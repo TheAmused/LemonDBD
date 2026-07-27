@@ -1,0 +1,7 @@
+Flask>=3.1.0
+flask-cors>=5.0.0
+gunicorn>=23.0.0
+curl_cffi>=0.7.4
+beautifulsoup4>=4.12.3
+tqdm>=4.66.0
+pydantic>=2.10.0

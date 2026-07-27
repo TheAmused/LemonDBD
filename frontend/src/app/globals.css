@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #f8fafc;
+    --bg-surface: #ffffff;
+    --border-color: #e2e8f0;
+    --accent-red: #dc2626;
+  }
+
+  .dark {
+    --bg-primary: #030712;
+    --bg-surface: #0b0f19;
+    --border-color: #1f293d;
+    --accent-red: #ef4444;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    @apply text-slate-900 dark:text-slate-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col font-sans transition-colors duration-300;
+  }
+}
+
+/* Custom Dead by Daylight Aesthetic Effects */
+@keyframes fogMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.dbd-fog-overlay {
+  background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.05) 0%, transparent 80%);
+  animation: fogMove 20s ease infinite;
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-800 rounded-full hover:bg-red-600 transition-colors;
+}
+
+/* High-contrast perk stat highlights */
+strong {
+  @apply font-bold text-amber-600 dark:text-amber-400;
+}

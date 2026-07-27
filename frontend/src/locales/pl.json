@@ -1,0 +1,52 @@
+{
+  "app": {
+    "title": "DEAD BY DAYLIGHT",
+    "subtitle": "Baza Umiejętności i Łowca Perkowa",
+    "syncWiki": "Synchronizuj z Wiki",
+    "syncing": "Pobieranie..."
+  },
+  "stats": {
+    "totalPerks": "Wszystkie Umiejętności",
+    "survivorPerks": "Ocalali",
+    "killerPerks": "Zabójcy"
+  },
+  "filters": {
+    "searchPlaceholder": "Szukaj po nazwie perków lub opisie...",
+    "category": "Rola",
+    "allCategories": "Wszystkie Role",
+    "survivor": "Ocalali",
+    "killer": "Zabójcy",
+    "character": "Postać",
+    "allCharacters": "Wszystkie Postacie",
+    "sortBy": "Sortuj według",
+    "sortName": "Nazwa Perku",
+    "sortCharacter": "Postać",
+    "sortCategory": "Rola",
+    "order": "Kolejność",
+    "asc": "Rosnąco (A-Z)",
+    "desc": "Malejąco (Z-A)",
+    "clear": "Resetuj Filtry"
+  },
+  "pagination": {
+    "showing": "Pokazuje",
+    "of": "z",
+    "results": "umiejętności",
+    "perPage": "Na stronę",
+    "page": "Strona"
+  },
+  "card": {
+    "general": "Umiejętność Ogólna",
+    "viewDetails": "Inspekcja Perku"
+  },
+  "modal": {
+    "close": "Zamknij",
+    "character": "Przypisana Postać",
+    "role": "Rola",
+    "copySlug": "Kopiuj ID",
+    "slugCopied": "Skopiowano do Schowka!"
+  },
+  "empty": {
+    "title": "Brak Umiejętności",
+    "subtitle": "Brak wyników spełniających podane kryteria wyszukiwania."
+  }
+}

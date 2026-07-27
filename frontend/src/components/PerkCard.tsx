@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { User, Shield, Sparkles, ImageOff } from 'lucide-react';
+import { User, ImageOff, Sparkles } from 'lucide-react';
 
 export interface Perk {
   name: string;
   character: string;
+  character_real_name?: string;
+  character_avatar_path?: string;
   category: string;
   description: string;
   icon_url: string;
@@ -21,13 +23,40 @@ interface PerkCardProps {
 
 export const PerkCard: React.FC<PerkCardProps> = ({ perk, viewMode, onSelect, dict }) => {
   const [imgError, setImgError] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
+
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  const iconSrc = perk.icon_local_path
-    ? `${backendBase}/static/${perk.icon_local_path}`
+  const cleanIconPath = (perk.icon_local_path || '').replace(/^\/?(static\/)?/, '');
+  const iconSrc = cleanIconPath
+    ? `${backendBase}/static/${cleanIconPath}`
     : perk.icon_url;
 
+  const getAvatarSrc = () => {
+    let rawPath = perk.character_avatar_path;
+    if (!rawPath && perk.character && perk.character !== 'General') {
+      const subDir = perk.category === 'Survivor' ? 'survivors' : 'killers';
+      const sanitized = perk.character
+        .toLowerCase()
+        .trim()
+        .replace(/[\s\-/]+/g, '_')
+        .replace(/[\\/*?:"<>|]/g, '')
+        .replace(/_+/g, '_')
+        .replace(/^_+|_+$/g, '');
+      rawPath = `avatars/${subDir}/${sanitized}.png`;
+    }
+
+    if (!rawPath) return null;
+    const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');
+    return `${backendBase}/static/${cleanPath}`;
+  };
+
+  const avatarSrc = getAvatarSrc();
   const isSurvivor = perk.category === 'Survivor';
+  const showRealName =
+    perk.character_real_name &&
+    perk.character_real_name !== 'General' &&
+    perk.character_real_name !== perk.character;
 
   if (viewMode === 'list') {
     return (
@@ -55,8 +84,22 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, viewMode, onSelect, di
             </h3>
             <div className="mt-1 flex items-center gap-2.5 text-xs text-slate-500 dark:text-slate-400">
               <span className="flex items-center gap-1 font-medium">
-                <User className="h-3 w-3 text-slate-400" />
-                {perk.character}
+                {avatarSrc && !avatarError ? (
+                  <img
+                    src={avatarSrc}
+                    alt={perk.character}
+                    onError={() => setAvatarError(true)}
+                    className="h-4 w-4 rounded-full object-cover"
+                  />
+                ) : (
+                  <User className="h-3 w-3 text-slate-400" />
+                )}
+                <span>{perk.character}</span>
+                {showRealName && (
+                  <span className="text-[10px] text-slate-400 font-normal">
+                    ({perk.character_real_name})
+                  </span>
+                )}
               </span>
               <span
                 className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${
@@ -83,7 +126,6 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, viewMode, onSelect, di
       onClick={() => onSelect(perk)}
       className="group relative flex cursor-pointer flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/70 p-5 shadow-sm hover:-translate-y-1 hover:border-red-500/50 hover:shadow-xl dark:border-slate-800/80 dark:bg-slate-900/60 dark:hover:border-red-500/50 backdrop-blur-md transition-all duration-200 overflow-hidden"
     >
-      {/* Decorative Top Accent Bar */}
       <div
         className={`absolute top-0 left-0 right-0 h-1 ${
           isSurvivor ? 'bg-emerald-500' : 'bg-rose-600'
@@ -91,7 +133,6 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, viewMode, onSelect, di
       />
 
       <div>
-        {/* Header Icon + Role Badge */}
         <div className="mb-4 flex items-center justify-between">
           <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/50 p-2.5 dark:from-slate-900/90 dark:to-slate-950 border border-slate-200/60 dark:border-slate-800 shadow-inner group-hover:border-red-500/30 transition-colors">
             {!imgError ? (
@@ -117,18 +158,32 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, viewMode, onSelect, di
           </span>
         </div>
 
-        {/* Title & Character Info */}
         <h3 className="text-base font-bold leading-tight text-slate-900 group-hover:text-red-600 dark:text-slate-100 dark:group-hover:text-red-400 transition-colors">
           {perk.name}
         </h3>
 
         <div className="mt-2 flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
-          <User className="h-3.5 w-3.5 text-slate-400" />
-          <span className="truncate">{perk.character}</span>
+          {avatarSrc && !avatarError ? (
+            <img
+              src={avatarSrc}
+              alt={perk.character}
+              onError={() => setAvatarError(true)}
+              className="h-4 w-4 rounded-full object-cover shrink-0"
+            />
+          ) : (
+            <User className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+          )}
+          <div className="truncate">
+            <span className="font-semibold">{perk.character}</span>
+            {showRealName && (
+              <span className="ml-1 text-[11px] text-slate-400 font-normal">
+                ({perk.character_real_name})
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Action Footer Button */}
       <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-xs font-semibold text-slate-600 group-hover:text-red-600 dark:text-slate-400 dark:group-hover:text-red-400">
         <span>{dict.card.viewDetails}</span>
         <Sparkles className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />

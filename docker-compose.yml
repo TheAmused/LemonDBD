@@ -5,14 +5,14 @@ services:
       dockerfile: Dockerfile
     container_name: dbd_backend
     restart: unless-stopped
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     volumes:
       - ./backend/data:/app/data
-      - ./backend/app/static/icons:/app/app/static/icons
+      - ./backend/app/static:/app/app/static
     environment:
       - FLASK_ENV=production
-      - CORS_ORIGINS=http://localhost:3000
+      - CORS_ORIGINS=*
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
       interval: 10s
@@ -27,16 +27,33 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: http://localhost:5000
+        NEXT_PUBLIC_API_URL: http://localhost
     container_name: dbd_frontend
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:5000
+      - NEXT_PUBLIC_API_URL=http://localhost
     depends_on:
       backend:
         condition: service_healthy
+    networks:
+      - dbd_network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: dbd_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
     networks:
       - dbd_network
 

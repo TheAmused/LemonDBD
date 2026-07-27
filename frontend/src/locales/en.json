@@ -5,10 +5,34 @@
     "syncWiki": "Sync Wiki Data",
     "syncing": "Syncing Data..."
   },
-  "stats": {
+"generator": {
+    "title": "Perk Loadout Generator",
+    "subtitle": "Roll random perks based on in-game inventory coordinates [Page/Slot].",
+    "modeInstant": "Instant Roll",
+    "modeWheel": "Wheel of Fortune",
+    "configTitle": "Inventory & Wheel Settings",
+    "totalPages": "Total Pages",
+    "perksPerPage": "Perks per Page",
+    "lastPagePerks": "Last Page Perks",
+    "spinDuration": "Spin Duration (sec)",
+    "resetDefaults": "Reset to Defaults",
+    "rollButton": "Roll New Loadout",
+    "spinWheels": "Spin Wheel for Slot #{slot}",
+    "spinning": "Spinning Wheel...",
+    "pageWheelTitle": "Page Wheel",
+    "perkWheelTitle": "Perk Wheel",
+    "selectedPage": "Selected Page: {page}",
+    "slotBadge": "Page {page} / Slot {slot}",
+    "copyBuild": "Copy Loadout Text",
+    "buildCopied": "Loadout Copied!"
+  },
+"stats": {
+    "vaultStats": "Vault Statistics",
     "totalPerks": "Total Perks",
-    "survivorPerks": "Survivor",
-    "killerPerks": "Killer"
+    "characters": "Characters",
+    "survivors": "Survivors",
+    "killers": "Killers",
+    "ratio": "Role Distribution"
   },
   "filters": {
     "searchPlaceholder": "Search by perk title or description...",
@@ -25,7 +49,8 @@
     "order": "Order",
     "asc": "Ascending (A-Z)",
     "desc": "Descending (Z-A)",
-    "clear": "Reset Filters"
+    "clear": "Reset Filters",
+    "generatorTab": "Perk Generator"
   },
   "pagination": {
     "showing": "Showing",

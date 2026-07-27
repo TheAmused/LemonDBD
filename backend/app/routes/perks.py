@@ -43,6 +43,13 @@ def get_perk(identifier: str):
     return jsonify({"data": perk}), 200
 
 
+@perks_bp.route("/api/v1/characters", methods=["GET"])
+def list_characters():
+    category = request.args.get("category")
+    characters = perk_service.get_characters(category)
+    return jsonify({"count": len(characters), "data": characters}), 200
+
+
 @perks_bp.route("/api/v1/survivors", methods=["GET"])
 def list_survivors():
     survivors = perk_service.get_characters("Survivor")
@@ -63,26 +70,23 @@ def _run_background_scrape():
 
 @perks_bp.route("/api/v1/scrape", methods=["POST"])
 def trigger_scrape():
-    """Triggers background scraping without blocking the HTTP request."""
     status = ScraperService.get_status()
     if status["is_running"]:
-        return jsonify({"message": "Scrape task is already in progress", "status": status}), 409
+        return jsonify({"message": "Scrape task in progress", "status": status}), 409
 
     thread = threading.Thread(target=_run_background_scrape, daemon=True)
     thread.start()
-
-    return jsonify({"message": "Scrape task initiated successfully in background"}), 202
+    return jsonify({"message": "Scrape task initiated in background"}), 202
 
 
 @perks_bp.route("/api/v1/scrape/status", methods=["GET"])
 def get_scrape_status():
-    """Polled by frontend to show scrape progress bar."""
     return jsonify(ScraperService.get_status()), 200
 
 
-@perks_bp.route("/static/icons/<path:filename>", methods=["GET"])
-def serve_icon(filename: str):
-    static_folder = Path(current_app.root_path) / "static" / "icons"
+@perks_bp.route("/static/<path:filename>", methods=["GET"])
+def serve_static_asset(filename: str):
+    static_folder = Path(current_app.root_path) / "static"
     response = send_from_directory(static_folder, filename)
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Cache-Control"] = "public, max-age=86400"

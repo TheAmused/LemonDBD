@@ -5,10 +5,34 @@
     "syncWiki": "Synchronizuj z Wiki",
     "syncing": "Pobieranie..."
   },
-  "stats": {
-    "totalPerks": "Wszystkie Umiejętności",
-    "survivorPerks": "Ocalali",
-    "killerPerks": "Zabójcy"
+"generator": {
+    "title": "Losownik Perkó́w",
+    "subtitle": "Losuj zestawy perków na podstawie stron ekwipunku w grze [Strona/Slot].",
+    "modeInstant": "Szybki Los",
+    "modeWheel": "Koło Fortuny",
+    "configTitle": "Ustawienia Ekwipunku i Koła",
+    "totalPages": "Liczba Stron",
+    "perksPerPage": "Perków na Stronę",
+    "lastPagePerks": "Perków na Ostatniej Stronie",
+    "spinDuration": "Czas Czas Losowania (sek)",
+    "resetDefaults": "Przywróć Domyślne",
+    "rollButton": "Wylosuj Pełny Zestaw",
+    "spinWheels": "Zakręć dla Perku #{slot}",
+    "spinning": "Losowanie...",
+    "pageWheelTitle": "Koło Stron",
+    "perkWheelTitle": "Koło Perków",
+    "selectedPage": "Wybrana Strona: {page}",
+    "slotBadge": "Strona {page} / Slot {slot}",
+    "copyBuild": "Kopiuj Zestaw",
+    "buildCopied": "Skopiowano Zestaw!"
+  },
+"stats": {
+    "vaultStats": "Statystyki Bazy",
+    "totalPerks": "Wszystkie Perki",
+    "characters": "Postacie",
+    "survivors": "Ocalali",
+    "killers": "Zabójcy",
+    "ratio": "Stosunek Ról"
   },
   "filters": {
     "searchPlaceholder": "Szukaj po nazwie perków lub opisie...",
@@ -25,7 +49,8 @@
     "order": "Kolejność",
     "asc": "Rosnąco (A-Z)",
     "desc": "Malejąco (Z-A)",
-    "clear": "Resetuj Filtry"
+    "clear": "Resetuj Filtry",
+    "generatorTab": "Losownik Perkó́w"
   },
   "pagination": {
     "showing": "Pokazuje",

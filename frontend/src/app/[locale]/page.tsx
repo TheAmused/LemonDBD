@@ -2,14 +2,23 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { Navbar } from '@/components/Navbar';
+import { Sidebar } from '@/components/Sidebar';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard, Perk } from '@/components/PerkCard';
 import { PerkModal } from '@/components/PerkModal';
+import { PerkGenerator } from '@/components/PerkGenerator';
 import { Pagination } from '@/components/Pagination';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { Shield, Sparkles } from 'lucide-react';
+import { Shield } from 'lucide-react';
+
+export interface CharacterItem {
+  name: string;
+  real_name: string;
+  category: string;
+}
+
+const DASHBOARD_TAB_KEY = 'lemon_dbd_active_tab_v2';
 
 export default function DashboardPage() {
   const params = useParams();
@@ -17,12 +26,17 @@ export default function DashboardPage() {
 
   const [dict, setDict] = useState<any>(null);
   const [perks, setPerks] = useState<Perk[]>([]);
-  const [characters, setCharacters] = useState<string[]>([]);
+  const [allPerksForGenerator, setAllPerksForGenerator] = useState<Perk[]>([]);
+  const [characterOptions, setCharacterOptions] = useState<{ value: string; label: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Pagination & Filtering state
-  const [search, setSearch] = useState<string>('');
+  // Vault Stats State
+  const [survivorCount, setSurvivorCount] = useState<number>(0);
+  const [killerCount, setKillerCount] = useState<number>(0);
+  const [characterCount, setCharacterCount] = useState<number>(0);
+
   const [category, setCategory] = useState<string>('all');
+  const [search, setSearch] = useState<string>('');
   const [character, setCharacter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('name');
   const [order, setOrder] = useState<string>('asc');
@@ -40,6 +54,26 @@ export default function DashboardPage() {
     getDictionary(locale).then(setDict);
   }, [locale]);
 
+  useEffect(() => {
+    try {
+      const savedTab = localStorage.getItem(DASHBOARD_TAB_KEY);
+      if (savedTab) setCategory(savedTab);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const handleSelectCategory = (cat: string) => {
+    setCategory(cat);
+    setCharacter('all');
+    setPage(1);
+    try {
+      localStorage.setItem(DASHBOARD_TAB_KEY, cat);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const fetchPerks = useCallback(async () => {
     setLoading(true);
     try {
@@ -50,14 +84,17 @@ export default function DashboardPage() {
         order: order,
       });
 
-      if (category !== 'all') queryParams.append('category', category);
+      if (category !== 'all' && category !== 'generator') {
+        queryParams.append('category', category);
+      }
       if (character !== 'all') queryParams.append('character', character);
       if (search) queryParams.append('search', search);
 
-      const [perksRes, survivorsRes, killersRes] = await Promise.all([
+      const [perksRes, charRes, generatorRes, allCharsRes] = await Promise.all([
         fetch(`${backendBase}/api/v1/perks?${queryParams.toString()}`),
-        fetch(`${backendBase}/api/v1/survivors`),
-        fetch(`${backendBase}/api/v1/killers`),
+        fetch(`${backendBase}/api/v1/characters${category !== 'all' && category !== 'generator' ? `?category=${category}` : ''}`),
+        fetch(`${backendBase}/api/v1/perks?limit=1000`),
+        fetch(`${backendBase}/api/v1/characters`),
       ]);
 
       if (perksRes.ok) {
@@ -69,16 +106,39 @@ export default function DashboardPage() {
         }
       }
 
-      const charSet = new Set<string>();
-      if (survivorsRes.ok) {
-        const sData = await survivorsRes.json();
-        (sData.data || []).forEach((c: string) => charSet.add(c));
+      let fetchedCharactersList: CharacterItem[] = [];
+      if (allCharsRes.ok) {
+        const acData = await allCharsRes.json();
+        fetchedCharactersList = acData.data || [];
       }
-      if (killersRes.ok) {
-        const kData = await killersRes.json();
-        (kData.data || []).forEach((c: string) => charSet.add(c));
+
+      if (generatorRes.ok) {
+        const gResult = await generatorRes.json();
+        const fullList: Perk[] = gResult.data || [];
+        setAllPerksForGenerator(fullList);
+
+        setSurvivorCount(fullList.filter((p) => p.category === 'Survivor').length);
+        setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
+
+        // Calculate dynamic character count from perks if character cache is unpopulated
+        if (fetchedCharactersList.length > 0) {
+          setCharacterCount(fetchedCharactersList.length);
+        } else {
+          const uniqueChars = new Set(
+            fullList.map((p) => p.character).filter((c) => c && c !== 'General')
+          );
+          setCharacterCount(uniqueChars.size);
+        }
       }
-      setCharacters(Array.from(charSet).sort());
+
+      if (charRes.ok) {
+        const cData = await charRes.json();
+        const options = (cData.data || []).map((c: CharacterItem) => ({
+          value: c.name,
+          label: c.real_name && c.real_name !== c.name ? `${c.name} (${c.real_name})` : c.name,
+        }));
+        setCharacterOptions(options);
+      }
     } catch (err) {
       console.error('Failed fetching perks:', err);
     } finally {
@@ -102,83 +162,101 @@ export default function DashboardPage() {
   if (!dict) return null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
-      <Navbar currentLocale={locale} dict={dict} onSyncComplete={fetchPerks} />
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
+      <Sidebar
+        currentLocale={locale}
+        dict={dict}
+        activeCategory={category}
+        onSelectCategory={handleSelectCategory}
+        onSyncComplete={fetchPerks}
+        totalPerksCount={allPerksForGenerator.length || totalResults}
+        survivorCount={survivorCount}
+        killerCount={killerCount}
+        characterCount={characterCount}
+      />
 
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Filter Toolbar */}
-        <PerkFilters
-          search={search}
-          setSearch={(v) => { setSearch(v); setPage(1); }}
-          category={category}
-          setCategory={(v) => { setCategory(v); setPage(1); }}
-          character={character}
-          setCharacter={(v) => { setCharacter(v); setPage(1); }}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          order={order}
-          setOrder={setOrder}
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-          characters={characters}
-          dict={dict}
-          onReset={handleResetFilters}
-        />
-
-        {/* Content Section */}
-        {loading ? (
-          <div className="grid grid-cols-1 gap-6 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {[...Array(8)].map((_, i) => (
-              <div
-                key={i}
-                className="h-52 animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800"
-              />
-            ))}
-          </div>
-        ) : perks.length === 0 ? (
-          <div className="my-12 rounded-3xl border border-dashed border-slate-300 p-12 text-center dark:border-slate-800">
-            <Shield className="mx-auto h-12 w-12 text-slate-400 mb-3" />
-            <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-              {dict.empty.title}
-            </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {dict.empty.subtitle}
-            </p>
-          </div>
-        ) : (
-          <>
-            <div
-              className={
-                viewMode === 'grid'
-                  ? 'grid grid-cols-1 gap-6 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
-                  : 'flex flex-col gap-3'
-              }
-            >
-              {perks.map((perk, idx) => (
-                <PerkCard
-                  key={`${perk.name}-${idx}`}
-                  perk={perk}
-                  viewMode={viewMode}
-                  onSelect={setSelectedPerk}
-                  dict={dict}
-                />
-              ))}
-            </div>
-
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              totalResults={totalResults}
-              limit={limit}
-              onPageChange={setPage}
-              onLimitChange={(newLimit) => { setLimit(newLimit); setPage(1); }}
+      <div className="lg:pl-64 min-h-screen flex flex-col w-full">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-10 w-full">
+          {category === 'generator' ? (
+            <PerkGenerator
+              allPerks={allPerksForGenerator}
+              onSelectPerk={setSelectedPerk}
               dict={dict}
             />
-          </>
-        )}
+          ) : (
+            <>
+              <PerkFilters
+                search={search}
+                setSearch={(v) => { setSearch(v); setPage(1); }}
+                character={character}
+                setCharacter={(v) => { setCharacter(v); setPage(1); }}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                order={order}
+                setOrder={setOrder}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+                characterOptions={characterOptions}
+                dict={dict}
+                onReset={handleResetFilters}
+              />
 
-        <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
-      </main>
+              {loading ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-52 animate-pulse rounded-2xl bg-slate-200/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800"
+                    />
+                  ))}
+                </div>
+              ) : perks.length === 0 ? (
+                <div className="my-12 rounded-3xl border border-dashed border-slate-300 p-12 text-center dark:border-slate-800">
+                  <Shield className="mx-auto h-12 w-12 text-slate-400 mb-3" />
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                    {dict.empty.title}
+                  </h3>
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    {dict.empty.subtitle}
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div
+                    className={
+                      viewMode === 'grid'
+                        ? 'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'
+                        : 'flex flex-col gap-3'
+                    }
+                  >
+                    {perks.map((perk, idx) => (
+                      <PerkCard
+                        key={`${perk.name}-${idx}`}
+                        perk={perk}
+                        viewMode={viewMode}
+                        onSelect={setSelectedPerk}
+                        dict={dict}
+                      />
+                    ))}
+                  </div>
+
+                  <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    totalResults={totalResults}
+                    limit={limit}
+                    onPageChange={setPage}
+                    onLimitChange={(newLimit) => { setLimit(newLimit); setPage(1); }}
+                    dict={dict}
+                  />
+                </>
+              )}
+            </>
+          )}
+
+          <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
+        </main>
+      </div>
     </div>
   );
 }

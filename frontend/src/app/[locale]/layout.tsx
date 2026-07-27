@@ -12,9 +12,12 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const { locale: rawLocale } = await params;
+  const locale = (
+    i18n.locales.includes(rawLocale as Locale) ? rawLocale : i18n.defaultLocale
+  ) as Locale;
 
   return (
     <html lang={locale} suppressHydrationWarning>

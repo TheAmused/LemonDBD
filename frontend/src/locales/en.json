@@ -1,0 +1,52 @@
+{
+  "app": {
+    "title": "DEAD BY DAYLIGHT",
+    "subtitle": "Perk Vault & Database",
+    "syncWiki": "Sync Wiki Data",
+    "syncing": "Syncing Data..."
+  },
+  "stats": {
+    "totalPerks": "Total Perks",
+    "survivorPerks": "Survivor",
+    "killerPerks": "Killer"
+  },
+  "filters": {
+    "searchPlaceholder": "Search by perk title or description...",
+    "category": "Role",
+    "allCategories": "All Roles",
+    "survivor": "Survivors",
+    "killer": "Killers",
+    "character": "Character",
+    "allCharacters": "All Characters",
+    "sortBy": "Sort By",
+    "sortName": "Perk Name",
+    "sortCharacter": "Character",
+    "sortCategory": "Role",
+    "order": "Order",
+    "asc": "Ascending (A-Z)",
+    "desc": "Descending (Z-A)",
+    "clear": "Reset Filters"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "of": "of",
+    "results": "perks",
+    "perPage": "Per page",
+    "page": "Page"
+  },
+  "card": {
+    "general": "General Perk",
+    "viewDetails": "Inspect Perk"
+  },
+  "modal": {
+    "close": "Close",
+    "character": "Associated Character",
+    "role": "Role",
+    "copySlug": "Copy Identifier",
+    "slugCopied": "Copied to Clipboard!"
+  },
+  "empty": {
+    "title": "No Perks Found",
+    "subtitle": "Try adjusting your search terms or filter combinations."
+  }
+}

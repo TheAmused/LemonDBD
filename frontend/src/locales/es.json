@@ -1,0 +1,52 @@
+{
+  "app": {
+    "title": "DEAD BY DAYLIGHT",
+    "subtitle": "Bóveda de Habilidades",
+    "syncWiki": "Sincronizar Wiki",
+    "syncing": "Sincronizando..."
+  },
+  "stats": {
+    "totalPerks": "Total Habilidades",
+    "survivorPerks": "Supervivientes",
+    "killerPerks": "Asesinos"
+  },
+  "filters": {
+    "searchPlaceholder": "Buscar por título o descripción...",
+    "category": "Rol",
+    "allCategories": "Todos los Roles",
+    "survivor": "Supervivientes",
+    "killer": "Asesinos",
+    "character": "Personaje",
+    "allCharacters": "Todos los Personajes",
+    "sortBy": "Ordenar por",
+    "sortName": "Nombre",
+    "sortCharacter": "Personaje",
+    "sortCategory": "Rol",
+    "order": "Orden",
+    "asc": "Ascendente (A-Z)",
+    "desc": "Descendente (Z-A)",
+    "clear": "Reiniciar Filtros"
+  },
+  "pagination": {
+    "showing": "Mostrando",
+    "of": "de",
+    "results": "habilidades",
+    "perPage": "Por página",
+    "page": "Página"
+  },
+  "card": {
+    "general": "Habilidad General",
+    "viewDetails": "Inspeccionar"
+  },
+  "modal": {
+    "close": "Cerrar",
+    "character": "Personaje Asociado",
+    "role": "Rol",
+    "copySlug": "Copiar Identificador",
+    "slugCopied": "¡Copiado al Portapapeles!"
+  },
+  "empty": {
+    "title": "No se encontraron habilidades",
+    "subtitle": "Intenta ajustar los términos de búsqueda o cambiar los filtros."
+  }
+}

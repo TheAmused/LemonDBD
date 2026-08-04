@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Role } from '@/types/challenge';
-import { Flame, Trophy, Shield, User, Skull, BarChart2 } from 'lucide-react';
+import { Flame, Trophy, Shield, User, Skull, BarChart2, BookOpen, Settings } from 'lucide-react';
 
 export interface ChallengeHeaderProps {
   activeRole: Role;
@@ -11,6 +11,8 @@ export interface ChallengeHeaderProps {
   bestStreak: number;
   lastCheckpointStreak: number;
   onOpenStats?: () => void;
+  onOpenRules?: () => void;
+  onOpenPool?: () => void;
 }
 
 export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
@@ -20,6 +22,8 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
   bestStreak,
   lastCheckpointStreak,
   onOpenStats,
+  onOpenRules,
+  onOpenPool,
 }) => {
   return (
     <div className="w-full bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-xl mb-6">
@@ -62,7 +66,7 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
           </div>
         </div>
 
-        {/* Right: Streak Badges & Stats Trigger */}
+        {/* Right: Streak Badges & Action Triggers */}
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
           {/* Current Streak */}
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950/80 border border-amber-500/30 text-amber-400 shadow-sm">
@@ -103,11 +107,35 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
             </div>
           </div>
 
+          {/* Gauntlet Rules Button */}
+          {onOpenRules && (
+            <button
+              onClick={onOpenRules}
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
+              title="View Gauntlet Rules & Guidelines"
+            >
+              <BookOpen className="w-4 h-4 text-amber-400" />
+              <span className="hidden sm:inline">Gauntlet Rules</span>
+            </button>
+          )}
+
+          {/* Character Pool Settings Button */}
+          {onOpenPool && (
+            <button
+              onClick={onOpenPool}
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
+              title="Configure Character Pool Settings"
+            >
+              <Settings className="w-4 h-4 text-slate-400" />
+              <span className="hidden sm:inline">Character Pool</span>
+            </button>
+          )}
+
           {/* Open Stats Drawer Button */}
           {onOpenStats && (
             <button
               onClick={onOpenStats}
-              className="flex items-center justify-center p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors shadow-sm ml-1 cursor-pointer"
+              className="flex items-center justify-center p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors shadow-sm cursor-pointer"
               title="View Challenge Statistics"
             >
               <BarChart2 className="w-5 h-5" />

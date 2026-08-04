@@ -71,3 +71,44 @@ export async function fetchChallengeStats(): Promise<StatsResponse> {
   const response = await fetch(`${API_BASE}/stats`);
   return handleResponse<StatsResponse>(response);
 }
+
+export async function invalidateMatch(
+  runId: number,
+  reason: 'dc_before_5_gens' | 'game_cancelled'
+): Promise<RunResponse> {
+  const response = await fetch(`${API_BASE}/invalidate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      run_id: runId,
+      reason,
+    }),
+  });
+  return handleResponse<RunResponse>(response);
+}
+
+export async function fetchCharacterPool(
+  role: string
+): Promise<{ role: string; disabled_characters: string[]; disabled_names: string[] }> {
+  const response = await fetch(`${API_BASE}/pool?role=${role}`);
+  return handleResponse<{ role: string; disabled_characters: string[]; disabled_names: string[] }>(response);
+}
+
+export async function updateCharacterPool(
+  role: string,
+  disabledCharacters: string[]
+): Promise<{ role: string; disabled_characters: string[]; disabled_names: string[] }> {
+  const response = await fetch(`${API_BASE}/pool`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      role,
+      disabled_characters: disabledCharacters,
+    }),
+  });
+  return handleResponse<{ role: string; disabled_characters: string[]; disabled_names: string[] }>(response);
+}

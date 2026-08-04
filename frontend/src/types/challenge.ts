@@ -23,6 +23,13 @@ export interface ChallengeLoadout {
   map_offering: MapOffering;
 }
 
+export interface TierInfo {
+  name: string;
+  tier_level: number;
+  perk_limit: number;
+  description: string;
+}
+
 export interface ChallengeRun {
   id: number;
   role: Role;
@@ -37,6 +44,7 @@ export interface ChallengeRun {
   checkpoint_characters_json?: string;
   completed_characters: string[];
   checkpoint_characters: string[];
+  tier_info?: TierInfo;
   created_at?: string;
   updated_at?: string;
 }
@@ -71,6 +79,7 @@ export interface ChallengeStats {
 export interface RunResponse {
   run: ChallengeRun;
   settings: UserSettings;
+  tier_info?: TierInfo;
 }
 
 export interface SubmitResultResponse {

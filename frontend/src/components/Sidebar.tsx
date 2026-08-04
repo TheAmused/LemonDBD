@@ -23,6 +23,7 @@ import {
   Trophy,
   Scroll,
   Calculator,
+  Wand2,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -190,6 +191,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-red-500/10 text-red-400 border border-red-500/20',
     },
     {
+      id: 'custom-perks',
+      label: '🎨 Perk Studio',
+      icon: Wand2,
+      color: 'text-pink-400',
+      activeBg: 'bg-pink-500/10 text-pink-400 border border-pink-500/20',
+    },
+    {
       id: 'quests',
       label: '📜 Quests',
       icon: Scroll,
@@ -240,7 +248,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
-            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator' || item.id === 'builds') {
+            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator' || item.id === 'builds' || item.id === 'custom-perks') {
               return (
                 <Link
                   key={item.id}

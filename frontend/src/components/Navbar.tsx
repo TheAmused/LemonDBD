@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2, Trophy, Scroll, Users, Calculator } from 'lucide-react';
+import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2, Trophy, Scroll, Users, Calculator, Wand2 } from 'lucide-react';
 
 interface NavbarProps {
   currentLocale: string;
@@ -159,6 +159,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
               }`}
             >
               <span>🔥 Build Vault</span>
+            </Link>
+
+            <Link
+              href={`/${currentLocale}/custom-perks`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                pathname?.includes('/custom-perks')
+                  ? 'bg-pink-500/10 text-pink-400 border border-pink-500/20 shadow-sm'
+                  : 'text-pink-500 hover:text-pink-400 hover:bg-pink-500/10 border border-pink-500/20'
+              }`}
+            >
+              <Wand2 className="h-3.5 w-3.5" />
+              <span>Perk Studio</span>
             </Link>
 
             {onOpenQuests && (

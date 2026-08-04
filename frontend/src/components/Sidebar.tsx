@@ -19,6 +19,7 @@ import {
   CheckCircle2,
   Database,
   Users,
+  Swords,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -148,6 +149,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       color: 'text-amber-500',
       activeBg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
     },
+    {
+      id: 'challenge',
+      label: 'Win Streak Challenge',
+      icon: Swords,
+      color: 'text-amber-400',
+      activeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+    },
   ];
 
   // Calculate Survivor vs Killer distribution percentages
@@ -196,7 +204,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => {
-                  onSelectCategory(item.id);
+                  if (item.id === 'challenge') {
+                    if (typeof window !== 'undefined') {
+                      window.location.href = `/${currentLocale}/challenge`;
+                    }
+                  } else {
+                    onSelectCategory(item.id);
+                  }
                   setMobileOpen(false);
                 }}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${

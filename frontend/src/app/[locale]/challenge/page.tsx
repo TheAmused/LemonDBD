@@ -18,6 +18,7 @@ import { CharacterRosterGrid, CharacterItem } from '@/components/challenge/Chara
 import { ChallengeStatsDrawer } from '@/components/challenge/ChallengeStatsDrawer';
 import { GauntletRulesModal } from '@/components/challenge/GauntletRulesModal';
 import { CharacterPoolModal } from '@/components/challenge/CharacterPoolModal';
+import { QuestsModal } from '@/components/QuestsModal';
 import { Sidebar } from '@/components/Sidebar';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
@@ -39,6 +40,7 @@ export default function ChallengePage() {
   const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
   const [isRulesOpen, setIsRulesOpen] = useState<boolean>(false);
   const [isPoolOpen, setIsPoolOpen] = useState<boolean>(false);
+  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // Vault Stats for Sidebar
@@ -247,6 +249,7 @@ export default function ChallengePage() {
         dict={dict}
         activeCategory="challenge"
         onSelectCategory={handleSelectCategory}
+        onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalPerksCount}
         survivorCount={survivorCount}
         killerCount={killerCount}
@@ -323,6 +326,13 @@ export default function ChallengePage() {
           characters={characters}
           disabledCharacters={disabledCharacters}
           onSave={handleSavePool}
+        />
+
+        {/* Quests Modal */}
+        <QuestsModal
+          isOpen={isQuestsOpen}
+          onClose={() => setIsQuestsOpen(false)}
+          dict={dict}
         />
       </main>
     </div>

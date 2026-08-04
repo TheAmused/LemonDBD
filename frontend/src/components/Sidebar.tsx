@@ -20,6 +20,8 @@ import {
   Database,
   Users,
   Swords,
+  Trophy,
+  Scroll,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -28,6 +30,7 @@ interface SidebarProps {
   activeCategory: string;
   onSelectCategory: (category: string) => void;
   onSyncComplete?: () => void;
+  onOpenQuests?: () => void;
   totalPerksCount?: number;
   survivorCount?: number;
   killerCount?: number;
@@ -40,6 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeCategory,
   onSelectCategory,
   onSyncComplete,
+  onOpenQuests,
   totalPerksCount = 0,
   survivorCount = 0,
   killerCount = 0,
@@ -156,6 +160,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
       color: 'text-amber-400',
       activeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
     },
+    {
+      id: 'draft',
+      label: '🏆 Draft Room',
+      icon: Trophy,
+      color: 'text-rose-400',
+      activeBg: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
+    },
+    {
+      id: 'quests',
+      label: '📜 Quests',
+      icon: Scroll,
+      color: 'text-amber-400',
+      activeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+    },
   ];
 
   // Calculate Survivor vs Killer distribution percentages
@@ -200,11 +218,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
-            if (item.id === 'challenge') {
+            if (item.id === 'challenge' || item.id === 'draft') {
               return (
                 <Link
                   key={item.id}
-                  href={`/${currentLocale}/challenge`}
+                  href={`/${currentLocale}/${item.id}`}
                   onClick={() => setMobileOpen(false)}
                   className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${
                     isActive
@@ -217,6 +235,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <span>{item.label}</span>
                   </div>
                 </Link>
+              );
+            }
+
+            if (item.id === 'quests') {
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (onOpenQuests) onOpenQuests();
+                    setMobileOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    isActive
+                      ? item.activeBg
+                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className={`h-4 w-4 ${item.color}`} />
+                    <span>{item.label}</span>
+                  </div>
+                </button>
               );
             }
 

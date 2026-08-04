@@ -150,6 +150,17 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
               <span>Killer Calc</span>
             </Link>
 
+            <Link
+              href={`/${currentLocale}/builds`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                pathname?.includes('/builds')
+                  ? 'bg-red-500/10 text-red-400 border border-red-500/20 shadow-sm'
+                  : 'text-red-500 hover:text-red-400 hover:bg-red-500/10 border border-red-500/20'
+              }`}
+            >
+              <span>🔥 Build Vault</span>
+            </Link>
+
             {onOpenQuests && (
               <button
                 onClick={onOpenQuests}

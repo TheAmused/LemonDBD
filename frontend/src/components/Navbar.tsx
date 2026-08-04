@@ -79,25 +79,41 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-colors">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand Logo */}
-        <Link href={`/${currentLocale}`} className="flex items-center gap-3 group">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-900 text-white shadow-lg shadow-red-900/30 group-hover:scale-105 transition-transform">
-            <Flame className="h-5 w-5 text-red-100 animate-pulse" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-sm tracking-wider text-slate-900 dark:text-slate-100 font-mono">
-                {dict.app.title}
-              </span>
-              <span className="rounded bg-red-600/10 px-1.5 py-0.5 text-[10px] font-bold text-red-600 dark:text-red-400 border border-red-500/20">
-                PRO
-              </span>
+        <div className="flex items-center gap-6">
+          {/* Brand Logo */}
+          <Link href={`/${currentLocale}`} className="flex items-center gap-3 group">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-900 text-white shadow-lg shadow-red-900/30 group-hover:scale-105 transition-transform">
+              <Flame className="h-5 w-5 text-red-100 animate-pulse" />
             </div>
-            <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-              {dict.app.subtitle}
-            </p>
-          </div>
-        </Link>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-extrabold text-sm tracking-wider text-slate-900 dark:text-slate-100 font-mono">
+                  {dict.app.title}
+                </span>
+                <span className="rounded bg-red-600/10 px-1.5 py-0.5 text-[10px] font-bold text-red-600 dark:text-red-400 border border-red-500/20">
+                  PRO
+                </span>
+              </div>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                {dict.app.subtitle}
+              </p>
+            </div>
+          </Link>
+
+          {/* Main Navigation */}
+          <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-3">
+            <Link
+              href={`/${currentLocale}/challenge`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                pathname?.includes('/challenge')
+                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm'
+                  : 'text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 border border-amber-500/20'
+              }`}
+            >
+              <span>⚡ Challenge</span>
+            </Link>
+          </nav>
+        </div>
 
         {/* Action Controls */}
         <div className="flex items-center gap-2.5">

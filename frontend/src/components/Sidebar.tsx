@@ -151,7 +151,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'challenge',
-      label: 'Win Streak Challenge',
+      label: '⚡ Challenge',
       icon: Swords,
       color: 'text-amber-400',
       activeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
@@ -200,17 +200,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
+            if (item.id === 'challenge') {
+              return (
+                <Link
+                  key={item.id}
+                  href={`/${currentLocale}/challenge`}
+                  onClick={() => setMobileOpen(false)}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                    isActive
+                      ? item.activeBg
+                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className={`h-4 w-4 ${item.color}`} />
+                    <span>{item.label}</span>
+                  </div>
+                </Link>
+              );
+            }
+
             return (
               <button
                 key={item.id}
                 onClick={() => {
-                  if (item.id === 'challenge') {
-                    if (typeof window !== 'undefined') {
-                      window.location.href = `/${currentLocale}/challenge`;
-                    }
-                  } else {
-                    onSelectCategory(item.id);
-                  }
+                  onSelectCategory(item.id);
                   setMobileOpen(false);
                 }}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${

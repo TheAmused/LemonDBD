@@ -8,11 +8,16 @@ import {
   rollChallenge,
   submitMatchResult,
   fetchChallengeStats,
+  invalidateMatch,
+  fetchCharacterPool,
+  updateCharacterPool,
 } from '@/services/challengeApi';
 import { ChallengeHeader } from '@/components/challenge/ChallengeHeader';
 import { ActiveTargetStage } from '@/components/challenge/ActiveTargetStage';
 import { CharacterRosterGrid, CharacterItem } from '@/components/challenge/CharacterRosterGrid';
 import { ChallengeStatsDrawer } from '@/components/challenge/ChallengeStatsDrawer';
+import { GauntletRulesModal } from '@/components/challenge/GauntletRulesModal';
+import { CharacterPoolModal } from '@/components/challenge/CharacterPoolModal';
 import { Sidebar } from '@/components/Sidebar';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
@@ -25,12 +30,15 @@ export default function ChallengePage() {
   const [activeRole, setActiveRole] = useState<Role>('survivor');
   const [run, setRun] = useState<ChallengeRun | null>(null);
   const [characters, setCharacters] = useState<CharacterItem[]>([]);
+  const [disabledCharacters, setDisabledCharacters] = useState<string[]>([]);
   const [stats, setStats] = useState<ChallengeStats | null>(null);
 
   const [loadingRun, setLoadingRun] = useState<boolean>(true);
   const [loadingRoster, setLoadingRoster] = useState<boolean>(true);
   const [submittingResult, setSubmittingResult] = useState<boolean>(false);
   const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
+  const [isRulesOpen, setIsRulesOpen] = useState<boolean>(false);
+  const [isPoolOpen, setIsPoolOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // Vault Stats for Sidebar
@@ -88,6 +96,16 @@ export default function ChallengePage() {
     }
   }, [backendBase]);
 
+  // Fetch character pool exclusions
+  const loadCharacterPool = useCallback(async (role: Role) => {
+    try {
+      const poolData = await fetchCharacterPool(role);
+      setDisabledCharacters(poolData.disabled_characters || poolData.disabled_names || []);
+    } catch (err) {
+      console.error('Failed to fetch character pool settings:', err);
+    }
+  }, []);
+
   // Fetch active run for active role
   const loadRun = useCallback(async (role: Role) => {
     setLoadingRun(true);
@@ -117,8 +135,9 @@ export default function ChallengePage() {
   useEffect(() => {
     loadRun(activeRole);
     loadCharacters(activeRole);
+    loadCharacterPool(activeRole);
     loadStats();
-  }, [activeRole, loadRun, loadCharacters, loadStats]);
+  }, [activeRole, loadRun, loadCharacters, loadCharacterPool, loadStats]);
 
   // Role Switcher Handler
   const handleRoleChange = (newRole: Role) => {
@@ -170,6 +189,32 @@ export default function ChallengePage() {
       setError(err.message || 'Failed to reroll loadout');
     } finally {
       setLoadingRun(false);
+    }
+  };
+
+  // Match Exception / Invalidation Handler
+  const handleInvalidateMatch = async (reason: 'dc_before_5_gens' | 'game_cancelled') => {
+    if (!run || submittingResult || loadingRun) return;
+    setSubmittingResult(true);
+    try {
+      const resp = await invalidateMatch(run.id, reason);
+      setRun(resp.run);
+    } catch (err: any) {
+      console.error('Failed to invalidate match:', err);
+      setError(err.message || 'Failed to invalidate match');
+    } finally {
+      setSubmittingResult(false);
+    }
+  };
+
+  // Character Pool Settings Save Handler
+  const handleSavePool = async (newDisabled: string[]) => {
+    try {
+      const resp = await updateCharacterPool(activeRole, newDisabled);
+      setDisabledCharacters(resp.disabled_characters || resp.disabled_names || []);
+    } catch (err: any) {
+      console.error('Failed to save character pool settings:', err);
+      setError(err.message || 'Failed to save character pool');
     }
   };
 
@@ -231,6 +276,8 @@ export default function ChallengePage() {
           bestStreak={run?.best_streak || 0}
           lastCheckpointStreak={run?.last_checkpoint_streak || 0}
           onOpenStats={() => setIsStatsOpen(true)}
+          onOpenRules={() => setIsRulesOpen(true)}
+          onOpenPool={() => setIsPoolOpen(true)}
         />
 
         {/* Active Target Stage */}
@@ -241,6 +288,7 @@ export default function ChallengePage() {
           onWin={handleWin}
           onLoss={handleLoss}
           onReroll={handleReroll}
+          onInvalidateMatch={handleInvalidateMatch}
           characterAvatarPath={characterAvatarPath}
         />
 
@@ -259,6 +307,22 @@ export default function ChallengePage() {
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
+        />
+
+        {/* Gauntlet Rules Modal */}
+        <GauntletRulesModal
+          isOpen={isRulesOpen}
+          onClose={() => setIsRulesOpen(false)}
+        />
+
+        {/* Character Pool Configuration Modal */}
+        <CharacterPoolModal
+          isOpen={isPoolOpen}
+          onClose={() => setIsPoolOpen(false)}
+          role={activeRole}
+          characters={characters}
+          disabledCharacters={disabledCharacters}
+          onSave={handleSavePool}
         />
       </main>
     </div>

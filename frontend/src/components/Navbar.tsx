@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2, Trophy, Scroll } from 'lucide-react';
+import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2, Trophy, Scroll, Users } from 'lucide-react';
 
 interface NavbarProps {
   currentLocale: string;
@@ -124,6 +124,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
             >
               <Trophy className="h-3.5 w-3.5" />
               <span>Draft Room</span>
+            </Link>
+
+            <Link
+              href={`/${currentLocale}/swf`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                pathname?.includes('/swf')
+                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm'
+                  : 'text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/20'
+              }`}
+            >
+              <Users className="h-3.5 w-3.5" />
+              <span>SWF Planner</span>
             </Link>
 
             {onOpenQuests && (

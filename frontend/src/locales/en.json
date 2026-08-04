@@ -24,7 +24,10 @@
     "selectedPage": "Selected Page: {page}",
     "slotBadge": "Page {page} / Slot {slot}",
     "copyBuild": "Copy Loadout Text",
-    "buildCopied": "Loadout Copied!"
+    "buildCopied": "Loadout Copied!",
+    "noRepeat": "No-Repeat Perks",
+    "drawnBadge": "Drawn: {drawn} / {total}",
+    "resetDrawn": "Reset Used Perks"
   },
 "stats": {
     "vaultStats": "Vault Statistics",

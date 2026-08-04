@@ -13,9 +13,18 @@ import {
   Settings2,
   RotateCcw,
   CircleDot,
+  Repeat,
+  Layers,
 } from 'lucide-react';
 import { Perk } from './PerkCard';
 import { WheelOfFortune } from './WheelOfFortune';
+import {
+  fetchGeneratorConfig,
+  updateGeneratorConfig,
+  fetchDrawnPerks,
+  addDrawnPerks,
+  resetDrawnPerks,
+} from '../services/generatorApi';
 
 interface PerkGeneratorProps {
   allPerks: Perk[];
@@ -38,6 +47,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 }) => {
   const [role, setRole] = useState<'Survivor' | 'Killer'>('Survivor');
   const [genMode, setGenMode] = useState<'instant' | 'wheel'>('instant');
+  const [noRepeatPerks, setNoRepeatPerks] = useState<boolean>(true);
   const [showConfig, setShowConfig] = useState(false);
 
   // Config parameters
@@ -46,6 +56,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
   const [lastPagePerks, setLastPagePerks] = useState<number>(8);
   const [spinDurationSec, setSpinDurationSec] = useState<number>(3);
 
+  const [drawnPerks, setDrawnPerks] = useState<string[]>([]);
   const [loadout, setLoadout] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const [activeSlotIdx, setActiveSlotIdx] = useState<number>(0);
   const [copied, setCopied] = useState(false);
@@ -60,6 +71,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
         const parsed = JSON.parse(saved);
         if (parsed.role) setRole(parsed.role);
         if (parsed.genMode) setGenMode(parsed.genMode);
+        if (typeof parsed.noRepeatPerks === 'boolean') setNoRepeatPerks(parsed.noRepeatPerks);
         if (parsed.totalPages) setTotalPages(parsed.totalPages);
         if (parsed.perksPerPage) setPerksPerPage(parsed.perksPerPage);
         if (parsed.lastPagePerks) setLastPagePerks(parsed.lastPagePerks);
@@ -72,12 +84,47 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     }
   }, []);
 
+  // Fetch generator config from SQLite on mount
+  useEffect(() => {
+    fetchGeneratorConfig()
+      .then((config) => {
+        if (config.role === 'Survivor' || config.role === 'Killer') {
+          setRole(config.role);
+        }
+        if (config.gen_mode === 'instant' || config.gen_mode === 'wheel') {
+          setGenMode(config.gen_mode);
+        }
+        if (typeof config.no_repeat_perks !== 'undefined') {
+          setNoRepeatPerks(Boolean(config.no_repeat_perks));
+        }
+        if (config.total_pages) setTotalPages(config.total_pages);
+        if (config.perks_per_page) setPerksPerPage(config.perks_per_page);
+        if (config.last_page_perks) setLastPagePerks(config.last_page_perks);
+        if (config.spin_duration_sec) setSpinDurationSec(config.spin_duration_sec);
+      })
+      .catch((e) => {
+        console.error('Failed fetching generator config from SQLite API:', e);
+      });
+  }, []);
+
+  // Fetch drawn perks from SQLite API whenever role changes or on mount
+  useEffect(() => {
+    fetchDrawnPerks(role)
+      .then((perks) => {
+        setDrawnPerks(perks);
+      })
+      .catch((e) => {
+        console.error('Failed fetching drawn perks from SQLite API:', e);
+      });
+  }, [role]);
+
   // Sync state to LocalStorage
   useEffect(() => {
     try {
       const payload = {
         role,
         genMode,
+        noRepeatPerks,
         totalPages,
         perksPerPage,
         lastPagePerks,
@@ -89,7 +136,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     } catch (e) {
       console.error('Failed saving generator state to localStorage:', e);
     }
-  }, [role, genMode, totalPages, perksPerPage, lastPagePerks, spinDurationSec, loadout, activeSlotIdx]);
+  }, [role, genMode, noRepeatPerks, totalPages, perksPerPage, lastPagePerks, spinDurationSec, loadout, activeSlotIdx]);
 
   const getSortedRolePerks = useCallback(() => {
     return allPerks
@@ -97,52 +144,120 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [allPerks, role]);
 
-  const handleResetDefaults = () => {
+  const handleRoleChange = async (newRole: 'Survivor' | 'Killer') => {
+    setRole(newRole);
+    setLoadout([null, null, null, null]);
+    try {
+      await updateGeneratorConfig({ role: newRole });
+    } catch (e) {
+      console.error('Failed updating role in SQLite:', e);
+    }
+  };
+
+  const handleGenModeChange = async (newMode: 'instant' | 'wheel') => {
+    setGenMode(newMode);
+    try {
+      await updateGeneratorConfig({ gen_mode: newMode });
+    } catch (e) {
+      console.error('Failed updating gen_mode in SQLite:', e);
+    }
+  };
+
+  const handleToggleNoRepeat = async () => {
+    const nextVal = !noRepeatPerks;
+    setNoRepeatPerks(nextVal);
+    try {
+      await updateGeneratorConfig({ no_repeat_perks: nextVal ? 1 : 0 });
+    } catch (e) {
+      console.error('Failed updating no_repeat_perks in SQLite:', e);
+    }
+  };
+
+  const handleResetDefaults = async () => {
     setTotalPages(12);
     setPerksPerPage(15);
     setLastPagePerks(8);
     setSpinDurationSec(3);
+    try {
+      await updateGeneratorConfig({
+        total_pages: 12,
+        perks_per_page: 15,
+        last_page_perks: 8,
+        spin_duration_sec: 3,
+      });
+    } catch (e) {
+      console.error('Failed resetting config defaults in SQLite:', e);
+    }
   };
 
-  const getRandomSlot = useCallback(() => {
-    const page = Math.floor(Math.random() * totalPages) + 1;
-    const maxSlots = page === totalPages ? lastPagePerks : perksPerPage;
-    const slot = Math.floor(Math.random() * maxSlots) + 1;
-    return { page, slot };
-  }, [totalPages, perksPerPage, lastPagePerks]);
-
-  const rollInstantLoadout = useCallback(() => {
+  const rollInstantLoadout = useCallback(async () => {
     const sortedPerks = getSortedRolePerks();
+    if (sortedPerks.length === 0) return;
+
+    let availablePerks = noRepeatPerks
+      ? sortedPerks.filter((p) => !drawnPerks.includes(p.name))
+      : sortedPerks;
+
+    // Fallback if all perks in role are drawn
+    if (availablePerks.length === 0) {
+      availablePerks = sortedPerks;
+    }
+
     const drawnSlots: DrawnSlot[] = [];
-    const usedCoordinates = new Set<string>();
+    const pool = [...availablePerks];
+    const needed = Math.min(4, pool.length);
 
-    let attempts = 0;
-    while (drawnSlots.length < 4 && attempts < 200) {
-      attempts++;
-      const { page, slot } = getRandomSlot();
-      const coordKey = `${page}/${slot}`;
+    for (let i = 0; i < needed; i++) {
+      const randomIndex = Math.floor(Math.random() * pool.length);
+      const chosenPerk = pool.splice(randomIndex, 1)[0];
 
-      if (!usedCoordinates.has(coordKey)) {
-        usedCoordinates.add(coordKey);
-        const index = (page - 1) * perksPerPage + (slot - 1);
-        const perk =
-          sortedPerks[index] ||
-          sortedPerks[index % Math.max(1, sortedPerks.length)];
+      const indexInSorted = sortedPerks.findIndex((p) => p.name === chosenPerk.name);
+      const page = Math.floor(indexInSorted / perksPerPage) + 1;
+      const slot = (indexInSorted % perksPerPage) + 1;
 
-        drawnSlots.push({ page, slot, perk });
-      }
+      drawnSlots.push({ page, slot, perk: chosenPerk });
     }
 
     setLoadout(drawnSlots);
-  }, [getSortedRolePerks, getRandomSlot, perksPerPage]);
 
-  const handleWheelWinSlot = (wonData: DrawnSlot) => {
+    // Save drawn perk names to SQLite
+    const newPerkNames = drawnSlots.map((s) => s.perk?.name).filter(Boolean) as string[];
+    if (newPerkNames.length > 0) {
+      try {
+        const updatedDrawn = await addDrawnPerks(role, newPerkNames);
+        setDrawnPerks(updatedDrawn);
+      } catch (err) {
+        console.error('Failed saving drawn perks to SQLite API:', err);
+      }
+    }
+  }, [getSortedRolePerks, noRepeatPerks, drawnPerks, perksPerPage, role]);
+
+  const handleWheelWinSlot = async (wonData: DrawnSlot) => {
     setLoadout((prev) => {
       const next = [...prev];
       next[activeSlotIdx] = wonData;
       return next;
     });
     setActiveSlotIdx((prev) => (prev + 1) % 4);
+
+    if (wonData.perk) {
+      try {
+        const updatedDrawn = await addDrawnPerks(role, [wonData.perk.name]);
+        setDrawnPerks(updatedDrawn);
+      } catch (err) {
+        console.error('Failed saving drawn perk from wheel to SQLite API:', err);
+      }
+    }
+  };
+
+  const handleResetDrawnPerks = async () => {
+    try {
+      const updatedDrawn = await resetDrawnPerks(role);
+      setDrawnPerks(updatedDrawn);
+    } catch (err) {
+      console.error('Failed resetting drawn perks in SQLite API:', err);
+      setDrawnPerks([]);
+    }
   };
 
   const handleCopyBuild = () => {
@@ -160,6 +275,12 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const sortedRolePerks = getSortedRolePerks();
+  const totalRolePerks = sortedRolePerks.length;
+  const drawnCount = drawnPerks.filter((name) =>
+    sortedRolePerks.some((p) => p.name === name)
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -181,7 +302,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           <div className="flex flex-wrap items-center gap-2.5">
             <div className="flex rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-950">
               <button
-                onClick={() => setGenMode('instant')}
+                onClick={() => handleGenModeChange('instant')}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
                   genMode === 'instant'
                     ? 'bg-amber-500 text-white shadow-sm'
@@ -192,7 +313,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 <span>{dict.generator.modeInstant}</span>
               </button>
               <button
-                onClick={() => setGenMode('wheel')}
+                onClick={() => handleGenModeChange('wheel')}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
                   genMode === 'wheel'
                     ? 'bg-amber-500 text-white shadow-sm'
@@ -206,10 +327,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
             <div className="flex rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-950">
               <button
-                onClick={() => {
-                  setRole('Survivor');
-                  setLoadout([null, null, null, null]);
-                }}
+                onClick={() => handleRoleChange('Survivor')}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
                   role === 'Survivor'
                     ? 'bg-emerald-600 text-white shadow-sm'
@@ -220,10 +338,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 <span>Survivor</span>
               </button>
               <button
-                onClick={() => {
-                  setRole('Killer');
-                  setLoadout([null, null, null, null]);
-                }}
+                onClick={() => handleRoleChange('Killer')}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
                   role === 'Killer'
                     ? 'bg-rose-600 text-white shadow-sm'
@@ -234,6 +349,24 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 <span>Killer</span>
               </button>
             </div>
+
+            {/* No-Repeat Perks Toggle */}
+            <button
+              onClick={handleToggleNoRepeat}
+              className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all cursor-pointer ${
+                noRepeatPerks
+                  ? 'border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                  : 'border-slate-200 bg-slate-100/80 text-slate-500 hover:text-slate-800 dark:border-slate-800 dark:bg-slate-950 dark:hover:text-slate-200'
+              }`}
+            >
+              <Repeat className={`h-3.5 w-3.5 ${noRepeatPerks ? 'text-amber-500' : ''}`} />
+              <span>{dict.generator?.noRepeat || 'No-Repeat Perks'}</span>
+              <span
+                className={`ml-1 inline-block h-2 w-2 rounded-full ${
+                  noRepeatPerks ? 'bg-amber-500' : 'bg-slate-400'
+                }`}
+              />
+            </button>
 
             <button
               onClick={() => setShowConfig(!showConfig)}
@@ -262,6 +395,33 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           </div>
         </div>
 
+        {/* Status & Pool Reset Toolbar */}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200/80 pt-3 dark:border-slate-800/80">
+          <div className="flex items-center gap-2">
+            {/* Drawn Badge */}
+            <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/80 px-3 py-1.5 text-xs font-extrabold text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+              <Layers className="h-3.5 w-3.5 text-amber-500" />
+              <span>
+                {dict.generator?.drawnBadge
+                  ? dict.generator.drawnBadge
+                      .replace('{drawn}', drawnCount.toString())
+                      .replace('{total}', totalRolePerks.toString())
+                  : `Drawn: ${drawnCount} / ${totalRolePerks}`}
+              </span>
+            </div>
+          </div>
+
+          {/* Reset Used Perks Button */}
+          <button
+            onClick={handleResetDrawnPerks}
+            className="flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3.5 py-1.5 text-xs font-extrabold text-rose-600 hover:bg-rose-500/20 active:scale-95 dark:text-rose-400 transition-all cursor-pointer"
+            title="Clear all used perks for this role in SQLite"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            <span>{dict.generator?.resetDrawn || 'Reset Used Perks'}</span>
+          </button>
+        </div>
+
         {/* Config Drawer */}
         {showConfig && (
           <div className="mt-4 border-t border-slate-200/80 pt-4 dark:border-slate-800/80 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -288,7 +448,11 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                   min={1}
                   max={30}
                   value={totalPages}
-                  onChange={(e) => setTotalPages(Math.max(1, Number(e.target.value)))}
+                  onChange={(e) => {
+                    const val = Math.max(1, Number(e.target.value));
+                    setTotalPages(val);
+                    updateGeneratorConfig({ total_pages: val }).catch(console.error);
+                  }}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
                 />
               </div>
@@ -302,7 +466,11 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                   min={1}
                   max={30}
                   value={perksPerPage}
-                  onChange={(e) => setPerksPerPage(Math.max(1, Number(e.target.value)))}
+                  onChange={(e) => {
+                    const val = Math.max(1, Number(e.target.value));
+                    setPerksPerPage(val);
+                    updateGeneratorConfig({ perks_per_page: val }).catch(console.error);
+                  }}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
                 />
               </div>
@@ -316,7 +484,11 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                   min={1}
                   max={30}
                   value={lastPagePerks}
-                  onChange={(e) => setLastPagePerks(Math.max(1, Number(e.target.value)))}
+                  onChange={(e) => {
+                    const val = Math.max(1, Number(e.target.value));
+                    setLastPagePerks(val);
+                    updateGeneratorConfig({ last_page_perks: val }).catch(console.error);
+                  }}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
                 />
               </div>
@@ -331,7 +503,11 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                   min={1}
                   max={15}
                   value={spinDurationSec}
-                  onChange={(e) => setSpinDurationSec(Math.max(1, Number(e.target.value)))}
+                  onChange={(e) => {
+                    const val = Math.max(1, Number(e.target.value));
+                    setSpinDurationSec(val);
+                    updateGeneratorConfig({ spin_duration_sec: val }).catch(console.error);
+                  }}
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
                 />
               </div>

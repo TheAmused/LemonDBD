@@ -13,10 +13,86 @@ MAP_OFFERINGS = [
     {"name": "Sacrificial Ward", "realm": "Any Realm (Cancel Offerings)"}
 ]
 
+GAUNTLET_TIERS = [
+    {
+        "tier_level": 0,
+        "tier_index": 0,
+        "name": "The Warm Up",
+        "perk_limit": 4,
+        "description": "Must include at least 1 character teachable perk"
+    },
+    {
+        "tier_level": 1,
+        "tier_index": 1,
+        "name": "The Thinning",
+        "perk_limit": 3,
+        "description": "Must include at least 1 character teachable perk"
+    },
+    {
+        "tier_level": 2,
+        "tier_index": 2,
+        "name": "The Struggle",
+        "perk_limit": 2,
+        "description": "Must include at least 1 character teachable perk"
+    },
+    {
+        "tier_level": 3,
+        "tier_index": 3,
+        "name": "The Hardcore",
+        "perk_limit": 1,
+        "description": "Must be a character teachable perk"
+    },
+    {
+        "tier_level": 4,
+        "tier_index": 4,
+        "name": "The Legend",
+        "perk_limit": 0,
+        "description": "No Perks allowed (No-perk trial)"
+    }
+]
+
 class ChallengeService:
     def __init__(self, db_service=None, perk_service=None):
         self.db_service = db_service or DatabaseService()
         self.perk_service = perk_service or PerkService()
+
+    def get_tier_info(self, streak, checkpoint_interval=3):
+        if not checkpoint_interval or checkpoint_interval <= 0:
+            checkpoint_interval = 3
+        tier_index = min(4, max(0, streak // checkpoint_interval))
+        return dict(GAUNTLET_TIERS[tier_index])
+
+    def get_pool_settings(self, role):
+        role_clean = role.lower()
+        conn = self.db_service.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT character_name FROM character_pool_settings WHERE role = ? AND is_enabled = 0;", (role_clean,))
+        rows = cursor.fetchall()
+        disabled_names = [row["character_name"] for row in rows]
+        conn.close()
+        return {"role": role_clean, "disabled_names": disabled_names}
+
+    def update_pool_settings(self, role, disabled_names):
+        role_clean = role.lower()
+        if isinstance(disabled_names, dict):
+            if "disabled_names" in disabled_names:
+                disabled_list = disabled_names["disabled_names"]
+            else:
+                disabled_list = [k for k, v in disabled_names.items() if not v]
+        else:
+            disabled_list = list(disabled_names)
+
+        conn = self.db_service.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM character_pool_settings WHERE role = ?;", (role_clean,))
+        for name in disabled_list:
+            cursor.execute(
+                "INSERT INTO character_pool_settings (role, character_name, is_enabled) VALUES (?, ?, 0);",
+                (role_clean, name)
+            )
+        conn.commit()
+        conn.close()
+        return self.get_pool_settings(role_clean)
 
     def get_user_settings(self):
         conn = self.db_service.get_connection()
@@ -46,19 +122,25 @@ class ChallengeService:
         )
         row = cursor.fetchone()
 
+        settings = self.get_user_settings()
+        interval = settings.get("checkpoint_interval", 3)
+
         if row:
             run_data = dict(row)
             run_data["completed_characters"] = json.loads(run_data["completed_characters_json"])
             run_data["checkpoint_characters"] = json.loads(run_data["checkpoint_characters_json"])
             run_data["current_loadout"] = json.loads(run_data["current_loadout_json"])
+            run_data["tier_info"] = self.get_tier_info(run_data["current_streak"], interval)
             conn.close()
             return run_data
 
         target_character = "Meg Thomas" if role == "survivor" else "The Trapper"
+        tier_info = self.get_tier_info(0, interval)
         initial_loadout = {
             "character": target_character,
             "perks": [],
-            "map_offering": MAP_OFFERINGS[0]
+            "map_offering": MAP_OFFERINGS[0],
+            "tier_info": tier_info
         }
 
         cursor.execute(
@@ -76,11 +158,17 @@ class ChallengeService:
         new_row["completed_characters"] = []
         new_row["checkpoint_characters"] = []
         new_row["current_loadout"] = initial_loadout
+        new_row["tier_info"] = tier_info
         conn.close()
         return new_row
 
-    def roll_challenge(self, role):
+    def roll_challenge(self, role, target_character=None):
         run = self.get_or_create_run(role)
+        settings = self.get_user_settings()
+        interval = settings.get("checkpoint_interval", 3)
+        tier_info = self.get_tier_info(run["current_streak"], interval)
+        perk_limit = tier_info["perk_limit"]
+
         all_perks_resp = self.perk_service.get_perks(category=role, limit=200)
         role_perks = all_perks_resp.get("data", [])
 
@@ -89,40 +177,53 @@ class ChallengeService:
         all_character_names = [c["name"] for c in characters_list if c.get("name")]
         
         if not all_character_names:
-            # Fallback if characters list is empty
             all_character_names = list(set([p.get("character") for p in role_perks if p.get("character") and p.get("character") not in ("General", "All")]))
 
-        completed = run["completed_characters"]
-        remaining = [c for c in all_character_names if c not in completed]
+        pool_settings = self.get_pool_settings(role)
+        disabled_names = set(pool_settings.get("disabled_names", []))
 
+        completed = run["completed_characters"]
+        remaining = [c for c in all_character_names if c not in completed and c not in disabled_names]
+
+        if not remaining:
+            remaining = [c for c in all_character_names if c not in disabled_names]
         if not remaining:
             remaining = all_character_names if all_character_names else ["Meg Thomas" if role == "survivor" else "The Trapper"]
 
-        target_char = random.choice(remaining)
-
-        # Perk sampling logic: 2 own perks, 1 general, 1 any (or up to 4 unique perks)
-        char_perks = [p for p in role_perks if p.get("character") == target_char]
-        general_perks = [p for p in role_perks if p.get("character") in ("General", "All")]
+        if target_character:
+            target_char = target_character
+        else:
+            target_char = random.choice(remaining)
 
         selected_perks = []
-        if char_perks:
-            selected_perks.extend(random.sample(char_perks, min(2, len(char_perks))))
-        if general_perks:
-            available_gen = [p for p in general_perks if p not in selected_perks]
-            if available_gen:
-                selected_perks.extend(random.sample(available_gen, min(1, len(available_gen))))
+        if perk_limit > 0:
+            char_perks = [p for p in role_perks if p.get("character") == target_char]
+            general_perks = [p for p in role_perks if p.get("character") in ("General", "All")]
 
-        remaining_pool = [p for p in role_perks if p not in selected_perks]
-        needed = 4 - len(selected_perks)
-        if needed > 0 and remaining_pool:
-            selected_perks.extend(random.sample(remaining_pool, min(needed, len(remaining_pool))))
+            if char_perks:
+                max_own = min(2, len(char_perks), perk_limit)
+                selected_perks.extend(random.sample(char_perks, max_own))
+            
+            needed = perk_limit - len(selected_perks)
+            if needed > 0 and general_perks:
+                available_gen = [p for p in general_perks if p not in selected_perks]
+                if available_gen:
+                    max_gen = min(1, len(available_gen), needed)
+                    selected_perks.extend(random.sample(available_gen, max_gen))
+
+            needed = perk_limit - len(selected_perks)
+            if needed > 0:
+                remaining_pool = [p for p in role_perks if p not in selected_perks]
+                if remaining_pool:
+                    selected_perks.extend(random.sample(remaining_pool, min(needed, len(remaining_pool))))
 
         map_offering = random.choice(MAP_OFFERINGS)
 
         loadout = {
             "character": target_char,
             "perks": selected_perks,
-            "map_offering": map_offering
+            "map_offering": map_offering,
+            "tier_info": tier_info
         }
 
         conn = self.db_service.get_connection()
@@ -140,7 +241,36 @@ class ChallengeService:
 
         run["current_character_id"] = target_char
         run["current_loadout"] = loadout
+        run["tier_info"] = tier_info
         return run
+
+    def invalidate_match(self, run_id, reason):
+        valid_reasons = ('dc_before_5_gens', 'game_cancelled')
+        if reason not in valid_reasons:
+            raise ValueError(f"Invalid reason: {reason}. Must be one of {valid_reasons}")
+
+        conn = self.db_service.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM challenge_runs WHERE id = ?;", (run_id,))
+        row = cursor.fetchone()
+        if not row:
+            conn.close()
+            raise ValueError("Run not found")
+
+        run = dict(row)
+        char_id = run["current_character_id"]
+
+        cursor.execute(
+            """
+            INSERT INTO match_exceptions (run_id, character_id, reason)
+            VALUES (?, ?, ?);
+            """,
+            (run_id, char_id, reason)
+        )
+        conn.commit()
+        conn.close()
+
+        return self.roll_challenge(run["role"], target_character=char_id)
 
     def submit_result(self, run_id, result):
         conn = self.db_service.get_connection()
@@ -205,6 +335,7 @@ class ChallengeService:
         updated_run["completed_characters"] = completed
         updated_run["checkpoint_characters"] = checkpoint_chars
         updated_run["current_loadout"] = json.loads(updated_run["current_loadout_json"])
+        updated_run["tier_info"] = self.get_tier_info(updated_run["current_streak"], interval)
         conn.close()
 
         return updated_run

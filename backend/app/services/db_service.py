@@ -95,6 +95,23 @@ class DatabaseService:
             UNIQUE(role, perk_name)
         );
 
+        CREATE TABLE IF NOT EXISTS character_pool_settings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
+            character_name TEXT NOT NULL,
+            is_enabled BOOLEAN NOT NULL DEFAULT 1,
+            UNIQUE(role, character_name)
+        );
+
+        CREATE TABLE IF NOT EXISTS match_exceptions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id INTEGER NOT NULL,
+            character_id TEXT NOT NULL,
+            reason TEXT NOT NULL CHECK (reason IN ('dc_before_5_gens', 'game_cancelled')),
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (run_id) REFERENCES challenge_runs(id) ON DELETE CASCADE
+        );
+
         INSERT OR IGNORE INTO generator_settings (id, role, gen_mode, no_repeat_perks)
         VALUES (1, 'Survivor', 'instant', 1);
         """)

@@ -20,6 +20,15 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 
+# Superpowers & Tooling Cache
+.superpowers/
+
+# SQLite Database Files
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
 # Environment Variables & Secrets
 .env
 .env.*
@@ -28,6 +37,12 @@ $RECYCLE.BIN/
 # Docker Overrides & Global Logs
 docker-compose.override.yml
 *.log
+
+# Test & Coverage Reports
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
 
 # ==========================================
 # Backend Service (/backend)

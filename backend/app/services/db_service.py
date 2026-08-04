@@ -135,9 +135,23 @@ class DatabaseService:
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
+        CREATE TABLE IF NOT EXISTS community_builds (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT NOT NULL,
+            role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
+            category TEXT NOT NULL CHECK (category IN ('otzdarva', 'meta', 'meme', 'stealth', 'chase')),
+            character_id TEXT NOT NULL DEFAULT 'all',
+            perks_json TEXT NOT NULL DEFAULT '[]',
+            upvotes INTEGER NOT NULL DEFAULT 0,
+            author TEXT NOT NULL DEFAULT 'Community',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
         INSERT OR IGNORE INTO generator_settings (id, role, gen_mode, no_repeat_perks)
         VALUES (1, 'Survivor', 'instant', 1);
         """)
 
         conn.commit()
         conn.close()
+

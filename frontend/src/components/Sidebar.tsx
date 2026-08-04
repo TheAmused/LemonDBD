@@ -183,6 +183,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
     },
     {
+      id: 'builds',
+      label: '🔥 Build Vault',
+      icon: Flame,
+      color: 'text-red-400',
+      activeBg: 'bg-red-500/10 text-red-400 border border-red-500/20',
+    },
+    {
       id: 'quests',
       label: '📜 Quests',
       icon: Scroll,
@@ -233,7 +240,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
-            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator') {
+            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator' || item.id === 'builds') {
               return (
                 <Link
                   key={item.id}

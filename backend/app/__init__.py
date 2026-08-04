@@ -46,6 +46,7 @@ def create_app() -> Flask:
     from app.routes.quests import quests_bp
     from app.routes.synergy import synergy_bp
     from app.routes.killer_calc import killer_calc_bp
+    from app.routes.builds import builds_bp
     app.register_blueprint(perks_bp)
     app.register_blueprint(challenges_bp)
     app.register_blueprint(generator_bp)
@@ -53,6 +54,7 @@ def create_app() -> Flask:
     app.register_blueprint(quests_bp)
     app.register_blueprint(synergy_bp)
     app.register_blueprint(killer_calc_bp)
+    app.register_blueprint(builds_bp)
 
     # Automatically check data on startup
     data_file = Path(app.root_path).parent / "data" / "perks.json"

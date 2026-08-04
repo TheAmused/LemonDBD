@@ -36,8 +36,13 @@ def create_app() -> Flask:
     def handle_options_preflight(path):
         return "", 200
 
+    from app.services.db_service import DatabaseService
+    DatabaseService().init_db()
+
     from app.routes.perks import perks_bp, _run_background_scrape
+    from app.routes.challenges import challenges_bp
     app.register_blueprint(perks_bp)
+    app.register_blueprint(challenges_bp)
 
     # Automatically check data on startup
     data_file = Path(app.root_path).parent / "data" / "perks.json"

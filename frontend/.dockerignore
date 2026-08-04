@@ -2,7 +2,9 @@ node_modules
 .next
 .git
 .gitignore
-.env
-.env.local
+.env*
 Dockerfile
 README.md
+out/
+build/
+*.tsbuildinfo

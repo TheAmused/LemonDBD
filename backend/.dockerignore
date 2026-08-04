@@ -5,7 +5,14 @@ __pycache__/
 .Python
 env/
 venv/
+.venv/
 ENV/
 .git
 .gitignore
-.env
+.env*
+tests/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.pytest_cache/

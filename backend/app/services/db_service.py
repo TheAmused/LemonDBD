@@ -15,6 +15,14 @@ class DatabaseService:
         conn = self.get_connection()
         cursor = conn.cursor()
 
+        cursor.execute("PRAGMA table_info(map_realms);")
+        cols = [row[1] for row in cursor.fetchall()]
+        if cols and "map_id" not in cols:
+            cursor.execute("DROP TABLE IF EXISTS map_realms;")
+            cursor.execute("DROP TABLE IF EXISTS map_tiles;")
+            cursor.execute("DROP TABLE IF EXISTS map_objectives;")
+            conn.commit()
+
         cursor.executescript("""
         CREATE TABLE IF NOT EXISTS user_settings (
             id INTEGER PRIMARY KEY CHECK (id = 1),
@@ -159,6 +167,53 @@ class DatabaseService:
             upvotes INTEGER NOT NULL DEFAULT 0,
             author TEXT NOT NULL DEFAULT 'Community',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS map_realms (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            map_id TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            realm TEXT NOT NULL,
+            layout_type TEXT,
+            jungle_gyms_count INTEGER DEFAULT 0,
+            totem_spawns_count INTEGER DEFAULT 5,
+            pallet_density TEXT,
+            shack_has_basement BOOLEAN DEFAULT 1,
+            description TEXT,
+            image_url TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS map_tiles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            map_id TEXT NOT NULL,
+            seed_variant TEXT NOT NULL DEFAULT 'seed_a',
+            floor INTEGER NOT NULL DEFAULT 1,
+            name TEXT NOT NULL,
+            type TEXT NOT NULL,
+            x REAL NOT NULL,
+            y REAL NOT NULL,
+            has_pallet BOOLEAN NOT NULL DEFAULT 0,
+            pallet_safety_rating TEXT CHECK (pallet_safety_rating IS NULL OR pallet_safety_rating IN ('god', 'safe', 'mindgameable', 'unsafe')),
+            has_window BOOLEAN NOT NULL DEFAULT 0,
+            vault_directions TEXT DEFAULT '[]',
+            looping_tips TEXT NOT NULL DEFAULT '',
+            mindgame_counter TEXT NOT NULL DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (map_id) REFERENCES map_realms(map_id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS map_objectives (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            map_id TEXT NOT NULL,
+            seed_variant TEXT NOT NULL DEFAULT 'seed_a',
+            floor INTEGER NOT NULL DEFAULT 1,
+            type TEXT NOT NULL CHECK (type IN ('totem', 'generator', 'exit_gate', 'hatch', 'chest', 'basement')),
+            x REAL NOT NULL,
+            y REAL NOT NULL,
+            location_description TEXT NOT NULL DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (map_id) REFERENCES map_realms(map_id) ON DELETE CASCADE
         );
 
         INSERT OR IGNORE INTO generator_settings (id, role, gen_mode, no_repeat_perks)

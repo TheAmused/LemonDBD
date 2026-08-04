@@ -148,6 +148,19 @@ class DatabaseService:
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
+        CREATE TABLE IF NOT EXISTS custom_perks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
+            character_name TEXT NOT NULL DEFAULT 'Teachable',
+            rarity TEXT NOT NULL CHECK (rarity IN ('Iridescent', 'Very Rare', 'Uncommon')),
+            icon_preset TEXT NOT NULL DEFAULT 'sparkles',
+            description TEXT NOT NULL,
+            upvotes INTEGER NOT NULL DEFAULT 0,
+            author TEXT NOT NULL DEFAULT 'Community',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
         INSERT OR IGNORE INTO generator_settings (id, role, gen_mode, no_repeat_perks)
         VALUES (1, 'Survivor', 'instant', 1);
         """)

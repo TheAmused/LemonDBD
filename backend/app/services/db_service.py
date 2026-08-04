@@ -112,6 +112,29 @@ class DatabaseService:
             FOREIGN KEY (run_id) REFERENCES challenge_runs(id) ON DELETE CASCADE
         );
 
+        CREATE TABLE IF NOT EXISTS draft_sessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            room_code TEXT UNIQUE NOT NULL,
+            phase TEXT NOT NULL DEFAULT 'bans' CHECK (phase IN ('bans', 'picks', 'complete')),
+            banned_perks TEXT NOT NULL DEFAULT '[]',
+            picked_survivor_perks TEXT NOT NULL DEFAULT '[]',
+            picked_killer_perks TEXT NOT NULL DEFAULT '[]',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS daily_quests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT NOT NULL,
+            category TEXT NOT NULL CHECK (category IN ('daily', 'weekly')),
+            progress INTEGER NOT NULL DEFAULT 0,
+            goal INTEGER NOT NULL DEFAULT 1,
+            xp_reward INTEGER NOT NULL DEFAULT 500,
+            is_completed BOOLEAN NOT NULL DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
         INSERT OR IGNORE INTO generator_settings (id, role, gen_mode, no_repeat_perks)
         VALUES (1, 'Survivor', 'instant', 1);
         """)

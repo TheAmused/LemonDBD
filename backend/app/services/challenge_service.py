@@ -51,15 +51,65 @@ GAUNTLET_TIERS = [
     }
 ]
 
+KILLER_GAUNTLET_TIERS = [
+    {
+        "tier_level": 0,
+        "tier_index": 0,
+        "name": "The Warm Up",
+        "perk_limit": 4,
+        "addon_limit": 2,
+        "description": "4 Perks, 2 Add-ons"
+    },
+    {
+        "tier_level": 1,
+        "tier_index": 1,
+        "name": "The Restriction",
+        "perk_limit": 3,
+        "addon_limit": 1,
+        "description": "3 Perks, 1 Add-on"
+    },
+    {
+        "tier_level": 2,
+        "tier_index": 2,
+        "name": "The Deprivation",
+        "perk_limit": 2,
+        "addon_limit": 0,
+        "description": "2 Perks, 0 Add-ons"
+    },
+    {
+        "tier_level": 3,
+        "tier_index": 3,
+        "name": "The Barebones",
+        "perk_limit": 1,
+        "addon_limit": 0,
+        "description": "1 Perk, 0 Add-ons"
+    },
+    {
+        "tier_level": 4,
+        "tier_index": 4,
+        "name": "The Entity's Chosen",
+        "perk_limit": 0,
+        "addon_limit": 0,
+        "description": "0 Perks, 0 Add-ons"
+    }
+]
+
 class ChallengeService:
     def __init__(self, db_service=None, perk_service=None):
         self.db_service = db_service or DatabaseService()
         self.perk_service = perk_service or PerkService()
 
-    def get_tier_info(self, streak, checkpoint_interval=3):
+    def get_tier_info(self, streak, role="survivor", checkpoint_interval=3):
+        if isinstance(role, int):
+            checkpoint_interval = role
+            role = "survivor"
         if not checkpoint_interval or checkpoint_interval <= 0:
             checkpoint_interval = 3
+
         tier_index = min(4, max(0, streak // checkpoint_interval))
+
+        if role and str(role).lower() == "killer":
+            return dict(KILLER_GAUNTLET_TIERS[tier_index])
         return dict(GAUNTLET_TIERS[tier_index])
 
     def get_pool_settings(self, role):
@@ -130,12 +180,12 @@ class ChallengeService:
             run_data["completed_characters"] = json.loads(run_data["completed_characters_json"])
             run_data["checkpoint_characters"] = json.loads(run_data["checkpoint_characters_json"])
             run_data["current_loadout"] = json.loads(run_data["current_loadout_json"])
-            run_data["tier_info"] = self.get_tier_info(run_data["current_streak"], interval)
+            run_data["tier_info"] = self.get_tier_info(run_data["current_streak"], role=run_data.get("role", role), checkpoint_interval=interval)
             conn.close()
             return run_data
 
         target_character = "Meg Thomas" if role == "survivor" else "The Trapper"
-        tier_info = self.get_tier_info(0, interval)
+        tier_info = self.get_tier_info(0, role=role, checkpoint_interval=interval)
         initial_loadout = {
             "character": target_character,
             "perks": [],
@@ -166,7 +216,7 @@ class ChallengeService:
         run = self.get_or_create_run(role)
         settings = self.get_user_settings()
         interval = settings.get("checkpoint_interval", 3)
-        tier_info = self.get_tier_info(run["current_streak"], interval)
+        tier_info = self.get_tier_info(run["current_streak"], role=role, checkpoint_interval=interval)
         perk_limit = tier_info["perk_limit"]
 
         all_perks_resp = self.perk_service.get_perks(category=role, limit=200)
@@ -335,7 +385,7 @@ class ChallengeService:
         updated_run["completed_characters"] = completed
         updated_run["checkpoint_characters"] = checkpoint_chars
         updated_run["current_loadout"] = json.loads(updated_run["current_loadout_json"])
-        updated_run["tier_info"] = self.get_tier_info(updated_run["current_streak"], interval)
+        updated_run["tier_info"] = self.get_tier_info(updated_run["current_streak"], role=updated_run.get("role", "survivor"), checkpoint_interval=interval)
         conn.close()
 
         return updated_run

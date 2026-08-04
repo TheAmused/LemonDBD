@@ -4,15 +4,16 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2, Trophy, Scroll } from 'lucide-react';
 
 interface NavbarProps {
   currentLocale: string;
   dict: any;
   onSyncComplete?: () => void;
+  onOpenQuests?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncComplete }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncComplete, onOpenQuests }) => {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
 
@@ -101,7 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
           </Link>
 
           {/* Main Navigation */}
-          <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-3">
+          <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-2">
             <Link
               href={`/${currentLocale}/challenge`}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
@@ -112,6 +113,28 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
             >
               <span>⚡ Challenge</span>
             </Link>
+
+            <Link
+              href={`/${currentLocale}/draft`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                pathname?.includes('/draft')
+                  ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20 shadow-sm'
+                  : 'text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 border border-rose-500/20'
+              }`}
+            >
+              <Trophy className="h-3.5 w-3.5" />
+              <span>Draft Room</span>
+            </Link>
+
+            {onOpenQuests && (
+              <button
+                onClick={onOpenQuests}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 border border-amber-500/20 transition-all cursor-pointer"
+              >
+                <Scroll className="h-3.5 w-3.5 text-amber-400" />
+                <span>Quests</span>
+              </button>
+            )}
           </nav>
         </div>
 

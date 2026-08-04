@@ -7,6 +7,7 @@ import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard, Perk } from '@/components/PerkCard';
 import { PerkModal } from '@/components/PerkModal';
 import { PerkGenerator } from '@/components/PerkGenerator';
+import { QuestsModal } from '@/components/QuestsModal';
 import { Pagination } from '@/components/Pagination';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
@@ -29,6 +30,7 @@ export default function DashboardPage() {
   const [allPerksForGenerator, setAllPerksForGenerator] = useState<Perk[]>([]);
   const [characterOptions, setCharacterOptions] = useState<{ value: string; label: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats State
   const [survivorCount, setSurvivorCount] = useState<number>(0);
@@ -169,6 +171,7 @@ export default function DashboardPage() {
         activeCategory={category}
         onSelectCategory={handleSelectCategory}
         onSyncComplete={fetchPerks}
+        onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={allPerksForGenerator.length || totalResults}
         survivorCount={survivorCount}
         killerCount={killerCount}
@@ -255,6 +258,7 @@ export default function DashboardPage() {
           )}
 
           <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
+          <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
         </main>
       </div>
     </div>

@@ -1,8 +1,62 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Play } from 'lucide-react';
+import { Play, Sparkles, Skull, Zap, Eye, Ban, Flame, RefreshCw } from 'lucide-react';
 import { Perk } from './PerkCard';
+
+export interface ChaosMutator {
+  id: string;
+  name: string;
+  description: string;
+  type: 'curse' | 'buff';
+  icon: string;
+  badgeBg: string;
+  borderColor: string;
+  textColor: string;
+}
+
+export const CHAOS_MUTATORS: ChaosMutator[] = [
+  {
+    id: 'blindness',
+    name: 'Curse of Blindness',
+    description: 'Perk icons and names are obscured during the trial! Rely on memory.',
+    type: 'curse',
+    icon: '👁️',
+    badgeBg: 'bg-purple-950/80',
+    borderColor: 'border-purple-500/60',
+    textColor: 'text-purple-300',
+  },
+  {
+    id: 'no_exhaustion',
+    name: 'No Exhaustion Perks',
+    description: 'Exhaustion perks are forbidden! If rolled, reroll or play without perks.',
+    type: 'curse',
+    icon: '🚫',
+    badgeBg: 'bg-rose-950/80',
+    borderColor: 'border-rose-500/60',
+    textColor: 'text-rose-300',
+  },
+  {
+    id: 'meme_loadout',
+    name: 'Meme Loadout',
+    description: 'Must run gimmick / off-meta perk combinations for maximum chaos!',
+    type: 'curse',
+    icon: '🤡',
+    badgeBg: 'bg-amber-950/80',
+    borderColor: 'border-amber-500/60',
+    textColor: 'text-amber-300',
+  },
+  {
+    id: 'double_xp',
+    name: 'Double XP',
+    description: 'Earn 2x XP rewards upon completing this trial successfully!',
+    type: 'buff',
+    icon: '⚡',
+    badgeBg: 'bg-emerald-950/80',
+    borderColor: 'border-emerald-500/60',
+    textColor: 'text-emerald-300',
+  },
+];
 
 interface WheelOfFortuneProps {
   totalPages: number;
@@ -12,9 +66,19 @@ interface WheelOfFortuneProps {
   role: 'Survivor' | 'Killer';
   sortedPerks: Perk[];
   activeSlotIdx: number;
-  onWinSlot: (wonData: { page: number; slot: number; perk: Perk }) => void;
+  onWinSlot: (wonData: { page: number; slot: number; perk: Perk; mutator?: ChaosMutator }) => void;
   dict: any;
   backendBase: string;
+}
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
+  color: string;
 }
 
 export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
@@ -32,13 +96,18 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   const [selectedPageUI, setSelectedPageUI] = useState<number>(1);
   const [isSpinning, setIsSpinning] = useState(false);
   const [statusText, setStatusText] = useState<string>('');
+  const [activeMutator, setActiveMutator] = useState<ChaosMutator | null>(null);
 
   const pageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const perkCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const particleCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const pageAngleRef = useRef<number>(0);
   const perkAngleRef = useRef<number>(0);
   const activePageRef = useRef<number>(1);
+
+  const particlesRef = useRef<Particle[]>([]);
+  const particleAnimFrameRef = useRef<number | null>(null);
 
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
 
@@ -73,6 +142,70 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     },
     [totalPages, lastPagePerks, perksPerPage, sortedPerks, getPerkIconSrc]
   );
+
+  /**
+   * Visual Particle Burst Trigger (HTML5 Canvas Embers / Sparkles)
+   */
+  const triggerParticleBurst = useCallback(() => {
+    const pCanvas = particleCanvasRef.current;
+    if (!pCanvas) return;
+    const ctx = pCanvas.getContext('2d');
+    if (!ctx) return;
+
+    const width = pCanvas.width;
+    const height = pCanvas.height;
+
+    // Create 50 burst particles
+    const colors = ['#f59e0b', '#ef4444', '#10b981', '#a855f7', '#3b82f6'];
+    const newParticles: Particle[] = [];
+
+    for (let i = 0; i < 60; i++) {
+      newParticles.push({
+        x: width / 2 + (Math.random() * 80 - 40),
+        y: height / 2 + (Math.random() * 80 - 40),
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8 - 2,
+        size: Math.random() * 5 + 2,
+        alpha: 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
+    }
+
+    particlesRef.current = newParticles;
+
+    const renderParticles = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      particlesRef.current = particlesRef.current.filter((p) => p.alpha > 0.02);
+
+      particlesRef.current.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha *= 0.94;
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+        ctx.restore();
+      });
+
+      if (particlesRef.current.length > 0) {
+        particleAnimFrameRef.current = requestAnimationFrame(renderParticles);
+      } else {
+        ctx.clearRect(0, 0, width, height);
+      }
+    };
+
+    if (particleAnimFrameRef.current) {
+      cancelAnimationFrame(particleAnimFrameRef.current);
+    }
+    renderParticles();
+  }, []);
 
   /**
    * Draw Wheel 1: Page Selector (520x520 HD Canvas)
@@ -252,6 +385,13 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     sortedPerks,
   ]);
 
+  // Roll Random Mutator
+  const handleRollMutator = () => {
+    const randomMutator = CHAOS_MUTATORS[Math.floor(Math.random() * CHAOS_MUTATORS.length)];
+    setActiveMutator(randomMutator);
+    triggerParticleBurst();
+  };
+
   const handleStartSpin = async () => {
     if (isSpinning) return;
     setIsSpinning(true);
@@ -341,14 +481,73 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     const wonPerk =
       sortedPerks[index] || sortedPerks[index % Math.max(1, sortedPerks.length)];
 
-    onWinSlot({ page: targetPage, slot: targetSlot, perk: wonPerk });
+    // 50% chance to also roll a Chaos Mutator if none active
+    let drawnMutator = activeMutator;
+    if (Math.random() > 0.4) {
+      drawnMutator = CHAOS_MUTATORS[Math.floor(Math.random() * CHAOS_MUTATORS.length)];
+      setActiveMutator(drawnMutator);
+    }
+
+    triggerParticleBurst();
+    onWinSlot({ page: targetPage, slot: targetSlot, perk: wonPerk, mutator: drawnMutator || undefined });
     setIsSpinning(false);
     setStatusText('');
   };
 
   return (
-    <div className="rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/60 text-center">
-      <div className="mb-6 flex items-center justify-center">
+    <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/60 text-center">
+      {/* Particle Canvas Overlay */}
+      <canvas
+        ref={particleCanvasRef}
+        width={1000}
+        height={600}
+        className="pointer-events-none absolute inset-0 z-20 h-full w-full"
+      />
+
+      {/* Secret Mutator / Curse Alert Badge when Won */}
+      {activeMutator && (
+        <div
+          className={`mb-6 rounded-2xl border p-4 shadow-xl backdrop-blur-md transition-all animate-in zoom-in-95 duration-300 ${activeMutator.badgeBg} ${activeMutator.borderColor} ${activeMutator.textColor}`}
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950/60 text-2xl border border-white/10 shadow-lg">
+                {activeMutator.icon}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-black/40 border border-white/20">
+                    {activeMutator.type === 'curse' ? '💀 Secret Curse Active' : '⚡ Chaos Buff Active'}
+                  </span>
+                  <h4 className="font-extrabold text-base tracking-wide text-white">
+                    {activeMutator.name}
+                  </h4>
+                </div>
+                <p className="text-xs text-slate-300 mt-1">{activeMutator.description}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={handleRollMutator}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-xs font-bold border border-white/10 text-slate-200 transition-colors cursor-pointer"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                <span>Reroll Curse</span>
+              </button>
+              <button
+                onClick={() => setActiveMutator(null)}
+                className="px-3 py-1.5 rounded-xl bg-black/40 hover:bg-black/60 text-xs font-bold text-slate-400 hover:text-white transition-colors cursor-pointer"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Spin Control & Chaos 2.0 Trigger Bar */}
+      <div className="mb-6 flex flex-wrap items-center justify-center gap-4">
         <button
           onClick={handleStartSpin}
           disabled={isSpinning}
@@ -360,6 +559,15 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
               ? statusText
               : dict.generator.spinWheels.replace('{slot}', (activeSlotIdx + 1).toString())}
           </span>
+        </button>
+
+        <button
+          onClick={handleRollMutator}
+          disabled={isSpinning}
+          className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-rose-700 px-5 py-3.5 text-xs font-extrabold text-white shadow-lg shadow-purple-950/40 hover:from-purple-500 hover:to-rose-600 disabled:opacity-50 transition-all cursor-pointer"
+        >
+          <Sparkles className="h-4 w-4 text-purple-200 animate-pulse" />
+          <span>Chaos Wheel 2.0 Mutator</span>
         </button>
       </div>
 

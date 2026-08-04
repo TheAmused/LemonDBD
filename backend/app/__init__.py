@@ -41,8 +41,10 @@ def create_app() -> Flask:
 
     from app.routes.perks import perks_bp, _run_background_scrape
     from app.routes.challenges import challenges_bp
+    from app.routes.generator import generator_bp
     app.register_blueprint(perks_bp)
     app.register_blueprint(challenges_bp)
+    app.register_blueprint(generator_bp)
 
     # Automatically check data on startup
     data_file = Path(app.root_path).parent / "data" / "perks.json"

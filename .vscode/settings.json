@@ -1,0 +1,24 @@
+{
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "files.autoSave": "afterDelay",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.superpowers": false
+  },
+  "allowedCommands": [
+    "npm test",
+    "npm run build",
+    "npm run dev",
+    "git status",
+    "git diff",
+    "git log",
+    "git commit",
+    "git add",
+    "tsc",
+    "vitest"
+  ]
+}

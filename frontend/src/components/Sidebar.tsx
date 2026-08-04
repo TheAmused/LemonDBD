@@ -24,6 +24,7 @@ import {
   Scroll,
   Calculator,
   Wand2,
+  Compass,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -198,6 +199,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-pink-500/10 text-pink-400 border border-pink-500/20',
     },
     {
+      id: 'maps',
+      label: '🗺️ Map Explorer',
+      icon: Compass,
+      color: 'text-cyan-400',
+      activeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
+    },
+    {
       id: 'quests',
       label: '📜 Quests',
       icon: Scroll,
@@ -248,7 +256,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
-            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator' || item.id === 'builds' || item.id === 'custom-perks') {
+            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator' || item.id === 'builds' || item.id === 'custom-perks' || item.id === 'maps') {
               return (
                 <Link
                   key={item.id}

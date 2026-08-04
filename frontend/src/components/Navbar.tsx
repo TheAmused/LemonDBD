@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2, Trophy, Scroll, Users } from 'lucide-react';
+import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2, Trophy, Scroll, Users, Calculator } from 'lucide-react';
 
 interface NavbarProps {
   currentLocale: string;
@@ -136,6 +136,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
             >
               <Users className="h-3.5 w-3.5" />
               <span>SWF Planner</span>
+            </Link>
+
+            <Link
+              href={`/${currentLocale}/killer-calculator`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                pathname?.includes('/killer-calculator')
+                  ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20 shadow-sm'
+                  : 'text-purple-500 hover:text-purple-400 hover:bg-purple-500/10 border border-purple-500/20'
+              }`}
+            >
+              <Calculator className="h-3.5 w-3.5" />
+              <span>Killer Calc</span>
             </Link>
 
             {onOpenQuests && (

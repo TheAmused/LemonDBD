@@ -22,6 +22,7 @@ import {
   Swords,
   Trophy,
   Scroll,
+  Calculator,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -175,6 +176,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
     },
     {
+      id: 'killer-calculator',
+      label: '🎯 Killer Calc',
+      icon: Calculator,
+      color: 'text-purple-400',
+      activeBg: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
+    },
+    {
       id: 'quests',
       label: '📜 Quests',
       icon: Scroll,
@@ -225,7 +233,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
-            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf') {
+            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator') {
               return (
                 <Link
                   key={item.id}

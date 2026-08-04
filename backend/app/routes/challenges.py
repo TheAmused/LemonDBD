@@ -23,7 +23,59 @@ def get_challenge_run():
         role = settings.get("active_role", "survivor")
 
     run = service.get_or_create_run(role)
-    return jsonify({"run": run, "settings": settings}), 200
+    return jsonify({"run": run, "settings": settings, "tier_info": run.get("tier_info")}), 200
+
+
+@challenges_bp.route("/invalidate", methods=["POST"])
+def invalidate_match():
+    data = request.get_json(silent=True) or {}
+    run_id = data.get("run_id")
+    reason = data.get("reason")
+    if not run_id or not reason:
+        return jsonify({"error": "Missing 'run_id' or 'reason'."}), 400
+
+    service = get_challenge_service()
+    settings = service.get_user_settings()
+
+    try:
+        updated_run = service.invalidate_match(run_id, reason)
+    except ValueError as e:
+        err_msg = str(e)
+        if "not found" in err_msg.lower():
+            return jsonify({"error": err_msg}), 404
+        return jsonify({"error": err_msg}), 400
+
+    return jsonify({"run": updated_run, "settings": settings}), 200
+
+
+@challenges_bp.route("/pool", methods=["GET", "POST"])
+def handle_character_pool():
+    service = get_challenge_service()
+    settings = service.get_user_settings()
+
+    if request.method == "GET":
+        role = request.args.get("role") or settings.get("active_role", "survivor")
+        if role not in ("survivor", "killer"):
+            role = settings.get("active_role", "survivor")
+        pool = service.get_pool_settings(role)
+        disabled = pool.get("disabled_names", [])
+        return jsonify({"role": role, "disabled_characters": disabled, "disabled_names": disabled}), 200
+
+    data = request.get_json(silent=True) or {}
+    role = data.get("role") or request.args.get("role") or settings.get("active_role", "survivor")
+    if role not in ("survivor", "killer"):
+        role = settings.get("active_role", "survivor")
+
+    disabled_characters = data.get("disabled_characters")
+    if disabled_characters is None:
+        disabled_characters = data.get("disabled_names", [])
+
+    if not isinstance(disabled_characters, list):
+        return jsonify({"error": "disabled_characters must be a list of character names."}), 400
+
+    updated_pool = service.update_pool_settings(role, disabled_characters)
+    disabled = updated_pool.get("disabled_names", [])
+    return jsonify({"role": role, "disabled_characters": disabled, "disabled_names": disabled}), 200
 
 
 @challenges_bp.route("/roll", methods=["POST"])

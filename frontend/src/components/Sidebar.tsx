@@ -168,6 +168,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
     },
     {
+      id: 'swf',
+      label: '👥 SWF Planner',
+      icon: Users,
+      color: 'text-emerald-400',
+      activeBg: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
+    },
+    {
       id: 'quests',
       label: '📜 Quests',
       icon: Scroll,
@@ -218,7 +225,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
-            if (item.id === 'challenge' || item.id === 'draft') {
+            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf') {
               return (
                 <Link
                   key={item.id}

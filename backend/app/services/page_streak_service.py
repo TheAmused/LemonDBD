@@ -66,3 +66,111 @@ class PageStreakService:
         size = self.get_perks_per_page()
         names = [p["name"] for p in pool]
         return [names[i:i + size] for i in range(0, len(names), size)]
+
+    # ---- roster ---------------------------------------------------------
+
+    def get_killers(self):
+        names = {
+            p["character"]
+            for p in self._all_killer_perks()
+            if p.get("character") and p["character"] != GENERAL_CHARACTER
+        }
+        return sorted(names)
+
+    def get_roster(self):
+        page_count = len(self.build_pages())
+        conn = self.db_service.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT killer, status, attempt, current_page, best_page, pages_json FROM page_streak_runs;")
+        runs = {row["killer"]: row for row in cursor.fetchall()}
+        conn.close()
+
+        roster = []
+        for killer in self.get_killers():
+            row = runs.get(killer)
+            if row is None:
+                roster.append({
+                    "killer": killer,
+                    "status": "not_started",
+                    "attempt": 0,
+                    "current_page": 0,
+                    "best_page": 0,
+                    "page_count": page_count,
+                })
+            else:
+                roster.append({
+                    "killer": killer,
+                    "status": row["status"],
+                    "attempt": row["attempt"],
+                    "current_page": row["current_page"],
+                    "best_page": row["best_page"],
+                    "page_count": len(json.loads(row["pages_json"])),
+                })
+        return roster
+
+    # ---- runs -----------------------------------------------------------
+
+    def _row_to_run(self, row, history):
+        pages = json.loads(row["pages_json"])
+        return {
+            "id": row["id"],
+            "killer": row["killer"],
+            "status": row["status"],
+            "attempt": row["attempt"],
+            "current_page": row["current_page"],
+            "best_page": row["best_page"],
+            "pages": pages,
+            "page_count": len(pages),
+            "snapshot_at": row["snapshot_at"],
+            "history": history,
+        }
+
+    def _fetch_history(self, cursor, run_id):
+        cursor.execute(
+            "SELECT attempt, page_number, perks_json, result, timestamp "
+            "FROM page_streak_page_logs WHERE run_id = ? ORDER BY id DESC;",
+            (run_id,),
+        )
+        return [
+            {
+                "attempt": row["attempt"],
+                "page_number": row["page_number"],
+                "perks": json.loads(row["perks_json"]),
+                "result": row["result"],
+                "timestamp": row["timestamp"],
+            }
+            for row in cursor.fetchall()
+        ]
+
+    def get_run(self, killer):
+        conn = self.db_service.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM page_streak_runs WHERE killer = ?;", (killer,))
+        row = cursor.fetchone()
+        if row is None:
+            conn.close()
+            return None
+        history = self._fetch_history(cursor, row["id"])
+        conn.close()
+        return self._row_to_run(row, history)
+
+    def start_run(self, killer):
+        if killer not in self.get_killers():
+            raise ValueError(f"Unknown killer: {killer}")
+        if self.get_run(killer) is not None:
+            raise ValueError(f"A run already exists for {killer}")
+
+        pages = self.build_pages()
+        if not pages:
+            raise ValueError("No perks available — the pool is empty")
+
+        conn = self.db_service.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO page_streak_runs (killer, status, attempt, current_page, best_page, pages_json) "
+            "VALUES (?, 'in_progress', 1, 1, 0, ?);",
+            (killer, json.dumps(pages)),
+        )
+        conn.commit()
+        conn.close()
+        return self.get_run(killer)

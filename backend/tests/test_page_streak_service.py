@@ -83,5 +83,72 @@ class TestPageStreakPool(unittest.TestCase):
         self.assertEqual(pages, [["Perk 001", "Perk 002"]])
 
 
+class TestPageStreakRoster(unittest.TestCase):
+    def setUp(self):
+        self.db_path = "test_page_streak_roster.db"
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+        self.db_service = DatabaseService(db_path=self.db_path)
+        self.db_service.init_db()
+        self.perks = (
+            make_perks(20, character="Trapper")
+            + make_perks(10, character="Nurse")
+            + make_perks(5, character="General")
+            + make_perks(4, category="Survivor", character="Meg")
+        )
+        # Give every perk a unique name so the pool has 35 killer perks.
+        for i, perk in enumerate(self.perks, start=1):
+            perk["name"] = f"Perk {i:03d}"
+        self.service = PageStreakService(
+            db_service=self.db_service,
+            perk_service=FakePerkService(self.perks),
+        )
+
+    def tearDown(self):
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+
+    def test_roster_lists_killers_without_general_or_survivors(self):
+        roster = self.service.get_roster()
+        names = [entry["killer"] for entry in roster]
+        self.assertEqual(names, ["Nurse", "Trapper"])
+        self.assertTrue(all(entry["status"] == "not_started" for entry in roster))
+        self.assertEqual(roster[0]["page_count"], 3)  # 35 killer perks incl. General
+
+    def test_start_run_freezes_snapshot(self):
+        run = self.service.start_run("Nurse")
+        self.assertEqual(run["status"], "in_progress")
+        self.assertEqual(run["current_page"], 1)
+        self.assertEqual(run["attempt"], 1)
+        self.assertEqual(run["best_page"], 0)
+        self.assertEqual(run["page_count"], 3)
+        self.assertEqual(len(run["pages"][0]), 15)
+
+        # Excluding perks afterwards must not touch the frozen run.
+        self.service.set_excluded_perks([f"Perk {i:03d}" for i in range(1, 21)])
+        reloaded = self.service.get_run("Nurse")
+        self.assertEqual(reloaded["page_count"], 3)
+        self.assertEqual(len(reloaded["pages"][0]), 15)
+
+    def test_start_run_twice_is_rejected(self):
+        self.service.start_run("Nurse")
+        with self.assertRaises(ValueError):
+            self.service.start_run("Nurse")
+
+    def test_start_run_rejects_unknown_killer(self):
+        with self.assertRaises(ValueError):
+            self.service.start_run("Not A Killer")
+
+    def test_get_run_returns_none_when_not_started(self):
+        self.assertIsNone(self.service.get_run("Trapper"))
+
+    def test_roster_reflects_started_run(self):
+        self.service.start_run("Nurse")
+        roster = {entry["killer"]: entry for entry in self.service.get_roster()}
+        self.assertEqual(roster["Nurse"]["status"], "in_progress")
+        self.assertEqual(roster["Nurse"]["current_page"], 1)
+        self.assertEqual(roster["Trapper"]["status"], "not_started")
+
+
 if __name__ == "__main__":
     unittest.main()

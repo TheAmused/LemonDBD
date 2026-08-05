@@ -23,6 +23,9 @@ $RECYCLE.BIN/
 # Superpowers & Tooling Cache
 .superpowers/
 
+# Local AI Assistant Notes
+CLAUDE.md
+
 # SQLite Database Files
 *.db
 *.db-journal

@@ -14,7 +14,10 @@
 
 - Branch: `feature/page-streak-mechanics`. All work commits there.
 - Backend commands run from `backend/`; frontend commands run from `frontend/`.
-- **Backend gate:** `python -m unittest discover -s tests -v` (or the single test file while iterating). Python lives in the container, not on the host — if `python` is missing, run tests with `docker compose run --rm backend python -m unittest ...`.
+- **Backend gate:** there is no Python on the host — tests run in the backend container, and the image does not ship the `tests/` directory, so the local source must be mounted over `/app`. Run from the repo root (`D:/vhost/LemonDBD`):
+  - whole suite: `docker compose run --rm --no-deps -v "D:/vhost/LemonDBD/backend:/app" backend python -m unittest discover -s tests`
+  - one module: `docker compose run --rm --no-deps -v "D:/vhost/LemonDBD/backend:/app" backend python -m unittest tests.test_page_streak_service -v`
+  - Baseline before this plan: **67 tests, OK**. Where a task step says `python -m unittest …`, use the containerised form above.
 - **Frontend gate:** `npx tsc --noEmit` then `npm run build`. Both must pass.
 - **`npm run lint` is broken project-wide** — Next.js 16 removed `next lint`, so it fails with "Invalid project directory provided". Never use it as a gate; never try to fix it.
 - **Do not add a frontend test framework.** The project has none and this plan does not introduce one. Backend tests are mandatory and written test-first.

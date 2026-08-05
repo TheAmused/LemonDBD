@@ -2,15 +2,16 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, type LucideIcon } from 'lucide-react';
 
-interface StreakPanelProps {
+interface StreakPanelBaseProps {
   title: string;
   description: string;
   icon: LucideIcon;
   accent: string;
   accentBorder: string;
-  href?: string;
-  comingSoon?: boolean;
 }
+
+type StreakPanelProps = StreakPanelBaseProps &
+  ({ comingSoon: true; href?: never } | { comingSoon?: false; href: string });
 
 export const StreakPanel: React.FC<StreakPanelProps> = ({
   title,
@@ -45,13 +46,13 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
 
   const base = `flex h-full flex-col rounded-2xl border p-5 backdrop-blur-sm transition-all ${accentBorder}`;
 
-  if (comingSoon || !href) {
+  if (comingSoon) {
     return <div className={`${base} bg-slate-900/30 opacity-70`}>{body}</div>;
   }
 
   return (
     <Link
-      href={href}
+      href={href!}
       className={`group ${base} bg-slate-900/50 hover:border-orange-500/50 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-orange-500`}
     >
       {body}

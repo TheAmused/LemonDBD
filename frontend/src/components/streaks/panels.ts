@@ -9,8 +9,6 @@ export interface StreakPanelDef {
   accent: string;
   /** Tailwind border color class for the card. */
   accentBorder: string;
-  /** Route segment under /[locale]/streaks/killer/. Omit for coming-soon panels. */
-  slug?: string;
   comingSoon?: boolean;
 }
 
@@ -23,7 +21,6 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     icon: BookOpen,
     accent: 'text-orange-400',
     accentBorder: 'border-orange-500/20',
-    slug: 'page-streak',
   },
   {
     id: 'history-streak',

@@ -21,7 +21,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
     <nav aria-label="Streak Role Tabs" className="flex items-center gap-2">
       {TABS.map((tab) => {
         const Icon = tab.icon;
-        const isActive = pathname?.includes(`/streaks/${tab.id}`) ?? false;
+        const isActive = pathname?.startsWith(`/${locale}/streaks/${tab.id}`) ?? false;
 
         return (
           <Link

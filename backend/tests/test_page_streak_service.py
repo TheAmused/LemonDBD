@@ -187,6 +187,7 @@ class TestPageStreakResults(unittest.TestCase):
         updated = self.service.submit_result("Nurse", 3, self.build_for(3), "win")
         self.assertEqual(updated["status"], "completed")
         self.assertEqual(updated["best_page"], 3)
+        self.assertEqual(updated["current_page"], updated["page_count"])
 
     def test_loss_resets_page_keeps_history_and_best(self):
         self.service.submit_result("Nurse", 1, self.build_for(1), "win")

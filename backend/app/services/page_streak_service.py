@@ -174,3 +174,87 @@ class PageStreakService:
         conn.commit()
         conn.close()
         return self.get_run(killer)
+
+    # ---- results and reset ----------------------------------------------
+
+    def expected_build_size(self, page_perks):
+        return min(BUILD_SIZE, len(page_perks))
+
+    def _validate_submission(self, run, page, perks, result):
+        if result not in ("win", "loss"):
+            raise ValueError("Result must be 'win' or 'loss'")
+        if run["status"] != "in_progress":
+            raise ValueError("This run is already completed — reset it to play again")
+        if page != run["current_page"]:
+            raise ValueError(f"Page {page} is not the current page ({run['current_page']})")
+
+        page_perks = run["pages"][page - 1]
+        submitted = list(perks or [])
+        if len(set(submitted)) != len(submitted):
+            raise ValueError("The build contains duplicate perks")
+        expected = self.expected_build_size(page_perks)
+        if len(submitted) != expected:
+            raise ValueError(f"This page needs exactly {expected} perks, got {len(submitted)}")
+        unknown = [name for name in submitted if name not in page_perks]
+        if unknown:
+            raise ValueError(f"Not on page {page}: {', '.join(unknown)}")
+
+    def submit_result(self, killer, page, perks, result):
+        run = self.get_run(killer)
+        if run is None:
+            raise ValueError(f"No run in progress for {killer}")
+        self._validate_submission(run, page, perks, result)
+
+        conn = self.db_service.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO page_streak_page_logs (run_id, attempt, page_number, perks_json, result) "
+            "VALUES (?, ?, ?, ?, ?);",
+            (run["id"], run["attempt"], page, json.dumps(list(perks)), result),
+        )
+
+        if result == "win":
+            best_page = max(run["best_page"], page)
+            if page >= run["page_count"]:
+                cursor.execute(
+                    "UPDATE page_streak_runs SET status = 'completed', best_page = ?, "
+                    "updated_at = CURRENT_TIMESTAMP WHERE id = ?;",
+                    (best_page, run["id"]),
+                )
+            else:
+                cursor.execute(
+                    "UPDATE page_streak_runs SET current_page = ?, best_page = ?, "
+                    "updated_at = CURRENT_TIMESTAMP WHERE id = ?;",
+                    (page + 1, best_page, run["id"]),
+                )
+        else:
+            cursor.execute(
+                "UPDATE page_streak_runs SET current_page = 1, attempt = attempt + 1, "
+                "updated_at = CURRENT_TIMESTAMP WHERE id = ?;",
+                (run["id"],),
+            )
+
+        conn.commit()
+        conn.close()
+        return self.get_run(killer)
+
+    def reset_run(self, killer):
+        run = self.get_run(killer)
+        if run is None:
+            raise ValueError(f"No run to reset for {killer}")
+
+        pages = self.build_pages()
+        if not pages:
+            raise ValueError("No perks available — the pool is empty")
+
+        conn = self.db_service.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE page_streak_runs SET status = 'in_progress', current_page = 1, "
+            "attempt = attempt + 1, pages_json = ?, snapshot_at = CURRENT_TIMESTAMP, "
+            "updated_at = CURRENT_TIMESTAMP WHERE id = ?;",
+            (json.dumps(pages), run["id"]),
+        )
+        conn.commit()
+        conn.close()
+        return self.get_run(killer)

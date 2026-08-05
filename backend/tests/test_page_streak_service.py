@@ -150,5 +150,114 @@ class TestPageStreakRoster(unittest.TestCase):
         self.assertEqual(roster["Trapper"]["status"], "not_started")
 
 
+class TestPageStreakResults(unittest.TestCase):
+    def setUp(self):
+        self.db_path = "test_page_streak_results.db"
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+        self.db_service = DatabaseService(db_path=self.db_path)
+        self.db_service.init_db()
+        self.perks = make_perks(32, character="Nurse")
+        self.service = PageStreakService(
+            db_service=self.db_service,
+            perk_service=FakePerkService(self.perks),
+        )
+        self.run = self.service.start_run("Nurse")
+
+    def tearDown(self):
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+
+    def build_for(self, page_number):
+        page = self.run["pages"][page_number - 1]
+        return page[:self.service.expected_build_size(page)]
+
+    def test_win_advances_to_next_page_and_records_best(self):
+        updated = self.service.submit_result("Nurse", 1, self.build_for(1), "win")
+        self.assertEqual(updated["current_page"], 2)
+        self.assertEqual(updated["best_page"], 1)
+        self.assertEqual(updated["status"], "in_progress")
+        self.assertEqual(len(updated["history"]), 1)
+        self.assertEqual(updated["history"][0]["result"], "win")
+        self.assertEqual(updated["history"][0]["page_number"], 1)
+
+    def test_winning_last_page_completes_the_run(self):
+        self.service.submit_result("Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result("Nurse", 2, self.build_for(2), "win")
+        updated = self.service.submit_result("Nurse", 3, self.build_for(3), "win")
+        self.assertEqual(updated["status"], "completed")
+        self.assertEqual(updated["best_page"], 3)
+
+    def test_loss_resets_page_keeps_history_and_best(self):
+        self.service.submit_result("Nurse", 1, self.build_for(1), "win")
+        updated = self.service.submit_result("Nurse", 2, self.build_for(2), "loss")
+        self.assertEqual(updated["current_page"], 1)
+        self.assertEqual(updated["attempt"], 2)
+        self.assertEqual(updated["best_page"], 1)
+        self.assertEqual(len(updated["history"]), 2)
+        self.assertEqual(updated["pages"], self.run["pages"])  # snapshot survives a loss
+
+    def test_short_last_page_accepts_a_short_build(self):
+        page3 = self.run["pages"][2]
+        self.assertEqual(len(page3), 2)
+        self.assertEqual(self.service.expected_build_size(page3), 2)
+        self.service.submit_result("Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result("Nurse", 2, self.build_for(2), "win")
+        updated = self.service.submit_result("Nurse", 3, page3, "win")
+        self.assertEqual(updated["status"], "completed")
+
+    def test_rejects_wrong_page(self):
+        with self.assertRaises(ValueError):
+            self.service.submit_result("Nurse", 2, self.build_for(2), "win")
+
+    def test_rejects_perk_from_another_page(self):
+        bad = self.build_for(1)[:3] + [self.run["pages"][1][0]]
+        with self.assertRaises(ValueError):
+            self.service.submit_result("Nurse", 1, bad, "win")
+
+    def test_rejects_wrong_perk_count(self):
+        with self.assertRaises(ValueError):
+            self.service.submit_result("Nurse", 1, self.build_for(1)[:3], "win")
+
+    def test_rejects_duplicate_perks(self):
+        first = self.run["pages"][0][0]
+        with self.assertRaises(ValueError):
+            self.service.submit_result("Nurse", 1, [first, first, first, first], "win")
+
+    def test_rejects_invalid_result_value(self):
+        with self.assertRaises(ValueError):
+            self.service.submit_result("Nurse", 1, self.build_for(1), "draw")
+
+    def test_rejects_result_on_completed_run(self):
+        self.service.submit_result("Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result("Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result("Nurse", 3, self.build_for(3), "win")
+        with self.assertRaises(ValueError):
+            self.service.submit_result("Nurse", 3, self.build_for(3), "win")
+
+    def test_reset_restarts_with_fresh_snapshot_and_keeps_history(self):
+        self.service.submit_result("Nurse", 1, self.build_for(1), "win")
+        self.service.set_excluded_perks([f"Perk {i:03d}" for i in range(1, 18)])
+        updated = self.service.reset_run("Nurse")
+        self.assertEqual(updated["current_page"], 1)
+        self.assertEqual(updated["attempt"], 2)
+        self.assertEqual(updated["status"], "in_progress")
+        self.assertEqual(updated["page_count"], 1)  # 15 perks left -> one page
+        self.assertEqual(len(updated["history"]), 1)
+        self.assertEqual(updated["best_page"], 1)
+
+    def test_reset_reopens_a_completed_run(self):
+        self.service.submit_result("Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result("Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result("Nurse", 3, self.build_for(3), "win")
+        updated = self.service.reset_run("Nurse")
+        self.assertEqual(updated["status"], "in_progress")
+        self.assertEqual(updated["current_page"], 1)
+
+    def test_reset_without_a_run_is_rejected(self):
+        with self.assertRaises(ValueError):
+            self.service.reset_run("Trapper")
+
+
 if __name__ == "__main__":
     unittest.main()

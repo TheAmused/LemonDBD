@@ -132,8 +132,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   type="button"
                   disabled={busy}
                   onClick={() => {
-                    resetRun();
                     setConfirmingReset(false);
+                    resetRun();
                   }}
                   className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-extrabold text-rose-400 disabled:opacity-50"
                 >

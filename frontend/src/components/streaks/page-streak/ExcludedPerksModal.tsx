@@ -27,13 +27,10 @@ export const ExcludedPerksModal: React.FC<ExcludedPerksModalProps> = ({ isOpen, 
         const data = await fetchExcludedPerks();
         if (cancelled) return;
         // pool excludes the excluded ones, so rebuild the full list from both
-        const poolNames = data.pool.map((p) => p.name);
         const missing = data.excluded.map((name) => ({ name, character: null, icon_local_path: null }));
         setAllPerks([...data.pool, ...missing].sort((a, b) => (a.name < b.name ? -1 : 1)));
         setExcluded(data.excluded);
-        if (poolNames.length > 0 && data.page_count > 0) {
-          setPerksPerPage(Math.ceil(poolNames.length / data.page_count));
-        }
+        setPerksPerPage(data.perks_per_page);
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : 'Could not load the perk list');
       }

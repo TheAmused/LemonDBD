@@ -33,6 +33,7 @@ def get_excluded_perks():
         ],
         "pool_size": sum(len(page) for page in pages),
         "page_count": len(pages),
+        "perks_per_page": service.get_perks_per_page(),
     }), 200
 
 

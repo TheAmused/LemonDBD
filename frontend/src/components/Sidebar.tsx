@@ -25,6 +25,7 @@ import {
   Calculator,
   Wand2,
   Compass,
+  Repeat,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -206,6 +207,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
     },
     {
+      id: 'streaks',
+      label: '🔥 Streaks',
+      icon: Repeat,
+      color: 'text-orange-400',
+      activeBg: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
+    },
+    {
       id: 'quests',
       label: '📜 Quests',
       icon: Scroll,
@@ -256,7 +264,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
-            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator' || item.id === 'builds' || item.id === 'custom-perks' || item.id === 'maps') {
+            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator' || item.id === 'builds' || item.id === 'custom-perks' || item.id === 'maps' || item.id === 'streaks') {
               return (
                 <Link
                   key={item.id}

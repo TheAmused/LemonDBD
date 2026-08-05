@@ -41,4 +41,5 @@ export interface ExcludedPerksResponse {
   pool: PoolPerk[];
   pool_size: number;
   page_count: number;
+  perks_per_page: number;
 }

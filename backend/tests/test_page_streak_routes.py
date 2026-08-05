@@ -42,6 +42,7 @@ class TestPageStreakRoutes(unittest.TestCase):
         res = self.client.get("/api/v1/page-streak/excluded-perks")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.get_json()["excluded"], ["Perk 001"])
+        self.assertEqual(res.get_json()["perks_per_page"], 15)
 
     def test_run_lifecycle(self):
         res = self.client.get("/api/v1/page-streak/run?killer=Nurse")

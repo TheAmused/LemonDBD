@@ -14,7 +14,8 @@
 
 - Branch: `feature/streaks`. All work commits there.
 - All commands run from `frontend/` on the host (Node 22, `node_modules` already installed).
-- **No test framework exists in this project** (`frontend/package.json` defines only `dev`, `build`, `start`, `lint`). The verification cycle replacing red/green TDD is: `npx tsc --noEmit` → `npm run lint` → `npm run build`. Every task uses it. Do not add Vitest/Jest — the spec rules it out for this iteration.
+- **No test framework exists in this project** (`frontend/package.json` defines only `dev`, `build`, `start`, `lint`). The verification cycle replacing red/green TDD is: `npx tsc --noEmit` → `npm run build`. Every task uses it. Do not add Vitest/Jest — the spec rules it out for this iteration.
+- **`npm run lint` is broken project-wide and must not be used as a gate.** It runs `next lint`, which Next.js 16 removed — Next now reads `lint` as a directory argument and fails with "Invalid project directory provided, no such directory: …/frontend/lint". This is pre-existing and out of scope for this plan; do not fix it, do not add ESLint config. Wherever a task step below says `npm run lint`, skip that command.
 - All user-facing copy is hardcoded English in all three locales. Do **not** add keys to `src/locales/en.json`, `es.json` or `pl.json`.
 - Do **not** modify `src/components/Navbar.tsx`. Sidebar only.
 - Streaks accent color is orange (`text-orange-400`, `bg-orange-500/10`, `border-orange-500/20`). Every other accent is taken.

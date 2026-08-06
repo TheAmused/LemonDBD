@@ -262,8 +262,17 @@ class ScraperService:
         current_category: Optional[str] = None
         content_area = soup.find("div", class_="mw-parser-output") or soup
 
-        char_by_slug = {c.wiki_slug.lower(): c for c in characters}
-        char_by_name = {c.name.lower(): c for c in characters}
+        char_by_slug = {c.wiki_slug.lower(): c for c in characters if c.wiki_slug}
+        char_by_name = {}
+        for c in characters:
+            # Killers are stored without their article, but the perks page links them
+            # by full title ("The Trapper"), so both spellings must resolve.
+            aliases = [c.name, c.real_name]
+            if c.category == "Killer":
+                aliases.append(f"The {c.name}")
+            for alias in aliases:
+                if alias:
+                    char_by_name.setdefault(alias.lower(), c)
 
         for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
             if element.name in ["h1", "h2", "h3", "h4"]:

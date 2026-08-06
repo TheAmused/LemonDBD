@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
@@ -10,6 +10,7 @@ import { BuildBar } from './BuildBar';
 import { RunHistory } from './RunHistory';
 import { StartRunPanel } from './StartRunPanel';
 import { usePerkArtwork } from './usePerkArtwork';
+import { Confetti } from './Confetti';
 
 interface PageStreakRunViewProps {
   locale: string;
@@ -30,12 +31,28 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const [confirmed, setConfirmed] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [lastWasLoss, setLastWasLoss] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
 
   // A new page (or a new attempt) always starts from an empty, unconfirmed build.
   useEffect(() => {
     setSelected([]);
     setConfirmed(false);
   }, [run?.current_page, run?.attempt, run?.status]);
+
+  // Fire once when the run flips to completed, not on every later render or reload.
+  const wasCompletedRef = useRef(false);
+  useEffect(() => {
+    const isCompleted = run?.status === 'completed';
+    if (isCompleted && !wasCompletedRef.current) {
+      setCelebrating(true);
+      const timer = setTimeout(() => setCelebrating(false), 3500);
+      wasCompletedRef.current = true;
+      return () => clearTimeout(timer);
+    }
+    if (!isCompleted) {
+      wasCompletedRef.current = false;
+    }
+  }, [run?.status]);
 
   const currentPagePerks = run ? run.pages[run.current_page - 1] ?? [] : [];
   const buildSize = Math.min(4, currentPagePerks.length);
@@ -50,6 +67,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
 
   return (
     <div>
+      <Confetti active={celebrating} />
       <Link
         href={`/${locale}/streaks/killer/page-streak`}
         className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 transition-colors hover:text-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500"

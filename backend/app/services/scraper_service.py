@@ -15,6 +15,13 @@ from curl_cffi.requests import AsyncSession
 
 logger = logging.getLogger(__name__)
 
+# Wiki portraits are named K01_TheTrapper_Portrait.png / S07_AceVisconti_Portrait.png.
+# The prefix letter is the role and the digits are the release number, which makes the
+# filename the only reliable way to tell a character from a power or an item.
+PORTRAIT_PATTERN = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.ASCII)
+
+ROLE_BY_PREFIX = {"K": "Killer", "S": "Survivor"}
+
 
 @dataclass
 class CharacterData:
@@ -136,6 +143,40 @@ class ScraperService:
             return ""
         raw_slug = href.split("/wiki/")[-1].split("#")[0].split("?")[0]
         return unquote(raw_slug).strip()
+
+    @staticmethod
+    def classify_portrait(image_url: str):
+        """Return (category, release_number) when the image is a character portrait.
+
+        Anything else — power icons, item icons, wiki concept images — returns None,
+        which is how powers stop being mistaken for characters.
+        """
+        if not image_url:
+            return None
+
+        filename = image_url.split("/revision")[0].rstrip("/").split("/")[-1]
+        match = PORTRAIT_PATTERN.match(filename)
+        if not match:
+            return None
+
+        category = ROLE_BY_PREFIX.get(match.group(1))
+        if not category:
+            return None
+
+        try:
+            release_number = int(match.group(2))
+        except ValueError:
+            return None
+
+        return category, release_number
+
+    @staticmethod
+    def normalise_character_name(title: str, category: str) -> str:
+        """Killers lose their leading article; survivors keep their name intact."""
+        clean = (title or "").strip()
+        if category == "Killer" and clean.startswith("The "):
+            return clean[4:].strip()
+        return clean
 
     def fetch_html(self, url: str) -> str:
         response = requests.get(

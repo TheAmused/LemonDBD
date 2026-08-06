@@ -197,5 +197,71 @@ class TestPerkOwnerMatching(unittest.TestCase):
         self.assertEqual(agitation.character, "Trapper")
 
 
+import os
+from app.services.db_service import DatabaseService
+
+
+class TestPruneStaleCharacterRows(unittest.TestCase):
+    def setUp(self):
+        self.db_path = "test_prune_stale.db"
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+        self.db_service = DatabaseService(db_path=self.db_path)
+        self.db_service.init_db()
+
+        conn = self.db_service.get_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO challenge_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
+            ("killer", "Blood Bond", 3),
+        )
+        cur.execute(
+            "INSERT INTO challenge_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
+            ("killer", "Trapper", 1),
+        )
+        cur.execute(
+            "INSERT INTO page_streak_runs (killer, pages_json) VALUES (?, ?);",
+            ("The Clown", "[]"),
+        )
+        conn.commit()
+        conn.close()
+
+    def tearDown(self):
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+
+    def _count(self, table):
+        conn = self.db_service.get_connection()
+        cur = conn.cursor()
+        cur.execute(f"SELECT COUNT(*) AS n FROM {table};")
+        n = cur.fetchone()["n"]
+        conn.close()
+        return n
+
+    def test_rows_with_unknown_characters_are_deleted(self):
+        deleted = self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
+        self.assertEqual(deleted["challenge_runs"], 1)
+        self.assertEqual(self._count("challenge_runs"), 1)
+
+    def test_rows_with_known_characters_survive(self):
+        self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
+        conn = self.db_service.get_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT current_character_id FROM challenge_runs;")
+        remaining = [row["current_character_id"] for row in cur.fetchall()]
+        conn.close()
+        self.assertEqual(remaining, ["Trapper"])
+
+    def test_page_streak_rows_are_pruned_too(self):
+        deleted = self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
+        self.assertEqual(deleted["page_streak_runs"], 1)
+        self.assertEqual(self._count("page_streak_runs"), 0)
+
+    def test_an_empty_valid_set_is_ignored(self):
+        deleted = self.db_service.prune_stale_character_rows(set())
+        self.assertEqual(deleted, {})
+        self.assertEqual(self._count("challenge_runs"), 2)
+
+
 if __name__ == "__main__":
     unittest.main()

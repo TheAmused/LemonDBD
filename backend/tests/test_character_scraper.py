@@ -139,5 +139,63 @@ class TestParseCharacterPage(unittest.TestCase):
         self.assertEqual(self.service.parse_character_page(html), [])
 
 
+class TestCharacterModelCarriesReleaseNumber(unittest.TestCase):
+    def test_model_accepts_and_returns_release_number(self):
+        from app.services.perk_service import CharacterModel
+
+        model = CharacterModel(
+            name="Trapper",
+            real_name="The Trapper",
+            category="Killer",
+            avatar_local_path="avatars/killers/trapper.png",
+            release_number=1,
+        )
+        self.assertEqual(model.model_dump()["release_number"], 1)
+
+    def test_release_number_defaults_when_absent(self):
+        from app.services.perk_service import CharacterModel
+
+        model = CharacterModel(name="Meg Thomas", real_name="Meg Thomas", category="Survivor")
+        self.assertIsNone(model.model_dump()["release_number"])
+
+
+PERKS_HTML = """
+<div class="mw-parser-output">
+  <h2>Killer Perks</h2>
+  <table class="wikitable">
+    <tr><th>Icon</th><th>Name</th><th>Description</th><th>Character</th></tr>
+    <tr>
+      <td><img data-src="https://x/images/f/f1/IconPerks_agitation.png"/></td>
+      <td>Agitation</td>
+      <td>You get excited.</td>
+      <td><a href="/wiki/The_Trapper" title="The Trapper">The Trapper</a></td>
+    </tr>
+  </table>
+</div>
+"""
+
+
+class TestPerkOwnerMatching(unittest.TestCase):
+    def test_perk_matches_a_killer_whose_name_lost_its_article(self):
+        service = ScraperService()
+        characters = service.parse_character_page(KILLER_PAGE_HTML)
+        perks = service.parse_perks(PERKS_HTML, characters)
+
+        agitation = next(p for p in perks if p.name == "Agitation")
+        self.assertEqual(agitation.character, "Trapper")
+        self.assertEqual(agitation.character_real_name, "Trapper")
+        self.assertEqual(agitation.character_avatar_path, "avatars/killers/trapper.png")
+
+    def test_owner_resolves_by_title_when_the_link_has_no_usable_slug(self):
+        service = ScraperService()
+        characters = service.parse_character_page(KILLER_PAGE_HTML)
+        for c in characters:
+            c.wiki_slug = ""
+        perks = service.parse_perks(PERKS_HTML, characters)
+
+        agitation = next(p for p in perks if p.name == "Agitation")
+        self.assertEqual(agitation.character, "Trapper")
+
+
 if __name__ == "__main__":
     unittest.main()

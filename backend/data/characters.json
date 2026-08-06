@@ -1,30 +1,413 @@
 [
   {
-    "name": "Character",
-    "real_name": "Character",
-    "wiki_slug": "Character",
-    "short_name": "character",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/IconHelpLoading_players.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/character.png"
+    "name": "Trapper",
+    "real_name": "Trapper",
+    "wiki_slug": "The_Trapper",
+    "short_name": "the_trapper",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/81/K01_TheTrapper_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/trapper.png",
+    "release_number": 1
   },
   {
-    "name": "Exit Gate",
-    "real_name": "Exit Gate",
-    "wiki_slug": "Exit_Gate",
-    "short_name": "exit_gate",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f0/IconHelp_exitGates.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/exit_gate.png"
+    "name": "Wraith",
+    "real_name": "Wraith",
+    "wiki_slug": "The_Wraith",
+    "short_name": "the_wraith",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c2/K02_TheWraith_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/wraith.png",
+    "release_number": 2
   },
   {
-    "name": "Killer",
-    "real_name": "Killer",
-    "wiki_slug": "Killer",
-    "short_name": "killer",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/06/IconHelpLoading_killer.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/killer.png"
+    "name": "Hillbilly",
+    "real_name": "Hillbilly",
+    "wiki_slug": "The_Hillbilly",
+    "short_name": "the_hillbilly",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/24/K03_TheHillbilly_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/hillbilly.png",
+    "release_number": 3
+  },
+  {
+    "name": "Nurse",
+    "real_name": "Nurse",
+    "wiki_slug": "The_Nurse",
+    "short_name": "the_nurse",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3b/K04_TheNurse_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/nurse.png",
+    "release_number": 4
+  },
+  {
+    "name": "Shape",
+    "real_name": "Shape",
+    "wiki_slug": "The_Shape",
+    "short_name": "the_shape",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b5/K05_TheShape_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/shape.png",
+    "release_number": 5
+  },
+  {
+    "name": "Hag",
+    "real_name": "Hag",
+    "wiki_slug": "The_Hag",
+    "short_name": "the_hag",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c7/K06_TheHag_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/hag.png",
+    "release_number": 6
+  },
+  {
+    "name": "Doctor",
+    "real_name": "Doctor",
+    "wiki_slug": "The_Doctor",
+    "short_name": "the_doctor",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/58/K07_TheDoctor_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/doctor.png",
+    "release_number": 7
+  },
+  {
+    "name": "Huntress",
+    "real_name": "Huntress",
+    "wiki_slug": "The_Huntress",
+    "short_name": "the_huntress",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f1/K08_TheHuntress_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/huntress.png",
+    "release_number": 8
+  },
+  {
+    "name": "Cannibal",
+    "real_name": "Cannibal",
+    "wiki_slug": "The_Cannibal",
+    "short_name": "the_cannibal",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/6f/K09_TheCannibal_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/cannibal.png",
+    "release_number": 9
+  },
+  {
+    "name": "Nightmare",
+    "real_name": "Nightmare",
+    "wiki_slug": "The_Nightmare",
+    "short_name": "the_nightmare",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d5/K10_TheNightmare_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/nightmare.png",
+    "release_number": 10
+  },
+  {
+    "name": "Pig",
+    "real_name": "Pig",
+    "wiki_slug": "The_Pig",
+    "short_name": "the_pig",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/5c/K11_ThePig_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/pig.png",
+    "release_number": 11
+  },
+  {
+    "name": "Clown",
+    "real_name": "Clown",
+    "wiki_slug": "The_Clown",
+    "short_name": "the_clown",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d1/K12_TheClown_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/clown.png",
+    "release_number": 12
+  },
+  {
+    "name": "Spirit",
+    "real_name": "Spirit",
+    "wiki_slug": "The_Spirit",
+    "short_name": "the_spirit",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f1/K13_TheSpirit_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/spirit.png",
+    "release_number": 13
+  },
+  {
+    "name": "Legion",
+    "real_name": "Legion",
+    "wiki_slug": "The_Legion",
+    "short_name": "the_legion",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/K14_TheLegion_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/legion.png",
+    "release_number": 14
+  },
+  {
+    "name": "Plague",
+    "real_name": "Plague",
+    "wiki_slug": "The_Plague",
+    "short_name": "the_plague",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/fe/K15_ThePlague_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/plague.png",
+    "release_number": 15
+  },
+  {
+    "name": "Ghost Face",
+    "real_name": "Ghost Face",
+    "wiki_slug": "The_Ghost_Face",
+    "short_name": "the_ghost_face",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d1/K16_TheGhostFace_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/ghost_face.png",
+    "release_number": 16
+  },
+  {
+    "name": "Demogorgon",
+    "real_name": "Demogorgon",
+    "wiki_slug": "The_Demogorgon",
+    "short_name": "the_demogorgon",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/75/K17_TheDemogorgon_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/demogorgon.png",
+    "release_number": 17
+  },
+  {
+    "name": "Oni",
+    "real_name": "Oni",
+    "wiki_slug": "The_Oni",
+    "short_name": "the_oni",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/80/K18_TheOni_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/oni.png",
+    "release_number": 18
+  },
+  {
+    "name": "Deathslinger",
+    "real_name": "Deathslinger",
+    "wiki_slug": "The_Deathslinger",
+    "short_name": "the_deathslinger",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/ac/K19_TheDeathslinger_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/deathslinger.png",
+    "release_number": 19
+  },
+  {
+    "name": "Executioner",
+    "real_name": "Executioner",
+    "wiki_slug": "The_Executioner",
+    "short_name": "the_executioner",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c9/K20_TheExecutioner_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/executioner.png",
+    "release_number": 20
+  },
+  {
+    "name": "Blight",
+    "real_name": "Blight",
+    "wiki_slug": "The_Blight",
+    "short_name": "the_blight",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1f/K21_TheBlight_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/blight.png",
+    "release_number": 21
+  },
+  {
+    "name": "Twins",
+    "real_name": "Twins",
+    "wiki_slug": "The_Twins",
+    "short_name": "the_twins",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/17/K22_TheTwins_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/twins.png",
+    "release_number": 22
+  },
+  {
+    "name": "Trickster",
+    "real_name": "Trickster",
+    "wiki_slug": "The_Trickster",
+    "short_name": "the_trickster",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c9/K23_TheTrickster_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/trickster.png",
+    "release_number": 23
+  },
+  {
+    "name": "Nemesis",
+    "real_name": "Nemesis",
+    "wiki_slug": "The_Nemesis",
+    "short_name": "the_nemesis",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/67/K24_TheNemesis_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/nemesis.png",
+    "release_number": 24
+  },
+  {
+    "name": "Cenobite",
+    "real_name": "Cenobite",
+    "wiki_slug": "The_Cenobite",
+    "short_name": "the_cenobite",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3b/K25_TheCenobite_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/cenobite.png",
+    "release_number": 25
+  },
+  {
+    "name": "Artist",
+    "real_name": "Artist",
+    "wiki_slug": "The_Artist",
+    "short_name": "the_artist",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/01/K26_TheArtist_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/artist.png",
+    "release_number": 26
+  },
+  {
+    "name": "Onryō",
+    "real_name": "Onryō",
+    "wiki_slug": "The_Onryō",
+    "short_name": "the_onryō",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/5f/K27_TheOnryo_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/onryō.png",
+    "release_number": 27
+  },
+  {
+    "name": "Dredge",
+    "real_name": "Dredge",
+    "wiki_slug": "The_Dredge",
+    "short_name": "the_dredge",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7e/K28_TheDredge_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/dredge.png",
+    "release_number": 28
+  },
+  {
+    "name": "Mastermind",
+    "real_name": "Mastermind",
+    "wiki_slug": "The_Mastermind",
+    "short_name": "the_mastermind",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/ec/K29_TheMastermind_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/mastermind.png",
+    "release_number": 29
+  },
+  {
+    "name": "Knight",
+    "real_name": "Knight",
+    "wiki_slug": "The_Knight",
+    "short_name": "the_knight",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/69/K30_TheKnight_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/knight.png",
+    "release_number": 30
+  },
+  {
+    "name": "Skull Merchant",
+    "real_name": "Skull Merchant",
+    "wiki_slug": "The_Skull_Merchant",
+    "short_name": "the_skull_merchant",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/64/K31_TheSkullMerchant_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/skull_merchant.png",
+    "release_number": 31
+  },
+  {
+    "name": "Singularity",
+    "real_name": "Singularity",
+    "wiki_slug": "The_Singularity",
+    "short_name": "the_singularity",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/24/K32_TheSingularity_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/singularity.png",
+    "release_number": 32
+  },
+  {
+    "name": "Xenomorph",
+    "real_name": "Xenomorph",
+    "wiki_slug": "The_Xenomorph",
+    "short_name": "the_xenomorph",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/64/K33_TheXenomorph_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/xenomorph.png",
+    "release_number": 33
+  },
+  {
+    "name": "Good Guy",
+    "real_name": "Good Guy",
+    "wiki_slug": "The_Good_Guy",
+    "short_name": "the_good_guy",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/81/K34_TheGoodGuy_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/good_guy.png",
+    "release_number": 34
+  },
+  {
+    "name": "Unknown",
+    "real_name": "Unknown",
+    "wiki_slug": "The_Unknown",
+    "short_name": "the_unknown",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/51/K35_TheUnknown_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/unknown.png",
+    "release_number": 35
+  },
+  {
+    "name": "Lich",
+    "real_name": "Lich",
+    "wiki_slug": "The_Lich",
+    "short_name": "the_lich",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f0/K36_TheLich_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/lich.png",
+    "release_number": 36
+  },
+  {
+    "name": "Dark Lord",
+    "real_name": "Dark Lord",
+    "wiki_slug": "The_Dark_Lord",
+    "short_name": "the_dark_lord",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/62/K37_TheDarkLord_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/dark_lord.png",
+    "release_number": 37
+  },
+  {
+    "name": "Houndmaster",
+    "real_name": "Houndmaster",
+    "wiki_slug": "The_Houndmaster",
+    "short_name": "the_houndmaster",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/96/K38_TheHoundmaster_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/houndmaster.png",
+    "release_number": 38
+  },
+  {
+    "name": "Ghoul",
+    "real_name": "Ghoul",
+    "wiki_slug": "The_Ghoul",
+    "short_name": "the_ghoul",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c9/K39_TheGhoul_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/ghoul.png",
+    "release_number": 39
+  },
+  {
+    "name": "Animatronic",
+    "real_name": "Animatronic",
+    "wiki_slug": "The_Animatronic",
+    "short_name": "the_animatronic",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/02/K40_TheAnimatronic_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/animatronic.png",
+    "release_number": 40
+  },
+  {
+    "name": "Krasue",
+    "real_name": "Krasue",
+    "wiki_slug": "The_Krasue",
+    "short_name": "the_krasue",
+    "category": "Killer",
+    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/93/K41_TheKrasue_Portrait.png/revision/latest",
+    "avatar_local_path": "avatars/killers/krasue.png",
+    "release_number": 41
   },
   {
     "name": "Dwight Fairfield",
@@ -33,7 +416,8 @@
     "short_name": "dwight_fairfield",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3d/S01_DwightFairfield_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/dwight_fairfield.png"
+    "avatar_local_path": "avatars/survivors/dwight_fairfield.png",
+    "release_number": 1
   },
   {
     "name": "Meg Thomas",
@@ -42,7 +426,8 @@
     "short_name": "meg_thomas",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/35/S02_MegThomas_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/meg_thomas.png"
+    "avatar_local_path": "avatars/survivors/meg_thomas.png",
+    "release_number": 2
   },
   {
     "name": "Claudette Morel",
@@ -51,7 +436,8 @@
     "short_name": "claudette_morel",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c2/S03_ClaudetteMorel_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/claudette_morel.png"
+    "avatar_local_path": "avatars/survivors/claudette_morel.png",
+    "release_number": 3
   },
   {
     "name": "Jake Park",
@@ -60,7 +446,8 @@
     "short_name": "jake_park",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/18/S04_JakePark_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/jake_park.png"
+    "avatar_local_path": "avatars/survivors/jake_park.png",
+    "release_number": 4
   },
   {
     "name": "Nea Karlsson",
@@ -69,7 +456,8 @@
     "short_name": "nea_karlsson",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e6/S05_NeaKarlsson_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/nea_karlsson.png"
+    "avatar_local_path": "avatars/survivors/nea_karlsson.png",
+    "release_number": 5
   },
   {
     "name": "Laurie Strode",
@@ -78,7 +466,8 @@
     "short_name": "laurie_strode",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/04/S06_LaurieStrode_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/laurie_strode.png"
+    "avatar_local_path": "avatars/survivors/laurie_strode.png",
+    "release_number": 6
   },
   {
     "name": "Ace Visconti",
@@ -87,7 +476,8 @@
     "short_name": "ace_visconti",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b9/S07_AceVisconti_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/ace_visconti.png"
+    "avatar_local_path": "avatars/survivors/ace_visconti.png",
+    "release_number": 7
   },
   {
     "name": "Bill Overbeck",
@@ -96,7 +486,8 @@
     "short_name": "bill_overbeck",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/9c/S08_BillOverbeck_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/bill_overbeck.png"
+    "avatar_local_path": "avatars/survivors/bill_overbeck.png",
+    "release_number": 8
   },
   {
     "name": "Feng Min",
@@ -105,7 +496,8 @@
     "short_name": "feng_min",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/a3/S09_FengMin_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/feng_min.png"
+    "avatar_local_path": "avatars/survivors/feng_min.png",
+    "release_number": 9
   },
   {
     "name": "David King",
@@ -114,7 +506,8 @@
     "short_name": "david_king",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/2a/S10_DavidKing_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/david_king.png"
+    "avatar_local_path": "avatars/survivors/david_king.png",
+    "release_number": 10
   },
   {
     "name": "Quentin Smith",
@@ -123,7 +516,8 @@
     "short_name": "quentin_smith",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/40/S11_QuentinSmith_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/quentin_smith.png"
+    "avatar_local_path": "avatars/survivors/quentin_smith.png",
+    "release_number": 11
   },
   {
     "name": "David Tapp",
@@ -132,7 +526,8 @@
     "short_name": "david_tapp",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d2/S12_DavidTapp_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/david_tapp.png"
+    "avatar_local_path": "avatars/survivors/david_tapp.png",
+    "release_number": 12
   },
   {
     "name": "Kate Denson",
@@ -141,7 +536,8 @@
     "short_name": "kate_denson",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/9c/S13_KateDenson_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/kate_denson.png"
+    "avatar_local_path": "avatars/survivors/kate_denson.png",
+    "release_number": 13
   },
   {
     "name": "Adam Francis",
@@ -150,7 +546,8 @@
     "short_name": "adam_francis",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/a5/S14_AdamFrancis_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/adam_francis.png"
+    "avatar_local_path": "avatars/survivors/adam_francis.png",
+    "release_number": 14
   },
   {
     "name": "Jeff Johansen",
@@ -159,7 +556,8 @@
     "short_name": "jeff_johansen",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/81/S15_JeffJohansen_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/jeff_johansen.png"
+    "avatar_local_path": "avatars/survivors/jeff_johansen.png",
+    "release_number": 15
   },
   {
     "name": "Jane Romero",
@@ -168,7 +566,8 @@
     "short_name": "jane_romero",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/80/S16_JaneRomero_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/jane_romero.png"
+    "avatar_local_path": "avatars/survivors/jane_romero.png",
+    "release_number": 16
   },
   {
     "name": "Ash Williams",
@@ -177,7 +576,8 @@
     "short_name": "ash_williams",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/91/S17_AshWilliams_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/ash_williams.png"
+    "avatar_local_path": "avatars/survivors/ash_williams.png",
+    "release_number": 17
   },
   {
     "name": "Nancy Wheeler",
@@ -186,7 +586,8 @@
     "short_name": "nancy_wheeler",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/70/S18_NancyWheeler_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/nancy_wheeler.png"
+    "avatar_local_path": "avatars/survivors/nancy_wheeler.png",
+    "release_number": 18
   },
   {
     "name": "Steve Harrington",
@@ -195,7 +596,8 @@
     "short_name": "steve_harrington",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e8/S19_SteveHarrington_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/steve_harrington.png"
+    "avatar_local_path": "avatars/survivors/steve_harrington.png",
+    "release_number": 19
   },
   {
     "name": "Yui Kimura",
@@ -204,7 +606,8 @@
     "short_name": "yui_kimura",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/13/S20_YuiKimura_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/yui_kimura.png"
+    "avatar_local_path": "avatars/survivors/yui_kimura.png",
+    "release_number": 20
   },
   {
     "name": "Zarina Kassir",
@@ -213,7 +616,8 @@
     "short_name": "zarina_kassir",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d9/S21_ZarinaKassir_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/zarina_kassir.png"
+    "avatar_local_path": "avatars/survivors/zarina_kassir.png",
+    "release_number": 21
   },
   {
     "name": "Cheryl Mason",
@@ -222,7 +626,8 @@
     "short_name": "cheryl_mason",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1d/S22_CherylMason_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/cheryl_mason.png"
+    "avatar_local_path": "avatars/survivors/cheryl_mason.png",
+    "release_number": 22
   },
   {
     "name": "Felix Richter",
@@ -231,7 +636,8 @@
     "short_name": "felix_richter",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/9e/S23_FelixRichter_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/felix_richter.png"
+    "avatar_local_path": "avatars/survivors/felix_richter.png",
+    "release_number": 23
   },
   {
     "name": "Élodie Rakoto",
@@ -240,7 +646,8 @@
     "short_name": "élodie_rakoto",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/de/S24_ElodieRakoto_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/élodie_rakoto.png"
+    "avatar_local_path": "avatars/survivors/élodie_rakoto.png",
+    "release_number": 24
   },
   {
     "name": "Yun-Jin Lee",
@@ -249,7 +656,8 @@
     "short_name": "yun-jin_lee",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f7/S25_Yun-JinLee_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/yun_jin_lee.png"
+    "avatar_local_path": "avatars/survivors/yun_jin_lee.png",
+    "release_number": 25
   },
   {
     "name": "Jill Valentine",
@@ -258,7 +666,8 @@
     "short_name": "jill_valentine",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/db/S26_JillValentine_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/jill_valentine.png"
+    "avatar_local_path": "avatars/survivors/jill_valentine.png",
+    "release_number": 26
   },
   {
     "name": "Leon Scott Kennedy",
@@ -267,7 +676,8 @@
     "short_name": "leon_scott_kennedy",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7d/S27_LeonScottKennedy_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/leon_scott_kennedy.png"
+    "avatar_local_path": "avatars/survivors/leon_scott_kennedy.png",
+    "release_number": 27
   },
   {
     "name": "Mikaela Reid",
@@ -276,7 +686,8 @@
     "short_name": "mikaela_reid",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3f/S28_MikaelaReid_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/mikaela_reid.png"
+    "avatar_local_path": "avatars/survivors/mikaela_reid.png",
+    "release_number": 28
   },
   {
     "name": "Jonah Vasquez",
@@ -285,7 +696,8 @@
     "short_name": "jonah_vasquez",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/37/S29_JonahVasquez_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/jonah_vasquez.png"
+    "avatar_local_path": "avatars/survivors/jonah_vasquez.png",
+    "release_number": 29
   },
   {
     "name": "Yoichi Asakawa",
@@ -294,7 +706,8 @@
     "short_name": "yoichi_asakawa",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/af/S30_YoichiAsakawa_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/yoichi_asakawa.png"
+    "avatar_local_path": "avatars/survivors/yoichi_asakawa.png",
+    "release_number": 30
   },
   {
     "name": "Haddie Kaur",
@@ -303,7 +716,8 @@
     "short_name": "haddie_kaur",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e7/S31_HaddieKaur_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/haddie_kaur.png"
+    "avatar_local_path": "avatars/survivors/haddie_kaur.png",
+    "release_number": 31
   },
   {
     "name": "Ada Wong",
@@ -312,7 +726,8 @@
     "short_name": "ada_wong",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/5e/S32_AdaWong_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/ada_wong.png"
+    "avatar_local_path": "avatars/survivors/ada_wong.png",
+    "release_number": 32
   },
   {
     "name": "Rebecca Chambers",
@@ -321,7 +736,8 @@
     "short_name": "rebecca_chambers",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/fd/S33_RebeccaChambers_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/rebecca_chambers.png"
+    "avatar_local_path": "avatars/survivors/rebecca_chambers.png",
+    "release_number": 33
   },
   {
     "name": "Vittorio Toscano",
@@ -330,7 +746,8 @@
     "short_name": "vittorio_toscano",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/39/S34_VittorioToscano_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/vittorio_toscano.png"
+    "avatar_local_path": "avatars/survivors/vittorio_toscano.png",
+    "release_number": 34
   },
   {
     "name": "Thalita Lyra",
@@ -339,7 +756,8 @@
     "short_name": "thalita_lyra",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/96/S35_ThalitaLyra_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/thalita_lyra.png"
+    "avatar_local_path": "avatars/survivors/thalita_lyra.png",
+    "release_number": 35
   },
   {
     "name": "Renato Lyra",
@@ -348,7 +766,8 @@
     "short_name": "renato_lyra",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/69/S36_RenatoLyra_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/renato_lyra.png"
+    "avatar_local_path": "avatars/survivors/renato_lyra.png",
+    "release_number": 36
   },
   {
     "name": "Gabriel Soma",
@@ -357,7 +776,8 @@
     "short_name": "gabriel_soma",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/64/S37_GabrielSoma_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/gabriel_soma.png"
+    "avatar_local_path": "avatars/survivors/gabriel_soma.png",
+    "release_number": 37
   },
   {
     "name": "Nicolas Cage",
@@ -366,7 +786,8 @@
     "short_name": "nicolas_cage",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b7/S38_NicolasCage_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/nicolas_cage.png"
+    "avatar_local_path": "avatars/survivors/nicolas_cage.png",
+    "release_number": 38
   },
   {
     "name": "Ellen Ripley",
@@ -375,7 +796,8 @@
     "short_name": "ellen_ripley",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/15/S39_EllenRipley_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/ellen_ripley.png"
+    "avatar_local_path": "avatars/survivors/ellen_ripley.png",
+    "release_number": 39
   },
   {
     "name": "Alan Wake",
@@ -384,7 +806,8 @@
     "short_name": "alan_wake",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/43/S40_AlanWake_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/alan_wake.png"
+    "avatar_local_path": "avatars/survivors/alan_wake.png",
+    "release_number": 40
   },
   {
     "name": "Sable Ward",
@@ -393,7 +816,8 @@
     "short_name": "sable_ward",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/9c/S41_SableWard_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/sable_ward.png"
+    "avatar_local_path": "avatars/survivors/sable_ward.png",
+    "release_number": 41
   },
   {
     "name": "The Troupe",
@@ -402,7 +826,8 @@
     "short_name": "the_troupe",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e0/S42_TheTroupe_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_troupe.png"
+    "avatar_local_path": "avatars/survivors/the_troupe.png",
+    "release_number": 42
   },
   {
     "name": "Lara Croft",
@@ -411,7 +836,8 @@
     "short_name": "lara_croft",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/63/S43_LaraCroft_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/lara_croft.png"
+    "avatar_local_path": "avatars/survivors/lara_croft.png",
+    "release_number": 43
   },
   {
     "name": "Trevor Belmont",
@@ -420,7 +846,8 @@
     "short_name": "trevor_belmont",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f8/S44_TrevorBelmont_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/trevor_belmont.png"
+    "avatar_local_path": "avatars/survivors/trevor_belmont.png",
+    "release_number": 44
   },
   {
     "name": "Taurie Cain",
@@ -429,7 +856,8 @@
     "short_name": "taurie_cain",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/72/S45_TaurieCain_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/taurie_cain.png"
+    "avatar_local_path": "avatars/survivors/taurie_cain.png",
+    "release_number": 45
   },
   {
     "name": "Rick Grimes",
@@ -438,7 +866,8 @@
     "short_name": "rick_grimes",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/4f/S46_RickGrimes_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/rick_grimes.png"
+    "avatar_local_path": "avatars/survivors/rick_grimes.png",
+    "release_number": 46
   },
   {
     "name": "Michonne Grimes",
@@ -447,7 +876,8 @@
     "short_name": "michonne_grimes",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/aa/S47_MichonneGrimes_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/michonne_grimes.png"
+    "avatar_local_path": "avatars/survivors/michonne_grimes.png",
+    "release_number": 47
   },
   {
     "name": "Vee Boonyasak",
@@ -456,1383 +886,7 @@
     "short_name": "vee_boonyasak",
     "category": "Survivor",
     "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/ce/S48_VeeBoonyasak_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/vee_boonyasak.png"
-  },
-  {
-    "name": "Firecrackers",
-    "real_name": "Firecrackers",
-    "wiki_slug": "Firecrackers",
-    "short_name": "firecrackers",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/88/IconItems_chineseFirecracker.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/firecrackers.png"
-  },
-  {
-    "name": "Toolboxes",
-    "real_name": "Toolboxes",
-    "wiki_slug": "Toolboxes",
-    "short_name": "toolboxes",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1b/IconItems_toolbox.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/toolboxes.png"
-  },
-  {
-    "name": "Haste",
-    "real_name": "Haste",
-    "wiki_slug": "Haste",
-    "short_name": "haste",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e7/IconStatusEffects_haste.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/haste.png"
-  },
-  {
-    "name": "Pallet",
-    "real_name": "Pallet",
-    "wiki_slug": "Pallet",
-    "short_name": "pallet",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d8/IconHelp_pullDown.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/pallet.png"
-  },
-  {
-    "name": "Boon Totem",
-    "real_name": "Boon Totem",
-    "wiki_slug": "Boon_Totem",
-    "short_name": "boon_totem",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/ff/Atl_Hud_Icon_BoonTotem.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/boon_totem.png"
-  },
-  {
-    "name": "Dying State",
-    "real_name": "Dying State",
-    "wiki_slug": "Dying_State",
-    "short_name": "dying_state",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/9a/IconHelp_dying.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/dying_state.png"
-  },
-  {
-    "name": "Endurance",
-    "real_name": "Endurance",
-    "wiki_slug": "Endurance",
-    "short_name": "endurance",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/69/IconStatusEffects_enduranceSurvivor.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/endurance.png"
-  },
-  {
-    "name": "Locker",
-    "real_name": "Locker",
-    "wiki_slug": "Locker",
-    "short_name": "locker",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d1/IconHelp_lockers.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/locker.png"
-  },
-  {
-    "name": "Totem",
-    "real_name": "Totem",
-    "wiki_slug": "Totem",
-    "short_name": "totem",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e9/IconHelpLoading_totem.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/totem.png"
-  },
-  {
-    "name": "Healthy",
-    "real_name": "Healthy",
-    "wiki_slug": "Healthy",
-    "short_name": "healthy",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/67/IconHelp_healthy.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/healthy.png"
-  },
-  {
-    "name": "Flash Grenade",
-    "real_name": "Flash Grenade",
-    "wiki_slug": "Flash_Grenade",
-    "short_name": "flash_grenade",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/6a/IconItems_flashGrenade.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/flash_grenade.png"
-  },
-  {
-    "name": "Great Skill Check",
-    "real_name": "Great Skill Check",
-    "wiki_slug": "Great_Skill_Check",
-    "short_name": "great_skill_check",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/cc/IconHelp_skillChecks.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/great_skill_check.png"
-  },
-  {
-    "name": "Deep Wound",
-    "real_name": "Deep Wound",
-    "wiki_slug": "Deep_Wound",
-    "short_name": "deep_wound",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3f/IconStatusEffects_deepWound.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/deep_wound.png"
-  },
-  {
-    "name": "Idle Crow",
-    "real_name": "Idle Crow",
-    "wiki_slug": "Idle_Crow",
-    "short_name": "idle_crow",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/78/IconHelp_crows.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/idle_crow.png"
-  },
-  {
-    "name": "Bloodpoints",
-    "real_name": "Bloodpoints",
-    "wiki_slug": "Bloodpoints",
-    "short_name": "bloodpoints",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/4b/IconCurrency_bloodpoints.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/bloodpoints.png"
-  },
-  {
-    "name": "Altruism",
-    "real_name": "Altruism",
-    "wiki_slug": "Altruism",
-    "short_name": "altruism",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/13/DailyRitualIcon_altruism.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/altruism.png"
-  },
-  {
-    "name": "Emergency Med-Kit",
-    "real_name": "Emergency Med-Kit",
-    "wiki_slug": "Emergency_Med-Kit",
-    "short_name": "emergency_med-kit",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/29/IconItems_emergencyMedKit.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/emergency_med_kit.png"
-  },
-  {
-    "name": "Survivor",
-    "real_name": "Survivor",
-    "wiki_slug": "Survivor",
-    "short_name": "survivor",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b3/IconHelpLoading_survivor.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/survivor.png"
-  },
-  {
-    "name": "Bleeding",
-    "real_name": "Bleeding",
-    "wiki_slug": "Bleeding",
-    "short_name": "bleeding",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/24/IconStatusEffects_bleeding.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/bleeding.png"
-  },
-  {
-    "name": "Cursed",
-    "real_name": "Cursed",
-    "wiki_slug": "Cursed",
-    "short_name": "cursed",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/55/IconStatusEffects_cursed.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/cursed.png"
-  },
-  {
-    "name": "Good Skill Check",
-    "real_name": "Good Skill Check",
-    "wiki_slug": "Good_Skill_Check",
-    "short_name": "good_skill_check",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/cc/IconHelp_skillChecks.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/good_skill_check.png"
-  },
-  {
-    "name": "Breakable Wall",
-    "real_name": "Breakable Wall",
-    "wiki_slug": "Breakable_Wall",
-    "short_name": "breakable_wall",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/95/IconHelp_breakableWall.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/breakable_wall.png"
-  },
-  {
-    "name": "The Trapper",
-    "real_name": "The Trapper",
-    "wiki_slug": "The_Trapper",
-    "short_name": "the_trapper",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/81/K01_TheTrapper_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_trapper.png"
-  },
-  {
-    "name": "Trapper",
-    "real_name": "Trapper",
-    "wiki_slug": "Trapper",
-    "short_name": "trapper",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/9f/IconHelpLoading_trapper.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/trapper.png"
-  },
-  {
-    "name": "The Wraith",
-    "real_name": "The Wraith",
-    "wiki_slug": "The_Wraith",
-    "short_name": "the_wraith",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c2/K02_TheWraith_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_wraith.png"
-  },
-  {
-    "name": "Wraith",
-    "real_name": "Wraith",
-    "wiki_slug": "Wraith",
-    "short_name": "wraith",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3d/IconHelpLoading_wraith.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/wraith.png"
-  },
-  {
-    "name": "The Hillbilly",
-    "real_name": "The Hillbilly",
-    "wiki_slug": "The_Hillbilly",
-    "short_name": "the_hillbilly",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/24/K03_TheHillbilly_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_hillbilly.png"
-  },
-  {
-    "name": "Hillbilly",
-    "real_name": "Hillbilly",
-    "wiki_slug": "Hillbilly",
-    "short_name": "hillbilly",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/4e/IconHelpLoading_hillbilly.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/hillbilly.png"
-  },
-  {
-    "name": "The Nurse",
-    "real_name": "The Nurse",
-    "wiki_slug": "The_Nurse",
-    "short_name": "the_nurse",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3b/K04_TheNurse_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_nurse.png"
-  },
-  {
-    "name": "Nurse",
-    "real_name": "Nurse",
-    "wiki_slug": "Nurse",
-    "short_name": "nurse",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/04/IconHelpLoading_nurse.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/nurse.png"
-  },
-  {
-    "name": "The Shape",
-    "real_name": "The Shape",
-    "wiki_slug": "The_Shape",
-    "short_name": "the_shape",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b5/K05_TheShape_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_shape.png"
-  },
-  {
-    "name": "Shape",
-    "real_name": "Shape",
-    "wiki_slug": "Shape",
-    "short_name": "shape",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/38/IconHelpLoading_shape.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/shape.png"
-  },
-  {
-    "name": "The Hag",
-    "real_name": "The Hag",
-    "wiki_slug": "The_Hag",
-    "short_name": "the_hag",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c7/K06_TheHag_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_hag.png"
-  },
-  {
-    "name": "Hag",
-    "real_name": "Hag",
-    "wiki_slug": "Hag",
-    "short_name": "hag",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/4f/IconHelpLoading_hag.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/hag.png"
-  },
-  {
-    "name": "The Doctor",
-    "real_name": "The Doctor",
-    "wiki_slug": "The_Doctor",
-    "short_name": "the_doctor",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/58/K07_TheDoctor_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_doctor.png"
-  },
-  {
-    "name": "Doctor",
-    "real_name": "Doctor",
-    "wiki_slug": "Doctor",
-    "short_name": "doctor",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/51/IconHelpLoading_doctor.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/doctor.png"
-  },
-  {
-    "name": "The Huntress",
-    "real_name": "The Huntress",
-    "wiki_slug": "The_Huntress",
-    "short_name": "the_huntress",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f1/K08_TheHuntress_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_huntress.png"
-  },
-  {
-    "name": "Huntress",
-    "real_name": "Huntress",
-    "wiki_slug": "Huntress",
-    "short_name": "huntress",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/22/IconHelpLoading_huntress.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/huntress.png"
-  },
-  {
-    "name": "The Cannibal",
-    "real_name": "The Cannibal",
-    "wiki_slug": "The_Cannibal",
-    "short_name": "the_cannibal",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/6f/K09_TheCannibal_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_cannibal.png"
-  },
-  {
-    "name": "Cannibal",
-    "real_name": "Cannibal",
-    "wiki_slug": "Cannibal",
-    "short_name": "cannibal",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c4/IconHelpLoading_cannibal.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/cannibal.png"
-  },
-  {
-    "name": "The Nightmare",
-    "real_name": "The Nightmare",
-    "wiki_slug": "The_Nightmare",
-    "short_name": "the_nightmare",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d5/K10_TheNightmare_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_nightmare.png"
-  },
-  {
-    "name": "Nightmare",
-    "real_name": "Nightmare",
-    "wiki_slug": "Nightmare",
-    "short_name": "nightmare",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/51/IconHelpLoading_nightmare.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/nightmare.png"
-  },
-  {
-    "name": "The Pig",
-    "real_name": "The Pig",
-    "wiki_slug": "The_Pig",
-    "short_name": "the_pig",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/5c/K11_ThePig_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_pig.png"
-  },
-  {
-    "name": "Pig",
-    "real_name": "Pig",
-    "wiki_slug": "Pig",
-    "short_name": "pig",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/67/IconHelpLoading_pig.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/pig.png"
-  },
-  {
-    "name": "The Clown",
-    "real_name": "The Clown",
-    "wiki_slug": "The_Clown",
-    "short_name": "the_clown",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d1/K12_TheClown_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_clown.png"
-  },
-  {
-    "name": "Clown",
-    "real_name": "Clown",
-    "wiki_slug": "Clown",
-    "short_name": "clown",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/a7/IconHelpLoading_clown.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/clown.png"
-  },
-  {
-    "name": "The Spirit",
-    "real_name": "The Spirit",
-    "wiki_slug": "The_Spirit",
-    "short_name": "the_spirit",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f1/K13_TheSpirit_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_spirit.png"
-  },
-  {
-    "name": "Spirit",
-    "real_name": "Spirit",
-    "wiki_slug": "Spirit",
-    "short_name": "spirit",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f6/IconHelpLoading_spirit.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/spirit.png"
-  },
-  {
-    "name": "The Legion",
-    "real_name": "The Legion",
-    "wiki_slug": "The_Legion",
-    "short_name": "the_legion",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/K14_TheLegion_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_legion.png"
-  },
-  {
-    "name": "Legion",
-    "real_name": "Legion",
-    "wiki_slug": "Legion",
-    "short_name": "legion",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d6/IconHelpLoading_legion.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/legion.png"
-  },
-  {
-    "name": "The Plague",
-    "real_name": "The Plague",
-    "wiki_slug": "The_Plague",
-    "short_name": "the_plague",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/fe/K15_ThePlague_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_plague.png"
-  },
-  {
-    "name": "Plague",
-    "real_name": "Plague",
-    "wiki_slug": "Plague",
-    "short_name": "plague",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7c/IconHelpLoading_plague.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/plague.png"
-  },
-  {
-    "name": "The Ghost Face",
-    "real_name": "The Ghost Face",
-    "wiki_slug": "The_Ghost_Face",
-    "short_name": "the_ghost_face",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d1/K16_TheGhostFace_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_ghost_face.png"
-  },
-  {
-    "name": "Ghost Face",
-    "real_name": "Ghost Face",
-    "wiki_slug": "Ghost_Face",
-    "short_name": "ghost_face",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/06/IconHelpLoading_ghost.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/ghost_face.png"
-  },
-  {
-    "name": "The Demogorgon",
-    "real_name": "The Demogorgon",
-    "wiki_slug": "The_Demogorgon",
-    "short_name": "the_demogorgon",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/75/K17_TheDemogorgon_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_demogorgon.png"
-  },
-  {
-    "name": "Demogorgon",
-    "real_name": "Demogorgon",
-    "wiki_slug": "Demogorgon",
-    "short_name": "demogorgon",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b2/IconHelpLoading_demogorgon.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/demogorgon.png"
-  },
-  {
-    "name": "The Oni",
-    "real_name": "The Oni",
-    "wiki_slug": "The_Oni",
-    "short_name": "the_oni",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/80/K18_TheOni_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_oni.png"
-  },
-  {
-    "name": "Oni",
-    "real_name": "Oni",
-    "wiki_slug": "Oni",
-    "short_name": "oni",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1b/IconHelpLoading_oni.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/oni.png"
-  },
-  {
-    "name": "The Deathslinger",
-    "real_name": "The Deathslinger",
-    "wiki_slug": "The_Deathslinger",
-    "short_name": "the_deathslinger",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/ac/K19_TheDeathslinger_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_deathslinger.png"
-  },
-  {
-    "name": "Deathslinger",
-    "real_name": "Deathslinger",
-    "wiki_slug": "Deathslinger",
-    "short_name": "deathslinger",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/54/IconHelpLoading_deathslinger.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/deathslinger.png"
-  },
-  {
-    "name": "The Executioner",
-    "real_name": "The Executioner",
-    "wiki_slug": "The_Executioner",
-    "short_name": "the_executioner",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c9/K20_TheExecutioner_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_executioner.png"
-  },
-  {
-    "name": "Executioner",
-    "real_name": "Executioner",
-    "wiki_slug": "Executioner",
-    "short_name": "executioner",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7d/IconHelpLoading_wales.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/executioner.png"
-  },
-  {
-    "name": "The Blight",
-    "real_name": "The Blight",
-    "wiki_slug": "The_Blight",
-    "short_name": "the_blight",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1f/K21_TheBlight_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_blight.png"
-  },
-  {
-    "name": "Blight",
-    "real_name": "Blight",
-    "wiki_slug": "Blight",
-    "short_name": "blight",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/98/IconHelpLoading_blight.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/blight.png"
-  },
-  {
-    "name": "The Twins",
-    "real_name": "The Twins",
-    "wiki_slug": "The_Twins",
-    "short_name": "the_twins",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/17/K22_TheTwins_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_twins.png"
-  },
-  {
-    "name": "Twins",
-    "real_name": "Twins",
-    "wiki_slug": "Twins",
-    "short_name": "twins",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/0f/IconHelpLoading_twins.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/twins.png"
-  },
-  {
-    "name": "The Trickster",
-    "real_name": "The Trickster",
-    "wiki_slug": "The_Trickster",
-    "short_name": "the_trickster",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c9/K23_TheTrickster_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_trickster.png"
-  },
-  {
-    "name": "Trickster",
-    "real_name": "Trickster",
-    "wiki_slug": "Trickster",
-    "short_name": "trickster",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/60/IconHelpLoading_trickster.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/trickster.png"
-  },
-  {
-    "name": "The Nemesis",
-    "real_name": "The Nemesis",
-    "wiki_slug": "The_Nemesis",
-    "short_name": "the_nemesis",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/67/K24_TheNemesis_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_nemesis.png"
-  },
-  {
-    "name": "The Cenobite",
-    "real_name": "The Cenobite",
-    "wiki_slug": "The_Cenobite",
-    "short_name": "the_cenobite",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3b/K25_TheCenobite_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_cenobite.png"
-  },
-  {
-    "name": "Cenobite",
-    "real_name": "Cenobite",
-    "wiki_slug": "Cenobite",
-    "short_name": "cenobite",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/91/IconHelpLoading_cenobite.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/cenobite.png"
-  },
-  {
-    "name": "The Artist",
-    "real_name": "The Artist",
-    "wiki_slug": "The_Artist",
-    "short_name": "the_artist",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/01/K26_TheArtist_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_artist.png"
-  },
-  {
-    "name": "Artist",
-    "real_name": "Artist",
-    "wiki_slug": "Artist",
-    "short_name": "artist",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/ac/IconHelpLoading_artist.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/artist.png"
-  },
-  {
-    "name": "The Onryō",
-    "real_name": "The Onryō",
-    "wiki_slug": "The_Onryō",
-    "short_name": "the_onryō",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/5f/K27_TheOnryo_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_onryō.png"
-  },
-  {
-    "name": "Onryō",
-    "real_name": "Onryō",
-    "wiki_slug": "Onryō",
-    "short_name": "onryō",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/31/IconHelpLoading_onryo.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/onryō.png"
-  },
-  {
-    "name": "The Dredge",
-    "real_name": "The Dredge",
-    "wiki_slug": "The_Dredge",
-    "short_name": "the_dredge",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7e/K28_TheDredge_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_dredge.png"
-  },
-  {
-    "name": "Dredge",
-    "real_name": "Dredge",
-    "wiki_slug": "Dredge",
-    "short_name": "dredge",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c5/IconHelpLoading_dredge.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/dredge.png"
-  },
-  {
-    "name": "The Mastermind",
-    "real_name": "The Mastermind",
-    "wiki_slug": "The_Mastermind",
-    "short_name": "the_mastermind",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/ec/K29_TheMastermind_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_mastermind.png"
-  },
-  {
-    "name": "Mastermind",
-    "real_name": "Mastermind",
-    "wiki_slug": "Mastermind",
-    "short_name": "mastermind",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/fe/IconHelpLoading_mastermind.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/mastermind.png"
-  },
-  {
-    "name": "The Knight",
-    "real_name": "The Knight",
-    "wiki_slug": "The_Knight",
-    "short_name": "the_knight",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/69/K30_TheKnight_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_knight.png"
-  },
-  {
-    "name": "Knight",
-    "real_name": "Knight",
-    "wiki_slug": "Knight",
-    "short_name": "knight",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/5b/IconHelpLoading_knight.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/knight.png"
-  },
-  {
-    "name": "The Skull Merchant",
-    "real_name": "The Skull Merchant",
-    "wiki_slug": "The_Skull_Merchant",
-    "short_name": "the_skull_merchant",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/64/K31_TheSkullMerchant_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_skull_merchant.png"
-  },
-  {
-    "name": "Skull Merchant",
-    "real_name": "Skull Merchant",
-    "wiki_slug": "Skull_Merchant",
-    "short_name": "skull_merchant",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f9/IconHelpLoading_skullMerchant.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/skull_merchant.png"
-  },
-  {
-    "name": "The Singularity",
-    "real_name": "The Singularity",
-    "wiki_slug": "The_Singularity",
-    "short_name": "the_singularity",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/24/K32_TheSingularity_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_singularity.png"
-  },
-  {
-    "name": "Singularity",
-    "real_name": "Singularity",
-    "wiki_slug": "Singularity",
-    "short_name": "singularity",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7c/IconHelpLoading_singularity.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/singularity.png"
-  },
-  {
-    "name": "The Xenomorph",
-    "real_name": "The Xenomorph",
-    "wiki_slug": "The_Xenomorph",
-    "short_name": "the_xenomorph",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/64/K33_TheXenomorph_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_xenomorph.png"
-  },
-  {
-    "name": "Xenomorph",
-    "real_name": "Xenomorph",
-    "wiki_slug": "Xenomorph",
-    "short_name": "xenomorph",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/eb/IconHelpLoading_xenomorph.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/xenomorph.png"
-  },
-  {
-    "name": "The Good Guy",
-    "real_name": "The Good Guy",
-    "wiki_slug": "The_Good_Guy",
-    "short_name": "the_good_guy",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/81/K34_TheGoodGuy_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_good_guy.png"
-  },
-  {
-    "name": "Good Guy",
-    "real_name": "Good Guy",
-    "wiki_slug": "Good_Guy",
-    "short_name": "good_guy",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/ba/IconHelpLoading_goodGuy.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/good_guy.png"
-  },
-  {
-    "name": "The Unknown",
-    "real_name": "The Unknown",
-    "wiki_slug": "The_Unknown",
-    "short_name": "the_unknown",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/51/K35_TheUnknown_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_unknown.png"
-  },
-  {
-    "name": "Unknown",
-    "real_name": "Unknown",
-    "wiki_slug": "Unknown",
-    "short_name": "unknown",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3f/IconHelpLoading_unknown.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/unknown.png"
-  },
-  {
-    "name": "The Lich",
-    "real_name": "The Lich",
-    "wiki_slug": "The_Lich",
-    "short_name": "the_lich",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f0/K36_TheLich_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_lich.png"
-  },
-  {
-    "name": "Lich",
-    "real_name": "Lich",
-    "wiki_slug": "Lich",
-    "short_name": "lich",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f8/IconHelpLoading_lich.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/lich.png"
-  },
-  {
-    "name": "The Dark Lord",
-    "real_name": "The Dark Lord",
-    "wiki_slug": "The_Dark_Lord",
-    "short_name": "the_dark_lord",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/62/K37_TheDarkLord_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_dark_lord.png"
-  },
-  {
-    "name": "Dark Lord",
-    "real_name": "Dark Lord",
-    "wiki_slug": "Dark_Lord",
-    "short_name": "dark_lord",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f2/KillerDracula.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/dark_lord.png"
-  },
-  {
-    "name": "The Houndmaster",
-    "real_name": "The Houndmaster",
-    "wiki_slug": "The_Houndmaster",
-    "short_name": "the_houndmaster",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/96/K38_TheHoundmaster_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_houndmaster.png"
-  },
-  {
-    "name": "Houndmaster",
-    "real_name": "Houndmaster",
-    "wiki_slug": "Houndmaster",
-    "short_name": "houndmaster",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e5/Unknown_QuestionMark.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/houndmaster.png"
-  },
-  {
-    "name": "The Ghoul",
-    "real_name": "The Ghoul",
-    "wiki_slug": "The_Ghoul",
-    "short_name": "the_ghoul",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c9/K39_TheGhoul_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_ghoul.png"
-  },
-  {
-    "name": "Ghoul",
-    "real_name": "Ghoul",
-    "wiki_slug": "Ghoul",
-    "short_name": "ghoul",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e5/Unknown_QuestionMark.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/ghoul.png"
-  },
-  {
-    "name": "The Animatronic",
-    "real_name": "The Animatronic",
-    "wiki_slug": "The_Animatronic",
-    "short_name": "the_animatronic",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/02/K40_TheAnimatronic_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/the_animatronic.png"
-  },
-  {
-    "name": "Animatronic",
-    "real_name": "Animatronic",
-    "wiki_slug": "Animatronic",
-    "short_name": "animatronic",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e5/Unknown_QuestionMark.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/animatronic.png"
-  },
-  {
-    "name": "Troupe",
-    "real_name": "Troupe",
-    "wiki_slug": "Troupe",
-    "short_name": "troupe",
-    "category": "Survivor",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/42/SurvivorTroupe.png/revision/latest",
-    "avatar_local_path": "avatars/survivors/troupe.png"
-  },
-  {
-    "name": "The Krasue",
-    "real_name": "The Krasue",
-    "wiki_slug": "The_Krasue",
-    "short_name": "the_krasue",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/93/K41_TheKrasue_Portrait.png/revision/latest",
-    "avatar_local_path": "avatars/killers/the_krasue.png"
-  },
-  {
-    "name": "Bear Traps",
-    "real_name": "Bear Traps",
-    "wiki_slug": "Bear_Traps",
-    "short_name": "bear_traps",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/0f/IconPowers_trap.png/revision/latest",
-    "avatar_local_path": "avatars/killers/bear_traps.png"
-  },
-  {
-    "name": "Wailing Bell",
-    "real_name": "Wailing Bell",
-    "wiki_slug": "Wailing_Bell",
-    "short_name": "wailing_bell",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/f4/IconPowers_bell.png/revision/latest",
-    "avatar_local_path": "avatars/killers/wailing_bell.png"
-  },
-  {
-    "name": "Chainsaw",
-    "real_name": "Chainsaw",
-    "wiki_slug": "Chainsaw",
-    "short_name": "chainsaw",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b1/IconPowers_chainsaw.png/revision/latest",
-    "avatar_local_path": "avatars/killers/chainsaw.png"
-  },
-  {
-    "name": "Spencer's Last Breath",
-    "real_name": "Spencer's Last Breath",
-    "wiki_slug": "Spencer's_Last_Breath",
-    "short_name": "spencer's_last_breath",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/6f/IconPowers_breath.png/revision/latest",
-    "avatar_local_path": "avatars/killers/spencer's_last_breath.png"
-  },
-  {
-    "name": "Evil Within",
-    "real_name": "Evil Within",
-    "wiki_slug": "Evil_Within",
-    "short_name": "evil_within",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1f/IconPowers_stalker1.png/revision/latest",
-    "avatar_local_path": "avatars/killers/evil_within.png"
-  },
-  {
-    "name": "Blackened Catalyst",
-    "real_name": "Blackened Catalyst",
-    "wiki_slug": "Blackened_Catalyst",
-    "short_name": "blackened_catalyst",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/62/IconPowers_blackenedCatalyst.png/revision/latest",
-    "avatar_local_path": "avatars/killers/blackened_catalyst.png"
-  },
-  {
-    "name": "Carter's Spark",
-    "real_name": "Carter's Spark",
-    "wiki_slug": "Carter's_Spark",
-    "short_name": "carter's_spark",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/50/IconPowers_cartersSpark.png/revision/latest",
-    "avatar_local_path": "avatars/killers/carter's_spark.png"
-  },
-  {
-    "name": "Hunting Hatchets",
-    "real_name": "Hunting Hatchets",
-    "wiki_slug": "Hunting_Hatchets",
-    "short_name": "hunting_hatchets",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e5/IconPowers_huntingHatchets.png/revision/latest",
-    "avatar_local_path": "avatars/killers/hunting_hatchets.png"
-  },
-  {
-    "name": "Bubba's Chainsaw",
-    "real_name": "Bubba's Chainsaw",
-    "wiki_slug": "Bubba's_Chainsaw",
-    "short_name": "bubba's_chainsaw",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/79/IconPowers_bubbasChainsaw.png/revision/latest",
-    "avatar_local_path": "avatars/killers/bubba's_chainsaw.png"
-  },
-  {
-    "name": "Dream Demon",
-    "real_name": "Dream Demon",
-    "wiki_slug": "Dream_Demon",
-    "short_name": "dream_demon",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3a/IconPowers_dreamDemon.png/revision/latest",
-    "avatar_local_path": "avatars/killers/dream_demon.png"
-  },
-  {
-    "name": "Jigsaw's Baptism",
-    "real_name": "Jigsaw's Baptism",
-    "wiki_slug": "Jigsaw's_Baptism",
-    "short_name": "jigsaw's_baptism",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b0/IconPowers_jigsawsBaptism.png/revision/latest",
-    "avatar_local_path": "avatars/killers/jigsaw's_baptism.png"
-  },
-  {
-    "name": "The Afterpiece Tonic",
-    "real_name": "The Afterpiece Tonic",
-    "wiki_slug": "The_Afterpiece_Tonic",
-    "short_name": "the_afterpiece_tonic",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/51/IconPowers_gasBomb.png/revision/latest",
-    "avatar_local_path": "avatars/killers/the_afterpiece_tonic.png"
-  },
-  {
-    "name": "Yamaoka's Haunting",
-    "real_name": "Yamaoka's Haunting",
-    "wiki_slug": "Yamaoka's_Haunting",
-    "short_name": "yamaoka's_haunting",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/bb/IconPowers_yamaokasHaunting.png/revision/latest",
-    "avatar_local_path": "avatars/killers/yamaoka's_haunting.png"
-  },
-  {
-    "name": "Feral Frenzy",
-    "real_name": "Feral Frenzy",
-    "wiki_slug": "Feral_Frenzy",
-    "short_name": "feral_frenzy",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e8/IconPowers_feralFrenzy.png/revision/latest",
-    "avatar_local_path": "avatars/killers/feral_frenzy.png"
-  },
-  {
-    "name": "Vile Purge",
-    "real_name": "Vile Purge",
-    "wiki_slug": "Vile_Purge",
-    "short_name": "vile_purge",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/fd/IconPowers_vilePurge.png/revision/latest",
-    "avatar_local_path": "avatars/killers/vile_purge.png"
-  },
-  {
-    "name": "Night Shroud",
-    "real_name": "Night Shroud",
-    "wiki_slug": "Night_Shroud",
-    "short_name": "night_shroud",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/27/IconPowers_nightShroud.png/revision/latest",
-    "avatar_local_path": "avatars/killers/night_shroud.png"
-  },
-  {
-    "name": "Of the Abyss",
-    "real_name": "Of the Abyss",
-    "wiki_slug": "Of_the_Abyss",
-    "short_name": "of_the_abyss",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/a9/IconPowers_ofTheAbyss.png/revision/latest",
-    "avatar_local_path": "avatars/killers/of_the_abyss.png"
-  },
-  {
-    "name": "Yamaoka's Wrath",
-    "real_name": "Yamaoka's Wrath",
-    "wiki_slug": "Yamaoka's_Wrath",
-    "short_name": "yamaoka's_wrath",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/66/IconPowers_yamaokasWrath.png/revision/latest",
-    "avatar_local_path": "avatars/killers/yamaoka's_wrath.png"
-  },
-  {
-    "name": "The Redeemer",
-    "real_name": "The Redeemer",
-    "wiki_slug": "The_Redeemer",
-    "short_name": "the_redeemer",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/6e/IconPowers_theRedeemer.png/revision/latest",
-    "avatar_local_path": "avatars/killers/the_redeemer.png"
-  },
-  {
-    "name": "Rites of Judgement",
-    "real_name": "Rites of Judgement",
-    "wiki_slug": "Rites_of_Judgement",
-    "short_name": "rites_of_judgement",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d5/IconPowers_ritesOfJudgement.png/revision/latest",
-    "avatar_local_path": "avatars/killers/rites_of_judgement.png"
-  },
-  {
-    "name": "Blighted Corruption",
-    "real_name": "Blighted Corruption",
-    "wiki_slug": "Blighted_Corruption",
-    "short_name": "blighted_corruption",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/fe/IconPowers_blightedCorruption.png/revision/latest",
-    "avatar_local_path": "avatars/killers/blighted_corruption.png"
-  },
-  {
-    "name": "Blood Bond",
-    "real_name": "Blood Bond",
-    "wiki_slug": "Blood_Bond",
-    "short_name": "blood_bond",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/28/IconPowers_bloodBond.png/revision/latest",
-    "avatar_local_path": "avatars/killers/blood_bond.png"
-  },
-  {
-    "name": "Showstopper",
-    "real_name": "Showstopper",
-    "wiki_slug": "Showstopper",
-    "short_name": "showstopper",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/fb/IconPowers_showstopper.png/revision/latest",
-    "avatar_local_path": "avatars/killers/showstopper.png"
-  },
-  {
-    "name": "T-Virus",
-    "real_name": "T-Virus",
-    "wiki_slug": "T-Virus",
-    "short_name": "t-virus",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b4/IconPowers_t-Virus.png/revision/latest",
-    "avatar_local_path": "avatars/killers/t_virus.png"
-  },
-  {
-    "name": "Summons of Pain",
-    "real_name": "Summons of Pain",
-    "wiki_slug": "Summons_of_Pain",
-    "short_name": "summons_of_pain",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/4d/IconPowers_summonsOfPain.png/revision/latest",
-    "avatar_local_path": "avatars/killers/summons_of_pain.png"
-  },
-  {
-    "name": "Birds of Torment",
-    "real_name": "Birds of Torment",
-    "wiki_slug": "Birds_of_Torment",
-    "short_name": "birds_of_torment",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/63/IconPowers_birdsOfTorment.png/revision/latest",
-    "avatar_local_path": "avatars/killers/birds_of_torment.png"
-  },
-  {
-    "name": "Deluge of Fear",
-    "real_name": "Deluge of Fear",
-    "wiki_slug": "Deluge_of_Fear",
-    "short_name": "deluge_of_fear",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/85/IconPowers_delugeOfFear.png/revision/latest",
-    "avatar_local_path": "avatars/killers/deluge_of_fear.png"
-  },
-  {
-    "name": "Reign of Darkness",
-    "real_name": "Reign of Darkness",
-    "wiki_slug": "Reign_of_Darkness",
-    "short_name": "reign_of_darkness",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/49/IconPowers_reignOfDarkness.png/revision/latest",
-    "avatar_local_path": "avatars/killers/reign_of_darkness.png"
-  },
-  {
-    "name": "Virulent Bound",
-    "real_name": "Virulent Bound",
-    "wiki_slug": "Virulent_Bound",
-    "short_name": "virulent_bound",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1d/IconPowers_virulentBound.png/revision/latest",
-    "avatar_local_path": "avatars/killers/virulent_bound.png"
-  },
-  {
-    "name": "Guardia Compagnia",
-    "real_name": "Guardia Compagnia",
-    "wiki_slug": "Guardia_Compagnia",
-    "short_name": "guardia_compagnia",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c4/IconPowers_guardiaCompagna.png/revision/latest",
-    "avatar_local_path": "avatars/killers/guardia_compagnia.png"
-  },
-  {
-    "name": "Eyes in the Sky",
-    "real_name": "Eyes in the Sky",
-    "wiki_slug": "Eyes_in_the_Sky",
-    "short_name": "eyes_in_the_sky",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c6/IconPowers_eyesInTheSky.png/revision/latest",
-    "avatar_local_path": "avatars/killers/eyes_in_the_sky.png"
-  },
-  {
-    "name": "Quantum Instantiation",
-    "real_name": "Quantum Instantiation",
-    "wiki_slug": "Quantum_Instantiation",
-    "short_name": "quantum_instantiation",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/df/IconPowers_quantumInstantiation.png/revision/latest",
-    "avatar_local_path": "avatars/killers/quantum_instantiation.png"
-  },
-  {
-    "name": "Hidden Pursuit",
-    "real_name": "Hidden Pursuit",
-    "wiki_slug": "Hidden_Pursuit",
-    "short_name": "hidden_pursuit",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b7/IconPowers_hiddenPursuit.png/revision/latest",
-    "avatar_local_path": "avatars/killers/hidden_pursuit.png"
-  },
-  {
-    "name": "Playtime's Over",
-    "real_name": "Playtime's Over",
-    "wiki_slug": "Playtime's_Over",
-    "short_name": "playtime's_over",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/bd/IconPowers_playtimesOver.png/revision/latest",
-    "avatar_local_path": "avatars/killers/playtime's_over.png"
-  },
-  {
-    "name": "UVX",
-    "real_name": "UVX",
-    "wiki_slug": "UVX",
-    "short_name": "uvx",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/61/IconPowers_uvx.png/revision/latest",
-    "avatar_local_path": "avatars/killers/uvx.png"
-  },
-  {
-    "name": "Vile Darkness",
-    "real_name": "Vile Darkness",
-    "wiki_slug": "Vile_Darkness",
-    "short_name": "vile_darkness",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/23/IconPowers_VileDarkness.png/revision/latest",
-    "avatar_local_path": "avatars/killers/vile_darkness.png"
-  },
-  {
-    "name": "Vampiric Shift",
-    "real_name": "Vampiric Shift",
-    "wiki_slug": "Vampiric_Shift",
-    "short_name": "vampiric_shift",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/a9/IconPowers_K37_Shapeshift.png/revision/latest",
-    "avatar_local_path": "avatars/killers/vampiric_shift.png"
-  },
-  {
-    "name": "Scent of Blood",
-    "real_name": "Scent of Blood",
-    "wiki_slug": "Scent_of_Blood",
-    "short_name": "scent_of_blood",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/df/IconPowers_scentOfBlood.png/revision/latest",
-    "avatar_local_path": "avatars/killers/scent_of_blood.png"
-  },
-  {
-    "name": "One-Eyed Terror",
-    "real_name": "One-Eyed Terror",
-    "wiki_slug": "One-Eyed_Terror",
-    "short_name": "one-eyed_terror",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/77/IconPowers_oneEyedTerror.png/revision/latest",
-    "avatar_local_path": "avatars/killers/one_eyed_terror.png"
-  },
-  {
-    "name": "Fazbear's Fright",
-    "real_name": "Fazbear's Fright",
-    "wiki_slug": "Fazbear's_Fright",
-    "short_name": "fazbear's_fright",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/84/IconPowers_fazbearsFright.png/revision/latest",
-    "avatar_local_path": "avatars/killers/fazbear's_fright.png"
-  },
-  {
-    "name": "Bloodlust",
-    "real_name": "Bloodlust",
-    "wiki_slug": "Bloodlust",
-    "short_name": "bloodlust",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e8/IconHelp_bloodlust.png/revision/latest",
-    "avatar_local_path": "avatars/killers/bloodlust.png"
-  },
-  {
-    "name": "Undetectable",
-    "real_name": "Undetectable",
-    "wiki_slug": "Undetectable",
-    "short_name": "undetectable",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1d/IconStatusEffects_undetectable.png/revision/latest",
-    "avatar_local_path": "avatars/killers/undetectable.png"
-  },
-  {
-    "name": "Hunter",
-    "real_name": "Hunter",
-    "wiki_slug": "Hunter",
-    "short_name": "hunter",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/a4/DailyRitualIcon_hunter.png/revision/latest",
-    "avatar_local_path": "avatars/killers/hunter.png"
-  },
-  {
-    "name": "Haemorrhage",
-    "real_name": "Haemorrhage",
-    "wiki_slug": "Haemorrhage",
-    "short_name": "haemorrhage",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/24/IconStatusEffects_bleeding.png/revision/latest",
-    "avatar_local_path": "avatars/killers/haemorrhage.png"
-  },
-  {
-    "name": "Deviousness",
-    "real_name": "Deviousness",
-    "wiki_slug": "Deviousness",
-    "short_name": "deviousness",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/f/ff/DailyRitualIcon_deviousness.png/revision/latest",
-    "avatar_local_path": "avatars/killers/deviousness.png"
-  },
-  {
-    "name": "Hex Totem",
-    "real_name": "Hex Totem",
-    "wiki_slug": "Hex_Totem",
-    "short_name": "hex_totem",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e9/IconHelpLoading_totem.png/revision/latest",
-    "avatar_local_path": "avatars/killers/hex_totem.png"
-  },
-  {
-    "name": "Dull Totem",
-    "real_name": "Dull Totem",
-    "wiki_slug": "Dull_Totem",
-    "short_name": "dull_totem",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e9/IconHelpLoading_totem.png/revision/latest",
-    "avatar_local_path": "avatars/killers/dull_totem.png"
-  },
-  {
-    "name": "Firecracker",
-    "real_name": "Firecracker",
-    "wiki_slug": "Firecracker",
-    "short_name": "firecracker",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/88/IconItems_chineseFirecracker.png/revision/latest",
-    "avatar_local_path": "avatars/killers/firecracker.png"
-  },
-  {
-    "name": "Flash Grenades",
-    "real_name": "Flash Grenades",
-    "wiki_slug": "Flash_Grenades",
-    "short_name": "flash_grenades",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/6/6a/IconItems_flashGrenade.png/revision/latest",
-    "avatar_local_path": "avatars/killers/flash_grenades.png"
-  },
-  {
-    "name": "Blast Mine",
-    "real_name": "Blast Mine",
-    "wiki_slug": "Blast_Mine",
-    "short_name": "blast_mine",
-    "category": "Killer",
-    "avatar_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/1c/IconPerks_blastMine.png/revision/latest",
-    "avatar_local_path": "avatars/killers/blast_mine.png"
+    "avatar_local_path": "avatars/survivors/vee_boonyasak.png",
+    "release_number": 48
   }
 ]

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -28,6 +28,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const { run, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
   const { iconByPerk, avatarByKiller } = usePerkArtwork();
   const [selected, setSelected] = useState<string[]>([]);
+  const [showNextPage, setShowNextPage] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [lastWasLoss, setLastWasLoss] = useState(false);
@@ -148,8 +149,21 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
 
               {nextPagePerks.length > 0 && (
                 <>
-                  <SectionLabel>Next up — page {run.current_page + 1}</SectionLabel>
-                  <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
+                  <button
+                    type="button"
+                    onClick={() => setShowNextPage((open) => !open)}
+                    aria-expanded={showNextPage}
+                    className="mb-2.5 mt-6 flex w-full items-center gap-2 font-mono text-[10.5px] uppercase tracking-widest text-slate-600 transition-colors hover:text-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 motion-reduce:transition-none"
+                  >
+                    <ChevronRight
+                      className={`h-3.5 w-3.5 transition-transform motion-reduce:transition-none ${
+                        showNextPage ? 'rotate-90' : ''
+                      }`}
+                    />
+                    <span>Next up — page {run.current_page + 1}</span>
+                    <span className="h-px flex-1 bg-slate-800" />
+                  </button>
+                  {showNextPage && <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />}
                 </>
               )}
             </>

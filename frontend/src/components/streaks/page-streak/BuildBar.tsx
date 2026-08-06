@@ -20,7 +20,7 @@ export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, o
       {slots.map((name, index) => (
         <div
           key={index}
-          className={`flex min-w-[130px] flex-1 items-center gap-2 rounded-lg px-3 py-2 text-xs ${
+          className={`flex h-14 min-w-[130px] flex-1 items-center gap-2 rounded-lg px-3 text-xs ${
             name
               ? 'border border-orange-500/50 bg-orange-500/10 font-semibold text-slate-100'
               : 'border border-dashed border-slate-700 font-mono text-slate-600'

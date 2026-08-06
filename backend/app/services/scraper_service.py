@@ -262,17 +262,29 @@ class ScraperService:
         current_category: Optional[str] = None
         content_area = soup.find("div", class_="mw-parser-output") or soup
 
-        char_by_slug = {c.wiki_slug.lower(): c for c in characters if c.wiki_slug}
+        char_by_slug = {}
         char_by_name = {}
         for c in characters:
-            # Killers are stored without their article, but the perks page links them
-            # by full title ("The Trapper"), so both spellings must resolve.
+            # The perks page is inconsistent about the article: killers are stored
+            # without it but linked as "The Trapper", while "The Troupe" is stored
+            # with it and linked as "Troupe". Register both spellings either way.
             aliases = [c.name, c.real_name]
-            if c.category == "Killer":
+            if c.name:
                 aliases.append(f"The {c.name}")
+                if c.name.startswith("The "):
+                    aliases.append(c.name[4:])
             for alias in aliases:
                 if alias:
                     char_by_name.setdefault(alias.lower(), c)
+
+            slugs = [c.wiki_slug]
+            if c.wiki_slug and c.wiki_slug.startswith("The_"):
+                slugs.append(c.wiki_slug[4:])
+            elif c.wiki_slug:
+                slugs.append(f"The_{c.wiki_slug}")
+            for slug in slugs:
+                if slug:
+                    char_by_slug.setdefault(slug.lower(), c)
 
         for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
             if element.name in ["h1", "h2", "h3", "h4"]:

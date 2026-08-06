@@ -138,7 +138,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           )}
 
           <SectionLabel>History</SectionLabel>
-          <RunHistory history={run.history} />
+          <RunHistory history={run.history} iconByPerk={iconByPerk} />
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {confirmingReset ? (

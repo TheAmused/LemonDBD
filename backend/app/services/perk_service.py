@@ -189,3 +189,12 @@ class PerkService:
         if category and category.lower() != "all":
             results = [c for c in results if c.category.lower() == category.lower()]
         return [c.model_dump() for c in sorted(results, key=lambda x: x.name)]
+
+    def get_characters_in_scrape_order(self) -> List[Dict[str, Any]]:
+        """Character records in the order they appear in characters.json.
+
+        get_characters() sorts alphabetically, which callers there depend on.
+        Page streak needs the raw scrape order because it tracks the wiki's
+        killer ordering, so it gets its own accessor over the same cache.
+        """
+        return [c.model_dump() for c in self._characters_cache]

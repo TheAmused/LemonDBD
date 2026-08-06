@@ -321,5 +321,69 @@ class TestPageStreakResults(unittest.TestCase):
             self.service.reset_run("Trapper")
 
 
+class OrderedFakePerkService(FakePerkService):
+    """Adds a scrape-ordered character list so roster ordering can be exercised."""
+
+    def __init__(self, perks, characters):
+        super().__init__(perks)
+        self._characters = characters
+
+    def get_characters_in_scrape_order(self):
+        return list(self._characters)
+
+
+class TestPageStreakRosterOrder(unittest.TestCase):
+    def setUp(self):
+        self.db_path = "test_page_streak_order.db"
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+        self.db_service = DatabaseService(db_path=self.db_path)
+        self.db_service.init_db()
+
+        perks = []
+        for killer in ["Wraith", "Trapper", "Nurse", "Animatronic"]:
+            perks.extend(make_perks(2, character=killer))
+        # make_perks reuses names, so give every perk a unique one.
+        for i, perk in enumerate(perks, start=1):
+            perk["name"] = f"Perk {i:03d}"
+
+        # Scrape order: Trapper before Wraith before Nurse. Animatronic is absent
+        # from the character list entirely, which is the real 5-killer edge case.
+        characters = [
+            {"name": "The Trapper", "category": "Survivor"},
+            {"name": "Trapper", "category": "Survivor"},
+            {"name": "The Wraith", "category": "Survivor"},
+            {"name": "Nurse", "category": "Survivor"},
+        ]
+
+        self.service = PageStreakService(
+            db_service=self.db_service,
+            perk_service=OrderedFakePerkService(perks, characters),
+        )
+
+    def tearDown(self):
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+
+    def test_killers_follow_character_list_order(self):
+        self.assertEqual(self.service.get_killers(), ["Trapper", "Wraith", "Nurse", "Animatronic"])
+
+    def test_killer_missing_from_character_list_is_kept_at_the_end(self):
+        self.assertIn("Animatronic", self.service.get_killers())
+
+    def test_roster_uses_the_same_order(self):
+        self.assertEqual(
+            [entry["killer"] for entry in self.service.get_roster()],
+            ["Trapper", "Wraith", "Nurse", "Animatronic"],
+        )
+
+    def test_ordering_survives_a_perk_service_without_characters(self):
+        service = PageStreakService(
+            db_service=self.db_service,
+            perk_service=FakePerkService(make_perks(3, character="Nurse")),
+        )
+        self.assertEqual(service.get_killers(), ["Nurse"])
+
+
 if __name__ == "__main__":
     unittest.main()

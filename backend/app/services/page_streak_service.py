@@ -99,13 +99,45 @@ class PageStreakService:
 
     # ---- roster ---------------------------------------------------------
 
+    def _character_positions(self):
+        """Map a killer name to its position in the scraped character list.
+
+        The scrape order follows the wiki's killer ordering, so it is the closest
+        thing we have to release order. Most killers appear as "The <name>"; a few
+        only under their bare name. Returns an empty map when the perk service
+        cannot supply characters, in which case ordering falls back to alphabetical.
+        """
+        get_ordered = getattr(self.perk_service, "get_characters_in_scrape_order", None)
+        if not callable(get_ordered):
+            return {}
+        try:
+            characters = get_ordered() or []
+        except Exception:
+            return {}
+
+        positions = {}
+        for index, character in enumerate(characters):
+            name = (character or {}).get("name")
+            if name and name not in positions:
+                positions[name] = index
+        return positions
+
     def get_killers(self):
         names = {
             p["character"]
             for p in self._all_killer_perks()
             if p.get("character") and p["character"] != GENERAL_CHARACTER
         }
-        return sorted(names)
+        positions = self._character_positions()
+
+        def sort_key(name):
+            position = positions.get(f"The {name}", positions.get(name))
+            if position is None:
+                # Unknown killers keep a deterministic place after the known ones.
+                return (1, 0, name)
+            return (0, position, name)
+
+        return sorted(names, key=sort_key)
 
     def get_roster(self):
         page_count = len(self.build_pages())

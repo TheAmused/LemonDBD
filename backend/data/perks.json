@@ -101,13 +101,13 @@
   },
   {
     "name": "Bardic Inspiration",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "The Troupe",
+    "character_real_name": "The Troupe",
+    "character_avatar_path": "avatars/survivors/the_troupe.png",
     "category": "Survivor",
     "description": "This description is based on the changes announced for or featured in the upcoming Patch 8.0.0It's time to give your audience a show.\nWill you bring the house down or will you choke?\nPress the *Active Ability button* while standing and motionless to enter the *Performance* interaction that lasts up to **15 seconds** and empowers other Survivors within **16 metres** of your location.\nThe empowering effect depends on the result of you rolling a **d20** and lasts for **90 seconds** after completing the *Performance*:\n* **1**: You scream, but without notifying the Killer.\n* **2 - 10**: Skill Checks grant **+1 %** Progression.\n* **11 - 19**: *Skill Checks* grant **+2 %** Progression.\n* **20**: *Skill Checks* grant **+3 %** Progression.\n*Bardic Inspiration* has a cool-down of **110**/**100**/**90** **seconds** after completing the *Performance* or cancelling it.\n*\"Listen closely! I'm about to save your life!\" — Aestri*",
     "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d8/IconPerks_bardicInspiration.png/revision/latest",
-    "icon_local_path": "icons/survivors/General/bardic_inspiration.png"
+    "icon_local_path": "icons/survivors/The Troupe/bardic_inspiration.png"
   },
   {
     "name": "Better Together",
@@ -841,13 +841,13 @@
   },
   {
     "name": "Mirrored Illusion",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "The Troupe",
+    "character_real_name": "The Troupe",
+    "character_avatar_path": "avatars/survivors/the_troupe.png",
     "category": "Survivor",
     "description": "This description is based on the changes announced for or featured in the upcoming Patch 8.2.0A familiar spell made unfamiliar in this corrupted landscape.\nAfter repairing **Generators** for a total of **20 %**, *Mirrored Illusion* activates:\n* Press the *Active Ability button* when next to either a Chest, Exit Gate, Generator, or a Totem to spawn a ***Static Illusion*** that lasts for **40**/**50**/**60** **seconds**.\n*Mirrored Illusion* deactivates after triggering successfully.\n*\"Just... stay there... perfect!\" — Baermar*",
     "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/97/IconPerks_mirroredIllusion.png/revision/latest",
-    "icon_local_path": "icons/survivors/General/mirrored_illusion.png"
+    "icon_local_path": "icons/survivors/The Troupe/mirrored_illusion.png"
   },
   {
     "name": "Moment of Glory",
@@ -1291,13 +1291,13 @@
   },
   {
     "name": "Still Sight",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "The Troupe",
+    "character_real_name": "The Troupe",
+    "character_avatar_path": "avatars/survivors/the_troupe.png",
     "category": "Survivor",
     "description": "This description is based on the changes announced for or featured in the upcoming Patch 8.0.0A clear mind and calm temperament will always find the means of their escape.\nAfter standing still for **6**/**5**/**4** **seconds**, *Still Sight* activates:\n* The Auras of the Killer as well as any Chests and Generators within **24 metres** of your location are revealed to you until you start moving again.\n*\"Breathe in. Breathe out. Now open your eyes.\" — Baermar*",
     "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b6/IconPerks_stillSight.png/revision/latest",
-    "icon_local_path": "icons/survivors/General/still_sight.png"
+    "icon_local_path": "icons/survivors/The Troupe/still_sight.png"
   },
   {
     "name": "Streetwise",

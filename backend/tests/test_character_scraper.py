@@ -175,7 +175,43 @@ PERKS_HTML = """
 """
 
 
+SURVIVOR_PAGE_HTML = """
+<div class="mw-parser-output">
+  <a href="/wiki/The_Troupe" title="The Troupe">
+    <img data-src="https://x/images/e/e0/S42_TheTroupe_Portrait.png/revision/latest"/>
+  </a>
+</div>
+"""
+
+TROUPE_PERKS_HTML = """
+<div class="mw-parser-output">
+  <h2>Survivor Perks</h2>
+  <table class="wikitable">
+    <tr><th>Icon</th><th>Name</th><th>Description</th><th>Character</th></tr>
+    <tr>
+      <td><img data-src="https://x/images/a/a2/IconPerks_bardic.png"/></td>
+      <td>Bardic Inspiration</td>
+      <td>You sing.</td>
+      <td><a href="/wiki/Troupe" title="Troupe">Aestri</a></td>
+    </tr>
+  </table>
+</div>
+"""
+
+
 class TestPerkOwnerMatching(unittest.TestCase):
+    def test_survivor_stored_with_an_article_matches_a_link_without_one(self):
+        # "The Troupe" is stored with its article, but the perks page links it as
+        # /wiki/Troupe with the title "Troupe". Without both spellings registered,
+        # its three perks silently fall through to "General".
+        service = ScraperService()
+        characters = service.parse_character_page(SURVIVOR_PAGE_HTML)
+        perks = service.parse_perks(TROUPE_PERKS_HTML, characters)
+
+        bardic = next(p for p in perks if p.name == "Bardic Inspiration")
+        self.assertEqual(bardic.character, "The Troupe")
+        self.assertEqual(bardic.character_avatar_path, "avatars/survivors/the_troupe.png")
+
     def test_perk_matches_a_killer_whose_name_lost_its_article(self):
         service = ScraperService()
         characters = service.parse_character_page(KILLER_PAGE_HTML)

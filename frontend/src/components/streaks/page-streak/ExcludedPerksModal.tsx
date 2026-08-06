@@ -72,9 +72,9 @@ export const ExcludedPerksModal: React.FC<ExcludedPerksModalProps> = ({ isOpen, 
       <div className="flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border border-slate-800 bg-slate-900">
         <div className="flex items-start justify-between gap-4 border-b border-slate-800 p-4">
           <div>
-            <h2 className="text-sm font-extrabold text-slate-100">Perks I don&apos;t own</h2>
+            <h2 className="text-sm font-extrabold text-slate-100">My perk collection</h2>
             <p className="mt-1 text-xs text-slate-500">
-              Unchecked perks leave the pool and the pages are renumbered. Runs already in progress keep their frozen layout.
+              Checked perks are the ones you own. Unchecking one removes it from the pool and renumbers the pages. Runs already in progress keep their frozen layout.
             </p>
           </div>
           <button onClick={onClose} aria-label="Close" className="rounded-lg p-1 text-slate-500 hover:text-slate-300">
@@ -124,7 +124,7 @@ export const ExcludedPerksModal: React.FC<ExcludedPerksModalProps> = ({ isOpen, 
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 p-4">
           <span className="font-mono text-[11px] text-orange-400">
-            {owned} of {allPerks.length} · {projectedPages} pages
+            {owned} of {allPerks.length} perks owned · {projectedPages} pages
           </span>
           <div className="flex gap-2">
             <button onClick={onClose} className="rounded-lg border border-slate-800 px-4 py-2 text-xs font-bold text-slate-400">

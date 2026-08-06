@@ -7,11 +7,12 @@ interface BuildBarProps {
   size: number;
   confirmed: boolean;
   onConfirm: () => void;
+  iconByPerk?: Record<string, string>;
 }
 
 const DIAMOND = 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)';
 
-export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, onConfirm }) => {
+export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, onConfirm, iconByPerk = {} }) => {
   const slots = Array.from({ length: size }, (_, i) => selected[i] ?? null);
 
   return (
@@ -27,7 +28,14 @@ export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, o
         >
           {name && (
             <span className="grid h-6 w-6 flex-none place-items-center bg-orange-400/60" style={{ clipPath: DIAMOND }}>
-              <span className="h-[82%] w-[82%] bg-gradient-to-br from-amber-900/80 to-slate-950" style={{ clipPath: DIAMOND }} />
+              <span
+                className="grid h-[82%] w-[82%] place-items-center bg-gradient-to-br from-amber-900/80 to-slate-950"
+                style={{ clipPath: DIAMOND }}
+              >
+                {iconByPerk[name] && (
+                  <img src={iconByPerk[name]} alt="" className="h-[70%] w-[70%] object-contain" />
+                )}
+              </span>
             </span>
           )}
           {name ?? `slot ${index + 1}`}

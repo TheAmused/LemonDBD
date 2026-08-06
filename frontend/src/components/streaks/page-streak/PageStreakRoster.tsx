@@ -6,6 +6,7 @@ import { fetchExcludedPerks, fetchRoster } from '@/services/pageStreakApi';
 import { RosterEntry } from '@/types/pageStreak';
 import { KillerRosterGrid } from './KillerRosterGrid';
 import { ExcludedPerksModal } from './ExcludedPerksModal';
+import { usePerkArtwork } from './usePerkArtwork';
 
 interface PageStreakRosterProps {
   locale: string;
@@ -19,6 +20,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const { avatarByKiller } = usePerkArtwork();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -65,7 +67,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
       {loading ? (
         <p className="py-10 text-center text-xs text-slate-500">Loading roster…</p>
       ) : (
-        <KillerRosterGrid locale={locale} roster={roster} />
+        <KillerRosterGrid locale={locale} roster={roster} avatarByKiller={avatarByKiller} />
       )}
 
       <ExcludedPerksModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSaved={load} />

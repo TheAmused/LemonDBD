@@ -35,7 +35,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({ name, selected = false, disa
     </>
   );
 
-  const shell = `flex flex-col items-center gap-2 rounded-xl border p-3 transition-all duration-150 ${
+  const shell = `flex flex-col items-center gap-2 rounded-xl border p-3 transition-all duration-150 motion-reduce:transition-none motion-reduce:scale-100 ${
     selected ? 'border-orange-500 bg-orange-500/10 scale-[1.03]' : 'border-slate-800 bg-slate-900/50'
   }`;
 
@@ -48,7 +48,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({ name, selected = false, disa
       type="button"
       onClick={() => onToggle(name)}
       aria-pressed={selected}
-      className={`${shell} hover:border-orange-500/50 focus:outline-none focus:ring-2 focus:ring-orange-500 motion-reduce:transition-none motion-reduce:scale-100`}
+      className={`${shell} hover:border-orange-500/50 focus:outline-none focus:ring-2 focus:ring-orange-500`}
     >
       {content}
     </button>

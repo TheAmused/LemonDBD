@@ -99,28 +99,27 @@ class PageStreakService:
 
     # ---- roster ---------------------------------------------------------
 
-    def _character_positions(self):
-        """Map a killer name to its position in the scraped character list.
+    def _release_numbers(self):
+        """Map a killer name to its release number, as scraped from the wiki portrait.
 
-        The scrape order follows the wiki's killer ordering, so it is the closest
-        thing we have to release order. Most killers appear as "The <name>"; a few
-        only under their bare name. Returns an empty map when the perk service
-        cannot supply characters, in which case ordering falls back to alphabetical.
+        Returns an empty map when the perk service cannot supply characters, in which
+        case ordering falls back to alphabetical.
         """
-        get_ordered = getattr(self.perk_service, "get_characters_in_scrape_order", None)
-        if not callable(get_ordered):
+        get_characters = getattr(self.perk_service, "get_characters", None)
+        if not callable(get_characters):
             return {}
         try:
-            characters = get_ordered() or []
+            characters = get_characters() or []
         except Exception:
             return {}
 
-        positions = {}
-        for index, character in enumerate(characters):
+        numbers = {}
+        for character in characters:
             name = (character or {}).get("name")
-            if name and name not in positions:
-                positions[name] = index
-        return positions
+            release_number = (character or {}).get("release_number")
+            if name and isinstance(release_number, int) and name not in numbers:
+                numbers[name] = release_number
+        return numbers
 
     def get_killers(self):
         names = {
@@ -128,10 +127,10 @@ class PageStreakService:
             for p in self._all_killer_perks()
             if p.get("character") and p["character"] != GENERAL_CHARACTER
         }
-        positions = self._character_positions()
+        release_numbers = self._release_numbers()
 
         def sort_key(name):
-            position = positions.get(f"The {name}", positions.get(name))
+            position = release_numbers.get(name)
             if position is None:
                 # Unknown killers keep a deterministic place after the known ones.
                 return (1, 0, name)

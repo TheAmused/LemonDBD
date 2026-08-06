@@ -22,7 +22,7 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
         setPoolSize(data.pool_size);
         setPageCount(data.page_count);
         if (data.page_count > 0) {
-          const perPage = Math.ceil(data.pool_size / data.page_count);
+          const perPage = data.perks_per_page;
           const remainder = data.pool_size % perPage;
           setLastPageSize(remainder === 0 ? perPage : remainder);
         }

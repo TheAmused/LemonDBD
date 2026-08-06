@@ -46,7 +46,7 @@ export const RunHistory: React.FC<RunHistoryProps> = ({ history, iconByPerk = {}
                         style={{ clipPath: DIAMOND }}
                       >
                         {iconByPerk[perk] && (
-                          <img src={iconByPerk[perk]} alt={perk} className="h-[70%] w-[70%] object-contain" />
+                          <img src={iconByPerk[perk]} alt={perk} className="h-[96%] w-[96%] object-contain" />
                         )}
                       </span>
                     </span>

@@ -33,7 +33,7 @@ export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, o
                 style={{ clipPath: DIAMOND }}
               >
                 {iconByPerk[name] && (
-                  <img src={iconByPerk[name]} alt="" className="h-[70%] w-[70%] object-contain" />
+                  <img src={iconByPerk[name]} alt="" className="h-[96%] w-[96%] object-contain" />
                 )}
               </span>
             </span>

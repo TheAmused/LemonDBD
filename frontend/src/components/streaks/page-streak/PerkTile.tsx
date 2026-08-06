@@ -43,7 +43,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
               src={iconSrc}
               alt={name}
               onError={() => setImgError(true)}
-              className="h-[62%] w-[62%] object-contain drop-shadow"
+              className="h-[96%] w-[96%] object-contain drop-shadow"
             />
           )}
         </span>

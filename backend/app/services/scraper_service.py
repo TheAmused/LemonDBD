@@ -32,6 +32,7 @@ class CharacterData:
     category: str
     avatar_url: str
     avatar_local_path: str
+    release_number: int = 0
 
 
 @dataclass
@@ -68,18 +69,6 @@ class ScraperService:
         "Sec-Fetch-User": "?1",
         "Upgrade-Insecure-Requests": "1",
         "Referer": "https://deadbydaylight.fandom.com/wiki/Dead_by_Daylight_Wiki",
-    }
-
-    EXCLUDED_SLUGS = {
-        "entity", "generator", "hatch", "chest", "item", "perk", "perks", "killers",
-        "survivors", "tome", "observer", "vigo", "void", "stagger", "hook", "obsession",
-        "blindness", "exhausted", "mangled", "broken", "exposed", "hindered", "oblivious",
-        "aura", "scratch_marks", "pools_of_blood", "terror_radius", "basement",
-        "exit_gate_switch", "skill_check", "loud_noise_notification", "conspicuous_action",
-        "health_state", "injured_state", "protection_hit", "special_attack", "special_attacks",
-        "crow", "window", "med-kit", "med-kits", "toolbox", "flashlight", "flashlights",
-        "key", "keys", "add-on", "add-ons", "playing_survivor:_tips_and_tricks",
-        "characters", "the_campfire", "status_effects", "realm", "realms", "map", "maps"
     }
 
     _lock = threading.Lock()
@@ -188,66 +177,83 @@ class ScraperService:
         response.raise_for_status()
         return response.text
 
+    def parse_character_page(self, html: str) -> List[CharacterData]:
+        """Extract characters from a wiki index page.
+
+        A link is a character only when its image is a portrait; the filename decides
+        the category and release number, so it does not matter which index page the
+        link was found on.
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        content = soup.find("div", class_="mw-parser-output") or soup
+
+        characters: List[CharacterData] = []
+        seen = set()
+
+        for link in content.find_all("a", href=re.compile(r"^/wiki/")):
+            img = link.find("img")
+            if not img:
+                continue
+
+            image_url = self.extract_high_res_url(img)
+            classified = self.classify_portrait(image_url)
+            if not classified:
+                continue
+
+            category, release_number = classified
+
+            title = (link.get("title") or "").strip() or link.get_text().strip()
+            name = self.normalise_character_name(title, category)
+            if not name:
+                continue
+
+            key = (category, name.lower())
+            if key in seen:
+                continue
+            seen.add(key)
+
+            slug = self.extract_slug_from_href(link.get("href", ""))
+            sanitized = self.sanitize_filename(name)
+            sub_dir = "survivors" if category == "Survivor" else "killers"
+
+            characters.append(
+                CharacterData(
+                    name=name,
+                    real_name=title,
+                    wiki_slug=slug,
+                    short_name=slug.lower(),
+                    category=category,
+                    avatar_url=image_url,
+                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                    release_number=release_number,
+                )
+            )
+
+        return characters
+
     def scrape_characters_dynamically(self) -> List[CharacterData]:
         characters: List[CharacterData] = []
-        seen_slugs = set()
+        seen = set()
 
-        def process_page(url: str, category: str):
+        for url in (self.SURVIVORS_URL, self.KILLERS_URL):
             try:
-                logger.info(f"Scraping {category} index page directly...")
-                html = self.fetch_html(url)
-                soup = BeautifulSoup(html, "html.parser")
-                content = soup.find("div", class_="mw-parser-output") or soup
-
-                for link in content.find_all("a", href=re.compile(r"^/wiki/")):
-                    href = link.get("href", "")
-                    slug = self.extract_slug_from_href(href)
-                    slug_lower = slug.lower()
-
-                    if not slug or slug_lower in seen_slugs or slug_lower in self.EXCLUDED_SLUGS:
-                        continue
-
-                    if slug.startswith(("Category:", "File:", "Special:", "Dead_by_Daylight", "Help:", "User:", "Template:", "Tome")):
-                        continue
-
-                    img = link.find("img")
-                    if not img:
-                        continue
-
-                    avatar_url = self.extract_high_res_url(img)
-                    if not avatar_url:
-                        continue
-
-                    title = link.get("title", "").strip() or link.get_text().strip()
-                    full_name = title.replace("_", " ").strip()
-
-                    if not full_name or len(full_name) > 50:
-                        continue
-
-                    if any(x in slug_lower for x in ["perk", "item", "addon", "power", "patch", "dlc", "store", "tips"]):
-                        continue
-
-                    seen_slugs.add(slug_lower)
-                    sanitized = self.sanitize_filename(full_name)
-                    sub_dir = "survivors" if category == "Survivor" else "killers"
-
-                    characters.append(
-                        CharacterData(
-                            name=full_name,
-                            real_name=full_name,
-                            wiki_slug=slug,
-                            short_name=slug_lower,
-                            category=category,
-                            avatar_url=avatar_url,
-                            avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
-                        )
-                    )
+                logger.info(f"Scraping character index: {url}")
+                page_characters = self.parse_character_page(self.fetch_html(url))
             except Exception as e:
-                logger.error(f"Error scraping {category} page: {e}")
+                logger.error(f"Error scraping {url}: {e}")
+                continue
 
-        process_page(self.SURVIVORS_URL, "Survivor")
-        process_page(self.KILLERS_URL, "Killer")
+            if not page_characters:
+                logger.error(f"No portraits found on {url} — wiki layout may have changed.")
 
+            for character in page_characters:
+                key = (character.category, character.name.lower())
+                if key in seen:
+                    continue
+                seen.add(key)
+                characters.append(character)
+
+        characters.sort(key=lambda c: (c.category, c.release_number, c.name))
         return characters
 
     def parse_perks(self, html_content: str, characters: List[CharacterData]) -> List[PerkData]:

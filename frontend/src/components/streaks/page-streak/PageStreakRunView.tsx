@@ -153,17 +153,27 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     type="button"
                     onClick={() => setShowNextPage((open) => !open)}
                     aria-expanded={showNextPage}
-                    className="mb-2.5 mt-6 flex w-full items-center gap-2 font-mono text-[10.5px] uppercase tracking-widest text-slate-600 transition-colors hover:text-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 motion-reduce:transition-none"
+                    className="mb-2.5 mt-6 flex w-full items-center gap-2 rounded font-mono text-[10.5px] uppercase tracking-widest text-slate-600 transition-colors hover:text-orange-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 motion-reduce:transition-none"
                   >
                     <ChevronRight
-                      className={`h-3.5 w-3.5 transition-transform motion-reduce:transition-none ${
+                      className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${
                         showNextPage ? 'rotate-90' : ''
                       }`}
                     />
                     <span>Next up — page {run.current_page + 1}</span>
                     <span className="h-px flex-1 bg-slate-800" />
                   </button>
-                  {showNextPage && <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />}
+                  {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
+                  <div
+                    aria-hidden={!showNextPage}
+                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
+                      showNextPage ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
+                    </div>
+                  </div>
                 </>
               )}
             </>

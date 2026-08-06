@@ -7,6 +7,22 @@ BUILD_SIZE = 4
 GENERAL_CHARACTER = "General"
 
 
+def _to_utc_iso(value):
+    """Normalise a SQLite CURRENT_TIMESTAMP string ("YYYY-MM-DD HH:MM:SS", UTC,
+    no zone marker) into an unambiguous ISO-8601 UTC string ("...Z").
+
+    Tolerant of None and of values that are already normalised (or otherwise
+    don't match the expected shape) — those are returned unchanged.
+    """
+    if not value:
+        return value
+    if value.endswith("Z"):
+        return value
+    if len(value) == 19 and value[10] == " ":
+        return value[:10] + "T" + value[11:] + "Z"
+    return value
+
+
 class PageStreakService:
     def __init__(self, db_service=None, perk_service=None):
         self.db_service = db_service or DatabaseService()
@@ -53,8 +69,22 @@ class PageStreakService:
         return DEFAULT_PERKS_PER_PAGE
 
     def _all_killer_perks(self):
-        result = self.perk_service.get_perks(category="Killer", limit=100000)
-        return list(result.get("data", []))
+        page = 1
+        limit = 200
+        collected = []
+        total = None
+        while True:
+            result = self.perk_service.get_perks(category="Killer", page=page, limit=limit)
+            data = result.get("data", [])
+            if not data:
+                break
+            collected.extend(data)
+            if total is None:
+                total = result.get("pagination", {}).get("total")
+            if total is not None and len(collected) >= total:
+                break
+            page += 1
+        return collected
 
     def get_pool(self):
         excluded = set(self.get_excluded_perks())
@@ -121,7 +151,7 @@ class PageStreakService:
             "best_page": row["best_page"],
             "pages": pages,
             "page_count": len(pages),
-            "snapshot_at": row["snapshot_at"],
+            "snapshot_at": _to_utc_iso(row["snapshot_at"]),
             "history": history,
         }
 
@@ -137,7 +167,7 @@ class PageStreakService:
                 "page_number": row["page_number"],
                 "perks": json.loads(row["perks_json"]),
                 "result": row["result"],
-                "timestamp": row["timestamp"],
+                "timestamp": _to_utc_iso(row["timestamp"]),
             }
             for row in cursor.fetchall()
         ]

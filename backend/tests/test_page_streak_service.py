@@ -15,6 +15,28 @@ class FakePerkService:
         return {"data": data, "pagination": {"total": len(data)}}
 
 
+class ClampingFakePerkService:
+    """Mimics production PerkService.get_perks pagination behaviour: it clamps
+    `limit` to 200, slices by `page`, and reports the true `total` in
+    `pagination`. Used to catch truncation bugs that FakePerkService (which
+    ignores `limit` entirely) cannot detect."""
+
+    def __init__(self, perks):
+        self._perks = perks
+
+    def get_perks(self, category=None, page=1, limit=50, **kwargs):
+        data = [p for p in self._perks if category is None or p["category"] == category]
+        total = len(data)
+        page = max(1, page)
+        limit = max(1, min(limit, 200))
+        start = (page - 1) * limit
+        end = start + limit
+        return {
+            "data": data[start:end],
+            "pagination": {"total": total, "page": page, "limit": limit},
+        }
+
+
 def make_perks(count, category="Killer", character="Trapper"):
     # Names are zero-padded so code-point order is also numeric order.
     return [
@@ -83,6 +105,40 @@ class TestPageStreakPool(unittest.TestCase):
         self.assertEqual(pages, [["Perk 001", "Perk 002"]])
 
 
+class TestPageStreakPoolPagination(unittest.TestCase):
+    """Regression coverage for the pool-truncation bug: PerkService.get_perks
+    clamps `limit` to 200 server-side, so _all_killer_perks() must page
+    through the full result set rather than requesting one huge page."""
+
+    def setUp(self):
+        self.db_path = "test_page_streak_pagination.db"
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+        self.db_service = DatabaseService(db_path=self.db_path)
+        self.db_service.init_db()
+        self.perks = make_perks(250)
+        self.service = PageStreakService(
+            db_service=self.db_service,
+            perk_service=ClampingFakePerkService(self.perks),
+        )
+
+    def tearDown(self):
+        if os.path.exists(self.db_path):
+            os.remove(self.db_path)
+
+    def test_get_pool_returns_all_perks_beyond_the_200_page_clamp(self):
+        pool = self.service.get_pool()
+        self.assertEqual(len(pool), 250)
+        names = {p["name"] for p in pool}
+        self.assertEqual(names, {p["name"] for p in self.perks})
+
+    def test_build_pages_covers_every_perk_beyond_the_200_page_clamp(self):
+        pages = self.service.build_pages()
+        flattened = [name for page in pages for name in page]
+        self.assertEqual(len(flattened), 250)
+        self.assertEqual(sorted(flattened), sorted(p["name"] for p in self.perks))
+
+
 class TestPageStreakRoster(unittest.TestCase):
     def setUp(self):
         self.db_path = "test_page_streak_roster.db"
@@ -114,6 +170,11 @@ class TestPageStreakRoster(unittest.TestCase):
         self.assertEqual(names, ["Nurse", "Trapper"])
         self.assertTrue(all(entry["status"] == "not_started" for entry in roster))
         self.assertEqual(roster[0]["page_count"], 3)  # 35 killer perks incl. General
+
+    def test_start_run_snapshot_at_is_utc_iso_with_z_suffix(self):
+        run = self.service.start_run("Nurse")
+        self.assertIsNotNone(run["snapshot_at"])
+        self.assertTrue(run["snapshot_at"].endswith("Z"))
 
     def test_start_run_freezes_snapshot(self):
         run = self.service.start_run("Nurse")

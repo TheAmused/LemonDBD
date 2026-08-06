@@ -116,8 +116,11 @@ class TestParseCharacterPage(unittest.TestCase):
         self.assertEqual(self.by_name["Wraith"].release_number, 2)
         self.assertEqual(self.by_name["Ace Visconti"].release_number, 7)
 
-    def test_real_name_keeps_the_wiki_title(self):
-        self.assertEqual(self.by_name["Trapper"].real_name, "The Trapper")
+    def test_real_name_does_not_repeat_the_title(self):
+        # The UI shows real_name in parentheses when it differs from name, so a killer
+        # must not render as "Trapper (The Trapper)".
+        self.assertEqual(self.by_name["Trapper"].real_name, "Trapper")
+        self.assertEqual(self.by_name["Ace Visconti"].real_name, "Ace Visconti")
 
     def test_avatar_path_follows_the_category(self):
         self.assertEqual(self.by_name["Trapper"].avatar_local_path, "avatars/killers/trapper.png")

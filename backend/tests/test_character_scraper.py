@@ -215,6 +215,7 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
             "INSERT INTO challenge_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
             ("killer", "Blood Bond", 3),
         )
+        blood_bond_run_id = cur.lastrowid
         cur.execute(
             "INSERT INTO challenge_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
             ("killer", "Trapper", 1),
@@ -222,6 +223,17 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
         cur.execute(
             "INSERT INTO page_streak_runs (killer, pages_json) VALUES (?, ?);",
             ("The Clown", "[]"),
+        )
+        clown_run_id = cur.lastrowid
+        cur.execute(
+            "INSERT INTO match_logs (run_id, role, character_id, result, perks_json, map_offering, "
+            "streak_before, streak_after) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+            (blood_bond_run_id, "killer", "Blood Bond", "win", "[]", "none", 2, 3),
+        )
+        cur.execute(
+            "INSERT INTO page_streak_page_logs (run_id, attempt, page_number, perks_json, result) "
+            "VALUES (?, ?, ?, ?, ?);",
+            (clown_run_id, 1, 1, "[]", "win"),
         )
         conn.commit()
         conn.close()
@@ -261,6 +273,13 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
         deleted = self.db_service.prune_stale_character_rows(set())
         self.assertEqual(deleted, {})
         self.assertEqual(self._count("challenge_runs"), 2)
+
+    def test_child_rows_are_cascaded_with_their_parent(self):
+        # Guards the PRAGMA foreign_keys = ON in prune_stale_character_rows: without it
+        # SQLite ignores ON DELETE CASCADE and leaves orphaned history behind.
+        self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
+        self.assertEqual(self._count("match_logs"), 0)
+        self.assertEqual(self._count("page_streak_page_logs"), 0)
 
 
 if __name__ == "__main__":

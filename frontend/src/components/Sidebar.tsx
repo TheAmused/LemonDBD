@@ -158,6 +158,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
     },
     {
+      id: 'streaks',
+      label: '🔥 Streaks',
+      icon: Repeat,
+      color: 'text-orange-400',
+      activeBg: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
+    },
+    {
       id: 'challenge',
       label: '⚡ Challenge',
       icon: Swords,
@@ -205,13 +212,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Compass,
       color: 'text-cyan-400',
       activeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
-    },
-    {
-      id: 'streaks',
-      label: '🔥 Streaks',
-      icon: Repeat,
-      color: 'text-orange-400',
-      activeBg: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
     },
     {
       id: 'quests',

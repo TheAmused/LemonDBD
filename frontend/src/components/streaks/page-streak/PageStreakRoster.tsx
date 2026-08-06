@@ -15,7 +15,6 @@ interface PageStreakRosterProps {
 export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) => {
   const [roster, setRoster] = useState<RosterEntry[]>([]);
   const [poolSize, setPoolSize] = useState(0);
-  const [excludedCount, setExcludedCount] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +28,6 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
       const [rosterData, exclusions] = await Promise.all([fetchRoster(), fetchExcludedPerks()]);
       setRoster(rosterData);
       setPoolSize(exclusions.pool_size);
-      setExcludedCount(exclusions.excluded.length);
       setPageCount(exclusions.page_count);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load the roster');
@@ -50,7 +48,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
           className="flex items-center gap-2 rounded-xl border border-slate-800 px-4 py-2 text-xs font-bold text-slate-300 hover:border-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
         >
           <SlidersHorizontal className="h-3.5 w-3.5" />
-          Perks I don&apos;t own ({excludedCount})
+          Perk collection ({poolSize})
         </button>
         <span className="font-mono text-[11px] text-slate-500">
           {poolSize} perks · {pageCount} pages

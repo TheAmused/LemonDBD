@@ -38,7 +38,7 @@ export const RunHistory: React.FC<RunHistoryProps> = ({ history, iconByPerk = {}
                     <span
                       key={perk}
                       title={perk}
-                      className="grid h-6 w-6 flex-none place-items-center bg-orange-400/60"
+                      className="grid h-9 w-9 flex-none place-items-center bg-orange-400/60"
                       style={{ clipPath: DIAMOND }}
                     >
                       <span

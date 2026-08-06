@@ -83,6 +83,32 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             </div>
           ) : (
             <>
+              {confirmed && (
+                <div className="mt-5 flex flex-wrap gap-3 ps-rise">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      setLastWasLoss(false);
+                      submitResult(run.current_page, selected, 'win');
+                    }}
+                    className="flex-1 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-8 py-4 text-base font-extrabold tracking-wide text-emerald-400 transition-colors hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 motion-reduce:transition-none"
+                  >
+                    Win
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      setLastWasLoss(true);
+                      submitResult(run.current_page, selected, 'loss');
+                    }}
+                    className="flex-1 rounded-xl border border-rose-500/35 bg-rose-500/10 px-8 py-4 text-base font-extrabold tracking-wide text-rose-400 transition-colors hover:bg-rose-500/20 focus:outline-none focus:ring-2 focus:ring-rose-500 disabled:opacity-50 motion-reduce:transition-none"
+                  >
+                    Loss
+                  </button>
+                </div>
+              )}
               <SectionLabel>Page {run.current_page} — pick {buildSize} perks</SectionLabel>
               <PerkPageGrid
                 key={`${run.attempt}-${run.current_page}`}
@@ -101,33 +127,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 onConfirm={() => setConfirmed(true)}
                 iconByPerk={iconByPerk}
               />
-
-              {confirmed && (
-                <div className="mt-3 flex flex-wrap gap-2.5 ps-rise">
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => {
-                      setLastWasLoss(false);
-                      submitResult(run.current_page, selected, 'win');
-                    }}
-                    className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-extrabold text-emerald-400 disabled:opacity-50"
-                  >
-                    {run.current_page >= run.page_count ? 'Win → finish' : `Win → page ${run.current_page + 1}`}
-                  </button>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => {
-                      setLastWasLoss(true);
-                      submitResult(run.current_page, selected, 'loss');
-                    }}
-                    className="rounded-lg border border-rose-500/35 bg-rose-500/10 px-4 py-2 text-xs font-extrabold text-rose-400 disabled:opacity-50"
-                  >
-                    Loss → back to page 1
-                  </button>
-                </div>
-              )}
 
               {nextPagePerks.length > 0 && (
                 <>

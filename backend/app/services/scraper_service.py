@@ -219,7 +219,7 @@ class ScraperService:
             characters.append(
                 CharacterData(
                     name=name,
-                    real_name=title,
+                    real_name=name,
                     wiki_slug=slug,
                     short_name=slug.lower(),
                     category=category,

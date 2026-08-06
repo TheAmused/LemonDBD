@@ -9,6 +9,7 @@ import { PerkPageGrid } from './PerkPageGrid';
 import { BuildBar } from './BuildBar';
 import { RunHistory } from './RunHistory';
 import { StartRunPanel } from './StartRunPanel';
+import { usePerkArtwork } from './usePerkArtwork';
 
 interface PageStreakRunViewProps {
   locale: string;
@@ -24,6 +25,7 @@ const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
   const { run, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
+  const { iconByPerk, avatarByKiller } = usePerkArtwork();
   const [selected, setSelected] = useState<string[]>([]);
   const [confirmed, setConfirmed] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
@@ -72,7 +74,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
 
       {!loading && run && (
         <div className="mt-5">
-          <RunHeader run={run} />
+          <RunHeader run={run} avatarSrc={avatarByKiller[run.killer]} />
 
           {run.status === 'completed' ? (
             <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] px-5 py-6 text-center">
@@ -88,6 +90,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 selected={selected}
                 onToggle={toggle}
                 variant={lastWasLoss ? 'reset' : 'enter'}
+                iconByPerk={iconByPerk}
               />
 
               <SectionLabel>Your build</SectionLabel>
@@ -96,6 +99,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 size={buildSize}
                 confirmed={confirmed}
                 onConfirm={() => setConfirmed(true)}
+                iconByPerk={iconByPerk}
               />
 
               {confirmed && (
@@ -128,7 +132,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               {nextPagePerks.length > 0 && (
                 <>
                   <SectionLabel>Next up — page {run.current_page + 1}</SectionLabel>
-                  <PerkPageGrid perks={nextPagePerks} dimmed />
+                  <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
                 </>
               )}
             </>

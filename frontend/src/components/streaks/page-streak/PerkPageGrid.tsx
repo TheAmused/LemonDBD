@@ -9,6 +9,7 @@ interface PerkPageGridProps {
   onToggle?: (name: string) => void;
   dimmed?: boolean;
   variant?: 'enter' | 'reset' | 'none';
+  iconByPerk?: Record<string, string>;
 }
 
 export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
@@ -17,6 +18,7 @@ export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
   onToggle,
   dimmed = false,
   variant = 'none',
+  iconByPerk = {},
 }) => {
   const animation = variant === 'enter' ? 'ps-page-enter' : variant === 'reset' ? 'ps-page-reset' : '';
 
@@ -32,6 +34,7 @@ export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
           name={name}
           selected={selected.includes(name)}
           disabled={dimmed || !onToggle}
+          iconSrc={iconByPerk[name]}
           onToggle={onToggle}
         />
       ))}

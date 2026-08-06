@@ -1,22 +1,33 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Skull } from 'lucide-react';
 import { PageStreakRun } from '@/types/pageStreak';
 
 interface RunHeaderProps {
   run: PageStreakRun;
+  avatarSrc?: string;
 }
 
-export const RunHeader: React.FC<RunHeaderProps> = ({ run }) => {
+export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc }) => {
+  const [imgError, setImgError] = useState(false);
   const cleared = run.status === 'completed' ? run.page_count : run.current_page - 1;
   const pct = run.page_count > 0 ? Math.round((cleared / run.page_count) * 100) : 0;
 
   return (
     <div>
       <div className="flex items-center gap-4">
-        <div className="flex h-16 w-16 flex-none items-center justify-center rounded-xl border border-slate-800 bg-slate-900">
-          <Skull className="h-7 w-7 text-slate-600" />
+        <div className="flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
+          {avatarSrc && !imgError ? (
+            <img
+              src={avatarSrc}
+              alt={run.killer}
+              onError={() => setImgError(true)}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <Skull className="h-7 w-7 text-slate-600" />
+          )}
         </div>
         <div className="min-w-0">
           <h2 className="text-lg font-extrabold tracking-wide text-slate-100">{run.killer}</h2>

@@ -1,17 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 interface PerkTileProps {
   name: string;
   selected?: boolean;
   disabled?: boolean;
+  iconSrc?: string;
   onToggle?: (name: string) => void;
 }
 
 const DIAMOND = 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)';
 
-export const PerkTile: React.FC<PerkTileProps> = ({ name, selected = false, disabled = false, onToggle }) => {
+export const PerkTile: React.FC<PerkTileProps> = ({
+  name,
+  selected = false,
+  disabled = false,
+  iconSrc,
+  onToggle,
+}) => {
+  const [imgError, setImgError] = useState(false);
+  const showImage = Boolean(iconSrc) && !imgError;
+
   const content = (
     <>
       <span
@@ -21,13 +31,22 @@ export const PerkTile: React.FC<PerkTileProps> = ({ name, selected = false, disa
         style={{ clipPath: DIAMOND }}
       >
         <span
-          className={`h-[82%] w-[82%] transition-colors ${
+          className={`grid h-[82%] w-[82%] place-items-center transition-colors ${
             selected
               ? 'bg-gradient-to-br from-amber-900/80 to-slate-950'
               : 'bg-gradient-to-br from-slate-700 to-slate-900'
           }`}
           style={{ clipPath: DIAMOND }}
-        />
+        >
+          {showImage && (
+            <img
+              src={iconSrc}
+              alt={name}
+              onError={() => setImgError(true)}
+              className="h-[62%] w-[62%] object-contain drop-shadow"
+            />
+          )}
+        </span>
       </span>
       <span className={`text-center text-[10.5px] font-semibold leading-tight ${selected ? 'text-slate-100' : 'text-slate-400'}`}>
         {name}

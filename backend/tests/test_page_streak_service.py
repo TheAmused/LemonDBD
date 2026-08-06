@@ -322,14 +322,16 @@ class TestPageStreakResults(unittest.TestCase):
 
 
 class OrderedFakePerkService(FakePerkService):
-    """Adds a scrape-ordered character list so roster ordering can be exercised."""
+    """Supplies character records carrying release numbers."""
 
     def __init__(self, perks, characters):
         super().__init__(perks)
         self._characters = characters
 
-    def get_characters_in_scrape_order(self):
-        return list(self._characters)
+    def get_characters(self, category=None):
+        if category is None:
+            return list(self._characters)
+        return [c for c in self._characters if c.get("category") == category]
 
 
 class TestPageStreakRosterOrder(unittest.TestCase):
@@ -343,17 +345,15 @@ class TestPageStreakRosterOrder(unittest.TestCase):
         perks = []
         for killer in ["Wraith", "Trapper", "Nurse", "Animatronic"]:
             perks.extend(make_perks(2, character=killer))
-        # make_perks reuses names, so give every perk a unique one.
         for i, perk in enumerate(perks, start=1):
             perk["name"] = f"Perk {i:03d}"
 
-        # Scrape order: Trapper before Wraith before Nurse. Animatronic is absent
-        # from the character list entirely, which is the real 5-killer edge case.
+        # Deliberately out of order in the list, and Animatronic has no record at all.
         characters = [
-            {"name": "The Trapper", "category": "Survivor"},
-            {"name": "Trapper", "category": "Survivor"},
-            {"name": "The Wraith", "category": "Survivor"},
-            {"name": "Nurse", "category": "Survivor"},
+            {"name": "Nurse", "category": "Killer", "release_number": 4},
+            {"name": "Trapper", "category": "Killer", "release_number": 1},
+            {"name": "Wraith", "category": "Killer", "release_number": 2},
+            {"name": "Meg Thomas", "category": "Survivor", "release_number": 2},
         ]
 
         self.service = PageStreakService(
@@ -365,10 +365,10 @@ class TestPageStreakRosterOrder(unittest.TestCase):
         if os.path.exists(self.db_path):
             os.remove(self.db_path)
 
-    def test_killers_follow_character_list_order(self):
+    def test_killers_are_ordered_by_release_number(self):
         self.assertEqual(self.service.get_killers(), ["Trapper", "Wraith", "Nurse", "Animatronic"])
 
-    def test_killer_missing_from_character_list_is_kept_at_the_end(self):
+    def test_killer_without_a_release_number_is_kept_at_the_end(self):
         self.assertIn("Animatronic", self.service.get_killers())
 
     def test_roster_uses_the_same_order(self):

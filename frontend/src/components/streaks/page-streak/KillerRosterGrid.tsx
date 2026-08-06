@@ -23,7 +23,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
           href={`/${locale}/streaks/killer/page-streak/${encodeURIComponent(entry.killer)}`}
           className={`relative flex flex-col gap-2 rounded-xl border p-3 transition-all focus:outline-none focus:ring-2 focus:ring-orange-500 ${
             done
-              ? 'border-emerald-500/40 bg-emerald-500/[0.07] hover:border-emerald-400/60'
+              ? 'border-emerald-500/40 bg-emerald-500/[0.07] hover:border-emerald-400/60 ps-complete-pulse'
               : active
                 ? 'border-orange-500/45 bg-orange-500/[0.07] hover:border-orange-400/70'
                 : 'border-slate-800 bg-slate-900/50 hover:border-slate-700'

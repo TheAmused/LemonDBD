@@ -27,6 +27,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const [selected, setSelected] = useState<string[]>([]);
   const [confirmed, setConfirmed] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
+  const [lastWasLoss, setLastWasLoss] = useState(false);
 
   // A new page (or a new attempt) always starts from an empty, unconfirmed build.
   useEffect(() => {
@@ -81,7 +82,13 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           ) : (
             <>
               <SectionLabel>Page {run.current_page} — pick {buildSize} perks</SectionLabel>
-              <PerkPageGrid perks={currentPagePerks} selected={selected} onToggle={toggle} />
+              <PerkPageGrid
+                key={`${run.attempt}-${run.current_page}`}
+                perks={currentPagePerks}
+                selected={selected}
+                onToggle={toggle}
+                variant={lastWasLoss ? 'reset' : 'enter'}
+              />
 
               <SectionLabel>Your build</SectionLabel>
               <BuildBar
@@ -92,11 +99,14 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               />
 
               {confirmed && (
-                <div className="mt-3 flex flex-wrap gap-2.5">
+                <div className="mt-3 flex flex-wrap gap-2.5 ps-rise">
                   <button
                     type="button"
                     disabled={busy}
-                    onClick={() => submitResult(run.current_page, selected, 'win')}
+                    onClick={() => {
+                      setLastWasLoss(false);
+                      submitResult(run.current_page, selected, 'win');
+                    }}
                     className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-extrabold text-emerald-400 disabled:opacity-50"
                   >
                     {run.current_page >= run.page_count ? 'Win → finish' : `Win → page ${run.current_page + 1}`}
@@ -104,7 +114,10 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   <button
                     type="button"
                     disabled={busy}
-                    onClick={() => submitResult(run.current_page, selected, 'loss')}
+                    onClick={() => {
+                      setLastWasLoss(true);
+                      submitResult(run.current_page, selected, 'loss');
+                    }}
                     className="rounded-lg border border-rose-500/35 bg-rose-500/10 px-4 py-2 text-xs font-extrabold text-rose-400 disabled:opacity-50"
                   >
                     Loss → back to page 1

@@ -27,7 +27,7 @@ export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, o
           }`}
         >
           {name && (
-            <span className="grid h-6 w-6 flex-none place-items-center bg-orange-400/60" style={{ clipPath: DIAMOND }}>
+            <span className="grid h-9 w-9 flex-none place-items-center bg-orange-400/60" style={{ clipPath: DIAMOND }}>
               <span
                 className="grid h-[82%] w-[82%] place-items-center bg-gradient-to-br from-amber-900/80 to-slate-950"
                 style={{ clipPath: DIAMOND }}

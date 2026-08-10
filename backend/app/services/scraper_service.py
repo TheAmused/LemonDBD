@@ -47,6 +47,30 @@ class CharacterData:
 
 
 @dataclass
+
+@dataclass
+class ItemData:
+    name: str
+    category: str
+    role: str
+    description: str
+    icon_url: str
+    icon_local_path: str
+    rarity: str
+
+
+@dataclass
+class AddonData:
+    name: str
+    associated_target: str
+    category: str
+    description: str
+    icon_url: str
+    icon_local_path: str
+    rarity: str
+
+
+@dataclass
 class PerkData:
     name: str
     character: str
@@ -219,7 +243,10 @@ class NightlightScraperDriver:
                 if isinstance(parsed, list):
                     raw_perks = parsed
                 elif isinstance(parsed, dict):
-                    raw_perks = parsed.get("perks") or parsed.get("data") or []
+                    if "perks" in parsed or "data" in parsed:
+                        raw_perks = parsed.get("perks") or parsed.get("data") or []
+                    else:
+                        raw_perks = [v for v in parsed.values() if isinstance(v, dict)]
             except Exception:
                 pass
 
@@ -261,11 +288,15 @@ class NightlightScraperDriver:
                 role_str = "Survivor" if role_num == 1 else "Killer"
                 char_name = chars_dict.get(char_id, "General") if char_id != "-1" else "General"
 
+                u_m = re.search(r'"u"\s*:\s*"([^"]*)"', obj_text)
+                k_m = re.search(r'"k"\s*:\s*"([^"]*)"', obj_text)
                 raw_perks.append({
                     "name": pname,
                     "character": char_name,
                     "role": role_str,
                     "icon": icon_slug,
+                    "u": u_m.group(1) if u_m else None,
+                    "k": k_m.group(1) if k_m else None,
                 })
 
         if not raw_perks and isinstance(chunk_js, str):
@@ -287,7 +318,21 @@ class NightlightScraperDriver:
             if not isinstance(item, dict):
                 continue
 
-            name = item.get("name") or item.get("perk_name") or item.get("title") or ""
+            name = item.get("name") or item.get("perk_name") or item.get("title") or item.get("n") or ""
+            if not name:
+                continue
+
+            u_val = item.get("u")
+            if u_val is not None:
+                u_str = str(u_val)
+                if not (u_str.startswith("/perks/") or "/perks/" in u_str):
+                    continue
+
+            k_val = item.get("k")
+            if k_val is not None:
+                k_str = str(k_val).lower()
+                if k_str in ["addon", "item"]:
+                    continue
             if not name:
                 continue
 
@@ -360,6 +405,156 @@ class NightlightScraperDriver:
 
         return perks
 
+    def parse_nightlight_items_and_addons(
+        self,
+        chunk_js: str,
+        stream_payload: str,
+        characters: Optional[List[CharacterData]] = None,
+    ) -> Tuple[List[ItemData], List[AddonData]]:
+        items: List[ItemData] = []
+        addons: List[AddonData] = []
+        char_map: Dict[str, CharacterData] = {}
+        if characters:
+            for c in characters:
+                char_map[c.name.lower()] = c
+                char_map[c.short_name.lower()] = c
+                char_map[c.wiki_slug.lower()] = c
+
+        item_descriptions: Dict[str, str] = {}
+        addon_descriptions: Dict[str, str] = {}
+        descriptions: Dict[str, str] = {}
+
+        if stream_payload:
+            soup = BeautifulSoup(stream_payload, "html.parser")
+            for el in soup.find_all(attrs={"data-item": True}):
+                iname = str(el["data-item"]).replace("\'", "'").replace('\"', '"').strip()
+                dtext = el.get_text(separator="\n", strip=True)
+                if iname and dtext:
+                    item_descriptions[iname] = dtext
+            for el in soup.find_all(attrs={"data-addon": True}):
+                aname = str(el["data-addon"]).replace("\'", "'").replace('\"', '"').strip()
+                dtext = el.get_text(separator="\n", strip=True)
+                if aname and dtext:
+                    addon_descriptions[aname] = dtext
+
+        raw_objects = []
+        if isinstance(chunk_js, str):
+            try:
+                parsed = json.loads(chunk_js)
+                if isinstance(parsed, list):
+                    raw_objects = parsed
+                elif isinstance(parsed, dict):
+                    if "items" in parsed or "addons" in parsed or "data" in parsed:
+                        raw_objects = (parsed.get("items") or []) + (parsed.get("addons") or []) + (parsed.get("data") or [])
+                    else:
+                        raw_objects = [v for v in parsed.values() if isinstance(v, dict)]
+            except Exception:
+                pass
+
+        if not raw_objects and isinstance(chunk_js, str):
+            seen_ids = set()
+            for m in re.finditer(r'"(\d+)":\s*(\{[^{}]*?"n"\s*:\s*"([^"]+)".*?\})', chunk_js):
+                pid = m.group(1)
+                if pid in seen_ids:
+                    continue
+                seen_ids.add(pid)
+                obj_text = m.group(2)
+                n_m = re.search(r'"n"\s*:\s*"([^"]+)"', obj_text)
+                i_m = re.search(r'"i"\s*:\s*"([^"]+)"', obj_text)
+                u_m = re.search(r'"u"\s*:\s*"([^"]*)"', obj_text)
+                k_m = re.search(r'"k"\s*:\s*"([^"]*)"', obj_text)
+                r_m = re.search(r'"r"\s*:\s*(\d+)', obj_text)
+                c_m = re.search(r'"c"\s*:\s*(-?\d+|"[^"]*")', obj_text)
+                rar_m = re.search(r'"rar(?:ity)?"\s*:\s*"([^"]*)"', obj_text)
+
+                if n_m:
+                    raw_objects.append({
+                        "name": n_m.group(1).replace('\"', '"').replace("\'", "'"),
+                        "icon": i_m.group(1) if i_m else "",
+                        "u": u_m.group(1) if u_m else "",
+                        "k": k_m.group(1) if k_m else "",
+                        "role": int(r_m.group(1)) if r_m else 1,
+                        "character": c_m.group(1).replace('"', '') if c_m else "General",
+                        "rarity": rar_m.group(1) if rar_m else "",
+                    })
+
+        for entry in raw_objects:
+            if not isinstance(entry, dict):
+                continue
+            name = entry.get("name") or entry.get("n") or entry.get("title") or ""
+            if not name:
+                continue
+
+            u_val = str(entry.get("u") or "").lower()
+            k_val = str(entry.get("k") or "").lower()
+
+            is_item = u_val.startswith("/items/") or "/items/" in u_val or k_val == "item"
+            is_addon = u_val.startswith("/addons/") or "/addons/" in u_val or k_val == "addon"
+
+            role_val = str(entry.get("role") or entry.get("r") or "Survivor").lower()
+            role_str = "Survivor" if role_val in ["survivor", "1", "s"] else "Killer"
+
+            raw_icon = entry.get("icon") or entry.get("i") or entry.get("slug") or ScraperService.sanitize_filename(name)
+            rarity = entry.get("rarity") or entry.get("rar") or ""
+
+            if is_item:
+                desc = item_descriptions.get(name) or descriptions.get(name) or ""
+                if raw_icon.startswith("http://") or raw_icon.startswith("https://"):
+                    icon_url = raw_icon
+                else:
+                    clean_icon = raw_icon.lstrip("/")
+                    if not clean_icon.endswith(".png") and "." not in clean_icon:
+                        clean_icon = f"{clean_icon}.png"
+                    if clean_icon.startswith("img/items/"):
+                        icon_url = f"https://cdn.nightlight.gg/{clean_icon}"
+                    else:
+                        icon_url = f"https://cdn.nightlight.gg/img/items/{clean_icon}"
+
+                sanitized = ScraperService.sanitize_filename(name)
+                items.append(
+                    ItemData(
+                        name=name,
+                        category=role_str,
+                        role=role_str,
+                        description=desc,
+                        icon_url=icon_url,
+                        icon_local_path=f"icons/items/{sanitized}.png",
+                        rarity=rarity,
+                    )
+                )
+
+            elif is_addon:
+                desc = addon_descriptions.get(name) or descriptions.get(name) or ""
+                target_raw = entry.get("associated_target") or entry.get("c") or entry.get("character") or entry.get("target") or "General"
+                matched_char = char_map.get(str(target_raw).lower())
+                target_name = matched_char.name if matched_char else str(target_raw)
+
+                if raw_icon.startswith("http://") or raw_icon.startswith("https://"):
+                    icon_url = raw_icon
+                else:
+                    clean_icon = raw_icon.lstrip("/")
+                    if not clean_icon.endswith(".png") and "." not in clean_icon:
+                        clean_icon = f"{clean_icon}.png"
+                    if clean_icon.startswith("img/addons/"):
+                        icon_url = f"https://cdn.nightlight.gg/{clean_icon}"
+                    else:
+                        icon_url = f"https://cdn.nightlight.gg/img/addons/{clean_icon}"
+
+                sanitized = ScraperService.sanitize_filename(name)
+                addons.append(
+                    AddonData(
+                        name=name,
+                        associated_target=target_name,
+                        category=role_str,
+                        description=desc,
+                        icon_url=icon_url,
+                        icon_local_path=f"icons/addons/{sanitized}.png",
+                        rarity=rarity,
+                    )
+                )
+
+        return items, addons
+
     def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData]]:
         logger.info("Scraping Nightlight.gg data...")
         survivors_raw = self.fetch_nightlight_data(self.SURVIVORS_API)
@@ -395,13 +590,16 @@ class NightlightScraperDriver:
                 chunk_text = perks_page_html
 
         perks = self.parse_nightlight_perks(chunk_text, perks_page_html, characters=characters)
-        return characters, perks
+        items, addons = self.parse_nightlight_items_and_addons(chunk_text, perks_page_html, characters=characters)
+        return characters, perks, items, addons
 
 
 class WikiScraperDriver:
     PERKS_URL = "https://deadbydaylight.fandom.com/wiki/Perks"
     SURVIVORS_URL = "https://deadbydaylight.fandom.com/wiki/Survivors"
     KILLERS_URL = "https://deadbydaylight.fandom.com/wiki/Killers"
+    ITEMS_URL = "https://deadbydaylight.fandom.com/wiki/Items"
+    ADDONS_URL = "https://deadbydaylight.fandom.com/wiki/Add-ons"
 
     IMPERSONATE_BROWSER = "chrome120"
     REQUEST_TIMEOUT = 30
@@ -613,12 +811,155 @@ class WikiScraperDriver:
                         continue
         return perks
 
-    def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData]]:
+
+    def parse_wiki_items(self, html_content: str) -> List[ItemData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        items: List[ItemData] = []
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+        current_category = "Survivor"
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                htext = element.get_text().lower()
+                if "killer" in htext:
+                    current_category = "Killer"
+                elif "survivor" in htext:
+                    current_category = "Survivor"
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                rows = element.find_all("tr")
+                for row in rows[1:]:
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 2:
+                        continue
+                    try:
+                        img_tag = cells[0].find("img")
+                        icon_url = ScraperService.extract_high_res_url(img_tag)
+
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        item_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                        if not item_name:
+                            continue
+
+                        rarity = ""
+                        description = ""
+                        if len(cells) >= 4:
+                            rarity = cells[2].get_text().strip()
+                            description = cells[3].get_text(separator="\n", strip=True)
+                        elif len(cells) == 3:
+                            description = cells[2].get_text(separator="\n", strip=True)
+
+                        if not rarity:
+                            for r_word in ["Ultra Rare", "Very Rare", "Rare", "Uncommon", "Common", "Event", "Iridescent"]:
+                                if r_word.lower() in description.lower():
+                                    rarity = r_word
+                                    break
+
+                        sanitized = ScraperService.sanitize_filename(item_name)
+                        local_path = f"icons/items/{sanitized}.png"
+
+                        items.append(
+                            ItemData(
+                                name=item_name,
+                                category=current_category,
+                                role=current_category,
+                                description=description,
+                                icon_url=icon_url,
+                                icon_local_path=local_path,
+                                rarity=rarity,
+                            )
+                        )
+                    except Exception:
+                        continue
+        return items
+
+    def parse_wiki_addons(self, html_content: str) -> List[AddonData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        addons: List[AddonData] = []
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+        current_target = "General"
+        current_category = "Survivor"
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                htext = element.get_text().strip()
+                htext_lower = htext.lower()
+                if "killer" in htext_lower:
+                    current_category = "Killer"
+                elif "survivor" in htext_lower:
+                    current_category = "Survivor"
+
+                target_clean = re.sub(r"\s+(?:Add-ons|Addons)$", "", htext, flags=re.IGNORECASE).strip()
+                if target_clean:
+                    current_target = target_clean
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                rows = element.find_all("tr")
+                for row in rows[1:]:
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 2:
+                        continue
+                    try:
+                        img_tag = cells[0].find("img")
+                        icon_url = ScraperService.extract_high_res_url(img_tag)
+
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        addon_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                        if not addon_name:
+                            continue
+
+                        rarity = ""
+                        description = ""
+                        if len(cells) >= 4:
+                            rarity = cells[2].get_text().strip()
+                            description = cells[3].get_text(separator="\n", strip=True)
+                        elif len(cells) == 3:
+                            description = cells[2].get_text(separator="\n", strip=True)
+
+                        if not rarity:
+                            for r_word in ["Ultra Rare", "Very Rare", "Rare", "Uncommon", "Common", "Event", "Iridescent"]:
+                                if r_word.lower() in description.lower():
+                                    rarity = r_word
+                                    break
+
+                        sanitized = ScraperService.sanitize_filename(addon_name)
+                        local_path = f"icons/addons/{sanitized}.png"
+
+                        addons.append(
+                            AddonData(
+                                name=addon_name,
+                                associated_target=current_target,
+                                category=current_category,
+                                description=description,
+                                icon_url=icon_url,
+                                icon_local_path=local_path,
+                                rarity=rarity,
+                            )
+                        )
+                    except Exception:
+                        continue
+        return addons
+
+    def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData]]:
         logger.info("Scraping Fandom Wiki data...")
         characters = self.scrape_characters_dynamically()
         html = self.fetch_html(self.PERKS_URL)
         perks = self.parse_perks(html, characters)
-        return characters, perks
+        try:
+            html_items = self.fetch_html(self.ITEMS_URL)
+            items = self.parse_wiki_items(html_items)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki items: {e}")
+            items = []
+        try:
+            html_addons = self.fetch_html(self.ADDONS_URL)
+            addons = self.parse_wiki_addons(html_addons)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki addons: {e}")
+            addons = []
+        return characters, perks, items, addons
 
 
 class ScraperService:
@@ -651,6 +992,8 @@ class ScraperService:
         self.base_dir = Path(base_dir)
         self.data_file = self.base_dir / "data" / "perks.json"
         self.characters_file = self.base_dir / "data" / "characters.json"
+        self.items_file = self.base_dir / "data" / "items.json"
+        self.addons_file = self.base_dir / "data" / "addons.json"
         self.config_file = self.base_dir / "data" / "scraper_config.json"
         self.static_dir = self.base_dir / "app" / "static"
         self.nightlight_driver = NightlightScraperDriver(self.base_dir)
@@ -765,7 +1108,13 @@ class ScraperService:
                 with self._lock:
                     self._status["progress"] += 1
 
-    async def download_all_assets_async(self, perks: List[PerkData], characters: List[CharacterData]) -> None:
+    async def download_all_assets_async(
+        self,
+        perks: List[PerkData],
+        characters: List[CharacterData],
+        items: Optional[List[ItemData]] = None,
+        addons: Optional[List[AddonData]] = None,
+    ) -> None:
         semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_DOWNLOADS)
         async with AsyncSession(impersonate=self.IMPERSONATE_BROWSER, verify=False) as client:
             tasks = [
@@ -777,6 +1126,18 @@ class ScraperService:
                     tasks.append(
                         self._download_asset(client, semaphore, char.avatar_url, char.avatar_local_path)
                     )
+            if items:
+                for item in items:
+                    if item.icon_url:
+                        tasks.append(
+                            self._download_asset(client, semaphore, item.icon_url, item.icon_local_path)
+                        )
+            if addons:
+                for addon in addons:
+                    if addon.icon_url:
+                        tasks.append(
+                            self._download_asset(client, semaphore, addon.icon_url, addon.icon_local_path)
+                        )
 
             await asyncio.gather(*tasks)
 
@@ -807,12 +1168,20 @@ class ScraperService:
         source_used = active_source
         characters: List[CharacterData] = []
         perks: List[PerkData] = []
+        items: List[ItemData] = []
+        addons: List[AddonData] = []
+
+        def unpack_res(res):
+            if isinstance(res, tuple) and len(res) == 4:
+                return res[0], res[1], res[2], res[3]
+            return res[0], res[1], [], []
 
         try:
             if active_source == "nightlight":
                 try:
                     logger.info("Attempting to scrape via Nightlight driver...")
-                    characters, perks = self.nightlight_driver.scrape_all()
+                    res = self.nightlight_driver.scrape_all()
+                    characters, perks, items, addons = unpack_res(res)
                 except Exception as nl_err:
                     logger.warning(f"Nightlight driver failed: {nl_err}")
                     if active_fallback:
@@ -823,12 +1192,14 @@ class ScraperService:
                         )
                         fallback_used = True
                         source_used = "wiki"
-                        characters, perks = self.wiki_driver.scrape_all()
+                        res = self.wiki_driver.scrape_all()
+                        characters, perks, items, addons = unpack_res(res)
                     else:
                         raise nl_err
             else:
                 logger.info("Scraping via Wiki driver...")
-                characters, perks = self.wiki_driver.scrape_all()
+                res = self.wiki_driver.scrape_all()
+                characters, perks, items, addons = unpack_res(res)
                 source_used = "wiki"
 
             self.characters_file.parent.mkdir(parents=True, exist_ok=True)
@@ -839,14 +1210,22 @@ class ScraperService:
             with open(self.data_file, "w", encoding="utf-8") as f:
                 json.dump([asdict(p) for p in perks], f, indent=2, ensure_ascii=False)
 
-            total_downloads = len(perks) + sum(1 for c in characters if c.avatar_url)
+            self.items_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(self.items_file, "w", encoding="utf-8") as f:
+                json.dump([asdict(i) for i in items], f, indent=2, ensure_ascii=False)
+
+            self.addons_file.parent.mkdir(parents=True, exist_ok=True)
+            with open(self.addons_file, "w", encoding="utf-8") as f:
+                json.dump([asdict(a) for a in addons], f, indent=2, ensure_ascii=False)
+
+            total_downloads = len(perks) + sum(1 for c in characters if c.avatar_url) + len(items) + len(addons)
             self._update_status(
                 current_step="downloading_assets",
                 total=total_downloads,
                 progress=0,
             )
 
-            asyncio.run(self.download_all_assets_async(perks, characters))
+            asyncio.run(self.download_all_assets_async(perks, characters, items=items, addons=addons))
 
             now_iso = datetime.now(timezone.utc).isoformat()
             self.save_config({
@@ -862,6 +1241,8 @@ class ScraperService:
                 "total_characters": len(characters),
                 "survivors": survivor_count,
                 "killers": killer_count,
+                "total_items": len(items),
+                "total_addons": len(addons),
             }
 
             self._update_status(

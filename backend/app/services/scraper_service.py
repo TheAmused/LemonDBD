@@ -333,8 +333,6 @@ class NightlightScraperDriver:
                 k_str = str(k_val).lower()
                 if k_str in ["addon", "item"]:
                     continue
-            if not name:
-                continue
 
             role_val = str(item.get("role") or item.get("category") or "Survivor").lower()
             if role_val in ["survivor", "1", "s"]:
@@ -891,7 +889,7 @@ class WikiScraperDriver:
                     current_category = "Survivor"
 
                 target_clean = re.sub(r"\s+(?:Add-ons|Addons)$", "", htext, flags=re.IGNORECASE).strip()
-                if target_clean:
+                if target_clean and target_clean.lower() not in ["survivor", "killer", "general", "common", "uncommon", "rare", "very rare", "ultra rare"]:
                     current_target = target_clean
 
             elif element.name == "table" and "wikitable" in element.get("class", []):

@@ -63,6 +63,23 @@ def list_killers():
     return jsonify({"count": len(killers), "data": killers}), 200
 
 
+@perks_bp.route("/api/v1/items", methods=["GET"])
+def list_items():
+    category = request.args.get("category")
+    search = request.args.get("search")
+    items = perk_service.get_items(category=category, search=search)
+    return jsonify({"count": len(items), "data": items}), 200
+
+
+@perks_bp.route("/api/v1/addons", methods=["GET"])
+def list_addons():
+    category = request.args.get("category")
+    target = request.args.get("target") or request.args.get("associated_target")
+    search = request.args.get("search")
+    addons = perk_service.get_addons(category=category, target=target, search=search)
+    return jsonify({"count": len(addons), "data": addons}), 200
+
+
 def _run_background_scrape(override_source=None, override_fallback=None):
     scraper = ScraperService()
     scraper.run_sync_pipeline(override_source=override_source, override_fallback=override_fallback)

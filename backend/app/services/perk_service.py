@@ -19,6 +19,25 @@ class CharacterModel(BaseModel):
     avatar_local_path: Optional[str] = ""
 
 
+class ItemModel(BaseModel):
+    name: str
+    category: str
+    role: Optional[str] = "Survivor"
+    description: Optional[str] = ""
+    icon_url: Optional[str] = ""
+    icon_local_path: Optional[str] = ""
+    rarity: Optional[str] = ""
+
+
+class AddonModel(BaseModel):
+    name: str
+    associated_target: Optional[str] = ""
+    category: Optional[str] = ""
+    description: Optional[str] = ""
+    icon_url: Optional[str] = ""
+    icon_local_path: Optional[str] = ""
+    rarity: Optional[str] = ""
+
 class PerkModel(BaseModel):
     name: str
     character: str
@@ -38,9 +57,13 @@ class PerkService:
             data_path = Path(__file__).resolve().parent.parent.parent / "data" / "perks.json"
         self.data_path = Path(data_path)
         self.characters_path = self.data_path.parent / "characters.json"
+        self.items_path = self.data_path.parent / "items.json"
+        self.addons_path = self.data_path.parent / "addons.json"
 
         self._cache: List[PerkModel] = []
         self._characters_cache: List[CharacterModel] = []
+        self._items_cache: List[ItemModel] = []
+        self._addons_cache: List[AddonModel] = []
         self.reload_data()
 
     @staticmethod
@@ -63,6 +86,30 @@ class PerkService:
                 self._characters_cache = []
 
         char_avatar_lookup = {c.name.lower(): c.avatar_local_path for c in self._characters_cache if c.avatar_local_path}
+
+        if self.items_path.exists():
+            try:
+                with open(self.items_path, "r", encoding="utf-8") as f:
+                    raw_items = json.load(f)
+                    self._items_cache = [ItemModel(**item) for item in raw_items]
+                logger.info(f"Loaded {len(self._items_cache)} items.")
+            except Exception as e:
+                logger.error(f"Failed loading items JSON: {e}")
+                self._items_cache = []
+        else:
+            self._items_cache = []
+
+        if self.addons_path.exists():
+            try:
+                with open(self.addons_path, "r", encoding="utf-8") as f:
+                    raw_addons = json.load(f)
+                    self._addons_cache = [AddonModel(**addon) for addon in raw_addons]
+                logger.info(f"Loaded {len(self._addons_cache)} addons.")
+            except Exception as e:
+                logger.error(f"Failed loading addons JSON: {e}")
+                self._addons_cache = []
+        else:
+            self._addons_cache = []
 
         if self.data_path.exists():
             try:
@@ -189,3 +236,53 @@ class PerkService:
         if category and category.lower() != "all":
             results = [c for c in results if c.category.lower() == category.lower()]
         return [c.model_dump() for c in sorted(results, key=lambda x: x.name)]
+    def get_items(
+        self,
+        category: Optional[str] = None,
+        search: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        results = self._items_cache
+
+        if category and category.lower() != "all":
+            results = [item for item in results if item.category and item.category.lower() == category.lower()]
+
+        if search:
+            query = search.lower().strip()
+            results = [
+                item for item in results
+                if (item.name and query in item.name.lower())
+                or (item.description and query in item.description.lower())
+                or (item.category and query in item.category.lower())
+                or (item.role and query in item.role.lower())
+            ]
+
+        return [item.model_dump() for item in results]
+
+    def get_addons(
+        self,
+        category: Optional[str] = None,
+        target: Optional[str] = None,
+        search: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        results = self._addons_cache
+
+        if category and category.lower() != "all":
+            results = [addon for addon in results if addon.category and addon.category.lower() == category.lower()]
+
+        if target and target.lower() != "all":
+            results = [
+                addon for addon in results
+                if addon.associated_target and addon.associated_target.lower() == target.lower()
+            ]
+
+        if search:
+            query = search.lower().strip()
+            results = [
+                addon for addon in results
+                if (addon.name and query in addon.name.lower())
+                or (addon.description and query in addon.description.lower())
+                or (addon.category and query in addon.category.lower())
+                or (addon.associated_target and query in addon.associated_target.lower())
+            ]
+
+        return [addon.model_dump() for addon in results]

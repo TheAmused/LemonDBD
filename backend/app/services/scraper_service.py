@@ -4,7 +4,7 @@ import logging
 import re
 import threading
 from dataclasses import asdict, dataclass, fields
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple, Union
 from urllib.parse import unquote
@@ -767,7 +767,7 @@ class ScraperService:
 
             asyncio.run(self.download_all_assets_async(perks, characters))
 
-            now_iso = datetime.utcnow().isoformat()
+            now_iso = datetime.now(timezone.utc).isoformat()
             self.save_config({
                 "last_used_source": source_used,
                 "last_run_timestamp": now_iso,

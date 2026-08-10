@@ -61,6 +61,7 @@ class TestScraperFallback(unittest.TestCase):
 
     @patch("app.services.scraper_service.asyncio.run")
     def test_automatic_fallback_on_nightlight_failure(self, mock_asyncio_run):
+        mock_asyncio_run.side_effect = lambda coro: coro.close() if hasattr(coro, "close") else None
         # Mock Nightlight driver to raise exception
         self.service.nightlight_driver.scrape_all = MagicMock(
             side_effect=Exception("Nightlight API 503")
@@ -92,6 +93,7 @@ class TestScraperFallback(unittest.TestCase):
 
     @patch("app.services.scraper_service.asyncio.run")
     def test_no_fallback_when_disabled(self, mock_asyncio_run):
+        mock_asyncio_run.side_effect = lambda coro: coro.close() if hasattr(coro, "close") else None
         # Disable fallback in config
         self.service.save_config({"fallback_to_wiki": False})
 
@@ -111,6 +113,7 @@ class TestScraperFallback(unittest.TestCase):
 
     @patch("app.services.scraper_service.asyncio.run")
     def test_no_fallback_when_disabled_via_override(self, mock_asyncio_run):
+        mock_asyncio_run.side_effect = lambda coro: coro.close() if hasattr(coro, "close") else None
         # Mock Nightlight driver to raise exception
         self.service.nightlight_driver.scrape_all = MagicMock(
             side_effect=Exception("Nightlight API 503")
@@ -125,6 +128,7 @@ class TestScraperFallback(unittest.TestCase):
 
     @patch("app.services.scraper_service.asyncio.run")
     def test_successful_nightlight_scrape_no_fallback(self, mock_asyncio_run):
+        mock_asyncio_run.side_effect = lambda coro: coro.close() if hasattr(coro, "close") else None
         self.service.nightlight_driver.scrape_all = MagicMock(
             return_value=(self.sample_characters, self.sample_perks)
         )

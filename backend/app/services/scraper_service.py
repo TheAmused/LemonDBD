@@ -1,11 +1,11 @@
-﻿import json
+import json
 import logging
 import re
 import threading
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any, Tuple, Union
 from urllib.parse import unquote
 
 from bs4 import BeautifulSoup, Tag
@@ -13,6 +13,25 @@ from curl_cffi import requests
 from curl_cffi.requests import AsyncSession
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class ScraperConfig:
+    source: str = "nightlight"
+    fallback_to_wiki: bool = True
+    last_used_source: str = "nightlight"
+    last_run_timestamp: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "ScraperConfig":
+        if not isinstance(data, dict):
+            return cls()
+        valid_keys = {f.name for f in fields(cls)}
+        filtered = {k: v for k, v in data.items() if k in valid_keys}
+        return cls(**filtered)
 
 
 @dataclass
@@ -349,8 +368,36 @@ class ScraperService:
         self.base_dir = Path(base_dir)
         self.data_file = self.base_dir / "data" / "perks.json"
         self.characters_file = self.base_dir / "data" / "characters.json"
+        self.config_file = self.base_dir / "data" / "scraper_config.json"
         self.static_dir = self.base_dir / "app" / "static"
         self.nightlight_driver = NightlightScraperDriver(self.base_dir)
+
+    def load_config(self) -> ScraperConfig:
+        if not self.config_file.exists():
+            return ScraperConfig()
+        try:
+            with open(self.config_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            return ScraperConfig.from_dict(data)
+        except Exception as e:
+            logger.error(f"Error loading scraper config: {e}")
+            return ScraperConfig()
+
+    def save_config(self, data: Union[ScraperConfig, Dict[str, Any]]) -> ScraperConfig:
+        if isinstance(data, ScraperConfig):
+            config_obj = data
+        elif isinstance(data, dict):
+            current_dict = self.load_config().to_dict()
+            current_dict.update(data)
+            config_obj = ScraperConfig.from_dict(current_dict)
+        else:
+            raise ValueError("Data must be a ScraperConfig instance or a dict")
+
+        self.config_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.config_file, "w", encoding="utf-8") as f:
+            json.dump(config_obj.to_dict(), f, indent=2, ensure_ascii=False)
+
+        return config_obj
 
     @classmethod
     def get_status(cls) -> Dict[str, Any]:

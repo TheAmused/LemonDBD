@@ -1,4 +1,4 @@
-﻿import unittest
+import unittest
 from unittest.mock import MagicMock, patch
 from app.services.scraper_service import (
     CharacterData,
@@ -115,7 +115,7 @@ class TestNightlightScraperDriver(unittest.TestCase):
             'https://nightlight.gg/test',
             headers=driver.HEADERS,
             impersonate='chrome120',
-            verify=False,
+            verify=True,
             timeout=30,
         )
 

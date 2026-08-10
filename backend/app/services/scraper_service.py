@@ -82,15 +82,30 @@ class NightlightScraperDriver:
         self.base_dir = Path(base_dir)
 
     def fetch_nightlight_data(self, url: str) -> str:
-        response = requests.get(
-            url,
-            headers=self.HEADERS,
-            impersonate=self.IMPERSONATE_BROWSER,
-            verify=False,
-            timeout=self.REQUEST_TIMEOUT,
-        )
-        response.raise_for_status()
-        return response.text
+        try:
+            response = requests.get(
+                url,
+                headers=self.HEADERS,
+                impersonate=self.IMPERSONATE_BROWSER,
+                verify=True,
+                timeout=self.REQUEST_TIMEOUT,
+            )
+            response.raise_for_status()
+            return response.text
+        except Exception as err:
+            err_msg = str(err).lower()
+            if "certificate" in err_msg or "ssl" in err_msg or "curl: (60)" in err_msg:
+                logger.warning(f"SSL certificate verification failed for {url}. Retrying with verify=False...")
+                response = requests.get(
+                    url,
+                    headers=self.HEADERS,
+                    impersonate=self.IMPERSONATE_BROWSER,
+                    verify=False,
+                    timeout=self.REQUEST_TIMEOUT,
+                )
+                response.raise_for_status()
+                return response.text
+            raise
 
     def parse_api_characters(self, survivors_payload: Any, killers_payload: Any) -> List[CharacterData]:
         characters: List[CharacterData] = []
@@ -106,9 +121,13 @@ class NightlightScraperDriver:
             if isinstance(payload, list):
                 items = payload
             elif isinstance(payload, dict):
-                items = payload.get("data") or payload.get("survivors") or payload.get("killers") or payload.get("items") or []
-                if not isinstance(items, list):
-                    items = [payload]
+                data_val = payload.get("data")
+                if isinstance(data_val, list):
+                    items = data_val
+                elif isinstance(data_val, dict):
+                    items = data_val.get("survivors") or data_val.get("killers") or data_val.get("items") or []
+                if not items:
+                    items = payload.get("survivors") or payload.get("killers") or payload.get("items") or []
 
             for item in items:
                 if not isinstance(item, dict):
@@ -215,6 +234,41 @@ class NightlightScraperDriver:
                     pass
 
         if not raw_perks and isinstance(chunk_js, str):
+            chars_dict = {}
+            c_start = chunk_js.find('"10010":{"n":')
+            if c_start != -1:
+                for c_m in re.finditer(r'"(\d{4,5})":\s*(\{[^{}]*?"n"\s*:\s*"([^"]+)".*?\})', chunk_js):
+                    cid = c_m.group(1)
+                    cname = c_m.group(3)
+                    chars_dict[cid] = cname
+
+            seen_ids = set()
+            for m in re.finditer(r'"(\d+)":\s*(\{[^{}]*?"n"\s*:\s*"([^"]+)".*?"i"\s*:\s*"([^"]+)".*?\})', chunk_js):
+                pid = m.group(1)
+                pname = m.group(3).replace('\\"', '"').replace("\\'", "'")
+                icon_slug = m.group(4)
+                if pid in seen_ids:
+                    continue
+                seen_ids.add(pid)
+
+                obj_text = m.group(2)
+                r_m = re.search(r'"r"\s*:\s*(\d+)', obj_text)
+                c_m = re.search(r'"c"\s*:\s*(-?\d+)', obj_text)
+
+                role_num = int(r_m.group(1)) if r_m else 1
+                char_id = c_m.group(1) if c_m else "-1"
+
+                role_str = "Survivor" if role_num == 1 else "Killer"
+                char_name = chars_dict.get(char_id, "General") if char_id != "-1" else "General"
+
+                raw_perks.append({
+                    "name": pname,
+                    "character": char_name,
+                    "role": role_str,
+                    "icon": icon_slug,
+                })
+
+        if not raw_perks and isinstance(chunk_js, str):
             for m in re.finditer(r'\{\s*(?:[^{}]*?name\s*:\s*["\'](?P<name>[^"\']+)["\'][^{}]*?)\}', chunk_js, re.DOTALL):
                 obj_text = m.group(0)
                 name_m = re.search(r'name\s*:\s*["\']([^"\']+)["\']', obj_text)
@@ -313,7 +367,34 @@ class NightlightScraperDriver:
         characters = self.parse_api_characters(survivors_raw, killers_raw)
 
         perks_page_html = self.fetch_nightlight_data(self.PERKS_LIST_URL)
-        perks = self.parse_nightlight_perks(perks_page_html, perks_page_html, characters=characters)
+
+        chunk_text = ""
+        manifest_match = re.search(r'window\.__reactRouterManifest\s*=\s*(\{.*?\});', perks_page_html, re.DOTALL)
+        if manifest_match:
+            try:
+                manifest = json.loads(manifest_match.group(1))
+                for r_name, r_data in manifest.get("routes", {}).items():
+                    for imp in r_data.get("imports", []):
+                        if "chunk-" in imp:
+                            try:
+                                c_text = self.fetch_nightlight_data(f"https://nightlight.gg{imp}")
+                                if '{"1":{"n":' in c_text or '"Sprint_Burst"' in c_text:
+                                    chunk_text = c_text
+                                    break
+                            except Exception:
+                                pass
+                    if chunk_text:
+                        break
+            except Exception:
+                pass
+
+        if not chunk_text:
+            try:
+                chunk_text = self.fetch_nightlight_data("https://nightlight.gg/assets/chunk-Ge20zz2D.js")
+            except Exception:
+                chunk_text = perks_page_html
+
+        perks = self.parse_nightlight_perks(chunk_text, perks_page_html, characters=characters)
         return characters, perks
 
 
@@ -686,7 +767,7 @@ class ScraperService:
 
     async def download_all_assets_async(self, perks: List[PerkData], characters: List[CharacterData]) -> None:
         semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_DOWNLOADS)
-        async with AsyncSession(impersonate=self.IMPERSONATE_BROWSER) as client:
+        async with AsyncSession(impersonate=self.IMPERSONATE_BROWSER, verify=False) as client:
             tasks = [
                 self._download_asset(client, semaphore, perk.icon_url, perk.icon_local_path)
                 for perk in perks

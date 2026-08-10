@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import re
@@ -316,14 +317,13 @@ class NightlightScraperDriver:
         return characters, perks
 
 
-class ScraperService:
+class WikiScraperDriver:
     PERKS_URL = "https://deadbydaylight.fandom.com/wiki/Perks"
     SURVIVORS_URL = "https://deadbydaylight.fandom.com/wiki/Survivors"
     KILLERS_URL = "https://deadbydaylight.fandom.com/wiki/Killers"
 
     IMPERSONATE_BROWSER = "chrome120"
     REQUEST_TIMEOUT = 30
-    MAX_CONCURRENT_DOWNLOADS = 10
 
     HEADERS = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
@@ -352,6 +352,206 @@ class ScraperService:
         "characters", "the_campfire", "status_effects", "realm", "realms", "map", "maps"
     }
 
+    def __init__(self, base_dir: Optional[Path] = None):
+        if base_dir is None:
+            base_dir = Path(__file__).resolve().parent.parent.parent
+        self.base_dir = Path(base_dir)
+
+    def fetch_html(self, url: str) -> str:
+        response = requests.get(
+            url,
+            headers=self.HEADERS,
+            impersonate=self.IMPERSONATE_BROWSER,
+            timeout=self.REQUEST_TIMEOUT,
+        )
+        response.raise_for_status()
+        return response.text
+
+    def scrape_characters_dynamically(self) -> List[CharacterData]:
+        characters: List[CharacterData] = []
+        seen_slugs = set()
+
+        def process_page(url: str, category: str):
+            try:
+                logger.info(f"Scraping {category} index page directly...")
+                html = self.fetch_html(url)
+                soup = BeautifulSoup(html, "html.parser")
+                content = soup.find("div", class_="mw-parser-output") or soup
+
+                for link in content.find_all("a", href=re.compile(r"^/wiki/")):
+                    href = link.get("href", "")
+                    slug = ScraperService.extract_slug_from_href(href)
+                    slug_lower = slug.lower()
+
+                    if not slug or slug_lower in seen_slugs or slug_lower in self.EXCLUDED_SLUGS:
+                        continue
+
+                    if slug.startswith(("Category:", "File:", "Special:", "Dead_by_Daylight", "Help:", "User:", "Template:", "Tome")):
+                        continue
+
+                    img = link.find("img")
+                    if not img:
+                        continue
+
+                    avatar_url = ScraperService.extract_high_res_url(img)
+                    if not avatar_url:
+                        continue
+
+                    title = link.get("title", "").strip() or link.get_text().strip()
+                    full_name = title.replace("_", " ").strip()
+
+                    if not full_name or len(full_name) > 50:
+                        continue
+
+                    if any(x in slug_lower for x in ["perk", "item", "addon", "power", "patch", "dlc", "store", "tips"]):
+                        continue
+
+                    seen_slugs.add(slug_lower)
+                    sanitized = ScraperService.sanitize_filename(full_name)
+                    sub_dir = "survivors" if category == "Survivor" else "killers"
+
+                    characters.append(
+                        CharacterData(
+                            name=full_name,
+                            real_name=full_name,
+                            wiki_slug=slug,
+                            short_name=slug_lower,
+                            category=category,
+                            avatar_url=avatar_url,
+                            avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                        )
+                    )
+            except Exception as e:
+                logger.error(f"Error scraping {category} page: {e}")
+
+        process_page(self.SURVIVORS_URL, "Survivor")
+        process_page(self.KILLERS_URL, "Killer")
+
+        return characters
+
+    def parse_perks(self, html_content: str, characters: List[CharacterData]) -> List[PerkData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        perks: List[PerkData] = []
+        current_category: Optional[str] = None
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+
+        char_by_slug = {c.wiki_slug.lower(): c for c in characters}
+        char_by_name = {c.name.lower(): c for c in characters}
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                header_text = element.get_text().lower()
+                if "survivor" in header_text:
+                    current_category = "Survivor"
+                elif "killer" in header_text:
+                    current_category = "Killer"
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                if not current_category:
+                    continue
+
+                rows = element.find_all("tr")
+                for row in rows[1:]:
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 3:
+                        continue
+                    try:
+                        icon_tag = cells[0].find("img")
+                        icon_url = ScraperService.extract_high_res_url(icon_tag)
+
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        perk_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+
+                        cell_copy = BeautifulSoup(str(cells[2]), "html.parser")
+                        for bold in cell_copy.find_all(["b", "strong"]):
+                            bold.replace_with(f"**{bold.get_text().strip()}**")
+                        for italic in cell_copy.find_all(["i", "em"]):
+                            italic.replace_with(f"*{italic.get_text().strip()}*")
+                        for li in cell_copy.find_all("li"):
+                            li.replace_with(f"\n* {li.get_text().strip()}")
+                        for br in cell_copy.find_all("br"):
+                            br.replace_with("\n")
+                        lines = [line.strip() for line in cell_copy.get_text().splitlines()]
+                        description = "\n".join(line for line in lines if line)
+
+                        canonical_name = "General"
+                        real_name = "General"
+                        avatar_path = ""
+
+                        if len(cells) >= 4:
+                            owner_cell = cells[3]
+                            owner_link = owner_cell.find("a")
+
+                            matched = None
+                            if owner_link:
+                                href = owner_link.get("href", "")
+                                link_title = owner_link.get("title", "").strip()
+                                slug = ScraperService.extract_slug_from_href(href).lower()
+                                matched = char_by_slug.get(slug) or char_by_name.get(link_title.lower())
+
+                            if not matched:
+                                raw_text = owner_cell.get_text().strip()
+                                clean_text = re.sub(r"^[.\s\-–]+|[.\s\-–]+$", "", raw_text).strip().lower()
+
+                                if clean_text and clean_text not in ["all", "general", "none", "-", "all survivors", "all killers"]:
+                                    for key, c in char_by_name.items():
+                                        if clean_text in key or key in clean_text:
+                                            matched = c
+                                            break
+
+                            if matched:
+                                canonical_name = matched.name
+                                real_name = matched.real_name
+                                avatar_path = matched.avatar_local_path
+
+                        if not perk_name:
+                            continue
+
+                        sanitized_name = ScraperService.sanitize_filename(perk_name)
+                        category_dir = "survivors" if current_category == "Survivor" else "killers"
+
+                        if canonical_name == "General":
+                            local_rel_path = f"icons/{category_dir}/General/{sanitized_name}.png"
+                        else:
+                            local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.png"
+
+                        perks.append(
+                            PerkData(
+                                name=perk_name,
+                                character=canonical_name,
+                                character_real_name=real_name,
+                                character_avatar_path=avatar_path,
+                                category=current_category,
+                                description=description,
+                                icon_url=icon_url,
+                                icon_local_path=local_rel_path,
+                            )
+                        )
+                    except Exception:
+                        continue
+        return perks
+
+    def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData]]:
+        logger.info("Scraping Fandom Wiki data...")
+        characters = self.scrape_characters_dynamically()
+        html = self.fetch_html(self.PERKS_URL)
+        perks = self.parse_perks(html, characters)
+        return characters, perks
+
+
+class ScraperService:
+    PERKS_URL = WikiScraperDriver.PERKS_URL
+    SURVIVORS_URL = WikiScraperDriver.SURVIVORS_URL
+    KILLERS_URL = WikiScraperDriver.KILLERS_URL
+
+    IMPERSONATE_BROWSER = "chrome120"
+    REQUEST_TIMEOUT = 30
+    MAX_CONCURRENT_DOWNLOADS = 10
+
+    HEADERS = WikiScraperDriver.HEADERS
+    EXCLUDED_SLUGS = WikiScraperDriver.EXCLUDED_SLUGS
+
     _lock = threading.Lock()
     _status: Dict[str, Any] = {
         "is_running": False,
@@ -360,6 +560,8 @@ class ScraperService:
         "current_step": "idle",
         "last_run": None,
         "error": None,
+        "fallback_used": False,
+        "last_used_source": "nightlight",
     }
 
     def __init__(self, base_dir: Optional[Path] = None):
@@ -371,6 +573,7 @@ class ScraperService:
         self.config_file = self.base_dir / "data" / "scraper_config.json"
         self.static_dir = self.base_dir / "app" / "static"
         self.nightlight_driver = NightlightScraperDriver(self.base_dir)
+        self.wiki_driver = WikiScraperDriver(self.base_dir)
 
     def load_config(self) -> ScraperConfig:
         if not self.config_file.exists():
@@ -444,179 +647,13 @@ class ScraperService:
         return unquote(raw_slug).strip()
 
     def fetch_html(self, url: str) -> str:
-        response = requests.get(
-            url,
-            headers=self.HEADERS,
-            impersonate=self.IMPERSONATE_BROWSER,
-            timeout=self.REQUEST_TIMEOUT,
-        )
-        response.raise_for_status()
-        return response.text
+        return self.wiki_driver.fetch_html(url)
 
     def scrape_characters_dynamically(self) -> List[CharacterData]:
-        characters: List[CharacterData] = []
-        seen_slugs = set()
-
-        def process_page(url: str, category: str):
-            try:
-                logger.info(f"Scraping {category} index page directly...")
-                html = self.fetch_html(url)
-                soup = BeautifulSoup(html, "html.parser")
-                content = soup.find("div", class_="mw-parser-output") or soup
-
-                for link in content.find_all("a", href=re.compile(r"^/wiki/")):
-                    href = link.get("href", "")
-                    slug = self.extract_slug_from_href(href)
-                    slug_lower = slug.lower()
-
-                    if not slug or slug_lower in seen_slugs or slug_lower in self.EXCLUDED_SLUGS:
-                        continue
-
-                    if slug.startswith(("Category:", "File:", "Special:", "Dead_by_Daylight", "Help:", "User:", "Template:", "Tome")):
-                        continue
-
-                    img = link.find("img")
-                    if not img:
-                        continue
-
-                    avatar_url = self.extract_high_res_url(img)
-                    if not avatar_url:
-                        continue
-
-                    title = link.get("title", "").strip() or link.get_text().strip()
-                    full_name = title.replace("_", " ").strip()
-
-                    if not full_name or len(full_name) > 50:
-                        continue
-
-                    if any(x in slug_lower for x in ["perk", "item", "addon", "power", "patch", "dlc", "store", "tips"]):
-                        continue
-
-                    seen_slugs.add(slug_lower)
-                    sanitized = self.sanitize_filename(full_name)
-                    sub_dir = "survivors" if category == "Survivor" else "killers"
-
-                    characters.append(
-                        CharacterData(
-                            name=full_name,
-                            real_name=full_name,
-                            wiki_slug=slug,
-                            short_name=slug_lower,
-                            category=category,
-                            avatar_url=avatar_url,
-                            avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
-                        )
-                    )
-            except Exception as e:
-                logger.error(f"Error scraping {category} page: {e}")
-
-        process_page(self.SURVIVORS_URL, "Survivor")
-        process_page(self.KILLERS_URL, "Killer")
-
-        return characters
+        return self.wiki_driver.scrape_characters_dynamically()
 
     def parse_perks(self, html_content: str, characters: List[CharacterData]) -> List[PerkData]:
-        soup = BeautifulSoup(html_content, "html.parser")
-        perks: List[PerkData] = []
-        current_category: Optional[str] = None
-        content_area = soup.find("div", class_="mw-parser-output") or soup
-
-        char_by_slug = {c.wiki_slug.lower(): c for c in characters}
-        char_by_name = {c.name.lower(): c for c in characters}
-
-        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
-            if element.name in ["h1", "h2", "h3", "h4"]:
-                header_text = element.get_text().lower()
-                if "survivor" in header_text:
-                    current_category = "Survivor"
-                elif "killer" in header_text:
-                    current_category = "Killer"
-
-            elif element.name == "table" and "wikitable" in element.get("class", []):
-                if not current_category:
-                    continue
-
-                rows = element.find_all("tr")
-                for row in rows[1:]:
-                    cells = row.find_all(["td", "th"])
-                    if len(cells) < 3:
-                        continue
-                    try:
-                        icon_tag = cells[0].find("img")
-                        icon_url = self.extract_high_res_url(icon_tag)
-
-                        name_cell = cells[1]
-                        name_link = name_cell.find("a")
-                        perk_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
-
-                        cell_copy = BeautifulSoup(str(cells[2]), "html.parser")
-                        for bold in cell_copy.find_all(["b", "strong"]):
-                            bold.replace_with(f"**{bold.get_text().strip()}**")
-                        for italic in cell_copy.find_all(["i", "em"]):
-                            italic.replace_with(f"*{italic.get_text().strip()}*")
-                        for li in cell_copy.find_all("li"):
-                            li.replace_with(f"\n* {li.get_text().strip()}")
-                        for br in cell_copy.find_all("br"):
-                            br.replace_with("\n")
-                        lines = [line.strip() for line in cell_copy.get_text().splitlines()]
-                        description = "\n".join(line for line in lines if line)
-
-                        canonical_name = "General"
-                        real_name = "General"
-                        avatar_path = ""
-
-                        if len(cells) >= 4:
-                            owner_cell = cells[3]
-                            owner_link = owner_cell.find("a")
-
-                            matched = None
-                            if owner_link:
-                                href = owner_link.get("href", "")
-                                link_title = owner_link.get("title", "").strip()
-                                slug = self.extract_slug_from_href(href).lower()
-                                matched = char_by_slug.get(slug) or char_by_name.get(link_title.lower())
-
-                            if not matched:
-                                raw_text = owner_cell.get_text().strip()
-                                clean_text = re.sub(r"^[.\s\-–]+|[.\s\-–]+$", "", raw_text).strip().lower()
-
-                                if clean_text and clean_text not in ["all", "general", "none", "-", "all survivors", "all killers"]:
-                                    for key, c in char_by_name.items():
-                                        if clean_text in key or key in clean_text:
-                                            matched = c
-                                            break
-
-                            if matched:
-                                canonical_name = matched.name
-                                real_name = matched.real_name
-                                avatar_path = matched.avatar_local_path
-
-                        if not perk_name:
-                            continue
-
-                        sanitized_name = self.sanitize_filename(perk_name)
-                        category_dir = "survivors" if current_category == "Survivor" else "killers"
-
-                        if canonical_name == "General":
-                            local_rel_path = f"icons/{category_dir}/General/{sanitized_name}.png"
-                        else:
-                            local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.png"
-
-                        perks.append(
-                            PerkData(
-                                name=perk_name,
-                                character=canonical_name,
-                                character_real_name=real_name,
-                                character_avatar_path=avatar_path,
-                                category=current_category,
-                                description=description,
-                                icon_url=icon_url,
-                                icon_local_path=local_rel_path,
-                            )
-                        )
-                    except Exception:
-                        continue
-        return perks
+        return self.wiki_driver.parse_perks(html_content, characters)
 
     async def _download_asset(
         self,
@@ -662,10 +699,18 @@ class ScraperService:
 
             await asyncio.gather(*tasks)
 
-    def run_sync_pipeline(self) -> Dict[str, int]:
+    def run_sync_pipeline(
+        self,
+        override_source: Optional[str] = None,
+        override_fallback: Optional[bool] = None,
+    ) -> Dict[str, int]:
         if self.get_status()["is_running"]:
             logger.warning("Scrape pipeline already running.")
             return {}
+
+        config = self.load_config()
+        active_source = override_source if override_source is not None else config.source
+        active_fallback = override_fallback if override_fallback is not None else config.fallback_to_wiki
 
         self._update_status(
             is_running=True,
@@ -673,21 +718,43 @@ class ScraperService:
             total=0,
             current_step="scraping_characters",
             error=None,
+            fallback_used=False,
+            last_used_source=active_source,
         )
 
+        fallback_used = False
+        source_used = active_source
+        characters: List[CharacterData] = []
+        perks: List[PerkData] = []
+
         try:
-            characters = self.scrape_characters_dynamically()
+            if active_source == "nightlight":
+                try:
+                    logger.info("Attempting to scrape via Nightlight driver...")
+                    characters, perks = self.nightlight_driver.scrape_all()
+                except Exception as nl_err:
+                    logger.warning(f"Nightlight driver failed: {nl_err}")
+                    if active_fallback:
+                        logger.info("Falling back to Wiki driver...")
+                        self._update_status(
+                            current_step="falling_back_to_wiki",
+                            fallback_used=True,
+                        )
+                        fallback_used = True
+                        source_used = "wiki"
+                        characters, perks = self.wiki_driver.scrape_all()
+                    else:
+                        raise nl_err
+            else:
+                logger.info("Scraping via Wiki driver...")
+                characters, perks = self.wiki_driver.scrape_all()
+                source_used = "wiki"
 
             self.characters_file.parent.mkdir(parents=True, exist_ok=True)
             with open(self.characters_file, "w", encoding="utf-8") as f:
                 json.dump([asdict(c) for c in characters], f, indent=2, ensure_ascii=False)
 
-            self._update_status(current_step="fetching_perks_wiki")
-            html = self.fetch_html(self.PERKS_URL)
-
-            self._update_status(current_step="parsing_perks")
-            perks = self.parse_perks(html, characters)
-
+            self.data_file.parent.mkdir(parents=True, exist_ok=True)
             with open(self.data_file, "w", encoding="utf-8") as f:
                 json.dump([asdict(p) for p in perks], f, indent=2, ensure_ascii=False)
 
@@ -699,6 +766,12 @@ class ScraperService:
             )
 
             asyncio.run(self.download_all_assets_async(perks, characters))
+
+            now_iso = datetime.utcnow().isoformat()
+            self.save_config({
+                "last_used_source": source_used,
+                "last_run_timestamp": now_iso,
+            })
 
             survivor_count = sum(1 for p in perks if p.category == "Survivor")
             killer_count = sum(1 for p in perks if p.category == "Killer")
@@ -713,7 +786,9 @@ class ScraperService:
             self._update_status(
                 is_running=False,
                 current_step="completed",
-                last_run=datetime.utcnow().isoformat(),
+                last_run=now_iso,
+                last_used_source=source_used,
+                fallback_used=fallback_used,
             )
             return stats
 

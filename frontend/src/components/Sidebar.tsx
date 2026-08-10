@@ -25,6 +25,7 @@ import {
   Calculator,
   Wand2,
   Compass,
+  Package,
   Settings,
 } from 'lucide-react';
 import { ScraperConfigModal } from './ScraperConfigModal';
@@ -209,6 +210,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Compass,
       color: 'text-cyan-400',
       activeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
+    },
+    {
+      id: 'items',
+      label: '📦 Items & Add-ons',
+      icon: Package,
+      color: 'text-teal-400',
+      activeBg: 'bg-teal-500/10 text-teal-400 border border-teal-500/20',
     },
     {
       id: 'quests',

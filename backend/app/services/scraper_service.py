@@ -270,33 +270,32 @@ class NightlightScraperDriver:
                     chars_dict[cid] = cname
 
             seen_ids = set()
-            for m in re.finditer(r'"(\d+)":\s*(\{[^{}]*?"n"\s*:\s*"([^"]+)".*?"i"\s*:\s*"([^"]+)".*?\})', chunk_js):
+            for m in re.finditer(r'"(\d+)":\s*(\{[^{}]*?"n"\s*:\s*"([^"]+)".*?"u"\s*:\s*"/perks/([^"]+)".*?\})', chunk_js):
                 pid = m.group(1)
                 pname = m.group(3).replace('\\"', '"').replace("\\'", "'")
-                icon_slug = m.group(4)
+                u_slug = m.group(4)
                 if pid in seen_ids:
                     continue
                 seen_ids.add(pid)
 
                 obj_text = m.group(2)
+                i_m = re.search(r'"i"\s*:\s*"([^"]+)"', obj_text)
                 r_m = re.search(r'"r"\s*:\s*(\d+)', obj_text)
                 c_m = re.search(r'"c"\s*:\s*(-?\d+)', obj_text)
 
+                icon_slug = i_m.group(1) if i_m else ""
                 role_num = int(r_m.group(1)) if r_m else 1
                 char_id = c_m.group(1) if c_m else "-1"
 
                 role_str = "Survivor" if role_num == 1 else "Killer"
                 char_name = chars_dict.get(char_id, "General") if char_id != "-1" else "General"
 
-                u_m = re.search(r'"u"\s*:\s*"([^"]*)"', obj_text)
-                k_m = re.search(r'"k"\s*:\s*"([^"]*)"', obj_text)
                 raw_perks.append({
                     "name": pname,
                     "character": char_name,
                     "role": role_str,
                     "icon": icon_slug,
-                    "u": u_m.group(1) if u_m else None,
-                    "k": k_m.group(1) if k_m else None,
+                    "u": f"/perks/{u_slug}",
                 })
 
         if not raw_perks and isinstance(chunk_js, str):
@@ -589,6 +588,18 @@ class NightlightScraperDriver:
 
         perks = self.parse_nightlight_perks(chunk_text, perks_page_html, characters=characters)
         items, addons = self.parse_nightlight_items_and_addons(chunk_text, perks_page_html, characters=characters)
+        if len(items) < 5 or len(addons) < 5:
+            try:
+                wiki_driver = WikiScraperDriver(self.base_dir)
+                if len(items) < 5:
+                    w_items_html = wiki_driver.fetch_html(wiki_driver.ITEMS_URL)
+                    items = wiki_driver.parse_wiki_items(w_items_html)
+                if len(addons) < 5:
+                    w_addons_html = wiki_driver.fetch_html(wiki_driver.ADDONS_URL)
+                    addons = wiki_driver.parse_wiki_addons(w_addons_html)
+            except Exception as w_err:
+                logger.warning(f"Wiki fallback for items/addons failed: {w_err}")
+
         return characters, perks, items, addons
 
 
@@ -635,14 +646,30 @@ class WikiScraperDriver:
         self.base_dir = Path(base_dir)
 
     def fetch_html(self, url: str) -> str:
-        response = requests.get(
-            url,
-            headers=self.HEADERS,
-            impersonate=self.IMPERSONATE_BROWSER,
-            timeout=self.REQUEST_TIMEOUT,
-        )
-        response.raise_for_status()
-        return response.text
+        try:
+            response = requests.get(
+                url,
+                headers=self.HEADERS,
+                impersonate=self.IMPERSONATE_BROWSER,
+                verify=True,
+                timeout=self.REQUEST_TIMEOUT,
+            )
+            response.raise_for_status()
+            return response.text
+        except Exception as err:
+            err_msg = str(err).lower()
+            if "certificate" in err_msg or "ssl" in err_msg or "curl: (60)" in err_msg:
+                logger.warning(f"SSL certificate verification failed for {url}. Retrying with verify=False...")
+                response = requests.get(
+                    url,
+                    headers=self.HEADERS,
+                    impersonate=self.IMPERSONATE_BROWSER,
+                    verify=False,
+                    timeout=self.REQUEST_TIMEOUT,
+                )
+                response.raise_for_status()
+                return response.text
+            raise
 
     def scrape_characters_dynamically(self) -> List[CharacterData]:
         characters: List[CharacterData] = []

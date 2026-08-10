@@ -1,3 +1,4 @@
+from dataclasses import asdict
 import threading
 from pathlib import Path
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
@@ -62,9 +63,9 @@ def list_killers():
     return jsonify({"count": len(killers), "data": killers}), 200
 
 
-def _run_background_scrape():
+def _run_background_scrape(override_source=None, override_fallback=None):
     scraper = ScraperService()
-    scraper.run_sync_pipeline()
+    scraper.run_sync_pipeline(override_source=override_source, override_fallback=override_fallback)
     perk_service.reload_data()
 
 
@@ -74,7 +75,17 @@ def trigger_scrape():
     if status["is_running"]:
         return jsonify({"message": "Scrape task in progress", "status": status}), 409
 
-    thread = threading.Thread(target=_run_background_scrape, daemon=True)
+    data = request.get_json(silent=True) or {}
+    source = data.get("source")
+    fallback = data.get("fallback")
+    if fallback is None:
+        fallback = data.get("fallback_to_wiki")
+
+    thread = threading.Thread(
+        target=_run_background_scrape,
+        kwargs={"override_source": source, "override_fallback": fallback},
+        daemon=True,
+    )
     thread.start()
     return jsonify({"message": "Scrape task initiated in background"}), 202
 
@@ -82,6 +93,20 @@ def trigger_scrape():
 @perks_bp.route("/api/v1/scrape/status", methods=["GET"])
 def get_scrape_status():
     return jsonify(ScraperService.get_status()), 200
+
+
+@perks_bp.route("/api/v1/scrape/config", methods=["GET"])
+def get_scrape_config():
+    scraper = ScraperService()
+    return jsonify(asdict(scraper.load_config())), 200
+
+
+@perks_bp.route("/api/v1/scrape/config", methods=["POST"])
+def update_scrape_config():
+    data = request.get_json(silent=True) or {}
+    scraper = ScraperService()
+    updated = scraper.save_config(data)
+    return jsonify({"message": "Configuration updated", "config": asdict(updated)}), 200
 
 
 @perks_bp.route("/static/<path:filename>", methods=["GET"])

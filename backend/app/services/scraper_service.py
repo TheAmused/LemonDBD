@@ -1,12 +1,11 @@
-import asyncio
-import json
+﻿import json
 import logging
 import re
 import threading
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple
 from urllib.parse import unquote
 
 from bs4 import BeautifulSoup, Tag
@@ -37,6 +36,265 @@ class PerkData:
     description: str
     icon_url: str
     icon_local_path: str
+
+
+class NightlightScraperDriver:
+    SURVIVORS_API = "https://nightlight.gg/api/v1/stats/global/survivors"
+    KILLERS_API = "https://nightlight.gg/api/v1/stats/global/killers"
+    PERKS_LIST_URL = "https://nightlight.gg/perks/list"
+
+    CDN_PORTRAITS_BASE = "https://cdn.nightlight.gg/img/portraits/"
+    CDN_PERKS_BASE = "https://cdn.nightlight.gg/img/perks/"
+
+    IMPERSONATE_BROWSER = "chrome120"
+    REQUEST_TIMEOUT = 30
+
+    HEADERS = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://nightlight.gg/",
+    }
+
+    def __init__(self, base_dir: Optional[Path] = None):
+        if base_dir is None:
+            base_dir = Path(__file__).resolve().parent.parent.parent
+        self.base_dir = Path(base_dir)
+
+    def fetch_nightlight_data(self, url: str) -> str:
+        response = requests.get(
+            url,
+            headers=self.HEADERS,
+            impersonate=self.IMPERSONATE_BROWSER,
+            verify=False,
+            timeout=self.REQUEST_TIMEOUT,
+        )
+        response.raise_for_status()
+        return response.text
+
+    def parse_api_characters(self, survivors_payload: Any, killers_payload: Any) -> List[CharacterData]:
+        characters: List[CharacterData] = []
+
+        def process_items(payload: Any, category: str):
+            if isinstance(payload, str):
+                try:
+                    payload = json.loads(payload)
+                except Exception:
+                    return
+
+            items = []
+            if isinstance(payload, list):
+                items = payload
+            elif isinstance(payload, dict):
+                items = payload.get("data") or payload.get("survivors") or payload.get("killers") or payload.get("items") or []
+                if not isinstance(items, list):
+                    items = [payload]
+
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+
+                name = item.get("name") or item.get("character_name") or item.get("title") or ""
+                if not name:
+                    continue
+
+                real_name = item.get("real_name") or name
+                wiki_slug = item.get("wiki_slug") or item.get("slug") or item.get("id") or ScraperService.sanitize_filename(name)
+                short_name = item.get("short_name") or ScraperService.sanitize_filename(name)
+
+                raw_portrait = (
+                    item.get("avatar_url")
+                    or item.get("portrait_url")
+                    or item.get("portrait")
+                    or item.get("image")
+                    or f"{short_name}.png"
+                )
+
+                if raw_portrait.startswith("http://") or raw_portrait.startswith("https://"):
+                    avatar_url = raw_portrait
+                else:
+                    clean_portrait = raw_portrait.lstrip("/")
+                    if clean_portrait.startswith("img/portraits/"):
+                        avatar_url = f"https://cdn.nightlight.gg/{clean_portrait}"
+                    elif clean_portrait.startswith("portraits/"):
+                        avatar_url = f"https://cdn.nightlight.gg/img/{clean_portrait}"
+                    else:
+                        if not clean_portrait.endswith(".png") and "." not in clean_portrait:
+                            clean_portrait = f"{clean_portrait}.png"
+                        avatar_url = f"https://cdn.nightlight.gg/img/portraits/{clean_portrait}"
+
+                sanitized = ScraperService.sanitize_filename(name)
+                sub_dir = "survivors" if category == "Survivor" else "killers"
+                local_path = f"avatars/{sub_dir}/{sanitized}.png"
+
+                characters.append(
+                    CharacterData(
+                        name=name,
+                        real_name=real_name,
+                        wiki_slug=wiki_slug,
+                        short_name=short_name,
+                        category=category,
+                        avatar_url=avatar_url,
+                        avatar_local_path=local_path,
+                    )
+                )
+
+        process_items(survivors_payload, "Survivor")
+        process_items(killers_payload, "Killer")
+        return characters
+
+    def parse_nightlight_perks(
+        self,
+        chunk_js: str,
+        stream_payload: str,
+        characters: Optional[List[CharacterData]] = None,
+    ) -> List[PerkData]:
+        perks: List[PerkData] = []
+        char_map: Dict[str, CharacterData] = {}
+        if characters:
+            for c in characters:
+                char_map[c.name.lower()] = c
+                char_map[c.short_name.lower()] = c
+                char_map[c.wiki_slug.lower()] = c
+
+        descriptions: Dict[str, str] = {}
+        if stream_payload:
+            soup = BeautifulSoup(stream_payload, "html.parser")
+            for el in soup.find_all(attrs={"data-perk": True}):
+                pname = str(el["data-perk"]).replace("\\'", "'").replace('\\"', '"').strip()
+                dtext = el.get_text(separator="\n", strip=True)
+                if pname and dtext:
+                    descriptions[pname] = dtext
+
+            if not descriptions:
+                for m in re.finditer(r'data-perk=["\']([^"\']+)["\'][^>]*>(.*?)(?=</div|<div|data-perk=|$)', stream_payload, re.DOTALL):
+                    pname = m.group(1).replace("\\'", "'").replace('\\"', '"').strip()
+                    dtext = BeautifulSoup(m.group(2), "html.parser").get_text(separator="\n", strip=True)
+                    if pname and dtext:
+                        descriptions[pname] = dtext
+
+        raw_perks = []
+        if isinstance(chunk_js, str):
+            try:
+                parsed = json.loads(chunk_js)
+                if isinstance(parsed, list):
+                    raw_perks = parsed
+                elif isinstance(parsed, dict):
+                    raw_perks = parsed.get("perks") or parsed.get("data") or []
+            except Exception:
+                pass
+
+        if not raw_perks and isinstance(chunk_js, str):
+            match = re.search(r'perks\s*:\s*(\[\s*\{.*?\}\s*\])', chunk_js, re.DOTALL)
+            if match:
+                try:
+                    json_str = re.sub(r'(\b\w+\b)\s*:', r'"\1":', match.group(1))
+                    json_str = re.sub(r':\s*\'([^\']*)\'', r': "\1"', json_str)
+                    raw_perks = json.loads(json_str)
+                except Exception:
+                    pass
+
+        if not raw_perks and isinstance(chunk_js, str):
+            for m in re.finditer(r'\{\s*(?:[^{}]*?name\s*:\s*["\'](?P<name>[^"\']+)["\'][^{}]*?)\}', chunk_js, re.DOTALL):
+                obj_text = m.group(0)
+                name_m = re.search(r'name\s*:\s*["\']([^"\']+)["\']', obj_text)
+                char_m = re.search(r'character\s*:\s*["\']([^"\']+)["\']', obj_text)
+                role_m = re.search(r'role\s*:\s*["\']?([^"\'\s,}]+)["\']?', obj_text)
+                icon_m = re.search(r'icon\s*:\s*["\']([^"\']+)["\']', obj_text)
+                if name_m:
+                    raw_perks.append({
+                        "name": name_m.group(1),
+                        "character": char_m.group(1) if char_m else "General",
+                        "role": role_m.group(1) if role_m else "Survivor",
+                        "icon": icon_m.group(1) if icon_m else "",
+                    })
+
+        for item in raw_perks:
+            if not isinstance(item, dict):
+                continue
+
+            name = item.get("name") or item.get("perk_name") or item.get("title") or ""
+            if not name:
+                continue
+
+            role_val = str(item.get("role") or item.get("category") or "Survivor").lower()
+            if role_val in ["survivor", "1", "s"]:
+                category = "Survivor"
+            elif role_val in ["killer", "2", "k"]:
+                category = "Killer"
+            else:
+                category = "Survivor"
+
+            char_input = item.get("character") or item.get("character_name") or item.get("owner") or "General"
+            matched_char = char_map.get(str(char_input).lower())
+
+            if matched_char:
+                canonical_name = matched_char.name
+                real_name = matched_char.real_name
+                avatar_path = matched_char.avatar_local_path
+            else:
+                canonical_name = str(char_input) if char_input and char_input.lower() not in ["none", "all", "general"] else "General"
+                real_name = canonical_name
+                avatar_path = ""
+
+            desc = descriptions.get(name) or descriptions.get(name.replace("\\'", "'")) or ""
+            if not desc and stream_payload:
+                idx = stream_payload.find(name)
+                if idx != -1:
+                    snippet = stream_payload[idx:idx + 300]
+                    desc = BeautifulSoup(snippet, "html.parser").get_text(separator="\n", strip=True)
+
+            raw_icon = (
+                item.get("icon")
+                or item.get("icon_slug")
+                or item.get("slug")
+                or ScraperService.sanitize_filename(name)
+            )
+
+            if raw_icon.startswith("http://") or raw_icon.startswith("https://"):
+                icon_url = raw_icon
+            else:
+                clean_icon = raw_icon.lstrip("/")
+                if clean_icon.startswith("img/perks/"):
+                    icon_url = f"https://cdn.nightlight.gg/{clean_icon}"
+                elif clean_icon.startswith("perks/"):
+                    icon_url = f"https://cdn.nightlight.gg/img/{clean_icon}"
+                else:
+                    if not clean_icon.endswith(".png") and "." not in clean_icon:
+                        clean_icon = f"{clean_icon}.png"
+                    icon_url = f"https://cdn.nightlight.gg/img/perks/{clean_icon}"
+
+            sanitized_name = ScraperService.sanitize_filename(name)
+            category_dir = "survivors" if category == "Survivor" else "killers"
+            if canonical_name == "General":
+                local_rel_path = f"icons/{category_dir}/General/{sanitized_name}.png"
+            else:
+                local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.png"
+
+            perks.append(
+                PerkData(
+                    name=name,
+                    character=canonical_name,
+                    character_real_name=real_name,
+                    character_avatar_path=avatar_path,
+                    category=category,
+                    description=desc,
+                    icon_url=icon_url,
+                    icon_local_path=local_rel_path,
+                )
+            )
+
+        return perks
+
+    def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData]]:
+        logger.info("Scraping Nightlight.gg data...")
+        survivors_raw = self.fetch_nightlight_data(self.SURVIVORS_API)
+        killers_raw = self.fetch_nightlight_data(self.KILLERS_API)
+        characters = self.parse_api_characters(survivors_raw, killers_raw)
+
+        perks_page_html = self.fetch_nightlight_data(self.PERKS_LIST_URL)
+        perks = self.parse_nightlight_perks(perks_page_html, perks_page_html, characters=characters)
+        return characters, perks
 
 
 class ScraperService:
@@ -92,6 +350,7 @@ class ScraperService:
         self.data_file = self.base_dir / "data" / "perks.json"
         self.characters_file = self.base_dir / "data" / "characters.json"
         self.static_dir = self.base_dir / "app" / "static"
+        self.nightlight_driver = NightlightScraperDriver(self.base_dir)
 
     @classmethod
     def get_status(cls) -> Dict[str, Any]:

@@ -25,7 +25,9 @@ import {
   Calculator,
   Wand2,
   Compass,
+  Settings,
 } from 'lucide-react';
+import { ScraperConfigModal } from './ScraperConfigModal';
 
 interface SidebarProps {
   currentLocale: string;
@@ -59,6 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string>('');
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const toggleLocale =
@@ -86,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     try {
       setIsSyncing(true);
       setSyncStatus('Init...');
-      await fetch(`${backendBase}/api/v1/scrape`, { method: 'POST' });
+      await fetch(backendBase + '/api/v1/scrape', { method: 'POST' });
     } catch (err) {
       console.error('Failed to trigger scrape job:', err);
       setIsSyncing(false);
@@ -99,15 +102,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (isSyncing) {
       interval = setInterval(async () => {
         try {
-          const res = await fetch(`${backendBase}/api/v1/scrape/status`);
+          const res = await fetch(backendBase + '/api/v1/scrape/status');
           if (res.ok) {
             const data = await res.json();
             if (data.is_running) {
-              if (data.current_step === 'downloading_assets' && data.total > 0) {
+              const activeSource = data.last_used_source || data.active_source || data.source;
+              const sourceInfo = activeSource ? (' - ' + activeSource) : '';
+              if ((data.current_step === 'downloading_assets' || data.current_step === 'downloading_icons') && data.total > 0) {
                 const pct = Math.round((data.progress / data.total) * 100);
-                setSyncStatus(`${pct}%`);
+                setSyncStatus(pct + '%' + sourceInfo);
               } else {
-                setSyncStatus(data.current_step.replace('_', ' '));
+                setSyncStatus(data.current_step.replace(/_/g, ' ') + sourceInfo);
               }
             } else {
               setIsSyncing(false);
@@ -224,7 +229,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div>
         {/* Brand Header */}
         <Link
-          href={`/${currentLocale}`}
+          href={'/' + currentLocale}
           onClick={() => setMobileOpen(false)}
           className="flex items-center gap-3 px-2 py-3 group focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
         >
@@ -260,16 +265,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
               return (
                 <Link
                   key={item.id}
-                  href={`/${currentLocale}/${item.id}`}
+                  href={'/' + currentLocale + '/' + item.id}
                   onClick={() => setMobileOpen(false)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                    isActive
+                  className={
+                    'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
+                    (isActive
                       ? item.activeBg
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60'
-                  }`}
+                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
+                  }
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`h-4 w-4 ${item.color}`} />
+                    <Icon className={'h-4 w-4 ' + item.color} />
                     <span>{item.label}</span>
                   </div>
                 </Link>
@@ -284,14 +290,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     if (onOpenQuests) onOpenQuests();
                     setMobileOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                    isActive
+                  className={
+                    'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
+                    (isActive
                       ? item.activeBg
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60'
-                  }`}
+                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
+                  }
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`h-4 w-4 ${item.color}`} />
+                    <Icon className={'h-4 w-4 ' + item.color} />
                     <span>{item.label}</span>
                   </div>
                 </button>
@@ -305,14 +312,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onSelectCategory(item.id);
                   setMobileOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                  isActive
+                className={
+                  'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
+                  (isActive
                     ? item.activeBg
-                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60'
-                }`}
+                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
+                }
               >
                 <div className="flex items-center gap-3">
-                  <Icon className={`h-4 w-4 ${item.color}`} />
+                  <Icon className={'h-4 w-4 ' + item.color} />
                   <span>{item.label}</span>
                 </div>
               </button>
@@ -320,7 +328,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           })}
         </nav>
 
-        {/* NEW: LIVE VAULT STATS WIDGET (Fills the empty space) */}
+        {/* LIVE VAULT STATS WIDGET */}
         <div className="mt-6 rounded-2xl border border-slate-200/80 bg-slate-100/60 p-3.5 dark:border-slate-800/80 dark:bg-slate-900/50 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
@@ -366,14 +374,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
             <div className="flex h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
               <div
-                style={{ width: `${survivorPct}%` }}
+                style={{ width: survivorPct + '%' }}
                 className="bg-emerald-500 transition-all duration-500"
-                title={`Survivors: ${survivorPct}%`}
+                title={'Survivors: ' + survivorPct + '%'}
               />
               <div
-                style={{ width: `${killerPct}%` }}
+                style={{ width: killerPct + '%' }}
                 className="bg-rose-500 transition-all duration-500"
-                title={`Killers: ${killerPct}%`}
+                title={'Killers: ' + killerPct + '%'}
               />
             </div>
           </div>
@@ -389,14 +397,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        <button
-          onClick={handleTriggerSync}
-          disabled={isSyncing}
-          className="w-full flex h-10 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-3.5 text-xs font-bold text-white shadow-md shadow-red-900/20 hover:from-red-500 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-60 transition-all cursor-pointer"
-        >
-          <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
-          <span>{isSyncing ? `${dict.app.syncing} (${syncStatus})` : dict.app.syncWiki}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleTriggerSync}
+            disabled={isSyncing}
+            className="flex-1 flex h-10 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-3 text-xs font-bold text-white shadow-md shadow-red-900/20 hover:from-red-500 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-60 transition-all cursor-pointer min-w-0"
+          >
+            <RefreshCw className={'h-4 w-4 shrink-0 ' + (isSyncing ? 'animate-spin' : '')} />
+            <span className="truncate">{isSyncing ? (dict.app.syncing + ' (' + syncStatus + ')') : dict.app.syncWiki}</span>
+          </button>
+          <button
+            onClick={() => setIsConfigOpen(true)}
+            title="Scraper Settings"
+            aria-label="Scraper Settings"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          >
+            <Settings className="h-4 w-4 text-slate-600 dark:text-slate-400 hover:rotate-45 transition-transform" />
+          </button>
+        </div>
 
         <div className="grid grid-cols-2 gap-2">
           <Link
@@ -431,7 +449,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </aside>
 
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 lg:hidden">
-        <Link href={`/${currentLocale}`} className="flex items-center gap-2.5">
+        <Link href={'/' + currentLocale} className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white">
             <Flame className="h-5 w-5" />
           </div>
@@ -468,6 +486,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
       )}
+
+      <ScraperConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} />
     </>
   );
 };

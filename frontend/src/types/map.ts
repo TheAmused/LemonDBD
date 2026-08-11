@@ -75,7 +75,15 @@ export interface MapRealm {
   has_window?: boolean;
   vault_direction?: string;
   looping_tips?: string;
-  mindgame_counter?: string;
+  callout_image_url?: string;
+  callout_image_local_path?: string;
+  clock_system?: {
+    description?: string;
+    twelve_o_clock?: string;
+    three_o_clock?: string;
+    six_o_clock?: string;
+    nine_o_clock?: string;
+  };
   tiles?: MapTile[];
   objectives?: MapObjective[];
 }

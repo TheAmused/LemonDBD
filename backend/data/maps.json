@@ -1,0 +1,930 @@
+[
+  {
+    "id": "azarovs_resting_place",
+    "name": "Azarov's Resting Place",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp",
+    "callout_image_local_path": "maps/callouts/autohaven_wreckers/azarovs_resting_place.webp",
+    "dpath": "Azarovs/Azarovs Resting Place.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "blood_lodge",
+    "name": "Blood Lodge",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
+    "callout_image_local_path": "maps/callouts/autohaven_wreckers/blood_lodge.webp",
+    "dpath": "Azarovs/Blood Lodge.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "gas_heaven",
+    "name": "Gas Heaven",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Gas%20Heaven.webp",
+    "callout_image_local_path": "maps/callouts/autohaven_wreckers/gas_heaven.webp",
+    "dpath": "Azarovs/Gas Heaven.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "wreckers_yard",
+    "name": "Wreckers' Yard",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wreckers.webp",
+    "callout_image_local_path": "maps/callouts/autohaven_wreckers/wreckers_yard.webp",
+    "dpath": "Azarovs/Wreckers.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "wretched_shop",
+    "name": "Wretched Shop",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wretched%20Shop.webp",
+    "callout_image_local_path": "maps/callouts/autohaven_wreckers/wretched_shop.webp",
+    "dpath": "Azarovs/Wretched Shop.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "preschool_i",
+    "name": "Preschool I",
+    "realm": "Badham",
+    "realm_id": "badham",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool1.webp",
+    "callout_image_local_path": "maps/callouts/badham/preschool_i.webp",
+    "dpath": "Badham/Preschool1.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool I (Badham). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "preschool_ii",
+    "name": "Preschool II",
+    "realm": "Badham",
+    "realm_id": "badham",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool2.webp",
+    "callout_image_local_path": "maps/callouts/badham/preschool_ii.webp",
+    "dpath": "Badham/Preschool2.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool II (Badham). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "preschool_iii",
+    "name": "Preschool III",
+    "realm": "Badham",
+    "realm_id": "badham",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool3.webp",
+    "callout_image_local_path": "maps/callouts/badham/preschool_iii.webp",
+    "dpath": "Badham/Preschool3.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool III (Badham). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "preschool_iiiv",
+    "name": "Preschool IIIV",
+    "realm": "Badham",
+    "realm_id": "badham",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool4.webp",
+    "callout_image_local_path": "maps/callouts/badham/preschool_iiiv.webp",
+    "dpath": "Badham/Preschool4.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool IIIV (Badham). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "preschool_v",
+    "name": "Preschool V",
+    "realm": "Badham",
+    "realm_id": "badham",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool5.webp",
+    "callout_image_local_path": "maps/callouts/badham/preschool_v.webp",
+    "dpath": "Badham/Preschool5.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool V (Badham). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "fractured_cowshed",
+    "name": "Fractured Cowshed",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Fractured%20Cowshed.webp",
+    "callout_image_local_path": "maps/callouts/coldwind_farm/fractured_cowshed.webp",
+    "dpath": "Coldwind/Fractured Cowshed.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "rancid_abbatoir",
+    "name": "Rancid Abbatoir",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rancid%20Abbatoir.webp",
+    "callout_image_local_path": "maps/callouts/coldwind_farm/rancid_abbatoir.webp",
+    "dpath": "Coldwind/Rancid Abbatoir.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Rancid Abbatoir (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "rotten_fields",
+    "name": "Rotten Fields",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rotten%20Fields.webp",
+    "callout_image_local_path": "maps/callouts/coldwind_farm/rotten_fields.webp",
+    "dpath": "Coldwind/Rotten Fields.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "the_thompson_house",
+    "name": "The Thompson House",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/The%20Thompson%20House.webp",
+    "callout_image_local_path": "maps/callouts/coldwind_farm/the_thompson_house.webp",
+    "dpath": "Coldwind/The Thompson House.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "torment_creek",
+    "name": "Torment Creek",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Torment%20Creek.webp",
+    "callout_image_local_path": "maps/callouts/coldwind_farm/torment_creek.webp",
+    "dpath": "Coldwind/Torment Creek.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "disturbed_ward",
+    "name": "Disturbed Ward",
+    "realm": "Crotus Prenn Asylum",
+    "realm_id": "crotus_prenn_asylum",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Disturbed%20Ward.webp",
+    "callout_image_local_path": "maps/callouts/crotus_prenn_asylum/disturbed_ward.webp",
+    "dpath": "Crotus Pen/Disturbed Ward.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Disturbed Ward (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "father_campbells_chapel",
+    "name": "Father Campbells Chapel",
+    "realm": "Crotus Prenn Asylum",
+    "realm_id": "crotus_prenn_asylum",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Father%20Campbells%20Chapel.webp",
+    "callout_image_local_path": "maps/callouts/crotus_prenn_asylum/father_campbells_chapel.webp",
+    "dpath": "Crotus Pen/Father Campbells Chapel.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Father Campbells Chapel (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "shattered_square",
+    "name": "Shattered Square",
+    "realm": "Decimated Borgo",
+    "realm_id": "decimated_borgo",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Shattered%20Square.webp",
+    "callout_image_local_path": "maps/callouts/decimated_borgo/shattered_square.webp",
+    "dpath": "Borgo/Shattered Square.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Shattered Square (Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "forgotten_ruins",
+    "name": "Forgotten Ruins",
+    "realm": "Decimated Borgo",
+    "realm_id": "decimated_borgo",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Forgotten%20Ruins.webp",
+    "callout_image_local_path": "maps/callouts/decimated_borgo/forgotten_ruins.webp",
+    "dpath": "Borgo/Forgotten Ruins.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Forgotten Ruins (Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "eyrie_of_crows",
+    "name": "Eyrie of Crows",
+    "realm": "Forsaken Boneyard",
+    "realm_id": "forsaken_boneyard",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Eyrie%20of%20Crows.webp",
+    "callout_image_local_path": "maps/callouts/forsaken_boneyard/eyrie_of_crows.webp",
+    "dpath": "Boneyard/Eyrie of Crows.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "dead_sands",
+    "name": "Dead Sands",
+    "realm": "Forsaken Boneyard",
+    "realm_id": "forsaken_boneyard",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Dead%20Sands.webp",
+    "callout_image_local_path": "maps/callouts/forsaken_boneyard/dead_sands.webp",
+    "dpath": "Boneyard/Dead Sands.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "the_underground_complex",
+    "name": "The Underground Complex",
+    "realm": "Hawkins National Laboratory",
+    "realm_id": "hawkins_national_laboratory",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Hawkins.webp",
+    "callout_image_local_path": "maps/callouts/hawkins_national_laboratory/the_underground_complex.webp",
+    "dpath": "Other/Hawkins.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "coal_tower",
+    "name": "Coal Tower",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/coal_tower.webp",
+    "dpath": "McMillan/Coal Tower.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Coal Tower (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "coal_tower_ii",
+    "name": "Coal Tower II",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower%20II.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/coal_tower_ii.webp",
+    "dpath": "McMillan/Coal Tower II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Coal Tower II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "groaning_storehouse",
+    "name": "Groaning Storehouse",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/groaning_storehouse.webp",
+    "dpath": "McMillan/Groaning Storehouse.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Groaning Storehouse (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "groaning_storehouse_ii",
+    "name": "Groaning Storehouse II",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse%20II.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/groaning_storehouse_ii.webp",
+    "dpath": "McMillan/Groaning Storehouse II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Groaning Storehouse II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "ironworks_of_misery",
+    "name": "Ironworks Of Misery",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/ironworks_of_misery.webp",
+    "dpath": "McMillan/Ironworks Of Misery.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ironworks Of Misery (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "ironworks_of_misery_ii",
+    "name": "Ironworks Of Misery II",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery%20II.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/ironworks_of_misery_ii.webp",
+    "dpath": "McMillan/Ironworks Of Misery II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ironworks Of Misery II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "shelter_woods",
+    "name": "Shelter Woods",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/shelter_woods.webp",
+    "dpath": "McMillan/Shelter Woods.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Shelter Woods (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "shelter_woods_ii",
+    "name": "Shelter Woods II",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods%20II.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/shelter_woods_ii.webp",
+    "dpath": "McMillan/Shelter Woods II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Shelter Woods II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "suffocation_pit",
+    "name": "Suffocation Pit",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/suffocation_pit.webp",
+    "dpath": "McMillan/Suffocation Pit.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Suffocation Pit (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "suffocation_pit_ii",
+    "name": "Suffocation Pit II",
+    "realm": "MacMillan Estate",
+    "realm_id": "macmillan_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit%20II.webp",
+    "callout_image_local_path": "maps/callouts/macmillan_estate/suffocation_pit_ii.webp",
+    "dpath": "McMillan/Suffocation Pit II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Suffocation Pit II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "mothers_dwelling",
+    "name": "Mother's Dwelling",
+    "realm": "Red Forest",
+    "realm_id": "red_forest",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Mothers%20Dwelling.webp",
+    "callout_image_local_path": "maps/callouts/red_forest/mothers_dwelling.webp",
+    "dpath": "Red Forest/Mothers Dwelling.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "temple_of_purgation",
+    "name": "Temple of Purgation",
+    "realm": "Red Forest",
+    "realm_id": "red_forest",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Temple%20of%20Purgation.webp",
+    "callout_image_local_path": "maps/callouts/red_forest/temple_of_purgation.webp",
+    "dpath": "Red Forest/Temple of Purgation.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "grim_pantry",
+    "name": "Grim Pantry",
+    "realm": "Backwater Swamp",
+    "realm_id": "backwater_swamp",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Grim%20Pantry.webp",
+    "callout_image_local_path": "maps/callouts/backwater_swamp/grim_pantry.webp",
+    "dpath": "Swamp/Grim Pantry.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "the_pale_rose",
+    "name": "The Pale Rose",
+    "realm": "Backwater Swamp",
+    "realm_id": "backwater_swamp",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Pale%20Rose.webp",
+    "callout_image_local_path": "maps/callouts/backwater_swamp/the_pale_rose.webp",
+    "dpath": "Swamp/Pale Rose.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "family_residence",
+    "name": "Family Residence",
+    "realm": "Yamaoka Estate",
+    "realm_id": "yamaoka_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence.webp",
+    "callout_image_local_path": "maps/callouts/yamaoka_estate/family_residence.webp",
+    "dpath": "Yamaoka/Family Residence.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "family_residence_ii",
+    "name": "Family Residence II",
+    "realm": "Yamaoka Estate",
+    "realm_id": "yamaoka_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence%20II.webp",
+    "callout_image_local_path": "maps/callouts/yamaoka_estate/family_residence_ii.webp",
+    "dpath": "Yamaoka/Family Residence II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Family Residence II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "sanctum_of_wrath",
+    "name": "Sanctum of Wrath",
+    "realm": "Yamaoka Estate",
+    "realm_id": "yamaoka_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath.webp",
+    "callout_image_local_path": "maps/callouts/yamaoka_estate/sanctum_of_wrath.webp",
+    "dpath": "Yamaoka/Sanctum of Wrath.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "sanctum_of_wrath_ii",
+    "name": "Sanctum of Wrath II",
+    "realm": "Yamaoka Estate",
+    "realm_id": "yamaoka_estate",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath%20II.webp",
+    "callout_image_local_path": "maps/callouts/yamaoka_estate/sanctum_of_wrath_ii.webp",
+    "dpath": "Yamaoka/Sanctum of Wrath II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Sanctum of Wrath II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "police_station_east_wing",
+    "name": "Police Station East Wing",
+    "realm": "Raccoon City",
+    "realm_id": "raccoon_city",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20East%20Wing.webp",
+    "callout_image_local_path": "maps/callouts/raccoon_city/police_station_east_wing.webp",
+    "dpath": "Raccoon City/Rpd East Wing.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Police Station East Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "police_station_west_wing",
+    "name": "Police Station West Wing",
+    "realm": "Raccoon City",
+    "realm_id": "raccoon_city",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20West%20Wing.webp",
+    "callout_image_local_path": "maps/callouts/raccoon_city/police_station_west_wing.webp",
+    "dpath": "Raccoon City/Rpd West Wing.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Police Station West Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "dead_dawg_saloon",
+    "name": "Dead Dawg Saloon",
+    "realm": "Grave of Glennvale",
+    "realm_id": "grave_of_glennvale",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Dead%20Dawg%20Saloon.webp",
+    "callout_image_local_path": "maps/callouts/grave_of_glennvale/dead_dawg_saloon.webp",
+    "dpath": "Other/Dead Dawg Saloon.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glennvale). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "garden_of_joy",
+    "name": "Garden of Joy",
+    "realm": "Withered Isle",
+    "realm_id": "withered_isle",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Garden%20of%20Joy.webp",
+    "callout_image_local_path": "maps/callouts/withered_isle/garden_of_joy.webp",
+    "dpath": "Other/Garden of Joy.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "greenville_square",
+    "name": "Greenville Square",
+    "realm": "Withered Isle",
+    "realm_id": "withered_isle",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Greenville%20Square.webp",
+    "callout_image_local_path": "maps/callouts/withered_isle/greenville_square.webp",
+    "dpath": "Other/Greenville Square.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "fallen_refuge",
+    "name": "Fallen Refuge",
+    "realm": "Withered Isle",
+    "realm_id": "withered_isle",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Fallen%20Refuge.webp",
+    "callout_image_local_path": "maps/callouts/withered_isle/fallen_refuge.webp",
+    "dpath": "Other/Fallen Refuge.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "freddy_fazbears_pizza",
+    "name": "Freddy Fazbears Pizza",
+    "realm": "Withered Isle",
+    "realm_id": "withered_isle",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Freddy%20Fazbears%20Pizza.webp",
+    "callout_image_local_path": "maps/callouts/withered_isle/freddy_fazbears_pizza.webp",
+    "dpath": "Other/Freddy Fazbears Pizza.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Freddy Fazbears Pizza (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "the_game",
+    "name": "The Game",
+    "realm": "Gideon Meat Plant",
+    "realm_id": "gideon_meat_plant",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/The%20Game.webp",
+    "callout_image_local_path": "maps/callouts/gideon_meat_plant/the_game.webp",
+    "dpath": "Other/The Game.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "lampkin_lane",
+    "name": "Lampkin Lane",
+    "realm": "Haddonfield",
+    "realm_id": "haddonfield",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Haddonfield.webp",
+    "callout_image_local_path": "maps/callouts/haddonfield/lampkin_lane.webp",
+    "dpath": "Other/Haddonfield.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "midwich_elementary_school",
+    "name": "Midwich Elementary School",
+    "realm": "Silent Hill",
+    "realm_id": "silent_hill",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Midwich.gif",
+    "callout_image_local_path": "maps/callouts/silent_hill/midwich_elementary_school.webp",
+    "dpath": "Other/Midwich.gif",
+    "clock_system": {
+      "description": "12-Clock Callout System for Midwich Elementary School (Silent Hill). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "mount_ormond_resort",
+    "name": "Mount Ormond Resort",
+    "realm": "Ormond",
+    "realm_id": "ormond",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond.webp",
+    "callout_image_local_path": "maps/callouts/ormond/mount_ormond_resort.webp",
+    "dpath": "Ormond/Ormond.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "mount_ormond_resort_ii",
+    "name": "Mount Ormond Resort II",
+    "realm": "Ormond",
+    "realm_id": "ormond",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20II.webp",
+    "callout_image_local_path": "maps/callouts/ormond/mount_ormond_resort_ii.webp",
+    "dpath": "Ormond/Ormond II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort II (Ormond). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "mount_ormond_resort_iii",
+    "name": "Mount Ormond Resort III",
+    "realm": "Ormond",
+    "realm_id": "ormond",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20III.webp",
+    "callout_image_local_path": "maps/callouts/ormond/mount_ormond_resort_iii.webp",
+    "dpath": "Ormond/Ormond III.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort III (Ormond). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "ormond_lake_mine",
+    "name": "Ormond Lake Mine",
+    "realm": "Ormond",
+    "realm_id": "ormond",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20Lake%20Mine.webp",
+    "callout_image_local_path": "maps/callouts/ormond/ormond_lake_mine.webp",
+    "dpath": "Ormond/Ormond Lake Mine.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "treatment_theatre",
+    "name": "Treatment Theatre",
+    "realm": "Léry's Memorial Institute",
+    "realm_id": "lérys_memorial_institute",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Lerys.webp",
+    "callout_image_local_path": "maps/callouts/lérys_memorial_institute/treatment_theatre.webp",
+    "dpath": "Other/Lerys.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Treatment Theatre (Léry's Memorial Institute). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "toba_landing",
+    "name": "Toba Landing",
+    "realm": "Dvarka Deepwood",
+    "realm_id": "dvarka_deepwood",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Toba%20Landing.webp",
+    "callout_image_local_path": "maps/callouts/dvarka_deepwood/toba_landing.webp",
+    "dpath": "Dvarka Deepwood/Toba Landing.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "nostromo_wreckage",
+    "name": "Nostromo Wreckage",
+    "realm": "Dvarka Deepwood",
+    "realm_id": "dvarka_deepwood",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Nostromo%20Wreckage.webp",
+    "callout_image_local_path": "maps/callouts/dvarka_deepwood/nostromo_wreckage.webp",
+    "dpath": "Dvarka Deepwood/Nostromo Wreckage.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  },
+  {
+    "id": "tricksters_delusion",
+    "name": "Trickster's Delusion",
+    "realm": "Sleepless District",
+    "realm_id": "sleepless_district",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Sleepless%20District/Tricksters%20Delusion.webp",
+    "callout_image_local_path": "maps/callouts/sleepless_district/tricksters_delusion.webp",
+    "dpath": "Sleepless District/Tricksters Delusion.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Trickster's Delusion (Sleepless District). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Building / Top Spawn",
+      "three_o_clock": "Right Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack / Bottom Spawn",
+      "nine_o_clock": "Left Tile / Jungle Gym"
+    }
+  }
+]

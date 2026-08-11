@@ -2797,7 +2797,7 @@
     "category": "Survivor",
     "description": "While healing another Survivor: For each Hook State they have, you heal 30 / 40 / 50 % faster. Whenever you hit a great basic Skill Check, you gain 3 % more progress.\n\"Look at me. My name's Orela, and I'm gonna make sure you're all right.\" -Orela Rose",
     "icon_url": "https://cdn.nightlight.gg/img/perks/do-no-harm.png",
-    "icon_local_path": "icons/survivors/Orela Rose/do_no_harm.png"
+    "icon_local_path": "icons/survivors/General/do_no_harm.png"
   },
   {
     "name": "Duty of Care",
@@ -2807,7 +2807,7 @@
     "category": "Survivor",
     "description": "While healthy, whenever you take a protection hit, other Survivors within 12 m gain 25 % Haste for 4 / 5 / 6 s.\n\"Don't worry about me. I've got a knack for bouncing back.\" -Orela Rose",
     "icon_url": "https://cdn.nightlight.gg/img/perks/duty-of-care.png",
-    "icon_local_path": "icons/survivors/Orela Rose/duty_of_care.png"
+    "icon_local_path": "icons/survivors/General/duty_of_care.png"
   },
   {
     "name": "Rapid Response",
@@ -2817,7 +2817,7 @@
     "category": "Survivor",
     "description": "Whenever you fast-exit a Locker, you gain Exhausted for 30 / 25 / 20 s.\nWhenever you gain Exhausted , you see the Killer's Aura for 2 s.\n\"All right. You got this. 3... 2... 1... go!\" -Orela Rose",
     "icon_url": "https://cdn.nightlight.gg/img/perks/rapid-response.png",
-    "icon_local_path": "icons/survivors/Orela Rose/rapid_response.png"
+    "icon_local_path": "icons/survivors/General/rapid_response.png"
   },
   {
     "name": "Help Wanted",
@@ -2857,7 +2857,7 @@
     "category": "Survivor",
     "description": "After you rummage or unlock 2 Chests, while next to a Broken Pallet, use Active Ability Button 1 for 4 s to create a Fragile Pallet.\nWithin 24 / 28 / 32 m, you see the Auras of Broken Pallets.\n“Without the fences, this place is worthless.” -Rick Grimes",
     "icon_url": "https://cdn.nightlight.gg/img/perks/apocalyptic-ingenuity.png",
-    "icon_local_path": "icons/survivors/Rick Grimes/apocalyptic_ingenuity.png"
+    "icon_local_path": "icons/survivors/General/apocalyptic_ingenuity.png"
   },
   {
     "name": "Come and Get Me!",
@@ -2867,7 +2867,7 @@
     "category": "Survivor",
     "description": "Whenever you unhook a Survivor, while crouched and idle, use Active Ability Button 1 to have injured and downed Survivors within 24 m: Make no Grunts of Pain for 10 / 12.5 / 15 s. Leave no Pools of Blood for 10 / 12.5 / 15 s. Leave no Scratch Marks for 10 / 12.5 / 15 s.\nYou scream, then the Killer sees your Aura for 5 s.\n“We're the ones who live.” -Rick Grimes",
     "icon_url": "https://cdn.nightlight.gg/img/perks/come-and-get-me.png",
-    "icon_local_path": "icons/survivors/Rick Grimes/come_and_get_me!.png"
+    "icon_local_path": "icons/survivors/General/come_and_get_me!.png"
   },
   {
     "name": "Teamwork: Toughen Up",
@@ -2877,7 +2877,7 @@
     "category": "Survivor",
     "description": "While injured, whenever another Survivor within 24 m of you blinds or Pallet-stuns the Killer, for 20 / 25 / 30 s: You make no Grunts of Pain. You leave no Pools of Blood. You leave no Scratch Marks.\n“They're fucking with the wrong people.” -Rick Grimes",
     "icon_url": "https://cdn.nightlight.gg/img/perks/teamwork-toughen-up.png",
-    "icon_local_path": "icons/survivors/Rick Grimes/teamwork:_toughen_up.png"
+    "icon_local_path": "icons/survivors/General/teamwork_toughen_up.png"
   },
   {
     "name": "Conviction",
@@ -2887,7 +2887,7 @@
     "category": "Survivor",
     "description": "After you finish healing 1 other Survivor, while downed with at least 25 % recovery, use Active Ability Button 1 to recover instantly.\nYou gain Broken , then, after 20 / 25 / 30 s, you are downed instantly.\n\"It's enough to keep going. Keep trying. Keep fighting. Keep dreaming.\" -Michonne Grimes",
     "icon_url": "https://cdn.nightlight.gg/img/perks/conviction.png",
-    "icon_local_path": "icons/survivors/Michonne Grimes/conviction.png"
+    "icon_local_path": "icons/survivors/General/conviction.png"
   },
   {
     "name": "Last Stand",
@@ -2897,7 +2897,7 @@
     "category": "Survivor",
     "description": "After hiding for 120 / 105 / 90 s within the Killer's Terror Radius, when you fast-vault, once per trial, stun the Killer for 3 s if they are within 2.5 m.\n\"Some bullies, you can live with. Others, you gotta fight.\" - Michonne Grimes",
     "icon_url": "https://cdn.nightlight.gg/img/perks/last-stand.png",
-    "icon_local_path": "icons/survivors/Michonne Grimes/last_stand.png"
+    "icon_local_path": "icons/survivors/General/last_stand.png"
   },
   {
     "name": "Teamwork: Throw Down",
@@ -2907,7 +2907,7 @@
     "category": "Survivor",
     "description": "Whenever you blind or Pallet-stun the Killer, for 6 / 8 / 10 s, other injured Survivors within 24 m: Gain Endurance . See the Killer's Aura.\n\"Facing evil brings good people together.\" -Michonne Grimes",
     "icon_url": "https://cdn.nightlight.gg/img/perks/teamwork-throw-down.png",
-    "icon_local_path": "icons/survivors/Michonne Grimes/teamwork:_throw_down.png"
+    "icon_local_path": "icons/survivors/General/teamwork_throw_down.png"
   },
   {
     "name": "Road Life",
@@ -2917,7 +2917,7 @@
     "category": "Survivor",
     "description": "While injured, not Broken and repairing a Generator: Whenever you hit a basic great Skill Check, you earn 1 Token. Whenever you miss a basic Skill Check, you lose 1 token.\nWhen you have 6 / 5 / 4 Tokens, spend all Tokens to heal 100 % faster until you stop healing.\n“Remind me to teach you how to patch your own pedals, Krit.” -Vee Boonyasak",
     "icon_url": "https://cdn.nightlight.gg/img/perks/road-life.png",
-    "icon_local_path": "icons/survivors/Vee Boonyasak/road_life.png"
+    "icon_local_path": "icons/survivors/General/road_life.png"
   },
   {
     "name": "ONE-TWO-THREE-FOUR!",
@@ -2927,7 +2927,7 @@
     "category": "Survivor",
     "description": "While idle, use Active Ability Button 2 to perform, empowering all Survivors within 16 m for up to 15 s. While you are performing, other Survivors will see your Aura. You get special Skill Checks during that time: while healing or repairing, basic Skill Checks are 20 % more likely to appear.\nIf you complete the performance, the effect ends after 90 s. Cooldown: 110 / 100 / 90 s.\n“We are loud! We are heavy! WE ARE AXEKICK!” - Vee Boonyasak",
     "icon_url": "https://cdn.nightlight.gg/img/perks/one-two-three-four.png",
-    "icon_local_path": "icons/survivors/Vee Boonyasak/one-two-three-four!.png"
+    "icon_local_path": ""
   },
   {
     "name": "Ghost Notes",
@@ -2937,7 +2937,7 @@
     "category": "Survivor",
     "description": "While you have Exhausted , your Scratch Marks disappear 50 % faster.\nYou lose Exhausted 5 / 7.5 / 10 % faster.\n“Let's take it to the bridge!” -Vee Boonyasak",
     "icon_url": "https://cdn.nightlight.gg/img/perks/ghost-notes.png",
-    "icon_local_path": "icons/survivors/Vee Boonyasak/ghost_notes.png"
+    "icon_local_path": "icons/survivors/General/ghost_notes.png"
   },
   {
     "name": "Ravenous",
@@ -2977,7 +2977,7 @@
     "category": "Survivor",
     "description": "After repairing 20 % of Generators, while next to a Window, use Active Ability Button 2 to trap it for 40 / 50 / 60 s. All Survivors see that Window's Aura for that time.\nWhen the Killer vaults that Window, the trap explodes and they gain 50 % Hindered for 6 s.\n\"Never tell me the odds.\" -Dustin Henderson",
     "icon_url": "https://cdn.nightlight.gg/img/perks/bada-bada-boom.png",
-    "icon_local_path": "icons/survivors/Dustin Henderson/bada_bada_boom.png"
+    "icon_local_path": "icons/survivors/General/bada_bada_boom.png"
   },
   {
     "name": "Change of Plan",
@@ -2987,7 +2987,7 @@
     "category": "Survivor",
     "description": "When the trial starts, you earn 2 Tokens.\nWhile hiding in a Locker and holding a non-event Toolbox, use Active Ability Button 2 and spend 1 Token to transform your Toolbox and add-ons into a Med-Kit of the same rarity with 80 / 90 / 100 % Charges and random add-ons of the same rarity.\n“Oh my god, oh my god, oh my god, oh my god.” —Dustin Henderson",
     "icon_url": "https://cdn.nightlight.gg/img/perks/change-of-plan.png",
-    "icon_local_path": "icons/survivors/Dustin Henderson/change_of_plan.png"
+    "icon_local_path": "icons/survivors/General/change_of_plan.png"
   },
   {
     "name": "Teamwork: Full Circuit",
@@ -2997,7 +2997,7 @@
     "category": "Survivor",
     "description": "For each other Survivor repairing a Generator with you, good basic Skill Check zones are 15 / 20 / 25 % bigger.\nWhile repairing with at least 1 other Survivor, you repair 5 % faster.\n“How many times do I have to be right on the money before you guys just trust me?” —Dustin Henderson",
     "icon_url": "https://cdn.nightlight.gg/img/perks/teamwork-full-circuit.png",
-    "icon_local_path": "icons/survivors/Dustin Henderson/teamwork:_full_circuit.png"
+    "icon_local_path": "icons/survivors/General/teamwork_full_circuit.png"
   },
   {
     "name": "Extrasensory Perception",
@@ -3007,7 +3007,7 @@
     "category": "Survivor",
     "description": "After crouching for 4 s: You see Auras in an expanding radius up to 44 m. You gain Elusive . You gain Oblivious .\nWhen you stop crouching, or after 11 s, cooldown: 60 / 50 / 40 s.\n\"What is friend?\" —Eleven",
     "icon_url": "https://cdn.nightlight.gg/img/perks/extrasensory-perception.png",
-    "icon_local_path": "icons/survivors/Eleven/extrasensory_perception.png"
+    "icon_local_path": "icons/survivors/General/extrasensory_perception.png"
   },
   {
     "name": "We See You",
@@ -3017,7 +3017,7 @@
     "category": "Survivor",
     "description": "Whenever the Killer sees your Aura, you earn 1 Token. Cooldown: 10 s.\nWhen you have 4 Tokens, spend them all. Then, all Survivors see the Killer's Aura for 10 / 12.5 / 15 s.\n“It is not me. It is you. You are the monster.” —Eleven",
     "icon_url": "https://cdn.nightlight.gg/img/perks/we-see-you.png",
-    "icon_local_path": "icons/survivors/Eleven/we_see_you.png"
+    "icon_local_path": "icons/survivors/General/we_see_you.png"
   },
   {
     "name": "Teamwork: Soft-Spoken",
@@ -3027,7 +3027,7 @@
     "category": "Survivor",
     "description": "For each other Survivor repairing a Generator with you, the range of Generator repair noises is 15 / 20 / 25 % smaller.\nWhile repairing with at least 1 other Survivor, you repair 5 % faster.\n\"I make my own rules.\" —Eleven",
     "icon_url": "https://cdn.nightlight.gg/img/perks/teamwork-soft-spoken.png",
-    "icon_local_path": "icons/survivors/Eleven/teamwork:_soft-spoken.png"
+    "icon_local_path": ""
   },
   {
     "name": "Turn Back The Clock",
@@ -3067,7 +3067,7 @@
     "category": "Survivor",
     "description": "Whenever a generator is completed, earn 1 Token, up to 5 .\nFor each Token: You bless and cleanse 8 / 9 / 10 % faster. You heal 8 / 9 / 10 % faster. You unhook Survivors 8 / 9 / 10 % faster.\n“I'm sorry… I didn't realize I was working so late.” – Kwon Tae-young",
     "icon_url": "https://cdn.nightlight.gg/img/perks/flow-state.png",
-    "icon_local_path": "icons/survivors/Kwon Tae-young/flow_state.png"
+    "icon_local_path": "icons/survivors/General/flow_state.png"
   },
   {
     "name": "A Place For Us",
@@ -3077,7 +3077,7 @@
     "category": "Survivor",
     "description": "While healing another Survivor, you both gain Elusive .\nWhenever you finish healing the Obsession, you both gain Elusive for 20 / 25 / 30 s.\nWhen the trial starts, you are less likely to be the Obsession.\n“I understand computers… systems. Problems. But this… I wonder if I'll ever understand.” – Kwon Tae-young",
     "icon_url": "https://cdn.nightlight.gg/img/perks/a-place-for-us.png",
-    "icon_local_path": "icons/survivors/Kwon Tae-young/a_place_for_us.png"
+    "icon_local_path": "icons/survivors/General/a_place_for_us.png"
   },
   {
     "name": "Five Moves Ahead",
@@ -3087,7 +3087,7 @@
     "category": "Survivor",
     "description": "While you are in the Killer's Terror Radius or chased by the Killer: You see the Auras of the 5 closest Pallets and Windows. After you drop a Pallet, you start moving 50 % earlier. Whenever you drop a Pallet, cooldown: 40 / 35 / 30 s.\n“Every problem has a solution. It's only a question of complexity.” – Kwon Tae-young",
     "icon_url": "https://cdn.nightlight.gg/img/perks/five-moves-ahead.png",
-    "icon_local_path": "icons/survivors/Kwon Tae-young/five_moves_ahead.png"
+    "icon_local_path": "icons/survivors/General/five_moves_ahead.png"
   },
   {
     "name": "Hex: Scared to Death",
@@ -3127,7 +3127,7 @@
     "category": "Survivor",
     "description": "Whenever you fast-vault a Pallet: You gain 10 / 12.5 / 15 % Haste for 3 s. The Pallet is reset, blocked for 60 s, and all Survivors see its Aura for that time.\nCooldown: 60 s.\n\"Nothing but the open road. Just the way I like it.\" -Shane Wiigwaas",
     "icon_url": "https://cdn.nightlight.gg/img/perks/wide-open-throttle.png",
-    "icon_local_path": "icons/survivors/Shane Wiigwaas/wide_open_throttle.png"
+    "icon_local_path": "icons/survivors/General/wide_open_throttle.png"
   },
   {
     "name": "Lend a Hand",
@@ -3137,7 +3137,7 @@
     "category": "Survivor",
     "description": "Whenever you bless or cleanse 1 Totem, while healing another Survivor and only once per Survivor, use Active Ability Button 2 to give them 2 / 3 / 4 permanent healing charges.\n\"Walk it off, will you? We still have work to do.\" -Shane Wiigwaas",
     "icon_url": "https://cdn.nightlight.gg/img/perks/lend-a-hand.png",
-    "icon_local_path": "icons/survivors/Shane Wiigwaas/lend_a_hand.png"
+    "icon_local_path": "icons/survivors/General/lend_a_hand.png"
   },
   {
     "name": "Cross-Examination",
@@ -3147,7 +3147,7 @@
     "category": "Survivor",
     "description": "While in the Killer's Terror Radius and not being chased by the Killer, they leave Light Marks that last for 10 s that you can see. While on the Killer's Light Marks, you gain Elusive . This ends after 3 / 4 / 5 s.\n\"The witness has said enough, Your Honor. No further questions.\" -Shane Wiigwaas",
     "icon_url": "https://cdn.nightlight.gg/img/perks/cross-examination.png",
-    "icon_local_path": "icons/survivors/Shane Wiigwaas/cross-examination.png"
+    "icon_local_path": ""
   },
   {
     "name": "Fruits of Your Labor",
@@ -3157,7 +3157,7 @@
     "category": "Survivor",
     "description": "Whenever a Generator is completed, you earn 1 Token.\nWhenever you finish repairing a Generator, for each Token: You gain 5 % Haste for 2 s. You gain 10 / 15 / 20 % healing progress.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/fruits-of-your-labor.png",
-    "icon_local_path": "icons/survivors/Aurora Stardotter/fruits_of_your_labor.png"
+    "icon_local_path": "icons/survivors/General/fruits_of_your_labor.png"
   },
   {
     "name": "Salvation's Cry",
@@ -3167,7 +3167,7 @@
     "category": "Survivor",
     "description": "Whenever the Killer starts chasing you: You see the Auras of other Survivors for 1 / 2 / 3 s. Survivors not being chased see your Aura for 5 s. Survivors not being chased see the Killer's Aura for 5 s.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/salvations-cry.png",
-    "icon_local_path": "icons/survivors/Aurora Stardotter/salvation's_cry.png"
+    "icon_local_path": "icons/survivors/General/salvation's_cry.png"
   },
   {
     "name": "Boon: Steadfast",
@@ -3177,7 +3177,7 @@
     "category": "Survivor",
     "description": "While next to a Totem, use Active Ability Button 1 to bless it, creating a unique Boon Totem that combines all your Boons.\nGenerators within the Boon's range: Regress 50 % slower. Survivors repair them 8 / 9 / 10 % faster.\nSurvivors within the Boon's range see the Auras of affected Generators.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/boon-steadfast.png",
-    "icon_local_path": "icons/survivors/Aurora Stardotter/boon:_steadfast.png"
+    "icon_local_path": "icons/survivors/General/boon_steadfast.png"
   },
   {
     "name": "Celestial Witness",

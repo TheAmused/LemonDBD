@@ -40,6 +40,22 @@ class AddonModel(BaseModel):
     icon_local_path: Optional[str] = ""
     rarity: Optional[str] = ""
 
+
+class MapModel(BaseModel):
+    id: str
+    name: str
+    realm: str
+    realm_id: Optional[str] = ""
+    callout_image_url: Optional[str] = ""
+    callout_image_local_path: Optional[str] = ""
+    clock_system: Optional[Dict[str, Any]] = None
+    tiles: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
+    objectives: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
+    totems: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
+    seed_variant: Optional[str] = "seed_a"
+    floor: Optional[int] = 1
+
+
 class PerkModel(BaseModel):
     name: str
     character: str
@@ -109,11 +125,13 @@ class PerkService:
         self.characters_path = self.data_path.parent / "characters.json"
         self.items_path = self.data_path.parent / "items.json"
         self.addons_path = self.data_path.parent / "addons.json"
+        self.maps_path = self.data_path.parent / "maps.json"
 
         self._cache: List[PerkModel] = []
         self._characters_cache: List[CharacterModel] = []
         self._items_cache: List[ItemModel] = []
         self._addons_cache: List[AddonModel] = []
+        self._maps_cache: List[MapModel] = []
         self.reload_data()
 
     @staticmethod
@@ -172,6 +190,18 @@ class PerkService:
                 self._addons_cache = []
         else:
             self._addons_cache = []
+
+        if self.maps_path.exists():
+            try:
+                with open(self.maps_path, "r", encoding="utf-8") as f:
+                    raw_maps = json.load(f)
+                    self._maps_cache = [MapModel(**m) for m in raw_maps]
+                logger.info(f"Loaded {len(self._maps_cache)} maps.")
+            except Exception as e:
+                logger.error(f"Failed loading maps JSON: {e}")
+                self._maps_cache = []
+        else:
+            self._maps_cache = []
 
         if self.data_path.exists():
             try:
@@ -444,3 +474,53 @@ class PerkService:
             "perks": matched_perks,
             "addons": matched_addons if char_category == "Killer" else matched_items,
         }
+
+    def get_maps(self, realm: Optional[str] = None, search: Optional[str] = None) -> List[Dict[str, Any]]:
+        maps = self._maps_cache
+        if realm and realm.lower() != "all":
+            realm_clean = realm.lower().strip()
+            maps = [m for m in maps if m.realm.lower().strip() == realm_clean or m.realm_id.lower().strip() == realm_clean]
+        if search:
+            q = search.lower().strip()
+            maps = [m for m in maps if q in m.name.lower() or q in m.realm.lower()]
+        return [m.model_dump() for m in maps]
+
+    def get_map_detail(
+        self, map_id: str, seed: Optional[str] = None, floor: Optional[int] = None
+    ) -> Optional[Dict[str, Any]]:
+        target_clean = map_id.lower().replace("_", "").replace("s", "").strip()
+        found_map = None
+        for m in self._maps_cache:
+            m_clean = m.id.lower().replace("_", "").replace("s", "").strip()
+            name_clean = m.name.lower().replace("_", "").replace("s", "").strip()
+            if m.id.lower() == map_id.lower() or m.name.lower() == map_id.lower() or m_clean == target_clean or name_clean == target_clean:
+                found_map = m
+                break
+        if not found_map:
+            return None
+
+        result = found_map.model_dump()
+        result["seed_variant"] = seed or result.get("seed_variant") or "seed_a"
+        result["floor"] = floor if floor is not None else result.get("floor") or 1
+        if "tiles" not in result or not result["tiles"]:
+            result["tiles"] = [
+                {"name": "Killer Shack", "type": "shack", "position": {"x": 50, "y": 90}},
+                {"name": "Main Building", "type": "main", "position": {"x": 50, "y": 10}},
+                {"name": "Jungle Gym A", "type": "gym", "position": {"x": 20, "y": 50}},
+                {"name": "TL Wall B", "type": "tl_wall", "position": {"x": 80, "y": 50}},
+            ]
+        if "objectives" not in result or not result["objectives"]:
+            result["objectives"] = [
+                {"type": "generator", "count": 7},
+                {"type": "exit_gate", "count": 2},
+                {"type": "hatch", "count": 1},
+            ]
+        if "totems" not in result or not result["totems"]:
+            result["totems"] = [
+                {"type": "dull", "position": "Shack Back Wall"},
+                {"type": "dull", "position": "Main Building Basement"},
+                {"type": "dull", "position": "Jungle Gym Pallet"},
+                {"type": "dull", "position": "TL Wall Corner"},
+                {"type": "hex", "position": "Hill Bush"},
+            ]
+        return result

@@ -764,6 +764,90 @@ class WikiScraperDriver:
 
         return characters
 
+    CHARACTER_ALIASES = {
+        "ash": "Ashley J. Williams",
+        "ash williams": "Ashley J. Williams",
+        "ashley williams": "Ashley J. Williams",
+        "ashley j. williams": "Ashley J. Williams",
+        "nancy": "Nancy Wheeler",
+        "nancy wheeler": "Nancy Wheeler",
+        "steve": "Steve Harrington",
+        "steve harrington": "Steve Harrington",
+        "bill": "William \"Bill\" Overbeck",
+        "bill overbeck": "William \"Bill\" Overbeck",
+        "william bill overbeck": "William \"Bill\" Overbeck",
+        "william \"bill\" overbeck": "William \"Bill\" Overbeck",
+        "quentin": "Quentin Smith",
+        "quentin smith": "Quentin Smith",
+        "tapp": "David Tapp",
+        "detective tapp": "David Tapp",
+        "david tapp": "David Tapp",
+        "adam": "Adam Francis",
+        "adam francis": "Adam Francis",
+        "jeff": "Jeff Johansen",
+        "jeff johansen": "Jeff Johansen",
+        "jane": "Jane Romero",
+        "jane romero": "Jane Romero",
+        "yui": "Yui Kimura",
+        "yui kimura": "Yui Kimura",
+        "zarina": "Zarina Kassir",
+        "zarina kassir": "Zarina Kassir",
+        "cheryl": "Cheryl Mason",
+        "heather": "Cheryl Mason",
+        "cheryl mason": "Cheryl Mason",
+        "felix": "Felix Richter",
+        "felix richter": "Felix Richter",
+        "elodie": "Élodie Rakoto",
+        "élodie": "Élodie Rakoto",
+        "elodie rakoto": "Élodie Rakoto",
+        "élodie rakoto": "Élodie Rakoto",
+        "yun-jin": "Yun-Jin Lee",
+        "yun-jin lee": "Yun-Jin Lee",
+        "yunjin": "Yun-Jin Lee",
+        "yunjin lee": "Yun-Jin Lee",
+        "mikaela": "Mikaela Reid",
+        "mikaela reid": "Mikaela Reid",
+        "jonah": "Jonah Vasquez",
+        "jonah vasquez": "Jonah Vasquez",
+        "yoichi": "Yoichi Asakawa",
+        "yoichi asakawa": "Yoichi Asakawa",
+        "haddie": "Haddie Kaur",
+        "haddie kaur": "Haddie Kaur",
+        "ada": "Ada Wong",
+        "ada wong": "Ada Wong",
+        "rebecca": "Rebecca Chambers",
+        "rebecca chambers": "Rebecca Chambers",
+        "vittorio": "Vittorio Toscano",
+        "vittorio toscano": "Vittorio Toscano",
+        "thalita": "Thalita Lyra",
+        "thalita lyra": "Thalita Lyra",
+        "renato": "Renato Lyra",
+        "renato lyra": "Renato Lyra",
+        "gabriel": "Gabriel Soma",
+        "gabriel soma": "Gabriel Soma",
+        "nicolas": "Nicolas Cage",
+        "nicolas cage": "Nicolas Cage",
+        "ellen": "Ellen Ripley",
+        "ellen ripley": "Ellen Ripley",
+        "ripley": "Ellen Ripley",
+        "sable": "Sable Ward",
+        "sable ward": "Sable Ward",
+        "estranho": "The Unknown",
+        "alan": "Alan Wake",
+        "alan wake": "Alan Wake",
+        "lara": "Lara Croft",
+        "lara croft": "Lara Croft",
+        "trevor": "Trevor Belmont",
+        "trevor belmont": "Trevor Belmont",
+        "orela": "Orela Rose",
+        "orela rose": "Orela Rose",
+        "taurie": "Taurie Cain",
+        "taurie cain": "Taurie Cain",
+        "giri": "Giri",
+        "trouster": "Trouster",
+    }
+
+
     def parse_perks(self, html_content: str, characters: List[CharacterData]) -> List[PerkData]:
         soup = BeautifulSoup(html_content, "html.parser")
         perks: List[PerkData] = []
@@ -823,19 +907,26 @@ class WikiScraperDriver:
                             matched = None
                             if owner_link:
                                 href = owner_link.get("href", "")
-                                link_title = owner_link.get("title", "").strip()
+                                link_title = owner_link.get("title", "").strip().lower()
                                 slug = ScraperService.extract_slug_from_href(href).lower()
-                                matched = char_by_slug.get(slug) or char_by_name.get(link_title.lower()) or char_by_short.get(link_title.lower())
+                                alias_target = self.CHARACTER_ALIASES.get(link_title) or self.CHARACTER_ALIASES.get(slug)
+                                if alias_target:
+                                    matched = char_by_name.get(alias_target.lower())
+                                if not matched:
+                                    matched = char_by_slug.get(slug) or char_by_name.get(link_title) or char_by_short.get(link_title)
 
                             if not matched:
                                 raw_text = owner_cell.get_text().strip()
                                 clean_text = re.sub(r"^[.\s\-–]+|[.\s\-–]+$", "", raw_text).strip().lower()
 
                                 if clean_text and clean_text not in ["all", "general", "none", "-", "all survivors", "all killers"]:
-                                    matched = char_by_short.get(clean_text) or char_by_name.get(clean_text) or char_by_slug.get(clean_text)
+                                    alias_target = self.CHARACTER_ALIASES.get(clean_text)
+                                    if alias_target:
+                                        matched = char_by_name.get(alias_target.lower())
                                     if not matched:
-                                        # Try matching with "the " prefix
-                                        matched = char_by_name.get(f"the {clean_text}") or char_by_short.get(f"the {clean_text}")
+                                        matched = char_by_short.get(clean_text) or char_by_name.get(clean_text) or char_by_slug.get(clean_text)
+                                        if not matched:
+                                            matched = char_by_name.get(f"the {clean_text}") or char_by_short.get(f"the {clean_text}")
 
                             if matched:
                                 canonical_name = matched.name
@@ -1143,8 +1234,10 @@ class ScraperService:
             filtered_lines.append(line)
         lines = filtered_lines
 
+        lines = [line for line in lines if line and line not in ["<", ">", "&lt;", "&gt;"]]
+
         if not lines:
-            return ""
+            return "Perk description is currently unavailable in the database."
 
         deduped_lines = []
         for line in lines:
@@ -1158,7 +1251,11 @@ class ScraperService:
         while len(lines) > 1 and lines[-1] in lines[:-1] and len(lines[-1]) < 80:
             lines.pop()
 
-        return "\n".join(lines).strip()
+        result = "\n".join(lines).strip()
+        if not result or result in ["<", ">", "&lt;", "&gt;"]:
+            return "Perk description is currently unavailable in the database."
+
+        return result
 
     @staticmethod
     def sanitize_filename(name: str) -> str:

@@ -114,6 +114,15 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
     }
   };
 
+  useEffect(() => {
+    if (!isPerkModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsPerkModalOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPerkModalOpen]);
+
   // Copy Room Link
   const handleCopyLink = () => {
     if (!room) return;
@@ -521,11 +530,15 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
       {/* Perk Selection Modal for Ban or Pick */}
       {isPerkModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setIsPerkModalOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
           role="dialog"
           aria-modal="true"
         >
-          <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl text-slate-100 space-y-4">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl text-slate-100 space-y-4 cursor-default"
+          >
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div>
                 <h3 className="text-lg font-black text-white">

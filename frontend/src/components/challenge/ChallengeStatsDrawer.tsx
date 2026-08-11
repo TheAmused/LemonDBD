@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ChallengeStats, MatchLog } from '@/types/challenge';
 import { X, BarChart2, CheckCircle2, XCircle, Trophy, Flame, Percent, Activity } from 'lucide-react';
 
@@ -24,6 +24,14 @@ export const ChallengeStatsDrawer: React.FC<ChallengeStatsDrawerProps> = ({
   const wins = stats ? stats.wins : 0;
   const losses = stats ? stats.losses : 0;
   const recentLogs: MatchLog[] = stats ? stats.recent_logs || [] : [];
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/70 backdrop-blur-sm transition-opacity">

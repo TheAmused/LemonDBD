@@ -72,6 +72,18 @@ export const MapExplorer: React.FC = () => {
     loadDetail();
   }, [selectedMapId]);
 
+  useEffect(() => {
+    if (!isDetailModalOpen && !isFullscreenOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsDetailModalOpen(false);
+        setIsFullscreenOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDetailModalOpen, isFullscreenOpen]);
+
   // Extract unique realms
   const uniqueRealms = useMemo(() => {
     const realmSet = new Set<string>();
@@ -386,8 +398,14 @@ export const MapExplorer: React.FC = () => {
 
       {/* Map Callout Detail & Zoom Modal */}
       {isDetailModalOpen && activeMap && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-xl p-4 md:p-8 animate-in fade-in duration-200 overflow-y-auto">
-          <div className="relative w-full max-w-6xl rounded-3xl border border-slate-800 bg-slate-900 p-6 md:p-8 shadow-2xl space-y-6">
+        <div
+          onClick={() => setIsDetailModalOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-xl p-4 md:p-8 animate-in fade-in duration-200 overflow-y-auto cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-6xl rounded-3xl border border-slate-800 bg-slate-900 p-6 md:p-8 shadow-2xl space-y-6 cursor-default"
+          >
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
               <div>

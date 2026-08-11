@@ -75,13 +75,25 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
 
   const totalQuestsCompleted = quests.filter((q) => q.is_completed).length;
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
       role="dialog"
       aria-modal="true"
     >
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-700/60 bg-slate-900 shadow-2xl text-slate-100 animate-in zoom-in-95 duration-200">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-700/60 bg-slate-900 shadow-2xl text-slate-100 animate-in zoom-in-95 duration-200 cursor-default"
+      >
         {/* Modal Top Header */}
         <div className="relative bg-gradient-to-r from-amber-600/30 via-slate-900 to-red-600/20 p-6 border-b border-slate-800">
           <button

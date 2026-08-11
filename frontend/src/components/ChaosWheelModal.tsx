@@ -231,14 +231,28 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       }
     };
 
-    requestAnimationFrame(animate);
   };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md">
-      <div className="relative w-full max-w-lg rounded-3xl border border-purple-500/30 bg-slate-900 p-6 shadow-2xl shadow-purple-950/50 text-slate-100">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg rounded-3xl border border-purple-500/30 bg-slate-900 p-6 shadow-2xl shadow-purple-950/50 text-slate-100 cursor-default"
+      >
         <button
           onClick={onClose}
           className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"

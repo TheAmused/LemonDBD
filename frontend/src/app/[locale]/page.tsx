@@ -60,15 +60,17 @@ function DashboardContent() {
     getDictionary(locale).then(setDict);
   }, [locale]);
 
+  const VALID_PERK_CATEGORIES = ['all', 'Survivor', 'Killer', 'General', 'generator'];
+
   useEffect(() => {
     if (paramTab === 'generator') {
       setCategory('generator');
-    } else if (paramCategory) {
+    } else if (paramCategory && VALID_PERK_CATEGORIES.includes(paramCategory)) {
       setCategory(paramCategory);
     } else {
       try {
         const savedTab = localStorage.getItem(DASHBOARD_TAB_KEY);
-        if (savedTab) {
+        if (savedTab && VALID_PERK_CATEGORIES.includes(savedTab)) {
           setCategory(savedTab);
         } else {
           setCategory('all');
@@ -80,11 +82,12 @@ function DashboardContent() {
   }, [paramCategory, paramTab]);
 
   const handleSelectCategory = (cat: string) => {
-    setCategory(cat);
+    const targetCategory = VALID_PERK_CATEGORIES.includes(cat) ? cat : 'all';
+    setCategory(targetCategory);
     setCharacter('all');
     setPage(1);
     try {
-      localStorage.setItem(DASHBOARD_TAB_KEY, cat);
+      localStorage.setItem(DASHBOARD_TAB_KEY, targetCategory);
     } catch (e) {
       console.error(e);
     }

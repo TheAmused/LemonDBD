@@ -17,7 +17,8 @@ import {
   Layers,
 } from 'lucide-react';
 import { Perk } from './PerkCard';
-import { WheelOfFortune } from './WheelOfFortune';
+import { WheelOfFortune, EXHAUSTION_PERK_NAMES } from './WheelOfFortune';
+import { ChaosWheelModal, ChaosMutator } from './ChaosWheelModal';
 import {
   fetchGeneratorConfig,
   updateGeneratorConfig,
@@ -59,6 +60,8 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
   const [drawnPerks, setDrawnPerks] = useState<string[]>([]);
   const [loadout, setLoadout] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const [activeSlotIdx, setActiveSlotIdx] = useState<number>(0);
+  const [isChaosModalOpen, setIsChaosModalOpen] = useState(false);
+  const [activeMutator, setActiveMutator] = useState<ChaosMutator | null>(null);
   const [copied, setCopied] = useState(false);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
@@ -197,6 +200,18 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     let availablePerks = noRepeatPerks
       ? sortedPerks.filter((p) => !drawnPerks.includes(p.name))
       : sortedPerks;
+
+    if (activeMutator?.id === 'no_exhaustion') {
+      availablePerks = availablePerks.filter((p) => {
+        const nameLower = p.name.toLowerCase().trim();
+        const descLower = (p.description || '').toLowerCase();
+        return (
+          !EXHAUSTION_PERK_NAMES.has(nameLower) &&
+          !descLower.includes('exhausted') &&
+          !descLower.includes('exhaustion')
+        );
+      });
+    }
 
     // Fallback if all perks in role are drawn
     if (availablePerks.length === 0) {
@@ -366,6 +381,14 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                   noRepeatPerks ? 'bg-amber-500' : 'bg-slate-400'
                 }`}
               />
+            </button>
+
+            <button
+              onClick={() => setIsChaosModalOpen(true)}
+              className="flex items-center gap-1.5 rounded-xl border border-purple-500/50 bg-purple-500/10 px-3 py-2 text-xs font-bold text-purple-400 hover:bg-purple-500/20 transition-all cursor-pointer shadow-sm"
+            >
+              <Skull className="h-3.5 w-3.5 text-purple-400 animate-pulse" />
+              <span>{activeMutator ? `Curse: ${activeMutator.name}` : 'Chaos Wheel'}</span>
             </button>
 
             <button
@@ -611,6 +634,17 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           );
         })}
       </div>
+
+      <ChaosWheelModal
+        isOpen={isChaosModalOpen}
+        onClose={() => setIsChaosModalOpen(false)}
+        onSelectMutator={(m) => {
+          setActiveMutator(m);
+          setIsChaosModalOpen(false);
+        }}
+        activeMutator={activeMutator}
+        dict={dict}
+      />
     </div>
   );
 };

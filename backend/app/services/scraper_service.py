@@ -25,6 +25,36 @@ PORTRAIT_PATTERN = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.ASCII)
 
 ROLE_BY_PREFIX = {"K": "Killer", "S": "Survivor"}
 
+TEACHABLE_PERK_OVERRIDE = {
+    "flow state": "Kwon Tae-young",
+    "a place for us": "Kwon Tae-young",
+    "five moves ahead": "Kwon Tae-young",
+    "fruits of your labor": "Aurora Stardotter",
+    "salvation's cry": "Aurora Stardotter",
+    "boon: steadfast": "Aurora Stardotter",
+    "do no harm": "Orela Rose",
+    "duty of care": "Orela Rose",
+    "rapid response": "Orela Rose",
+    "apocalyptic ingenuity": "Rick Grimes",
+    "come and get me!": "Rick Grimes",
+    "teamwork: toughen up": "Rick Grimes",
+    "conviction": "Michonne Grimes",
+    "last stand": "Michonne Grimes",
+    "teamwork: throw down": "Michonne Grimes",
+    "road life": "Vee Boonyasak",
+    "one-two-three-four!": "Vee Boonyasak",
+    "ghost notes": "Vee Boonyasak",
+    "bada bada boom": "Dustin Henderson",
+    "change of plan": "Dustin Henderson",
+    "teamwork: full circuit": "Dustin Henderson",
+    "extrasensory perception": "Eleven",
+    "we see you": "Eleven",
+    "teamwork: soft-spoken": "Eleven",
+    "wide open throttle": "Shane Wiigwaas",
+    "lend a hand": "Shane Wiigwaas",
+    "cross-examination": "Shane Wiigwaas",
+}
+
 
 @dataclass
 class ScraperConfig:
@@ -366,8 +396,12 @@ class NightlightScraperDriver:
             else:
                 category = "Survivor"
 
-            char_input = item.get("character") or item.get("character_name") or item.get("owner") or "General"
-            matched_char = char_map.get(str(char_input).lower())
+            override_char = TEACHABLE_PERK_OVERRIDE.get(name.lower())
+            if override_char:
+                matched_char = char_map.get(override_char.lower())
+            else:
+                char_input = item.get("character") or item.get("character_name") or item.get("owner") or "General"
+                matched_char = char_map.get(str(char_input).lower())
 
             if wiki_perks:
                 wp_match = next((wp for wp in wiki_perks if wp.name and wp.name.lower() == name.lower()), None)

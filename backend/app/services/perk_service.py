@@ -1,4 +1,4 @@
-from app.services.scraper_service import ScraperService
+from app.services.scraper_service import ScraperService, TEACHABLE_PERK_OVERRIDE
 import json
 import logging
 import math
@@ -183,8 +183,19 @@ class PerkService:
                         if perk.description:
                             perk.description = ScraperService.clean_description_text(perk.description)
 
-                        # Auto-link missing avatar paths in memory
-                        if not perk.character_avatar_path and perk.character and perk.character != "General":
+                        # Auto-link missing teachable perk character assignments
+                        override_char = TEACHABLE_PERK_OVERRIDE.get(perk.name.lower())
+                        if override_char:
+                            perk.character = override_char
+                            perk.character_real_name = override_char
+                            matched_avatar = char_avatar_lookup.get(override_char.lower())
+                            if matched_avatar:
+                                perk.character_avatar_path = matched_avatar
+                            else:
+                                sub_dir = "survivors" if perk.category == "Survivor" else "killers"
+                                sanitized = self._sanitize_name(override_char)
+                                perk.character_avatar_path = f"avatars/{sub_dir}/{sanitized}.png"
+                        elif not perk.character_avatar_path and perk.character and perk.character != "General":
                             matched_avatar = char_avatar_lookup.get(perk.character.lower())
                             if matched_avatar:
                                 perk.character_avatar_path = matched_avatar

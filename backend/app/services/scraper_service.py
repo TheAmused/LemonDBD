@@ -349,6 +349,11 @@ class NightlightScraperDriver:
             char_input = item.get("character") or item.get("character_name") or item.get("owner") or "General"
             matched_char = char_map.get(str(char_input).lower())
 
+            if wiki_perks:
+                wp_match = next((wp for wp in wiki_perks if wp.name and wp.name.lower() == name.lower()), None)
+                if wp_match and wp_match.character and wp_match.character.lower() not in ["none", "all", "general"]:
+                    matched_char = char_map.get(wp_match.character.lower()) or char_map.get(wp_match.character.split()[-1].lower()) or matched_char
+
             if matched_char:
                 canonical_name = matched_char.name
                 real_name = matched_char.real_name
@@ -392,11 +397,12 @@ class NightlightScraperDriver:
                     icon_url = f"https://cdn.nightlight.gg/img/perks/{clean_icon}"
 
             sanitized_name = ScraperService.sanitize_filename(name)
+            sanitized_char = ScraperService.sanitize_filename(canonical_name)
             category_dir = "survivors" if category == "Survivor" else "killers"
             if canonical_name == "General":
                 local_rel_path = f"icons/{category_dir}/General/{sanitized_name}.png"
             else:
-                local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.png"
+                local_rel_path = f"icons/{category_dir}/{sanitized_char}/{sanitized_name}.png"
 
             perks.append(
                 PerkData(
@@ -591,13 +597,15 @@ class NightlightScraperDriver:
             except Exception:
                 pass
 
-        if not chunk_text:
-            try:
-                chunk_text = self.fetch_nightlight_data("https://nightlight.gg/assets/chunk-Ge20zz2D.js")
-            except Exception:
-                chunk_text = perks_page_html
+        wiki_perks = []
+        try:
+            wiki_driver = WikiScraperDriver(self.base_dir)
+            wiki_html = wiki_driver.fetch_html(wiki_driver.PERKS_URL)
+            wiki_perks = wiki_driver.parse_perks(wiki_html, characters)
+        except Exception as w_err:
+            logger.warning(f"Wiki perks lookup for character mapping failed: {w_err}")
 
-        perks = self.parse_nightlight_perks(chunk_text, perks_page_html, characters=characters)
+        perks = self.parse_nightlight_perks(chunk_text, perks_page_html, characters=characters, wiki_perks=wiki_perks)
         items, addons = self.parse_nightlight_items_and_addons(chunk_text, perks_page_html, characters=characters)
         if len(items) < 5 or len(addons) < 5:
             try:
@@ -750,8 +758,9 @@ class WikiScraperDriver:
         current_category: Optional[str] = None
         content_area = soup.find("div", class_="mw-parser-output") or soup
 
-        char_by_slug = {c.wiki_slug.lower(): c for c in characters}
-        char_by_name = {c.name.lower(): c for c in characters}
+        char_by_slug = {c.wiki_slug.lower(): c for c in characters if c.wiki_slug}
+        char_by_name = {c.name.lower(): c for c in characters if c.name}
+        char_by_short = {c.short_name.lower(): c for c in characters if c.short_name}
 
         for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
             if element.name in ["h1", "h2", "h3", "h4"]:
@@ -804,17 +813,19 @@ class WikiScraperDriver:
                                 href = owner_link.get("href", "")
                                 link_title = owner_link.get("title", "").strip()
                                 slug = ScraperService.extract_slug_from_href(href).lower()
-                                matched = char_by_slug.get(slug) or char_by_name.get(link_title.lower())
+                                matched = char_by_slug.get(slug) or char_by_name.get(link_title.lower()) or char_by_short.get(link_title.lower())
 
                             if not matched:
                                 raw_text = owner_cell.get_text().strip()
                                 clean_text = re.sub(r"^[.\s\-–]+|[.\s\-–]+$", "", raw_text).strip().lower()
 
                                 if clean_text and clean_text not in ["all", "general", "none", "-", "all survivors", "all killers"]:
-                                    for key, c in char_by_name.items():
-                                        if clean_text in key or key in clean_text:
-                                            matched = c
-                                            break
+                                    matched = char_by_short.get(clean_text) or char_by_name.get(clean_text)
+                                    if not matched:
+                                        for key, c in char_by_name.items():
+                                            if clean_text in key or key in clean_text:
+                                                matched = c
+                                                break
 
                             if matched:
                                 canonical_name = matched.name

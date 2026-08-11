@@ -651,33 +651,33 @@
   },
   {
     "name": "Borrowed Time",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "William \"Bill\" Overbeck",
+    "character_real_name": "William \"Bill\" Overbeck",
+    "character_avatar_path": "avatars/survivors/william_bill_overbeck.png",
     "category": "Survivor",
     "description": "You are fuelled with an unexpected energy when saving an ally from a Hook.\nThe Survivors you unhook benefit from the following effects:\n* **Extends** the duration of their ***Endurance*** **Status Effect** by **6**/**8**/**10** **seconds**.\n* **Extends** the duration of their ***Haste*** **Status Effect** by **10 seconds**.\n*\"Probably stings like hell, but it ain't gonna kill ya. Up and at 'em soldier. Time to move!\" — Bill Overbeck*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/borrowed-time.png",
-    "icon_local_path": "icons/survivors/General/borrowed_time.png"
+    "icon_local_path": "icons/survivors/william_bill_overbeck/borrowed_time.png"
   },
   {
     "name": "Left Behind",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "William \"Bill\" Overbeck",
+    "character_real_name": "William \"Bill\" Overbeck",
+    "character_avatar_path": "avatars/survivors/william_bill_overbeck.png",
     "category": "Survivor",
     "description": "You will get the job done... no matter the cost.\nOnce you are the **Last Survivor Standing**, *Left Behind* activates:\n* The Aura of the Hatch is revealed to you within **24**/**28**/**32** **metres**.\n*\"I'm not horse-shittin' around. I'm doing this alone!\" — Bill Overbeck*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/left-behind.png",
-    "icon_local_path": "icons/survivors/General/left_behind.png"
+    "icon_local_path": "icons/survivors/william_bill_overbeck/left_behind.png"
   },
   {
     "name": "Unbreakable",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "William \"Bill\" Overbeck",
+    "character_real_name": "William \"Bill\" Overbeck",
+    "character_avatar_path": "avatars/survivors/william_bill_overbeck.png",
     "category": "Survivor",
     "description": "Past battles have taught you a thing or two about survival.\nOnce per Trial, you can completely recover from the Dying State.\n* Your Recovery speed is increased by **25**/**30**/**35** **%**.\n*\"Goddammit, I am seriously FUBAR!\" — Bill Overbeck*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/unbreakable.png",
-    "icon_local_path": "icons/survivors/General/unbreakable.png"
+    "icon_local_path": "icons/survivors/william_bill_overbeck/unbreakable.png"
   },
   {
     "name": "Overcharge",
@@ -1191,33 +1191,33 @@
   },
   {
     "name": "Buckle Up",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Ashley J. Williams",
+    "character_real_name": "Ashley J. Williams",
+    "character_avatar_path": "avatars/survivors/ashley_j._williams.png",
     "category": "Survivor",
     "description": "Unlocks potential in your Aura-reading ability.\nWhen healing a Survivor in the Dying State, *Buckle Up* activates:\n* The Aura of the Killer is revealed to the both of you.\n* Completing a *Healing Action* on the dying Survivor suppresses their Scratch Marks and grants them a **+50 %** ***Haste*** **Status Effect** for **3**/**4**/**5** **seconds**.\n*Buckle Up* does not cause the ***Exhausted*** **Status Effect**.\n*\"Ghost beaters never leave a man behind.\" — Ash Williams*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/buckle-up.png",
-    "icon_local_path": "icons/survivors/General/buckle_up.png"
+    "icon_local_path": "icons/survivors/ashley_j._williams/buckle_up.png"
   },
   {
     "name": "Flip-Flop",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Ashley J. Williams",
+    "character_real_name": "Ashley J. Williams",
+    "character_avatar_path": "avatars/survivors/ashley_j._williams.png",
     "category": "Survivor",
     "description": "You have an uncanny ability to escape the inevitable.\n* Recovering in the Dying State also charges the *Wiggle Meter* at **50 %** of the Recovery rate and up to a maximum of **40**/**45**/**50** **%** of Wiggle Progression.\n*\"Catch ya on the flip-flop.\" — Ash Williams*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/flip-flop.png",
-    "icon_local_path": "icons/survivors/General/flip_flop.png"
+    "icon_local_path": "icons/survivors/ashley_j._williams/flip_flop.png"
   },
   {
     "name": "Mettle of Man",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Ashley J. Williams",
+    "character_real_name": "Ashley J. Williams",
+    "character_avatar_path": "avatars/survivors/ashley_j._williams.png",
     "category": "Survivor",
     "description": "/ 6.1.3Evil has a way of always finding you.\nAfter triggering your **third** *Protection Hit*, *Mettle of Man* activates:\n* While injured, *Mettle of Man* shields you from going down the next time you take damage.\n* Healing back to full health will reveal your Aura to the Killer whenever you are farther than **12**/**14**/**16** **metres** from them.\n*Mettle of Man* deactivates the next time you are put into the Dying State.\n**Increases** your chance of becoming the initial  ***Obsession*** by increasing the default value by **+100 %**.\n*The Killer can only be **obsessed** with one Survivor at a time.*\n*\"Evil has a bullseye on my back the size of Tiger Stadium.\" — Ash Williams*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/mettle-of-man.png",
-    "icon_local_path": "icons/survivors/General/mettle_of_man.png"
+    "icon_local_path": "icons/survivors/ashley_j._williams/mettle_of_man.png"
   },
   {
     "name": "Furtive Chase",

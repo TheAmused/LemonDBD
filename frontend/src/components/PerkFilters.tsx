@@ -79,6 +79,17 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               <Filter className="h-3.5 w-3.5 text-rose-400" />
               <span>Killer Perks</span>
             </button>
+            <button
+              onClick={() => setCategory('General')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                category === 'General'
+                  ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20'
+                  : 'text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-400'
+              }`}
+            >
+              <User className="h-3.5 w-3.5 text-amber-400" />
+              <span>General Perks</span>
+            </button>
           </div>
         </div>
       )}

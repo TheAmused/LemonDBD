@@ -100,7 +100,9 @@ function DashboardContent() {
         order: order,
       });
 
-      if (category !== 'all' && category !== 'generator') {
+      if (category === 'General') {
+        queryParams.append('character', 'General');
+      } else if (category !== 'all' && category !== 'generator') {
         queryParams.append('category', category);
       }
       if (character !== 'all') queryParams.append('character', character);

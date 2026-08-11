@@ -365,6 +365,12 @@ class NightlightScraperDriver:
                     snippet = stream_payload[idx:idx + 300]
                     desc = BeautifulSoup(snippet, "html.parser").get_text(separator="\n", strip=True)
 
+            clean_desc = ScraperService.clean_description_text(desc)
+            if (not clean_desc or "data-discover" in clean_desc or len(clean_desc) < 15) and wiki_map:
+                wiki_val = wiki_map.get(name.lower())
+                if wiki_val:
+                    clean_desc = ScraperService.clean_description_text(wiki_val)
+
             raw_icon = (
                 item.get("icon")
                 or item.get("icon_slug")
@@ -399,7 +405,7 @@ class NightlightScraperDriver:
                     character_real_name=real_name,
                     character_avatar_path=avatar_path,
                     category=category,
-                    description=desc,
+                    description=clean_desc,
                     icon_url=icon_url,
                     icon_local_path=local_rel_path,
                 )

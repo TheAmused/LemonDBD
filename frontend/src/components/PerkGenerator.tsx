@@ -578,6 +578,27 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
           const isSelectedForWheelSlot = genMode === 'wheel' && activeSlotIdx === idx;
 
+          const getAvatarSrc = (p?: Perk) => {
+            if (!p) return null;
+            let rawPath = p.character_avatar_path;
+            if (!rawPath && p.character && p.character !== 'General') {
+              const subDir = role === 'Survivor' ? 'survivors' : 'killers';
+              const sanitized = p.character
+                .toLowerCase()
+                .trim()
+                .replace(/[\s\-/]+/g, '_')
+                .replace(/[\\/*?:"<>|]/g, '')
+                .replace(/_+/g, '_')
+                .replace(/^_+|_+$/g, '');
+              rawPath = `avatars/${subDir}/${sanitized}.png`;
+            }
+            if (!rawPath) return null;
+            const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');
+            return `${backendBase}/static/${cleanPath}`;
+          };
+
+          const avatarSrc = getAvatarSrc(perk);
+
           return (
             <div
               key={idx}
@@ -585,11 +606,12 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               className={`group relative flex cursor-pointer flex-col justify-between rounded-2xl border p-5 shadow-sm backdrop-blur-md transition-all duration-200 ${
                 isSelectedForWheelSlot
                   ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/40'
-                  : 'border-slate-200/80 bg-white/70 dark:border-slate-800/80 dark:bg-slate-900/60 hover:-translate-y-1 hover:border-amber-500/50'
+                  : 'border-slate-200/80 bg-white/70 dark:border-slate-800/80 dark:bg-slate-900/80 hover:-translate-y-1 hover:border-amber-500/50'
               }`}
             >
               <div>
-                <div className="mb-4 flex items-center justify-between">
+                {/* Header Slot Info & Role Badge */}
+                <div className="mb-3 flex items-center justify-between">
                   {slotData ? (
                     <span className="rounded-full bg-amber-500/10 px-2.5 py-1 font-mono text-[11px] font-extrabold text-amber-600 border border-amber-500/20 dark:text-amber-400">
                       [{slotData.page}/{slotData.slot}]
@@ -599,31 +621,58 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                       [-/-]
                     </span>
                   )}
-                  <span className="text-[10px] font-extrabold uppercase text-slate-400">
-                    Perk #{idx + 1}
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                    Slot #{idx + 1}
                   </span>
                 </div>
 
-                <div className="relative mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/50 p-3 dark:from-slate-900/90 dark:to-slate-950 border border-slate-200/60 dark:border-slate-800 shadow-inner group-hover:border-amber-500/40 transition-colors">
-                  {perk && iconSrc ? (
-                    <img
-                      src={iconSrc}
-                      alt={perk.name}
-                      className="h-14 w-14 object-contain drop-shadow-md group-hover:scale-110 transition-transform"
-                    />
-                  ) : (
-                    <ImageOff className="h-8 w-8 text-slate-400" />
-                  )}
+                {/* Perk Icon & Bigger Avatar Row */}
+                <div className="mb-4 flex items-center justify-between">
+                  {/* Left: Full Perk Icon Container */}
+                  <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/50 p-2.5 dark:from-slate-900/90 dark:to-slate-950 border border-slate-200/60 dark:border-slate-800 shadow-inner group-hover:border-amber-500/40 transition-colors">
+                    {perk && iconSrc ? (
+                      <img
+                        src={iconSrc}
+                        alt={perk.name}
+                        className="h-12 w-12 object-contain drop-shadow-md group-hover:scale-110 transition-transform"
+                      />
+                    ) : (
+                      <ImageOff className="h-6 w-6 text-slate-400" />
+                    )}
+                  </div>
+
+                  {/* Right: BIGGER Character Avatar + Top Right Role Icon Badge */}
+                  <div className="relative flex items-center">
+                    {avatarSrc ? (
+                      <img
+                        src={avatarSrc}
+                        alt={perk?.character || 'Avatar'}
+                        className="h-14 w-14 rounded-2xl object-cover border-2 border-slate-700 shadow-md group-hover:border-amber-500/50 transition-colors"
+                      />
+                    ) : (
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800 border-2 border-slate-700 text-slate-400">
+                        {role === 'Survivor' ? <Shield className="h-7 w-7 text-emerald-400" /> : <Skull className="h-7 w-7 text-rose-400" />}
+                      </div>
+                    )}
+
+                    {/* Top-Right Role Icon Badge */}
+                    <div
+                      className={`absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border shadow-md backdrop-blur-md ${
+                        role === 'Survivor'
+                          ? 'border-emerald-500/60 bg-emerald-950 text-emerald-400 ring-2 ring-emerald-950'
+                          : 'border-rose-500/60 bg-rose-950 text-rose-400 ring-2 ring-rose-950'
+                      }`}
+                      title={role}
+                    >
+                      {role === 'Survivor' ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
+                    </div>
+                  </div>
                 </div>
 
-                <h3 className="text-center text-base font-bold text-slate-900 group-hover:text-amber-500 dark:text-slate-100 transition-colors">
+                {/* Perk Title as Hero Text (No character text label below!) */}
+                <h3 className="text-base font-extrabold leading-snug text-slate-900 group-hover:text-amber-500 dark:text-slate-100 transition-colors">
                   {perk ? perk.name : 'Spin Wheel or Roll'}
                 </h3>
-
-                <div className="mt-1.5 flex items-center justify-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                  <User className="h-3.5 w-3.5 text-slate-400" />
-                  <span>{perk ? perk.character : 'General'}</span>
-                </div>
               </div>
 
               <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-xs font-semibold text-slate-500 group-hover:text-amber-500 transition-colors">

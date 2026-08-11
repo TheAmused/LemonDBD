@@ -1014,8 +1014,27 @@ class WikiScraperDriver:
         current_category: Optional[str] = None
         content_area = soup.find("div", class_="mw-parser-output") or soup
 
-        char_by_slug = {c.wiki_slug.lower(): c for c in characters if c.wiki_slug}
-        char_by_name = {c.name.lower(): c for c in characters if c.name}
+        char_by_slug = {}
+        char_by_name = {}
+        for c in characters:
+            aliases = [c.name, c.real_name]
+            if c.name:
+                aliases.append(f"The {c.name}")
+                if c.name.startswith("The "):
+                    aliases.append(c.name[4:])
+            for alias in aliases:
+                if alias:
+                    char_by_name.setdefault(alias.lower(), c)
+
+            slugs = [c.wiki_slug]
+            if c.wiki_slug and c.wiki_slug.startswith("The_"):
+                slugs.append(c.wiki_slug[4:])
+            elif c.wiki_slug:
+                slugs.append(f"The_{c.wiki_slug}")
+            for slug in slugs:
+                if slug:
+                    char_by_slug.setdefault(slug.lower(), c)
+
         char_by_short = {c.short_name.lower(): c for c in characters if c.short_name}
 
         for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
@@ -1292,10 +1311,6 @@ class ScraperService:
     MAX_CONCURRENT_DOWNLOADS = 10
 
     HEADERS = WikiScraperDriver.HEADERS
-    EXCLUDED_SLUGS = WikiScraperDriver.EXCLUDED_SLUGS
-
-=======
->>>>>>> origin/main
     _lock = threading.Lock()
     _status: Dict[str, Any] = {
         "is_running": False,
@@ -1364,7 +1379,7 @@ class ScraperService:
             return ""
 
         cleaned = re.sub(r"<[^>]+>", "", text)
-        cleaned = re.sub(r'\b[a-zA-Z0-9_-]+=["\'][^"\'][^"\']\s*>?', "", cleaned)
+        cleaned = re.sub(r'\b[a-zA-Z0-9_-]+=["\'][^"\']*["\']\s*>?', "", cleaned)
         import html
         cleaned = html.unescape(cleaned)
 
@@ -1554,6 +1569,10 @@ class ScraperService:
                     avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
                     release_number=release_number,
                 )
+            )
+
+        return characters
+
     def scrape_characters_dynamically(self) -> List[CharacterData]:
         return self.wiki_driver.scrape_characters_dynamically()
 

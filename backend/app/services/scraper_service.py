@@ -18,6 +18,13 @@ from curl_cffi.requests import AsyncSession
 
 logger = logging.getLogger(__name__)
 
+# Wiki portraits are named K01_TheTrapper_Portrait.png / S07_AceVisconti_Portrait.png.
+# The prefix letter is the role and the digits are the release number, which makes the
+# filename the only reliable way to tell a character from a power or an item.
+PORTRAIT_PATTERN = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.ASCII)
+
+ROLE_BY_PREFIX = {"K": "Killer", "S": "Survivor"}
+
 
 @dataclass
 class ScraperConfig:
@@ -47,6 +54,7 @@ class CharacterData:
     category: str
     avatar_url: str
     avatar_local_path: str
+    release_number: int = 0
 
 
 @dataclass
@@ -795,6 +803,9 @@ class WikiScraperDriver:
         "Referer": "https://deadbydaylight.fandom.com/wiki/Dead_by_Daylight_Wiki",
     }
 
+    PORTRAIT_PATTERN = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.ASCII)
+    ROLE_BY_PREFIX = {"K": "Killer", "S": "Survivor"}
+
     EXCLUDED_SLUGS = {
         "entity", "generator", "hatch", "chest", "item", "perk", "perks", "killers",
         "survivors", "tome", "observer", "vigo", "void", "stagger", "hook", "obsession",
@@ -1283,6 +1294,8 @@ class ScraperService:
     HEADERS = WikiScraperDriver.HEADERS
     EXCLUDED_SLUGS = WikiScraperDriver.EXCLUDED_SLUGS
 
+=======
+>>>>>>> origin/main
     _lock = threading.Lock()
     _status: Dict[str, Any] = {
         "is_running": False,
@@ -1454,9 +1467,93 @@ class ScraperService:
         raw_slug = href.split("/wiki/")[-1].split("#")[0].split("?")[0]
         return unquote(raw_slug).strip()
 
+    @staticmethod
+    def classify_portrait(image_url: str):
+        """Return (category, release_number) when the image is a character portrait.
+
+        Anything else — power icons, item icons, wiki concept images — returns None,
+        which is how powers stop being mistaken for characters.
+        """
+        if not image_url:
+            return None
+
+        filename = image_url.split("/revision")[0].rstrip("/").split("/")[-1]
+        match = PORTRAIT_PATTERN.match(filename)
+        if not match:
+            return None
+
+        category = ROLE_BY_PREFIX.get(match.group(1))
+        if not category:
+            return None
+
+        try:
+            release_number = int(match.group(2))
+        except ValueError:
+            return None
+
+        return category, release_number
+
+    @staticmethod
+    def normalise_character_name(title: str, category: str) -> str:
+        """Killers lose their leading article; survivors keep their name intact."""
+        clean = (title or "").strip()
+        if category == "Killer" and clean.startswith("The "):
+            return clean[4:].strip()
+        return clean
+
     def fetch_html(self, url: str) -> str:
         return self.wiki_driver.fetch_html(url)
 
+    def parse_character_page(self, html: str) -> List[CharacterData]:
+        """Extract characters from a wiki index page.
+
+        A link is a character only when its image is a portrait; the filename decides
+        the category and release number, so it does not matter which index page the
+        link was found on.
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        content = soup.find("div", class_="mw-parser-output") or soup
+
+        characters: List[CharacterData] = []
+        seen = set()
+
+        for link in content.find_all("a", href=re.compile(r"^/wiki/")):
+            img = link.find("img")
+            if not img:
+                continue
+
+            image_url = self.extract_high_res_url(img)
+            classified = self.classify_portrait(image_url)
+            if not classified:
+                continue
+
+            category, release_number = classified
+
+            title = (link.get("title") or "").strip() or link.get_text().strip()
+            name = self.normalise_character_name(title, category)
+            if not name:
+                continue
+
+            key = (category, name.lower())
+            if key in seen:
+                continue
+            seen.add(key)
+
+            slug = self.extract_slug_from_href(link.get("href", ""))
+            sanitized = self.sanitize_filename(name)
+            sub_dir = "survivors" if category == "Survivor" else "killers"
+
+            characters.append(
+                CharacterData(
+                    name=name,
+                    real_name=name,
+                    wiki_slug=slug,
+                    short_name=slug.lower(),
+                    category=category,
+                    avatar_url=image_url,
+                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                    release_number=release_number,
+                )
     def scrape_characters_dynamically(self) -> List[CharacterData]:
         return self.wiki_driver.scrape_characters_dynamically()
 

@@ -27,6 +27,7 @@ import {
   Compass,
   Package,
   Settings,
+  Repeat,
 } from 'lucide-react';
 import { ScraperConfigModal } from './ScraperConfigModal';
 
@@ -158,6 +159,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       color: 'text-amber-500',
       activeBg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
       href: `/${currentLocale}?tab=generator`,
+    },
+    {
+      id: 'streaks',
+      label: '🔥 Streaks',
+      icon: Repeat,
+      color: 'text-orange-400',
+      activeBg: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
+      href: `/${currentLocale}/streaks`,
     },
     {
       id: 'challenge',

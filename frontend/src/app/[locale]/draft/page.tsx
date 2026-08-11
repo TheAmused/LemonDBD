@@ -74,7 +74,7 @@ export default function DraftPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row dbd-fog-overlay">
+    <div className="h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row dbd-fog-overlay">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -87,7 +87,7 @@ export default function DraftPage() {
         characterCount={characterCount}
       />
 
-      <main className="flex-1 lg:pl-64 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+      <main className="flex-1 lg:pl-64 p-4 sm:p-6 lg:p-8 overflow-y-auto w-full">
         <Suspense fallback={<div className="p-8 text-center text-slate-400">Loading Draft Room...</div>}>
           <DraftContent locale={locale} dict={dict} />
         </Suspense>

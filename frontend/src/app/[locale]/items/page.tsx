@@ -20,14 +20,14 @@ export default function ItemsPage() {
   if (!dict) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex transition-colors duration-300">
+    <div className="h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex transition-colors duration-300">
       <Sidebar
         dict={dict}
         activeCategory={category}
         onSelectCategory={setCategory}
         currentLocale={locale}
       />
-      <main className="flex-1 lg:pl-64 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto w-full transition-all">
+      <main className="flex-1 lg:pl-64 p-4 md:p-8 lg:p-10 w-full overflow-y-auto transition-all">
         <ItemsAddonsViewer />
       </main>
     </div>

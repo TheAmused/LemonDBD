@@ -37,7 +37,7 @@ function MapsPageInner() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row dbd-fog-overlay">
+    <div className="h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row dbd-fog-overlay">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -45,7 +45,7 @@ function MapsPageInner() {
         onSelectCategory={handleSelectCategory}
       />
 
-      <main className="flex-1 lg:pl-64 p-4 md:p-8 max-w-7xl mx-auto w-full">
+      <main className="flex-1 lg:pl-64 p-4 md:p-8 overflow-y-auto w-full">
         {/* ── Page Header ── */}
         <div className="mb-6 flex flex-col gap-4">
           <div className="flex items-center gap-3">

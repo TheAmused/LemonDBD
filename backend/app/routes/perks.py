@@ -51,6 +51,15 @@ def list_characters():
     return jsonify({"count": len(characters), "data": characters}), 200
 
 
+
+
+@perks_bp.route("/api/v1/characters/<string:character_name>/detail", methods=["GET"])
+def get_character_detail(character_name: str):
+    detail = perk_service.get_character_detail(character_name)
+    if not detail:
+        return jsonify({"error": "Character not found", "status": 404}), 404
+    return jsonify({"data": detail}), 200
+
 @perks_bp.route("/api/v1/survivors", methods=["GET"])
 def list_survivors():
     survivors = perk_service.get_characters("Survivor")

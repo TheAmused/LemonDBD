@@ -196,6 +196,21 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
               <span>Map Explorer</span>
             </Link>
 
+            <Link
+              href={'/' + currentLocale + '/characters'}
+              className={
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ' +
+                (pathname?.includes('/characters')
+                  ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-sm'
+                  : 'text-indigo-500 hover:text-indigo-400 hover:bg-indigo-500/10 border border-indigo-500/20')
+              }
+            >
+              <Users className="h-3.5 w-3.5 text-indigo-400" />
+              <span>Characters</span>
+            </Link>
+
+
+
             {onOpenQuests && (
               <button
                 onClick={onOpenQuests}

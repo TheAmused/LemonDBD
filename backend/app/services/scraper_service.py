@@ -1,8 +1,11 @@
 import asyncio
+import hashlib
+import html
 import json
 import logging
 import re
 import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, fields
 from datetime import datetime, timezone
 from pathlib import Path
@@ -329,6 +332,11 @@ class NightlightScraperDriver:
             name = item.get("name") or item.get("perk_name") or item.get("title") or item.get("n") or ""
             if not name:
                 continue
+            # Normalize perk names: fix literal escape sequences from JS chunk encoding
+            name = str(name).replace("\\xA0", " ").replace("\\xa0", " ").replace("\\u00a0", " ")
+            name = name.replace("\u00a0", " ").replace("\u2019", "'").replace("\u2018", "'")
+            name = name.replace("\u2013", "-").replace("\u2014", "-")
+            name = name.strip()
 
             u_val = item.get("u")
             if u_val is not None:
@@ -582,6 +590,121 @@ class NightlightScraperDriver:
 
         return items, addons
 
+    def fetch_nightlight_perk_descriptions(self, perks: List[PerkData]) -> Dict[str, str]:
+        """Fetch full perk description from each Nightlight perk page.
+        Extracts from the active tab-pane div (current patch description) for complete, untruncated text.
+        Falls back to meta description if the tab-pane content is unavailable."""
+        GENERIC_MARKERS = [
+            "Track DBD stats",
+            "Dead by Daylight Stat Tracker",
+            "Nightlight.gg",
+            "custom icons",
+        ]
+
+        def name_to_slugs(name: str):
+            """Generate candidate Nightlight URL slugs for a perk name.
+            Nightlight uses original casing with spaces replaced by underscores,
+            and URL-encodes special chars like apostrophes (%27), ampersands (&), etc.
+            """
+            import urllib.parse
+            # Normalize unicode mojibake back to ASCII-safe chars
+            clean = name.replace("\u2019", "'").replace("\u2018", "'").replace(
+                "\u2013", "-").replace("\u2014", "-").replace("\u00a0", " ")
+            # Handle literal escape sequences that appear as strings (encoding corruption)
+            clean = clean.replace("\\xA0", " ").replace("\\xa0", " ").replace("\\u00a0", " ")
+
+            candidates = []
+            # Strategy 1: preserve casing, replace spaces with _, keep other chars
+            s1 = re.sub(r" +", "_", clean)
+            candidates.append(s1)
+
+            # Strategy 2: URL-encode all non-alphanumeric non-underscore chars
+            s2 = urllib.parse.quote(re.sub(r" +", "_", clean), safe="_-.")
+            if s2 != s1:
+                candidates.append(s2)
+
+            # Strategy 3: strip all non-alphanum-underscore
+            s3 = re.sub(r"[^a-zA-Z0-9_]+", "_", re.sub(r" +", "_", clean)).strip("_")
+            if s3 not in candidates:
+                candidates.append(s3)
+
+            # Strategy 4: strip trailing punctuation (for "Come and Get Me!")
+            s4 = re.sub(r"[^a-zA-Z0-9_]+", "_", re.sub(r" +", "_", clean.rstrip("!?."))).strip("_")
+            if s4 not in candidates:
+                candidates.append(s4)
+
+            # Strategy 5: URL-encode the full name including non-breaking spaces (%C2%A0 etc.)
+            raw_name = name  # use original bytes with unicode, not cleaned
+            s5 = urllib.parse.quote(re.sub(r" ", "_", raw_name), safe="_-")
+            if s5 not in candidates:
+                candidates.append(s5)
+
+            return candidates
+
+        def fetch_one(name: str, slugs) -> Tuple[str, str]:
+            for slug in slugs:
+                url = f"https://nightlight.gg/perks/{slug}"
+                try:
+                    html_text = self.fetch_nightlight_data(url)
+                    soup = BeautifulSoup(html_text, "html.parser")
+
+                    # Verify we're on a real perk page (not the homepage)
+                    meta = soup.find("meta", attrs={"name": "description"})
+                    if meta and any(m in str(meta.get("content", "")) for m in GENERIC_MARKERS):
+                        continue  # Homepage redirect — try next slug
+
+                    # Extract full description from the ACTIVE tab panel.
+                    # Nightlight shows description history as tabs; the current description
+                    # is inside the tab-pane with class "active show".
+                    full_desc = ""
+                    active_pane = soup.find(
+                        "div",
+                        class_=lambda c: c and "tab-pane" in c and "active" in c and "show" in c,
+                    )
+                    if active_pane:
+                        # First child div contains the description paragraphs
+                        desc_div = active_pane.find("div", recursive=False)
+                        if desc_div:
+                            paragraphs = desc_div.find_all("p", recursive=False)
+                            lines = []
+                            for p in paragraphs:
+                                text = p.get_text(" ", strip=True)
+                                if text:
+                                    lines.append(text)
+                            full_desc = "\n".join(lines).strip()
+
+                    # Fallback: use meta description (truncated but better than nothing)
+                    if not full_desc and meta and meta.get("content"):
+                        full_desc = str(meta["content"]).strip()
+                        if any(m in full_desc for m in GENERIC_MARKERS):
+                            full_desc = ""
+
+                    if full_desc:
+                        return name, full_desc
+                except Exception:
+                    pass
+            return name, ""
+
+        descriptions: Dict[str, str] = {}
+        seen: set = set()
+        tasks = []
+        for perk in perks:
+            key = perk.name.lower()
+            if key not in seen:
+                seen.add(key)
+                tasks.append((perk.name, name_to_slugs(perk.name)))
+
+        logger.info(f"Fetching Nightlight perk descriptions for {len(tasks)} perks...")
+        with ThreadPoolExecutor(max_workers=12) as executor:
+            futures = {executor.submit(fetch_one, name, slugs): name for name, slugs in tasks}
+            for future in as_completed(futures):
+                name, desc = future.result()
+                if desc:
+                    descriptions[name.lower()] = desc
+
+        logger.info(f"Fetched Nightlight descriptions for {len(descriptions)}/{len(tasks)} perks.")
+        return descriptions
+
     def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData]]:
         logger.info("Scraping Nightlight.gg data...")
         survivors_raw = self.fetch_nightlight_data(self.SURVIVORS_API)
@@ -610,6 +733,7 @@ class NightlightScraperDriver:
             except Exception:
                 pass
 
+        # Use Wiki only for character-to-perk ownership mapping (not descriptions)
         wiki_perks = []
         try:
             wiki_driver = WikiScraperDriver(self.base_dir)
@@ -619,6 +743,17 @@ class NightlightScraperDriver:
             logger.warning(f"Wiki perks lookup for character mapping failed: {w_err}")
 
         perks = self.parse_nightlight_perks(chunk_text, perks_page_html, characters=characters, wiki_perks=wiki_perks)
+
+        # Fetch ALL perk descriptions directly from Nightlight individual perk pages
+        nl_descriptions = self.fetch_nightlight_perk_descriptions(perks)
+        enriched_perks = []
+        for p in perks:
+            nl_desc = nl_descriptions.get(p.name.lower(), "")
+            if nl_desc:
+                p.description = nl_desc
+            enriched_perks.append(p)
+        perks = enriched_perks
+
         items, addons = self.parse_nightlight_items_and_addons(chunk_text, perks_page_html, characters=characters)
         if len(items) < 5 or len(addons) < 5:
             try:
@@ -1216,9 +1351,23 @@ class ScraperService:
             return ""
 
         cleaned = re.sub(r"<[^>]+>", "", text)
-        cleaned = re.sub(r'\b[a-zA-Z0-9_-]+=["\'][^"\']*["\']\s*>?', "", cleaned)
+        cleaned = re.sub(r'\b[a-zA-Z0-9_-]+=["\'][^"\'][^"\']\s*>?', "", cleaned)
         import html
         cleaned = html.unescape(cleaned)
+
+        # Fix encoding artifacts from HTML text extraction:
+        # U+FFFD (replacement char) is produced by BS4 for unknown curly quotes
+        cleaned = cleaned.replace("\ufffd", '"')
+        # "?" followed by capital or quote is often a garbled open-quote
+        cleaned = re.sub(r'\?([A-Z"])', r'"\1', cleaned)
+        cleaned = re.sub(r'([a-z.,!])\?\s*-', r'\1" -', cleaned)
+
+        # Normalize slash-separated perk value ranges: "5 / 4 / 3" -> "5/4/3"
+        cleaned = re.sub(r'(\d+)(?:\s*/\s*(\d+))+', lambda m: re.sub(r'\s*/\s*', '/', m.group(0)), cleaned)
+
+        # Normalize "50 %" -> "50%", "5 s" -> "5s", "60 m" -> "60m"
+        cleaned = re.sub(r'(\d+)\s+(%)', r'\1\2', cleaned)
+        cleaned = re.sub(r'(\d+)\s+(s|m)\b(?!\w)', r'\1\2', cleaned)
 
         # 1. Strip Wiki patch notice disclaimers (e.g. "This description is based on the changes announced for or featured in the upcoming Patch 8.1.0")
         cleaned = re.sub(

@@ -324,14 +324,23 @@ class PerkService:
 
         char_canonical_name = matched_char["name"]
 
-        matched_perks = [
-            p.model_dump()
-            for p in self._cache
-            if p.character and (
-                p.character.lower() == char_canonical_name.lower()
-                or p.character.lower() == target_clean
-            )
-        ]
+        char_tokens = set([
+            char_canonical_name.lower(),
+            target_clean,
+            matched_char.get("short_name", "").lower(),
+            matched_char.get("real_name", "").lower(),
+            matched_char.get("wiki_slug", "").lower(),
+        ])
+        char_tokens.discard("")
+
+        matched_perks = []
+        for p in self._cache:
+            p_char = (p.character or "").lower().strip()
+            p_real = (p.character_real_name or "").lower().strip()
+            if p_char in char_tokens or p_real in char_tokens:
+                matched_perks.append(p.model_dump())
+            elif p_char != "general" and any(tok for tok in char_tokens if len(tok) >= 3 and (tok == p_char or tok in p_char or p_char in tok)):
+                matched_perks.append(p.model_dump())
 
         matched_addons = [
             a.model_dump()

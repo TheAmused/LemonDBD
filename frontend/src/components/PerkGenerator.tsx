@@ -609,9 +609,9 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                   : 'border-slate-200/80 bg-white/70 dark:border-slate-800/80 dark:bg-slate-900/80 hover:-translate-y-1 hover:border-amber-500/50'
               }`}
             >
-              <div>
+              <div className="flex flex-col gap-4">
                 {/* Header Slot Info & Role Badge */}
-                <div className="mb-3 flex items-center justify-between">
+                <div className="flex items-center justify-between">
                   {slotData ? (
                     <span className="rounded-full bg-amber-500/10 px-2.5 py-1 font-mono text-[11px] font-extrabold text-amber-600 border border-amber-500/20 dark:text-amber-400">
                       [{slotData.page}/{slotData.slot}]
@@ -627,17 +627,17 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 </div>
 
                 {/* Perk Icon & Bigger Avatar Row */}
-                <div className="mb-4 flex items-center justify-between">
-                  {/* Left: Full Perk Icon Container */}
-                  <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/50 p-2.5 dark:from-slate-900/90 dark:to-slate-950 border border-slate-200/60 dark:border-slate-800 shadow-inner group-hover:border-amber-500/40 transition-colors">
+                <div className="flex items-center justify-between">
+                  {/* Left: MASSIVE Perk Icon Container */}
+                  <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/60 p-2 dark:from-slate-900 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-inner group-hover:border-amber-500/50 transition-colors">
                     {perk && iconSrc ? (
                       <img
                         src={iconSrc}
                         alt={perk.name}
-                        className="h-12 w-12 object-contain drop-shadow-md group-hover:scale-110 transition-transform"
+                        className="h-16 w-16 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-300"
                       />
                     ) : (
-                      <ImageOff className="h-6 w-6 text-slate-400" />
+                      <ImageOff className="h-8 w-8 text-slate-400" />
                     )}
                   </div>
 
@@ -647,37 +647,32 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                       <img
                         src={avatarSrc}
                         alt={perk?.character || 'Avatar'}
-                        className="h-14 w-14 rounded-2xl object-cover border-2 border-slate-700 shadow-md group-hover:border-amber-500/50 transition-colors"
+                        className="h-16 w-16 rounded-2xl object-cover border-2 border-slate-700 shadow-lg group-hover:border-amber-500/60 transition-colors duration-300"
                       />
                     ) : (
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-800 border-2 border-slate-700 text-slate-400">
-                        {role === 'Survivor' ? <Shield className="h-7 w-7 text-emerald-400" /> : <Skull className="h-7 w-7 text-rose-400" />}
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-800 border-2 border-slate-700 text-slate-400">
+                        {role === 'Survivor' ? <Shield className="h-8 w-8 text-emerald-400" /> : <Skull className="h-8 w-8 text-rose-400" />}
                       </div>
                     )}
 
                     {/* Top-Right Role Icon Badge */}
                     <div
-                      className={`absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border shadow-md backdrop-blur-md ${
+                      className={`absolute -top-1.5 -right-1.5 flex h-7 w-7 items-center justify-center rounded-full border shadow-lg backdrop-blur-md ${
                         role === 'Survivor'
-                          ? 'border-emerald-500/60 bg-emerald-950 text-emerald-400 ring-2 ring-emerald-950'
-                          : 'border-rose-500/60 bg-rose-950 text-rose-400 ring-2 ring-rose-950'
+                          ? 'border-emerald-500/60 bg-emerald-950 text-emerald-400 ring-2 ring-slate-950'
+                          : 'border-rose-500/60 bg-rose-950 text-rose-400 ring-2 ring-slate-950'
                       }`}
                       title={role}
                     >
-                      {role === 'Survivor' ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
+                      {role === 'Survivor' ? <Shield className="h-4 w-4" /> : <Skull className="h-4 w-4" />}
                     </div>
                   </div>
                 </div>
 
-                {/* Perk Title as Hero Text (No character text label below!) */}
-                <h3 className="text-base font-extrabold leading-snug text-slate-900 group-hover:text-amber-500 dark:text-slate-100 transition-colors">
+                {/* Hero Perk Title */}
+                <h3 className="text-lg font-black leading-tight text-slate-900 group-hover:text-amber-500 dark:text-slate-100 transition-colors">
                   {perk ? perk.name : 'Spin Wheel or Roll'}
                 </h3>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-xs font-semibold text-slate-500 group-hover:text-amber-500 transition-colors">
-                <span>{dict.card.viewDetails}</span>
-                <Sparkles className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </div>
           );

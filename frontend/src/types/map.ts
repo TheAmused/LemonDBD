@@ -74,7 +74,8 @@ export interface MapRealm {
   has_pallet?: boolean;
   has_window?: boolean;
   vault_direction?: string;
-  looping_tips?: string;
+  source?: string;
+  source_label?: string;
   callout_image_url?: string;
   callout_image_local_path?: string;
   clock_system?: {

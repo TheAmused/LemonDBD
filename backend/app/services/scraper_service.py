@@ -133,6 +133,8 @@ class MapData:
     callout_image_local_path: str
     dpath: str
     clock_system: Dict[str, Any]
+    source: str = "hens333"
+    source_label: str = "Hens333 12-Clock Callouts"
 
 
 class HensMapScraperDriver:
@@ -168,11 +170,11 @@ class HensMapScraperDriver:
 
                     encoded_dpath = re.sub(r"\s", "%20", dpath)
                     remote_url = f"{self.CDN_BASE}{encoded_dpath}"
-                    rel_static_path = f"maps/callouts/{realm_slug}/{map_slug}.webp"
+                    rel_static_path = f"maps/callouts/hens333/{realm_slug}/{map_slug}.webp"
 
                     maps.append(
                         MapData(
-                            id=map_slug,
+                            id=f"hens_{map_slug}",
                             name=map_name,
                             realm=realm_name,
                             realm_id=realm_slug,
@@ -186,12 +188,85 @@ class HensMapScraperDriver:
                                 "six_o_clock": "Killer Shack / Bottom Spawn",
                                 "nine_o_clock": "Left Tile / Jungle Gym",
                             },
+                            source="hens333",
+                            source_label="Hens333 12-Clock Callouts",
                         )
                     )
             logger.info(f"Scraped {len(maps)} maps from Hens333.")
             return maps
         except Exception as e:
             logger.error(f"Error scraping Hens333 maps: {e}")
+            return []
+
+
+class SamoelColtMapScraperDriver:
+    STEAM_GUIDE_URL = "https://steamcommunity.com/sharedfiles/filedetails/?id=2899093390"
+
+    @staticmethod
+    def slugify(text: str) -> str:
+        text = text.lower().strip()
+        text = re.sub(r"[^\w\s-]", "", text)
+        text = re.sub(r"[\s_-]+", "_", text)
+        return text.strip("_")
+
+    def scrape_maps(self) -> List[MapData]:
+        logger.info("Scraping SamoelColt map guides from Steam Workshop...")
+        try:
+            res = requests.get(self.STEAM_GUIDE_URL, verify=False, timeout=20)
+            if res.status_code != 200:
+                logger.warning(f"Failed to fetch Steam Workshop guide: HTTP {res.status_code}")
+                return []
+            soup = BeautifulSoup(res.text, "html.parser")
+            maps: List[MapData] = []
+
+            subsections = soup.find_all("div", class_="subSection")
+            for sub in subsections:
+                title_div = sub.find("div", class_="subSectionTitle")
+                realm_name = title_div.get_text(strip=True) if title_div else "General Realm"
+                if realm_name in ["Overview", "Comments", "General"]:
+                    continue
+
+                realm_slug = self.slugify(realm_name)
+                lines = [text.strip() for text in sub.stripped_strings if text.strip() and text.strip() != realm_name]
+
+                links = sub.find_all("a", class_="modalContentLink")
+                for idx, link in enumerate(links):
+                    href = link.get("href")
+                    if href and "images.steamusercontent.com" in href:
+                        map_name = f"{realm_name} Map {idx + 1}"
+                        if idx < len(lines):
+                            potential_name = lines[idx]
+                            if len(potential_name) < 40 and not potential_name.startswith("http"):
+                                map_name = potential_name
+
+                        map_slug = self.slugify(map_name)
+                        unique_id = f"samoel_{realm_slug}_{map_slug}_{idx + 1}"
+                        rel_static_path = f"maps/callouts/samoelcolt/{realm_slug}/{map_slug}_{idx + 1}.jpg"
+
+                        maps.append(
+                            MapData(
+                                id=unique_id,
+                                name=map_name,
+                                realm=realm_name,
+                                realm_id=realm_slug,
+                                callout_image_url=href,
+                                callout_image_local_path=rel_static_path,
+                                dpath="",
+                                clock_system={
+                                    "description": f"SamoelColt Isometric Scheme for {map_name} ({realm_name}). Sector-based layout.",
+                                    "twelve_o_clock": "North Sector",
+                                    "three_o_clock": "East Sector",
+                                    "six_o_clock": "South Sector",
+                                    "nine_o_clock": "West Sector",
+                                },
+                                source="samoelcolt",
+                                source_label="SamoelColt Isometric Scheme",
+                            )
+                        )
+            logger.info(f"Scraped {len(maps)} SamoelColt maps from Steam Workshop.")
+            return maps
+        except Exception as e:
+            logger.error(f"Error scraping SamoelColt maps: {e}")
             return []
 
 
@@ -1443,6 +1518,7 @@ class ScraperService:
         self.nightlight_driver = NightlightScraperDriver(self.base_dir)
         self.wiki_driver = WikiScraperDriver(self.base_dir)
         self.hens_map_driver = HensMapScraperDriver()
+        self.samoel_map_driver = SamoelColtMapScraperDriver()
 
     def load_config(self) -> ScraperConfig:
         if not self.config_file.exists():
@@ -1833,17 +1909,26 @@ class ScraperService:
             with open(self.addons_file, "w", encoding="utf-8") as f:
                 json.dump([asdict(a) for a in addons], f, indent=2, ensure_ascii=False)
 
-            # Scrape Hens333 Maps
+            # Scrape Hens333 and SamoelColt Maps
+            maps: List[MapData] = []
             try:
                 logger.info("Scraping Hens333 maps...")
-                maps = self.hens_map_driver.scrape_maps()
-                if maps:
-                    self.maps_file.parent.mkdir(parents=True, exist_ok=True)
-                    with open(self.maps_file, "w", encoding="utf-8") as f:
-                        json.dump([asdict(m) for m in maps], f, indent=2, ensure_ascii=False)
+                hens_maps = self.hens_map_driver.scrape_maps()
+                maps.extend(hens_maps)
             except Exception as map_err:
-                logger.warning(f"Failed scraping maps: {map_err}")
-                maps = []
+                logger.warning(f"Failed scraping Hens333 maps: {map_err}")
+
+            try:
+                logger.info("Scraping SamoelColt Steam Workshop maps...")
+                samoel_maps = self.samoel_map_driver.scrape_maps()
+                maps.extend(samoel_maps)
+            except Exception as map_err:
+                logger.warning(f"Failed scraping SamoelColt maps: {map_err}")
+
+            if maps:
+                self.maps_file.parent.mkdir(parents=True, exist_ok=True)
+                with open(self.maps_file, "w", encoding="utf-8") as f:
+                    json.dump([asdict(m) for m in maps], f, indent=2, ensure_ascii=False)
 
             total_downloads = len(perks) + sum(1 for c in characters if c.avatar_url) + len(items) + len(addons) + len(maps)
             self._update_status(

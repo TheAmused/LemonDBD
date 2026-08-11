@@ -93,7 +93,8 @@ def list_addons():
 def list_maps():
     realm = request.args.get("realm")
     search = request.args.get("search")
-    maps = perk_service.get_maps(realm=realm, search=search)
+    source = request.args.get("source")
+    maps = perk_service.get_maps(realm=realm, search=search, source=source)
     return jsonify({"count": len(maps), "maps": maps, "data": maps}), 200
 
 

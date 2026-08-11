@@ -375,7 +375,15 @@ class NightlightScraperDriver:
                     desc = BeautifulSoup(snippet, "html.parser").get_text(separator="\n", strip=True)
 
             clean_desc = ScraperService.clean_description_text(desc)
-            if (not clean_desc or "data-discover" in clean_desc or len(clean_desc) < 15) and wiki_map:
+            is_garbage = (
+                not clean_desc 
+                or len(clean_desc) < 20 
+                or "Survivor\n-" in clean_desc 
+                or "Killer\n-" in clean_desc 
+                or "This description is based on" in clean_desc
+                or re.match(r'^[A-Za-z0-9_\'\s\-"]+\s+(?:Survivor|Killer)', clean_desc)
+            )
+            if is_garbage and wiki_map:
                 wiki_val = wiki_map.get(name.lower())
                 if wiki_val:
                     clean_desc = ScraperService.clean_description_text(wiki_val)
@@ -1107,8 +1115,33 @@ class ScraperService:
         import html
         cleaned = html.unescape(cleaned)
 
+        # 1. Strip Wiki patch notice disclaimers (e.g. "This description is based on the changes announced for or featured in the upcoming Patch 8.1.0")
+        cleaned = re.sub(
+            r"This description is based on the changes announced for or featured in the upcoming Patch\s*[\d.]*",
+            "",
+            cleaned,
+            flags=re.IGNORECASE
+        )
+        cleaned = re.sub(r"Unable to retrieve the Perk description.*$", "", cleaned, flags=re.IGNORECASE)
+
+        # 2. Strip Nightlight header trash text e.g. "Autodidact" Autodidact\nSurvivor\n- Adam Francis"
+        cleaned = re.sub(
+            r'^[A-Za-z0-9_\'\s\-"]+\s+(?:Survivor|Killer)\s+-\s+[A-Za-z0-9_\'\s\-]+$',
+            "",
+            cleaned,
+            flags=re.MULTILINE | re.IGNORECASE
+        )
+
         lines = [line.strip() for line in cleaned.splitlines()]
         lines = [line for line in lines if line]
+
+        # 3. Filter out lines that are just perk title or category headers
+        filtered_lines = []
+        for line in lines:
+            if line.lower() in ["survivor", "killer", "survivor perk", "killer perk"] or re.match(r"^-\s*[A-Za-z0-9\s']+$", line) or re.match(r'^[A-Za-z0-9_\'\s\-"]+"\s+[A-Za-z0-9_\'\s\-"]+$', line):
+                continue
+            filtered_lines.append(line)
+        lines = filtered_lines
 
         if not lines:
             return ""

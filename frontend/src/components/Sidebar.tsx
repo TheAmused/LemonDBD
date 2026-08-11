@@ -145,27 +145,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems: NavItem[] = [
     {
       id: 'all',
-      label: dict.filters.allCategories || 'All Perks',
-      icon: Layers,
-      color: 'text-slate-400 dark:text-slate-400',
-      activeBg: 'bg-slate-200/80 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100',
-      href: `/${currentLocale}`,
-    },
-    {
-      id: 'Survivor',
-      label: dict.filters.survivor || 'Survivor Perks',
+      label: dict.filters.allCategories || 'Perks Vault',
       icon: Shield,
-      color: 'text-emerald-500',
-      activeBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
-      href: `/${currentLocale}?category=Survivor`,
-    },
-    {
-      id: 'Killer',
-      label: dict.filters.killer || 'Killer Perks',
-      icon: Skull,
-      color: 'text-rose-500',
-      activeBg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20',
-      href: `/${currentLocale}?category=Killer`,
+      color: 'text-red-500',
+      activeBg: 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20',
+      href: `/${currentLocale}`,
     },
     {
       id: 'generator',

@@ -50,6 +50,54 @@ class PerkModel(BaseModel):
     icon_local_path: str
 
 
+KILLER_POWER_MAP = {
+    "The Trapper": ["Bear Trap", "The Trapper", "Trapper", "Evan MacMillan"],
+    "The Wraith": ["Wailing Bell", "The Wraith", "Wraith", "Philip Ojomo"],
+    "The Hillbilly": ["Chainsaw", "The Hillbilly", "Hillbilly", "Max Thompson Jr."],
+    "The Nurse": ["Spencer's Last Breath", "The Nurse", "Nurse", "Sally Smithson"],
+    "The Shape": ["Evil Within", "The Shape", "Michael Myers", "Shape"],
+    "The Hag": ["Blackened Catalyst", "The Hag", "Hag", "Lisa Sherwood"],
+    "The Doctor": ["Carter's Spark", "The Doctor", "Doctor", "Herman Carter"],
+    "The Huntress": ["Hunting Hatchets", "The Huntress", "Huntress", "Anna"],
+    "The Cannibal": ["Bubba's Chainsaw", "The Cannibal", "Leatherface", "Bubba Sawyer"],
+    "The Nightmare": ["Dream Demon", "The Nightmare", "Freddy Krueger", "Freddy"],
+    "The Pig": ["Jigsaw's Baptism", "The Pig", "Pig", "Amanda Young"],
+    "The Clown": ["Afterpiece Tonic", "T.K. Soda", "The Clown", "Clown", "Kenneth Chase"],
+    "The Spirit": ["Yamaoka's Haunting", "The Spirit", "Spirit", "Rin Yamaoka"],
+    "The Legion": ["Feral Frenzy", "The Legion", "Legion", "Frank, Julie, Susie, Joey"],
+    "The Plague": ["Vile Purge", "The Plague", "Plague", "Adiris"],
+    "The Ghost Face": ["Night Shroud", "The Ghost Face", "Ghost Face", "Danny Johnson"],
+    "The Demogorgon": ["Of the Abyss", "The Demogorgon", "Demogorgon"],
+    "The Deathslinger": ["The Redeemer", "The Deathslinger", "Deathslinger", "Caleb Quinn"],
+    "The Executioner": ["Rites of Judgement", "Summoning of Torment", "The Executioner", "Pyramid Head"],
+    "The Oni": ["Yamaoka's Wrath", "The Oni", "Oni", "Kazan Yamaoka"],
+    "The Blight": ["Blighted Corruption", "The Blight", "Blight", "Talbot Grimes"],
+    "The Twins": ["Blood Bond", "The Twins", "Twins", "Charlotte & Victor Deshayes"],
+    "The Trickster": ["Show-Stopper", "The Trickster", "Trickster", "Ji-Woon Hak"],
+    "The Nemesis": ["T-Virus", "The Nemesis", "Nemesis"],
+    "The Cenobite": ["Lament Configuration", "The Cenobite", "Pinhead", "Elliot Spencer"],
+    "The Artist": ["Birds of Torment", "The Artist", "Artist", "Carmina Mora"],
+    "The Onryō": ["Deluge of Fear", "The Onryō", "The Onryo", "Sadako", "Sadako Yamamura"],
+    "The Dredge": ["Reign of Darkness", "Nightfall", "The Dredge", "Dredge"],
+    "The Mastermind": ["Virulent Bound", "The Mastermind", "Wesker", "Albert Wesker"],
+    "The Knight": ["Guardia Compagnia", "The Knight", "Knight", "Tarhos Kovács"],
+    "The Skull Merchant": ["Eyes in the Sky", "The Skull Merchant", "Skull Merchant", "Adriana Imai"],
+    "The Singularity": ["Quantum Instantiation", "The Singularity", "Singularity", "HUX-A7-13"],
+    "The Xenomorph": ["Hidden Pursuit", "The Xenomorph", "Xenomorph"],
+    "The Good Guy": ["Playtime's Over", "The Good Guy", "Chucky", "Charles Lee Ray"],
+    "The Unknown": ["UVX", "UEX", "The Unknown", "Unknown"],
+    "The Lich": ["Spell", "Spells", "The Lich", "Vecna"],
+    "The Dark Lord": ["Dominion", "The Dark Lord", "Dracula"],
+    "The Animatronic": ["Help Wanted", "Phantom Fear", "Haywire", "The Animatronic", "Animatronic", "Springtrap"],
+}
+
+HEADER_EXCLUSIONS = {
+    "uncommon items", "rare items", "very rare items", "ultra rare items",
+    "common items", "event items", "unused item", "limited items",
+    "survivor items", "killer items", "items", "add-ons", "addons", "equipment"
+}
+
+
 class PerkService:
     ALLOWED_SORT_FIELDS = {"name", "character", "category"}
 
@@ -230,11 +278,10 @@ class PerkService:
 
     def get_characters(self, category: Optional[str] = None) -> List[Dict[str, Any]]:
         results = self._characters_cache
-
         if not results and self._cache:
             char_map: Dict[str, Dict[str, Any]] = {}
             for perk in self._cache:
-                if perk.character and perk.character != "General":
+                if perk.character and perk.character.lower() not in ["none", "all", "general"]:
                     key = perk.character.lower().strip()
                     if key not in char_map:
                         char_map[key] = {
@@ -248,15 +295,21 @@ class PerkService:
                         }
             results = [CharacterModel(**c) for c in char_map.values()]
 
+        results = [c for c in results if "overall_average" not in c.name.lower() and "overall average" not in c.name.lower()]
+
         if category and category.lower() != "all":
             results = [c for c in results if c.category.lower() == category.lower()]
         return [c.model_dump() for c in sorted(results, key=lambda x: x.name)]
+
     def get_items(
         self,
         category: Optional[str] = None,
         search: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        results = self._items_cache
+        results = [
+            item for item in self._items_cache
+            if item.name.lower().strip() not in HEADER_EXCLUSIONS and not item.name.lower().strip().endswith(" items")
+        ]
 
         if category and category.lower() != "all":
             results = [item for item in results if item.category and item.category.lower() == category.lower()]
@@ -323,46 +376,45 @@ class PerkService:
             return None
 
         char_canonical_name = matched_char["name"]
+        char_category = matched_char.get("category", "Survivor")
 
-        char_tokens = set([
+        alias_tokens = set([
             char_canonical_name.lower(),
             target_clean,
             matched_char.get("short_name", "").lower(),
             matched_char.get("real_name", "").lower(),
             matched_char.get("wiki_slug", "").lower(),
         ])
-        char_tokens.discard("")
+        if char_canonical_name in KILLER_POWER_MAP:
+            for p_alias in KILLER_POWER_MAP[char_canonical_name]:
+                alias_tokens.add(p_alias.lower())
+        alias_tokens.discard("")
 
         matched_perks = []
         for p in self._cache:
             p_char = (p.character or "").lower().strip()
             p_real = (p.character_real_name or "").lower().strip()
-            if p_char in char_tokens or p_real in char_tokens:
-                matched_perks.append(p.model_dump())
-            elif p_char != "general" and any(tok for tok in char_tokens if len(tok) >= 3 and (tok == p_char or tok in p_char or p_char in tok)):
+            if p_char in alias_tokens or p_real in alias_tokens:
                 matched_perks.append(p.model_dump())
 
-        matched_addons = [
-            a.model_dump()
-            for a in self._addons_cache
-            if a.associated_target and (
-                a.associated_target.lower() == char_canonical_name.lower()
-                or a.associated_target.lower() == target_clean
-            )
-        ]
+        matched_addons = []
+        if char_category == "Killer":
+            matched_addons = [
+                a.model_dump()
+                for a in self._addons_cache
+                if a.associated_target and a.associated_target.lower() in alias_tokens
+            ]
 
-        matched_items = [
-            item.model_dump()
-            for item in self._items_cache
-            if (
-                (item.role and item.role.lower() == matched_char.get("category", "").lower())
-                or (item.category and item.category.lower() == matched_char.get("category", "").lower())
-            )
-        ]
+        matched_items = []
+        if char_category == "Survivor":
+            matched_items = [
+                item.model_dump()
+                for item in self._items_cache
+                if item.name.lower().strip() not in HEADER_EXCLUSIONS and not item.name.lower().strip().endswith(" items")
+            ]
 
         return {
             "character": matched_char,
             "perks": matched_perks,
-            "addons": matched_addons,
-            "items": matched_items,
+            "addons": matched_addons if char_category == "Killer" else matched_items,
         }

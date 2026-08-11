@@ -205,6 +205,8 @@ function DashboardContent() {
               <PerkFilters
                 search={search}
                 setSearch={(v) => { setSearch(v); setPage(1); }}
+                category={category}
+                setCategory={(v) => { handleSelectCategory(v); setPage(1); }}
                 character={character}
                 setCharacter={(v) => { setCharacter(v); setPage(1); }}
                 sortBy={sortBy}

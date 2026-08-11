@@ -301,3 +301,59 @@ class PerkService:
             ]
 
         return [addon.model_dump() for addon in results]
+
+
+    def get_character_detail(self, character_name: str) -> Optional[Dict[str, Any]]:
+        target_clean = character_name.strip().lower()
+        target_slug = self._slugify(character_name)
+
+        all_chars = self.get_characters()
+        matched_char = None
+        for c in all_chars:
+            if (
+                c.get("name", "").lower() == target_clean
+                or c.get("real_name", "").lower() == target_clean
+                or c.get("wiki_slug", "").lower() == target_slug
+                or c.get("short_name", "").lower() == target_clean
+            ):
+                matched_char = c
+                break
+
+        if not matched_char:
+            return None
+
+        char_canonical_name = matched_char["name"]
+
+        matched_perks = [
+            p.model_dump()
+            for p in self._cache
+            if p.character and (
+                p.character.lower() == char_canonical_name.lower()
+                or p.character.lower() == target_clean
+            )
+        ]
+
+        matched_addons = [
+            a.model_dump()
+            for a in self._addons_cache
+            if a.associated_target and (
+                a.associated_target.lower() == char_canonical_name.lower()
+                or a.associated_target.lower() == target_clean
+            )
+        ]
+
+        matched_items = [
+            item.model_dump()
+            for item in self._items_cache
+            if (
+                (item.role and item.role.lower() == matched_char.get("category", "").lower())
+                or (item.category and item.category.lower() == matched_char.get("category", "").lower())
+            )
+        ]
+
+        return {
+            "character": matched_char,
+            "perks": matched_perks,
+            "addons": matched_addons,
+            "items": matched_items,
+        }

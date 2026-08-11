@@ -306,11 +306,11 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             <div className="flex items-center gap-2">
               <Dices className="h-6 w-6 text-amber-500 animate-bounce" />
               <h2 className="text-xl font-extrabold text-slate-900 dark:text-slate-100">
-                {dict.generator.title}
+                {dict?.generator?.title || 'Perk Loadout Generator'}
               </h2>
             </div>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {dict.generator.subtitle}
+              {dict?.generator?.subtitle || 'Roll random perks based on in-game inventory coordinates [Page/Slot].'}
             </p>
           </div>
 
@@ -325,7 +325,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 }`}
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>{dict.generator.modeInstant}</span>
+                <span>{dict?.generator?.modeInstant || 'Instant Roll'}</span>
               </button>
               <button
                 onClick={() => handleGenModeChange('wheel')}
@@ -336,7 +336,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 }`}
               >
                 <CircleDot className="h-3.5 w-3.5" />
-                <span>{dict.generator.modeWheel}</span>
+                <span>{dict?.generator?.modeWheel || 'Wheel of Fortune'}</span>
               </button>
             </div>
 
@@ -406,12 +406,12 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               {copied ? (
                 <>
                   <Check className="h-3.5 w-3.5 text-emerald-500" />
-                  <span className="text-emerald-500">{dict.generator.buildCopied}</span>
+                  <span className="text-emerald-500">{dict?.generator?.buildCopied || 'Loadout Copied!'}</span>
                 </>
               ) : (
                 <>
                   <Copy className="h-3.5 w-3.5" />
-                  <span>{dict.generator.copyBuild}</span>
+                  <span>{dict?.generator?.copyBuild || 'Copy Loadout Text'}</span>
                 </>
               )}
             </button>
@@ -425,7 +425,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/80 px-3 py-1.5 text-xs font-extrabold text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
               <Layers className="h-3.5 w-3.5 text-amber-500" />
               <span>
-                {dict.generator?.drawnBadge
+                {dict?.generator?.drawnBadge
                   ? dict.generator.drawnBadge
                       .replace('{drawn}', drawnCount.toString())
                       .replace('{total}', totalRolePerks.toString())
@@ -441,7 +441,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             title="Clear all used perks for this role in SQLite"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            <span>{dict.generator?.resetDrawn || 'Reset Used Perks'}</span>
+            <span>{dict?.generator?.resetDrawn || 'Reset Used Perks'}</span>
           </button>
         </div>
 
@@ -450,21 +450,21 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           <div className="mt-4 border-t border-slate-200/80 pt-4 dark:border-slate-800/80 animate-in fade-in slide-in-from-top-2 duration-200">
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                {dict.generator.configTitle}
+                {dict?.generator?.configTitle || 'Inventory & Wheel Settings'}
               </h4>
               <button
                 onClick={handleResetDefaults}
                 className="flex items-center gap-1 text-[11px] font-semibold text-amber-500 hover:underline cursor-pointer"
               >
                 <RotateCcw className="h-3 w-3" />
-                <span>{dict.generator.resetDefaults}</span>
+                <span>{dict?.generator?.resetDefaults || 'Reset to Defaults'}</span>
               </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                  {dict.generator.totalPages} (Pages)
+                  {dict?.generator?.totalPages || 'Total Pages'} (Pages)
                 </label>
                 <input
                   type="number"
@@ -482,7 +482,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                  {dict.generator.perksPerPage} (Standard)
+                  {dict?.generator?.perksPerPage || 'Perks per Page'} (Standard)
                 </label>
                 <input
                   type="number"
@@ -500,7 +500,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                  {dict.generator.lastPagePerks} (Last Page)
+                  {dict?.generator?.lastPagePerks || 'Last Page Perks'} (Last Page)
                 </label>
                 <input
                   type="number"
@@ -518,7 +518,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                  {dict.generator.spinDuration}
+                  {dict?.generator?.spinDuration || 'Spin Duration (sec)'}
                 </label>
                 <input
                   type="number"
@@ -563,7 +563,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-sm font-black text-white shadow-lg shadow-amber-900/30 hover:from-amber-400 hover:to-amber-500 active:scale-95 transition-all cursor-pointer"
           >
             <Dices className="h-5 w-5" />
-            <span>{dict.generator.rollButton}</span>
+            <span>{dict?.generator?.rollButton || 'Roll New Loadout'}</span>
           </button>
         </div>
       )}

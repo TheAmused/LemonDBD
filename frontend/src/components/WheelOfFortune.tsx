@@ -457,7 +457,7 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   const handleStartSpin = async () => {
     if (isSpinning) return;
     setIsSpinning(true);
-    setStatusText(dict.generator.spinning);
+    setStatusText(dict?.generator?.spinning || 'Spinning Wheel...');
 
     const totalDurationMs = Math.max(1500, spinDurationSec * 1000);
     const pageSpinDuration = totalDurationMs * 0.45;

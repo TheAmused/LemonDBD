@@ -378,6 +378,7 @@ class NightlightScraperDriver:
             is_garbage = (
                 not clean_desc 
                 or len(clean_desc) < 20 
+                or "unavailable" in clean_desc.lower()
                 or "Survivor\n-" in clean_desc 
                 or "Killer\n-" in clean_desc 
                 or "This description is based on" in clean_desc
@@ -779,9 +780,9 @@ class WikiScraperDriver:
         "william \"bill\" overbeck": "William \"Bill\" Overbeck",
         "quentin": "Quentin Smith",
         "quentin smith": "Quentin Smith",
-        "tapp": "David Tapp",
-        "detective tapp": "David Tapp",
-        "david tapp": "David Tapp",
+        "tapp": "Detective Tapp",
+        "detective tapp": "Detective Tapp",
+        "david tapp": "Detective Tapp",
         "adam": "Adam Francis",
         "adam francis": "Adam Francis",
         "jeff": "Jeff Johansen",
@@ -797,14 +798,15 @@ class WikiScraperDriver:
         "cheryl mason": "Cheryl Mason",
         "felix": "Felix Richter",
         "felix richter": "Felix Richter",
-        "elodie": "Élodie Rakoto",
-        "élodie": "Élodie Rakoto",
-        "elodie rakoto": "Élodie Rakoto",
-        "élodie rakoto": "Élodie Rakoto",
-        "yun-jin": "Yun-Jin Lee",
-        "yun-jin lee": "Yun-Jin Lee",
-        "yunjin": "Yun-Jin Lee",
-        "yunjin lee": "Yun-Jin Lee",
+        "elodie": "Elodie Rakoto",
+        "élodie": "Elodie Rakoto",
+        "elodie rakoto": "Elodie Rakoto",
+        "élodie rakoto": "Elodie Rakoto",
+        "yun-jin": "Lee Yun-Jin",
+        "yun-jin lee": "Lee Yun-Jin",
+        "yunjin": "Lee Yun-Jin",
+        "yunjin lee": "Lee Yun-Jin",
+        "lee yun-jin": "Lee Yun-Jin",
         "mikaela": "Mikaela Reid",
         "mikaela reid": "Mikaela Reid",
         "jonah": "Jonah Vasquez",
@@ -843,6 +845,18 @@ class WikiScraperDriver:
         "orela rose": "Orela Rose",
         "taurie": "Taurie Cain",
         "taurie cain": "Taurie Cain",
+        "leon": "Leon S. Kennedy",
+        "leon kennedy": "Leon S. Kennedy",
+        "leon s. kennedy": "Leon S. Kennedy",
+        "jill": "Jill Valentine",
+        "jill valentine": "Jill Valentine",
+        "aestri": "Aestri Yazar",
+        "baermar": "Aestri Yazar",
+        "aestri yazar": "Aestri Yazar",
+        "baermar uraz": "Aestri Yazar",
+        "aestri yazar & baermar uraz": "Aestri Yazar",
+        "the troupe": "Aestri Yazar",
+        "bard": "Aestri Yazar",
         "giri": "Giri",
         "trouster": "Trouster",
     }

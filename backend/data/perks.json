@@ -921,33 +921,33 @@
   },
   {
     "name": "Detective's Hunch",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Detective Tapp",
+    "character_real_name": "Detective Tapp",
+    "character_avatar_path": "avatars/survivors/detective_tapp.png",
     "category": "Survivor",
     "description": "Unlocks potential in your Aura-reading ability.\nEach time a Generator is completed, the Auras of any Generators, Chests, and Totemswithin **32**/**48**/**64** **metres** are revealed to you for **10 seconds**.\n* If you are holding a Map, any objects revealed by *Detective's Hunch* will automatically be tracked by it.\n*\"Are you able to tell us where you were last night?\" — Detective David Tapp*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/detectives-hunch.png",
-    "icon_local_path": "icons/survivors/General/detective's_hunch.png"
+    "icon_local_path": "icons/survivors/detective_tapp/detective's_hunch.png"
   },
   {
     "name": "Stake Out",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Detective Tapp",
+    "character_real_name": "Detective Tapp",
+    "character_avatar_path": "avatars/survivors/detective_tapp.png",
     "category": "Survivor",
     "description": "Getting close to the Killer fills you with determination.\nEvery **15 seconds** you are within the Killer's Terror Radius, while not being chased, *Stake Out* gains **1 Token**, up to a maximum of **2**/**3**/**4** **Tokens**.\n* When *Stake Out* has at least **1 Token**, Good Skill Checks consume **1 Token** and are considered Great Skill Checks, granting an additional Progression bonus of **+1 %**.\n* Great Skill Checks do not consume any Tokens.\n*\"I had you, I had you on your knees. You're runnin' scared because we had you. We're gonna close this case!\" — Detective David Tapp*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/stake-out.png",
-    "icon_local_path": "icons/survivors/General/stake_out.png"
+    "icon_local_path": "icons/survivors/detective_tapp/stake_out.png"
   },
   {
     "name": "Tenacity",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Detective Tapp",
+    "character_real_name": "Detective Tapp",
+    "character_avatar_path": "avatars/survivors/detective_tapp.png",
     "category": "Survivor",
     "description": "There is nothing stopping you.\nYour ferocious tenacity in dire situations allow you to benefit from the following effects:\n* **Increases** your Crawling speed by **30**/**40**/**50** **%**.\n* Grants the ability to crawl and recover at the same time.\n* **Reduces** the volume of *Grunts of Pain* while in the Dying State by **-75 %**.\n*\"What the hell is this? I'm taking this bastard down!\" — Detective David Tapp*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/tenacity.png",
-    "icon_local_path": "icons/survivors/General/tenacity.png"
+    "icon_local_path": "icons/survivors/detective_tapp/tenacity.png"
   },
   {
     "name": "Bamboozle",
@@ -1611,33 +1611,33 @@
   },
   {
     "name": "Appraisal",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Elodie Rakoto",
+    "character_real_name": "Elodie Rakoto",
+    "character_avatar_path": "avatars/survivors/elodie_rakoto.png",
     "category": "Survivor",
     "description": "You have a careful eye that notices what many overlook.\n*Appraisal* has **3 Tokens** at the start of the Trial:\n* Consume **-1 Token** to perform the *Rummage* action on an already unlocked Chest in order to retrieve a second Item from it.\n* **Increases** Rummaging speed by **40**/**60**/**80** **%**.\n*Rummaging is only available once per Chest.*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/appraisal.png",
-    "icon_local_path": "icons/survivors/General/appraisal.png"
+    "icon_local_path": "icons/survivors/elodie_rakoto/appraisal.png"
   },
   {
     "name": "Deception",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Elodie Rakoto",
+    "character_real_name": "Elodie Rakoto",
+    "character_avatar_path": "avatars/survivors/elodie_rakoto.png",
     "category": "Survivor",
     "description": "Your adventurous lifestyle requires moments of crafty misdirection.\nInteracting with a Locker while holding the *Sprint button* has the following effects:\n* **Prevents** you from entering the **Locker**, allowing you to run past it.\n* Causes the doors of the **Locker** to swiftly open and close, feining a Survivor entering it.\n* Triggers a *Loud Noise Notification* at the location of the **Locker**.\n* **Suppresses** the creation of Scratch Marks and Pools of Blood for **3 seconds**.\n*Deception* has a cool-down of **30**/**25**/**20** **seconds**.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/deception.png",
-    "icon_local_path": "icons/survivors/General/deception.png"
+    "icon_local_path": "icons/survivors/elodie_rakoto/deception.png"
   },
   {
     "name": "Power Struggle",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Elodie Rakoto",
+    "character_real_name": "Elodie Rakoto",
+    "character_avatar_path": "avatars/survivors/elodie_rakoto.png",
     "category": "Survivor",
     "description": "You have never given up and you are not about to start now.\n* Reveals the Auras of available Pallets whenever you are in the Dying State.\nWhile being carried by The Killer, reaching **25**/**20**/**15** **%** Wiggling progression activates *Power Struggle*:\n* You can drop a nearby, standing Pallet to stun the Killer and escape their grasp.\n*Power Struggle* deactivates after triggering successfully.\n*\"I relied on others to protect me once and I lost everything. Never again.\" — Élodie Rakoto*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/power-struggle.png",
-    "icon_local_path": "icons/survivors/General/power_struggle.png"
+    "icon_local_path": "icons/survivors/elodie_rakoto/power_struggle.png"
   },
   {
     "name": "Starstruck",
@@ -1671,33 +1671,33 @@
   },
   {
     "name": "Fast Track",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Lee Yun-Jin",
+    "character_real_name": "Lee Yun-Jin",
+    "character_avatar_path": "avatars/survivors/lee_yun_jin.png",
     "category": "Survivor",
     "description": "Sometimes the sacrifice of others is necessary to get ahead.\nWhenever a Survivor other than yourself is hooked, *Fast Track* is granted **1**/**2**/**3** **Token(s)**, up to a maximum of **9**/**18**/**27** **Tokens**.\n* Succeeding a *Great Repair Skill Check* consumes all accumulated Tokens.\n* **Increases** the bonus Progression awarded for succeeding that Skill Check by a stack-able **+1 %** per Token.\n*\"The weak are sacrificed first. It's nature, it's business... it's the truth most refuse to face.\" — Yun-Jin Lee*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/fast-track.png",
-    "icon_local_path": "icons/survivors/General/fast_track.png"
+    "icon_local_path": "icons/survivors/lee_yun_jin/fast_track.png"
   },
   {
     "name": "Smash Hit",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Lee Yun-Jin",
+    "character_real_name": "Lee Yun-Jin",
+    "character_avatar_path": "avatars/survivors/lee_yun_jin.png",
     "category": "Survivor",
     "description": "When your rival makes a mistake, you seize the opportunity.\nStunning the Killer with a Pallet triggers *Smash Hit*:\n* Grants a **+50 %** ***Haste*** **Status Effect** for **4 seconds**.\n*Smash Hit* causes the ***Exhausted*** **Status Effect** for **30**/**25**/**20** **seconds**.\n*Smash Hit* cannot be used when ***Exhausted***.\n*\"I have dealt with psychopaths in suits. You're just uglier and worse dressed.\" — Yun-Jin Lee*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/smash-hit.png",
-    "icon_local_path": "icons/survivors/General/smash_hit.png"
+    "icon_local_path": "icons/survivors/lee_yun_jin/smash_hit.png"
   },
   {
     "name": "Self-Preservation",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Lee Yun-Jin",
+    "character_real_name": "Lee Yun-Jin",
+    "character_avatar_path": "avatars/survivors/lee_yun_jin.png",
     "category": "Survivor",
     "description": "Life is unforgiving.\nThe more confirmation you get of that, the more prepared you become.\nWhenever another Survivor is hit with a *Basic Attack* or *Special Attack* within **16 metres** of you, *Self-Preservation* activates:\n* Scratch Marks, *Grunts of Pain* when injured, and Bleeding are suppressed for the next **6**/**8**/**10** **seconds**.\n*\"Something I learnt in the industry: when the axe is swinging, keep your head down.\" — Yun-Jin Lee*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/self-preservation.png",
-    "icon_local_path": "icons/survivors/General/self_preservation.png"
+    "icon_local_path": "icons/survivors/lee_yun_jin/self_preservation.png"
   },
   {
     "name": "Lethal Pursuer",
@@ -1761,33 +1761,33 @@
   },
   {
     "name": "Bite the Bullet",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Leon S. Kennedy",
+    "character_real_name": "Leon S. Kennedy",
+    "character_avatar_path": "avatars/survivors/leon_s._kennedy.png",
     "category": "Survivor",
     "description": "Pain hurts you as much as anyone, but you would prefer others do not know that.\nWhen healing yourself or another Survivor, you benefit from the following effects:\n* **Suppresses** all noises related to Healing and *Grunts of Pain*.\n* Failed *Healing Skill Checks* do not trigger a *Loud Noise Notification*.\n**Reduces** the Penalty to **3**/**2**/**1** **%** of the total Progression.\n*\"I can do this.\" — Leon Scott Kennedy*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/bite-the-bullet.png",
-    "icon_local_path": "icons/survivors/General/bite_the_bullet.png"
+    "icon_local_path": "icons/survivors/leon_s._kennedy/bite_the_bullet.png"
   },
   {
     "name": "Flashbang",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Leon S. Kennedy",
+    "character_real_name": "Leon S. Kennedy",
+    "character_avatar_path": "avatars/survivors/leon_s._kennedy.png",
     "category": "Survivor",
     "description": "Flashbang.\\u003c/p\\u003e\\u003cp\\u003eWhen you use the Flashbang:\\u003cul\\u003e\\u003cul\\u003e\\u003cli\\u003eEveryone nearby looking at the detonation is blinded.\\u003c/li\\u003e\\u003cli\\u003eThe Killer is alerted.\\u003c/ul\\u003e\\u003c/li\\u003e\\u003c/ul\\u003e\\u003c/p\\u003e\\u003cp\\u003e\\u003cspan class=\\",
     "icon_url": "https://cdn.nightlight.gg/img/perks/flashbang.png",
-    "icon_local_path": "icons/survivors/General/flashbang.png"
+    "icon_local_path": "icons/survivors/leon_s._kennedy/flashbang.png"
   },
   {
     "name": "Rookie Spirit",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Leon S. Kennedy",
+    "character_real_name": "Leon S. Kennedy",
+    "character_avatar_path": "avatars/survivors/leon_s._kennedy.png",
     "category": "Survivor",
     "description": "You keep a careful eye on objectives when they are slipping away.\nWhile repairing Generators, succeed **5**/**4**/**3**  Good or Great Skill Checks to activate *Rookie Spirit* for the remainder of the Trial:\n* The Auras of any regressing Generators are revealed to you until they stop regressing by any means.\n*\"I'll stop this, lieutenant. I promise.\" — Leon Scott Kennedy*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/rookie-spirit.png",
-    "icon_local_path": "icons/survivors/General/rookie_spirit.png"
+    "icon_local_path": "icons/survivors/leon_s._kennedy/rookie_spirit.png"
   },
   {
     "name": "Deadlock",
@@ -2581,33 +2581,33 @@
   },
   {
     "name": "Mirrored Illusion",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Aestri Yazar",
+    "character_real_name": "Aestri Yazar",
+    "character_avatar_path": "avatars/survivors/aestri_yazar.png",
     "category": "Survivor",
     "description": "A familiar spell made unfamiliar in this corrupted landscape.\nAfter repairing **Generators** for a total of **20 %**, *Mirrored Illusion* activates:\n* Press the *Active Ability button* when next to either a Chest, Exit Gate, Generator, or a Totem to spawn a ***Static Illusion*** that lasts for **40**/**50**/**60** **seconds**.\n*Mirrored Illusion* deactivates after triggering successfully.\n*\"Just... stay there... perfect!\" — Baermar*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/mirrored-illusion.png",
-    "icon_local_path": "icons/survivors/General/mirrored_illusion.png"
+    "icon_local_path": "icons/survivors/aestri_yazar/mirrored_illusion.png"
   },
   {
     "name": "Bardic Inspiration",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Aestri Yazar",
+    "character_real_name": "Aestri Yazar",
+    "character_avatar_path": "avatars/survivors/aestri_yazar.png",
     "category": "Survivor",
     "description": "It's time to give your audience a show.\nWill you bring the house down or will you choke?\nPress the *Active Ability button* while standing and motionless to enter the *Performance* interaction that lasts up to **15 seconds** and empowers other Survivors within **16 metres** of your location.\nThe empowering effect depends on the result of you rolling a **d20** and lasts for **90 seconds** after completing the *Performance*:\n* **1**: You scream, but without notifying the Killer.\n* **2 - 10**: Skill Checks grant **+1 %** Progression.\n* **11 - 19**: *Skill Checks* grant **+2 %** Progression.\n* **20**: *Skill Checks* grant **+3 %** Progression.\n*Bardic Inspiration* has a cool-down of **110**/**100**/**90** **seconds** after completing the *Performance* or cancelling it.\n*\"Listen closely! I'm about to save your life!\" — Aestri*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/bardic-inspiration.png",
-    "icon_local_path": "icons/survivors/General/bardic_inspiration.png"
+    "icon_local_path": "icons/survivors/aestri_yazar/bardic_inspiration.png"
   },
   {
     "name": "Still Sight",
-    "character": "General",
-    "character_real_name": "General",
-    "character_avatar_path": "",
+    "character": "Aestri Yazar",
+    "character_real_name": "Aestri Yazar",
+    "character_avatar_path": "avatars/survivors/aestri_yazar.png",
     "category": "Survivor",
     "description": "A clear mind and calm temperament will always find the means of their escape.\nAfter standing still for **6**/**5**/**4** **seconds**, *Still Sight* activates:\n* The Auras of the Killer as well as any Chests and Generators within **24 metres** of your location are revealed to you until you start moving again.\n*\"Breathe in. Breathe out. Now open your eyes.\" — Baermar*",
     "icon_url": "https://cdn.nightlight.gg/img/perks/still-sight.png",
-    "icon_local_path": "icons/survivors/General/still_sight.png"
+    "icon_local_path": "icons/survivors/aestri_yazar/still_sight.png"
   },
   {
     "name": "Finesse",
@@ -2765,7 +2765,7 @@
     "character_real_name": "The Ghoul",
     "character_avatar_path": "avatars/killers/the_ghoul.png",
     "category": "Killer",
-    "description": "",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/hex-nothing-but-misery.png",
     "icon_local_path": "icons/killers/the_ghoul/hex_nothing_but_misery.png"
   },
@@ -2775,7 +2775,7 @@
     "character_real_name": "The Ghoul",
     "character_avatar_path": "avatars/killers/the_ghoul.png",
     "category": "Killer",
-    "description": "",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/forever-entwined.png",
     "icon_local_path": "icons/killers/the_ghoul/forever_entwined.png"
   },
@@ -2785,7 +2785,7 @@
     "character_real_name": "The Ghoul",
     "character_avatar_path": "avatars/killers/the_ghoul.png",
     "category": "Killer",
-    "description": "",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/none-are-free.png",
     "icon_local_path": "icons/killers/the_ghoul/none_are_free.png"
   },
@@ -2825,7 +2825,7 @@
     "character_real_name": "The Animatronic",
     "character_avatar_path": "avatars/killers/the_animatronic.png",
     "category": "Killer",
-    "description": "",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/help-wanted.png",
     "icon_local_path": "icons/killers/the_animatronic/help_wanted.png"
   },
@@ -2835,7 +2835,7 @@
     "character_real_name": "The Animatronic",
     "character_avatar_path": "avatars/killers/the_animatronic.png",
     "category": "Killer",
-    "description": "",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/phantom-fear.png",
     "icon_local_path": "icons/killers/the_animatronic/phantom_fear.png"
   },
@@ -2845,7 +2845,7 @@
     "character_real_name": "The Animatronic",
     "character_avatar_path": "avatars/killers/the_animatronic.png",
     "category": "Killer",
-    "description": "",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/haywire.png",
     "icon_local_path": "icons/killers/the_animatronic/haywire.png"
   },
@@ -2855,7 +2855,7 @@
     "character_real_name": "General",
     "character_avatar_path": "",
     "category": "Survivor",
-    "description": "",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/apocalyptic-ingenuity.png",
     "icon_local_path": "icons/survivors/General/apocalyptic_ingenuity.png"
   },
@@ -2975,7 +2975,7 @@
     "character_real_name": "General",
     "character_avatar_path": "",
     "category": "Survivor",
-    "description": "",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/bada-bada-boom.png",
     "icon_local_path": "icons/survivors/General/bada_bada_boom.png"
   },
@@ -3075,7 +3075,7 @@
     "character_real_name": "General",
     "character_avatar_path": "",
     "category": "Survivor",
-    "description": "<",
+    "description": "Perk description is currently unavailable in the database.",
     "icon_url": "https://cdn.nightlight.gg/img/perks/a-place-for-us.png",
     "icon_local_path": "icons/survivors/General/a_place_for_us.png"
   },

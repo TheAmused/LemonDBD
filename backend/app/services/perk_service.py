@@ -1,3 +1,4 @@
+from app.services.scraper_service import ScraperService
 import json
 import logging
 import math
@@ -91,7 +92,13 @@ class PerkService:
             try:
                 with open(self.items_path, "r", encoding="utf-8") as f:
                     raw_items = json.load(f)
-                    self._items_cache = [ItemModel(**item) for item in raw_items]
+                    parsed_items = []
+                    for item in raw_items:
+                        item_obj = ItemModel(**item)
+                        if item_obj.description:
+                            item_obj.description = ScraperService.clean_description_text(item_obj.description)
+                        parsed_items.append(item_obj)
+                    self._items_cache = parsed_items
                 logger.info(f"Loaded {len(self._items_cache)} items.")
             except Exception as e:
                 logger.error(f"Failed loading items JSON: {e}")
@@ -103,7 +110,13 @@ class PerkService:
             try:
                 with open(self.addons_path, "r", encoding="utf-8") as f:
                     raw_addons = json.load(f)
-                    self._addons_cache = [AddonModel(**addon) for addon in raw_addons]
+                    parsed_addons = []
+                    for addon in raw_addons:
+                        addon_obj = AddonModel(**addon)
+                        if addon_obj.description:
+                            addon_obj.description = ScraperService.clean_description_text(addon_obj.description)
+                        parsed_addons.append(addon_obj)
+                    self._addons_cache = parsed_addons
                 logger.info(f"Loaded {len(self._addons_cache)} addons.")
             except Exception as e:
                 logger.error(f"Failed loading addons JSON: {e}")
@@ -118,6 +131,8 @@ class PerkService:
                     parsed_perks = []
                     for item in raw_data:
                         perk = PerkModel(**item)
+                        if perk.description:
+                            perk.description = ScraperService.clean_description_text(perk.description)
 
                         # Auto-link missing avatar paths in memory
                         if not perk.character_avatar_path and perk.character and perk.character != "General":

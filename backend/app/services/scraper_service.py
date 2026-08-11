@@ -211,6 +211,7 @@ class NightlightScraperDriver:
         chunk_js: str,
         stream_payload: str,
         characters: Optional[List[CharacterData]] = None,
+        wiki_perks: Optional[List[PerkData]] = None,
     ) -> List[PerkData]:
         perks: List[PerkData] = []
         char_map: Dict[str, CharacterData] = {}
@@ -219,6 +220,10 @@ class NightlightScraperDriver:
                 char_map[c.name.lower()] = c
                 char_map[c.short_name.lower()] = c
                 char_map[c.wiki_slug.lower()] = c
+
+        wiki_map: Optional[Dict[str, str]] = None
+        if wiki_perks:
+            wiki_map = {wp.name.lower(): wp.description for wp in wiki_perks if wp.name}
 
         descriptions: Dict[str, str] = {}
         if stream_payload:
@@ -777,7 +782,8 @@ class WikiScraperDriver:
                         for br in cell_copy.find_all("br"):
                             br.replace_with("\n")
                         lines = [line.strip() for line in cell_copy.get_text().splitlines()]
-                        description = "\n".join(line for line in lines if line)
+                        raw_description = "\n".join(line for line in lines if line)
+                        description = ScraperService.clean_description_text(raw_description)
 
                         canonical_name = "General"
                         real_name = "General"
@@ -1060,6 +1066,36 @@ class ScraperService:
     def _update_status(cls, **kwargs) -> None:
         with cls._lock:
             cls._status.update(kwargs)
+
+    @staticmethod
+    def clean_description_text(text: str) -> str:
+        if not text or not isinstance(text, str):
+            return ""
+
+        cleaned = re.sub(r"<[^>]+>", "", text)
+        cleaned = re.sub(r'\b[a-zA-Z0-9_-]+=["\'][^"\']*["\']\s*>?', "", cleaned)
+        import html
+        cleaned = html.unescape(cleaned)
+
+        lines = [line.strip() for line in cleaned.splitlines()]
+        lines = [line for line in lines if line]
+
+        if not lines:
+            return ""
+
+        deduped_lines = []
+        for line in lines:
+            if not deduped_lines or line != deduped_lines[-1]:
+                deduped_lines.append(line)
+        lines = deduped_lines
+
+        while len(lines) > 1 and lines[-1].lower() == lines[0].lower():
+            lines.pop()
+
+        while len(lines) > 1 and lines[-1] in lines[:-1] and len(lines[-1]) < 80:
+            lines.pop()
+
+        return "\n".join(lines).strip()
 
     @staticmethod
     def sanitize_filename(name: str) -> str:

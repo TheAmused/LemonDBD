@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
-import { Navbar } from '@/components/Navbar';
 import { CharactersHub } from '@/components/CharactersHub';
 import { QuestsModal } from '@/components/QuestsModal';
 import { getDictionary } from '@/i18n/get-dictionary';
@@ -81,17 +80,10 @@ export default function CharactersPage() {
         characterCount={characterCount}
       />
 
-      <div className="flex-1 lg:pl-64 flex flex-col w-full min-h-screen">
-        <Navbar
-          currentLocale={locale}
-          dict={dict}
-          onOpenQuests={() => setIsQuestsOpen(true)}
-        />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
-          <CharactersHub dict={dict} />
-          <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
-        </main>
-      </div>
+      <main className="flex-1 lg:pl-64 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+        <CharactersHub dict={dict} />
+        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
+      </main>
     </div>
   );
 }

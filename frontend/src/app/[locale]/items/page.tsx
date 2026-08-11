@@ -27,7 +27,7 @@ export default function ItemsPage() {
         onSelectCategory={setCategory}
         currentLocale={locale}
       />
-      <main className="flex-1 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto w-full transition-all">
+      <main className="flex-1 lg:pl-64 p-4 md:p-8 lg:p-10 max-w-7xl mx-auto w-full transition-all">
         <ItemsAddonsViewer />
       </main>
     </div>

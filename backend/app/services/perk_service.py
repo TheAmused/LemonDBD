@@ -48,6 +48,8 @@ class MapModel(BaseModel):
     realm_id: Optional[str] = ""
     callout_image_url: Optional[str] = ""
     callout_image_local_path: Optional[str] = ""
+    source: Optional[str] = "hens333"
+    source_label: Optional[str] = "Hens333 12-Clock Callouts"
     clock_system: Optional[Dict[str, Any]] = None
     tiles: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
     objectives: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
@@ -475,8 +477,13 @@ class PerkService:
             "addons": matched_addons if char_category == "Killer" else matched_items,
         }
 
-    def get_maps(self, realm: Optional[str] = None, search: Optional[str] = None) -> List[Dict[str, Any]]:
+    def get_maps(
+        self, realm: Optional[str] = None, search: Optional[str] = None, source: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         maps = self._maps_cache
+        if source and source.lower() != "all":
+            src_clean = source.lower().strip()
+            maps = [m for m in maps if (m.source or "").lower().strip() == src_clean]
         if realm and realm.lower() != "all":
             realm_clean = realm.lower().strip()
             maps = [m for m in maps if m.realm.lower().strip() == realm_clean or m.realm_id.lower().strip() == realm_clean]
@@ -488,12 +495,12 @@ class PerkService:
     def get_map_detail(
         self, map_id: str, seed: Optional[str] = None, floor: Optional[int] = None
     ) -> Optional[Dict[str, Any]]:
-        target_clean = map_id.lower().replace("_", "").replace("s", "").strip()
+        target_clean = map_id.lower().replace("_", "").replace("-", "").replace("s", "").replace("hens", "").replace("samoel", "").strip()
         found_map = None
         for m in self._maps_cache:
-            m_clean = m.id.lower().replace("_", "").replace("s", "").strip()
-            name_clean = m.name.lower().replace("_", "").replace("s", "").strip()
-            if m.id.lower() == map_id.lower() or m.name.lower() == map_id.lower() or m_clean == target_clean or name_clean == target_clean:
+            m_clean = m.id.lower().replace("_", "").replace("-", "").replace("s", "").replace("hens", "").replace("samoel", "").strip()
+            name_clean = m.name.lower().replace("_", "").replace("-", "").replace("s", "").strip()
+            if m.id.lower() == map_id.lower() or m.name.lower() == map_id.lower() or m_clean == target_clean or name_clean == target_clean or target_clean in m_clean or m_clean in target_clean:
                 found_map = m
                 break
         if not found_map:

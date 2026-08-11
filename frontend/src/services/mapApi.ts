@@ -9,10 +9,11 @@ const getApiBase = () => {
 
 const API_BASE = getApiBase();
 
-export async function fetchMaps(realm?: string, search?: string): Promise<{ maps: MapRealm[] }> {
+export async function fetchMaps(realm?: string, search?: string, source?: string): Promise<{ maps: MapRealm[] }> {
   const params = new URLSearchParams();
   if (realm) params.append('realm', realm);
   if (search) params.append('search', search);
+  if (source) params.append('source', source);
 
   const url = `${API_BASE}/maps?${params.toString()}`;
   const res = await fetch(url);

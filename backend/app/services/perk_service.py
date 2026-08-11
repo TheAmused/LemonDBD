@@ -363,11 +363,19 @@ class PerkService:
         all_chars = self.get_characters()
         matched_char = None
         for c in all_chars:
+            c_name = c.get("name", "").lower()
+            c_real = c.get("real_name", "").lower()
+            c_slug = c.get("wiki_slug", "").lower()
+            c_short = c.get("short_name", "").lower()
+
             if (
-                c.get("name", "").lower() == target_clean
-                or c.get("real_name", "").lower() == target_clean
-                or c.get("wiki_slug", "").lower() == target_slug
-                or c.get("short_name", "").lower() == target_clean
+                c_name == target_clean
+                or c_real == target_clean
+                or c_slug == target_slug
+                or c_short == target_clean
+                or (target_clean in ["yun-jin lee", "yunjin lee", "yun-jin"] and "yun-jin" in c_name)
+                or (target_clean in ["david tapp", "tapp", "detective tapp"] and "tapp" in c_name)
+                or (target_clean in ["elodie rakoto", "elodie", "élodie rakoto"] and "lodie" in c_name)
             ):
                 matched_char = c
                 break
@@ -378,6 +386,7 @@ class PerkService:
         char_canonical_name = matched_char["name"]
         char_category = matched_char.get("category", "Survivor")
 
+        import unicodedata
         alias_tokens = set([
             char_canonical_name.lower(),
             target_clean,
@@ -385,9 +394,14 @@ class PerkService:
             matched_char.get("real_name", "").lower(),
             matched_char.get("wiki_slug", "").lower(),
         ])
+        norm_canon = unicodedata.normalize('NFKD', char_canonical_name.lower()).encode('ASCII', 'ignore').decode('utf-8')
+        alias_tokens.add(norm_canon)
+        
         if char_canonical_name in KILLER_POWER_MAP:
             for p_alias in KILLER_POWER_MAP[char_canonical_name]:
                 alias_tokens.add(p_alias.lower())
+        if char_canonical_name in ["Aestri Yazar", "Baermar Uraz"]:
+            alias_tokens.update(["aestri yazar & baermar uraz", "aestri yazar", "baermar uraz", "aestri", "baermar", "bard", "the troupe"])
         alias_tokens.discard("")
 
         matched_perks = []

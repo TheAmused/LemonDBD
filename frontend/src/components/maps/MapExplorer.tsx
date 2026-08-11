@@ -27,16 +27,16 @@ import { fetchMaps, fetchMapDetail } from '@/services/mapApi';
 import { FullscreenMapEngine } from './FullscreenMapEngine';
 
 interface MapExplorerProps {
-  initialSearch?: string;
+  initialMapName?: string;
 }
 
-export const MapExplorer: React.FC<MapExplorerProps> = ({ initialSearch = '' }) => {
+export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' }) => {
   const [maps, setMaps] = useState<MapRealm[]>([]);
   const [selectedRealm, setSelectedRealm] = useState<string>('all');
   const [selectedSource, setSelectedSource] = useState<'all' | 'hens333' | 'samoelcolt'>('hens333');
   const [selectedMapId, setSelectedMapId] = useState<string>('hens_azarovs_resting_place');
   const [activeMap, setActiveMap] = useState<MapRealm | null>(null);
-  const [search, setSearch] = useState(initialSearch);
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -45,14 +45,35 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialSearch = '' }) 
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
+  // Track whether we've already auto-opened from voice nav so we only do it once
+  const voiceAutoOpenedRef = React.useRef(false);
+
   useEffect(() => {
     async function loadMaps() {
       try {
         setLoading(true);
         const data = await fetchMaps(selectedRealm, search, selectedSource);
-        setMaps(data.maps || []);
-        if (data.maps && data.maps.length > 0 && !data.maps.some((m) => m.id === selectedMapId)) {
-          setSelectedMapId(data.maps[0].id);
+        const loaded: MapRealm[] = data.maps || [];
+        setMaps(loaded);
+
+        // Voice nav: auto-open the spoken map on first load only
+        if (initialMapName && !voiceAutoOpenedRef.current && loaded.length > 0) {
+          const needle = initialMapName.toLowerCase().trim();
+          const match = loaded.find(
+            (m) =>
+              m.name.toLowerCase().includes(needle) ||
+              needle.includes(m.name.toLowerCase())
+          );
+          if (match) {
+            voiceAutoOpenedRef.current = true;
+            setSelectedMapId(match.id);
+            setIsDetailModalOpen(true);
+            return; // skip the fallback below
+          }
+        }
+
+        if (loaded.length > 0 && !loaded.some((m) => m.id === selectedMapId)) {
+          setSelectedMapId(loaded[0].id);
         }
       } catch (err) {
         console.error('Failed loading maps:', err);

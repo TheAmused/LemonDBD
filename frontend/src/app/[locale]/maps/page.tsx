@@ -15,8 +15,10 @@ export default function MapsPage() {
   const locale = (params?.locale as Locale) || 'en';
 
   const [dict, setDict] = useState<any>(null);
-  // Read optional ?search= query param (set by VoiceNavButton navigation)
-  const initialSearch = searchParams?.get('search') || '';
+
+  // Read optional ?mapName= query param set by VoiceNavButton
+  // MapExplorer will auto-open that map's detail modal on load
+  const initialMapName = searchParams?.get('mapName') || '';
 
   useEffect(() => {
     getDictionary(locale).then(setDict);
@@ -64,7 +66,7 @@ export default function MapsPage() {
 
           {/* ── Voice Command Bar ── */}
           <div className="relative overflow-hidden rounded-2xl border border-cyan-500/20 bg-slate-900/70 px-5 py-4 backdrop-blur-sm shadow-lg shadow-cyan-950/30">
-            {/* Decorative glow */}
+            {/* Decorative ambient glow */}
             <div className="pointer-events-none absolute -left-8 -top-8 h-24 w-24 rounded-full bg-cyan-500/10 blur-2xl" />
             <div className="pointer-events-none absolute -right-8 -bottom-8 h-24 w-24 rounded-full bg-cyan-600/5 blur-2xl" />
 
@@ -76,7 +78,7 @@ export default function MapsPage() {
                 <div>
                   <p className="text-xs font-bold text-slate-200">Voice Navigation</p>
                   <p className="text-[10px] text-slate-500">
-                    Say a map name — the search updates instantly
+                    Say a map name — it opens automatically
                   </p>
                 </div>
               </div>
@@ -86,8 +88,8 @@ export default function MapsPage() {
           </div>
         </div>
 
-        {/* ── Map Explorer ── */}
-        <MapExplorer initialSearch={initialSearch} />
+        {/* ── Map Explorer — receives the spoken map name to auto-open ── */}
+        <MapExplorer initialMapName={initialMapName} />
       </main>
     </div>
   );

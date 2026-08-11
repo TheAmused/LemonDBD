@@ -89,6 +89,24 @@ def list_addons():
     return jsonify({"count": len(addons), "data": addons}), 200
 
 
+@perks_bp.route("/api/v1/maps", methods=["GET"])
+def list_maps():
+    realm = request.args.get("realm")
+    search = request.args.get("search")
+    maps = perk_service.get_maps(realm=realm, search=search)
+    return jsonify({"count": len(maps), "maps": maps, "data": maps}), 200
+
+
+@perks_bp.route("/api/v1/maps/<string:map_id>", methods=["GET"])
+def get_map_detail_route(map_id: str):
+    seed = request.args.get("seed")
+    floor = request.args.get("floor", type=int)
+    map_data = perk_service.get_map_detail(map_id, seed=seed, floor=floor)
+    if not map_data:
+        return jsonify({"error": "Map not found"}), 404
+    return jsonify({"map": map_data, "data": map_data}), 200
+
+
 def _run_background_scrape(override_source=None, override_fallback=None):
     scraper = ScraperService()
     scraper.run_sync_pipeline(override_source=override_source, override_fallback=override_fallback)

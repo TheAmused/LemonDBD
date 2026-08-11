@@ -348,7 +348,7 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         const iconSize = 34;
         const iconRadiusPos = radius - 45;
 
-        if (imgObj && imgObj.complete) {
+        if (imgObj && imgObj.complete && imgObj.naturalWidth > 0 && imgObj.naturalHeight > 0) {
           ctx.save();
           if (isBlocked) {
             ctx.globalAlpha = 0.35;

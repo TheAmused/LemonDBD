@@ -66,7 +66,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const toggleLocale =
-    currentLocale === 'en' ? (pathname.includes('/es') ? 'pl' : 'es') : currentLocale === 'es' ? 'pl' : 'en';
+    currentLocale === 'en' ? (pathname?.includes('/es') ? 'pl' : 'es') : currentLocale === 'es' ? 'pl' : 'en';
 
   const redirectedPathName = (locale: string) => {
     if (!pathname) return '/';
@@ -261,7 +261,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const survivorPct = Math.round((survivorCount / safeTotal) * 100);
   const killerPct = 100 - survivorPct;
 
-  const SidebarContent = () => (
+  const renderSidebarContent = () => (
     <div className="flex h-full flex-col justify-between p-4 overflow-y-auto">
       <div>
         {/* Brand Header */}
@@ -296,13 +296,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeCategory === item.id;
+            const isActive = activeCategory === item.id || (item.href && pathname?.includes(item.href));
 
             if (item.href) {
               return (
                 <Link
                   key={item.id}
                   href={item.href}
+                  aria-current={isActive ? 'page' : undefined}
                   onClick={() => {
                     if (onSelectCategory) onSelectCategory(item.id);
                     setMobileOpen(false);
@@ -325,6 +326,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             return (
               <button
                 key={item.id}
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => {
                   if (item.id === 'quests') {
                     if (onOpenQuests) onOpenQuests();
@@ -466,7 +468,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         aria-label="Sidebar Navigation"
         className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-colors"
       >
-        <SidebarContent />
+        {renderSidebarContent()}
       </aside>
 
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 lg:hidden">
@@ -503,7 +505,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               <X className="h-5 w-5" />
             </button>
-            <SidebarContent />
+            {renderSidebarContent()}
           </div>
         </div>
       )}

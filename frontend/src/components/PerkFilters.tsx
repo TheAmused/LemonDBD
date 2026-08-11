@@ -6,6 +6,8 @@ import { Search, LayoutGrid, List, RotateCcw, ArrowUpDown, Filter, User } from '
 interface PerkFiltersProps {
   search: string;
   setSearch: (val: string) => void;
+  category?: string;
+  setCategory?: (val: string) => void;
   character: string;
   setCharacter: (val: string) => void;
   sortBy: string;
@@ -22,6 +24,8 @@ interface PerkFiltersProps {
 export const PerkFilters: React.FC<PerkFiltersProps> = ({
   search,
   setSearch,
+  category = 'all',
+  setCategory,
   character,
   setCharacter,
   sortBy,
@@ -34,10 +38,51 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   dict,
   onReset,
 }) => {
-  const hasActiveFilters = search || character !== 'all' || sortBy !== 'name' || order !== 'asc';
+  const hasActiveFilters = search || category !== 'all' || character !== 'all' || sortBy !== 'name' || order !== 'asc';
 
   return (
     <div className="mb-8 rounded-2xl border border-slate-200/80 bg-white/70 p-4 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/60 transition-all">
+      {/* 3-Way Role Segmented Pill Toggle */}
+      {setCategory && (
+        <div className="mb-4 flex items-center justify-center sm:justify-start">
+          <div className="inline-flex rounded-xl border border-slate-200 bg-slate-100/90 p-1 dark:border-slate-800 dark:bg-slate-950/90 shadow-inner">
+            <button
+              onClick={() => setCategory('all')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                category === 'all'
+                  ? 'bg-white text-slate-900 shadow dark:bg-slate-800 dark:text-slate-100'
+                  : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              }`}
+            >
+              <LayoutGrid className="h-3.5 w-3.5 text-slate-400" />
+              <span>All Perks</span>
+            </button>
+            <button
+              onClick={() => setCategory('Survivor')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                category === 'Survivor'
+                  ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                  : 'text-slate-500 hover:text-emerald-600 dark:text-slate-400 dark:hover:text-emerald-400'
+              }`}
+            >
+              <User className="h-3.5 w-3.5 text-emerald-400" />
+              <span>Survivor Perks</span>
+            </button>
+            <button
+              onClick={() => setCategory('Killer')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                category === 'Killer'
+                  ? 'bg-rose-600 text-white shadow-md shadow-rose-600/20'
+                  : 'text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400'
+              }`}
+            >
+              <Filter className="h-3.5 w-3.5 text-rose-400" />
+              <span>Killer Perks</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />

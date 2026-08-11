@@ -161,6 +161,10 @@ class NightlightScraperDriver:
                 if not name:
                     continue
 
+                name_lower = name.lower()
+                if "overall_average" in name_lower or "overall average" in name_lower:
+                    continue
+
                 real_name = item.get("real_name") or name
                 wiki_slug = item.get("wiki_slug") or item.get("slug") or item.get("id") or ScraperService.sanitize_filename(name)
                 short_name = item.get("short_name") or ScraperService.sanitize_filename(name)
@@ -820,12 +824,10 @@ class WikiScraperDriver:
                                 clean_text = re.sub(r"^[.\s\-–]+|[.\s\-–]+$", "", raw_text).strip().lower()
 
                                 if clean_text and clean_text not in ["all", "general", "none", "-", "all survivors", "all killers"]:
-                                    matched = char_by_short.get(clean_text) or char_by_name.get(clean_text)
+                                    matched = char_by_short.get(clean_text) or char_by_name.get(clean_text) or char_by_slug.get(clean_text)
                                     if not matched:
-                                        for key, c in char_by_name.items():
-                                            if clean_text in key or key in clean_text:
-                                                matched = c
-                                                break
+                                        # Try matching with "the " prefix
+                                        matched = char_by_name.get(f"the {clean_text}") or char_by_short.get(f"the {clean_text}")
 
                             if matched:
                                 canonical_name = matched.name
@@ -890,6 +892,15 @@ class WikiScraperDriver:
                         if not item_name:
                             continue
 
+                        name_lower = item_name.lower().strip()
+                        HEADER_EXCLUSIONS = {
+                            "uncommon items", "rare items", "very rare items", "ultra rare items",
+                            "common items", "event items", "unused item", "limited items",
+                            "survivor items", "killer items", "items", "add-ons", "addons", "equipment"
+                        }
+                        if name_lower in HEADER_EXCLUSIONS or name_lower.endswith(" items") or name_lower.endswith(" add-ons"):
+                            continue
+
                         rarity = ""
                         description = ""
                         if len(cells) >= 4:
@@ -897,6 +908,8 @@ class WikiScraperDriver:
                             description = cells[3].get_text(separator="\n", strip=True)
                         elif len(cells) == 3:
                             description = cells[2].get_text(separator="\n", strip=True)
+
+                        description = ScraperService.clean_description_text(description)
 
                         if not rarity:
                             for r_word in ["Ultra Rare", "Very Rare", "Rare", "Uncommon", "Common", "Event", "Iridescent"]:

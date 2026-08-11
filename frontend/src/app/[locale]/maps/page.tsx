@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { MapExplorer } from '@/components/maps/MapExplorer';
@@ -9,22 +9,20 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { Mic, Compass } from 'lucide-react';
 
-export default function MapsPage() {
+// ── Inner component that safely reads searchParams inside Suspense ──────────
+function MapsPageInner() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || 'en';
 
   const [dict, setDict] = useState<any>(null);
-
-  // Read optional ?mapName= query param set by VoiceNavButton
-  // MapExplorer will auto-open that map's detail modal on load
   const initialMapName = searchParams?.get('mapName') || '';
 
   useEffect(() => {
     getDictionary(locale).then(setDict);
   }, [locale]);
 
-  const handleSelectCategory = (cat: string) => {
+  const handleSelectCategory = () => {
     if (typeof window !== 'undefined') {
       window.location.href = `/${locale}`;
     }
@@ -66,7 +64,6 @@ export default function MapsPage() {
 
           {/* ── Voice Command Bar ── */}
           <div className="relative overflow-hidden rounded-2xl border border-cyan-500/20 bg-slate-900/70 px-5 py-4 backdrop-blur-sm shadow-lg shadow-cyan-950/30">
-            {/* Decorative ambient glow */}
             <div className="pointer-events-none absolute -left-8 -top-8 h-24 w-24 rounded-full bg-cyan-500/10 blur-2xl" />
             <div className="pointer-events-none absolute -right-8 -bottom-8 h-24 w-24 rounded-full bg-cyan-600/5 blur-2xl" />
 
@@ -88,9 +85,23 @@ export default function MapsPage() {
           </div>
         </div>
 
-        {/* ── Map Explorer — receives the spoken map name to auto-open ── */}
         <MapExplorer initialMapName={initialMapName} />
       </main>
     </div>
+  );
+}
+
+// ── Outer page: wraps inner in Suspense so useSearchParams() is safe ─────────
+export default function MapsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
+          Loading...
+        </div>
+      }
+    >
+      <MapsPageInner />
+    </Suspense>
   );
 }

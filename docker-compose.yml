@@ -27,13 +27,13 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: http://localhost
+        NEXT_PUBLIC_API_URL: https://localhost
     container_name: dbd_frontend
     restart: unless-stopped
     expose:
       - "3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost
+      - NEXT_PUBLIC_API_URL=https://localhost
     depends_on:
       backend:
         condition: service_healthy

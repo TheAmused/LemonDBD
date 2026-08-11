@@ -18,6 +18,7 @@ class CharacterModel(BaseModel):
     category: str
     avatar_url: Optional[str] = ""
     avatar_local_path: Optional[str] = ""
+    release_number: Optional[int] = None
 
 
 class ItemModel(BaseModel):

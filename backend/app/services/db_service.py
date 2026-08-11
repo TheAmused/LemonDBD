@@ -216,10 +216,66 @@ class DatabaseService:
             FOREIGN KEY (map_id) REFERENCES map_realms(map_id) ON DELETE CASCADE
         );
 
+        CREATE TABLE IF NOT EXISTS page_streak_excluded_perks (
+            perk_name TEXT PRIMARY KEY
+        );
+
+        CREATE TABLE IF NOT EXISTS page_streak_runs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            killer TEXT NOT NULL UNIQUE,
+            status TEXT NOT NULL DEFAULT 'in_progress' CHECK (status IN ('in_progress', 'completed')),
+            attempt INTEGER NOT NULL DEFAULT 1,
+            current_page INTEGER NOT NULL DEFAULT 1,
+            best_page INTEGER NOT NULL DEFAULT 0,
+            pages_json TEXT NOT NULL DEFAULT '[]',
+            snapshot_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS page_streak_page_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id INTEGER NOT NULL,
+            attempt INTEGER NOT NULL,
+            page_number INTEGER NOT NULL,
+            perks_json TEXT NOT NULL,
+            result TEXT NOT NULL CHECK (result IN ('win', 'loss')),
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (run_id) REFERENCES page_streak_runs(id) ON DELETE CASCADE
+        );
+
         INSERT OR IGNORE INTO generator_settings (id, role, gen_mode, no_repeat_perks)
         VALUES (1, 'Survivor', 'instant', 1);
         """)
 
         conn.commit()
         conn.close()
+
+    def prune_stale_character_rows(self, valid_names):
+        """Delete run rows pinned to characters that no longer exist.
+
+        A renamed or removed character leaves rows that can never be resolved again.
+        An empty valid_names means the character data failed to load — in that case do
+        nothing, because deleting every run on a failed scrape would be catastrophic.
+        """
+        names = {str(n) for n in (valid_names or set())}
+        if not names:
+            return {}
+
+        deleted = {}
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = ON;")
+
+        for table, column in (("challenge_runs", "current_character_id"), ("page_streak_runs", "killer")):
+            cursor.execute(f"SELECT id, {column} AS character_name FROM {table};")
+            stale = [row["id"] for row in cursor.fetchall() if row["character_name"] not in names]
+            if stale:
+                placeholders = ",".join("?" for _ in stale)
+                cursor.execute(f"DELETE FROM {table} WHERE id IN ({placeholders});", stale)
+            deleted[table] = len(stale)
+
+        conn.commit()
+        conn.close()
+        return deleted
 

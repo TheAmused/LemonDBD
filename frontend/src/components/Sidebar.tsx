@@ -298,7 +298,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   href={item.href}
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => {
-                    if (onSelectCategory) onSelectCategory(item.id);
                     setMobileOpen(false);
                   }}
                   className={

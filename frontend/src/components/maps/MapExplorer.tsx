@@ -26,13 +26,17 @@ import { MapRealm } from '@/types/map';
 import { fetchMaps, fetchMapDetail } from '@/services/mapApi';
 import { FullscreenMapEngine } from './FullscreenMapEngine';
 
-export const MapExplorer: React.FC = () => {
+interface MapExplorerProps {
+  initialSearch?: string;
+}
+
+export const MapExplorer: React.FC<MapExplorerProps> = ({ initialSearch = '' }) => {
   const [maps, setMaps] = useState<MapRealm[]>([]);
   const [selectedRealm, setSelectedRealm] = useState<string>('all');
   const [selectedSource, setSelectedSource] = useState<'all' | 'hens333' | 'samoelcolt'>('hens333');
   const [selectedMapId, setSelectedMapId] = useState<string>('hens_azarovs_resting_place');
   const [activeMap, setActiveMap] = useState<MapRealm | null>(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(initialSearch);
   const [loading, setLoading] = useState(true);
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);

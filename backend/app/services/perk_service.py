@@ -343,7 +343,13 @@ class PerkService:
 
         if category and category.lower() != "all":
             results = [c for c in results if c.category.lower() == category.lower()]
-        return [c.model_dump() for c in sorted(results, key=lambda x: x.name)]
+
+        def sort_key(c: CharacterModel):
+            if c.release_number is None:
+                return (1, 0, c.name)
+            return (0, c.release_number, c.name)
+
+        return [c.model_dump() for c in sorted(results, key=sort_key)]
 
     def get_items(
         self,

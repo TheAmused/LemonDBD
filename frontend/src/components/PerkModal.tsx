@@ -23,6 +23,8 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose, dict }) => 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+
+
   if (!perk) return null;
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';

@@ -109,6 +109,18 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
     fetchBuilds();
   }, [fetchBuilds]);
 
+  useEffect(() => {
+    if (!isSubmitModalOpen && !shareBuild) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsSubmitModalOpen(false);
+        setShareBuild(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isSubmitModalOpen, shareBuild]);
+
   // Handle optimistic upvote
   const handleUpvote = async (buildId: number) => {
     if (upvotedIds[buildId]) return;
@@ -464,8 +476,14 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
 
       {/* Submit Build Modal */}
       {isSubmitModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-          <div className="relative w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+        <div
+          onClick={() => setIsSubmitModalOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl cursor-default"
+          >
             <button
               onClick={() => setIsSubmitModalOpen(false)}
               className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-800 transition-colors"
@@ -623,8 +641,14 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
 
       {/* Shareable Build Card Modal */}
       {shareBuild && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-          <div className="relative w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4">
+        <div
+          onClick={() => setShareBuild(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4 cursor-default"
+          >
             <button
               onClick={() => setShareBuild(null)}
               className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-800 transition-colors"

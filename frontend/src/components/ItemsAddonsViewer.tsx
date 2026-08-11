@@ -60,6 +60,15 @@ export function ItemsAddonsViewer() {
     fetchData();
   }, [backendBase]);
 
+  useEffect(() => {
+    if (!selectedDetail) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedDetail(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedDetail]);
+
   const getRarityBadgeStyle = (rarity: string) => {
     const clean = (rarity || '').toLowerCase().replace(/\s+/g, '');
     if (clean.includes('ultrarare')) {
@@ -320,12 +329,13 @@ export function ItemsAddonsViewer() {
       {/* Modal Detail View */}
       {selectedDetail && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setSelectedDetail(null);
-          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200 cursor-pointer"
+          onClick={() => setSelectedDetail(null)}
         >
-          <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-2xl p-6 space-y-4">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-2xl p-6 space-y-4 cursor-default"
+          >
             <button
               onClick={() => setSelectedDetail(null)}
               className="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"

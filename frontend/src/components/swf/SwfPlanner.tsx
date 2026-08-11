@@ -145,6 +145,15 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!activeSlot) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveSlot(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeSlot]);
+
   // Analyze Synergy for a survivor
   const analyzeSurvivorSynergy = useCallback(
     async (survivorId: number, perks: (string | null)[]) => {
@@ -537,8 +546,14 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
 
       {/* Perk Selector Modal */}
       {activeSlot && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
-          <div className="relative w-full max-w-2xl max-h-[85vh] rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl flex flex-col space-y-4">
+        <div
+          onClick={() => setActiveSlot(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-2xl max-h-[85vh] rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl flex flex-col space-y-4 cursor-default"
+          >
             {/* Modal Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>

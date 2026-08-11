@@ -348,7 +348,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           />
 
           {/* Modal Content */}
-          <div className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl shadow-slate-950 animate-in zoom-in-95 duration-200">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl shadow-slate-950 animate-in zoom-in-95 duration-200"
+          >
             {/* Header / Hero */}
             <div className="relative border-b border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-6 sm:p-8">
               <button

@@ -123,6 +123,78 @@ class PerkData:
     icon_local_path: str
 
 
+@dataclass
+class MapData:
+    id: str
+    name: str
+    realm: str
+    realm_id: str
+    callout_image_url: str
+    callout_image_local_path: str
+    dpath: str
+    clock_system: Dict[str, Any]
+
+
+class HensMapScraperDriver:
+    HENS_CALLOUTS_URL = "https://hens333.com/callouts"
+    CDN_BASE = "https://hens333.com/img/dbd/callouts/"
+
+    @staticmethod
+    def slugify(text: str) -> str:
+        text = text.lower().strip()
+        text = re.sub(r"[^\w\s-]", "", text)
+        text = re.sub(r"[\s_-]+", "_", text)
+        return text.strip("_")
+
+    def scrape_maps(self) -> List[MapData]:
+        logger.info("Scraping map callouts from Hens333...")
+        try:
+            res = requests.get(self.HENS_CALLOUTS_URL, verify=False, timeout=15)
+            if res.status_code != 200:
+                logger.warning(f"Failed to fetch Hens333 callouts: HTTP {res.status_code}")
+                return []
+            soup = BeautifulSoup(res.text, "html.parser")
+            maps: List[MapData] = []
+
+            for rw in soup.find_all("div", class_="realm-wrapper"):
+                h1 = rw.find("h1")
+                realm_name = h1.get_text(strip=True) if h1 else "General Realm"
+                realm_slug = self.slugify(realm_name)
+
+                for btn in rw.find_all(attrs={"data-path": True}):
+                    dpath = btn["data-path"]
+                    map_name = btn.get_text(strip=True)
+                    map_slug = self.slugify(map_name)
+
+                    encoded_dpath = re.sub(r"\s", "%20", dpath)
+                    remote_url = f"{self.CDN_BASE}{encoded_dpath}"
+                    rel_static_path = f"maps/callouts/{realm_slug}/{map_slug}.webp"
+
+                    maps.append(
+                        MapData(
+                            id=map_slug,
+                            name=map_name,
+                            realm=realm_name,
+                            realm_id=realm_slug,
+                            callout_image_url=remote_url,
+                            callout_image_local_path=rel_static_path,
+                            dpath=dpath,
+                            clock_system={
+                                "description": f"12-Clock Callout System for {map_name} ({realm_name}). Standard top-middle starts at 12 o'clock.",
+                                "twelve_o_clock": "Main Building / Top Spawn",
+                                "three_o_clock": "Right Tile / Generator Cluster",
+                                "six_o_clock": "Killer Shack / Bottom Spawn",
+                                "nine_o_clock": "Left Tile / Jungle Gym",
+                            },
+                        )
+                    )
+            logger.info(f"Scraped {len(maps)} maps from Hens333.")
+            return maps
+        except Exception as e:
+            logger.error(f"Error scraping Hens333 maps: {e}")
+            return []
+
+
 class NightlightScraperDriver:
     SURVIVORS_API = "https://nightlight.gg/api/v1/stats/global/survivors"
     KILLERS_API = "https://nightlight.gg/api/v1/stats/global/killers"
@@ -1365,10 +1437,12 @@ class ScraperService:
         self.characters_file = self.base_dir / "data" / "characters.json"
         self.items_file = self.base_dir / "data" / "items.json"
         self.addons_file = self.base_dir / "data" / "addons.json"
+        self.maps_file = self.base_dir / "data" / "maps.json"
         self.config_file = self.base_dir / "data" / "scraper_config.json"
         self.static_dir = self.base_dir / "app" / "static"
         self.nightlight_driver = NightlightScraperDriver(self.base_dir)
         self.wiki_driver = WikiScraperDriver(self.base_dir)
+        self.hens_map_driver = HensMapScraperDriver()
 
     def load_config(self) -> ScraperConfig:
         if not self.config_file.exists():
@@ -1648,6 +1722,7 @@ class ScraperService:
         characters: List[CharacterData],
         items: Optional[List[ItemData]] = None,
         addons: Optional[List[AddonData]] = None,
+        maps: Optional[List[MapData]] = None,
     ) -> None:
         semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_DOWNLOADS)
         async with AsyncSession(impersonate=self.IMPERSONATE_BROWSER, verify=False) as client:
@@ -1671,6 +1746,12 @@ class ScraperService:
                     if addon.icon_url:
                         tasks.append(
                             self._download_asset(client, semaphore, addon.icon_url, addon.icon_local_path)
+                        )
+            if maps:
+                for m in maps:
+                    if m.callout_image_url and m.callout_image_local_path:
+                        tasks.append(
+                            self._download_asset(client, semaphore, m.callout_image_url, m.callout_image_local_path)
                         )
 
             await asyncio.gather(*tasks)
@@ -1752,14 +1833,26 @@ class ScraperService:
             with open(self.addons_file, "w", encoding="utf-8") as f:
                 json.dump([asdict(a) for a in addons], f, indent=2, ensure_ascii=False)
 
-            total_downloads = len(perks) + sum(1 for c in characters if c.avatar_url) + len(items) + len(addons)
+            # Scrape Hens333 Maps
+            try:
+                logger.info("Scraping Hens333 maps...")
+                maps = self.hens_map_driver.scrape_maps()
+                if maps:
+                    self.maps_file.parent.mkdir(parents=True, exist_ok=True)
+                    with open(self.maps_file, "w", encoding="utf-8") as f:
+                        json.dump([asdict(m) for m in maps], f, indent=2, ensure_ascii=False)
+            except Exception as map_err:
+                logger.warning(f"Failed scraping maps: {map_err}")
+                maps = []
+
+            total_downloads = len(perks) + sum(1 for c in characters if c.avatar_url) + len(items) + len(addons) + len(maps)
             self._update_status(
                 current_step="downloading_assets",
                 total=total_downloads,
                 progress=0,
             )
 
-            asyncio.run(self.download_all_assets_async(perks, characters, items=items, addons=addons))
+            asyncio.run(self.download_all_assets_async(perks, characters, items=items, addons=addons, maps=maps))
 
             now_iso = datetime.now(timezone.utc).isoformat()
             self.save_config({

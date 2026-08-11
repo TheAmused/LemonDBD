@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'next/navigation';
+import React, { useEffect, useState, useCallback, Suspense } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard, Perk } from '@/components/PerkCard';
@@ -21,9 +21,13 @@ export interface CharacterItem {
 
 const DASHBOARD_TAB_KEY = 'lemon_dbd_active_tab_v2';
 
-export default function DashboardPage() {
+function DashboardContent() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || 'en';
+
+  const paramCategory = searchParams ? searchParams.get('category') : null;
+  const paramTab = searchParams ? searchParams.get('tab') : null;
 
   const [dict, setDict] = useState<any>(null);
   const [perks, setPerks] = useState<Perk[]>([]);
@@ -57,13 +61,23 @@ export default function DashboardPage() {
   }, [locale]);
 
   useEffect(() => {
-    try {
-      const savedTab = localStorage.getItem(DASHBOARD_TAB_KEY);
-      if (savedTab) setCategory(savedTab);
-    } catch (e) {
-      console.error(e);
+    if (paramTab === 'generator') {
+      setCategory('generator');
+    } else if (paramCategory) {
+      setCategory(paramCategory);
+    } else {
+      try {
+        const savedTab = localStorage.getItem(DASHBOARD_TAB_KEY);
+        if (savedTab) {
+          setCategory(savedTab);
+        } else {
+          setCategory('all');
+        }
+      } catch (e) {
+        setCategory('all');
+      }
     }
-  }, []);
+  }, [paramCategory, paramTab]);
 
   const handleSelectCategory = (cat: string) => {
     setCategory(cat);
@@ -262,5 +276,13 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

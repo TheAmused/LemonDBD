@@ -133,13 +133,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return () => clearInterval(interval);
   }, [isSyncing, backendBase, onSyncComplete]);
 
-  const navItems = [
+  interface NavItem {
+    id: string;
+    label: string;
+    icon: any;
+    color: string;
+    activeBg: string;
+    href?: string;
+  }
+
+  const navItems: NavItem[] = [
     {
       id: 'all',
       label: dict.filters.allCategories || 'All Perks',
       icon: Layers,
       color: 'text-slate-400 dark:text-slate-400',
       activeBg: 'bg-slate-200/80 dark:bg-slate-800/80 text-slate-900 dark:text-slate-100',
+      href: `/${currentLocale}`,
     },
     {
       id: 'Survivor',
@@ -147,6 +157,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Shield,
       color: 'text-emerald-500',
       activeBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
+      href: `/${currentLocale}?category=Survivor`,
     },
     {
       id: 'Killer',
@@ -154,6 +165,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Skull,
       color: 'text-rose-500',
       activeBg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20',
+      href: `/${currentLocale}?category=Killer`,
     },
     {
       id: 'generator',
@@ -161,6 +173,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Dices,
       color: 'text-amber-500',
       activeBg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
+      href: `/${currentLocale}?tab=generator`,
     },
     {
       id: 'challenge',
@@ -168,6 +181,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Swords,
       color: 'text-amber-400',
       activeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+      href: `/${currentLocale}/challenge`,
     },
     {
       id: 'draft',
@@ -175,6 +189,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Trophy,
       color: 'text-rose-400',
       activeBg: 'bg-rose-500/10 text-rose-400 border border-rose-500/20',
+      href: `/${currentLocale}/draft`,
     },
     {
       id: 'swf',
@@ -182,6 +197,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Users,
       color: 'text-emerald-400',
       activeBg: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
+      href: `/${currentLocale}/swf`,
     },
     {
       id: 'killer-calculator',
@@ -189,6 +205,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Calculator,
       color: 'text-purple-400',
       activeBg: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
+      href: `/${currentLocale}/killer-calculator`,
     },
     {
       id: 'builds',
@@ -196,6 +213,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Flame,
       color: 'text-red-400',
       activeBg: 'bg-red-500/10 text-red-400 border border-red-500/20',
+      href: `/${currentLocale}/builds`,
     },
     {
       id: 'custom-perks',
@@ -203,6 +221,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Wand2,
       color: 'text-pink-400',
       activeBg: 'bg-pink-500/10 text-pink-400 border border-pink-500/20',
+      href: `/${currentLocale}/custom-perks`,
     },
     {
       id: 'maps',
@@ -210,6 +229,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Compass,
       color: 'text-cyan-400',
       activeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
+      href: `/${currentLocale}/maps`,
     },
     {
       id: 'items',
@@ -217,15 +237,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Package,
       color: 'text-teal-400',
       activeBg: 'bg-teal-500/10 text-teal-400 border border-teal-500/20',
+      href: `/${currentLocale}/items`,
     },
     {
       id: 'characters',
-      label: '?? Characters',
+      label: '👤 Characters',
       icon: Users,
       color: 'text-indigo-400',
       activeBg: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
+      href: `/${currentLocale}/characters`,
     },
-
     {
       id: 'quests',
       label: '📜 Quests',
@@ -277,12 +298,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
             const Icon = item.icon;
             const isActive = activeCategory === item.id;
 
-            if (item.id === 'challenge' || item.id === 'draft' || item.id === 'swf' || item.id === 'killer-calculator' || item.id === 'builds' || item.id === 'custom-perks' || item.id === 'maps' || item.id === 'characters') {
+            if (item.href) {
               return (
                 <Link
                   key={item.id}
-                  href={'/' + currentLocale + '/' + item.id}
-                  onClick={() => setMobileOpen(false)}
+                  href={item.href}
+                  onClick={() => {
+                    if (onSelectCategory) onSelectCategory(item.id);
+                    setMobileOpen(false);
+                  }}
                   className={
                     'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
                     (isActive
@@ -298,34 +322,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
               );
             }
 
-            if (item.id === 'quests') {
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    if (onOpenQuests) onOpenQuests();
-                    setMobileOpen(false);
-                  }}
-                  className={
-                    'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
-                    (isActive
-                      ? item.activeBg
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
-                  }
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className={'h-4 w-4 ' + item.color} />
-                    <span>{item.label}</span>
-                  </div>
-                </button>
-              );
-            }
-
             return (
               <button
                 key={item.id}
                 onClick={() => {
-                  onSelectCategory(item.id);
+                  if (item.id === 'quests') {
+                    if (onOpenQuests) onOpenQuests();
+                  } else if (onSelectCategory) {
+                    onSelectCategory(item.id);
+                  }
                   setMobileOpen(false);
                 }}
                 className={

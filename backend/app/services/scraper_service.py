@@ -1832,6 +1832,33 @@ class ScraperService:
 
             await asyncio.gather(*tasks)
 
+    def _preserve_release_numbers(self, characters: List[CharacterData]) -> None:
+        """Carry over release_number from the characters file already on disk.
+
+        Drivers like Nightlight have no concept of release order, so a fresh
+        scrape always writes release_number=0. Without this, every sync wipes
+        out the chronological ordering used to sort the Characters Hub.
+        """
+        if not self.characters_file.exists():
+            return
+        try:
+            with open(self.characters_file, "r", encoding="utf-8") as f:
+                existing = json.load(f)
+        except Exception:
+            return
+
+        existing_numbers = {
+            c["name"].lower(): c["release_number"]
+            for c in existing
+            if isinstance(c, dict) and c.get("name") and isinstance(c.get("release_number"), int)
+        }
+
+        for character in characters:
+            if not character.release_number:
+                known = existing_numbers.get(character.name.lower())
+                if known is not None:
+                    character.release_number = known
+
     def run_sync_pipeline(
         self,
         override_source: Optional[str] = None,
@@ -1892,6 +1919,8 @@ class ScraperService:
                 res = self.wiki_driver.scrape_all()
                 characters, perks, items, addons = unpack_res(res)
                 source_used = "wiki"
+
+            self._preserve_release_numbers(characters)
 
             self.characters_file.parent.mkdir(parents=True, exist_ok=True)
             with open(self.characters_file, "w", encoding="utf-8") as f:

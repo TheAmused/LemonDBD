@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { MapExplorer } from '@/components/maps/MapExplorer';
 import VoiceNavButton from '@/components/maps/VoiceNavButton';
+import { QuestsModal } from '@/components/QuestsModal';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { Mic, Compass } from 'lucide-react';
@@ -17,11 +18,45 @@ function MapsPageInner() {
   const { isCollapsed } = useSidebarState();
 
   const [dict, setDict] = useState<any>(null);
+  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const initialMapName = searchParams?.get('mapName') || '';
+
+  // Vault Stats for Sidebar
+  const [totalPerksCount, setTotalPerksCount] = useState<number>(0);
+  const [survivorCount, setSurvivorCount] = useState<number>(0);
+  const [killerCount, setKillerCount] = useState<number>(0);
+  const [characterCount, setCharacterCount] = useState<number>(0);
+
+  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
     getDictionary(locale).then(setDict);
   }, [locale]);
+
+  useEffect(() => {
+    async function loadVaultStats() {
+      try {
+        const [perksRes, charsRes] = await Promise.all([
+          fetch(`${backendBase}/api/v1/perks?limit=1000`),
+          fetch(`${backendBase}/api/v1/characters`),
+        ]);
+        if (perksRes.ok) {
+          const pData = await perksRes.json();
+          const list = pData.data || [];
+          setTotalPerksCount(pData.pagination?.total || list.length);
+          setSurvivorCount(list.filter((p: any) => p.category === 'Survivor').length);
+          setKillerCount(list.filter((p: any) => p.category === 'Killer').length);
+        }
+        if (charsRes.ok) {
+          const cData = await charsRes.json();
+          setCharacterCount(cData.count || (cData.data || []).length);
+        }
+      } catch (err) {
+        console.error('Failed to load sidebar vault stats:', err);
+      }
+    }
+    loadVaultStats();
+  }, [backendBase]);
 
   const handleSelectCategory = () => {
     if (typeof window !== 'undefined') {
@@ -44,6 +79,11 @@ function MapsPageInner() {
         dict={dict}
         activeCategory="maps"
         onSelectCategory={handleSelectCategory}
+        onOpenQuests={() => setIsQuestsOpen(true)}
+        totalPerksCount={totalPerksCount}
+        survivorCount={survivorCount}
+        killerCount={killerCount}
+        characterCount={characterCount}
       />
 
       <main
@@ -91,6 +131,7 @@ function MapsPageInner() {
         </div>
 
         <MapExplorer initialMapName={initialMapName} />
+        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
       </main>
     </div>
   );

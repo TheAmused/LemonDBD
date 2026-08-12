@@ -251,6 +251,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Scroll,
       color: 'text-amber-400',
       activeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+      href: `/${currentLocale}/quests`,
     },
   ];
 

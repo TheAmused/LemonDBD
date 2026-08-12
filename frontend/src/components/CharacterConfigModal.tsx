@@ -112,16 +112,16 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
   return (
     <div
       onClick={handleSaveAndClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
       role="dialog"
       aria-modal="true"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl shadow-slate-950/80 text-slate-100 animate-in zoom-in-95 duration-200 cursor-default"
+        className="relative w-full max-w-4xl max-h-[88vh] flex flex-col overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl shadow-slate-950/90 text-slate-100 animate-in zoom-in-95 duration-200 cursor-default"
       >
         {/* Header Bar */}
-        <div className="relative p-5 sm:p-6 border-b border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950">
+        <div className="relative p-5 sm:p-6 border-b border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 shrink-0">
           <button
             onClick={handleSaveAndClose}
             className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer"
@@ -142,16 +142,16 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
             </div>
             <div>
               <h2 className="text-xl font-black tracking-wide text-white">
-                Configure {role} Roster Pool
+                Configure {role} Character Roster
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Enable or disable characters to dynamically populate your Perk Randomizer wheels.
+                Click character avatar buttons to toggle them in your Perk Randomizer pool.
               </p>
             </div>
           </div>
 
           {/* Quick Actions & Search Bar */}
-          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
             {/* Search Box */}
             <div className="relative flex-1 w-full">
               <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
@@ -159,7 +159,7 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search character roster..."
+                placeholder={`Search ${role} roster...`}
                 className="w-full rounded-2xl border border-slate-800 bg-slate-950/80 py-2 pl-10 pr-4 text-xs font-medium text-slate-100 placeholder:text-slate-500 focus:border-cyan-500/60 focus:outline-none transition-colors"
               />
             </div>
@@ -185,116 +185,110 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
           </div>
         </div>
 
-        {/* Character Grid Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4">
-          {/* General Perks Card */}
-          <div className="mb-4">
-            <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-              General Perks Category:
-            </p>
-            <div
-              onClick={() => toggleCharacter('General')}
-              className={`group flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                isGeneralSelected
-                  ? 'border-amber-500/60 bg-amber-950/20 shadow-md shadow-amber-950/30'
-                  : 'border-slate-800 bg-slate-950/40 opacity-60 hover:opacity-100'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400">
-                  <Sparkles className="h-5 w-5" />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-sm text-slate-100">General Perks</h4>
-                  <p className="text-xs text-slate-400">Include universal perks not tied to any character</p>
-                </div>
-              </div>
-
-              <div
-                className={`flex h-6 w-6 items-center justify-center rounded-full border ${
-                  isGeneralSelected
-                    ? 'border-amber-400 bg-amber-500 text-slate-950 font-bold'
-                    : 'border-slate-700 bg-slate-900 text-transparent'
-                }`}
-              >
-                <Check className="h-4 w-4" />
-              </div>
-            </div>
+        {/* Character Avatar Buttons Grid */}
+        <div className="p-5 sm:p-6 overflow-y-auto flex-1">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+              Active Selection: {selected.size} / {characterOptions.length + 1}
+            </span>
           </div>
 
-          {/* Character Roster Cards */}
-          <div>
-            <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">
-              {role} Characters ({selected.size - (isGeneralSelected ? 1 : 0)} / {characterOptions.length} Selected):
-            </p>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4">
+            {/* General Perks Avatar Button */}
+            <button
+              onClick={() => toggleCharacter('General')}
+              title="General / Universal Perks"
+              className={`group relative flex flex-col items-center justify-center p-2 rounded-2xl border-2 transition-all cursor-pointer ${
+                isGeneralSelected
+                  ? 'border-amber-400 bg-amber-500/15 shadow-[0_0_20px_rgba(245,158,11,0.35)] scale-105'
+                  : 'border-slate-800 bg-slate-950/50 opacity-40 hover:opacity-100 hover:border-slate-700'
+              }`}
+            >
+              <div className="relative flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-950/40 border border-amber-500/40 text-amber-400 shadow-md">
+                <Sparkles className="h-8 w-8 group-hover:scale-110 transition-transform" />
+              </div>
+              <span className="mt-1.5 text-[11px] font-extrabold text-amber-300 text-center truncate max-w-full">
+                General
+              </span>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {filteredOptions.map((opt) => {
-                const isSelected = selected.has(opt.value);
-                const avatarSrc = getAvatarSrc(opt.value);
+              {/* Active Checkmark Badge */}
+              <div
+                className={`absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border shadow-lg transition-transform ${
+                  isGeneralSelected
+                    ? 'border-amber-300 bg-amber-500 text-slate-950 font-bold scale-100'
+                    : 'scale-0'
+                }`}
+              >
+                <Check className="h-3.5 w-3.5 stroke-[3]" />
+              </div>
+            </button>
 
-                return (
+            {/* Character Avatar Buttons */}
+            {filteredOptions.map((opt) => {
+              const isSelected = selected.has(opt.value);
+              const avatarSrc = getAvatarSrc(opt.value);
+
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => toggleCharacter(opt.value)}
+                  title={opt.value}
+                  className={`group relative flex flex-col items-center justify-center p-2 rounded-2xl border-2 transition-all cursor-pointer ${
+                    isSelected
+                      ? isSurvivor
+                        ? 'border-emerald-400 bg-emerald-500/15 shadow-[0_0_20px_rgba(16,185,129,0.35)] scale-105'
+                        : 'border-rose-500 bg-rose-500/15 shadow-[0_0_20px_rgba(244,63,94,0.35)] scale-105'
+                      : 'border-slate-800 bg-slate-950/50 opacity-40 hover:opacity-100 hover:border-slate-700'
+                  }`}
+                >
+                  {/* BIG Character Avatar */}
+                  {avatarSrc ? (
+                    <img
+                      src={avatarSrc}
+                      alt={opt.value}
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = 'none';
+                      }}
+                      className="h-16 w-16 sm:h-20 sm:w-20 rounded-xl object-cover border border-slate-700/80 shadow-md group-hover:scale-105 transition-transform"
+                    />
+                  ) : (
+                    <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-xl bg-slate-800 text-slate-500 border border-slate-700">
+                      <User className="h-8 w-8" />
+                    </div>
+                  )}
+
+                  {/* Character Name Label */}
+                  <span className="mt-1.5 text-[11px] font-extrabold text-slate-200 text-center truncate max-w-full group-hover:text-white">
+                    {opt.value}
+                  </span>
+
+                  {/* Active Checkmark Badge */}
                   <div
-                    key={opt.value}
-                    onClick={() => toggleCharacter(opt.value)}
-                    className={`group relative flex items-center gap-3 p-2.5 rounded-2xl border cursor-pointer transition-all ${
+                    className={`absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border shadow-lg transition-transform ${
                       isSelected
                         ? isSurvivor
-                          ? 'border-emerald-500/60 bg-emerald-950/20 shadow-sm shadow-emerald-950/40'
-                          : 'border-rose-500/60 bg-rose-950/20 shadow-sm shadow-rose-950/40'
-                        : 'border-slate-800 bg-slate-950/40 opacity-55 hover:opacity-100'
+                          ? 'border-emerald-300 bg-emerald-500 text-slate-950 font-bold scale-100'
+                          : 'border-rose-300 bg-rose-500 text-white font-bold scale-100'
+                        : 'scale-0'
                     }`}
                   >
-                    {/* Avatar Image */}
-                    {avatarSrc ? (
-                      <img
-                        src={avatarSrc}
-                        alt={opt.value}
-                        onError={(e) => {
-                          (e.target as HTMLElement).style.display = 'none';
-                        }}
-                        className="h-10 w-10 rounded-xl object-cover border border-slate-700 shrink-0"
-                      />
-                    ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-slate-500 shrink-0">
-                        <User className="h-5 w-5" />
-                      </div>
-                    )}
-
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-slate-200 truncate group-hover:text-white">
-                        {opt.value}
-                      </p>
-                    </div>
-
-                    {/* Checkmark Badge */}
-                    <div
-                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
-                        isSelected
-                          ? isSurvivor
-                            ? 'border-emerald-400 bg-emerald-500 text-slate-950'
-                            : 'border-rose-400 bg-rose-500 text-white'
-                          : 'border-slate-700 bg-slate-900 text-transparent'
-                      }`}
-                    >
-                      <Check className="h-3.5 w-3.5 stroke-[3]" />
-                    </div>
+                    <Check className="h-3.5 w-3.5 stroke-[3]" />
                   </div>
-                );
-              })}
-            </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Footer Bar */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/80 flex items-center justify-between">
+        <div className="p-4 border-t border-slate-800 bg-slate-950/90 flex items-center justify-between shrink-0">
           <p className="text-xs text-slate-400">
-            Total Enabled Characters: <span className="font-bold text-slate-200">{selected.size}</span>
+            Total Active Characters: <span className="font-extrabold text-slate-200">{selected.size}</span>
           </p>
 
           <button
             onClick={handleSaveAndClose}
-            className="px-6 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 text-white text-xs font-black hover:from-cyan-500 hover:to-teal-500 transition-colors shadow-lg shadow-cyan-950/40 cursor-pointer"
+            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 text-white text-xs font-black hover:from-cyan-500 hover:to-teal-500 transition-colors shadow-lg shadow-cyan-950/50 cursor-pointer"
           >
             Save & Done
           </button>

@@ -287,7 +287,7 @@ class PerkService:
 
         total_count = len(results)
         page = max(1, page)
-        limit = max(1, min(limit, 200))
+        limit = max(1, min(limit, 10000))
         total_pages = math.ceil(total_count / limit) if total_count > 0 else 1
 
         start_idx = (page - 1) * limit

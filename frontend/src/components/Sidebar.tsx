@@ -30,6 +30,8 @@ import {
   Repeat,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  Folder,
 } from 'lucide-react';
 import { ScraperConfigModal } from './ScraperConfigModal';
 import { useSidebarState } from '@/hooks/useSidebarState';
@@ -68,6 +70,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [syncStatus, setSyncStatus] = useState<string>('');
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [othersOpen, setOthersOpen] = useState(false);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const toggleLocale =
@@ -147,10 +150,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
     href?: string;
   }
 
-  const navItems: NavItem[] = [
+  // Top-Level Main Navigation
+  const mainNavItems: NavItem[] = [
     {
       id: 'all',
-      label: dict.filters.allCategories || 'Perks Vault',
+      label: dict.filters?.allCategories || 'Perks Vault',
       icon: Shield,
       color: 'text-red-500',
       activeBg: 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20',
@@ -158,7 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'generator',
-      label: dict.filters.generatorTab || 'Perk Generator',
+      label: dict.filters?.generatorTab || 'Perk Randomizer',
       icon: Dices,
       color: 'text-amber-500',
       activeBg: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
@@ -180,6 +184,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
       href: `/${currentLocale}/challenge`,
     },
+    {
+      id: 'maps',
+      label: '🗺️ Map Explorer',
+      icon: Compass,
+      color: 'text-cyan-400',
+      activeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
+      href: `/${currentLocale}/maps`,
+    },
+    {
+      id: 'items',
+      label: '📦 Items & Add-ons',
+      icon: Package,
+      color: 'text-teal-400',
+      activeBg: 'bg-teal-500/10 text-teal-400 border border-teal-500/20',
+      href: `/${currentLocale}/items`,
+    },
+    {
+      id: 'characters',
+      label: '👤 Characters',
+      icon: Users,
+      color: 'text-indigo-400',
+      activeBg: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
+      href: `/${currentLocale}/characters`,
+    },
+  ];
+
+  // Droppable "Others" Accordion Navigation
+  const otherNavItems: NavItem[] = [
     {
       id: 'draft',
       label: '🏆 Draft Room',
@@ -221,30 +253,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       href: `/${currentLocale}/custom-perks`,
     },
     {
-      id: 'maps',
-      label: '🗺️ Map Explorer',
-      icon: Compass,
-      color: 'text-cyan-400',
-      activeBg: 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20',
-      href: `/${currentLocale}/maps`,
-    },
-    {
-      id: 'items',
-      label: '📦 Items & Add-ons',
-      icon: Package,
-      color: 'text-teal-400',
-      activeBg: 'bg-teal-500/10 text-teal-400 border border-teal-500/20',
-      href: `/${currentLocale}/items`,
-    },
-    {
-      id: 'characters',
-      label: '👤 Characters',
-      icon: Users,
-      color: 'text-indigo-400',
-      activeBg: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
-      href: `/${currentLocale}/characters`,
-    },
-    {
       id: 'quests',
       label: '📜 Quests',
       icon: Scroll,
@@ -254,10 +262,76 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
+  // Auto-expand "Others" accordion if an item inside it is active
+  const isOtherActive = otherNavItems.some(
+    (item) => activeCategory === item.id || (item.href && pathname?.includes(item.href))
+  );
+
+  useEffect(() => {
+    if (isOtherActive) {
+      setOthersOpen(true);
+    }
+  }, [isOtherActive]);
+
   // Calculate Survivor vs Killer distribution percentages
   const safeTotal = survivorCount + killerCount || 1;
   const survivorPct = Math.round((survivorCount / safeTotal) * 100);
   const killerPct = 100 - survivorPct;
+
+  const renderNavItem = (item: NavItem) => {
+    const Icon = item.icon;
+    const isActive = activeCategory === item.id || (item.href && pathname?.includes(item.href));
+
+    if (item.href) {
+      return (
+        <Link
+          key={item.id}
+          href={item.href}
+          aria-current={isActive ? 'page' : undefined}
+          onClick={() => {
+            setMobileOpen(false);
+          }}
+          className={
+            'w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
+            (isActive
+              ? item.activeBg
+              : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
+          }
+        >
+          <div className="flex items-center gap-3">
+            <Icon className={'h-4 w-4 ' + item.color} />
+            <span>{item.label}</span>
+          </div>
+        </Link>
+      );
+    }
+
+    return (
+      <button
+        key={item.id}
+        aria-current={isActive ? 'page' : undefined}
+        onClick={() => {
+          if (item.id === 'quests') {
+            if (onOpenQuests) onOpenQuests();
+          } else if (onSelectCategory) {
+            onSelectCategory(item.id);
+          }
+          setMobileOpen(false);
+        }}
+        className={
+          'w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
+          (isActive
+            ? item.activeBg
+            : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
+        }
+      >
+        <div className="flex items-center gap-3">
+          <Icon className={'h-4 w-4 ' + item.color} />
+          <span>{item.label}</span>
+        </div>
+      </button>
+    );
+  };
 
   const renderSidebarContent = () => (
     <div className="flex h-full flex-col justify-between p-4 overflow-y-auto">
@@ -294,60 +368,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
             Navigation
           </p>
 
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeCategory === item.id || (item.href && pathname?.includes(item.href));
+          {/* Main Top-Level Items */}
+          {mainNavItems.map(renderNavItem)}
 
-            if (item.href) {
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  aria-current={isActive ? 'page' : undefined}
-                  onClick={() => {
-                    setMobileOpen(false);
-                  }}
-                  className={
-                    'w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
-                    (isActive
-                      ? item.activeBg
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
-                  }
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className={'h-4 w-4 ' + item.color} />
-                    <span>{item.label}</span>
-                  </div>
-                </Link>
-              );
-            }
+          {/* Droppable "Others" Accordion Group */}
+          <div className="pt-1">
+            <button
+              onClick={() => setOthersOpen(!othersOpen)}
+              className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                isOtherActive
+                  ? 'bg-slate-800/80 text-cyan-400 border border-cyan-500/30'
+                  : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Folder className="h-4 w-4 text-cyan-400" />
+                <span>Others</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {isOtherActive && (
+                  <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                )}
+                <ChevronDown
+                  className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
+                    othersOpen ? 'rotate-180' : 'rotate-0'
+                  }`}
+                />
+              </div>
+            </button>
 
-            return (
-              <button
-                key={item.id}
-                aria-current={isActive ? 'page' : undefined}
-                onClick={() => {
-                  if (item.id === 'quests') {
-                    if (onOpenQuests) onOpenQuests();
-                  } else if (onSelectCategory) {
-                    onSelectCategory(item.id);
-                  }
-                  setMobileOpen(false);
-                }}
-                className={
-                  'w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
-                  (isActive
-                    ? item.activeBg
-                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
-                }
-              >
-                <div className="flex items-center gap-3">
-                  <Icon className={'h-4 w-4 ' + item.color} />
-                  <span>{item.label}</span>
-                </div>
-              </button>
-            );
-          })}
+            {/* Nested Sub-Menu List */}
+            {othersOpen && (
+              <div className="mt-1 ml-3 pl-2.5 space-y-1 border-l-2 border-slate-800/80">
+                {otherNavItems.map(renderNavItem)}
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* LIVE VAULT STATS WIDGET */}

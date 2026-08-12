@@ -22,10 +22,12 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { Sidebar } from '@/components/Sidebar';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
+import { useSidebarState } from '@/hooks/useSidebarState';
 
 export default function ChallengePage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
+  const { isCollapsed } = useSidebarState();
 
   const [dict, setDict] = useState<any>(null);
   const [activeRole, setActiveRole] = useState<Role>('survivor');
@@ -256,8 +258,11 @@ export default function ChallengePage() {
         characterCount={characterCount}
       />
 
-      {/* Main Challenge Content */}
-      <main className="flex-1 lg:pl-64 p-4 sm:p-6 lg:p-8 overflow-y-auto w-full">
+      <main
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
+          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        }`}
+      >
         {/* Error Alert */}
         {error && (
           <div className="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-sm flex items-center justify-between shadow-lg">

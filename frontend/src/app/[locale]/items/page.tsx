@@ -6,10 +6,12 @@ import { Sidebar } from '@/components/Sidebar';
 import { ItemsAddonsViewer } from '@/components/ItemsAddonsViewer';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
+import { useSidebarState } from '@/hooks/useSidebarState';
 
 export default function ItemsPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
+  const { isCollapsed } = useSidebarState();
   const [dict, setDict] = useState<any>(null);
   const [category, setCategory] = useState<string>('items');
 
@@ -27,7 +29,11 @@ export default function ItemsPage() {
         onSelectCategory={setCategory}
         currentLocale={locale}
       />
-      <main className="flex-1 lg:pl-64 p-4 md:p-8 lg:p-10 w-full overflow-y-auto transition-all">
+      <main
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
+          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        }`}
+      >
         <ItemsAddonsViewer />
       </main>
     </div>

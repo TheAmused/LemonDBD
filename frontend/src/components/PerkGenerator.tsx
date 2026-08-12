@@ -17,6 +17,7 @@ import {
   Layers,
   Users,
   EyeOff,
+  Trash2,
 } from 'lucide-react';
 import { Perk } from './PerkCard';
 import { WheelOfFortune, EXHAUSTION_PERK_NAMES } from './WheelOfFortune';
@@ -304,6 +305,30 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     }
   };
 
+  const handleResetAllLoadoutAndWheels = async () => {
+    setLoadout([null, null, null, null]);
+    setActiveSlotIdx(0);
+    setRevealedSlots([false, false, false, false]);
+    setActiveMutator(null);
+    try {
+      const updatedDrawn = await resetDrawnPerks(role);
+      setDrawnPerks(updatedDrawn);
+    } catch (err) {
+      console.error('Failed resetting drawn perks in SQLite API:', err);
+      setDrawnPerks([]);
+    }
+  };
+
+  const handleClearSlot = (slotIdx: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLoadout((prev) => {
+      const next = [...prev];
+      next[slotIdx] = null;
+      return next;
+    });
+    setActiveSlotIdx(slotIdx);
+  };
+
   const handleResetDrawnPerks = async () => {
     try {
       const updatedDrawn = await resetDrawnPerks(role);
@@ -440,6 +465,16 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               <span>{activeMutator ? `Curse: ${activeMutator.name}` : 'Chaos Wheel'}</span>
             </button>
 
+            {/* Reset Loadout & Wheels Button */}
+            <button
+              onClick={handleResetAllLoadoutAndWheels}
+              className="flex items-center gap-1.5 rounded-xl border border-rose-500/50 bg-rose-500/10 px-3 py-2 text-xs font-bold text-rose-400 hover:bg-rose-500/20 transition-all cursor-pointer shadow-sm"
+              title="Reset wheels, clear active loadout slots, and reset slot focus"
+            >
+              <RotateCcw className="h-3.5 w-3.5 text-rose-400" />
+              <span>Reset Loadout & Wheels</span>
+            </button>
+
             {/* Copy Build Button */}
             <button
               onClick={handleCopyBuild}
@@ -503,6 +538,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           backendBase={backendBase}
           activeMutator={activeMutator}
           onOpenChaosModal={() => setIsChaosModalOpen(true)}
+          onResetWheels={handleResetAllLoadoutAndWheels}
         />
       )}
 
@@ -583,9 +619,20 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                       [-/-]
                     </span>
                   )}
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                    Slot #{idx + 1}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                      Slot #{idx + 1}
+                    </span>
+                    {slotData && (
+                      <button
+                        onClick={(e) => handleClearSlot(idx, e)}
+                        className="rounded-lg p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 transition-colors cursor-pointer"
+                        title="Clear this perk slot"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Perk Icon & Bigger Avatar Row */}

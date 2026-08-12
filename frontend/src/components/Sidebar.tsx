@@ -32,6 +32,7 @@ import {
   ChevronRight,
   ChevronDown,
   Folder,
+  Gamepad2,
 } from 'lucide-react';
 import { ScraperConfigModal } from './ScraperConfigModal';
 import { useSidebarState } from '@/hooks/useSidebarState';
@@ -208,6 +209,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
       href: `/${currentLocale}/characters`,
     },
+    {
+      id: 'guesser',
+      label: dict.guesser?.navLink ? `🎮 ${dict.guesser.navLink}` : '🎮 Guesser',
+      icon: Gamepad2,
+      color: 'text-violet-400',
+      activeBg: 'bg-violet-500/10 text-violet-400 border border-violet-500/20',
+      href: `/${currentLocale}/characters/guesser`,
+    },
   ];
 
   // Droppable "Others" Accordion Navigation
@@ -280,7 +289,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon;
-    const isActive = activeCategory === item.id || (item.href && pathname?.includes(item.href));
+    const isActive =
+      activeCategory === item.id ||
+      (item.href &&
+        (item.id === 'characters'
+          ? pathname === item.href || pathname === item.href + '/'
+          : pathname?.includes(item.href)));
 
     if (item.href) {
       return (

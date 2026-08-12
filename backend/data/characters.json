@@ -561,7 +561,7 @@
   },
   {
     "name": "The Mastermind",
-    "real_name": "The Mastermind",
+    "real_name": "Albert Wesker",
     "wiki_slug": "the_mastermind",
     "short_name": "the_mastermind",
     "category": "Killer",
@@ -571,7 +571,7 @@
   },
   {
     "name": "The Animatronic",
-    "real_name": "The Animatronic",
+    "real_name": "Springtrap",
     "wiki_slug": "the_animatronic",
     "short_name": "the_animatronic",
     "category": "Killer",
@@ -581,7 +581,7 @@
   },
   {
     "name": "The Legion",
-    "real_name": "The Legion",
+    "real_name": "Frank, Julie, Susie, Joey",
     "wiki_slug": "the_legion",
     "short_name": "the_legion",
     "category": "Killer",
@@ -591,7 +591,7 @@
   },
   {
     "name": "The Huntress",
-    "real_name": "The Huntress",
+    "real_name": "Anna",
     "wiki_slug": "the_huntress",
     "short_name": "the_huntress",
     "category": "Killer",
@@ -611,7 +611,7 @@
   },
   {
     "name": "The Spirit",
-    "real_name": "The Spirit",
+    "real_name": "Rin Yamaoka",
     "wiki_slug": "the_spirit",
     "short_name": "the_spirit",
     "category": "Killer",
@@ -621,7 +621,7 @@
   },
   {
     "name": "The Hillbilly",
-    "real_name": "The Hillbilly",
+    "real_name": "Max Thompson Jr.",
     "wiki_slug": "the_hillbilly",
     "short_name": "the_hillbilly",
     "category": "Killer",
@@ -631,7 +631,7 @@
   },
   {
     "name": "The Nurse",
-    "real_name": "The Nurse",
+    "real_name": "Sally Smithson",
     "wiki_slug": "the_nurse",
     "short_name": "the_nurse",
     "category": "Killer",
@@ -641,7 +641,7 @@
   },
   {
     "name": "The Wraith",
-    "real_name": "The Wraith",
+    "real_name": "Philip Ojomo",
     "wiki_slug": "the_wraith",
     "short_name": "the_wraith",
     "category": "Killer",
@@ -651,7 +651,7 @@
   },
   {
     "name": "The Blight",
-    "real_name": "The Blight",
+    "real_name": "Talbot Grimes",
     "wiki_slug": "the_blight",
     "short_name": "the_blight",
     "category": "Killer",
@@ -661,7 +661,7 @@
   },
   {
     "name": "The Shape",
-    "real_name": "The Shape",
+    "real_name": "Michael Myers",
     "wiki_slug": "the_shape",
     "short_name": "the_shape",
     "category": "Killer",
@@ -671,7 +671,7 @@
   },
   {
     "name": "The Cannibal",
-    "real_name": "The Cannibal",
+    "real_name": "Bubba Sawyer",
     "wiki_slug": "the_cannibal",
     "short_name": "the_cannibal",
     "category": "Killer",
@@ -681,7 +681,7 @@
   },
   {
     "name": "The Ghost Face",
-    "real_name": "The Ghost Face",
+    "real_name": "Danny Johnson",
     "wiki_slug": "the_ghost_face",
     "short_name": "the_ghost_face",
     "category": "Killer",
@@ -691,7 +691,7 @@
   },
   {
     "name": "The Trapper",
-    "real_name": "The Trapper",
+    "real_name": "Evan MacMillan",
     "wiki_slug": "the_trapper",
     "short_name": "the_trapper",
     "category": "Killer",
@@ -701,7 +701,7 @@
   },
   {
     "name": "The Deathslinger",
-    "real_name": "The Deathslinger",
+    "real_name": "Caleb Quinn",
     "wiki_slug": "the_deathslinger",
     "short_name": "the_deathslinger",
     "category": "Killer",
@@ -711,7 +711,7 @@
   },
   {
     "name": "The Dark Lord",
-    "real_name": "The Dark Lord",
+    "real_name": "Dracula",
     "wiki_slug": "the_dark_lord",
     "short_name": "the_dark_lord",
     "category": "Killer",
@@ -731,7 +731,7 @@
   },
   {
     "name": "The Pig",
-    "real_name": "The Pig",
+    "real_name": "Amanda Young",
     "wiki_slug": "the_pig",
     "short_name": "the_pig",
     "category": "Killer",
@@ -741,7 +741,7 @@
   },
   {
     "name": "The Trickster",
-    "real_name": "The Trickster",
+    "real_name": "Ji-Woon Hak",
     "wiki_slug": "the_trickster",
     "short_name": "the_trickster",
     "category": "Killer",
@@ -751,7 +751,7 @@
   },
   {
     "name": "The Knight",
-    "real_name": "The Knight",
+    "real_name": "Tarhos Kovács",
     "wiki_slug": "the_knight",
     "short_name": "the_knight",
     "category": "Killer",
@@ -761,7 +761,7 @@
   },
   {
     "name": "The Doctor",
-    "real_name": "The Doctor",
+    "real_name": "Herman Carter",
     "wiki_slug": "the_doctor",
     "short_name": "the_doctor",
     "category": "Killer",
@@ -771,7 +771,7 @@
   },
   {
     "name": "The Oni",
-    "real_name": "The Oni",
+    "real_name": "Kazan Yamaoka",
     "wiki_slug": "the_oni",
     "short_name": "the_oni",
     "category": "Killer",
@@ -791,7 +791,7 @@
   },
   {
     "name": "The Good Guy",
-    "real_name": "The Good Guy",
+    "real_name": "Charles Lee Ray",
     "wiki_slug": "the_good_guy",
     "short_name": "the_good_guy",
     "category": "Killer",
@@ -801,7 +801,7 @@
   },
   {
     "name": "The Clown",
-    "real_name": "The Clown",
+    "real_name": "Kenneth Chase",
     "wiki_slug": "the_clown",
     "short_name": "the_clown",
     "category": "Killer",
@@ -811,7 +811,7 @@
   },
   {
     "name": "The Nightmare",
-    "real_name": "The Nightmare",
+    "real_name": "Freddy Krueger",
     "wiki_slug": "the_nightmare",
     "short_name": "the_nightmare",
     "category": "Killer",
@@ -821,7 +821,7 @@
   },
   {
     "name": "The Onryō",
-    "real_name": "The Onryō",
+    "real_name": "Sadako Yamamura",
     "wiki_slug": "the_onryō",
     "short_name": "the_onryō",
     "category": "Killer",
@@ -831,7 +831,7 @@
   },
   {
     "name": "The Lich",
-    "real_name": "The Lich",
+    "real_name": "Vecna",
     "wiki_slug": "the_lich",
     "short_name": "the_lich",
     "category": "Killer",
@@ -841,7 +841,7 @@
   },
   {
     "name": "The Plague",
-    "real_name": "The Plague",
+    "real_name": "Adiris",
     "wiki_slug": "the_plague",
     "short_name": "the_plague",
     "category": "Killer",
@@ -861,7 +861,7 @@
   },
   {
     "name": "The Executioner",
-    "real_name": "The Executioner",
+    "real_name": "Pyramid Head",
     "wiki_slug": "the_executioner",
     "short_name": "the_executioner",
     "category": "Killer",
@@ -871,7 +871,7 @@
   },
   {
     "name": "The Artist",
-    "real_name": "The Artist",
+    "real_name": "Carmina Mora",
     "wiki_slug": "the_artist",
     "short_name": "the_artist",
     "category": "Killer",
@@ -881,7 +881,7 @@
   },
   {
     "name": "The Xenomorph",
-    "real_name": "The Xenomorph",
+    "real_name": "Xenomorph",
     "wiki_slug": "the_xenomorph",
     "short_name": "the_xenomorph",
     "category": "Killer",
@@ -891,7 +891,7 @@
   },
   {
     "name": "The Singularity",
-    "real_name": "The Singularity",
+    "real_name": "HUX-A7-13",
     "wiki_slug": "the_singularity",
     "short_name": "the_singularity",
     "category": "Killer",
@@ -921,7 +921,7 @@
   },
   {
     "name": "The Demogorgon",
-    "real_name": "The Demogorgon",
+    "real_name": "Demogorgon",
     "wiki_slug": "the_demogorgon",
     "short_name": "the_demogorgon",
     "category": "Killer",
@@ -931,7 +931,7 @@
   },
   {
     "name": "The Hag",
-    "real_name": "The Hag",
+    "real_name": "Lisa Sherwood",
     "wiki_slug": "the_hag",
     "short_name": "the_hag",
     "category": "Killer",
@@ -941,7 +941,7 @@
   },
   {
     "name": "The Cenobite",
-    "real_name": "The Cenobite",
+    "real_name": "Elliot Spencer",
     "wiki_slug": "the_cenobite",
     "short_name": "the_cenobite",
     "category": "Killer",
@@ -951,7 +951,7 @@
   },
   {
     "name": "The Twins",
-    "real_name": "The Twins",
+    "real_name": "Charlotte & Victor Deshayes",
     "wiki_slug": "the_twins",
     "short_name": "the_twins",
     "category": "Killer",
@@ -961,7 +961,7 @@
   },
   {
     "name": "The Skull Merchant",
-    "real_name": "The Skull Merchant",
+    "real_name": "Adriana Imai",
     "wiki_slug": "the_skull_merchant",
     "short_name": "the_skull_merchant",
     "category": "Killer",

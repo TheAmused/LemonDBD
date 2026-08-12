@@ -55,6 +55,46 @@ TEACHABLE_PERK_OVERRIDE = {
     "cross-examination": "Shane Wiigwaas",
 }
 
+KILLER_REAL_NAMES = {
+    "The Trapper": "Evan MacMillan",
+    "The Wraith": "Philip Ojomo",
+    "The Hillbilly": "Max Thompson Jr.",
+    "The Nurse": "Sally Smithson",
+    "The Shape": "Michael Myers",
+    "The Hag": "Lisa Sherwood",
+    "The Doctor": "Herman Carter",
+    "The Huntress": "Anna",
+    "The Cannibal": "Bubba Sawyer",
+    "The Nightmare": "Freddy Krueger",
+    "The Pig": "Amanda Young",
+    "The Clown": "Kenneth Chase",
+    "The Spirit": "Rin Yamaoka",
+    "The Legion": "Frank, Julie, Susie, Joey",
+    "The Plague": "Adiris",
+    "The Ghost Face": "Danny Johnson",
+    "The Demogorgon": "Demogorgon",
+    "The Deathslinger": "Caleb Quinn",
+    "The Executioner": "Pyramid Head",
+    "The Oni": "Kazan Yamaoka",
+    "The Blight": "Talbot Grimes",
+    "The Twins": "Charlotte & Victor Deshayes",
+    "The Trickster": "Ji-Woon Hak",
+    "The Cenobite": "Elliot Spencer",
+    "The Artist": "Carmina Mora",
+    "The Onryō": "Sadako Yamamura",
+    "The Dredge": "The Dredge",
+    "The Mastermind": "Albert Wesker",
+    "The Knight": "Tarhos Kovács",
+    "The Skull Merchant": "Adriana Imai",
+    "The Singularity": "HUX-A7-13",
+    "The Xenomorph": "Xenomorph",
+    "The Good Guy": "Charles Lee Ray",
+    "The Unknown": "The Unknown",
+    "The Lich": "Vecna",
+    "The Dark Lord": "Dracula",
+    "The Animatronic": "Springtrap"
+}
+
 
 @dataclass
 class ScraperConfig:
@@ -1919,6 +1959,11 @@ class ScraperService:
                 res = self.wiki_driver.scrape_all()
                 characters, perks, items, addons = unpack_res(res)
                 source_used = "wiki"
+
+            # Populate real names for killers
+            for c in characters:
+                if c.category == "Killer" and c.name in KILLER_REAL_NAMES:
+                    c.real_name = KILLER_REAL_NAMES[c.name]
 
             self._preserve_release_numbers(characters)
 

@@ -76,5 +76,36 @@
   "empty": {
     "title": "No se encontraron habilidades",
     "subtitle": "Intenta ajustar los términos de búsqueda o cambiar los filtros."
+  },
+  "guesser": {
+    "navLink": "Adivino",
+    "title": "Adivino de Conocimiento de DBD",
+    "subtitle": "Pon a prueba tu dominio sobre supervivientes, asesinos, poderes y habilidades.",
+    "selectMode": "Selecciona un modo de juego",
+    "currentStreak": "Racha actual",
+    "bestStreak": "Mejor racha",
+    "accuracy": "Precisión",
+    "totalGuesses": "Intentos totales",
+    "play": "Jugar",
+    "playing": "Jugando",
+    "correct": "¡Correcto!",
+    "incorrect": "¡Incorrecto!",
+    "next": "Siguiente pregunta",
+    "back": "Volver a modos",
+    "loading": "Cargando juego...",
+    "modeCharacterTitle": "Adivino de Personajes",
+    "modeCharacterDesc": "Identifica supervivientes, asesinos y poderes basándote en nombres reales y descripciones.",
+    "modePerkDescTitle": "Adivino de Habilidades por Descripción",
+    "modePerkDescDesc": "Adivina la habilidad por su descripción. ¡Se tacharán palabras en rachas altas!",
+    "modePerkNameToIconTitle": "Habilidad a Icono",
+    "modePerkNameToIconDesc": "Elige el icono correcto. ¡Rotarán, se atenuarán y se recortarán en rachas altas!",
+    "modePerkIconToNameTitle": "Icono a Habilidad",
+    "modePerkIconToNameDesc": "Adivina el nombre de la habilidad a partir de su icono. ¡Se aplican distorsiones al icono!",
+    "modeMapTitle": "Adivino de Mapas",
+    "modeMapDesc": "Pon a prueba tu conocimiento visual de reinos, semillas, estructuras y generadores.",
+    "modeMemesTitle": "Adivino de Memes de DBD",
+    "modeMemesDesc": "Adivina los chistes y nombres de los memes populares de la comunidad de DBD.",
+    "reset": "Reiniciar Racha",
+    "streakResetSuccess": "Racha reiniciada con éxito"
   }
 }

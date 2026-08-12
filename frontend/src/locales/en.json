@@ -76,5 +76,36 @@
   "empty": {
     "title": "No Perks Found",
     "subtitle": "Try adjusting your search terms or filter combinations."
+  },
+  "guesser": {
+    "navLink": "Guesser",
+    "title": "DBD Knowledge Guesser",
+    "subtitle": "Test your mastery of survivors, killers, powers, and perks.",
+    "selectMode": "Select a Game Mode",
+    "currentStreak": "Current Streak",
+    "bestStreak": "Best Streak",
+    "accuracy": "Accuracy",
+    "totalGuesses": "Total Guesses",
+    "play": "Play",
+    "playing": "Playing",
+    "correct": "Correct!",
+    "incorrect": "Incorrect!",
+    "next": "Next Question",
+    "back": "Back to modes",
+    "loading": "Loading Game...",
+    "modeCharacterTitle": "Character Guesser",
+    "modeCharacterDesc": "Identify survivors, killers, and powers based on descriptions and real names.",
+    "modePerkDescTitle": "Perk Description Guesser",
+    "modePerkDescDesc": "Guess the perk from its text. Words are progressively scratched out at higher streaks!",
+    "modePerkNameToIconTitle": "Name to Icon Guesser",
+    "modePerkNameToIconDesc": "Pick the right perk icon. Icons rotate, gray out, and crop at higher streaks!",
+    "modePerkIconToNameTitle": "Icon to Name Guesser",
+    "modePerkIconToNameDesc": "Guess the perk name from its icon. Adaptive distortion applies to icons!",
+    "modeMapTitle": "Map Guesser",
+    "modeMapDesc": "Test your visual recognition of realms, seeds, tiles, and generator loops.",
+    "modeMemesTitle": "DBD Meme Guesser",
+    "modeMemesDesc": "Guess the jokes and names from popular Dead by Daylight community memes.",
+    "reset": "Reset Streak",
+    "streakResetSuccess": "Streak reset successfully"
   }
 }

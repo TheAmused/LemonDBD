@@ -205,58 +205,60 @@ function DashboardContent() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        {/* ── Atmospheric Hero Header ── */}
-        <div className="mb-7 flex flex-col gap-4">
-          <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60">
-            {/* Background Glow Accents */}
-            <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
-            <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
+        {/* ── Atmospheric Hero Header (Vault View Only) ── */}
+        {category !== 'generator' && (
+          <div className="mb-7 flex flex-col gap-4">
+            <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60">
+              {/* Background Glow Accents */}
+              <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
+              <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
 
-            <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              {/* Header Title & Subtitle */}
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/25 shadow-lg shadow-cyan-950/40">
-                  <Database className="h-6 w-6 text-cyan-400" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-black text-slate-100 tracking-tight sm:text-3xl">
-                    Perks Vault & Codex
-                  </h1>
-                  <p className="text-xs text-slate-400 mt-1 max-w-xl">
-                    Explore all Dead by Daylight Survivor and Killer teachables, descriptions, and character assignments in one place.
-                  </p>
-                </div>
-              </div>
-
-              {/* Dynamic Vault Counter Badges */}
-              <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
-                <div className="flex items-center gap-2.5 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 shadow-inner">
-                  <Flame className="h-4 w-4 text-cyan-400" />
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase text-slate-500">Vault Total</span>
-                    <span className="text-xs font-black text-slate-100">{totalVaultPerks}</span>
+              <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                {/* Header Title & Subtitle */}
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/25 shadow-lg shadow-cyan-950/40">
+                    <Database className="h-6 w-6 text-cyan-400" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-black text-slate-100 tracking-tight sm:text-3xl">
+                      Perks Vault & Codex
+                    </h1>
+                    <p className="text-xs text-slate-400 mt-1 max-w-xl">
+                      Explore all Dead by Daylight Survivor and Killer teachables, descriptions, and character assignments in one place.
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-950/30 px-4 py-2.5 shadow-inner">
-                  <Shield className="h-4 w-4 text-emerald-400" />
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase text-emerald-500/80">Survivor</span>
-                    <span className="text-xs font-black text-emerald-300">{survivorCount}</span>
+                {/* Dynamic Vault Counter Badges */}
+                <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
+                  <div className="flex items-center gap-2.5 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 shadow-inner">
+                    <Flame className="h-4 w-4 text-cyan-400" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-bold uppercase text-slate-500">Vault Total</span>
+                      <span className="text-xs font-black text-slate-100">{totalVaultPerks}</span>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-2.5 rounded-2xl border border-rose-500/30 bg-rose-950/30 px-4 py-2.5 shadow-inner">
-                  <Skull className="h-4 w-4 text-rose-400" />
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase text-rose-500/80">Killer</span>
-                    <span className="text-xs font-black text-rose-300">{killerCount}</span>
+                  <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-950/30 px-4 py-2.5 shadow-inner">
+                    <Shield className="h-4 w-4 text-emerald-400" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-bold uppercase text-emerald-500/80">Survivor</span>
+                      <span className="text-xs font-black text-emerald-300">{survivorCount}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2.5 rounded-2xl border border-rose-500/30 bg-rose-950/30 px-4 py-2.5 shadow-inner">
+                    <Skull className="h-4 w-4 text-rose-400" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-bold uppercase text-rose-500/80">Killer</span>
+                      <span className="text-xs font-black text-rose-300">{killerCount}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* ── Content View ── */}
         {category === 'generator' ? (

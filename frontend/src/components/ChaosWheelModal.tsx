@@ -57,16 +57,6 @@ export const CHAOS_MUTATORS: ChaosMutator[] = [
     borderColor: 'border-indigo-500',
     textColor: 'text-indigo-300',
   },
-  {
-    id: 'double_xp',
-    name: 'Double XP Blessing',
-    description: 'Earn 2x XP rewards upon completing this trial successfully!',
-    type: 'buff',
-    icon: '⚡',
-    badgeBg: 'bg-emerald-950/90',
-    borderColor: 'border-emerald-500',
-    textColor: 'text-emerald-300',
-  },
 ];
 
 interface ChaosWheelModalProps {

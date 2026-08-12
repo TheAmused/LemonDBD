@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Dices,
   Shield,
@@ -15,10 +15,13 @@ import {
   CircleDot,
   Repeat,
   Layers,
+  Users,
+  EyeOff,
 } from 'lucide-react';
 import { Perk } from './PerkCard';
 import { WheelOfFortune, EXHAUSTION_PERK_NAMES } from './WheelOfFortune';
 import { ChaosWheelModal, ChaosMutator } from './ChaosWheelModal';
+import { CharacterConfigModal } from './CharacterConfigModal';
 import {
   fetchGeneratorConfig,
   updateGeneratorConfig,
@@ -39,7 +42,7 @@ interface DrawnSlot {
   perk?: Perk;
 }
 
-const STORAGE_KEY = 'lemon_dbd_generator_v2';
+const STORAGE_KEY = 'lemon_dbd_generator_v3';
 
 export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
   allPerks,
@@ -49,12 +52,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
   const [role, setRole] = useState<'Survivor' | 'Killer'>('Survivor');
   const [genMode, setGenMode] = useState<'instant' | 'wheel'>('instant');
   const [noRepeatPerks, setNoRepeatPerks] = useState<boolean>(true);
-  const [showConfig, setShowConfig] = useState(false);
-
-  // Config parameters
-  const [totalPages, setTotalPages] = useState<number>(12);
-  const [perksPerPage, setPerksPerPage] = useState<number>(15);
-  const [lastPagePerks, setLastPagePerks] = useState<number>(8);
   const [spinDurationSec, setSpinDurationSec] = useState<number>(3);
 
   const [drawnPerks, setDrawnPerks] = useState<string[]>([]);
@@ -64,7 +61,27 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
   const [activeMutator, setActiveMutator] = useState<ChaosMutator | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Character Configuration State
+  const [isCharModalOpen, setIsCharModalOpen] = useState(false);
+  const [enabledSurvCharacters, setEnabledSurvCharacters] = useState<string[]>([]);
+  const [enabledKillerCharacters, setEnabledKillerCharacters] = useState<string[]>([]);
+  const [revealedSlots, setRevealedSlots] = useState<boolean[]>([false, false, false, false]);
+
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+  // Available Characters List by Role
+  const characterOptions = useMemo(() => {
+    const rolePerks = allPerks.filter((p) => p.category === role);
+    const namesSet = new Set<string>();
+    rolePerks.forEach((p) => {
+      if (p.character && p.character !== 'General') {
+        namesSet.add(p.character);
+      }
+    });
+    return Array.from(namesSet)
+      .sort((a, b) => a.localeCompare(b))
+      .map((name) => ({ value: name, label: name }));
+  }, [allPerks, role]);
 
   // Load state from LocalStorage on mount
   useEffect(() => {
@@ -75,17 +92,32 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
         if (parsed.role) setRole(parsed.role);
         if (parsed.genMode) setGenMode(parsed.genMode);
         if (typeof parsed.noRepeatPerks === 'boolean') setNoRepeatPerks(parsed.noRepeatPerks);
-        if (parsed.totalPages) setTotalPages(parsed.totalPages);
-        if (parsed.perksPerPage) setPerksPerPage(parsed.perksPerPage);
-        if (parsed.lastPagePerks) setLastPagePerks(parsed.lastPagePerks);
         if (parsed.spinDurationSec) setSpinDurationSec(parsed.spinDurationSec);
         if (parsed.loadout) setLoadout(parsed.loadout);
         if (typeof parsed.activeSlotIdx === 'number') setActiveSlotIdx(parsed.activeSlotIdx);
       }
+
+      const savedSurv = localStorage.getItem('lemon_dbd_enabled_survs');
+      if (savedSurv) setEnabledSurvCharacters(JSON.parse(savedSurv));
+
+      const savedKillers = localStorage.getItem('lemon_dbd_enabled_killers');
+      if (savedKillers) setEnabledKillerCharacters(JSON.parse(savedKillers));
     } catch (e) {
       console.error('Failed loading generator state from localStorage:', e);
     }
   }, []);
+
+  // Initialize all characters enabled if empty
+  useEffect(() => {
+    if (characterOptions.length === 0) return;
+    const allCharNames = ['General', ...characterOptions.map((c) => c.value)];
+
+    if (role === 'Survivor' && enabledSurvCharacters.length === 0) {
+      setEnabledSurvCharacters(allCharNames);
+    } else if (role === 'Killer' && enabledKillerCharacters.length === 0) {
+      setEnabledKillerCharacters(allCharNames);
+    }
+  }, [characterOptions, role, enabledSurvCharacters.length, enabledKillerCharacters.length]);
 
   // Fetch generator config from SQLite on mount
   useEffect(() => {
@@ -100,9 +132,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
         if (typeof config.no_repeat_perks !== 'undefined') {
           setNoRepeatPerks(Boolean(config.no_repeat_perks));
         }
-        if (config.total_pages) setTotalPages(config.total_pages);
-        if (config.perks_per_page) setPerksPerPage(config.perks_per_page);
-        if (config.last_page_perks) setLastPagePerks(config.last_page_perks);
         if (config.spin_duration_sec) setSpinDurationSec(config.spin_duration_sec);
       })
       .catch((e) => {
@@ -128,9 +157,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
         role,
         genMode,
         noRepeatPerks,
-        totalPages,
-        perksPerPage,
-        lastPagePerks,
         spinDurationSec,
         loadout,
         activeSlotIdx,
@@ -139,17 +165,48 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     } catch (e) {
       console.error('Failed saving generator state to localStorage:', e);
     }
-  }, [role, genMode, noRepeatPerks, totalPages, perksPerPage, lastPagePerks, spinDurationSec, loadout, activeSlotIdx]);
+  }, [role, genMode, noRepeatPerks, spinDurationSec, loadout, activeSlotIdx]);
 
+  // Get active enabled characters list for current role
+  const activeEnabledChars = useMemo(() => {
+    return role === 'Survivor' ? enabledSurvCharacters : enabledKillerCharacters;
+  }, [role, enabledSurvCharacters, enabledKillerCharacters]);
+
+  const handleSaveEnabledCharacters = (newEnabled: string[]) => {
+    if (role === 'Survivor') {
+      setEnabledSurvCharacters(newEnabled);
+      localStorage.setItem('lemon_dbd_enabled_survs', JSON.stringify(newEnabled));
+    } else {
+      setEnabledKillerCharacters(newEnabled);
+      localStorage.setItem('lemon_dbd_enabled_killers', JSON.stringify(newEnabled));
+    }
+  };
+
+  // Dynamically Filter and Sort Perks [A-Z] based on Enabled Characters Pool
   const getSortedRolePerks = useCallback(() => {
-    return allPerks
-      .filter((p) => p.category === role)
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }, [allPerks, role]);
+    const rolePerks = allPerks.filter((p) => p.category === role);
+    const enabledSet = new Set(activeEnabledChars);
+
+    const filtered = rolePerks.filter((p) => {
+      const charName = p.character || 'General';
+      return enabledSet.has(charName);
+    });
+
+    return filtered.sort((a, b) => a.name.localeCompare(b.name));
+  }, [allPerks, role, activeEnabledChars]);
+
+  const sortedRolePerks = getSortedRolePerks();
+  const totalRolePerks = sortedRolePerks.length;
+
+  // Dynamic Wheel Parameters at 15 Perks per Page [A-Z]
+  const perksPerPage = 15;
+  const totalPages = Math.max(1, Math.ceil(totalRolePerks / 15));
+  const lastPagePerks = totalRolePerks % 15 || (totalRolePerks > 0 ? 15 : 0);
 
   const handleRoleChange = async (newRole: 'Survivor' | 'Killer') => {
     setRole(newRole);
     setLoadout([null, null, null, null]);
+    setRevealedSlots([false, false, false, false]);
     try {
       await updateGeneratorConfig({ role: newRole });
     } catch (e) {
@@ -176,23 +233,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     }
   };
 
-  const handleResetDefaults = async () => {
-    setTotalPages(12);
-    setPerksPerPage(15);
-    setLastPagePerks(8);
-    setSpinDurationSec(3);
-    try {
-      await updateGeneratorConfig({
-        total_pages: 12,
-        perks_per_page: 15,
-        last_page_perks: 8,
-        spin_duration_sec: 3,
-      });
-    } catch (e) {
-      console.error('Failed resetting config defaults in SQLite:', e);
-    }
-  };
-
   const rollInstantLoadout = useCallback(async () => {
     const sortedPerks = getSortedRolePerks();
     if (sortedPerks.length === 0) return;
@@ -213,7 +253,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
       });
     }
 
-    // Fallback if all perks in role are drawn
     if (availablePerks.length === 0) {
       availablePerks = sortedPerks;
     }
@@ -227,15 +266,15 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
       const chosenPerk = pool.splice(randomIndex, 1)[0];
 
       const indexInSorted = sortedPerks.findIndex((p) => p.name === chosenPerk.name);
-      const page = Math.floor(indexInSorted / perksPerPage) + 1;
-      const slot = (indexInSorted % perksPerPage) + 1;
+      const page = Math.floor(indexInSorted / 15) + 1;
+      const slot = (indexInSorted % 15) + 1;
 
       drawnSlots.push({ page, slot, perk: chosenPerk });
     }
 
     setLoadout(drawnSlots);
+    setRevealedSlots([false, false, false, false]);
 
-    // Save drawn perk names to SQLite
     const newPerkNames = drawnSlots.map((s) => s.perk?.name).filter(Boolean) as string[];
     if (newPerkNames.length > 0) {
       try {
@@ -245,7 +284,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
         console.error('Failed saving drawn perks to SQLite API:', err);
       }
     }
-  }, [getSortedRolePerks, noRepeatPerks, drawnPerks, perksPerPage, role]);
+  }, [getSortedRolePerks, noRepeatPerks, drawnPerks, role, activeMutator]);
 
   const handleWheelWinSlot = async (wonData: DrawnSlot) => {
     setLoadout((prev) => {
@@ -291,8 +330,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const sortedRolePerks = getSortedRolePerks();
-  const totalRolePerks = sortedRolePerks.length;
   const drawnCount = drawnPerks.filter((name) =>
     sortedRolePerks.some((p) => p.name === name)
   ).length;
@@ -315,6 +352,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
+            {/* Mode Selector */}
             <div className="flex rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-950">
               <button
                 onClick={() => handleGenModeChange('instant')}
@@ -340,6 +378,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               </button>
             </div>
 
+            {/* Role Selector */}
             <div className="flex rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-950">
               <button
                 onClick={() => handleRoleChange('Survivor')}
@@ -365,6 +404,15 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               </button>
             </div>
 
+            {/* Configure Characters Modal Button */}
+            <button
+              onClick={() => setIsCharModalOpen(true)}
+              className="flex items-center gap-1.5 rounded-xl border border-cyan-500/50 bg-cyan-500/10 px-3 py-2 text-xs font-bold text-cyan-400 hover:bg-cyan-500/20 transition-all cursor-pointer shadow-sm"
+            >
+              <Users className="h-3.5 w-3.5 text-cyan-400" />
+              <span>Configure Characters ({activeEnabledChars.length})</span>
+            </button>
+
             {/* No-Repeat Perks Toggle */}
             <button
               onClick={handleToggleNoRepeat}
@@ -383,6 +431,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               />
             </button>
 
+            {/* Chaos Wheel Modal Button */}
             <button
               onClick={() => setIsChaosModalOpen(true)}
               className="flex items-center gap-1.5 rounded-xl border border-purple-500/50 bg-purple-500/10 px-3 py-2 text-xs font-bold text-purple-400 hover:bg-purple-500/20 transition-all cursor-pointer shadow-sm"
@@ -391,14 +440,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               <span>{activeMutator ? `Curse: ${activeMutator.name}` : 'Chaos Wheel'}</span>
             </button>
 
-            <button
-              onClick={() => setShowConfig(!showConfig)}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/80 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 transition-colors cursor-pointer"
-            >
-              <Settings2 className="h-3.5 w-3.5" />
-              <span>Config</span>
-            </button>
-
+            {/* Copy Build Button */}
             <button
               onClick={handleCopyBuild}
               className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/80 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 transition-colors cursor-pointer"
@@ -429,7 +471,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                   ? dict.generator.drawnBadge
                       .replace('{drawn}', drawnCount.toString())
                       .replace('{total}', totalRolePerks.toString())
-                  : `Drawn: ${drawnCount} / ${totalRolePerks}`}
+                  : `Drawn: ${drawnCount} / ${totalRolePerks} Perks (${totalPages} Pages)`}
               </span>
             </div>
           </div>
@@ -444,114 +486,23 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             <span>{dict?.generator?.resetDrawn || 'Reset Used Perks'}</span>
           </button>
         </div>
-
-        {/* Config Drawer */}
-        {showConfig && (
-          <div className="mt-4 border-t border-slate-200/80 pt-4 dark:border-slate-800/80 animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                {dict?.generator?.configTitle || 'Inventory & Wheel Settings'}
-              </h4>
-              <button
-                onClick={handleResetDefaults}
-                className="flex items-center gap-1 text-[11px] font-semibold text-amber-500 hover:underline cursor-pointer"
-              >
-                <RotateCcw className="h-3 w-3" />
-                <span>{dict?.generator?.resetDefaults || 'Reset to Defaults'}</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                  {dict?.generator?.totalPages || 'Total Pages'} (Pages)
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  max={30}
-                  value={totalPages}
-                  onChange={(e) => {
-                    const val = Math.max(1, Number(e.target.value));
-                    setTotalPages(val);
-                    updateGeneratorConfig({ total_pages: val }).catch(console.error);
-                  }}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                  {dict?.generator?.perksPerPage || 'Perks per Page'} (Standard)
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  max={30}
-                  value={perksPerPage}
-                  onChange={(e) => {
-                    const val = Math.max(1, Number(e.target.value));
-                    setPerksPerPage(val);
-                    updateGeneratorConfig({ perks_per_page: val }).catch(console.error);
-                  }}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                  {dict?.generator?.lastPagePerks || 'Last Page Perks'} (Last Page)
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  max={30}
-                  value={lastPagePerks}
-                  onChange={(e) => {
-                    const val = Math.max(1, Number(e.target.value));
-                    setLastPagePerks(val);
-                    updateGeneratorConfig({ last_page_perks: val }).catch(console.error);
-                  }}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                  {dict?.generator?.spinDuration || 'Spin Duration (sec)'}
-                </label>
-                <input
-                  type="number"
-                  step={0.5}
-                  min={1}
-                  max={15}
-                  value={spinDurationSec}
-                  onChange={(e) => {
-                    const val = Math.max(1, Number(e.target.value));
-                    setSpinDurationSec(val);
-                    updateGeneratorConfig({ spin_duration_sec: val }).catch(console.error);
-                  }}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-900 focus:border-amber-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
-                />
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Wheel Section */}
       {genMode === 'wheel' && (
         <WheelOfFortune
           totalPages={totalPages}
-          perksPerPage={perksPerPage}
+          perksPerPage={15}
           lastPagePerks={lastPagePerks}
           spinDurationSec={spinDurationSec}
           role={role}
-          sortedPerks={getSortedRolePerks()}
+          sortedPerks={sortedRolePerks}
           activeSlotIdx={activeSlotIdx}
           onWinSlot={handleWheelWinSlot}
           dict={dict}
           backendBase={backendBase}
+          activeMutator={activeMutator}
+          onOpenChaosModal={() => setIsChaosModalOpen(true)}
         />
       )}
 
@@ -577,6 +528,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             : perk?.icon_url;
 
           const isSelectedForWheelSlot = genMode === 'wheel' && activeSlotIdx === idx;
+          const isObscuredByBlindness = activeMutator?.id === 'blindness' && !revealedSlots[idx];
 
           const getAvatarSrc = (p?: Perk) => {
             if (!p) return null;
@@ -602,7 +554,17 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           return (
             <div
               key={idx}
-              onClick={() => perk && onSelectPerk(perk)}
+              onClick={() => {
+                if (isObscuredByBlindness) {
+                  setRevealedSlots((prev) => {
+                    const next = [...prev];
+                    next[idx] = true;
+                    return next;
+                  });
+                } else if (perk) {
+                  onSelectPerk(perk);
+                }
+              }}
               className={`group relative flex cursor-pointer flex-col justify-between rounded-2xl border p-5 shadow-sm backdrop-blur-md transition-all duration-200 ${
                 isSelectedForWheelSlot
                   ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/40'
@@ -629,8 +591,13 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 {/* Perk Icon & Bigger Avatar Row */}
                 <div className="flex items-center justify-between">
                   {/* Left: MASSIVE Perk Icon Container */}
-                  <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/60 p-2 dark:from-slate-900 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-inner group-hover:border-amber-500/50 transition-colors">
-                    {perk && iconSrc ? (
+                  <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/60 p-2 dark:from-slate-900 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-inner group-hover:border-amber-500/50 transition-colors overflow-hidden">
+                    {isObscuredByBlindness ? (
+                      <div className="flex flex-col items-center justify-center text-purple-400 animate-pulse">
+                        <EyeOff className="h-8 w-8" />
+                        <span className="text-[9px] font-extrabold mt-1">CURSED</span>
+                      </div>
+                    ) : perk && iconSrc ? (
                       <img
                         src={iconSrc}
                         alt={perk.name}
@@ -643,7 +610,11 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
                   {/* Right: BIGGER Character Avatar + Top Right Role Icon Badge */}
                   <div className="relative flex items-center">
-                    {avatarSrc ? (
+                    {isObscuredByBlindness ? (
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-950/80 border-2 border-purple-500/50 text-purple-300">
+                        <EyeOff className="h-7 w-7" />
+                      </div>
+                    ) : avatarSrc ? (
                       <img
                         src={avatarSrc}
                         alt={perk?.character || 'Avatar'}
@@ -671,7 +642,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
                 {/* Hero Perk Title */}
                 <h3 className="text-lg font-black leading-tight text-slate-900 group-hover:text-amber-500 dark:text-slate-100 transition-colors">
-                  {perk ? perk.name : 'Spin Wheel or Roll'}
+                  {isObscuredByBlindness ? '??? (Click to Reveal)' : perk ? perk.name : 'Spin Wheel or Roll'}
                 </h3>
               </div>
             </div>
@@ -679,6 +650,18 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
         })}
       </div>
 
+      {/* Character Configuration Modal */}
+      <CharacterConfigModal
+        isOpen={isCharModalOpen}
+        onClose={() => setIsCharModalOpen(false)}
+        role={role}
+        characterOptions={characterOptions}
+        enabledCharacters={activeEnabledChars}
+        onSave={handleSaveEnabledCharacters}
+        dict={dict}
+      />
+
+      {/* Chaos Curse Wheel Modal */}
       <ChaosWheelModal
         isOpen={isChaosModalOpen}
         onClose={() => setIsChaosModalOpen(false)}

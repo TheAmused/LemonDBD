@@ -19,6 +19,34 @@ export const EXHAUSTION_PERK_NAMES = new Set([
   'head on',
 ]);
 
+export const MEME_PERK_NAMES = new Set([
+  'no mither',
+  'diversion',
+  'head on',
+  'plot twist',
+  'red herring',
+  'slippery meat',
+  'blast mine',
+  'flashbang',
+  'scene partner',
+  'dramaturgy',
+  'deception',
+  'bardic inspiration',
+  'up the ante',
+  'autodidact',
+  'power struggle',
+  'mad grit',
+  'insidious',
+  'monstrous shrine',
+  'unrelenting',
+  'game afoot',
+  'coup de grâce',
+  'coup de grace',
+  'deerstalker',
+  'rancor',
+  'trail of torment',
+]);
+
 interface WheelOfFortuneProps {
   totalPages: number;
   perksPerPage: number;
@@ -464,23 +492,59 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     const pauseDelay = 400;
     const perkSpinDuration = totalDurationMs * 0.55;
 
-    // Pick a valid page and slot with SAFEGUARD against blocked perks
+    // Pick a valid target page
     let targetPage = Math.floor(Math.random() * totalPages) + 1;
     let maxSlotsOnPage = targetPage === totalPages ? lastPagePerks : perksPerPage;
-    let targetSlot = Math.floor(Math.random() * maxSlotsOnPage) + 1;
-    let targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
-    let targetPerk = sortedPerks[targetIndex];
 
-    // Safeguard loop: if picked perk is blocked by mutator, retry up to 20 times for unblocked perk
-    let attempts = 0;
-    while (isPerkBlockedByMutator(targetPerk) && attempts < 25) {
-      attempts++;
-      targetPage = Math.floor(Math.random() * totalPages) + 1;
-      maxSlotsOnPage = targetPage === totalPages ? lastPagePerks : perksPerPage;
-      targetSlot = Math.floor(Math.random() * maxSlotsOnPage) + 1;
-      targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
-      targetPerk = sortedPerks[targetIndex];
+    const isHexOrBoonPerk = (p?: Perk) => {
+      if (!p) return false;
+      const name = p.name.toLowerCase();
+      const desc = (p.description || '').toLowerCase();
+      return name.includes('hex:') || name.includes('boon:') || desc.includes('hex:') || desc.includes('boon:');
+    };
+
+    const isMemePerk = (p?: Perk) => {
+      if (!p) return false;
+      const name = p.name.toLowerCase().trim();
+      return MEME_PERK_NAMES.has(name);
+    };
+
+    // Find candidate slots on targetPage that satisfy mutator priorities
+    let validSlotsOnPage: number[] = [];
+    for (let s = 1; s <= maxSlotsOnPage; s++) {
+      const idx = (targetPage - 1) * perksPerPage + (s - 1);
+      const perk = sortedPerks[idx];
+      if (!perk) continue;
+
+      if (isPerkBlockedByMutator(perk)) continue;
+
+      if (activeMutator?.id === 'hex_boon_only') {
+        if (isHexOrBoonPerk(perk)) validSlotsOnPage.push(s);
+      } else if (activeMutator?.id === 'meme_loadout') {
+        if (isMemePerk(perk)) validSlotsOnPage.push(s);
+      } else {
+        validSlotsOnPage.push(s);
+      }
     }
+
+    // Fallback if no curse-specific perk exists on this page
+    if (validSlotsOnPage.length === 0) {
+      for (let s = 1; s <= maxSlotsOnPage; s++) {
+        const idx = (targetPage - 1) * perksPerPage + (s - 1);
+        const perk = sortedPerks[idx];
+        if (perk && !isPerkBlockedByMutator(perk)) {
+          validSlotsOnPage.push(s);
+        }
+      }
+    }
+
+    const targetSlot =
+      validSlotsOnPage.length > 0
+        ? validSlotsOnPage[Math.floor(Math.random() * validSlotsOnPage.length)]
+        : Math.floor(Math.random() * maxSlotsOnPage) + 1;
+
+    const targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
+    const targetPerk = sortedPerks[targetIndex];
 
     // Phase 1: Spin Page Wheel
     const pageSliceAngle = (2 * Math.PI) / totalPages;

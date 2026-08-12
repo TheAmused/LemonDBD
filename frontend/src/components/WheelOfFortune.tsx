@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Play, Sparkles, Skull, Zap, Eye, Ban, Flame, RefreshCw, ShieldAlert, Check } from 'lucide-react';
+import { Play, Sparkles, Skull, Zap, Eye, Ban, Flame, RefreshCw, ShieldAlert, Check, RotateCcw } from 'lucide-react';
 import { Perk } from './PerkCard';
 import { ChaosMutator } from './ChaosWheelModal';
 
@@ -60,6 +60,7 @@ interface WheelOfFortuneProps {
   backendBase: string;
   activeMutator?: ChaosMutator | null;
   onOpenChaosModal?: () => void;
+  onResetWheels?: () => void;
 }
 
 interface Particle {
@@ -85,6 +86,7 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   backendBase,
   activeMutator,
   onOpenChaosModal,
+  onResetWheels,
 }) => {
   const [selectedPageUI, setSelectedPageUI] = useState<number>(1);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -730,22 +732,36 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         </div>
       </div>
 
-      {/* Spin Control Button */}
+      {/* Spin Control Button & Reset Wheels */}
       <div className="mt-8 flex flex-col items-center gap-3">
-        <button
-          onClick={handleStartSpin}
-          disabled={isSpinning}
-          className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-base tracking-wider uppercase shadow-xl transition-all ${
-            isSpinning
-              ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-              : role === 'Survivor'
-              ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/60 active:scale-95'
-              : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/60 active:scale-95'
-          }`}
-        >
-          <Play className={`h-5 w-5 fill-current ${isSpinning ? 'animate-spin' : ''}`} />
-          {isSpinning ? 'Spinning Perk Wheels...' : `Spin for Perk Slot #${activeSlotIdx + 1}`}
-        </button>
+        <div className="flex items-center gap-3 flex-wrap justify-center">
+          <button
+            onClick={handleStartSpin}
+            disabled={isSpinning}
+            className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-base tracking-wider uppercase shadow-xl transition-all ${
+              isSpinning
+                ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+                : role === 'Survivor'
+                ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/60 active:scale-95'
+                : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/60 active:scale-95'
+            }`}
+          >
+            <Play className={`h-5 w-5 fill-current ${isSpinning ? 'animate-spin' : ''}`} />
+            {isSpinning ? 'Spinning Perk Wheels...' : `Spin for Perk Slot #${activeSlotIdx + 1}`}
+          </button>
+
+          {onResetWheels && (
+            <button
+              onClick={onResetWheels}
+              disabled={isSpinning}
+              className="flex items-center gap-2 px-5 py-4 rounded-2xl bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 font-extrabold text-sm border border-rose-500/40 shadow-lg transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+              title="Reset wheels, clear active loadout slots, and reset slot focus"
+            >
+              <RotateCcw className="h-4 w-4" />
+              <span>Reset Wheels & Slots</span>
+            </button>
+          )}
+        </div>
 
         {statusText && (
           <p className="text-xs font-bold text-amber-400 animate-pulse">

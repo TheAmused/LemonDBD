@@ -28,9 +28,8 @@ import {
   Package,
   Settings,
   Repeat,
-  PanelLeftClose,
-  PanelLeftOpen,
   ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { ScraperConfigModal } from './ScraperConfigModal';
 import { useSidebarState } from '@/hooks/useSidebarState';
@@ -263,7 +262,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const renderSidebarContent = () => (
     <div className="flex h-full flex-col justify-between p-4 overflow-y-auto">
       <div>
-        {/* Brand Header with Desktop Collapse Button */}
+        {/* Brand Header */}
         <div className="flex items-center justify-between px-1 py-2">
           <Link
             href={'/' + currentLocale}
@@ -287,16 +286,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </p>
             </div>
           </Link>
-
-          {/* Desktop Toggle Button inside Header */}
-          <button
-            onClick={toggleSidebar}
-            title="Collapse Sidebar"
-            aria-label="Collapse Sidebar"
-            className="hidden lg:flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-100/60 text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
         </div>
 
         {/* Navigation Tabs */}
@@ -474,19 +463,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* ── DESKTOP COLLAPSED FLOATING TOGGLE BUTTON ── */}
-      {isCollapsed && (
-        <button
-          onClick={toggleSidebar}
-          title="Expand Navigation Sidebar"
-          aria-label="Expand Navigation Sidebar"
-          className="hidden lg:flex fixed top-4 left-4 z-50 h-11 w-11 items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/90 text-cyan-400 shadow-xl shadow-slate-950/80 backdrop-blur-xl hover:bg-slate-800 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-        >
-          <PanelLeftOpen className="h-5 w-5" />
-        </button>
-      )}
-
-      {/* ── DESKTOP ASIDE SIDEBAR ── */}
+      {/* ── DESKTOP ASIDE SIDEBAR WITH INTEGRATED DRAWER KNOB HANDLE ── */}
       <aside
         aria-label="Sidebar Navigation"
         className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-transform duration-300 ${
@@ -494,6 +471,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
         }`}
       >
         {renderSidebarContent()}
+
+        {/* ── SINGLE UNIFIED DRAWER KNOB HANDLE (STAYS ATTACHED TO SIDEBAR RIGHT BORDER) ── */}
+        <button
+          onClick={toggleSidebar}
+          title={isCollapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
+          aria-label={isCollapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
+          className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-slate-700/80 bg-slate-900/95 text-cyan-400 shadow-2xl shadow-slate-950/90 backdrop-blur-xl hover:bg-slate-800 hover:w-7 hover:text-cyan-300 active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
+        >
+          {isCollapsed ? (
+            <ChevronRight className="h-5 w-5 text-cyan-400 group-hover:scale-110 transition-transform" />
+          ) : (
+            <ChevronLeft className="h-5 w-5 text-cyan-400 group-hover:scale-110 transition-transform" />
+          )}
+        </button>
       </aside>
 
       {/* ── MOBILE HEADER & DRAWER ── */}

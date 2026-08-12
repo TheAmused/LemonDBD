@@ -231,6 +231,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       }
     };
 
+    requestAnimationFrame(animate);
   };
 
   useEffect(() => {

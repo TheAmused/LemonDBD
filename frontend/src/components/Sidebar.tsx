@@ -28,8 +28,12 @@ import {
   Package,
   Settings,
   Repeat,
+  PanelLeftClose,
+  PanelLeftOpen,
+  ChevronLeft,
 } from 'lucide-react';
 import { ScraperConfigModal } from './ScraperConfigModal';
+import { useSidebarState } from '@/hooks/useSidebarState';
 
 interface SidebarProps {
   currentLocale: string;
@@ -58,6 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  const { isCollapsed, toggleSidebar } = useSidebarState();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -257,32 +262,44 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const renderSidebarContent = () => (
     <div className="flex h-full flex-col justify-between p-4 overflow-y-auto">
       <div>
-        {/* Brand Header */}
-        <Link
-          href={'/' + currentLocale}
-          onClick={() => setMobileOpen(false)}
-          className="flex items-center gap-3 px-2 py-3 group focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
-        >
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-900 text-white shadow-lg shadow-red-900/30 group-hover:scale-105 transition-transform">
-            <Flame className="h-5 w-5 text-red-100 animate-pulse" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-sm tracking-wider text-slate-900 dark:text-slate-100 font-mono">
-                {dict.app.title}
-              </span>
-              <span className="rounded bg-red-600/10 px-1.5 py-0.5 text-[10px] font-bold text-red-600 dark:text-red-400 border border-red-500/20">
-                PRO
-              </span>
+        {/* Brand Header with Desktop Collapse Button */}
+        <div className="flex items-center justify-between px-1 py-2">
+          <Link
+            href={'/' + currentLocale}
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
+          >
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-900 text-white shadow-lg shadow-red-900/30 group-hover:scale-105 transition-transform">
+              <Flame className="h-5 w-5 text-red-100 animate-pulse" />
             </div>
-            <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-              {dict.app.subtitle}
-            </p>
-          </div>
-        </Link>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-extrabold text-sm tracking-wider text-slate-900 dark:text-slate-100 font-mono">
+                  {dict.app.title}
+                </span>
+                <span className="rounded bg-red-600/10 px-1.5 py-0.5 text-[10px] font-bold text-red-600 dark:text-red-400 border border-red-500/20">
+                  PRO
+                </span>
+              </div>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                {dict.app.subtitle}
+              </p>
+            </div>
+          </Link>
 
-        {/* Division Navigation Tabs */}
-        <nav aria-label="Perk Category Navigation" className="mt-6 space-y-1.5">
+          {/* Desktop Toggle Button inside Header */}
+          <button
+            onClick={toggleSidebar}
+            title="Collapse Sidebar"
+            aria-label="Collapse Sidebar"
+            className="hidden lg:flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-100/60 text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:text-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Navigation Tabs */}
+        <nav aria-label="Perk Category Navigation" className="mt-5 space-y-1">
           <p className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
             Navigation
           </p>
@@ -301,7 +318,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     setMobileOpen(false);
                   }}
                   className={
-                    'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
+                    'w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
                     (isActive
                       ? item.activeBg
                       : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
@@ -328,7 +345,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   setMobileOpen(false);
                 }}
                 className={
-                  'w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
+                  'w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
                   (isActive
                     ? item.activeBg
                     : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
@@ -344,8 +361,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
 
         {/* LIVE VAULT STATS WIDGET */}
-        <div className="mt-6 rounded-2xl border border-slate-200/80 bg-slate-100/60 p-3.5 dark:border-slate-800/80 dark:bg-slate-900/50 backdrop-blur-sm">
-          <div className="flex items-center justify-between mb-3">
+        <div className="mt-5 rounded-2xl border border-slate-200/80 bg-slate-100/60 p-3 dark:border-slate-800/80 dark:bg-slate-900/50 backdrop-blur-sm">
+          <div className="flex items-center justify-between mb-2.5">
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
               <Database className="h-3 w-3 text-red-500" />
               {dict.stats?.vaultStats || 'Vault Statistics'}
@@ -353,41 +370,41 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>
 
-          <div className="grid grid-cols-2 gap-2 mb-3">
+          <div className="grid grid-cols-2 gap-2 mb-2.5">
             <div className="rounded-xl border border-slate-200/60 bg-white/80 p-2 dark:border-slate-800/60 dark:bg-slate-950/60">
-              <div className="flex items-center gap-1 text-slate-400 mb-1">
+              <div className="flex items-center gap-1 text-slate-400 mb-0.5">
                 <Layers className="h-3 w-3" />
                 <span className="text-[10px] font-semibold">{dict.stats?.totalPerks || 'Perks'}</span>
               </div>
-              <p className="text-base font-black text-slate-900 dark:text-slate-100 font-mono">
+              <p className="text-sm font-black text-slate-900 dark:text-slate-100 font-mono">
                 {totalPerksCount}
               </p>
             </div>
 
             <div className="rounded-xl border border-slate-200/60 bg-white/80 p-2 dark:border-slate-800/60 dark:bg-slate-950/60">
-              <div className="flex items-center gap-1 text-slate-400 mb-1">
+              <div className="flex items-center gap-1 text-slate-400 mb-0.5">
                 <Users className="h-3 w-3" />
                 <span className="text-[10px] font-semibold">{dict.stats?.characters || 'Cast'}</span>
               </div>
-              <p className="text-base font-black text-slate-900 dark:text-slate-100 font-mono">
+              <p className="text-sm font-black text-slate-900 dark:text-slate-100 font-mono">
                 {characterCount}
               </p>
             </div>
           </div>
 
           {/* Survivor vs Killer Ratio Bar */}
-          <div className="space-y-1.5 pt-1">
-            <div className="flex justify-between text-[11px] font-extrabold">
+          <div className="space-y-1 pt-0.5">
+            <div className="flex justify-between text-[10px] font-extrabold">
               <span className="text-emerald-500 flex items-center gap-1">
-                <Shield className="h-3 w-3" /> {survivorCount}
+                <Shield className="h-2.5 w-2.5" /> {survivorCount}
               </span>
-              <span className="text-slate-400 text-[10px] font-normal">{dict.stats?.ratio || 'Ratio'}</span>
+              <span className="text-slate-400 text-[9px] font-normal">{dict.stats?.ratio || 'Ratio'}</span>
               <span className="text-rose-500 flex items-center gap-1">
-                {killerCount} <Skull className="h-3 w-3" />
+                {killerCount} <Skull className="h-2.5 w-2.5" />
               </span>
             </div>
 
-            <div className="flex h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+            <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
               <div
                 style={{ width: survivorPct + '%' }}
                 className="bg-emerald-500 transition-all duration-500"
@@ -404,9 +421,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Sidebar Footer Controls */}
-      <div className="space-y-3 pt-4 mt-4 border-t border-slate-200/80 dark:border-slate-800/80">
+      <div className="space-y-2.5 pt-3 mt-3 border-t border-slate-200/80 dark:border-slate-800/80">
         {showSuccessToast && (
-          <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-2.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+          <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span>Sync Successful!</span>
           </div>
@@ -416,18 +433,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={handleTriggerSync}
             disabled={isSyncing}
-            className="flex-1 flex h-10 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-3 text-xs font-bold text-white shadow-md shadow-red-900/20 hover:from-red-500 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-60 transition-all cursor-pointer min-w-0"
+            className="flex-1 flex h-9 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-3 text-xs font-bold text-white shadow-md shadow-red-900/20 hover:from-red-500 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-60 transition-all cursor-pointer min-w-0"
           >
-            <RefreshCw className={'h-4 w-4 shrink-0 ' + (isSyncing ? 'animate-spin' : '')} />
+            <RefreshCw className={'h-3.5 w-3.5 shrink-0 ' + (isSyncing ? 'animate-spin' : '')} />
             <span className="truncate">{isSyncing ? (dict.app.syncing + ' (' + syncStatus + ')') : dict.app.syncWiki}</span>
           </button>
           <button
             onClick={() => setIsConfigOpen(true)}
             title="Scraper Settings"
             aria-label="Scraper Settings"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
-            <Settings className="h-4 w-4 text-slate-600 dark:text-slate-400 hover:rotate-45 transition-transform" />
+            <Settings className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400 hover:rotate-45 transition-transform" />
           </button>
         </div>
 
@@ -435,7 +452,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <Link
             href={redirectedPathName(toggleLocale)}
             aria-label="Switch Language"
-            className="flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
+            className="flex h-8 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors"
           >
             <Languages className="h-3.5 w-3.5 text-red-500" />
             <span className="uppercase">{toggleLocale}</span>
@@ -444,10 +461,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle Dark Mode"
-            className="flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="flex h-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-slate-300" />
+            <Sun className="h-3.5 w-3.5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
+            <Moon className="absolute h-3.5 w-3.5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-slate-300" />
           </button>
         </div>
       </div>
@@ -456,13 +473,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
+      {/* ── DESKTOP COLLAPSED FLOATING TOGGLE BUTTON ── */}
+      {isCollapsed && (
+        <button
+          onClick={toggleSidebar}
+          title="Expand Navigation Sidebar"
+          aria-label="Expand Navigation Sidebar"
+          className="hidden lg:flex fixed top-4 left-4 z-50 h-11 w-11 items-center justify-center rounded-2xl border border-slate-800 bg-slate-900/90 text-cyan-400 shadow-xl shadow-slate-950/80 backdrop-blur-xl hover:bg-slate-800 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <PanelLeftOpen className="h-5 w-5" />
+        </button>
+      )}
+
+      {/* ── DESKTOP ASIDE SIDEBAR ── */}
       <aside
         aria-label="Sidebar Navigation"
-        className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-colors"
+        className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-transform duration-300 ${
+          isCollapsed ? '-translate-x-full' : 'translate-x-0'
+        }`}
       >
         {renderSidebarContent()}
       </aside>
 
+      {/* ── MOBILE HEADER & DRAWER ── */}
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 lg:hidden">
         <Link href={'/' + currentLocale} className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white">

@@ -11,7 +11,8 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { Pagination } from '@/components/Pagination';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { Shield, Skull, Sparkles, Database, Users, Flame } from 'lucide-react';
+import { Shield, Skull, Database, Flame } from 'lucide-react';
+import { useSidebarState } from '@/hooks/useSidebarState';
 
 export interface CharacterItem {
   name: string;
@@ -25,6 +26,7 @@ function DashboardContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || 'en';
+  const { isCollapsed } = useSidebarState();
 
   const paramCategory = searchParams ? searchParams.get('category') : null;
   const paramTab = searchParams ? searchParams.get('tab') : null;
@@ -198,18 +200,22 @@ function DashboardContent() {
         characterCount={characterCount}
       />
 
-      <main className="flex-1 lg:pl-64 p-4 sm:p-6 lg:p-8 w-full overflow-y-auto">
+      <main
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
+          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        }`}
+      >
         {/* ── Atmospheric Hero Header ── */}
-        <div className="mb-6 flex flex-col gap-4">
-          <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-5 sm:p-6 backdrop-blur-xl shadow-2xl shadow-slate-950/60">
+        <div className="mb-7 flex flex-col gap-4">
+          <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60">
             {/* Background Glow Accents */}
             <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
             <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
 
             <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               {/* Header Title & Subtitle */}
-              <div className="flex items-start gap-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/25 shadow-lg shadow-cyan-950/40">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/25 shadow-lg shadow-cyan-950/40">
                   <Database className="h-6 w-6 text-cyan-400" />
                 </div>
                 <div>
@@ -223,8 +229,8 @@ function DashboardContent() {
               </div>
 
               {/* Dynamic Vault Counter Badges */}
-              <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
-                <div className="flex items-center gap-2 rounded-2xl border border-slate-800 bg-slate-950/80 px-3.5 py-2 shadow-inner">
+              <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
+                <div className="flex items-center gap-2.5 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 shadow-inner">
                   <Flame className="h-4 w-4 text-cyan-400" />
                   <div className="flex flex-col">
                     <span className="text-[10px] font-bold uppercase text-slate-500">Vault Total</span>
@@ -232,7 +238,7 @@ function DashboardContent() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-950/30 px-3.5 py-2 shadow-inner">
+                <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-950/30 px-4 py-2.5 shadow-inner">
                   <Shield className="h-4 w-4 text-emerald-400" />
                   <div className="flex flex-col">
                     <span className="text-[10px] font-bold uppercase text-emerald-500/80">Survivor</span>
@@ -240,7 +246,7 @@ function DashboardContent() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-950/30 px-3.5 py-2 shadow-inner">
+                <div className="flex items-center gap-2.5 rounded-2xl border border-rose-500/30 bg-rose-950/30 px-4 py-2.5 shadow-inner">
                   <Skull className="h-4 w-4 text-rose-400" />
                   <div className="flex flex-col">
                     <span className="text-[10px] font-bold uppercase text-rose-500/80">Killer</span>
@@ -291,7 +297,7 @@ function DashboardContent() {
 
             {/* Perks Cards Grid / List */}
             {loading ? (
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 mt-6">
                 {[...Array(12)].map((_, i) => (
                   <div
                     key={i}
@@ -320,8 +326,8 @@ function DashboardContent() {
                 <div
                   className={
                     viewMode === 'grid'
-                      ? 'grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'
-                      : 'flex flex-col gap-3'
+                      ? 'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 mt-6'
+                      : 'flex flex-col gap-4 mt-6'
                   }
                 >
                   {perks.map((perk, idx) => (
@@ -336,18 +342,20 @@ function DashboardContent() {
                 </div>
 
                 {/* Pagination */}
-                <Pagination
-                  page={page}
-                  totalPages={totalPages}
-                  totalResults={totalResults}
-                  limit={limit}
-                  onPageChange={setPage}
-                  onLimitChange={(newLimit) => {
-                    setLimit(newLimit);
-                    setPage(1);
-                  }}
-                  dict={dict}
-                />
+                <div className="mt-8">
+                  <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    totalResults={totalResults}
+                    limit={limit}
+                    onPageChange={setPage}
+                    onLimitChange={(newLimit) => {
+                      setLimit(newLimit);
+                      setPage(1);
+                    }}
+                    dict={dict}
+                  />
+                </div>
               </>
             )}
           </>

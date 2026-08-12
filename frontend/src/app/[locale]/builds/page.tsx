@@ -7,10 +7,12 @@ import { BuildVault } from '@/components/builds/BuildVault';
 import { QuestsModal } from '@/components/QuestsModal';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
+import { useSidebarState } from '@/hooks/useSidebarState';
 
 export default function BuildsPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
+  const { isCollapsed } = useSidebarState();
 
   const [dict, setDict] = useState<any>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
@@ -80,7 +82,11 @@ export default function BuildsPage() {
         characterCount={characterCount}
       />
 
-      <main className="flex-1 lg:pl-64 p-4 sm:p-6 lg:p-8 w-full overflow-y-auto">
+      <main
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
+          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        }`}
+      >
         <Suspense fallback={<div className="p-8 text-center text-slate-400">Loading Build Vault...</div>}>
           <BuildVault dict={dict} currentLocale={locale} />
         </Suspense>

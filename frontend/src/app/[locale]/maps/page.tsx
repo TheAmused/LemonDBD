@@ -8,12 +8,13 @@ import VoiceNavButton from '@/components/maps/VoiceNavButton';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { Mic, Compass } from 'lucide-react';
+import { useSidebarState } from '@/hooks/useSidebarState';
 
-// ── Inner component that safely reads searchParams inside Suspense ──────────
 function MapsPageInner() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || 'en';
+  const { isCollapsed } = useSidebarState();
 
   const [dict, setDict] = useState<any>(null);
   const initialMapName = searchParams?.get('mapName') || '';
@@ -45,18 +46,22 @@ function MapsPageInner() {
         onSelectCategory={handleSelectCategory}
       />
 
-      <main className="flex-1 lg:pl-64 p-4 md:p-8 overflow-y-auto w-full">
+      <main
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
+          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        }`}
+      >
         {/* ── Page Header ── */}
-        <div className="mb-6 flex flex-col gap-4">
+        <div className="mb-7 flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 shadow-lg shadow-cyan-950/40">
               <Compass className="h-5 w-5 text-cyan-400" />
             </div>
             <div>
-              <h1 className="text-xl font-extrabold text-slate-100 tracking-tight">
+              <h1 className="text-2xl font-black text-slate-100 tracking-tight">
                 Map Explorer
               </h1>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Browse DBD maps, callouts, and guides
               </p>
             </div>
@@ -91,7 +96,6 @@ function MapsPageInner() {
   );
 }
 
-// ── Outer page: wraps inner in Suspense so useSearchParams() is safe ─────────
 export default function MapsPage() {
   return (
     <Suspense

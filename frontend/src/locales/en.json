@@ -53,7 +53,7 @@
     "asc": "Ascending (A-Z)",
     "desc": "Descending (Z-A)",
     "clear": "Reset Filters",
-    "generatorTab": "Perk Generator"
+    "generatorTab": "Perk Randomizer"
   },
   "pagination": {
     "showing": "Showing",

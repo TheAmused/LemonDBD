@@ -76,5 +76,36 @@
   "empty": {
     "title": "Brak Umiejętności",
     "subtitle": "Brak wyników spełniających podane kryteria wyszukiwania."
+  },
+  "guesser": {
+    "navLink": "Zgadywanka",
+    "title": "Zgadywanka wiedzy DBD",
+    "subtitle": "Przetestuj swoją wiedzę o ocalałych, zabójcach, mocach i perkach.",
+    "selectMode": "Wybierz tryb gry",
+    "currentStreak": "Aktualna seria",
+    "bestStreak": "Najlepsza seria",
+    "accuracy": "Celność",
+    "totalGuesses": "Wszystkie próby",
+    "play": "Graj",
+    "playing": "Gram",
+    "correct": "Dobrze!",
+    "incorrect": "Źle!",
+    "next": "Następne pytanie",
+    "back": "Powrót do trybów",
+    "loading": "Ładowanie gry...",
+    "modeCharacterTitle": "Zgadywanka postaci",
+    "modeCharacterDesc": "Zidentyfikuj ocalałych, zabójców i ich moce na podstawie prawdziwych imion i opisów.",
+    "modePerkDescTitle": "Zgadywanka perku z opisu",
+    "modePerkDescDesc": "Zgadnij perk z jego opisu. Słowa będą zakrywane wraz z rosnącą serią!",
+    "modePerkNameToIconTitle": "Nazwa do ikony",
+    "modePerkNameToIconDesc": "Wybierz poprawną ikonę perku. Ikony obracają się, szarzeją i są powiększane w wysokich seriach!",
+    "modePerkIconToNameTitle": "Ikona do nazwy",
+    "modePerkIconToNameDesc": "Zgadnij nazwę perku z jego ikony. Na ikonę nakładane są zniekształcenia!",
+    "modeMapTitle": "Zgadywanka mapy",
+    "modeMapDesc": "Sprawdź swoją wiedzę o krainach, strukturach, generatach i pętlach.",
+    "modeMemesTitle": "Zgadywanka memów z DBD",
+    "modeMemesDesc": "Zgadnij żarty i nazwy z popularnych memów społeczności Dead by Daylight.",
+    "reset": "Zresetuj serię",
+    "streakResetSuccess": "Seria zresetowana pomyślnie"
   }
 }

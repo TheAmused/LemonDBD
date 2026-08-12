@@ -18,6 +18,10 @@ import {
   Users,
   EyeOff,
   Trash2,
+  Flame,
+  Zap,
+  ChevronRight,
+  Filter,
 } from 'lucide-react';
 import { Perk } from './PerkCard';
 import { WheelOfFortune, EXHAUSTION_PERK_NAMES } from './WheelOfFortune';
@@ -51,7 +55,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
   dict,
 }) => {
   const [role, setRole] = useState<'Survivor' | 'Killer'>('Survivor');
-  const [genMode, setGenMode] = useState<'instant' | 'wheel'>('instant');
+  const [genMode, setGenMode] = useState<'instant' | 'wheel'>('wheel');
   const [noRepeatPerks, setNoRepeatPerks] = useState<boolean>(true);
   const [spinDurationSec, setSpinDurationSec] = useState<number>(3);
 
@@ -234,6 +238,40 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     }
   };
 
+  const handleResetAllLoadoutAndWheels = async () => {
+    setLoadout([null, null, null, null]);
+    setActiveSlotIdx(0);
+    setRevealedSlots([false, false, false, false]);
+    setActiveMutator(null);
+    try {
+      const updatedDrawn = await resetDrawnPerks(role);
+      setDrawnPerks(updatedDrawn);
+    } catch (err) {
+      console.error('Failed resetting drawn perks in SQLite API:', err);
+      setDrawnPerks([]);
+    }
+  };
+
+  const handleClearSlot = (slotIdx: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLoadout((prev) => {
+      const next = [...prev];
+      next[slotIdx] = null;
+      return next;
+    });
+    setActiveSlotIdx(slotIdx);
+  };
+
+  const handleResetDrawnPerks = async () => {
+    try {
+      const updatedDrawn = await resetDrawnPerks(role);
+      setDrawnPerks(updatedDrawn);
+    } catch (err) {
+      console.error('Failed resetting drawn perks in SQLite API:', err);
+      setDrawnPerks([]);
+    }
+  };
+
   const rollInstantLoadout = useCallback(async () => {
     const sortedPerks = getSortedRolePerks();
     if (sortedPerks.length === 0) return;
@@ -305,40 +343,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     }
   };
 
-  const handleResetAllLoadoutAndWheels = async () => {
-    setLoadout([null, null, null, null]);
-    setActiveSlotIdx(0);
-    setRevealedSlots([false, false, false, false]);
-    setActiveMutator(null);
-    try {
-      const updatedDrawn = await resetDrawnPerks(role);
-      setDrawnPerks(updatedDrawn);
-    } catch (err) {
-      console.error('Failed resetting drawn perks in SQLite API:', err);
-      setDrawnPerks([]);
-    }
-  };
-
-  const handleClearSlot = (slotIdx: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setLoadout((prev) => {
-      const next = [...prev];
-      next[slotIdx] = null;
-      return next;
-    });
-    setActiveSlotIdx(slotIdx);
-  };
-
-  const handleResetDrawnPerks = async () => {
-    try {
-      const updatedDrawn = await resetDrawnPerks(role);
-      setDrawnPerks(updatedDrawn);
-    } catch (err) {
-      console.error('Failed resetting drawn perks in SQLite API:', err);
-      setDrawnPerks([]);
-    }
-  };
-
   const handleCopyBuild = () => {
     const activePerks = loadout.filter(Boolean) as DrawnSlot[];
     if (activePerks.length === 0) return;
@@ -359,171 +363,193 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     sortedRolePerks.some((p) => p.name === name)
   ).length;
 
+  const isSurvivor = role === 'Survivor';
+
   return (
-    <div className="space-y-6">
-      {/* Control Banner */}
-      <div className="rounded-3xl border border-slate-200/80 bg-white/70 p-5 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/60">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12">
+      {/* ── HIGH-IMPACT HERO COMMAND HEADER ── */}
+      <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6 sm:p-8 shadow-2xl backdrop-blur-2xl">
+        {/* Background Fog & Glow Orbs */}
+        <div
+          className={`pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full opacity-20 blur-3xl transition-all duration-700 ${
+            isSurvivor ? 'bg-emerald-500' : 'bg-rose-600'
+          }`}
+        />
+        <div className="pointer-events-none absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-amber-500/15 opacity-20 blur-3xl" />
+
+        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          {/* Title & Subtitle */}
           <div>
-            <div className="flex items-center gap-2">
-              <Dices className="h-6 w-6 text-amber-500 animate-bounce" />
-              <h2 className="text-xl font-extrabold text-slate-900 dark:text-slate-100">
-                {dict?.generator?.title || 'Perk Loadout Generator'}
-              </h2>
+            <div className="flex items-center gap-3">
+              <div
+                className={`flex h-12 w-12 items-center justify-center rounded-2xl border shadow-xl transition-all duration-500 ${
+                  isSurvivor
+                    ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400 shadow-emerald-950/50'
+                    : 'border-rose-500/40 bg-rose-500/10 text-rose-400 shadow-rose-950/50'
+                }`}
+              >
+                <Dices className="h-6 w-6 animate-pulse" />
+              </div>
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-mono">
+                  {role.toUpperCase()} PERK RANDOMIZER
+                </h1>
+                <p className="text-xs sm:text-sm font-medium text-slate-400 mt-0.5">
+                  Roll random loadouts by in-game inventory coordinates [Page / Slot].
+                </p>
+              </div>
             </div>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {dict?.generator?.subtitle || 'Roll random perks based on in-game inventory coordinates [Page/Slot].'}
-            </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
-            {/* Mode Selector */}
-            <div className="flex rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-950">
-              <button
-                onClick={() => handleGenModeChange('instant')}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-                  genMode === 'instant'
-                    ? 'bg-amber-500 text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>{dict?.generator?.modeInstant || 'Instant Roll'}</span>
-              </button>
-              <button
-                onClick={() => handleGenModeChange('wheel')}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-                  genMode === 'wheel'
-                    ? 'bg-amber-500 text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                <CircleDot className="h-3.5 w-3.5" />
-                <span>{dict?.generator?.modeWheel || 'Wheel of Fortune'}</span>
-              </button>
-            </div>
-
-            {/* Role Selector */}
-            <div className="flex rounded-xl border border-slate-200 bg-slate-100/80 p-1 dark:border-slate-800 dark:bg-slate-950">
+          {/* Prominent Role & Mode Switcher Hub */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Survivor vs Killer Master Segmented Switch */}
+            <div className="flex items-center rounded-2xl border border-slate-800 bg-slate-950/90 p-1.5 shadow-inner">
               <button
                 onClick={() => handleRoleChange('Survivor')}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-                  role === 'Survivor'
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
+                  isSurvivor
+                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-950/80 scale-105'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
                 }`}
               >
-                <Shield className="h-3.5 w-3.5" />
+                <Shield className="h-4 w-4" />
                 <span>Survivor</span>
               </button>
+
               <button
                 onClick={() => handleRoleChange('Killer')}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-                  role === 'Killer'
-                    ? 'bg-rose-600 text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
+                  !isSurvivor
+                    ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-lg shadow-rose-950/80 scale-105'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
                 }`}
               >
-                <Skull className="h-3.5 w-3.5" />
+                <Skull className="h-4 w-4" />
                 <span>Killer</span>
               </button>
             </div>
 
-            {/* Configure Characters Modal Button */}
+            {/* Mode Switcher: Wheel vs Instant */}
+            <div className="flex items-center rounded-2xl border border-slate-800 bg-slate-950/90 p-1.5 shadow-inner">
+              <button
+                onClick={() => handleGenModeChange('wheel')}
+                className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
+                  genMode === 'wheel'
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-950/80 scale-105'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                <CircleDot className="h-4 w-4" />
+                <span>Wheel</span>
+              </button>
+
+              <button
+                onClick={() => handleGenModeChange('instant')}
+                className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
+                  genMode === 'instant'
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-950/80 scale-105'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>Instant</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── ACTION TOOLBAR ROW ── */}
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800/80 pt-5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Configure Characters Avatar Modal Trigger */}
             <button
               onClick={() => setIsCharModalOpen(true)}
-              className="flex items-center gap-1.5 rounded-xl border border-cyan-500/50 bg-cyan-500/10 px-3 py-2 text-xs font-bold text-cyan-400 hover:bg-cyan-500/20 transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-2 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-4 py-2 text-xs font-extrabold text-cyan-300 hover:bg-cyan-500/20 hover:border-cyan-500/60 transition-all cursor-pointer shadow-md shadow-cyan-950/40"
             >
-              <Users className="h-3.5 w-3.5 text-cyan-400" />
+              <Users className="h-4 w-4 text-cyan-400" />
               <span>Configure Characters ({activeEnabledChars.length})</span>
             </button>
 
             {/* No-Repeat Perks Toggle */}
             <button
               onClick={handleToggleNoRepeat}
-              className={`flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-xs font-extrabold transition-all cursor-pointer ${
                 noRepeatPerks
-                  ? 'border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400'
-                  : 'border-slate-200 bg-slate-100/80 text-slate-500 hover:text-slate-800 dark:border-slate-800 dark:bg-slate-950 dark:hover:text-slate-200'
+                  ? 'border-amber-500/50 bg-amber-500/10 text-amber-300 shadow-md shadow-amber-950/40'
+                  : 'border-slate-800 bg-slate-950/80 text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Repeat className={`h-3.5 w-3.5 ${noRepeatPerks ? 'text-amber-500' : ''}`} />
-              <span>{dict.generator?.noRepeat || 'No-Repeat Perks'}</span>
+              <Repeat className={`h-4 w-4 ${noRepeatPerks ? 'text-amber-400' : ''}`} />
+              <span>No-Repeat Perks</span>
               <span
-                className={`ml-1 inline-block h-2 w-2 rounded-full ${
-                  noRepeatPerks ? 'bg-amber-500' : 'bg-slate-400'
+                className={`ml-1 h-2 w-2 rounded-full ${
+                  noRepeatPerks ? 'bg-amber-400 animate-pulse' : 'bg-slate-600'
                 }`}
               />
             </button>
 
-            {/* Chaos Wheel Modal Button */}
+            {/* Chaos Curse Wheel Modal Trigger */}
             <button
               onClick={() => setIsChaosModalOpen(true)}
-              className="flex items-center gap-1.5 rounded-xl border border-purple-500/50 bg-purple-500/10 px-3 py-2 text-xs font-bold text-purple-400 hover:bg-purple-500/20 transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-2 rounded-xl border border-purple-500/40 bg-purple-500/10 px-4 py-2 text-xs font-extrabold text-purple-300 hover:bg-purple-500/20 transition-all cursor-pointer shadow-md shadow-purple-950/40"
             >
-              <Skull className="h-3.5 w-3.5 text-purple-400 animate-pulse" />
+              <Skull className="h-4 w-4 text-purple-400 animate-pulse" />
               <span>{activeMutator ? `Curse: ${activeMutator.name}` : 'Chaos Wheel'}</span>
             </button>
+          </div>
 
-            {/* Reset Loadout & Wheels Button */}
+          <div className="flex items-center gap-2.5">
+            {/* 1-Click Reset Wheels & Loadout */}
             <button
               onClick={handleResetAllLoadoutAndWheels}
-              className="flex items-center gap-1.5 rounded-xl border border-rose-500/50 bg-rose-500/10 px-3 py-2 text-xs font-bold text-rose-400 hover:bg-rose-500/20 transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-xs font-extrabold text-rose-300 hover:bg-rose-500/20 active:scale-95 transition-all cursor-pointer shadow-md shadow-rose-950/40"
               title="Reset wheels, clear active loadout slots, and reset slot focus"
             >
-              <RotateCcw className="h-3.5 w-3.5 text-rose-400" />
-              <span>Reset Loadout & Wheels</span>
+              <RotateCcw className="h-4 w-4" />
+              <span>Reset Wheels & Loadout</span>
             </button>
 
             {/* Copy Build Button */}
             <button
               onClick={handleCopyBuild}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/80 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 transition-colors cursor-pointer"
+              className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2 text-xs font-extrabold text-slate-200 hover:bg-slate-700 hover:text-white transition-colors cursor-pointer"
             >
               {copied ? (
                 <>
-                  <Check className="h-3.5 w-3.5 text-emerald-500" />
-                  <span className="text-emerald-500">{dict?.generator?.buildCopied || 'Loadout Copied!'}</span>
+                  <Check className="h-4 w-4 text-emerald-400" />
+                  <span className="text-emerald-400">Loadout Copied!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>{dict?.generator?.copyBuild || 'Copy Loadout Text'}</span>
+                  <Copy className="h-4 w-4" />
+                  <span>Copy Loadout</span>
                 </>
               )}
             </button>
           </div>
         </div>
 
-        {/* Status & Pool Reset Toolbar */}
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200/80 pt-3 dark:border-slate-800/80">
+        {/* Status & Pool Reset Bar */}
+        <div className="mt-4 flex items-center justify-between text-xs font-bold text-slate-400">
           <div className="flex items-center gap-2">
-            {/* Drawn Badge */}
-            <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/80 px-3 py-1.5 text-xs font-extrabold text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+            <span className="flex items-center gap-1.5 rounded-lg bg-slate-900 border border-slate-800 px-3 py-1 text-slate-300">
               <Layers className="h-3.5 w-3.5 text-amber-500" />
-              <span>
-                {dict?.generator?.drawnBadge
-                  ? dict.generator.drawnBadge
-                      .replace('{drawn}', drawnCount.toString())
-                      .replace('{total}', totalRolePerks.toString())
-                  : `Drawn: ${drawnCount} / ${totalRolePerks} Perks (${totalPages} Pages)`}
-              </span>
-            </div>
+              Drawn: {drawnCount} / {totalRolePerks} Perks ({totalPages} Pages)
+            </span>
           </div>
 
-          {/* Reset Used Perks Button */}
           <button
             onClick={handleResetDrawnPerks}
-            className="flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3.5 py-1.5 text-xs font-extrabold text-rose-600 hover:bg-rose-500/20 active:scale-95 dark:text-rose-400 transition-all cursor-pointer"
-            title="Clear all used perks for this role in SQLite"
+            className="flex items-center gap-1 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer text-xs font-bold"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            <span>{dict?.generator?.resetDrawn || 'Reset Used Perks'}</span>
+            <span>Reset Used Perks Memory</span>
           </button>
         </div>
       </div>
 
-      {/* Wheel Section */}
+      {/* ── WHEEL OF FORTUNE STAGE ── */}
       {genMode === 'wheel' && (
         <WheelOfFortune
           totalPages={totalPages}
@@ -542,159 +568,185 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
         />
       )}
 
-      {/* Instant Roll Action Bar */}
+      {/* ── INSTANT ROLL ACTION BAR ── */}
       {genMode === 'instant' && (
-        <div className="flex justify-center">
+        <div className="flex justify-center py-4">
           <button
             onClick={rollInstantLoadout}
-            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-sm font-black text-white shadow-lg shadow-amber-900/30 hover:from-amber-400 hover:to-amber-500 active:scale-95 transition-all cursor-pointer"
+            className={`flex items-center gap-3 rounded-2xl px-10 py-5 font-black text-lg tracking-wider uppercase shadow-2xl transition-all duration-300 cursor-pointer ${
+              isSurvivor
+                ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/80 active:scale-95'
+                : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/80 active:scale-95'
+            }`}
           >
-            <Dices className="h-5 w-5" />
-            <span>{dict?.generator?.rollButton || 'Roll New Loadout'}</span>
+            <Dices className="h-6 w-6 fill-current animate-spin" />
+            <span>Roll Complete {role} Loadout</span>
           </button>
         </div>
       )}
 
-      {/* 4-Perk Build Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {loadout.map((slotData, idx) => {
-          const perk = slotData?.perk;
-          const iconSrc = perk?.icon_local_path
-            ? `${backendBase}/static/${perk.icon_local_path}`
-            : perk?.icon_url;
+      {/* ── 4-PERK BUILD CARDS SHOWCASE ── */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <Flame className="h-4 w-4 text-amber-500" />
+            Active 4-Perk Loadout
+          </h3>
+          <span className="text-xs text-slate-500 font-bold">
+            Target Focus: <span className="text-amber-400 font-black">Slot #{activeSlotIdx + 1}</span>
+          </span>
+        </div>
 
-          const isSelectedForWheelSlot = genMode === 'wheel' && activeSlotIdx === idx;
-          const isObscuredByBlindness = activeMutator?.id === 'blindness' && !revealedSlots[idx];
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {loadout.map((slotData, idx) => {
+            const perk = slotData?.perk;
+            const iconSrc = perk?.icon_local_path
+              ? `${backendBase}/static/${perk.icon_local_path}`
+              : perk?.icon_url;
 
-          const getAvatarSrc = (p?: Perk) => {
-            if (!p) return null;
-            let rawPath = p.character_avatar_path;
-            if (!rawPath && p.character && p.character !== 'General') {
-              const subDir = role === 'Survivor' ? 'survivors' : 'killers';
-              const sanitized = p.character
-                .toLowerCase()
-                .trim()
-                .replace(/[\s\-/]+/g, '_')
-                .replace(/[\\/*?:"<>|]/g, '')
-                .replace(/_+/g, '_')
-                .replace(/^_+|_+$/g, '');
-              rawPath = `avatars/${subDir}/${sanitized}.png`;
-            }
-            if (!rawPath) return null;
-            const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');
-            return `${backendBase}/static/${cleanPath}`;
-          };
+            const isSelectedForWheelSlot = genMode === 'wheel' && activeSlotIdx === idx;
+            const isObscuredByBlindness = activeMutator?.id === 'blindness' && !revealedSlots[idx];
 
-          const avatarSrc = getAvatarSrc(perk);
+            const getAvatarSrc = (p?: Perk) => {
+              if (!p) return null;
+              let rawPath = p.character_avatar_path;
+              if (!rawPath && p.character && p.character !== 'General') {
+                const subDir = role === 'Survivor' ? 'survivors' : 'killers';
+                const sanitized = p.character
+                  .toLowerCase()
+                  .trim()
+                  .replace(/[\s\-/]+/g, '_')
+                  .replace(/[\\/*?:"<>|]/g, '')
+                  .replace(/_+/g, '_')
+                  .replace(/^_+|_+$/g, '');
+                rawPath = `avatars/${subDir}/${sanitized}.png`;
+              }
+              if (!rawPath) return null;
+              const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');
+              return `${backendBase}/static/${cleanPath}`;
+            };
 
-          return (
-            <div
-              key={idx}
-              onClick={() => {
-                if (isObscuredByBlindness) {
-                  setRevealedSlots((prev) => {
-                    const next = [...prev];
-                    next[idx] = true;
-                    return next;
-                  });
-                } else if (perk) {
-                  onSelectPerk(perk);
-                }
-              }}
-              className={`group relative flex cursor-pointer flex-col justify-between rounded-2xl border p-5 shadow-sm backdrop-blur-md transition-all duration-200 ${
-                isSelectedForWheelSlot
-                  ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/40'
-                  : 'border-slate-200/80 bg-white/70 dark:border-slate-800/80 dark:bg-slate-900/80 hover:-translate-y-1 hover:border-amber-500/50'
-              }`}
-            >
-              <div className="flex flex-col gap-4">
-                {/* Header Slot Info & Role Badge */}
-                <div className="flex items-center justify-between">
-                  {slotData ? (
-                    <span className="rounded-full bg-amber-500/10 px-2.5 py-1 font-mono text-[11px] font-extrabold text-amber-600 border border-amber-500/20 dark:text-amber-400">
-                      [{slotData.page}/{slotData.slot}]
-                    </span>
-                  ) : (
-                    <span className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-[11px] font-semibold text-slate-400 dark:bg-slate-800">
-                      [-/-]
-                    </span>
-                  )}
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                      Slot #{idx + 1}
-                    </span>
-                    {slotData && (
-                      <button
-                        onClick={(e) => handleClearSlot(idx, e)}
-                        className="rounded-lg p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 transition-colors cursor-pointer"
-                        title="Clear this perk slot"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    )}
-                  </div>
-                </div>
+            const avatarSrc = getAvatarSrc(perk);
 
-                {/* Perk Icon & Bigger Avatar Row */}
-                <div className="flex items-center justify-between">
-                  {/* Left: MASSIVE Perk Icon Container */}
-                  <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200/60 p-2 dark:from-slate-900 dark:to-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-inner group-hover:border-amber-500/50 transition-colors overflow-hidden">
-                    {isObscuredByBlindness ? (
-                      <div className="flex flex-col items-center justify-center text-purple-400 animate-pulse">
-                        <EyeOff className="h-8 w-8" />
-                        <span className="text-[9px] font-extrabold mt-1">CURSED</span>
-                      </div>
-                    ) : perk && iconSrc ? (
-                      <img
-                        src={iconSrc}
-                        alt={perk.name}
-                        className="h-16 w-16 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-300"
-                      />
+            return (
+              <div
+                key={idx}
+                onClick={() => {
+                  if (isObscuredByBlindness) {
+                    setRevealedSlots((prev) => {
+                      const next = [...prev];
+                      next[idx] = true;
+                      return next;
+                    });
+                  } else if (perk) {
+                    onSelectPerk(perk);
+                  }
+                }}
+                className={`group relative flex cursor-pointer flex-col justify-between rounded-3xl border p-6 shadow-xl backdrop-blur-xl transition-all duration-300 ${
+                  isSelectedForWheelSlot
+                    ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/50 scale-[1.02]'
+                    : 'border-slate-800 bg-slate-900/80 hover:-translate-y-1.5 hover:border-amber-500/50 hover:shadow-2xl'
+                }`}
+              >
+                <div className="flex flex-col gap-5">
+                  {/* Header Slot Info & Clear Button */}
+                  <div className="flex items-center justify-between">
+                    {slotData ? (
+                      <span className="rounded-full bg-amber-500/15 px-3 py-1 font-mono text-xs font-black text-amber-400 border border-amber-500/30">
+                        [Page {slotData.page} / Slot {slotData.slot}]
+                      </span>
                     ) : (
-                      <ImageOff className="h-8 w-8 text-slate-400" />
-                    )}
-                  </div>
-
-                  {/* Right: BIGGER Character Avatar + Top Right Role Icon Badge */}
-                  <div className="relative flex items-center">
-                    {isObscuredByBlindness ? (
-                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-950/80 border-2 border-purple-500/50 text-purple-300">
-                        <EyeOff className="h-7 w-7" />
-                      </div>
-                    ) : avatarSrc ? (
-                      <img
-                        src={avatarSrc}
-                        alt={perk?.character || 'Avatar'}
-                        className="h-16 w-16 rounded-2xl object-cover border-2 border-slate-700 shadow-lg group-hover:border-amber-500/60 transition-colors duration-300"
-                      />
-                    ) : (
-                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-800 border-2 border-slate-700 text-slate-400">
-                        {role === 'Survivor' ? <Shield className="h-8 w-8 text-emerald-400" /> : <Skull className="h-8 w-8 text-rose-400" />}
-                      </div>
+                      <span className="rounded-full bg-slate-950 px-3 py-1 font-mono text-xs font-semibold text-slate-500 border border-slate-850">
+                        [-/-]
+                      </span>
                     )}
 
-                    {/* Top-Right Role Icon Badge */}
-                    <div
-                      className={`absolute -top-1.5 -right-1.5 flex h-7 w-7 items-center justify-center rounded-full border shadow-lg backdrop-blur-md ${
-                        role === 'Survivor'
-                          ? 'border-emerald-500/60 bg-emerald-950 text-emerald-400 ring-2 ring-slate-950'
-                          : 'border-rose-500/60 bg-rose-950 text-rose-400 ring-2 ring-slate-950'
-                      }`}
-                      title={role}
-                    >
-                      {role === 'Survivor' ? <Shield className="h-4 w-4" /> : <Skull className="h-4 w-4" />}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                        Slot #{idx + 1}
+                      </span>
+                      {slotData && (
+                        <button
+                          onClick={(e) => handleClearSlot(idx, e)}
+                          className="rounded-lg p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 transition-colors cursor-pointer"
+                          title="Clear this perk slot"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
-                </div>
 
-                {/* Hero Perk Title */}
-                <h3 className="text-lg font-black leading-tight text-slate-900 group-hover:text-amber-500 dark:text-slate-100 transition-colors">
-                  {isObscuredByBlindness ? '??? (Click to Reveal)' : perk ? perk.name : 'Spin Wheel or Roll'}
-                </h3>
+                  {/* Perk Icon & Character Avatar Row */}
+                  <div className="flex items-center justify-between">
+                    {/* Left: Perk Icon Frame */}
+                    <div className="relative flex h-22 w-22 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 p-2 border border-slate-800 shadow-inner group-hover:border-amber-500/60 transition-colors overflow-hidden">
+                      {isObscuredByBlindness ? (
+                        <div className="flex flex-col items-center justify-center text-purple-400 animate-pulse">
+                          <EyeOff className="h-8 w-8" />
+                          <span className="text-[9px] font-black mt-1">CURSED</span>
+                        </div>
+                      ) : perk && iconSrc ? (
+                        <img
+                          src={iconSrc}
+                          alt={perk.name}
+                          className="h-18 w-18 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-300"
+                        />
+                      ) : (
+                        <ImageOff className="h-9 w-9 text-slate-600" />
+                      )}
+                    </div>
+
+                    {/* Right: Character Avatar Frame */}
+                    <div className="relative flex items-center">
+                      {isObscuredByBlindness ? (
+                        <div className="flex h-18 w-18 items-center justify-center rounded-2xl bg-purple-950/80 border-2 border-purple-500/50 text-purple-300">
+                          <EyeOff className="h-7 w-7" />
+                        </div>
+                      ) : avatarSrc ? (
+                        <img
+                          src={avatarSrc}
+                          alt={perk?.character || 'Avatar'}
+                          className="h-18 w-18 rounded-2xl object-cover border-2 border-slate-700 shadow-xl group-hover:border-amber-500/60 transition-colors duration-300"
+                        />
+                      ) : (
+                        <div className="flex h-18 w-18 items-center justify-center rounded-2xl bg-slate-800 border-2 border-slate-700 text-slate-400">
+                          {isSurvivor ? (
+                            <Shield className="h-8 w-8 text-emerald-400" />
+                          ) : (
+                            <Skull className="h-8 w-8 text-rose-400" />
+                          )}
+                        </div>
+                      )}
+
+                      {/* Top-Right Role Badge */}
+                      <div
+                        className={`absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full border shadow-xl backdrop-blur-md ${
+                          isSurvivor
+                            ? 'border-emerald-500/60 bg-emerald-950 text-emerald-400 ring-2 ring-slate-950'
+                            : 'border-rose-500/60 bg-rose-950 text-rose-400 ring-2 ring-slate-950'
+                        }`}
+                        title={role}
+                      >
+                        {isSurvivor ? <Shield className="h-4 w-4" /> : <Skull className="h-4 w-4" />}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Hero Perk Title & Character Sub-Label */}
+                  <div>
+                    <h3 className="text-lg font-black leading-tight text-white group-hover:text-amber-400 transition-colors">
+                      {isObscuredByBlindness ? '??? (Click to Reveal)' : perk ? perk.name : 'Spin Wheel or Roll'}
+                    </h3>
+                    <p className="text-xs font-bold text-slate-400 mt-1">
+                      {perk ? perk.character : 'Empty Slot'}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* Character Configuration Modal */}

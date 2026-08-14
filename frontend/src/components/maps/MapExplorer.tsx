@@ -27,15 +27,23 @@ import { getVariantsForMap } from '@/utils/mapVoiceMatcher';
 
 export interface MapExplorerProps {
   initialMapName?: string;
+  selectedMap?: { mapName: string; timestamp: number } | string;
   selectedSource?: 'all' | 'hens333' | 'samoelcolt';
   onSourceChange?: (source: 'all' | 'hens333' | 'samoelcolt') => void;
   onActionTriggered?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
-  triggerAction?: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close' | null;
+  triggerAction?:
+    | { action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close'; timestamp: number }
+    | 'zoom_in'
+    | 'zoom_out'
+    | 'fullscreen'
+    | 'close'
+    | null;
 }
 
 export const MapExplorer: React.FC<MapExplorerProps> = ({
   initialMapName = '',
+  selectedMap,
   selectedSource: propSelectedSource,
   onSourceChange,
   onActionTriggered,
@@ -122,10 +130,13 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     loadMaps();
   }, [selectedRealm, search, activeSource]);
 
-  // Handle initialMapName changes: search maps matching name & active source, select, and open detail modal
+  // Handle initialMapName / selectedMap changes: search maps matching name & active source, select, and open detail modal
   useEffect(() => {
-    if (!initialMapName || !initialMapName.trim() || maps.length === 0) return;
-    const needle = initialMapName.toLowerCase().trim();
+    const rawTarget = selectedMap !== undefined ? selectedMap : initialMapName;
+    const targetMapName =
+      typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.mapName : rawTarget;
+    if (!targetMapName || !targetMapName.trim() || maps.length === 0) return;
+    const needle = targetMapName.toLowerCase().trim();
 
     // Priority 1: Match within active source
     let match = maps.find(
@@ -148,7 +159,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       setIsDetailModalOpen(true);
       handleResetZoomPan();
     }
-  }, [initialMapName, maps, activeSource, handleResetZoomPan]);
+  }, [initialMapName, selectedMap, maps, activeSource, handleResetZoomPan]);
 
   // Load Map Detail
   useEffect(() => {
@@ -183,16 +194,17 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isDetailModalOpen, isFullscreenOpen, onActionTriggered]);
 
-  // React to voice or external trigger action
+  // React to voice or external trigger action (idempotent across multiple invocations)
   useEffect(() => {
     if (!triggerAction) return;
-    if (triggerAction === 'zoom_in') {
+    const action = typeof triggerAction === 'object' ? triggerAction.action : triggerAction;
+    if (action === 'zoom_in') {
       setZoomLevel((z) => Math.min(3.0, Math.round((z + 0.25) * 100) / 100));
-    } else if (triggerAction === 'zoom_out') {
+    } else if (action === 'zoom_out') {
       setZoomLevel((z) => Math.max(0.5, Math.round((z - 0.25) * 100) / 100));
-    } else if (triggerAction === 'fullscreen') {
+    } else if (action === 'fullscreen') {
       setIsFullscreenOpen(true);
-    } else if (triggerAction === 'close') {
+    } else if (action === 'close') {
       setIsFullscreenOpen(false);
       setIsDetailModalOpen(false);
     }
@@ -251,23 +263,32 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const handlePopoutImage = (url: string, title: string) => {
     if (typeof window !== 'undefined') {
       const w = window.open('', '_blank', 'width=1200,height=900,resizable=yes,scrollbars=yes');
-      if (w) {
-        w.document.write(`
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <title>${title} - Map Guide</title>
-              <style>
-                body { margin: 0; background: #090d16; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: system-ui, sans-serif; color: #fff; }
-                img { max-width: 98vw; max-height: 95vh; object-contain: fit; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-              </style>
-            </head>
-            <body>
-              <img src="${url}" alt="${title}" />
-            </body>
-          </html>
-        `);
-        w.document.close();
+      if (w && w.document) {
+        w.document.title = `${title} - Map Guide`;
+        w.document.body.style.margin = '0';
+        w.document.body.style.background = '#090d16';
+        w.document.body.style.display = 'flex';
+        w.document.body.style.alignItems = 'center';
+        w.document.body.style.justifyContent = 'center';
+        w.document.body.style.minHeight = '100vh';
+        w.document.body.style.fontFamily = 'system-ui, sans-serif';
+        w.document.body.style.color = '#fff';
+
+        if (typeof w.document.body.replaceChildren === 'function') {
+          w.document.body.replaceChildren();
+        } else {
+          w.document.body.textContent = '';
+        }
+
+        const img = w.document.createElement('img');
+        img.src = url;
+        img.alt = title;
+        img.style.maxWidth = '98vw';
+        img.style.maxHeight = '95vh';
+        img.style.objectFit = 'contain';
+        img.style.borderRadius = '12px';
+        img.style.boxShadow = '0 10px 40px rgba(0,0,0,0.8)';
+        w.document.body.appendChild(img);
       }
     }
   };

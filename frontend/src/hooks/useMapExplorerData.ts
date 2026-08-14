@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { MapRealm } from '@/types/map';
 import { fetchMaps, fetchMapDetail } from '@/services/mapApi';
 import { getVariantsForMap } from '@/utils/mapVoiceMatcher';
@@ -122,6 +122,11 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   const [loading, setLoading] = useState(true);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
+  const onAvailableMapsLoadedRef = useRef(onAvailableMapsLoaded);
+  useEffect(() => {
+    onAvailableMapsLoadedRef.current = onAvailableMapsLoaded;
+  }, [onAvailableMapsLoaded]);
+
   const activeSource = propSelectedSource !== undefined ? propSelectedSource : internalSource;
 
   useEffect(() => {
@@ -148,10 +153,12 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
         const loaded: MapRealm[] = data?.maps || [];
         if (!isCancelled) {
           setMaps(loaded);
-          onAvailableMapsLoaded?.(loaded);
+          onAvailableMapsLoadedRef.current?.(loaded);
 
-          if (loaded.length > 0 && !loaded.some((m) => m.id === selectedMapId)) {
-            setSelectedMapId(loaded[0].id);
+          if (loaded.length > 0) {
+            setSelectedMapId((prevId) =>
+              !loaded.some((m) => m.id === prevId) ? loaded[0].id : prevId
+            );
           }
         }
       } catch (err) {
@@ -166,7 +173,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     return () => {
       isCancelled = true;
     };
-  }, [selectedRealm, search, activeSource, onAvailableMapsLoaded, selectedMapId]);
+  }, [selectedRealm, search, activeSource]);
 
   // Handle initialMapName / selectedMap changes: search maps matching name & active source, select, and open detail modal
   useEffect(() => {
@@ -221,32 +228,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   const selectVariantByName = useCallback(
     (variantName: string) => {
       if (!activeMap || maps.length === 0) return;
-      const normTarget = variantName.toLowerCase().trim();
-      const normClean = normalizeMapSearch(variantName);
-
-      // Match within same source
-      let match = maps.find(
-        (m) =>
-          m.source === activeMap.source &&
-          (m.name.toLowerCase().includes(normTarget) ||
-            normTarget.includes(m.name.toLowerCase()) ||
-            normalizeMapSearch(m.name) === normClean ||
-            normalizeMapSearch(m.name).includes(normClean) ||
-            normClean.includes(normalizeMapSearch(m.name)))
-      );
-
-      // Fallback: any map
-      if (!match) {
-        match = maps.find(
-          (m) =>
-            m.name.toLowerCase().includes(normTarget) ||
-            normTarget.includes(m.name.toLowerCase()) ||
-            normalizeMapSearch(m.name) === normClean ||
-            normalizeMapSearch(m.name).includes(normClean) ||
-            normClean.includes(normalizeMapSearch(m.name))
-        );
-      }
-
+      const match = findMapByNameAndSource(maps, variantName, activeMap.source as MapSource);
       if (match) {
         setSelectedMapId(match.id);
       }

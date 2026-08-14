@@ -62,13 +62,15 @@ export interface UseMapGesturesReturn {
   };
 }
 
+const DEFAULT_PAN = { x: 0, y: 0 };
+
 export function useMapGestures(options: UseMapGesturesOptions = {}): UseMapGesturesReturn {
   const {
     minZoom = 0.5,
     maxZoom = 3.0,
     zoomStep = 0.25,
     initialZoom = 1.0,
-    initialPan = { x: 0, y: 0 },
+    initialPan = DEFAULT_PAN,
     onActionTriggered,
   } = options;
 

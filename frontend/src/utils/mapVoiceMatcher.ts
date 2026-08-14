@@ -243,9 +243,12 @@ export function getVariantsForMap(mapName: string): string[] {
     return [...MAP_VARIANT_GROUPS.sanctum_of_wrath];
   }
   if (
-    normName.includes('mountormond') ||
+    (normName.includes('mountormond') ||
     normName.includes('ormond') ||
-    normName.includes('goraormond')
+    normName.includes('goraormond')) &&
+    !normName.includes('mine') &&
+    !normName.includes('kopalnia') &&
+    !normName.includes('majn')
   ) {
     return [...MAP_VARIANT_GROUPS.mount_ormond];
   }
@@ -1011,7 +1014,7 @@ export const EXPLICIT_VARIANT_RULES: ExplicitVariantRule[] = [
   {
     keywords: [
       "badham 5", "badham five", "badham v", "badham piec", "badham pięć",
-      "preschool 5", "preschool five", "preschool v", "preschool piec", "preschool piec", "preschool pięć",
+      "preschool 5", "preschool five", "preschool v", "preschool piec", "preschool pięć",
       "badham preschool 5", "badham preschool v", "springwood 5", "springwood piec", "springwood pięć",
       "bedhem 5", "bedhem piec", "bedhem pięć", "bedhem v",
       "przedszkole 5", "przedszkole piec", "przedszkole pięć", "przedszkole v",
@@ -1386,6 +1389,7 @@ function cleanSpokenQuery(spoken: string): string {
     'display',
     'view the',
     'view',
+    'please',
     // Polish conversational prefixes
     'czy mozesz prosze pokazac mi',
     'czy mozesz prosze pokazac',
@@ -1400,6 +1404,8 @@ function cleanSpokenQuery(spoken: string): string {
     'prosze wyswietl',
     'prosze znajdz',
     'prosze wlacz',
+    'prosze',
+    'proszę',
     'pokaz mi',
     'pokaz',
     'otworz',
@@ -1412,11 +1418,16 @@ function cleanSpokenQuery(spoken: string): string {
     'zobacz',
   ];
 
-  for (const prefix of leadingPrefixes) {
-    const normPrefix = normalizeString(prefix);
-    if (cleaned.startsWith(normPrefix + ' ')) {
-      cleaned = cleaned.slice(normPrefix.length).trim();
-      break;
+  let prefixChanged = true;
+  while (prefixChanged) {
+    prefixChanged = false;
+    for (const prefix of leadingPrefixes) {
+      const normPrefix = normalizeString(prefix);
+      if (cleaned.startsWith(normPrefix + ' ')) {
+        cleaned = cleaned.slice(normPrefix.length).trim();
+        prefixChanged = true;
+        break;
+      }
     }
   }
 
@@ -1468,20 +1479,25 @@ export function matchVoiceQuery(
 
   if (!rawLower) return null;
 
+  const cleanRaw = cleanSpokenQuery(rawLower);
+  const commandCandidates = [cleanRaw, rawLower].filter(Boolean);
+
   // 1. Check Pure Source Switching Commands (exact string/normalized match)
   for (const rule of SOURCE_COMMAND_RULES) {
     for (const kw of rule.keywords) {
       const normKw = normalizeForComparison(kw);
-      const normRaw = normalizeForComparison(rawLower);
-      if (normRaw === normKw || rawLower === normalizeString(kw)) {
-        return {
-          matchedMapName: '',
-          source: rule.source,
-          confidence: 1.0,
-          isVariant: false,
-          action: 'switch_source',
-          actionPayload: rule.source,
-        };
+      for (const text of commandCandidates) {
+        const normCmd = normalizeForComparison(text);
+        if (normCmd === normKw || text === normalizeString(kw)) {
+          return {
+            matchedMapName: '',
+            source: rule.source,
+            confidence: 1.0,
+            isVariant: false,
+            action: 'switch_source',
+            actionPayload: rule.source,
+          };
+        }
       }
     }
   }
@@ -1490,15 +1506,17 @@ export function matchVoiceQuery(
   for (const rule of ACTION_COMMAND_RULES) {
     for (const kw of rule.keywords) {
       const normKw = normalizeForComparison(kw);
-      const normRaw = normalizeForComparison(rawLower);
-      if (normRaw === normKw || rawLower === normalizeString(kw)) {
-        return {
-          matchedMapName: '',
-          source: currentSource,
-          confidence: 1.0,
-          isVariant: false,
-          action: rule.action,
-        };
+      for (const text of commandCandidates) {
+        const normCmd = normalizeForComparison(text);
+        if (normCmd === normKw || text === normalizeString(kw)) {
+          return {
+            matchedMapName: '',
+            source: currentSource,
+            confidence: 1.0,
+            isVariant: false,
+            action: rule.action,
+          };
+        }
       }
     }
   }

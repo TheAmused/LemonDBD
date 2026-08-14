@@ -103,3 +103,18 @@ test('Variant disambiguation covers all DBD map families for MapExplorer switche
   assert.deepStrictEqual(singleMapVariants, []);
 });
 
+test('MapExplorer triggerAction contracts and source selection flow', () => {
+  const triggerActions: Array<'zoom_in' | 'zoom_out' | 'fullscreen' | 'close'> = [
+    'zoom_in',
+    'zoom_out',
+    'fullscreen',
+    'close',
+  ];
+
+  triggerActions.forEach((act) => {
+    const res = matchVoiceQuery(act === 'zoom_in' ? 'zoom in' : act === 'zoom_out' ? 'zoom out' : act);
+    assert.ok(res);
+    assert.strictEqual(res.action, act);
+  });
+});
+

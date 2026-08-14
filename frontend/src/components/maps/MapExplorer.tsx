@@ -31,6 +31,7 @@ export interface MapExplorerProps {
   onSourceChange?: (source: 'all' | 'hens333' | 'samoelcolt') => void;
   onActionTriggered?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
+  triggerAction?: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close' | null;
 }
 
 export const MapExplorer: React.FC<MapExplorerProps> = ({
@@ -39,6 +40,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   onSourceChange,
   onActionTriggered,
   onAvailableMapsLoaded,
+  triggerAction,
 }) => {
   const [maps, setMaps] = useState<MapRealm[]>([]);
   const [selectedRealm, setSelectedRealm] = useState<string>('all');
@@ -180,6 +182,21 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isDetailModalOpen, isFullscreenOpen, onActionTriggered]);
+
+  // React to voice or external trigger action
+  useEffect(() => {
+    if (!triggerAction) return;
+    if (triggerAction === 'zoom_in') {
+      setZoomLevel((z) => Math.min(3.0, Math.round((z + 0.25) * 100) / 100));
+    } else if (triggerAction === 'zoom_out') {
+      setZoomLevel((z) => Math.max(0.5, Math.round((z - 0.25) * 100) / 100));
+    } else if (triggerAction === 'fullscreen') {
+      setIsFullscreenOpen(true);
+    } else if (triggerAction === 'close') {
+      setIsFullscreenOpen(false);
+      setIsDetailModalOpen(false);
+    }
+  }, [triggerAction]);
 
   // Extract unique realms
   const uniqueRealms = useMemo(() => {
@@ -711,6 +728,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
+              onTouchCancel={handleTouchEnd}
               style={{ touchAction: 'none' }}
               className={`relative min-h-[440px] md:min-h-[520px] max-h-[85vh] h-[55vh] md:h-[65vh] w-full overflow-hidden rounded-2xl bg-slate-950 p-4 border border-slate-800/80 flex items-center justify-center select-none ${
                 isDragging ? 'cursor-grabbing' : 'cursor-grab'

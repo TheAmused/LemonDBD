@@ -467,33 +467,47 @@ export function VoiceCommandBanner({
         };
 
         recognition.onerror = (event: any) => {
-          console.warn('[VoiceNav] Recognition error:', event.error, event);
-          if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-            isListeningRef.current = false;
-            isHoldingRef.current = false;
+          console.warn('[VoiceNav] Recognition error event:', event.error, event);
+          isListeningRef.current = false;
+          isHoldingRef.current = false;
+          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+
+          if (event.error === 'network') {
             setVoiceStatus('error');
             setErrorMessage(
-              'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
+              'Network error: Speech service could not connect. If using Brave Browser, enable "Use Google services for speech recognition" in brave://settings/extensions, or check your internet/firewall.'
             );
+          } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            setVoiceStatus('error');
+            setErrorMessage(
+              'Microphone access blocked. Please allow microphone permissions in your browser address bar (lock/tune icon).'
+            );
+          } else if (event.error === 'audio-capture') {
+            setVoiceStatus('error');
+            setErrorMessage('No microphone device detected. Please connect or enable your microphone.');
           } else if (event.error === 'no-speech') {
-            if (!isHoldingRef.current) {
-              isListeningRef.current = false;
-              setVoiceStatus('nomatch');
-              resetTimerRef.current = setTimeout(() => {
-                setVoiceStatus('idle');
-              }, 2400);
-            }
+            setVoiceStatus('nomatch');
+            resetTimerRef.current = setTimeout(() => {
+              setVoiceStatus('idle');
+            }, 2400);
+          } else {
+            setVoiceStatus('error');
+            setErrorMessage(`Speech recognition error: ${event.error || 'Unknown error'}`);
           }
         };
 
         recognition.onend = () => {
           console.log('[VoiceNav] Recognition onend triggered. isHolding:', isHoldingRef.current, 'text:', liveTranscriptRef.current);
-          // If the user is STILL holding the key or button down, keep listening without interruption!
+          // Only auto-restart if isHolding is still true AND no error occurred
           if (isHoldingRef.current) {
             try {
               recognition.start();
               return;
-            } catch {}
+            } catch (e) {
+              console.warn('[VoiceNav] Auto-restart failed:', e);
+              isHoldingRef.current = false;
+              isListeningRef.current = false;
+            }
           }
 
           isListeningRef.current = false;

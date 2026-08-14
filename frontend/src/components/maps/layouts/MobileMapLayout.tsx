@@ -333,6 +333,8 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                 <MapLegendDrawer
                   clockSystem={activeMap?.clock_system}
                   source={activeMap?.source}
+                  mapName={activeMap?.name}
+                  realmName={activeMap?.realm}
                   isOpen={true}
                   collapsible={false}
                 />

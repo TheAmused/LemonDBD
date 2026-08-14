@@ -280,6 +280,7 @@ export function VoiceCommandBanner({
 
   const handleExecuteCommand = useCallback(
     (query: string) => {
+      console.log('[VoiceNav] Prompt chip or manual command triggered:', query);
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       liveTranscriptRef.current = query;
@@ -291,6 +292,8 @@ export function VoiceCommandBanner({
         propsRef.current.currentSource,
         propsRef.current.availableMaps
       );
+
+      console.log('[VoiceNav] Match query result for "' + query + '":', result);
 
       if (result) {
         executeMatch(result);
@@ -307,25 +310,31 @@ export function VoiceCommandBanner({
   // ─── Start / Stop Speech Recognition ────────────────────────────────────────
 
   const stopListening = useCallback(() => {
+    console.log('[VoiceNav] stopListening called.');
     isListeningRef.current = false;
     isHoldingRef.current = false;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
-      } catch {}
+      } catch (e) {
+        console.warn('[VoiceNav] Error stopping recognition:', e);
+      }
     }
     setVoiceStatus('idle');
   }, []);
 
   const stopListeningAndProcess = useCallback(() => {
+    console.log('[VoiceNav] stopListeningAndProcess called. Current text:', liveTranscriptRef.current);
     isListeningRef.current = false;
     isHoldingRef.current = false;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
-      } catch {}
+      } catch (e) {
+        console.warn('[VoiceNav] Error stopping recognition in stopListeningAndProcess:', e);
+      }
     }
 
     const currentText = liveTranscriptRef.current.trim();
@@ -337,6 +346,8 @@ export function VoiceCommandBanner({
           propsRef.current.currentSource,
           propsRef.current.availableMaps
         );
+
+      console.log('[VoiceNav] Processing final hold text "' + currentText + '", Match:', match);
 
       if (match) {
         executeMatch(match);
@@ -356,13 +367,18 @@ export function VoiceCommandBanner({
 
   const startListening = useCallback(
     (isHold = false) => {
-      if (isListeningRef.current) return;
+      console.log('[VoiceNav] startListening called. isHold:', isHold, 'isListeningRef:', isListeningRef.current);
+      if (isListeningRef.current) {
+        console.log('[VoiceNav] Already listening, skipping duplicate start.');
+        return;
+      }
 
       if (typeof window === 'undefined') return;
       const SpeechRec =
         (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
       if (!SpeechRec) {
+        console.error('[VoiceNav] Web Speech API (SpeechRecognition / webkitSpeechRecognition) is not supported in this browser!');
         setVoiceStatus('error');
         setErrorMessage('Web Speech API is not supported in this browser.');
         return;
@@ -387,7 +403,7 @@ export function VoiceCommandBanner({
         recognition.continuous = true;
 
         recognition.onstart = () => {
-          console.log('[VoiceNav] Microphone started listening. Hold mode:', isHoldingRef.current);
+          console.log('[VoiceNav] Speech recognition ONSTART fired successfully. Mic is active!');
           isListeningRef.current = true;
           setVoiceStatus('listening');
           liveTranscriptRef.current = '';
@@ -782,39 +798,12 @@ export function VoiceCommandBanner({
             <button
               id="voice-command-mic-btn"
               type="button"
-              onPointerDown={(e) => {
-                // Prevent duplicate click emulations
-                isHoldingRef.current = true;
-                holdStartTimeRef.current = Date.now();
-                if (!isListeningRef.current) {
-                  startListening(true);
-                }
-              }}
-              onPointerUp={(e) => {
-                const duration = Date.now() - holdStartTimeRef.current;
-                const wasHolding = isHoldingRef.current;
-                isHoldingRef.current = false;
-                if (duration > 200 && isListeningRef.current) {
-                  stopListeningAndProcess();
-                }
-              }}
-              onPointerLeave={(e) => {
-                if (isHoldingRef.current) {
-                  isHoldingRef.current = false;
-                  if (isListeningRef.current) {
-                    stopListeningAndProcess();
-                  }
-                }
-              }}
-              onClick={(e) => {
-                const duration = Date.now() - holdStartTimeRef.current;
-                // If it was just a quick tap/click (<200ms), handle as normal toggle
-                if (duration <= 200) {
-                  if (isListeningRef.current || voiceStatus === 'listening') {
-                    stopListening();
-                  } else {
-                    startListening(false);
-                  }
+              onClick={() => {
+                console.log('[VoiceNav] Mic button clicked. Current voiceStatus:', voiceStatus, 'isListeningRef:', isListeningRef.current);
+                if (isListeningRef.current || voiceStatus === 'listening') {
+                  stopListening();
+                } else {
+                  startListening(false);
                 }
               }}
               aria-label={currentCfg.badge}
@@ -832,7 +821,7 @@ export function VoiceCommandBanner({
             <kbd className="rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-cyan-300">
               V
             </kbd>
-            <span>Hold to talk (or click to toggle)</span>
+            <span>Hold &apos;V&apos; to talk (or click button to toggle)</span>
           </div>
         </div>
 

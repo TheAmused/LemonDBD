@@ -25,24 +25,25 @@ export interface MapLegendDrawerProps {
   realmName?: string;
 }
 
+const GENERIC_PLACEHOLDERS = new Set([
+  'north sector',
+  'east sector',
+  'south sector',
+  'west sector',
+  'main building / top spawn',
+  'right tile / generator cluster',
+  'killer shack / bottom spawn',
+  'left tile / jungle gym',
+  'main building',
+  'top spawn',
+  'bottom spawn',
+  'left tile',
+  'right tile',
+]);
+
 const isGenericOrMissing = (val?: string): boolean => {
   if (!val || typeof val !== 'string' || !val.trim()) return true;
-  const genericPlaceholders = [
-    'north sector',
-    'east sector',
-    'south sector',
-    'west sector',
-    'main building / top spawn',
-    'right tile / generator cluster',
-    'killer shack / bottom spawn',
-    'left tile / jungle gym',
-    'main building',
-    'top spawn',
-    'bottom spawn',
-    'left tile',
-    'right tile',
-  ];
-  return genericPlaceholders.includes(val.trim().toLowerCase());
+  return GENERIC_PLACEHOLDERS.has(val.trim().toLowerCase());
 };
 
 export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({

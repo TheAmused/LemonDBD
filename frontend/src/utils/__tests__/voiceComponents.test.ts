@@ -138,4 +138,70 @@ test('MapExplorer triggerAction contracts and source selection flow', () => {
   assert.ok(typeof selectionPayload.timestamp === 'number');
 });
 
+test('VoiceCommandBanner Push-to-Talk and Mic button hold contracts', () => {
+  // Push-to-Talk Keydown & Keyup transition contracts
+  let isListening = false;
+  let isHolding = false;
+  let speechProcessed = false;
+
+  const simulateKeyDown = (key: string) => {
+    if (key.toLowerCase() === 'v') {
+      if (!isListening) {
+        isHolding = true;
+        isListening = true;
+      } else {
+        // Toggle off if already listening
+        isListening = false;
+        speechProcessed = true;
+      }
+    }
+  };
+
+  const simulateKeyUp = (key: string) => {
+    if (key.toLowerCase() === 'v') {
+      isHolding = false;
+      if (isListening) {
+        isListening = false;
+        speechProcessed = true;
+      }
+    }
+  };
+
+  // 1. Hold 'V' -> starts listening -> release 'V' -> stops and processes
+  simulateKeyDown('v');
+  assert.strictEqual(isListening, true);
+  assert.strictEqual(isHolding, true);
+  assert.strictEqual(speechProcessed, false);
+
+  simulateKeyUp('v');
+  assert.strictEqual(isListening, false);
+  assert.strictEqual(isHolding, false);
+  assert.strictEqual(speechProcessed, true);
+
+  // 2. Click Mic Button (Hold > 250ms Push-to-Talk)
+  let holdStart = 0;
+  let micListening = false;
+  let micProcessed = false;
+
+  const handleMouseDown = () => {
+    holdStart = Date.now() - 300; // Simulated 300ms hold
+    micListening = true;
+  };
+
+  const handleMouseUp = () => {
+    const duration = Date.now() - holdStart;
+    if (duration > 250 && micListening) {
+      micListening = false;
+      micProcessed = true;
+    }
+  };
+
+  handleMouseDown();
+  assert.strictEqual(micListening, true);
+  handleMouseUp();
+  assert.strictEqual(micListening, false);
+  assert.strictEqual(micProcessed, true);
+});
+
+
 

@@ -167,6 +167,7 @@ export function VoiceCommandBanner({
   const pendingMatchRef = useRef<MatchResult | null>(null);
   const isHoldingRef = useRef<boolean>(false);
   const holdStartTimeRef = useRef<number>(0);
+  const mouseDownListeningStateRef = useRef<boolean>(false);
 
   // Keep references to latest callbacks and props
   const propsRef = useRef({
@@ -569,10 +570,12 @@ export function VoiceCommandBanner({
       if (!isInput && (e.key === 'v' || e.key === 'V')) {
         if (e.repeat) return;
         e.preventDefault();
-        isHoldingRef.current = true;
-        holdStartTimeRef.current = Date.now();
         if (!isListeningRef.current) {
+          isHoldingRef.current = true;
+          holdStartTimeRef.current = Date.now();
           startListening(true);
+        } else {
+          stopListeningAndProcess();
         }
       }
     };
@@ -588,18 +591,20 @@ export function VoiceCommandBanner({
 
       if (!isInput && (e.key === 'v' || e.key === 'V')) {
         e.preventDefault();
-        const duration = Date.now() - holdStartTimeRef.current;
         isHoldingRef.current = false;
-        // If held for more than 180ms, release immediately executes the command!
-        if (duration > 180 && isListeningRef.current) {
+        if (isListeningRef.current) {
           stopListeningAndProcess();
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [startListening, stopListening, voiceStatus]);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [startListening, stopListeningAndProcess]);
 
   // ─── Status HUD Configurations ──────────────────────────────────────────────
 
@@ -812,10 +817,52 @@ export function VoiceCommandBanner({
             <button
               id="voice-command-mic-btn"
               type="button"
+              onMouseDown={() => {
+                mouseDownListeningStateRef.current =
+                  isListeningRef.current || voiceStatus === 'listening';
+                isHoldingRef.current = true;
+                holdStartTimeRef.current = Date.now();
+                if (!isListeningRef.current) {
+                  startListening(true);
+                }
+              }}
+              onMouseUp={() => {
+                const duration =
+                  holdStartTimeRef.current > 0 ? Date.now() - holdStartTimeRef.current : 0;
+                isHoldingRef.current = false;
+                if (duration > 250 && isListeningRef.current) {
+                  stopListeningAndProcess();
+                }
+              }}
+              onMouseLeave={() => {
+                if (isHoldingRef.current) {
+                  const duration =
+                    holdStartTimeRef.current > 0 ? Date.now() - holdStartTimeRef.current : 0;
+                  isHoldingRef.current = false;
+                  if (duration > 250 && isListeningRef.current) {
+                    stopListeningAndProcess();
+                  }
+                }
+              }}
               onClick={() => {
-                console.log('[VoiceNav] Mic button clicked. Current voiceStatus:', voiceStatus, 'isListeningRef:', isListeningRef.current);
+                console.log(
+                  '[VoiceNav] Mic button clicked. Current voiceStatus:',
+                  voiceStatus,
+                  'isListeningRef:',
+                  isListeningRef.current
+                );
+                const isClickFromMouse = holdStartTimeRef.current > 0;
+                const duration = isClickFromMouse ? Date.now() - holdStartTimeRef.current : 0;
+                holdStartTimeRef.current = 0;
+
+                if (duration > 250) {
+                  return;
+                }
+
                 if (isListeningRef.current || voiceStatus === 'listening') {
-                  stopListening();
+                  if (!isClickFromMouse || mouseDownListeningStateRef.current) {
+                    stopListeningAndProcess();
+                  }
                 } else {
                   startListening(false);
                 }

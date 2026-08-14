@@ -291,9 +291,10 @@ test('MobileMapLayout renders fallback and handles null activeMap', () => {
 // ─── 4. mapUtils Unit Tests ───────────────────────────────────────────────────
 test('getMapImageSrc resolves local paths, remote URLs, and fallbacks properly', () => {
   const backend = 'http://test-api.local';
+  const backendWithSlash = 'http://test-api.local/';
 
   // Local path
-  const localMap: MapRealm = {
+  const localMap: Partial<MapRealm> = {
     id: 'test_local',
     name: 'Local Map',
     realm: 'Realm',
@@ -303,9 +304,13 @@ test('getMapImageSrc resolves local paths, remote URLs, and fallbacks properly',
     getMapImageSrc(localMap, backend),
     'http://test-api.local/static/maps/local.png'
   );
+  assert.strictEqual(
+    getMapImageSrc(localMap, backendWithSlash),
+    'http://test-api.local/static/maps/local.png'
+  );
 
   // Local path with leading slash and static/
-  const leadingSlashMap: MapRealm = {
+  const leadingSlashMap: Partial<MapRealm> = {
     id: 'test_slash',
     name: 'Slash Map',
     realm: 'Realm',
@@ -317,7 +322,7 @@ test('getMapImageSrc resolves local paths, remote URLs, and fallbacks properly',
   );
 
   // Remote URL
-  const remoteMap: MapRealm = {
+  const remoteMap: Partial<MapRealm> = {
     id: 'test_remote',
     name: 'Remote Map',
     realm: 'Realm',
@@ -326,7 +331,7 @@ test('getMapImageSrc resolves local paths, remote URLs, and fallbacks properly',
   assert.strictEqual(getMapImageSrc(remoteMap, backend), 'https://images.example.com/map.jpg');
 
   // Fallback image_url
-  const fallbackMap: MapRealm = {
+  const fallbackMap: Partial<MapRealm> = {
     id: 'test_fallback',
     name: 'Fallback Map',
     realm: 'Realm',

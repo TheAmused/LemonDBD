@@ -399,7 +399,18 @@ export function VoiceCommandBanner({
         const recognition = new SpeechRec();
         recognitionRef.current = recognition;
 
-        recognition.lang = locale === 'tr' ? 'tr-TR' : 'en-US';
+        recognition.lang =
+          locale === 'pl'
+            ? 'pl-PL'
+            : locale === 'es'
+            ? 'es-ES'
+            : locale === 'tr'
+            ? 'tr-TR'
+            : locale === 'de'
+            ? 'de-DE'
+            : locale === 'fr'
+            ? 'fr-FR'
+            : 'en-US';
         recognition.interimResults = true;
         recognition.maxAlternatives = 5;
         // continuous = true ensures browser never auto-aborts while user is speaking or holding!

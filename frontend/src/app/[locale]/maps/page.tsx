@@ -134,12 +134,19 @@ function MapsPageInner() {
           <VoiceCommandBanner
             locale={locale}
             currentSource={currentSource}
-            onSourceChange={(src) => setCurrentSource(src)}
-            onSelectMap={(name, _id, src) => {
+            onSourceChange={(src) => {
+              console.log('[MapsPage] Source changed to:', src);
+              setCurrentSource(src);
+            }}
+            onSelectMap={(name, id, src) => {
+              console.log('[MapsPage] onSelectMap called with:', { name, id, src });
               if (src) setCurrentSource(src as any);
               setSelectedMap({ mapName: name, timestamp: Date.now() });
             }}
-            onAction={(act) => setTriggerAction({ action: act, timestamp: Date.now() })}
+            onAction={(act) => {
+              console.log('[MapsPage] onAction called with:', act);
+              setTriggerAction({ action: act, timestamp: Date.now() });
+            }}
             availableMaps={availableMaps}
           />
         </div>
@@ -148,8 +155,14 @@ function MapsPageInner() {
           initialMapName={selectedMap.mapName}
           selectedMap={selectedMap}
           selectedSource={currentSource}
-          onSourceChange={(src) => setCurrentSource(src)}
-          onAvailableMapsLoaded={(maps) => setAvailableMaps(maps)}
+          onSourceChange={(src) => {
+            console.log('[MapsPage] Explorer source changed to:', src);
+            setCurrentSource(src);
+          }}
+          onAvailableMapsLoaded={(maps) => {
+            console.log('[MapsPage] Loaded available maps count:', maps.length);
+            setAvailableMaps(maps);
+          }}
           onActionTriggered={(act) => setTriggerAction({ action: act, timestamp: Date.now() })}
           triggerAction={triggerAction}
         />

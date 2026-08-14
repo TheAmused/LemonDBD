@@ -142,6 +142,7 @@ test('MapControls renders zoom percentage and control elements', () => {
   assert.ok(html.includes('data-testid="map-controls-preset-fit"'));
   assert.ok(html.includes('data-testid="map-controls-preset-100"'));
   assert.ok(html.includes('data-testid="map-controls-preset-150"'));
+  assert.ok(html.includes('aria-pressed="true"'));
   assert.ok(html.includes('data-testid="map-controls-preset-200"'));
   assert.ok(html.includes('data-testid="map-controls-reset"'));
   assert.ok(html.includes('data-testid="map-controls-fullscreen"'));
@@ -362,6 +363,7 @@ test('MapLegendDrawer adapts sector names for SamoelColt source and handles coll
   assert.ok(openHtml.includes('West Sector'));
   assert.ok(openHtml.includes('West Yard'));
   assert.ok(openHtml.includes('data-testid="map-legend-toggle-btn"'));
+  assert.ok(openHtml.includes('aria-expanded="true"'));
 
   const collapsedHtml = renderToStaticMarkup(
     React.createElement(MapLegendDrawer, {
@@ -377,6 +379,7 @@ test('MapLegendDrawer adapts sector names for SamoelColt source and handles coll
   // Body not visible when isOpen is false
   assert.ok(!collapsedHtml.includes('data-testid="map-legend-body"'));
   assert.ok(!collapsedHtml.includes('North Tower'));
+  assert.ok(collapsedHtml.includes('aria-expanded="false"'));
 });
 
 // ─── 6. MapDirectoryList Component Unit Tests ─────────────────────────────────

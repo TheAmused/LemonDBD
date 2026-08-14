@@ -117,6 +117,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
               e.stopPropagation();
               handleToggle();
             }}
+            aria-expanded={isExpanded}
             aria-label={isExpanded ? 'Collapse Legend' : 'Expand Legend'}
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700/60 bg-slate-800/50 text-slate-400 hover:text-white transition-colors min-h-[36px] min-w-[36px]"
             data-testid="map-legend-toggle-btn"

@@ -94,7 +94,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                 }`}
                 data-testid="realm-pill-all"
               >
-                All Realms ({Object.values(groupedMaps).reduce((acc, curr) => acc + curr.length, 0)})
+                All Realms ({Object.values(groupedMaps || {}).reduce((acc, curr) => acc + curr.length, 0)})
               </button>
               {uniqueRealms.map((r) => {
                 const count = groupedMaps[r]?.length || 0;

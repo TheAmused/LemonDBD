@@ -91,6 +91,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             type="button"
             onClick={onReset}
             title="Fit to Screen"
+            aria-pressed={false}
             className="px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800 transition-all cursor-pointer"
             data-testid="map-controls-preset-fit"
           >
@@ -100,6 +101,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             type="button"
             onClick={() => onSetZoom(1.0)}
             title="Set 100% Zoom"
+            aria-pressed={Math.abs(zoomLevel - 1.0) < 0.01}
             className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
               Math.abs(zoomLevel - 1.0) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'
@@ -113,6 +115,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             type="button"
             onClick={() => onSetZoom(1.5)}
             title="Set 150% Zoom"
+            aria-pressed={Math.abs(zoomLevel - 1.5) < 0.01}
             className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
               Math.abs(zoomLevel - 1.5) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'
@@ -126,6 +129,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             type="button"
             onClick={() => onSetZoom(2.0)}
             title="Set 200% Zoom"
+            aria-pressed={Math.abs(zoomLevel - 2.0) < 0.01}
             className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
               Math.abs(zoomLevel - 2.0) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'

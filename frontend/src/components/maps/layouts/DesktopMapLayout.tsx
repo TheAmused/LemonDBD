@@ -8,6 +8,7 @@ import { MapControls } from '../MapControls';
 import { VariantSwitcherBar } from '../VariantSwitcherBar';
 import { MapLegendDrawer } from '../MapLegendDrawer';
 import { MapDirectoryList } from '../MapDirectoryList';
+import { getMapImageSrc } from '@/utils/mapUtils';
 
 export interface DesktopMapLayoutProps {
   // Explorer Data
@@ -50,17 +51,6 @@ export interface DesktopMapLayoutProps {
   // Actions
   onLaunchFullscreen?: () => void;
   onPopoutImage?: (url: string, title: string) => void;
-}
-
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
-function getMapImageSrc(m: MapRealm | null | undefined): string {
-  if (!m) return '';
-  if (m.callout_image_local_path) {
-    const clean = m.callout_image_local_path.replace(/^\/?(static\/)?/, '');
-    return `${backendBase}/static/${clean}`;
-  }
-  return m.callout_image_url || m.image_url || '';
 }
 
 export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
@@ -246,6 +236,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
               <button
                 type="button"
                 onClick={onLaunchFullscreen}
+                aria-label="Launch 2D Interactive Engine"
                 className="flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer min-h-[36px]"
                 data-testid="desktop-map-fullscreen-btn"
                 title="Launch 2D Interactive Engine"
@@ -258,6 +249,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
               <button
                 type="button"
                 onClick={() => onPopoutImage(getMapImageSrc(activeMap), activeMap.name)}
+                aria-label="Popout Map Image in New Window"
                 className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-bold text-slate-200 hover:border-amber-500 hover:text-amber-400 transition-all cursor-pointer min-h-[36px]"
                 data-testid="desktop-map-popout-btn"
                 title="Popout Map Image in New Window"

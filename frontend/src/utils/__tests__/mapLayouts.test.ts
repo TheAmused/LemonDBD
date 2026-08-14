@@ -4,6 +4,8 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { DesktopMapLayout } from '../../components/maps/layouts/DesktopMapLayout';
 import { MobileMapLayout } from '../../components/maps/layouts/MobileMapLayout';
+import { MapExplorer } from '../../components/maps/MapExplorer';
+import { getMapImageSrc, handlePopoutImageWindow } from '../mapUtils';
 import type { MapRealm } from '@/types/map';
 
 const mockMaps: MapRealm[] = [
@@ -285,3 +287,81 @@ test('MobileMapLayout renders fallback and handles null activeMap', () => {
   assert.ok(html.includes('Browse All Maps'));
   assert.ok(html.includes('data-testid="map-canvas-fallback"'));
 });
+
+// ─── 4. mapUtils Unit Tests ───────────────────────────────────────────────────
+test('getMapImageSrc resolves local paths, remote URLs, and fallbacks properly', () => {
+  const backend = 'http://test-api.local';
+
+  // Local path
+  const localMap: MapRealm = {
+    id: 'test_local',
+    name: 'Local Map',
+    realm: 'Realm',
+    callout_image_local_path: 'static/maps/local.png',
+  };
+  assert.strictEqual(
+    getMapImageSrc(localMap, backend),
+    'http://test-api.local/static/maps/local.png'
+  );
+
+  // Local path with leading slash and static/
+  const leadingSlashMap: MapRealm = {
+    id: 'test_slash',
+    name: 'Slash Map',
+    realm: 'Realm',
+    callout_image_local_path: '/static/maps/slash.png',
+  };
+  assert.strictEqual(
+    getMapImageSrc(leadingSlashMap, backend),
+    'http://test-api.local/static/maps/slash.png'
+  );
+
+  // Remote URL
+  const remoteMap: MapRealm = {
+    id: 'test_remote',
+    name: 'Remote Map',
+    realm: 'Realm',
+    callout_image_url: 'https://images.example.com/map.jpg',
+  };
+  assert.strictEqual(getMapImageSrc(remoteMap, backend), 'https://images.example.com/map.jpg');
+
+  // Fallback image_url
+  const fallbackMap: MapRealm = {
+    id: 'test_fallback',
+    name: 'Fallback Map',
+    realm: 'Realm',
+    image_url: 'https://images.example.com/fallback.jpg',
+  };
+  assert.strictEqual(
+    getMapImageSrc(fallbackMap, backend),
+    'https://images.example.com/fallback.jpg'
+  );
+
+  // Null / undefined handling
+  assert.strictEqual(getMapImageSrc(null, backend), '');
+  assert.strictEqual(getMapImageSrc(undefined, backend), '');
+});
+
+test('handlePopoutImageWindow executes safely in non-browser environment', () => {
+  assert.doesNotThrow(() => {
+    handlePopoutImageWindow('https://example.com/img.png', 'Test Map');
+    handlePopoutImageWindow('', '');
+  });
+});
+
+// ─── 5. MapExplorer Orchestrator Unit Tests ───────────────────────────────────
+test('MapExplorer renders responsive root with desktop and mobile wrappers', () => {
+  const html = renderToStaticMarkup(
+    React.createElement(MapExplorer, {
+      initialMapName: "Azarov's Resting Place",
+      selectedSource: 'hens333',
+    })
+  );
+
+  assert.ok(html.includes('data-testid="map-explorer-root"'));
+  assert.ok(html.includes('hidden lg:block'));
+  assert.ok(html.includes('block lg:hidden'));
+  assert.ok(html.includes('data-testid="desktop-map-layout"'));
+  assert.ok(html.includes('data-testid="mobile-map-layout"'));
+});
+

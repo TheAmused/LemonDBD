@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { Compass, Clock, Layers, ExternalLink, Search } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
+import { getMapImageSrc } from '@/utils/mapUtils';
 
 export interface MapDirectoryListProps {
   groupedMaps: Record<string, MapRealm[]>;
@@ -54,14 +55,6 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
   }, [flatMaps, searchQuery]);
 
   const uniqueRealms = useMemo(() => Object.keys(groupedMaps || {}).sort(), [groupedMaps]);
-
-  const getMapImageSrc = (m: MapRealm): string => {
-    if (m.callout_image_local_path) {
-      const clean = m.callout_image_local_path.replace(/^\/?(static\/)?/, '');
-      return `${backendBase}/static/${clean}`;
-    }
-    return m.callout_image_url || m.image_url || '';
-  };
 
   return (
     <div className={`space-y-6 ${className}`} data-testid="map-directory-list">
@@ -154,14 +147,22 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
           data-testid="map-directory-grid"
         >
           {filteredMaps.map((m) => {
-            const imgSrc = getMapImageSrc(m);
+            const imgSrc = getMapImageSrc(m, backendBase);
             const isSelected = selectedMapId === m.id;
             const isSamoel = m.source === 'samoelcolt';
 
             return (
               <div
                 key={m.id}
+                role="button"
+                tabIndex={0}
                 onClick={() => onSelectMapId(m.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectMapId(m.id);
+                  }
+                }}
                 className={`group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border bg-slate-900/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] ${
                   isSelected
                     ? 'border-amber-500 ring-2 ring-amber-500/40 shadow-[0_0_30px_rgba(245,158,11,0.25)]'

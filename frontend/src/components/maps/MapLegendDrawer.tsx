@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Clock, Layers, ChevronDown, ChevronUp, Info } from 'lucide-react';
+import { Clock, Layers, ChevronDown, ChevronUp, Info, Compass } from 'lucide-react';
+import { getMapLandmarks, MapLandmarks } from '@/utils/mapLandmarks';
 
 export interface ClockSystemData {
   description?: string;
@@ -9,6 +10,7 @@ export interface ClockSystemData {
   three_o_clock?: string;
   six_o_clock?: string;
   nine_o_clock?: string;
+  center?: string;
 }
 
 export interface MapLegendDrawerProps {
@@ -19,7 +21,29 @@ export interface MapLegendDrawerProps {
   collapsible?: boolean;
   className?: string;
   title?: string;
+  mapName?: string;
+  realmName?: string;
 }
+
+const isGenericOrMissing = (val?: string): boolean => {
+  if (!val || typeof val !== 'string' || !val.trim()) return true;
+  const genericPlaceholders = [
+    'north sector',
+    'east sector',
+    'south sector',
+    'west sector',
+    'main building / top spawn',
+    'right tile / generator cluster',
+    'killer shack / bottom spawn',
+    'left tile / jungle gym',
+    'main building',
+    'top spawn',
+    'bottom spawn',
+    'left tile',
+    'right tile',
+  ];
+  return genericPlaceholders.includes(val.trim().toLowerCase());
+};
 
 export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
   clockSystem,
@@ -29,6 +53,8 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
   collapsible = false,
   className = '',
   title,
+  mapName,
+  realmName,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState<boolean>(true);
 
@@ -52,25 +78,50 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
 
   const displayTitle = title || defaultTitle;
 
+  // Resolve rich landmarks from dictionary when values are generic or missing
+  const fallbackLandmarks: MapLandmarks = getMapLandmarks(mapName, realmName, source);
+
+  const twelveVal = isGenericOrMissing(clockSystem?.twelve_o_clock)
+    ? fallbackLandmarks.twelve_o_clock
+    : clockSystem!.twelve_o_clock!;
+
+  const threeVal = isGenericOrMissing(clockSystem?.three_o_clock)
+    ? fallbackLandmarks.three_o_clock
+    : clockSystem!.three_o_clock!;
+
+  const sixVal = isGenericOrMissing(clockSystem?.six_o_clock)
+    ? fallbackLandmarks.six_o_clock
+    : clockSystem!.six_o_clock!;
+
+  const nineVal = isGenericOrMissing(clockSystem?.nine_o_clock)
+    ? fallbackLandmarks.nine_o_clock
+    : clockSystem!.nine_o_clock!;
+
+  const centerVal = !isGenericOrMissing(clockSystem?.center)
+    ? clockSystem!.center!
+    : fallbackLandmarks.center;
+
+  const descriptionVal = clockSystem?.description || fallbackLandmarks.description;
+
   const sectors = [
     {
       label: isSamoel ? 'North Sector' : "12 O'Clock (Top)",
-      value: clockSystem?.twelve_o_clock || 'Main Building / Top Spawn',
+      value: twelveVal,
       badge: isSamoel ? 'N' : '12',
     },
     {
       label: isSamoel ? 'East Sector' : "3 O'Clock (Right)",
-      value: clockSystem?.three_o_clock || 'Right Tile / Generator Cluster',
+      value: threeVal,
       badge: isSamoel ? 'E' : '3',
     },
     {
       label: isSamoel ? 'South Sector' : "6 O'Clock (Bottom)",
-      value: clockSystem?.six_o_clock || 'Killer Shack / Bottom Spawn',
+      value: sixVal,
       badge: isSamoel ? 'S' : '6',
     },
     {
       label: isSamoel ? 'West Sector' : "9 O'Clock (Left)",
-      value: clockSystem?.nine_o_clock || 'Left Tile / Jungle Gym',
+      value: nineVal,
       badge: isSamoel ? 'W' : '9',
     },
   ];
@@ -131,10 +182,46 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
       {isExpanded && (
         <div className="p-3.5 md:p-4 space-y-3" data-testid="map-legend-body">
           {/* Optional System Description */}
-          {clockSystem?.description && (
+          {descriptionVal && (
             <div className="flex items-start gap-2 rounded-xl border border-slate-800 bg-slate-950/70 p-3 text-xs text-slate-300">
               <Info className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
-              <span>{clockSystem.description}</span>
+              <span>{descriptionVal}</span>
+            </div>
+          )}
+
+          {/* Center Landmark Highlight Banner */}
+          {centerVal && (
+            <div
+              className={`rounded-xl border p-3 md:p-3.5 flex items-center justify-between gap-3 shadow-inner ${
+                isSamoel
+                  ? 'border-emerald-500/30 bg-emerald-950/40 text-emerald-300'
+                  : 'border-amber-500/30 bg-amber-950/40 text-amber-300'
+              }`}
+              data-testid="map-legend-sector-center"
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span
+                  className={`flex h-6 w-6 items-center justify-center rounded-lg border text-[11px] font-black font-mono shrink-0 ${
+                    isSamoel
+                      ? 'border-emerald-500/50 bg-emerald-900/60 text-emerald-300'
+                      : 'border-amber-500/50 bg-amber-900/60 text-amber-300'
+                  }`}
+                >
+                  <Compass className="h-3.5 w-3.5" />
+                </span>
+                <div className="min-w-0">
+                  <span
+                    className={`text-[10px] md:text-[11px] font-bold uppercase tracking-wider block ${
+                      isSamoel ? 'text-emerald-400' : 'text-amber-500'
+                    }`}
+                  >
+                    Center Landmark / Objective
+                  </span>
+                  <div className="text-xs md:text-sm font-extrabold text-slate-100 truncate">
+                    {centerVal}
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -169,3 +256,4 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
     </div>
   );
 };
+

@@ -305,6 +305,8 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
         <MapLegendDrawer
           clockSystem={activeMap?.clock_system}
           source={activeMap?.source}
+          mapName={activeMap?.name}
+          realmName={activeMap?.realm}
           isOpen={isLegendOpen}
           onToggle={() => setIsLegendOpen((prev) => !prev)}
           collapsible={true}

@@ -8,11 +8,12 @@
     "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/azarovs_resting_place.webp",
     "dpath": "Azarovs/Azarovs Resting Place.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock. Azarov's Resting Place dumbbell map divided by a narrow middle chokepoint.",
+      "twelve_o_clock": "Azarov's Office & Garage / North Exit Gate",
+      "three_o_clock": "East Tree Cluster / Long Wall Pallet Tile",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "Car Crusher Crane / Scrap Pallet Gym",
+      "center": "Center Chokepoint / Spine Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -26,11 +27,12 @@
     "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/blood_lodge.webp",
     "dpath": "Azarovs/Blood Lodge.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock. Blood Lodge expansive junkyard renowned for high pallet loop density.",
+      "twelve_o_clock": "Blood Lodge Main Building / North Spawn",
+      "three_o_clock": "East Jungle Gyms / High Pallet Density Area",
+      "six_o_clock": "Killer Shack & Basement / South Gate",
+      "nine_o_clock": "Car Crusher / Scrap Metal Piles",
+      "center": "Central Crane / Tree Loop Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -44,11 +46,12 @@
     "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/gas_heaven.webp",
     "dpath": "Azarovs/Gas Heaven.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock. Gas Heaven feature map with an interactive service garage door.",
+      "twelve_o_clock": "Gas Station & Auto Repair Shop (Gen Door Vault)",
+      "three_o_clock": "East Car Wall Loops / Scrap Yard",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym & Long Wall Tiles",
+      "center": "Central Scrap Heap & Flatbed Truck"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -62,11 +65,12 @@
     "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wreckers_yard.webp",
     "dpath": "Azarovs/Wreckers.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock. Wreckers' Yard open scrapyard without a dedicated main building.",
+      "twelve_o_clock": "North Crane / Scrap Car Stacks",
+      "three_o_clock": "East Pallet Gym / Tree Loop",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West L-T Wall / Four-Wall Gym",
+      "center": "Central Car Compactor / Open Spine Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -80,11 +84,12 @@
     "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wretched_shop.webp",
     "dpath": "Azarovs/Wretched Shop.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock. Wretched Shop automotive maintenance garage with strong window vaults.",
+      "twelve_o_clock": "Wretched Shop Garage / Vault Window",
+      "three_o_clock": "East Car Wall Maze / Generator Cluster",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West Scrap Crane / L-T Walls",
+      "center": "Central Tree / High Pallet Corridor"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -98,11 +103,12 @@
     "callout_image_local_path": "maps/callouts/hens333/badham/preschool_i.webp",
     "dpath": "Badham/Preschool1.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Preschool I (Badham). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Preschool I (Badham). Standard top-middle starts at 12 o'clock. Badham Preschool I layout with boiler basement under the school.",
+      "twelve_o_clock": "Badham Elementary / Boiler Room Basement",
+      "three_o_clock": "East 2-Story House / House of Pain",
+      "six_o_clock": "Killer Shack / South Suburb Gate",
+      "nine_o_clock": "West Street Cars / White Fence Loop",
+      "center": "Preschool Front Courtyard / Parked Cars"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -116,11 +122,12 @@
     "callout_image_local_path": "maps/callouts/hens333/badham/preschool_ii.webp",
     "dpath": "Badham/Preschool2.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Preschool II (Badham). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Preschool II (Badham). Standard top-middle starts at 12 o'clock. Badham Preschool II variant repositioning residential houses.",
+      "twelve_o_clock": "Preschool Main Entrance / Schoolyard",
+      "three_o_clock": "East House of Pain / Backyard Fences",
+      "six_o_clock": "Killer Shack / South Fence Gate",
+      "nine_o_clock": "West 2-Story Residence / Porch Vault",
+      "center": "Central Street / Abandoned Van Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -134,11 +141,12 @@
     "callout_image_local_path": "maps/callouts/hens333/badham/preschool_iii.webp",
     "dpath": "Badham/Preschool3.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Preschool III (Badham). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Preschool III (Badham). Standard top-middle starts at 12 o'clock. Badham Preschool III featuring a corner cul-de-sac and playground.",
+      "twelve_o_clock": "Preschool Building / Boiler Basement",
+      "three_o_clock": "East Suburb Cul-de-sac / Corner House",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Playpark / Jungle Gym",
+      "center": "Central Crossroad / Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -152,11 +160,12 @@
     "callout_image_local_path": "maps/callouts/hens333/badham/preschool_iiiv.webp",
     "dpath": "Badham/Preschool4.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Preschool IIIV (Badham). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Preschool IIIV (Badham). Standard top-middle starts at 12 o'clock. Badham Preschool IV variant featuring balanced suburban streets.",
+      "twelve_o_clock": "Preschool Main Structure / Boiler Room",
+      "three_o_clock": "East 2-Story House / Corner Loop",
+      "six_o_clock": "Killer Shack / South Street Gate",
+      "nine_o_clock": "West Playground / Fence Maze",
+      "center": "Suburban Street / Service Truck"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -170,11 +179,12 @@
     "callout_image_local_path": "maps/callouts/hens333/badham/preschool_v.webp",
     "dpath": "Badham/Preschool5.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Preschool V (Badham). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Preschool V (Badham). Standard top-middle starts at 12 o'clock. Badham Preschool V variant offering wide open street sightlines.",
+      "twelve_o_clock": "Preschool Facility / Basement Lab",
+      "three_o_clock": "East House / Garage Vault",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West Residential Driveway / Cars",
+      "center": "School Playground / Central Fence Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -188,11 +198,12 @@
     "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/fractured_cowshed.webp",
     "dpath": "Coldwind/Fractured Cowshed.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock. Fractured Cowshed famous for the strong barn window vault.",
+      "twelve_o_clock": "Fractured Cowshed / God Window Vault & Pen",
+      "three_o_clock": "East Cornfield Maze / Windmill",
+      "six_o_clock": "Killer Shack / South Farm Gate",
+      "nine_o_clock": "Harvester Tractor / Combine Ramp",
+      "center": "Cattle Silo / Central Hay Bale Cluster"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -206,11 +217,12 @@
     "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rancid_abbatoir.webp",
     "dpath": "Coldwind/Rancid Abbatoir.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Rancid Abbatoir (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Rancid Abbatoir (Coldwind Farm). Standard top-middle starts at 12 o'clock. Rancid Abattoir meat slaughtering facility filled with carcass hooks.",
+      "twelve_o_clock": "Meat Slaughterhouse / Pig Hooks & Chute Vault",
+      "three_o_clock": "East Combine Harvester / Hay Cart",
+      "six_o_clock": "Killer Shack / South Farm Gate",
+      "nine_o_clock": "West Corn Maze / Tall Stalks",
+      "center": "Central Silo / Windmill Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -224,11 +236,12 @@
     "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rotten_fields.webp",
     "dpath": "Coldwind/Rotten Fields.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock. Rotten Fields completely open cornfield map without a large building.",
+      "twelve_o_clock": "North Combine Harvester / Ramp Loop",
+      "three_o_clock": "East Cornfield / Four-Wall Pallet Gym",
+      "six_o_clock": "Killer Shack / South Farm Gate",
+      "nine_o_clock": "West Windmill / Hay Bales",
+      "center": "Central Cornfield Gen / Scarecrow Tree"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -242,11 +255,12 @@
     "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/the_thompson_house.webp",
     "dpath": "Coldwind/The Thompson House.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for The Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for The Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock. The Thompson House two-story southern estate house.",
+      "twelve_o_clock": "Thompson Manor / 2-Story Wrap Porch & Balcony",
+      "three_o_clock": "East Cornfield / Harvester Loop",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Windmill / Cattle Pen",
+      "center": "Porch Yard / Central Haystack Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -260,11 +274,12 @@
     "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/torment_creek.webp",
     "dpath": "Coldwind/Torment Creek.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock. Torment Creek collapsed agricultural barn with fallen silo debris.",
+      "twelve_o_clock": "Torment Creek Silo / Ruined Barn Frame",
+      "three_o_clock": "East Corn Maze / Tractor Loop",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West Harvester / Hay Wagon",
+      "center": "Fallen Silo / Center Farm Clearing Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -278,11 +293,12 @@
     "callout_image_local_path": "maps/callouts/hens333/crotus_prenn_asylum/disturbed_ward.webp",
     "dpath": "Crotus Pen/Disturbed Ward.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Disturbed Ward (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Disturbed Ward (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock. Disturbed Ward massive asylum sanitarium structure.",
+      "twelve_o_clock": "Asylum Sanitarium / 2nd Floor Drop & Hall",
+      "three_o_clock": "East Gazebo / Stone Fountain Loop",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Perimeter Gym / Brick Wall",
+      "center": "Asylum Front Courtyard / Ambulance Loop"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -296,11 +312,12 @@
     "callout_image_local_path": "maps/callouts/hens333/crotus_prenn_asylum/father_campbells_chapel.webp",
     "dpath": "Crotus Pen/Father Campbells Chapel.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Father Campbells Chapel (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Father Campbells Chapel (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock. Father Campbell's Chapel gothic stone sanctuary with the carnival caravan.",
+      "twelve_o_clock": "Father Campbell's Chapel / Bell Tower & Pews",
+      "three_o_clock": "East Circus Caravan / Maurice the Horse",
+      "six_o_clock": "Killer Shack / South Asylum Gate",
+      "nine_o_clock": "West Carnival Gazebo / Ticket Booth",
+      "center": "Chapel Courtyard / Hearse Carriage Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -314,11 +331,12 @@
     "callout_image_local_path": "maps/callouts/hens333/decimated_borgo/shattered_square.webp",
     "dpath": "Borgo/Shattered Square.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Shattered Square (Decimated Borgo). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Shattered Square (Decimated Borgo). Standard top-middle starts at 12 o'clock. The Shattered Square razed medieval settlement with smoldering ruins.",
+      "twelve_o_clock": "Ruined Keep / Burning Manor Hearth",
+      "three_o_clock": "East Gallows / Executioner Cart",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Smoldering Cottages / Hay Cart",
+      "center": "Central Burning Rubble / Scaffold Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -332,11 +350,12 @@
     "callout_image_local_path": "maps/callouts/hens333/decimated_borgo/forgotten_ruins.webp",
     "dpath": "Borgo/Forgotten Ruins.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Forgotten Ruins (Decimated Borgo). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Forgotten Ruins (Decimated Borgo). Standard top-middle starts at 12 o'clock. Forgotten Ruins ancient subterranean fortress featuring the Dragon lair.",
+      "twelve_o_clock": "Fortress Keep / Dragon Throne Chamber",
+      "three_o_clock": "East Dungeon Catacombs / Vault Chutes",
+      "six_o_clock": "Killer Shack / Outer Moat Gate",
+      "nine_o_clock": "West Tower Ruins / Stone Corridors",
+      "center": "Subterranean Altar / Portcullis Hub Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -350,11 +369,12 @@
     "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/eyrie_of_crows.webp",
     "dpath": "Boneyard/Eyrie of Crows.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock. Eyrie of Crows majestic stone tower rising from Chilean desert sands.",
+      "twelve_o_clock": "Eyrie Crow Tower / High Balcony & Library",
+      "three_o_clock": "East Desert Crypts / Stone Sarcophagi",
+      "six_o_clock": "Killer Shack / South Sand Gate",
+      "nine_o_clock": "West Canvas Tents / Excavation Pit",
+      "center": "Tower Base / Raven Statues & Open Sand"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -368,11 +388,12 @@
     "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/dead_sands.webp",
     "dpath": "Boneyard/Dead Sands.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock. Dead Sands desert expansion with excavated tomb relics.",
+      "twelve_o_clock": "Ruined Crypt Spire / Sand Citadel",
+      "three_o_clock": "East Sarcophagus Maze / Stone Walls",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Excavation Trench / Scaffolding",
+      "center": "Central Sunken Relic / Sand Dunes Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -386,11 +407,12 @@
     "callout_image_local_path": "maps/callouts/hens333/hawkins_national_laboratory/the_underground_complex.webp",
     "dpath": "Other/Hawkins.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock. The Underground Complex Stranger Things research laboratory.",
+      "twelve_o_clock": "Upside Down Rift Lab / Portal Chamber",
+      "three_o_clock": "East Isolation Tanks / Glass Chambers",
+      "six_o_clock": "Main Blast Doors / Decontamination Exit",
+      "nine_o_clock": "West Catwalk Silos / Storage Vats",
+      "center": "Hawkins Central Atrium / 2nd Floor Catwalks"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -404,11 +426,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/coal_tower.webp",
     "dpath": "McMillan/Coal Tower.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Coal Tower (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Coal Tower (MacMillan Estate). Standard top-middle starts at 12 o'clock. Coal Tower two-story industrial brick manufacturing tower.",
+      "twelve_o_clock": "Coal Tower 2-Story Brick Factory / Drop Vault",
+      "three_o_clock": "East Minecart Tracks / Water Tower",
+      "six_o_clock": "Killer Shack / South Mine Gate",
+      "nine_o_clock": "West Industrial L-T Walls / Brick Gyms",
+      "center": "Central Minecart Rail / Forest Clearing"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -422,11 +445,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/coal_tower_ii.webp",
     "dpath": "McMillan/Coal Tower II.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Coal Tower II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Coal Tower II (MacMillan Estate). Standard top-middle starts at 12 o'clock. Coal Tower II variant repositioning the industrial factory.",
+      "twelve_o_clock": "Coal Tower Factory / Upper Window Drop",
+      "three_o_clock": "East Water Tower / Minecart Loops",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Forest Gyms / Industrial Walls",
+      "center": "Central Rail Tracks / Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -440,11 +464,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/groaning_storehouse.webp",
     "dpath": "McMillan/Groaning Storehouse.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Groaning Storehouse (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Groaning Storehouse (MacMillan Estate). Standard top-middle starts at 12 o'clock. Groaning Storehouse expansive timber processing storehouse.",
+      "twelve_o_clock": "Groaning Storehouse / Timber Factory & God Window",
+      "three_o_clock": "East Log Piles / Cut Wood Pallets",
+      "six_o_clock": "Killer Shack / South Forest Gate",
+      "nine_o_clock": "West Brick Four-Wall / Industrial Gym",
+      "center": "Central Lumber Yard / Crane Clearing Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -458,11 +483,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/groaning_storehouse_ii.webp",
     "dpath": "McMillan/Groaning Storehouse II.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Groaning Storehouse II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Groaning Storehouse II (MacMillan Estate). Standard top-middle starts at 12 o'clock. Groaning Storehouse II variant with adjusted log pile spacing.",
+      "twelve_o_clock": "Lumber Storehouse / Timber Factory Vault",
+      "three_o_clock": "East Cut Log Stacks / Pallet Loops",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Brick Gyms / Four-Walls",
+      "center": "Central Lumber Yard / Log Crane"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -476,11 +502,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/ironworks_of_misery.webp",
     "dpath": "McMillan/Ironworks Of Misery.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Ironworks Of Misery (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Ironworks Of Misery (MacMillan Estate). Standard top-middle starts at 12 o'clock. Ironworks of Misery massive smelting kiln factory with pipe vaults.",
+      "twelve_o_clock": "Ironworks Smelting Kiln / Blast Furnace Pipe Vault",
+      "three_o_clock": "East Industrial Pipes / Brick Wall Maze",
+      "six_o_clock": "Killer Shack / South Estate Gate",
+      "nine_o_clock": "West Jungle Gyms / Metal Dumpster Loop",
+      "center": "Kiln Front Yard / Iron Scrap Pile Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -494,11 +521,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/ironworks_of_misery_ii.webp",
     "dpath": "McMillan/Ironworks Of Misery II.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Ironworks Of Misery II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Ironworks Of Misery II (MacMillan Estate). Standard top-middle starts at 12 o'clock. Ironworks of Misery II variant with reworked factory exterior loops.",
+      "twelve_o_clock": "Ironworks Kiln / Blast Furnace Facility",
+      "three_o_clock": "East Industrial Brick Maze / Pipes",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Four-Walls / Scrap Loops",
+      "center": "Kiln Front Yard / Center Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -512,11 +540,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/shelter_woods.webp",
     "dpath": "McMillan/Shelter Woods.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Shelter Woods (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Shelter Woods (MacMillan Estate). Standard top-middle starts at 12 o'clock. Shelter Woods dense forest centered around the colossal oak tree.",
+      "twelve_o_clock": "Massive Ancient Oak Tree / Merchant Camp",
+      "three_o_clock": "East Moonstone Rock Outcrops / Gyms",
+      "six_o_clock": "Killer Shack / South Woods Gate",
+      "nine_o_clock": "West Dense Tree Stumps / Pallet Loops",
+      "center": "Central Clearing / Fallen Tree Trunk Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -530,11 +559,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/shelter_woods_ii.webp",
     "dpath": "McMillan/Shelter Woods II.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Shelter Woods II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Shelter Woods II (MacMillan Estate). Standard top-middle starts at 12 o'clock. Shelter Woods II featuring upgraded radar camp structures.",
+      "twelve_o_clock": "Colossal Oak Tree / Radar Encampment",
+      "three_o_clock": "East Boulder Clusters / Forest Gyms",
+      "six_o_clock": "Killer Shack / South Woods Gate",
+      "nine_o_clock": "West Tree Stumps / High Pallet Area",
+      "center": "Central Oak Base / Clearing Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -548,11 +578,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/suffocation_pit.webp",
     "dpath": "McMillan/Suffocation Pit.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Suffocation Pit (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Suffocation Pit (MacMillan Estate). Standard top-middle starts at 12 o'clock. Suffocation Pit dumbbell layout with the mine shaft ramp dividing the map.",
+      "twelve_o_clock": "Mine Shaft Entrance / Stone Crusher Ramps",
+      "three_o_clock": "East Heavy Brick Gyms / High Walls",
+      "six_o_clock": "Killer Shack / South Mine Gate",
+      "nine_o_clock": "West Minecart Piles / Rock Clusters",
+      "center": "Suffocation Pit Chokepoint / Rail Ramp Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -566,11 +597,12 @@
     "callout_image_local_path": "maps/callouts/hens333/macmillan_estate/suffocation_pit_ii.webp",
     "dpath": "McMillan/Suffocation Pit II.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Suffocation Pit II (MacMillan Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Suffocation Pit II (MacMillan Estate). Standard top-middle starts at 12 o'clock. Suffocation Pit II variant with widened central chokepoint.",
+      "twelve_o_clock": "Mine Shaft Ramp / Crusher Platform",
+      "three_o_clock": "East Brick Gyms / Four-Walls",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Minecarts / Rock Formations",
+      "center": "Suffocation Chokepoint / Center Rail Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -584,11 +616,12 @@
     "callout_image_local_path": "maps/callouts/hens333/red_forest/mothers_dwelling.webp",
     "dpath": "Red Forest/Mothers Dwelling.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock. Mother's Dwelling sprawling Russian forest with the Huntress cabin.",
+      "twelve_o_clock": "Huntress Cottage / 2-Story Wooden Lodge & Porch",
+      "three_o_clock": "East Stone Monoliths / Ancient Ruins",
+      "six_o_clock": "Killer Shack / South Forest Gate",
+      "nine_o_clock": "West Tall Pine Glade / Mossy Boulders",
+      "center": "Mother's Glade / Fallen Birch Trunk Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -602,11 +635,12 @@
     "callout_image_local_path": "maps/callouts/hens333/red_forest/temple_of_purgation.webp",
     "dpath": "Red Forest/Temple of Purgation.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock. Temple of Purgation ancient Babylonian stone temple.",
+      "twelve_o_clock": "Temple of Purgation / Underground Altar Basement",
+      "three_o_clock": "East Stone Columns / Ancient Wall Gyms",
+      "six_o_clock": "Killer Shack / South Forest Gate",
+      "nine_o_clock": "West Pine Thicket / Relic Obelisks",
+      "center": "Temple Entrance Steps / Pool of Purgation Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -620,11 +654,12 @@
     "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/grim_pantry.webp",
     "dpath": "Swamp/Grim Pantry.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock. Grim Pantry elevated stilt lodge with basement vaults and extensive wooden boardwalks.",
+      "twelve_o_clock": "Grim Pantry Stilt House / Drop Vault & Pantry Basement",
+      "three_o_clock": "East Pier / High Water Boardwalk Shacks",
+      "six_o_clock": "Killer Shack / South Swamp Gate",
+      "nine_o_clock": "West Wooden Maze / Reed Loops",
+      "center": "Central Sunken Boat / Low Marsh Clearing"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -638,11 +673,12 @@
     "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/the_pale_rose.webp",
     "dpath": "Swamp/Pale Rose.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock. The Pale Rose multi-deck river steamboat stranded amidst foggy reeds.",
+      "twelve_o_clock": "The Pale Rose Steamboat / Upper Deck & Wheelhouse",
+      "three_o_clock": "East Boardwalk Pier / Reed Thicket",
+      "six_o_clock": "Killer Shack / South Swamp Gate",
+      "nine_o_clock": "West Willow Tree / Stilt Platform Loop",
+      "center": "Sunken Wreck / Marsh Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -656,11 +692,12 @@
     "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence.webp",
     "dpath": "Yamaoka/Family Residence.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock. Family Residence ancestral Japanese estate manor.",
+      "twelve_o_clock": "Yamaoka Family House / Shoji Screen Porch & Roof",
+      "three_o_clock": "East Bamboo Thicket / Stone Torii Gate",
+      "six_o_clock": "Killer Shack / South Estate Gate",
+      "nine_o_clock": "West Garden Pagoda / Stone Lanterns",
+      "center": "Residence Front Courtyard / Ancestral Tree Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -674,11 +711,12 @@
     "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence_ii.webp",
     "dpath": "Yamaoka/Family Residence II.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Family Residence II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Family Residence II (Yamaoka Estate). Standard top-middle starts at 12 o'clock. Family Residence II variant with modified outer bamboo grove paths.",
+      "twelve_o_clock": "Yamaoka House / Shoji Hallways & Porch",
+      "three_o_clock": "East Torii Gate Path / Bamboo Forest",
+      "six_o_clock": "Killer Shack / South Estate Gate",
+      "nine_o_clock": "West Pagoda / Stone Lantern Garden",
+      "center": "Courtyard Garden / Ancestral Tree"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -692,11 +730,12 @@
     "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath.webp",
     "dpath": "Yamaoka/Sanctum of Wrath.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock. Sanctum of Wrath grand mountain temple shrine.",
+      "twelve_o_clock": "Sanctum Temple Shrine / Stone Guardian Statues",
+      "three_o_clock": "East Bamboo Forest / Torii Gate Path",
+      "six_o_clock": "Killer Shack / South Shrine Gate",
+      "nine_o_clock": "West Stone Lantern Garden / Pagoda",
+      "center": "Temple Stepped Basin / Ancestral Altar Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -710,11 +749,12 @@
     "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath_ii.webp",
     "dpath": "Yamaoka/Sanctum of Wrath II.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Sanctum of Wrath II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Sanctum of Wrath II (Yamaoka Estate). Standard top-middle starts at 12 o'clock. Sanctum of Wrath II variant with adjusted shrine stairs.",
+      "twelve_o_clock": "Sanctum Shrine / Guardian Statues & Steps",
+      "three_o_clock": "East Bamboo Trail / Torii Gates",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Stone Lantern Garden / Pagoda",
+      "center": "Central Altar Basin / Altar Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -728,11 +768,12 @@
     "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_east_wing.webp",
     "dpath": "Raccoon City/Rpd East Wing.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Police Station East Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Police Station East Wing (Raccoon City). Standard top-middle starts at 12 o'clock. Raccoon City Police Station East Wing focusing on the rooftop helipad.",
+      "twelve_o_clock": "RPD Main Lobby / Goddess Statue & Front Steps",
+      "three_o_clock": "Rooftop Helipad / Burning Helicopter & Fire Escape",
+      "six_o_clock": "East Office Wing / Chief Irons Taxidermy Office",
+      "nine_o_clock": "East Waiting Room / Fire Exit Corridor",
+      "center": "Main Hall Atrium / 2nd Floor Walkway Hub"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -746,11 +787,12 @@
     "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_west_wing.webp",
     "dpath": "Raccoon City/Rpd West Wing.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Police Station West Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Police Station West Wing (Raccoon City). Standard top-middle starts at 12 o'clock. Raccoon City Police Station West Wing focusing on the multi-story library.",
+      "twelve_o_clock": "RPD Main Lobby / Goddess Statue & Front Steps",
+      "three_o_clock": "S.T.A.R.S. Office / 2nd Floor Corridor",
+      "six_o_clock": "West Office / Records Room & Dark Room",
+      "nine_o_clock": "West 3-Story Library / Movable Bookshelves",
+      "center": "Main Hall Atrium / West Yard Gates"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -764,11 +806,12 @@
     "callout_image_local_path": "maps/callouts/hens333/grave_of_glennvale/dead_dawg_saloon.webp",
     "dpath": "Other/Dead Dawg Saloon.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glennvale). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glennvale). Standard top-middle starts at 12 o'clock. Dead Dawg Saloon Wild West ghost town featuring breakable doors and gallows.",
+      "twelve_o_clock": "Dead Dawg Saloon / 2nd Floor Balcony & Bar",
+      "three_o_clock": "East Gallows / Hanging Tree & Cart",
+      "six_o_clock": "Killer Shack / South Canyon Gate",
+      "nine_o_clock": "West Windmill / Water Tower Basin",
+      "center": "Main Street / Sheriff Carriage & Barbed Fence"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -782,11 +825,12 @@
     "callout_image_local_path": "maps/callouts/hens333/withered_isle/garden_of_joy.webp",
     "dpath": "Other/Garden of Joy.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock. Garden of Joy corrupted colonial mansion featuring high attic drops.",
+      "twelve_o_clock": "Corrupted Colonial Manor / 2nd Floor Attic Drop",
+      "three_o_clock": "East Greenhouse / Overgrown Trellis",
+      "six_o_clock": "Killer Shack / South Forest Gate",
+      "nine_o_clock": "West Gazebo / Twisted Picnic Tables",
+      "center": "Front Lawn / Corrupted Roots & Fountain Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -800,11 +844,12 @@
     "callout_image_local_path": "maps/callouts/hens333/withered_isle/greenville_square.webp",
     "dpath": "Other/Greenville Square.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock. Greenville Square 1980s commercial square featuring cinema and arcade.",
+      "twelve_o_clock": "Greenville Cinema / Theater Screen & Arcade Lobby",
+      "three_o_clock": "East Town Gazebo / Stone Statue Park",
+      "six_o_clock": "Killer Shack / South Road Gate",
+      "nine_o_clock": "West Parking Lot / Abandoned Sedan Loops",
+      "center": "Town Square Plaza / Central Fountain Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -818,11 +863,12 @@
     "callout_image_local_path": "maps/callouts/hens333/withered_isle/fallen_refuge.webp",
     "dpath": "Other/Fallen Refuge.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock. Fallen Refuge dilapidated sanctuary with crumbled stone archways.",
+      "twelve_o_clock": "Crumbled Chapel / Sanctuary Spire",
+      "three_o_clock": "East Overgrown Garden / Stone Arches",
+      "six_o_clock": "Killer Shack / South Refuge Gate",
+      "nine_o_clock": "West Refugee Camp / Tents & Crates",
+      "center": "Chapel Courtyard / Broken Monument Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -836,11 +882,12 @@
     "callout_image_local_path": "maps/callouts/hens333/withered_isle/freddy_fazbears_pizza.webp",
     "dpath": "Other/Freddy Fazbears Pizza.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Freddy Fazbears Pizza (Withered Isle). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Freddy Fazbears Pizza (Withered Isle). Standard top-middle starts at 12 o'clock. Freddy Fazbear's Pizza haunted family pizzeria.",
+      "twelve_o_clock": "Pizzeria Show Stage / Animatronic Band",
+      "three_o_clock": "Pirate Cove & Kitchen / Stage Curtains",
+      "six_o_clock": "Security Office / South Dining Exit",
+      "nine_o_clock": "Arcade Hall & Prize Corner / Ball Pit",
+      "center": "Main Dining Room / Party Tables Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -854,11 +901,12 @@
     "callout_image_local_path": "maps/callouts/hens333/gideon_meat_plant/the_game.webp",
     "dpath": "Other/The Game.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock. The Game Saw-themed meatpacking facility with two complete indoor floors.",
+      "twelve_o_clock": "Upper Bathrooms / Sliding Door Vats",
+      "three_o_clock": "East Freezer / Frozen Pig Carcasses",
+      "six_o_clock": "Blast Door Exit / Lower Packaging Room",
+      "nine_o_clock": "West Jigsaw Operating Room / Metal Chute",
+      "center": "Central 2-Story Hole / Metal Catwalk Stairs"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -872,11 +920,12 @@
     "callout_image_local_path": "maps/callouts/hens333/haddonfield/lampkin_lane.webp",
     "dpath": "Other/Haddonfield.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock. Lampkin Lane Halloween suburban street with the Myers house.",
+      "twelve_o_clock": "Myers House / Roof Balcony & Secret Stash",
+      "three_o_clock": "East Strode Residence / House of Pain",
+      "six_o_clock": "Killer Shack / South Suburb Gate",
+      "nine_o_clock": "West 2-Story House / Garage Roof",
+      "center": "Lampkin Lane Main Street / Police Cruisers"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -890,11 +939,12 @@
     "callout_image_local_path": "maps/callouts/hens333/silent_hill/midwich_elementary_school.webp",
     "dpath": "Other/Midwich.gif",
     "clock_system": {
-      "description": "12-Clock Callout System for Midwich Elementary School (Silent Hill). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Midwich Elementary School (Silent Hill). Standard top-middle starts at 12 o'clock. Midwich Elementary School square two-story indoor layout.",
+      "twelve_o_clock": "North Classrooms / Reception & Infirmary",
+      "three_o_clock": "East Stairwell / Chemistry Lab & Lockers",
+      "six_o_clock": "South Classrooms / Library & Music Room",
+      "nine_o_clock": "West Stairwell / Restrooms & Flayed Corpse",
+      "center": "Central Courtyard / Clock Tower & Sirens"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -908,11 +958,12 @@
     "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort.webp",
     "dpath": "Ormond/Ormond.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock. Mount Ormond Resort ski lodge chalet with two interior levels.",
+      "twelve_o_clock": "Ormond Ski Resort Chalet / Upper Balcony Bar",
+      "three_o_clock": "East Heavy Bulldozer / Snowplow Ramp",
+      "six_o_clock": "Killer Shack / South Mountain Gate",
+      "nine_o_clock": "West Snowmobile Stalls / Pine Forest",
+      "center": "Resort Front Porch / Snowy Bonfire Pit Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -926,11 +977,12 @@
     "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_ii.webp",
     "dpath": "Ormond/Ormond II.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Mount Ormond Resort II (Ormond). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Mount Ormond Resort II (Ormond). Standard top-middle starts at 12 o'clock. Mount Ormond Resort II variant with updated snowdrift obstacles.",
+      "twelve_o_clock": "Ski Chalet / Main Dining & Upper Deck",
+      "three_o_clock": "East Snow Excavator / Bulldozer",
+      "six_o_clock": "Killer Shack / South Slope Gate",
+      "nine_o_clock": "West Pine Glade / Snowmobile Barn",
+      "center": "Resort Terrace / Central Bonfire Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -944,11 +996,12 @@
     "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_iii.webp",
     "dpath": "Ormond/Ormond III.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Mount Ormond Resort III (Ormond). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Mount Ormond Resort III (Ormond). Standard top-middle starts at 12 o'clock. Mount Ormond Resort III variant featuring tighter exterior loops.",
+      "twelve_o_clock": "Ski Lodge / Hearth & 2nd Floor Bar",
+      "three_o_clock": "East Snow Groomer / Excavation Yard",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Snowmobile Trail / Pine Loops",
+      "center": "Front Porch / Bonfire Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -962,11 +1015,12 @@
     "callout_image_local_path": "maps/callouts/hens333/ormond/ormond_lake_mine.webp",
     "dpath": "Ormond/Ormond Lake Mine.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock. Ormond Lake Mine industrial mining headframe located on a frozen mountainside.",
+      "twelve_o_clock": "Lake Mine Headframe / Elevator Shaft & Crane",
+      "three_o_clock": "East Mining Excavator / Rock Wall",
+      "six_o_clock": "Killer Shack / South Glacier Gate",
+      "nine_o_clock": "West Minecart Siding / Heavy Timber",
+      "center": "Mine Quarry Pit / Conveyor Belt Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -980,11 +1034,12 @@
     "callout_image_local_path": "maps/callouts/hens333/lérys_memorial_institute/treatment_theatre.webp",
     "dpath": "Other/Lerys.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Treatment Theatre (Léry's Memorial Institute). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Treatment Theatre (Léry's Memorial Institute). Standard top-middle starts at 12 o'clock. Léry's Memorial Institute modular mental hospital with treatment rooms.",
+      "twelve_o_clock": "Electroshock Operating Stage / 2nd Floor Glass",
+      "three_o_clock": "East Office Wing / Reception & Medical Files",
+      "six_o_clock": "Ambulance Bay Exit / Double Glass Doors",
+      "nine_o_clock": "West Hydrotherapy / Patient Shower Ward",
+      "center": "Central Operating Theatre / Shock Device Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -998,11 +1053,12 @@
     "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/toba_landing.webp",
     "dpath": "Dvarka Deepwood/Toba Landing.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock. Toba Landing extraterrestrial research base on an alien planet.",
+      "twelve_o_clock": "Alien Research Station / Glass Lookout & Ramp",
+      "three_o_clock": "East Crystal Flora / Plateau Rocks",
+      "six_o_clock": "Killer Shack / South Alien Forest Gate",
+      "nine_o_clock": "West Giant Fungus / Spore Trees",
+      "center": "Central Pod / Alien Spire Generator"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -1016,11 +1072,12 @@
     "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/nostromo_wreckage.webp",
     "dpath": "Dvarka Deepwood/Nostromo Wreckage.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock. Nostromo Wreckage crashed Weyland-Yutani starship hull.",
+      "twelve_o_clock": "USCSS Nostromo Hull / Cryo Chamber & Bridge",
+      "three_o_clock": "East Escape Shuttle / Exhaust Plume",
+      "six_o_clock": "Killer Shack / South Plateau Gate",
+      "nine_o_clock": "West Mineral Spire / Alien Outcrop",
+      "center": "Starship Central Debris / Engine Core Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -1034,11 +1091,12 @@
     "callout_image_local_path": "maps/callouts/hens333/sleepless_district/tricksters_delusion.webp",
     "dpath": "Sleepless District/Tricksters Delusion.webp",
     "clock_system": {
-      "description": "12-Clock Callout System for Trickster's Delusion (Sleepless District). Standard top-middle starts at 12 o'clock.",
-      "twelve_o_clock": "Main Building / Top Spawn",
-      "three_o_clock": "Right Tile / Generator Cluster",
-      "six_o_clock": "Killer Shack / Bottom Spawn",
-      "nine_o_clock": "Left Tile / Jungle Gym"
+      "description": "12-Clock Callout System for Trickster's Delusion (Sleepless District). Standard top-middle starts at 12 o'clock. Trickster's Delusion neon-lit K-pop entertainment district.",
+      "twelve_o_clock": "Neon Concert Stage / VIP Lounge & Backstage",
+      "three_o_clock": "East Sound Stage / Recording Booths",
+      "six_o_clock": "Killer Shack / Alley Exit Gate",
+      "nine_o_clock": "West Neon Alleyway / Dumpsters & Neon Signs",
+      "center": "Nightclub Dancefloor / Neon DJ Booth Gen"
     },
     "source": "hens333",
     "source_label": "Hens333 12-Clock Callouts"
@@ -1052,11 +1110,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/torment_creek_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Torment Creek (Coldwind Farm). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Torment Creek (Coldwind Farm). Torment Creek collapsed agricultural barn with fallen silo debris.",
+      "twelve_o_clock": "Torment Creek Silo / Ruined Barn Frame",
+      "three_o_clock": "East Corn Maze / Tractor Loop",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West Harvester / Hay Wagon",
+      "center": "Fallen Silo / Center Farm Clearing Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1070,11 +1129,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/thompson_house_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Thompson House (Coldwind Farm). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Thompson House (Coldwind Farm). The Thompson House two-story southern estate house.",
+      "twelve_o_clock": "Thompson Manor / 2-Story Wrap Porch & Balcony",
+      "three_o_clock": "East Cornfield / Harvester Loop",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Windmill / Cattle Pen",
+      "center": "Porch Yard / Central Haystack Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1088,11 +1148,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/rotten_fields_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Rotten Fields (Coldwind Farm). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Rotten Fields (Coldwind Farm). Rotten Fields completely open cornfield map without a large building.",
+      "twelve_o_clock": "North Combine Harvester / Ramp Loop",
+      "three_o_clock": "East Cornfield / Four-Wall Pallet Gym",
+      "six_o_clock": "Killer Shack / South Farm Gate",
+      "nine_o_clock": "West Windmill / Hay Bales",
+      "center": "Central Cornfield Gen / Scarecrow Tree"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1106,11 +1167,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/rancid_abattoir_4.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Rancid Abattoir (Coldwind Farm). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Rancid Abattoir (Coldwind Farm). Rancid Abattoir meat slaughtering facility filled with carcass hooks.",
+      "twelve_o_clock": "Meat Slaughterhouse / Pig Hooks & Chute Vault",
+      "three_o_clock": "East Combine Harvester / Hay Cart",
+      "six_o_clock": "Killer Shack / South Farm Gate",
+      "nine_o_clock": "West Corn Maze / Tall Stalks",
+      "center": "Central Silo / Windmill Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1124,11 +1186,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/fractured_cowshed_5.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Fractured Cowshed (Coldwind Farm). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Fractured Cowshed (Coldwind Farm). Fractured Cowshed famous for the strong barn window vault.",
+      "twelve_o_clock": "Fractured Cowshed / God Window Vault & Pen",
+      "three_o_clock": "East Cornfield Maze / Windmill",
+      "six_o_clock": "Killer Shack / South Farm Gate",
+      "nine_o_clock": "Harvester Tractor / Combine Ramp",
+      "center": "Cattle Silo / Central Hay Bale Cluster"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1142,11 +1205,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/ironworks_of_misery_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Ironworks of Misery (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Ironworks of Misery (The Macmillan Estate). Ironworks of Misery massive smelting kiln factory with pipe vaults.",
+      "twelve_o_clock": "Ironworks Smelting Kiln / Blast Furnace Pipe Vault",
+      "three_o_clock": "East Industrial Pipes / Brick Wall Maze",
+      "six_o_clock": "Killer Shack / South Estate Gate",
+      "nine_o_clock": "West Jungle Gyms / Metal Dumpster Loop",
+      "center": "Kiln Front Yard / Iron Scrap Pile Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1160,11 +1224,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/ironworks_of_misery_ii_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Ironworks of Misery II (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Ironworks of Misery II (The Macmillan Estate). Ironworks of Misery II variant with reworked factory exterior loops.",
+      "twelve_o_clock": "Ironworks Kiln / Blast Furnace Facility",
+      "three_o_clock": "East Industrial Brick Maze / Pipes",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Four-Walls / Scrap Loops",
+      "center": "Kiln Front Yard / Center Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1178,11 +1243,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/suffocation_pit_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Suffocation Pit (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Suffocation Pit (The Macmillan Estate). Suffocation Pit dumbbell layout with the mine shaft ramp dividing the map.",
+      "twelve_o_clock": "Mine Shaft Entrance / Stone Crusher Ramps",
+      "three_o_clock": "East Heavy Brick Gyms / High Walls",
+      "six_o_clock": "Killer Shack / South Mine Gate",
+      "nine_o_clock": "West Minecart Piles / Rock Clusters",
+      "center": "Suffocation Pit Chokepoint / Rail Ramp Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1196,11 +1262,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/suffocation_pit_ii_4.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Suffocation Pit II (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Suffocation Pit II (The Macmillan Estate). Suffocation Pit II variant with widened central chokepoint.",
+      "twelve_o_clock": "Mine Shaft Ramp / Crusher Platform",
+      "three_o_clock": "East Brick Gyms / Four-Walls",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Minecarts / Rock Formations",
+      "center": "Suffocation Chokepoint / Center Rail Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1214,11 +1281,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/shelter_woods_5.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Shelter Woods (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Shelter Woods (The Macmillan Estate). Shelter Woods dense forest centered around the colossal oak tree.",
+      "twelve_o_clock": "Massive Ancient Oak Tree / Merchant Camp",
+      "three_o_clock": "East Moonstone Rock Outcrops / Gyms",
+      "six_o_clock": "Killer Shack / South Woods Gate",
+      "nine_o_clock": "West Dense Tree Stumps / Pallet Loops",
+      "center": "Central Clearing / Fallen Tree Trunk Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1232,11 +1300,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/shelter_woods_ii_6.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Shelter Woods II (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Shelter Woods II (The Macmillan Estate). Shelter Woods II featuring upgraded radar camp structures.",
+      "twelve_o_clock": "Colossal Oak Tree / Radar Encampment",
+      "three_o_clock": "East Boulder Clusters / Forest Gyms",
+      "six_o_clock": "Killer Shack / South Woods Gate",
+      "nine_o_clock": "West Tree Stumps / High Pallet Area",
+      "center": "Central Oak Base / Clearing Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1250,11 +1319,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/groaning_storehouse_7.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Groaning Storehouse (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Groaning Storehouse (The Macmillan Estate). Groaning Storehouse expansive timber processing storehouse.",
+      "twelve_o_clock": "Groaning Storehouse / Timber Factory & God Window",
+      "three_o_clock": "East Log Piles / Cut Wood Pallets",
+      "six_o_clock": "Killer Shack / South Forest Gate",
+      "nine_o_clock": "West Brick Four-Wall / Industrial Gym",
+      "center": "Central Lumber Yard / Crane Clearing Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1268,11 +1338,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/groaning_storehouse_ii_8.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Groaning Storehouse II (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Groaning Storehouse II (The Macmillan Estate). Groaning Storehouse II variant with adjusted log pile spacing.",
+      "twelve_o_clock": "Lumber Storehouse / Timber Factory Vault",
+      "three_o_clock": "East Cut Log Stacks / Pallet Loops",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Brick Gyms / Four-Walls",
+      "center": "Central Lumber Yard / Log Crane"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1286,11 +1357,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/coal_tower_9.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Coal Tower (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Coal Tower (The Macmillan Estate). Coal Tower two-story industrial brick manufacturing tower.",
+      "twelve_o_clock": "Coal Tower 2-Story Brick Factory / Drop Vault",
+      "three_o_clock": "East Minecart Tracks / Water Tower",
+      "six_o_clock": "Killer Shack / South Mine Gate",
+      "nine_o_clock": "West Industrial L-T Walls / Brick Gyms",
+      "center": "Central Minecart Rail / Forest Clearing"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1304,11 +1376,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/coal_tower_ii_10.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Coal Tower II (The Macmillan Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Coal Tower II (The Macmillan Estate). Coal Tower II variant repositioning the industrial factory.",
+      "twelve_o_clock": "Coal Tower Factory / Upper Window Drop",
+      "three_o_clock": "East Water Tower / Minecart Loops",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Forest Gyms / Industrial Walls",
+      "center": "Central Rail Tracks / Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1322,11 +1395,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/azarovs_resting_place_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Azarov's Resting Place (Autohaven Wreckers). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Azarov's Resting Place (Autohaven Wreckers). Azarov's Resting Place dumbbell map divided by a narrow middle chokepoint.",
+      "twelve_o_clock": "Azarov's Office & Garage / North Exit Gate",
+      "three_o_clock": "East Tree Cluster / Long Wall Pallet Tile",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "Car Crusher Crane / Scrap Pallet Gym",
+      "center": "Center Chokepoint / Spine Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1340,11 +1414,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/blood_lodge_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Blood Lodge (Autohaven Wreckers). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Blood Lodge (Autohaven Wreckers). Blood Lodge expansive junkyard renowned for high pallet loop density.",
+      "twelve_o_clock": "Blood Lodge Main Building / North Spawn",
+      "three_o_clock": "East Jungle Gyms / High Pallet Density Area",
+      "six_o_clock": "Killer Shack & Basement / South Gate",
+      "nine_o_clock": "Car Crusher / Scrap Metal Piles",
+      "center": "Central Crane / Tree Loop Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1358,11 +1433,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/gas_heaven_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Gas Heaven (Autohaven Wreckers). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Gas Heaven (Autohaven Wreckers). Gas Heaven feature map with an interactive service garage door.",
+      "twelve_o_clock": "Gas Station & Auto Repair Shop (Gen Door Vault)",
+      "three_o_clock": "East Car Wall Loops / Scrap Yard",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym & Long Wall Tiles",
+      "center": "Central Scrap Heap & Flatbed Truck"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1376,11 +1452,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/wreckers_yard_4.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Wreckers' Yard (Autohaven Wreckers). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Wreckers' Yard (Autohaven Wreckers). Wreckers' Yard open scrapyard without a dedicated main building.",
+      "twelve_o_clock": "North Crane / Scrap Car Stacks",
+      "three_o_clock": "East Pallet Gym / Tree Loop",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West L-T Wall / Four-Wall Gym",
+      "center": "Central Car Compactor / Open Spine Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1394,11 +1471,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/wretched_shop_5.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Wretched Shop (Autohaven Wreckers). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Wretched Shop (Autohaven Wreckers). Wretched Shop automotive maintenance garage with strong window vaults.",
+      "twelve_o_clock": "Wretched Shop Garage / Vault Window",
+      "three_o_clock": "East Car Wall Maze / Generator Cluster",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West Scrap Crane / L-T Walls",
+      "center": "Central Tree / High Pallet Corridor"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1412,11 +1490,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/disturbed_ward/crotus_prenn_asylum_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Crotus Prenn Asylum (Disturbed Ward). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Crotus Prenn Asylum (Disturbed Ward). Crotus Prenn Asylum psychiatric hospital grounds.",
+      "twelve_o_clock": "Asylum Sanitarium / 2nd Floor Drop & Hall",
+      "three_o_clock": "East Gazebo / Stone Fountain Loop",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Perimeter Gym / Brick Wall",
+      "center": "Asylum Front Courtyard / Ambulance Loop"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1430,11 +1509,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/disturbed_ward/father_cambells_chapel_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Father Cambell's Chapel (Disturbed Ward). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Father Cambell's Chapel (Disturbed Ward). Father Campbell's Chapel gothic stone sanctuary with the carnival caravan.",
+      "twelve_o_clock": "Father Campbell's Chapel / Bell Tower & Pews",
+      "three_o_clock": "East Circus Caravan / Maurice the Horse",
+      "six_o_clock": "Killer Shack / South Asylum Gate",
+      "nine_o_clock": "West Carnival Gazebo / Ticket Booth",
+      "center": "Chapel Courtyard / Hearse Carriage Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1448,11 +1528,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/lerys_memorial_institute/treatment_theatre_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Treatment Theatre (Lery's Memorial Institute). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Treatment Theatre (Lery's Memorial Institute). Léry's Memorial Institute modular mental hospital with treatment rooms.",
+      "twelve_o_clock": "Electroshock Operating Stage / 2nd Floor Glass",
+      "three_o_clock": "East Office Wing / Reception & Medical Files",
+      "six_o_clock": "Ambulance Bay Exit / Double Glass Doors",
+      "nine_o_clock": "West Hydrotherapy / Patient Shower Ward",
+      "center": "Central Operating Theatre / Shock Device Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1466,11 +1547,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/backwater_swamp/the_pale_rose_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for The Pale Rose (Backwater Swamp). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for The Pale Rose (Backwater Swamp). The Pale Rose multi-deck river steamboat stranded amidst foggy reeds.",
+      "twelve_o_clock": "The Pale Rose Steamboat / Upper Deck & Wheelhouse",
+      "three_o_clock": "East Boardwalk Pier / Reed Thicket",
+      "six_o_clock": "Killer Shack / South Swamp Gate",
+      "nine_o_clock": "West Willow Tree / Stilt Platform Loop",
+      "center": "Sunken Wreck / Marsh Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1484,11 +1566,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/backwater_swamp/grim_pantry_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Grim Pantry (Backwater Swamp). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Grim Pantry (Backwater Swamp). Grim Pantry elevated stilt lodge with basement vaults and extensive wooden boardwalks.",
+      "twelve_o_clock": "Grim Pantry Stilt House / Drop Vault & Pantry Basement",
+      "three_o_clock": "East Pier / High Water Boardwalk Shacks",
+      "six_o_clock": "Killer Shack / South Swamp Gate",
+      "nine_o_clock": "West Wooden Maze / Reed Loops",
+      "center": "Central Sunken Boat / Low Marsh Clearing"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1502,11 +1585,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/haddonfield/lampkin_lane_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Lampkin Lane (Haddonfield). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Lampkin Lane (Haddonfield). Lampkin Lane Halloween suburban street with the Myers house.",
+      "twelve_o_clock": "Myers House / Roof Balcony & Secret Stash",
+      "three_o_clock": "East Strode Residence / House of Pain",
+      "six_o_clock": "Killer Shack / South Suburb Gate",
+      "nine_o_clock": "West 2-Story House / Garage Roof",
+      "center": "Lampkin Lane Main Street / Police Cruisers"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1520,11 +1604,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/red_forest/mothers_dwelling_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Mother's Dwelling (Red Forest). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Mother's Dwelling (Red Forest). Mother's Dwelling sprawling Russian forest with the Huntress cabin.",
+      "twelve_o_clock": "Huntress Cottage / 2-Story Wooden Lodge & Porch",
+      "three_o_clock": "East Stone Monoliths / Ancient Ruins",
+      "six_o_clock": "Killer Shack / South Forest Gate",
+      "nine_o_clock": "West Tall Pine Glade / Mossy Boulders",
+      "center": "Mother's Glade / Fallen Birch Trunk Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1538,11 +1623,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/red_forest/the_temple_of_purgation_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for The Temple of Purgation (Red Forest). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for The Temple of Purgation (Red Forest). Temple of Purgation ancient Babylonian stone temple.",
+      "twelve_o_clock": "Temple of Purgation / Underground Altar Basement",
+      "three_o_clock": "East Stone Columns / Ancient Wall Gyms",
+      "six_o_clock": "Killer Shack / South Forest Gate",
+      "nine_o_clock": "West Pine Thicket / Relic Obelisks",
+      "center": "Temple Entrance Steps / Pool of Purgation Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1556,11 +1642,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_i_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Badham Preschool I (Springwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Badham Preschool I (Springwood). Badham Preschool I layout with boiler basement under the school.",
+      "twelve_o_clock": "Badham Elementary / Boiler Room Basement",
+      "three_o_clock": "East 2-Story House / House of Pain",
+      "six_o_clock": "Killer Shack / South Suburb Gate",
+      "nine_o_clock": "West Street Cars / White Fence Loop",
+      "center": "Preschool Front Courtyard / Parked Cars"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1574,11 +1661,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_ii_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Badham Preschool II (Springwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Badham Preschool II (Springwood). Badham Preschool II variant repositioning residential houses.",
+      "twelve_o_clock": "Preschool Main Entrance / Schoolyard",
+      "three_o_clock": "East House of Pain / Backyard Fences",
+      "six_o_clock": "Killer Shack / South Fence Gate",
+      "nine_o_clock": "West 2-Story Residence / Porch Vault",
+      "center": "Central Street / Abandoned Van Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1592,11 +1680,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_iii_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Badham Preschool III (Springwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Badham Preschool III (Springwood). Badham Preschool III featuring a corner cul-de-sac and playground.",
+      "twelve_o_clock": "Preschool Building / Boiler Basement",
+      "three_o_clock": "East Suburb Cul-de-sac / Corner House",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Playpark / Jungle Gym",
+      "center": "Central Crossroad / Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1610,11 +1699,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_iv_4.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Badham Preschool IV (Springwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Badham Preschool IV (Springwood). Badham Preschool IV variant featuring balanced suburban streets.",
+      "twelve_o_clock": "Preschool Main Structure / Boiler Room",
+      "three_o_clock": "East 2-Story House / Corner Loop",
+      "six_o_clock": "Killer Shack / South Street Gate",
+      "nine_o_clock": "West Playground / Fence Maze",
+      "center": "Suburban Street / Service Truck"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1628,11 +1718,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_v_5.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Badham Preschool V (Springwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Badham Preschool V (Springwood). Badham Preschool V variant offering wide open street sightlines.",
+      "twelve_o_clock": "Preschool Facility / Basement Lab",
+      "three_o_clock": "East House / Garage Vault",
+      "six_o_clock": "Killer Shack / South Exit Gate",
+      "nine_o_clock": "West Residential Driveway / Cars",
+      "center": "School Playground / Central Fence Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1646,11 +1737,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/yamaoka_estate/sanctum_of_wrath_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Sanctum of Wrath (Yamaoka Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Sanctum of Wrath (Yamaoka Estate). Sanctum of Wrath grand mountain temple shrine.",
+      "twelve_o_clock": "Sanctum Temple Shrine / Stone Guardian Statues",
+      "three_o_clock": "East Bamboo Forest / Torii Gate Path",
+      "six_o_clock": "Killer Shack / South Shrine Gate",
+      "nine_o_clock": "West Stone Lantern Garden / Pagoda",
+      "center": "Temple Stepped Basin / Ancestral Altar Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1664,11 +1756,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/yamaoka_estate/sanctum_of_wrath_v1_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Sanctum of Wrath v1 (Yamaoka Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Sanctum of Wrath v1 (Yamaoka Estate). Sanctum of Wrath grand mountain temple shrine.",
+      "twelve_o_clock": "Sanctum Temple Shrine / Stone Guardian Statues",
+      "three_o_clock": "East Bamboo Forest / Torii Gate Path",
+      "six_o_clock": "Killer Shack / South Shrine Gate",
+      "nine_o_clock": "West Stone Lantern Garden / Pagoda",
+      "center": "Temple Stepped Basin / Ancestral Altar Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1682,11 +1775,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/yamaoka_estate/family_residence_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Family Residence (Yamaoka Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Family Residence (Yamaoka Estate). Family Residence ancestral Japanese estate manor.",
+      "twelve_o_clock": "Yamaoka Family House / Shoji Screen Porch & Roof",
+      "three_o_clock": "East Bamboo Thicket / Stone Torii Gate",
+      "six_o_clock": "Killer Shack / South Estate Gate",
+      "nine_o_clock": "West Garden Pagoda / Stone Lanterns",
+      "center": "Residence Front Courtyard / Ancestral Tree Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1700,11 +1794,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/yamaoka_estate/family_residence_v1_4.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Family Residence v1 (Yamaoka Estate). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Family Residence v1 (Yamaoka Estate). Family Residence ancestral Japanese estate manor.",
+      "twelve_o_clock": "Yamaoka Family House / Shoji Screen Porch & Roof",
+      "three_o_clock": "East Bamboo Thicket / Stone Torii Gate",
+      "six_o_clock": "Killer Shack / South Estate Gate",
+      "nine_o_clock": "West Garden Pagoda / Stone Lanterns",
+      "center": "Residence Front Courtyard / Ancestral Tree Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1718,11 +1813,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/ormond/mount_ormond_resort_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Mount Ormond Resort (Ormond). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Mount Ormond Resort (Ormond). Mount Ormond Resort ski lodge chalet with two interior levels.",
+      "twelve_o_clock": "Ormond Ski Resort Chalet / Upper Balcony Bar",
+      "three_o_clock": "East Heavy Bulldozer / Snowplow Ramp",
+      "six_o_clock": "Killer Shack / South Mountain Gate",
+      "nine_o_clock": "West Snowmobile Stalls / Pine Forest",
+      "center": "Resort Front Porch / Snowy Bonfire Pit Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1736,11 +1832,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/ormond/mount_ormond_resort_v1_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Mount Ormond Resort v1 (Ormond). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Mount Ormond Resort v1 (Ormond). Mount Ormond Resort ski lodge chalet with two interior levels.",
+      "twelve_o_clock": "Ormond Ski Resort Chalet / Upper Balcony Bar",
+      "three_o_clock": "East Heavy Bulldozer / Snowplow Ramp",
+      "six_o_clock": "Killer Shack / South Mountain Gate",
+      "nine_o_clock": "West Snowmobile Stalls / Pine Forest",
+      "center": "Resort Front Porch / Snowy Bonfire Pit Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1754,11 +1851,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/ormond/mount_ormond_resort_v2_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Mount Ormond Resort v2 (Ormond). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Mount Ormond Resort v2 (Ormond). Mount Ormond Resort II variant with updated snowdrift obstacles.",
+      "twelve_o_clock": "Ski Chalet / Main Dining & Upper Deck",
+      "three_o_clock": "East Snow Excavator / Bulldozer",
+      "six_o_clock": "Killer Shack / South Slope Gate",
+      "nine_o_clock": "West Pine Glade / Snowmobile Barn",
+      "center": "Resort Terrace / Central Bonfire Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1772,11 +1870,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/ormond/ormond_lake_mine_4.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Ormond Lake Mine (Ormond). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Ormond Lake Mine (Ormond). Ormond Lake Mine industrial mining headframe located on a frozen mountainside.",
+      "twelve_o_clock": "Lake Mine Headframe / Elevator Shaft & Crane",
+      "three_o_clock": "East Mining Excavator / Rock Wall",
+      "six_o_clock": "Killer Shack / South Glacier Gate",
+      "nine_o_clock": "West Minecart Siding / Heavy Timber",
+      "center": "Mine Quarry Pit / Conveyor Belt Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1790,11 +1889,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/hawkins_national_laboratory/the_underground_complex_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for The Underground Complex (Hawkins National Laboratory). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for The Underground Complex (Hawkins National Laboratory). The Underground Complex Stranger Things research laboratory.",
+      "twelve_o_clock": "Upside Down Rift Lab / Portal Chamber",
+      "three_o_clock": "East Isolation Tanks / Glass Chambers",
+      "six_o_clock": "Main Blast Doors / Decontamination Exit",
+      "nine_o_clock": "West Catwalk Silos / Storage Vats",
+      "center": "Hawkins Central Atrium / 2nd Floor Catwalks"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1808,11 +1908,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/gideon_meat_plant/the_game_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for The Game (Gideon Meat Plant). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for The Game (Gideon Meat Plant). The Game Saw-themed meatpacking facility with two complete indoor floors.",
+      "twelve_o_clock": "Upper Bathrooms / Sliding Door Vats",
+      "three_o_clock": "East Freezer / Frozen Pig Carcasses",
+      "six_o_clock": "Blast Door Exit / Lower Packaging Room",
+      "nine_o_clock": "West Jigsaw Operating Room / Metal Chute",
+      "center": "Central 2-Story Hole / Metal Catwalk Stairs"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1826,11 +1927,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/gideon_meat_plant/gideon_meat_plant_map_2_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Gideon Meat Plant Map 2 (Gideon Meat Plant). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Gideon Meat Plant Map 2 (Gideon Meat Plant). Gideon Meat Plant layout featuring industrial slicing machines.",
+      "twelve_o_clock": "Upper Level Slicers / Tile Bathrooms",
+      "three_o_clock": "East Meat Hanging Freezers",
+      "six_o_clock": "Blast Exit Gate / Ground Packaging",
+      "nine_o_clock": "West Operating Room / Metal Chutes",
+      "center": "Central Catwalk Staircase / Saw Trap Room"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1844,11 +1946,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/grave_of_glenvale/dead_dawg_saloon_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Dead Dawg Saloon (Grave of Glenvale). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Dead Dawg Saloon (Grave of Glenvale). Dead Dawg Saloon Wild West ghost town featuring breakable doors and gallows.",
+      "twelve_o_clock": "Dead Dawg Saloon / 2nd Floor Balcony & Bar",
+      "three_o_clock": "East Gallows / Hanging Tree & Cart",
+      "six_o_clock": "Killer Shack / South Canyon Gate",
+      "nine_o_clock": "West Windmill / Water Tower Basin",
+      "center": "Main Street / Sheriff Carriage & Barbed Fence"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1862,11 +1965,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/silent_hill/midwich_elementary_school_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Midwich  Elementary  School (Silent Hill). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Midwich  Elementary  School (Silent Hill). Midwich Elementary School square two-story indoor layout.",
+      "twelve_o_clock": "North Classrooms / Reception & Infirmary",
+      "three_o_clock": "East Stairwell / Chemistry Lab & Lockers",
+      "six_o_clock": "South Classrooms / Library & Music Room",
+      "nine_o_clock": "West Stairwell / Restrooms & Flayed Corpse",
+      "center": "Central Courtyard / Clock Tower & Sirens"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1880,11 +1984,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/silent_hill/silent_hill_map_2_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Silent Hill Map 2 (Silent Hill). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Silent Hill Map 2 (Silent Hill). Midwich Elementary School variant layout.",
+      "twelve_o_clock": "North Classrooms / Reception",
+      "three_o_clock": "East Chemistry Lab & Stairwell",
+      "six_o_clock": "South Library & Music Room",
+      "nine_o_clock": "West Restrooms & Locker Corridor",
+      "center": "Courtyard Clock Tower Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1898,11 +2003,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/raccoon_city/raccoon_city_police_station_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Raccoon City Police Station (Raccoon City). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Raccoon City Police Station (Raccoon City). Raccoon City Police Station iconic multi-story indoor precinct.",
+      "twelve_o_clock": "RPD Grand Hall / Goddess Statue & Front Desk",
+      "three_o_clock": "East Wing / Rooftop Helipad & Fire Escape",
+      "six_o_clock": "Front Courtyard / Police Cruiser Barricades",
+      "nine_o_clock": "West Wing / 3-Story Library & S.T.A.R.S. Office",
+      "center": "Main Reception Desk / Staircase Hub"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1916,11 +2022,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/raccoon_city/raccoon_city_map_2_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Raccoon City Map 2 (Raccoon City). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Raccoon City Map 2 (Raccoon City). Raccoon City Police Station variant layout.",
+      "twelve_o_clock": "RPD Grand Hall / Goddess Statue",
+      "three_o_clock": "East Helipad & Chief Office",
+      "six_o_clock": "Front Yard Entrance Gates",
+      "nine_o_clock": "West Library & Operations Room",
+      "center": "Main Atrium / Grand Staircase Hub"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1934,11 +2041,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/forsaken_boneyard/eyrie_of_crows_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Eyrie of Crows (Forsaken Boneyard). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Eyrie of Crows (Forsaken Boneyard). Eyrie of Crows majestic stone tower rising from Chilean desert sands.",
+      "twelve_o_clock": "Eyrie Crow Tower / High Balcony & Library",
+      "three_o_clock": "East Desert Crypts / Stone Sarcophagi",
+      "six_o_clock": "Killer Shack / South Sand Gate",
+      "nine_o_clock": "West Canvas Tents / Excavation Pit",
+      "center": "Tower Base / Raven Statues & Open Sand"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1952,11 +2060,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/forsaken_boneyard/dead_sands_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Dead Sands (Forsaken Boneyard). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Dead Sands (Forsaken Boneyard). Dead Sands desert expansion with excavated tomb relics.",
+      "twelve_o_clock": "Ruined Crypt Spire / Sand Citadel",
+      "three_o_clock": "East Sarcophagus Maze / Stone Walls",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Excavation Trench / Scaffolding",
+      "center": "Central Sunken Relic / Sand Dunes Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1970,11 +2079,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/withered_isle/garden_of_joy_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Garden of Joy (Withered Isle). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Garden of Joy (Withered Isle). Garden of Joy corrupted colonial mansion featuring high attic drops.",
+      "twelve_o_clock": "Corrupted Colonial Manor / 2nd Floor Attic Drop",
+      "three_o_clock": "East Greenhouse / Overgrown Trellis",
+      "six_o_clock": "Killer Shack / South Forest Gate",
+      "nine_o_clock": "West Gazebo / Twisted Picnic Tables",
+      "center": "Front Lawn / Corrupted Roots & Fountain Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -1988,11 +2098,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/withered_isle/greenville_square_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Greenville Square (Withered Isle). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Greenville Square (Withered Isle). Greenville Square 1980s commercial square featuring cinema and arcade.",
+      "twelve_o_clock": "Greenville Cinema / Theater Screen & Arcade Lobby",
+      "three_o_clock": "East Town Gazebo / Stone Statue Park",
+      "six_o_clock": "Killer Shack / South Road Gate",
+      "nine_o_clock": "West Parking Lot / Abandoned Sedan Loops",
+      "center": "Town Square Plaza / Central Fountain Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2006,11 +2117,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/withered_isle/freddy_fazbears_pizza_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Freddy Fazbear's Pizza (Withered Isle). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Freddy Fazbear's Pizza (Withered Isle). Freddy Fazbear's Pizza haunted family pizzeria.",
+      "twelve_o_clock": "Pizzeria Show Stage / Animatronic Band",
+      "three_o_clock": "Pirate Cove & Kitchen / Stage Curtains",
+      "six_o_clock": "Security Office / South Dining Exit",
+      "nine_o_clock": "Arcade Hall & Prize Corner / Ball Pit",
+      "center": "Main Dining Room / Party Tables Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2024,11 +2136,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/withered_isle/fallen_refuge_4.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Fallen Refuge (Withered Isle). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Fallen Refuge (Withered Isle). Fallen Refuge dilapidated sanctuary with crumbled stone archways.",
+      "twelve_o_clock": "Crumbled Chapel / Sanctuary Spire",
+      "three_o_clock": "East Overgrown Garden / Stone Arches",
+      "six_o_clock": "Killer Shack / South Refuge Gate",
+      "nine_o_clock": "West Refugee Camp / Tents & Crates",
+      "center": "Chapel Courtyard / Broken Monument Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2042,11 +2155,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_decimated_borgo/the_shattered_square_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for The Shattered square (The Decimated Borgo). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for The Shattered square (The Decimated Borgo). The Shattered Square razed medieval settlement with smoldering ruins.",
+      "twelve_o_clock": "Ruined Keep / Burning Manor Hearth",
+      "three_o_clock": "East Gallows / Executioner Cart",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Smoldering Cottages / Hay Cart",
+      "center": "Central Burning Rubble / Scaffold Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2060,11 +2174,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_decimated_borgo/forgotten_ruins_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Forgotten Ruins (The Decimated Borgo). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Forgotten Ruins (The Decimated Borgo). Forgotten Ruins ancient subterranean fortress featuring the Dragon lair.",
+      "twelve_o_clock": "Fortress Keep / Dragon Throne Chamber",
+      "three_o_clock": "East Dungeon Catacombs / Vault Chutes",
+      "six_o_clock": "Killer Shack / Outer Moat Gate",
+      "nine_o_clock": "West Tower Ruins / Stone Corridors",
+      "center": "Subterranean Altar / Portcullis Hub Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2078,11 +2193,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/the_decimated_borgo/the_decimated_borgo_map_3_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for The Decimated Borgo Map 3 (The Decimated Borgo). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for The Decimated Borgo Map 3 (The Decimated Borgo). The Decimated Borgo fortress perimeter with burning timber.",
+      "twelve_o_clock": "Ruined Keep / Great Hall",
+      "three_o_clock": "East Gallows / Medieval Cottages",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Siege Engines / Wooden Barricades",
+      "center": "Central Burning Scaffold Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2096,11 +2212,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/dvarka_deepwood/toba_landing_1.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Toba Landing (Dvarka Deepwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Toba Landing (Dvarka Deepwood). Toba Landing extraterrestrial research base on an alien planet.",
+      "twelve_o_clock": "Alien Research Station / Glass Lookout & Ramp",
+      "three_o_clock": "East Crystal Flora / Plateau Rocks",
+      "six_o_clock": "Killer Shack / South Alien Forest Gate",
+      "nine_o_clock": "West Giant Fungus / Spore Trees",
+      "center": "Central Pod / Alien Spire Generator"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2114,11 +2231,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/dvarka_deepwood/nostromo_wreckage_2.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Nostromo Wreckage (Dvarka Deepwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Nostromo Wreckage (Dvarka Deepwood). Nostromo Wreckage crashed Weyland-Yutani starship hull.",
+      "twelve_o_clock": "USCSS Nostromo Hull / Cryo Chamber & Bridge",
+      "three_o_clock": "East Escape Shuttle / Exhaust Plume",
+      "six_o_clock": "Killer Shack / South Plateau Gate",
+      "nine_o_clock": "West Mineral Spire / Alien Outcrop",
+      "center": "Starship Central Debris / Engine Core Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2132,11 +2250,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/dvarka_deepwood/dvarka_deepwood_map_3_3.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Dvarka Deepwood Map 3 (Dvarka Deepwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Dvarka Deepwood Map 3 (Dvarka Deepwood). Dvarka Deepwood alien ecosystem with bioluminescent flora.",
+      "twelve_o_clock": "Crashed Module / Command Deck",
+      "three_o_clock": "East Bioluminescent Grove / Crystals",
+      "six_o_clock": "Killer Shack / South Deepwood Gate",
+      "nine_o_clock": "West Spore Plateau / Rocky Formations",
+      "center": "Deepwood Clearing / Energy Conduit Gen"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"
@@ -2150,11 +2269,12 @@
     "callout_image_local_path": "maps/callouts/samoelcolt/dvarka_deepwood/dvarka_deepwood_map_4_4.jpg",
     "dpath": "",
     "clock_system": {
-      "description": "SamoelColt Isometric Scheme for Dvarka Deepwood Map 4 (Dvarka Deepwood). Sector-based layout.",
-      "twelve_o_clock": "North Sector",
-      "three_o_clock": "East Sector",
-      "six_o_clock": "South Sector",
-      "nine_o_clock": "West Sector"
+      "description": "SamoelColt Isometric Scheme for Dvarka Deepwood Map 4 (Dvarka Deepwood). Dvarka Deepwood alien terrain featuring impact craters.",
+      "twelve_o_clock": "Research Pod / Solar Arrays",
+      "three_o_clock": "East Alien Ridge / Plateau Gym",
+      "six_o_clock": "Killer Shack / South Gate",
+      "nine_o_clock": "West Fungus Spire / Mineral Formations",
+      "center": "Central Crater / Xenomorph Debris"
     },
     "source": "samoelcolt",
     "source_label": "SamoelColt Isometric Scheme"

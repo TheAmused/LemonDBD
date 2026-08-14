@@ -374,3 +374,44 @@ test('Edge cases and empty/invalid input handling', () => {
   assert.deepStrictEqual(getVariantsForMap("The Game"), []);
   assert.deepStrictEqual(getVariantsForMap("Freddy Fazbears Pizza"), []);
 });
+
+test('Exact action matching does not intercept substring phrases (e.g. backwater swamp)', () => {
+  const rSwamp = matchVoiceQuery("backwater swamp");
+  assert.ok(rSwamp);
+  assert.strictEqual(rSwamp.action, 'navigate');
+  assert.strictEqual(rSwamp.matchedMapName, "Grim Pantry");
+  assert.notStrictEqual(rSwamp.action, 'close');
+});
+
+test('Source-prefixed map queries route to appropriate source provider', () => {
+  // "hens blood lodge"
+  const rHens = matchVoiceQuery("hens blood lodge", 'all', mockMaps);
+  assert.ok(rHens);
+  assert.strictEqual(rHens.matchedMapName, "Blood Lodge");
+  assert.strictEqual(rHens.source, 'hens333');
+  assert.strictEqual(rHens.matchedMapId, 'hens_blood_lodge');
+  assert.strictEqual(rHens.action, 'navigate');
+
+  // "samoel dead dawg"
+  const rSamoel = matchVoiceQuery("samoel dead dawg", 'all', mockMaps);
+  assert.ok(rSamoel);
+  assert.strictEqual(rSamoel.matchedMapName, "Dead Dawg Saloon");
+  assert.strictEqual(rSamoel.source, 'samoelcolt');
+  assert.strictEqual(rSamoel.matchedMapId, 'samoel_dead_dawg');
+  assert.strictEqual(rSamoel.action, 'navigate');
+});
+
+test('Unicode NFD accents resolution (e.g. Léry\'s)', () => {
+  const rLeryAccented = matchVoiceQuery("Léry's Memorial Institute");
+  assert.ok(rLeryAccented);
+  assert.strictEqual(rLeryAccented.matchedMapName, "Treatment Theatre");
+
+  const rLeryShort = matchVoiceQuery("Léry's");
+  assert.ok(rLeryShort);
+  assert.strictEqual(rLeryShort.matchedMapName, "Treatment Theatre");
+
+  // Accent-insensitive Levenshtein distance
+  assert.strictEqual(levenshteinDistance("Léry", "Lery"), 0);
+  assert.strictEqual(levenshteinDistance("café", "cafe"), 0);
+});
+

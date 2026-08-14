@@ -34,7 +34,7 @@ export interface VoiceCommandBannerProps {
   onSourceChange: (source: 'all' | 'hens333' | 'samoelcolt') => void;
   onSelectMap: (mapName: string, mapId?: string, source?: string) => void;
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
-  availableMaps?: Array<{ id: string; name: string; realm: string; source: string }>;
+  availableMaps?: Array<{ id: string; name: string; realm?: string; source?: string }>;
   className?: string;
 }
 

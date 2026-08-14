@@ -313,6 +313,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
         style={{ touchAction: 'none' }}
         className="relative flex-1 w-full h-full cursor-grab active:cursor-grabbing overflow-hidden flex items-center justify-center bg-slate-950"
       >
@@ -335,8 +336,9 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           style={{
             transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
             transformOrigin: 'center center',
+            transition: isDragging ? 'none' : 'transform 75ms ease-out',
           }}
-          className="relative w-[900px] h-[700px] bg-slate-900/80 border-2 border-slate-800 rounded-3xl shadow-2xl transition-transform duration-75 ease-out select-none"
+          className="relative w-[900px] h-[700px] bg-slate-900/80 border-2 border-slate-800 rounded-3xl shadow-2xl select-none"
         >
           {/* Map Blueprint Grid Coordinates */}
           <div className="absolute inset-0 rounded-3xl border border-slate-700/40 p-4 pointer-events-none">

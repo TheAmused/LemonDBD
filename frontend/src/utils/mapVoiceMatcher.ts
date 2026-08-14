@@ -28,8 +28,8 @@ export interface MatchResult {
 export interface MapDataEntry {
   id: string;
   name: string;
-  realm: string;
-  source: string;
+  realm?: string;
+  source?: string;
 }
 
 // ─── Levenshtein Distance & Similarity ────────────────────────────────────────
@@ -1214,7 +1214,7 @@ function createMapMatchResult(
       found = allMaps.find(
         (m) =>
           normalizeForComparison(m.name) === targetNorm &&
-          m.source.toLowerCase() === currentSource.toLowerCase()
+          m.source?.toLowerCase() === currentSource.toLowerCase()
       );
     }
 
@@ -1223,7 +1223,7 @@ function createMapMatchResult(
       found = allMaps.find(
         (m) =>
           normalizeForComparison(m.name) === targetNorm &&
-          m.source.toLowerCase() === 'hens333'
+          m.source?.toLowerCase() === 'hens333'
       );
     }
 

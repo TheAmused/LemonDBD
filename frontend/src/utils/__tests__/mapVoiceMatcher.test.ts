@@ -758,6 +758,31 @@ test('Polish action navigation commands', () => {
   const rClose = matchVoiceQuery("zamknij");
   assert.ok(rClose);
   assert.strictEqual(rClose.action, 'close');
+
+  // Conversational action commands
+  const rFullPlease = matchVoiceQuery("fullscreen please");
+  assert.ok(rFullPlease);
+  assert.strictEqual(rFullPlease.action, 'fullscreen');
+
+  const rZamknijProsze = matchVoiceQuery("zamknij prosze");
+  assert.ok(rZamknijProsze);
+  assert.strictEqual(rZamknijProsze.action, 'close');
+
+  const rProszePrzybliz = matchVoiceQuery("prosze przybliz");
+  assert.ok(rProszePrzybliz);
+  assert.strictEqual(rProszePrzybliz.action, 'zoom_in');
+
+  const rSwitchHensPlease = matchVoiceQuery("switch to hens please");
+  assert.ok(rSwitchHensPlease);
+  assert.strictEqual(rSwitchHensPlease.action, 'switch_source');
+  assert.strictEqual(rSwitchHensPlease.actionPayload, 'hens333');
 });
+
+test('Ormond Lake Mine does not return mount_ormond resort variants', () => {
+  assert.deepStrictEqual(getVariantsForMap('Ormond Lake Mine'), []);
+  assert.deepStrictEqual(getVariantsForMap('ormond kopalnia'), []);
+  assert.deepStrictEqual(getVariantsForMap('lake mine'), []);
+});
+
 
 

@@ -165,6 +165,8 @@ export function VoiceCommandBanner({
   const isListeningRef = useRef<boolean>(false);
   const liveTranscriptRef = useRef<string>('');
   const pendingMatchRef = useRef<MatchResult | null>(null);
+  const isHoldingRef = useRef<boolean>(false);
+  const holdStartTimeRef = useRef<number>(0);
 
   // Keep references to latest callbacks and props
   const propsRef = useRef({
@@ -201,6 +203,8 @@ export function VoiceCommandBanner({
   // Clear timers, remove recognition listeners, and abort speech recognition on unmount
   useEffect(() => {
     return () => {
+      isHoldingRef.current = false;
+      isListeningRef.current = false;
       if (recognitionRef.current) {
         try {
           recognitionRef.current.onstart = null;
@@ -300,6 +304,7 @@ export function VoiceCommandBanner({
 
   const stopListening = useCallback(() => {
     isListeningRef.current = false;
+    isHoldingRef.current = false;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     if (recognitionRef.current) {
       try {
@@ -309,157 +314,180 @@ export function VoiceCommandBanner({
     setVoiceStatus('idle');
   }, []);
 
-  const startListening = useCallback(() => {
-    if (isListeningRef.current || voiceStatus === 'listening') {
-      stopListening();
-      return;
-    }
-
-    if (typeof window === 'undefined') return;
-    const SpeechRec =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-
-    if (!SpeechRec) {
-      setVoiceStatus('error');
-      setErrorMessage('Web Speech API is not supported in this browser.');
-      return;
-    }
-
-    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+  const stopListeningAndProcess = useCallback(() => {
+    isListeningRef.current = false;
+    isHoldingRef.current = false;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-    pendingMatchRef.current = null;
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {}
+    }
 
-    try {
-      const recognition = new SpeechRec();
-      recognitionRef.current = recognition;
-
-      recognition.lang = locale === 'tr' ? 'tr-TR' : 'en-US';
-      recognition.interimResults = true;
-      recognition.maxAlternatives = 5;
-      recognition.continuous = false;
-
-      recognition.onstart = () => {
-        isListeningRef.current = true;
-        setVoiceStatus('listening');
-        liveTranscriptRef.current = '';
-        setLiveTranscript('');
-        setMatchedResult(null);
-        setErrorMessage('');
-        pendingMatchRef.current = null;
-        if (propsRef.current.soundEnabled) {
-          playMicStartSound();
-        }
-      };
-
-      recognition.onresult = (event: any) => {
-        let interimText = '';
-        let finalText = '';
-        const alternatives: string[] = [];
-        let hasFinalResult = false;
-
-        for (let i = 0; i < event.results.length; i++) {
-          const res = event.results[i];
-          if (res.isFinal) {
-            finalText += res[0].transcript + ' ';
-            hasFinalResult = true;
-          } else {
-            interimText += res[0].transcript + ' ';
-          }
-          for (let j = 0; j < res.length; j++) {
-            alternatives.push(res[j].transcript);
-          }
-        }
-
-        const combinedTranscript = (finalText + interimText).trim();
-        liveTranscriptRef.current = combinedTranscript;
-        setLiveTranscript(combinedTranscript);
-
-        // Find best match candidate
-        let bestMatch = matchVoiceQuery(
-          combinedTranscript,
+    const currentText = liveTranscriptRef.current.trim();
+    if (currentText) {
+      const match =
+        pendingMatchRef.current ||
+        matchVoiceQuery(
+          currentText,
           propsRef.current.currentSource,
           propsRef.current.availableMaps
         );
 
-        if (!bestMatch) {
-          for (const alt of alternatives) {
-            const altMatch = matchVoiceQuery(
-              alt,
-              propsRef.current.currentSource,
-              propsRef.current.availableMaps
-            );
-            if (altMatch) {
-              bestMatch = altMatch;
-              break;
+      if (match) {
+        executeMatch(match);
+        return;
+      } else {
+        setVoiceStatus('nomatch');
+        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+        resetTimerRef.current = setTimeout(() => {
+          setVoiceStatus('idle');
+        }, 2200);
+        return;
+      }
+    }
+
+    setVoiceStatus('idle');
+  }, [executeMatch]);
+
+  const startListening = useCallback(
+    (isHold = false) => {
+      if (isListeningRef.current) return;
+
+      if (typeof window === 'undefined') return;
+      const SpeechRec =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+      if (!SpeechRec) {
+        setVoiceStatus('error');
+        setErrorMessage('Web Speech API is not supported in this browser.');
+        return;
+      }
+
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      pendingMatchRef.current = null;
+      isHoldingRef.current = isHold;
+      if (isHold) {
+        holdStartTimeRef.current = Date.now();
+      }
+
+      try {
+        const recognition = new SpeechRec();
+        recognitionRef.current = recognition;
+
+        recognition.lang = locale === 'tr' ? 'tr-TR' : 'en-US';
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 5;
+        // continuous = true ensures browser never auto-aborts while user is speaking or holding!
+        recognition.continuous = true;
+
+        recognition.onstart = () => {
+          isListeningRef.current = true;
+          setVoiceStatus('listening');
+          liveTranscriptRef.current = '';
+          setLiveTranscript('');
+          setMatchedResult(null);
+          setErrorMessage('');
+          pendingMatchRef.current = null;
+          if (propsRef.current.soundEnabled) {
+            playMicStartSound();
+          }
+        };
+
+        recognition.onresult = (event: any) => {
+          let interimText = '';
+          let finalText = '';
+          const alternatives: string[] = [];
+
+          for (let i = 0; i < event.results.length; i++) {
+            const res = event.results[i];
+            if (res.isFinal) {
+              finalText += res[0].transcript + ' ';
+            } else {
+              interimText += res[0].transcript + ' ';
+            }
+            for (let j = 0; j < res.length; j++) {
+              alternatives.push(res[j].transcript);
             }
           }
-        }
 
-        pendingMatchRef.current = bestMatch;
-        setMatchedResult(bestMatch);
+          const combinedTranscript = (finalText + interimText).trim();
+          liveTranscriptRef.current = combinedTranscript;
+          setLiveTranscript(combinedTranscript);
 
-        // If the speech engine marked the utterance as FINAL, execute immediately
-        if (hasFinalResult && bestMatch) {
-          isListeningRef.current = false;
-          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-          try {
-            recognition.stop();
-          } catch {}
-          executeMatch(bestMatch);
-          return;
-        }
-
-        // For INTERIM results: do NOT cut off speech while the user is actively talking!
-        // Instead, use a gentle silence debounce (1500ms) in case the browser delays isFinal.
-        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-
-        if (bestMatch) {
-          silenceTimerRef.current = setTimeout(() => {
-            if (isListeningRef.current && pendingMatchRef.current) {
-              isListeningRef.current = false;
-              try {
-                recognition.stop();
-              } catch {}
-              executeMatch(pendingMatchRef.current);
-            }
-          }, 1500);
-        }
-      };
-
-      recognition.onerror = (event: any) => {
-        isListeningRef.current = false;
-        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-          setVoiceStatus('error');
-          setErrorMessage(
-            'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
-          );
-        } else if (event.error === 'no-speech') {
-          setVoiceStatus('nomatch');
-          resetTimerRef.current = setTimeout(() => {
-            setVoiceStatus('idle');
-          }, 2400);
-        } else {
-          setVoiceStatus('idle');
-        }
-      };
-
-      recognition.onend = () => {
-        isListeningRef.current = false;
-        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-
-        // When speech recognition ends naturally, execute any pending match
-        const matchToExecute =
-          pendingMatchRef.current ||
-          matchVoiceQuery(
-            liveTranscriptRef.current,
+          // Find best match candidate
+          let bestMatch = matchVoiceQuery(
+            combinedTranscript,
             propsRef.current.currentSource,
             propsRef.current.availableMaps
           );
 
-        if (matchToExecute) {
-          executeMatch(matchToExecute);
-        } else {
+          if (!bestMatch) {
+            for (const alt of alternatives) {
+              const altMatch = matchVoiceQuery(
+                alt,
+                propsRef.current.currentSource,
+                propsRef.current.availableMaps
+              );
+              if (altMatch) {
+                bestMatch = altMatch;
+                break;
+              }
+            }
+          }
+
+          pendingMatchRef.current = bestMatch;
+          setMatchedResult(bestMatch);
+        };
+
+        recognition.onerror = (event: any) => {
+          if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            isListeningRef.current = false;
+            isHoldingRef.current = false;
+            setVoiceStatus('error');
+            setErrorMessage(
+              'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
+            );
+          } else if (event.error === 'no-speech') {
+            if (!isHoldingRef.current) {
+              isListeningRef.current = false;
+              setVoiceStatus('nomatch');
+              resetTimerRef.current = setTimeout(() => {
+                setVoiceStatus('idle');
+              }, 2400);
+            }
+          }
+        };
+
+        recognition.onend = () => {
+          // If the user is STILL holding the key or button down, keep listening without interruption!
+          if (isHoldingRef.current) {
+            try {
+              recognition.start();
+              return;
+            } catch {}
+          }
+
+          isListeningRef.current = false;
+          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+
+          const currentText = liveTranscriptRef.current.trim();
+          if (currentText) {
+            const matchToExecute =
+              pendingMatchRef.current ||
+              matchVoiceQuery(
+                currentText,
+                propsRef.current.currentSource,
+                propsRef.current.availableMaps
+              );
+
+            if (matchToExecute) {
+              executeMatch(matchToExecute);
+              return;
+            }
+          }
+
           setVoiceStatus((prev) => {
             if (prev === 'listening') {
               return liveTranscriptRef.current ? 'nomatch' : 'idle';
@@ -471,18 +499,20 @@ export function VoiceCommandBanner({
               setVoiceStatus('idle');
             }, 2400);
           }
-        }
-      };
+        };
 
-      recognition.start();
-    } catch (err: any) {
-      isListeningRef.current = false;
-      setVoiceStatus('error');
-      setErrorMessage(err?.message || 'Failed to initialize voice recognition.');
-    }
-  }, [voiceStatus, stopListening, locale, executeMatch]);
+        recognition.start();
+      } catch (err: any) {
+        isListeningRef.current = false;
+        isHoldingRef.current = false;
+        setVoiceStatus('error');
+        setErrorMessage(err?.message || 'Failed to initialize voice recognition.');
+      }
+    },
+    [locale, executeMatch]
+  );
 
-  // ─── Global Keyboard Hotkey: Press 'V' to Toggle Mic ───────────────────────
+  // ─── Global Keyboard Hotkey: Hold 'V' (Push-To-Talk) or Press to Toggle ────
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -495,11 +525,32 @@ export function VoiceCommandBanner({
           target.getAttribute('role') === 'textbox');
 
       if (!isInput && (e.key === 'v' || e.key === 'V')) {
+        if (e.repeat) return;
         e.preventDefault();
-        if (isListeningRef.current || voiceStatus === 'listening') {
-          stopListening();
-        } else {
-          startListening();
+        isHoldingRef.current = true;
+        holdStartTimeRef.current = Date.now();
+        if (!isListeningRef.current) {
+          startListening(true);
+        }
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isInput =
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable ||
+          target.getAttribute('role') === 'textbox');
+
+      if (!isInput && (e.key === 'v' || e.key === 'V')) {
+        e.preventDefault();
+        const duration = Date.now() - holdStartTimeRef.current;
+        isHoldingRef.current = false;
+        // If held for more than 180ms, release immediately executes the command!
+        if (duration > 180 && isListeningRef.current) {
+          stopListeningAndProcess();
         }
       }
     };
@@ -719,10 +770,44 @@ export function VoiceCommandBanner({
             <button
               id="voice-command-mic-btn"
               type="button"
-              onClick={voiceStatus === 'listening' ? stopListening : startListening}
+              onPointerDown={(e) => {
+                // Prevent duplicate click emulations
+                isHoldingRef.current = true;
+                holdStartTimeRef.current = Date.now();
+                if (!isListeningRef.current) {
+                  startListening(true);
+                }
+              }}
+              onPointerUp={(e) => {
+                const duration = Date.now() - holdStartTimeRef.current;
+                const wasHolding = isHoldingRef.current;
+                isHoldingRef.current = false;
+                if (duration > 200 && isListeningRef.current) {
+                  stopListeningAndProcess();
+                }
+              }}
+              onPointerLeave={(e) => {
+                if (isHoldingRef.current) {
+                  isHoldingRef.current = false;
+                  if (isListeningRef.current) {
+                    stopListeningAndProcess();
+                  }
+                }
+              }}
+              onClick={(e) => {
+                const duration = Date.now() - holdStartTimeRef.current;
+                // If it was just a quick tap/click (<200ms), handle as normal toggle
+                if (duration <= 200) {
+                  if (isListeningRef.current || voiceStatus === 'listening') {
+                    stopListening();
+                  } else {
+                    startListening(false);
+                  }
+                }
+              }}
               aria-label={currentCfg.badge}
               aria-pressed={voiceStatus === 'listening'}
-              className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-full shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-400/50 cursor-pointer active:scale-95 hover:scale-105 ${currentCfg.buttonColor}`}
+              className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-full shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
             >
               <StatusIcon
                 className={`h-7 w-7 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
@@ -735,7 +820,7 @@ export function VoiceCommandBanner({
             <kbd className="rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-cyan-300">
               V
             </kbd>
-            <span>or click to {voiceStatus === 'listening' ? 'stop' : 'speak'}</span>
+            <span>Hold to talk (or click to toggle)</span>
           </div>
         </div>
 

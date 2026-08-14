@@ -161,8 +161,10 @@ export function VoiceCommandBanner({
 
   const recognitionRef = useRef<any>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isListeningRef = useRef<boolean>(false);
   const liveTranscriptRef = useRef<string>('');
+  const pendingMatchRef = useRef<MatchResult | null>(null);
 
   // Keep references to latest callbacks and props
   const propsRef = useRef({
@@ -211,6 +213,9 @@ export function VoiceCommandBanner({
       if (resetTimerRef.current) {
         clearTimeout(resetTimerRef.current);
       }
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+      }
     };
   }, []);
 
@@ -218,14 +223,16 @@ export function VoiceCommandBanner({
 
   const executeMatch = useCallback(
     (result: MatchResult) => {
-      const { onSourceChange, onAction, onSelectMap, soundEnabled } = propsRef.current;
-
       setMatchedResult(result);
+      pendingMatchRef.current = null;
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+
+      const { onSourceChange, onAction, onSelectMap, soundEnabled } = propsRef.current;
 
       if (result.action === 'switch_source' && result.actionPayload) {
         setVoiceStatus('matched');
-        onSourceChange(result.actionPayload as MapSource);
         if (soundEnabled) playMatchSuccessSound();
+        onSourceChange(result.actionPayload as MapSource);
         if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
         resetTimerRef.current = setTimeout(() => {
           setVoiceStatus('idle');
@@ -235,8 +242,8 @@ export function VoiceCommandBanner({
 
       if (result.action && ['zoom_in', 'zoom_out', 'fullscreen', 'close'].includes(result.action)) {
         setVoiceStatus('matched');
-        onAction?.(result.action as 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close');
         if (soundEnabled) playMatchSuccessSound();
+        onAction?.(result.action as 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close');
         if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
         resetTimerRef.current = setTimeout(() => {
           setVoiceStatus('idle');
@@ -266,6 +273,7 @@ export function VoiceCommandBanner({
   const handleExecuteCommand = useCallback(
     (query: string) => {
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       liveTranscriptRef.current = query;
       setLiveTranscript(query);
       setErrorMessage('');
@@ -292,6 +300,7 @@ export function VoiceCommandBanner({
 
   const stopListening = useCallback(() => {
     isListeningRef.current = false;
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
@@ -317,6 +326,8 @@ export function VoiceCommandBanner({
     }
 
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+    pendingMatchRef.current = null;
 
     try {
       const recognition = new SpeechRec();
@@ -334,6 +345,7 @@ export function VoiceCommandBanner({
         setLiveTranscript('');
         setMatchedResult(null);
         setErrorMessage('');
+        pendingMatchRef.current = null;
         if (propsRef.current.soundEnabled) {
           playMicStartSound();
         }
@@ -343,11 +355,13 @@ export function VoiceCommandBanner({
         let interimText = '';
         let finalText = '';
         const alternatives: string[] = [];
+        let hasFinalResult = false;
 
         for (let i = 0; i < event.results.length; i++) {
           const res = event.results[i];
           if (res.isFinal) {
             finalText += res[0].transcript + ' ';
+            hasFinalResult = true;
           } else {
             interimText += res[0].transcript + ' ';
           }
@@ -360,42 +374,61 @@ export function VoiceCommandBanner({
         liveTranscriptRef.current = combinedTranscript;
         setLiveTranscript(combinedTranscript);
 
-        // Evaluate match immediately on live interim and final results
-        const directMatch = matchVoiceQuery(
+        // Find best match candidate
+        let bestMatch = matchVoiceQuery(
           combinedTranscript,
           propsRef.current.currentSource,
           propsRef.current.availableMaps
         );
 
-        if (directMatch) {
+        if (!bestMatch) {
+          for (const alt of alternatives) {
+            const altMatch = matchVoiceQuery(
+              alt,
+              propsRef.current.currentSource,
+              propsRef.current.availableMaps
+            );
+            if (altMatch) {
+              bestMatch = altMatch;
+              break;
+            }
+          }
+        }
+
+        pendingMatchRef.current = bestMatch;
+        setMatchedResult(bestMatch);
+
+        // If the speech engine marked the utterance as FINAL, execute immediately
+        if (hasFinalResult && bestMatch) {
           isListeningRef.current = false;
+          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
           try {
             recognition.stop();
           } catch {}
-          executeMatch(directMatch);
+          executeMatch(bestMatch);
           return;
         }
 
-        // Try alternatives if direct match didn't resolve
-        for (const alt of alternatives) {
-          const altMatch = matchVoiceQuery(
-            alt,
-            propsRef.current.currentSource,
-            propsRef.current.availableMaps
-          );
-          if (altMatch) {
-            isListeningRef.current = false;
-            try {
-              recognition.stop();
-            } catch {}
-            executeMatch(altMatch);
-            return;
-          }
+        // For INTERIM results: do NOT cut off speech while the user is actively talking!
+        // Instead, use a gentle silence debounce (1500ms) in case the browser delays isFinal.
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+
+        if (bestMatch) {
+          silenceTimerRef.current = setTimeout(() => {
+            if (isListeningRef.current && pendingMatchRef.current) {
+              isListeningRef.current = false;
+              try {
+                recognition.stop();
+              } catch {}
+              executeMatch(pendingMatchRef.current);
+            }
+          }, 1500);
         }
       };
 
       recognition.onerror = (event: any) => {
         isListeningRef.current = false;
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
           setVoiceStatus('error');
           setErrorMessage(
@@ -413,12 +446,32 @@ export function VoiceCommandBanner({
 
       recognition.onend = () => {
         isListeningRef.current = false;
-        setVoiceStatus((prev) => {
-          if (prev === 'listening') {
-            return liveTranscriptRef.current ? 'nomatch' : 'idle';
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+
+        // When speech recognition ends naturally, execute any pending match
+        const matchToExecute =
+          pendingMatchRef.current ||
+          matchVoiceQuery(
+            liveTranscriptRef.current,
+            propsRef.current.currentSource,
+            propsRef.current.availableMaps
+          );
+
+        if (matchToExecute) {
+          executeMatch(matchToExecute);
+        } else {
+          setVoiceStatus((prev) => {
+            if (prev === 'listening') {
+              return liveTranscriptRef.current ? 'nomatch' : 'idle';
+            }
+            return prev;
+          });
+          if (liveTranscriptRef.current) {
+            resetTimerRef.current = setTimeout(() => {
+              setVoiceStatus('idle');
+            }, 2400);
           }
-          return prev;
-        });
+        }
       };
 
       recognition.start();

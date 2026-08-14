@@ -1,12 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert';
-import { matchVoiceQuery, getVariantsForMap } from '../mapVoiceMatcher';
+import { matchVoiceQuery, getVariantsForMap, MAP_VARIANT_GROUPS } from '../mapVoiceMatcher';
 import { VoiceCommandBanner } from '../../components/maps/VoiceCommandBanner';
 import { VoiceNavButton } from '../../components/maps/VoiceNavButton';
+import { MapExplorer } from '../../components/maps/MapExplorer';
+import { FullscreenMapEngine } from '../../components/maps/FullscreenMapEngine';
 
-test('VoiceCommandBanner and VoiceNavButton are properly exported functions/components', () => {
+test('VoiceCommandBanner, VoiceNavButton, MapExplorer, and FullscreenMapEngine are properly exported functions/components', () => {
   assert.strictEqual(typeof VoiceCommandBanner, 'function');
   assert.strictEqual(typeof VoiceNavButton, 'function');
+  assert.strictEqual(typeof MapExplorer, 'function');
+  assert.strictEqual(typeof FullscreenMapEngine, 'function');
 });
 
 test('VoiceCommandBanner props interface and match handling integration', () => {
@@ -51,3 +55,51 @@ test('VoiceCommandBanner props interface and match handling integration', () => 
   assert.strictEqual(rpdVariants.length, 2);
   assert.ok(rpdVariants.includes('Police Station West Wing'));
 });
+
+test('Variant disambiguation covers all DBD map families for MapExplorer switcher', () => {
+  // Coal Tower
+  const coalVariants = getVariantsForMap('Coal Tower');
+  assert.strictEqual(coalVariants.length, 2);
+  assert.ok(coalVariants.includes('Coal Tower II'));
+
+  // Groaning Storehouse
+  const storehouseVariants = getVariantsForMap('Groaning Storehouse II');
+  assert.strictEqual(storehouseVariants.length, 2);
+  assert.ok(storehouseVariants.includes('Groaning Storehouse'));
+
+  // Ironworks of Misery
+  const ironworksVariants = getVariantsForMap('Ironworks Of Misery');
+  assert.strictEqual(ironworksVariants.length, 2);
+  assert.ok(ironworksVariants.includes('Ironworks Of Misery II'));
+
+  // Shelter Woods
+  const shelterVariants = getVariantsForMap('Shelter Woods II');
+  assert.strictEqual(shelterVariants.length, 2);
+  assert.ok(shelterVariants.includes('Shelter Woods'));
+
+  // Suffocation Pit
+  const suffocationVariants = getVariantsForMap('Suffocation Pit');
+  assert.strictEqual(suffocationVariants.length, 2);
+  assert.ok(suffocationVariants.includes('Suffocation Pit II'));
+
+  // Family Residence
+  const familyVariants = getVariantsForMap('Family Residence II');
+  assert.strictEqual(familyVariants.length, 2);
+  assert.ok(familyVariants.includes('Family Residence'));
+
+  // Sanctum of Wrath
+  const sanctumVariants = getVariantsForMap('Sanctum of Wrath');
+  assert.strictEqual(sanctumVariants.length, 2);
+  assert.ok(sanctumVariants.includes('Sanctum of Wrath II'));
+
+  // Mount Ormond
+  const ormondVariants = getVariantsForMap('Mount Ormond Resort III');
+  assert.strictEqual(ormondVariants.length, 3);
+  assert.ok(ormondVariants.includes('Mount Ormond Resort'));
+  assert.ok(ormondVariants.includes('Mount Ormond Resort II'));
+
+  // Non-variant map returns empty array
+  const singleMapVariants = getVariantsForMap('The Game');
+  assert.deepStrictEqual(singleMapVariants, []);
+});
+

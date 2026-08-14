@@ -1,17 +1,13 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import {
   Compass,
   Search,
   Maximize2,
   ExternalLink,
   Layers,
-  MapPin,
   Clock,
-  ChevronRight,
-  Shield,
-  Eye,
   RotateCcw,
   Sparkles,
   AlignLeft,
@@ -21,19 +17,34 @@ import {
   ZoomIn,
   ZoomOut,
   Map as MapIcon,
+  Check,
+  Move,
 } from 'lucide-react';
 import { MapRealm } from '@/types/map';
 import { fetchMaps, fetchMapDetail } from '@/services/mapApi';
 import { FullscreenMapEngine } from './FullscreenMapEngine';
+import { getVariantsForMap } from '@/utils/mapVoiceMatcher';
 
-interface MapExplorerProps {
+export interface MapExplorerProps {
   initialMapName?: string;
+  selectedSource?: 'all' | 'hens333' | 'samoelcolt';
+  onSourceChange?: (source: 'all' | 'hens333' | 'samoelcolt') => void;
+  onActionTriggered?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
+  onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
 }
 
-export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' }) => {
+export const MapExplorer: React.FC<MapExplorerProps> = ({
+  initialMapName = '',
+  selectedSource: propSelectedSource,
+  onSourceChange,
+  onActionTriggered,
+  onAvailableMapsLoaded,
+}) => {
   const [maps, setMaps] = useState<MapRealm[]>([]);
   const [selectedRealm, setSelectedRealm] = useState<string>('all');
-  const [selectedSource, setSelectedSource] = useState<'all' | 'hens333' | 'samoelcolt'>('hens333');
+  const [internalSource, setInternalSource] = useState<'all' | 'hens333' | 'samoelcolt'>(
+    propSelectedSource || 'hens333'
+  );
   const [selectedMapId, setSelectedMapId] = useState<string>('hens_azarovs_resting_place');
   const [activeMap, setActiveMap] = useState<MapRealm | null>(null);
   const [search, setSearch] = useState('');
@@ -41,36 +52,61 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [imageAlignment, setImageAlignment] = useState<'left' | 'center' | 'right'>('center');
-  const [zoomLevel, setZoomLevel] = useState<number>(1);
 
+  // Zoom & Pan State for Detail Modal
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [initialPinchDistance, setInitialPinchDistance] = useState<number | null>(null);
+  const [initialPinchZoom, setInitialPinchZoom] = useState<number>(1);
+
+  const modalCanvasRef = useRef<HTMLDivElement>(null);
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  // Track whether we've already auto-opened from voice nav so we only do it once
-  const voiceAutoOpenedRef = React.useRef(false);
+  // Synchronize internal source state with prop if controlled
+  const activeSource = propSelectedSource !== undefined ? propSelectedSource : internalSource;
 
+  useEffect(() => {
+    if (propSelectedSource !== undefined) {
+      setInternalSource(propSelectedSource);
+    }
+  }, [propSelectedSource]);
+
+  const handleSourceChange = (source: 'all' | 'hens333' | 'samoelcolt') => {
+    setInternalSource(source);
+    onSourceChange?.(source);
+  };
+
+  // Reset Zoom & Pan
+  const handleResetZoomPan = useCallback(() => {
+    setZoomLevel(1);
+    setPan({ x: 0, y: 0 });
+  }, []);
+
+  const handleZoomIn = useCallback(() => {
+    setZoomLevel((z) => Math.min(3.0, Math.round((z + 0.25) * 100) / 100));
+    onActionTriggered?.('zoom_in');
+  }, [onActionTriggered]);
+
+  const handleZoomOut = useCallback(() => {
+    setZoomLevel((z) => Math.max(0.5, Math.round((z - 0.25) * 100) / 100));
+    onActionTriggered?.('zoom_out');
+  }, [onActionTriggered]);
+
+  const handleSetZoom = useCallback((level: number) => {
+    setZoomLevel(Math.min(3.0, Math.max(0.5, level)));
+  }, []);
+
+  // Fetch maps list on realm/search/source change
   useEffect(() => {
     async function loadMaps() {
       try {
         setLoading(true);
-        const data = await fetchMaps(selectedRealm, search, selectedSource);
+        const data = await fetchMaps(selectedRealm, search, activeSource);
         const loaded: MapRealm[] = data.maps || [];
         setMaps(loaded);
-
-        // Voice nav: auto-open the spoken map on first load only
-        if (initialMapName && !voiceAutoOpenedRef.current && loaded.length > 0) {
-          const needle = initialMapName.toLowerCase().trim();
-          const match = loaded.find(
-            (m) =>
-              m.name.toLowerCase().includes(needle) ||
-              needle.includes(m.name.toLowerCase())
-          );
-          if (match) {
-            voiceAutoOpenedRef.current = true;
-            setSelectedMapId(match.id);
-            setIsDetailModalOpen(true);
-            return; // skip the fallback below
-          }
-        }
+        onAvailableMapsLoaded?.(loaded);
 
         if (loaded.length > 0 && !loaded.some((m) => m.id === selectedMapId)) {
           setSelectedMapId(loaded[0].id);
@@ -82,8 +118,37 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
       }
     }
     loadMaps();
-  }, [selectedRealm, search, selectedSource]);
+  }, [selectedRealm, search, activeSource]);
 
+  // Handle initialMapName changes: search maps matching name & active source, select, and open detail modal
+  useEffect(() => {
+    if (!initialMapName || !initialMapName.trim() || maps.length === 0) return;
+    const needle = initialMapName.toLowerCase().trim();
+
+    // Priority 1: Match within active source
+    let match = maps.find(
+      (m) =>
+        (activeSource === 'all' || m.source === activeSource) &&
+        (m.name.toLowerCase().includes(needle) || needle.includes(m.name.toLowerCase()))
+    );
+
+    // Priority 2: Match across any source in loaded maps
+    if (!match) {
+      match = maps.find(
+        (m) =>
+          m.name.toLowerCase().includes(needle) ||
+          needle.includes(m.name.toLowerCase())
+      );
+    }
+
+    if (match) {
+      setSelectedMapId(match.id);
+      setIsDetailModalOpen(true);
+      handleResetZoomPan();
+    }
+  }, [initialMapName, maps, activeSource, handleResetZoomPan]);
+
+  // Load Map Detail
   useEffect(() => {
     if (!selectedMapId) return;
     async function loadDetail() {
@@ -97,17 +162,24 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
     loadDetail();
   }, [selectedMapId]);
 
+  // Reset zoom and pan whenever a new map is loaded or detail modal opens
+  useEffect(() => {
+    handleResetZoomPan();
+  }, [selectedMapId, isDetailModalOpen, handleResetZoomPan]);
+
+  // Keyboard Escape Handler
   useEffect(() => {
     if (!isDetailModalOpen && !isFullscreenOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsDetailModalOpen(false);
         setIsFullscreenOpen(false);
+        onActionTriggered?.('close');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isDetailModalOpen, isFullscreenOpen]);
+  }, [isDetailModalOpen, isFullscreenOpen, onActionTriggered]);
 
   // Extract unique realms
   const uniqueRealms = useMemo(() => {
@@ -117,6 +189,39 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
     });
     return Array.from(realmSet).sort();
   }, [maps]);
+
+  // Map variants for active map
+  const variants = useMemo(() => {
+    if (!activeMap) return [];
+    return getVariantsForMap(activeMap.name);
+  }, [activeMap]);
+
+  // Handle switching to a specific variant within the same provider source
+  const handleVariantSelect = (variantName: string) => {
+    if (!activeMap) return;
+    const normTarget = variantName.toLowerCase().trim();
+
+    // Find map matching variant and source
+    let match = maps.find(
+      (m) =>
+        m.source === activeMap.source &&
+        (m.name.toLowerCase().includes(normTarget) || normTarget.includes(m.name.toLowerCase()))
+    );
+
+    // Fallback: any map matching variant
+    if (!match) {
+      match = maps.find(
+        (m) =>
+          m.name.toLowerCase().includes(normTarget) ||
+          normTarget.includes(m.name.toLowerCase())
+      );
+    }
+
+    if (match) {
+      setSelectedMapId(match.id);
+      handleResetZoomPan();
+    }
+  };
 
   const getMapImageSrc = (m: MapRealm) => {
     if (m.callout_image_local_path) {
@@ -150,6 +255,73 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
     }
   };
 
+  // ─── Mouse Drag Handlers for Modal Pan ─────────────────────────────────────
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    setPan({
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y,
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // ─── Mouse Wheel Zoom ───────────────────────────────────────────────────────
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 0.15 : -0.15;
+    setZoomLevel((prev) => Math.min(3.0, Math.max(0.5, Math.round((prev + delta) * 100) / 100)));
+  };
+
+  // ─── Touch Drag & Pinch-to-Zoom Handlers for Mobile ─────────────────────────
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.touches[0].clientX - pan.x,
+        y: e.touches[0].clientY - pan.y,
+      });
+    } else if (e.touches.length === 2) {
+      setIsDragging(false);
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      setInitialPinchDistance(dist);
+      setInitialPinchZoom(zoomLevel);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length === 1 && isDragging) {
+      setPan({
+        x: e.touches[0].clientX - dragStart.x,
+        y: e.touches[0].clientY - dragStart.y,
+      });
+    } else if (e.touches.length === 2 && initialPinchDistance !== null && initialPinchDistance > 0) {
+      const currentDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const factor = currentDist / initialPinchDistance;
+      const nextZoom = Math.min(3.0, Math.max(0.5, initialPinchZoom * factor));
+      setZoomLevel(Math.round(nextZoom * 100) / 100);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    setInitialPinchDistance(null);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
@@ -171,8 +343,11 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
 
           <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
             <button
-              onClick={() => setIsFullscreenOpen(true)}
-              className="flex-1 lg:flex-none items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-3 text-xs font-extrabold text-slate-950 shadow-lg shadow-amber-500/20 hover:from-amber-400 hover:to-amber-500 active:scale-95 transition-all cursor-pointer flex"
+              onClick={() => {
+                setIsFullscreenOpen(true);
+                onActionTriggered?.('fullscreen');
+              }}
+              className="flex-1 lg:flex-none items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-3 text-xs font-extrabold text-slate-950 shadow-lg shadow-amber-500/20 hover:from-amber-400 hover:to-amber-500 active:scale-95 transition-all cursor-pointer flex min-h-[44px]"
             >
               <Maximize2 className="h-4 w-4" />
               <span>Launch 2D Interactive Engine</span>
@@ -192,9 +367,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
 
         <div className="flex w-full sm:w-auto rounded-xl border border-slate-800 bg-slate-950 p-1 shadow-inner">
           <button
-            onClick={() => setSelectedSource('hens333')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-xs font-extrabold transition-all cursor-pointer ${
-              selectedSource === 'hens333'
+            onClick={() => handleSourceChange('hens333')}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-xs font-extrabold transition-all cursor-pointer min-h-[40px] ${
+              activeSource === 'hens333'
                 ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 scale-105'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
@@ -204,9 +379,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
           </button>
 
           <button
-            onClick={() => setSelectedSource('samoelcolt')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-xs font-extrabold transition-all cursor-pointer ${
-              selectedSource === 'samoelcolt'
+            onClick={() => handleSourceChange('samoelcolt')}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-xs font-extrabold transition-all cursor-pointer min-h-[40px] ${
+              activeSource === 'samoelcolt'
                 ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 scale-105'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
@@ -216,9 +391,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
           </button>
 
           <button
-            onClick={() => setSelectedSource('all')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-xs font-extrabold transition-all cursor-pointer ${
-              selectedSource === 'all'
+            onClick={() => handleSourceChange('all')}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-xs font-extrabold transition-all cursor-pointer min-h-[40px] ${
+              activeSource === 'all'
                 ? 'bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 shadow-md scale-105'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
@@ -240,7 +415,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
               placeholder="Search map or realm..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-2 text-xs font-semibold text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-2 text-xs font-semibold text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[40px]"
             />
           </div>
 
@@ -252,30 +427,30 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
             <div className="flex rounded-xl border border-slate-800 bg-slate-950 p-1">
               <button
                 onClick={() => setImageAlignment('left')}
-                className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`p-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   imageAlignment === 'left' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-slate-200'
                 }`}
                 title="Left Align"
               >
-                <AlignLeft className="h-3.5 w-3.5" />
+                <AlignLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setImageAlignment('center')}
-                className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`p-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   imageAlignment === 'center' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-slate-200'
                 }`}
                 title="Center Align"
               >
-                <AlignCenter className="h-3.5 w-3.5" />
+                <AlignCenter className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setImageAlignment('right')}
-                className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`p-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   imageAlignment === 'right' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-slate-200'
                 }`}
                 title="Right Align"
               >
-                <AlignRight className="h-3.5 w-3.5" />
+                <AlignRight className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -285,7 +460,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
           <button
             onClick={() => setSelectedRealm('all')}
-            className={`px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border ${
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border min-h-[38px] ${
               selectedRealm === 'all'
                 ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
                 : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
@@ -299,7 +474,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
               <button
                 key={r}
                 onClick={() => setSelectedRealm(r)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border min-h-[38px] ${
                   selectedRealm === r
                     ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
                     : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
@@ -356,6 +531,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
                     <img
                       src={imgSrc}
                       alt={m.name}
+                      style={{ imageRendering: '-webkit-optimize-contrast' as any }}
                       className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
                     />
                   ) : (
@@ -387,7 +563,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
                       e.stopPropagation();
                       handlePopoutImage(imgSrc, m.name);
                     }}
-                    className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/80 text-slate-300 hover:text-amber-400 backdrop-blur-md transition-colors"
+                    className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/80 text-slate-300 hover:text-amber-400 backdrop-blur-md transition-colors cursor-pointer"
                     title="Popout Map Image in New Window"
                   >
                     <ExternalLink className="h-4 w-4" />
@@ -421,59 +597,132 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
         </div>
       )}
 
-      {/* Map Callout Detail & Zoom Modal */}
+      {/* Map Callout Detail & Large-Scale Zoom Modal */}
       {isDetailModalOpen && activeMap && (
         <div
-          onClick={() => setIsDetailModalOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-xl p-4 md:p-8 animate-in fade-in duration-200 overflow-y-auto cursor-pointer"
+          onClick={() => {
+            setIsDetailModalOpen(false);
+            onActionTriggered?.('close');
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-xl p-2 sm:p-4 md:p-6 animate-in fade-in duration-200 overflow-y-auto cursor-pointer"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-6xl rounded-3xl border border-slate-800 bg-slate-900 p-6 md:p-8 shadow-2xl space-y-6 cursor-default"
+            className="relative w-[96vw] max-w-7xl max-h-[96vh] rounded-3xl border border-slate-800 bg-slate-900/95 p-4 sm:p-6 md:p-8 shadow-2xl space-y-4 md:space-y-6 cursor-default flex flex-col overflow-y-auto"
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-3 py-1 text-xs font-extrabold text-amber-400">
-                    {activeMap.realm}
-                  </span>
-                  <span
-                    className={`rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase ${
-                      activeMap.source === 'samoelcolt'
-                        ? 'border-emerald-500/50 bg-emerald-950/90 text-emerald-300'
-                        : 'border-amber-500/50 bg-amber-950/90 text-amber-300'
-                    }`}
-                  >
-                    {activeMap.source === 'samoelcolt' ? 'SamoelColt Isometric' : 'Hens333 12-Clock'}
-                  </span>
+            <div className="flex flex-col gap-3 border-b border-slate-800 pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-3 py-1 text-xs font-extrabold text-amber-400">
+                      {activeMap.realm}
+                    </span>
+                    <span
+                      className={`rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase ${
+                        activeMap.source === 'samoelcolt'
+                          ? 'border-emerald-500/50 bg-emerald-950/90 text-emerald-300'
+                          : 'border-amber-500/50 bg-amber-950/90 text-amber-300'
+                      }`}
+                    >
+                      {activeMap.source === 'samoelcolt' ? 'SamoelColt Isometric' : 'Hens333 12-Clock'}
+                    </span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-black text-white mt-1">
+                    {activeMap.name} Diagram
+                  </h2>
                 </div>
-                <h2 className="text-2xl font-black text-white mt-1">
-                  {activeMap.name} Diagram
-                </h2>
+
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <button
+                    onClick={() => {
+                      setIsDetailModalOpen(false);
+                      setIsFullscreenOpen(true);
+                      onActionTriggered?.('fullscreen');
+                    }}
+                    className="hidden sm:flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer min-h-[44px]"
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                    <span>2D Engine</span>
+                  </button>
+                  <button
+                    onClick={() => handlePopoutImage(getMapImageSrc(activeMap), activeMap.name)}
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3.5 py-2 text-xs font-bold text-slate-200 hover:border-amber-500 hover:text-amber-400 transition-all cursor-pointer min-h-[44px]"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    <span className="hidden sm:inline">Popout</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsDetailModalOpen(false);
+                      onActionTriggered?.('close');
+                    }}
+                    className="rounded-xl border border-slate-800 bg-slate-950 p-2.5 text-slate-400 hover:text-white transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                    title="Close"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => handlePopoutImage(getMapImageSrc(activeMap), activeMap.name)}
-                  className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3.5 py-2 text-xs font-bold text-slate-200 hover:border-amber-500 hover:text-amber-400 transition-all"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  <span>Popout Window</span>
-                </button>
-                <button
-                  onClick={() => setIsDetailModalOpen(false)}
-                  className="rounded-xl border border-slate-800 bg-slate-950 p-2 text-slate-400 hover:text-white transition-colors"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
+              {/* Variant Disambiguation Switcher Bar */}
+              {variants.length > 1 && (
+                <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-amber-500/30 bg-amber-950/20 p-2.5 backdrop-blur-sm">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400 pl-1 pr-2">
+                    <Layers className="h-3.5 w-3.5" />
+                    <span>Map Variants:</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {variants.map((v) => {
+                      const isActive =
+                        activeMap.name.toLowerCase() === v.toLowerCase() ||
+                        activeMap.name.toLowerCase().includes(v.toLowerCase()) ||
+                        v.toLowerCase().includes(activeMap.name.toLowerCase());
+
+                      return (
+                        <button
+                          key={v}
+                          type="button"
+                          onClick={() => handleVariantSelect(v)}
+                          className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all cursor-pointer min-h-[36px] ${
+                            isActive
+                              ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-extrabold scale-105 ring-2 ring-amber-400'
+                              : 'bg-slate-900 border border-slate-700 text-slate-300 hover:border-amber-400 hover:text-white'
+                          }`}
+                        >
+                          <span>{v}</span>
+                          {isActive && <Check className="h-3.5 w-3.5 text-slate-950" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Main Callout Image Display with Alignment & Zoom */}
-            <div className="relative min-h-[400px] max-h-[650px] w-full overflow-auto rounded-2xl bg-slate-950 p-4 border border-slate-800/80 flex items-center justify-center">
+            {/* Main High-Resolution Image Display with Pan & Zoom */}
+            <div
+              ref={modalCanvasRef}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onWheel={handleWheel}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              style={{ touchAction: 'none' }}
+              className={`relative min-h-[440px] md:min-h-[520px] max-h-[85vh] h-[55vh] md:h-[65vh] w-full overflow-hidden rounded-2xl bg-slate-950 p-4 border border-slate-800/80 flex items-center justify-center select-none ${
+                isDragging ? 'cursor-grabbing' : 'cursor-grab'
+              }`}
+            >
               <div
-                className={`w-full flex transition-all ${
+                style={{
+                  transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoomLevel})`,
+                  transformOrigin: 'center center',
+                  transition: isDragging ? 'none' : 'transform 100ms ease-out',
+                }}
+                className={`w-full h-full flex items-center transition-all ${
                   imageAlignment === 'left'
                     ? 'justify-start'
                     : imageAlignment === 'right'
@@ -484,71 +733,121 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
                 <img
                   src={getMapImageSrc(activeMap)}
                   alt={activeMap.name}
-                  style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'center center' }}
-                  className="max-h-[600px] object-contain rounded-xl shadow-2xl transition-transform duration-200"
+                  draggable={false}
+                  style={{
+                    imageRendering: '-webkit-optimize-contrast' as any,
+                  }}
+                  className="max-h-full max-w-full object-contain rounded-xl shadow-2xl pointer-events-none"
                 />
               </div>
 
-              {/* Zoom Controls Overlay */}
-              <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900/90 p-1.5 backdrop-blur-md">
+              {/* Pan Hint Overlay */}
+              <div className="absolute top-3 left-3 hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-800/80 bg-slate-950/70 px-2.5 py-1 text-[10px] font-mono text-slate-400 backdrop-blur-md pointer-events-none">
+                <Move className="h-3 w-3 text-amber-500" />
+                <span>Drag to pan • Scroll to zoom</span>
+              </div>
+
+              {/* Floating Zoom & Preset Controls Overlay */}
+              <div className="absolute bottom-4 right-4 flex flex-wrap items-center gap-1.5 rounded-2xl border border-slate-800 bg-slate-900/90 p-2 backdrop-blur-md shadow-2xl z-30">
                 <button
-                  onClick={() => setZoomLevel((z) => Math.min(2.5, z + 0.25))}
-                  className="p-1 text-slate-300 hover:text-amber-400"
-                  title="Zoom In"
+                  onClick={handleZoomIn}
+                  className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-200 hover:text-amber-400 hover:bg-slate-800 transition-all cursor-pointer"
+                  title="Zoom In (+25%)"
                 >
                   <ZoomIn className="h-4 w-4" />
                 </button>
-                <span className="text-[11px] font-mono font-bold text-slate-400 px-1">
+
+                <span className="text-xs font-mono font-bold text-amber-400 px-2 min-w-[45px] text-center">
                   {Math.round(zoomLevel * 100)}%
                 </span>
+
                 <button
-                  onClick={() => setZoomLevel((z) => Math.max(0.5, z - 0.25))}
-                  className="p-1 text-slate-300 hover:text-amber-400"
-                  title="Zoom Out"
+                  onClick={handleZoomOut}
+                  className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-200 hover:text-amber-400 hover:bg-slate-800 transition-all cursor-pointer"
+                  title="Zoom Out (-25%)"
                 >
                   <ZoomOut className="h-4 w-4" />
                 </button>
+
+                <div className="w-px h-5 bg-slate-800 mx-1 hidden sm:block" />
+
+                {/* Quick Zoom Presets */}
+                <div className="hidden sm:flex items-center gap-1">
+                  <button
+                    onClick={() => handleSetZoom(1.0)}
+                    className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      zoomLevel === 1.0
+                        ? 'bg-amber-500 text-slate-950 font-extrabold'
+                        : 'text-slate-400 hover:text-white bg-slate-800/50'
+                    }`}
+                  >
+                    100%
+                  </button>
+                  <button
+                    onClick={() => handleSetZoom(1.5)}
+                    className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      zoomLevel === 1.5
+                        ? 'bg-amber-500 text-slate-950 font-extrabold'
+                        : 'text-slate-400 hover:text-white bg-slate-800/50'
+                    }`}
+                  >
+                    150%
+                  </button>
+                  <button
+                    onClick={() => handleSetZoom(2.0)}
+                    className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                      zoomLevel === 2.0
+                        ? 'bg-amber-500 text-slate-950 font-extrabold'
+                        : 'text-slate-400 hover:text-white bg-slate-800/50'
+                    }`}
+                  >
+                    200%
+                  </button>
+                </div>
+
+                <div className="w-px h-5 bg-slate-800 mx-1" />
+
                 <button
-                  onClick={() => setZoomLevel(1)}
-                  className="p-1 text-slate-300 hover:text-amber-400"
-                  title="Reset Zoom"
+                  onClick={handleResetZoomPan}
+                  className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-200 hover:text-amber-400 hover:bg-slate-800 transition-all cursor-pointer"
+                  title="Reset Zoom & Pan"
                 >
-                  <RotateCcw className="h-3.5 w-3.5" />
+                  <RotateCcw className="h-4 w-4" />
                 </button>
               </div>
             </div>
 
-            {/* Clock / Sector System Legend */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-                <div className="text-xs font-bold uppercase text-amber-500">
+            {/* Clock / Sector System Legend (2 columns mobile, 4 columns desktop) */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+              <div className="rounded-2xl border border-slate-800 bg-slate-950 p-3.5 md:p-4">
+                <div className="text-[11px] md:text-xs font-bold uppercase text-amber-500">
                   {activeMap.source === 'samoelcolt' ? 'North Sector' : "12 O'Clock (Top)"}
                 </div>
-                <div className="mt-1 text-sm font-extrabold text-slate-100">
+                <div className="mt-1 text-xs md:text-sm font-extrabold text-slate-100 line-clamp-2">
                   {activeMap.clock_system?.twelve_o_clock || 'Main Building / Top Spawn'}
                 </div>
               </div>
-              <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-                <div className="text-xs font-bold uppercase text-amber-500">
+              <div className="rounded-2xl border border-slate-800 bg-slate-950 p-3.5 md:p-4">
+                <div className="text-[11px] md:text-xs font-bold uppercase text-amber-500">
                   {activeMap.source === 'samoelcolt' ? 'East Sector' : "3 O'Clock (Right)"}
                 </div>
-                <div className="mt-1 text-sm font-extrabold text-slate-100">
+                <div className="mt-1 text-xs md:text-sm font-extrabold text-slate-100 line-clamp-2">
                   {activeMap.clock_system?.three_o_clock || 'Right Tile / Generator Cluster'}
                 </div>
               </div>
-              <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-                <div className="text-xs font-bold uppercase text-amber-500">
+              <div className="rounded-2xl border border-slate-800 bg-slate-950 p-3.5 md:p-4">
+                <div className="text-[11px] md:text-xs font-bold uppercase text-amber-500">
                   {activeMap.source === 'samoelcolt' ? 'South Sector' : "6 O'Clock (Bottom)"}
                 </div>
-                <div className="mt-1 text-sm font-extrabold text-slate-100">
+                <div className="mt-1 text-xs md:text-sm font-extrabold text-slate-100 line-clamp-2">
                   {activeMap.clock_system?.six_o_clock || 'Killer Shack / Bottom Spawn'}
                 </div>
               </div>
-              <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-                <div className="text-xs font-bold uppercase text-amber-500">
+              <div className="rounded-2xl border border-slate-800 bg-slate-950 p-3.5 md:p-4">
+                <div className="text-[11px] md:text-xs font-bold uppercase text-amber-500">
                   {activeMap.source === 'samoelcolt' ? 'West Sector' : "9 O'Clock (Left)"}
                 </div>
-                <div className="mt-1 text-sm font-extrabold text-slate-100">
+                <div className="mt-1 text-xs md:text-sm font-extrabold text-slate-100 line-clamp-2">
                   {activeMap.clock_system?.nine_o_clock || 'Left Tile / Jungle Gym'}
                 </div>
               </div>
@@ -562,9 +861,16 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({ initialMapName = '' })
         <FullscreenMapEngine
           mapId={activeMap.id}
           availableMaps={maps}
-          onClose={() => setIsFullscreenOpen(false)}
+          onSelectMapId={(id) => {
+            setSelectedMapId(id);
+          }}
+          onClose={() => {
+            setIsFullscreenOpen(false);
+            onActionTriggered?.('close');
+          }}
         />
       )}
     </div>
   );
 };
+

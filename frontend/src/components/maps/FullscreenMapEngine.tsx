@@ -37,10 +37,16 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   availableMaps = [],
   onSelectMapId,
 }) => {
+  const [currentMapId, setCurrentMapId] = useState<string>(mapId);
   const [activeMap, setActiveMap] = useState<MapRealm | null>(null);
   const [currentSeed, setCurrentSeed] = useState<string>('seed_a');
   const [currentFloor, setCurrentFloor] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
+
+  // Sync currentMapId when mapId prop changes
+  useEffect(() => {
+    setCurrentMapId(mapId);
+  }, [mapId]);
 
   // Zoom & Pan State
   const [zoom, setZoom] = useState<number>(1.0);
@@ -67,12 +73,12 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Fetch Map Detail when mapId, seed, or floor changes
+  // Fetch Map Detail when currentMapId, seed, or floor changes
   useEffect(() => {
     async function loadDetail() {
       setLoading(true);
       try {
-        const data = await fetchMapDetail(mapId, currentSeed, currentFloor);
+        const data = await fetchMapDetail(currentMapId, currentSeed, currentFloor);
         setActiveMap(data.map);
       } catch (err) {
         console.error('Failed to load fullscreen map data:', err);
@@ -81,7 +87,22 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       }
     }
     loadDetail();
-  }, [mapId, currentSeed, currentFloor]);
+  }, [currentMapId, currentSeed, currentFloor]);
+
+  // Keyboard Escape Handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isDrawerOpen) {
+          setIsDrawerOpen(false);
+        } else {
+          onClose();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDrawerOpen, onClose]);
 
   // Handle Wheel Zoom (10% to 500% -> 0.1 to 5.0 scale)
   const handleWheel = (e: React.WheelEvent) => {
@@ -134,7 +155,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         x: e.touches[0].clientX - dragStart.x,
         y: e.touches[0].clientY - dragStart.y,
       });
-    } else if (e.touches.length === 2 && initialPinchDistance !== null) {
+    } else if (e.touches.length === 2 && initialPinchDistance !== null && initialPinchDistance > 0) {
       const currentDist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
@@ -158,6 +179,12 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     e.stopPropagation();
     setSelectedInspectorItem(item);
     setIsDrawerOpen(true);
+  };
+
+  const handleSelectMap = (id: string) => {
+    setCurrentMapId(id);
+    onSelectMapId?.(id);
+    handleResetView();
   };
 
   // Helper for pallet safety ring styling
@@ -209,11 +236,11 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-base font-extrabold text-white tracking-wide">{activeMap.name}</h1>
-                {availableMaps.length > 0 && onSelectMapId && (
+                {availableMaps.length > 0 && (
                   <select
                     value={activeMap.id}
-                    onChange={(e) => onSelectMapId(e.target.value)}
-                    className="bg-slate-900 border border-slate-800 text-amber-400 text-xs font-bold rounded-lg px-2 py-1 focus:outline-none focus:border-amber-500"
+                    onChange={(e) => handleSelectMap(e.target.value)}
+                    className="bg-slate-900 border border-slate-800 text-amber-400 text-xs font-bold rounded-lg px-2 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
                   >
                     {availableMaps.map((m) => (
                       <option key={m.id} value={m.id}>
@@ -286,6 +313,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        style={{ touchAction: 'none' }}
         className="relative flex-1 w-full h-full cursor-grab active:cursor-grabbing overflow-hidden flex items-center justify-center bg-slate-950"
       >
         {/* Tactical Grid Background Layer */}

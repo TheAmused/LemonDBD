@@ -138,11 +138,17 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     if (!targetMapName || !targetMapName.trim() || maps.length === 0) return;
     const needle = targetMapName.toLowerCase().trim();
 
+    console.log('[MapExplorer] Processing map target selection:', targetMapName, 'Active source:', activeSource, 'Loaded maps count:', maps.length);
+
+    // Helper: Normalize strings for tolerant matching
+    const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const normNeedle = norm(needle);
+
     // Priority 1: Match within active source
     let match = maps.find(
       (m) =>
         (activeSource === 'all' || m.source === activeSource) &&
-        (m.name.toLowerCase().includes(needle) || needle.includes(m.name.toLowerCase()))
+        (m.name.toLowerCase().includes(needle) || needle.includes(m.name.toLowerCase()) || norm(m.name) === normNeedle || norm(m.name).includes(normNeedle) || normNeedle.includes(norm(m.name)))
     );
 
     // Priority 2: Match across any source in loaded maps
@@ -150,14 +156,20 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       match = maps.find(
         (m) =>
           m.name.toLowerCase().includes(needle) ||
-          needle.includes(m.name.toLowerCase())
+          needle.includes(m.name.toLowerCase()) ||
+          norm(m.name) === normNeedle ||
+          norm(m.name).includes(normNeedle) ||
+          normNeedle.includes(norm(m.name))
       );
     }
 
     if (match) {
+      console.log('[MapExplorer] Successfully matched map:', match.name, 'ID:', match.id, 'Source:', match.source);
       setSelectedMapId(match.id);
       setIsDetailModalOpen(true);
       handleResetZoomPan();
+    } else {
+      console.warn('[MapExplorer] No matching map found for:', targetMapName, 'Available maps sample:', maps.slice(0, 5).map(m => m.name));
     }
   }, [initialMapName, selectedMap, maps, activeSource, handleResetZoomPan]);
 

@@ -227,6 +227,7 @@ export function VoiceCommandBanner({
 
   const executeMatch = useCallback(
     (result: MatchResult) => {
+      console.log('[VoiceNav] Executing matched result:', result);
       setMatchedResult(result);
       pendingMatchRef.current = null;
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
@@ -234,6 +235,7 @@ export function VoiceCommandBanner({
       const { onSourceChange, onAction, onSelectMap, soundEnabled } = propsRef.current;
 
       if (result.action === 'switch_source' && result.actionPayload) {
+        console.log('[VoiceNav] Action -> Switch source to:', result.actionPayload);
         setVoiceStatus('matched');
         if (soundEnabled) playMatchSuccessSound();
         onSourceChange(result.actionPayload as MapSource);
@@ -245,6 +247,7 @@ export function VoiceCommandBanner({
       }
 
       if (result.action && ['zoom_in', 'zoom_out', 'fullscreen', 'close'].includes(result.action)) {
+        console.log('[VoiceNav] Action -> Trigger navigation action:', result.action);
         setVoiceStatus('matched');
         if (soundEnabled) playMatchSuccessSound();
         onAction?.(result.action as 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close');
@@ -256,6 +259,7 @@ export function VoiceCommandBanner({
       }
 
       if (result.matchedMapName) {
+        console.log('[VoiceNav] Map Matched ->', result.matchedMapName, 'ID:', result.matchedMapId, 'Source:', result.source);
         setVoiceStatus('matched');
         if (result.availableVariants && result.availableVariants.length > 0) {
           setDisambiguationVariants(result.availableVariants);
@@ -383,6 +387,7 @@ export function VoiceCommandBanner({
         recognition.continuous = true;
 
         recognition.onstart = () => {
+          console.log('[VoiceNav] Microphone started listening. Hold mode:', isHoldingRef.current);
           isListeningRef.current = true;
           setVoiceStatus('listening');
           liveTranscriptRef.current = '';
@@ -415,6 +420,7 @@ export function VoiceCommandBanner({
           const combinedTranscript = (finalText + interimText).trim();
           liveTranscriptRef.current = combinedTranscript;
           setLiveTranscript(combinedTranscript);
+          console.log('[VoiceNav] Live transcript:', combinedTranscript);
 
           // Find best match candidate
           let bestMatch = matchVoiceQuery(
@@ -439,9 +445,13 @@ export function VoiceCommandBanner({
 
           pendingMatchRef.current = bestMatch;
           setMatchedResult(bestMatch);
+          if (bestMatch) {
+            console.log('[VoiceNav] Interim candidate matched:', bestMatch.matchedMapName, bestMatch.confidence);
+          }
         };
 
         recognition.onerror = (event: any) => {
+          console.warn('[VoiceNav] Recognition error:', event.error, event);
           if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
             isListeningRef.current = false;
             isHoldingRef.current = false;
@@ -461,6 +471,7 @@ export function VoiceCommandBanner({
         };
 
         recognition.onend = () => {
+          console.log('[VoiceNav] Recognition onend triggered. isHolding:', isHoldingRef.current, 'text:', liveTranscriptRef.current);
           // If the user is STILL holding the key or button down, keep listening without interruption!
           if (isHoldingRef.current) {
             try {
@@ -483,6 +494,7 @@ export function VoiceCommandBanner({
               );
 
             if (matchToExecute) {
+              console.log('[VoiceNav] onend matched:', matchToExecute);
               executeMatch(matchToExecute);
               return;
             }

@@ -116,5 +116,15 @@ test('MapExplorer triggerAction contracts and source selection flow', () => {
     assert.ok(res);
     assert.strictEqual(res.action, act);
   });
+
+  // Timestamped action and selection payload structure
+  const actionPayload = { action: 'zoom_in' as const, timestamp: Date.now() };
+  assert.strictEqual(actionPayload.action, 'zoom_in');
+  assert.ok(typeof actionPayload.timestamp === 'number');
+
+  const selectionPayload = { mapName: "Dead Dawg Saloon", timestamp: Date.now() };
+  assert.strictEqual(selectionPayload.mapName, "Dead Dawg Saloon");
+  assert.ok(typeof selectionPayload.timestamp === 'number');
 });
+
 

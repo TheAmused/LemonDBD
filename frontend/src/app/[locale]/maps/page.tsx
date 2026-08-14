@@ -25,15 +25,22 @@ function MapsPageInner() {
   // Voice Navigation & Source State
   const [currentSource, setCurrentSource] = useState<'all' | 'hens333' | 'samoelcolt'>('hens333');
   const [availableMaps, setAvailableMaps] = useState<MapRealm[]>([]);
-  const [selectedMapName, setSelectedMapName] = useState<string>(initialMapName);
-  const [triggerAction, setTriggerAction] = useState<
-    'zoom_in' | 'zoom_out' | 'fullscreen' | 'close' | null
-  >(null);
+  const [selectedMap, setSelectedMap] = useState<{
+    mapName: string;
+    timestamp: number;
+  }>({
+    mapName: initialMapName,
+    timestamp: Date.now(),
+  });
+  const [triggerAction, setTriggerAction] = useState<{
+    action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close';
+    timestamp: number;
+  } | null>(null);
 
-  // Sync selectedMapName if URL parameter changes
+  // Sync selectedMap if URL parameter changes
   useEffect(() => {
     if (initialMapName) {
-      setSelectedMapName(initialMapName);
+      setSelectedMap({ mapName: initialMapName, timestamp: Date.now() });
     }
   }, [initialMapName]);
 
@@ -130,19 +137,20 @@ function MapsPageInner() {
             onSourceChange={(src) => setCurrentSource(src)}
             onSelectMap={(name, _id, src) => {
               if (src) setCurrentSource(src as any);
-              setSelectedMapName(name);
+              setSelectedMap({ mapName: name, timestamp: Date.now() });
             }}
-            onAction={(act) => setTriggerAction(act)}
+            onAction={(act) => setTriggerAction({ action: act, timestamp: Date.now() })}
             availableMaps={availableMaps}
           />
         </div>
 
         <MapExplorer
-          initialMapName={selectedMapName}
+          initialMapName={selectedMap.mapName}
+          selectedMap={selectedMap}
           selectedSource={currentSource}
           onSourceChange={(src) => setCurrentSource(src)}
           onAvailableMapsLoaded={(maps) => setAvailableMaps(maps)}
-          onActionTriggered={(act) => setTriggerAction(act)}
+          onActionTriggered={(act) => setTriggerAction({ action: act, timestamp: Date.now() })}
           triggerAction={triggerAction}
         />
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />

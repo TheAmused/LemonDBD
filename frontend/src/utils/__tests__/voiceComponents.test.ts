@@ -6,11 +6,22 @@ import { VoiceNavButton } from '../../components/maps/VoiceNavButton';
 import { MapExplorer } from '../../components/maps/MapExplorer';
 import { FullscreenMapEngine } from '../../components/maps/FullscreenMapEngine';
 
-test('VoiceCommandBanner, VoiceNavButton, MapExplorer, and FullscreenMapEngine are properly exported functions/components', () => {
+import { MapCanvas } from '../../components/maps/MapCanvas';
+import { MapControls } from '../../components/maps/MapControls';
+import { VariantSwitcherBar } from '../../components/maps/VariantSwitcherBar';
+import { MapLegendDrawer } from '../../components/maps/MapLegendDrawer';
+import { MapDirectoryList } from '../../components/maps/MapDirectoryList';
+
+test('VoiceCommandBanner, VoiceNavButton, MapExplorer, FullscreenMapEngine, and modular sub-components are properly exported', () => {
   assert.strictEqual(typeof VoiceCommandBanner, 'function');
   assert.strictEqual(typeof VoiceNavButton, 'function');
   assert.strictEqual(typeof MapExplorer, 'function');
   assert.strictEqual(typeof FullscreenMapEngine, 'function');
+  assert.strictEqual(typeof MapCanvas, 'function');
+  assert.strictEqual(typeof MapControls, 'function');
+  assert.strictEqual(typeof VariantSwitcherBar, 'function');
+  assert.strictEqual(typeof MapLegendDrawer, 'function');
+  assert.strictEqual(typeof MapDirectoryList, 'function');
 });
 
 test('VoiceCommandBanner props interface and match handling integration', () => {

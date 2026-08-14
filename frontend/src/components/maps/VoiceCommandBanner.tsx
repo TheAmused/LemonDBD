@@ -46,14 +46,31 @@ export type VoiceStatusState =
   | 'nomatch'
   | 'error';
 
-// ─── Web Audio API Sound Synthesizers ─────────────────────────────────────────
+// ─── Web Audio API Shared Context & Synthesizers ──────────────────────────────
+
+let sharedAudioContext: AudioContext | null = null;
+
+function getAudioContext(): AudioContext | null {
+  try {
+    if (typeof window === 'undefined') return null;
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return null;
+    if (!sharedAudioContext || sharedAudioContext.state === 'closed') {
+      sharedAudioContext = new AudioCtx();
+    }
+    if (sharedAudioContext.state === 'suspended') {
+      sharedAudioContext.resume().catch(() => {});
+    }
+    return sharedAudioContext;
+  } catch {
+    return null;
+  }
+}
 
 function playMicStartSound() {
   try {
-    if (typeof window === 'undefined') return;
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const now = ctx.currentTime;
 
     // Dual-tone high-tech activation beep (Tone 1: 540Hz -> 760Hz)
@@ -87,10 +104,8 @@ function playMicStartSound() {
 
 function playMatchSuccessSound() {
   try {
-    if (typeof window === 'undefined') return;
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const now = ctx.currentTime;
 
     // Ascending melodic chime (C5, E5, G5, C6)
@@ -147,6 +162,7 @@ export function VoiceCommandBanner({
   const recognitionRef = useRef<any>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isListeningRef = useRef<boolean>(false);
+  const liveTranscriptRef = useRef<string>('');
 
   // Keep references to latest callbacks and props
   const propsRef = useRef({
@@ -180,11 +196,15 @@ export function VoiceCommandBanner({
     }
   }, []);
 
-  // Clear timers and abort speech recognition on unmount
+  // Clear timers, remove recognition listeners, and abort speech recognition on unmount
   useEffect(() => {
     return () => {
       if (recognitionRef.current) {
         try {
+          recognitionRef.current.onstart = null;
+          recognitionRef.current.onresult = null;
+          recognitionRef.current.onerror = null;
+          recognitionRef.current.onend = null;
           recognitionRef.current.abort();
         } catch {}
       }
@@ -246,6 +266,7 @@ export function VoiceCommandBanner({
   const handleExecuteCommand = useCallback(
     (query: string) => {
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      liveTranscriptRef.current = query;
       setLiveTranscript(query);
       setErrorMessage('');
 
@@ -309,6 +330,7 @@ export function VoiceCommandBanner({
       recognition.onstart = () => {
         isListeningRef.current = true;
         setVoiceStatus('listening');
+        liveTranscriptRef.current = '';
         setLiveTranscript('');
         setMatchedResult(null);
         setErrorMessage('');
@@ -335,6 +357,7 @@ export function VoiceCommandBanner({
         }
 
         const combinedTranscript = (finalText + interimText).trim();
+        liveTranscriptRef.current = combinedTranscript;
         setLiveTranscript(combinedTranscript);
 
         // Evaluate match immediately on live interim and final results
@@ -392,7 +415,7 @@ export function VoiceCommandBanner({
         isListeningRef.current = false;
         setVoiceStatus((prev) => {
           if (prev === 'listening') {
-            return liveTranscript ? 'nomatch' : 'idle';
+            return liveTranscriptRef.current ? 'nomatch' : 'idle';
           }
           return prev;
         });
@@ -404,7 +427,7 @@ export function VoiceCommandBanner({
       setVoiceStatus('error');
       setErrorMessage(err?.message || 'Failed to initialize voice recognition.');
     }
-  }, [voiceStatus, stopListening, locale, executeMatch, liveTranscript]);
+  }, [voiceStatus, stopListening, locale, executeMatch]);
 
   // ─── Global Keyboard Hotkey: Press 'V' to Toggle Mic ───────────────────────
 
@@ -546,6 +569,7 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => onSourceChange('hens333')}
+            aria-pressed={currentSource === 'hens333'}
             className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all ${
               currentSource === 'hens333'
                 ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md shadow-cyan-950/50 border border-cyan-400/30 font-bold'
@@ -558,6 +582,7 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => onSourceChange('samoelcolt')}
+            aria-pressed={currentSource === 'samoelcolt'}
             className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all ${
               currentSource === 'samoelcolt'
                 ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-950/50 border border-purple-400/30 font-bold'
@@ -570,6 +595,7 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => onSourceChange('all')}
+            aria-pressed={currentSource === 'all'}
             className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all ${
               currentSource === 'all'
                 ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-md border border-slate-600 font-bold'
@@ -690,7 +716,11 @@ export function VoiceCommandBanner({
       </div>
 
       {/* ─── REAL-TIME LIVE TRANSCRIPTION DISPLAY ─── */}
-      <div className="relative z-10 rounded-2xl border border-slate-800 bg-slate-950/75 p-4 text-center shadow-inner">
+      <div
+        role="status"
+        aria-live="polite"
+        className="relative z-10 rounded-2xl border border-slate-800 bg-slate-950/75 p-4 text-center shadow-inner"
+      >
         {voiceStatus === 'listening' && (
           <div className="flex flex-col items-center justify-center gap-1.5">
             <div className="flex items-center gap-2">

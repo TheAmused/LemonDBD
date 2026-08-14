@@ -144,7 +144,10 @@ test('VoiceCommandBanner Push-to-Talk and Mic button hold contracts', () => {
   let isHolding = false;
   let speechProcessed = false;
 
-  const simulateKeyDown = (key: string) => {
+  const simulateKeyDown = (key: string, modifiers?: { ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean }) => {
+    if (modifiers?.ctrlKey || modifiers?.metaKey || modifiers?.altKey) {
+      return;
+    }
     if (key.toLowerCase() === 'v') {
       if (!isListening) {
         isHolding = true;
@@ -157,7 +160,10 @@ test('VoiceCommandBanner Push-to-Talk and Mic button hold contracts', () => {
     }
   };
 
-  const simulateKeyUp = (key: string) => {
+  const simulateKeyUp = (key: string, modifiers?: { ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean }) => {
+    if (modifiers?.ctrlKey || modifiers?.metaKey || modifiers?.altKey) {
+      return;
+    }
     if (key.toLowerCase() === 'v') {
       isHolding = false;
       if (isListening) {
@@ -166,6 +172,14 @@ test('VoiceCommandBanner Push-to-Talk and Mic button hold contracts', () => {
       }
     }
   };
+
+  // 0. Modifier keys (Ctrl+V, Cmd+V, Alt+V) do not activate push-to-talk
+  simulateKeyDown('v', { ctrlKey: true });
+  assert.strictEqual(isListening, false);
+  simulateKeyDown('v', { metaKey: true });
+  assert.strictEqual(isListening, false);
+  simulateKeyDown('v', { altKey: true });
+  assert.strictEqual(isListening, false);
 
   // 1. Hold 'V' -> starts listening -> release 'V' -> stops and processes
   simulateKeyDown('v');

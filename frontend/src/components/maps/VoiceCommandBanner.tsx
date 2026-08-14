@@ -393,6 +393,8 @@ export function VoiceCommandBanner({
         holdStartTimeRef.current = Date.now();
       }
 
+      isListeningRef.current = true;
+
       try {
         const recognition = new SpeechRec();
         recognitionRef.current = recognition;
@@ -567,7 +569,7 @@ export function VoiceCommandBanner({
           target.isContentEditable ||
           target.getAttribute('role') === 'textbox');
 
-      if (!isInput && (e.key === 'v' || e.key === 'V')) {
+      if (!isInput && !e.ctrlKey && !e.metaKey && !e.altKey && (e.key === 'v' || e.key === 'V')) {
         if (e.repeat) return;
         e.preventDefault();
         if (!isListeningRef.current) {
@@ -589,7 +591,7 @@ export function VoiceCommandBanner({
           target.isContentEditable ||
           target.getAttribute('role') === 'textbox');
 
-      if (!isInput && (e.key === 'v' || e.key === 'V')) {
+      if (!isInput && !e.ctrlKey && !e.metaKey && !e.altKey && (e.key === 'v' || e.key === 'V')) {
         e.preventDefault();
         isHoldingRef.current = false;
         if (isListeningRef.current) {

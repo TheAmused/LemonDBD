@@ -405,6 +405,8 @@ test('MapDirectoryList renders grouped showcase with active border and filters',
 
   assert.ok(html.includes('data-testid="map-directory-list"'));
   assert.ok(html.includes('data-testid="map-card-hens_azarovs_resting_place"'));
+  assert.ok(html.includes('role="button"'));
+  assert.ok(html.includes('tabindex="0"'));
   assert.ok(html.includes('border-amber-500'));
   assert.ok(html.includes("Azarov&#x27;s Resting Place"));
   assert.ok(html.includes('data-testid="map-card-samoel_coal_tower"'));

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Compass,
   Search,
@@ -17,20 +17,10 @@ import { MapControls } from '../MapControls';
 import { VariantSwitcherBar } from '../VariantSwitcherBar';
 import { MapLegendDrawer } from '../MapLegendDrawer';
 import { MapDirectoryList } from '../MapDirectoryList';
+import { getMapImageSrc } from '@/utils/mapUtils';
 import type { DesktopMapLayoutProps } from './DesktopMapLayout';
 
 export type MobileMapLayoutProps = DesktopMapLayoutProps;
-
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
-function getMapImageSrc(m: MapRealm | null | undefined): string {
-  if (!m) return '';
-  if (m.callout_image_local_path) {
-    const clean = m.callout_image_local_path.replace(/^\/?(static\/)?/, '');
-    return `${backendBase}/static/${clean}`;
-  }
-  return m.callout_image_url || m.image_url || '';
-}
 
 export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
   maps,
@@ -60,6 +50,18 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
   onPopoutImage,
 }) => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
+
+  // Close bottom sheet on Escape key press
+  useEffect(() => {
+    if (!isBottomSheetOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsBottomSheetOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isBottomSheetOpen]);
 
   return (
     <div
@@ -227,6 +229,9 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
 
           {/* Drawer container */}
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Map Directory and Legends"
             className="absolute bottom-0 inset-x-0 z-50 h-[80vh] max-h-[85vh] flex flex-col bg-slate-900 border-t border-slate-700/80 rounded-t-3xl shadow-2xl backdrop-blur-2xl"
             data-testid="mobile-bottom-sheet-content"
           >
@@ -310,6 +315,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                   selectedMapId={selectedMapId}
                   onSelectMapId={(id) => {
                     onSelectMapId(id);
+                    setIsBottomSheetOpen(false);
                   }}
                   onPopoutImage={onPopoutImage}
                   loading={loading}

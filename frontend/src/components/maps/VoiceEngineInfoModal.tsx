@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Cpu,
@@ -39,25 +40,48 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
   onPreloadModel,
   dict,
 }) => {
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Keyboard Escape listener to close modal
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const t = dict?.voice || {};
 
-  return (
+  const modalElement = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 select-none"
       role="dialog"
       aria-modal="true"
       aria-labelledby="voice-engine-modal-title"
+      data-testid="voice-engine-info-modal"
     >
-      {/* Backdrop */}
+      {/* Fullscreen Backdrop - Clicking backdrop closes modal */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
+        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+        aria-hidden="true"
       />
 
-      {/* Modal Card */}
-      <div className="relative w-full max-w-xl rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 p-6 sm:p-7 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 space-y-6 max-h-[90vh] overflow-y-auto">
+      {/* Modal Card - stopPropagation prevents clicks inside from closing */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative z-10 w-full max-w-xl rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 p-6 sm:p-7 shadow-2xl backdrop-blur-2xl animate-in zoom-in-95 duration-200 space-y-6 max-h-[90vh] overflow-y-auto"
+      >
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
@@ -78,6 +102,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
           </div>
 
           <button
+            type="button"
             onClick={onClose}
             aria-label="Close"
             className="rounded-full p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
@@ -89,7 +114,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
         {/* Current Browser Status Card */}
         <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 font-mono">
               <Laptop className="h-3.5 w-3.5 text-cyan-500" />
               Detected Browser
             </span>
@@ -99,7 +124,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
           </div>
 
           <div className="flex items-center justify-between pt-1">
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 font-mono">
               <Sparkles className="h-3.5 w-3.5 text-amber-500" />
               Active Recognition Engine
             </span>
@@ -149,7 +174,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
                 'Supported natively in Google Chrome, Microsoft Edge, and Apple Safari. Transcribes speech in real-time via built-in browser speech services with 0MB download overhead.'}
             </p>
 
-            <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
+            <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-slate-500 font-mono">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" />
               <span>Chrome &bull; Edge &bull; Safari</span>
             </div>
@@ -181,7 +206,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
                 'Runs locally inside your browser via Web Audio & WebAssembly. 100% private, offline-ready, and works in Firefox, Brave, Opera, or any browser without external servers.'}
             </p>
 
-            <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+            <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-mono">
               <ShieldCheck className="h-3.5 w-3.5" />
               <span>Universal &bull; Private &bull; In-Browser</span>
             </div>
@@ -190,7 +215,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
 
         {/* Why Fallback Is Needed Box */}
         <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/5 p-4 space-y-2">
-          <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-extrabold text-xs">
+          <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-extrabold text-xs font-mono">
             <Info className="h-4 w-4 shrink-0" />
             <span>{t.whyNeededTitle || 'Why is a Client-Side Fallback Needed?'}</span>
           </div>
@@ -203,7 +228,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
         {/* Model Download & Storage Status */}
         <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4 space-y-3">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-extrabold uppercase tracking-wider text-slate-500">
+            <span className="font-extrabold uppercase tracking-wider text-slate-500 font-mono">
               Local Model Status
             </span>
             <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
@@ -234,7 +259,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
               <button
                 type="button"
                 onClick={onPreloadModel}
-                className="flex items-center gap-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 transition-colors cursor-pointer font-mono"
               >
                 <RefreshCw className="h-3 w-3" />
                 <span>Preload Model</span>
@@ -248,7 +273,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 px-5 py-2 text-xs font-bold shadow-md transition-all hover:opacity-90 cursor-pointer"
+            className="rounded-xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 px-5 py-2 text-xs font-bold shadow-md transition-all hover:opacity-90 cursor-pointer font-mono"
           >
             {dict?.modal?.close || 'Got It'}
           </button>
@@ -256,4 +281,10 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
       </div>
     </div>
   );
+
+  if (mounted && typeof document !== 'undefined') {
+    return createPortal(modalElement, document.body);
+  }
+
+  return modalElement;
 };

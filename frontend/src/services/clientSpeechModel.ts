@@ -6,7 +6,7 @@
  * or when Google speech recognition services are blocked by firewalls or privacy shields.
  * 
  * Default on Chrome, Edge, Safari: Native Web Speech API (Google / Apple Framework).
- * Fallback on Firefox / Others: Lightweight Client-Side Speech Model (Web Audio + WebAssembly / ONNX Whisper).
+ * Fallback on Firefox / Brave / Others: Lightweight Client-Side Speech Model (Web Audio + WebAssembly / ONNX Whisper).
  */
 
 export type VoiceEngineType = 'web-speech' | 'client-model';
@@ -33,8 +33,28 @@ export interface BrowserCompatibilityInfo {
 
 // ─── Browser & Engine Detection ──────────────────────────────────────────────
 
+let isBraveDetected = false;
+
+if (typeof window !== 'undefined' && (navigator as any).brave) {
+  try {
+    const braveObj = (navigator as any).brave;
+    if (typeof braveObj.isBrave === 'function') {
+      braveObj.isBrave().then((isBrave: boolean) => {
+        if (isBrave) {
+          isBraveDetected = true;
+          console.log('[ClientSpeechModel] Brave Browser detected! Recommending local client speech model.');
+        }
+      }).catch(() => {});
+    } else {
+      isBraveDetected = true;
+    }
+  } catch {}
+}
+
 export function isWebSpeechSupported(): boolean {
   if (typeof window === 'undefined') return false;
+  // If Brave is detected, Web Speech API dummy object is blocked by Brave Shields
+  if (isBraveDetected) return false;
   return !!(
     (window as any).SpeechRecognition ||
     (window as any).webkitSpeechRecognition
@@ -43,14 +63,12 @@ export function isWebSpeechSupported(): boolean {
 
 export function detectBrowser(): string {
   if (typeof window === 'undefined' || !navigator?.userAgent) return 'Unknown';
+  if (isBraveDetected) return 'Brave Browser';
   const ua = navigator.userAgent;
 
+  if ((navigator as any).brave) return 'Brave Browser';
   if (ua.includes('Edg/')) return 'Microsoft Edge';
   if (ua.includes('Chrome/') && !ua.includes('Edg/') && !ua.includes('OPR/')) {
-    // Check if Brave
-    if ((navigator as any).brave && typeof (navigator as any).brave.isBrave === 'function') {
-      return 'Brave Browser';
-    }
     return 'Google Chrome';
   }
   if (ua.includes('Safari/') && !ua.includes('Chrome/') && !ua.includes('Chromium')) return 'Apple Safari';
@@ -63,11 +81,13 @@ export function detectBrowser(): string {
 
 export function getBrowserCompatibility(): BrowserCompatibilityInfo {
   const browserName = detectBrowser();
-  const hasNative = isWebSpeechSupported();
+  const isBrave = browserName.includes('Brave') || isBraveDetected;
+  const hasNative = isWebSpeechSupported() && !isBrave;
   const isChromeOrEdgeOrSafari =
-    browserName.includes('Chrome') ||
-    browserName.includes('Edge') ||
-    browserName.includes('Safari');
+    !isBrave &&
+    (browserName.includes('Chrome') ||
+      browserName.includes('Edge') ||
+      browserName.includes('Safari'));
 
   const recommendedEngine: VoiceEngineType = hasNative ? 'web-speech' : 'client-model';
 
@@ -143,6 +163,8 @@ export class AudioCaptureSession {
   private isRecording = false;
   private actualSampleRate = 16000;
   private onLevelCallback: ((level: number) => void) | null = null;
+  private mediaRecorder: MediaRecorder | null = null;
+  private recordedBlobs: Blob[] = [];
 
   setLevelCallback(cb: ((level: number) => void) | null) {
     this.onLevelCallback = cb;
@@ -151,6 +173,7 @@ export class AudioCaptureSession {
   async start(): Promise<void> {
     if (this.isRecording) return;
     this.audioChunks = [];
+    this.recordedBlobs = [];
 
     console.log('[ClientSpeechModel] Requesting microphone access...');
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -164,11 +187,12 @@ export class AudioCaptureSession {
 
     this.mediaStream = stream;
 
+    // Initialize AudioContext
     const AudioContextClass =
       window.AudioContext || (window as any).webkitAudioContext;
     this.audioContext = new AudioContextClass();
 
-    // Critical: Chrome, Firefox, and Safari suspend new AudioContext instances by default!
+    // Critical for Chrome/Brave/Safari: resume AudioContext
     if (this.audioContext.state === 'suspended') {
       await this.audioContext.resume();
     }
@@ -176,41 +200,66 @@ export class AudioCaptureSession {
     this.actualSampleRate = this.audioContext.sampleRate || 44100;
     console.log('[ClientSpeechModel] AudioContext active at sampleRate:', this.actualSampleRate);
 
-    this.mediaSource = this.audioContext.createMediaStreamSource(stream);
-    // Buffer size 4096 gives ~85-92ms per chunk at 44.1k/48k
-    this.scriptProcessor = this.audioContext.createScriptProcessor(4096, 1, 1);
+    // Primary: ScriptProcessor
+    try {
+      this.mediaSource = this.audioContext.createMediaStreamSource(stream);
+      this.scriptProcessor = this.audioContext.createScriptProcessor(4096, 1, 1);
 
-    // Mute gain node prevents microphone audio from playing through speakers
-    this.muteGain = this.audioContext.createGain();
-    this.muteGain.gain.value = 0;
+      this.muteGain = this.audioContext.createGain();
+      this.muteGain.gain.value = 0;
 
-    this.scriptProcessor.onaudioprocess = (e) => {
-      if (!this.isRecording) return;
-      const inputData = e.inputBuffer.getChannelData(0);
-      const chunk = new Float32Array(inputData);
-      this.audioChunks.push(chunk);
+      this.scriptProcessor.onaudioprocess = (e) => {
+        if (!this.isRecording) return;
+        const inputData = e.inputBuffer.getChannelData(0);
+        const chunk = new Float32Array(inputData);
+        this.audioChunks.push(chunk);
 
-      // Compute RMS volume level for live visualizer
-      if (this.onLevelCallback && chunk.length > 0) {
-        let sum = 0;
-        for (let i = 0; i < chunk.length; i += 4) {
-          sum += chunk[i] * chunk[i];
+        // Compute RMS volume level for live visualizer
+        if (this.onLevelCallback && chunk.length > 0) {
+          let sum = 0;
+          for (let i = 0; i < chunk.length; i += 4) {
+            sum += chunk[i] * chunk[i];
+          }
+          const rms = Math.sqrt(sum / (chunk.length / 4));
+          const level = Math.min(100, Math.round(rms * 400));
+          this.onLevelCallback(level);
         }
-        const rms = Math.sqrt(sum / (chunk.length / 4));
-        const level = Math.min(100, Math.round(rms * 400));
-        this.onLevelCallback(level);
-      }
-    };
+      };
 
-    this.mediaSource.connect(this.scriptProcessor);
-    this.scriptProcessor.connect(this.muteGain);
-    this.muteGain.connect(this.audioContext.destination);
+      this.mediaSource.connect(this.scriptProcessor);
+      this.scriptProcessor.connect(this.muteGain);
+      this.muteGain.connect(this.audioContext.destination);
+    } catch (e) {
+      console.warn('[ClientSpeechModel] ScriptProcessor setup error, using MediaRecorder fallback:', e);
+    }
+
+    // Secondary: MediaRecorder as safety fallback
+    if (typeof MediaRecorder !== 'undefined') {
+      try {
+        this.mediaRecorder = new MediaRecorder(stream);
+        this.mediaRecorder.ondataavailable = (event) => {
+          if (event.data && event.data.size > 0) {
+            this.recordedBlobs.push(event.data);
+          }
+        };
+        this.mediaRecorder.start(100);
+      } catch (mrErr) {
+        console.warn('[ClientSpeechModel] MediaRecorder initialization warning:', mrErr);
+      }
+    }
+
     this.isRecording = true;
     console.log('[ClientSpeechModel] Audio capture session started successfully.');
   }
 
   stop(): Float32Array {
     this.isRecording = false;
+
+    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+      try {
+        this.mediaRecorder.stop();
+      } catch {}
+    }
 
     if (this.scriptProcessor) {
       this.scriptProcessor.disconnect();
@@ -250,7 +299,7 @@ export class AudioCaptureSession {
 
     this.audioChunks = [];
 
-    // Resample from actual hardware sample rate (e.g. 44100 / 48000) to 16000Hz for Whisper
+    // Resample from actual hardware sample rate to 16000Hz for Whisper
     const resampled = resampleTo16k(rawMerged, this.actualSampleRate, 16000);
     const normalized = normalizeAudioVolume(resampled);
 
@@ -314,8 +363,10 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     // Configure Transformers.js for browser environment
     env.allowLocalModels = false;
     env.useBrowserCache = true;
+    env.allowRemoteModels = true;
     if (env.backends?.onnx?.wasm) {
       env.backends.onnx.wasm.numThreads = 1;
+      (env.backends.onnx.wasm as any).proxy = false;
     }
 
     const modelName =
@@ -343,7 +394,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     console.log(`[ClientSpeechModel] Model ${modelName} loaded and ready in browser memory!`);
     return cachedPipeline;
   } catch (err: any) {
-    console.warn('[ClientSpeechModel] Transformers.js loading encountered issue, using fallback:', err);
+    console.warn('[ClientSpeechModel] Transformers.js loading issue (Brave Shields or network block):', err);
     broadcastProgress({
       status: 'ready',
       progress: 100,
@@ -381,10 +432,10 @@ export async function transcribeClientAudio(
       });
 
       const text = (typeof output === 'string' ? output : output?.text || '').trim();
-      console.log('[ClientSpeechModel] Transcription result:', text);
-      return text;
+      console.log('[ClientSpeechModel] Whisper transcription result:', text);
+      if (text) return text;
     } catch (e) {
-      console.error('[ClientSpeechModel] Inference failed:', e);
+      console.error('[ClientSpeechModel] Inference failed, attempting acoustic parsing:', e);
     }
   }
 

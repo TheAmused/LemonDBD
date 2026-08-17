@@ -197,7 +197,6 @@ function DashboardContent() {
         dict={dict}
         activeCategory={category}
         onSelectCategory={handleSelectCategory}
-        onSyncComplete={fetchPerks}
         onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalVaultPerks}
         survivorCount={survivorCount}

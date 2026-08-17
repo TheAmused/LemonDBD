@@ -4,27 +4,19 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Languages, Flame, RefreshCw, CheckCircle2, Trophy, Scroll, Users, Calculator, Wand2, Compass, Settings, Layers, Package, Gamepad2 } from 'lucide-react';
-import { ScraperConfigModal } from './ScraperConfigModal';
+import { Sun, Moon, Languages, Flame, Trophy, Scroll, Users, Calculator, Wand2, Compass, Layers, Package, Gamepad2 } from 'lucide-react';
 
 interface NavbarProps {
   currentLocale: string;
   dict: any;
-  onSyncComplete?: () => void;
   onOpenQuests?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncComplete, onOpenQuests }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onOpenQuests }) => {
   const { resolvedTheme, setTheme } = useTheme();
   const pathname = usePathname();
-
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<string>('');
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const toggleLocale = currentLocale === 'en' ? 'es' : 'en';
 
   const redirectedPathName = (locale: string) => {
@@ -34,61 +26,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
     return segments.join('/');
   };
 
-  const handleTriggerSync = async () => {
-    if (isSyncing) return;
-    try {
-      setIsSyncing(true);
-      setSyncStatus('Seeding DB...');
-      const res = await fetch(backendBase + '/api/scrape-and-seed', { method: 'POST' });
-      if (!res.ok) {
-        // Fallback to /api/v1/scrape if needed
-        await fetch(backendBase + '/api/v1/scrape', { method: 'POST' });
-      }
-    } catch (err) {
-      console.error('Failed to trigger scrape-and-seed job:', err);
-      setIsSyncing(false);
-    }
-  };
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isSyncing) {
-      interval = setInterval(async () => {
-        try {
-          const res = await fetch(backendBase + '/api/v1/scrape/status');
-          if (res.ok) {
-            const data = await res.json();
-            if (data.is_running) {
-              const activeSource = data.last_used_source || data.active_source || data.source;
-              const sourceInfo = activeSource ? (' - ' + activeSource) : '';
-              if ((data.current_step === 'downloading_icons' || data.current_step === 'downloading_assets') && data.total > 0) {
-                const pct = Math.round((data.progress / data.total) * 100);
-                setSyncStatus(pct + '%' + sourceInfo);
-              } else {
-                setSyncStatus(data.current_step.replace(/_/g, ' ') + sourceInfo);
-              }
-            } else {
-              setIsSyncing(false);
-              setSyncStatus('');
-              setShowSuccessToast(true);
-              setTimeout(() => setShowSuccessToast(false), 4000);
-              if (onSyncComplete) onSyncComplete();
-              clearInterval(interval);
-            }
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isSyncing, backendBase, onSyncComplete]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-colors">
@@ -273,36 +213,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
 
         {/* Action Controls */}
         <div className="flex items-center gap-2.5">
-          {showSuccessToast && (
-            <div className="hidden md:flex items-center gap-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 animate-in fade-in slide-in-from-top-2">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>Database Updated</span>
-            </div>
-          )}
-
-          {/* Sync Trigger Button */}
-          <button
-            onClick={handleTriggerSync}
-            disabled={isSyncing}
-            title={dict.app.syncWiki}
-            className="flex h-9 items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-3.5 text-xs font-bold text-white shadow-md shadow-red-900/20 hover:from-red-500 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500/40 disabled:opacity-60 transition-all cursor-pointer"
-          >
-            <RefreshCw className={'h-3.5 w-3.5 ' + (isSyncing ? 'animate-spin' : '')} />
-            <span className="hidden sm:inline">
-              {isSyncing ? (dict.app.syncing + ' (' + syncStatus + ')') : dict.app.syncWiki}
-            </span>
-          </button>
-
-          {/* Scraper Settings Button */}
-          <button
-            onClick={() => setIsConfigOpen(true)}
-            title="Scraper Settings"
-            aria-label="Scraper Settings"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          >
-            <Settings className="h-4 w-4 text-slate-600 dark:text-slate-400 hover:rotate-45 transition-transform" />
-          </button>
-
           {/* Locale Switcher */}
           <Link
             href={redirectedPathName(toggleLocale)}
@@ -327,8 +237,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
           </button>
         </div>
       </div>
-
-      <ScraperConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} />
     </header>
   );
 };

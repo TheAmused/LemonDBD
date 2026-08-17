@@ -177,7 +177,7 @@ class ScraperService:
         canvas = template.copy()
 
         icon = Image.open(io.BytesIO(icon_bytes)).convert("RGBA")
-        icon_size = int(size * 0.62)
+        icon_size = int(size * 0.85)
         icon_resized = icon.resize((icon_size, icon_size), Image.LANCZOS)
         offset = ((size - icon_size) // 2, (size - icon_size) // 2)
         canvas.alpha_composite(icon_resized, offset)
@@ -641,6 +641,16 @@ class ScraperService:
                     db.session.add(new_perk)
                     existing_perks[norm_p_name] = new_perk
             db.session.commit()
+
+            current_perk_names = {normalize_name_key(p.name.strip()) for p in perks}
+            stale_perks = [
+                row for norm_name, row in existing_perks.items()
+                if norm_name not in current_perk_names
+            ]
+            for row in stale_perks:
+                db.session.delete(row)
+            if stale_perks:
+                db.session.commit()
 
         if items:
             existing_items = {

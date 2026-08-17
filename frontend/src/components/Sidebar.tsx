@@ -13,10 +13,8 @@ import {
   Sun,
   Moon,
   Languages,
-  RefreshCw,
   Menu,
   X,
-  CheckCircle2,
   Database,
   Users,
   Swords,
@@ -26,20 +24,16 @@ import {
   Wand2,
   Compass,
   Package,
-  Settings,
   Repeat,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
   Folder,
   Gamepad2,
-  User,
   LogIn,
   LogOut,
   Crown,
-  ShieldCheck,
 } from 'lucide-react';
-import { ScraperConfigModal } from './ScraperConfigModal';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
@@ -50,7 +44,6 @@ interface SidebarProps {
   dict: any;
   activeCategory: string;
   onSelectCategory: (category: string) => void;
-  onSyncComplete?: () => void;
   onOpenQuests?: () => void;
   totalPerksCount?: number;
   survivorCount?: number;
@@ -63,7 +56,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   dict,
   activeCategory,
   onSelectCategory,
-  onSyncComplete,
   onOpenQuests,
   totalPerksCount = 0,
   survivorCount = 0,
@@ -77,14 +69,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<string>('');
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [othersOpen, setOthersOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const toggleLocale =
     currentLocale === 'en' ? (pathname?.includes('/es') ? 'pl' : 'es') : currentLocale === 'es' ? 'pl' : 'en';
 
@@ -108,58 +95,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mobileOpen]);
-
-  const handleTriggerSync = async () => {
-    if (isSyncing) return;
-    try {
-      setIsSyncing(true);
-      setSyncStatus('Seeding DB...');
-      const res = await fetch(backendBase + '/api/scrape-and-seed', { method: 'POST' });
-      if (!res.ok) {
-        // Fallback to /api/v1/scrape if needed
-        await fetch(backendBase + '/api/v1/scrape', { method: 'POST' });
-      }
-    } catch (err) {
-      console.error('Failed to trigger scrape-and-seed job:', err);
-      setIsSyncing(false);
-    }
-  };
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isSyncing) {
-      interval = setInterval(async () => {
-        try {
-          const res = await fetch(backendBase + '/api/v1/scrape/status');
-          if (res.ok) {
-            const data = await res.json();
-            if (data.is_running) {
-              const activeSource = data.last_used_source || data.active_source || data.source;
-              const sourceInfo = activeSource ? (' - ' + activeSource) : '';
-              if ((data.current_step === 'downloading_assets' || data.current_step === 'downloading_icons') && data.total > 0) {
-                const pct = Math.round((data.progress / data.total) * 100);
-                setSyncStatus(pct + '%' + sourceInfo);
-              } else {
-                setSyncStatus(data.current_step.replace(/_/g, ' ') + sourceInfo);
-              }
-            } else {
-              setIsSyncing(false);
-              setSyncStatus('');
-              setShowSuccessToast(true);
-              setTimeout(() => setShowSuccessToast(false), 4000);
-              if (onSyncComplete) onSyncComplete();
-              clearInterval(interval);
-            }
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isSyncing, backendBase, onSyncComplete]);
 
   interface NavItem {
     id: string;
@@ -230,7 +165,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
-  // Droppable "Others" Accordion Navigation
+  // Droppable "Others" Accordion Navigation (Visible only to Admins)
   const otherNavItems: NavItem[] = [
     {
       id: 'guesser',
@@ -296,10 +231,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   );
 
   useEffect(() => {
-    if (isOtherActive) {
+    if (isOtherActive && isAdmin) {
       setOthersOpen(true);
     }
-  }, [isOtherActive]);
+  }, [isOtherActive, isAdmin]);
 
   // Calculate Survivor vs Killer distribution percentages
   const safeTotal = survivorCount + killerCount || 1;
@@ -393,101 +328,108 @@ export const Sidebar: React.FC<SidebarProps> = ({
             Navigation
           </p>
 
-          {/* Main Top-Level Items */}
+          {/* Main Top-Level Items (Visible to All Users) */}
           {mainNavItems.map(renderNavItem)}
 
-          {/* Droppable "Others" Accordion Group */}
-          <div className="pt-1">
-            <button
-              onClick={() => setOthersOpen(!othersOpen)}
-              className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${isOtherActive
-                  ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
-                }`}
-            >
-              <div className="flex items-center gap-3">
-                <Folder className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
-                <span>Others</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                {isOtherActive && (
-                  <span className="h-2 w-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse" />
-                )}
-                <ChevronDown
-                  className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${othersOpen ? 'rotate-180' : 'rotate-0'
-                    }`}
-                />
-              </div>
-            </button>
-
-            {/* Nested Sub-Menu List & Vault Stats */}
-            {othersOpen && (
-              <div className="mt-1 ml-3 pl-2.5 space-y-3 border-l-2 border-slate-200 dark:border-slate-800/80">
-                <div className="space-y-1">
-                  {otherNavItems.map(renderNavItem)}
-                </div>
-
-                {/* LIVE VAULT STATS WIDGET */}
-                <div className="mt-3 rounded-2xl border border-slate-200/80 bg-slate-100/60 p-3 dark:border-slate-800/80 dark:bg-slate-900/50 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-                      <Database className="h-3 w-3 text-red-500" />
-                      {dict.stats?.vaultStats || 'Vault Statistics'}
+          {/* Droppable "Others" Accordion Group (Visible Only to Admins) */}
+          {isAdmin && (
+            <div className="pt-1">
+              <button
+                onClick={() => setOthersOpen(!othersOpen)}
+                className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${isOtherActive
+                    ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
+                  }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Folder className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
+                  <span className="flex items-center gap-1.5">
+                    <span>Others</span>
+                    <span className="rounded bg-amber-500/10 px-1 py-0.2 text-[9px] font-extrabold text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                      ADMIN
                     </span>
-                    <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {isOtherActive && (
+                    <span className="h-2 w-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse" />
+                  )}
+                  <ChevronDown
+                    className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${othersOpen ? 'rotate-180' : 'rotate-0'
+                      }`}
+                  />
+                </div>
+              </button>
+
+              {/* Nested Sub-Menu List & Vault Stats */}
+              {othersOpen && (
+                <div className="mt-1 ml-3 pl-2.5 space-y-3 border-l-2 border-slate-200 dark:border-slate-800/80">
+                  <div className="space-y-1">
+                    {otherNavItems.map(renderNavItem)}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 mb-2.5">
-                    <div className="rounded-xl border border-slate-200/60 bg-white/80 p-2 dark:border-slate-800/60 dark:bg-slate-950/60">
-                      <div className="flex items-center gap-1 text-slate-400 mb-0.5">
-                        <Layers className="h-3 w-3" />
-                        <span className="text-[10px] font-semibold">{dict.stats?.totalPerks || 'Perks'}</span>
-                      </div>
-                      <p className="text-sm font-black text-slate-900 dark:text-slate-100 font-mono">
-                        {totalPerksCount}
-                      </p>
-                    </div>
-
-                    <div className="rounded-xl border border-slate-200/60 bg-white/80 p-2 dark:border-slate-800/60 dark:bg-slate-950/60">
-                      <div className="flex items-center gap-1 text-slate-400 mb-0.5">
-                        <Users className="h-3 w-3" />
-                        <span className="text-[10px] font-semibold">{dict.stats?.characters || 'Cast'}</span>
-                      </div>
-                      <p className="text-sm font-black text-slate-900 dark:text-slate-100 font-mono">
-                        {characterCount}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Survivor vs Killer Ratio Bar */}
-                  <div className="space-y-1 pt-0.5">
-                    <div className="flex justify-between text-[10px] font-extrabold">
-                      <span className="text-emerald-500 flex items-center gap-1">
-                        <Shield className="h-2.5 w-2.5" /> {survivorCount}
+                  {/* LIVE VAULT STATS WIDGET */}
+                  <div className="mt-3 rounded-2xl border border-slate-200/80 bg-slate-100/60 p-3 dark:border-slate-800/80 dark:bg-slate-900/50 backdrop-blur-sm">
+                    <div className="flex items-center justify-between mb-2.5">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                        <Database className="h-3 w-3 text-red-500" />
+                        {dict.stats?.vaultStats || 'Vault Statistics'}
                       </span>
-                      <span className="text-slate-400 text-[9px] font-normal">{dict.stats?.ratio || 'Ratio'}</span>
-                      <span className="text-rose-500 flex items-center gap-1">
-                        {killerCount} <Skull className="h-2.5 w-2.5" />
-                      </span>
+                      <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                     </div>
 
-                    <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
-                      <div
-                        style={{ width: survivorPct + '%' }}
-                        className="bg-emerald-500 transition-all duration-500"
-                        title={'Survivors: ' + survivorPct + '%'}
-                      />
-                      <div
-                        style={{ width: killerPct + '%' }}
-                        className="bg-rose-500 transition-all duration-500"
-                        title={'Killers: ' + killerPct + '%'}
-                      />
+                    <div className="grid grid-cols-2 gap-2 mb-2.5">
+                      <div className="rounded-xl border border-slate-200/60 bg-white/80 p-2 dark:border-slate-800/60 dark:bg-slate-950/60">
+                        <div className="flex items-center gap-1 text-slate-400 mb-0.5">
+                          <Layers className="h-3 w-3" />
+                          <span className="text-[10px] font-semibold">{dict.stats?.totalPerks || 'Perks'}</span>
+                        </div>
+                        <p className="text-sm font-black text-slate-900 dark:text-slate-100 font-mono">
+                          {totalPerksCount}
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-slate-200/60 bg-white/80 p-2 dark:border-slate-800/60 dark:bg-slate-950/60">
+                        <div className="flex items-center gap-1 text-slate-400 mb-0.5">
+                          <Users className="h-3 w-3" />
+                          <span className="text-[10px] font-semibold">{dict.stats?.characters || 'Cast'}</span>
+                        </div>
+                        <p className="text-sm font-black text-slate-900 dark:text-slate-100 font-mono">
+                          {characterCount}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Survivor vs Killer Ratio Bar */}
+                    <div className="space-y-1 pt-0.5">
+                      <div className="flex justify-between text-[10px] font-extrabold">
+                        <span className="text-emerald-500 flex items-center gap-1">
+                          <Shield className="h-2.5 w-2.5" /> {survivorCount}
+                        </span>
+                        <span className="text-slate-400 text-[9px] font-normal">{dict.stats?.ratio || 'Ratio'}</span>
+                        <span className="text-rose-500 flex items-center gap-1">
+                          {killerCount} <Skull className="h-2.5 w-2.5" />
+                        </span>
+                      </div>
+
+                      <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+                        <div
+                          style={{ width: survivorPct + '%' }}
+                          className="bg-emerald-500 transition-all duration-500"
+                          title={'Survivors: ' + survivorPct + '%'}
+                        />
+                        <div
+                          style={{ width: killerPct + '%' }}
+                          className="bg-rose-500 transition-all duration-500"
+                          title={'Killers: ' + killerPct + '%'}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </nav>
 
         {/* User Account / Login Button Section */}
@@ -553,32 +495,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar Footer Controls */}
       <div className="space-y-2.5 pt-3 mt-3 border-t border-slate-200/80 dark:border-slate-800/80">
-        {showSuccessToast && (
-          <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-            <CheckCircle2 className="h-4 w-4 shrink-0" />
-            <span>Sync Successful!</span>
-          </div>
-        )}
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleTriggerSync}
-            disabled={isSyncing}
-            className="flex-1 flex h-9 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-3 text-xs font-bold text-white shadow-md shadow-red-900/20 hover:from-red-500 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-60 transition-all cursor-pointer min-w-0"
-          >
-            <RefreshCw className={'h-3.5 w-3.5 shrink-0 ' + (isSyncing ? 'animate-spin' : '')} />
-            <span className="truncate">{isSyncing ? (dict.app.syncing + ' (' + syncStatus + ')') : dict.app.syncWiki}</span>
-          </button>
-          <button
-            onClick={() => setIsConfigOpen(true)}
-            title="Scraper Settings"
-            aria-label="Scraper Settings"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          >
-            <Settings className="h-3.5 w-3.5 text-slate-600 dark:text-slate-400 hover:rotate-45 transition-transform" />
-          </button>
-        </div>
-
         <div className="grid grid-cols-2 gap-2">
           <Link
             href={redirectedPathName(toggleLocale)}
@@ -670,7 +586,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       )}
 
-      <ScraperConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} />
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </>
   );

@@ -151,6 +151,8 @@ class PerkService:
     def _seed_database_from_json_files(self):
         """Helper to seed the PostgreSQL / SQLite database from local JSON fixtures if present."""
         try:
+            from app.services.scraper_service import CANONICAL_DLC_INFO
+
             if self.characters_path.exists():
                 with open(self.characters_path, "r", encoding="utf-8") as f:
                     raw_chars = json.load(f)
@@ -158,6 +160,8 @@ class PerkService:
                         existing = db.session.scalars(
                             select(Character).where(Character.name == c["name"])
                         ).first()
+                        c_name_lower = c["name"].strip().lower()
+                        dlc = CANONICAL_DLC_INFO.get(c_name_lower, {})
                         if not existing:
                             db.session.add(
                                 Character(
@@ -168,9 +172,35 @@ class PerkService:
                                     wiki_slug=c.get("wiki_slug", ""),
                                     portrait_url=c.get("avatar_url", ""),
                                     avatar_local_path=c.get("avatar_local_path", ""),
-                                    release_number=c.get("release_number"),
+                                    release_number=c.get("release_number") or dlc.get("release_number"),
+                                    code_prefix=c.get("code_prefix") or dlc.get("code_prefix"),
+                                    chapter_name=c.get("chapter_name") or dlc.get("chapter_name"),
+                                    chapter_number=c.get("chapter_number") or dlc.get("chapter_number"),
+                                    dlc_type=c.get("dlc_type") or dlc.get("dlc_type"),
+                                    is_licensed=c.get("is_licensed", dlc.get("is_licensed", False)),
+                                    release_year=c.get("release_year") or dlc.get("release_year"),
+                                    release_date=c.get("release_date") or dlc.get("release_date"),
+                                    dlc_counterparts=c.get("dlc_counterparts") or dlc.get("dlc_counterparts"),
+                                    lore=c.get("lore") or dlc.get("lore"),
                                 )
                             )
+                        else:
+                            if not existing.chapter_name and dlc.get("chapter_name"):
+                                existing.chapter_name = dlc.get("chapter_name")
+                            if not existing.chapter_number and dlc.get("chapter_number"):
+                                existing.chapter_number = dlc.get("chapter_number")
+                            if not existing.dlc_type and dlc.get("dlc_type"):
+                                existing.dlc_type = dlc.get("dlc_type")
+                            if dlc.get("is_licensed") is not None:
+                                existing.is_licensed = dlc.get("is_licensed", False)
+                            if not existing.release_year and dlc.get("release_year"):
+                                existing.release_year = dlc.get("release_year")
+                            if not existing.release_date and dlc.get("release_date"):
+                                existing.release_date = dlc.get("release_date")
+                            if not existing.dlc_counterparts and dlc.get("dlc_counterparts"):
+                                existing.dlc_counterparts = dlc.get("dlc_counterparts")
+                            if not existing.lore and dlc.get("lore"):
+                                existing.lore = dlc.get("lore")
                     db.session.commit()
 
             if self.data_path.exists():
@@ -511,35 +541,79 @@ class PerkService:
             )
 
             characters = db.session.scalars(stmt).unique().all()
-            if characters:
+            if characters and len(characters) >= 20:
                 return [c.to_dict() for c in characters]
         except Exception as e:
             logger.debug(f"Querying characters from DB skipped/fallback: {e}")
 
-        # Fallback cache
-        results = [c for c in self._characters_cache if "overall_average" not in c.get("name", "").lower()]
-        if category and category.lower() != "all":
-            results = [c for c in results if c.get("category", "").lower() == category.lower()]
+        # Comprehensive fallback from CANONICAL_DLC_INFO
+        from app.services.scraper_service import CANONICAL_DLC_INFO
+        canonical_results = []
+        seen_names = set()
 
-        def _char_sort_key(c):
-            rn = c.get("release_number")
-            if isinstance(rn, int) and rn > 0:
-                return (0, rn, c.get("name", ""))
-            return (1, 9999, c.get("name", ""))
+        # Deduplicate to canonical unique characters
+        for name_key, dlc in CANONICAL_DLC_INFO.items():
+            role = dlc.get("role", "Survivor")
+            if category and category.lower() != "all" and role.lower() != category.lower():
+                continue
 
-        results = sorted(results, key=_char_sort_key)
+            display_name = name_key.title() if not name_key.startswith("the ") else f"The {name_key[4:].title()}"
+            if name_key == 'william "bill" overbeck' or name_key == "william 'bill' overbeck" or name_key == "bill overbeck":
+                display_name = 'William "Bill" Overbeck'
+            elif name_key == "detective tapp" or name_key == "david tapp":
+                display_name = "Detective David Tapp"
+            elif name_key == "ash williams" or name_key == "ashley j. williams":
+                display_name = "Ashley J. Williams"
+            elif name_key == "élodie rakoto" or name_key == "elodie rakoto":
+                display_name = "Élodie Rakoto"
+            elif name_key == "yun-jin lee" or name_key == "lee yun-jin":
+                display_name = "Yun-Jin Lee"
+            elif name_key == "leon s. kennedy" or name_key == "leon kennedy":
+                display_name = "Leon S. Kennedy"
+            elif name_key == "the onryo" or name_key == "the onryō":
+                display_name = "The Onryō"
 
-        if not results:
-            cat_clean = (category or "").lower()
-            if cat_clean == "survivor":
-                results = [{"name": n, "category": "Survivor", "role": "Survivor"} for n in DEFAULT_SURVIVORS]
-            elif cat_clean == "killer":
-                results = [{"name": n, "category": "Killer", "role": "Killer"} for n in DEFAULT_KILLERS]
-            else:
-                results = [{"name": n, "category": "Survivor", "role": "Survivor"} for n in DEFAULT_SURVIVORS] + \
-                          [{"name": n, "category": "Killer", "role": "Killer"} for n in DEFAULT_KILLERS]
+            if display_name.lower() in seen_names:
+                continue
+            seen_names.add(display_name.lower())
 
-        return results
+            sub_dir = "survivors" if role == "Survivor" else "killers"
+            clean_fname = re.sub(r'[\s\-/\'"]+', "_", display_name).strip("_")
+
+            canonical_results.append({
+                "id": len(seen_names),
+                "name": display_name,
+                "role": role,
+                "category": role,
+                "real_name": display_name,
+                "short_name": name_key.lower(),
+                "wiki_slug": display_name.replace(" ", "_"),
+                "portrait_url": "",
+                "avatar_local_path": f"avatars/{sub_dir}/{clean_fname}.png",
+                "release_number": dlc.get("release_number", 9999),
+                "code_prefix": dlc.get("code_prefix"),
+                "chapter_name": dlc.get("chapter_name"),
+                "chapter_number": dlc.get("chapter_number"),
+                "dlc_type": dlc.get("dlc_type"),
+                "is_licensed": dlc.get("is_licensed", False),
+                "release_year": dlc.get("release_year"),
+                "release_date": dlc.get("release_date"),
+                "dlc_counterparts": dlc.get("dlc_counterparts", "[]"),
+                "lore": dlc.get("lore"),
+            })
+
+        canonical_results.sort(key=lambda c: (0 if c.get("release_number") and c.get("release_number") > 0 else 1, c.get("release_number", 9999), c.get("name", "")))
+        return canonical_results
+
+    @staticmethod
+    def _slugify(text: str) -> str:
+        if not text:
+            return ""
+        clean = text.lower().strip()
+        clean = re.sub(r"[\s\-/]+", "_", clean)
+        clean = re.sub(r"[^a-z0-9_]", "", clean)
+        clean = re.sub(r"_+", "_", clean)
+        return clean.strip("_")
 
     def get_character_detail(self, character_name: str) -> Optional[Dict[str, Any]]:
         """SQLAlchemy 2.0 query to retrieve full character detail, teachable perks, and items/addons."""
@@ -560,16 +634,95 @@ class PerkService:
                 if (
                     c_name == target_clean
                     or c_real == target_clean
+                    or self._slugify(c.name) == target_slug
+                    or (c.real_name and self._slugify(c.real_name) == target_slug)
+                    or (c.wiki_slug and self._slugify(c.wiki_slug) == target_slug)
+                    or (c.short_name and self._slugify(c.short_name) == target_slug)
                     or c_slug == target_slug
                     or c_short == target_clean
-                    or (target_clean in ["yun-jin lee", "yunjin lee", "yun-jin"] and "yun-jin" in c_name)
-                    or (target_clean in ["david tapp", "tapp", "detective tapp"] and "tapp" in c_name)
-                    or (target_clean in ["elodie rakoto", "elodie", "élodie rakoto"] and "lodie" in c_name)
+                    or (target_slug in ["yun_jin_lee", "yunjin_lee", "yun_jin"] and "yun" in c_name)
+                    or (target_slug in ["david_tapp", "tapp", "detective_tapp", "detective_david_tapp"] and "tapp" in c_name)
+                    or (target_slug in ["elodie_rakoto", "elodie", "élodie_rakoto"] and ("elodie" in c_name or "lodie" in c_name))
+                    or (target_slug in ["bill_overbeck", "william_bill_overbeck", "bill"] and ("overbeck" in c_name or c_name == 'william "bill" overbeck'))
+                    or (target_slug in ["ash_williams", "ashley_j_williams", "ash"] and ("williams" in c_name or c_name.startswith("ashley")))
+                    or (target_slug in ["the_ghost_face", "ghost_face", "ghostface"] and "ghost" in c_name)
+                    or (target_slug in ["the_onryo", "the_onryō", "onryo", "sadako"] and ("onry" in c_name or "sadako" in c_real))
+                    or (target_slug in ["the_executioner", "pyramid_head"] and "executioner" in c_name)
+                    or (target_slug in ["the_cannibal", "leatherface", "bubba_sawyer"] and "cannibal" in c_name)
+                    or (target_slug in ["the_shape", "michael_myers", "myers"] and "shape" in c_name)
+                    or (target_slug in ["the_pig", "amanda_young", "jigsaw"] and "pig" in c_name)
+                    or (target_slug in ["the_nightmare", "freddy_krueger", "freddy"] and "nightmare" in c_name)
+                    or (target_slug in ["the_cenobite", "pinhead", "elliot_spencer"] and "cenobite" in c_name)
+                    or (target_slug in ["the_good_guy", "chucky", "charles_lee_ray"] and "good_guy" in self._slugify(c.name))
+                    or (target_slug in ["the_mastermind", "albert_wesker", "wesker"] and "mastermind" in self._slugify(c.name))
+                    or (target_slug in ["the_lich", "vecna"] and "lich" in self._slugify(c.name))
+                    or (target_slug in ["the_dark_lord", "dracula"] and "dark_lord" in self._slugify(c.name))
+                    or (target_slug in ["the_houndmaster", "portia_maye"] and "houndmaster" in self._slugify(c.name))
                 ):
                     matched_char = c
                     break
 
             if not matched_char:
+                # Resolve from canonical DLC metadata if not in DB table
+                from app.services.scraper_service import CANONICAL_DLC_INFO
+                matched_dlc_key = None
+                for k in CANONICAL_DLC_INFO.keys():
+                    if k == target_clean or self._slugify(k) == target_slug:
+                        matched_dlc_key = k
+                        break
+                    if target_slug in ["claudette_morel", "claudette"] and "claudette" in k:
+                        matched_dlc_key = k
+                        break
+
+                if not matched_dlc_key:
+                    for k in CANONICAL_DLC_INFO.keys():
+                        if target_slug in self._slugify(k) or self._slugify(k) in target_slug:
+                            matched_dlc_key = k
+                            break
+
+                if matched_dlc_key:
+                    dlc = CANONICAL_DLC_INFO[matched_dlc_key]
+                    role = dlc.get("role", "Survivor")
+                    display_name = matched_dlc_key.title() if not matched_dlc_key.startswith("the ") else f"The {matched_dlc_key[4:].title()}"
+                    sub_dir = "survivors" if role == "Survivor" else "killers"
+                    clean_fname = re.sub(r'[\s\-/\'"]+', "_", display_name).strip("_")
+
+                    fallback_char = {
+                        "name": display_name,
+                        "role": role,
+                        "category": role,
+                        "real_name": display_name,
+                        "short_name": matched_dlc_key,
+                        "wiki_slug": display_name.replace(" ", "_"),
+                        "portrait_url": "",
+                        "avatar_local_path": f"avatars/{sub_dir}/{clean_fname}.png",
+                        "release_number": dlc.get("release_number"),
+                        "code_prefix": dlc.get("code_prefix"),
+                        "chapter_name": dlc.get("chapter_name"),
+                        "chapter_number": dlc.get("chapter_number"),
+                        "dlc_type": dlc.get("dlc_type"),
+                        "is_licensed": dlc.get("is_licensed", False),
+                        "release_year": dlc.get("release_year"),
+                        "release_date": dlc.get("release_date"),
+                        "dlc_counterparts": dlc.get("dlc_counterparts", "[]"),
+                        "lore": dlc.get("lore"),
+                    }
+
+                    # Find perks for this character
+                    perks = []
+                    try:
+                        perk_stmt = select(Perk).where(func.lower(Perk.character_name) == display_name.lower())
+                        db_perks = db.session.scalars(perk_stmt).all()
+                        perks = [p.to_dict() for p in db_perks]
+                    except Exception:
+                        pass
+
+                    return {
+                        "character": fallback_char,
+                        "perks": perks,
+                        "addons": [],
+                    }
+
                 return None
 
             char_dict = matched_char.to_dict()
@@ -579,15 +732,36 @@ class PerkService:
             perks_list = [p.to_dict() for p in matched_char.perks]
 
             addons_or_items: List[Dict[str, Any]] = []
+            killer_power_info: Optional[Dict[str, Any]] = None
+
             if char_role == "Killer":
-                addons_stmt = select(Addon).where(
-                    or_(
-                        func.lower(Addon.associated_target) == matched_char.name.lower(),
-                        func.lower(Addon.associated_target) == (matched_char.real_name or "").lower()
-                    )
-                )
-                addons = db.session.scalars(addons_stmt).all()
-                addons_or_items = [a.to_dict() for a in addons]
+                from app.services.scraper_service import CANONICAL_KILLER_POWERS
+                k_key = matched_char.name.lower().strip()
+                power_data = CANONICAL_KILLER_POWERS.get(k_key)
+                if not power_data:
+                    for k, p in CANONICAL_KILLER_POWERS.items():
+                        if k in k_key or k_key in k:
+                            power_data = p
+                            break
+
+                target_names = [matched_char.name.lower(), (matched_char.real_name or "").lower()]
+                if power_data:
+                    killer_power_info = {
+                        "name": power_data["name"],
+                        "description": power_data["description"],
+                        "icon_url": power_data.get("icon_url", ""),
+                        "movement_speed": power_data.get("movement_speed", "4.6 m/s (115%)"),
+                        "terror_radius": power_data.get("terror_radius", "32 m"),
+                        "terror_radius_meters": power_data.get("terror_radius_meters", 32),
+                        "height": power_data.get("height", "Tall"),
+                    }
+                    target_names.extend([t.lower() for t in power_data.get("targets", [])])
+
+                target_filters = [func.lower(Addon.associated_target) == t for t in set(target_names) if t]
+                if target_filters:
+                    addons_stmt = select(Addon).where(or_(*target_filters))
+                    addons = db.session.scalars(addons_stmt).all()
+                    addons_or_items = [a.to_dict() for a in addons]
             else:
                 items_stmt = select(Item).where(
                     and_(
@@ -600,6 +774,7 @@ class PerkService:
 
             return {
                 "character": char_dict,
+                "power": killer_power_info,
                 "perks": perks_list,
                 "addons": addons_or_items,
             }

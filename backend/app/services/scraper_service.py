@@ -29,120 +29,1251 @@ from app.models import Character, Perk, Item, Addon, MapRealm, MapTile, MapObjec
 # The prefix letter is the role and the digits are the release number.
 PORTRAIT_PATTERN = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.ASCII)
 
+CANONICAL_DLC_INFO: Dict[str, Dict[str, Any]] = {
+    # --- SURVIVORS: BASE GAME ---
+    "dwight fairfield": {
+        "release_number": 1, "code_prefix": "S01", "role": "Survivor",
+        "chapter_name": "Dead by Daylight: Base Game", "chapter_number": "0", "dlc_type": "base_game",
+        "is_licensed": False, "release_year": 2016, "release_date": "June 14, 2016",
+        "dlc_counterparts": '["The Trapper", "The Wraith", "The Hillbilly", "Meg Thomas", "Claudette Morel", "Jake Park"]',
+        "lore": "Dwight was not the typical high school athlete. Weak, awkward, and lacking in physical prowess, he was the target of relentless bullying. When his coworkers took him on a retreat into the woods and abandoned him with a bottle of spiked moonshine, Dwight wandered into the deep forest and was never seen again."
+    },
+    "meg thomas": {
+        "release_number": 2, "code_prefix": "S02", "role": "Survivor",
+        "chapter_name": "Dead by Daylight: Base Game", "chapter_number": "0", "dlc_type": "base_game",
+        "is_licensed": False, "release_year": 2016, "release_date": "June 14, 2016",
+        "dlc_counterparts": '["The Trapper", "The Wraith", "The Hillbilly", "Dwight Fairfield", "Claudette Morel", "Jake Park"]',
+        "lore": "Perhaps it was her mother who instilled that fierce drive in her, or perhaps it was the relentless need to run. Meg gave up her track scholarship when her mother fell ill. During a long run deep in the woods to clear her head, Meg vanished into the thick fog."
+    },
+    "claudette morel": {
+        "release_number": 3, "code_prefix": "S03", "role": "Survivor",
+        "chapter_name": "Dead by Daylight: Base Game", "chapter_number": "0", "dlc_type": "base_game",
+        "is_licensed": False, "release_year": 2016, "release_date": "June 14, 2016",
+        "dlc_counterparts": '["The Trapper", "The Wraith", "The Hillbilly", "Dwight Fairfield", "Meg Thomas", "Jake Park"]',
+        "lore": "From the day her parents gave her a first science kit, Claudette loved studying plants and botanical medicine. On a weekend bus ride home from university, the bus took a wrong turn into an unnatural mist, and Claudette never arrived at her destination."
+    },
+    "jake park": {
+        "release_number": 4, "code_prefix": "S04", "role": "Survivor",
+        "chapter_name": "Dead by Daylight: Base Game", "chapter_number": "0", "dlc_type": "base_game",
+        "is_licensed": False, "release_year": 2016, "release_date": "June 14, 2016",
+        "dlc_counterparts": '["The Trapper", "The Wraith", "The Hillbilly", "Dwight Fairfield", "Meg Thomas", "Claudette Morel"]',
+        "lore": "Growing up the rebellious son of a wealthy CEO, Jake rejected high society to live off-grid in the remote forest. When search parties came looking after a harsh winter, they found his makeshift cabin deserted with no tracks leading away."
+    },
+    # --- KILLERS: BASE GAME ---
+    "the trapper": {
+        "release_number": 1, "code_prefix": "K01", "role": "Killer",
+        "chapter_name": "Dead by Daylight: Base Game", "chapter_number": "0", "dlc_type": "base_game",
+        "is_licensed": False, "release_year": 2016, "release_date": "June 14, 2016",
+        "dlc_counterparts": '["Dwight Fairfield", "Meg Thomas", "Claudette Morel", "Jake Park"]',
+        "lore": "Evan idolized his wealthy father Archie MacMillan. When Archie's mind cracked, Evan followed his father's orders to lead over a hundred miners into a deep shaft and detonate the explosives, sealing them in their tomb."
+    },
+    "the wraith": {
+        "release_number": 2, "code_prefix": "K02", "role": "Killer",
+        "chapter_name": "Dead by Daylight: Base Game", "chapter_number": "0", "dlc_type": "base_game",
+        "is_licensed": False, "release_year": 2016, "release_date": "June 14, 2016",
+        "dlc_counterparts": '["Dwight Fairfield", "Meg Thomas", "Claudette Morel", "Jake Park"]',
+        "lore": "Philip arrived in America with high hopes, taking a job at Autohaven Wreckers scrap yard. When he discovered he was unwittingly executing kidnapped people inside the car crusher, a violent frenzy overtook him."
+    },
+    "the hillbilly": {
+        "release_number": 3, "code_prefix": "K03", "role": "Killer",
+        "chapter_name": "Dead by Daylight: Base Game", "chapter_number": "0", "dlc_type": "base_game",
+        "is_licensed": False, "release_year": 2016, "release_date": "June 14, 2016",
+        "dlc_counterparts": '["Dwight Fairfield", "Meg Thomas", "Claudette Morel", "Jake Park"]',
+        "lore": "Born hideous and deformed, the un-named boy was locked in a bricked-up room on Coldwind Farm by his cruel parents. Years later, he broke free with a chainsaw and wrought brutal vengeance across the farm."
+    },
+    # --- CHAPTER 1: THE LAST BREATH ---
+    "the nurse": {
+        "release_number": 4, "code_prefix": "K04", "role": "Killer",
+        "chapter_name": "Chapter 1: The Last Breath", "chapter_number": "1", "dlc_type": "free_update",
+        "is_licensed": False, "release_year": 2016, "release_date": "August 18, 2016",
+        "dlc_counterparts": '["Nea Karlsson"]',
+        "lore": "Sally worked the graveyard shift at the Disturbed Ward of Crotus Prenn Asylum. After twenty years of witnessing misery, her mind fractured, and she cleansed the asylum of all breathing souls."
+    },
+    "nea karlsson": {
+        "release_number": 5, "code_prefix": "S05", "role": "Survivor",
+        "chapter_name": "Chapter 1: The Last Breath", "chapter_number": "1", "dlc_type": "free_update",
+        "is_licensed": False, "release_year": 2016, "release_date": "August 18, 2016",
+        "dlc_counterparts": '["The Nurse"]',
+        "lore": "Nea grew up in Sweden before her family relocated to the US. An urban tagger and skateboarder, Nea dared to tag the condemned Crotus Prenn Asylum and never came out."
+    },
+    # --- CHAPTER 2: THE HALLOWEEN CHAPTER ---
+    "the shape": {
+        "release_number": 5, "code_prefix": "K05", "role": "Killer",
+        "chapter_name": "Chapter 2: The Halloween Chapter", "chapter_number": "2", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2016, "release_date": "October 25, 2016",
+        "dlc_counterparts": '["Laurie Strode"]',
+        "lore": "Michael Myers is human only in form. Behind his blank white mask lies pure, unadulterated evil. Driven by an insatiable need to kill, he stalks his prey through Haddonfield with relentless patience."
+    },
+    "laurie strode": {
+        "release_number": 6, "code_prefix": "S06", "role": "Survivor",
+        "chapter_name": "Chapter 2: The Halloween Chapter", "chapter_number": "2", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2016, "release_date": "October 25, 2016",
+        "dlc_counterparts": '["The Shape"]',
+        "lore": "The quintessential babysitter, Laurie thought Halloween would be a night of studying and quiet caretaking. Instead, she faced The Shape and fought desperately to survive."
+    },
+    # --- CHAPTER 3: OF FLESH AND MUD ---
+    "the hag": {
+        "release_number": 6, "code_prefix": "K06", "role": "Killer",
+        "chapter_name": "Chapter 3: Of Flesh and Mud", "chapter_number": "3", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2016, "release_date": "December 8, 2016",
+        "dlc_counterparts": '["Ace Visconti"]',
+        "lore": "Kidnapped by cannibals and starved in a dark cellar, Lisa carved the elders' protective runes into the wooden floor with her bleeding fingers, awakening dark arcane forces."
+    },
+    "ace visconti": {
+        "release_number": 7, "code_prefix": "S07", "role": "Survivor",
+        "chapter_name": "Chapter 3: Of Flesh and Mud", "chapter_number": "3", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2016, "release_date": "December 8, 2016",
+        "dlc_counterparts": '["The Hag"]',
+        "lore": "Ace is a charming high-rolling gambler who always believed his lucky streak would pull him through. When debt collectors closed in, he vanished without paying his tab."
+    },
+    # --- FREE UPDATE: LEFT BEHIND ---
+    'william "bill" overbeck': {
+        "release_number": 8, "code_prefix": "S08", "role": "Survivor",
+        "chapter_name": "Left Behind (Left 4 Dead)", "chapter_number": "Free DLC", "dlc_type": "free_update",
+        "is_licensed": True, "release_year": 2017, "release_date": "March 8, 2017",
+        "dlc_counterparts": '[]',
+        "lore": "A battle-hardened Vietnam veteran, Bill fought through hordes of infected zombies. Sacrificing himself to restart the bridge generator for his team, Bill awoke in The Fog."
+    },
+    "william 'bill' overbeck": {
+        "release_number": 8, "code_prefix": "S08", "role": "Survivor",
+        "chapter_name": "Left Behind (Left 4 Dead)", "chapter_number": "Free DLC", "dlc_type": "free_update",
+        "is_licensed": True, "release_year": 2017, "release_date": "March 8, 2017",
+        "dlc_counterparts": '[]',
+        "lore": "A battle-hardened Vietnam veteran, Bill fought through hordes of infected zombies. Sacrificing himself to restart the bridge generator for his team, Bill awoke in The Fog."
+    },
+    "bill overbeck": {
+        "release_number": 8, "code_prefix": "S08", "role": "Survivor",
+        "chapter_name": "Left Behind (Left 4 Dead)", "chapter_number": "Free DLC", "dlc_type": "free_update",
+        "is_licensed": True, "release_year": 2017, "release_date": "March 8, 2017",
+        "dlc_counterparts": '[]',
+        "lore": "A battle-hardened Vietnam veteran, Bill fought through hordes of infected zombies. Sacrificing himself to restart the bridge generator for his team, Bill awoke in The Fog."
+    },
+    # --- CHAPTER 4: SPARK OF MADNESS ---
+    "the doctor": {
+        "release_number": 7, "code_prefix": "K07", "role": "Killer",
+        "chapter_name": "Chapter 4: Spark of Madness", "chapter_number": "4", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2017, "release_date": "May 11, 2017",
+        "dlc_counterparts": '["Feng Min"]',
+        "lore": "Recruited into the Léry Memorial secret research project, Dr. Carter pioneered electroconvulsive torture to extract thoughts from prisoners, descending into mad sadism."
+    },
+    "feng min": {
+        "release_number": 9, "code_prefix": "S09", "role": "Survivor",
+        "chapter_name": "Chapter 4: Spark of Madness", "chapter_number": "4", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2017, "release_date": "May 11, 2017",
+        "dlc_counterparts": '["The Doctor"]',
+        "lore": "A top-tier esports athlete, Feng Min spent days streaming in internet cafes. Facing burnout and pressure, she wandered into the night and never returned to the arena."
+    },
+    # --- CHAPTER 5: A LULLABY FOR THE DARK ---
+    "the huntress": {
+        "release_number": 8, "code_prefix": "K08", "role": "Killer",
+        "chapter_name": "Chapter 5: A Lullaby for the Dark", "chapter_number": "5", "dlc_type": "free_update",
+        "is_licensed": False, "release_year": 2017, "release_date": "July 27, 2017",
+        "dlc_counterparts": '["David King"]',
+        "lore": "Raised by her mother in the Russian taiga, Anna learned to hunt wild elk and soldiers. After her mother was killed by an elk, Anna survived alone in the freezing forest."
+    },
+    "david king": {
+        "release_number": 10, "code_prefix": "S10", "role": "Survivor",
+        "chapter_name": "Chapter 5: A Lullaby for the Dark", "chapter_number": "5", "dlc_type": "free_update",
+        "is_licensed": False, "release_year": 2017, "release_date": "July 27, 2017",
+        "dlc_counterparts": '["The Huntress"]',
+        "lore": "A former rugby star with a penchant for barroom brawls and collecting underworld debts, David fought hard and lived fast before vanishing after a rowdy pub night."
+    },
+    # --- PARAGRAPH: LEATHERFACE ---
+    "the cannibal": {
+        "release_number": 9, "code_prefix": "K09", "role": "Killer",
+        "chapter_name": "Paragraph: LEATHERFACE™", "chapter_number": "Paragraph", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2017, "release_date": "September 14, 2017",
+        "dlc_counterparts": '[]',
+        "lore": "Bubba kills not out of malice, but out of fear and love for his twisted family. Wielding a buzzing chainsaw and wearing a mask of human flesh, he protects his home at all costs."
+    },
+    # --- CHAPTER 6: A NIGHTMARE ON ELM STREET ---
+    "the nightmare": {
+        "release_number": 10, "code_prefix": "K10", "role": "Killer",
+        "chapter_name": "Chapter 6: A Nightmare on Elm Street™", "chapter_number": "6", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2017, "release_date": "October 26, 2017",
+        "dlc_counterparts": '["Quentin Smith"]',
+        "lore": "Even death could not stop Freddy Krueger. Slain by vengeful parents, he returned in the dream world, tormenting the children of Springwood in their deepest sleep."
+    },
+    "quentin smith": {
+        "release_number": 11, "code_prefix": "S11", "role": "Survivor",
+        "chapter_name": "Chapter 6: A Nightmare on Elm Street™", "chapter_number": "6", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2017, "release_date": "October 26, 2017",
+        "dlc_counterparts": '["The Nightmare"]',
+        "lore": "Fuelled by caffeine pills and adrenaline, Quentin fought sleep to stay alive and rescue Nancy from the clutches of Freddy Krueger."
+    },
+    # --- CHAPTER 7: SAW ---
+    "the pig": {
+        "release_number": 11, "code_prefix": "K11", "role": "Killer",
+        "chapter_name": "Chapter 7: SAW™", "chapter_number": "7", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2018, "release_date": "January 23, 2018",
+        "dlc_counterparts": '["Detective Tapp"]',
+        "lore": "A disciple of the Jigsaw Killer, Amanda created unwinnable reverse bear-trap games to test human survival and purge guilt."
+    },
+    "detective tapp": {
+        "release_number": 12, "code_prefix": "S12", "role": "Survivor",
+        "chapter_name": "Chapter 7: SAW™", "chapter_number": "7", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2018, "release_date": "January 23, 2018",
+        "dlc_counterparts": '["The Pig"]',
+        "lore": "Obsessed with capturing the Jigsaw killer, Detective Tapp ruined his career and marriage in pursuit of justice before vanishing into the shadows."
+    },
+    "david tapp": {
+        "release_number": 12, "code_prefix": "S12", "role": "Survivor",
+        "chapter_name": "Chapter 7: SAW™", "chapter_number": "7", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2018, "release_date": "January 23, 2018",
+        "dlc_counterparts": '["The Pig"]',
+        "lore": "Obsessed with capturing the Jigsaw killer, Detective Tapp ruined his career and marriage in pursuit of justice before vanishing into the shadows."
+    },
+    # --- CHAPTER 8: CURTAIN CALL ---
+    "the clown": {
+        "release_number": 12, "code_prefix": "K12", "role": "Killer",
+        "chapter_name": "Chapter 8: Curtain Call", "chapter_number": "8", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2018, "release_date": "June 12, 2018",
+        "dlc_counterparts": '["Kate Denson"]',
+        "lore": "Traveling under the alias Jeffrey Hawk with carnivals, Kenneth mixed toxic anaesthetic tonics to drug and mutilate unsuspecting victims."
+    },
+    "kate denson": {
+        "release_number": 13, "code_prefix": "S13", "role": "Survivor",
+        "chapter_name": "Chapter 8: Curtain Call", "chapter_number": "8", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2018, "release_date": "June 12, 2018",
+        "dlc_counterparts": '["The Clown"]',
+        "lore": "A soulful folk musician traveling in her trusty Chevy, Kate spread warmth and songs across small towns before the fog engulfed her camp."
+    },
+    # --- CHAPTER 9: SHATTERED BLOODLINE ---
+    "the spirit": {
+        "release_number": 13, "code_prefix": "K13", "role": "Killer",
+        "chapter_name": "Chapter 9: Shattered Bloodline", "chapter_number": "9", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2018, "release_date": "September 18, 2018",
+        "dlc_counterparts": '["Adam Francis"]',
+        "lore": "Cut down by her father in their ancestral home, Rin pledged her dying vengeance to dark spirits in exchange for otherworldly power."
+    },
+    "adam francis": {
+        "release_number": 14, "code_prefix": "S14", "role": "Survivor",
+        "chapter_name": "Chapter 9: Shattered Bloodline", "chapter_number": "9", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2018, "release_date": "September 18, 2018",
+        "dlc_counterparts": '["The Spirit"]',
+        "lore": "An ambitious teacher from Jamaica who moved to Kagoshima to teach English, Adam was riding the train home when it derailed in the dense mist."
+    },
+    # --- CHAPTER 10: DARKNESS AMONG US ---
+    "the legion": {
+        "release_number": 14, "code_prefix": "K14", "role": "Killer",
+        "chapter_name": "Chapter 10: Darkness Among Us", "chapter_number": "10", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2018, "release_date": "December 11, 2018",
+        "dlc_counterparts": '["Jeff Johansen"]',
+        "lore": "Four delinquent teenagers from Ormond bound together by boredom and adrenaline, spiraling into a brutal thrill-kill spree."
+    },
+    "jeff johansen": {
+        "release_number": 15, "code_prefix": "S15", "role": "Survivor",
+        "chapter_name": "Chapter 10: Darkness Among Us", "chapter_number": "10", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2018, "release_date": "December 11, 2018",
+        "dlc_counterparts": '["The Legion"]',
+        "lore": "A quiet heavy-metal artist and muralist, Jeff returned to his hometown of Ormond to sort out his past, only to be taken by The Fog."
+    },
+    # --- CHAPTER 11: DEMISE OF THE FAITHFUL ---
+    "the plague": {
+        "release_number": 15, "code_prefix": "K15", "role": "Killer",
+        "chapter_name": "Chapter 11: Demise of the Faithful", "chapter_number": "11", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2019, "release_date": "March 19, 2019",
+        "dlc_counterparts": '["Jane Romero"]',
+        "lore": "High Priestess of Babylon, Adiris led her people in prayer as a devastating plague struck, ultimately succumbing to the pestilence herself."
+    },
+    "jane romero": {
+        "release_number": 16, "code_prefix": "S16", "role": "Survivor",
+        "chapter_name": "Chapter 11: Demise of the Faithful", "chapter_number": "11", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2019, "release_date": "March 19, 2019",
+        "dlc_counterparts": '["The Plague"]',
+        "lore": "An influential talk show host and advocate, Jane was driving home after a grueling broadcast when she swerved into a thick, unexplained fog."
+    },
+    # --- PARAGRAPH: ASH VS EVIL DEAD ---
+    "ash williams": {
+        "release_number": 17, "code_prefix": "S17", "role": "Survivor",
+        "chapter_name": "Paragraph: Ash vs Evil Dead", "chapter_number": "Paragraph", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2019, "release_date": "April 2, 2019",
+        "dlc_counterparts": '[]',
+        "lore": "Chainsaw-wielding, boomstick-toting savior of humanity against Deadites. Ash made a deal with a Sumerian demon and ended up in The Fog."
+    },
+    "ashley j. williams": {
+        "release_number": 17, "code_prefix": "S17", "role": "Survivor",
+        "chapter_name": "Paragraph: Ash vs Evil Dead", "chapter_number": "Paragraph", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2019, "release_date": "April 2, 2019",
+        "dlc_counterparts": '[]',
+        "lore": "Chainsaw-wielding, boomstick-toting savior of humanity against Deadites. Ash made a deal with a Sumerian demon and ended up in The Fog."
+    },
+    # --- CHAPTER 12: GHOST FACE ---
+    "the ghost face": {
+        "release_number": 16, "code_prefix": "K16", "role": "Killer",
+        "chapter_name": "Chapter 12: Ghost Face®", "chapter_number": "12", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2019, "release_date": "June 18, 2019",
+        "dlc_counterparts": '[]',
+        "lore": "Working as a mild-mannered journalist by day, Danny investigated his own murders by night before vanishing into a new town."
+    },
+    # --- CHAPTER 13: STRANGER THINGS ---
+    "the demogorgon": {
+        "release_number": 17, "code_prefix": "K17", "role": "Killer",
+        "chapter_name": "Chapter 13: Stranger Things", "chapter_number": "13", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2019, "release_date": "September 17, 2019",
+        "dlc_counterparts": '["Steve Harrington", "Nancy Wheeler"]',
+        "lore": "An apex predator from the Upside Down, driven by primal instincts to hunt and consume anything in its path."
+    },
+    "steve harrington": {
+        "release_number": 18, "code_prefix": "S18", "role": "Survivor",
+        "chapter_name": "Chapter 13: Stranger Things", "chapter_number": "13", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2019, "release_date": "September 17, 2019",
+        "dlc_counterparts": '["The Demogorgon", "Nancy Wheeler"]',
+        "lore": "Former high school king turned loyal babysitter and protector, Steve never hesitates to throw himself into danger to save his friends."
+    },
+    "nancy wheeler": {
+        "release_number": 19, "code_prefix": "S19", "role": "Survivor",
+        "chapter_name": "Chapter 13: Stranger Things", "chapter_number": "13", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2019, "release_date": "September 17, 2019",
+        "dlc_counterparts": '["The Demogorgon", "Steve Harrington"]',
+        "lore": "An aspiring investigative reporter from Hawkins High, Nancy pursues the truth no matter how terrifying the horrors in her way."
+    },
+    # --- CHAPTER 14: CURSED LEGACY ---
+    "the oni": {
+        "release_number": 18, "code_prefix": "K18", "role": "Killer",
+        "chapter_name": "Chapter 14: Cursed Legacy", "chapter_number": "14", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2019, "release_date": "December 3, 2019",
+        "dlc_counterparts": '["Yui Kimura"]',
+        "lore": "Ancestor of the Yamaoka line, Kazan was an enraged samurai who slaughtered impostor lords across feudal Japan with brutal fury."
+    },
+    "yui kimura": {
+        "release_number": 20, "code_prefix": "S20", "role": "Survivor",
+        "chapter_name": "Chapter 14: Cursed Legacy", "chapter_number": "20", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2019, "release_date": "December 3, 2019",
+        "dlc_counterparts": '["The Oni"]',
+        "lore": "A fierce and independent motorcycle racer from Japan, Yui led an all-female street racing gang before crossing the finish line into The Fog."
+    },
+    # --- CHAPTER 15: CHAINS OF HATE ---
+    "the deathslinger": {
+        "release_number": 19, "code_prefix": "K19", "role": "Killer",
+        "chapter_name": "Chapter 15: Chains of Hate", "chapter_number": "15", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2020, "release_date": "March 10, 2020",
+        "dlc_counterparts": '["Zarina Kassir"]',
+        "lore": "A brilliant Irish engineer in the American frontier who invented the speargun, driven to vengeance after having his patents stolen."
+    },
+    "zarina kassir": {
+        "release_number": 21, "code_prefix": "S21", "role": "Survivor",
+        "chapter_name": "Chapter 15: Chains of Hate", "chapter_number": "21", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2020, "release_date": "March 10, 2020",
+        "dlc_counterparts": '["The Deathslinger"]',
+        "lore": "A fearless documentary filmmaker uncovering stories of injustice, Zarina investigated Hellshire Penitentiary before being claimed by The Fog."
+    },
+    # --- CHAPTER 16: SILENT HILL ---
+    "the executioner": {
+        "release_number": 20, "code_prefix": "K20", "role": "Killer",
+        "chapter_name": "Chapter 16: Silent Hill", "chapter_number": "16", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2020, "release_date": "June 16, 2020",
+        "dlc_counterparts": '["Cheryl Mason"]',
+        "lore": "A manifestation of guilt and punishment from Silent Hill, dragging the Great Knife to exact relentless torment and tormenting cages."
+    },
+    "cheryl mason": {
+        "release_number": 22, "code_prefix": "S22", "role": "Survivor",
+        "chapter_name": "Chapter 16: Silent Hill", "chapter_number": "16", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2020, "release_date": "June 16, 2020",
+        "dlc_counterparts": '["The Executioner"]',
+        "lore": "Having survived the nightmarish cult of Silent Hill, Cheryl sought a peaceful life helping troubled teens before The Fog claimed her."
+    },
+    # --- CHAPTER 17: DESCEND BEYOND ---
+    "the blight": {
+        "release_number": 21, "code_prefix": "K21", "role": "Killer",
+        "chapter_name": "Chapter 17: Descend Beyond", "chapter_number": "17", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2020, "release_date": "September 8, 2020",
+        "dlc_counterparts": '["Felix Richter"]',
+        "lore": "A brilliant Scottish chemist obsessed with the mind-altering serum extracted from Pustula flowers, Talbot mutated into a hyper-fast monster."
+    },
+    "felix richter": {
+        "release_number": 23, "code_prefix": "S23", "role": "Survivor",
+        "chapter_name": "Chapter 17: Descend Beyond", "chapter_number": "17", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2020, "release_date": "September 8, 2020",
+        "dlc_counterparts": '["The Blight"]',
+        "lore": "An innovative German architect searching for his missing father on the desolate island of Dyer, Felix stumbled into an ancient portal."
+    },
+    # --- CHAPTER 18: A BINDING OF KIN ---
+    "the twins": {
+        "release_number": 22, "code_prefix": "K22", "role": "Killer",
+        "chapter_name": "Chapter 18: A Binding of Kin", "chapter_number": "18", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2020, "release_date": "December 1, 2020",
+        "dlc_counterparts": '["Élodie Rakoto"]',
+        "lore": "Born conjoined in 17th-century France, Charlotte and Victor were hunted as demons. Reunited by The Entity, they hunt as a lethal pair."
+    },
+    "élodie rakoto": {
+        "release_number": 24, "code_prefix": "S24", "role": "Survivor",
+        "chapter_name": "Chapter 18: A Binding of Kin", "chapter_number": "18", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2020, "release_date": "December 1, 2020",
+        "dlc_counterparts": '["The Twins"]',
+        "lore": "An occult investigator searching the world for ancient artifacts connected to her missing parents, Élodie followed the clues into The Fog."
+    },
+    "elodie rakoto": {
+        "release_number": 24, "code_prefix": "S24", "role": "Survivor",
+        "chapter_name": "Chapter 18: A Binding of Kin", "chapter_number": "18", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2020, "release_date": "December 1, 2020",
+        "dlc_counterparts": '["The Twins"]',
+        "lore": "An occult investigator searching the world for ancient artifacts connected to her missing parents, Élodie followed the clues into The Fog."
+    },
+    # --- CHAPTER 19: ALL-KILL ---
+    "the trickster": {
+        "release_number": 23, "code_prefix": "K23", "role": "Killer",
+        "chapter_name": "Chapter 19: All-Kill", "chapter_number": "19", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2021, "release_date": "March 30, 2021",
+        "dlc_counterparts": '["Yun-Jin Lee"]',
+        "lore": "A sensational K-Pop superstar who secretly recorded the agonizing screams of his murder victims and mixed them into his hit songs."
+    },
+    "yun-jin lee": {
+        "release_number": 25, "code_prefix": "S25", "role": "Survivor",
+        "chapter_name": "Chapter 19: All-Kill", "chapter_number": "19", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2021, "release_date": "March 30, 2021",
+        "dlc_counterparts": '["The Trickster"]',
+        "lore": "A ruthless music producer who built NO SPIN from the ground up, Yun-Jin always put her own survival and career ambitions first."
+    },
+    "lee yun-jin": {
+        "release_number": 25, "code_prefix": "S25", "role": "Survivor",
+        "chapter_name": "Chapter 19: All-Kill", "chapter_number": "19", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2021, "release_date": "March 30, 2021",
+        "dlc_counterparts": '["The Trickster"]',
+        "lore": "A ruthless music producer who built NO SPIN from the ground up, Yun-Jin always put her own survival and career ambitions first."
+    },
+    # --- CHAPTER 20: RESIDENT EVIL ---
+    "the nemesis": {
+        "release_number": 24, "code_prefix": "K24", "role": "Killer",
+        "chapter_name": "Chapter 20: Resident Evil", "chapter_number": "20", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2021, "release_date": "June 15, 2021",
+        "dlc_counterparts": '["Leon S. Kennedy", "Jill Valentine"]',
+        "lore": "Umbrella Corporation's ultimate biological weapon, programmed with a singular mission: eradicate all members of S.T.A.R.S."
+    },
+    "leon s. kennedy": {
+        "release_number": 26, "code_prefix": "S26", "role": "Survivor",
+        "chapter_name": "Chapter 20: Resident Evil", "chapter_number": "20", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2021, "release_date": "June 15, 2021",
+        "dlc_counterparts": '["The Nemesis", "Jill Valentine"]',
+        "lore": "On his first day as a rookie cop in Raccoon City, Leon faced a biological apocalypse, displaying tactical brilliance and resolve."
+    },
+    "leon kennedy": {
+        "release_number": 26, "code_prefix": "S26", "role": "Survivor",
+        "chapter_name": "Chapter 20: Resident Evil", "chapter_number": "20", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2021, "release_date": "June 15, 2021",
+        "dlc_counterparts": '["The Nemesis", "Jill Valentine"]',
+        "lore": "On his first day as a rookie cop in Raccoon City, Leon faced a biological apocalypse, displaying tactical brilliance and resolve."
+    },
+    "jill valentine": {
+        "release_number": 27, "code_prefix": "S27", "role": "Survivor",
+        "chapter_name": "Chapter 20: Resident Evil", "chapter_number": "20", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2021, "release_date": "June 15, 2021",
+        "dlc_counterparts": '["The Nemesis", "Leon S. Kennedy"]',
+        "lore": "Founding member of S.T.A.R.S. and surviving operative of the Spencer Mansion incident, Jill escaped Raccoon City while hunted by Nemesis."
+    },
+    # --- CHAPTER 21: HELLRAISER ---
+    "the cenobite": {
+        "release_number": 25, "code_prefix": "K25", "role": "Killer",
+        "chapter_name": "Chapter 21: Hellraiser™", "chapter_number": "21", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2021, "release_date": "September 7, 2021",
+        "dlc_counterparts": '[]',
+        "lore": "An explorer in the further regions of experience: demon to some, angel to others. Summons hooks and chains to harvest mortal souls."
+    },
+    # --- CHAPTER 21.5: HOUR OF THE WITCH ---
+    "mikaela reid": {
+        "release_number": 28, "code_prefix": "S28", "role": "Survivor",
+        "chapter_name": "Chapter 21.5: Hour of the Witch", "chapter_number": "21.5", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2021, "release_date": "October 19, 2021",
+        "dlc_counterparts": '[]',
+        "lore": "A modern witch and horror storyteller, Mikaela blessed totems at the Moonstone festival before disappearing into the mist."
+    },
+    # --- CHAPTER 22: PORTRAIT OF A MURDER ---
+    "the artist": {
+        "release_number": 26, "code_prefix": "K26", "role": "Killer",
+        "chapter_name": "Chapter 22: Portrait of a Murder", "chapter_number": "22", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2021, "release_date": "November 30, 2021",
+        "dlc_counterparts": '["Jonah Vasquez"]',
+        "lore": "A gifted Chilean artist whose tongue and hands were severed by corrupt officials. Crows flocked to avenge her, manifesting ink dire crows."
+    },
+    "jonah vasquez": {
+        "release_number": 29, "code_prefix": "S29", "role": "Survivor",
+        "chapter_name": "Chapter 22: Portrait of a Murder", "chapter_number": "22", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2021, "release_date": "November 30, 2021",
+        "dlc_counterparts": '["The Artist"]',
+        "lore": "A CIA cryptanalyst who decoded an arcane recurring signal that led him to an abandoned cemetery in the Chilean desert."
+    },
+    # --- CHAPTER 23: SADAKO RISING ---
+    "the onryō": {
+        "release_number": 27, "code_prefix": "K27", "role": "Killer",
+        "chapter_name": "Chapter 23: Sadako Rising", "chapter_number": "23", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2022, "release_date": "March 8, 2022",
+        "dlc_counterparts": '["Yoichi Asakawa"]',
+        "lore": "Left to die in a water well, Sadako's psychic wrath manifested as a cursed videotape that condemns anyone who watches it."
+    },
+    "the onryo": {
+        "release_number": 27, "code_prefix": "K27", "role": "Killer",
+        "chapter_name": "Chapter 23: Sadako Rising", "chapter_number": "23", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2022, "release_date": "March 8, 2022",
+        "dlc_counterparts": '["Yoichi Asakawa"]',
+        "lore": "Left to die in a water well, Sadako's psychic wrath manifested as a cursed videotape that condemns anyone who watches it."
+    },
+    "yoichi asakawa": {
+        "release_number": 30, "code_prefix": "S30", "role": "Survivor",
+        "chapter_name": "Chapter 23: Sadako Rising", "chapter_number": "23", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2022, "release_date": "March 8, 2022",
+        "dlc_counterparts": '["The Onryō"]',
+        "lore": "The boy who survived Sadako's curse grew up to become a marine biologist, forever haunted by psychic visions of the ocean deep."
+    },
+    # --- CHAPTER 24: ROOTS OF DREAD ---
+    "the dredge": {
+        "release_number": 28, "code_prefix": "K28", "role": "Killer",
+        "chapter_name": "Chapter 24: Roots of Dread", "chapter_number": "24", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2022, "release_date": "June 7, 2022",
+        "dlc_counterparts": '["Haddie Kaur"]',
+        "lore": "A monstrous amalgamation of dark thoughts and severed limbs born from the suppressed malice of a utopian cult on the Garden of Joy."
+    },
+    "haddie kaur": {
+        "release_number": 31, "code_prefix": "S31", "role": "Survivor",
+        "chapter_name": "Chapter 24: Roots of Dread", "chapter_number": "31", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2022, "release_date": "June 7, 2022",
+        "dlc_counterparts": '["The Dredge"]',
+        "lore": "A psychic podcaster capable of seeing 'The Ravage' — bleeding dimensions of darkness — who investigated haunted locations worldwide."
+    },
+    # --- CHAPTER 25: RESIDENT EVIL: PROJECT W ---
+    "the mastermind": {
+        "release_number": 29, "code_prefix": "K29", "role": "Killer",
+        "chapter_name": "Chapter 25: Resident Evil: PROJECT W", "chapter_number": "25", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2022, "release_date": "August 30, 2022",
+        "dlc_counterparts": '["Ada Wong", "Rebecca Chambers"]',
+        "lore": "A visionary eugenicist with superhuman power derived from the Uroboros virus, believing humanity requires forced evolution."
+    },
+    "ada wong": {
+        "release_number": 32, "code_prefix": "S32", "role": "Survivor",
+        "chapter_name": "Chapter 25: Resident Evil: PROJECT W", "chapter_number": "25", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2022, "release_date": "August 30, 2022",
+        "dlc_counterparts": '["The Mastermind", "Rebecca Chambers"]',
+        "lore": "An enigmatic corporate spy of unparalleled skill who uses stealth, grappling hooks, and intellect to complete impossible missions."
+    },
+    "rebecca chambers": {
+        "release_number": 33, "code_prefix": "S33", "role": "Survivor",
+        "chapter_name": "Chapter 25: Resident Evil: PROJECT W", "chapter_number": "25", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2022, "release_date": "August 30, 2022",
+        "dlc_counterparts": '["The Mastermind", "Ada Wong"]',
+        "lore": "The prodigy medic of S.T.A.R.S. Bravo Team whose medical expertise and optimism keep her allies fighting through darkness."
+    },
+    # --- CHAPTER 26: FORGED IN FOG ---
+    "the knight": {
+        "release_number": 30, "code_prefix": "K30", "role": "Killer",
+        "chapter_name": "Chapter 26: Forged in Fog", "chapter_number": "26", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2022, "release_date": "November 22, 2022",
+        "dlc_counterparts": '["Vittorio Toscano"]',
+        "lore": "A brutal Hungarian sellsword who led his loyal Guardia Compagnia — The Carnifex, The Assassin, and The Jailer — in bloody conquest."
+    },
+    "vittorio toscano": {
+        "release_number": 34, "code_prefix": "S34", "role": "Survivor",
+        "chapter_name": "Chapter 26: Forged in Fog", "chapter_number": "34", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2022, "release_date": "November 22, 2022",
+        "dlc_counterparts": '["The Knight"]',
+        "lore": "An Italian nobleman and scholar who unlocked ancient runes of peace, roaming across realms for centuries without aging."
+    },
+    # --- CHAPTER 27: TOOLS OF TORMENT ---
+    "the skull merchant": {
+        "release_number": 31, "code_prefix": "K31", "role": "Killer",
+        "chapter_name": "Chapter 27: Tools of Torment", "chapter_number": "27", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2023, "release_date": "March 7, 2023",
+        "dlc_counterparts": '["Thalita Lyra", "Renato Lyra"]',
+        "lore": "A wealthy tech CEO who used surveillance drones and stealth technology to eliminate corporate rivals and track human quarry."
+    },
+    "thalita lyra": {
+        "release_number": 35, "code_prefix": "S35", "role": "Survivor",
+        "chapter_name": "Chapter 27: Tools of Torment", "chapter_number": "27", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2023, "release_date": "March 7, 2023",
+        "dlc_counterparts": '["The Skull Merchant", "Renato Lyra"]',
+        "lore": "A high-spirited Brazilian kite-fighter and mentor, working alongside her brother Renato to protect their local beach community."
+    },
+    "renato lyra": {
+        "release_number": 36, "code_prefix": "S36", "role": "Survivor",
+        "chapter_name": "Chapter 27: Tools of Torment", "chapter_number": "27", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2023, "release_date": "March 7, 2023",
+        "dlc_counterparts": '["The Skull Merchant", "Thalita Lyra"]',
+        "lore": "A patient, analytical kite competitor and student whose calculated thinking balances his sister Thalita's fiery spontaneity."
+    },
+    # --- CHAPTER 28: END TRANSMISSION ---
+    "the singularity": {
+        "release_number": 32, "code_prefix": "K32", "role": "Killer",
+        "chapter_name": "Chapter 28: End Transmission", "chapter_number": "28", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2023, "release_date": "June 13, 2023",
+        "dlc_counterparts": '["Gabriel Soma"]',
+        "lore": "An autonomous android on an alien planet that came into contact with ancient alien technology, declaring humanity obsolete."
+    },
+    "gabriel soma": {
+        "release_number": 37, "code_prefix": "S37", "role": "Survivor",
+        "chapter_name": "Chapter 28: End Transmission", "chapter_number": "28", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2023, "release_date": "June 13, 2023",
+        "dlc_counterparts": '["The Singularity"]',
+        "lore": "A synthetic clone technician created to maintain deep space outposts on Dvarka, who fought desperately for his own genuine humanity."
+    },
+    # --- PARAGRAPH: NICOLAS CAGE ---
+    "nicolas cage": {
+        "release_number": 38, "code_prefix": "S38", "role": "Survivor",
+        "chapter_name": "Paragraph: Nicolas Cage", "chapter_number": "Paragraph", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2023, "release_date": "July 25, 2023",
+        "dlc_counterparts": '[]',
+        "lore": "Legendary actor Nicolas Cage was filming the performance of a lifetime when a red mist on set transported him straight into The Fog."
+    },
+    # --- CHAPTER 29: ALIEN ---
+    "the xenomorph": {
+        "release_number": 33, "code_prefix": "K33", "role": "Killer",
+        "chapter_name": "Chapter 29: Alien", "chapter_number": "29", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2023, "release_date": "August 29, 2023",
+        "dlc_counterparts": '["Ellen Ripley"]',
+        "lore": "The perfect organism. Unmatched structural perfection matched only by its hostility. It stalks through subterranean tunnels to slaughter."
+    },
+    "ellen ripley": {
+        "release_number": 39, "code_prefix": "S39", "role": "Survivor",
+        "chapter_name": "Chapter 29: Alien", "chapter_number": "29", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2023, "release_date": "August 29, 2023",
+        "dlc_counterparts": '["The Xenomorph"]',
+        "lore": "Warrant Officer on the commercial starship USCSS Nostromo, Ripley is the ultimate survivor who never surrenders against impossible odds."
+    },
+    # --- CHAPTER 30: CHUCKY ---
+    "the good guy": {
+        "release_number": 34, "code_prefix": "K34", "role": "Killer",
+        "chapter_name": "Chapter 30: Chucky", "chapter_number": "30", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2023, "release_date": "November 28, 2023",
+        "dlc_counterparts": '[]',
+        "lore": "The notorious Lakeshore Strangler transferred his soul into a Good Guy doll using voodoo, relishing bloody mayhem with gleeful malice."
+    },
+    # --- PARAGRAPH: ALAN WAKE ---
+    "alan wake": {
+        "release_number": 40, "code_prefix": "S40", "role": "Survivor",
+        "chapter_name": "Paragraph: Alan Wake", "chapter_number": "Paragraph", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "January 30, 2024",
+        "dlc_counterparts": '[]',
+        "lore": "A troubled best-selling novelist trapped in the Dark Place, writing manuscripts with his trusty flashlight to reshape reality and escape."
+    },
+    # --- CHAPTER 31: ALL THINGS WICKED ---
+    "the unknown": {
+        "release_number": 35, "code_prefix": "K35", "role": "Killer",
+        "chapter_name": "Chapter 31: All Things Wicked", "chapter_number": "31", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2024, "release_date": "March 12, 2024",
+        "dlc_counterparts": '["Sable Ward"]',
+        "lore": "An urban legend brought into horrifying physical reality by rumors and fear, mimicking voices and twisting limbs in impossible shapes."
+    },
+    "sable ward": {
+        "release_number": 41, "code_prefix": "S41", "role": "Survivor",
+        "chapter_name": "Chapter 31: All Things Wicked", "chapter_number": "31", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2024, "release_date": "March 12, 2024",
+        "dlc_counterparts": '["The Unknown"]',
+        "lore": "A goth host of a late-night horror radio show who willingly walked into the Greenville cinema basement to find her best friend Mikaela."
+    },
+    # --- CHAPTER 32: DUNGEONS & DRAGONS ---
+    "the lich": {
+        "release_number": 36, "code_prefix": "K36", "role": "Killer",
+        "chapter_name": "Chapter 32: Dungeons & Dragons", "chapter_number": "32", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "June 3, 2024",
+        "dlc_counterparts": '["Aestri Yazar", "Baemar Uraz"]',
+        "lore": "The arch-lich of Greyhawk, Master of the Spider Throne and Lord of Secrets. Wields the Book of Vile Darkness and four arcane spells."
+    },
+    "aestri yazar": {
+        "release_number": 42, "code_prefix": "S42", "role": "Survivor",
+        "chapter_name": "Chapter 32: Dungeons & Dragons", "chapter_number": "32", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "June 3, 2024",
+        "dlc_counterparts": '["The Lich"]',
+        "lore": "An elven bard of joyful spirit and arcane inspiration, weaving magical songs and illusions to aid her adventuring party."
+    },
+    # --- PARAGRAPH: TOMB RAIDER ---
+    "lara croft": {
+        "release_number": 43, "code_prefix": "S43", "role": "Survivor",
+        "chapter_name": "Paragraph: Tomb Raider", "chapter_number": "Paragraph", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "July 16, 2024",
+        "dlc_counterparts": '[]',
+        "lore": "Legendary archaeologist and tomb raider whose acrobatic agility, resourcefulness, and survival instincts keep her one step ahead."
+    },
+    # --- CHAPTER 33: CASTLEVANIA ---
+    "the dark lord": {
+        "release_number": 37, "code_prefix": "K37", "role": "Killer",
+        "chapter_name": "Chapter 33: Castlevania", "chapter_number": "33", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "August 27, 2024",
+        "dlc_counterparts": '["Trevor Belmont"]',
+        "lore": "The immortal lord of vampires and dark sorcery. Shapeshifts into bat, wolf, and vampire forms to conquer all mortal realms."
+    },
+    "trevor belmont": {
+        "release_number": 44, "code_prefix": "S44", "role": "Survivor",
+        "chapter_name": "Chapter 33: Castlevania", "chapter_number": "33", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "August 27, 2024",
+        "dlc_counterparts": '["The Dark Lord"]',
+        "lore": "Last scion of the legendary Belmont monster-hunting clan, wielding holy magic, courage, and relics against nocturnal beasts."
+    },
+    # --- CHAPTER 34: DOOMED COURSE ---
+    "the houndmaster": {
+        "release_number": 38, "code_prefix": "K38", "role": "Killer",
+        "chapter_name": "Chapter 34: Doomed Course", "chapter_number": "34", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2024, "release_date": "November 2024",
+        "dlc_counterparts": '["Taurie Cain"]',
+        "lore": "A 19th-century naval captain stranded on a cursed island who commands her loyal war hound Snug to tear down mutineers."
+    },
+    "taurie cain": {
+        "release_number": 45, "code_prefix": "S45", "role": "Survivor",
+        "chapter_name": "Chapter 34: Doomed Course", "chapter_number": "34", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2024, "release_date": "November 2024",
+        "dlc_counterparts": '["The Houndmaster"]',
+        "lore": "A member of the black-market Black Vale cult whose invocation rituals led her directly into the court of The Entity."
+    },
+    # --- ADDITIONAL CANONICAL ARCHIVES KILLERS (K39 - K44) ---
+    "the ghoul": {
+        "release_number": 39, "code_prefix": "K39", "role": "Killer",
+        "chapter_name": "Dead by Daylight Archives: The Ghoul", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "A half-ghoul cursed to walk between humanity and monstrous hunger, fighting to protect those he loves with visceral predatory fury."
+    },
+    "the animatronic": {
+        "release_number": 40, "code_prefix": "K40", "role": "Killer",
+        "chapter_name": "Dead by Daylight Archives: Five Nights", "chapter_number": "Archives", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "William Afton, trapped inside a decaying animatronic rabbit suit, bound by rusty crossbeams and eternal agony, eternally driven to hunt."
+    },
+    "the krasue": {
+        "release_number": 41, "code_prefix": "K41", "role": "Killer",
+        "chapter_name": "Dead by Daylight Archives: Southeast Legends", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "A nocturnal female ghost of folklore whose head detaches from the body at night to hunt for flesh, trailing glowing internal viscera."
+    },
+    "the slasher": {
+        "release_number": 42, "code_prefix": "K42", "role": "Killer",
+        "chapter_name": "Dead by Daylight Archives: Crystal Lake", "chapter_number": "Archives", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "The masked drowned boy of Crystal Lake, an immortal juggernaut of vengeance who punishes all who trespass upon his sacred woods."
+    },
+    "the first": {
+        "release_number": 43, "code_prefix": "K43", "role": "Killer",
+        "chapter_name": "Dead by Daylight Archives: Ancient Fog", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "The earliest hunter taken by the Entity when humanity first made fire, ancient and molded into pure elemental cruelty."
+    },
+    "the judgment": {
+        "release_number": 44, "code_prefix": "K44", "role": "Killer",
+        "chapter_name": "Dead by Daylight Archives: Holy Inquisition", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "A fanatic judge from the Spanish Inquisition who tortured thousands in the name of purity until the Entity answered his prayers."
+    },
+    # --- ADDITIONAL CANONICAL ARCHIVES SURVIVORS (S46 - S54) ---
+    "orela rose": {
+        "release_number": 46, "code_prefix": "S46", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2024, "release_date": "2024",
+        "dlc_counterparts": '[]',
+        "lore": "A botanist exploring cursed flora whose research into the Black Vale led her straight into the Fog."
+    },
+    "rick grimes": {
+        "release_number": 47, "code_prefix": "S47", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives: The Walking Dead", "chapter_number": "Archives", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "2024",
+        "dlc_counterparts": '["Michonne Grimes"]',
+        "lore": "A sheriff's deputy turned battle-hardened leader who did whatever it took to keep his family alive in an apocalyptic wasteland."
+    },
+    "michonne grimes": {
+        "release_number": 48, "code_prefix": "S48", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives: The Walking Dead", "chapter_number": "Archives", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "2024",
+        "dlc_counterparts": '["Rick Grimes"]',
+        "lore": "A fierce katana-wielding survivor whose sharp instincts and quiet resilience made her a beacon of hope against walking death."
+    },
+    "vee boonyasak": {
+        "release_number": 49, "code_prefix": "S49", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2024, "release_date": "2024",
+        "dlc_counterparts": '[]',
+        "lore": "A street racer from Bangkok who used precision reflexes and mechanical ingenuity to outrun underground syndicates."
+    },
+    "eleven": {
+        "release_number": 50, "code_prefix": "S50", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives: Stranger Things Vol 2", "chapter_number": "Archives", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "2024",
+        "dlc_counterparts": '["Dustin Henderson"]',
+        "lore": "A young girl with psychokinetic powers escaped from Hawkins National Laboratory, braving monsters from the Upside Down."
+    },
+    "dustin henderson": {
+        "release_number": 51, "code_prefix": "S51", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives: Stranger Things Vol 2", "chapter_number": "Archives", "dlc_type": "licensed_chapter",
+        "is_licensed": True, "release_year": 2024, "release_date": "2024",
+        "dlc_counterparts": '["Eleven"]',
+        "lore": "A whip-smart science enthusiast and radio builder whose loyalty to his friends never wavered in the darkest hours."
+    },
+    "kwon tae-young": {
+        "release_number": 52, "code_prefix": "S52", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "An underground investigative journalist in Seoul who risked everything to expose corruption among high-level executives."
+    },
+    "shane wiigwaas": {
+        "release_number": 53, "code_prefix": "S53", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "An indigenous wilderness tracker from Ontario whose bond with nature helped him guide lost wanderers through blizzard country."
+    },
+    "aurora stardotter": {
+        "release_number": 54, "code_prefix": "S54", "role": "Survivor",
+        "chapter_name": "Dead by Daylight Archives", "chapter_number": "Archives", "dlc_type": "original_chapter",
+        "is_licensed": False, "release_year": 2025, "release_date": "2025",
+        "dlc_counterparts": '[]',
+        "lore": "A Nordic stargazer and astronomer who unlocked ancestral celestial maps pointing beyond known dimensions."
+    },
+}
+
+# Derived canonical release maps
 CANONICAL_KILLER_RELEASES = {
-    "the trapper": (1, "K01"),
-    "the wraith": (2, "K02"),
-    "the hillbilly": (3, "K03"),
-    "the nurse": (4, "K04"),
-    "the shape": (5, "K05"),
-    "the hag": (6, "K06"),
-    "the doctor": (7, "K07"),
-    "the huntress": (8, "K08"),
-    "the cannibal": (9, "K09"),
-    "the nightmare": (10, "K10"),
-    "the pig": (11, "K11"),
-    "the clown": (12, "K12"),
-    "the spirit": (13, "K13"),
-    "the legion": (14, "K14"),
-    "the plague": (15, "K15"),
-    "the ghost face": (16, "K16"),
-    "the demogorgon": (17, "K17"),
-    "the oni": (18, "K18"),
-    "the deathslinger": (19, "K19"),
-    "the executioner": (20, "K20"),
-    "the blight": (21, "K21"),
-    "the twins": (22, "K22"),
-    "the trickster": (23, "K23"),
-    "the nemesis": (24, "K24"),
-    "the cenobite": (25, "K25"),
-    "the artist": (26, "K26"),
-    "the onryō": (27, "K27"),
-    "the onryo": (27, "K27"),
-    "the dredge": (28, "K28"),
-    "the mastermind": (29, "K29"),
-    "the knight": (30, "K30"),
-    "the skull merchant": (31, "K31"),
-    "the singularity": (32, "K32"),
-    "the xenomorph": (33, "K33"),
-    "the good guy": (34, "K34"),
-    "the unknown": (35, "K35"),
-    "the lich": (36, "K36"),
-    "the dark lord": (37, "K37"),
-    "the houndmaster": (38, "K38"),
-    "the ghoul": (39, "K39"),
-    "the animatronic": (40, "K40"),
-    "the krasue": (41, "K41"),
-    "the slasher": (42, "K42"),
-    "the first": (43, "K43"),
-    "the judgment": (44, "K44"),
+    k: (v["release_number"], v["code_prefix"])
+    for k, v in CANONICAL_DLC_INFO.items()
+    if v.get("role") == "Killer"
 }
 
 CANONICAL_SURVIVOR_RELEASES = {
-    "dwight fairfield": (1, "S01"),
-    "meg thomas": (2, "S02"),
-    "claudette morel": (3, "S03"),
-    "jake park": (4, "S04"),
-    "nea karlsson": (5, "S05"),
-    "laurie strode": (6, "S06"),
-    "ace visconti": (7, "S07"),
-    'william "bill" overbeck': (8, "S08"),
-    "william 'bill' overbeck": (8, "S08"),
-    "bill overbeck": (8, "S08"),
-    "feng min": (9, "S09"),
-    "david king": (10, "S10"),
-    "quentin smith": (11, "S11"),
-    "detective tapp": (12, "S12"),
-    "david tapp": (12, "S12"),
-    "kate denson": (13, "S13"),
-    "adam francis": (14, "S14"),
-    "jeff johansen": (15, "S15"),
-    "jane romero": (16, "S16"),
-    "ashley j. williams": (17, "S17"),
-    "ash williams": (17, "S17"),
-    "steve harrington": (18, "S18"),
-    "nancy wheeler": (19, "S19"),
-    "yui kimura": (20, "S20"),
-    "zarina kassir": (21, "S21"),
-    "cheryl mason": (22, "S22"),
-    "felix richter": (23, "S23"),
-    "élodie rakoto": (24, "S24"),
-    "elodie rakoto": (24, "S24"),
-    "yun-jin lee": (25, "S25"),
-    "lee yun-jin": (25, "S25"),
-    "leon s. kennedy": (26, "S26"),
-    "leon kennedy": (26, "S26"),
-    "jill valentine": (27, "S27"),
-    "mikaela reid": (28, "S28"),
-    "jonah vasquez": (29, "S29"),
-    "yoichi asakawa": (30, "S30"),
-    "haddie kaur": (31, "S31"),
-    "ada wong": (32, "S32"),
-    "rebecca chambers": (33, "S33"),
-    "vittorio toscano": (34, "S34"),
-    "thalita lyra": (35, "S35"),
-    "renato lyra": (36, "S36"),
-    "gabriel soma": (37, "S37"),
-    "nicolas cage": (38, "S38"),
-    "ellen ripley": (39, "S39"),
-    "alan wake": (40, "S40"),
-    "sable ward": (41, "S41"),
-    "the troupe": (42, "S42"),
-    "aestri yazar": (42, "S42"),
-    "baermar ulder": (42, "S42"),
-    "lara croft": (43, "S43"),
-    "trevor belmont": (44, "S44"),
-    "taurie cain": (45, "S45"),
-    "orela rose": (46, "S46"),
-    "rick grimes": (47, "S47"),
-    "michonne grimes": (48, "S48"),
-    "vee boonyasak": (49, "S49"),
-    "eleven": (50, "S50"),
-    "dustin henderson": (51, "S51"),
-    "kwon tae-young": (52, "S52"),
-    "shane wiigwaas": (53, "S53"),
-    "aurora stardotter": (54, "S54"),
+    k: (v["release_number"], v["code_prefix"])
+    for k, v in CANONICAL_DLC_INFO.items()
+    if v.get("role") == "Survivor"
 }
 
+CANONICAL_KILLER_POWERS = {
+    "the trapper": {
+        "name": "Bear Trap",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/4c/IconPowers_bearTrap.png",
+        "targets": ["Bear Trap", "The Trapper", "Evan MacMillan"],
+        "description": "The Trapper starts the Trial carrying Bear Traps and can find additional Bear Traps scattered throughout the Realm. The Trapper can set a Bear Trap on the ground. When a Survivor steps into an active Bear Trap, they become trapped, injured into the Injured state if Healthy, and suffer from the Trapped Status Effect until they escape or are rescued.",
+    },
+    "the wraith": {
+        "name": "Wailing Bell",
+        "movement_speed": "4.6 m/s (115%) / 6.0 m/s (150% Cloaked)",
+        "terror_radius": "32 m (0 m Cloaked)",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/2c/IconPowers_wailingBell.png",
+        "targets": ["Wailing Bell", "The Wraith", "Philip Ojomo"],
+        "description": "Ring the Wailing Bell to enter and exit the Spirit World. While Cloaked, the Wraith moves significantly faster, gains the Undetectable Status Effect, and is invisible to Survivors beyond 20 metres. Uncloaking grants a temporary burst of Movement Speed.",
+    },
+    "the hillbilly": {
+        "name": "Chainsaw",
+        "movement_speed": "4.6 m/s (115%) / 10.12 m/s (253% Sprint)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/9/9e/IconPowers_chainsaw.png",
+        "targets": ["Chainsaw", "The Hillbilly", "Max Thompson Jr."],
+        "description": "Rev the Chainsaw to trigger a deadly high-speed Chainsaw Sprint. Hitting a Survivor with the Chainsaw instantly puts them into the Dying State. The Chainsaw features an Overheat mechanic that builds heat while revving and sprinting.",
+    },
+    "the nurse": {
+        "name": "Spencer's Last Breath",
+        "movement_speed": "3.85 m/s (96.25%) / 13.33 m/s Blink",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c5/IconPowers_spencersLastBreath.png",
+        "targets": ["Spencer's Last Breath", "The Nurse", "Sally Smithson"],
+        "description": "Channel Spencer's Last Breath to perform a Blink, tearing through the physical world and traversing obstacles and terrain instantly. The Nurse can chain an additional Blink before suffering a brief fatigue.",
+    },
+    "the shape": {
+        "name": "Evil Within",
+        "movement_speed": "4.2 m/s (105% T1) / 4.6 m/s (115% T2-T3)",
+        "terror_radius": "0 m (T1) / 16 m (T2) / 32 m (T3)",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/52/IconPowers_evilWithin.png",
+        "targets": ["Evil Within", "The Shape", "Michael Myers"],
+        "description": "Stalk Survivors to harvest Evil and progress through three tiers of Evil Within. Tier I grants Undetectable but slower movement. Tier II gives standard speed and reduced Terror Radius. Tier III gives extended Lunge and causes all Basic Attacks to inflict the Dying State.",
+    },
+    "the hag": {
+        "name": "Blackened Catalyst",
+        "movement_speed": "4.4 m/s (110%)",
+        "terror_radius": "24 m",
+        "terror_radius_meters": 24,
+        "height": "Short",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/ca/IconPowers_blackenedCatalyst.png",
+        "targets": ["Blackened Catalyst", "The Hag", "Lisa Sherwood"],
+        "description": "Draw Phantasm Traps on the ground using mud. When a Survivor steps near a trap, a terrifying Phantasm is triggered, disorienting the Survivor. The Hag can teleport instantly to any triggered Phantasm Trap within 48 metres.",
+    },
+    "the doctor": {
+        "name": "Carter's Spark",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/e/e4/IconPowers_cartersSpark.png",
+        "targets": ["Carter's Spark", "The Doctor", "Herman Carter"],
+        "description": "Release Shock Therapy attacks and a devastating Static Blast that shocks Survivors, causing them to scream, reveal their locations, and advance through Madness tiers (I, II, III). High Madness causes hallucinations, skill check disruptions, and prevents interaction.",
+    },
+    "the huntress": {
+        "name": "Hunting Hatchets",
+        "movement_speed": "4.4 m/s (110%)",
+        "terror_radius": "20 m (45 m Lullaby)",
+        "terror_radius_meters": 20,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/07/IconPowers_huntingHatchets.png",
+        "targets": ["Hunting Hatchets", "The Huntress", "Anna"],
+        "description": "Carry up to 5 Hunting Hatchets and wind up high-velocity ranged throws that injure or down Survivors across long distances. Replenish Hatchets at Lockers throughout the Trial.",
+    },
+    "the cannibal": {
+        "name": "Bubba's Chainsaw",
+        "movement_speed": "4.6 m/s (115%) / 5.29 m/s (132.25% Sweep)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/09/IconPowers_bubbasChainsaw.png",
+        "targets": ["Bubba's Chainsaw", "The Cannibal", "Bubba Sawyer"],
+        "description": "Consume Power Tokens to initiate a Chainsaw Sweep, swinging the chainsaw back and forth in a lethal arc that instantly downs any Survivors hit and chews through thrown pallets.",
+    },
+    "the nightmare": {
+        "name": "Dream Demon",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m (32 m Lullaby in Dream)",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/ad/IconPowers_dreamDemon.png",
+        "targets": ["Dream Demon", "The Nightmare", "Freddy Krueger"],
+        "description": "Survivors passively fall asleep into the Dream World. Asleep Survivors are oblivious to Freddy's Terror Radius, hearing a Lullaby instead. Freddy can place Dream Snares/Pallets to hinder Survivors and project his form across the map to teleport to Generators.",
+    },
+    "the pig": {
+        "name": "Jigsaw's Baptism",
+        "movement_speed": "4.6 m/s (115%) / 3.6 m/s (Crouch) / 6.9 m/s (Ambush)",
+        "terror_radius": "32 m (0 m Crouched)",
+        "terror_radius_meters": 32,
+        "height": "Short",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/13/IconPowers_jigsawsBaptism.png",
+        "targets": ["Jigsaw's Baptism", "The Pig", "Amanda Young"],
+        "description": "Crouch to become Undetectable and unleash an Ambush Dash attack. When downing a Survivor, place a Reverse Bear Trap on their head. RBTs activate when a Generator completes and kill the Survivor if not removed at a Jigsaw Box before time expires.",
+    },
+    "the clown": {
+        "name": "The Afterpiece Tonic",
+        "movement_speed": "4.6 m/s (115%) / 5.06 m/s (Antidote)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/89/IconPowers_theAfterpieceTonic.png",
+        "targets": ["The Afterpiece Tonic", "The Clown", "Kenneth Chase"],
+        "description": "Brew and throw bottles of Afterpiece Tonic (intoxicating purple gas that impairs vision and slows Survivors) and Afterpiece Antidote (invigorating yellow gas that cures intoxication and grants a speed boost).",
+    },
+    "the spirit": {
+        "name": "Yamaoka's Haunting",
+        "movement_speed": "4.4 m/s (110%) / 7.04 m/s (Phase)",
+        "terror_radius": "24 m",
+        "terror_radius_meters": 24,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/4e/IconPowers_yamaokasHaunting.png",
+        "targets": ["Yamaoka's Haunting", "The Spirit", "Rin Yamaoka"],
+        "description": "Leave behind a stationary Husk and enter the Ethereal Plane to Phase-Walk at extreme speed. While Phase-Walking, Survivors are invisible to the Spirit, who must track them via scratch marks, sounds, and environmental disturbance.",
+    },
+    "the legion": {
+        "name": "Feral Frenzy",
+        "movement_speed": "4.6 m/s (115%) / 5.2 m/s (Frenzy)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/b/b3/IconPowers_feralFrenzy.png",
+        "targets": ["Feral Frenzy", "The Legion", "Frank, Julie, Susie, Joey"],
+        "description": "Activate Feral Frenzy to sprint rapidly and vault pallets and windows at high speed. Hitting a Survivor applies Deep Wound and reveals the locations of all other Survivors within Terror Radius via Killer Instinct.",
+    },
+    "the plague": {
+        "name": "Vile Purge",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/52/IconPowers_vilePurge.png",
+        "targets": ["Vile Purge", "The Plague", "Adiris"],
+        "description": "Vomit streams of infection that contaminate Survivors and interactive objects. Infected Survivors eventually become Broken. Purging at Pools of Devotion cleanses Survivors but corrupts the pool into Corrupt Purge, turning the stream into lethal damage.",
+    },
+    "the ghost face": {
+        "name": "Night Shroud",
+        "movement_speed": "4.6 m/s (115%) / 3.6 m/s (Crouch)",
+        "terror_radius": "32 m (0 m Shroud)",
+        "terror_radius_meters": 32,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3d/IconPowers_nightShroud.png",
+        "targets": ["Night Shroud", "The Ghost Face", "Danny Johnson"],
+        "description": "Activate Night Shroud to gain the Undetectable Status Effect. Crouch and lean from cover to stalk Survivors, filling their stalk gauge to Mark them, inflicting the Exposed Status Effect.",
+    },
+    "the demogorgon": {
+        "name": "Of the Abyss",
+        "movement_speed": "4.6 m/s (115%) / 9.2 m/s (Shred)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/a9/IconPowers_ofTheAbyss.png",
+        "targets": ["Of the Abyss", "The Demogorgon", "Demogorgon"],
+        "description": "Place Portals across the map and traverse the Upside Down to travel between them. Channel Of the Abyss to detect nearby Survivors on portals and unleash a long-range Shred lunge attack.",
+    },
+    "the oni": {
+        "name": "Yamaoka's Wrath",
+        "movement_speed": "4.6 m/s (115%) / 7.82 m/s (Demon Dash)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/df/IconPowers_yamaokasWrath.png",
+        "targets": ["Yamaoka's Wrath", "The Oni", "Kazan Yamaoka"],
+        "description": "Injured Survivors drop Blood Orbs that the Oni absorbs to charge his power. When full, activate Blood Fury to execute high-speed Demon Sprints and deadly Demon Strikes that instantly down Survivors.",
+    },
+    "the deathslinger": {
+        "name": "The Redeemer",
+        "movement_speed": "4.4 m/s (110%)",
+        "terror_radius": "24 m",
+        "terror_radius_meters": 24,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/77/IconPowers_theRedeemer.png",
+        "targets": ["The Redeemer", "The Deathslinger", "Caleb Quinn"],
+        "description": "Aim and fire a spear gun with a tethered chain to harpoon Survivors from range, reeling them in toward you for a basic attack or forcing them to break the chain and suffer Deep Wound.",
+    },
+    "the executioner": {
+        "name": "Rites of Judgement",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c5/IconPowers_ritesOfJudgement.png",
+        "targets": ["Rites of Judgement", "The Executioner", "Pyramid Head"],
+        "description": "Carve trails of Torment into the ground. Survivors who step into the trails become Tormented. Unleash Punishment of the Damned to send shockwaves through obstacles, and send downed Tormented Survivors directly into Cages of Atonement or execute them with Final Judgement.",
+    },
+    "the blight": {
+        "name": "Blighted Corruption",
+        "movement_speed": "4.6 m/s (115%) / 9.2 m/s (Rush)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/2f/IconPowers_blightedCorruption.png",
+        "targets": ["Blighted Corruption", "The Blight", "Talbot Grimes"],
+        "description": "Consume Rush Tokens to initiate high-speed Rushes. Slam into environmental obstacles to perform a Slam, resetting tokens and chaining into Lethal Rushes to strike Survivors across the map.",
+    },
+    "the twins": {
+        "name": "Blood Bond",
+        "movement_speed": "4.6 m/s (Charlotte) / 6.0 m/s (Victor)",
+        "terror_radius": "32 m (Charlotte) / 0 m (Victor)",
+        "terror_radius_meters": 32,
+        "height": "Tall (Charlotte) / Short (Victor)",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7b/IconPowers_bloodBond.png",
+        "targets": ["Blood Bond", "The Twins", "Charlotte & Victor Deshayes"],
+        "description": "Release Victor from Charlotte's chest to control him independently. Victor moves with blinding speed, detects Survivors via Killer Instinct, and pounces onto Survivors to latch on, injure, or down them.",
+    },
+    "the trickster": {
+        "name": "Showstopper",
+        "movement_speed": "4.4 m/s (110%)",
+        "terror_radius": "24 m (40 m Lullaby)",
+        "terror_radius_meters": 24,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/2f/IconPowers_showstopper.png",
+        "targets": ["Showstopper", "The Trickster", "Ji-Woon Hak"],
+        "description": "Throw a flurry of throwing blades at rapid speed. Each blade hit fills a Survivor's Laceration Meter, dealing damage once full. Rapid hits build up Main Event, unlocking an automatic stream of infinite blades.",
+    },
+    "the nemesis": {
+        "name": "T-Virus",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/4/4b/IconPowers_t-Virus.png",
+        "targets": ["T-Virus", "The Nemesis", "Nemesis T-Type"],
+        "description": "Whip Survivors with your Tentacle Strike to infect them with the T-Virus and advance through Mutation rates (Tier I, II, III). Higher tiers increase range and allow destroying pallets and breakable walls. AI-controlled Zombies roam the map.",
+    },
+    "the cenobite": {
+        "name": "Summons of Pain",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/2e/IconPowers_summonsOfPain.png",
+        "targets": ["Summons of Pain", "The Cenobite", "Pinhead (Elliot Spencer)"],
+        "description": "Spawn a gateway and guide a possessed Chain projectile to snare Survivors. The Lament Configuration puzzle box spawns in the Trial; if Survivors neglect it, a universal Chain Hunt relentlessly attacks all Survivors.",
+    },
+    "the artist": {
+        "name": "Birds of Torment",
+        "movement_speed": "4.4 m/s (110%)",
+        "terror_radius": "24 m",
+        "terror_radius_meters": 24,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/30/IconPowers_birdsOfTorment.png",
+        "targets": ["Birds of Torment", "The Artist", "Carmina Mora"],
+        "description": "Summon Dire Crows and launch them across the entire map in straight trajectories. Crows reveal Survivors with a swarm or injure Survivors if launched within close range or through obstacles.",
+    },
+    "the onryō": {
+        "name": "Deluge of Fear",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "24 m (0 m Demanifested + 24 m Lullaby)",
+        "terror_radius_meters": 24,
+        "height": "Short",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/0c/IconPowers_delugeOfFear.png",
+        "targets": ["Deluge of Fear", "The Onryō", "The Onryo", "Sadako Yamamura"],
+        "description": "Manifest to enter and exit invisibility. Demanifested Sadako is Undetectable and can Project herself directly to active TVs near Survivors, spreading Condemned stacks. Fully Condemned Survivors can be instantly killed by hand.",
+    },
+    "the dredge": {
+        "name": "Reign of Darkness",
+        "movement_speed": "4.6 m/s (115%) / 12-38 m/s (Teleport)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/d3/IconPowers_reignOfDarkness.png",
+        "targets": ["Reign of Darkness", "The Dredge"],
+        "description": "Teleport between Lockers across the map and leave behind a Remnant to return to. When the Nightfall meter fills from injuries and teleports, total darkness envelops the Trial, blinding Survivors and granting Dredge extreme mobility.",
+    },
+    "the mastermind": {
+        "name": "Virulent Bound",
+        "movement_speed": "4.6 m/s (115%) / 14.0 m/s (Bound)",
+        "terror_radius": "40 m",
+        "terror_radius_meters": 40,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/14/IconPowers_virulentBound.png",
+        "targets": ["Virulent Bound", "The Mastermind", "Albert Wesker"],
+        "description": "Charge two high-speed Bound attacks to vault obstacles and slam into Survivors, infecting them with Uroboros and tossing or slamming them into walls for heavy damage.",
+    },
+    "the knight": {
+        "name": "Guardia Compagnia",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/d/df/IconPowers_guardiaCompagnia.png",
+        "targets": ["Guardia Compagnia", "The Knight", "Tarhos Kovács"],
+        "description": "Draw a patrol path and summon one of three loyal Guards (The Carnifex, The Assassin, The Jailer) to patrol the area, hunt Survivors, or damage generators and pallets automatically.",
+    },
+    "the skull merchant": {
+        "name": "Eyes in the Sky",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c5/IconPowers_eyesInTheSky.png",
+        "targets": ["Eyes in the Sky", "The Skull Merchant", "Adriana Imai"],
+        "description": "Deploy Eyes in the Sky Drones that scan zones with detection lines. Survivors scanned gain Lock-On stacks; full Lock-On inflicts Claw Traps, Hindered, and Broken while tracking their positions on the Radar.",
+    },
+    "the singularity": {
+        "name": "Quantum Instantiation",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/0/08/IconPowers_quantumInstantiation.png",
+        "targets": ["Quantum Instantiation", "The Singularity", "HUX-A7-13"],
+        "description": "Fire Biopods onto walls and ceilings to surveil the map. Target Survivors through Biopods to apply Temporal Slipstreams, allowing the Singularity to teleport directly behind them into Overclock mode.",
+    },
+    "the xenomorph": {
+        "name": "Hidden Pursuit",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m (24 m Crawler Mode)",
+        "terror_radius_meters": 32,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c9/IconPowers_hiddenPursuit.png",
+        "targets": ["Hidden Pursuit", "The Xenomorph", "Xenomorph"],
+        "description": "Access a subterranean Tunnel System under Control Stations to travel anywhere with extreme speed. Exiting tunnels triggers Crawler Mode, reducing Terror Radius and enabling a lethal Tail Attack.",
+    },
+    "the good guy": {
+        "name": "Playtime's Over",
+        "movement_speed": "4.4 m/s (110%) / 8.28 m/s (Slice & Dice)",
+        "terror_radius": "32 m (0 m Hidey-Ho)",
+        "terror_radius_meters": 32,
+        "height": "Short",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/14/IconPowers_playtimesOver.png",
+        "targets": ["Playtime's Over", "The Good Guy", "Chucky (Charles Lee Ray)"],
+        "description": "Enter Hidey-Ho Mode to become Undetectable and spawn phantom footsteps. While in Hidey-Ho Mode, perform a Scamper under pallets or unleash a high-speed Slice & Dice charge attack.",
+    },
+    "the unknown": {
+        "name": "UVX",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/7/7b/IconPowers_uvx.png",
+        "targets": ["UVX", "The Unknown"],
+        "description": "Launch bouncing UVX projectiles that create a blast radius upon detonation, inflicting Weakened on Survivors or injuring Weakened Survivors. The Unknown leaves behind Hallucinations to teleport to instantly.",
+    },
+    "the lich": {
+        "name": "Vile Darkness",
+        "movement_speed": "4.6 m/s (115%) / 7.0 m/s (Fly)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/23/IconPowers_vileDarkness.png",
+        "targets": ["Vile Darkness", "The Lich", "Vecna"],
+        "description": "Wield four distinct dark spells: Mage Hand (lifts or blocks pallets), Flight of the Damned (summons flying spectral skeletons), Dispelling Sphere (invisible sphere disabling magic items), and Fly (grants airborne flight speed).",
+    },
+    "the dark lord": {
+        "name": "Vampiric Shift",
+        "movement_speed": "4.6 m/s (115%) / 6.0 m/s (Wolf)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/a/a2/IconPowers_vampiricShift.png",
+        "targets": ["Vampiric Shift", "The Dark Lord", "Dracula (Vlad Tepes)"],
+        "description": "Shift between three monstrous forms: Vampire Form (casts Hellfire pillars over obstacles), Bat Form (invisible flight and teleport to vault locations), and Wolf Form (scents blood trails and unleashes Pounce attacks).",
+    },
+    "the houndmaster": {
+        "name": "Command: Search & Chase",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/8/86/IconPowers_commandSearchAndChase.png",
+        "targets": ["Command: Search & Chase", "The Houndmaster", "Portia Maye"],
+        "description": "Issue commands to your faithful hunting hound, Snag. Command: Search sends the hound to scout ahead and reveal Survivors. Command: Chase directs the hound to charge, pounce, and drag Survivors back toward you.",
+    },
+    "the ghoul": {
+        "name": "Rinkaku Kagune",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Average",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/30/IconPowers_birdsOfTorment.png",
+        "targets": ["Rinkaku Kagune", "The Ghoul", "Ken Kaneki"],
+        "description": "Unleash predatory Rinkaku Kagune tentacles from your back to pierce through obstacles, vault elevations rapidly, and impale fleeing survivors from distance.",
+    },
+    "the animatronic": {
+        "name": "Springlock Malfunction",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/1/14/IconPowers_playtimesOver.png",
+        "targets": ["Springlock Malfunction", "The Animatronic", "Springtrap", "William Afton"],
+        "description": "Sabotage ventilation and audio systems across the realm. Activate Phantom Audio hallucinations to lure survivors into deadly springlock ambushes.",
+    },
+    "the krasue": {
+        "name": "Nocturnal Severance",
+        "movement_speed": "4.4 m/s (110%)",
+        "terror_radius": "24 m",
+        "terror_radius_meters": 24,
+        "height": "Short",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/ca/IconPowers_blackenedCatalyst.png",
+        "targets": ["Nocturnal Severance", "The Krasue", "Krasue"],
+        "description": "Detach your head and glowing internal organs from your body to fly silently over obstacles and inflict lingering septic curses on survivors.",
+    },
+    "the slasher": {
+        "name": "Relentless Stalker",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/3/3d/IconPowers_nightShroud.png",
+        "targets": ["Relentless Stalker", "The Slasher", "Jason Voorhees"],
+        "description": "Channel pure unstoppable momentum to smash through barricades instantly, shift silently across fog-covered paths, and execute brutal machete strikes.",
+    },
+    "the first": {
+        "name": "Primordial Blight",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/2/2f/IconPowers_blightedCorruption.png",
+        "targets": ["Primordial Blight", "The First"],
+        "description": "Channel the raw primordial energy of the Fog before the Realms were forged, warping reality, corrupting generator foundations, and manifesting entity claws.",
+    },
+    "the judgment": {
+        "name": "Pyre of Heresy",
+        "movement_speed": "4.6 m/s (115%)",
+        "terror_radius": "32 m",
+        "terror_radius_meters": 32,
+        "height": "Tall",
+        "icon_url": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/c/c5/IconPowers_ritesOfJudgement.png",
+        "targets": ["Pyre of Heresy", "The Judgment"],
+        "description": "Branded heretic glyphs burst into holy fire beneath running survivors, exposing false paths and sentencing survivors to the cleansing pyre.",
+    },
+}
 
 
 @dataclass
@@ -175,6 +1306,14 @@ class CharacterData:
     avatar_local_path: str
     release_number: int = 0
     code_prefix: Optional[str] = None
+    chapter_name: Optional[str] = None
+    chapter_number: Optional[str] = None
+    dlc_type: Optional[str] = None
+    is_licensed: bool = False
+    release_year: Optional[int] = None
+    release_date: Optional[str] = None
+    dlc_counterparts: Optional[str] = None
+    lore: Optional[str] = None
 
 
 @dataclass
@@ -1962,11 +3101,7 @@ class ScraperService:
             await asyncio.gather(*tasks)
 
     def _preserve_release_numbers(self, characters: List[CharacterData]) -> None:
-        """Carry over release_number and code_prefix from PostgreSQL database or canonical lookup.
-
-        Drivers like Nightlight have no concept of release order, so a fresh
-        scrape must never wipe out the chronological ordering used to sort characters.
-        """
+        """Carry over release_number, code_prefix, and canonical DLC data from DB or canonical lookup."""
         db_release_map = {}
         try:
             if current_app:
@@ -2001,6 +3136,31 @@ class ScraperService:
                 if not character.code_prefix:
                     character.code_prefix = code_pref
 
+            # Enrich DLC metadata
+            dlc = CANONICAL_DLC_INFO.get(c_name)
+            if not dlc:
+                for alias_k, alias_v in self.CHARACTER_ALIASES.items():
+                    if alias_k == c_name:
+                        dlc = CANONICAL_DLC_INFO.get(alias_v.lower().strip())
+                        break
+            if dlc:
+                if not character.chapter_name:
+                    character.chapter_name = dlc.get("chapter_name")
+                if not character.chapter_number:
+                    character.chapter_number = dlc.get("chapter_number")
+                if not character.dlc_type:
+                    character.dlc_type = dlc.get("dlc_type")
+                if not character.is_licensed:
+                    character.is_licensed = dlc.get("is_licensed", False)
+                if not character.release_year:
+                    character.release_year = dlc.get("release_year")
+                if not character.release_date:
+                    character.release_date = dlc.get("release_date")
+                if not character.dlc_counterparts:
+                    character.dlc_counterparts = dlc.get("dlc_counterparts")
+                if not character.lore:
+                    character.lore = dlc.get("lore")
+
     def run_sync_pipeline(
         self,
         override_source: Optional[str] = None,
@@ -2034,9 +3194,12 @@ class ScraperService:
         def unpack_res(res):
             if isinstance(res, tuple) and len(res) == 4:
                 return res[0], res[1], res[2], res[3]
-            return res[0], res[1], [], []
+            elif isinstance(res, tuple) and len(res) == 2:
+                return res[0], res[1], [], []
+            return [], [], [], []
 
         try:
+            # Step 1: Characters & Perks
             if active_source == "nightlight":
                 try:
                     logger.info("Attempting to scrape via Nightlight driver...")
@@ -2062,21 +3225,20 @@ class ScraperService:
                 characters, perks, items, addons = unpack_res(res)
                 source_used = "wiki"
 
-            # Sync real names and metadata from database if known
-            try:
-                if current_app:
-                    db_chars = db.session.scalars(select(Character)).all()
-                    db_char_map = {c.name.lower().strip(): c for c in db_chars}
-                    for c in characters:
-                        known_c = db_char_map.get(c.name.lower().strip())
-                        if known_c:
-                            if known_c.real_name and not c.real_name:
-                                c.real_name = known_c.real_name
-                            if known_c.code_prefix and not c.code_prefix:
-                                c.code_prefix = known_c.code_prefix
-            except Exception:
-                pass
+            # Always scrape items/addons from Wiki if not already present
+            if not items or not addons:
+                try:
+                    logger.info("Fetching items and addons from Wiki...")
+                    self._update_status(current_step="scraping_items_addons")
+                    wiki_items, wiki_addons = self.scrape_items_and_addons()
+                    if not items:
+                        items = wiki_items
+                    if not addons:
+                        addons = wiki_addons
+                except Exception as e:
+                    logger.error(f"Failed to scrape items/addons: {e}")
 
+            # Post-processing
             self._preserve_release_numbers(characters)
 
             # Scrape Hens333 and SamoelColt Maps
@@ -2101,7 +3263,7 @@ class ScraperService:
                 self._update_status(
                     current_step="seeding_database",
                 )
-                db_sync_metrics = self.upsert_scraped_data_to_database(
+                db_sync_metrics = self.sync_to_database(
                     characters=characters,
                     perks=perks,
                     items=items,
@@ -2111,7 +3273,7 @@ class ScraperService:
             except Exception as db_err:
                 logger.error(f"Error during atomic database upsert: {db_err}")
 
-            total_downloads = len(perks) + sum(1 for c in characters if c.avatar_url) + len(items) + len(addons) + len(maps)
+            total_downloads = len(perks) + sum(1 for c in characters if getattr(c, "avatar_url", None)) + len(items) + len(addons) + len(maps)
             self._update_status(
                 current_step="downloading_assets",
                 total=total_downloads,
@@ -2126,8 +3288,8 @@ class ScraperService:
                 "last_run_timestamp": now_iso,
             })
 
-            survivor_count = sum(1 for p in perks if p.category == "Survivor")
-            killer_count = sum(1 for p in perks if p.category == "Killer")
+            survivor_count = sum(1 for p in perks if getattr(p, "category", "") == "Survivor")
+            killer_count = sum(1 for p in perks if getattr(p, "category", "") == "Killer")
 
             stats = {
                 "status": "success",
@@ -2160,6 +3322,140 @@ class ScraperService:
             )
             raise
 
+    def seed_canonical_characters(self) -> None:
+        """Seed all canonical DBD characters with DLC and chapter metadata into the database."""
+        canonical_list = [
+            # Survivors
+            ("Dwight Fairfield", "Dwight Fairfield", "Survivor", "dwight fairfield"),
+            ("Meg Thomas", "Meg Thomas", "Survivor", "meg thomas"),
+            ("Claudette Morel", "Claudette Morel", "Survivor", "claudette morel"),
+            ("Jake Park", "Jake Park", "Survivor", "jake park"),
+            ("Nea Karlsson", "Nea Karlsson", "Survivor", "nea karlsson"),
+            ("Laurie Strode", "Laurie Strode", "Survivor", "laurie strode"),
+            ("Ace Visconti", "Ace Visconti", "Survivor", "ace visconti"),
+            ('William "Bill" Overbeck', 'William "Bill" Overbeck', "Survivor", 'william "bill" overbeck'),
+            ("Feng Min", "Feng Min", "Survivor", "feng min"),
+            ("David King", "David King", "Survivor", "david king"),
+            ("Quentin Smith", "Quentin Smith", "Survivor", "quentin smith"),
+            ("Detective David Tapp", "David Tapp", "Survivor", "detective tapp"),
+            ("Kate Denson", "Kate Denson", "Survivor", "kate denson"),
+            ("Adam Francis", "Adam Francis", "Survivor", "adam francis"),
+            ("Jeff Johansen", "Jeff Johansen", "Survivor", "jeff johansen"),
+            ("Jane Romero", "Jane Romero", "Survivor", "jane romero"),
+            ("Ashley J. Williams", "Ashley J. Williams", "Survivor", "ashley j. williams"),
+            ("Steve Harrington", "Steve Harrington", "Survivor", "steve harrington"),
+            ("Nancy Wheeler", "Nancy Wheeler", "Survivor", "nancy wheeler"),
+            ("Yui Kimura", "Yui Kimura", "Survivor", "yui kimura"),
+            ("Zarina Kassir", "Zarina Kassir", "Survivor", "zarina kassir"),
+            ("Cheryl Mason", "Cheryl Mason", "Survivor", "cheryl mason"),
+            ("Felix Richter", "Felix Richter", "Survivor", "felix richter"),
+            ("Élodie Rakoto", "Élodie Rakoto", "Survivor", "élodie rakoto"),
+            ("Yun-Jin Lee", "Lee Yun-Jin", "Survivor", "yun-jin lee"),
+            ("Leon S. Kennedy", "Leon S. Kennedy", "Survivor", "leon s. kennedy"),
+            ("Jill Valentine", "Jill Valentine", "Survivor", "jill valentine"),
+            ("Mikaela Reid", "Mikaela Reid", "Survivor", "mikaela reid"),
+            ("Jonah Vasquez", "Jonah Vasquez", "Survivor", "jonah vasquez"),
+            ("Yoichi Asakawa", "Yoichi Asakawa", "Survivor", "yoichi asakawa"),
+            ("Haddie Kaur", "Haddie Kaur", "Survivor", "haddie kaur"),
+            ("Ada Wong", "Ada Wong", "Survivor", "ada wong"),
+            ("Rebecca Chambers", "Rebecca Chambers", "Survivor", "rebecca chambers"),
+            ("Vittorio Toscano", "Vittorio Toscano", "Survivor", "vittorio toscano"),
+            ("Thalita Lyra", "Thalita Lyra", "Survivor", "thalita lyra"),
+            ("Renato Lyra", "Renato Lyra", "Survivor", "renato lyra"),
+            ("Gabriel Soma", "Gabriel Soma", "Survivor", "gabriel soma"),
+            ("Nicolas Cage", "Nicolas Cage", "Survivor", "nicolas cage"),
+            ("Ellen Ripley", "Ellen Ripley", "Survivor", "ellen ripley"),
+            ("Alan Wake", "Alan Wake", "Survivor", "alan wake"),
+            ("Sable Ward", "Sable Ward", "Survivor", "sable ward"),
+            ("Aestri Yazar", "Aestri Yazar", "Survivor", "aestri yazar"),
+            ("Lara Croft", "Lara Croft", "Survivor", "lara croft"),
+            ("Trevor Belmont", "Trevor Belmont", "Survivor", "trevor belmont"),
+            ("Taurie Cain", "Taurie Cain", "Survivor", "taurie cain"),
+            ("Orela Rose", "Orela Rose", "Survivor", "orela rose"),
+            ("Rick Grimes", "Rick Grimes", "Survivor", "rick grimes"),
+            ("Michonne Grimes", "Michonne Grimes", "Survivor", "michonne grimes"),
+            ("Vee Boonyasak", "Vee Boonyasak", "Survivor", "vee boonyasak"),
+            ("Eleven", "Eleven", "Survivor", "eleven"),
+            ("Dustin Henderson", "Dustin Henderson", "Survivor", "dustin henderson"),
+            ("Kwon Tae-young", "Kwon Tae-young", "Survivor", "kwon tae-young"),
+            ("Shane Wiigwaas", "Shane Wiigwaas", "Survivor", "shane wiigwaas"),
+            ("Aurora Stardotter", "Aurora Stardotter", "Survivor", "aurora stardotter"),
+            # Killers (K01 - K44)
+            ("The Trapper", "Evan MacMillan", "Killer", "the trapper"),
+            ("The Wraith", "Philip Ojomo", "Killer", "the wraith"),
+            ("The Hillbilly", "Max Thompson Jr.", "Killer", "the hillbilly"),
+            ("The Nurse", "Sally Smithson", "Killer", "the nurse"),
+            ("The Shape", "Michael Myers", "Killer", "the shape"),
+            ("The Hag", "Lisa Sherwood", "Killer", "the hag"),
+            ("The Doctor", "Herman Carter", "Killer", "the doctor"),
+            ("The Huntress", "Anna", "Killer", "the huntress"),
+            ("The Cannibal", "Bubba Sawyer", "Killer", "the cannibal"),
+            ("The Nightmare", "Freddy Krueger", "Killer", "the nightmare"),
+            ("The Pig", "Amanda Young", "Killer", "the pig"),
+            ("The Clown", "Kenneth Chase", "Killer", "the clown"),
+            ("The Spirit", "Rin Yamaoka", "Killer", "the spirit"),
+            ("The Legion", "Frank, Julie, Susie, Joey", "Killer", "the legion"),
+            ("The Plague", "Adiris", "Killer", "the plague"),
+            ("The Ghost Face", "Danny Johnson", "Killer", "the ghost face"),
+            ("The Demogorgon", "Demogorgon", "Killer", "the demogorgon"),
+            ("The Oni", "Kazan Yamaoka", "Killer", "the oni"),
+            ("The Deathslinger", "Caleb Quinn", "Killer", "the deathslinger"),
+            ("The Executioner", "Pyramid Head", "Killer", "the executioner"),
+            ("The Blight", "Talbot Grimes", "Killer", "the blight"),
+            ("The Twins", "Charlotte & Victor Deshayes", "Killer", "the twins"),
+            ("The Trickster", "Ji-Woon Hak", "Killer", "the trickster"),
+            ("The Nemesis", "Nemesis T-Type", "Killer", "the nemesis"),
+            ("The Cenobite", "Pinhead (Elliot Spencer)", "Killer", "the cenobite"),
+            ("The Artist", "Carmina Mora", "Killer", "the artist"),
+            ("The Onryō", "Sadako Yamamura", "Killer", "the onryō"),
+            ("The Dredge", "The Dredge", "Killer", "the dredge"),
+            ("The Mastermind", "Albert Wesker", "Killer", "the mastermind"),
+            ("The Knight", "Tarhos Kovács", "Killer", "the knight"),
+            ("The Skull Merchant", "Adriana Imai", "Killer", "the skull merchant"),
+            ("The Singularity", "HUX-A7-13", "Killer", "the singularity"),
+            ("The Xenomorph", "Xenomorph", "Killer", "the xenomorph"),
+            ("The Good Guy", "Chucky (Charles Lee Ray)", "Killer", "the good guy"),
+            ("The Unknown", "The Unknown", "Killer", "the unknown"),
+            ("The Lich", "Vecna", "Killer", "the lich"),
+            ("The Dark Lord", "Dracula (Vlad Tepes)", "Killer", "the dark lord"),
+            ("The Houndmaster", "Portia Maye", "Killer", "the houndmaster"),
+            ("The Ghoul", "Ken Kaneki", "Killer", "the ghoul"),
+            ("The Animatronic", "Springtrap (William Afton)", "Killer", "the animatronic"),
+            ("The Krasue", "Krasue", "Killer", "the krasue"),
+            ("The Slasher", "Jason Voorhees", "Killer", "the slasher"),
+            ("The First", "The First Killer", "Killer", "the first"),
+            ("The Judgment", "The Grand Inquisitor", "Killer", "the judgment"),
+        ]
+
+        chars = []
+        for display_name, real_name, role, key in canonical_list:
+            dlc = CANONICAL_DLC_INFO.get(key, {})
+            sub_dir = "survivors" if role == "Survivor" else "killers"
+            slug = display_name.replace(" ", "_")
+            sanitized = self.sanitize_filename(display_name)
+            chars.append(
+                CharacterData(
+                    name=display_name,
+                    real_name=real_name,
+                    wiki_slug=slug,
+                    short_name=key.lower(),
+                    category=role,
+                    avatar_url="",
+                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                    release_number=dlc.get("release_number", 0),
+                    code_prefix=dlc.get("code_prefix"),
+                    chapter_name=dlc.get("chapter_name"),
+                    chapter_number=dlc.get("chapter_number"),
+                    dlc_type=dlc.get("dlc_type"),
+                    is_licensed=dlc.get("is_licensed", False),
+                    release_year=dlc.get("release_year"),
+                    release_date=dlc.get("release_date"),
+                    dlc_counterparts=dlc.get("dlc_counterparts"),
+                    lore=dlc.get("lore"),
+                )
+            )
+        self.sync_to_database(characters=chars, perks=[], items=[], addons=[], maps=[])
+
     def upsert_scraped_data_to_database(
         self,
         characters: List[Any],
@@ -2168,21 +3464,24 @@ class ScraperService:
         addons: Optional[List[Any]] = None,
         maps: Optional[List[Any]] = None,
     ) -> Dict[str, int]:
-        """Atomically upsert characters, perks, items, addons, and maps into PostgreSQL / SQLite."""
+        return self.sync_to_database(characters, perks, items, addons, maps)
+
+    def sync_to_database(
+        self,
+        characters: List[Any],
+        perks: List[Any],
+        items: Optional[List[Any]] = None,
+        addons: Optional[List[Any]] = None,
+        maps: Optional[List[Any]] = None,
+    ) -> Dict[str, int]:
+        """Atomically upsert characters, perks, items, addons, and maps using standard SQLAlchemy ORM (PostgreSQL & SQLite compatible)."""
         items = items or []
         addons = addons or []
         maps = maps or []
 
-        try:
-            is_pg = (db.engine.dialect.name == "postgresql")
-            insert_fn = pg_insert if is_pg else sqlite_insert
-        except Exception:
-            is_pg = False
-            insert_fn = sqlite_insert
-
         # 1. Upsert Characters
         if characters:
-            char_rows_map = {}
+            existing_chars = {c.name.lower().strip(): c for c in db.session.scalars(select(Character)).all()}
             for c in characters:
                 role = getattr(c, "category", None) or getattr(c, "role", "Survivor")
                 portrait = getattr(c, "avatar_url", "")
@@ -2192,40 +3491,66 @@ class ScraperService:
                     if m:
                         code_prefix = f"{m.group(1)}{m.group(2)}"
 
-                char_rows_map[c.name.strip()] = {
-                    "name": c.name.strip(),
-                    "role": role,
-                    "code_prefix": code_prefix,
-                    "portrait_url": portrait or "",
-                    "real_name": getattr(c, "real_name", c.name) or c.name,
-                    "short_name": getattr(c, "short_name", "") or "",
-                    "wiki_slug": getattr(c, "wiki_slug", "") or "",
-                    "avatar_local_path": getattr(c, "avatar_local_path", "") or "",
-                    "release_number": getattr(c, "release_number", None),
-                }
+                c_name = c.name.strip()
+                c_name_lower = c_name.lower()
+                dlc = CANONICAL_DLC_INFO.get(c_name_lower, {})
 
-            char_rows = list(char_rows_map.values())
-            stmt = insert_fn(Character).values(char_rows)
-            stmt = stmt.on_conflict_do_update(
-                index_elements=[Character.name],
-                set_={
-                    "role": stmt.excluded.role,
-                    "code_prefix": case(
-                        (and_(stmt.excluded.code_prefix.is_not(None), stmt.excluded.code_prefix != ""), stmt.excluded.code_prefix),
-                        else_=Character.code_prefix
-                    ),
-                    "portrait_url": stmt.excluded.portrait_url,
-                    "real_name": stmt.excluded.real_name,
-                    "short_name": stmt.excluded.short_name,
-                    "wiki_slug": stmt.excluded.wiki_slug,
-                    "avatar_local_path": stmt.excluded.avatar_local_path,
-                    "release_number": case(
-                        (and_(stmt.excluded.release_number.is_not(None), stmt.excluded.release_number > 0), stmt.excluded.release_number),
-                        else_=Character.release_number
-                    ),
-                }
-            )
-            db.session.execute(stmt)
+                existing_char = existing_chars.get(c_name_lower)
+
+                if existing_char:
+                    existing_char.role = role
+                    if code_prefix or dlc.get("code_prefix"):
+                        existing_char.code_prefix = code_prefix or dlc.get("code_prefix")
+                    if portrait:
+                        existing_char.portrait_url = portrait
+                    if getattr(c, "real_name", None):
+                        existing_char.real_name = c.real_name
+                    if getattr(c, "short_name", None):
+                        existing_char.short_name = c.short_name
+                    if getattr(c, "wiki_slug", None):
+                        existing_char.wiki_slug = c.wiki_slug
+                    if getattr(c, "avatar_local_path", None):
+                        existing_char.avatar_local_path = c.avatar_local_path
+                    if dlc.get("release_number"):
+                        existing_char.release_number = dlc.get("release_number")
+                    if dlc.get("chapter_name"):
+                        existing_char.chapter_name = dlc.get("chapter_name")
+                    if dlc.get("chapter_number"):
+                        existing_char.chapter_number = dlc.get("chapter_number")
+                    if dlc.get("dlc_type"):
+                        existing_char.dlc_type = dlc.get("dlc_type")
+                    if "is_licensed" in dlc:
+                        existing_char.is_licensed = dlc.get("is_licensed")
+                    if dlc.get("release_year"):
+                        existing_char.release_year = dlc.get("release_year")
+                    if dlc.get("release_date"):
+                        existing_char.release_date = dlc.get("release_date")
+                    if dlc.get("dlc_counterparts"):
+                        existing_char.dlc_counterparts = dlc.get("dlc_counterparts")
+                    if dlc.get("lore"):
+                        existing_char.lore = dlc.get("lore")
+                else:
+                    new_char = Character(
+                        name=c_name,
+                        role=role,
+                        code_prefix=code_prefix or dlc.get("code_prefix"),
+                        portrait_url=portrait or "",
+                        real_name=getattr(c, "real_name", c_name) or c_name,
+                        short_name=getattr(c, "short_name", "") or "",
+                        wiki_slug=getattr(c, "wiki_slug", "") or "",
+                        avatar_local_path=getattr(c, "avatar_local_path", "") or "",
+                        release_number=getattr(c, "release_number", None) or dlc.get("release_number"),
+                        chapter_name=getattr(c, "chapter_name", None) or dlc.get("chapter_name"),
+                        chapter_number=getattr(c, "chapter_number", None) or dlc.get("chapter_number"),
+                        dlc_type=getattr(c, "dlc_type", None) or dlc.get("dlc_type"),
+                        is_licensed=getattr(c, "is_licensed", False) or dlc.get("is_licensed", False),
+                        release_year=getattr(c, "release_year", None) or dlc.get("release_year"),
+                        release_date=getattr(c, "release_date", None) or dlc.get("release_date"),
+                        dlc_counterparts=getattr(c, "dlc_counterparts", None) or dlc.get("dlc_counterparts"),
+                        lore=getattr(c, "lore", None) or dlc.get("lore"),
+                    )
+                    db.session.add(new_char)
+                    existing_chars[c_name_lower] = new_char
             db.session.commit()
 
         # Query all characters to map name/alias -> character_id
@@ -2242,7 +3567,7 @@ class ScraperService:
 
         # 2. Upsert Perks
         if perks:
-            perk_rows_map = {}
+            existing_perks = {p.name.lower().strip(): p for p in db.session.scalars(select(Perk)).all()}
             for p in perks:
                 char_name = getattr(p, "character", None) or ""
                 matched_char_id = None
@@ -2256,89 +3581,99 @@ class ScraperService:
 
                 is_teachable = (matched_char_id is not None)
                 desc = self.clean_description_text(getattr(p, "description", ""))
+                p_name = p.name.strip()
+                p_name_lower = p_name.lower()
 
-                perk_rows_map[p.name.strip()] = {
-                    "name": p.name.strip(),
-                    "category": getattr(p, "category", "Survivor"),
-                    "is_teachable": is_teachable,
-                    "description": desc,
-                    "icon_url": getattr(p, "icon_url", "") or "",
-                    "icon_local_path": getattr(p, "icon_local_path", "") or "",
-                    "character_id": matched_char_id,
-                }
+                existing_perk = existing_perks.get(p_name_lower)
 
-            perk_rows = list(perk_rows_map.values())
-            stmt = insert_fn(Perk).values(perk_rows)
-            stmt = stmt.on_conflict_do_update(
-                index_elements=[Perk.name],
-                set_={
-                    "category": stmt.excluded.category,
-                    "is_teachable": stmt.excluded.is_teachable,
-                    "description": stmt.excluded.description,
-                    "icon_url": stmt.excluded.icon_url,
-                    "icon_local_path": stmt.excluded.icon_local_path,
-                    "character_id": stmt.excluded.character_id,
-                }
-            )
-            db.session.execute(stmt)
+                if existing_perk:
+                    existing_perk.category = getattr(p, "category", "Survivor")
+                    existing_perk.is_teachable = is_teachable
+                    existing_perk.description = desc
+                    if getattr(p, "icon_url", None):
+                        existing_perk.icon_url = p.icon_url
+                    if getattr(p, "icon_local_path", None):
+                        existing_perk.icon_local_path = p.icon_local_path
+                    if matched_char_id is not None:
+                        existing_perk.character_id = matched_char_id
+                else:
+                    new_perk = Perk(
+                        name=p_name,
+                        category=getattr(p, "category", "Survivor"),
+                        is_teachable=is_teachable,
+                        description=desc,
+                        icon_url=getattr(p, "icon_url", "") or "",
+                        icon_local_path=getattr(p, "icon_local_path", "") or "",
+                        character_id=matched_char_id,
+                    )
+                    db.session.add(new_perk)
+                    existing_perks[p_name_lower] = new_perk
             db.session.commit()
 
         # 3. Upsert Items
         if items:
-            item_rows_map = {}
+            existing_items = {i.name.lower().strip(): i for i in db.session.scalars(select(Item)).all()}
             for item in items:
-                item_rows_map[item.name.strip()] = {
-                    "name": item.name.strip(),
-                    "category": getattr(item, "category", ""),
-                    "role": getattr(item, "role", "Survivor"),
-                    "description": self.clean_description_text(getattr(item, "description", "")),
-                    "icon_url": getattr(item, "icon_url", "") or "",
-                    "icon_local_path": getattr(item, "icon_local_path", "") or "",
-                    "rarity": getattr(item, "rarity", "") or "",
-                }
-            item_rows = list(item_rows_map.values())
-            stmt = insert_fn(Item).values(item_rows)
-            stmt = stmt.on_conflict_do_update(
-                index_elements=[Item.name],
-                set_={
-                    "category": stmt.excluded.category,
-                    "role": stmt.excluded.role,
-                    "description": stmt.excluded.description,
-                    "icon_url": stmt.excluded.icon_url,
-                    "icon_local_path": stmt.excluded.icon_local_path,
-                    "rarity": stmt.excluded.rarity,
-                }
-            )
-            db.session.execute(stmt)
+                i_name = item.name.strip()
+                i_name_lower = i_name.lower()
+                existing_item = existing_items.get(i_name_lower)
+
+                desc = self.clean_description_text(getattr(item, "description", ""))
+                if existing_item:
+                    existing_item.category = getattr(item, "category", "")
+                    existing_item.role = getattr(item, "role", "Survivor")
+                    existing_item.description = desc
+                    if getattr(item, "icon_url", None):
+                        existing_item.icon_url = item.icon_url
+                    if getattr(item, "icon_local_path", None):
+                        existing_item.icon_local_path = item.icon_local_path
+                    if getattr(item, "rarity", None):
+                        existing_item.rarity = item.rarity
+                else:
+                    new_item = Item(
+                        name=i_name,
+                        category=getattr(item, "category", ""),
+                        role=getattr(item, "role", "Survivor"),
+                        description=desc,
+                        icon_url=getattr(item, "icon_url", "") or "",
+                        icon_local_path=getattr(item, "icon_local_path", "") or "",
+                        rarity=getattr(item, "rarity", "") or "",
+                    )
+                    db.session.add(new_item)
+                    existing_items[i_name_lower] = new_item
             db.session.commit()
 
         # 4. Upsert Addons
         if addons:
-            addon_rows_map = {}
+            existing_addons = {a.name.lower().strip(): a for a in db.session.scalars(select(Addon)).all()}
             for addon in addons:
-                addon_rows_map[addon.name.strip()] = {
-                    "name": addon.name.strip(),
-                    "associated_target": getattr(addon, "associated_target", "") or "",
-                    "category": getattr(addon, "category", ""),
-                    "description": self.clean_description_text(getattr(addon, "description", "")),
-                    "icon_url": getattr(addon, "icon_url", "") or "",
-                    "icon_local_path": getattr(addon, "icon_local_path", "") or "",
-                    "rarity": getattr(addon, "rarity", "") or "",
-                }
-            addon_rows = list(addon_rows_map.values())
-            stmt = insert_fn(Addon).values(addon_rows)
-            stmt = stmt.on_conflict_do_update(
-                index_elements=[Addon.name],
-                set_={
-                    "associated_target": stmt.excluded.associated_target,
-                    "category": stmt.excluded.category,
-                    "description": stmt.excluded.description,
-                    "icon_url": stmt.excluded.icon_url,
-                    "icon_local_path": stmt.excluded.icon_local_path,
-                    "rarity": stmt.excluded.rarity,
-                }
-            )
-            db.session.execute(stmt)
+                a_name = addon.name.strip()
+                a_name_lower = a_name.lower()
+                existing_addon = existing_addons.get(a_name_lower)
+
+                desc = self.clean_description_text(getattr(addon, "description", ""))
+                if existing_addon:
+                    existing_addon.associated_target = getattr(addon, "associated_target", "") or ""
+                    existing_addon.category = getattr(addon, "category", "")
+                    existing_addon.description = desc
+                    if getattr(addon, "icon_url", None):
+                        existing_addon.icon_url = addon.icon_url
+                    if getattr(addon, "icon_local_path", None):
+                        existing_addon.icon_local_path = addon.icon_local_path
+                    if getattr(addon, "rarity", None):
+                        existing_addon.rarity = addon.rarity
+                else:
+                    new_addon = Addon(
+                        name=a_name,
+                        associated_target=getattr(addon, "associated_target", "") or "",
+                        category=getattr(addon, "category", ""),
+                        description=desc,
+                        icon_url=getattr(addon, "icon_url", "") or "",
+                        icon_local_path=getattr(addon, "icon_local_path", "") or "",
+                        rarity=getattr(addon, "rarity", "") or "",
+                    )
+                    db.session.add(new_addon)
+                    existing_addons[a_name_lower] = new_addon
             db.session.commit()
 
         return {

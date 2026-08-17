@@ -53,8 +53,12 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     with flask_app.app_context():
         from app.services.db_service import DatabaseService
         from app.seeds.user_seeder import seed_default_users
+        from app.services.scraper_service import ScraperService
         DatabaseService().init_db()
         seed_default_users()
+        is_testing = flask_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
+        if not is_testing:
+            ScraperService().seed_canonical_characters()
 
     # Blueprints
     from app.routes.auth import auth_bp

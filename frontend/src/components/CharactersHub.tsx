@@ -1,10 +1,23 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { Shield, Skull, Search, X, Sparkles, Package, User, Flame, Info, ChevronRight, Lock, Check } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { AuthModal } from './AuthModal';
 import { useSidebarState } from '@/hooks/useSidebarState';
+
+function characterToSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s\-/]+/g, '_')
+    .replace(/[^a-z0-9_]/g, '')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
 
 export interface Character {
   id?: number;
@@ -77,6 +90,9 @@ interface CharactersHubProps {
 }
 
 export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || 'en';
   const { isAuthenticated, token, user, bulkUpdateCharacterOwnership, bulkUpdatePerkOwnership } = useAuth();
   const { isCollapsed } = useSidebarState();
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -474,7 +490,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   if (ownershipMode) {
                     if (char.id) handleToggleCharacterOwned(char.id);
                   } else {
-                    handleOpenDetail(char);
+                    router.push(`/${locale}/characters/${characterToSlug(char.name)}`);
                   }
                 }}
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-800 hover:border-red-500/50 shadow-sm hover:shadow-xl dark:shadow-none transition-all duration-300 cursor-pointer"

@@ -15,13 +15,14 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncComplete, onOpenQuests }) => {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const pathname = usePathname();
 
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string>('');
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const toggleLocale = currentLocale === 'en' ? 'es' : 'en';
@@ -48,6 +49,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
       setIsSyncing(false);
     }
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -310,12 +315,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onSyncCompl
 
           {/* Theme Switcher */}
           <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle Theme"
             className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-slate-300" />
+            {isMounted && resolvedTheme === 'dark' ? (
+              <Moon className="h-4 w-4 text-slate-300" />
+            ) : (
+              <Sun className="h-4 w-4 text-amber-500" />
+            )}
           </button>
         </div>
       </div>

@@ -65,19 +65,19 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
 
   return (
     <div
-      className="flex flex-col w-full h-[calc(100vh-8rem)] rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden relative select-none"
+      className="flex flex-col w-full h-[calc(100vh-14rem)] rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 shadow-sm dark:shadow-xl overflow-hidden relative"
       data-testid="mobile-map-layout"
     >
-      {/* ─── Top Bar: Compact Header & Source Controls ──────────────────────── */}
+      {/* ─── Top Compact Header ────────────────────────────────────────────── */}
       <div
-        className="flex items-center justify-between p-3 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md z-10 shrink-0"
-        data-testid="mobile-map-topbar"
+        className="flex items-center justify-between p-3 border-b border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shrink-0 z-10"
+        data-testid="mobile-map-header"
       >
-        <div className="flex items-center gap-2 min-w-0 pr-2">
-          <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] font-extrabold text-amber-400 whitespace-nowrap">
-            {activeMap?.realm || 'Select Realm'}
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-[11px] font-extrabold text-amber-600 dark:text-amber-400 whitespace-nowrap">
+            {activeMap?.realm || 'Select a Map'}
           </span>
-          <h2 className="text-xs sm:text-sm font-black text-white truncate">
+          <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate">
             {activeMap ? activeMap.name : 'Select a Map'}
           </h2>
         </div>
@@ -85,7 +85,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
         <div className="flex items-center gap-1.5 shrink-0">
           {/* Provider Source Segmented Pill */}
           <div
-            className="flex items-center rounded-lg border border-slate-800 bg-slate-950 p-0.5"
+            className="flex items-center rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 p-0.5"
             data-testid="mobile-map-source-toggle"
           >
             <button
@@ -96,7 +96,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               className={`p-1.5 rounded-md text-xs font-bold transition-all cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center ${
                 activeSource === 'hens333'
                   ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
               data-testid="mobile-map-source-hens333"
             >
@@ -110,7 +110,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               className={`p-1.5 rounded-md text-xs font-bold transition-all cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center ${
                 activeSource === 'samoelcolt'
                   ? 'bg-emerald-500 text-slate-950 font-black shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
               data-testid="mobile-map-source-samoelcolt"
             >
@@ -124,7 +124,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               className={`p-1.5 rounded-md text-xs font-bold transition-all cursor-pointer min-h-[32px] min-w-[32px] flex items-center justify-center ${
                 activeSource === 'all'
                   ? 'bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 font-black shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
               data-testid="mobile-map-source-all"
             >
@@ -138,7 +138,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               type="button"
               onClick={onLaunchFullscreen}
               aria-label="Launch Fullscreen"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer min-h-[32px] min-w-[32px]"
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer min-h-[32px] min-w-[32px]"
               data-testid="mobile-map-fullscreen-btn"
               title="Launch Fullscreen Engine"
             >
@@ -157,7 +157,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
       />
 
       {/* ─── Center Viewport: High-Res MapCanvas & Floating MapControls ─────── */}
-      <div className="relative flex-1 w-full min-h-0 overflow-hidden flex items-center justify-center bg-slate-950">
+      <div className="relative flex-1 w-full min-h-0 overflow-hidden flex items-center justify-center bg-slate-100 dark:bg-slate-950">
         <MapCanvas
           imageUrl={getMapImageSrc(activeMap)}
           mapName={activeMap?.name}
@@ -194,22 +194,22 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
       {/* ─── Bottom Sheet Collapsed Dock Bar ─────────────────────────────────── */}
       {!isBottomSheetOpen && (
         <div
-          className="absolute bottom-0 inset-x-0 z-30 flex items-center justify-between p-3 bg-slate-900/95 border-t border-slate-800 backdrop-blur-xl shadow-2xl rounded-t-2xl"
+          className="absolute bottom-0 inset-x-0 z-30 flex items-center justify-between p-3 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 backdrop-blur-xl shadow-2xl rounded-t-2xl"
           data-testid="mobile-bottom-sheet"
         >
           <button
             type="button"
             onClick={() => setIsBottomSheetOpen(true)}
-            className="flex-1 flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 text-xs font-extrabold transition-all cursor-pointer min-h-[44px]"
+            className="flex-1 flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800/80 dark:hover:bg-slate-800 dark:text-slate-200 text-xs font-extrabold transition-all cursor-pointer min-h-[44px] shadow-sm"
             data-testid="mobile-bottom-sheet-toggle"
           >
             <div className="flex items-center gap-2 truncate">
-              <Compass className="h-4 w-4 text-amber-400 shrink-0" />
+              <Compass className="h-4 w-4 text-amber-500 dark:text-amber-400 shrink-0" />
               <span className="truncate">
                 {activeMap ? activeMap.name : 'Browse All Maps & Realms'}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 shrink-0 text-slate-400">
+            <div className="flex items-center gap-1.5 shrink-0 text-slate-400 dark:text-slate-400">
               <Search className="h-3.5 w-3.5" />
               <ChevronUp className="h-4 w-4" />
             </div>
@@ -223,7 +223,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
           {/* Backdrop overlay */}
           <div
             onClick={() => setIsBottomSheetOpen(false)}
-            className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-40 cursor-pointer"
+            className="absolute inset-0 bg-slate-950/70 dark:bg-slate-950/80 backdrop-blur-sm z-40 cursor-pointer"
             data-testid="mobile-bottom-sheet-backdrop"
           />
 
@@ -232,7 +232,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
             role="dialog"
             aria-modal="true"
             aria-label="Map Directory and Legends"
-            className="absolute bottom-0 inset-x-0 z-50 h-[80vh] max-h-[85vh] flex flex-col bg-slate-900 border-t border-slate-700/80 rounded-t-3xl shadow-2xl backdrop-blur-2xl"
+            className="absolute bottom-0 inset-x-0 z-50 h-[80vh] max-h-[85vh] flex flex-col bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700/80 rounded-t-3xl shadow-2xl backdrop-blur-2xl"
             data-testid="mobile-bottom-sheet-content"
           >
             {/* Drag Handle */}
@@ -241,19 +241,19 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               className="w-full py-2.5 flex justify-center cursor-pointer select-none shrink-0"
               data-testid="mobile-bottom-sheet-handle"
             >
-              <div className="w-12 h-1.5 rounded-full bg-slate-600 hover:bg-slate-500 transition-colors" />
+              <div className="w-12 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 hover:bg-slate-400 dark:hover:bg-slate-500 transition-colors" />
             </div>
 
             {/* Sheet Header: Search Input & Close Button */}
-            <div className="px-4 pb-3 flex items-center gap-2 border-b border-slate-800 shrink-0">
+            <div className="px-4 pb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 shrink-0">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
                 <input
                   type="text"
                   placeholder="Search map or realm..."
                   value={search}
                   onChange={(e) => onSearchChange(e.target.value)}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-9 pr-3 py-2 text-xs font-semibold text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[38px]"
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 pl-9 pr-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[38px] shadow-inner"
                   data-testid="mobile-map-search-input"
                 />
               </div>
@@ -261,7 +261,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                 type="button"
                 onClick={() => setIsBottomSheetOpen(false)}
                 aria-label="Close Bottom Sheet"
-                className="p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition-colors min-h-[38px] min-w-[38px] flex items-center justify-center cursor-pointer"
+                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-300 dark:hover:text-white transition-colors min-h-[38px] min-w-[38px] flex items-center justify-center cursor-pointer shadow-sm"
                 data-testid="mobile-bottom-sheet-close"
               >
                 <X className="h-4 w-4" />
@@ -269,14 +269,14 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
             </div>
 
             {/* Realm Selection Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto p-3 border-b border-slate-800 scrollbar-thin shrink-0">
+            <div className="flex items-center gap-1.5 overflow-x-auto p-3 border-b border-slate-200 dark:border-slate-800 scrollbar-thin shrink-0">
               <button
                 type="button"
                 onClick={() => onSelectRealm('all')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] ${
                   selectedRealm === 'all'
                     ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                    : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'
                 }`}
                 data-testid="mobile-map-realm-pill-all"
               >
@@ -293,7 +293,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                     className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] ${
                       selectedRealm === r
                         ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                        : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'
                     }`}
                     data-testid={`mobile-map-realm-pill-${slug}`}
                   >
@@ -307,7 +307,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
             <div className="flex-1 overflow-y-auto p-4 space-y-6 min-h-0">
               {/* Map Directory Showcase */}
               <div>
-                <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3">
+                <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
                   Map Directory
                 </h3>
                 <MapDirectoryList
@@ -327,7 +327,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
 
               {/* Map Legend Drawer */}
               <div>
-                <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3">
+                <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
                   Sector Callouts & Clock System
                 </h3>
                 <MapLegendDrawer

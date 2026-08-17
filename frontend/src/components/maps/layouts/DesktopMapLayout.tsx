@@ -89,34 +89,33 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
     >
       {/* ─── Left Sidebar: Search, Source, Realms & Map Directory ───────────── */}
       <aside
-        className="w-full lg:w-80 xl:w-96 shrink-0 h-[calc(100vh-14rem)] flex flex-col rounded-2xl border border-slate-800 bg-slate-900/90 shadow-xl overflow-hidden"
+        className="w-full lg:w-80 xl:w-96 shrink-0 h-[calc(100vh-14rem)] flex flex-col rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm dark:shadow-xl overflow-hidden"
         data-testid="desktop-map-sidebar"
       >
         {/* Top: Search Input & Provider Source Segmented Toggle */}
-        <div className="p-3.5 border-b border-slate-800/80 space-y-3 shrink-0">
+        <div className="p-3.5 border-b border-slate-200 dark:border-slate-800/80 space-y-3 shrink-0">
           <div className="relative w-full">
-            <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Search map or realm..."
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-2 text-xs font-semibold text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[40px]"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 pl-10 pr-4 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[40px] shadow-inner"
               data-testid="desktop-map-search-input"
             />
           </div>
 
           {/* Provider Source Segmented Control */}
-          <div className="flex w-full rounded-xl border border-slate-800 bg-slate-950 p-1">
+          <div className="flex w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 p-1">
             <button
               type="button"
               onClick={() => onSourceChange('hens333')}
               aria-pressed={activeSource === 'hens333'}
-              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-extrabold transition-all cursor-pointer min-h-[34px] ${
-                activeSource === 'hens333'
+              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-extrabold transition-all cursor-pointer min-h-[34px] ${activeSource === 'hens333'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
               data-testid="desktop-map-source-hens333"
             >
               <Clock className="h-3 w-3" />
@@ -126,11 +125,10 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
               type="button"
               onClick={() => onSourceChange('samoelcolt')}
               aria-pressed={activeSource === 'samoelcolt'}
-              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-extrabold transition-all cursor-pointer min-h-[34px] ${
-                activeSource === 'samoelcolt'
+              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-extrabold transition-all cursor-pointer min-h-[34px] ${activeSource === 'samoelcolt'
                   ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
               data-testid="desktop-map-source-samoelcolt"
             >
               <Layers className="h-3 w-3" />
@@ -140,11 +138,10 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
               type="button"
               onClick={() => onSourceChange('all')}
               aria-pressed={activeSource === 'all'}
-              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-extrabold transition-all cursor-pointer min-h-[34px] ${
-                activeSource === 'all'
+              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-extrabold transition-all cursor-pointer min-h-[34px] ${activeSource === 'all'
                   ? 'bg-gradient-to-r from-amber-500 to-emerald-500 text-slate-950 shadow-md'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
               data-testid="desktop-map-source-all"
             >
               <Sparkles className="h-3 w-3" />
@@ -154,15 +151,14 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
         </div>
 
         {/* Middle: Realm Selection Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto p-3 border-b border-slate-800/80 scrollbar-thin shrink-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto p-3 border-b border-slate-200 dark:border-slate-800/80 scrollbar-thin shrink-0">
           <button
             type="button"
             onClick={() => onSelectRealm('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] ${
-              selectedRealm === 'all'
+            className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] ${selectedRealm === 'all'
                 ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
-            }`}
+                : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'
+              }`}
             data-testid="desktop-map-realm-pill-all"
           >
             All ({maps.length})
@@ -175,11 +171,10 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                 key={r}
                 type="button"
                 onClick={() => onSelectRealm(r)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] ${
-                  selectedRealm === r
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] ${selectedRealm === r
                     ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
-                }`}
+                    : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'
+                  }`}
                 data-testid={`desktop-map-realm-pill-${slug}`}
               >
                 {r} ({count})
@@ -205,28 +200,27 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
 
       {/* ─── Right Center Viewport: Header, Variants, Canvas, Controls & Legend ── */}
       <main
-        className="flex-1 flex flex-col min-w-0 h-[calc(100vh-14rem)] rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden relative"
+        className="flex-1 flex flex-col min-w-0 h-[calc(100vh-14rem)] rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 shadow-sm dark:shadow-xl overflow-hidden relative"
         data-testid="desktop-map-viewport"
       >
         {/* Viewport Header */}
         <div
-          className="flex items-center justify-between p-3.5 md:p-4 border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-md shrink-0"
+          className="flex items-center justify-between p-3.5 md:p-4 border-b border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/70 backdrop-blur-md shrink-0"
           data-testid="desktop-map-header"
         >
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-3 py-1 text-xs font-extrabold text-amber-400 whitespace-nowrap">
+            <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-3 py-1 text-xs font-extrabold text-amber-600 dark:text-amber-400 whitespace-nowrap">
               {activeMap?.realm || 'Select a Map'}
             </span>
             <span
-              className={`hidden sm:inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase whitespace-nowrap ${
-                activeMap?.source === 'samoelcolt'
-                  ? 'border-emerald-500/50 bg-emerald-950/90 text-emerald-300'
-                  : 'border-amber-500/50 bg-amber-950/90 text-amber-300'
-              }`}
+              className={`hidden sm:inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase whitespace-nowrap ${activeMap?.source === 'samoelcolt'
+                  ? 'border-emerald-500/50 bg-emerald-500/10 dark:bg-emerald-950/90 text-emerald-700 dark:text-emerald-300'
+                  : 'border-amber-500/50 bg-amber-500/10 dark:bg-amber-950/90 text-amber-700 dark:text-amber-300'
+                }`}
             >
               {activeMap?.source === 'samoelcolt' ? 'SamoelColt Isometric' : 'Hens333 12-Clock'}
             </span>
-            <h2 className="text-base md:text-lg font-black text-white truncate">
+            <h2 className="text-base md:text-lg font-black text-slate-900 dark:text-white truncate">
               {activeMap ? activeMap.name : 'No Map Selected'}
             </h2>
           </div>
@@ -237,7 +231,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                 type="button"
                 onClick={onLaunchFullscreen}
                 aria-label="Launch 2D Interactive Engine"
-                className="flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer min-h-[36px]"
+                className="flex items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer min-h-[36px]"
                 data-testid="desktop-map-fullscreen-btn"
                 title="Launch 2D Interactive Engine"
               >
@@ -250,7 +244,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                 type="button"
                 onClick={() => onPopoutImage(getMapImageSrc(activeMap), activeMap.name)}
                 aria-label="Popout Map Image in New Window"
-                className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-bold text-slate-200 hover:border-amber-500 hover:text-amber-400 transition-all cursor-pointer min-h-[36px]"
+                className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-all cursor-pointer min-h-[36px]"
                 data-testid="desktop-map-popout-btn"
                 title="Popout Map Image in New Window"
               >
@@ -270,7 +264,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
         />
 
         {/* High-Resolution Map Canvas & Floating Controls */}
-        <div className="relative flex-1 w-full min-h-0 overflow-hidden flex items-center justify-center bg-slate-950">
+        <div className="relative flex-1 w-full min-h-0 overflow-hidden flex items-center justify-center bg-slate-100 dark:bg-slate-950">
           <MapCanvas
             imageUrl={getMapImageSrc(activeMap)}
             mapName={activeMap?.name}
@@ -310,7 +304,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
           isOpen={isLegendOpen}
           onToggle={() => setIsLegendOpen((prev) => !prev)}
           collapsible={true}
-          className="border-t border-slate-800/80 rounded-none rounded-b-2xl shrink-0"
+          className="border-t border-slate-200/90 dark:border-slate-800/80 rounded-none rounded-b-2xl shrink-0"
         />
       </main>
     </div>

@@ -34,24 +34,24 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 px-6 py-14 text-center">
-      <h3 className="text-base font-extrabold text-slate-100">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-300 bg-white/60 dark:border-slate-800 dark:bg-slate-900/30 px-6 py-14 text-center shadow-sm">
+      <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100">
         Ready for {pageCount ?? '…'} pages on {killer}?
       </h3>
-      <p className="max-w-md text-xs leading-relaxed text-slate-500">
+      <p className="max-w-md text-xs leading-relaxed text-slate-500 dark:text-slate-400">
         You start on page 1. A win moves you to the next page, a loss sends you back to the beginning. The page layout
         is frozen for the whole attempt.
       </p>
       <div className="flex flex-wrap justify-center gap-5 font-mono text-[11px] text-slate-500">
-        <span>perks <b className="text-slate-200 tabular-nums">{poolSize ?? '—'}</b></span>
-        <span>pages <b className="text-slate-200 tabular-nums">{pageCount ?? '—'}</b></span>
-        <span>last page <b className="text-slate-200 tabular-nums">{lastPageSize ?? '—'}</b> perks</span>
+        <span>perks <b className="text-slate-800 dark:text-slate-200 tabular-nums">{poolSize ?? '—'}</b></span>
+        <span>pages <b className="text-slate-800 dark:text-slate-200 tabular-nums">{pageCount ?? '—'}</b></span>
+        <span>last page <b className="text-slate-800 dark:text-slate-200 tabular-nums">{lastPageSize ?? '—'}</b> perks</span>
       </div>
       <button
         type="button"
         onClick={onStart}
         disabled={busy}
-        className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2.5 text-xs font-extrabold text-white disabled:opacity-60"
+        className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2.5 text-xs font-extrabold text-white disabled:opacity-60 shadow-sm cursor-pointer"
       >
         {busy ? 'Starting…' : 'Start streak'}
       </button>

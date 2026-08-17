@@ -232,7 +232,7 @@ export default function ChallengePage() {
 
   if (!dict) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
         Loading...
       </div>
     );
@@ -245,7 +245,7 @@ export default function ChallengePage() {
   const characterAvatarPath = activeChar?.avatar_local_path;
 
   return (
-    <div className="h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row dbd-fog-overlay selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay selection:bg-amber-500 selection:text-slate-950 transition-colors duration-300">
       {/* Sidebar Navigation */}
       <Sidebar
         currentLocale={locale}

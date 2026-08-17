@@ -66,8 +66,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     imageAlignment === 'left'
       ? 'justify-start'
       : imageAlignment === 'right'
-      ? 'justify-end'
-      : 'justify-center';
+        ? 'justify-end'
+        : 'justify-center';
 
   return (
     <div
@@ -81,9 +81,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       onTouchEnd={onTouchEnd}
       onTouchCancel={onTouchCancel}
       style={{ touchAction: 'none' }}
-      className={`relative min-h-[440px] md:min-h-[520px] max-h-[85vh] h-[55vh] md:h-[65vh] w-full overflow-hidden rounded-2xl bg-slate-950 p-4 border border-slate-800/80 flex items-center justify-center select-none ${
-        isDragging ? 'cursor-grabbing' : 'cursor-grab'
-      } ${className}`}
+      className={`relative min-h-[440px] md:min-h-[520px] max-h-[85vh] h-[55vh] md:h-[65vh] w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-950 p-4 border border-slate-200/90 dark:border-slate-800/80 flex items-center justify-center select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+        } ${className}`}
       data-testid="map-canvas-container"
     >
       {/* Hardware-accelerated transformed container */}
@@ -118,10 +117,10 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
               <Compass className="h-14 w-14 text-slate-600 animate-spin" style={{ animationDuration: '20s' }} />
             )}
             <div className="space-y-1">
-              <p className="text-sm font-bold text-slate-300">
+              <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
                 {imageError ? 'Unable to load diagram' : 'No diagram available'}
               </p>
-              <p className="text-xs text-slate-500 max-w-xs">
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs">
                 {imageError
                   ? `Failed to load diagram for ${mapName}. Please check network connection.`
                   : `Diagram for ${mapName} is not yet available.`}
@@ -134,7 +133,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       {/* Pan & Zoom Hint Overlay */}
       {showPanHint && (
         <div
-          className="absolute top-3 left-3 hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-800/80 bg-slate-950/70 px-2.5 py-1 text-[10px] font-mono text-slate-400 backdrop-blur-md pointer-events-none z-10"
+          className="absolute top-3 left-3 hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-200/80 dark:border-slate-800/80 bg-white/75 dark:bg-slate-950/70 px-2.5 py-1 text-[10px] font-mono text-slate-500 dark:text-slate-400 backdrop-blur-md pointer-events-none z-10"
           data-testid="map-canvas-pan-hint"
         >
           <Move className="h-3 w-3 text-amber-500" />

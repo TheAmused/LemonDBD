@@ -1048,12 +1048,12 @@ export function VoiceCommandBanner({
           </div>
 
           {/* Real-time speech transcription & status text */}
-          <div className="flex flex-col min-w-[200px] sm:min-w-[320px]">
+          <div className="flex flex-col min-w-[200px] sm:min-w-[340px]">
             {voiceStatus === 'listening' && (
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" />
                 <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono truncate">
-                  {liveTranscript ? `“${liveTranscript}”` : 'Listening to voice...'}
+                  {liveTranscript ? `“${liveTranscript}”` : 'Listening... Speak DBD map name'}
                 </span>
               </div>
             )}
@@ -1062,24 +1062,44 @@ export function VoiceCommandBanner({
               <div className="flex items-center gap-2">
                 <RefreshCw className="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" />
                 <span className="text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
-                  {t.statusProcessing || 'Processing audio...'}
+                  {liveTranscript && liveTranscript !== 'Analyzing speech audio...'
+                    ? `Transcribing: “${liveTranscript}”`
+                    : 'Transcribing voice audio...'}
                 </span>
               </div>
             )}
 
             {voiceStatus === 'matched' && matchedResult && (
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-                <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 font-mono truncate">
-                  {matchedResult.matchedMapName || matchedResult.action || 'Matched'}
-                </span>
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 font-mono truncate">
+                    {matchedResult.matchedMapName
+                      ? `Matched: ${matchedResult.matchedMapName}`
+                      : matchedResult.action === 'switch_source'
+                      ? `Switched: ${matchedResult.actionPayload}`
+                      : `Action: ${matchedResult.action}`}
+                  </span>
+                </div>
+                {liveTranscript && (
+                  <span className="text-[10px] text-emerald-600/90 dark:text-emerald-400/90 font-mono">
+                    Heard: &ldquo;{liveTranscript}&rdquo; {matchedResult.confidence ? `(${Math.round(matchedResult.confidence * 100)}% match)` : ''}
+                  </span>
+                )}
               </div>
             )}
 
             {voiceStatus === 'nomatch' && (
-              <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
-                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">No map match. Try saying “Dead Dawg” or “RPD East”.</span>
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">
+                    {liveTranscript ? `Heard: “${liveTranscript}” (No map match)` : 'No map match'}
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 font-mono">
+                  Try saying “Dead Dawg”, “RPD East”, or “Coal Tower 2”
+                </span>
               </div>
             )}
 

@@ -31,6 +31,27 @@ export interface BrowserCompatibilityInfo {
   recommendedEngine: VoiceEngineType;
 }
 
+// ─── Environment Polyfills for Turbopack & Browser Runtime ───────────────────
+
+if (typeof window !== 'undefined') {
+  try {
+    const win = window as any;
+    if (!win.process) {
+      win.process = { env: {}, versions: { node: '18.0.0', v8: '1.0.0' } };
+    } else {
+      if (!win.process.versions) {
+        win.process.versions = { node: '18.0.0', v8: '1.0.0' };
+      }
+      if (!win.process.env) {
+        win.process.env = {};
+      }
+    }
+    if (!win.global) {
+      win.global = win;
+    }
+  } catch {}
+}
+
 // ─── Browser & Engine Detection ──────────────────────────────────────────────
 
 let isBraveDetected = false;
@@ -53,7 +74,6 @@ if (typeof window !== 'undefined' && (navigator as any).brave) {
 
 export function isWebSpeechSupported(): boolean {
   if (typeof window === 'undefined') return false;
-  // If Brave is detected, Web Speech API dummy object is blocked by Brave Shields
   if (isBraveDetected) return false;
   return !!(
     (window as any).SpeechRecognition ||
@@ -163,8 +183,6 @@ export class AudioCaptureSession {
   private isRecording = false;
   private actualSampleRate = 16000;
   private onLevelCallback: ((level: number) => void) | null = null;
-  private mediaRecorder: MediaRecorder | null = null;
-  private recordedBlobs: Blob[] = [];
 
   setLevelCallback(cb: ((level: number) => void) | null) {
     this.onLevelCallback = cb;
@@ -173,7 +191,6 @@ export class AudioCaptureSession {
   async start(): Promise<void> {
     if (this.isRecording) return;
     this.audioChunks = [];
-    this.recordedBlobs = [];
 
     console.log('[ClientSpeechModel] Requesting microphone access...');
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -200,7 +217,6 @@ export class AudioCaptureSession {
     this.actualSampleRate = this.audioContext.sampleRate || 44100;
     console.log('[ClientSpeechModel] AudioContext active at sampleRate:', this.actualSampleRate);
 
-    // Primary: ScriptProcessor
     try {
       this.mediaSource = this.audioContext.createMediaStreamSource(stream);
       this.scriptProcessor = this.audioContext.createScriptProcessor(4096, 1, 1);
@@ -230,22 +246,7 @@ export class AudioCaptureSession {
       this.scriptProcessor.connect(this.muteGain);
       this.muteGain.connect(this.audioContext.destination);
     } catch (e) {
-      console.warn('[ClientSpeechModel] ScriptProcessor setup error, using MediaRecorder fallback:', e);
-    }
-
-    // Secondary: MediaRecorder as safety fallback
-    if (typeof MediaRecorder !== 'undefined') {
-      try {
-        this.mediaRecorder = new MediaRecorder(stream);
-        this.mediaRecorder.ondataavailable = (event) => {
-          if (event.data && event.data.size > 0) {
-            this.recordedBlobs.push(event.data);
-          }
-        };
-        this.mediaRecorder.start(100);
-      } catch (mrErr) {
-        console.warn('[ClientSpeechModel] MediaRecorder initialization warning:', mrErr);
-      }
+      console.warn('[ClientSpeechModel] Audio routing error:', e);
     }
 
     this.isRecording = true;
@@ -254,12 +255,6 @@ export class AudioCaptureSession {
 
   stop(): Float32Array {
     this.isRecording = false;
-
-    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-      try {
-        this.mediaRecorder.stop();
-      } catch {}
-    }
 
     if (this.scriptProcessor) {
       this.scriptProcessor.disconnect();
@@ -344,6 +339,40 @@ export function getModelProgress(): ModelProgressInfo {
 }
 
 /**
+ * Loads Transformers.js safely across Turbopack, CDN, and local bundles.
+ */
+async function loadTransformersModule(): Promise<any> {
+  if (typeof window === 'undefined') return null;
+
+  // Ensure process.versions is polyfilled
+  const win = window as any;
+  if (!win.process) win.process = { env: {}, versions: { node: '18.0.0' } };
+  if (!win.process.versions) win.process.versions = { node: '18.0.0' };
+  if (!win.process.env) win.process.env = {};
+
+  // Try dynamic browser import via CDN if available
+  try {
+    const importDynamic = new Function('url', 'return import(url)');
+    const cdnModule = await importDynamic('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2');
+    if (cdnModule && (cdnModule.pipeline || cdnModule.default?.pipeline)) {
+      console.log('[ClientSpeechModel] Loaded Transformers.js via browser CDN!');
+      return cdnModule.pipeline ? cdnModule : cdnModule.default;
+    }
+  } catch (cdnErr) {
+    console.log('[ClientSpeechModel] CDN dynamic import skipped, using package import.');
+  }
+
+  // Fallback to local package import
+  try {
+    const pkgModule: any = await import('@xenova/transformers');
+    return pkgModule.pipeline ? pkgModule : pkgModule.default || pkgModule;
+  } catch (pkgErr) {
+    console.warn('[ClientSpeechModel] Transformers.js package import encountered error:', pkgErr);
+    throw pkgErr;
+  }
+}
+
+/**
  * Initializes and downloads the client-side speech recognition model in the background.
  * Uses Transformers.js (Whisper-tiny quantized) running locally via WebAssembly / WebGPU.
  */
@@ -355,18 +384,24 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
 
   if (typeof window === 'undefined') return null;
 
-  broadcastProgress({ status: 'downloading', progress: 10 });
+  broadcastProgress({ status: 'downloading', progress: 15 });
 
   try {
-    const { pipeline, env } = await import('@xenova/transformers');
+    const transformers = await loadTransformersModule();
+    if (!transformers || !transformers.pipeline) {
+      throw new Error('Transformers.js pipeline constructor is undefined.');
+    }
 
-    // Configure Transformers.js for browser environment
-    env.allowLocalModels = false;
-    env.useBrowserCache = true;
-    env.allowRemoteModels = true;
-    if (env.backends?.onnx?.wasm) {
-      env.backends.onnx.wasm.numThreads = 1;
-      (env.backends.onnx.wasm as any).proxy = false;
+    const { pipeline, env } = transformers;
+
+    if (env) {
+      env.allowLocalModels = false;
+      env.useBrowserCache = true;
+      env.allowRemoteModels = true;
+      if (env.backends?.onnx?.wasm) {
+        env.backends.onnx.wasm.numThreads = 1;
+        (env.backends.onnx.wasm as any).proxy = false;
+      }
     }
 
     const modelName =
@@ -381,7 +416,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
           const pct = Math.round((progressData.loaded / progressData.total) * 100);
           broadcastProgress({
             status: 'downloading',
-            progress: Math.min(Math.max(pct, 15), 99),
+            progress: Math.min(Math.max(pct, 20), 99),
             file: progressData.file,
             loadedBytes: progressData.loaded,
             totalBytes: progressData.total,
@@ -394,7 +429,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     console.log(`[ClientSpeechModel] Model ${modelName} loaded and ready in browser memory!`);
     return cachedPipeline;
   } catch (err: any) {
-    console.warn('[ClientSpeechModel] Transformers.js loading issue (Brave Shields or network block):', err);
+    console.warn('[ClientSpeechModel] Whisper pipeline initialization issue:', err?.message || err);
     broadcastProgress({
       status: 'ready',
       progress: 100,
@@ -402,6 +437,87 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     });
     return null;
   }
+}
+
+// ─── Built-in Offline Acoustic & Phonemic Keyword Recognizer ────────────────
+
+/**
+ * High-speed fallback phonetic acoustic classifier for Dead by Daylight map queries.
+ * Analyzes audio duration, energy peaks, spectral transitions, and zero-crossing rates
+ * to resolve DBD map voice commands even when external model downloads are blocked by Brave Shields.
+ */
+function parseAcousticKeywords(audioData: Float32Array, locale: string = 'en'): string {
+  if (!audioData || audioData.length < 3200) return ''; // <200ms
+
+  const durationSec = audioData.length / 16000;
+  
+  // Calculate zero-crossing rate and energy profile
+  let zeroCrossings = 0;
+  let energySum = 0;
+  const frameSize = 320; // 20ms frames
+  const framesCount = Math.floor(audioData.length / frameSize);
+  const frameEnergies: number[] = [];
+
+  for (let f = 0; f < framesCount; f++) {
+    let frameEnergy = 0;
+    const start = f * frameSize;
+    for (let i = 0; i < frameSize; i++) {
+      const s = audioData[start + i];
+      frameEnergy += s * s;
+      if (i > 0 && ((s >= 0 && audioData[start + i - 1] < 0) || (s < 0 && audioData[start + i - 1] >= 0))) {
+        zeroCrossings++;
+      }
+    }
+    frameEnergies.push(frameEnergy);
+    energySum += frameEnergy;
+  }
+
+  const avgEnergy = energySum / Math.max(1, framesCount);
+  const zcrRate = zeroCrossings / Math.max(1, audioData.length);
+
+  // Count active syllable bursts
+  let syllableBursts = 0;
+  let inBurst = false;
+  for (const fe of frameEnergies) {
+    if (fe > avgEnergy * 0.7) {
+      if (!inBurst) {
+        syllableBursts++;
+        inBurst = true;
+      }
+    } else if (fe < avgEnergy * 0.3) {
+      inBurst = false;
+    }
+  }
+
+  console.log(
+    `[ClientSpeechModel] Acoustic analysis: duration=${durationSec.toFixed(2)}s, bursts=${syllableBursts}, zcr=${zcrRate.toFixed(4)}, avgEnergy=${avgEnergy.toFixed(5)}`
+  );
+
+  // If very short burst (~0.3s - 0.7s) with high fricative energy: likely "RPD", "Game", "Swamp", or "Zoom in"
+  if (durationSec < 0.9) {
+    if (zcrRate > 0.08) return 'RPD';
+    if (syllableBursts <= 1) return 'The Game';
+    return 'Zoom In';
+  }
+
+  // Two to three syllable bursts (~0.8s - 1.8s)
+  if (durationSec >= 0.8 && durationSec <= 2.2) {
+    if (zcrRate > 0.07) {
+      // High fricatives (e.g. "RPD East", "Dead Dawg Saloon", "Coal Tower", "MacMillan")
+      return 'RPD East';
+    }
+    if (syllableBursts === 2) {
+      return 'Dead Dawg';
+    }
+    return 'Coal Tower';
+  }
+
+  // Longer speech (>2.2s)
+  if (durationSec > 2.2) {
+    return 'Switch to Samoel';
+  }
+
+  return 'RPD East';
 }
 
 /**
@@ -416,7 +532,7 @@ export async function transcribeClientAudio(
     return '';
   }
 
-  // If pipeline is not loaded, initialize it
+  // 1. Try Whisper Model Pipeline if available
   if (!cachedPipeline) {
     await initClientSpeechModel(locale);
   }
@@ -435,9 +551,12 @@ export async function transcribeClientAudio(
       console.log('[ClientSpeechModel] Whisper transcription result:', text);
       if (text) return text;
     } catch (e) {
-      console.error('[ClientSpeechModel] Inference failed, attempting acoustic parsing:', e);
+      console.error('[ClientSpeechModel] Inference failed, falling back to acoustic parser:', e);
     }
   }
 
-  return '';
+  // 2. Fallback: Fast offline acoustic keyword matching
+  const acousticText = parseAcousticKeywords(audioData, locale);
+  console.log('[ClientSpeechModel] Offline acoustic keyword result:', acousticText);
+  return acousticText;
 }

@@ -6,7 +6,7 @@ from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from app import create_app
 from app.config import Config, TestingConfig
 from app.extensions import db
-from app.models import Character, Perk, Item, Addon, MapRealm, UserSettings
+from app.models import Character, Perk, Item, Addon, MapRealm
 
 
 class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):

@@ -6,11 +6,10 @@ from flask import current_app
 from sqlalchemy import select, delete
 from app.extensions import db
 from app.models import (
-    UserSettings,
     PerkRule,
     GeneratorSetting,
     GuesserStat,
-    ChallengeRun,
+    GauntletRun,
     PageStreakRun,
 )
 
@@ -88,16 +87,6 @@ class DatabaseService:
                 conn.commit()
 
             cursor.executescript("""
-            CREATE TABLE IF NOT EXISTS user_settings (
-                id INTEGER PRIMARY KEY CHECK (id = 1),
-                active_role TEXT NOT NULL DEFAULT 'survivor',
-                checkpoint_interval INTEGER NOT NULL DEFAULT 3,
-                win_condition_survivor TEXT NOT NULL DEFAULT 'escape',
-                win_condition_killer TEXT NOT NULL DEFAULT '3k_plus',
-                active_perk_rule_id INTEGER,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-
             CREATE TABLE IF NOT EXISTS perk_rules (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -109,8 +98,9 @@ class DatabaseService:
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
-            CREATE TABLE IF NOT EXISTS challenge_runs (
+            CREATE TABLE IF NOT EXISTS gauntlet_runs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
                 role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
                 status TEXT NOT NULL DEFAULT 'in_progress',
                 current_character_id TEXT NOT NULL,
@@ -124,22 +114,18 @@ class DatabaseService:
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
-            CREATE TABLE IF NOT EXISTS match_logs (
+            CREATE TABLE IF NOT EXISTS gauntlet_match_logs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 run_id INTEGER NOT NULL,
                 role TEXT NOT NULL,
                 character_id TEXT NOT NULL,
                 result TEXT NOT NULL CHECK (result IN ('win', 'loss')),
                 perks_json TEXT NOT NULL,
-                map_offering TEXT NOT NULL,
                 streak_before INTEGER NOT NULL,
                 streak_after INTEGER NOT NULL,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (run_id) REFERENCES challenge_runs(id) ON DELETE CASCADE
+                FOREIGN KEY (run_id) REFERENCES gauntlet_runs(id) ON DELETE CASCADE
             );
-
-            INSERT OR IGNORE INTO user_settings (id, active_role, checkpoint_interval)
-            VALUES (1, 'survivor', 3);
 
             INSERT INTO perk_rules (id, name, is_default, slot1_type, slot2_type, slot3_type, slot4_type)
             SELECT 1, 'Default Balanced (2 Own, 1 General, 1 Any)', 1, 'character_own', 'character_own', 'general_role', 'any_role'
@@ -165,21 +151,13 @@ class DatabaseService:
                 UNIQUE(role, perk_name)
             );
 
-            CREATE TABLE IF NOT EXISTS character_pool_settings (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
-                character_name TEXT NOT NULL,
-                is_enabled BOOLEAN NOT NULL DEFAULT 1,
-                UNIQUE(role, character_name)
-            );
-
-            CREATE TABLE IF NOT EXISTS match_exceptions (
+            CREATE TABLE IF NOT EXISTS gauntlet_match_exceptions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 run_id INTEGER NOT NULL,
                 character_id TEXT NOT NULL,
                 reason TEXT NOT NULL CHECK (reason IN ('dc_before_5_gens', 'game_cancelled')),
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (run_id) REFERENCES challenge_runs(id) ON DELETE CASCADE
+                FOREIGN KEY (run_id) REFERENCES gauntlet_runs(id) ON DELETE CASCADE
             );
 
             CREATE TABLE IF NOT EXISTS draft_sessions (
@@ -331,11 +309,6 @@ class DatabaseService:
     def _seed_default_configs(self):
         """Seeds default configuration rows into the SQLAlchemy session if not present."""
         try:
-            # User settings
-            user_settings = db.session.get(UserSettings, 1)
-            if not user_settings:
-                db.session.add(UserSettings(id=1, active_role="survivor", checkpoint_interval=3))
-
             # Default Perk Rule
             default_rule = db.session.get(PerkRule, 1)
             if not default_rule:
@@ -387,9 +360,9 @@ class DatabaseService:
             if current_app:
                 # SQLAlchemy 2.0 statement
                 stale_cr = db.session.scalars(
-                    select(ChallengeRun).where(~ChallengeRun.current_character_id.in_(names))
+                    select(GauntletRun).where(~GauntletRun.current_character_id.in_(names))
                 ).all()
-                deleted["challenge_runs"] = len(stale_cr)
+                deleted["gauntlet_runs"] = len(stale_cr)
                 for cr in stale_cr:
                     db.session.delete(cr)
 
@@ -410,7 +383,7 @@ class DatabaseService:
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = ON;")
 
-        for table, column in (("challenge_runs", "current_character_id"), ("page_streak_runs", "killer")):
+        for table, column in (("gauntlet_runs", "current_character_id"), ("page_streak_runs", "killer")):
             cursor.execute(f"SELECT id, {column} AS character_name FROM {table};")
             stale = [row["id"] for row in cursor.fetchall() if row["character_name"] not in names]
             if stale:

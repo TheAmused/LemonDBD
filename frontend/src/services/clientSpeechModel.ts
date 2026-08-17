@@ -339,42 +339,8 @@ export function getModelProgress(): ModelProgressInfo {
 }
 
 /**
- * Loads Transformers.js safely across Turbopack, CDN, and local bundles.
- */
-async function loadTransformersModule(): Promise<any> {
-  if (typeof window === 'undefined') return null;
-
-  // Ensure process.versions is polyfilled
-  const win = window as any;
-  if (!win.process) win.process = { env: {}, versions: { node: '18.0.0' } };
-  if (!win.process.versions) win.process.versions = { node: '18.0.0' };
-  if (!win.process.env) win.process.env = {};
-
-  // Try dynamic browser import via CDN if available
-  try {
-    const importDynamic = new Function('url', 'return import(url)');
-    const cdnModule = await importDynamic('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2');
-    if (cdnModule && (cdnModule.pipeline || cdnModule.default?.pipeline)) {
-      console.log('[ClientSpeechModel] Loaded Transformers.js via browser CDN!');
-      return cdnModule.pipeline ? cdnModule : cdnModule.default;
-    }
-  } catch (cdnErr) {
-    console.log('[ClientSpeechModel] CDN dynamic import skipped, using package import.');
-  }
-
-  // Fallback to local package import
-  try {
-    const pkgModule: any = await import('@xenova/transformers');
-    return pkgModule.pipeline ? pkgModule : pkgModule.default || pkgModule;
-  } catch (pkgErr) {
-    console.warn('[ClientSpeechModel] Transformers.js package import encountered error:', pkgErr);
-    throw pkgErr;
-  }
-}
-
-/**
  * Initializes and downloads the client-side speech recognition model in the background.
- * Uses Transformers.js (Whisper-tiny quantized) running locally via WebAssembly / WebGPU.
+ * Uses Transformers.js with direct Whisper-tiny models.
  */
 export async function initClientSpeechModel(locale: string = 'en'): Promise<any> {
   if (cachedPipeline) {
@@ -384,15 +350,16 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
 
   if (typeof window === 'undefined') return null;
 
-  broadcastProgress({ status: 'downloading', progress: 15 });
+  broadcastProgress({ status: 'downloading', progress: 10 });
 
   try {
-    const transformers = await loadTransformersModule();
-    if (!transformers || !transformers.pipeline) {
-      throw new Error('Transformers.js pipeline constructor is undefined.');
-    }
-
-    const { pipeline, env } = transformers;
+    const {
+      env,
+      AutoTokenizer,
+      AutoProcessor,
+      AutoModelForSpeechSeq2Seq,
+      AutomaticSpeechRecognitionPipeline,
+    } = await import('@xenova/transformers');
 
     if (env) {
       env.allowLocalModels = false;
@@ -407,117 +374,49 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     const modelName =
       locale === 'en' ? 'Xenova/whisper-tiny.en' : 'Xenova/whisper-tiny';
 
-    console.log(`[ClientSpeechModel] Loading ${modelName} in background...`);
+    console.log(`[ClientSpeechModel] Loading ${modelName} via AutoModelForSpeechSeq2Seq...`);
 
-    cachedPipeline = await pipeline('automatic-speech-recognition', modelName, {
-      quantized: true,
-      progress_callback: (progressData: any) => {
-        if (progressData && progressData.status === 'progress' && progressData.total) {
-          const pct = Math.round((progressData.loaded / progressData.total) * 100);
-          broadcastProgress({
-            status: 'downloading',
-            progress: Math.min(Math.max(pct, 20), 99),
-            file: progressData.file,
-            loadedBytes: progressData.loaded,
-            totalBytes: progressData.total,
-          });
-        }
-      },
+    const progress_callback = (progressData: any) => {
+      if (progressData && progressData.status === 'progress' && progressData.total) {
+        const pct = Math.round((progressData.loaded / progressData.total) * 100);
+        broadcastProgress({
+          status: 'downloading',
+          progress: Math.min(Math.max(pct, 15), 99),
+          file: progressData.file,
+          loadedBytes: progressData.loaded,
+          totalBytes: progressData.total,
+        });
+      }
+    };
+
+    const [tokenizer, processor, model] = await Promise.all([
+      AutoTokenizer.from_pretrained(modelName, { progress_callback }),
+      AutoProcessor.from_pretrained(modelName, { progress_callback }),
+      AutoModelForSpeechSeq2Seq.from_pretrained(modelName, {
+        quantized: true,
+        progress_callback,
+      }),
+    ]);
+
+    cachedPipeline = new AutomaticSpeechRecognitionPipeline({
+      task: 'automatic-speech-recognition',
+      tokenizer,
+      processor,
+      model,
     });
 
     broadcastProgress({ status: 'ready', progress: 100 });
-    console.log(`[ClientSpeechModel] Model ${modelName} loaded and ready in browser memory!`);
+    console.log(`[ClientSpeechModel] Whisper model ${modelName} initialized successfully in browser memory!`);
     return cachedPipeline;
   } catch (err: any) {
-    console.warn('[ClientSpeechModel] Whisper pipeline initialization issue:', err?.message || err);
+    console.warn('[ClientSpeechModel] Whisper pipeline initialization error:', err);
     broadcastProgress({
-      status: 'ready',
-      progress: 100,
+      status: 'error',
+      progress: 0,
       error: err?.message,
     });
     return null;
   }
-}
-
-// ─── Built-in Offline Acoustic & Phonemic Keyword Recognizer ────────────────
-
-/**
- * High-speed fallback phonetic acoustic classifier for Dead by Daylight map queries.
- * Analyzes audio duration, energy peaks, spectral transitions, and zero-crossing rates
- * to resolve DBD map voice commands even when external model downloads are blocked by Brave Shields.
- */
-function parseAcousticKeywords(audioData: Float32Array, locale: string = 'en'): string {
-  if (!audioData || audioData.length < 3200) return ''; // <200ms
-
-  const durationSec = audioData.length / 16000;
-  
-  // Calculate zero-crossing rate and energy profile
-  let zeroCrossings = 0;
-  let energySum = 0;
-  const frameSize = 320; // 20ms frames
-  const framesCount = Math.floor(audioData.length / frameSize);
-  const frameEnergies: number[] = [];
-
-  for (let f = 0; f < framesCount; f++) {
-    let frameEnergy = 0;
-    const start = f * frameSize;
-    for (let i = 0; i < frameSize; i++) {
-      const s = audioData[start + i];
-      frameEnergy += s * s;
-      if (i > 0 && ((s >= 0 && audioData[start + i - 1] < 0) || (s < 0 && audioData[start + i - 1] >= 0))) {
-        zeroCrossings++;
-      }
-    }
-    frameEnergies.push(frameEnergy);
-    energySum += frameEnergy;
-  }
-
-  const avgEnergy = energySum / Math.max(1, framesCount);
-  const zcrRate = zeroCrossings / Math.max(1, audioData.length);
-
-  // Count active syllable bursts
-  let syllableBursts = 0;
-  let inBurst = false;
-  for (const fe of frameEnergies) {
-    if (fe > avgEnergy * 0.7) {
-      if (!inBurst) {
-        syllableBursts++;
-        inBurst = true;
-      }
-    } else if (fe < avgEnergy * 0.3) {
-      inBurst = false;
-    }
-  }
-
-  console.log(
-    `[ClientSpeechModel] Acoustic analysis: duration=${durationSec.toFixed(2)}s, bursts=${syllableBursts}, zcr=${zcrRate.toFixed(4)}, avgEnergy=${avgEnergy.toFixed(5)}`
-  );
-
-  // If very short burst (~0.3s - 0.7s) with high fricative energy: likely "RPD", "Game", "Swamp", or "Zoom in"
-  if (durationSec < 0.9) {
-    if (zcrRate > 0.08) return 'RPD';
-    if (syllableBursts <= 1) return 'The Game';
-    return 'Zoom In';
-  }
-
-  // Two to three syllable bursts (~0.8s - 1.8s)
-  if (durationSec >= 0.8 && durationSec <= 2.2) {
-    if (zcrRate > 0.07) {
-      // High fricatives (e.g. "RPD East", "Dead Dawg Saloon", "Coal Tower", "MacMillan")
-      return 'RPD East';
-    }
-    if (syllableBursts === 2) {
-      return 'Dead Dawg';
-    }
-    return 'Coal Tower';
-  }
-
-  // Longer speech (>2.2s)
-  if (durationSec > 2.2) {
-    return 'Switch to Samoel';
-  }
-
-  return 'RPD East';
 }
 
 /**
@@ -532,14 +431,17 @@ export async function transcribeClientAudio(
     return '';
   }
 
-  // 1. Try Whisper Model Pipeline if available
+  // If pipeline is not loaded, initialize it
   if (!cachedPipeline) {
     await initClientSpeechModel(locale);
   }
 
   if (cachedPipeline) {
     try {
-      console.log('[ClientSpeechModel] Running Whisper model inference on 16kHz audio buffer of length:', audioData.length);
+      console.log(
+        '[ClientSpeechModel] Running Whisper model inference on 16kHz audio buffer of length:',
+        audioData.length
+      );
       const output = await cachedPipeline(audioData, {
         language: locale === 'pl' ? 'polish' : locale === 'es' ? 'spanish' : 'english',
         task: 'transcribe',
@@ -549,14 +451,11 @@ export async function transcribeClientAudio(
 
       const text = (typeof output === 'string' ? output : output?.text || '').trim();
       console.log('[ClientSpeechModel] Whisper transcription result:', text);
-      if (text) return text;
+      return text;
     } catch (e) {
-      console.error('[ClientSpeechModel] Inference failed, falling back to acoustic parser:', e);
+      console.error('[ClientSpeechModel] Whisper inference failed:', e);
     }
   }
 
-  // 2. Fallback: Fast offline acoustic keyword matching
-  const acousticText = parseAcousticKeywords(audioData, locale);
-  console.log('[ClientSpeechModel] Offline acoustic keyword result:', acousticText);
-  return acousticText;
+  return '';
 }

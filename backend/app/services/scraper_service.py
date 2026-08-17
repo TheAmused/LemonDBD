@@ -664,6 +664,29 @@ class NightlightScraperDriver:
             else:
                 category = "Survivor"
 
+            desc = descriptions.get(name) or descriptions.get(name.replace("\\'", "'")) or ""
+            if not desc and stream_payload:
+                idx = stream_payload.find(name)
+                if idx != -1:
+                    snippet = stream_payload[idx:idx + 300]
+                    desc = BeautifulSoup(snippet, "html.parser").get_text(separator="\n", strip=True)
+
+            clean_desc = ScraperService.clean_description_text(desc)
+
+            is_garbage = (
+                not clean_desc
+                or len(clean_desc) < 20
+                or "unavailable" in clean_desc.lower()
+                or "Survivor\n-" in clean_desc
+                or "Killer\n-" in clean_desc
+                or "This description is based on" in clean_desc
+                or re.match(r'^[A-Za-z0-9_\'\s\-"]+\s+(?:Survivor|Killer)', clean_desc)
+            )
+            if is_garbage and wiki_map:
+                wiki_val = wiki_map.get(name.lower())
+                if wiki_val:
+                    clean_desc = ScraperService.clean_description_text(wiki_val)
+
             char_input = item.get("character") or item.get("character_name") or item.get("owner") or "General"
             matched_char = char_map.get(str(char_input).lower())
             if not matched_char and str(char_input).lower() not in ["none", "all", "general"]:
@@ -677,6 +700,27 @@ class NightlightScraperDriver:
                 if wp_match and wp_match.character and wp_match.character.lower() not in ["none", "all", "general"]:
                     matched_char = char_map.get(wp_match.character.lower()) or char_map.get(wp_match.character.split()[-1].lower()) or matched_char
 
+            if not matched_char:
+                # Last resort: many perk flavor-text quotes are attributed to their
+                # owning character (e.g. `"..." - Kwon Tae-young`), which lets us
+                # recover the real owner when neither Nightlight nor the wiki tagged
+                # it (this consistently happens for newly-added characters). If
+                # Nightlight didn't have real flavor text at all, its fallback
+                # snippet is often just a metadata caption ('Name\nRole\n-
+                # Character') that clean_description_text() already stripped as
+                # junk — check the raw text for that shape too.
+                quoted_name = (
+                    ScraperService.extract_quote_attribution(clean_desc)
+                    or ScraperService.extract_header_caption_owner(desc)
+                )
+                if quoted_name:
+                    matched_char = char_map.get(quoted_name.lower())
+                    if not matched_char:
+                        for c_k, c_v in char_map.items():
+                            if c_k in quoted_name.lower() or quoted_name.lower() in c_k:
+                                matched_char = c_v
+                                break
+
             if matched_char:
                 canonical_name = matched_char.name
                 real_name = matched_char.real_name
@@ -685,28 +729,6 @@ class NightlightScraperDriver:
                 canonical_name = str(char_input) if char_input and char_input.lower() not in ["none", "all", "general"] else "General"
                 real_name = canonical_name
                 avatar_path = ""
-
-            desc = descriptions.get(name) or descriptions.get(name.replace("\\'", "'")) or ""
-            if not desc and stream_payload:
-                idx = stream_payload.find(name)
-                if idx != -1:
-                    snippet = stream_payload[idx:idx + 300]
-                    desc = BeautifulSoup(snippet, "html.parser").get_text(separator="\n", strip=True)
-
-            clean_desc = ScraperService.clean_description_text(desc)
-            is_garbage = (
-                not clean_desc 
-                or len(clean_desc) < 20 
-                or "unavailable" in clean_desc.lower()
-                or "Survivor\n-" in clean_desc 
-                or "Killer\n-" in clean_desc 
-                or "This description is based on" in clean_desc
-                or re.match(r'^[A-Za-z0-9_\'\s\-"]+\s+(?:Survivor|Killer)', clean_desc)
-            )
-            if is_garbage and wiki_map:
-                wiki_val = wiki_map.get(name.lower())
-                if wiki_val:
-                    clean_desc = ScraperService.clean_description_text(wiki_val)
 
             raw_icon = (
                 item.get("icon")
@@ -1421,6 +1443,17 @@ class WikiScraperDriver:
                                         if not matched:
                                             matched = char_by_name.get(f"the {clean_text}") or char_by_short.get(f"the {clean_text}")
 
+                            if not matched:
+                                quoted_name = ScraperService.extract_quote_attribution(description)
+                                if quoted_name:
+                                    quoted_lower = quoted_name.lower()
+                                    matched = char_by_name.get(quoted_lower) or char_by_short.get(quoted_lower)
+                                    if not matched:
+                                        for c_k, c_v in char_by_name.items():
+                                            if c_k in quoted_lower or quoted_lower in c_k:
+                                                matched = c_v
+                                                break
+
                             if matched:
                                 canonical_name = matched.name
                                 real_name = matched.real_name
@@ -1764,6 +1797,50 @@ class ScraperService:
             return "Perk description is currently unavailable in the database."
 
         return result
+
+    _QUOTE_ATTRIBUTION_NON_NAMES = {"notebook", "unknown", "unknown, notebook"}
+
+    @staticmethod
+    def extract_quote_attribution(text: str) -> Optional[str]:
+        """Pull the speaker's name from a flavor-text quote attribution at the
+        end of a perk description, e.g. '"..." - Kwon Tae-young' -> 'Kwon Tae-young'.
+        Used as a last-resort way to recover a perk's owning character when
+        neither Nightlight nor the wiki tagged it (this consistently happens
+        for newly-added characters the matching data hasn't caught up with)."""
+        if not text:
+            return None
+        match = re.search(
+            r'["”]\s*[-–—]\s*([A-Z][A-Za-z.\'’\-]+(?:\s+[A-Z][A-Za-z.\'’\-]+){0,3})\s*$',
+            text.strip(),
+        )
+        if not match:
+            return None
+        candidate = match.group(1).strip()
+        if candidate.lower() in ScraperService._QUOTE_ATTRIBUTION_NON_NAMES:
+            return None
+        return candidate
+
+    @staticmethod
+    def extract_header_caption_owner(raw_text: str) -> Optional[str]:
+        """When Nightlight's real description lookup misses for a perk, the
+        300-char fallback snippet sometimes lands on a metadata caption
+        instead of flavor text, e.g. 'A Place For Us\\nSurvivor\\n- Kwon
+        Tae-young'. clean_description_text() correctly discards that caption
+        as junk, so pull the owning character out of it first, before it's
+        thrown away — this is the only place the perk's owner is recorded
+        for perks Nightlight has no real description for yet."""
+        if not raw_text:
+            return None
+        match = re.search(
+            r'(?:Survivor|Killer)\s*\n?\s*-\s*([A-Z][A-Za-z.\'’\-]+(?:\s+[A-Z][A-Za-z.\'’\-]+){0,3})',
+            raw_text,
+        )
+        if not match:
+            return None
+        candidate = match.group(1).strip().rstrip("<>").strip()
+        if candidate.lower() in ScraperService._QUOTE_ATTRIBUTION_NON_NAMES:
+            return None
+        return candidate
 
     @staticmethod
     def sanitize_filename(name: str) -> str:

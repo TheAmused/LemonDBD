@@ -368,7 +368,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
   return (
     <div className="w-full space-y-6">
       {/* ── COMPACT FULL-WIDTH CONTROL HEADER BAR ── */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-5 shadow-2xl backdrop-blur-2xl">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:border-slate-800 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-5 shadow-sm dark:shadow-2xl backdrop-blur-2xl">
         <div
           className={`pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full opacity-20 blur-3xl transition-all duration-700 ${
             isSurvivor ? 'bg-emerald-500' : 'bg-rose-600'
@@ -379,24 +379,24 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           {/* Title & Stats */}
           <div className="flex items-center gap-3">
             <div
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border shadow-lg ${
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border shadow-sm dark:shadow-lg ${
                 isSurvivor
-                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-                  : 'border-rose-500/40 bg-rose-500/10 text-rose-400'
+                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                  : 'border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400'
               }`}
             >
               <Dices className="h-5 w-5 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-black tracking-tight text-white font-mono uppercase">
+                <h1 className="text-xl font-black tracking-tight text-slate-900 dark:text-white font-mono uppercase">
                   {role} Perk Randomizer
                 </h1>
-                <span className="rounded-md bg-slate-900 px-2 py-0.5 text-[10px] font-mono font-bold text-slate-300 border border-slate-800">
+                <span className="rounded-md bg-slate-100 dark:bg-slate-900 px-2 py-0.5 text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
                   {drawnCount} / {totalRolePerks} Perks ({totalPages} Pages)
                 </span>
               </div>
-              <p className="text-xs font-medium text-slate-400">
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
                 In-game inventory coordinates [Page / Slot]
               </p>
             </div>
@@ -405,13 +405,13 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
           {/* Controls Cluster */}
           <div className="flex flex-wrap items-center gap-2.5">
             {/* Survivor vs Killer Master Switch */}
-            <div className="flex items-center rounded-2xl border border-slate-800 bg-slate-950/90 p-1 shadow-inner">
+            <div className="flex items-center rounded-2xl border border-slate-200 bg-slate-100/90 dark:border-slate-800 dark:bg-slate-950/90 p-1 shadow-inner">
               <button
                 onClick={() => handleRoleChange('Survivor')}
                 className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
                   isSurvivor
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-950/80'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md'
+                    : 'text-slate-600 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
               >
                 <Shield className="h-3.5 w-3.5" />
@@ -422,8 +422,8 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 onClick={() => handleRoleChange('Killer')}
                 className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
                   !isSurvivor
-                    ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-md shadow-rose-950/80'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-md'
+                    : 'text-slate-600 hover:text-rose-700 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
               >
                 <Skull className="h-3.5 w-3.5" />
@@ -432,13 +432,13 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             </div>
 
             {/* Mode Switcher: Wheel vs Instant */}
-            <div className="flex items-center rounded-2xl border border-slate-800 bg-slate-950/90 p-1 shadow-inner">
+            <div className="flex items-center rounded-2xl border border-slate-200 bg-slate-100/90 dark:border-slate-800 dark:bg-slate-950/90 p-1 shadow-inner">
               <button
                 onClick={() => handleGenModeChange('wheel')}
                 className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
                   genMode === 'wheel'
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-950/80'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md'
+                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
               >
                 <CircleDot className="h-3.5 w-3.5" />
@@ -449,8 +449,8 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 onClick={() => handleGenModeChange('instant')}
                 className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
                   genMode === 'instant'
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-950/80'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md'
+                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
               >
                 <Sparkles className="h-3.5 w-3.5" />
@@ -461,9 +461,9 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             {/* Configure Characters */}
             <button
               onClick={() => setIsCharModalOpen(true)}
-              className="flex items-center gap-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-xs font-bold text-cyan-300 hover:bg-cyan-500/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/20 transition-all cursor-pointer"
             >
-              <Users className="h-3.5 w-3.5 text-cyan-400" />
+              <Users className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
               <span>Characters ({activeEnabledChars.length})</span>
             </button>
 
@@ -472,20 +472,18 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               onClick={handleToggleNoRepeat}
               className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
                 noRepeatPerks
-                  ? 'border-amber-500/50 bg-amber-500/10 text-amber-300'
-                  : 'border-slate-800 bg-slate-950/80 text-slate-400 hover:text-slate-200'
+                  ? 'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-300'
+                  : 'border-slate-200 bg-slate-100/90 text-slate-600 dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              <Repeat className={`h-3.5 w-3.5 ${noRepeatPerks ? 'text-amber-400' : ''}`} />
+              <Repeat className={`h-3.5 w-3.5 ${noRepeatPerks ? 'text-amber-600 dark:text-amber-400' : ''}`} />
               <span>No-Repeat</span>
             </button>
-
-
 
             {/* Reset All */}
             <button
               onClick={handleResetAllLoadoutAndWheels}
-              className="flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-bold text-rose-300 hover:bg-rose-500/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-bold text-rose-700 dark:text-rose-300 hover:bg-rose-500/20 transition-all cursor-pointer"
               title="Reset wheels, loadout slots, and memory"
             >
               <RotateCcw className="h-3.5 w-3.5" />
@@ -495,12 +493,12 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             {/* Copy Build */}
             <button
               onClick={handleCopyBuild}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800/80 px-3 py-1.5 text-xs font-bold text-slate-200 hover:bg-slate-700 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/90 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
             >
               {copied ? (
                 <>
-                  <Check className="h-3.5 w-3.5 text-emerald-400" />
-                  <span className="text-emerald-400">Copied!</span>
+                  <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-emerald-600 dark:text-emerald-400">Copied!</span>
                 </>
               ) : (
                 <>
@@ -554,14 +552,14 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
         {/* RIGHT COLUMN: ACTIVE 4-PERK BUILD CARDS (ALWAYS VISIBLE WITHOUT SCROLLING) */}
         <div className="xl:col-span-5 w-full">
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-2xl backdrop-blur-xl">
+          <div className="rounded-3xl border border-slate-200/90 bg-white/90 dark:border-slate-800 dark:bg-slate-900/80 p-5 shadow-sm dark:shadow-2xl backdrop-blur-xl">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 dark:text-slate-300 flex items-center gap-2">
                 <Flame className="h-4 w-4 text-amber-500" />
                 Active 4-Perk Loadout
               </h3>
-              <span className="text-xs text-slate-400 font-bold">
-                Focus: <span className="text-amber-400 font-black">Slot #{activeSlotIdx + 1}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-bold">
+                Focus: <span className="text-amber-600 dark:text-amber-400 font-black">Slot #{activeSlotIdx + 1}</span>
               </span>
             </div>
 
@@ -611,33 +609,33 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                         onSelectPerk(perk);
                       }
                     }}
-                    className={`group relative flex cursor-pointer flex-col justify-between rounded-2xl border p-4 shadow-lg backdrop-blur-xl transition-all duration-200 ${
+                    className={`group relative flex cursor-pointer flex-col justify-between rounded-2xl border p-4 shadow-sm dark:shadow-lg backdrop-blur-xl transition-all duration-200 ${
                       isSelectedForWheelSlot
                         ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/50'
-                        : 'border-slate-800 bg-slate-950/80 hover:border-amber-500/50'
+                        : 'border-slate-200 bg-slate-50 hover:border-amber-500/50 dark:border-slate-800 dark:bg-slate-950/80 dark:hover:border-amber-500/50'
                     }`}
                   >
                     <div className="flex flex-col gap-3">
                       {/* Slot Header Row */}
                       <div className="flex items-center justify-between">
                         {slotData ? (
-                          <span className="rounded-md bg-amber-500/15 px-2 py-0.5 font-mono text-[11px] font-black text-amber-400 border border-amber-500/30">
+                          <span className="rounded-md bg-amber-500/15 px-2 py-0.5 font-mono text-[11px] font-black text-amber-600 dark:text-amber-400 border border-amber-500/30">
                             [P{slotData.page}/S{slotData.slot}]
                           </span>
                         ) : (
-                          <span className="rounded-md bg-slate-900 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-500 border border-slate-800">
+                          <span className="rounded-md bg-slate-100 dark:bg-slate-900 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-800">
                             [-/-]
                           </span>
                         )}
 
                         <div className="flex items-center gap-1">
-                          <span className="text-[10px] font-black uppercase text-slate-400">
+                          <span className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400">
                             Slot #{idx + 1}
                           </span>
                           {slotData && (
                             <button
                               onClick={(e) => handleClearSlot(idx, e)}
-                              className="rounded-lg p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-400 transition-colors cursor-pointer"
+                              className="rounded-lg p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-500 transition-colors cursor-pointer"
                               title="Clear slot"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
@@ -649,9 +647,9 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                       {/* Perk Icon & Character Avatar Row */}
                       <div className="flex items-center justify-between">
                         {/* Left: Perk Icon Frame */}
-                        <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 p-1.5 border border-slate-800 shadow-inner group-hover:border-amber-500/60 transition-colors overflow-hidden">
+                        <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-slate-100 to-slate-200/80 dark:from-slate-900 dark:to-slate-950 p-1.5 border border-slate-200 dark:border-slate-800 shadow-inner group-hover:border-amber-500/60 transition-colors overflow-hidden">
                           {isObscuredByBlindness ? (
-                            <div className="flex flex-col items-center justify-center text-purple-400 animate-pulse">
+                            <div className="flex flex-col items-center justify-center text-purple-600 dark:text-purple-400 animate-pulse">
                               <EyeOff className="h-6 w-6" />
                               <span className="text-[8px] font-black mt-0.5">CURSED</span>
                             </div>
@@ -659,41 +657,41 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                             <img
                               src={iconSrc}
                               alt={perk.name}
-                              className="h-13 w-13 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-300"
+                              className="h-13 w-13 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.2)] dark:drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-300"
                             />
                           ) : (
-                            <ImageOff className="h-7 w-7 text-slate-600" />
+                            <ImageOff className="h-7 w-7 text-slate-400 dark:text-slate-600" />
                           )}
                         </div>
 
                         {/* Right: Character Avatar Frame */}
                         <div className="relative flex items-center">
                           {isObscuredByBlindness ? (
-                            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-purple-950/80 border-2 border-purple-500/50 text-purple-300">
+                            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-purple-100 border-2 border-purple-500/50 text-purple-700 dark:bg-purple-950/80 dark:text-purple-300">
                               <EyeOff className="h-6 w-6" />
                             </div>
                           ) : avatarSrc ? (
                             <img
                               src={avatarSrc}
                               alt={perk?.character || 'Avatar'}
-                              className="h-14 w-14 rounded-xl object-cover border-2 border-slate-700 shadow-lg group-hover:border-amber-500/60 transition-colors duration-300"
+                              className="h-14 w-14 rounded-xl object-cover border-2 border-slate-200 dark:border-slate-700 shadow-md group-hover:border-amber-500/60 transition-colors duration-300"
                             />
                           ) : (
-                            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-800 border-2 border-slate-700 text-slate-400">
+                            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-100 border-2 border-slate-200 text-slate-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400">
                               {isSurvivor ? (
-                                <Shield className="h-6 w-6 text-emerald-400" />
+                                <Shield className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                               ) : (
-                                <Skull className="h-6 w-6 text-rose-400" />
+                                <Skull className="h-6 w-6 text-rose-600 dark:text-rose-400" />
                               )}
                             </div>
                           )}
 
                           {/* Top-Right Role Badge */}
                           <div
-                            className={`absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border shadow-lg backdrop-blur-md ${
+                            className={`absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border shadow-sm backdrop-blur-md ${
                               isSurvivor
-                                ? 'border-emerald-500/60 bg-emerald-950 text-emerald-400 ring-2 ring-slate-950'
-                                : 'border-rose-500/60 bg-rose-950 text-rose-400 ring-2 ring-slate-950'
+                                ? 'border-emerald-500/60 bg-emerald-100 text-emerald-700 ring-2 ring-white dark:bg-emerald-950 dark:text-emerald-400 dark:ring-slate-950'
+                                : 'border-rose-500/60 bg-rose-100 text-rose-700 ring-2 ring-white dark:bg-rose-950 dark:text-rose-400 dark:ring-slate-950'
                             }`}
                             title={role}
                           >
@@ -704,10 +702,10 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
 
                       {/* Perk Title & Sub-Label */}
                       <div>
-                        <h4 className="text-sm font-black leading-tight text-white group-hover:text-amber-400 transition-colors line-clamp-1">
+                        <h4 className="text-sm font-black leading-tight text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-1">
                           {isObscuredByBlindness ? '??? (Click to Reveal)' : perk ? perk.name : 'Empty Slot'}
                         </h4>
-                        <p className="text-[11px] font-bold text-slate-400 mt-0.5 truncate">
+                        <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
                           {perk ? perk.character : 'Spin wheel or roll'}
                         </p>
                       </div>

@@ -60,16 +60,16 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
     <div className={`space-y-6 ${className}`} data-testid="map-directory-list">
       {/* Optional Filters Bar (Search & Realm Pills) */}
       {showFilters && (
-        <div className="flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 backdrop-blur-md">
+        <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/80 p-4 backdrop-blur-md shadow-sm">
           {onSearchChange && (
             <div className="relative w-full md:w-80">
-              <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <input
                 type="text"
                 placeholder="Search map or realm..."
                 value={searchQuery || ''}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 pl-10 pr-4 py-2 text-xs font-semibold text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[40px]"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 pl-10 pr-4 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[40px] shadow-inner"
                 data-testid="map-directory-search-input"
               />
             </div>
@@ -83,7 +83,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                 className={`px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border min-h-[38px] ${
                   selectedRealm === 'all'
                     ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                    : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'
                 }`}
                 data-testid="realm-pill-all"
               >
@@ -99,7 +99,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                     className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border min-h-[38px] ${
                       selectedRealm === r
                         ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                        : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'
                     }`}
                     data-testid={`realm-pill-${r.toLowerCase().replace(/\s+/g, '-')}`}
                   >
@@ -121,21 +121,21 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
-              className="h-72 animate-pulse rounded-3xl bg-slate-900/60 border border-slate-800"
+              className="h-72 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800"
             />
           ))}
         </div>
       ) : filteredMaps.length === 0 ? (
         /* Empty State */
         <div
-          className="my-12 rounded-3xl border border-dashed border-slate-800 p-12 text-center select-none"
+          className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center select-none"
           data-testid="map-directory-empty"
         >
           <Compass
-            className="mx-auto h-12 w-12 text-slate-600 mb-3 animate-spin"
+            className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3 animate-spin"
             style={{ animationDuration: '20s' }}
           />
-          <h3 className="text-lg font-bold text-slate-200">No Maps Found</h3>
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">No Maps Found</h3>
           <p className="mt-1 text-xs text-slate-500">
             Try adjusting your search query or selected realm filter.
           </p>
@@ -163,10 +163,10 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                     onSelectMapId(m.id);
                   }
                 }}
-                className={`group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border bg-slate-900/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] ${
+                className={`group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border bg-white dark:bg-slate-900/90 shadow-sm dark:shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] ${
                   isSelected
-                    ? 'border-amber-500 ring-2 ring-amber-500/40 shadow-[0_0_30px_rgba(245,158,11,0.25)]'
-                    : 'border-slate-800 hover:border-amber-500/50'
+                    ? 'border-amber-500 ring-2 ring-amber-500/40 shadow-md dark:shadow-[0_0_30px_rgba(245,158,11,0.25)]'
+                    : 'border-slate-200 dark:border-slate-800 hover:border-amber-500/50'
                 }`}
                 data-testid={`map-card-${m.id}`}
               >
@@ -179,7 +179,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                       style={{
                         imageRendering: '-webkit-optimize-contrast' as React.CSSProperties['imageRendering'],
                       }}
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-95 group-hover:opacity-100"
                       data-testid={`map-thumbnail-${m.id}`}
                     />
                   ) : (
@@ -187,11 +187,11 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                       <Compass className="h-12 w-12" />
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
 
                   {/* Realm Tag Overlay */}
                   <div
-                    className="absolute top-3 left-3 rounded-full border border-slate-700/80 bg-slate-950/80 px-3 py-1 text-[11px] font-extrabold text-amber-400 backdrop-blur-md"
+                    className="absolute top-3 left-3 rounded-full border border-slate-700/80 bg-slate-950/80 px-3 py-1 text-[11px] font-extrabold text-amber-400 backdrop-blur-md shadow-sm"
                     data-testid={`map-realm-tag-${m.id}`}
                   >
                     {m.realm}
@@ -227,15 +227,15 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
 
                 {/* Card Body */}
                 <div className="p-5 flex flex-col gap-3">
-                  <h3 className="text-lg font-black text-slate-100 group-hover:text-amber-400 transition-colors">
+                  <h3 className="text-lg font-black text-slate-900 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                     {m.name}
                   </h3>
 
                   {/* Callout Quick Hint */}
-                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
                     {isSamoel ? (
                       <>
-                        <Layers className="h-3.5 w-3.5 text-emerald-400" />
+                        <Layers className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
                         <span>Isometric Scheme (Steam Guide)</span>
                       </>
                     ) : (

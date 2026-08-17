@@ -45,7 +45,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
       <div className="mb-5 flex flex-wrap items-center gap-3">
         <button
           onClick={() => setModalOpen(true)}
-          className="flex items-center gap-2 rounded-xl border border-slate-800 px-4 py-2 text-xs font-bold text-slate-300 hover:border-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+          className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/60 px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
         >
           <SlidersHorizontal className="h-3.5 w-3.5" />
           Perk collection ({poolSize})

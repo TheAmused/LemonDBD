@@ -79,46 +79,48 @@ export const ExcludedPerksModal: React.FC<ExcludedPerksModalProps> = ({ isOpen, 
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 dark:bg-slate-950/85 backdrop-blur-sm p-4 cursor-pointer"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border border-slate-800 bg-slate-900 cursor-default"
+        className="flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-2xl cursor-default"
       >
-        <div className="flex items-start justify-between gap-4 border-b border-slate-800 p-4">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-200 dark:border-slate-800 p-4">
           <div>
-            <h2 className="text-sm font-extrabold text-slate-100">My perk collection</h2>
-            <p className="mt-1 text-xs text-slate-500">
+            <h2 className="text-sm font-extrabold text-slate-900 dark:text-slate-100">My perk collection</h2>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Checked perks are the ones you own. Unchecking one removes it from the pool and renumbers the pages. Runs already in progress keep their frozen layout.
             </p>
           </div>
-          <button onClick={onClose} aria-label="Close" className="rounded-lg p-1 text-slate-500 hover:text-slate-300">
+          <button onClick={onClose} aria-label="Close" className="rounded-lg p-1 text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300">
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="border-b border-slate-800 p-3">
-          <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2">
-            <Search className="h-3.5 w-3.5 text-slate-500" />
+        <div className="border-b border-slate-200 dark:border-slate-800 p-3">
+          <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60 px-3 py-2">
+            <Search className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search perks"
-              className="w-full bg-transparent text-xs text-slate-200 outline-none placeholder:text-slate-600"
+              className="w-full bg-transparent text-xs text-slate-800 dark:text-slate-200 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-600"
             />
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-3">
-          {error && <p className="mb-2 text-xs text-rose-400">{error}</p>}
+          {error && <p className="mb-2 text-xs text-rose-500 dark:text-rose-400">{error}</p>}
           <div className="flex flex-col gap-1.5">
             {visible.map((perk) => {
               const isExcluded = excluded.includes(perk.name);
               return (
                 <label
                   key={perk.name}
-                  className={`flex cursor-pointer items-center gap-3 rounded-lg border border-slate-800 px-3 py-2 text-xs ${
-                    isExcluded ? 'text-slate-600 line-through' : 'text-slate-200'
+                  className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2 text-xs transition-colors ${
+                    isExcluded
+                      ? 'border-slate-200/60 bg-slate-100/50 text-slate-400 dark:border-slate-800 dark:bg-transparent dark:text-slate-600 line-through'
+                      : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-800 dark:border-slate-800 dark:bg-transparent dark:hover:bg-slate-800/40 dark:text-slate-200'
                   }`}
                 >
                   <input
@@ -137,18 +139,18 @@ export const ExcludedPerksModal: React.FC<ExcludedPerksModalProps> = ({ isOpen, 
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 p-4">
-          <span className="font-mono text-[11px] text-orange-400">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 dark:border-slate-800 p-4">
+          <span className="font-mono text-[11px] text-orange-600 dark:text-orange-400">
             {owned} of {allPerks.length} perks owned · {projectedPages} pages
           </span>
           <div className="flex gap-2">
-            <button onClick={onClose} className="rounded-lg border border-slate-800 px-4 py-2 text-xs font-bold text-slate-400">
+            <button onClick={onClose} className="rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-transparent px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-400">
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 text-xs font-extrabold text-white disabled:opacity-60"
+              className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 text-xs font-extrabold text-white disabled:opacity-60 shadow-sm cursor-pointer"
             >
               {saving ? 'Saving…' : 'Save'}
             </button>

@@ -72,21 +72,21 @@ export function ItemsAddonsViewer() {
   const getRarityBadgeStyle = (rarity: string) => {
     const clean = (rarity || '').toLowerCase().replace(/\s+/g, '');
     if (clean.includes('ultrarare')) {
-      return 'bg-pink-500/10 text-pink-400 border-pink-500/30';
+      return 'bg-pink-500/10 text-pink-700 dark:text-pink-400 border-pink-500/30';
     }
     if (clean.includes('veryrare')) {
-      return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
+      return 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/30';
     }
     if (clean.includes('rare')) {
-      return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+      return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30';
     }
     if (clean.includes('uncommon')) {
-      return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+      return 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30';
     }
     if (clean.includes('common')) {
-      return 'bg-slate-500/10 text-slate-400 border-slate-500/30';
+      return 'bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/30';
     }
-    return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30';
+    return 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border-cyan-500/30';
   };
 
   const filteredItems = items.filter((item) => {

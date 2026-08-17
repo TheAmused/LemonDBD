@@ -98,10 +98,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (isSyncing) return;
     try {
       setIsSyncing(true);
-      setSyncStatus('Init...');
-      await fetch(backendBase + '/api/v1/scrape', { method: 'POST' });
+      setSyncStatus('Seeding DB...');
+      const res = await fetch(backendBase + '/api/scrape-and-seed', { method: 'POST' });
+      if (!res.ok) {
+        // Fallback to /api/v1/scrape if needed
+        await fetch(backendBase + '/api/v1/scrape', { method: 'POST' });
+      }
     } catch (err) {
-      console.error('Failed to trigger scrape job:', err);
+      console.error('Failed to trigger scrape-and-seed job:', err);
       setIsSyncing(false);
     }
   };

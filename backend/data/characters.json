@@ -80,16 +80,6 @@
     "release_number": 15
   },
   {
-    "name": "Ace Visconti",
-    "real_name": "Ace Visconti",
-    "wiki_slug": "ace_visconti",
-    "short_name": "ace_visconti",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/ace-visconti.png",
-    "avatar_local_path": "avatars/survivors/ace_visconti.png",
-    "release_number": 12
-  },
-  {
     "name": "Nea Karlsson",
     "real_name": "Nea Karlsson",
     "wiki_slug": "nea_karlsson",
@@ -98,6 +88,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/nea-karlsson.png",
     "avatar_local_path": "avatars/survivors/nea_karlsson.png",
     "release_number": 8
+  },
+  {
+    "name": "Ace Visconti",
+    "real_name": "Ace Visconti",
+    "wiki_slug": "ace_visconti",
+    "short_name": "ace_visconti",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/ace-visconti.png",
+    "avatar_local_path": "avatars/survivors/ace_visconti.png",
+    "release_number": 12
   },
   {
     "name": "Mikaela Reid",
@@ -110,16 +110,6 @@
     "release_number": 52
   },
   {
-    "name": "Kwon Tae-young",
-    "real_name": "Kwon Tae-young",
-    "wiki_slug": "kwon_tae_young",
-    "short_name": "kwon_tae_young",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/kwon-tae-young.png",
-    "avatar_local_path": "avatars/survivors/kwon_tae_young.png",
-    "release_number": 93
-  },
-  {
     "name": "Leon S. Kennedy",
     "real_name": "Leon S. Kennedy",
     "wiki_slug": "leon_s._kennedy",
@@ -127,17 +117,7 @@
     "category": "Survivor",
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/leon-s-kennedy.png",
     "avatar_local_path": "avatars/survivors/leon_s._kennedy.png",
-    "release_number": 49
-  },
-  {
-    "name": "Ada Wong",
-    "real_name": "Ada Wong",
-    "wiki_slug": "ada_wong",
-    "short_name": "ada_wong",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/ada-wong.png",
-    "avatar_local_path": "avatars/survivors/ada_wong.png",
-    "release_number": 60
+    "release_number": 0
   },
   {
     "name": "Claudette Morel",
@@ -150,6 +130,26 @@
     "release_number": 5
   },
   {
+    "name": "Kwon Tae-young",
+    "real_name": "Kwon Tae-young",
+    "wiki_slug": "kwon_tae_young",
+    "short_name": "kwon_tae_young",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/kwon-tae-young.png",
+    "avatar_local_path": "avatars/survivors/kwon_tae_young.png",
+    "release_number": 0
+  },
+  {
+    "name": "Ada Wong",
+    "real_name": "Ada Wong",
+    "wiki_slug": "ada_wong",
+    "short_name": "ada_wong",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/ada-wong.png",
+    "avatar_local_path": "avatars/survivors/ada_wong.png",
+    "release_number": 60
+  },
+  {
     "name": "Yui Kimura",
     "real_name": "Yui Kimura",
     "wiki_slug": "yui_kimura",
@@ -158,36 +158,6 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/yui-kimura.png",
     "avatar_local_path": "avatars/survivors/yui_kimura.png",
     "release_number": 37
-  },
-  {
-    "name": "Jake Park",
-    "real_name": "Jake Park",
-    "wiki_slug": "jake_park",
-    "short_name": "jake_park",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/jake-park.png",
-    "avatar_local_path": "avatars/survivors/jake_park.png",
-    "release_number": 6
-  },
-  {
-    "name": "Lee Yun-Jin",
-    "real_name": "Lee Yun-Jin",
-    "wiki_slug": "lee_yun_jin",
-    "short_name": "lee_yun_jin",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/yun-jin-lee.png",
-    "avatar_local_path": "avatars/survivors/lee_yun_jin.png",
-    "release_number": 47
-  },
-  {
-    "name": "Jill Valentine",
-    "real_name": "Jill Valentine",
-    "wiki_slug": "jill_valentine",
-    "short_name": "jill_valentine",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/jill-valentine.png",
-    "avatar_local_path": "avatars/survivors/jill_valentine.png",
-    "release_number": 50
   },
   {
     "name": "Taurie Cain",
@@ -200,6 +170,36 @@
     "release_number": 82
   },
   {
+    "name": "Lee Yun-Jin",
+    "real_name": "Lee Yun-Jin",
+    "wiki_slug": "lee_yun_jin",
+    "short_name": "lee_yun_jin",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/yun-jin-lee.png",
+    "avatar_local_path": "avatars/survivors/lee_yun_jin.png",
+    "release_number": 0
+  },
+  {
+    "name": "Jake Park",
+    "real_name": "Jake Park",
+    "wiki_slug": "jake_park",
+    "short_name": "jake_park",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/jake-park.png",
+    "avatar_local_path": "avatars/survivors/jake_park.png",
+    "release_number": 6
+  },
+  {
+    "name": "Renato Lyra",
+    "real_name": "Renato Lyra",
+    "wiki_slug": "renato_lyra",
+    "short_name": "renato_lyra",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/renato-lyra.png",
+    "avatar_local_path": "avatars/survivors/renato_lyra.png",
+    "release_number": 66
+  },
+  {
     "name": "Steve Harrington",
     "real_name": "Steve Harrington",
     "wiki_slug": "steve_harrington",
@@ -208,6 +208,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/steve-harrington.png",
     "avatar_local_path": "avatars/survivors/steve_harrington.png",
     "release_number": 34
+  },
+  {
+    "name": "Jill Valentine",
+    "real_name": "Jill Valentine",
+    "wiki_slug": "jill_valentine",
+    "short_name": "jill_valentine",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/jill-valentine.png",
+    "avatar_local_path": "avatars/survivors/jill_valentine.png",
+    "release_number": 50
   },
   {
     "name": "Nancy Wheeler",
@@ -230,26 +240,6 @@
     "release_number": 61
   },
   {
-    "name": "Renato Lyra",
-    "real_name": "Renato Lyra",
-    "wiki_slug": "renato_lyra",
-    "short_name": "renato_lyra",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/renato-lyra.png",
-    "avatar_local_path": "avatars/survivors/renato_lyra.png",
-    "release_number": 66
-  },
-  {
-    "name": "Shane Wiigwaas",
-    "real_name": "Shane Wiigwaas",
-    "wiki_slug": "shane_wiigwaas",
-    "short_name": "shane_wiigwaas",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/shane-wiigwaas.png",
-    "avatar_local_path": "avatars/survivors/shane_wiigwaas.png",
-    "release_number": 95
-  },
-  {
     "name": "Thalita Lyra",
     "real_name": "Thalita Lyra",
     "wiki_slug": "thalita_lyra",
@@ -260,16 +250,6 @@
     "release_number": 65
   },
   {
-    "name": "Trevor Belmont",
-    "real_name": "Trevor Belmont",
-    "wiki_slug": "trevor_belmont",
-    "short_name": "trevor_belmont",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/trevor-belmont.png",
-    "avatar_local_path": "avatars/survivors/trevor_belmont.png",
-    "release_number": 80
-  },
-  {
     "name": "William \"Bill\" Overbeck",
     "real_name": "William \"Bill\" Overbeck",
     "wiki_slug": "william_bill_overbeck",
@@ -277,7 +257,7 @@
     "category": "Survivor",
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/william-bill-overbeck.png",
     "avatar_local_path": "avatars/survivors/william_bill_overbeck.png",
-    "release_number": 13
+    "release_number": 0
   },
   {
     "name": "David King",
@@ -288,16 +268,6 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/david-king.png",
     "avatar_local_path": "avatars/survivors/david_king.png",
     "release_number": 17
-  },
-  {
-    "name": "Felix Richter",
-    "real_name": "Felix Richter",
-    "wiki_slug": "felix_richter",
-    "short_name": "felix_richter",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/felix-richter.png",
-    "avatar_local_path": "avatars/survivors/felix_richter.png",
-    "release_number": 43
   },
   {
     "name": "Zarina Kassir",
@@ -320,6 +290,36 @@
     "release_number": 63
   },
   {
+    "name": "Felix Richter",
+    "real_name": "Felix Richter",
+    "wiki_slug": "felix_richter",
+    "short_name": "felix_richter",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/felix-richter.png",
+    "avatar_local_path": "avatars/survivors/felix_richter.png",
+    "release_number": 43
+  },
+  {
+    "name": "Shane Wiigwaas",
+    "real_name": "Shane Wiigwaas",
+    "wiki_slug": "shane_wiigwaas",
+    "short_name": "shane_wiigwaas",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/shane-wiigwaas.png",
+    "avatar_local_path": "avatars/survivors/shane_wiigwaas.png",
+    "release_number": 0
+  },
+  {
+    "name": "Trevor Belmont",
+    "real_name": "Trevor Belmont",
+    "wiki_slug": "trevor_belmont",
+    "short_name": "trevor_belmont",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/trevor-belmont.png",
+    "avatar_local_path": "avatars/survivors/trevor_belmont.png",
+    "release_number": 80
+  },
+  {
     "name": "Rick Grimes",
     "real_name": "Rick Grimes",
     "wiki_slug": "rick_grimes",
@@ -328,16 +328,6 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/rick-grimes.png",
     "avatar_local_path": "avatars/survivors/rick_grimes.png",
     "release_number": 86
-  },
-  {
-    "name": "Jane Romero",
-    "real_name": "Jane Romero",
-    "wiki_slug": "jane_romero",
-    "short_name": "jane_romero",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/jane-romero.png",
-    "avatar_local_path": "avatars/survivors/jane_romero.png",
-    "release_number": 30
   },
   {
     "name": "Nicolas Cage",
@@ -350,6 +340,16 @@
     "release_number": 69
   },
   {
+    "name": "Jane Romero",
+    "real_name": "Jane Romero",
+    "wiki_slug": "jane_romero",
+    "short_name": "jane_romero",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/jane-romero.png",
+    "avatar_local_path": "avatars/survivors/jane_romero.png",
+    "release_number": 30
+  },
+  {
     "name": "Adam Francis",
     "real_name": "Adam Francis",
     "wiki_slug": "adam_francis",
@@ -360,16 +360,6 @@
     "release_number": 26
   },
   {
-    "name": "Aestri Yazar",
-    "real_name": "Aestri Yazar",
-    "wiki_slug": "aestri_yazar",
-    "short_name": "aestri_yazar",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/aestri-yazar.png",
-    "avatar_local_path": "avatars/survivors/aestri_yazar.png",
-    "release_number": 77
-  },
-  {
     "name": "Orela Rose",
     "real_name": "Orela Rose",
     "wiki_slug": "orela_rose",
@@ -377,17 +367,7 @@
     "category": "Survivor",
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/orela-rose.png",
     "avatar_local_path": "avatars/survivors/orela_rose.png",
-    "release_number": 84
-  },
-  {
-    "name": "Alan Wake",
-    "real_name": "Alan Wake",
-    "wiki_slug": "alan_wake",
-    "short_name": "alan_wake",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/alan-wake.png",
-    "avatar_local_path": "avatars/survivors/alan_wake.png",
-    "release_number": 73
+    "release_number": 0
   },
   {
     "name": "Jeff Johansen",
@@ -400,6 +380,26 @@
     "release_number": 28
   },
   {
+    "name": "Aestri Yazar",
+    "real_name": "Aestri Yazar",
+    "wiki_slug": "aestri_yazar",
+    "short_name": "aestri_yazar",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/aestri-yazar.png",
+    "avatar_local_path": "avatars/survivors/aestri_yazar.png",
+    "release_number": 0
+  },
+  {
+    "name": "Alan Wake",
+    "real_name": "Alan Wake",
+    "wiki_slug": "alan_wake",
+    "short_name": "alan_wake",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/alan-wake.png",
+    "avatar_local_path": "avatars/survivors/alan_wake.png",
+    "release_number": 73
+  },
+  {
     "name": "Laurie Strode",
     "real_name": "Laurie Strode",
     "wiki_slug": "laurie_strode",
@@ -408,6 +408,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/laurie-strode.png",
     "avatar_local_path": "avatars/survivors/laurie_strode.png",
     "release_number": 10
+  },
+  {
+    "name": "Eleven",
+    "real_name": "Eleven",
+    "wiki_slug": "eleven",
+    "short_name": "eleven",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/eleven.png",
+    "avatar_local_path": "avatars/survivors/eleven.png",
+    "release_number": 0
   },
   {
     "name": "Quentin Smith",
@@ -420,16 +430,6 @@
     "release_number": 20
   },
   {
-    "name": "Eleven",
-    "real_name": "Eleven",
-    "wiki_slug": "eleven",
-    "short_name": "eleven",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/eleven.png",
-    "avatar_local_path": "avatars/survivors/eleven.png",
-    "release_number": 91
-  },
-  {
     "name": "Ellen Ripley",
     "real_name": "Ellen Ripley",
     "wiki_slug": "ellen_ripley",
@@ -440,14 +440,14 @@
     "release_number": 71
   },
   {
-    "name": "Ashley J. Williams",
-    "real_name": "Ashley J. Williams",
-    "wiki_slug": "ashley_j._williams",
-    "short_name": "ashley_j._williams",
+    "name": "Elodie Rakoto",
+    "real_name": "Elodie Rakoto",
+    "wiki_slug": "elodie_rakoto",
+    "short_name": "elodie_rakoto",
     "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/ashley-j-williams.png",
-    "avatar_local_path": "avatars/survivors/ashley_j._williams.png",
-    "release_number": 31
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/elodie-rakoto.png",
+    "avatar_local_path": "avatars/survivors/elodie_rakoto.png",
+    "release_number": 0
   },
   {
     "name": "Dustin Henderson",
@@ -457,7 +457,7 @@
     "category": "Survivor",
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/dustin-henderson.png",
     "avatar_local_path": "avatars/survivors/dustin_henderson.png",
-    "release_number": 92
+    "release_number": 0
   },
   {
     "name": "Gabriel Soma",
@@ -470,16 +470,6 @@
     "release_number": 68
   },
   {
-    "name": "Elodie Rakoto",
-    "real_name": "Elodie Rakoto",
-    "wiki_slug": "elodie_rakoto",
-    "short_name": "elodie_rakoto",
-    "category": "Survivor",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/elodie-rakoto.png",
-    "avatar_local_path": "avatars/survivors/elodie_rakoto.png",
-    "release_number": 45
-  },
-  {
     "name": "Detective Tapp",
     "real_name": "Detective Tapp",
     "wiki_slug": "detective_tapp",
@@ -487,7 +477,7 @@
     "category": "Survivor",
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/detective-tapp.png",
     "avatar_local_path": "avatars/survivors/detective_tapp.png",
-    "release_number": 22
+    "release_number": 0
   },
   {
     "name": "Michonne Grimes",
@@ -498,6 +488,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/michonne-grimes.png",
     "avatar_local_path": "avatars/survivors/michonne_grimes.png",
     "release_number": 87
+  },
+  {
+    "name": "Ashley J. Williams",
+    "real_name": "Ashley J. Williams",
+    "wiki_slug": "ashley_j._williams",
+    "short_name": "ashley_j._williams",
+    "category": "Survivor",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/ashley-j-williams.png",
+    "avatar_local_path": "avatars/survivors/ashley_j._williams.png",
+    "release_number": 0
   },
   {
     "name": "Jonah Vasquez",
@@ -537,7 +537,7 @@
     "category": "Survivor",
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/aurora-stardotter.png",
     "avatar_local_path": "avatars/survivors/aurora_stardotter.png",
-    "release_number": 97
+    "release_number": 0
   },
   {
     "name": "The Slasher",
@@ -547,7 +547,7 @@
     "category": "Killer",
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-slasher.png",
     "avatar_local_path": "avatars/killers/the_slasher.png",
-    "release_number": 94
+    "release_number": 0
   },
   {
     "name": "The Ghoul",
@@ -580,6 +580,16 @@
     "release_number": 85
   },
   {
+    "name": "The Hillbilly",
+    "real_name": "Max Thompson Jr.",
+    "wiki_slug": "the_hillbilly",
+    "short_name": "the_hillbilly",
+    "category": "Killer",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-hillbilly.png",
+    "avatar_local_path": "avatars/killers/the_hillbilly.png",
+    "release_number": 2
+  },
+  {
     "name": "The Legion",
     "real_name": "Frank, Julie, Susie, Joey",
     "wiki_slug": "the_legion",
@@ -600,16 +610,6 @@
     "release_number": 16
   },
   {
-    "name": "The Nemesis",
-    "real_name": "The Nemesis",
-    "wiki_slug": "the_nemesis",
-    "short_name": "the_nemesis",
-    "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-nemesis.png",
-    "avatar_local_path": "avatars/killers/the_nemesis.png",
-    "release_number": 48
-  },
-  {
     "name": "The Spirit",
     "real_name": "Rin Yamaoka",
     "wiki_slug": "the_spirit",
@@ -618,16 +618,6 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-spirit.png",
     "avatar_local_path": "avatars/killers/the_spirit.png",
     "release_number": 25
-  },
-  {
-    "name": "The Hillbilly",
-    "real_name": "Max Thompson Jr.",
-    "wiki_slug": "the_hillbilly",
-    "short_name": "the_hillbilly",
-    "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-hillbilly.png",
-    "avatar_local_path": "avatars/killers/the_hillbilly.png",
-    "release_number": 2
   },
   {
     "name": "The Nurse",
@@ -640,14 +630,14 @@
     "release_number": 7
   },
   {
-    "name": "The Wraith",
-    "real_name": "Philip Ojomo",
-    "wiki_slug": "the_wraith",
-    "short_name": "the_wraith",
+    "name": "The Nemesis",
+    "real_name": "The Nemesis",
+    "wiki_slug": "the_nemesis",
+    "short_name": "the_nemesis",
     "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-wraith.png",
-    "avatar_local_path": "avatars/killers/the_wraith.png",
-    "release_number": 1
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-nemesis.png",
+    "avatar_local_path": "avatars/killers/the_nemesis.png",
+    "release_number": 48
   },
   {
     "name": "The Blight",
@@ -658,6 +648,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-blight.png",
     "avatar_local_path": "avatars/killers/the_blight.png",
     "release_number": 42
+  },
+  {
+    "name": "The Wraith",
+    "real_name": "Philip Ojomo",
+    "wiki_slug": "the_wraith",
+    "short_name": "the_wraith",
+    "category": "Killer",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-wraith.png",
+    "avatar_local_path": "avatars/killers/the_wraith.png",
+    "release_number": 1
   },
   {
     "name": "The Shape",
@@ -720,16 +720,6 @@
     "release_number": 79
   },
   {
-    "name": "The First",
-    "real_name": "The First",
-    "wiki_slug": "the_first",
-    "short_name": "the_first",
-    "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-first.png",
-    "avatar_local_path": "avatars/killers/the_first.png",
-    "release_number": 90
-  },
-  {
     "name": "The Pig",
     "real_name": "Amanda Young",
     "wiki_slug": "the_pig",
@@ -740,14 +730,14 @@
     "release_number": 21
   },
   {
-    "name": "The Trickster",
-    "real_name": "Ji-Woon Hak",
-    "wiki_slug": "the_trickster",
-    "short_name": "the_trickster",
+    "name": "The First",
+    "real_name": "The First",
+    "wiki_slug": "the_first",
+    "short_name": "the_first",
     "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-trickster.png",
-    "avatar_local_path": "avatars/killers/the_trickster.png",
-    "release_number": 46
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-first.png",
+    "avatar_local_path": "avatars/killers/the_first.png",
+    "release_number": 0
   },
   {
     "name": "The Knight",
@@ -758,6 +748,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-knight.png",
     "avatar_local_path": "avatars/killers/the_knight.png",
     "release_number": 62
+  },
+  {
+    "name": "The Trickster",
+    "real_name": "Ji-Woon Hak",
+    "wiki_slug": "the_trickster",
+    "short_name": "the_trickster",
+    "category": "Killer",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-trickster.png",
+    "avatar_local_path": "avatars/killers/the_trickster.png",
+    "release_number": 46
   },
   {
     "name": "The Doctor",
@@ -790,16 +790,6 @@
     "release_number": 74
   },
   {
-    "name": "The Good Guy",
-    "real_name": "Charles Lee Ray",
-    "wiki_slug": "the_good_guy",
-    "short_name": "the_good_guy",
-    "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-good-guy.png",
-    "avatar_local_path": "avatars/killers/the_good_guy.png",
-    "release_number": 72
-  },
-  {
     "name": "The Clown",
     "real_name": "Kenneth Chase",
     "wiki_slug": "the_clown",
@@ -808,6 +798,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-clown.png",
     "avatar_local_path": "avatars/killers/the_clown.png",
     "release_number": 23
+  },
+  {
+    "name": "The Good Guy",
+    "real_name": "Charles Lee Ray",
+    "wiki_slug": "the_good_guy",
+    "short_name": "the_good_guy",
+    "category": "Killer",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-good-guy.png",
+    "avatar_local_path": "avatars/killers/the_good_guy.png",
+    "release_number": 72
   },
   {
     "name": "The Nightmare",
@@ -830,14 +830,14 @@
     "release_number": 55
   },
   {
-    "name": "The Lich",
-    "real_name": "Vecna",
-    "wiki_slug": "the_lich",
-    "short_name": "the_lich",
+    "name": "The Dredge",
+    "real_name": "The Dredge",
+    "wiki_slug": "the_dredge",
+    "short_name": "the_dredge",
     "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-lich.png",
-    "avatar_local_path": "avatars/killers/the_lich.png",
-    "release_number": 76
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-dredge.png",
+    "avatar_local_path": "avatars/killers/the_dredge.png",
+    "release_number": 57
   },
   {
     "name": "The Plague",
@@ -850,14 +850,14 @@
     "release_number": 29
   },
   {
-    "name": "The Dredge",
-    "real_name": "The Dredge",
-    "wiki_slug": "the_dredge",
-    "short_name": "the_dredge",
+    "name": "The Lich",
+    "real_name": "Vecna",
+    "wiki_slug": "the_lich",
+    "short_name": "the_lich",
     "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-dredge.png",
-    "avatar_local_path": "avatars/killers/the_dredge.png",
-    "release_number": 57
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-lich.png",
+    "avatar_local_path": "avatars/killers/the_lich.png",
+    "release_number": 76
   },
   {
     "name": "The Executioner",
@@ -900,16 +900,6 @@
     "release_number": 67
   },
   {
-    "name": "The Krasue",
-    "real_name": "The Krasue",
-    "wiki_slug": "the_krasue",
-    "short_name": "the_krasue",
-    "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-krasue.png",
-    "avatar_local_path": "avatars/killers/the_krasue.png",
-    "release_number": 88
-  },
-  {
     "name": "The Houndmaster",
     "real_name": "The Houndmaster",
     "wiki_slug": "the_houndmaster",
@@ -918,6 +908,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-houndmaster.png",
     "avatar_local_path": "avatars/killers/the_houndmaster.png",
     "release_number": 81
+  },
+  {
+    "name": "The Krasue",
+    "real_name": "The Krasue",
+    "wiki_slug": "the_krasue",
+    "short_name": "the_krasue",
+    "category": "Killer",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-krasue.png",
+    "avatar_local_path": "avatars/killers/the_krasue.png",
+    "release_number": 88
   },
   {
     "name": "The Demogorgon",
@@ -930,16 +930,6 @@
     "release_number": 33
   },
   {
-    "name": "The Hag",
-    "real_name": "Lisa Sherwood",
-    "wiki_slug": "the_hag",
-    "short_name": "the_hag",
-    "category": "Killer",
-    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-hag.png",
-    "avatar_local_path": "avatars/killers/the_hag.png",
-    "release_number": 11
-  },
-  {
     "name": "The Cenobite",
     "real_name": "Elliot Spencer",
     "wiki_slug": "the_cenobite",
@@ -948,6 +938,16 @@
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-cenobite.png",
     "avatar_local_path": "avatars/killers/the_cenobite.png",
     "release_number": 51
+  },
+  {
+    "name": "The Hag",
+    "real_name": "Lisa Sherwood",
+    "wiki_slug": "the_hag",
+    "short_name": "the_hag",
+    "category": "Killer",
+    "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-hag.png",
+    "avatar_local_path": "avatars/killers/the_hag.png",
+    "release_number": 11
   },
   {
     "name": "The Twins",
@@ -977,6 +977,6 @@
     "category": "Killer",
     "avatar_url": "https://cdn.nightlight.gg/img/portraits/the-judgement.png",
     "avatar_local_path": "avatars/killers/the_judgment.png",
-    "release_number": 96
+    "release_number": 0
   }
 ]

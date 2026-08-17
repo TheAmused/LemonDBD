@@ -1,22 +1,32 @@
 import os
 import logging
 import threading
+from typing import Optional, Type
 from pathlib import Path
 from flask import Flask, jsonify
 from flask_cors import CORS
 
+from app.config import Config
+from app.extensions import db, migrate
+import app.models  # noqa: F401
 
-def create_app() -> Flask:
-    app = Flask(__name__)
+
+def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
+    flask_app = Flask(__name__)
+
+    if config_class is None:
+        flask_app.config.from_object(Config)
+    else:
+        flask_app.config.from_object(config_class)
 
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     )
 
-    allowed_origins = os.getenv("CORS_ORIGINS", "*")
+    allowed_origins = flask_app.config.get("CORS_ORIGINS", "*")
     CORS(
-        app,
+        flask_app,
         resources={
             r"/api/*": {"origins": allowed_origins},
             r"/static/*": {"origins": allowed_origins},
@@ -24,22 +34,28 @@ def create_app() -> Flask:
         supports_credentials=True,
     )
 
-    @app.after_request
+    # Initialize extensions
+    db.init_app(flask_app)
+    migrate.init_app(flask_app, db)
+
+    @flask_app.after_request
     def apply_cors_headers(response):
         response.headers["Access-Control-Allow-Origin"] = allowed_origins
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With, Accept"
         return response
 
-    @app.route("/", defaults={"path": ""}, methods=["OPTIONS"])
-    @app.route("/<path:path>", methods=["OPTIONS"])
+    @flask_app.route("/", defaults={"path": ""}, methods=["OPTIONS"])
+    @flask_app.route("/<path:path>", methods=["OPTIONS"])
     def handle_options_preflight(path):
         return "", 200
 
-    from app.services.db_service import DatabaseService
-    DatabaseService().init_db()
+    with flask_app.app_context():
+        from app.services.db_service import DatabaseService
+        DatabaseService().init_db()
 
-    from app.routes.perks import perks_bp, _run_background_scrape
+    # Blueprints
+    from app.routes.perks import perks_bp, _run_background_scrape, perk_service
     from app.routes.challenges import challenges_bp
     from app.routes.generator import generator_bp
     from app.routes.synergy import synergy_bp
@@ -54,23 +70,23 @@ def create_app() -> Flask:
     from app.routes.others.custom_perks import custom_perks_bp
     from app.routes.others.guesser import guesser_bp
 
-    app.register_blueprint(perks_bp)
-    app.register_blueprint(challenges_bp)
-    app.register_blueprint(generator_bp)
-    app.register_blueprint(draft_bp)
-    app.register_blueprint(quests_bp)
-    app.register_blueprint(synergy_bp)
-    app.register_blueprint(killer_calc_bp)
-    app.register_blueprint(builds_bp)
-    app.register_blueprint(custom_perks_bp)
-    app.register_blueprint(maps_bp)
-    app.register_blueprint(page_streak_bp)
-    app.register_blueprint(guesser_bp)
+    flask_app.register_blueprint(perks_bp)
+    flask_app.register_blueprint(challenges_bp)
+    flask_app.register_blueprint(generator_bp)
+    flask_app.register_blueprint(draft_bp)
+    flask_app.register_blueprint(quests_bp)
+    flask_app.register_blueprint(synergy_bp)
+    flask_app.register_blueprint(killer_calc_bp)
+    flask_app.register_blueprint(builds_bp)
+    flask_app.register_blueprint(custom_perks_bp)
+    flask_app.register_blueprint(maps_bp)
+    flask_app.register_blueprint(page_streak_bp)
+    flask_app.register_blueprint(guesser_bp)
 
-    # Automatically check data on startup
-    data_file = Path(app.root_path).parent / "data" / "perks.json"
-    if not data_file.exists() or data_file.stat().st_size == 0:
-        logging.info("perks.json not found on startup. Triggering initial scrape in background thread...")
-        threading.Thread(target=_run_background_scrape, daemon=True).start()
+    with flask_app.app_context():
+        try:
+            perk_service.reload_data()
+        except Exception as e:
+            logging.debug(f"PerkService reload_data notice: {e}")
 
-    return app
+    return flask_app

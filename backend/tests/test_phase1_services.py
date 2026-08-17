@@ -3,7 +3,6 @@ import tempfile
 import unittest
 from app import create_app
 from app.services.db_service import DatabaseService
-from app.services.challenge_service import ChallengeService
 from app.services.others.draft_service import DraftService
 from app.services.others.quest_service import QuestService
 
@@ -18,7 +17,6 @@ class TestPhase1Services(unittest.TestCase):
         self.app.config["TESTING"] = True
         self.app.config["DRAFT_SERVICE"] = DraftService(db_service=self.db_service)
         self.app.config["QUEST_SERVICE"] = QuestService(db_service=self.db_service)
-        self.app.config["CHALLENGE_SERVICE"] = ChallengeService(db_service=self.db_service)
         self.client = self.app.test_client()
 
     def tearDown(self):
@@ -27,51 +25,7 @@ class TestPhase1Services(unittest.TestCase):
             os.unlink(self.db_path)
 
     # -------------------------------------------------------------
-    # 1. Killer Gauntlet Tiers Tests
-    # -------------------------------------------------------------
-    def test_killer_gauntlet_tiers(self):
-        service = ChallengeService(db_service=self.db_service)
-
-        # Tier 0 (Streak 0-2)
-        tier0 = service.get_tier_info(0, role="killer")
-        self.assertEqual(tier0["name"], "The Warm Up")
-        self.assertEqual(tier0["perk_limit"], 4)
-        self.assertEqual(tier0["addon_limit"], 2)
-
-        # Tier 1 (Streak 3-5)
-        tier1 = service.get_tier_info(3, role="killer")
-        self.assertEqual(tier1["name"], "The Restriction")
-        self.assertEqual(tier1["perk_limit"], 3)
-        self.assertEqual(tier1["addon_limit"], 1)
-
-        # Tier 2 (Streak 6-8)
-        tier2 = service.get_tier_info(6, role="killer")
-        self.assertEqual(tier2["name"], "The Deprivation")
-        self.assertEqual(tier2["perk_limit"], 2)
-        self.assertEqual(tier2["addon_limit"], 0)
-
-        # Tier 3 (Streak 9-11)
-        tier3 = service.get_tier_info(9, role="killer")
-        self.assertEqual(tier3["name"], "The Barebones")
-        self.assertEqual(tier3["perk_limit"], 1)
-        self.assertEqual(tier3["addon_limit"], 0)
-
-        # Tier 4 (Streak 12+)
-        tier4 = service.get_tier_info(12, role="killer")
-        self.assertEqual(tier4["name"], "The Entity's Chosen")
-        self.assertEqual(tier4["perk_limit"], 0)
-        self.assertEqual(tier4["addon_limit"], 0)
-
-        # Confirm survivor tiers differ from killer tiers
-        survivor_tier0 = service.get_tier_info(0, role="survivor")
-        self.assertEqual(survivor_tier0["name"], "The Warm Up")
-        self.assertNotIn("addon_limit", survivor_tier0)
-
-        survivor_tier1 = service.get_tier_info(3, role="survivor")
-        self.assertEqual(survivor_tier1["name"], "The Thinning")
-
-    # -------------------------------------------------------------
-    # 2. Tournament Draft Service & API Tests
+    # 1. Tournament Draft Service & API Tests
     # -------------------------------------------------------------
     def test_draft_service_and_endpoints(self):
         # Create draft room via POST /api/v1/draft/create
@@ -125,7 +79,7 @@ class TestPhase1Services(unittest.TestCase):
         self.assertEqual(res.status_code, 404)
 
     # -------------------------------------------------------------
-    # 3. Daily & Weekly Quest Service & API Tests
+    # 2. Daily & Weekly Quest Service & API Tests
     # -------------------------------------------------------------
     def test_quest_service_and_endpoints(self):
         # GET /api/v1/quests/ should auto-seed 3 daily + 1 weekly

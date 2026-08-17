@@ -60,11 +60,11 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     from app.routes.auth import auth_bp
     from app.routes.users import users_bp
     from app.routes.perks import perks_bp, _run_background_scrape, perk_service
-    from app.routes.challenges import challenges_bp
     from app.routes.generator import generator_bp
     from app.routes.synergy import synergy_bp
     from app.routes.maps import maps_bp
     from app.routes.page_streak import page_streak_bp
+    from app.routes.gauntlet_streak import gauntlet_streak_bp
 
     # Others routes
     from app.routes.others.draft import draft_bp
@@ -77,7 +77,6 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(users_bp)
     flask_app.register_blueprint(perks_bp)
-    flask_app.register_blueprint(challenges_bp)
     flask_app.register_blueprint(generator_bp)
     flask_app.register_blueprint(draft_bp)
     flask_app.register_blueprint(quests_bp)
@@ -87,6 +86,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app.register_blueprint(custom_perks_bp)
     flask_app.register_blueprint(maps_bp)
     flask_app.register_blueprint(page_streak_bp)
+    flask_app.register_blueprint(gauntlet_streak_bp)
     flask_app.register_blueprint(guesser_bp)
 
     with flask_app.app_context():

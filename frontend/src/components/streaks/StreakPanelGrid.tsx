@@ -1,14 +1,16 @@
 import React from 'react';
 import { StreakPanel } from './StreakPanel';
-import { KILLER_STREAK_PANELS } from './panels';
+import { StreakPanelDef } from './panels';
 
 interface StreakPanelGridProps {
   locale: string;
+  role: string;
+  panels: StreakPanelDef[];
 }
 
-export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale }) => (
+export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role, panels }) => (
   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {KILLER_STREAK_PANELS.map((panel) =>
+    {panels.map((panel) =>
       panel.comingSoon ? (
         <StreakPanel
           key={panel.id}
@@ -27,7 +29,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale }) => (
           icon={panel.icon}
           accent={panel.accent}
           accentBorder={panel.accentBorder}
-          href={`/${locale}/streaks/killer/${panel.id}`}
+          href={`/${locale}/streaks/${role}/${panel.id}`}
         />
       )
     )}

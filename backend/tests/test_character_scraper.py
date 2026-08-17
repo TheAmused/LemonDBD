@@ -248,12 +248,12 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
         conn = self.db_service.get_connection()
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO challenge_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
+            "INSERT INTO gauntlet_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
             ("killer", "Blood Bond", 3),
         )
         blood_bond_run_id = cur.lastrowid
         cur.execute(
-            "INSERT INTO challenge_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
+            "INSERT INTO gauntlet_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
             ("killer", "Trapper", 1),
         )
         cur.execute(
@@ -262,9 +262,9 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
         )
         clown_run_id = cur.lastrowid
         cur.execute(
-            "INSERT INTO match_logs (run_id, role, character_id, result, perks_json, map_offering, "
-            "streak_before, streak_after) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-            (blood_bond_run_id, "killer", "Blood Bond", "win", "[]", "none", 2, 3),
+            "INSERT INTO gauntlet_match_logs (run_id, role, character_id, result, perks_json, "
+            "streak_before, streak_after) VALUES (?, ?, ?, ?, ?, ?, ?);",
+            (blood_bond_run_id, "killer", "Blood Bond", "win", "[]", 2, 3),
         )
         cur.execute(
             "INSERT INTO page_streak_page_logs (run_id, attempt, page_number, perks_json, result) "
@@ -288,14 +288,14 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
 
     def test_rows_with_unknown_characters_are_deleted(self):
         deleted = self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
-        self.assertEqual(deleted["challenge_runs"], 1)
-        self.assertEqual(self._count("challenge_runs"), 1)
+        self.assertEqual(deleted["gauntlet_runs"], 1)
+        self.assertEqual(self._count("gauntlet_runs"), 1)
 
     def test_rows_with_known_characters_survive(self):
         self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
         conn = self.db_service.get_connection()
         cur = conn.cursor()
-        cur.execute("SELECT current_character_id FROM challenge_runs;")
+        cur.execute("SELECT current_character_id FROM gauntlet_runs;")
         remaining = [row["current_character_id"] for row in cur.fetchall()]
         conn.close()
         self.assertEqual(remaining, ["Trapper"])
@@ -308,13 +308,13 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
     def test_an_empty_valid_set_is_ignored(self):
         deleted = self.db_service.prune_stale_character_rows(set())
         self.assertEqual(deleted, {})
-        self.assertEqual(self._count("challenge_runs"), 2)
+        self.assertEqual(self._count("gauntlet_runs"), 2)
 
     def test_child_rows_are_cascaded_with_their_parent(self):
         # Guards the PRAGMA foreign_keys = ON in prune_stale_character_rows: without it
         # SQLite ignores ON DELETE CASCADE and leaves orphaned history behind.
         self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
-        self.assertEqual(self._count("match_logs"), 0)
+        self.assertEqual(self._count("gauntlet_match_logs"), 0)
         self.assertEqual(self._count("page_streak_page_logs"), 0)
 
 

@@ -407,7 +407,7 @@ export default function UserProfilePage() {
                 >
                   <div className="flex items-center gap-2.5">
                     <Repeat className="h-4 w-4 text-orange-500 dark:text-orange-400" />
-                    <span>Streaks & Gauntlet</span>
+                    <span>Challenges</span>
                   </div>
                   <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600 group-hover:text-orange-500 dark:group-hover:text-orange-400 group-hover:translate-x-0.5 transition-transform" />
                 </Link>

@@ -62,6 +62,12 @@ test('AudioCaptureSession class interface and contract', () => {
   const result = session.stop();
   assert.ok(result instanceof Float32Array);
   assert.strictEqual(result.length, 0);
+
+  // Calling stop immediately after creation or aborting leaves session in clean stopped state
+  session.stop();
+  const secondResult = session.stop();
+  assert.ok(secondResult instanceof Float32Array);
+  assert.strictEqual(secondResult.length, 0);
 });
 
 test('resampleTo16k downsamples 48kHz audio buffer to 16kHz Float32Array', () => {

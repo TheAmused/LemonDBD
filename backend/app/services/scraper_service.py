@@ -153,21 +153,30 @@ class ScraperService:
             addons = []
         return items, addons
 
-    @staticmethod
-    def _apply_perk_diamond_frame(icon_bytes: bytes, size: int = 256) -> bytes:
+    _PERK_FRAME_TEMPLATE_PATH = Path(__file__).resolve().parent.parent / "scrapers" / "assets" / "perk_frame.png"
+    _perk_frame_template_cache = None
+
+    @classmethod
+    def _get_perk_frame_template(cls):
+        from PIL import Image
+
+        if cls._perk_frame_template_cache is None:
+            cls._perk_frame_template_cache = Image.open(cls._PERK_FRAME_TEMPLATE_PATH).convert("RGBA")
+        return cls._perk_frame_template_cache
+
+    @classmethod
+    def _apply_perk_diamond_frame(cls, icon_bytes: bytes) -> bytes:
         """wiki.gg only serves the bare perk glyph, with no rarity frame baked in
-        (unlike nightlight.gg's icons). Draw a purple diamond frame behind the
-        glyph so perks keep their familiar framed look regardless of rarity."""
-        from PIL import Image, ImageDraw
+        (unlike nightlight.gg's icons). Paste the glyph onto a real diamond-frame
+        background lifted from a nightlight.gg icon so perks keep their familiar
+        framed look regardless of rarity."""
+        from PIL import Image
+
+        template = cls._get_perk_frame_template()
+        size = template.size[0]
+        canvas = template.copy()
 
         icon = Image.open(io.BytesIO(icon_bytes)).convert("RGBA")
-        canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-        draw = ImageDraw.Draw(canvas)
-        margin = size * 0.04
-        half = size / 2
-        points = [(half, margin), (size - margin, half), (half, size - margin), (margin, half)]
-        draw.polygon(points, fill=(58, 33, 84, 255), outline=(15, 8, 20, 255), width=max(2, size // 64))
-
         icon_size = int(size * 0.62)
         icon_resized = icon.resize((icon_size, icon_size), Image.LANCZOS)
         offset = ((size - icon_size) // 2, (size - icon_size) // 2)

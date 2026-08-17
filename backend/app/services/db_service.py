@@ -278,13 +278,10 @@ class DatabaseService:
                 FOREIGN KEY (map_id) REFERENCES map_realms(map_id) ON DELETE CASCADE
             );
 
-            CREATE TABLE IF NOT EXISTS page_streak_excluded_perks (
-                perk_name TEXT PRIMARY KEY
-            );
-
             CREATE TABLE IF NOT EXISTS page_streak_runs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                killer TEXT NOT NULL UNIQUE,
+                user_id INTEGER,
+                killer TEXT NOT NULL,
                 status TEXT NOT NULL DEFAULT 'in_progress' CHECK (status IN ('in_progress', 'completed')),
                 attempt INTEGER NOT NULL DEFAULT 1,
                 current_page INTEGER NOT NULL DEFAULT 1,

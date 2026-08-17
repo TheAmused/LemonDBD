@@ -21,16 +21,9 @@ class TestDatabaseService(unittest.TestCase):
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = [row[0] for row in cursor.fetchall()]
         
-        self.assertIn("user_settings", tables)
         self.assertIn("perk_rules", tables)
-        self.assertIn("challenge_runs", tables)
-        self.assertIn("match_logs", tables)
-        
-        # Verify default settings single row
-        cursor.execute("SELECT checkpoint_interval FROM user_settings WHERE id=1;")
-        row = cursor.fetchone()
-        self.assertIsNotNone(row)
-        self.assertEqual(row[0], 3)
+        self.assertIn("gauntlet_runs", tables)
+        self.assertIn("gauntlet_match_logs", tables)
         conn.close()
 
 if __name__ == "__main__":

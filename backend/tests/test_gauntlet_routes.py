@@ -1,57 +1,125 @@
-import os
 import unittest
 from app import create_app
-from app.services.db_service import DatabaseService
-from app.services.challenge_service import ChallengeService
+from app.extensions import db
+from app.models import Character, Perk
+from app.services.user_service import UserService
+
+
+def seed_killer(name, perk_count=3):
+    character = Character(name=name, role="Killer")
+    db.session.add(character)
+    db.session.flush()
+    for i in range(1, perk_count + 1):
+        db.session.add(Perk(
+            name=f"{name} Perk {i}",
+            character_id=character.id,
+            is_teachable=True,
+            category="Killer",
+        ))
+    db.session.commit()
+    return character
 
 
 class TestGauntletRoutes(unittest.TestCase):
     def setUp(self):
-        self.db_path = "test_gauntlet_routes.db"
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
-        self.db_service = DatabaseService(db_path=self.db_path)
-        self.db_service.init_db()
-        self.challenge_service = ChallengeService(db_service=self.db_service)
-
         self.app = create_app()
         self.app.config["TESTING"] = True
-        self.app.config["CHALLENGE_SERVICE"] = self.challenge_service
         self.client = self.app.test_client()
+        self.ctx = self.app.app_context()
+        self.ctx.push()
+        db.create_all()
+
+        seed_killer("Nurse")
+        seed_killer("Trapper")
+
+        user_service = UserService()
+        user, err = user_service.register_user("streakuser", "gauntlet@test.com", "password123")
+        assert err is None
+        self.user_id = user.id
+        self.token = user_service.generate_token(user.id)
+        self.headers = {"Authorization": f"Bearer {self.token}"}
 
     def tearDown(self):
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+        db.session.remove()
+        db.drop_all()
+        self.ctx.pop()
 
-    def test_invalidate_match_endpoint(self):
-        run_res = self.client.get('/api/v1/challenges/run?role=survivor')
-        self.assertEqual(run_res.status_code, 200)
-        run_data = run_res.get_json()
-        self.assertIn("tier_info", run_data)
-        run_id = run_data["run"]["id"]
+    def test_endpoints_require_login(self):
+        self.assertEqual(self.client.get("/api/v1/gauntlet-streak/run?role=killer").status_code, 401)
+        self.assertEqual(
+            self.client.post("/api/v1/gauntlet-streak/roll", json={"role": "killer"}).status_code, 401
+        )
+        self.assertEqual(self.client.get("/api/v1/gauntlet-streak/stats?role=killer").status_code, 401)
 
-        response = self.client.post('/api/v1/challenges/invalidate', json={"run_id": run_id, "reason": "dc_before_5_gens"})
-        self.assertEqual(response.status_code, 200)
-        data = response.get_json()
-        self.assertIn("run", data)
-        self.assertEqual(data["run"]["id"], run_id)
+    def test_run_requires_valid_role(self):
+        res = self.client.get("/api/v1/gauntlet-streak/run?role=bogus", headers=self.headers)
+        self.assertEqual(res.status_code, 400)
 
-    def test_character_pool_endpoints(self):
-        get_res = self.client.get('/api/v1/challenges/pool?role=survivor')
-        self.assertEqual(get_res.status_code, 200)
-        get_data = get_res.get_json()
-        self.assertIn("disabled_characters", get_data)
+    def test_get_run_auto_creates(self):
+        res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
+        self.assertEqual(res.status_code, 200)
+        run = res.get_json()["run"]
+        self.assertEqual(run["role"], "killer")
+        self.assertEqual(run["status"], "in_progress")
+        self.assertIn("tier_info", run)
 
-        post_res = self.client.post('/api/v1/challenges/pool', json={"role": "survivor", "disabled_characters": ["Dwight Fairfield"]})
-        self.assertEqual(post_res.status_code, 200)
-        post_data = post_res.get_json()
-        self.assertIn("disabled_characters", post_data)
-        self.assertIn("Dwight Fairfield", post_data["disabled_characters"])
+    def test_roll_returns_a_loadout(self):
+        res = self.client.post("/api/v1/gauntlet-streak/roll", json={"role": "killer"}, headers=self.headers)
+        self.assertEqual(res.status_code, 200)
+        run = res.get_json()["run"]
+        self.assertIn("current_loadout", run)
+        self.assertIn("character", run["current_loadout"])
 
-        verify_res = self.client.get('/api/v1/challenges/pool?role=survivor')
-        self.assertEqual(verify_res.status_code, 200)
-        verify_data = verify_res.get_json()
-        self.assertIn("Dwight Fairfield", verify_data["disabled_characters"])
+    def test_result_lifecycle(self):
+        run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
+        run_id = run_res.get_json()["run"]["id"]
+
+        res = self.client.post(
+            "/api/v1/gauntlet-streak/result",
+            json={"role": "killer", "run_id": run_id, "result": "win"},
+            headers=self.headers,
+        )
+        self.assertEqual(res.status_code, 200)
+        data = res.get_json()
+        self.assertEqual(data["previous_run"]["current_streak"], 1)
+        self.assertIn("run", data)  # the freshly-rolled next run
+
+    def test_invalidate_endpoint(self):
+        run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
+        run_id = run_res.get_json()["run"]["id"]
+        target = run_res.get_json()["run"]["current_character_id"]
+
+        res = self.client.post(
+            "/api/v1/gauntlet-streak/invalidate",
+            json={"run_id": run_id, "reason": "game_cancelled"},
+            headers=self.headers,
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.get_json()["run"]["current_character_id"], target)
+
+    def test_stats_endpoint(self):
+        res = self.client.get("/api/v1/gauntlet-streak/stats?role=killer", headers=self.headers)
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("stats", res.get_json())
+
+    def test_runs_are_isolated_per_user(self):
+        user_service = UserService()
+        other, err = user_service.register_user("otherstreakuser", "other-gauntlet@test.com", "password123")
+        assert err is None
+        other_headers = {"Authorization": f"Bearer {user_service.generate_token(other.id)}"}
+
+        run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
+        run_id = run_res.get_json()["run"]["id"]
+        self.client.post(
+            "/api/v1/gauntlet-streak/result",
+            json={"role": "killer", "run_id": run_id, "result": "win"},
+            headers=self.headers,
+        )
+
+        other_run = self.client.get(
+            "/api/v1/gauntlet-streak/run?role=killer", headers=other_headers
+        ).get_json()["run"]
+        self.assertEqual(other_run["current_streak"], 0)
 
 
 if __name__ == "__main__":

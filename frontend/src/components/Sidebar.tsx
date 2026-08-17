@@ -17,7 +17,6 @@ import {
   X,
   Database,
   Users,
-  Swords,
   Trophy,
   Scroll,
   Calculator,
@@ -125,19 +124,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'streaks',
-      label: '🔥 Streaks',
+      label: '🔥 Challenges',
       icon: Repeat,
       color: 'text-orange-400',
       activeBg: 'bg-orange-500/10 text-orange-400 border border-orange-500/20',
       href: `/${currentLocale}/streaks`,
-    },
-    {
-      id: 'challenge',
-      label: '⚡ Challenge',
-      icon: Swords,
-      color: 'text-amber-400',
-      activeBg: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
-      href: `/${currentLocale}/challenge`,
     },
     {
       id: 'maps',

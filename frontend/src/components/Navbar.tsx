@@ -70,18 +70,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentLocale, dict, onOpenQuest
             </Link>
 
             <Link
-              href={'/' + currentLocale + '/challenge'}
-              className={
-                'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ' +
-                (pathname?.includes('/challenge')
-                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm'
-                  : 'text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 border border-amber-500/20')
-              }
-            >
-              <span>⚡ Challenge</span>
-            </Link>
-
-            <Link
               href={'/' + currentLocale + '/draft'}
               className={
                 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ' +

@@ -30,7 +30,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Streak Tracker';
+    document.title = 'LemonDBD - Challenges';
     getDictionary(locale)
       .then(setDict)
       .catch((err) => console.error('Failed to load streaks dictionary:', err));
@@ -95,7 +95,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
         }`}
       >
         <header className="mb-6">
-          <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">🔥 Streaks</h1>
+          <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">🔥 Challenges</h1>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Long-run challenges that carry across matches. Pick a role to see what is available.
           </p>
@@ -115,10 +115,10 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
               <Lock className="h-5 w-5 text-orange-500/70" />
             </div>
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-slate-300">
-              Log in to track your streaks
+              Log in to track your challenges
             </h2>
             <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-slate-500">
-              Streaks use the killers and perks you own, so we need to know who you are first.
+              Challenges use the killers and perks you own, so we need to know who you are first.
             </p>
             <button
               onClick={() => setIsAuthModalOpen(true)}

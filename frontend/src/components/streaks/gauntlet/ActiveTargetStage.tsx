@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChallengeRun, Role } from '@/types/challenge';
+import { GauntletRun, Role } from '@/types/gauntletStreak';
 import {
   RefreshCw,
-  MapPin,
   CheckCircle,
   XCircle,
   User,
@@ -16,14 +15,13 @@ import {
 } from 'lucide-react';
 
 export interface ActiveTargetStageProps {
-  run: ChallengeRun | null;
+  run: GauntletRun | null;
   role: Role;
   loading?: boolean;
   onWin: () => void;
   onLoss: () => void;
   onReroll: () => void;
-  onInvalidateMatch?: (reason: 'dc_before_5_gens' | 'game_cancelled') => void;
-  characterAvatarPath?: string;
+  onInvalidateMatch: (reason: 'dc_before_5_gens' | 'game_cancelled') => void;
 }
 
 export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
@@ -34,7 +32,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   onLoss,
   onReroll,
   onInvalidateMatch,
-  characterAvatarPath,
 }) => {
   const [avatarError, setAvatarError] = useState(false);
   const [perkImgErrors, setPerkImgErrors] = useState<Record<number, boolean>>({});
@@ -47,40 +44,27 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         <div className="animate-spin text-amber-500 mx-auto w-8 h-8 mb-3 flex items-center justify-center">
           <RefreshCw className="w-8 h-8" />
         </div>
-        <p className="text-slate-400 text-sm">Loading active challenge stage...</p>
+        <p className="text-slate-400 text-sm">Loading active gauntlet stage...</p>
       </div>
     );
   }
 
   const loadout = run.current_loadout;
   const targetName = loadout.character || run.current_character_id || 'Target Character';
+  const tierInfo = run.tier_info || { name: 'The Warm Up', tier_level: 0, perk_limit: 4, description: '' };
+  const perkLimit = tierInfo.perk_limit;
 
-  // Tier info resolution
-  const tierInfo = run.tier_info || {
-    name: 'The Warm Up',
-    tier_level: 0,
-    perk_limit: 4,
-    description: '4 Perks Allowed',
-  };
-  const perkLimit = tierInfo.perk_limit !== undefined ? tierInfo.perk_limit : 4;
-
-  // Build target avatar URL
   const getAvatarUrl = () => {
-    let rawPath = characterAvatarPath;
-    if (!rawPath && targetName) {
-      const subDir = role === 'survivor' ? 'survivors' : 'killers';
-      const sanitized = targetName
-        .toLowerCase()
-        .trim()
-        .replace(/[\s\-/]+/g, '_')
-        .replace(/[\\/*?:"<>|]/g, '')
-        .replace(/_+/g, '_')
-        .replace(/^_+|_+$/g, '');
-      rawPath = `avatars/${subDir}/${sanitized}.png`;
-    }
-    if (!rawPath) return null;
-    const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');
-    return `${backendBase}/static/${cleanPath}`;
+    if (!targetName) return null;
+    const subDir = role === 'survivor' ? 'survivors' : 'killers';
+    const sanitized = targetName
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\-/]+/g, '_')
+      .replace(/[\\/*?:"<>|]/g, '')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '');
+    return `${backendBase}/static/avatars/${subDir}/${sanitized}.png`;
   };
 
   const avatarSrc = getAvatarUrl();
@@ -89,17 +73,14 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     setPerkImgErrors((prev) => ({ ...prev, [idx]: true }));
   };
 
-  // Build 4 slots array
   const perkSlots = [0, 1, 2, 3];
 
   return (
     <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
       {/* Top Banner / Stage Header */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-6 mb-6">
-        {/* Target Character Display */}
         <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
           <div className="relative">
-            {/* Amber Border Ring around Character Portrait */}
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl p-1 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden">
               {avatarSrc && !avatarError ? (
                 <img
@@ -110,11 +91,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 />
               ) : (
                 <div className="w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400">
-                  {role === 'survivor' ? (
-                    <User className="w-10 h-10" />
-                  ) : (
-                    <Skull className="w-10 h-10" />
-                  )}
+                  {role === 'survivor' ? <User className="w-10 h-10" /> : <Skull className="w-10 h-10" />}
                 </div>
               )}
             </div>
@@ -125,7 +102,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
           <div>
             <div className="text-xs uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 mb-1">
-              Active Challenge Target
+              Active Gauntlet Target
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               {targetName}
@@ -138,44 +115,21 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </div>
         </div>
 
-        {/* Right Header Badges: Tier Info & Map Offering */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-          {/* Active Perk Tier Badge */}
-          <div className="flex items-center gap-3 px-4 py-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-800 dark:text-amber-300 w-full sm:w-auto justify-center">
-            <Lock className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
-            <div>
-              <div className="text-[10px] uppercase font-black text-amber-600 dark:text-amber-400 tracking-wider">
-                Tier {tierInfo.tier_level}: {tierInfo.name}
-              </div>
-              <div className="text-xs font-bold text-slate-900 dark:text-white">
-                {perkLimit === 0 ? '0 Perks (Perkless Trial)' : `${perkLimit} Perk${perkLimit > 1 ? 's' : ''} Allowed`}
-              </div>
+        {/* Active Perk Tier Badge */}
+        <div className="flex items-center gap-3 px-4 py-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-800 dark:text-amber-300 w-full md:w-auto justify-center">
+          <Lock className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
+          <div>
+            <div className="text-[10px] uppercase font-black text-amber-600 dark:text-amber-400 tracking-wider">
+              Tier {tierInfo.tier_level}: {tierInfo.name}
+            </div>
+            <div className="text-xs font-bold text-slate-900 dark:text-white">
+              {perkLimit === 0 ? '0 Perks (Perkless Trial)' : `${perkLimit} Perk${perkLimit > 1 ? 's' : ''} Allowed`}
             </div>
           </div>
-
-          {/* Map Offering Badge */}
-          {loadout.map_offering && (
-            <div className="flex items-center gap-3 px-4 py-3 bg-slate-100 dark:bg-slate-950/80 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 w-full sm:w-auto justify-center shadow-sm">
-              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shrink-0">
-                <MapPin className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">
-                  Map Offering
-                </div>
-                <div className="text-sm font-bold text-slate-900 dark:text-amber-200">
-                  {loadout.map_offering.name}
-                </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">
-                  {loadout.map_offering.realm}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Perk Loadout Grid (4 Perks with Tier Locks) */}
+      {/* Perk Loadout Grid */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
@@ -259,9 +213,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                     {perk.name}
                   </h4>
                   <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                    {perk.character && perk.character !== 'General'
-                      ? perk.character
-                      : 'General Perk'}
+                    {perk.character_name || 'General Perk'}
                   </p>
                 </div>
               </div>
@@ -272,7 +224,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
       {/* Action Buttons & Match Exception Handlers */}
       <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800/80">
-        {/* Standard Match Outcome Buttons: WIN, LOSE, REROLL */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={onWin}
@@ -302,33 +253,30 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </button>
         </div>
 
-        {/* Match Exception Buttons: DC < 5 Gens & Game Cancelled */}
-        {onInvalidateMatch && (
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mr-1">
-              Match Exception:
-            </span>
-            <button
-              onClick={() => onInvalidateMatch('dc_before_5_gens')}
-              disabled={loading}
-              className="px-3.5 py-2 bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-900 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
-              title="Invalidate match & re-roll for same character due to disconnect before 5 generators"
-            >
-              <ShieldAlert className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-              <span>DC &lt; 5 Gens</span>
-            </button>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mr-1">
+            Match Exception:
+          </span>
+          <button
+            onClick={() => onInvalidateMatch('dc_before_5_gens')}
+            disabled={loading}
+            className="px-3.5 py-2 bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-900 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+            title="Invalidate match & re-roll for same character due to disconnect before 5 generators"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+            <span>DC &lt; 5 Gens</span>
+          </button>
 
-            <button
-              onClick={() => onInvalidateMatch('game_cancelled')}
-              disabled={loading}
-              className="px-3.5 py-2 bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
-              title="Invalidate match & re-roll for same character due to loading disconnect"
-            >
-              <Ban className="w-3.5 h-3.5 text-slate-400" />
-              <span>Game Cancelled</span>
-            </button>
-          </div>
-        )}
+          <button
+            onClick={() => onInvalidateMatch('game_cancelled')}
+            disabled={loading}
+            className="px-3.5 py-2 bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+            title="Invalidate match & re-roll for same character due to loading disconnect"
+          >
+            <Ban className="w-3.5 h-3.5 text-slate-400" />
+            <span>Game Cancelled</span>
+          </button>
+        </div>
       </div>
     </div>
   );

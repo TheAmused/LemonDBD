@@ -1,4 +1,5 @@
 import asyncio
+import io
 import json
 import logging
 import threading
@@ -152,12 +153,37 @@ class ScraperService:
             addons = []
         return items, addons
 
+    @staticmethod
+    def _apply_perk_diamond_frame(icon_bytes: bytes, size: int = 256) -> bytes:
+        """wiki.gg only serves the bare perk glyph, with no rarity frame baked in
+        (unlike nightlight.gg's icons). Draw a purple diamond frame behind the
+        glyph so perks keep their familiar framed look regardless of rarity."""
+        from PIL import Image, ImageDraw
+
+        icon = Image.open(io.BytesIO(icon_bytes)).convert("RGBA")
+        canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(canvas)
+        margin = size * 0.04
+        half = size / 2
+        points = [(half, margin), (size - margin, half), (half, size - margin), (margin, half)]
+        draw.polygon(points, fill=(58, 33, 84, 255), outline=(15, 8, 20, 255), width=max(2, size // 64))
+
+        icon_size = int(size * 0.62)
+        icon_resized = icon.resize((icon_size, icon_size), Image.LANCZOS)
+        offset = ((size - icon_size) // 2, (size - icon_size) // 2)
+        canvas.alpha_composite(icon_resized, offset)
+
+        buf = io.BytesIO()
+        canvas.save(buf, format="PNG")
+        return buf.getvalue()
+
     async def _download_asset(
         self,
         client: AsyncSession,
         semaphore: asyncio.Semaphore,
         url: str,
         relative_path: str,
+        apply_perk_frame: bool = False,
     ) -> None:
         if not url:
             return
@@ -174,7 +200,13 @@ class ScraperService:
             try:
                 response = await client.get(url, headers=self.HEADERS, timeout=self.REQUEST_TIMEOUT)
                 response.raise_for_status()
-                destination.write_bytes(response.content)
+                content = response.content
+                if apply_perk_frame:
+                    try:
+                        content = self._apply_perk_diamond_frame(content)
+                    except Exception as frame_err:
+                        logger.warning(f"Could not frame perk icon [{url}]: {frame_err}")
+                destination.write_bytes(content)
             except Exception as err:
                 logger.error(f"Download failed [{url}]: {err}")
             finally:
@@ -192,7 +224,9 @@ class ScraperService:
         semaphore = asyncio.Semaphore(self.MAX_CONCURRENT_DOWNLOADS)
         async with AsyncSession(impersonate=self.IMPERSONATE_BROWSER, verify=False) as client:
             tasks = [
-                self._download_asset(client, semaphore, perk.icon_url, perk.icon_local_path)
+                self._download_asset(
+                    client, semaphore, perk.icon_url, perk.icon_local_path, apply_perk_frame=True
+                )
                 for perk in perks
             ]
             for char in characters:

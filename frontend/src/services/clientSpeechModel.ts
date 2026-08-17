@@ -339,50 +339,37 @@ export function getModelProgress(): ModelProgressInfo {
 }
 
 /**
- * Loads the standalone browser Transformers.js distribution from /transformers/transformers.min.js
- * or jsdelivr CDN. This avoids Turbopack trying to bundle node-specific fs/path modules.
+ * Loads the standalone browser Transformers.js ES module via dynamic import.
+ * This runs natively in the browser and bypasses Turbopack module resolution entirely.
  */
 async function loadTransformersStandalone(): Promise<any> {
   if (typeof window === 'undefined') return null;
 
-  const win = window as any;
-  if (win.transformers && win.transformers.AutoModelForSpeechSeq2Seq) {
-    return win.transformers;
+  // 1. Try local ESM distribution from /transformers/transformers.min.js
+  try {
+    const importDynamic = new Function('url', 'return import(url)');
+    const mod = await importDynamic('/transformers/transformers.min.js');
+    if (mod && (mod.AutoModelForSpeechSeq2Seq || mod.default?.AutoModelForSpeechSeq2Seq)) {
+      console.log('[ClientSpeechModel] Loaded local ESM Transformers.js successfully!');
+      return mod.AutoModelForSpeechSeq2Seq ? mod : mod.default;
+    }
+  } catch (err) {
+    console.warn('[ClientSpeechModel] Local ESM import error, trying CDN fallback...', err);
   }
 
-  await new Promise<void>((resolve, reject) => {
-    const existing = document.querySelector('script[data-transformers-bundle]');
-    if (existing) {
-      if (win.transformers) {
-        resolve();
-      } else {
-        existing.addEventListener('load', () => resolve());
-        existing.addEventListener('error', (e) => reject(e));
-      }
-      return;
+  // 2. Fallback to CDN ESM distribution
+  try {
+    const importDynamic = new Function('url', 'return import(url)');
+    const cdnMod = await importDynamic('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js');
+    if (cdnMod && (cdnMod.AutoModelForSpeechSeq2Seq || cdnMod.default?.AutoModelForSpeechSeq2Seq)) {
+      console.log('[ClientSpeechModel] Loaded CDN ESM Transformers.js successfully!');
+      return cdnMod.AutoModelForSpeechSeq2Seq ? cdnMod : cdnMod.default;
     }
+  } catch (cdnErr) {
+    console.warn('[ClientSpeechModel] CDN ESM import error:', cdnErr);
+  }
 
-    const script = document.createElement('script');
-    script.setAttribute('data-transformers-bundle', 'true');
-    script.src = '/transformers/transformers.min.js';
-    script.async = true;
-    script.onload = () => {
-      console.log('[ClientSpeechModel] Loaded local standalone Transformers.js bundle!');
-      resolve();
-    };
-    script.onerror = (err) => {
-      console.warn('[ClientSpeechModel] Local script load failed, trying CDN fallback...', err);
-      const cdnScript = document.createElement('script');
-      cdnScript.src = 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js';
-      cdnScript.async = true;
-      cdnScript.onload = () => resolve();
-      cdnScript.onerror = (cdnErr) => reject(cdnErr);
-      document.head.appendChild(cdnScript);
-    };
-    document.head.appendChild(script);
-  });
-
-  return win.transformers;
+  return null;
 }
 
 /**

@@ -24,6 +24,7 @@ import {
   Globe,
   Info,
   Download,
+  Radio,
 } from 'lucide-react';
 import {
   matchVoiceQuery,
@@ -174,6 +175,7 @@ export function VoiceCommandBanner({
   const [disambiguationVariants, setDisambiguationVariants] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [audioLevel, setAudioLevel] = useState<number>(0);
 
   // Dual-Engine & Fallback State
   const [browserInfo, setBrowserInfo] = useState<BrowserCompatibilityInfo>(() =>
@@ -269,69 +271,66 @@ export function VoiceCommandBanner({
 
   // ─── Execute Match Result Helper ────────────────────────────────────────────
 
-  const executeMatch = useCallback(
-    (result: MatchResult) => {
-      console.log('[VoiceNav] Executing matched result:', result);
-      setMatchedResult(result);
-      pendingMatchRef.current = null;
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+  const executeMatch = useCallback((result: MatchResult) => {
+    console.log('[VoiceNav] Executing matched result:', result);
+    setMatchedResult(result);
+    pendingMatchRef.current = null;
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
-      const { onSourceChange, onAction, onSelectMap, soundEnabled } = propsRef.current;
+    const { onSourceChange, onAction, onSelectMap, soundEnabled } = propsRef.current;
 
-      if (result.action === 'switch_source' && result.actionPayload) {
-        console.log('[VoiceNav] Action -> Switch source to:', result.actionPayload);
-        setVoiceStatus('matched');
-        if (soundEnabled) playMatchSuccessSound();
-        onSourceChange(result.actionPayload as MapSource);
-        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-        resetTimerRef.current = setTimeout(() => {
-          setVoiceStatus('idle');
-        }, 2200);
-        return;
-      }
-
-      if (result.action && ['zoom_in', 'zoom_out', 'fullscreen', 'close'].includes(result.action)) {
-        console.log('[VoiceNav] Action -> Map navigation command:', result.action);
-        setVoiceStatus('matched');
-        if (soundEnabled) playMatchSuccessSound();
-        if (onAction) onAction(result.action as any);
-        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-        resetTimerRef.current = setTimeout(() => {
-          setVoiceStatus('idle');
-        }, 2200);
-        return;
-      }
-
-      if (result.matchedMapName) {
-        console.log('[VoiceNav] Action -> Selecting map:', result.matchedMapName);
-        setVoiceStatus('matched');
-        if (soundEnabled) playMatchSuccessSound();
-        onSelectMap(result.matchedMapName, result.matchedMapId, result.source);
-
-        const variants =
-          result.availableVariants ||
-          getVariantsForMap(result.matchedMapName);
-        if (variants && variants.length > 1) {
-          setDisambiguationVariants(variants);
-        } else {
-          setDisambiguationVariants([]);
-        }
-
-        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-        resetTimerRef.current = setTimeout(() => {
-          setVoiceStatus('idle');
-        }, 2400);
-        return;
-      }
-
-      setVoiceStatus('nomatch');
+    if (result.action === 'switch_source' && result.actionPayload) {
+      console.log('[VoiceNav] Action -> Switch source to:', result.actionPayload);
+      setVoiceStatus('matched');
+      if (soundEnabled) playMatchSuccessSound();
+      onSourceChange(result.actionPayload as MapSource);
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       resetTimerRef.current = setTimeout(() => {
         setVoiceStatus('idle');
       }, 2200);
-    },
-    []
-  );
+      return;
+    }
+
+    if (result.action && ['zoom_in', 'zoom_out', 'fullscreen', 'close'].includes(result.action)) {
+      console.log('[VoiceNav] Action -> Map navigation command:', result.action);
+      setVoiceStatus('matched');
+      if (soundEnabled) playMatchSuccessSound();
+      if (onAction) onAction(result.action as any);
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => {
+        setVoiceStatus('idle');
+      }, 2200);
+      return;
+    }
+
+    if (result.matchedMapName) {
+      console.log('[VoiceNav] Action -> Selecting map:', result.matchedMapName);
+      setVoiceStatus('matched');
+      if (soundEnabled) playMatchSuccessSound();
+      onSelectMap(result.matchedMapName, result.matchedMapId, result.source);
+
+      const variants =
+        result.availableVariants ||
+        getVariantsForMap(result.matchedMapName);
+      if (variants && variants.length > 1) {
+        setDisambiguationVariants(variants);
+      } else {
+        setDisambiguationVariants([]);
+      }
+
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => {
+        setVoiceStatus('idle');
+      }, 2400);
+      return;
+    }
+
+    setVoiceStatus('nomatch');
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = setTimeout(() => {
+      setVoiceStatus('idle');
+    }, 2200);
+  }, []);
 
   // ─── Manual Command Trigger (Chips & Disambiguation) ───────────────────────
 
@@ -365,6 +364,7 @@ export function VoiceCommandBanner({
     console.log('[VoiceNav] stopListening called.');
     isListeningRef.current = false;
     isHoldingRef.current = false;
+    setAudioLevel(0);
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
     if (activeEngine === 'web-speech' && recognitionRef.current) {
@@ -388,6 +388,7 @@ export function VoiceCommandBanner({
     console.log('[VoiceNav] stopListeningAndProcess called. ActiveEngine:', activeEngine);
     isListeningRef.current = false;
     isHoldingRef.current = false;
+    setAudioLevel(0);
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
     // If Client-Side Model Engine is active
@@ -507,6 +508,9 @@ export function VoiceCommandBanner({
           }
 
           audioSessionRef.current = new AudioCaptureSession();
+          audioSessionRef.current.setLevelCallback((lvl) => {
+            setAudioLevel(lvl);
+          });
           await audioSessionRef.current.start();
         } catch (err: any) {
           isListeningRef.current = false;
@@ -811,18 +815,18 @@ export function VoiceCommandBanner({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-white/90 dark:bg-slate-900/85 p-5 sm:p-6 backdrop-blur-xl shadow-lg dark:shadow-2xl shadow-cyan-950/20 dark:shadow-cyan-950/40 transition-all duration-300 ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-white/95 dark:bg-slate-900/90 p-4 sm:p-5 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-cyan-950/20 dark:shadow-cyan-950/40 transition-all duration-300 ${className}`}
     >
       {/* Decorative ambient background glows */}
-      <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/15 blur-3xl" />
+      <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" />
 
-      {/* ─── TOP BAR: Status HUD Badge, Dual Engine Indicator & Source Selector ─── */}
-      <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4">
-        {/* Left: HUD Status Badge, Engine Pill & Sound Toggle */}
-        <div className="flex flex-wrap items-center gap-2.5">
+      {/* ─── COMPACT TACTICAL COMMAND BAR ─── */}
+      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800/80">
+        {/* Left: HUD Status Badge, Engine Indicator & Sound Toggle */}
+        <div className="flex flex-wrap items-center gap-2">
           <div
-            className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-semibold tracking-wide transition-all ${currentCfg.badgeClass}`}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-black tracking-wide font-mono transition-all ${currentCfg.badgeClass}`}
           >
             <span className={`h-2 w-2 rounded-full ${currentCfg.dotClass}`} />
             <span>{currentCfg.badge}</span>
@@ -837,16 +841,16 @@ export function VoiceCommandBanner({
                 ? 'Web Speech API (Chrome/Edge/Safari). Click to view compatibility info & fallback details.'
                 : 'In-Browser Speech Model (Local Fallback). Click to view compatibility info & fallback details.'
             }
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 ${
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 ${
               activeEngine === 'web-speech'
                 ? 'border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/20'
                 : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20'
             }`}
           >
             {activeEngine === 'web-speech' ? (
-              <Globe className="h-3.5 w-3.5 text-cyan-500" />
+              <Globe className="h-3 w-3 text-cyan-500" />
             ) : (
-              <Cpu className="h-3.5 w-3.5 text-emerald-500" />
+              <Cpu className="h-3 w-3 text-emerald-500" />
             )}
             <span>
               {activeEngine === 'web-speech'
@@ -858,8 +862,8 @@ export function VoiceCommandBanner({
 
           {/* Model Background Download Pill if downloading */}
           {modelProgress.status === 'downloading' && (
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-300 animate-pulse">
-              <RefreshCw className="h-3 w-3 animate-spin" />
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300 animate-pulse font-mono">
+              <RefreshCw className="h-2.5 w-2.5 animate-spin" />
               <span>{modelProgress.progress}%</span>
             </div>
           )}
@@ -868,117 +872,120 @@ export function VoiceCommandBanner({
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
             title={soundEnabled ? 'Mute voice feedback sound' : 'Enable voice feedback sound'}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer"
+            className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer"
           >
             {soundEnabled ? (
-              <Volume2 className="h-3.5 w-3.5" />
+              <Volume2 className="h-3 w-3" />
             ) : (
-              <VolumeX className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
+              <VolumeX className="h-3 w-3 text-slate-400 dark:text-slate-500" />
             )}
           </button>
         </div>
 
-        {/* Right: Provider Source Segmented Toggle */}
-        <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950/70 p-1">
-          <span className="px-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            Source:
-          </span>
-          <button
-            type="button"
-            onClick={() => onSourceChange('hens333')}
-            aria-pressed={currentSource === 'hens333'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
-              currentSource === 'hens333'
-                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md shadow-cyan-950/30 border border-cyan-400/30 font-bold'
-                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
-          >
-            Hens333 (12-Clock)
-          </button>
+        {/* Right: Provider Source Segmented Toggle & Quick Spoken Prompts */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Provider Source Segmented Toggle */}
+          <div className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 p-0.5">
+            <span className="px-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
+              Source:
+            </span>
+            <button
+              type="button"
+              onClick={() => onSourceChange('hens333')}
+              aria-pressed={currentSource === 'hens333'}
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
+                currentSource === 'hens333'
+                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-sm font-black'
+                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+            >
+              Hens333 (12-Clock)
+            </button>
 
-          <button
-            type="button"
-            onClick={() => onSourceChange('samoelcolt')}
-            aria-pressed={currentSource === 'samoelcolt'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
-              currentSource === 'samoelcolt'
-                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-950/30 border border-purple-400/30 font-bold'
-                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
-          >
-            SamoelColt (Isometric)
-          </button>
+            <button
+              type="button"
+              onClick={() => onSourceChange('samoelcolt')}
+              aria-pressed={currentSource === 'samoelcolt'}
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
+                currentSource === 'samoelcolt'
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-sm font-black'
+                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+            >
+              SamoelColt (Isometric)
+            </button>
 
-          <button
-            type="button"
-            onClick={() => onSourceChange('all')}
-            aria-pressed={currentSource === 'all'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
-              currentSource === 'all'
-                ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-md border border-slate-500 font-bold'
-                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
-          >
-            All Sources
-          </button>
+            <button
+              type="button"
+              onClick={() => onSourceChange('all')}
+              aria-pressed={currentSource === 'all'}
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
+                currentSource === 'all'
+                  ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-sm font-black'
+                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+            >
+              All
+            </button>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-1">
+            {QUICK_COMMAND_PROMPTS.slice(0, 3).map((prompt) => (
+              <button
+                key={prompt.label}
+                type="button"
+                onClick={() => handleExecuteCommand(prompt.query)}
+                className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 hover:border-cyan-500/50 px-2 py-0.5 text-[10px] font-mono font-medium text-slate-600 dark:text-slate-300 transition active:scale-95 cursor-pointer shadow-xs"
+              >
+                &ldquo;{prompt.label}&rdquo;
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* ─── CENTER HERO AREA: Waveform Visualizer, Glowing Mic Button & Live Transcription ─── */}
-      <div className="relative z-10 my-6 flex flex-col items-center gap-5 sm:flex-row sm:items-center sm:justify-between">
-        {/* Left Side Equalizer Waveform */}
-        <div className="hidden sm:flex items-center gap-1.5 h-12 px-2">
-          {[14, 24, 18, 32, 20, 38, 26, 16].map((h, i) => (
-            <span
-              key={`left-wave-${i}`}
-              style={{
-                height:
+      {/* ─── COMPACT CENTER HERO: Visualizer, Glowing Mic Button & Live Transcription ─── */}
+      <div className="relative z-10 my-3.5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Left Equalizer Waveform with Live Mic Level Support */}
+        <div className="hidden sm:flex items-center gap-1 h-9 px-1">
+          {[12, 22, 16, 28, 18, 32, 24, 14].map((h, i) => {
+            const dynamicHeight =
+              voiceStatus === 'listening'
+                ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
+                : voiceStatus === 'matched'
+                ? 24
+                : 4;
+            return (
+              <span
+                key={`left-wave-${i}`}
+                style={{
+                  height: `${dynamicHeight}px`,
+                  animation:
+                    voiceStatus === 'listening'
+                      ? `pulse ${(0.4 + (i % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
+                      : 'none',
+                }}
+                className={`w-1 rounded-full transition-all duration-150 ${
                   voiceStatus === 'listening'
-                    ? `${h}px`
+                    ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
                     : voiceStatus === 'matched'
-                    ? '28px'
-                    : '6px',
-                animation:
-                  voiceStatus === 'listening'
-                    ? `pulse ${(0.5 + (i % 4) * 0.15).toFixed(2)}s ease-in-out infinite alternate`
-                    : 'none',
-              }}
-              className={`w-1 rounded-full transition-all duration-200 ${
-                voiceStatus === 'listening'
-                  ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
-                  : voiceStatus === 'matched'
-                  ? 'bg-emerald-400'
-                  : 'bg-slate-300 dark:bg-slate-700/60'
-              }`}
-            />
-          ))}
+                    ? 'bg-emerald-400'
+                    : 'bg-slate-300 dark:bg-slate-700/60'
+                }`}
+              />
+            );
+          })}
         </div>
 
-        {/* Center: Glowing Circular Mic Toggle Button */}
-        <div className="flex flex-col items-center gap-2">
+        {/* Center: Glowing Mic Button */}
+        <div className="flex items-center gap-3">
           <div className="relative flex items-center justify-center">
-            {/* Outer animated ping rings when listening */}
             {voiceStatus === 'listening' && (
               <>
-                <span className="absolute h-24 w-24 animate-ping rounded-full bg-rose-500/20" />
-                <span className="absolute h-28 w-28 animate-ping rounded-full bg-rose-500/10 [animation-delay:200ms]" />
+                <span className="absolute h-16 w-16 animate-ping rounded-full bg-rose-500/20" />
+                <span className="absolute h-20 w-20 animate-ping rounded-full bg-rose-500/10 [animation-delay:200ms]" />
               </>
             )}
-
-            {/* Glowing border ring */}
-            <span
-              className={`absolute h-20 w-20 rounded-full ring-4 transition-all duration-300 ${
-                voiceStatus === 'listening'
-                  ? 'ring-rose-500/50 animate-pulse'
-                  : voiceStatus === 'matched'
-                  ? 'ring-emerald-500/50'
-                  : voiceStatus === 'nomatch'
-                  ? 'ring-amber-500/40'
-                  : voiceStatus === 'error'
-                  ? 'ring-red-500/50'
-                  : 'ring-cyan-500/30'
-              }`}
-            />
 
             <button
               id="voice-command-mic-btn"
@@ -1011,19 +1018,11 @@ export function VoiceCommandBanner({
                 }
               }}
               onClick={() => {
-                console.log(
-                  '[VoiceNav] Mic button clicked. Current voiceStatus:',
-                  voiceStatus,
-                  'isListeningRef:',
-                  isListeningRef.current
-                );
                 const isClickFromMouse = holdStartTimeRef.current > 0;
                 const duration = isClickFromMouse ? Date.now() - holdStartTimeRef.current : 0;
                 holdStartTimeRef.current = 0;
 
-                if (duration > 250) {
-                  return;
-                }
+                if (duration > 250) return;
 
                 if (isListeningRef.current || voiceStatus === 'listening') {
                   if (!isClickFromMouse || mouseDownListeningStateRef.current) {
@@ -1035,201 +1034,115 @@ export function VoiceCommandBanner({
               }}
               aria-label={currentCfg.badge}
               aria-pressed={voiceStatus === 'listening'}
-              className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-full shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
+              className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl shadow-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
             >
               <StatusIcon
-                className={`h-7 w-7 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
+                className={`h-5 w-5 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
               />
             </button>
           </div>
 
-          {/* Keyboard shortcut hint */}
-          <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400">
-            <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-cyan-600 dark:text-cyan-300 shadow-sm">
-              V
-            </kbd>
-            <span>{t.holdOrPress || "Hold 'V' to talk (or click button to toggle)"}</span>
-          </div>
-        </div>
-
-        {/* Right Side Equalizer Waveform */}
-        <div className="hidden sm:flex items-center gap-1.5 h-12 px-2">
-          {[16, 26, 38, 20, 32, 18, 24, 14].map((h, i) => (
-            <span
-              key={`right-wave-${i}`}
-              style={{
-                height:
-                  voiceStatus === 'listening'
-                    ? `${h}px`
-                    : voiceStatus === 'matched'
-                    ? '28px'
-                    : '6px',
-                animation:
-                  voiceStatus === 'listening'
-                    ? `pulse ${(0.5 + ((i + 2) % 4) * 0.15).toFixed(2)}s ease-in-out infinite alternate`
-                    : 'none',
-              }}
-              className={`w-1 rounded-full transition-all duration-200 ${
-                voiceStatus === 'listening'
-                  ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
-                  : voiceStatus === 'matched'
-                  ? 'bg-emerald-400'
-                  : 'bg-slate-300 dark:bg-slate-700/60'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* ─── REAL-TIME LIVE TRANSCRIPTION DISPLAY ─── */}
-      <div
-        role="status"
-        aria-live="polite"
-        className="relative z-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/75 p-4 text-center shadow-inner"
-      >
-        {voiceStatus === 'listening' && (
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-              <span className="text-xs font-semibold text-rose-600 dark:text-rose-400">
-                Listening to your voice...
-              </span>
-            </div>
-            <div className="text-base font-semibold text-slate-900 dark:text-slate-100 min-h-[28px] flex items-center justify-center">
-              {liveTranscript ? (
-                <span>
-                  &ldquo;{liveTranscript}&rdquo;
-                  <span className="inline-block h-4 w-1.5 bg-cyan-400 ml-1 animate-pulse" />
+          {/* Real-time speech transcription & status text */}
+          <div className="flex flex-col min-w-[200px] sm:min-w-[320px]">
+            {voiceStatus === 'listening' && (
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+                <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono truncate">
+                  {liveTranscript ? `“${liveTranscript}”` : 'Listening to voice...'}
                 </span>
-              ) : (
-                <span className="italic text-slate-400 dark:text-slate-500">
-                  Say a DBD map name, source, or action command...
+              </div>
+            )}
+
+            {voiceStatus === 'processing' && (
+              <div className="flex items-center gap-2">
+                <RefreshCw className="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" />
+                <span className="text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
+                  {t.statusProcessing || 'Processing audio...'}
                 </span>
-              )}
-            </div>
-          </div>
-        )}
+              </div>
+            )}
 
-        {voiceStatus === 'processing' && (
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            <div className="flex items-center gap-2">
-              <RefreshCw className="h-4 w-4 text-amber-500 animate-spin" />
-              <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">
-                {t.statusProcessing || 'Processing voice audio...'}
-              </span>
-            </div>
-          </div>
-        )}
-
-        {voiceStatus === 'matched' && matchedResult && (
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
-              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
-                {matchedResult.action === 'switch_source'
-                  ? 'Provider Source Switched'
-                  : matchedResult.action && matchedResult.action !== 'navigate'
-                  ? 'Navigation Action Executed'
-                  : 'Map Match Identified'}
-              </span>
-            </div>
-
-            <div className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-              {matchedResult.matchedMapName ? (
-                <span className="rounded-xl bg-emerald-500/20 px-3 py-1 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40">
-                  {matchedResult.matchedMapName}
+            {voiceStatus === 'matched' && matchedResult && (
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 font-mono truncate">
+                  {matchedResult.matchedMapName || matchedResult.action || 'Matched'}
                 </span>
-              ) : matchedResult.action === 'switch_source' ? (
-                <span className="rounded-xl bg-cyan-500/20 px-3 py-1 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40">
-                  Switched to: {matchedResult.actionPayload}
-                </span>
-              ) : (
-                <span className="rounded-xl bg-purple-500/20 px-3 py-1 text-purple-800 dark:text-purple-300 border border-purple-500/40">
-                  Action: {matchedResult.action}
-                </span>
-              )}
+              </div>
+            )}
 
-              {matchedResult.confidence && (
-                <span className="text-xs font-normal text-emerald-600 dark:text-emerald-400/80">
-                  ({Math.round(matchedResult.confidence * 100)}% match)
-                </span>
-              )}
-            </div>
-          </div>
-        )}
+            {voiceStatus === 'nomatch' && (
+              <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">No map match. Try saying “Dead Dawg” or “RPD East”.</span>
+              </div>
+            )}
 
-        {voiceStatus === 'nomatch' && (
-          <div className="flex flex-col items-center justify-center gap-1">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
-              <AlertCircle className="h-4 w-4" />
-              <span>Could not match voice query &ldquo;{liveTranscript || 'speech'}&rdquo;</span>
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Try saying canonical map names like &ldquo;Dead Dawg&rdquo;, &ldquo;RPD East&rdquo;,
-              &ldquo;Coal Tower 2&rdquo;, or &ldquo;Switch to Samoel&rdquo;.
-            </p>
-          </div>
-        )}
+            {voiceStatus === 'error' && (
+              <div className="flex items-center gap-1.5 text-xs font-bold text-rose-700 dark:text-rose-400 font-mono">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{errorMessage || t.micBlocked || 'Microphone error'}</span>
+              </div>
+            )}
 
-        {voiceStatus === 'error' && (
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-700 dark:text-rose-400">
-              <AlertCircle className="h-4 w-4" />
-              <span>{errorMessage || t.micBlocked || 'Microphone error'}</span>
-            </div>
-            {activeEngine === 'web-speech' && (
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveEngine('client-model');
-                  initClientSpeechModel(locale);
-                  setVoiceStatus('idle');
-                  setErrorMessage('');
-                }}
-                className="mt-1 flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20 transition-all cursor-pointer"
-              >
-                <Cpu className="h-3.5 w-3.5" />
-                <span>{t.useClientModel || 'Switch to In-Browser Client Model'}</span>
-              </button>
+            {voiceStatus === 'idle' && (
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono">
+                <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1 py-0.2 text-[9px] font-mono text-cyan-600 dark:text-cyan-300 shadow-xs">
+                  V
+                </kbd>
+                <span className="truncate">Hold [V] to talk (or click mic)</span>
+              </div>
             )}
           </div>
-        )}
+        </div>
 
-        {voiceStatus === 'idle' && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <Compass className="h-4 w-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-            <span>
-              Speak any map name (e.g. &ldquo;Dead Dawg&rdquo;, &ldquo;RPD East&rdquo;), provider (&ldquo;Switch to Samoel&rdquo;), or action (&ldquo;Zoom In&rdquo;, &ldquo;Fullscreen&rdquo;)
-            </span>
-          </div>
-        )}
+        {/* Right Equalizer Waveform */}
+        <div className="hidden sm:flex items-center gap-1 h-9 px-1">
+          {[14, 24, 32, 18, 28, 16, 22, 12].map((h, i) => {
+            const dynamicHeight =
+              voiceStatus === 'listening'
+                ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
+                : voiceStatus === 'matched'
+                ? 24
+                : 4;
+            return (
+              <span
+                key={`right-wave-${i}`}
+                style={{
+                  height: `${dynamicHeight}px`,
+                  animation:
+                    voiceStatus === 'listening'
+                      ? `pulse ${(0.4 + ((i + 2) % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
+                      : 'none',
+                }}
+                className={`w-1 rounded-full transition-all duration-150 ${
+                  voiceStatus === 'listening'
+                    ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
+                    : voiceStatus === 'matched'
+                    ? 'bg-emerald-400'
+                    : 'bg-slate-300 dark:bg-slate-700/60'
+                }`}
+              />
+            );
+          })}
+        </div>
       </div>
 
       {/* ─── DYNAMIC VARIANT DISAMBIGUATION PILLS ─── */}
       {disambiguationVariants.length > 0 && (
-        <div className="relative z-10 mt-4 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 p-3.5 backdrop-blur-sm">
-          <div className="mb-2 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-bold text-cyan-800 dark:text-cyan-300">
-              <Layers className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span>Map Variants Detected — Click or speak variant:</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setDisambiguationVariants([])}
-              className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 cursor-pointer"
-              title="Dismiss variants"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
+        <div className="relative z-10 mt-2.5 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 text-xs font-black text-cyan-800 dark:text-cyan-300 font-mono">
+            <Layers className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
+            <span>Variants:</span>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {disambiguationVariants.map((variant) => (
               <button
                 key={variant}
                 type="button"
                 onClick={() => handleExecuteCommand(variant)}
-                className="flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-white/80 dark:bg-cyan-900/40 px-3 py-1 text-xs font-medium text-cyan-900 dark:text-cyan-200 transition hover:border-cyan-500 hover:bg-cyan-100 dark:hover:bg-cyan-800/60 hover:text-cyan-950 dark:hover:text-white active:scale-95 cursor-pointer shadow-sm"
+                className="flex items-center gap-1 rounded-xl border border-cyan-400/40 bg-white/80 dark:bg-cyan-900/40 px-2.5 py-0.5 text-xs font-bold text-cyan-900 dark:text-cyan-200 transition hover:border-cyan-500 hover:bg-cyan-100 dark:hover:bg-cyan-800/60 active:scale-95 cursor-pointer shadow-xs font-mono"
               >
                 <span>{variant}</span>
                 <ArrowRight className="h-3 w-3 text-cyan-500 dark:text-cyan-400" />
@@ -1238,33 +1151,6 @@ export function VoiceCommandBanner({
           </div>
         </div>
       )}
-
-      {/* ─── BOTTOM INTERACTIVE BAR: Quick Spoken Command Prompt Chips ─── */}
-      <div className="relative z-10 mt-4 flex flex-col sm:flex-row sm:items-center gap-2 pt-2">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
-          Try Saying:
-        </span>
-        <div className="flex flex-wrap items-center gap-1.5">
-          {QUICK_COMMAND_PROMPTS.map((prompt) => (
-            <button
-              key={prompt.label}
-              type="button"
-              onClick={() => handleExecuteCommand(prompt.query)}
-              className={`rounded-lg border px-2.5 py-1 text-[11px] font-medium transition active:scale-95 cursor-pointer shadow-sm ${
-                prompt.type === 'variant'
-                  ? 'border-cyan-500/40 bg-cyan-500/10 text-cyan-800 dark:border-cyan-600/50 dark:bg-cyan-950/40 dark:text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/20 dark:hover:bg-cyan-900/60'
-                  : prompt.type === 'source'
-                  ? 'border-purple-500/40 bg-purple-500/10 text-purple-800 dark:border-purple-600/50 dark:bg-purple-950/40 dark:text-purple-300 hover:border-purple-400 hover:bg-purple-500/20 dark:hover:bg-purple-900/60'
-                  : prompt.type === 'action'
-                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:border-emerald-600/50 dark:bg-emerald-950/40 dark:text-emerald-300 hover:border-emerald-400 hover:bg-emerald-500/20 dark:hover:bg-emerald-900/60'
-                  : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              &ldquo;{prompt.label}&rdquo;
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* ─── Engine Compatibility & Fallback Explanatory Modal ─── */}
       <VoiceEngineInfoModal

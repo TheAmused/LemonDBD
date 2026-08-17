@@ -51,11 +51,34 @@ test('AudioCaptureSession class interface and contract', () => {
   const session = new AudioCaptureSession();
   assert.strictEqual(typeof session.start, 'function');
   assert.strictEqual(typeof session.stop, 'function');
+  assert.strictEqual(typeof session.setLevelCallback, 'function');
+
+  // Test setting level callback
+  session.setLevelCallback((lvl) => {
+    assert.strictEqual(typeof lvl, 'number');
+  });
 
   // Calling stop when not recording returns an empty Float32Array safely
   const result = session.stop();
   assert.ok(result instanceof Float32Array);
   assert.strictEqual(result.length, 0);
+});
+
+test('resampleTo16k downsamples 48kHz audio buffer to 16kHz Float32Array', () => {
+  const { resampleTo16k, normalizeAudioVolume } = require('../../services/clientSpeechModel');
+  
+  // 48000 samples = 1 second at 48kHz
+  const sample48k = new Float32Array(48000);
+  for (let i = 0; i < 48000; i++) {
+    sample48k[i] = Math.sin(2 * Math.PI * 440 * (i / 48000));
+  }
+
+  const resampled = resampleTo16k(sample48k, 48000, 16000);
+  assert.strictEqual(resampled.length, 16000);
+
+  // Test volume normalization
+  const normalized = normalizeAudioVolume(resampled);
+  assert.strictEqual(normalized.length, 16000);
 });
 
 test('transcribeClientAudio handles empty and short audio buffers safely', async () => {

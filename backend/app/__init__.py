@@ -52,9 +52,13 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
 
     with flask_app.app_context():
         from app.services.db_service import DatabaseService
+        from app.services.user_service import UserService
         DatabaseService().init_db()
+        UserService().seed_default_admin_if_empty()
 
     # Blueprints
+    from app.routes.auth import auth_bp
+    from app.routes.users import users_bp
     from app.routes.perks import perks_bp, _run_background_scrape, perk_service
     from app.routes.challenges import challenges_bp
     from app.routes.generator import generator_bp
@@ -70,6 +74,8 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     from app.routes.others.custom_perks import custom_perks_bp
     from app.routes.others.guesser import guesser_bp
 
+    flask_app.register_blueprint(auth_bp)
+    flask_app.register_blueprint(users_bp)
     flask_app.register_blueprint(perks_bp)
     flask_app.register_blueprint(challenges_bp)
     flask_app.register_blueprint(generator_bp)

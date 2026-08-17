@@ -33,6 +33,7 @@ export default function DraftPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
+    document.title = 'LemonDBD - Draft Mode';
     getDictionary(locale).then(setDict);
   }, [locale]);
 

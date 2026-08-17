@@ -1,7 +1,6 @@
 {
   "app": {
-    "title": "DEAD BY DAYLIGHT",
-    "subtitle": "Perk Vault & Database",
+    "title": "LemonDBD",
     "syncWiki": "Sync Wiki Data",
     "syncing": "Syncing Data..."
   },

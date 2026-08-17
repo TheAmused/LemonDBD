@@ -1,7 +1,22 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { i18n, type Locale } from '@/i18n/config';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { AuthProvider } from '@/context/AuthContext';
 import '@/app/globals.css';
+
+export const metadata: Metadata = {
+  title: {
+    template: 'LemonDBD - %s',
+    default: 'LemonDBD - Dead by Daylight Hub & Tools',
+  },
+  description: 'LemonDBD: Ultimate Dead by Daylight database, perk randomizer, map explorer, and player companion.',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
+};
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }));
@@ -23,7 +38,9 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

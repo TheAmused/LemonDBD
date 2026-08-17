@@ -54,6 +54,7 @@ export default function ChallengePage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
+    document.title = 'LemonDBD - Trial Gauntlet Challenge';
     getDictionary(locale).then(setDict);
   }, [locale]);
 

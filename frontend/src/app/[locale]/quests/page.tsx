@@ -39,6 +39,7 @@ export default function QuestsPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
+    document.title = 'LemonDBD - Quests & Trials';
     getDictionary(locale).then(setDict);
     loadQuests();
   }, [locale]);

@@ -112,11 +112,11 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose, dict }) => 
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-10 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-10 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-4xl rounded-3xl border border-slate-200 bg-white p-6 sm:p-10 lg:p-12 shadow-2xl dark:border-slate-800 dark:bg-slate-900 cursor-default"
+        className="relative w-full max-w-4xl rounded-3xl border border-slate-200 bg-white p-6 sm:p-10 lg:p-12 shadow-2xl dark:border-slate-800 dark:bg-slate-900 text-slate-900 dark:text-slate-100 cursor-default animate-in zoom-in-95 duration-200"
         role="dialog"
         aria-modal="true"
       >
@@ -151,8 +151,8 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose, dict }) => 
               <span
                 className={`flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-black uppercase tracking-wider ${
                   isSurvivor
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
-                    : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
+                    : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
                 }`}
               >
                 {isSurvivor ? <Shield className="h-4 w-4" /> : <Skull className="h-4 w-4" />}
@@ -173,7 +173,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose, dict }) => 
                 )}
                 <span>{perk.character}</span>
                 {showRealName && (
-                  <span className="text-xs text-slate-400 font-normal">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">
                     ({perk.character_real_name})
                   </span>
                 )}
@@ -182,19 +182,19 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose, dict }) => 
           </div>
         </div>
 
-        <div className="mt-10 border-t border-slate-100 pt-8 dark:border-slate-800">
+        <div className="mt-10 border-t border-slate-200 pt-8 dark:border-slate-800">
           <div className="mb-4 flex items-center justify-between">
-            <h4 className="text-xs font-extrabold uppercase tracking-widest text-slate-400">
+            <h4 className="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400">
               Perk Description
             </h4>
             <button
               onClick={handleCopySlug}
-              className="flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
+              className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
               {copied ? (
                 <>
-                  <Check className="h-4 w-4 text-emerald-500" />
-                  <span className="text-emerald-500">{dict.modal.slugCopied}</span>
+                  <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">{dict.modal.slugCopied}</span>
                 </>
               ) : (
                 <>

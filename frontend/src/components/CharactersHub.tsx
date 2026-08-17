@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Shield, Skull, Search, X, Sparkles, Package, User, Flame, Info, ChevronRight } from 'lucide-react';
+import { Shield, Skull, Search, X, Sparkles, Package, User, Flame, Info, ChevronRight, Lock, Check } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { AuthModal } from './AuthModal';
+import { useSidebarState } from '@/hooks/useSidebarState';
 
 export interface Character {
+  id?: number;
   name: string;
   real_name: string;
   category: string;
@@ -11,6 +15,23 @@ export interface Character {
   short_name?: string;
   avatar_url?: string;
   avatar_local_path?: string;
+}
+
+interface OwnedCharacter {
+  character_id: number;
+  name: string;
+  role: string;
+  is_owned: boolean;
+}
+
+interface OwnedPerk {
+  perk_id: number;
+  name: string;
+  character_id: number | null;
+  is_teachable: boolean;
+  is_unlocked: boolean;
+  icon_url?: string;
+  icon_local_path?: string;
 }
 
 export interface Perk {
@@ -56,6 +77,8 @@ interface CharactersHubProps {
 }
 
 export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
+  const { isAuthenticated, token, user, bulkUpdateCharacterOwnership, bulkUpdatePerkOwnership } = useAuth();
+  const { isCollapsed } = useSidebarState();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<'all' | 'Survivor' | 'Killer'>('all');
@@ -65,6 +88,18 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [detailLoading, setDetailLoading] = useState<boolean>(false);
   const [detailData, setDetailData] = useState<CharacterDetailData | null>(null);
+
+  // Ownership selection mode state
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [ownershipMode, setOwnershipMode] = useState<boolean>(false);
+  const [ownershipLoading, setOwnershipLoading] = useState<boolean>(false);
+  const [ownershipSaving, setOwnershipSaving] = useState<boolean>(false);
+  const [ownershipSaveError, setOwnershipSaveError] = useState<string | null>(null);
+  const [showSavedToast, setShowSavedToast] = useState<boolean>(false);
+  const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<number, boolean>>({});
+  const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
+  const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
+  const [perksPopupCharacter, setPerksPopupCharacter] = useState<Character | null>(null);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -121,6 +156,134 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedCharacter]);
 
+  const handleToggleOwnershipMode = async () => {
+    if (ownershipMode) {
+      setOwnershipMode(false);
+      return;
+    }
+    if (!isAuthenticated || !token || !user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    setOwnershipLoading(true);
+    try {
+      const [charsRes, perksRes] = await Promise.all([
+        fetch(`${backendBase}/api/v1/users/${user.id}/characters`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        fetch(`${backendBase}/api/v1/users/${user.id}/perks`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      const charDraft: Record<number, boolean> = {};
+      if (charsRes.ok) {
+        const data = await charsRes.json();
+        (data.data as OwnedCharacter[]).forEach((c) => {
+          charDraft[c.character_id] = c.is_owned;
+        });
+      }
+
+      const perkDraft: Record<number, boolean> = {};
+      let perksList: OwnedPerk[] = [];
+      if (perksRes.ok) {
+        const data = await perksRes.json();
+        perksList = data.data as OwnedPerk[];
+        perksList.forEach((p) => {
+          perkDraft[p.perk_id] = p.is_unlocked;
+        });
+      }
+
+      setCharacterOwnershipDraft(charDraft);
+      setPerkUnlockDraft(perkDraft);
+      setAllPerks(perksList);
+      setOwnershipMode(true);
+    } catch (err) {
+      console.error('Failed to load ownership state:', err);
+    } finally {
+      setOwnershipLoading(false);
+    }
+  };
+
+  const handleToggleCharacterOwned = (characterId: number) => {
+    const newIsOwned = !(characterOwnershipDraft[characterId] ?? true);
+    setCharacterOwnershipDraft((prev) => ({
+      ...prev,
+      [characterId]: newIsOwned,
+    }));
+    // Mirror the backend's auto-unlock/auto-lock cascade in the local draft
+    setPerkUnlockDraft((prev) => {
+      const next = { ...prev };
+      allPerks
+        .filter((p) => p.character_id === characterId)
+        .forEach((p) => {
+          next[p.perk_id] = newIsOwned;
+        });
+      return next;
+    });
+  };
+
+  const handleTogglePerkUnlocked = (perkId: number) => {
+    setPerkUnlockDraft((prev) => ({
+      ...prev,
+      [perkId]: !(prev[perkId] ?? true),
+    }));
+  };
+
+  const handleCancelOwnershipMode = () => {
+    setOwnershipMode(false);
+    setCharacterOwnershipDraft({});
+    setPerkUnlockDraft({});
+    setAllPerks([]);
+    setPerksPopupCharacter(null);
+    setOwnershipSaveError(null);
+  };
+
+  const handleSaveOwnership = async () => {
+    setOwnershipSaving(true);
+    setOwnershipSaveError(null);
+    try {
+      const characterUpdates = Object.entries(characterOwnershipDraft).map(([characterId, isOwned]) => ({
+        character_id: Number(characterId),
+        is_owned: isOwned,
+      }));
+      const perkUpdates = Object.entries(perkUnlockDraft).map(([perkId, isUnlocked]) => ({
+        perk_id: Number(perkId),
+        is_unlocked: isUnlocked,
+      }));
+
+      // Sequential, not parallel: the character-bulk endpoint cascades and writes
+      // to the same perk-ownership rows the perk-bulk endpoint writes to. Firing
+      // both at once races two transactions against the same rows, which can roll
+      // back the character update while the perk update still commits.
+      const charactersOk =
+        characterUpdates.length === 0 || (await bulkUpdateCharacterOwnership(characterUpdates));
+      const perksOk = perkUpdates.length === 0 || (await bulkUpdatePerkOwnership(perkUpdates));
+
+      if (!charactersOk || !perksOk) {
+        setOwnershipSaveError('Nie udało się zapisać wszystkich zmian. Spróbuj ponownie.');
+        return;
+      }
+
+      handleCancelOwnershipMode();
+      setShowSavedToast(true);
+      window.setTimeout(() => setShowSavedToast(false), 2500);
+    } catch (err) {
+      console.error('Failed to save ownership changes:', err);
+      setOwnershipSaveError('Nie udało się zapisać zmian. Spróbuj ponownie.');
+    } finally {
+      setOwnershipSaving(false);
+    }
+  };
+
+  const getCharacterPerkStats = (characterId?: number) => {
+    if (!characterId) return { total: 0, unlocked: 0 };
+    const perksForChar = allPerks.filter((p) => p.character_id === characterId);
+    const unlocked = perksForChar.filter((p) => perkUnlockDraft[p.perk_id] ?? true).length;
+    return { total: perksForChar.length, unlocked };
+  };
+
   const getAvatarUrl = (char: Character) => {
     let rawPath = char.avatar_local_path;
     if (!rawPath && char.name) {
@@ -175,7 +338,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${ownershipMode ? 'pb-20' : ''}`}>
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-red-950/40 p-6 sm:p-8 shadow-2xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -244,6 +407,21 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           </button>
         </div>
 
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <button
+            onClick={handleToggleOwnershipMode}
+            disabled={ownershipLoading}
+            className={`flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs font-bold border transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait ${
+              ownershipMode
+                ? 'bg-amber-600 text-white border-amber-500 shadow-md shadow-amber-900/30'
+                : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-amber-500/50 hover:text-amber-400'
+            }`}
+          >
+            {ownershipMode ? <X className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+            {ownershipLoading ? 'Loading...' : ownershipMode ? 'Exit Selection' : 'My Characters'}
+          </button>
+        </div>
+
         {/* Search Input */}
         <div className="relative w-full sm:w-72">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -287,10 +465,21 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
           {filteredCharacters.map((char, idx) => {
             const isSurvivor = char.category?.toLowerCase() === 'survivor';
+            const isOwned = char.id ? characterOwnershipDraft[char.id] ?? true : true;
+            const perkStats = ownershipMode ? getCharacterPerkStats(char.id) : { total: 0, unlocked: 0 };
+            const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
+            const showLockedOverlay = !isOwned;
+
             return (
               <div
                 key={`${char.name}-${idx}`}
-                onClick={() => handleOpenDetail(char)}
+                onClick={() => {
+                  if (ownershipMode) {
+                    if (char.id) handleToggleCharacterOwned(char.id);
+                  } else {
+                    handleOpenDetail(char);
+                  }
+                }}
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 hover:bg-slate-850 hover:border-red-500/50 hover:shadow-xl hover:shadow-red-950/20 transition-all duration-300 cursor-pointer"
               >
                 {/* Role Badge */}
@@ -307,17 +496,46 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   </span>
                 </div>
 
+                {/* Ownership Lock Badge */}
+                {ownershipMode && !isOwned && (
+                  <div className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/80 border border-amber-500/40 text-amber-400 backdrop-blur-md">
+                    <Lock className="h-3.5 w-3.5" />
+                  </div>
+                )}
+                {ownershipMode && isOwned && (
+                  <div className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 backdrop-blur-md">
+                    <Check className="h-3.5 w-3.5" />
+                  </div>
+                )}
+
                 {/* Avatar Portrait Image */}
                 <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-950">
                   <img
                     src={getAvatarUrl(char)}
                     alt={char.name}
-                    className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    className={`h-full w-full object-cover object-top transition-transform duration-500 ${
+                      ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-105'
+                    }`}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
                         'https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/IconHelpLoading_players.png/revision/latest';
                     }}
                   />
+                  {ownershipMode && showLockedOverlay && (
+                    <img
+                      src={getAvatarUrl(char)}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover object-top grayscale pointer-events-none"
+                      style={{ clipPath: hasPartialPerks ? 'inset(0 50% 0 0)' : 'inset(0 0 0 0)' }}
+                    />
+                  )}
+                  {ownershipMode && showLockedOverlay && !hasPartialPerks && (
+                    <div className="absolute inset-0 bg-slate-950/50" />
+                  )}
+                  {ownershipMode && hasPartialPerks && (
+                    <div className="absolute inset-y-0 left-0 w-1/2 bg-slate-950/50" />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
                 </div>
 
@@ -330,6 +548,17 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     <p className="text-[11px] font-medium text-slate-400 line-clamp-1">
                       {char.real_name}
                     </p>
+                  )}
+                  {ownershipMode && !isOwned && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPerksPopupCharacter(char);
+                      }}
+                      className="mt-1 w-full rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px] font-bold text-amber-400 hover:bg-amber-500/20 transition-colors"
+                    >
+                      Perks {perkStats.total > 0 ? `(${perkStats.unlocked}/${perkStats.total})` : ''}
+                    </button>
                   )}
                 </div>
               </div>
@@ -553,6 +782,111 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           </div>
         </div>
       )}
+
+      {/* Perks Popup for a Locked Character */}
+      {perksPopupCharacter && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          <div
+            onClick={() => setPerksPopupCharacter(null)}
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
+          />
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl"
+          >
+            <div className="flex items-center justify-between border-b border-slate-800 p-5">
+              <h3 className="text-base font-bold text-slate-100">
+                {perksPopupCharacter.name} Perks
+              </h3>
+              <button
+                onClick={() => setPerksPopupCharacter(null)}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="px-5 pt-4 text-[11px] text-slate-500">Click a perk to toggle whether you own it.</p>
+            <div className="p-5 space-y-2">
+              {allPerks
+                .filter((p) => p.character_id === perksPopupCharacter.id)
+                .map((perk) => {
+                  const isUnlocked = perkUnlockDraft[perk.perk_id] ?? true;
+                  return (
+                    <button
+                      key={perk.perk_id}
+                      onClick={() => handleTogglePerkUnlocked(perk.perk_id)}
+                      className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left text-xs font-semibold transition-all hover:scale-[1.02] active:scale-95 ${
+                        isUnlocked
+                          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300 hover:border-emerald-400/70'
+                          : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-amber-500/50'
+                      }`}
+                    >
+                      <div
+                        className={`h-16 w-16 shrink-0 rounded-lg border p-1.5 flex items-center justify-center bg-slate-900 ${
+                          isUnlocked ? 'border-emerald-500/30' : 'border-slate-800'
+                        }`}
+                      >
+                        <img
+                          src={getAssetUrl(perk.icon_local_path, perk.icon_url)}
+                          alt={perk.name}
+                          className={`h-full w-full object-contain ${isUnlocked ? '' : 'grayscale opacity-50'}`}
+                        />
+                      </div>
+                      <span className="flex-1">{perk.name}</span>
+                      {isUnlocked ? <Check className="h-4 w-4 shrink-0" /> : <Lock className="h-4 w-4 shrink-0" />}
+                    </button>
+                  );
+                })}
+              {allPerks.filter((p) => p.character_id === perksPopupCharacter.id).length === 0 && (
+                <p className="text-xs text-slate-500 italic">No teachable perks for this character.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Save Bar for Ownership Selection Mode — fixed to the true bottom of the
+          screen, but padded to match the sidebar so it never sits behind it
+          or looks off-center relative to the visible content column. */}
+      {ownershipMode && (
+        <div
+          className={`fixed inset-x-0 bottom-0 z-30 border-t border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-md transition-all duration-300 ${
+            isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+          }`}
+        >
+          {ownershipSaveError && (
+            <p className="px-5 sm:px-7 lg:px-9 pt-2 text-center text-[11px] font-semibold text-rose-400">
+              {ownershipSaveError}
+            </p>
+          )}
+          <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
+            <button
+              onClick={handleCancelOwnershipMode}
+              disabled={ownershipSaving}
+              className="px-5 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors disabled:opacity-60"
+            >
+              Anuluj
+            </button>
+            <button
+              onClick={handleSaveOwnership}
+              disabled={ownershipSaving}
+              className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/30 hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait"
+            >
+              {ownershipSaving ? 'Zapisywanie...' : 'Akceptuj'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Save confirmation toast */}
+      {showSavedToast && (
+        <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-extrabold text-white shadow-2xl shadow-emerald-900/50 ring-2 ring-emerald-400/50 animate-in fade-in slide-in-from-top-4 duration-300">
+          <Check className="h-5 w-5" />
+          Zmiany zapisane
+        </div>
+      )}
+
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   );
 };

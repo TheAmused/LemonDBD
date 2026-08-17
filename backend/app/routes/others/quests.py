@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, jsonify, request
-from app.services.quest_service import QuestService
+from app.services.others.quest_service import QuestService
 
 quests_bp = Blueprint("quests", __name__, url_prefix="/api/v1/quests")
 _default_quest_service = None

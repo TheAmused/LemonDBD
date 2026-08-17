@@ -4,8 +4,8 @@ import unittest
 from app import create_app
 from app.services.db_service import DatabaseService
 from app.services.challenge_service import ChallengeService
-from app.services.draft_service import DraftService
-from app.services.quest_service import QuestService
+from app.services.others.draft_service import DraftService
+from app.services.others.quest_service import QuestService
 
 
 class TestPhase1Services(unittest.TestCase):

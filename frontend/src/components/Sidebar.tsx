@@ -209,6 +209,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
       href: `/${currentLocale}/characters`,
     },
+  ];
+
+  // Droppable "Others" Accordion Navigation
+  const otherNavItems: NavItem[] = [
     {
       id: 'guesser',
       label: dict.guesser?.navLink ? `🎮 ${dict.guesser.navLink}` : '🎮 Guesser',
@@ -217,10 +221,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-violet-500/10 text-violet-400 border border-violet-500/20',
       href: `/${currentLocale}/characters/guesser`,
     },
-  ];
-
-  // Droppable "Others" Accordion Navigation
-  const otherNavItems: NavItem[] = [
     {
       id: 'draft',
       label: '🏆 Draft Room',

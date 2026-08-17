@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, jsonify, request
-from app.services.draft_service import DraftService
+from app.services.others.draft_service import DraftService
 
 draft_bp = Blueprint("draft", __name__, url_prefix="/api/v1/draft")
 _default_draft_service = None

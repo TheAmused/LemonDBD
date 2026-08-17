@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.killer_calc_service import KillerCalcService
+from app.services.others.killer_calc_service import KillerCalcService
 
 killer_calc_bp = Blueprint("killer_calc", __name__, url_prefix="/api/v1/killer-calc")
 calc_service = KillerCalcService()

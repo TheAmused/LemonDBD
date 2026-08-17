@@ -1,6 +1,6 @@
 import unittest
 from app import create_app
-from app.services.killer_calc_service import KillerCalcService, calculate_killer_calc
+from app.services.others.killer_calc_service import KillerCalcService, calculate_killer_calc
 
 
 class TestPhase3Services(unittest.TestCase):

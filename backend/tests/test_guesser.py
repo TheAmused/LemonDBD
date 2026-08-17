@@ -3,7 +3,7 @@ import json
 import unittest
 from app import create_app
 from app.services.db_service import DatabaseService
-from app.services.guesser_service import GuesserService
+from app.services.others.guesser_service import GuesserService
 
 class TestGuesserModule(unittest.TestCase):
     def setUp(self):
@@ -19,7 +19,7 @@ class TestGuesserModule(unittest.TestCase):
         self.app = create_app()
         self.app.config["TESTING"] = True
         # Monkey patch DatabaseService path within routes
-        from app.routes.guesser import guesser_service
+        from app.routes.others.guesser import guesser_service
         self.original_db = guesser_service.db_service
         guesser_service.db_service = self.db_service
         
@@ -27,7 +27,7 @@ class TestGuesserModule(unittest.TestCase):
         self.service = GuesserService(db_service=self.db_service)
 
     def tearDown(self):
-        from app.routes.guesser import guesser_service
+        from app.routes.others.guesser import guesser_service
         guesser_service.db_service = self.original_db
         if os.path.exists(self.db_path):
             os.remove(self.db_path)

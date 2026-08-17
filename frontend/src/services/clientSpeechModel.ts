@@ -209,7 +209,7 @@ export class AudioCaptureSession {
       window.AudioContext || (window as any).webkitAudioContext;
     this.audioContext = new AudioContextClass();
 
-    // Critical for Chrome/Brave/Safari: resume AudioContext
+    // Critical for Chrome/Brave/Safari/Firefox: resume AudioContext
     if (this.audioContext.state === 'suspended') {
       await this.audioContext.resume();
     }
@@ -407,6 +407,13 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       if (env.backends?.onnx?.wasm) {
         env.backends.onnx.wasm.numThreads = 1;
         env.backends.onnx.wasm.proxy = false;
+        env.backends.onnx.wasm.simd = true;
+        env.backends.onnx.wasm.wasmPaths = {
+          wasm: '/transformers/ort-wasm.wasm',
+          simd: '/transformers/ort-wasm-simd.wasm',
+          threaded: '/transformers/ort-wasm-threaded.wasm',
+          simdThreaded: '/transformers/ort-wasm-simd-threaded.wasm',
+        };
       }
     }
 

@@ -1,57 +1,47 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { SlidersHorizontal } from 'lucide-react';
-import { fetchExcludedPerks, fetchRoster } from '@/services/pageStreakApi';
+import { fetchRoster } from '@/services/pageStreakApi';
 import { RosterEntry } from '@/types/pageStreak';
 import { KillerRosterGrid } from './KillerRosterGrid';
-import { ExcludedPerksModal } from './ExcludedPerksModal';
 import { usePerkArtwork } from './usePerkArtwork';
+import { useAuth } from '@/context/AuthContext';
 
 interface PageStreakRosterProps {
   locale: string;
 }
 
 export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) => {
+  const { token } = useAuth();
   const [roster, setRoster] = useState<RosterEntry[]>([]);
-  const [poolSize, setPoolSize] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
   const { avatarByKiller } = usePerkArtwork();
 
   const load = useCallback(async () => {
+    if (!token) return;
     setLoading(true);
     setError(null);
     try {
-      const [rosterData, exclusions] = await Promise.all([fetchRoster(), fetchExcludedPerks()]);
-      setRoster(rosterData);
-      setPoolSize(exclusions.pool_size);
-      setPageCount(exclusions.page_count);
+      setRoster(await fetchRoster(token));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load the roster');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     load();
   }, [load]);
 
+  const pageCount = roster[0]?.page_count ?? 0;
+
   return (
     <div>
       <div className="mb-5 flex flex-wrap items-center gap-3">
-        <button
-          onClick={() => setModalOpen(true)}
-          className="flex items-center gap-2 rounded-xl border border-slate-800 px-4 py-2 text-xs font-bold text-slate-300 hover:border-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-        >
-          <SlidersHorizontal className="h-3.5 w-3.5" />
-          Perk collection ({poolSize})
-        </button>
         <span className="font-mono text-[11px] text-slate-500">
-          {poolSize} perks · {pageCount} pages
+          {roster.length} killers you own · {pageCount} pages
         </span>
       </div>
 
@@ -67,8 +57,6 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
       ) : (
         <KillerRosterGrid locale={locale} roster={roster} avatarByKiller={avatarByKiller} />
       )}
-
-      <ExcludedPerksModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSaved={load} />
     </div>
   );
 };

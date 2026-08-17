@@ -339,6 +339,53 @@ export function getModelProgress(): ModelProgressInfo {
 }
 
 /**
+ * Loads the standalone browser Transformers.js distribution from /transformers/transformers.min.js
+ * or jsdelivr CDN. This avoids Turbopack trying to bundle node-specific fs/path modules.
+ */
+async function loadTransformersStandalone(): Promise<any> {
+  if (typeof window === 'undefined') return null;
+
+  const win = window as any;
+  if (win.transformers && win.transformers.AutoModelForSpeechSeq2Seq) {
+    return win.transformers;
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    const existing = document.querySelector('script[data-transformers-bundle]');
+    if (existing) {
+      if (win.transformers) {
+        resolve();
+      } else {
+        existing.addEventListener('load', () => resolve());
+        existing.addEventListener('error', (e) => reject(e));
+      }
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.setAttribute('data-transformers-bundle', 'true');
+    script.src = '/transformers/transformers.min.js';
+    script.async = true;
+    script.onload = () => {
+      console.log('[ClientSpeechModel] Loaded local standalone Transformers.js bundle!');
+      resolve();
+    };
+    script.onerror = (err) => {
+      console.warn('[ClientSpeechModel] Local script load failed, trying CDN fallback...', err);
+      const cdnScript = document.createElement('script');
+      cdnScript.src = 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js';
+      cdnScript.async = true;
+      cdnScript.onload = () => resolve();
+      cdnScript.onerror = (cdnErr) => reject(cdnErr);
+      document.head.appendChild(cdnScript);
+    };
+    document.head.appendChild(script);
+  });
+
+  return win.transformers;
+}
+
+/**
  * Initializes and downloads the client-side speech recognition model in the background.
  * Uses Transformers.js with direct Whisper-tiny models.
  */
@@ -353,28 +400,34 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
   broadcastProgress({ status: 'downloading', progress: 10 });
 
   try {
+    const transformers = await loadTransformersStandalone();
+    if (!transformers) {
+      throw new Error('Could not load standalone Transformers.js bundle.');
+    }
+
     const {
       env,
       AutoTokenizer,
       AutoProcessor,
       AutoModelForSpeechSeq2Seq,
       AutomaticSpeechRecognitionPipeline,
-    } = await import('@xenova/transformers');
+    } = transformers;
 
     if (env) {
       env.allowLocalModels = false;
       env.useBrowserCache = true;
       env.allowRemoteModels = true;
       if (env.backends?.onnx?.wasm) {
+        env.backends.onnx.wasm.wasmPaths = '/transformers/';
         env.backends.onnx.wasm.numThreads = 1;
-        (env.backends.onnx.wasm as any).proxy = false;
+        env.backends.onnx.wasm.proxy = false;
       }
     }
 
     const modelName =
       locale === 'en' ? 'Xenova/whisper-tiny.en' : 'Xenova/whisper-tiny';
 
-    console.log(`[ClientSpeechModel] Loading ${modelName} via AutoModelForSpeechSeq2Seq...`);
+    console.log(`[ClientSpeechModel] Initializing Whisper model (${modelName})...`);
 
     const progress_callback = (progressData: any) => {
       if (progressData && progressData.status === 'progress' && progressData.total) {

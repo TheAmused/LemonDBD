@@ -474,142 +474,142 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
       {isSubmitModalOpen && (
         <div
           onClick={() => setIsSubmitModalOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in cursor-pointer"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl cursor-default"
+            className="relative w-full max-w-lg rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl cursor-default"
           >
             <button
               onClick={() => setIsSubmitModalOpen(false)}
-              className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-800 transition-colors"
+              className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>
 
             <div className="flex items-center gap-2 mb-4">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-600/20 text-red-400 border border-red-500/30">
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-600/10 dark:bg-red-600/20 text-red-600 dark:text-red-400 border border-red-500/30">
                 <Plus className="h-4 w-4" />
               </span>
               <div>
-                <h2 className="text-lg font-bold text-slate-100">Submit Custom Build</h2>
-                <p className="text-xs text-slate-400">Share your custom loadout with the community</p>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Submit Custom Build</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Share your custom loadout with the community</p>
               </div>
             </div>
 
             {submitError && (
-              <div className="mb-4 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs font-semibold text-rose-400">
+              <div className="mb-4 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs font-semibold text-rose-700 dark:text-rose-400">
                 {submitError}
               </div>
             )}
 
             <form onSubmit={handleSubmitBuild} className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">Build Title *</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Build Title *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Enduring Spirit Nurse"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-200 placeholder-slate-600 focus:border-red-500 focus:outline-none"
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">Description</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Description</label>
                 <textarea
                   rows={2}
                   placeholder="Briefly explain the strategy or perk interactions..."
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
-                  className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-200 placeholder-slate-600 focus:border-red-500 focus:outline-none resize-none"
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none resize-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">Role *</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Role *</label>
                   <select
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value as 'survivor' | 'killer')}
-                    className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-200 focus:border-red-500 focus:outline-none"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-200 focus:border-red-500 focus:outline-none"
                   >
-                    <option value="survivor">🛡️ Survivor</option>
-                    <option value="killer">💀 Killer</option>
+                    <option value="survivor" className="dark:bg-slate-900">🛡️ Survivor</option>
+                    <option value="killer" className="dark:bg-slate-900">💀 Killer</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">Category *</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Category *</label>
                   <select
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
-                    className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-200 focus:border-red-500 focus:outline-none capitalize"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-200 focus:border-red-500 focus:outline-none capitalize"
                   >
-                    <option value="meta">Meta</option>
-                    <option value="otzdarva">Otzdarva Recommended</option>
-                    <option value="meme">Meme</option>
-                    <option value="stealth">Stealth</option>
-                    <option value="chase">Chase</option>
+                    <option value="meta" className="dark:bg-slate-900">Meta</option>
+                    <option value="otzdarva" className="dark:bg-slate-900">Otzdarva Recommended</option>
+                    <option value="meme" className="dark:bg-slate-900">Meme</option>
+                    <option value="stealth" className="dark:bg-slate-900">Stealth</option>
+                    <option value="chase" className="dark:bg-slate-900">Chase</option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">Target Character</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Target Character</label>
                   <input
                     type="text"
                     placeholder="e.g. Huntress or Meg"
                     value={newCharacter}
                     onChange={(e) => setNewCharacter(e.target.value)}
-                    className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-200 placeholder-slate-600 focus:border-red-500 focus:outline-none"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 mb-1">Author Name</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Author Name</label>
                   <input
                     type="text"
                     placeholder="Your username"
                     value={newAuthor}
                     onChange={(e) => setNewAuthor(e.target.value)}
-                    className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-medium text-slate-200 placeholder-slate-600 focus:border-red-500 focus:outline-none"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">Loadout Perks (4 Slots) *</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Loadout Perks (4 Slots) *</label>
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="text"
                     placeholder="Perk 1 (e.g. Sprint Burst)"
                     value={newPerk1}
                     onChange={(e) => setNewPerk1(e.target.value)}
-                    className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-200 placeholder-slate-600 focus:border-red-500 focus:outline-none"
+                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                   <input
                     type="text"
                     placeholder="Perk 2 (e.g. Adrenaline)"
                     value={newPerk2}
                     onChange={(e) => setNewPerk2(e.target.value)}
-                    className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-200 placeholder-slate-600 focus:border-red-500 focus:outline-none"
+                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                   <input
                     type="text"
                     placeholder="Perk 3 (e.g. Resilience)"
                     value={newPerk3}
                     onChange={(e) => setNewPerk3(e.target.value)}
-                    className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-200 placeholder-slate-600 focus:border-red-500 focus:outline-none"
+                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                   <input
                     type="text"
                     placeholder="Perk 4 (e.g. Windows of Opportunity)"
                     value={newPerk4}
                     onChange={(e) => setNewPerk4(e.target.value)}
-                    className="rounded-xl border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-200 placeholder-slate-600 focus:border-red-500 focus:outline-none"
+                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -618,7 +618,7 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                 <button
                   type="button"
                   onClick={() => setIsSubmitModalOpen(false)}
-                  className="rounded-xl border border-slate-800 bg-slate-800 px-4 py-2 text-xs font-bold text-slate-300 hover:bg-slate-700 transition-colors"
+                  className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -635,52 +635,52 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
         </div>
       )}
 
-      {/* Shareable Build Card Modal */}
       {shareBuild && (
         <div
           onClick={() => setShareBuild(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in cursor-pointer"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl space-y-4 cursor-default"
+            className="relative w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl space-y-4 cursor-default"
           >
             <button
               onClick={() => setShareBuild(null)}
-              className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-800 transition-colors"
+              className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>
 
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-600/20 text-red-400 border border-red-500/30">
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-600/10 dark:bg-red-600/20 text-red-600 dark:text-red-400 border border-red-500/30">
                 <Share2 className="h-4 w-4" />
               </span>
               <div>
-                <h2 className="text-base font-bold text-slate-100">Share Build Card</h2>
-                <p className="text-xs text-slate-400">Scan QR code or copy link to share</p>
+                <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">Share Build Card</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Scan QR code or copy link to share</p>
               </div>
             </div>
 
             {/* Build Card Preview */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4 space-y-3">
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4 space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <span
-                  className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-extrabold uppercase ${shareBuild.role === 'survivor'
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                    }`}
+                  className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-extrabold uppercase ${
+                    shareBuild.role === 'survivor'
+                      ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20'
+                      : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20'
+                  }`}
                 >
                   {shareBuild.role}
                 </span>
-                <span className="text-[10px] font-bold text-amber-400 uppercase">
+                <span className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">
                   {shareBuild.category}
                 </span>
               </div>
 
               <div>
-                <h3 className="text-sm font-extrabold text-slate-100">{shareBuild.title}</h3>
-                <p className="text-xs text-slate-400 mt-1">{shareBuild.description}</p>
+                <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100">{shareBuild.title}</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{shareBuild.description}</p>
               </div>
 
               {/* Perk Badges */}
@@ -688,9 +688,9 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                 {shareBuild.perks.map((perk, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900/90 p-1.5 text-xs font-semibold text-slate-200"
+                    className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200"
                   >
-                    <span className="h-4 w-4 shrink-0 rounded bg-red-600/20 text-[9px] font-bold text-red-400 flex items-center justify-center">
+                    <span className="h-4 w-4 shrink-0 rounded bg-red-600/10 dark:bg-red-600/20 text-[9px] font-bold text-red-600 dark:text-red-400 flex items-center justify-center">
                       {i + 1}
                     </span>
                     <span className="truncate text-[11px]">{perk}</span>
@@ -700,8 +700,8 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
             </div>
 
             {/* QR Code & Share Link */}
-            <div className="flex items-center gap-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-3">
-              <div className="shrink-0 bg-white p-1.5 rounded-xl">
+            <div className="flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-3">
+              <div className="shrink-0 bg-white p-1.5 rounded-xl border border-slate-200 dark:border-none shadow-sm">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(shareUrl)}`}
                   alt="Build QR Code"
@@ -710,19 +710,19 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
               </div>
 
               <div className="flex-1 space-y-2">
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-400">
-                  <QrCode className="h-3.5 w-3.5 text-red-400" />
+                <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                  <QrCode className="h-3.5 w-3.5 text-red-500 dark:text-red-400" />
                   <span>Scan with mobile device</span>
                 </div>
 
                 <button
                   onClick={handleCopyShareLink}
-                  className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3 py-2 text-xs font-bold text-slate-200 hover:bg-slate-700 transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-sm"
                 >
                   {copiedShareLink ? (
                     <>
-                      <Check className="h-3.5 w-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Link Copied!</span>
+                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <span className="text-emerald-600 dark:text-emerald-400">Link Copied!</span>
                     </>
                   ) : (
                     <>

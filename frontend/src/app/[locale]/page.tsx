@@ -304,12 +304,12 @@ function DashboardContent() {
                 {[...Array(12)].map((_, i) => (
                   <div
                     key={i}
-                    className="h-48 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80"
+                    className="h-48 animate-pulse rounded-3xl bg-slate-200/70 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80"
                   />
                 ))}
               </div>
             ) : perks.length === 0 ? (
-              <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800/80 bg-white dark:bg-slate-900/40 p-12 text-center backdrop-blur-sm">
+              <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800/80 bg-white/40 dark:bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm">
                 <Shield className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
                 <h3 className="text-lg font-extrabold text-slate-800 dark:text-slate-200">
                   {dict?.empty?.title || 'No Perks Found'}
@@ -319,7 +319,7 @@ function DashboardContent() {
                 </p>
                 <button
                   onClick={handleResetFilters}
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 px-4 py-2 text-xs font-bold text-cyan-600 dark:text-cyan-300 hover:bg-cyan-500/20 transition-colors cursor-pointer"
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/10 dark:bg-cyan-500/20 border border-cyan-500/30 px-4 py-2 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/20 dark:hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm"
                 >
                   Reset Filters
                 </button>

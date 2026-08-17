@@ -201,22 +201,22 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="rounded-3xl border border-slate-800 bg-gradient-to-r from-slate-900 via-red-950/40 to-slate-900 p-6 shadow-xl text-slate-100">
+      <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-gradient-to-r from-red-50 via-slate-100 to-rose-50 dark:from-slate-900 dark:via-red-950/40 dark:to-slate-900 p-6 shadow-sm dark:shadow-xl text-slate-900 dark:text-slate-100">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-600/20 border border-red-500/40 text-red-400 shadow-lg shadow-red-950/50">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-600/10 dark:bg-red-600/20 border border-red-500/30 text-red-600 dark:text-red-400 shadow-sm dark:shadow-lg dark:shadow-red-950/50">
               <Trophy className="h-6 w-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-black tracking-wide text-white font-mono">
+                <h1 className="text-2xl font-black tracking-wide text-slate-900 dark:text-white font-mono">
                   Tournament Draft Room
                 </h1>
-                <span className="rounded-full bg-red-500/20 border border-red-500/30 px-2.5 py-0.5 text-[10px] font-bold text-red-400 uppercase">
+                <span className="rounded-full bg-red-500/10 dark:bg-red-500/20 border border-red-500/30 px-2.5 py-0.5 text-[10px] font-bold text-red-600 dark:text-red-400 uppercase">
                   Phase 1 Competitive
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
                 Ban & Pick perks interactively for tournament matches with live spectator support.
               </p>
             </div>
@@ -231,12 +231,12 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                 value={roomCodeInput}
                 onChange={(e) => setRoomCodeInput(e.target.value.toUpperCase())}
                 maxLength={6}
-                className="w-36 px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono uppercase tracking-widest text-slate-100 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-36 px-3 py-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-xs font-mono uppercase tracking-widest text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"
               />
               <button
                 onClick={handleJoinRoom}
                 disabled={loading || !roomCodeInput.trim()}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-bold transition-all disabled:opacity-50 cursor-pointer shadow-sm"
               >
                 Join Room
               </button>
@@ -250,22 +250,22 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
             </div>
           ) : (
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex items-center gap-2 rounded-xl bg-slate-950/80 border border-slate-800 px-3.5 py-1.5 font-mono text-xs text-amber-400">
-                <span className="text-slate-400 font-sans text-[10px] uppercase">Room Code:</span>
+              <div className="flex items-center gap-2 rounded-xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 font-mono text-xs text-amber-700 dark:text-amber-400 shadow-sm">
+                <span className="text-slate-500 dark:text-slate-400 font-sans text-[10px] uppercase">Room Code:</span>
                 <span className="font-extrabold text-sm tracking-wider">{room.room_code}</span>
               </div>
 
               <button
                 onClick={handleCopyLink}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors cursor-pointer shadow-sm"
               >
-                <Share2 className="h-3.5 w-3.5 text-red-400" />
+                <Share2 className="h-3.5 w-3.5 text-red-500 dark:text-red-400" />
                 <span>{copiedToast ? 'Copied URL!' : 'Share Room'}</span>
               </button>
 
               <button
                 onClick={() => setRoom(null)}
-                className="px-3 py-1.5 rounded-xl border border-slate-700 text-slate-400 hover:text-white text-xs font-bold transition-colors cursor-pointer"
+                className="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-bold transition-colors cursor-pointer shadow-sm"
               >
                 Leave Room
               </button>
@@ -275,7 +275,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-xs flex justify-between items-center">
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-200 text-xs flex justify-between items-center shadow-sm">
           <span>{error}</span>
           <button onClick={() => setError(null)} className="font-bold underline cursor-pointer">
             Dismiss
@@ -287,18 +287,18 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
       {room && (
         <div className="space-y-6">
           {/* Status & Role Switcher Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-900 border border-slate-800 text-slate-200">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/90 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 shadow-sm">
             {/* Phase Indicator */}
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-400 uppercase">Draft Phase:</span>
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Draft Phase:</span>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
                     room.phase === 'bans'
-                      ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40 animate-pulse'
+                      ? 'bg-rose-500/10 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-500/40 animate-pulse'
                       : room.phase === 'picks'
-                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 animate-pulse'
-                      : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                      ? 'bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/40 animate-pulse'
+                      : 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/40'
                   }`}
                 >
                   {room.phase === 'bans'
@@ -314,7 +314,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                   onClick={() =>
                     handleAdvancePhase(room.phase === 'bans' ? 'picks' : 'complete')
                   }
-                  className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer shadow-sm"
                 >
                   Next Phase →
                 </button>
@@ -322,14 +322,14 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
             </div>
 
             {/* Spectator / Role Selector */}
-            <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 shadow-inner">
               <span className="text-[10px] font-bold uppercase text-slate-500 px-2">Role:</span>
               <button
                 onClick={() => setUserRole('survivor')}
                 className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   userRole === 'survivor'
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-400 border border-emerald-500/30 shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Shield className="h-3.5 w-3.5" />
@@ -339,8 +339,8 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                 onClick={() => setUserRole('killer')}
                 className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   userRole === 'killer'
-                    ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-rose-500/20 text-rose-800 dark:text-rose-400 border border-rose-500/30 shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Skull className="h-3.5 w-3.5" />
@@ -350,8 +350,8 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                 onClick={() => setUserRole('spectator')}
                 className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   userRole === 'spectator'
-                    ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-purple-500/20 text-purple-800 dark:text-purple-400 border border-purple-500/30 shadow-sm'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Eye className="h-3.5 w-3.5" />
@@ -361,11 +361,11 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
           </div>
 
           {/* Banned Perks Section */}
-          <div className="rounded-3xl border border-rose-900/40 bg-slate-900/80 p-6 space-y-4">
+          <div className="rounded-3xl border border-rose-500/30 dark:border-rose-900/40 bg-white/90 dark:bg-slate-900/80 p-6 space-y-4 shadow-sm dark:shadow-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Ban className="h-5 w-5 text-rose-500" />
-                <h2 className="text-lg font-bold text-white">Banned Perks (Max 3 Per Side)</h2>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Banned Perks (Max 3 Per Side)</h2>
               </div>
               {room.phase === 'bans' && userRole !== 'spectator' && (
                 <div className="flex gap-2">
@@ -376,7 +376,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                       setIsPerkModalOpen(true);
                     }}
                     disabled={room.banned_perks.length >= 6}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 hover:bg-emerald-500/20 dark:hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-sm"
                   >
                     + Ban Survivor Perk
                   </button>
@@ -387,7 +387,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                       setIsPerkModalOpen(true);
                     }}
                     disabled={room.banned_perks.length >= 6}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 dark:bg-rose-500/20 hover:bg-rose-500/20 dark:hover:bg-rose-500/30 text-rose-700 dark:text-rose-300 border border-rose-500/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-sm"
                   >
                     + Ban Killer Perk
                   </button>
@@ -396,7 +396,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
             </div>
 
             {room.banned_perks.length === 0 ? (
-              <div className="py-6 text-center text-xs text-slate-500 italic border border-dashed border-slate-800 rounded-2xl">
+              <div className="py-6 text-center text-xs text-slate-400 dark:text-slate-500 italic border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
                 No perks banned yet. Select "Ban Survivor Perk" or "Ban Killer Perk" to start.
               </div>
             ) : (
@@ -404,7 +404,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                 {room.banned_perks.map((perkName, idx) => (
                   <div
                     key={`${perkName}-${idx}`}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-950/60 border border-rose-700/60 text-xs font-bold text-rose-200 shadow-md"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-700/60 text-xs font-bold text-rose-800 dark:text-rose-200 shadow-sm"
                   >
                     <Ban className="h-3.5 w-3.5 text-rose-500" />
                     <span>{perkName}</span>
@@ -417,11 +417,11 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
           {/* Picked Perks Grids (Survivor vs Killer) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Survivor Team Picks */}
-            <div className="rounded-3xl border border-emerald-900/40 bg-slate-900/80 p-6 space-y-4">
+            <div className="rounded-3xl border border-emerald-500/30 dark:border-emerald-900/40 bg-white/90 dark:bg-slate-900/80 p-6 space-y-4 shadow-sm dark:shadow-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-emerald-400" />
-                  <h3 className="text-base font-bold text-emerald-400">Survivor Team Picks</h3>
+                  <Shield className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  <h3 className="text-base font-bold text-emerald-700 dark:text-emerald-400">Survivor Team Picks</h3>
                 </div>
                 {room.phase === 'picks' &&
                   (userRole === 'survivor' || userRole === 'killer') && (
@@ -447,20 +447,20 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                   return (
                     <div
                       key={slotIdx}
-                      className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${
+                      className={`flex items-center gap-3 p-3 rounded-2xl border transition-all shadow-sm ${
                         perkName
-                          ? 'border-emerald-500/40 bg-emerald-950/30'
-                          : 'border-dashed border-slate-800 bg-slate-950/40'
+                          ? 'border-emerald-500/40 bg-emerald-50/70 dark:bg-emerald-950/30'
+                          : 'border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40'
                       }`}
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-xs font-mono font-bold text-slate-400 shrink-0">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-slate-600 dark:text-slate-400 shrink-0">
                         S{slotIdx + 1}
                       </div>
                       <div className="overflow-hidden">
-                        <p className="text-xs font-bold text-slate-100 truncate">
+                        <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                           {perkName || 'Empty Pick Slot'}
                         </p>
-                        <p className="text-[10px] text-slate-400 truncate">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                           {perkObj?.character || 'Survivor Perk'}
                         </p>
                       </div>
@@ -471,11 +471,11 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
             </div>
 
             {/* Killer Team Picks */}
-            <div className="rounded-3xl border border-rose-900/40 bg-slate-900/80 p-6 space-y-4">
+            <div className="rounded-3xl border border-rose-500/30 dark:border-rose-900/40 bg-white/90 dark:bg-slate-900/80 p-6 space-y-4 shadow-sm dark:shadow-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Skull className="h-5 w-5 text-rose-400" />
-                  <h3 className="text-base font-bold text-rose-400">Killer Team Picks</h3>
+                  <Skull className="h-5 w-5 text-rose-600 dark:text-rose-400" />
+                  <h3 className="text-base font-bold text-rose-700 dark:text-rose-400">Killer Team Picks</h3>
                 </div>
                 {room.phase === 'picks' &&
                   (userRole === 'killer' || userRole === 'survivor') && (
@@ -501,20 +501,20 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                   return (
                     <div
                       key={slotIdx}
-                      className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${
+                      className={`flex items-center gap-3 p-3 rounded-2xl border transition-all shadow-sm ${
                         perkName
-                          ? 'border-rose-500/40 bg-rose-950/30'
-                          : 'border-dashed border-slate-800 bg-slate-950/40'
+                          ? 'border-rose-500/40 bg-rose-50/70 dark:bg-rose-950/30'
+                          : 'border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40'
                       }`}
                     >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-xs font-mono font-bold text-slate-400 shrink-0">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-slate-600 dark:text-slate-400 shrink-0">
                         K{slotIdx + 1}
                       </div>
                       <div className="overflow-hidden">
-                        <p className="text-xs font-bold text-slate-100 truncate">
+                        <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                           {perkName || 'Empty Pick Slot'}
                         </p>
-                        <p className="text-[10px] text-slate-400 truncate">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                           {perkObj?.character || 'Killer Perk'}
                         </p>
                       </div>
@@ -531,26 +531,26 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
       {isPerkModalOpen && (
         <div
           onClick={() => setIsPerkModalOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
           role="dialog"
           aria-modal="true"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl text-slate-100 space-y-4 cursor-default"
+            className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-2xl text-slate-900 dark:text-slate-100 space-y-4 cursor-default"
           >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <div>
-                <h3 className="text-lg font-black text-white">
+                <h3 className="text-lg font-black text-slate-900 dark:text-white">
                   Select Perk to {actionTypeModal === 'ban' ? 'Ban' : 'Pick'} ({activeTabRole})
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Search and click any available perk to confirm.
                 </p>
               </div>
               <button
                 onClick={() => setIsPerkModalOpen(false)}
-                className="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 transition-colors"
+                className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 transition-colors cursor-pointer shadow-sm"
               >
                 Cancel
               </button>
@@ -564,14 +564,14 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                 placeholder="Search perk name or character..."
                 value={perkSearch}
                 onChange={(e) => setPerkSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"
               />
             </div>
 
             {/* Perks Grid */}
             <div className="max-h-[50vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2 pr-1">
               {availablePerks.length === 0 ? (
-                <div className="col-span-2 py-8 text-center text-xs text-slate-500">
+                <div className="col-span-2 py-8 text-center text-xs text-slate-400 dark:text-slate-500 font-mono">
                   No matching available perks.
                 </div>
               ) : (
@@ -579,15 +579,15 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                   <button
                     key={perk.name}
                     onClick={() => handleExecuteAction(perk.name)}
-                    className="flex items-center justify-between p-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-800/80 hover:border-slate-700 transition-all text-left group cursor-pointer"
+                    className="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-all text-left group cursor-pointer shadow-sm"
                   >
                     <div>
-                      <p className="text-xs font-bold text-slate-100 group-hover:text-amber-400 transition-colors">
+                      <p className="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                         {perk.name}
                       </p>
-                      <p className="text-[10px] text-slate-400">{perk.character || 'General'}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400">{perk.character || 'General'}</p>
                     </div>
-                    <span className="text-[10px] font-extrabold uppercase px-2 py-1 rounded bg-slate-800 text-slate-300 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                    <span className="text-[10px] font-extrabold uppercase px-2 py-1 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 group-hover:bg-red-600 group-hover:text-white transition-colors">
                       Select
                     </span>
                   </button>

@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from app import create_app
-from app.scraper_service import ScraperService
+from app.services.scraper_service import ScraperService
 
 app = create_app()
 

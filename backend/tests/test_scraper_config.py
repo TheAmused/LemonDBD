@@ -25,9 +25,9 @@ class TestScraperConfig(unittest.TestCase):
     def test_load_config_returns_defaults_when_file_missing(self):
         config = self.service.load_config()
         self.assertIsInstance(config, ScraperConfig)
-        self.assertEqual(config.source, "nightlight")
-        self.assertTrue(config.fallback_to_wiki)
-        self.assertEqual(config.last_used_source, "nightlight")
+        self.assertEqual(config.source, "wikigg")
+        self.assertFalse(config.fallback_to_wiki)
+        self.assertEqual(config.last_used_source, "wikigg")
         self.assertIsNone(config.last_run_timestamp)
 
     def test_save_and_load_config_with_dict(self):

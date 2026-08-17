@@ -4,7 +4,7 @@ import unicodedata
 from typing import Optional, Tuple
 from urllib.parse import unquote
 from bs4 import Tag
-from app.scrapers.constants import PORTRAIT_PATTERN
+from app.scrapers.constants_wikigg import PORTRAIT_PATTERN
 
 
 def normalize_name_key(text: str) -> str:

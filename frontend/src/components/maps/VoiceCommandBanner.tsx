@@ -20,6 +20,11 @@ import {
   ArrowRight,
   RefreshCw,
   SlidersHorizontal,
+  Cpu,
+  Globe,
+  Info,
+  Download,
+  Radio,
 } from 'lucide-react';
 import {
   matchVoiceQuery,
@@ -27,6 +32,17 @@ import {
   MapSource,
   MatchResult,
 } from '@/utils/mapVoiceMatcher';
+import {
+  getBrowserCompatibility,
+  AudioCaptureSession,
+  initClientSpeechModel,
+  transcribeClientAudio,
+  subscribeModelProgress,
+  VoiceEngineType,
+  ModelProgressInfo,
+  BrowserCompatibilityInfo,
+} from '@/services/clientSpeechModel';
+import { VoiceEngineInfoModal } from './VoiceEngineInfoModal';
 
 export interface VoiceCommandBannerProps {
   locale?: string;
@@ -36,6 +52,7 @@ export interface VoiceCommandBannerProps {
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
   availableMaps?: Array<{ id: string; name: string; realm?: string; source?: string }>;
   className?: string;
+  dict?: any;
 }
 
 export type VoiceStatusState =
@@ -150,16 +167,29 @@ export function VoiceCommandBanner({
   onAction,
   availableMaps,
   className = '',
+  dict,
 }: VoiceCommandBannerProps) {
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatusState>('idle');
   const [liveTranscript, setLiveTranscript] = useState<string>('');
   const [matchedResult, setMatchedResult] = useState<MatchResult | null>(null);
   const [disambiguationVariants, setDisambiguationVariants] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isSupported, setIsSupported] = useState<boolean>(true);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [audioLevel, setAudioLevel] = useState<number>(0);
+
+  // Dual-Engine & Fallback State
+  const [browserInfo, setBrowserInfo] = useState<BrowserCompatibilityInfo>(() =>
+    getBrowserCompatibility()
+  );
+  const [activeEngine, setActiveEngine] = useState<VoiceEngineType>('web-speech');
+  const [modelProgress, setModelProgress] = useState<ModelProgressInfo>({
+    status: 'unloaded',
+    progress: 0,
+  });
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
 
   const recognitionRef = useRef<any>(null);
+  const audioSessionRef = useRef<AudioCaptureSession | null>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isListeningRef = useRef<boolean>(false);
@@ -190,18 +220,28 @@ export function VoiceCommandBanner({
     };
   }, [currentSource, onSourceChange, onSelectMap, onAction, availableMaps, soundEnabled]);
 
-  // Check Web Speech API browser support on mount
+  // Initial Engine Setup & Progress Subscription
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const SpeechRec =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (!SpeechRec) {
-        setIsSupported(false);
-      }
-    }
-  }, []);
+    const compat = getBrowserCompatibility();
+    setBrowserInfo(compat);
+    setActiveEngine(compat.recommendedEngine);
 
-  // Clear timers, remove recognition listeners, and abort speech recognition on unmount
+    // Subscribe to model download progress
+    const unsubscribe = subscribeModelProgress((info) => {
+      setModelProgress(info);
+    });
+
+    // If client-model is recommended (e.g. Firefox / Opera / Brave), trigger background download
+    if (compat.recommendedEngine === 'client-model') {
+      initClientSpeechModel(locale);
+    }
+
+    return () => {
+      unsubscribe();
+    };
+  }, [locale]);
+
+  // Clear timers, audio session, and recognition on unmount
   useEffect(() => {
     return () => {
       isHoldingRef.current = false;
@@ -215,6 +255,11 @@ export function VoiceCommandBanner({
           recognitionRef.current.abort();
         } catch {}
       }
+      if (audioSessionRef.current) {
+        try {
+          audioSessionRef.current.stop();
+        } catch {}
+      }
       if (resetTimerRef.current) {
         clearTimeout(resetTimerRef.current);
       }
@@ -226,75 +271,80 @@ export function VoiceCommandBanner({
 
   // ─── Execute Match Result Helper ────────────────────────────────────────────
 
-  const executeMatch = useCallback(
-    (result: MatchResult) => {
-      console.log('[VoiceNav] Executing matched result:', result);
-      setMatchedResult(result);
-      pendingMatchRef.current = null;
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+  const executeMatch = useCallback((result: MatchResult) => {
+    console.log('[VoiceNav] Executing matched result:', result);
+    setMatchedResult(result);
+    pendingMatchRef.current = null;
+    if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
-      const { onSourceChange, onAction, onSelectMap, soundEnabled } = propsRef.current;
+    const { onSourceChange, onAction, onSelectMap, soundEnabled } = propsRef.current;
 
-      if (result.action === 'switch_source' && result.actionPayload) {
-        console.log('[VoiceNav] Action -> Switch source to:', result.actionPayload);
-        setVoiceStatus('matched');
-        if (soundEnabled) playMatchSuccessSound();
-        onSourceChange(result.actionPayload as MapSource);
-        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-        resetTimerRef.current = setTimeout(() => {
-          setVoiceStatus('idle');
-        }, 2200);
-        return;
+    if (result.action === 'switch_source' && result.actionPayload) {
+      console.log('[VoiceNav] Action -> Switch source to:', result.actionPayload);
+      setVoiceStatus('matched');
+      if (soundEnabled) playMatchSuccessSound();
+      onSourceChange(result.actionPayload as MapSource);
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => {
+        setVoiceStatus('idle');
+      }, 2200);
+      return;
+    }
+
+    if (result.action && ['zoom_in', 'zoom_out', 'fullscreen', 'close'].includes(result.action)) {
+      console.log('[VoiceNav] Action -> Map navigation command:', result.action);
+      setVoiceStatus('matched');
+      if (soundEnabled) playMatchSuccessSound();
+      if (onAction) onAction(result.action as any);
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => {
+        setVoiceStatus('idle');
+      }, 2200);
+      return;
+    }
+
+    if (result.matchedMapName) {
+      console.log('[VoiceNav] Action -> Selecting map:', result.matchedMapName);
+      setVoiceStatus('matched');
+      if (soundEnabled) playMatchSuccessSound();
+      onSelectMap(result.matchedMapName, result.matchedMapId, result.source);
+
+      const variants =
+        result.availableVariants ||
+        getVariantsForMap(result.matchedMapName);
+      if (variants && variants.length > 1) {
+        setDisambiguationVariants(variants);
+      } else {
+        setDisambiguationVariants([]);
       }
 
-      if (result.action && ['zoom_in', 'zoom_out', 'fullscreen', 'close'].includes(result.action)) {
-        console.log('[VoiceNav] Action -> Trigger navigation action:', result.action);
-        setVoiceStatus('matched');
-        if (soundEnabled) playMatchSuccessSound();
-        onAction?.(result.action as 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close');
-        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-        resetTimerRef.current = setTimeout(() => {
-          setVoiceStatus('idle');
-        }, 2200);
-        return;
-      }
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => {
+        setVoiceStatus('idle');
+      }, 2400);
+      return;
+    }
 
-      if (result.matchedMapName) {
-        console.log('[VoiceNav] Map Matched ->', result.matchedMapName, 'ID:', result.matchedMapId, 'Source:', result.source);
-        setVoiceStatus('matched');
-        if (result.availableVariants && result.availableVariants.length > 0) {
-          setDisambiguationVariants(result.availableVariants);
-        }
-        if (soundEnabled) playMatchSuccessSound();
-        onSelectMap(result.matchedMapName, result.matchedMapId, result.source);
+    setVoiceStatus('nomatch');
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = setTimeout(() => {
+      setVoiceStatus('idle');
+    }, 2200);
+  }, []);
 
-        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-        resetTimerRef.current = setTimeout(() => {
-          setVoiceStatus('idle');
-        }, 3000);
-      }
-    },
-    []
-  );
-
-  // ─── Manual Command Trigger (Chips & Pills) ─────────────────────────────────
+  // ─── Manual Command Trigger (Chips & Disambiguation) ───────────────────────
 
   const handleExecuteCommand = useCallback(
-    (query: string) => {
-      console.log('[VoiceNav] Prompt chip or manual command triggered:', query);
-      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      liveTranscriptRef.current = query;
-      setLiveTranscript(query);
-      setErrorMessage('');
+    (queryText: string) => {
+      console.log('[VoiceNav] Manually executing query:', queryText);
+      liveTranscriptRef.current = queryText;
+      setLiveTranscript(queryText);
 
       const result = matchVoiceQuery(
-        query,
+        queryText,
         propsRef.current.currentSource,
         propsRef.current.availableMaps
       );
-
-      console.log('[VoiceNav] Match query result for "' + query + '":', result);
 
       if (result) {
         executeMatch(result);
@@ -314,22 +364,73 @@ export function VoiceCommandBanner({
     console.log('[VoiceNav] stopListening called.');
     isListeningRef.current = false;
     isHoldingRef.current = false;
+    setAudioLevel(0);
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-    if (recognitionRef.current) {
+
+    if (activeEngine === 'web-speech' && recognitionRef.current) {
       try {
         recognitionRef.current.stop();
       } catch (e) {
-        console.warn('[VoiceNav] Error stopping recognition:', e);
+        console.warn('[VoiceNav] Error stopping Web Speech recognition:', e);
+      }
+    } else if (activeEngine === 'client-model' && audioSessionRef.current) {
+      try {
+        audioSessionRef.current.stop();
+      } catch (e) {
+        console.warn('[VoiceNav] Error stopping client audio session:', e);
       }
     }
-    setVoiceStatus('idle');
-  }, []);
 
-  const stopListeningAndProcess = useCallback(() => {
-    console.log('[VoiceNav] stopListeningAndProcess called. Current text:', liveTranscriptRef.current);
+    setVoiceStatus('idle');
+  }, [activeEngine]);
+
+  const stopListeningAndProcess = useCallback(async () => {
+    console.log('[VoiceNav] stopListeningAndProcess called. ActiveEngine:', activeEngine);
     isListeningRef.current = false;
     isHoldingRef.current = false;
+    setAudioLevel(0);
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+
+    // If Client-Side Model Engine is active
+    if (activeEngine === 'client-model') {
+      if (audioSessionRef.current) {
+        setVoiceStatus('processing');
+        const audioBuffer = audioSessionRef.current.stop();
+        audioSessionRef.current = null;
+
+        if (audioBuffer && audioBuffer.length > 1600) {
+          try {
+            const transcript = await transcribeClientAudio(audioBuffer, locale);
+            const cleanText = (transcript || '').trim();
+            liveTranscriptRef.current = cleanText;
+            setLiveTranscript(cleanText);
+
+            if (cleanText) {
+              const match = matchVoiceQuery(
+                cleanText,
+                propsRef.current.currentSource,
+                propsRef.current.availableMaps
+              );
+              if (match) {
+                executeMatch(match);
+                return;
+              }
+            }
+          } catch (err) {
+            console.error('[VoiceNav] Client-side transcription error:', err);
+          }
+        }
+
+        setVoiceStatus('nomatch');
+        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+        resetTimerRef.current = setTimeout(() => {
+          setVoiceStatus('idle');
+        }, 2200);
+      }
+      return;
+    }
+
+    // Native Web Speech Engine active
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
@@ -364,26 +465,24 @@ export function VoiceCommandBanner({
     }
 
     setVoiceStatus('idle');
-  }, [executeMatch]);
+  }, [activeEngine, locale, executeMatch]);
 
   const startListening = useCallback(
-    (isHold = false) => {
-      console.log('[VoiceNav] startListening called. isHold:', isHold, 'isListeningRef:', isListeningRef.current);
+    async (isHold = false) => {
+      console.log(
+        '[VoiceNav] startListening called. Engine:',
+        activeEngine,
+        'isHold:',
+        isHold,
+        'isListeningRef:',
+        isListeningRef.current
+      );
       if (isListeningRef.current) {
         console.log('[VoiceNav] Already listening, skipping duplicate start.');
         return;
       }
 
       if (typeof window === 'undefined') return;
-      const SpeechRec =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-
-      if (!SpeechRec) {
-        console.error('[VoiceNav] Web Speech API (SpeechRecognition / webkitSpeechRecognition) is not supported in this browser!');
-        setVoiceStatus('error');
-        setErrorMessage('Web Speech API is not supported in this browser.');
-        return;
-      }
 
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
@@ -391,6 +490,69 @@ export function VoiceCommandBanner({
       isHoldingRef.current = isHold;
       if (isHold) {
         holdStartTimeRef.current = Date.now();
+      }
+
+      // ─── ENGINE 1: Client-Side Speech Model (Web Audio Fallback) ────────────
+      if (activeEngine === 'client-model') {
+        try {
+          isListeningRef.current = true;
+          setVoiceStatus('listening');
+          liveTranscriptRef.current = '';
+          setLiveTranscript('');
+          setMatchedResult(null);
+          setErrorMessage('');
+          pendingMatchRef.current = null;
+
+          if (propsRef.current.soundEnabled) {
+            playMicStartSound();
+          }
+
+          let speechDetected = false;
+          audioSessionRef.current = new AudioCaptureSession();
+          audioSessionRef.current.setLevelCallback((lvl) => {
+            setAudioLevel(lvl);
+            // In click-to-talk toggle mode, auto-stop after speech and subsequent silence
+            if (!isHoldingRef.current && isListeningRef.current) {
+              if (lvl > 15) {
+                speechDetected = true;
+                if (silenceTimerRef.current) {
+                  clearTimeout(silenceTimerRef.current);
+                  silenceTimerRef.current = null;
+                }
+              } else if (speechDetected && lvl < 8) {
+                if (!silenceTimerRef.current) {
+                  silenceTimerRef.current = setTimeout(() => {
+                    if (isListeningRef.current) {
+                      stopListeningAndProcess();
+                    }
+                  }, 1200);
+                }
+              }
+            }
+          });
+          await audioSessionRef.current.start();
+        } catch (err: any) {
+          isListeningRef.current = false;
+          isHoldingRef.current = false;
+          setVoiceStatus('error');
+          setErrorMessage(
+            err?.name === 'NotAllowedError'
+              ? 'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
+              : 'Failed to access microphone for local speech model.'
+          );
+        }
+        return;
+      }
+
+      // ─── ENGINE 2: Native Web Speech API ────────────────────────────────────
+      const SpeechRec =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+      if (!SpeechRec) {
+        console.warn('[VoiceNav] Web Speech API is absent, switching to client-model fallback!');
+        setActiveEngine('client-model');
+        initClientSpeechModel(locale);
+        return;
       }
 
       isListeningRef.current = true;
@@ -413,11 +575,10 @@ export function VoiceCommandBanner({
             : 'en-US';
         recognition.interimResults = true;
         recognition.maxAlternatives = 5;
-        // continuous = true ensures browser never auto-aborts while user is speaking or holding!
         recognition.continuous = true;
 
         recognition.onstart = () => {
-          console.log('[VoiceNav] Speech recognition ONSTART fired successfully. Mic is active!');
+          console.log('[VoiceNav] Speech recognition ONSTART fired successfully.');
           isListeningRef.current = true;
           setVoiceStatus('listening');
           liveTranscriptRef.current = '';
@@ -450,9 +611,7 @@ export function VoiceCommandBanner({
           const combinedTranscript = (finalText + interimText).trim();
           liveTranscriptRef.current = combinedTranscript;
           setLiveTranscript(combinedTranscript);
-          console.log('[VoiceNav] Live transcript:', combinedTranscript);
 
-          // Find best match candidate
           let bestMatch = matchVoiceQuery(
             combinedTranscript,
             propsRef.current.currentSource,
@@ -475,9 +634,6 @@ export function VoiceCommandBanner({
 
           pendingMatchRef.current = bestMatch;
           setMatchedResult(bestMatch);
-          if (bestMatch) {
-            console.log('[VoiceNav] Interim candidate matched:', bestMatch.matchedMapName, bestMatch.confidence);
-          }
         };
 
         recognition.onerror = (event: any) => {
@@ -486,19 +642,21 @@ export function VoiceCommandBanner({
           isHoldingRef.current = false;
           if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
-          if (event.error === 'network') {
+          if (event.error === 'network' || event.error === 'service-not-allowed') {
+            console.log('[VoiceNav] Google Web Speech blocked by browser shields (Brave/Firefox). Switching to local speech model...');
+            setActiveEngine('client-model');
+            initClientSpeechModel(locale);
+            setVoiceStatus('nomatch');
+            setErrorMessage('Switched to Local In-Browser Speech AI (Brave Shield / offline mode active)');
+            if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+            resetTimerRef.current = setTimeout(() => {
+              setVoiceStatus('idle');
+            }, 3000);
+          } else if (event.error === 'not-allowed') {
             setVoiceStatus('error');
             setErrorMessage(
-              'Network error: Speech service could not connect. If using Brave Browser, enable "Use Google services for speech recognition" in brave://settings/extensions, or check your internet/firewall.'
+              'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
             );
-          } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-            setVoiceStatus('error');
-            setErrorMessage(
-              'Microphone access blocked. Please allow microphone permissions in your browser address bar (lock/tune icon).'
-            );
-          } else if (event.error === 'audio-capture') {
-            setVoiceStatus('error');
-            setErrorMessage('No microphone device detected. Please connect or enable your microphone.');
           } else if (event.error === 'no-speech') {
             setVoiceStatus('nomatch');
             resetTimerRef.current = setTimeout(() => {
@@ -511,8 +669,6 @@ export function VoiceCommandBanner({
         };
 
         recognition.onend = () => {
-          console.log('[VoiceNav] Recognition onend triggered. isHolding:', isHoldingRef.current, 'text:', liveTranscriptRef.current);
-          // Only auto-restart if isHolding is still true AND no error occurred
           if (isHoldingRef.current) {
             try {
               recognition.start();
@@ -538,7 +694,6 @@ export function VoiceCommandBanner({
               );
 
             if (matchToExecute) {
-              console.log('[VoiceNav] onend matched:', matchToExecute);
               executeMatch(matchToExecute);
               return;
             }
@@ -565,7 +720,7 @@ export function VoiceCommandBanner({
         setErrorMessage(err?.message || 'Failed to initialize voice recognition.');
       }
     },
-    [locale, executeMatch]
+    [activeEngine, locale, executeMatch]
   );
 
   // ─── Global Keyboard Hotkey: Hold 'V' (Push-To-Talk) or Press to Toggle ────
@@ -624,7 +779,8 @@ export function VoiceCommandBanner({
   const statusConfig = {
     idle: {
       badge: 'IDLE • READY',
-      badgeClass: 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300',
+      badgeClass:
+        'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300',
       dotClass: 'bg-cyan-500 dark:bg-cyan-400',
       icon: Mic,
       buttonColor:
@@ -632,15 +788,17 @@ export function VoiceCommandBanner({
     },
     listening: {
       badge: 'LISTENING • SPEAK NOW',
-      badgeClass: 'bg-rose-500/20 border-rose-500/50 text-rose-700 dark:text-rose-300 animate-pulse',
+      badgeClass:
+        'bg-rose-500/20 border-rose-500/50 text-rose-700 dark:text-rose-300 animate-pulse',
       dotClass: 'bg-rose-500 animate-ping',
       icon: Volume2,
       buttonColor:
         'bg-gradient-to-br from-rose-500 via-red-600 to-rose-800 text-white shadow-red-900/50 ring-red-500/60 hover:from-rose-400 hover:to-red-700',
     },
     processing: {
-      badge: 'PROCESSING...',
-      badgeClass: 'bg-amber-500/20 border-amber-500/50 text-amber-800 dark:text-amber-300',
+      badge: 'PROCESSING AUDIO...',
+      badgeClass:
+        'bg-amber-500/20 border-amber-500/50 text-amber-800 dark:text-amber-300',
       dotClass: 'bg-amber-500 animate-pulse',
       icon: RefreshCw,
       buttonColor:
@@ -648,7 +806,8 @@ export function VoiceCommandBanner({
     },
     matched: {
       badge: 'MATCHED • EXECUTING',
-      badgeClass: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-800 dark:text-emerald-300',
+      badgeClass:
+        'bg-emerald-500/20 border-emerald-500/50 text-emerald-800 dark:text-emerald-300',
       dotClass: 'bg-emerald-500',
       icon: CheckCircle2,
       buttonColor:
@@ -656,15 +815,17 @@ export function VoiceCommandBanner({
     },
     nomatch: {
       badge: 'NO MATCH • TRY AGAIN',
-      badgeClass: 'bg-amber-500/20 border-amber-500/40 text-amber-800 dark:text-amber-300',
+      badgeClass:
+        'bg-amber-500/20 border-amber-500/40 text-amber-800 dark:text-amber-300',
       dotClass: 'bg-amber-500',
       icon: MicOff,
       buttonColor:
         'bg-gradient-to-br from-amber-600 via-stone-700 to-slate-800 text-white shadow-amber-900/30 ring-amber-500/30',
     },
     error: {
-      badge: 'MIC BLOCKED • CHECK PERMISSION',
-      badgeClass: 'bg-red-500/20 border-red-500/50 text-red-800 dark:text-red-300',
+      badge: 'MIC ERROR • CHECK PERMISSION',
+      badgeClass:
+        'bg-red-500/20 border-red-500/50 text-red-800 dark:text-red-300',
       dotClass: 'bg-red-500',
       icon: AlertCircle,
       buttonColor:
@@ -674,158 +835,181 @@ export function VoiceCommandBanner({
 
   const currentCfg = statusConfig[voiceStatus];
   const StatusIcon = currentCfg.icon;
-
-  if (!isSupported) {
-    return (
-      <div
-        className={`relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700/60 bg-white/90 dark:bg-slate-900/90 p-5 text-sm text-slate-600 dark:text-slate-400 backdrop-blur-md shadow-sm ${className}`}
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400">
-            <AlertCircle className="h-5 w-5" />
-          </div>
-          <div>
-            <h4 className="font-semibold text-slate-900 dark:text-slate-200">Voice Navigation Unsupported</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Your current browser does not support the Web Speech API. Please switch to Google
-              Chrome, Microsoft Edge, or Safari for voice navigation.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const t = dict?.voice || {};
 
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-white/90 dark:bg-slate-900/85 p-5 sm:p-6 backdrop-blur-xl shadow-lg dark:shadow-2xl shadow-cyan-950/20 dark:shadow-cyan-950/40 transition-all duration-300 ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-white/95 dark:bg-slate-900/90 p-4 sm:p-5 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-cyan-950/20 dark:shadow-cyan-950/40 transition-all duration-300 ${className}`}
     >
       {/* Decorative ambient background glows */}
-      <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/15 blur-3xl" />
+      <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" />
 
-      {/* ─── TOP BAR: Status HUD Badge & Provider Source Segmented Toggle ─── */}
-      <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4">
-        {/* Left: HUD Status Badge & Sound Toggle */}
-        <div className="flex items-center gap-3">
+      {/* ─── COMPACT TACTICAL COMMAND BAR ─── */}
+      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800/80">
+        {/* Left: HUD Status Badge, Engine Indicator & Sound Toggle */}
+        <div className="flex flex-wrap items-center gap-2">
           <div
-            className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-semibold tracking-wide transition-all ${currentCfg.badgeClass}`}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-black tracking-wide font-mono transition-all ${currentCfg.badgeClass}`}
           >
             <span className={`h-2 w-2 rounded-full ${currentCfg.dotClass}`} />
             <span>{currentCfg.badge}</span>
           </div>
 
+          {/* Active Recognition Engine Pill with Tooltip Info Trigger */}
+          <button
+            type="button"
+            onClick={() => setIsInfoModalOpen(true)}
+            title={
+              activeEngine === 'web-speech'
+                ? 'Web Speech API (Chrome/Edge/Safari). Click to view compatibility info & fallback details.'
+                : 'In-Browser Speech Model (Local Fallback). Click to view compatibility info & fallback details.'
+            }
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 ${
+              activeEngine === 'web-speech'
+                ? 'border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/20'
+                : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20'
+            }`}
+          >
+            {activeEngine === 'web-speech' ? (
+              <Globe className="h-3 w-3 text-cyan-500" />
+            ) : (
+              <Cpu className="h-3 w-3 text-emerald-500" />
+            )}
+            <span>
+              {activeEngine === 'web-speech'
+                ? t.engineNativeBadge || 'Web Speech API'
+                : t.engineClientBadge || 'Local AI Model'}
+            </span>
+            <Info className="h-3 w-3 opacity-70 hover:opacity-100" />
+          </button>
+
+          {/* Model Background Download Pill if downloading */}
+          {modelProgress.status === 'downloading' && (
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300 animate-pulse font-mono">
+              <RefreshCw className="h-2.5 w-2.5 animate-spin" />
+              <span>{modelProgress.progress}%</span>
+            </div>
+          )}
+
           <button
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
             title={soundEnabled ? 'Mute voice feedback sound' : 'Enable voice feedback sound'}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer"
+            className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer"
           >
-            {soundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />}
+            {soundEnabled ? (
+              <Volume2 className="h-3 w-3" />
+            ) : (
+              <VolumeX className="h-3 w-3 text-slate-400 dark:text-slate-500" />
+            )}
           </button>
         </div>
 
-        {/* Right: Provider Source Segmented Toggle */}
-        <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950/70 p-1">
-          <span className="px-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            Source:
-          </span>
-          <button
-            type="button"
-            onClick={() => onSourceChange('hens333')}
-            aria-pressed={currentSource === 'hens333'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
-              currentSource === 'hens333'
-                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md shadow-cyan-950/30 border border-cyan-400/30 font-bold'
-                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
-          >
-            Hens333 (12-Clock)
-          </button>
+        {/* Right: Provider Source Segmented Toggle & Quick Spoken Prompts */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Provider Source Segmented Toggle */}
+          <div className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 p-0.5">
+            <span className="px-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
+              Source:
+            </span>
+            <button
+              type="button"
+              onClick={() => onSourceChange('hens333')}
+              aria-pressed={currentSource === 'hens333'}
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
+                currentSource === 'hens333'
+                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-sm font-black'
+                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+            >
+              Hens333 (12-Clock)
+            </button>
 
-          <button
-            type="button"
-            onClick={() => onSourceChange('samoelcolt')}
-            aria-pressed={currentSource === 'samoelcolt'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
-              currentSource === 'samoelcolt'
-                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-950/30 border border-purple-400/30 font-bold'
-                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
-          >
-            SamoelColt (Isometric)
-          </button>
+            <button
+              type="button"
+              onClick={() => onSourceChange('samoelcolt')}
+              aria-pressed={currentSource === 'samoelcolt'}
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
+                currentSource === 'samoelcolt'
+                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-sm font-black'
+                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+            >
+              SamoelColt (Isometric)
+            </button>
 
-          <button
-            type="button"
-            onClick={() => onSourceChange('all')}
-            aria-pressed={currentSource === 'all'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
-              currentSource === 'all'
-                ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-md border border-slate-500 font-bold'
-                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
-          >
-            All Sources
-          </button>
+            <button
+              type="button"
+              onClick={() => onSourceChange('all')}
+              aria-pressed={currentSource === 'all'}
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
+                currentSource === 'all'
+                  ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-sm font-black'
+                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+            >
+              All
+            </button>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-1">
+            {QUICK_COMMAND_PROMPTS.slice(0, 3).map((prompt) => (
+              <button
+                key={prompt.label}
+                type="button"
+                onClick={() => handleExecuteCommand(prompt.query)}
+                className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 hover:border-cyan-500/50 px-2 py-0.5 text-[10px] font-mono font-medium text-slate-600 dark:text-slate-300 transition active:scale-95 cursor-pointer shadow-xs"
+              >
+                &ldquo;{prompt.label}&rdquo;
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* ─── CENTER HERO AREA: Waveform Visualizer, Glowing Mic Button & Live Transcription ─── */}
-      <div className="relative z-10 my-6 flex flex-col items-center gap-5 sm:flex-row sm:items-center sm:justify-between">
-        {/* Left Side Equalizer Waveform */}
-        <div className="hidden sm:flex items-center gap-1.5 h-12 px-2">
-          {[14, 24, 18, 32, 20, 38, 26, 16].map((h, i) => (
-            <span
-              key={`left-wave-${i}`}
-              style={{
-                height:
+      {/* ─── COMPACT CENTER HERO: Visualizer, Glowing Mic Button & Live Transcription ─── */}
+      <div className="relative z-10 my-3.5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Left Equalizer Waveform with Live Mic Level Support */}
+        <div className="hidden sm:flex items-center gap-1 h-9 px-1">
+          {[12, 22, 16, 28, 18, 32, 24, 14].map((h, i) => {
+            const dynamicHeight =
+              voiceStatus === 'listening'
+                ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
+                : voiceStatus === 'matched'
+                ? 24
+                : 4;
+            return (
+              <span
+                key={`left-wave-${i}`}
+                style={{
+                  height: `${dynamicHeight}px`,
+                  animation:
+                    voiceStatus === 'listening'
+                      ? `pulse ${(0.4 + (i % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
+                      : 'none',
+                }}
+                className={`w-1 rounded-full transition-all duration-150 ${
                   voiceStatus === 'listening'
-                    ? `${h}px`
+                    ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
                     : voiceStatus === 'matched'
-                    ? '28px'
-                    : '6px',
-                animation:
-                  voiceStatus === 'listening'
-                    ? `pulse ${(0.5 + (i % 4) * 0.15).toFixed(2)}s ease-in-out infinite alternate`
-                    : 'none',
-              }}
-              className={`w-1 rounded-full transition-all duration-200 ${
-                voiceStatus === 'listening'
-                  ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
-                  : voiceStatus === 'matched'
-                  ? 'bg-emerald-400'
-                  : 'bg-slate-700/60'
-              }`}
-            />
-          ))}
+                    ? 'bg-emerald-400'
+                    : 'bg-slate-300 dark:bg-slate-700/60'
+                }`}
+              />
+            );
+          })}
         </div>
 
-        {/* Center: Glowing Circular Mic Toggle Button */}
-        <div className="flex flex-col items-center gap-2">
+        {/* Center: Glowing Mic Button */}
+        <div className="flex items-center gap-3">
           <div className="relative flex items-center justify-center">
-            {/* Outer animated ping rings when listening */}
             {voiceStatus === 'listening' && (
               <>
-                <span className="absolute h-24 w-24 animate-ping rounded-full bg-rose-500/20" />
-                <span className="absolute h-28 w-28 animate-ping rounded-full bg-rose-500/10 [animation-delay:200ms]" />
+                <span className="absolute h-16 w-16 animate-ping rounded-full bg-rose-500/20" />
+                <span className="absolute h-20 w-20 animate-ping rounded-full bg-rose-500/10 [animation-delay:200ms]" />
               </>
             )}
-
-            {/* Glowing border ring */}
-            <span
-              className={`absolute h-20 w-20 rounded-full ring-4 transition-all duration-300 ${
-                voiceStatus === 'listening'
-                  ? 'ring-rose-500/50 animate-pulse'
-                  : voiceStatus === 'matched'
-                  ? 'ring-emerald-500/50'
-                  : voiceStatus === 'nomatch'
-                  ? 'ring-amber-500/40'
-                  : voiceStatus === 'error'
-                  ? 'ring-red-500/50'
-                  : 'ring-cyan-500/30'
-              }`}
-            />
 
             <button
               id="voice-command-mic-btn"
@@ -858,19 +1042,11 @@ export function VoiceCommandBanner({
                 }
               }}
               onClick={() => {
-                console.log(
-                  '[VoiceNav] Mic button clicked. Current voiceStatus:',
-                  voiceStatus,
-                  'isListeningRef:',
-                  isListeningRef.current
-                );
                 const isClickFromMouse = holdStartTimeRef.current > 0;
                 const duration = isClickFromMouse ? Date.now() - holdStartTimeRef.current : 0;
                 holdStartTimeRef.current = 0;
 
-                if (duration > 250) {
-                  return;
-                }
+                if (duration > 250) return;
 
                 if (isListeningRef.current || voiceStatus === 'listening') {
                   if (!isClickFromMouse || mouseDownListeningStateRef.current) {
@@ -882,176 +1058,162 @@ export function VoiceCommandBanner({
               }}
               aria-label={currentCfg.badge}
               aria-pressed={voiceStatus === 'listening'}
-              className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-full shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
+              className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl shadow-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
             >
               <StatusIcon
-                className={`h-7 w-7 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
+                className={`h-5 w-5 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
               />
             </button>
           </div>
 
-          {/* Keyboard shortcut hint */}
-          <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400">
-            <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-cyan-600 dark:text-cyan-300 shadow-sm">
-              V
-            </kbd>
-            <span>Hold &apos;V&apos; to talk (or click button to toggle)</span>
+          {/* Real-time speech transcription & status text */}
+          <div className="flex flex-col min-w-[200px] sm:min-w-[340px]">
+            {voiceStatus === 'listening' && (
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+                  <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono truncate">
+                    {liveTranscript
+                      ? `“${liveTranscript}”`
+                      : audioLevel > 8
+                      ? (locale === 'pl' ? 'Słucham głosu... Puść [V] lub kliknij' : 'Listening to voice... Release [V] or click')
+                      : (locale === 'pl' ? 'Mów teraz (np. Dead Dawg, RPD)' : 'Speak DBD map name (e.g. Dead Dawg)')}
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 font-mono truncate">
+                  {activeEngine === 'client-model'
+                    ? (locale === 'pl' ? 'Lokalny model AI • Puść [V] lub kliknij aby rozpoznać' : 'Local AI Model • Release [V] or click to transcribe')
+                    : (locale === 'pl' ? 'Rozpoznawanie mowy w toku...' : 'Speech recognition active...')}
+                </span>
+              </div>
+            )}
+
+            {voiceStatus === 'processing' && (
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" />
+                  <span className="text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
+                    {liveTranscript && liveTranscript !== 'Analyzing speech audio...'
+                      ? `Transcribing: “${liveTranscript}”`
+                      : (locale === 'pl' ? 'Przetwarzanie głosu przez model AI...' : 'Transcribing voice with local Whisper AI...')}
+                  </span>
+                </div>
+                <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80 font-mono">
+                  {locale === 'pl' ? 'Lokalne przetwarzanie ONNX WebAssembly' : 'In-browser ONNX WebAssembly inference'}
+                </span>
+              </div>
+            )}
+
+            {voiceStatus === 'matched' && matchedResult && (
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 font-mono truncate">
+                    {matchedResult.matchedMapName
+                      ? `Matched: ${matchedResult.matchedMapName}`
+                      : matchedResult.action === 'switch_source'
+                      ? `Switched: ${matchedResult.actionPayload}`
+                      : `Action: ${matchedResult.action}`}
+                  </span>
+                </div>
+                {liveTranscript && (
+                  <span className="text-[10px] text-emerald-600/90 dark:text-emerald-400/90 font-mono truncate">
+                    Heard: &ldquo;{liveTranscript}&rdquo; {matchedResult.confidence ? `(${Math.round(matchedResult.confidence * 100)}% match)` : ''}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {voiceStatus === 'nomatch' && (
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">
+                    {liveTranscript
+                      ? `Heard: “${liveTranscript}” (No DBD match)`
+                      : (locale === 'pl' ? 'Brak dźwięku lub nierozpoznano' : 'No speech detected / Not recognized')}
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 font-mono truncate">
+                  {locale === 'pl'
+                    ? 'Spróbuj: „Dead Dawg”, „RPD East” lub „Badham 2”'
+                    : 'Try saying: “Dead Dawg”, “RPD East”, or “Coal Tower”'}
+                </span>
+              </div>
+            )}
+
+            {voiceStatus === 'error' && (
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-rose-700 dark:text-rose-400 font-mono">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{errorMessage || t.micBlocked || 'Microphone error'}</span>
+                </div>
+                <span className="text-[10px] text-rose-600/80 dark:text-rose-400/80 font-mono">
+                  {locale === 'pl' ? 'Sprawdź uprawnienia mikrofonu w przeglądarce' : 'Check microphone permissions in browser address bar'}
+                </span>
+              </div>
+            )}
+
+            {voiceStatus === 'idle' && (
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono">
+                <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1 py-0.2 text-[9px] font-mono text-cyan-600 dark:text-cyan-300 shadow-xs">
+                  V
+                </kbd>
+                <span className="truncate">
+                  {locale === 'pl' ? 'Przytrzymaj [V] aby mówić (lub kliknij mikrofon)' : 'Hold [V] to talk (or click mic)'}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Right Side Equalizer Waveform */}
-        <div className="hidden sm:flex items-center gap-1.5 h-12 px-2">
-          {[16, 26, 38, 20, 32, 18, 24, 14].map((h, i) => (
-            <span
-              key={`right-wave-${i}`}
-              style={{
-                height:
+        {/* Right Equalizer Waveform */}
+        <div className="hidden sm:flex items-center gap-1 h-9 px-1">
+          {[14, 24, 32, 18, 28, 16, 22, 12].map((h, i) => {
+            const dynamicHeight =
+              voiceStatus === 'listening'
+                ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
+                : voiceStatus === 'matched'
+                ? 24
+                : 4;
+            return (
+              <span
+                key={`right-wave-${i}`}
+                style={{
+                  height: `${dynamicHeight}px`,
+                  animation:
+                    voiceStatus === 'listening'
+                      ? `pulse ${(0.4 + ((i + 2) % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
+                      : 'none',
+                }}
+                className={`w-1 rounded-full transition-all duration-150 ${
                   voiceStatus === 'listening'
-                    ? `${h}px`
+                    ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
                     : voiceStatus === 'matched'
-                    ? '28px'
-                    : '6px',
-                animation:
-                  voiceStatus === 'listening'
-                    ? `pulse ${(0.5 + ((i + 2) % 4) * 0.15).toFixed(2)}s ease-in-out infinite alternate`
-                    : 'none',
-              }}
-              className={`w-1 rounded-full transition-all duration-200 ${
-                voiceStatus === 'listening'
-                  ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
-                  : voiceStatus === 'matched'
-                  ? 'bg-emerald-400'
-                  : 'bg-slate-300 dark:bg-slate-700/60'
-              }`}
-            />
-          ))}
+                    ? 'bg-emerald-400'
+                    : 'bg-slate-300 dark:bg-slate-700/60'
+                }`}
+              />
+            );
+          })}
         </div>
-      </div>
-
-      {/* ─── REAL-TIME LIVE TRANSCRIPTION DISPLAY ─── */}
-      <div
-        role="status"
-        aria-live="polite"
-        className="relative z-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/75 p-4 text-center shadow-inner"
-      >
-        {voiceStatus === 'listening' && (
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-              <span className="text-xs font-semibold text-rose-600 dark:text-rose-400">Listening to your voice...</span>
-            </div>
-            <div className="text-base font-semibold text-slate-900 dark:text-slate-100 min-h-[28px] flex items-center justify-center">
-              {liveTranscript ? (
-                <span>
-                  &ldquo;{liveTranscript}&rdquo;
-                  <span className="inline-block h-4 w-1.5 bg-cyan-400 ml-1 animate-pulse" />
-                </span>
-              ) : (
-                <span className="italic text-slate-400 dark:text-slate-500">
-                  Say a DBD map name, source, or action command...
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {voiceStatus === 'matched' && matchedResult && (
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
-              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
-                {matchedResult.action === 'switch_source'
-                  ? 'Provider Source Switched'
-                  : matchedResult.action && matchedResult.action !== 'navigate'
-                  ? 'Navigation Action Executed'
-                  : 'Map Match Identified'}
-              </span>
-            </div>
-
-            <div className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-              {matchedResult.matchedMapName ? (
-                <span className="rounded-xl bg-emerald-500/20 px-3 py-1 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40">
-                  {matchedResult.matchedMapName}
-                </span>
-              ) : matchedResult.action === 'switch_source' ? (
-                <span className="rounded-xl bg-cyan-500/20 px-3 py-1 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40">
-                  Switched to: {matchedResult.actionPayload}
-                </span>
-              ) : (
-                <span className="rounded-xl bg-purple-500/20 px-3 py-1 text-purple-800 dark:text-purple-300 border border-purple-500/40">
-                  Action: {matchedResult.action}
-                </span>
-              )}
-
-              {matchedResult.confidence && (
-                <span className="text-xs font-normal text-emerald-600 dark:text-emerald-400/80">
-                  ({Math.round(matchedResult.confidence * 100)}% match)
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {voiceStatus === 'nomatch' && (
-          <div className="flex flex-col items-center justify-center gap-1">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
-              <AlertCircle className="h-4 w-4" />
-              <span>Could not match voice query &ldquo;{liveTranscript || 'speech'}&rdquo;</span>
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Try saying canonical map names like &ldquo;Dead Dawg&rdquo;, &ldquo;RPD East&rdquo;,
-              &ldquo;Coal Tower 2&rdquo;, or &ldquo;Switch to Samoel&rdquo;.
-            </p>
-          </div>
-        )}
-
-        {voiceStatus === 'error' && (
-          <div className="flex flex-col items-center justify-center gap-1">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-700 dark:text-rose-400">
-              <AlertCircle className="h-4 w-4" />
-              <span>{errorMessage || 'Microphone error'}</span>
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Please ensure your browser has permission to access your microphone.
-            </p>
-          </div>
-        )}
-
-        {voiceStatus === 'idle' && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <Compass className="h-4 w-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
-            <span>
-              Speak any map name (e.g. &ldquo;Dead Dawg&rdquo;, &ldquo;RPD East&rdquo;), provider (&ldquo;Switch to Samoel&rdquo;), or action (&ldquo;Zoom In&rdquo;, &ldquo;Fullscreen&rdquo;)
-            </span>
-          </div>
-        )}
       </div>
 
       {/* ─── DYNAMIC VARIANT DISAMBIGUATION PILLS ─── */}
       {disambiguationVariants.length > 0 && (
-        <div className="relative z-10 mt-4 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 p-3.5 backdrop-blur-sm">
-          <div className="mb-2 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-bold text-cyan-800 dark:text-cyan-300">
-              <Layers className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span>Map Variants Detected — Click or speak variant:</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setDisambiguationVariants([])}
-              className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 cursor-pointer"
-              title="Dismiss variants"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
+        <div className="relative z-10 mt-2.5 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 text-xs font-black text-cyan-800 dark:text-cyan-300 font-mono">
+            <Layers className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
+            <span>Variants:</span>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {disambiguationVariants.map((variant) => (
               <button
                 key={variant}
                 type="button"
                 onClick={() => handleExecuteCommand(variant)}
-                className="flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-white/80 dark:bg-cyan-900/40 px-3 py-1 text-xs font-medium text-cyan-900 dark:text-cyan-200 transition hover:border-cyan-500 hover:bg-cyan-100 dark:hover:bg-cyan-800/60 hover:text-cyan-950 dark:hover:text-white active:scale-95 cursor-pointer shadow-sm"
+                className="flex items-center gap-1 rounded-xl border border-cyan-400/40 bg-white/80 dark:bg-cyan-900/40 px-2.5 py-0.5 text-xs font-bold text-cyan-900 dark:text-cyan-200 transition hover:border-cyan-500 hover:bg-cyan-100 dark:hover:bg-cyan-800/60 active:scale-95 cursor-pointer shadow-xs font-mono"
               >
                 <span>{variant}</span>
                 <ArrowRight className="h-3 w-3 text-cyan-500 dark:text-cyan-400" />
@@ -1061,32 +1223,23 @@ export function VoiceCommandBanner({
         </div>
       )}
 
-      {/* ─── BOTTOM INTERACTIVE BAR: Quick Spoken Command Prompt Chips ─── */}
-      <div className="relative z-10 mt-4 flex flex-col sm:flex-row sm:items-center gap-2 pt-2">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
-          Try Saying:
-        </span>
-        <div className="flex flex-wrap items-center gap-1.5">
-          {QUICK_COMMAND_PROMPTS.map((prompt) => (
-            <button
-              key={prompt.label}
-              type="button"
-              onClick={() => handleExecuteCommand(prompt.query)}
-              className={`rounded-lg border px-2.5 py-1 text-[11px] font-medium transition active:scale-95 cursor-pointer shadow-sm ${
-                prompt.type === 'variant'
-                  ? 'border-cyan-500/40 bg-cyan-500/10 text-cyan-800 dark:border-cyan-600/50 dark:bg-cyan-950/40 dark:text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/20 dark:hover:bg-cyan-900/60'
-                  : prompt.type === 'source'
-                  ? 'border-purple-500/40 bg-purple-500/10 text-purple-800 dark:border-purple-600/50 dark:bg-purple-950/40 dark:text-purple-300 hover:border-purple-400 hover:bg-purple-500/20 dark:hover:bg-purple-900/60'
-                  : prompt.type === 'action'
-                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:border-emerald-600/50 dark:bg-emerald-950/40 dark:text-emerald-300 hover:border-emerald-400 hover:bg-emerald-500/20 dark:hover:bg-emerald-900/60'
-                  : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              &ldquo;{prompt.label}&rdquo;
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* ─── Engine Compatibility & Fallback Explanatory Modal ─── */}
+      <VoiceEngineInfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        currentEngine={activeEngine}
+        onSelectEngine={(eng) => {
+          setActiveEngine(eng);
+          if (eng === 'client-model') {
+            initClientSpeechModel(locale);
+          }
+        }}
+        browserName={browserInfo.browserName}
+        hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
+        modelProgress={modelProgress}
+        onPreloadModel={() => initClientSpeechModel(locale)}
+        dict={dict}
+      />
     </div>
   );
 }

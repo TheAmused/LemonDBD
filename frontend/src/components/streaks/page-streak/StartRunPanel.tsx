@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { fetchExcludedPerks } from '@/services/pageStreakApi';
+import { fetchPoolSummary } from '@/services/pageStreakApi';
+import { useAuth } from '@/context/AuthContext';
 
 interface StartRunPanelProps {
   killer: string;
@@ -10,13 +11,15 @@ interface StartRunPanelProps {
 }
 
 export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onStart }) => {
+  const { token } = useAuth();
   const [poolSize, setPoolSize] = useState<number | null>(null);
   const [pageCount, setPageCount] = useState<number | null>(null);
   const [lastPageSize, setLastPageSize] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!token) return;
     let cancelled = false;
-    fetchExcludedPerks()
+    fetchPoolSummary(token)
       .then((data) => {
         if (cancelled) return;
         setPoolSize(data.pool_size);
@@ -31,7 +34,7 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [token]);
 
   return (
     <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-300 bg-white/60 dark:border-slate-800 dark:bg-slate-900/30 px-6 py-14 text-center shadow-sm">

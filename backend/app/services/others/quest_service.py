@@ -32,11 +32,19 @@ DEFAULT_QUESTS = [
 ]
 
 
+import logging
+from flask import current_app
+from sqlalchemy import select, func
+from app.extensions import db
+from app.models import DailyQuest
+
+logger = logging.getLogger(__name__)
+
+
 class QuestService:
     def __init__(self, db_service=None):
+        self._use_sqlalchemy = (db_service is None)
         self.db_service = db_service or DatabaseService()
-        self._init_table()
-        self.seed_quests_if_empty()
 
     def _init_table(self):
         conn = self.db_service.get_connection()
@@ -58,6 +66,28 @@ class QuestService:
         conn.close()
 
     def seed_quests_if_empty(self):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    count = db.session.scalar(select(func.count(DailyQuest.id))) or 0
+                    if count == 0:
+                        for q in DEFAULT_QUESTS:
+                            db.session.add(
+                                DailyQuest(
+                                    title=q["title"],
+                                    description=q["description"],
+                                    category=q["category"],
+                                    progress=0,
+                                    goal=q["goal"],
+                                    xp_reward=q["xp_reward"],
+                                    is_completed=False,
+                                )
+                            )
+                        db.session.commit()
+                    return
+            except Exception as e:
+                logger.debug(f"SQLAlchemy seed_quests_if_empty fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) as count FROM daily_quests;")
@@ -74,6 +104,15 @@ class QuestService:
 
     def get_quests(self):
         self.seed_quests_if_empty()
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    stmt = select(DailyQuest).order_by(DailyQuest.id.asc())
+                    rows = db.session.scalars(stmt).all()
+                    return [r.to_dict() for r in rows]
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_quests fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM daily_quests ORDER BY id ASC;")
@@ -88,6 +127,21 @@ class QuestService:
         return quests
 
     def claim_quest(self, quest_id):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    q = db.session.get(DailyQuest, int(quest_id))
+                    if not q:
+                        raise ValueError(f"Quest with ID {quest_id} not found.")
+                    if q.is_completed:
+                        raise ValueError(f"Quest with ID {quest_id} is already completed.")
+                    q.is_completed = True
+                    q.progress = q.goal
+                    db.session.commit()
+                    return {"quest": q.to_dict(), "xp_reward": q.xp_reward}
+            except Exception as e:
+                logger.debug(f"SQLAlchemy claim_quest fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM daily_quests WHERE id = ?;", (quest_id,))
@@ -110,7 +164,7 @@ class QuestService:
 
         cursor.execute("SELECT * FROM daily_quests WHERE id = ?;", (quest_id,))
         updated_row = dict(cursor.fetchone())
-        updated_row["is_completed"] = True
+        updated_row["is_completed"] = bool(updated_row["is_completed"])
         conn.close()
 
         return {

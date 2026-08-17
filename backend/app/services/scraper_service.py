@@ -19,7 +19,7 @@ from curl_cffi.requests import AsyncSession
 logger = logging.getLogger(__name__)
 
 from flask import current_app
-from sqlalchemy import select, or_, func
+from sqlalchemy import select, or_, func, case, and_
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from app.extensions import db
@@ -28,6 +28,120 @@ from app.models import Character, Perk, Item, Addon, MapRealm, MapTile, MapObjec
 # Wiki portraits are named K01_TheTrapper_Portrait.png / S07_AceVisconti_Portrait.png.
 # The prefix letter is the role and the digits are the release number.
 PORTRAIT_PATTERN = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.ASCII)
+
+CANONICAL_KILLER_RELEASES = {
+    "the trapper": (1, "K01"),
+    "the wraith": (2, "K02"),
+    "the hillbilly": (3, "K03"),
+    "the nurse": (4, "K04"),
+    "the shape": (5, "K05"),
+    "the hag": (6, "K06"),
+    "the doctor": (7, "K07"),
+    "the huntress": (8, "K08"),
+    "the cannibal": (9, "K09"),
+    "the nightmare": (10, "K10"),
+    "the pig": (11, "K11"),
+    "the clown": (12, "K12"),
+    "the spirit": (13, "K13"),
+    "the legion": (14, "K14"),
+    "the plague": (15, "K15"),
+    "the ghost face": (16, "K16"),
+    "the demogorgon": (17, "K17"),
+    "the oni": (18, "K18"),
+    "the deathslinger": (19, "K19"),
+    "the executioner": (20, "K20"),
+    "the blight": (21, "K21"),
+    "the twins": (22, "K22"),
+    "the trickster": (23, "K23"),
+    "the nemesis": (24, "K24"),
+    "the cenobite": (25, "K25"),
+    "the artist": (26, "K26"),
+    "the onryō": (27, "K27"),
+    "the onryo": (27, "K27"),
+    "the dredge": (28, "K28"),
+    "the mastermind": (29, "K29"),
+    "the knight": (30, "K30"),
+    "the skull merchant": (31, "K31"),
+    "the singularity": (32, "K32"),
+    "the xenomorph": (33, "K33"),
+    "the good guy": (34, "K34"),
+    "the unknown": (35, "K35"),
+    "the lich": (36, "K36"),
+    "the dark lord": (37, "K37"),
+    "the houndmaster": (38, "K38"),
+    "the ghoul": (39, "K39"),
+    "the animatronic": (40, "K40"),
+    "the krasue": (41, "K41"),
+    "the slasher": (42, "K42"),
+    "the first": (43, "K43"),
+    "the judgment": (44, "K44"),
+}
+
+CANONICAL_SURVIVOR_RELEASES = {
+    "dwight fairfield": (1, "S01"),
+    "meg thomas": (2, "S02"),
+    "claudette morel": (3, "S03"),
+    "jake park": (4, "S04"),
+    "nea karlsson": (5, "S05"),
+    "laurie strode": (6, "S06"),
+    "ace visconti": (7, "S07"),
+    'william "bill" overbeck': (8, "S08"),
+    "william 'bill' overbeck": (8, "S08"),
+    "bill overbeck": (8, "S08"),
+    "feng min": (9, "S09"),
+    "david king": (10, "S10"),
+    "quentin smith": (11, "S11"),
+    "detective tapp": (12, "S12"),
+    "david tapp": (12, "S12"),
+    "kate denson": (13, "S13"),
+    "adam francis": (14, "S14"),
+    "jeff johansen": (15, "S15"),
+    "jane romero": (16, "S16"),
+    "ashley j. williams": (17, "S17"),
+    "ash williams": (17, "S17"),
+    "steve harrington": (18, "S18"),
+    "nancy wheeler": (19, "S19"),
+    "yui kimura": (20, "S20"),
+    "zarina kassir": (21, "S21"),
+    "cheryl mason": (22, "S22"),
+    "felix richter": (23, "S23"),
+    "élodie rakoto": (24, "S24"),
+    "elodie rakoto": (24, "S24"),
+    "yun-jin lee": (25, "S25"),
+    "lee yun-jin": (25, "S25"),
+    "leon s. kennedy": (26, "S26"),
+    "leon kennedy": (26, "S26"),
+    "jill valentine": (27, "S27"),
+    "mikaela reid": (28, "S28"),
+    "jonah vasquez": (29, "S29"),
+    "yoichi asakawa": (30, "S30"),
+    "haddie kaur": (31, "S31"),
+    "ada wong": (32, "S32"),
+    "rebecca chambers": (33, "S33"),
+    "vittorio toscano": (34, "S34"),
+    "thalita lyra": (35, "S35"),
+    "renato lyra": (36, "S36"),
+    "gabriel soma": (37, "S37"),
+    "nicolas cage": (38, "S38"),
+    "ellen ripley": (39, "S39"),
+    "alan wake": (40, "S40"),
+    "sable ward": (41, "S41"),
+    "the troupe": (42, "S42"),
+    "aestri yazar": (42, "S42"),
+    "baermar ulder": (42, "S42"),
+    "lara croft": (43, "S43"),
+    "trevor belmont": (44, "S44"),
+    "taurie cain": (45, "S45"),
+    "orela rose": (46, "S46"),
+    "rick grimes": (47, "S47"),
+    "michonne grimes": (48, "S48"),
+    "vee boonyasak": (49, "S49"),
+    "eleven": (50, "S50"),
+    "dustin henderson": (51, "S51"),
+    "kwon tae-young": (52, "S52"),
+    "shane wiigwaas": (53, "S53"),
+    "aurora stardotter": (54, "S54"),
+}
 
 
 
@@ -60,6 +174,7 @@ class CharacterData:
     avatar_url: str
     avatar_local_path: str
     release_number: int = 0
+    code_prefix: Optional[str] = None
 
 
 @dataclass
@@ -1041,9 +1156,9 @@ class WikiScraperDriver:
         characters: List[CharacterData] = []
         seen_slugs = set()
 
-        def process_page(url: str, category: str):
+        def process_page(url: str, default_category: str):
             try:
-                logger.info(f"Scraping {category} index page directly...")
+                logger.info(f"Scraping {default_category} index page directly...")
                 html = self.fetch_html(url)
                 soup = BeautifulSoup(html, "html.parser")
                 content = soup.find("div", class_="mw-parser-output") or soup
@@ -1067,13 +1182,23 @@ class WikiScraperDriver:
                     if not avatar_url:
                         continue
 
+                    filename = avatar_url.split("/revision")[0].rstrip("/").split("/")[-1]
+                    match = PORTRAIT_PATTERN.match(filename)
+                    if not match:
+                        continue
+
+                    category = "Killer" if match.group(1).upper() == "K" else "Survivor"
+                    try:
+                        release_number = int(match.group(2))
+                    except ValueError:
+                        release_number = 0
+
                     title = link.get("title", "").strip() or link.get_text().strip()
                     full_name = title.replace("_", " ").strip()
-
                     if not full_name or len(full_name) > 50:
                         continue
 
-                    if any(x in slug_lower for x in ["perk", "item", "addon", "power", "patch", "dlc", "store", "tips"]):
+                    if any(x in slug_lower for x in ["perk", "item", "addon", "power", "patch", "dlc", "store", "tips", "bloodpoint"]):
                         continue
 
                     seen_slugs.add(slug_lower)
@@ -1089,10 +1214,11 @@ class WikiScraperDriver:
                             category=category,
                             avatar_url=avatar_url,
                             avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                            release_number=release_number,
                         )
                     )
             except Exception as e:
-                logger.error(f"Error scraping {category} page: {e}")
+                logger.error(f"Error scraping {default_category} page: {e}")
 
         process_page(self.SURVIVORS_URL, "Survivor")
         process_page(self.KILLERS_URL, "Killer")
@@ -1836,31 +1962,44 @@ class ScraperService:
             await asyncio.gather(*tasks)
 
     def _preserve_release_numbers(self, characters: List[CharacterData]) -> None:
-        """Carry over release_number from the characters file already on disk.
+        """Carry over release_number and code_prefix from PostgreSQL database or canonical lookup.
 
         Drivers like Nightlight have no concept of release order, so a fresh
-        scrape always writes release_number=0. Without this, every sync wipes
-        out the chronological ordering used to sort the Characters Hub.
+        scrape must never wipe out the chronological ordering used to sort characters.
         """
-        if not self.characters_file.exists():
-            return
+        db_release_map = {}
         try:
-            with open(self.characters_file, "r", encoding="utf-8") as f:
-                existing = json.load(f)
-        except Exception:
-            return
-
-        existing_numbers = {
-            c["name"].lower(): c["release_number"]
-            for c in existing
-            if isinstance(c, dict) and c.get("name") and isinstance(c.get("release_number"), int)
-        }
+            if current_app:
+                db_chars = db.session.scalars(select(Character)).all()
+                for c in db_chars:
+                    if c.release_number and c.release_number > 0:
+                        db_release_map[c.name.lower().strip()] = (c.release_number, c.code_prefix)
+        except Exception as e:
+            logger.debug(f"Could not load release numbers from database: {e}")
 
         for character in characters:
-            if not character.release_number:
-                known = existing_numbers.get(character.name.lower())
-                if known is not None:
-                    character.release_number = known
+            c_name = character.name.lower().strip()
+            # 1. First check DB
+            if c_name in db_release_map:
+                rel_num, code_pref = db_release_map[c_name]
+                if not character.release_number or character.release_number <= 0:
+                    character.release_number = rel_num
+                if not character.code_prefix:
+                    character.code_prefix = code_pref
+            # 2. Check canonical killer releases
+            elif c_name in CANONICAL_KILLER_RELEASES:
+                rel_num, code_pref = CANONICAL_KILLER_RELEASES[c_name]
+                if not character.release_number or character.release_number <= 0:
+                    character.release_number = rel_num
+                if not character.code_prefix:
+                    character.code_prefix = code_pref
+            # 3. Check canonical survivor releases
+            elif c_name in CANONICAL_SURVIVOR_RELEASES:
+                rel_num, code_pref = CANONICAL_SURVIVOR_RELEASES[c_name]
+                if not character.release_number or character.release_number <= 0:
+                    character.release_number = rel_num
+                if not character.code_prefix:
+                    character.code_prefix = code_pref
 
     def run_sync_pipeline(
         self,
@@ -1940,22 +2079,6 @@ class ScraperService:
 
             self._preserve_release_numbers(characters)
 
-            self.characters_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.characters_file, "w", encoding="utf-8") as f:
-                json.dump([asdict(c) for c in characters], f, indent=2, ensure_ascii=False)
-
-            self.data_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.data_file, "w", encoding="utf-8") as f:
-                json.dump([asdict(p) for p in perks], f, indent=2, ensure_ascii=False)
-
-            self.items_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.items_file, "w", encoding="utf-8") as f:
-                json.dump([asdict(i) for i in items], f, indent=2, ensure_ascii=False)
-
-            self.addons_file.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.addons_file, "w", encoding="utf-8") as f:
-                json.dump([asdict(a) for a in addons], f, indent=2, ensure_ascii=False)
-
             # Scrape Hens333 and SamoelColt Maps
             maps: List[MapData] = []
             try:
@@ -1972,7 +2095,7 @@ class ScraperService:
             except Exception as map_err:
                 logger.warning(f"Failed scraping SamoelColt maps: {map_err}")
 
-            # Atomically Upsert to PostgreSQL / SQLite Database
+            # Atomically Upsert directly to PostgreSQL / SQLAlchemy Database
             db_sync_metrics = {}
             try:
                 self._update_status(
@@ -1987,31 +2110,6 @@ class ScraperService:
                 )
             except Exception as db_err:
                 logger.error(f"Error during atomic database upsert: {db_err}")
-
-            # Backup save to JSON files
-            try:
-                self.characters_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(self.characters_file, "w", encoding="utf-8") as f:
-                    json.dump([asdict(c) for c in characters], f, indent=2, ensure_ascii=False)
-
-                self.data_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(self.data_file, "w", encoding="utf-8") as f:
-                    json.dump([asdict(p) for p in perks], f, indent=2, ensure_ascii=False)
-
-                self.items_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(self.items_file, "w", encoding="utf-8") as f:
-                    json.dump([asdict(i) for i in items], f, indent=2, ensure_ascii=False)
-
-                self.addons_file.parent.mkdir(parents=True, exist_ok=True)
-                with open(self.addons_file, "w", encoding="utf-8") as f:
-                    json.dump([asdict(a) for a in addons], f, indent=2, ensure_ascii=False)
-
-                if maps:
-                    self.maps_file.parent.mkdir(parents=True, exist_ok=True)
-                    with open(self.maps_file, "w", encoding="utf-8") as f:
-                        json.dump([asdict(m) for m in maps], f, indent=2, ensure_ascii=False)
-            except Exception as json_err:
-                logger.warning(f"Failed writing JSON backups: {json_err}")
 
             total_downloads = len(perks) + sum(1 for c in characters if c.avatar_url) + len(items) + len(addons) + len(maps)
             self._update_status(
@@ -2084,7 +2182,7 @@ class ScraperService:
 
         # 1. Upsert Characters
         if characters:
-            char_rows = []
+            char_rows_map = {}
             for c in characters:
                 role = getattr(c, "category", None) or getattr(c, "role", "Survivor")
                 portrait = getattr(c, "avatar_url", "")
@@ -2094,8 +2192,8 @@ class ScraperService:
                     if m:
                         code_prefix = f"{m.group(1)}{m.group(2)}"
 
-                char_rows.append({
-                    "name": c.name,
+                char_rows_map[c.name.strip()] = {
+                    "name": c.name.strip(),
                     "role": role,
                     "code_prefix": code_prefix,
                     "portrait_url": portrait or "",
@@ -2104,20 +2202,27 @@ class ScraperService:
                     "wiki_slug": getattr(c, "wiki_slug", "") or "",
                     "avatar_local_path": getattr(c, "avatar_local_path", "") or "",
                     "release_number": getattr(c, "release_number", None),
-                })
+                }
 
+            char_rows = list(char_rows_map.values())
             stmt = insert_fn(Character).values(char_rows)
             stmt = stmt.on_conflict_do_update(
                 index_elements=[Character.name],
                 set_={
                     "role": stmt.excluded.role,
-                    "code_prefix": stmt.excluded.code_prefix,
+                    "code_prefix": case(
+                        (and_(stmt.excluded.code_prefix.is_not(None), stmt.excluded.code_prefix != ""), stmt.excluded.code_prefix),
+                        else_=Character.code_prefix
+                    ),
                     "portrait_url": stmt.excluded.portrait_url,
                     "real_name": stmt.excluded.real_name,
                     "short_name": stmt.excluded.short_name,
                     "wiki_slug": stmt.excluded.wiki_slug,
                     "avatar_local_path": stmt.excluded.avatar_local_path,
-                    "release_number": stmt.excluded.release_number,
+                    "release_number": case(
+                        (and_(stmt.excluded.release_number.is_not(None), stmt.excluded.release_number > 0), stmt.excluded.release_number),
+                        else_=Character.release_number
+                    ),
                 }
             )
             db.session.execute(stmt)
@@ -2137,7 +2242,7 @@ class ScraperService:
 
         # 2. Upsert Perks
         if perks:
-            perk_rows = []
+            perk_rows_map = {}
             for p in perks:
                 char_name = getattr(p, "character", None) or ""
                 matched_char_id = None
@@ -2152,16 +2257,17 @@ class ScraperService:
                 is_teachable = (matched_char_id is not None)
                 desc = self.clean_description_text(getattr(p, "description", ""))
 
-                perk_rows.append({
-                    "name": p.name,
+                perk_rows_map[p.name.strip()] = {
+                    "name": p.name.strip(),
                     "category": getattr(p, "category", "Survivor"),
                     "is_teachable": is_teachable,
                     "description": desc,
                     "icon_url": getattr(p, "icon_url", "") or "",
                     "icon_local_path": getattr(p, "icon_local_path", "") or "",
                     "character_id": matched_char_id,
-                })
+                }
 
+            perk_rows = list(perk_rows_map.values())
             stmt = insert_fn(Perk).values(perk_rows)
             stmt = stmt.on_conflict_do_update(
                 index_elements=[Perk.name],
@@ -2179,17 +2285,18 @@ class ScraperService:
 
         # 3. Upsert Items
         if items:
-            item_rows = []
+            item_rows_map = {}
             for item in items:
-                item_rows.append({
-                    "name": item.name,
+                item_rows_map[item.name.strip()] = {
+                    "name": item.name.strip(),
                     "category": getattr(item, "category", ""),
                     "role": getattr(item, "role", "Survivor"),
                     "description": self.clean_description_text(getattr(item, "description", "")),
                     "icon_url": getattr(item, "icon_url", "") or "",
                     "icon_local_path": getattr(item, "icon_local_path", "") or "",
                     "rarity": getattr(item, "rarity", "") or "",
-                })
+                }
+            item_rows = list(item_rows_map.values())
             stmt = insert_fn(Item).values(item_rows)
             stmt = stmt.on_conflict_do_update(
                 index_elements=[Item.name],
@@ -2207,17 +2314,18 @@ class ScraperService:
 
         # 4. Upsert Addons
         if addons:
-            addon_rows = []
+            addon_rows_map = {}
             for addon in addons:
-                addon_rows.append({
-                    "name": addon.name,
+                addon_rows_map[addon.name.strip()] = {
+                    "name": addon.name.strip(),
                     "associated_target": getattr(addon, "associated_target", "") or "",
                     "category": getattr(addon, "category", ""),
                     "description": self.clean_description_text(getattr(addon, "description", "")),
                     "icon_url": getattr(addon, "icon_url", "") or "",
                     "icon_local_path": getattr(addon, "icon_local_path", "") or "",
                     "rarity": getattr(addon, "rarity", "") or "",
-                })
+                }
+            addon_rows = list(addon_rows_map.values())
             stmt = insert_fn(Addon).values(addon_rows)
             stmt = stmt.on_conflict_do_update(
                 index_elements=[Addon.name],

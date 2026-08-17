@@ -75,11 +75,19 @@ DEFAULT_BUILDS = [
 ]
 
 
+import logging
+from flask import current_app
+from sqlalchemy import select, or_, func
+from app.extensions import db
+from app.models import CommunityBuild
+
+logger = logging.getLogger(__name__)
+
+
 class BuildService:
     def __init__(self, db_service=None):
+        self._use_sqlalchemy = (db_service is None)
         self.db_service = db_service or DatabaseService()
-        self._init_table()
-        self.seed_builds_if_empty()
 
     def _init_table(self):
         conn = self.db_service.get_connection()
@@ -102,6 +110,29 @@ class BuildService:
         conn.close()
 
     def seed_builds_if_empty(self):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    count = db.session.scalar(select(func.count(CommunityBuild.id))) or 0
+                    if count == 0:
+                        for b in DEFAULT_BUILDS:
+                            db.session.add(
+                                CommunityBuild(
+                                    title=b["title"],
+                                    description=b["description"],
+                                    role=b["role"].lower(),
+                                    category=b["category"].lower(),
+                                    character_id=b.get("character_id", "all"),
+                                    perks_json=json.dumps(b.get("perks", [])),
+                                    upvotes=b.get("upvotes", 0),
+                                    author=b.get("author", "Community"),
+                                )
+                            )
+                        db.session.commit()
+                    return
+            except Exception as e:
+                logger.debug(f"SQLAlchemy seed_builds_if_empty fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) as count FROM community_builds;")
@@ -127,6 +158,35 @@ class BuildService:
 
     def get_builds(self, role=None, category=None, search=None, sort_by="upvotes"):
         self.seed_builds_if_empty()
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    stmt = select(CommunityBuild)
+                    if role and role.lower() != "all":
+                        stmt = stmt.where(func.lower(CommunityBuild.role) == role.lower())
+                    if category and category.lower() != "all":
+                        stmt = stmt.where(func.lower(CommunityBuild.category) == category.lower())
+                    if search and search.strip():
+                        pat = f"%{search.strip().lower()}%"
+                        stmt = stmt.where(
+                            or_(
+                                func.lower(CommunityBuild.title).ilike(pat),
+                                func.lower(CommunityBuild.description).ilike(pat),
+                                func.lower(CommunityBuild.character_id).ilike(pat),
+                                func.lower(CommunityBuild.author).ilike(pat),
+                                func.lower(CommunityBuild.perks_json).ilike(pat),
+                            )
+                        )
+                    if sort_by == "newest":
+                        stmt = stmt.order_by(CommunityBuild.id.desc())
+                    else:
+                        stmt = stmt.order_by(CommunityBuild.upvotes.desc(), CommunityBuild.id.desc())
+
+                    rows = db.session.scalars(stmt).all()
+                    return [r.to_dict() for r in rows]
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_builds fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
 
@@ -148,7 +208,7 @@ class BuildService:
 
         if sort_by == "newest":
             query += " ORDER BY id DESC"
-        else:  # default to upvotes
+        else:
             query += " ORDER BY upvotes DESC, id DESC"
 
         cursor.execute(query, params)
@@ -167,6 +227,14 @@ class BuildService:
         return builds
 
     def get_build_by_id(self, build_id):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    b = db.session.get(CommunityBuild, int(build_id))
+                    return b.to_dict() if b else None
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_build_by_id fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM community_builds WHERE id = ?;", (build_id,))
@@ -191,7 +259,7 @@ class BuildService:
         category_clean = (category or "").lower()
         allowed_categories = ["otzdarva", "meta", "meme", "stealth", "chase"]
         if category_clean not in allowed_categories:
-            category_clean = "meta"  # fallback if unlisted category provided
+            category_clean = "meta"
 
         title_clean = (title or "").strip()
         if not title_clean:
@@ -199,6 +267,25 @@ class BuildService:
 
         perks_list = perks if isinstance(perks, list) else []
         perks_json = json.dumps(perks_list)
+
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    nb = CommunityBuild(
+                        title=title_clean,
+                        description=(description or "").strip(),
+                        role=role_clean,
+                        category=category_clean,
+                        character_id=(character_id or "all").strip(),
+                        perks_json=perks_json,
+                        author=(author or "Community").strip(),
+                        upvotes=0,
+                    )
+                    db.session.add(nb)
+                    db.session.commit()
+                    return nb.to_dict()
+            except Exception as e:
+                logger.debug(f"SQLAlchemy create_build fallback: {e}")
 
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
@@ -221,6 +308,18 @@ class BuildService:
         return self.get_build_by_id(build_id)
 
     def upvote_build(self, build_id):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    b = db.session.get(CommunityBuild, int(build_id))
+                    if not b:
+                        raise ValueError(f"Build with ID {build_id} not found.")
+                    b.upvotes = (b.upvotes or 0) + 1
+                    db.session.commit()
+                    return b.to_dict()
+            except Exception as e:
+                logger.debug(f"SQLAlchemy upvote_build fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT id FROM community_builds WHERE id = ?;", (build_id,))

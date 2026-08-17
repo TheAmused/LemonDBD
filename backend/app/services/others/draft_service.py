@@ -1,12 +1,19 @@
 import json
 import uuid
+import logging
+from flask import current_app
+from sqlalchemy import select
+from app.extensions import db
+from app.models import DraftSession
 from app.services.db_service import DatabaseService
+
+logger = logging.getLogger(__name__)
 
 
 class DraftService:
     def __init__(self, db_service=None):
+        self._use_sqlalchemy = (db_service is None)
         self.db_service = db_service or DatabaseService()
-        self._init_table()
 
     def _init_table(self):
         conn = self.db_service.get_connection()
@@ -30,6 +37,28 @@ class DraftService:
         if not room_code:
             room_code = uuid.uuid4().hex[:6].upper()
 
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    existing = db.session.scalars(
+                        select(DraftSession).where(DraftSession.room_code == room_code)
+                    ).first()
+                    if existing:
+                        room_code = uuid.uuid4().hex[:6].upper()
+
+                    ds = DraftSession(
+                        room_code=room_code,
+                        phase="bans",
+                        banned_perks="[]",
+                        picked_survivor_perks="[]",
+                        picked_killer_perks="[]",
+                    )
+                    db.session.add(ds)
+                    db.session.commit()
+                    return ds.to_dict()
+            except Exception as e:
+                logger.debug(f"SQLAlchemy create_room fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM draft_sessions WHERE room_code = ?;", (room_code,))
@@ -49,6 +78,16 @@ class DraftService:
         return self.get_room(room_code)
 
     def get_room(self, room_code):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    ds = db.session.scalars(
+                        select(DraftSession).where(DraftSession.room_code == room_code)
+                    ).first()
+                    return ds.to_dict() if ds else None
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_room fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM draft_sessions WHERE room_code = ?;", (room_code,))
@@ -91,6 +130,22 @@ class DraftService:
 
         if new_phase in ("bans", "picks", "complete"):
             current_phase = new_phase
+
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    ds = db.session.scalars(
+                        select(DraftSession).where(DraftSession.room_code == room_code)
+                    ).first()
+                    if ds:
+                        ds.phase = current_phase
+                        ds.banned_perks = json.dumps(banned_perks)
+                        ds.picked_survivor_perks = json.dumps(picked_survivor_perks)
+                        ds.picked_killer_perks = json.dumps(picked_killer_perks)
+                        db.session.commit()
+                        return ds.to_dict()
+            except Exception as e:
+                logger.debug(f"SQLAlchemy process_action fallback: {e}")
 
         conn = self.db_service.get_connection()
         cursor = conn.cursor()

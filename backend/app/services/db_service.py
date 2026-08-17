@@ -17,13 +17,44 @@ from app.models import (
 logger = logging.getLogger(__name__)
 
 
+class _MemConnectionWrapper:
+    def __init__(self, conn):
+        self._conn = conn
+    def cursor(self):
+        return self._conn.cursor()
+    def commit(self):
+        return self._conn.commit()
+    def rollback(self):
+        return self._conn.rollback()
+    def execute(self, *args, **kwargs):
+        return self._conn.execute(*args, **kwargs)
+    def executemany(self, *args, **kwargs):
+        return self._conn.executemany(*args, **kwargs)
+    def executescript(self, *args, **kwargs):
+        return self._conn.executescript(*args, **kwargs)
+    def close(self):
+        pass
+    def __getattr__(self, name):
+        return getattr(self._conn, name)
+
+
 class DatabaseService:
-    def __init__(self, db_path: str = "data/lemon_dbd.db"):
+    def __init__(self, db_path: str = ":memory:"):
         self.db_path = db_path
+        self._mem_conn = None
+        if self.db_path == ":memory:":
+            raw = sqlite3.connect(":memory:", check_same_thread=False)
+            raw.row_factory = sqlite3.Row
+            self._mem_conn = _MemConnectionWrapper(raw)
+            self._init_sqlite_schema(self._mem_conn)
 
     def get_connection(self):
-        """Legacy SQLite connection helper for backwards compatibility in standalone tests."""
-        os.makedirs(os.path.dirname(os.path.abspath(self.db_path)), exist_ok=True)
+        """Legacy SQLite in-memory connection helper for backwards compatibility in standalone tests."""
+        if self.db_path == ":memory:":
+            return self._mem_conn
+        dir_name = os.path.dirname(os.path.abspath(self.db_path))
+        if dir_name and not os.path.exists(dir_name):
+            os.makedirs(dir_name, exist_ok=True)
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
         return conn
@@ -35,15 +66,19 @@ class DatabaseService:
             if current_app:
                 db.create_all()
                 self._seed_default_configs()
-                return
         except Exception as e:
             logger.debug(f"SQLAlchemy init_db skipped or failed (falling back): {e}")
 
         # Fallback for standalone/SQLite scripts
         try:
             conn = self.get_connection()
-            cursor = conn.cursor()
+            self._init_sqlite_schema(conn)
+        except Exception as e:
+            logger.debug(f"SQLite fallback init_db error: {e}")
 
+    def _init_sqlite_schema(self, conn):
+        try:
+            cursor = conn.cursor()
             cursor.execute("PRAGMA table_info(map_realms);")
             cols = [row[1] for row in cursor.fetchall()]
             if cols and "map_id" not in cols:

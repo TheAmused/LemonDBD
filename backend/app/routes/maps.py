@@ -9,7 +9,8 @@ service = MapService()
 def get_maps():
     realm = request.args.get("realm")
     search = request.args.get("search")
-    maps = service.get_maps(realm=realm, search=search)
+    source = request.args.get("source")
+    maps = service.get_maps(realm=realm, search=search, source=source)
     return jsonify({"maps": maps})
 
 @maps_bp.route("/<map_id>", methods=["GET"])

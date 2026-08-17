@@ -174,8 +174,20 @@ DEFAULT_OBJECTIVES_SEED_A = [
 ]
 
 
+import logging
+from typing import Optional, List, Dict, Any
+from flask import current_app
+from sqlalchemy import select, or_, func
+from sqlalchemy.orm import joinedload
+from app.extensions import db
+from app.models import MapRealm, MapTile, MapObjective
+
+logger = logging.getLogger(__name__)
+
+
 class MapService:
     def __init__(self, db_service=None):
+        self._use_sqlalchemy = (db_service is None)
         self.db_service = db_service or DatabaseService()
 
     def _seed_db_if_empty(self, conn):
@@ -219,7 +231,33 @@ class MapService:
 
             conn.commit()
 
-    def get_maps(self, realm=None, search=None):
+    def get_maps(self, realm=None, search=None, source=None) -> List[Dict[str, Any]]:
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    stmt = select(MapRealm).options(
+                        joinedload(MapRealm.tiles),
+                        joinedload(MapRealm.objectives),
+                    )
+                    if realm and realm.lower() != "all":
+                        stmt = stmt.where(func.lower(MapRealm.realm) == realm.lower())
+                    if source and source.lower() != "all":
+                        stmt = stmt.where(func.lower(MapRealm.source) == source.lower())
+                    if search and search.strip():
+                        term = f"%{search.strip().lower()}%"
+                        stmt = stmt.where(
+                            or_(
+                                func.lower(MapRealm.name).ilike(term),
+                                func.lower(MapRealm.realm).ilike(term),
+                            )
+                        )
+                    stmt = stmt.order_by(MapRealm.name.asc())
+                    rows = db.session.scalars(stmt).unique().all()
+                    if rows:
+                        return [r.to_dict() for r in rows]
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_maps fallback: {e}")
+
         conn = self.db_service.get_connection()
         self._seed_db_if_empty(conn)
         cursor = conn.cursor()
@@ -230,6 +268,9 @@ class MapService:
         if realm and realm != 'All':
             query += " AND LOWER(realm) = LOWER(?)"
             params.append(realm)
+        if source and source != 'all':
+            query += " AND LOWER(source) = LOWER(?)"
+            params.append(source)
         if search:
             query += " AND (LOWER(name) LIKE ? OR LOWER(realm) LIKE ?)"
             term = f"%{search.lower()}%"
@@ -245,6 +286,8 @@ class MapService:
                 "id": r["map_id"],
                 "name": r["name"],
                 "realm": r["realm"],
+                "source": r.get("source") if hasattr(r, "keys") and "source" in r.keys() else "hens333",
+                "source_label": r.get("source_label") if hasattr(r, "keys") and "source_label" in r.keys() else "Hens333 12-Clock Callouts",
                 "layout_type": r["layout_type"],
                 "jungle_gyms_count": r["jungle_gyms_count"],
                 "totem_spawns_count": r["totem_spawns_count"],
@@ -256,6 +299,29 @@ class MapService:
         return maps
 
     def get_map_by_id(self, map_id, seed_variant="seed_a", floor=1):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    clean_id = (map_id or "").strip()
+                    stmt = select(MapRealm).options(
+                        joinedload(MapRealm.tiles),
+                        joinedload(MapRealm.objectives),
+                    ).where(
+                        or_(
+                            MapRealm.map_id == clean_id,
+                            func.lower(MapRealm.map_id) == clean_id.lower(),
+                            func.lower(MapRealm.name) == clean_id.lower().replace("_", " "),
+                        )
+                    )
+                    m = db.session.scalars(stmt).unique().first()
+                    if m:
+                        d = m.to_dict()
+                        d["seed_variant"] = seed_variant
+                        d["floor"] = floor
+                        return d
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_map_by_id fallback: {e}")
+
         conn = self.db_service.get_connection()
         self._seed_db_if_empty(conn)
         cursor = conn.cursor()
@@ -273,6 +339,8 @@ class MapService:
                 "id": realm_row["map_id"],
                 "name": realm_row["name"],
                 "realm": realm_row["realm"],
+                "source": realm_row.get("source") if hasattr(realm_row, "keys") and "source" in realm_row.keys() else "hens333",
+                "source_label": realm_row.get("source_label") if hasattr(realm_row, "keys") and "source_label" in realm_row.keys() else "Hens333 12-Clock Callouts",
                 "layout_type": realm_row["layout_type"],
                 "jungle_gyms_count": realm_row["jungle_gyms_count"],
                 "totem_spawns_count": realm_row["totem_spawns_count"],

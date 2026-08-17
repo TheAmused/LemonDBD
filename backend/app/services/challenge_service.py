@@ -1,7 +1,15 @@
 import json
 import random
+import logging
+from flask import current_app
+from sqlalchemy import select, delete, func
+from sqlalchemy.orm import joinedload
+from app.extensions import db
+from app.models import UserSettings, ChallengeRun, MatchLog, MatchException, CharacterPoolSetting
 from app.services.db_service import DatabaseService
 from app.services.perk_service import PerkService
+
+logger = logging.getLogger(__name__)
 
 MAP_OFFERINGS = [
     {"name": "MacMillan's Phormium", "realm": "The MacMillan Estate"},
@@ -96,6 +104,7 @@ KILLER_GAUNTLET_TIERS = [
 
 class ChallengeService:
     def __init__(self, db_service=None, perk_service=None):
+        self._use_sqlalchemy = (db_service is None)
         self.db_service = db_service or DatabaseService()
         self.perk_service = perk_service or PerkService()
 
@@ -114,6 +123,18 @@ class ChallengeService:
 
     def get_pool_settings(self, role):
         role_clean = role.lower()
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    stmt = select(CharacterPoolSetting.character_name).where(
+                        CharacterPoolSetting.role == role_clean,
+                        CharacterPoolSetting.is_enabled.is_(False),
+                    )
+                    disabled_names = list(db.session.scalars(stmt).all())
+                    return {"role": role_clean, "disabled_names": disabled_names}
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_pool_settings fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT character_name FROM character_pool_settings WHERE role = ? AND is_enabled = 0;", (role_clean,))
@@ -132,6 +153,19 @@ class ChallengeService:
         else:
             disabled_list = list(disabled_names)
 
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    db.session.execute(
+                        delete(CharacterPoolSetting).where(CharacterPoolSetting.role == role_clean)
+                    )
+                    for name in disabled_list:
+                        db.session.add(CharacterPoolSetting(role=role_clean, character_name=name, is_enabled=False))
+                    db.session.commit()
+                    return self.get_pool_settings(role_clean)
+            except Exception as e:
+                logger.debug(f"SQLAlchemy update_pool_settings fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM character_pool_settings WHERE role = ?;", (role_clean,))
@@ -145,6 +179,18 @@ class ChallengeService:
         return self.get_pool_settings(role_clean)
 
     def get_user_settings(self):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    st = db.session.get(UserSettings, 1)
+                    if not st:
+                        st = UserSettings(id=1, active_role="survivor", checkpoint_interval=3)
+                        db.session.add(st)
+                        db.session.commit()
+                    return st.to_dict()
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_user_settings fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM user_settings WHERE id = 1;")
@@ -153,6 +199,22 @@ class ChallengeService:
         return dict(row) if row else {"id": 1, "active_role": "survivor", "checkpoint_interval": 3}
 
     def update_user_settings(self, active_role=None, checkpoint_interval=None):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    st = db.session.get(UserSettings, 1)
+                    if not st:
+                        st = UserSettings(id=1)
+                        db.session.add(st)
+                    if active_role:
+                        st.active_role = active_role
+                    if checkpoint_interval is not None:
+                        st.checkpoint_interval = checkpoint_interval
+                    db.session.commit()
+                    return st.to_dict()
+            except Exception as e:
+                logger.debug(f"SQLAlchemy update_user_settings fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         if active_role:
@@ -164,6 +226,49 @@ class ChallengeService:
         return self.get_user_settings()
 
     def get_or_create_run(self, role):
+        settings = self.get_user_settings()
+        interval = settings.get("checkpoint_interval", 3)
+
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    stmt = select(ChallengeRun).where(
+                        ChallengeRun.role == role,
+                        ChallengeRun.status == "in_progress",
+                    ).order_by(ChallengeRun.id.desc())
+                    existing_run = db.session.scalars(stmt).first()
+                    if existing_run:
+                        d = existing_run.to_dict()
+                        d["tier_info"] = self.get_tier_info(d["current_streak"], role=d.get("role", role), checkpoint_interval=interval)
+                        return d
+
+                    target_character = "Meg Thomas" if role == "survivor" else "The Trapper"
+                    tier_info = self.get_tier_info(0, role=role, checkpoint_interval=interval)
+                    initial_loadout = {
+                        "character": target_character,
+                        "perks": [],
+                        "map_offering": MAP_OFFERINGS[0],
+                        "tier_info": tier_info
+                    }
+                    new_run = ChallengeRun(
+                        role=role,
+                        status="in_progress",
+                        current_character_id=target_character,
+                        current_streak=0,
+                        best_streak=0,
+                        last_checkpoint_streak=0,
+                        completed_characters_json="[]",
+                        checkpoint_characters_json="[]",
+                        current_loadout_json=json.dumps(initial_loadout),
+                    )
+                    db.session.add(new_run)
+                    db.session.commit()
+                    d = new_run.to_dict()
+                    d["tier_info"] = tier_info
+                    return d
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_or_create_run fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute(
@@ -171,9 +276,6 @@ class ChallengeService:
             (role,)
         )
         row = cursor.fetchone()
-
-        settings = self.get_user_settings()
-        interval = settings.get("checkpoint_interval", 3)
 
         if row:
             run_data = dict(row)
@@ -276,6 +378,20 @@ class ChallengeService:
             "tier_info": tier_info
         }
 
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    cr = db.session.get(ChallengeRun, run["id"])
+                    if cr:
+                        cr.current_character_id = target_char
+                        cr.current_loadout_json = json.dumps(loadout)
+                        db.session.commit()
+                        d = cr.to_dict()
+                        d["tier_info"] = tier_info
+                        return d
+            except Exception as e:
+                logger.debug(f"SQLAlchemy roll_challenge fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute(
@@ -298,6 +414,19 @@ class ChallengeService:
         valid_reasons = ('dc_before_5_gens', 'game_cancelled')
         if reason not in valid_reasons:
             raise ValueError(f"Invalid reason: {reason}. Must be one of {valid_reasons}")
+
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    cr = db.session.get(ChallengeRun, run_id)
+                    if not cr:
+                        raise ValueError("Run not found")
+                    char_id = cr.current_character_id
+                    db.session.add(MatchException(run_id=run_id, character_id=char_id, reason=reason))
+                    db.session.commit()
+                    return self.roll_challenge(cr.role, target_character=char_id)
+            except Exception as e:
+                logger.debug(f"SQLAlchemy invalidate_match fallback: {e}")
 
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
@@ -323,6 +452,66 @@ class ChallengeService:
         return self.roll_challenge(run["role"], target_character=char_id)
 
     def submit_result(self, run_id, result):
+        settings = self.get_user_settings()
+        interval = settings.get("checkpoint_interval", 3)
+
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    cr = db.session.get(ChallengeRun, run_id)
+                    if not cr:
+                        raise ValueError("Run not found")
+
+                    current_streak = cr.current_streak
+                    best_streak = cr.best_streak
+                    last_checkpoint = cr.last_checkpoint_streak
+                    completed = json.loads(cr.completed_characters_json or "[]")
+                    checkpoint_chars = json.loads(cr.checkpoint_characters_json or "[]")
+                    char_id = cr.current_character_id
+
+                    loadout = json.loads(cr.current_loadout_json or "{}")
+                    perks_json = json.dumps(loadout.get("perks", []))
+                    map_offering_str = loadout.get("map_offering", {}).get("name", "Default Map")
+
+                    if result == "win":
+                        streak_after = current_streak + 1
+                        best_after = max(best_streak, streak_after)
+                        if char_id not in completed:
+                            completed.append(char_id)
+
+                        if interval > 0 and streak_after % interval == 0:
+                            last_checkpoint = streak_after
+                            checkpoint_chars = list(completed)
+                    else:
+                        streak_after = last_checkpoint if interval > 0 else 0
+                        completed = list(checkpoint_chars)
+                        best_after = best_streak
+
+                    cr.current_streak = streak_after
+                    cr.best_streak = best_after
+                    cr.last_checkpoint_streak = last_checkpoint
+                    cr.completed_characters_json = json.dumps(completed)
+                    cr.checkpoint_characters_json = json.dumps(checkpoint_chars)
+
+                    db.session.add(
+                        MatchLog(
+                            run_id=run_id,
+                            role=cr.role,
+                            character_id=char_id,
+                            result=result,
+                            perks_json=perks_json,
+                            map_offering=map_offering_str,
+                            streak_before=current_streak,
+                            streak_after=streak_after,
+                        )
+                    )
+                    db.session.commit()
+                    d = cr.to_dict()
+                    d["tier_info"] = self.get_tier_info(streak_after, role=cr.role, checkpoint_interval=interval)
+                    return d
+            except Exception as e:
+                logger.debug(f"SQLAlchemy submit_result fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM challenge_runs WHERE id = ?;", (run_id,))
@@ -332,8 +521,6 @@ class ChallengeService:
             raise ValueError("Run not found")
 
         run = dict(row)
-        settings = self.get_user_settings()
-        interval = settings.get("checkpoint_interval", 3)
 
         current_streak = run["current_streak"]
         best_streak = run["best_streak"]
@@ -391,6 +578,28 @@ class ChallengeService:
         return updated_run
 
     def get_stats(self):
+        if self._use_sqlalchemy:
+            try:
+                if current_app:
+                    total = db.session.scalar(select(func.count(MatchLog.id))) or 0
+                    wins = db.session.scalar(
+                        select(func.count(MatchLog.id)).where(MatchLog.result == "win")
+                    ) or 0
+                    win_rate = round((wins / total * 100), 1) if total > 0 else 0.0
+
+                    recent_stmt = select(MatchLog).order_by(MatchLog.id.desc()).limit(10)
+                    logs = [l.to_dict() for l in db.session.scalars(recent_stmt).all()]
+
+                    return {
+                        "total_matches": total,
+                        "wins": wins,
+                        "losses": total - wins,
+                        "win_rate": win_rate,
+                        "recent_logs": logs,
+                    }
+            except Exception as e:
+                logger.debug(f"SQLAlchemy get_stats fallback: {e}")
+
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) as total, SUM(CASE WHEN result='win' THEN 1 ELSE 0 END) as wins FROM match_logs;")

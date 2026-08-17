@@ -1,4 +1,4 @@
-import { BookOpen, History, Shuffle, type LucideIcon } from 'lucide-react';
+import { BookOpen, History, Shuffle, Swords, type LucideIcon } from 'lucide-react';
 
 export interface StreakPanelDef {
   id: string;
@@ -13,6 +13,15 @@ export interface StreakPanelDef {
 }
 
 export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
+  {
+    id: 'gauntlet-streak',
+    title: 'Gauntlet streak',
+    description:
+      'Face a random owned killer with a shrinking perk loadout. Win to raise the streak, lose and fall back to your last checkpoint.',
+    icon: Swords,
+    accent: 'text-amber-400',
+    accentBorder: 'border-amber-500/20',
+  },
   {
     id: 'page-streak',
     title: 'Page streak',
@@ -39,5 +48,17 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     accent: 'text-slate-400',
     accentBorder: 'border-slate-700/60',
     comingSoon: true,
+  },
+];
+
+export const SURVIVOR_STREAK_PANELS: StreakPanelDef[] = [
+  {
+    id: 'gauntlet-streak',
+    title: 'Gauntlet streak',
+    description:
+      'Face a random owned survivor with a shrinking perk loadout. Win to raise the streak, lose and fall back to your last checkpoint.',
+    icon: Swords,
+    accent: 'text-amber-400',
+    accentBorder: 'border-amber-500/20',
   },
 ];

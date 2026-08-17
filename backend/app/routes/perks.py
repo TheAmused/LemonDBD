@@ -90,10 +90,11 @@ def list_addons():
     return jsonify({"count": len(addons), "data": addons}), 200
 
 
-def _run_background_scrape(override_source=None, override_fallback=None):
-    scraper = ScraperService()
-    scraper.run_sync_pipeline(override_source=override_source, override_fallback=override_fallback)
-    perk_service.reload_data()
+def _run_background_scrape(app, override_source=None, override_fallback=None):
+    with app.app_context():
+        scraper = ScraperService()
+        scraper.run_sync_pipeline(override_source=override_source, override_fallback=override_fallback)
+        perk_service.reload_data()
 
 
 @perks_bp.route("/api/scrape-and-seed", methods=["POST"])
@@ -137,6 +138,7 @@ def trigger_scrape():
 
     thread = threading.Thread(
         target=_run_background_scrape,
+        args=(current_app._get_current_object(),),
         kwargs={"override_source": source, "override_fallback": fallback},
         daemon=True,
     )

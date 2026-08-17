@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { Sidebar } from '@/components/Sidebar';
@@ -52,6 +52,7 @@ interface UserRow {
 
 export default function AdminPanelPage() {
   const params = useParams();
+  const router = useRouter();
   const currentLocale = (params?.locale as string) || 'en';
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
@@ -77,6 +78,12 @@ export default function AdminPanelPage() {
   useEffect(() => {
     document.title = 'LemonDBD - Admin Control Center';
   }, []);
+
+  useEffect(() => {
+    if (!isLoading && (!isAuthenticated || !isAdmin)) {
+      router.replace(`/${currentLocale}`);
+    }
+  }, [isLoading, isAuthenticated, isAdmin, currentLocale, router]);
 
   const fetchAdminData = useCallback(async () => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
@@ -249,36 +256,14 @@ export default function AdminPanelPage() {
     filters: { allCategories: 'Perks Vault', generatorTab: 'Perk Randomizer' },
   };
 
-  if (isLoading) {
+  if (isLoading || !isAuthenticated || !isAdmin) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-100">
         <div className="flex flex-col items-center gap-3">
           <LemonIcon className="h-10 w-10 animate-bounce" />
-          <p className="text-sm font-mono text-amber-400">Verifying administrative access...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated || !isAdmin) {
-    return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-6 text-center">
-        <div className="max-w-md w-full rounded-2xl border border-red-500/30 bg-slate-900/90 p-8 backdrop-blur-xl shadow-2xl shadow-red-950/50">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-600/10 border border-red-500/30 text-red-500">
-            <ShieldAlert className="h-10 w-10 animate-pulse" />
-          </div>
-          <h1 className="text-2xl font-black tracking-wider text-red-400 font-mono mb-2">
-            Access Denied
-          </h1>
-          <p className="text-xs text-slate-400 mb-6">
-            Administrative privileges required. You do not have permission to access the LemonDBD Admin Control Center.
+          <p className="text-sm font-mono text-amber-400">
+            {isLoading ? 'Verifying administrative access...' : 'Redirecting to Dashboard...'}
           </p>
-          <Link
-            href={`/${currentLocale}`}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 py-2.5 text-xs font-bold text-slate-200 transition-colors"
-          >
-            Return to Dashboard
-          </Link>
         </div>
       </div>
     );

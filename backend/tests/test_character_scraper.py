@@ -1,5 +1,6 @@
+import json
 import unittest
-from app.services.scraper_service import ScraperService
+from app.services.scraper_service import ScraperService, CharacterData, NightlightScraperDriver
 
 
 class TestClassifyPortrait(unittest.TestCase):
@@ -231,6 +232,126 @@ class TestPerkOwnerMatching(unittest.TestCase):
 
         agitation = next(p for p in perks if p.name == "Agitation")
         self.assertEqual(agitation.character, "Trapper")
+
+
+class TestExtractQuoteAttribution(unittest.TestCase):
+    def test_extracts_name_after_a_dash(self):
+        text = '"I understand computers... systems." - Kwon Tae-young'
+        self.assertEqual(ScraperService.extract_quote_attribution(text), "Kwon Tae-young")
+
+    def test_extracts_name_after_an_en_dash_with_no_space(self):
+        text = '"Go on. Run." –Portia Maye'
+        self.assertEqual(ScraperService.extract_quote_attribution(text), "Portia Maye")
+
+    def test_multi_line_description_only_looks_at_the_final_line(self):
+        text = 'Whenever you gain Bloodlust, gain Undetectable for 30s.\n"Where did she go" - The Huntress'
+        self.assertEqual(ScraperService.extract_quote_attribution(text), "The Huntress")
+
+    def test_filters_out_notebook_and_unknown_attributions(self):
+        self.assertIsNone(ScraperService.extract_quote_attribution('"Nothing is permanent." -Unknown, Notebook'))
+        self.assertIsNone(ScraperService.extract_quote_attribution('"In the shadows." -Notebook'))
+
+    def test_no_quote_attribution_returns_none(self):
+        text = "While carrying a Survivor: they wiggle 4% slower."
+        self.assertIsNone(ScraperService.extract_quote_attribution(text))
+
+    def test_empty_text_returns_none(self):
+        self.assertIsNone(ScraperService.extract_quote_attribution(""))
+        self.assertIsNone(ScraperService.extract_quote_attribution(None))
+
+
+class TestExtractHeaderCaptionOwner(unittest.TestCase):
+    def test_extracts_owner_from_a_metadata_caption(self):
+        text = "A Place For Us\nSurvivor\n- Kwon Tae-young\n<"
+        self.assertEqual(ScraperService.extract_header_caption_owner(text), "Kwon Tae-young")
+
+    def test_works_for_killer_role_too(self):
+        text = "Some Perk\nKiller\n- The Trapper"
+        self.assertEqual(ScraperService.extract_header_caption_owner(text), "The Trapper")
+
+    def test_filters_out_notebook_and_unknown_attributions(self):
+        self.assertIsNone(ScraperService.extract_header_caption_owner("Whispers\nKiller\n- Unknown, Notebook"))
+
+    def test_real_flavor_text_without_the_caption_shape_returns_none(self):
+        text = "While carrying a Survivor: They wiggle 4% slower."
+        self.assertIsNone(ScraperService.extract_header_caption_owner(text))
+
+    def test_empty_text_returns_none(self):
+        self.assertIsNone(ScraperService.extract_header_caption_owner(""))
+        self.assertIsNone(ScraperService.extract_header_caption_owner(None))
+
+
+class TestNightlightPerksMatchViaQuoteAttribution(unittest.TestCase):
+    def test_perk_with_no_character_tag_is_matched_via_its_quote(self):
+        driver = NightlightScraperDriver()
+        chunk_js = json.dumps([
+            {"name": "A Place For Us", "role": "Survivor", "u": "/perks/a-place-for-us", "icon": "a-place-for-us"}
+        ])
+        stream_payload = (
+            '<div data-perk="A Place For Us">While healing another Survivor, you both gain Elusive. '
+            '&quot;I wonder if I will ever understand.&quot; - Kwon Tae-young</div>'
+        )
+        characters = [
+            CharacterData(
+                name="Kwon Tae-young",
+                real_name="Kwon Tae-young",
+                wiki_slug="Kwon_Tae-young",
+                short_name="kwon_tae_young",
+                category="Survivor",
+                avatar_url="",
+                avatar_local_path="avatars/survivors/kwon_tae_young.png",
+            )
+        ]
+
+        perks = driver.parse_nightlight_perks(chunk_js, stream_payload, characters=characters)
+
+        self.assertEqual(len(perks), 1)
+        self.assertEqual(perks[0].character, "Kwon Tae-young")
+        self.assertEqual(perks[0].icon_local_path, "icons/survivors/kwon_tae_young/a_place_for_us.png")
+
+    def test_perk_with_only_a_metadata_caption_is_still_matched(self):
+        """Regression test for the real production bug: when Nightlight has no
+        real flavor text for a perk yet, the 300-char fallback snippet lands on
+        a bare 'Name\\nRole\\n- Character' caption instead, which
+        clean_description_text() correctly discards as junk. The character
+        must still be recovered from that caption before it's thrown away."""
+        driver = NightlightScraperDriver()
+        chunk_js = json.dumps([
+            {"name": "A Place For Us", "role": "Survivor", "u": "/perks/a-place-for-us", "icon": "a-place-for-us"}
+        ])
+        # No data-perk div for this name, so parsing falls back to the raw
+        # 300-char snippet search, which here only contains the caption.
+        stream_payload = "A Place For Us\nSurvivor\n- Kwon Tae-young\n<"
+        characters = [
+            CharacterData(
+                name="Kwon Tae-young",
+                real_name="Kwon Tae-young",
+                wiki_slug="Kwon_Tae-young",
+                short_name="kwon_tae_young",
+                category="Survivor",
+                avatar_url="",
+                avatar_local_path="avatars/survivors/kwon_tae_young.png",
+            )
+        ]
+
+        perks = driver.parse_nightlight_perks(chunk_js, stream_payload, characters=characters)
+
+        self.assertEqual(len(perks), 1)
+        self.assertEqual(perks[0].character, "Kwon Tae-young")
+
+    def test_perk_with_no_matching_quote_still_falls_back_to_general(self):
+        driver = NightlightScraperDriver()
+        chunk_js = json.dumps([
+            {"name": "Iron Grasp", "role": "Killer", "u": "/perks/iron-grasp", "icon": "iron-grasp"}
+        ])
+        stream_payload = (
+            '<div data-perk="Iron Grasp">While carrying a Survivor: They wiggle 4% slower.</div>'
+        )
+
+        perks = driver.parse_nightlight_perks(chunk_js, stream_payload, characters=[])
+
+        self.assertEqual(len(perks), 1)
+        self.assertEqual(perks[0].character, "General")
 
 
 import os

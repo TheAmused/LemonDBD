@@ -8,7 +8,7 @@ import { VoiceCommandBanner } from '@/components/maps/VoiceCommandBanner';
 import { QuestsModal } from '@/components/QuestsModal';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { Compass } from 'lucide-react';
+import { Compass, Sparkles, MapPin, Layers } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { MapRealm } from '@/types/map';
 
@@ -53,7 +53,7 @@ function MapsPageInner() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Map Explorer';
+    document.title = 'LemonDBD - Tactical Map Command Explorer';
     getDictionary(locale)
       .then(setDict)
       .catch((err) => console.error('Failed to load maps dictionary:', err));
@@ -92,8 +92,8 @@ function MapsPageInner() {
 
   if (!dict) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        Loading...
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono text-xs">
+        Initializing Tactical Map Command...
       </div>
     );
   }
@@ -113,47 +113,32 @@ function MapsPageInner() {
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
+        className={`flex-1 w-full min-h-screen transition-all duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 ${
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        {/* ── Page Header ── */}
-        <div className="mb-7 flex flex-col gap-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 shadow-sm">
-              <Compass className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                Map Explorer
-              </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Browse DBD maps, callouts, and guides with real-time voice navigation
-              </p>
-            </div>
-          </div>
+        {/* ── Top Tactical Navigation & Voice Command Bar ── */}
+        <VoiceCommandBanner
+          locale={locale}
+          dict={dict}
+          currentSource={currentSource}
+          onSourceChange={(src) => {
+            console.log('[MapsPage] Source changed to:', src);
+            setCurrentSource(src);
+          }}
+          onSelectMap={(name, id, src) => {
+            console.log('[MapsPage] onSelectMap called with:', { name, id, src });
+            if (src) setCurrentSource(src as any);
+            setSelectedMap({ mapName: name, timestamp: Date.now() });
+          }}
+          onAction={(act) => {
+            console.log('[MapsPage] onAction called with:', act);
+            setTriggerAction({ action: act, timestamp: Date.now() });
+          }}
+          availableMaps={availableMaps}
+        />
 
-          {/* ── Voice Command Banner ── */}
-          <VoiceCommandBanner
-            locale={locale}
-            currentSource={currentSource}
-            onSourceChange={(src) => {
-              console.log('[MapsPage] Source changed to:', src);
-              setCurrentSource(src);
-            }}
-            onSelectMap={(name, id, src) => {
-              console.log('[MapsPage] onSelectMap called with:', { name, id, src });
-              if (src) setCurrentSource(src as any);
-              setSelectedMap({ mapName: name, timestamp: Date.now() });
-            }}
-            onAction={(act) => {
-              console.log('[MapsPage] onAction called with:', act);
-              setTriggerAction({ action: act, timestamp: Date.now() });
-            }}
-            availableMaps={availableMaps}
-          />
-        </div>
-
+        {/* ── Main Map Spatial Workspace (Desktop & Mobile) ── */}
         <MapExplorer
           initialMapName={selectedMap.mapName}
           selectedMap={selectedMap}
@@ -169,6 +154,7 @@ function MapsPageInner() {
           onActionTriggered={(act) => setTriggerAction({ action: act, timestamp: Date.now() })}
           triggerAction={triggerAction}
         />
+
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
       </main>
     </div>
@@ -179,8 +165,8 @@ export default function MapsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-          Loading...
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono text-xs">
+          Loading Tactical Maps...
         </div>
       }
     >

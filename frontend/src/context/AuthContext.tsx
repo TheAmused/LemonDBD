@@ -143,6 +143,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setOwnership(null);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('lemondbd_token');
+      const path = window.location.pathname;
+      const localeMatch = path.match(/^\/([a-z]{2})/);
+      const locale = localeMatch ? localeMatch[1] : 'en';
+      if (path.includes('/admin') || path.includes('/user')) {
+        window.location.href = `/${locale}`;
+        return;
+      }
     }
     fetch(`${API_BASE}/api/v1/auth/logout`, { method: 'POST' }).catch(() => {});
   };

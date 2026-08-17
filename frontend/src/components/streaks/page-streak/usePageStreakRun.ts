@@ -3,24 +3,27 @@
 import { useCallback, useEffect, useState } from 'react';
 import { PageStreakRun } from '@/types/pageStreak';
 import * as api from '@/services/pageStreakApi';
+import { useAuth } from '@/context/AuthContext';
 
 export function usePageStreakRun(killer: string) {
+  const { token } = useAuth();
   const [run, setRun] = useState<PageStreakRun | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    if (!token) return;
     setLoading(true);
     setError(null);
     try {
-      setRun(await api.fetchRun(killer));
+      setRun(await api.fetchRun(token, killer));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load this streak');
     } finally {
       setLoading(false);
     }
-  }, [killer]);
+  }, [killer, token]);
 
   useEffect(() => {
     load();
@@ -47,9 +50,9 @@ export function usePageStreakRun(killer: string) {
     busy,
     error,
     reload: load,
-    startRun: () => mutate(() => api.startRun(killer)),
+    startRun: () => token && mutate(() => api.startRun(token, killer)),
     submitResult: (page: number, perks: string[], result: 'win' | 'loss') =>
-      mutate(() => api.submitResult(killer, page, perks, result)),
-    resetRun: () => mutate(() => api.resetRun(killer)),
+      token && mutate(() => api.submitResult(token, killer, page, perks, result)),
+    resetRun: () => token && mutate(() => api.resetRun(token, killer)),
   };
 }

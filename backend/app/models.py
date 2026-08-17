@@ -32,12 +32,31 @@ class Character(Base):
     wiki_slug: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     avatar_local_path: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     release_number: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    chapter_name: Mapped[Optional[str]] = mapped_column(String(150), nullable=True)
+    chapter_number: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    dlc_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    is_licensed: Mapped[Optional[bool]] = mapped_column(Boolean, default=False, nullable=True)
+    release_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    release_date: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    dlc_counterparts: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    lore: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     perks: Mapped[List["Perk"]] = relationship(
         back_populates="character", cascade="all, delete-orphan"
     )
 
     def to_dict(self) -> dict:
+        import json
+        counterparts = []
+        if self.dlc_counterparts:
+            try:
+                if self.dlc_counterparts.strip().startswith("["):
+                    counterparts = json.loads(self.dlc_counterparts)
+                else:
+                    counterparts = [x.strip() for x in self.dlc_counterparts.split(",") if x.strip()]
+            except Exception:
+                counterparts = []
+
         return {
             "id": self.id,
             "name": self.name,
@@ -51,6 +70,14 @@ class Character(Base):
             "avatar_url": self.portrait_url or "",
             "avatar_local_path": self.avatar_local_path or "",
             "release_number": self.release_number,
+            "chapter_name": self.chapter_name or "Dead by Daylight Archives",
+            "chapter_number": self.chapter_number or "",
+            "dlc_type": self.dlc_type or "original_chapter",
+            "is_licensed": bool(self.is_licensed),
+            "release_year": self.release_year or 2016,
+            "release_date": self.release_date or "",
+            "dlc_counterparts": counterparts,
+            "lore": self.lore or "",
         }
 
 

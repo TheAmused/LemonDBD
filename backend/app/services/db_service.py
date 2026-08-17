@@ -3,7 +3,7 @@ import sqlite3
 import logging
 from typing import Set, Dict, Any, Optional
 from flask import current_app
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, text
 from app.extensions import db
 from app.models import (
     PerkRule,
@@ -64,6 +64,7 @@ class DatabaseService:
             # If inside Flask application context, initialize with SQLAlchemy
             if current_app:
                 db.create_all()
+                self._migrate_columns()
                 self._seed_default_configs()
         except Exception as e:
             logger.debug(f"SQLAlchemy init_db skipped or failed (falling back): {e}")
@@ -74,6 +75,51 @@ class DatabaseService:
             self._init_sqlite_schema(conn)
         except Exception as e:
             logger.debug(f"SQLite fallback init_db error: {e}")
+
+    def _migrate_columns(self):
+        """Ensure all newly added columns exist in existing PostgreSQL and SQLite databases."""
+        try:
+            is_pg = False
+            try:
+                is_pg = (db.engine.dialect.name == "postgresql")
+            except Exception:
+                pass
+
+            character_columns = [
+                ("code_prefix", "VARCHAR(10)"),
+                ("portrait_url", "VARCHAR(255)"),
+                ("real_name", "VARCHAR(100)"),
+                ("short_name", "VARCHAR(50)"),
+                ("wiki_slug", "VARCHAR(100)"),
+                ("avatar_local_path", "VARCHAR(255)"),
+                ("release_number", "INTEGER"),
+                ("chapter_name", "VARCHAR(150)"),
+                ("chapter_number", "VARCHAR(50)"),
+                ("dlc_type", "VARCHAR(50)"),
+                ("is_licensed", "BOOLEAN DEFAULT FALSE"),
+                ("release_year", "INTEGER"),
+                ("release_date", "VARCHAR(50)"),
+                ("dlc_counterparts", "TEXT"),
+                ("lore", "TEXT"),
+            ]
+
+            with db.engine.connect() as conn:
+                for col_name, col_type in character_columns:
+                    try:
+                        if is_pg:
+                            conn.execute(text(f"ALTER TABLE characters ADD COLUMN IF NOT EXISTS {col_name} {col_type};"))
+                        else:
+                            # SQLite check if column already exists
+                            check_sql = text("PRAGMA table_info(characters);")
+                            res = conn.execute(check_sql).fetchall()
+                            existing_cols = [r[1] for r in res]
+                            if col_name not in existing_cols:
+                                conn.execute(text(f"ALTER TABLE characters ADD COLUMN {col_name} {col_type};"))
+                    except Exception as err:
+                        logger.debug(f"Column migration notice for {col_name}: {err}")
+                conn.commit()
+        except Exception as e:
+            logger.debug(f"Database column migration skipped or failed: {e}")
 
     def _init_sqlite_schema(self, conn):
         try:

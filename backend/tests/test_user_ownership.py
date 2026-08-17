@@ -23,22 +23,28 @@ class TestUserAndOwnership(unittest.TestCase):
                 trapper = Character(name="The Trapper", role="Killer", release_number=1)
                 db.session.add(trapper)
                 db.session.flush()
-                # 3 teachable perks for Trapper
-                p1 = Perk(name="Unnerving Presence", character_id=trapper.id, is_teachable=True, category="Killer")
-                p2 = Perk(name="Brutal Strength", character_id=trapper.id, is_teachable=True, category="Killer")
-                p3 = Perk(name="Agitation", character_id=trapper.id, is_teachable=True, category="Killer")
-                db.session.add_all([p1, p2, p3])
+
+            for p_name in ["Unnerving Presence", "Brutal Strength", "Agitation"]:
+                p = db.session.scalars(select(Perk).where(Perk.name == p_name)).first()
+                if not p:
+                    db.session.add(Perk(name=p_name, character_id=trapper.id, is_teachable=True, category="Killer"))
+                else:
+                    p.character_id = trapper.id
+                    p.is_teachable = True
 
             dwight = db.session.scalars(select(Character).where(Character.name == "Dwight Fairfield")).first()
             if not dwight:
                 dwight = Character(name="Dwight Fairfield", role="Survivor", release_number=1)
                 db.session.add(dwight)
                 db.session.flush()
-                # 3 teachable perks for Dwight
-                p4 = Perk(name="Bond", character_id=dwight.id, is_teachable=True, category="Survivor")
-                p5 = Perk(name="Prove Thyself", character_id=dwight.id, is_teachable=True, category="Survivor")
-                p6 = Perk(name="Leader", character_id=dwight.id, is_teachable=True, category="Survivor")
-                db.session.add_all([p4, p5, p6])
+
+            for p_name in ["Bond", "Prove Thyself", "Leader"]:
+                p = db.session.scalars(select(Perk).where(Perk.name == p_name)).first()
+                if not p:
+                    db.session.add(Perk(name=p_name, character_id=dwight.id, is_teachable=True, category="Survivor"))
+                else:
+                    p.character_id = dwight.id
+                    p.is_teachable = True
 
             db.session.commit()
 

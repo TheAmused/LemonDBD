@@ -25,6 +25,31 @@ def list_users():
     return jsonify(result), 200
 
 
+@users_bp.route("/users", methods=["POST"])
+@admin_required
+def create_user_by_admin():
+    data = request.get_json() or {}
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
+    role = data.get("role", "user")
+
+    user, err = user_service.register_user(
+        username=username,
+        email=email,
+        password=password,
+        role=role,
+    )
+    if err:
+        return jsonify({"error": err, "status": 400}), 400
+
+    return jsonify({
+        "status": "success",
+        "message": "User created successfully by admin",
+        "user": user.to_dict(),
+    }), 201
+
+
 @users_bp.route("/users/<int:user_id>", methods=["GET"])
 @login_required
 def get_user_detail(user_id):

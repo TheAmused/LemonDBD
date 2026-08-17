@@ -52,9 +52,9 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
 
     with flask_app.app_context():
         from app.services.db_service import DatabaseService
-        from app.services.user_service import UserService
+        from app.seeds.user_seeder import seed_default_users
         DatabaseService().init_db()
-        UserService().seed_default_admin_if_empty()
+        seed_default_users()
 
     # Blueprints
     from app.routes.auth import auth_bp

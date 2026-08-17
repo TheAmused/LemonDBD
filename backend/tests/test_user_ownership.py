@@ -196,6 +196,50 @@ class TestUserAndOwnership(unittest.TestCase):
         del_res = self.client.delete(f"/api/v1/users/{user.id}", headers=admin_headers)
         self.assertEqual(del_res.status_code, 200)
 
+    def test_default_seeder_lemon_and_user(self):
+        with self.app.app_context():
+            from app.seeds.user_seeder import seed_default_users
+            seed_default_users()
+
+            # Test admin login: lemon / lemon
+            lemon, l_token = self.user_service.authenticate("lemon", "lemon")
+            self.assertIsNotNone(lemon)
+            self.assertEqual(lemon.username, "lemon")
+            self.assertEqual(lemon.role, "admin")
+            self.assertIsNotNone(l_token)
+
+            # Test user login: user / user
+            u, u_token = self.user_service.authenticate("user", "user")
+            self.assertIsNotNone(u)
+            self.assertEqual(u.username, "user")
+            self.assertEqual(u.role, "user")
+            self.assertIsNotNone(u_token)
+
+    def test_admin_create_user_endpoint(self):
+        with self.app.app_context():
+            from app.seeds.user_seeder import seed_default_users
+            seed_default_users()
+            lemon, _ = self.user_service.authenticate("lemon", "lemon")
+            admin_token = self.user_service.generate_token(lemon.id)
+
+        admin_headers = {"Authorization": f"Bearer {admin_token}"}
+
+        # Create new user via admin POST /api/v1/users
+        res = self.client.post(
+            "/api/v1/users",
+            json={
+                "username": "custom_player",
+                "email": "custom@player.com",
+                "password": "secretpassword",
+                "role": "user",
+            },
+            headers=admin_headers,
+        )
+        self.assertEqual(res.status_code, 201)
+        data = res.get_json()
+        self.assertEqual(data["status"], "success")
+        self.assertEqual(data["user"]["username"], "custom_player")
+
 
 if __name__ == "__main__":
     unittest.main()

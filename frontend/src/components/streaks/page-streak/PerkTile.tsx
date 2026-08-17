@@ -26,7 +26,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
     <>
       <span
         className={`grid aspect-square w-full max-w-[88px] place-items-center transition-colors ${
-          selected ? 'bg-orange-400/70' : 'bg-slate-800'
+          selected ? 'bg-orange-400/70' : 'bg-slate-200 dark:bg-slate-800'
         }`}
         style={{ clipPath: DIAMOND }}
       >
@@ -34,7 +34,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
           className={`grid h-[82%] w-[82%] place-items-center transition-colors ${
             selected
               ? 'bg-gradient-to-br from-amber-900/80 to-slate-950'
-              : 'bg-gradient-to-br from-slate-700 to-slate-900'
+              : 'bg-gradient-to-br from-slate-100 to-slate-300 dark:from-slate-700 dark:to-slate-900'
           }`}
           style={{ clipPath: DIAMOND }}
         >
@@ -48,14 +48,14 @@ export const PerkTile: React.FC<PerkTileProps> = ({
           )}
         </span>
       </span>
-      <span className={`text-center text-[10.5px] font-semibold leading-tight ${selected ? 'text-slate-100' : 'text-slate-400'}`}>
+      <span className={`text-center text-[10.5px] font-semibold leading-tight ${selected ? 'text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400'}`}>
         {name}
       </span>
     </>
   );
 
-  const shell = `flex flex-col items-center gap-2 rounded-xl border p-3 transition-all duration-150 motion-reduce:transition-none motion-reduce:scale-100 ${
-    selected ? 'border-orange-500 bg-orange-500/10 scale-[1.03]' : 'border-slate-800 bg-slate-900/50'
+  const shell = `flex flex-col items-center gap-2 rounded-xl border p-3 transition-all duration-150 motion-reduce:transition-none motion-reduce:scale-100 shadow-sm ${
+    selected ? 'border-orange-500 bg-orange-500/10 scale-[1.03]' : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50'
   }`;
 
   if (disabled || !onToggle) {

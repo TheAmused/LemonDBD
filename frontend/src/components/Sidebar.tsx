@@ -70,7 +70,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   killerCount = 0,
   characterCount = 0,
 }) => {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar } = useSidebarState();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
@@ -82,6 +82,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [othersOpen, setOthersOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const toggleLocale =
@@ -93,6 +94,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     segments[1] = locale;
     return segments.join('/');
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -323,7 +328,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             'w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
             (isActive
               ? item.activeBg
-              : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
+              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200')
           }
         >
           <div className="flex items-center gap-3">
@@ -350,7 +355,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           'w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ' +
           (isActive
             ? item.activeBg
-            : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60')
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200')
         }
       >
         <div className="flex items-center gap-3">
@@ -371,7 +376,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-xl"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 via-red-950/40 to-slate-900 border border-amber-500/30 text-white shadow-lg shadow-amber-950/30 group-hover:scale-105 transition-transform p-1.5">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 via-red-950/20 to-slate-100 dark:to-slate-900 border border-amber-500/30 text-slate-900 dark:text-white shadow-md group-hover:scale-105 transition-transform p-1.5">
               <LemonIcon className="h-7 w-7" />
             </div>
             <div>
@@ -395,31 +400,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="pt-1">
             <button
               onClick={() => setOthersOpen(!othersOpen)}
-              className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${
-                isOtherActive
-                  ? 'bg-slate-800/80 text-cyan-400 border border-cyan-500/30'
-                  : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900/60'
-              }`}
+              className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${isOtherActive
+                  ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
+                }`}
             >
               <div className="flex items-center gap-3">
-                <Folder className="h-4 w-4 text-cyan-400" />
+                <Folder className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
                 <span>Others</span>
               </div>
               <div className="flex items-center gap-1.5">
                 {isOtherActive && (
-                  <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                  <span className="h-2 w-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse" />
                 )}
                 <ChevronDown
-                  className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
-                    othersOpen ? 'rotate-180' : 'rotate-0'
-                  }`}
+                  className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${othersOpen ? 'rotate-180' : 'rotate-0'
+                    }`}
                 />
               </div>
             </button>
 
             {/* Nested Sub-Menu List & Vault Stats */}
             {othersOpen && (
-              <div className="mt-1 ml-3 pl-2.5 space-y-3 border-l-2 border-slate-800/80">
+              <div className="mt-1 ml-3 pl-2.5 space-y-3 border-l-2 border-slate-200 dark:border-slate-800/80">
                 <div className="space-y-1">
                   {otherNavItems.map(renderNavItem)}
                 </div>
@@ -513,11 +516,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       {user.username}
                     </p>
                     <span
-                      className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${
-                        user.role === 'admin'
+                      className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${user.role === 'admin'
                           ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                           : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                      }`}
+                        }`}
                     >
                       {user.role}
                     </span>
@@ -588,12 +590,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </Link>
 
           <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle Dark Mode"
             className="flex h-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
-            <Sun className="h-3.5 w-3.5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
-            <Moon className="absolute h-3.5 w-3.5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-slate-300" />
+            {isMounted && resolvedTheme === 'dark' ? (
+              <Moon className="h-3.5 w-3.5 text-slate-300" />
+            ) : (
+              <Sun className="h-3.5 w-3.5 text-amber-500" />
+            )}
           </button>
         </div>
       </div>
@@ -605,9 +610,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* ── DESKTOP ASIDE SIDEBAR WITH INTEGRATED DRAWER KNOB HANDLE ── */}
       <aside
         aria-label="Sidebar Navigation"
-        className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-transform duration-300 ${
-          isCollapsed ? '-translate-x-full' : 'translate-x-0'
-        }`}
+        className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-transform duration-300 ${isCollapsed ? '-translate-x-full' : 'translate-x-0'
+          }`}
       >
         {renderSidebarContent()}
 
@@ -616,12 +620,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={toggleSidebar}
           title={isCollapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
           aria-label={isCollapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
-          className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-slate-700/80 bg-slate-900/95 text-cyan-400 shadow-2xl shadow-slate-950/90 backdrop-blur-xl hover:bg-slate-800 hover:w-7 hover:text-cyan-300 active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
+          className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-slate-200 bg-white/95 text-slate-700 shadow-md hover:bg-slate-100 hover:w-7 hover:text-cyan-600 dark:border-slate-700/80 dark:bg-slate-900/95 dark:text-cyan-400 dark:shadow-2xl dark:shadow-slate-950/90 dark:hover:bg-slate-800 dark:hover:text-cyan-300 active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
         >
           {isCollapsed ? (
-            <ChevronRight className="h-5 w-5 text-cyan-400 group-hover:scale-110 transition-transform" />
+            <ChevronRight className="h-5 w-5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" />
           ) : (
-            <ChevronLeft className="h-5 w-5 text-cyan-400 group-hover:scale-110 transition-transform" />
+            <ChevronLeft className="h-5 w-5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" />
           )}
         </button>
       </aside>

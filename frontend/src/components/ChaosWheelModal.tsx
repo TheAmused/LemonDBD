@@ -238,28 +238,28 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md cursor-pointer animate-in fade-in duration-200"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg rounded-3xl border border-purple-500/30 bg-slate-900 p-6 shadow-2xl shadow-purple-950/50 text-slate-100 cursor-default"
+        className="relative w-full max-w-lg rounded-3xl border border-purple-500/30 bg-white dark:bg-slate-900 p-6 shadow-2xl text-slate-900 dark:text-slate-100 cursor-default animate-in zoom-in-95 duration-200"
       >
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+          className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer"
         >
           <X className="h-5 w-5" />
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-900/50 border border-purple-500/40 text-purple-300">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 dark:bg-purple-900/50 border border-purple-500/30 text-purple-600 dark:text-purple-300 shadow-sm">
             <Skull className="h-6 w-6 animate-pulse" />
           </div>
           <div>
-            <h3 className="text-lg font-black tracking-wide text-white">
+            <h3 className="text-lg font-black tracking-wide text-slate-900 dark:text-white">
               Chaos Wheel of Curses
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               Spin to apply a single trial Curse or Buff to your 4 perk loadout.
             </p>
           </div>
@@ -277,10 +277,10 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           <button
             onClick={spinChaosWheel}
             disabled={isSpinning}
-            className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all ${
+            className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all cursor-pointer ${
               isSpinning
-                ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-purple-600 via-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-purple-900/50'
+                ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed'
+                : 'bg-gradient-to-r from-purple-600 via-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-purple-900/40'
             }`}
           >
             <Sparkles className={`h-4 w-4 ${isSpinning ? 'animate-spin' : ''}`} />
@@ -290,7 +290,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
 
         {/* Won Mutator Display Card */}
         {wonMutator && (
-          <div className={`mt-4 rounded-2xl border p-4 backdrop-blur-sm transition-all ${wonMutator.badgeBg} ${wonMutator.borderColor}`}>
+          <div className={`mt-4 rounded-2xl border p-4 backdrop-blur-sm transition-all shadow-sm ${wonMutator.badgeBg} ${wonMutator.borderColor}`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <span className="text-2xl">{wonMutator.icon}</span>
@@ -298,12 +298,12 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
                   <h4 className={`text-sm font-extrabold ${wonMutator.textColor}`}>
                     {wonMutator.name}
                   </h4>
-                  <p className="text-xs text-slate-300 mt-0.5">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">
                     {wonMutator.description}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-emerald-400 font-bold text-xs bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+              <div className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-bold text-xs bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
                 <Check className="h-3.5 w-3.5" />
                 Active
               </div>
@@ -314,7 +314,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
         <div className="mt-6 flex justify-end">
           <button
             onClick={onClose}
-            className="rounded-xl bg-slate-800 px-5 py-2.5 font-bold text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+            className="rounded-xl bg-slate-100 dark:bg-slate-800 px-5 py-2.5 font-bold text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shadow-sm"
           >
             Done
           </button>

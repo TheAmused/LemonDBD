@@ -70,16 +70,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
         onClick={onClose}
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-md rounded-2xl border border-slate-700/80 bg-slate-900/95 p-6 text-slate-100 shadow-2xl shadow-red-950/40 backdrop-blur-xl animate-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900/95 p-6 text-slate-900 dark:text-slate-100 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-xl p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+          className="absolute right-4 top-4 rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
           aria-label="Close auth dialog"
         >
           <X className="h-5 w-5" />
@@ -87,13 +87,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
         {/* Header */}
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/20 via-red-900/40 to-slate-950 p-2.5 border border-amber-500/30 shadow-lg shadow-amber-900/20">
+          <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-100 to-slate-100 dark:from-amber-500/20 dark:via-red-900/40 dark:to-slate-950 p-2.5 border border-amber-500/30 shadow-sm dark:shadow-lg dark:shadow-amber-900/20">
             <LemonIcon className="h-9 w-9 animate-pulse" />
           </div>
-          <h2 className="text-xl font-black tracking-wider text-slate-100 font-mono">
+          <h2 className="text-xl font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
             {isLoginMode ? 'Sign In to LemonDBD' : 'Create LemonDBD Account'}
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
             {isLoginMode
               ? 'Access your owned characters, perk unlocks, and personal builds.'
               : 'Join the community to track streaks, teachables, and game stats.'}
@@ -102,8 +102,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-4 flex items-center gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-400 animate-in fade-in duration-150">
-            <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
+          <div className="mb-4 flex items-center gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-700 dark:text-red-400 animate-in fade-in duration-150 shadow-sm">
+            <AlertCircle className="h-4 w-4 shrink-0 text-red-500 dark:text-red-400" />
             <span>{error}</span>
           </div>
         )}
@@ -111,7 +111,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-3.5">
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
               Username or Email
             </label>
             <div className="relative">
@@ -122,14 +122,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter username or email"
-                className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
               />
             </div>
           </div>
 
           {!isLoginMode && (
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
                 Email Address
               </label>
               <div className="relative">
@@ -140,14 +140,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="yourname@domain.com"
-                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
               Password
             </label>
             <div className="relative">
@@ -158,7 +158,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
               />
             </div>
           </div>
@@ -185,7 +185,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </form>
 
         {/* Quick Demo Fill Buttons */}
-        <div className="mt-4 pt-4 border-t border-slate-800/80">
+        <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800/80">
           <p className="text-[10px] uppercase font-bold text-slate-500 mb-2 text-center tracking-wider">
             Quick Demo Accounts
           </p>
@@ -193,17 +193,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={() => handleFillDemo('admin')}
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-red-500/20 bg-red-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-red-300 hover:bg-red-900/30 transition-colors"
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-red-500/20 bg-red-50 dark:bg-red-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors shadow-sm cursor-pointer"
             >
-              <ShieldAlert className="h-3 w-3 text-red-400" />
+              <ShieldAlert className="h-3 w-3 text-red-500 dark:text-red-400" />
               <span>Admin (lemon)</span>
             </button>
             <button
               type="button"
               onClick={() => handleFillDemo('player')}
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-amber-300 hover:bg-amber-900/30 transition-colors"
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-50 dark:bg-amber-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors shadow-sm cursor-pointer"
             >
-              <Sparkles className="h-3 w-3 text-amber-400" />
+              <Sparkles className="h-3 w-3 text-amber-600 dark:text-amber-400" />
               <span>User (user)</span>
             </button>
           </div>
@@ -217,12 +217,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               setIsLoginMode(!isLoginMode);
               setError(null);
             }}
-            className="text-xs text-slate-400 hover:text-amber-400 transition-colors cursor-pointer"
+            className="text-xs text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
           >
             {isLoginMode ? (
-              <>Don&apos;t have an account? <span className="font-bold text-amber-400 underline">Register</span></>
+              <>Don&apos;t have an account? <span className="font-bold text-amber-600 dark:text-amber-400 underline">Register</span></>
             ) : (
-              <>Already have an account? <span className="font-bold text-amber-400 underline">Sign In</span></>
+              <>Already have an account? <span className="font-bold text-amber-600 dark:text-amber-400 underline">Sign In</span></>
             )}
           </button>
         </div>

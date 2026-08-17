@@ -10,8 +10,8 @@ interface RoleTabsProps {
 }
 
 const TABS = [
-  { id: 'survivor', label: 'Survivor', icon: Shield, active: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' },
-  { id: 'killer', label: 'Killer', icon: Skull, active: 'bg-rose-500/10 text-rose-400 border-rose-500/30' },
+  { id: 'survivor', label: 'Survivor', icon: Shield, active: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/40 shadow-sm' },
+  { id: 'killer', label: 'Killer', icon: Skull, active: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/40 shadow-sm' },
 ];
 
 export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
@@ -31,7 +31,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
             className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-orange-500 ${
               isActive
                 ? tab.active
-                : 'border-slate-800 text-slate-400 hover:border-slate-700 hover:bg-slate-900/60 hover:text-slate-200'
+                : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:bg-slate-900/80 dark:hover:text-slate-200 shadow-sm'
             }`}
           >
             <Icon className="h-3.5 w-3.5" />

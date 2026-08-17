@@ -16,14 +16,14 @@ export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, o
   const slots = Array.from({ length: size }, (_, i) => selected[i] ?? null);
 
   return (
-    <div className="flex flex-wrap items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900/50 p-3">
+    <div className="flex flex-wrap items-center gap-2.5 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/50 p-3 shadow-sm">
       {slots.map((name, index) => (
         <div
           key={index}
-          className={`flex h-14 min-w-[130px] flex-1 items-center gap-2 rounded-lg px-3 text-xs ${
+          className={`flex h-14 min-w-[130px] flex-1 items-center gap-2 rounded-lg px-3 text-xs transition-colors ${
             name
-              ? 'border border-orange-500/50 bg-orange-500/10 font-semibold text-slate-100'
-              : 'border border-dashed border-slate-700 font-mono text-slate-600'
+              ? 'border border-orange-500/50 bg-orange-500/10 font-semibold text-slate-900 dark:text-slate-100'
+              : 'border border-dashed border-slate-300 dark:border-slate-700 font-mono text-slate-400 dark:text-slate-600'
           }`}
         >
           {name && (
@@ -45,7 +45,7 @@ export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, o
         type="button"
         onClick={onConfirm}
         disabled={selected.length !== size || confirmed}
-        className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 text-xs font-extrabold text-white transition-opacity disabled:opacity-40"
+        className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 text-xs font-extrabold text-white transition-opacity disabled:opacity-40 shadow-sm cursor-pointer"
       >
         {confirmed ? 'Build locked' : 'Confirm build'}
       </button>

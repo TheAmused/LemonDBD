@@ -623,12 +623,17 @@ export function VoiceCommandBanner({
           isHoldingRef.current = false;
           if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
-          if (event.error === 'network') {
-            setVoiceStatus('error');
-            setErrorMessage(
-              'Network error: Speech service could not connect. Click below to use the offline Client-Side Speech Model.'
-            );
-          } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          if (event.error === 'network' || event.error === 'service-not-allowed') {
+            console.log('[VoiceNav] Google Web Speech blocked by browser shields (Brave/Firefox). Switching to local speech model...');
+            setActiveEngine('client-model');
+            initClientSpeechModel(locale);
+            setVoiceStatus('nomatch');
+            setErrorMessage('Switched to Local In-Browser Speech AI (Brave Shield / offline mode active)');
+            if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+            resetTimerRef.current = setTimeout(() => {
+              setVoiceStatus('idle');
+            }, 3000);
+          } else if (event.error === 'not-allowed') {
             setVoiceStatus('error');
             setErrorMessage(
               'Microphone access blocked. Please allow microphone permissions in your browser address bar.'

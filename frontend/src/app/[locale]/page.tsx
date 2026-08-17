@@ -67,18 +67,23 @@ function DashboardContent() {
   useEffect(() => {
     if (paramTab === 'generator') {
       setCategory('generator');
+      document.title = 'LemonDBD - Perk Randomizer';
     } else if (paramCategory && VALID_PERK_CATEGORIES.includes(paramCategory)) {
       setCategory(paramCategory);
+      document.title = `LemonDBD - ${paramCategory} Perks Vault`;
     } else {
       try {
         const savedTab = localStorage.getItem(DASHBOARD_TAB_KEY);
         if (savedTab && VALID_PERK_CATEGORIES.includes(savedTab)) {
           setCategory(savedTab);
+          document.title = savedTab === 'generator' ? 'LemonDBD - Perk Randomizer' : 'LemonDBD - Perks Vault & Database';
         } else {
           setCategory('all');
+          document.title = 'LemonDBD - Perks Vault & Database';
         }
       } catch (e) {
         setCategory('all');
+        document.title = 'LemonDBD - Perks Vault & Database';
       }
     }
   }, [paramCategory, paramTab]);

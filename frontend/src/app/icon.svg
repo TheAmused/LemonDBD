@@ -1,0 +1,28 @@
+<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dbdLemon" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#FACC15" />
+      <stop offset="50%" stopColor="#EAB308" />
+      <stop offset="85%" stopColor="#D97706" />
+      <stop offset="100%" stopColor="#991B1B" />
+    </linearGradient>
+    <linearGradient id="leafG" x1="16" y1="2" x2="24" y2="10" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#22C55E" />
+      <stop offset="100%" stopColor="#15803D" />
+    </linearGradient>
+  </defs>
+  <circle cx="16" cy="17" r="13" fill="#DC2626" fill-opacity="0.25" />
+  <path d="M 5 16 C 5 8, 11 5, 17 5 C 24 5, 27 10, 27 16 C 27 24, 21 27, 15 27 C 8 27, 5 22, 5 16 Z" fill="url(#dbdLemon)" stroke="#78350F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 11 10 L 9 22" stroke="#450A0A" stroke-width="1.8" stroke-linecap="round" />
+  <path d="M 11 10 L 9 22" stroke="#DC2626" stroke-width="0.8" stroke-linecap="round" />
+  <path d="M 14.5 9 L 12.5 23" stroke="#450A0A" stroke-width="1.8" stroke-linecap="round" />
+  <path d="M 14.5 9 L 12.5 23" stroke="#DC2626" stroke-width="0.8" stroke-linecap="round" />
+  <path d="M 18 9 L 16 23" stroke="#450A0A" stroke-width="1.8" stroke-linecap="round" />
+  <path d="M 18 9 L 16 23" stroke="#DC2626" stroke-width="0.8" stroke-linecap="round" />
+  <path d="M 21.5 10 L 19.5 22" stroke="#450A0A" stroke-width="1.8" stroke-linecap="round" />
+  <path d="M 21.5 10 L 19.5 22" stroke="#DC2626" stroke-width="0.8" stroke-linecap="round" />
+  <path d="M 7.5 18.5 L 23 13.5" stroke="#18181B" stroke-width="1.6" stroke-linecap="round" />
+  <path d="M 7.5 18.5 L 23 13.5" stroke="#EF4444" stroke-width="0.8" stroke-linecap="round" />
+  <path d="M 16 5 C 16 2, 17 1.5, 18 1" stroke="#522504" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M 17 3 C 21 1.5, 24 3, 24 6 C 20 6.5, 18 5, 17 3 Z" fill="url(#leafG)" stroke="#14532D" stroke-width="0.8" />
+</svg>

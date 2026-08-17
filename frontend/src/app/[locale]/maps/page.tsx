@@ -53,7 +53,10 @@ function MapsPageInner() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    getDictionary(locale).then(setDict);
+    document.title = 'LemonDBD - Map Explorer';
+    getDictionary(locale)
+      .then(setDict)
+      .catch((err) => console.error('Failed to load maps dictionary:', err));
   }, [locale]);
 
   useEffect(() => {

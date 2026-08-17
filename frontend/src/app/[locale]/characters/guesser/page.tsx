@@ -205,6 +205,7 @@ export default function GuesserPage() {
   }, [backendBase]);
 
   useEffect(() => {
+    document.title = 'LemonDBD - Minigames & Guesser';
     loadStatsAndData();
   }, [loadStatsAndData]);
 

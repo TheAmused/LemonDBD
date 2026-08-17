@@ -25,6 +25,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
+    document.title = 'LemonDBD - Streak Tracker';
     getDictionary(locale)
       .then(setDict)
       .catch((err) => console.error('Failed to load streaks dictionary:', err));

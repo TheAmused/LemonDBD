@@ -1,7 +1,6 @@
 {
   "app": {
-    "title": "DEAD BY DAYLIGHT",
-    "subtitle": "Baza Umiejętności i Łowca Perkowa",
+    "title": "LemonDBD",
     "syncWiki": "Synchronizuj z Wiki",
     "syncing": "Pobieranie..."
   },

@@ -33,9 +33,17 @@ import {
   ChevronDown,
   Folder,
   Gamepad2,
+  User,
+  LogIn,
+  LogOut,
+  Crown,
+  ShieldCheck,
 } from 'lucide-react';
 import { ScraperConfigModal } from './ScraperConfigModal';
 import { useSidebarState } from '@/hooks/useSidebarState';
+import { LemonIcon } from './LemonIcon';
+import { useAuth } from '@/context/AuthContext';
+import { AuthModal } from './AuthModal';
 
 interface SidebarProps {
   currentLocale: string;
@@ -65,8 +73,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const { isCollapsed, toggleSidebar } = useSidebarState();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string>('');
   const [showSuccessToast, setShowSuccessToast] = useState(false);
@@ -359,23 +369,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <Link
             href={'/' + currentLocale}
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl"
+            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-xl"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-red-900 text-white shadow-lg shadow-red-900/30 group-hover:scale-105 transition-transform">
-              <Flame className="h-5 w-5 text-red-100 animate-pulse" />
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 via-red-950/40 to-slate-900 border border-amber-500/30 text-white shadow-lg shadow-amber-950/30 group-hover:scale-105 transition-transform p-1.5">
+              <LemonIcon className="h-7 w-7" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-sm tracking-wider text-slate-900 dark:text-slate-100 font-mono">
-                  {dict.app.title}
-                </span>
-                <span className="rounded bg-red-600/10 px-1.5 py-0.5 text-[10px] font-bold text-red-600 dark:text-red-400 border border-red-500/20">
-                  PRO
-                </span>
-              </div>
-              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                {dict.app.subtitle}
-              </p>
+              <span className="font-black text-base tracking-wider text-slate-900 dark:text-slate-100 font-mono">
+                LemonDBD
+              </span>
             </div>
           </Link>
         </div>
@@ -484,6 +486,67 @@ export const Sidebar: React.FC<SidebarProps> = ({
             )}
           </div>
         </nav>
+
+        {/* User Account / Login Button Section */}
+        <div className="mt-4 pt-3 border-t border-slate-200/80 dark:border-slate-800/80">
+          {!isAuthenticated || !user ? (
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-red-600/10 border border-amber-500/30 hover:border-amber-500/60 p-2.5 text-xs font-bold text-amber-500 dark:text-amber-400 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm group"
+            >
+              <LogIn className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              <span>Sign In / Register</span>
+            </button>
+          ) : (
+            <div className="rounded-xl border border-slate-200 bg-slate-100/60 dark:border-slate-800/80 dark:bg-slate-900/60 p-2.5 space-y-2">
+              <div className="flex items-center justify-between">
+                <Link
+                  href={`/${currentLocale}/user`}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity"
+                >
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400">
+                    <LemonIcon className="h-4 w-4" />
+                  </div>
+                  <div className="truncate">
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                      {user.username}
+                    </p>
+                    <span
+                      className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${
+                        user.role === 'admin'
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                      }`}
+                    >
+                      {user.role}
+                    </span>
+                  </div>
+                </Link>
+
+                <div className="flex items-center gap-1">
+                  {isAdmin && (
+                    <Link
+                      href={`/${currentLocale}/admin`}
+                      title="Admin Control Center"
+                      onClick={() => setMobileOpen(false)}
+                      className="p-1 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors"
+                    >
+                      <Crown className="h-4 w-4" />
+                    </Link>
+                  )}
+                  <button
+                    onClick={logout}
+                    title="Sign Out"
+                    className="p-1 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Sidebar Footer Controls */}
@@ -566,11 +629,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* ── MOBILE HEADER & DRAWER ── */}
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 lg:hidden">
         <Link href={'/' + currentLocale} className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white">
-            <Flame className="h-5 w-5" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 border border-amber-500/30 text-white p-1">
+            <LemonIcon className="h-6 w-6" />
           </div>
           <span className="font-extrabold text-sm tracking-wider font-mono text-slate-900 dark:text-slate-100">
-            {dict.app.title}
+            LemonDBD
           </span>
         </Link>
 
@@ -604,6 +667,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       <ScraperConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} />
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </>
   );
 };

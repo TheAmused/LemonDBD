@@ -27,6 +27,7 @@ export default function ItemsPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
+    document.title = 'LemonDBD - Items & Add-ons';
     getDictionary(locale).then(setDict);
   }, [locale]);
 

@@ -15,7 +15,7 @@ class OwnershipService:
     ) -> List[Dict[str, Any]]:
         """
         Get list of all characters with the user's ownership boolean status.
-        If no ownership record exists for a character, is_owned defaults to False.
+        If no ownership record exists for a character, is_owned defaults to True.
         """
         # Query characters
         stmt = select(Character)
@@ -34,7 +34,7 @@ class OwnershipService:
 
         results = []
         for c in characters:
-            is_owned = ownership_map.get(c.id, False)
+            is_owned = ownership_map.get(c.id, True)
             results.append({
                 "character_id": c.id,
                 "name": c.name,
@@ -56,6 +56,8 @@ class OwnershipService:
         Set ownership for a single character.
         If is_owned is True, automatically mark all unique teachable perks
         associated with this character as unlocked (is_unlocked = True).
+        If is_owned is False, automatically mark all unique teachable perks
+        associated with this character as locked (is_unlocked = False).
         """
         char = db.session.get(Character, character_id)
         if not char:
@@ -78,42 +80,52 @@ class OwnershipService:
             )
             db.session.add(record)
 
-        # Automatic teachable perk unlocking
-        auto_unlocked_perk_ids = []
-        if is_owned:
-            teachable_perks = db.session.scalars(
-                select(Perk).where(Perk.character_id == character_id)
-            ).all()
-
-            for perk in teachable_perks:
-                perk_record = db.session.scalars(
-                    select(UserPerkOwnership).where(
-                        UserPerkOwnership.user_id == user_id,
-                        UserPerkOwnership.perk_id == perk.id
-                    )
-                ).first()
-
-                if perk_record:
-                    perk_record.is_unlocked = True
-                else:
-                    perk_record = UserPerkOwnership(
-                        user_id=user_id,
-                        perk_id=perk.id,
-                        is_unlocked=True
-                    )
-                    db.session.add(perk_record)
-                auto_unlocked_perk_ids.append(perk.id)
+        # Automatic teachable perk unlock/lock cascade
+        auto_updated_perk_ids = self._cascade_perk_lock_state(user_id, character_id, is_unlocked=is_owned)
 
         db.session.commit()
 
-        return {
+        result = {
             "user_id": user_id,
             "character_id": character_id,
             "character_name": char.name,
             "is_owned": is_owned,
-            "auto_unlocked_teachable_perks_count": len(auto_unlocked_perk_ids),
-            "auto_unlocked_perk_ids": auto_unlocked_perk_ids,
         }
+        if is_owned:
+            result["auto_unlocked_teachable_perks_count"] = len(auto_updated_perk_ids)
+            result["auto_unlocked_perk_ids"] = auto_updated_perk_ids
+        else:
+            result["auto_locked_teachable_perks_count"] = len(auto_updated_perk_ids)
+            result["auto_locked_perk_ids"] = auto_updated_perk_ids
+        return result
+
+    def _cascade_perk_lock_state(self, user_id: int, character_id: int, is_unlocked: bool) -> List[int]:
+        """Set is_unlocked for every teachable perk of a character, creating records as needed."""
+        teachable_perks = db.session.scalars(
+            select(Perk).where(Perk.character_id == character_id)
+        ).all()
+
+        updated_perk_ids = []
+        for perk in teachable_perks:
+            perk_record = db.session.scalars(
+                select(UserPerkOwnership).where(
+                    UserPerkOwnership.user_id == user_id,
+                    UserPerkOwnership.perk_id == perk.id
+                )
+            ).first()
+
+            if perk_record:
+                perk_record.is_unlocked = is_unlocked
+            else:
+                perk_record = UserPerkOwnership(
+                    user_id=user_id,
+                    perk_id=perk.id,
+                    is_unlocked=is_unlocked
+                )
+                db.session.add(perk_record)
+            updated_perk_ids.append(perk.id)
+
+        return updated_perk_ids
 
     def bulk_set_character_ownership(
         self,
@@ -126,6 +138,7 @@ class OwnershipService:
         """
         updated_count = 0
         all_auto_unlocked_perks = []
+        all_auto_locked_perks = []
 
         for item in updates:
             char_id = item.get("character_id")
@@ -154,29 +167,11 @@ class OwnershipService:
                 )
                 db.session.add(record)
 
+            updated_perk_ids = self._cascade_perk_lock_state(user_id, char_id, is_unlocked=is_owned)
             if is_owned:
-                teachable_perks = db.session.scalars(
-                    select(Perk).where(Perk.character_id == char_id)
-                ).all()
-
-                for perk in teachable_perks:
-                    perk_record = db.session.scalars(
-                        select(UserPerkOwnership).where(
-                            UserPerkOwnership.user_id == user_id,
-                            UserPerkOwnership.perk_id == perk.id
-                        )
-                    ).first()
-
-                    if perk_record:
-                        perk_record.is_unlocked = True
-                    else:
-                        perk_record = UserPerkOwnership(
-                            user_id=user_id,
-                            perk_id=perk.id,
-                            is_unlocked=True
-                        )
-                        db.session.add(perk_record)
-                    all_auto_unlocked_perks.append(perk.id)
+                all_auto_unlocked_perks.extend(updated_perk_ids)
+            else:
+                all_auto_locked_perks.extend(updated_perk_ids)
 
             updated_count += 1
 
@@ -186,6 +181,7 @@ class OwnershipService:
             "user_id": user_id,
             "characters_updated_count": updated_count,
             "auto_unlocked_perks_count": len(all_auto_unlocked_perks),
+            "auto_locked_perks_count": len(all_auto_locked_perks),
         }
 
     def get_user_perks(
@@ -195,7 +191,7 @@ class OwnershipService:
     ) -> List[Dict[str, Any]]:
         """
         Get list of all perks with the user's unlock boolean status.
-        If no ownership record exists for a perk, is_unlocked defaults to False.
+        If no ownership record exists for a perk, is_unlocked defaults to True.
         """
         stmt = select(Perk)
         if category and category.lower() != "all":
@@ -211,7 +207,7 @@ class OwnershipService:
 
         results = []
         for p in perks:
-            is_unlocked = perk_map.get(p.id, False)
+            is_unlocked = perk_map.get(p.id, True)
             results.append({
                 "perk_id": p.id,
                 "name": p.name,
@@ -220,6 +216,7 @@ class OwnershipService:
                 "character_id": p.character_id,
                 "character_name": p.character.name if p.character else None,
                 "icon_url": p.icon_url,
+                "icon_local_path": p.icon_local_path,
                 "is_unlocked": is_unlocked,
             })
         return results
@@ -308,36 +305,44 @@ class OwnershipService:
         }
 
     def get_user_ownership_summary(self, user_id: int) -> Dict[str, Any]:
-        """Get high-level summary metrics of owned characters and unlocked perks."""
+        """
+        Get high-level summary metrics of owned characters and unlocked perks.
+        Characters/perks with no explicit ownership record default to
+        owned/unlocked, so "owned"/"unlocked" counts are total minus
+        explicit False records rather than a count of explicit True records.
+        """
         total_survivors = db.session.scalar(
             select(func.count(Character.id)).where(Character.role == "Survivor")
         ) or 0
-        owned_survivors = db.session.scalar(
+        locked_survivors = db.session.scalar(
             select(func.count(UserCharacterOwnership.id)).join(Character, UserCharacterOwnership.character_id == Character.id).where(
                 UserCharacterOwnership.user_id == user_id,
-                UserCharacterOwnership.is_owned.is_(True),
+                UserCharacterOwnership.is_owned.is_(False),
                 Character.role == "Survivor"
             )
         ) or 0
+        owned_survivors = total_survivors - locked_survivors
 
         total_killers = db.session.scalar(
             select(func.count(Character.id)).where(Character.role == "Killer")
         ) or 0
-        owned_killers = db.session.scalar(
+        locked_killers = db.session.scalar(
             select(func.count(UserCharacterOwnership.id)).join(Character, UserCharacterOwnership.character_id == Character.id).where(
                 UserCharacterOwnership.user_id == user_id,
-                UserCharacterOwnership.is_owned.is_(True),
+                UserCharacterOwnership.is_owned.is_(False),
                 Character.role == "Killer"
             )
         ) or 0
+        owned_killers = total_killers - locked_killers
 
         total_perks = db.session.scalar(select(func.count(Perk.id))) or 0
-        unlocked_perks = db.session.scalar(
+        locked_perks = db.session.scalar(
             select(func.count(UserPerkOwnership.id)).where(
                 UserPerkOwnership.user_id == user_id,
-                UserPerkOwnership.is_unlocked.is_(True)
+                UserPerkOwnership.is_unlocked.is_(False)
             )
         ) or 0
+        unlocked_perks = total_perks - locked_perks
 
         return {
             "user_id": user_id,

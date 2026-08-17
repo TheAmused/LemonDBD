@@ -1,8 +1,4 @@
-import {
-  ExcludedPerksResponse,
-  PageStreakRun,
-  RosterEntry,
-} from '../types/pageStreak';
+import { PageStreakRun, PoolSummary, RosterEntry } from '../types/pageStreak';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 const API_BASE = `${BASE_URL}/api/v1/page-streak`;
@@ -15,55 +11,52 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json();
 }
 
-function postJson<T>(path: string, body: unknown): Promise<T> {
+function authHeaders(token: string): HeadersInit {
+  return { Authorization: `Bearer ${token}` };
+}
+
+function getJson<T>(token: string, path: string): Promise<T> {
+  return fetch(`${API_BASE}${path}`, { headers: authHeaders(token) }).then(handleResponse<T>);
+}
+
+function postJson<T>(token: string, path: string, body: unknown): Promise<T> {
   return fetch(`${API_BASE}${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...authHeaders(token) },
     body: JSON.stringify(body),
   }).then(handleResponse<T>);
 }
 
-export async function fetchRoster(): Promise<RosterEntry[]> {
-  const data = await handleResponse<{ count: number; data: RosterEntry[] }>(
-    await fetch(`${API_BASE}/roster`)
-  );
+export async function fetchRoster(token: string): Promise<RosterEntry[]> {
+  const data = await getJson<{ count: number; data: RosterEntry[] }>(token, '/roster');
   return data.data;
 }
 
-export async function fetchExcludedPerks(): Promise<ExcludedPerksResponse> {
-  return handleResponse<ExcludedPerksResponse>(await fetch(`${API_BASE}/excluded-perks`));
+export async function fetchPoolSummary(token: string): Promise<PoolSummary> {
+  return getJson<PoolSummary>(token, '/pool');
 }
 
-export async function saveExcludedPerks(
-  excluded: string[]
-): Promise<{ excluded: string[]; pool_size: number; page_count: number }> {
-  const response = await fetch(`${API_BASE}/excluded-perks`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ excluded }),
-  });
-  return handleResponse(response);
-}
-
-export async function fetchRun(killer: string): Promise<PageStreakRun | null> {
-  const data = await handleResponse<{ run: PageStreakRun | null }>(
-    await fetch(`${API_BASE}/run?killer=${encodeURIComponent(killer)}`)
+export async function fetchRun(token: string, killer: string): Promise<PageStreakRun | null> {
+  const data = await getJson<{ run: PageStreakRun | null }>(
+    token,
+    `/run?killer=${encodeURIComponent(killer)}`
   );
   return data.run;
 }
 
-export async function startRun(killer: string): Promise<PageStreakRun> {
-  const data = await postJson<{ run: PageStreakRun }>('/run/start', { killer });
+export async function startRun(token: string, killer: string): Promise<PageStreakRun> {
+  const data = await postJson<{ run: PageStreakRun }>(token, '/run/start', { killer });
   return data.run;
 }
 
 export async function submitResult(
+  token: string,
   killer: string,
   page: number,
   perks: string[],
   result: 'win' | 'loss'
 ): Promise<PageStreakRun> {
-  const data = await postJson<{ run: PageStreakRun }>('/run/result', {
+  const data = await postJson<{ run: PageStreakRun }>(token, '/run/result', {
     killer,
     page,
     perks,
@@ -72,7 +65,7 @@ export async function submitResult(
   return data.run;
 }
 
-export async function resetRun(killer: string): Promise<PageStreakRun> {
-  const data = await postJson<{ run: PageStreakRun }>('/run/reset', { killer });
+export async function resetRun(token: string, killer: string): Promise<PageStreakRun> {
+  const data = await postJson<{ run: PageStreakRun }>(token, '/run/reset', { killer });
   return data.run;
 }

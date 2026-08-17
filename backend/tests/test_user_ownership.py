@@ -72,32 +72,88 @@ class TestUserAndOwnership(unittest.TestCase):
             self.assertIsNotNone(verified)
             self.assertEqual(verified.id, user.id)
 
-    def test_character_ownership_auto_unlocks_teachable_perks(self):
+    def test_default_state_is_all_owned_and_unlocked(self):
         """
         CRITICAL REQUIREMENT:
-        When a user marks a character as owned (is_owned = True),
-        all teachable perks for that character must automatically be set to is_unlocked = True!
+        A fresh user with no explicit ownership records must see every
+        character as owned and every perk as unlocked by default.
+        """
+        with self.app.app_context():
+            user, _ = self.user_service.register_user("freshuser", "fresh@test.com", "password123")
+
+            characters = self.ownership_service.get_user_characters(user.id)
+            self.assertTrue(len(characters) > 0)
+            self.assertTrue(all(c["is_owned"] for c in characters))
+
+            perks = self.ownership_service.get_user_perks(user.id)
+            self.assertTrue(len(perks) > 0)
+            self.assertTrue(all(p["is_unlocked"] for p in perks))
+
+    def test_locking_character_cascades_lock_to_its_perks(self):
+        """
+        CRITICAL REQUIREMENT:
+        When a user marks a character as NOT owned (is_owned = False),
+        all teachable perks for that character must automatically be
+        locked (is_unlocked = False), mirroring the auto-unlock on True.
         """
         with self.app.app_context():
             user, _ = self.user_service.register_user("trappermain", "trapper@test.com", "password123")
             trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
             self.assertIsNotNone(trapper)
 
-            # Trapper's teachable perks before ownership
             trapper_perks = db.session.scalars(select(Perk).where(Perk.character_id == trapper.id)).all()
             self.assertEqual(len(trapper_perks), 3)
+            trapper_perk_ids = {p.id for p in trapper_perks}
 
-            # Trapper not owned yet -> perks should not be unlocked
-            user_perks_before = self.ownership_service.get_user_perks(user.id)
-            unlocked_before = [p for p in user_perks_before if p["is_unlocked"]]
-            self.assertEqual(len(unlocked_before), 0)
+            # Default: Trapper owned, perks unlocked
+            res = self.ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+            self.assertFalse(res["is_owned"])
+            self.assertEqual(res["auto_locked_teachable_perks_count"], 3)
 
-            # User acquires The Trapper
+            user_perks_after = self.ownership_service.get_user_perks(user.id)
+            locked_trapper_perks = [
+                p for p in user_perks_after if p["perk_id"] in trapper_perk_ids and not p["is_unlocked"]
+            ]
+            self.assertEqual(len(locked_trapper_perks), 3)
+
+    def test_manually_unlock_single_perk_of_locked_character(self):
+        """
+        A user can own a single perk of an otherwise-locked character:
+        lock the character (cascades to lock all its perks), then
+        manually re-unlock one specific perk.
+        """
+        with self.app.app_context():
+            user, _ = self.user_service.register_user("partialuser", "partial@test.com", "password123")
+            trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            trapper_perks = db.session.scalars(select(Perk).where(Perk.character_id == trapper.id)).all()
+
+            self.ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+            self.ownership_service.set_perk_ownership(user.id, trapper_perks[0].id, is_unlocked=True)
+
+            user_perks = self.ownership_service.get_user_perks(user.id)
+            trapper_perk_status = {p["perk_id"]: p["is_unlocked"] for p in user_perks if p["character_id"] == trapper.id}
+            self.assertTrue(trapper_perk_status[trapper_perks[0].id])
+            self.assertFalse(trapper_perk_status[trapper_perks[1].id])
+            self.assertFalse(trapper_perk_status[trapper_perks[2].id])
+
+    def test_character_ownership_auto_unlocks_teachable_perks(self):
+        """
+        When a user marks a character as owned (is_owned = True) after it
+        was locked, all teachable perks for that character must
+        automatically be set to is_unlocked = True.
+        """
+        with self.app.app_context():
+            user, _ = self.user_service.register_user("trappermain2", "trapper2@test.com", "password123")
+            trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            trapper_perks = db.session.scalars(select(Perk).where(Perk.character_id == trapper.id)).all()
+
+            # Lock first, so re-owning is a meaningful transition
+            self.ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+
             res = self.ownership_service.set_character_ownership(user.id, trapper.id, is_owned=True)
             self.assertTrue(res["is_owned"])
             self.assertEqual(res["auto_unlocked_teachable_perks_count"], 3)
 
-            # Verify that all 3 Trapper teachables are now automatically marked as unlocked!
             user_perks_after = self.ownership_service.get_user_perks(user.id)
             trapper_perk_ids = {p.id for p in trapper_perks}
             unlocked_trapper_perks = [p for p in user_perks_after if p["perk_id"] in trapper_perk_ids and p["is_unlocked"]]
@@ -106,20 +162,38 @@ class TestUserAndOwnership(unittest.TestCase):
     def test_bulk_character_and_perk_ownership(self):
         with self.app.app_context():
             user, _ = self.user_service.register_user("bulkuser", "bulk@test.com", "password123")
+            trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
             dwight = db.session.scalars(select(Character).where(Character.name == "Dwight Fairfield")).first()
 
-            # Bulk set character ownership
+            # Lock Trapper first, then bulk re-own via Dwight + Trapper
+            self.ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+
             bulk_res = self.ownership_service.bulk_set_character_ownership(
                 user.id,
-                [{"character_id": dwight.id, "is_owned": True}]
+                [{"character_id": trapper.id, "is_owned": True}, {"character_id": dwight.id, "is_owned": True}]
             )
-            self.assertEqual(bulk_res["characters_updated_count"], 1)
-            self.assertEqual(bulk_res["auto_unlocked_perks_count"], 3)
+            self.assertEqual(bulk_res["characters_updated_count"], 2)
+            self.assertEqual(bulk_res["auto_unlocked_perks_count"], 6)
 
-            # Verify summary
+            # Verify summary: everything owned/unlocked again
             summary = self.ownership_service.get_user_ownership_summary(user.id)
-            self.assertGreaterEqual(summary["survivors"]["owned"], 1)
-            self.assertGreaterEqual(summary["perks"]["unlocked"], 3)
+            self.assertGreaterEqual(summary["survivors"]["owned"], summary["survivors"]["total"])
+            self.assertGreaterEqual(summary["perks"]["unlocked"], 6)
+
+    def test_ownership_summary_reflects_default_and_explicit_locks(self):
+        with self.app.app_context():
+            user, _ = self.user_service.register_user("summaryuser", "summary@test.com", "password123")
+            trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+
+            summary_default = self.ownership_service.get_user_ownership_summary(user.id)
+            self.assertEqual(summary_default["killers"]["owned"], summary_default["killers"]["total"])
+            self.assertEqual(summary_default["perks"]["unlocked"], summary_default["perks"]["total"])
+
+            self.ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+
+            summary_after_lock = self.ownership_service.get_user_ownership_summary(user.id)
+            self.assertEqual(summary_after_lock["killers"]["owned"], summary_default["killers"]["total"] - 1)
+            self.assertEqual(summary_after_lock["perks"]["unlocked"], summary_default["perks"]["total"] - 3)
 
     def test_auth_and_user_routes(self):
         # Register via API
@@ -140,15 +214,25 @@ class TestUserAndOwnership(unittest.TestCase):
         self.assertEqual(me_res.status_code, 200)
         self.assertEqual(me_res.get_json()["user"]["username"], "apicheck")
 
-        # Check get characters
+        # Check get characters -> default all owned
         chars_res = self.client.get(f"/api/v1/users/{user_id}/characters", headers=headers)
         self.assertEqual(chars_res.status_code, 200)
+        chars_data = chars_res.get_json()["data"]
+        self.assertTrue(all(c["is_owned"] for c in chars_data))
 
-        # Set character ownership via API
+        # Lock character via API -> cascades to lock its perks
         with self.app.app_context():
             trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
             trapper_id = trapper.id
 
+        lock_res = self.client.post(f"/api/v1/users/{user_id}/characters", json={
+            "character_id": trapper_id,
+            "is_owned": False
+        }, headers=headers)
+        self.assertEqual(lock_res.status_code, 200)
+        self.assertEqual(lock_res.get_json()["data"]["auto_locked_teachable_perks_count"], 3)
+
+        # Re-own via API -> auto unlocks its teachable perks
         own_res = self.client.post(f"/api/v1/users/{user_id}/characters", json={
             "character_id": trapper_id,
             "is_owned": True
@@ -156,12 +240,11 @@ class TestUserAndOwnership(unittest.TestCase):
         self.assertEqual(own_res.status_code, 200)
         self.assertEqual(own_res.get_json()["data"]["auto_unlocked_teachable_perks_count"], 3)
 
-        # Check get perks via API
+        # Check get perks via API -> default all unlocked
         perks_res = self.client.get(f"/api/v1/users/{user_id}/perks", headers=headers)
         self.assertEqual(perks_res.status_code, 200)
         perks_data = perks_res.get_json()["data"]
-        unlocked_count = sum(1 for p in perks_data if p["is_unlocked"])
-        self.assertEqual(unlocked_count, 3)
+        self.assertTrue(all(p["is_unlocked"] for p in perks_data))
 
     def test_admin_routes(self):
         with self.app.app_context():

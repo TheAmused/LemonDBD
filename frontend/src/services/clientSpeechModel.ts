@@ -348,9 +348,9 @@ async function loadTransformersStandalone(): Promise<any> {
   try {
     const importDynamic = new Function('url', 'return import(url)');
     const mod = await importDynamic('/transformers/transformers.min.js');
-    if (mod && (mod.pipeline || mod.default?.pipeline || mod.AutoModelForSpeechSeq2Seq || mod.default?.AutoModelForSpeechSeq2Seq)) {
+    if (mod && (mod.AutoModelForSpeechSeq2Seq || mod.default?.AutoModelForSpeechSeq2Seq || mod.pipeline || mod.default?.pipeline)) {
       console.log('[ClientSpeechModel] Loaded local ESM Transformers.js successfully!');
-      return mod.pipeline ? mod : mod.default;
+      return mod.AutoModelForSpeechSeq2Seq ? mod : mod.default;
     }
   } catch (err) {
     console.warn('[ClientSpeechModel] Local ESM import error, trying CDN fallback...', err);
@@ -360,9 +360,9 @@ async function loadTransformersStandalone(): Promise<any> {
   try {
     const importDynamic = new Function('url', 'return import(url)');
     const cdnMod = await importDynamic('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js');
-    if (cdnMod && (cdnMod.pipeline || cdnMod.default?.pipeline || cdnMod.AutoModelForSpeechSeq2Seq || cdnMod.default?.AutoModelForSpeechSeq2Seq)) {
+    if (cdnMod && (cdnMod.AutoModelForSpeechSeq2Seq || cdnMod.default?.AutoModelForSpeechSeq2Seq || cdnMod.pipeline || cdnMod.default?.pipeline)) {
       console.log('[ClientSpeechModel] Loaded CDN ESM Transformers.js successfully!');
-      return cdnMod.pipeline ? cdnMod : cdnMod.default;
+      return cdnMod.AutoModelForSpeechSeq2Seq ? cdnMod : cdnMod.default;
     }
   } catch (cdnErr) {
     console.warn('[ClientSpeechModel] CDN ESM import error:', cdnErr);
@@ -391,10 +391,17 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       throw new Error('Could not load standalone Transformers.js bundle.');
     }
 
-    const { env, pipeline } = transformers;
+    const {
+      env,
+      AutoTokenizer,
+      AutoProcessor,
+      AutoModelForSpeechSeq2Seq,
+      AutomaticSpeechRecognitionPipeline,
+    } = transformers;
 
     if (env) {
-      env.allowLocalModels = false;
+      env.allowLocalModels = true;
+      env.localModelPath = '/models/';
       env.useBrowserCache = true;
       env.allowRemoteModels = true;
       if (env.backends?.onnx?.wasm) {
@@ -406,7 +413,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     const modelName =
       locale === 'en' ? 'Xenova/whisper-tiny.en' : 'Xenova/whisper-tiny';
 
-    console.log(`[ClientSpeechModel] Initializing Whisper pipeline (${modelName})...`);
+    console.log(`[ClientSpeechModel] Initializing Whisper model (${modelName})...`);
 
     const progress_callback = (progressData: any) => {
       if (progressData && progressData.status === 'progress' && progressData.total) {
@@ -421,9 +428,20 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       }
     };
 
-    cachedPipeline = await pipeline('automatic-speech-recognition', modelName, {
-      quantized: true,
-      progress_callback,
+    const [tokenizer, processor, model] = await Promise.all([
+      AutoTokenizer.from_pretrained(modelName, { progress_callback }),
+      AutoProcessor.from_pretrained(modelName, { progress_callback }),
+      AutoModelForSpeechSeq2Seq.from_pretrained(modelName, {
+        quantized: true,
+        progress_callback,
+      }),
+    ]);
+
+    cachedPipeline = new AutomaticSpeechRecognitionPipeline({
+      task: 'automatic-speech-recognition',
+      tokenizer,
+      processor,
+      model,
     });
 
     broadcastProgress({ status: 'ready', progress: 100 });

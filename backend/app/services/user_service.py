@@ -56,8 +56,8 @@ class UserService:
             return None, "Username must be at least 3 characters long."
         if not clean_email or "@" not in clean_email:
             return None, "A valid email address is required."
-        if not password or len(password) < 6:
-            return None, "Password must be at least 6 characters long."
+        if not password or len(password) < 3:
+            return None, "Password must be at least 3 characters long."
 
         # Check existing
         existing_username = db.session.scalars(select(User).where(User.username.ilike(clean_username))).first()
@@ -245,30 +245,9 @@ class UserService:
         }
 
     def seed_default_admin_if_empty(self) -> None:
-        """Seed a baseline admin and standard demo user if users table is empty."""
+        """Seed default admin (lemon/lemon) and test user (user/user)."""
         try:
-            count = db.session.scalar(select(func.count(User.id))) or 0
-            if count == 0:
-                logger.info("Seeding default admin user (admin / admin123)...")
-                admin = User(
-                    username="admin",
-                    email="admin@lemondbd.com",
-                    password_hash=generate_password_hash("admin123"),
-                    role="admin",
-                    avatar_url="avatar_admin",
-                    is_active=True,
-                )
-                demo = User(
-                    username="player_one",
-                    email="player@lemondbd.com",
-                    password_hash=generate_password_hash("player123"),
-                    role="user",
-                    avatar_url="avatar_survivor",
-                    is_active=True,
-                )
-                db.session.add(admin)
-                db.session.add(demo)
-                db.session.commit()
-                logger.info("Default admin and demo users seeded.")
+            from app.seeds.user_seeder import seed_default_users
+            seed_default_users()
         except Exception as e:
-            logger.debug(f"Error seeding default admin user: {e}")
+            logger.debug(f"Error executing user seeder: {e}")

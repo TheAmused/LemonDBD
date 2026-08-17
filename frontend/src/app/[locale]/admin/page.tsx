@@ -24,7 +24,9 @@ import {
   ArrowUpDown,
   Lock,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  UserPlus,
+  X,
 } from 'lucide-react';
 
 interface AdminStats {
@@ -61,6 +63,14 @@ export default function AdminPanelPage() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [loadingData, setLoadingData] = useState(true);
   const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Create User Modal State
+  const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
+  const [createUsername, setCreateUsername] = useState('');
+  const [createEmail, setCreateEmail] = useState('');
+  const [createPassword, setCreatePassword] = useState('');
+  const [createRole, setCreateRole] = useState<'user' | 'admin'>('user');
+  const [isCreating, setIsCreating] = useState(false);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -191,6 +201,46 @@ export default function AdminPanelPage() {
       }
     } catch (err: any) {
       setActionMessage({ type: 'error', text: err?.message || 'Network error.' });
+    }
+  };
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem('lemondbd_token');
+    if (!token) return;
+
+    setIsCreating(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          username: createUsername,
+          email: createEmail,
+          password: createPassword,
+          role: createRole,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setActionMessage({ type: 'success', text: `User "${createUsername}" created successfully!` });
+        setIsCreateUserOpen(false);
+        setCreateUsername('');
+        setCreateEmail('');
+        setCreatePassword('');
+        setCreateRole('user');
+        fetchAdminData();
+      } else {
+        setActionMessage({ type: 'error', text: data.error || 'Failed to create user.' });
+      }
+    } catch (err: any) {
+      setActionMessage({ type: 'error', text: err?.message || 'Network error.' });
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -373,6 +423,15 @@ export default function AdminPanelPage() {
                   <option value="admin">Admins</option>
                   <option value="user">Standard Users</option>
                 </select>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCreateUserOpen(true)}
+                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 px-3 py-1.5 text-xs font-bold text-slate-950 shadow-md shadow-amber-950/30 transition-all cursor-pointer"
+                >
+                  <UserPlus className="h-3.5 w-3.5" />
+                  <span>Create User</span>
+                </button>
               </div>
             </div>
 
@@ -506,6 +565,118 @@ export default function AdminPanelPage() {
           </div>
         </div>
       </main>
+
+      {/* Create User Modal */}
+      {isCreateUserOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+          <div
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
+            onClick={() => !isCreating && setIsCreateUserOpen(false)}
+          />
+
+          <div className="relative w-full max-w-md rounded-2xl border border-slate-700/80 bg-slate-900/95 p-6 text-slate-100 shadow-2xl shadow-red-950/40 backdrop-blur-xl animate-in zoom-in-95 duration-200">
+            <button
+              onClick={() => !isCreating && setIsCreateUserOpen(false)}
+              className="absolute right-4 top-4 rounded-xl p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400">
+                <UserPlus className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-black tracking-wider text-slate-100 font-mono">Create New User</h3>
+                <p className="text-xs text-slate-400">Add a new account directly to the database</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleCreateUser} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={createUsername}
+                  onChange={(e) => setCreateUsername(e.target.value)}
+                  placeholder="e.g. killer_master"
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={createEmail}
+                  onChange={(e) => setCreateEmail(e.target.value)}
+                  placeholder="e.g. master@lemondbd.com"
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={createPassword}
+                  onChange={(e) => setCreatePassword(e.target.value)}
+                  placeholder="Minimum 3 characters"
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Role Privilege
+                </label>
+                <select
+                  value={createRole}
+                  onChange={(e) => setCreateRole(e.target.value as 'user' | 'admin')}
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 focus:border-amber-500 focus:outline-none"
+                >
+                  <option value="user">Standard User (Player)</option>
+                  <option value="admin">Administrator (Full Control)</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateUserOpen(false)}
+                  disabled={isCreating}
+                  className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-700 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isCreating}
+                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 px-4 py-2 text-xs font-black uppercase tracking-wider text-slate-950 shadow-lg shadow-amber-950/30 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  {isCreating ? (
+                    <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-slate-950 border-t-transparent" />
+                  ) : (
+                    <>
+                      <UserPlus className="h-3.5 w-3.5" />
+                      <span>Create Account</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

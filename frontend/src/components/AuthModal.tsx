@@ -57,11 +57,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleFillDemo = (role: 'admin' | 'player') => {
     setIsLoginMode(true);
     if (role === 'admin') {
-      setUsername('admin');
-      setPassword('admin123');
+      setUsername('lemon');
+      setPassword('lemon');
     } else {
-      setUsername('player_one');
-      setPassword('player123');
+      setUsername('user');
+      setPassword('user');
     }
     setError(null);
   };
@@ -196,7 +196,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               className="flex items-center justify-center gap-1.5 rounded-lg border border-red-500/20 bg-red-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-red-300 hover:bg-red-900/30 transition-colors"
             >
               <ShieldAlert className="h-3 w-3 text-red-400" />
-              <span>Admin Demo</span>
+              <span>Admin (lemon)</span>
             </button>
             <button
               type="button"
@@ -204,7 +204,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               className="flex items-center justify-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-amber-300 hover:bg-amber-900/30 transition-colors"
             >
               <Sparkles className="h-3 w-3 text-amber-400" />
-              <span>Player Demo</span>
+              <span>User (user)</span>
             </button>
           </div>
         </div>

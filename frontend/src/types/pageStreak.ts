@@ -30,15 +30,7 @@ export interface PageStreakRun {
   history: HistoryEntry[];
 }
 
-export interface PoolPerk {
-  name: string;
-  character: string | null;
-  icon_local_path: string | null;
-}
-
-export interface ExcludedPerksResponse {
-  excluded: string[];
-  pool: PoolPerk[];
+export interface PoolSummary {
   pool_size: number;
   page_count: number;
   perks_per_page: number;

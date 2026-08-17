@@ -480,9 +480,15 @@ class GeneratorDrawnPerk(Base):
 
 class PageStreakRun(Base):
     __tablename__ = "page_streak_runs"
+    __table_args__ = (
+        UniqueConstraint("user_id", "killer", name="uq_page_streak_run_user_killer"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    killer: Mapped[str] = mapped_column(String(100), unique=True, index=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    killer: Mapped[str] = mapped_column(String(100), index=True)
     status: Mapped[str] = mapped_column(String(20), default="in_progress")
     attempt: Mapped[int] = mapped_column(Integer, default=1)
     current_page: Mapped[int] = mapped_column(Integer, default=1)
@@ -502,6 +508,7 @@ class PageStreakRun(Base):
         import json
         return {
             "id": self.id,
+            "user_id": self.user_id,
             "killer": self.killer,
             "status": self.status,
             "attempt": self.attempt,
@@ -542,15 +549,6 @@ class PageStreakPageLog(Base):
             "result": self.result,
             "timestamp": self.timestamp.isoformat() if self.timestamp else None,
         }
-
-
-class PageStreakExcludedPerk(Base):
-    __tablename__ = "page_streak_excluded_perks"
-
-    perk_name: Mapped[str] = mapped_column(String(150), primary_key=True)
-
-    def to_dict(self) -> dict:
-        return {"perk_name": self.perk_name}
 
 
 class DraftSession(Base):

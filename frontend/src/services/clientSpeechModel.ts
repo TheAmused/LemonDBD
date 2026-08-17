@@ -37,17 +37,52 @@ if (typeof window !== 'undefined') {
   try {
     const win = window as any;
     if (!win.process) {
-      win.process = { env: {}, versions: { node: '18.0.0', v8: '1.0.0' } };
+      win.process = { env: {}, browser: true };
     } else {
-      if (!win.process.versions) {
-        win.process.versions = { node: '18.0.0', v8: '1.0.0' };
-      }
       if (!win.process.env) {
         win.process.env = {};
+      }
+      // Ensure browser mode is respected; do not set process.versions.node
+      // as it causes emscripten and onnxruntime-web to falsely detect Node.js runtime.
+      if (win.process.versions?.node) {
+        delete win.process.versions.node;
       }
     }
     if (!win.global) {
       win.global = win;
+    }
+
+    // Suppress noisy ONNX wasm graph cleaner and response header warnings in browser console
+    if (!win.__onnxLogFilterInstalled) {
+      win.__onnxLogFilterInstalled = true;
+      const originalWarn = console.warn;
+      const originalLog = console.log;
+      const shouldSuppress = (args: any[]): boolean => {
+        try {
+          const str = args
+            .map((a) => (typeof a === 'string' ? a : a?.message || ''))
+            .join(' ');
+          if (
+            str.includes('CleanUnusedInitializersAndNodeArgs') ||
+            str.includes('Removing initializer') ||
+            str.includes('Constant_1_output_0') ||
+            str.includes('Unable to determine content-length')
+          ) {
+            return true;
+          }
+        } catch {}
+        return false;
+      };
+
+      console.warn = function (...args: any[]) {
+        if (shouldSuppress(args)) return;
+        return originalWarn.apply(console, args);
+      };
+
+      console.log = function (...args: any[]) {
+        if (shouldSuppress(args)) return;
+        return originalLog.apply(console, args);
+      };
     }
   } catch {}
 }
@@ -181,6 +216,8 @@ export class AudioCaptureSession {
   private muteGain: GainNode | null = null;
   private audioChunks: Float32Array[] = [];
   private isRecording = false;
+  private isStarting = false;
+  private isStopped = false;
   private actualSampleRate = 16000;
   private onLevelCallback: ((level: number) => void) | null = null;
 
@@ -189,35 +226,60 @@ export class AudioCaptureSession {
   }
 
   async start(): Promise<void> {
-    if (this.isRecording) return;
+    if (this.isRecording || this.isStarting) return;
+    this.isStarting = true;
+    this.isStopped = false;
     this.audioChunks = [];
 
-    console.log('[ClientSpeechModel] Requesting microphone access...');
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        channelCount: 1,
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true,
-      },
-    });
-
-    this.mediaStream = stream;
-
-    // Initialize AudioContext
-    const AudioContextClass =
-      window.AudioContext || (window as any).webkitAudioContext;
-    this.audioContext = new AudioContextClass();
-
-    // Critical for Chrome/Brave/Safari/Firefox: resume AudioContext
-    if (this.audioContext.state === 'suspended') {
-      await this.audioContext.resume();
-    }
-
-    this.actualSampleRate = this.audioContext.sampleRate || 44100;
-    console.log('[ClientSpeechModel] AudioContext active at sampleRate:', this.actualSampleRate);
-
     try {
+      console.log('[ClientSpeechModel] Requesting microphone access...');
+      if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
+        throw new Error('Microphone mediaDevices API is not available');
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+
+      // Handle abort if stop() was called during getUserMedia prompt
+      if (this.isStopped) {
+        stream.getTracks().forEach((track) => {
+          try {
+            track.stop();
+          } catch {}
+        });
+        return;
+      }
+
+      this.mediaStream = stream;
+
+      // Initialize AudioContext
+      const AudioContextClass =
+        window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) {
+        throw new Error('Web AudioContext is not supported');
+      }
+
+      this.audioContext = new AudioContextClass();
+
+      // Critical for Chrome/Brave/Safari/Firefox: resume AudioContext
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume();
+      }
+
+      if (this.isStopped) {
+        this.cleanup();
+        return;
+      }
+
+      this.actualSampleRate = this.audioContext.sampleRate || 44100;
+      console.log('[ClientSpeechModel] AudioContext active at sampleRate:', this.actualSampleRate);
+
       this.mediaSource = this.audioContext.createMediaStreamSource(stream);
       this.scriptProcessor = this.audioContext.createScriptProcessor(4096, 1, 1);
 
@@ -225,7 +287,7 @@ export class AudioCaptureSession {
       this.muteGain.gain.value = 0;
 
       this.scriptProcessor.onaudioprocess = (e) => {
-        if (!this.isRecording) return;
+        if (!this.isRecording || this.isStopped) return;
         const inputData = e.inputBuffer.getChannelData(0);
         const chunk = new Float32Array(inputData);
         this.audioChunks.push(chunk);
@@ -245,29 +307,36 @@ export class AudioCaptureSession {
       this.mediaSource.connect(this.scriptProcessor);
       this.scriptProcessor.connect(this.muteGain);
       this.muteGain.connect(this.audioContext.destination);
-    } catch (e) {
-      console.warn('[ClientSpeechModel] Audio routing error:', e);
-    }
 
-    this.isRecording = true;
-    console.log('[ClientSpeechModel] Audio capture session started successfully.');
+      this.isRecording = true;
+      console.log('[ClientSpeechModel] Audio capture session started successfully.');
+    } catch (e) {
+      this.cleanup();
+      throw e;
+    } finally {
+      this.isStarting = false;
+    }
   }
 
-  stop(): Float32Array {
-    this.isRecording = false;
-
+  private cleanup() {
     if (this.scriptProcessor) {
-      this.scriptProcessor.disconnect();
+      try {
+        this.scriptProcessor.disconnect();
+      } catch {}
       this.scriptProcessor = null;
     }
 
     if (this.mediaSource) {
-      this.mediaSource.disconnect();
+      try {
+        this.mediaSource.disconnect();
+      } catch {}
       this.mediaSource = null;
     }
 
     if (this.muteGain) {
-      this.muteGain.disconnect();
+      try {
+        this.muteGain.disconnect();
+      } catch {}
       this.muteGain = null;
     }
 
@@ -279,9 +348,18 @@ export class AudioCaptureSession {
     }
 
     if (this.mediaStream) {
-      this.mediaStream.getTracks().forEach((track) => track.stop());
+      try {
+        this.mediaStream.getTracks().forEach((track) => track.stop());
+      } catch {}
       this.mediaStream = null;
     }
+  }
+
+  stop(): Float32Array {
+    this.isStopped = true;
+    this.isRecording = false;
+
+    this.cleanup();
 
     // Merge recorded raw chunks
     const totalLength = this.audioChunks.reduce((acc, c) => acc + c.length, 0);
@@ -314,6 +392,7 @@ let currentProgressInfo: ModelProgressInfo = {
   progress: 0,
 };
 const progressListeners = new Set<ProgressCallback>();
+let isLocalBundleActive = false;
 
 function broadcastProgress(info: ModelProgressInfo) {
   currentProgressInfo = info;
@@ -350,7 +429,8 @@ async function loadTransformersStandalone(): Promise<any> {
     const mod = await importDynamic('/transformers/transformers.min.js');
     if (mod && (mod.AutoModelForSpeechSeq2Seq || mod.default?.AutoModelForSpeechSeq2Seq || mod.pipeline || mod.default?.pipeline)) {
       console.log('[ClientSpeechModel] Loaded local ESM Transformers.js successfully!');
-      return mod.AutoModelForSpeechSeq2Seq ? mod : mod.default;
+      isLocalBundleActive = true;
+      return mod.AutoModelForSpeechSeq2Seq || mod.pipeline ? mod : mod.default;
     }
   } catch (err) {
     console.warn('[ClientSpeechModel] Local ESM import error, trying CDN fallback...', err);
@@ -362,7 +442,8 @@ async function loadTransformersStandalone(): Promise<any> {
     const cdnMod = await importDynamic('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js');
     if (cdnMod && (cdnMod.AutoModelForSpeechSeq2Seq || cdnMod.default?.AutoModelForSpeechSeq2Seq || cdnMod.pipeline || cdnMod.default?.pipeline)) {
       console.log('[ClientSpeechModel] Loaded CDN ESM Transformers.js successfully!');
-      return cdnMod.AutoModelForSpeechSeq2Seq ? cdnMod : cdnMod.default;
+      isLocalBundleActive = false;
+      return cdnMod.AutoModelForSpeechSeq2Seq || cdnMod.pipeline ? cdnMod : cdnMod.default;
     }
   } catch (cdnErr) {
     console.warn('[ClientSpeechModel] CDN ESM import error:', cdnErr);
@@ -393,6 +474,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
 
     const {
       env,
+      pipeline,
       AutoTokenizer,
       AutoProcessor,
       AutoModelForSpeechSeq2Seq,
@@ -404,21 +486,24 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       env.localModelPath = '/models/';
       env.useBrowserCache = true;
       env.allowRemoteModels = true;
-      if (env.backends?.onnx?.wasm) {
-        env.backends.onnx.wasm.numThreads = 1;
-        env.backends.onnx.wasm.proxy = false;
-        env.backends.onnx.wasm.simd = true;
-        env.backends.onnx.wasm.wasmPaths = {
-          wasm: '/transformers/ort-wasm.wasm',
-          simd: '/transformers/ort-wasm-simd.wasm',
-          threaded: '/transformers/ort-wasm-threaded.wasm',
-          simdThreaded: '/transformers/ort-wasm-simd-threaded.wasm',
-        };
+      if (env.backends?.onnx) {
+        // Suppress ONNX runtime graph optimization warnings (CleanUnusedInitializersAndNodeArgs)
+        env.backends.onnx.logLevel = 'error';
+        if (env.backends.onnx.wasm) {
+          env.backends.onnx.wasm.numThreads = 1;
+          env.backends.onnx.wasm.proxy = false;
+          env.backends.onnx.wasm.simd = true;
+          // In ONNX Runtime Web, wasmPaths must be the directory prefix string (e.g. '/transformers/')
+          // or an object keyed by the exact filenames ('ort-wasm.wasm', 'ort-wasm-simd.wasm', etc.).
+          env.backends.onnx.wasm.wasmPaths = isLocalBundleActive
+            ? '/transformers/'
+            : 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/';
+        }
       }
     }
 
     const modelName =
-      locale === 'en' ? 'Xenova/whisper-tiny.en' : 'Xenova/whisper-tiny';
+      locale === 'pl' ? 'Xenova/whisper-tiny' : 'Xenova/whisper-tiny.en';
 
     console.log(`[ClientSpeechModel] Initializing Whisper model (${modelName})...`);
 
@@ -435,21 +520,35 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       }
     };
 
-    const [tokenizer, processor, model] = await Promise.all([
-      AutoTokenizer.from_pretrained(modelName, { progress_callback }),
-      AutoProcessor.from_pretrained(modelName, { progress_callback }),
-      AutoModelForSpeechSeq2Seq.from_pretrained(modelName, {
+    const session_options = {
+      logSeverityLevel: 3, // 3 = Error only (suppress warnings and info logs)
+    };
+
+    if (typeof pipeline === 'function') {
+      cachedPipeline = await pipeline('automatic-speech-recognition', modelName, {
         quantized: true,
         progress_callback,
-      }),
-    ]);
+        session_options,
+      });
+    } else {
+      const [tokenizer, processor, model] = await Promise.all([
+        AutoTokenizer.from_pretrained(modelName, { progress_callback }),
+        AutoProcessor.from_pretrained(modelName, { progress_callback }),
+        AutoModelForSpeechSeq2Seq.from_pretrained(modelName, {
+          quantized: true,
+          progress_callback,
+          session_options,
+        }),
+      ]);
 
-    cachedPipeline = new AutomaticSpeechRecognitionPipeline({
-      task: 'automatic-speech-recognition',
-      tokenizer,
-      processor,
-      model,
-    });
+      const PipelineClass = AutomaticSpeechRecognitionPipeline || transformers.Pipeline;
+      cachedPipeline = new PipelineClass({
+        task: 'automatic-speech-recognition',
+        tokenizer,
+        processor,
+        model,
+      });
+    }
 
     broadcastProgress({ status: 'ready', progress: 100 });
     console.log(`[ClientSpeechModel] Whisper model ${modelName} initialized successfully in browser memory!`);
@@ -488,14 +587,43 @@ export async function transcribeClientAudio(
         '[ClientSpeechModel] Running Whisper model inference on 16kHz audio buffer of length:',
         audioData.length
       );
-      const output = await cachedPipeline(audioData, {
-        language: locale === 'pl' ? 'polish' : locale === 'es' ? 'spanish' : 'english',
-        task: 'transcribe',
+
+      const isEnglish = !locale || locale === 'en';
+      const options: Record<string, any> = {
         chunk_length_s: 30,
         stride_length_s: 5,
-      });
+      };
 
-      const text = (typeof output === 'string' ? output : output?.text || '').trim();
+      // Whisper English-only models (whisper-tiny.en) do NOT accept language tokens in vocabulary
+      if (!isEnglish) {
+        options.language =
+          locale === 'pl'
+            ? 'polish'
+            : locale === 'es'
+            ? 'spanish'
+            : locale === 'de'
+            ? 'german'
+            : locale === 'fr'
+            ? 'french'
+            : 'english';
+        options.task = 'transcribe';
+      }
+
+      const output = await cachedPipeline(audioData, options);
+
+      let text = '';
+      if (typeof output === 'string') {
+        text = output;
+      } else if (Array.isArray(output) && output.length > 0) {
+        text = output
+          .map((item: any) => item?.text || (typeof item === 'string' ? item : ''))
+          .filter(Boolean)
+          .join(' ');
+      } else if (output && typeof output.text === 'string') {
+        text = output.text;
+      }
+
+      text = text.trim();
       console.log('[ClientSpeechModel] Whisper transcription result:', text);
       return text;
     } catch (e) {

@@ -507,9 +507,28 @@ export function VoiceCommandBanner({
             playMicStartSound();
           }
 
+          let speechDetected = false;
           audioSessionRef.current = new AudioCaptureSession();
           audioSessionRef.current.setLevelCallback((lvl) => {
             setAudioLevel(lvl);
+            // In click-to-talk toggle mode, auto-stop after speech and subsequent silence
+            if (!isHoldingRef.current && isListeningRef.current) {
+              if (lvl > 15) {
+                speechDetected = true;
+                if (silenceTimerRef.current) {
+                  clearTimeout(silenceTimerRef.current);
+                  silenceTimerRef.current = null;
+                }
+              } else if (speechDetected && lvl < 8) {
+                if (!silenceTimerRef.current) {
+                  silenceTimerRef.current = setTimeout(() => {
+                    if (isListeningRef.current) {
+                      stopListeningAndProcess();
+                    }
+                  }, 1200);
+                }
+              }
+            }
           });
           await audioSessionRef.current.start();
         } catch (err: any) {
@@ -1050,21 +1069,37 @@ export function VoiceCommandBanner({
           {/* Real-time speech transcription & status text */}
           <div className="flex flex-col min-w-[200px] sm:min-w-[340px]">
             {voiceStatus === 'listening' && (
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" />
-                <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono truncate">
-                  {liveTranscript ? `“${liveTranscript}”` : 'Listening... Speak DBD map name'}
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+                  <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono truncate">
+                    {liveTranscript
+                      ? `“${liveTranscript}”`
+                      : audioLevel > 8
+                      ? (locale === 'pl' ? 'Słucham głosu... Puść [V] lub kliknij' : 'Listening to voice... Release [V] or click')
+                      : (locale === 'pl' ? 'Mów teraz (np. Dead Dawg, RPD)' : 'Speak DBD map name (e.g. Dead Dawg)')}
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 font-mono truncate">
+                  {activeEngine === 'client-model'
+                    ? (locale === 'pl' ? 'Lokalny model AI • Puść [V] lub kliknij aby rozpoznać' : 'Local AI Model • Release [V] or click to transcribe')
+                    : (locale === 'pl' ? 'Rozpoznawanie mowy w toku...' : 'Speech recognition active...')}
                 </span>
               </div>
             )}
 
             {voiceStatus === 'processing' && (
-              <div className="flex items-center gap-2">
-                <RefreshCw className="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" />
-                <span className="text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
-                  {liveTranscript && liveTranscript !== 'Analyzing speech audio...'
-                    ? `Transcribing: “${liveTranscript}”`
-                    : 'Transcribing voice audio...'}
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" />
+                  <span className="text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
+                    {liveTranscript && liveTranscript !== 'Analyzing speech audio...'
+                      ? `Transcribing: “${liveTranscript}”`
+                      : (locale === 'pl' ? 'Przetwarzanie głosu przez model AI...' : 'Transcribing voice with local Whisper AI...')}
+                  </span>
+                </div>
+                <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80 font-mono">
+                  {locale === 'pl' ? 'Lokalne przetwarzanie ONNX WebAssembly' : 'In-browser ONNX WebAssembly inference'}
                 </span>
               </div>
             )}
@@ -1082,7 +1117,7 @@ export function VoiceCommandBanner({
                   </span>
                 </div>
                 {liveTranscript && (
-                  <span className="text-[10px] text-emerald-600/90 dark:text-emerald-400/90 font-mono">
+                  <span className="text-[10px] text-emerald-600/90 dark:text-emerald-400/90 font-mono truncate">
                     Heard: &ldquo;{liveTranscript}&rdquo; {matchedResult.confidence ? `(${Math.round(matchedResult.confidence * 100)}% match)` : ''}
                   </span>
                 )}
@@ -1094,19 +1129,28 @@ export function VoiceCommandBanner({
                 <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                   <span className="truncate">
-                    {liveTranscript ? `Heard: “${liveTranscript}” (No map match)` : 'No map match'}
+                    {liveTranscript
+                      ? `Heard: “${liveTranscript}” (No DBD match)`
+                      : (locale === 'pl' ? 'Brak dźwięku lub nierozpoznano' : 'No speech detected / Not recognized')}
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-500 font-mono">
-                  Try saying “Dead Dawg”, “RPD East”, or “Coal Tower 2”
+                <span className="text-[10px] text-slate-500 font-mono truncate">
+                  {locale === 'pl'
+                    ? 'Spróbuj: „Dead Dawg”, „RPD East” lub „Badham 2”'
+                    : 'Try saying: “Dead Dawg”, “RPD East”, or “Coal Tower”'}
                 </span>
               </div>
             )}
 
             {voiceStatus === 'error' && (
-              <div className="flex items-center gap-1.5 text-xs font-bold text-rose-700 dark:text-rose-400 font-mono">
-                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{errorMessage || t.micBlocked || 'Microphone error'}</span>
+              <div className="flex flex-col text-left">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-rose-700 dark:text-rose-400 font-mono">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{errorMessage || t.micBlocked || 'Microphone error'}</span>
+                </div>
+                <span className="text-[10px] text-rose-600/80 dark:text-rose-400/80 font-mono">
+                  {locale === 'pl' ? 'Sprawdź uprawnienia mikrofonu w przeglądarce' : 'Check microphone permissions in browser address bar'}
+                </span>
               </div>
             )}
 
@@ -1115,7 +1159,9 @@ export function VoiceCommandBanner({
                 <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1 py-0.2 text-[9px] font-mono text-cyan-600 dark:text-cyan-300 shadow-xs">
                   V
                 </kbd>
-                <span className="truncate">Hold [V] to talk (or click mic)</span>
+                <span className="truncate">
+                  {locale === 'pl' ? 'Przytrzymaj [V] aby mówić (lub kliknij mikrofon)' : 'Hold [V] to talk (or click mic)'}
+                </span>
               </div>
             )}
           </div>

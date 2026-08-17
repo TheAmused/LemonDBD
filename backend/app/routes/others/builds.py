@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, jsonify, request
-from app.services.build_service import BuildService
+from app.services.others.build_service import BuildService
 
 builds_bp = Blueprint("builds", __name__, url_prefix="/api/v1/builds")
 _default_build_service = None

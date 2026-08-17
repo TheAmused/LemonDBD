@@ -1,6 +1,6 @@
 import unittest
 from app import create_app
-from app.services.build_service import BuildService
+from app.services.others.build_service import BuildService
 
 
 class TestPhase4Services(unittest.TestCase):

@@ -1,6 +1,6 @@
 import unittest
 from app import create_app
-from app.services.custom_perk_service import CustomPerkService
+from app.services.others.custom_perk_service import CustomPerkService
 
 
 class TestPhase5Services(unittest.TestCase):

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.services.guesser_service import GuesserService
+from app.services.others.guesser_service import GuesserService
 
 guesser_bp = Blueprint("guesser", __name__, url_prefix="/api/v1/guesser")
 guesser_service = GuesserService()

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.custom_perk_service import CustomPerkService
+from app.services.others.custom_perk_service import CustomPerkService
 
 custom_perks_bp = Blueprint("custom_perks", __name__, url_prefix="/api/v1/custom-perks")
 service = CustomPerkService()

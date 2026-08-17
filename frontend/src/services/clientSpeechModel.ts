@@ -6,7 +6,7 @@
  * or when Google speech recognition services are blocked by firewalls or privacy shields.
  * 
  * Default on Chrome, Edge, Safari: Native Web Speech API (Google / Apple Framework).
- * Fallback on Firefox / Others: Lightweight Client-Side Speech Model (Web Audio + WebAssembly / ONNX).
+ * Fallback on Firefox / Others: Lightweight Client-Side Speech Model (Web Audio + WebAssembly / ONNX Whisper).
  */
 
 export type VoiceEngineType = 'web-speech' | 'client-model';
@@ -79,20 +79,80 @@ export function getBrowserCompatibility(): BrowserCompatibilityInfo {
   };
 }
 
-// ─── Web Audio Capture & Resampling Session ──────────────────────────────────
+// ─── Audio Resampling & Normalization Helpers ────────────────────────────────
+
+/**
+ * High-quality linear resampling from source sample rate (e.g. 44.1kHz / 48kHz)
+ * to target sample rate (16000Hz required by Whisper).
+ */
+export function resampleTo16k(
+  audioData: Float32Array,
+  origSampleRate: number,
+  targetSampleRate: number = 16000
+): Float32Array {
+  if (!audioData || audioData.length === 0) return new Float32Array(0);
+  if (origSampleRate === targetSampleRate) return audioData;
+
+  const ratio = origSampleRate / targetSampleRate;
+  const newLength = Math.round(audioData.length / ratio);
+  const result = new Float32Array(newLength);
+
+  for (let i = 0; i < newLength; i++) {
+    const origIndex = i * ratio;
+    const indexLow = Math.floor(origIndex);
+    const indexHigh = Math.min(indexLow + 1, audioData.length - 1);
+    const weight = origIndex - indexLow;
+    result[i] = audioData[indexLow] * (1 - weight) + audioData[indexHigh] * weight;
+  }
+
+  return result;
+}
+
+/**
+ * Normalizes Float32 audio volume levels to enhance quiet microphone inputs.
+ */
+export function normalizeAudioVolume(audioData: Float32Array): Float32Array {
+  if (!audioData || audioData.length === 0) return audioData;
+  let maxVal = 0;
+  for (let i = 0; i < audioData.length; i++) {
+    const abs = Math.abs(audioData[i]);
+    if (abs > maxVal) maxVal = abs;
+  }
+
+  if (maxVal > 0.005 && maxVal < 0.85) {
+    const factor = 0.9 / maxVal;
+    const normalized = new Float32Array(audioData.length);
+    for (let i = 0; i < audioData.length; i++) {
+      normalized[i] = audioData[i] * factor;
+    }
+    return normalized;
+  }
+
+  return audioData;
+}
+
+// ─── Web Audio Capture Session ───────────────────────────────────────────────
 
 export class AudioCaptureSession {
   private mediaStream: MediaStream | null = null;
   private audioContext: AudioContext | null = null;
   private scriptProcessor: ScriptProcessorNode | null = null;
   private mediaSource: MediaStreamAudioSourceNode | null = null;
+  private muteGain: GainNode | null = null;
   private audioChunks: Float32Array[] = [];
   private isRecording = false;
+  private actualSampleRate = 16000;
+  private onLevelCallback: ((level: number) => void) | null = null;
+
+  setLevelCallback(cb: ((level: number) => void) | null) {
+    this.onLevelCallback = cb;
+  }
 
   async start(): Promise<void> {
     if (this.isRecording) return;
     this.audioChunks = [];
 
+    console.log('[ClientSpeechModel] Requesting microphone access...');
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: {
         channelCount: 1,
@@ -106,23 +166,47 @@ export class AudioCaptureSession {
 
     const AudioContextClass =
       window.AudioContext || (window as any).webkitAudioContext;
-    this.audioContext = new AudioContextClass({ sampleRate: 16000 });
+    this.audioContext = new AudioContextClass();
+
+    // Critical: Chrome, Firefox, and Safari suspend new AudioContext instances by default!
+    if (this.audioContext.state === 'suspended') {
+      await this.audioContext.resume();
+    }
+
+    this.actualSampleRate = this.audioContext.sampleRate || 44100;
+    console.log('[ClientSpeechModel] AudioContext active at sampleRate:', this.actualSampleRate);
 
     this.mediaSource = this.audioContext.createMediaStreamSource(stream);
-    // Buffer size 4096 gives ~250ms per chunk at 16kHz
+    // Buffer size 4096 gives ~85-92ms per chunk at 44.1k/48k
     this.scriptProcessor = this.audioContext.createScriptProcessor(4096, 1, 1);
+
+    // Mute gain node prevents microphone audio from playing through speakers
+    this.muteGain = this.audioContext.createGain();
+    this.muteGain.gain.value = 0;
 
     this.scriptProcessor.onaudioprocess = (e) => {
       if (!this.isRecording) return;
       const inputData = e.inputBuffer.getChannelData(0);
-      // Clone Float32Array
       const chunk = new Float32Array(inputData);
       this.audioChunks.push(chunk);
+
+      // Compute RMS volume level for live visualizer
+      if (this.onLevelCallback && chunk.length > 0) {
+        let sum = 0;
+        for (let i = 0; i < chunk.length; i += 4) {
+          sum += chunk[i] * chunk[i];
+        }
+        const rms = Math.sqrt(sum / (chunk.length / 4));
+        const level = Math.min(100, Math.round(rms * 400));
+        this.onLevelCallback(level);
+      }
     };
 
     this.mediaSource.connect(this.scriptProcessor);
-    this.scriptProcessor.connect(this.audioContext.destination);
+    this.scriptProcessor.connect(this.muteGain);
+    this.muteGain.connect(this.audioContext.destination);
     this.isRecording = true;
+    console.log('[ClientSpeechModel] Audio capture session started successfully.');
   }
 
   stop(): Float32Array {
@@ -138,6 +222,11 @@ export class AudioCaptureSession {
       this.mediaSource = null;
     }
 
+    if (this.muteGain) {
+      this.muteGain.disconnect();
+      this.muteGain = null;
+    }
+
     if (this.audioContext && this.audioContext.state !== 'closed') {
       try {
         this.audioContext.close();
@@ -150,17 +239,26 @@ export class AudioCaptureSession {
       this.mediaStream = null;
     }
 
-    // Merge recorded chunks into a single Float32Array
+    // Merge recorded raw chunks
     const totalLength = this.audioChunks.reduce((acc, c) => acc + c.length, 0);
-    const merged = new Float32Array(totalLength);
+    const rawMerged = new Float32Array(totalLength);
     let offset = 0;
     for (const chunk of this.audioChunks) {
-      merged.set(chunk, offset);
+      rawMerged.set(chunk, offset);
       offset += chunk.length;
     }
 
     this.audioChunks = [];
-    return merged;
+
+    // Resample from actual hardware sample rate (e.g. 44100 / 48000) to 16000Hz for Whisper
+    const resampled = resampleTo16k(rawMerged, this.actualSampleRate, 16000);
+    const normalized = normalizeAudioVolume(resampled);
+
+    console.log(
+      `[ClientSpeechModel] Audio captured: raw=${rawMerged.length} samples (${this.actualSampleRate}Hz) -> resampled=${normalized.length} samples (16000Hz)`
+    );
+
+    return normalized;
   }
 }
 
@@ -208,17 +306,18 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
 
   if (typeof window === 'undefined') return null;
 
-  broadcastProgress({ status: 'downloading', progress: 5 });
+  broadcastProgress({ status: 'downloading', progress: 10 });
 
   try {
-    // Dynamic import to prevent SSR issues
     const { pipeline, env } = await import('@xenova/transformers');
 
     // Configure Transformers.js for browser environment
     env.allowLocalModels = false;
     env.useBrowserCache = true;
+    if (env.backends?.onnx?.wasm) {
+      env.backends.onnx.wasm.numThreads = 1;
+    }
 
-    // Use whisper-tiny.en for English, multilingual whisper-tiny for others
     const modelName =
       locale === 'en' ? 'Xenova/whisper-tiny.en' : 'Xenova/whisper-tiny';
 
@@ -231,7 +330,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
           const pct = Math.round((progressData.loaded / progressData.total) * 100);
           broadcastProgress({
             status: 'downloading',
-            progress: Math.min(Math.max(pct, 10), 99),
+            progress: Math.min(Math.max(pct, 15), 99),
             file: progressData.file,
             loadedBytes: progressData.loaded,
             totalBytes: progressData.total,
@@ -244,7 +343,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     console.log(`[ClientSpeechModel] Model ${modelName} loaded and ready in browser memory!`);
     return cachedPipeline;
   } catch (err: any) {
-    console.warn('[ClientSpeechModel] Transformers.js loading encountered issue, using acoustic matcher:', err);
+    console.warn('[ClientSpeechModel] Transformers.js loading encountered issue, using fallback:', err);
     broadcastProgress({
       status: 'ready',
       progress: 100,
@@ -273,7 +372,7 @@ export async function transcribeClientAudio(
 
   if (cachedPipeline) {
     try {
-      console.log('[ClientSpeechModel] Running Whisper model inference on audio buffer of length:', audioData.length);
+      console.log('[ClientSpeechModel] Running Whisper model inference on 16kHz audio buffer of length:', audioData.length);
       const output = await cachedPipeline(audioData, {
         language: locale === 'pl' ? 'polish' : locale === 'es' ? 'spanish' : 'english',
         task: 'transcribe',
@@ -285,7 +384,7 @@ export async function transcribeClientAudio(
       console.log('[ClientSpeechModel] Transcription result:', text);
       return text;
     } catch (e) {
-      console.error('[ClientSpeechModel] Inference failed, falling back:', e);
+      console.error('[ClientSpeechModel] Inference failed:', e);
     }
   }
 

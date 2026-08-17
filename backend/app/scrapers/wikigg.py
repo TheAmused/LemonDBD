@@ -80,76 +80,83 @@ class WikiGGScraperDriver:
                 return response.text
             raise
 
+    def parse_character_page(self, html: str, seen_slugs: Optional[set] = None) -> List[CharacterData]:
+        owns_seen_slugs = seen_slugs is None
+        if seen_slugs is None:
+            seen_slugs = set()
+
+        characters: List[CharacterData] = []
+        soup = BeautifulSoup(html, "html.parser")
+        content = soup.find("div", class_="mw-parser-output") or soup
+
+        for link in content.find_all("a", href=re.compile(r"^/wiki/")):
+            href = link.get("href", "")
+            slug = extract_slug_from_href(href)
+            slug_lower = slug.lower()
+
+            if not slug or slug_lower in seen_slugs or slug_lower in self.EXCLUDED_SLUGS:
+                continue
+
+            if slug.startswith(("Category:", "File:", "Special:", "Dead_by_Daylight", "Help:", "User:", "Template:", "Tome")):
+                continue
+
+            img = link.find("img")
+            if not img:
+                continue
+
+            avatar_url = extract_high_res_url(img, self.BASE_DOMAIN)
+            if not avatar_url:
+                continue
+
+            filename = avatar_url.split("/revision")[0].rstrip("/").split("/")[-1]
+            match = self.PORTRAIT_PATTERN.match(filename)
+            if not match:
+                continue
+
+            category = "Killer" if match.group(1).upper() == "K" else "Survivor"
+            try:
+                release_number = int(match.group(2))
+            except ValueError:
+                release_number = 0
+
+            title = link.get("title", "").strip() or link.get_text().strip()
+            full_name = title.replace("_", " ").strip()
+            if not full_name or len(full_name) > 50:
+                continue
+
+            if any(x in slug_lower for x in ["perk", "item", "addon", "power", "patch", "dlc", "store", "tips", "bloodpoint"]):
+                continue
+
+            seen_slugs.add(slug_lower)
+            sanitized = sanitize_filename(full_name)
+            sub_dir = "survivors" if category == "Survivor" else "killers"
+
+            characters.append(
+                CharacterData(
+                    name=full_name,
+                    real_name=full_name,
+                    wiki_slug=slug,
+                    short_name=slug_lower,
+                    category=category,
+                    avatar_url=avatar_url,
+                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                    release_number=release_number,
+                )
+            )
+
+        return characters
+
     def scrape_characters_dynamically(self) -> List[CharacterData]:
         characters: List[CharacterData] = []
         seen_slugs = set()
 
-        def process_page(url: str, default_category: str):
+        for url, label in ((self.SURVIVORS_URL, "Survivor"), (self.KILLERS_URL, "Killer")):
             try:
-                logger.info(f"Scraping {default_category} from deadbydaylight.wiki.gg...")
+                logger.info(f"Scraping {label} from deadbydaylight.wiki.gg...")
                 html = self.fetch_html(url)
-                soup = BeautifulSoup(html, "html.parser")
-                content = soup.find("div", class_="mw-parser-output") or soup
-
-                for link in content.find_all("a", href=re.compile(r"^/wiki/")):
-                    href = link.get("href", "")
-                    slug = extract_slug_from_href(href)
-                    slug_lower = slug.lower()
-
-                    if not slug or slug_lower in seen_slugs or slug_lower in self.EXCLUDED_SLUGS:
-                        continue
-
-                    if slug.startswith(("Category:", "File:", "Special:", "Dead_by_Daylight", "Help:", "User:", "Template:", "Tome")):
-                        continue
-
-                    img = link.find("img")
-                    if not img:
-                        continue
-
-                    avatar_url = extract_high_res_url(img, self.BASE_DOMAIN)
-                    if not avatar_url:
-                        continue
-
-                    filename = avatar_url.split("/")[-1]
-                    match = self.PORTRAIT_PATTERN.match(filename)
-                    if not match:
-                        continue
-
-                    category = "Killer" if match.group(1).upper() == "K" else "Survivor"
-                    try:
-                        release_number = int(match.group(2))
-                    except ValueError:
-                        release_number = 0
-
-                    title = link.get("title", "").strip() or link.get_text().strip()
-                    full_name = title.replace("_", " ").strip()
-                    if not full_name or len(full_name) > 50:
-                        continue
-
-                    if any(x in slug_lower for x in ["perk", "item", "addon", "power", "patch", "dlc", "store", "tips", "bloodpoint"]):
-                        continue
-
-                    seen_slugs.add(slug_lower)
-                    sanitized = sanitize_filename(full_name)
-                    sub_dir = "survivors" if category == "Survivor" else "killers"
-
-                    characters.append(
-                        CharacterData(
-                            name=full_name,
-                            real_name=full_name,
-                            wiki_slug=slug,
-                            short_name=slug_lower,
-                            category=category,
-                            avatar_url=avatar_url,
-                            avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
-                            release_number=release_number,
-                        )
-                    )
+                characters.extend(self.parse_character_page(html, seen_slugs=seen_slugs))
             except Exception as e:
-                logger.error(f"Error scraping {default_category} from wiki.gg: {e}")
-
-        process_page(self.SURVIVORS_URL, "Survivor")
-        process_page(self.KILLERS_URL, "Killer")
+                logger.error(f"Error scraping {label} from wiki.gg: {e}")
 
         return characters
 

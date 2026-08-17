@@ -20,6 +20,10 @@ import {
   ArrowRight,
   RefreshCw,
   SlidersHorizontal,
+  Cpu,
+  Globe,
+  Info,
+  Download,
 } from 'lucide-react';
 import {
   matchVoiceQuery,
@@ -27,6 +31,17 @@ import {
   MapSource,
   MatchResult,
 } from '@/utils/mapVoiceMatcher';
+import {
+  getBrowserCompatibility,
+  AudioCaptureSession,
+  initClientSpeechModel,
+  transcribeClientAudio,
+  subscribeModelProgress,
+  VoiceEngineType,
+  ModelProgressInfo,
+  BrowserCompatibilityInfo,
+} from '@/services/clientSpeechModel';
+import { VoiceEngineInfoModal } from './VoiceEngineInfoModal';
 
 export interface VoiceCommandBannerProps {
   locale?: string;
@@ -36,6 +51,7 @@ export interface VoiceCommandBannerProps {
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
   availableMaps?: Array<{ id: string; name: string; realm?: string; source?: string }>;
   className?: string;
+  dict?: any;
 }
 
 export type VoiceStatusState =
@@ -150,16 +166,28 @@ export function VoiceCommandBanner({
   onAction,
   availableMaps,
   className = '',
+  dict,
 }: VoiceCommandBannerProps) {
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatusState>('idle');
   const [liveTranscript, setLiveTranscript] = useState<string>('');
   const [matchedResult, setMatchedResult] = useState<MatchResult | null>(null);
   const [disambiguationVariants, setDisambiguationVariants] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isSupported, setIsSupported] = useState<boolean>(true);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
 
+  // Dual-Engine & Fallback State
+  const [browserInfo, setBrowserInfo] = useState<BrowserCompatibilityInfo>(() =>
+    getBrowserCompatibility()
+  );
+  const [activeEngine, setActiveEngine] = useState<VoiceEngineType>('web-speech');
+  const [modelProgress, setModelProgress] = useState<ModelProgressInfo>({
+    status: 'unloaded',
+    progress: 0,
+  });
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
+
   const recognitionRef = useRef<any>(null);
+  const audioSessionRef = useRef<AudioCaptureSession | null>(null);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isListeningRef = useRef<boolean>(false);
@@ -190,18 +218,28 @@ export function VoiceCommandBanner({
     };
   }, [currentSource, onSourceChange, onSelectMap, onAction, availableMaps, soundEnabled]);
 
-  // Check Web Speech API browser support on mount
+  // Initial Engine Setup & Progress Subscription
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const SpeechRec =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (!SpeechRec) {
-        setIsSupported(false);
-      }
-    }
-  }, []);
+    const compat = getBrowserCompatibility();
+    setBrowserInfo(compat);
+    setActiveEngine(compat.recommendedEngine);
 
-  // Clear timers, remove recognition listeners, and abort speech recognition on unmount
+    // Subscribe to model download progress
+    const unsubscribe = subscribeModelProgress((info) => {
+      setModelProgress(info);
+    });
+
+    // If client-model is recommended (e.g. Firefox / Opera / Brave), trigger background download
+    if (compat.recommendedEngine === 'client-model') {
+      initClientSpeechModel(locale);
+    }
+
+    return () => {
+      unsubscribe();
+    };
+  }, [locale]);
+
+  // Clear timers, audio session, and recognition on unmount
   useEffect(() => {
     return () => {
       isHoldingRef.current = false;
@@ -213,6 +251,11 @@ export function VoiceCommandBanner({
           recognitionRef.current.onerror = null;
           recognitionRef.current.onend = null;
           recognitionRef.current.abort();
+        } catch {}
+      }
+      if (audioSessionRef.current) {
+        try {
+          audioSessionRef.current.stop();
         } catch {}
       }
       if (resetTimerRef.current) {
@@ -248,10 +291,10 @@ export function VoiceCommandBanner({
       }
 
       if (result.action && ['zoom_in', 'zoom_out', 'fullscreen', 'close'].includes(result.action)) {
-        console.log('[VoiceNav] Action -> Trigger navigation action:', result.action);
+        console.log('[VoiceNav] Action -> Map navigation command:', result.action);
         setVoiceStatus('matched');
         if (soundEnabled) playMatchSuccessSound();
-        onAction?.(result.action as 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close');
+        if (onAction) onAction(result.action as any);
         if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
         resetTimerRef.current = setTimeout(() => {
           setVoiceStatus('idle');
@@ -260,41 +303,49 @@ export function VoiceCommandBanner({
       }
 
       if (result.matchedMapName) {
-        console.log('[VoiceNav] Map Matched ->', result.matchedMapName, 'ID:', result.matchedMapId, 'Source:', result.source);
+        console.log('[VoiceNav] Action -> Selecting map:', result.matchedMapName);
         setVoiceStatus('matched');
-        if (result.availableVariants && result.availableVariants.length > 0) {
-          setDisambiguationVariants(result.availableVariants);
-        }
         if (soundEnabled) playMatchSuccessSound();
         onSelectMap(result.matchedMapName, result.matchedMapId, result.source);
+
+        const variants =
+          result.availableVariants ||
+          getVariantsForMap(result.matchedMapName);
+        if (variants && variants.length > 1) {
+          setDisambiguationVariants(variants);
+        } else {
+          setDisambiguationVariants([]);
+        }
 
         if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
         resetTimerRef.current = setTimeout(() => {
           setVoiceStatus('idle');
-        }, 3000);
+        }, 2400);
+        return;
       }
+
+      setVoiceStatus('nomatch');
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => {
+        setVoiceStatus('idle');
+      }, 2200);
     },
     []
   );
 
-  // ─── Manual Command Trigger (Chips & Pills) ─────────────────────────────────
+  // ─── Manual Command Trigger (Chips & Disambiguation) ───────────────────────
 
   const handleExecuteCommand = useCallback(
-    (query: string) => {
-      console.log('[VoiceNav] Prompt chip or manual command triggered:', query);
-      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-      liveTranscriptRef.current = query;
-      setLiveTranscript(query);
-      setErrorMessage('');
+    (queryText: string) => {
+      console.log('[VoiceNav] Manually executing query:', queryText);
+      liveTranscriptRef.current = queryText;
+      setLiveTranscript(queryText);
 
       const result = matchVoiceQuery(
-        query,
+        queryText,
         propsRef.current.currentSource,
         propsRef.current.availableMaps
       );
-
-      console.log('[VoiceNav] Match query result for "' + query + '":', result);
 
       if (result) {
         executeMatch(result);
@@ -315,21 +366,70 @@ export function VoiceCommandBanner({
     isListeningRef.current = false;
     isHoldingRef.current = false;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-    if (recognitionRef.current) {
+
+    if (activeEngine === 'web-speech' && recognitionRef.current) {
       try {
         recognitionRef.current.stop();
       } catch (e) {
-        console.warn('[VoiceNav] Error stopping recognition:', e);
+        console.warn('[VoiceNav] Error stopping Web Speech recognition:', e);
+      }
+    } else if (activeEngine === 'client-model' && audioSessionRef.current) {
+      try {
+        audioSessionRef.current.stop();
+      } catch (e) {
+        console.warn('[VoiceNav] Error stopping client audio session:', e);
       }
     }
-    setVoiceStatus('idle');
-  }, []);
 
-  const stopListeningAndProcess = useCallback(() => {
-    console.log('[VoiceNav] stopListeningAndProcess called. Current text:', liveTranscriptRef.current);
+    setVoiceStatus('idle');
+  }, [activeEngine]);
+
+  const stopListeningAndProcess = useCallback(async () => {
+    console.log('[VoiceNav] stopListeningAndProcess called. ActiveEngine:', activeEngine);
     isListeningRef.current = false;
     isHoldingRef.current = false;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+
+    // If Client-Side Model Engine is active
+    if (activeEngine === 'client-model') {
+      if (audioSessionRef.current) {
+        setVoiceStatus('processing');
+        const audioBuffer = audioSessionRef.current.stop();
+        audioSessionRef.current = null;
+
+        if (audioBuffer && audioBuffer.length > 1600) {
+          try {
+            const transcript = await transcribeClientAudio(audioBuffer, locale);
+            const cleanText = (transcript || '').trim();
+            liveTranscriptRef.current = cleanText;
+            setLiveTranscript(cleanText);
+
+            if (cleanText) {
+              const match = matchVoiceQuery(
+                cleanText,
+                propsRef.current.currentSource,
+                propsRef.current.availableMaps
+              );
+              if (match) {
+                executeMatch(match);
+                return;
+              }
+            }
+          } catch (err) {
+            console.error('[VoiceNav] Client-side transcription error:', err);
+          }
+        }
+
+        setVoiceStatus('nomatch');
+        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+        resetTimerRef.current = setTimeout(() => {
+          setVoiceStatus('idle');
+        }, 2200);
+      }
+      return;
+    }
+
+    // Native Web Speech Engine active
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
@@ -364,26 +464,24 @@ export function VoiceCommandBanner({
     }
 
     setVoiceStatus('idle');
-  }, [executeMatch]);
+  }, [activeEngine, locale, executeMatch]);
 
   const startListening = useCallback(
-    (isHold = false) => {
-      console.log('[VoiceNav] startListening called. isHold:', isHold, 'isListeningRef:', isListeningRef.current);
+    async (isHold = false) => {
+      console.log(
+        '[VoiceNav] startListening called. Engine:',
+        activeEngine,
+        'isHold:',
+        isHold,
+        'isListeningRef:',
+        isListeningRef.current
+      );
       if (isListeningRef.current) {
         console.log('[VoiceNav] Already listening, skipping duplicate start.');
         return;
       }
 
       if (typeof window === 'undefined') return;
-      const SpeechRec =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-
-      if (!SpeechRec) {
-        console.error('[VoiceNav] Web Speech API (SpeechRecognition / webkitSpeechRecognition) is not supported in this browser!');
-        setVoiceStatus('error');
-        setErrorMessage('Web Speech API is not supported in this browser.');
-        return;
-      }
 
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
@@ -391,6 +489,47 @@ export function VoiceCommandBanner({
       isHoldingRef.current = isHold;
       if (isHold) {
         holdStartTimeRef.current = Date.now();
+      }
+
+      // ─── ENGINE 1: Client-Side Speech Model (Web Audio Fallback) ────────────
+      if (activeEngine === 'client-model') {
+        try {
+          isListeningRef.current = true;
+          setVoiceStatus('listening');
+          liveTranscriptRef.current = '';
+          setLiveTranscript('');
+          setMatchedResult(null);
+          setErrorMessage('');
+          pendingMatchRef.current = null;
+
+          if (propsRef.current.soundEnabled) {
+            playMicStartSound();
+          }
+
+          audioSessionRef.current = new AudioCaptureSession();
+          await audioSessionRef.current.start();
+        } catch (err: any) {
+          isListeningRef.current = false;
+          isHoldingRef.current = false;
+          setVoiceStatus('error');
+          setErrorMessage(
+            err?.name === 'NotAllowedError'
+              ? 'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
+              : 'Failed to access microphone for local speech model.'
+          );
+        }
+        return;
+      }
+
+      // ─── ENGINE 2: Native Web Speech API ────────────────────────────────────
+      const SpeechRec =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+      if (!SpeechRec) {
+        console.warn('[VoiceNav] Web Speech API is absent, switching to client-model fallback!');
+        setActiveEngine('client-model');
+        initClientSpeechModel(locale);
+        return;
       }
 
       isListeningRef.current = true;
@@ -413,11 +552,10 @@ export function VoiceCommandBanner({
             : 'en-US';
         recognition.interimResults = true;
         recognition.maxAlternatives = 5;
-        // continuous = true ensures browser never auto-aborts while user is speaking or holding!
         recognition.continuous = true;
 
         recognition.onstart = () => {
-          console.log('[VoiceNav] Speech recognition ONSTART fired successfully. Mic is active!');
+          console.log('[VoiceNav] Speech recognition ONSTART fired successfully.');
           isListeningRef.current = true;
           setVoiceStatus('listening');
           liveTranscriptRef.current = '';
@@ -450,9 +588,7 @@ export function VoiceCommandBanner({
           const combinedTranscript = (finalText + interimText).trim();
           liveTranscriptRef.current = combinedTranscript;
           setLiveTranscript(combinedTranscript);
-          console.log('[VoiceNav] Live transcript:', combinedTranscript);
 
-          // Find best match candidate
           let bestMatch = matchVoiceQuery(
             combinedTranscript,
             propsRef.current.currentSource,
@@ -475,9 +611,6 @@ export function VoiceCommandBanner({
 
           pendingMatchRef.current = bestMatch;
           setMatchedResult(bestMatch);
-          if (bestMatch) {
-            console.log('[VoiceNav] Interim candidate matched:', bestMatch.matchedMapName, bestMatch.confidence);
-          }
         };
 
         recognition.onerror = (event: any) => {
@@ -489,16 +622,13 @@ export function VoiceCommandBanner({
           if (event.error === 'network') {
             setVoiceStatus('error');
             setErrorMessage(
-              'Network error: Speech service could not connect. If using Brave Browser, enable "Use Google services for speech recognition" in brave://settings/extensions, or check your internet/firewall.'
+              'Network error: Speech service could not connect. Click below to use the offline Client-Side Speech Model.'
             );
           } else if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
             setVoiceStatus('error');
             setErrorMessage(
-              'Microphone access blocked. Please allow microphone permissions in your browser address bar (lock/tune icon).'
+              'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
             );
-          } else if (event.error === 'audio-capture') {
-            setVoiceStatus('error');
-            setErrorMessage('No microphone device detected. Please connect or enable your microphone.');
           } else if (event.error === 'no-speech') {
             setVoiceStatus('nomatch');
             resetTimerRef.current = setTimeout(() => {
@@ -511,8 +641,6 @@ export function VoiceCommandBanner({
         };
 
         recognition.onend = () => {
-          console.log('[VoiceNav] Recognition onend triggered. isHolding:', isHoldingRef.current, 'text:', liveTranscriptRef.current);
-          // Only auto-restart if isHolding is still true AND no error occurred
           if (isHoldingRef.current) {
             try {
               recognition.start();
@@ -538,7 +666,6 @@ export function VoiceCommandBanner({
               );
 
             if (matchToExecute) {
-              console.log('[VoiceNav] onend matched:', matchToExecute);
               executeMatch(matchToExecute);
               return;
             }
@@ -565,7 +692,7 @@ export function VoiceCommandBanner({
         setErrorMessage(err?.message || 'Failed to initialize voice recognition.');
       }
     },
-    [locale, executeMatch]
+    [activeEngine, locale, executeMatch]
   );
 
   // ─── Global Keyboard Hotkey: Hold 'V' (Push-To-Talk) or Press to Toggle ────
@@ -624,7 +751,8 @@ export function VoiceCommandBanner({
   const statusConfig = {
     idle: {
       badge: 'IDLE • READY',
-      badgeClass: 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300',
+      badgeClass:
+        'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300',
       dotClass: 'bg-cyan-500 dark:bg-cyan-400',
       icon: Mic,
       buttonColor:
@@ -632,15 +760,17 @@ export function VoiceCommandBanner({
     },
     listening: {
       badge: 'LISTENING • SPEAK NOW',
-      badgeClass: 'bg-rose-500/20 border-rose-500/50 text-rose-700 dark:text-rose-300 animate-pulse',
+      badgeClass:
+        'bg-rose-500/20 border-rose-500/50 text-rose-700 dark:text-rose-300 animate-pulse',
       dotClass: 'bg-rose-500 animate-ping',
       icon: Volume2,
       buttonColor:
         'bg-gradient-to-br from-rose-500 via-red-600 to-rose-800 text-white shadow-red-900/50 ring-red-500/60 hover:from-rose-400 hover:to-red-700',
     },
     processing: {
-      badge: 'PROCESSING...',
-      badgeClass: 'bg-amber-500/20 border-amber-500/50 text-amber-800 dark:text-amber-300',
+      badge: 'PROCESSING AUDIO...',
+      badgeClass:
+        'bg-amber-500/20 border-amber-500/50 text-amber-800 dark:text-amber-300',
       dotClass: 'bg-amber-500 animate-pulse',
       icon: RefreshCw,
       buttonColor:
@@ -648,7 +778,8 @@ export function VoiceCommandBanner({
     },
     matched: {
       badge: 'MATCHED • EXECUTING',
-      badgeClass: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-800 dark:text-emerald-300',
+      badgeClass:
+        'bg-emerald-500/20 border-emerald-500/50 text-emerald-800 dark:text-emerald-300',
       dotClass: 'bg-emerald-500',
       icon: CheckCircle2,
       buttonColor:
@@ -656,15 +787,17 @@ export function VoiceCommandBanner({
     },
     nomatch: {
       badge: 'NO MATCH • TRY AGAIN',
-      badgeClass: 'bg-amber-500/20 border-amber-500/40 text-amber-800 dark:text-amber-300',
+      badgeClass:
+        'bg-amber-500/20 border-amber-500/40 text-amber-800 dark:text-amber-300',
       dotClass: 'bg-amber-500',
       icon: MicOff,
       buttonColor:
         'bg-gradient-to-br from-amber-600 via-stone-700 to-slate-800 text-white shadow-amber-900/30 ring-amber-500/30',
     },
     error: {
-      badge: 'MIC BLOCKED • CHECK PERMISSION',
-      badgeClass: 'bg-red-500/20 border-red-500/50 text-red-800 dark:text-red-300',
+      badge: 'MIC ERROR • CHECK PERMISSION',
+      badgeClass:
+        'bg-red-500/20 border-red-500/50 text-red-800 dark:text-red-300',
       dotClass: 'bg-red-500',
       icon: AlertCircle,
       buttonColor:
@@ -674,27 +807,7 @@ export function VoiceCommandBanner({
 
   const currentCfg = statusConfig[voiceStatus];
   const StatusIcon = currentCfg.icon;
-
-  if (!isSupported) {
-    return (
-      <div
-        className={`relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700/60 bg-white/90 dark:bg-slate-900/90 p-5 text-sm text-slate-600 dark:text-slate-400 backdrop-blur-md shadow-sm ${className}`}
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400">
-            <AlertCircle className="h-5 w-5" />
-          </div>
-          <div>
-            <h4 className="font-semibold text-slate-900 dark:text-slate-200">Voice Navigation Unsupported</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Your current browser does not support the Web Speech API. Please switch to Google
-              Chrome, Microsoft Edge, or Safari for voice navigation.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const t = dict?.voice || {};
 
   return (
     <div
@@ -704,10 +817,10 @@ export function VoiceCommandBanner({
       <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/15 blur-3xl" />
       <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" />
 
-      {/* ─── TOP BAR: Status HUD Badge & Provider Source Segmented Toggle ─── */}
+      {/* ─── TOP BAR: Status HUD Badge, Dual Engine Indicator & Source Selector ─── */}
       <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4">
-        {/* Left: HUD Status Badge & Sound Toggle */}
-        <div className="flex items-center gap-3">
+        {/* Left: HUD Status Badge, Engine Pill & Sound Toggle */}
+        <div className="flex flex-wrap items-center gap-2.5">
           <div
             className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-semibold tracking-wide transition-all ${currentCfg.badgeClass}`}
           >
@@ -715,13 +828,53 @@ export function VoiceCommandBanner({
             <span>{currentCfg.badge}</span>
           </div>
 
+          {/* Active Recognition Engine Pill with Tooltip Info Trigger */}
+          <button
+            type="button"
+            onClick={() => setIsInfoModalOpen(true)}
+            title={
+              activeEngine === 'web-speech'
+                ? 'Web Speech API (Chrome/Edge/Safari). Click to view compatibility info & fallback details.'
+                : 'In-Browser Speech Model (Local Fallback). Click to view compatibility info & fallback details.'
+            }
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 ${
+              activeEngine === 'web-speech'
+                ? 'border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/20'
+                : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20'
+            }`}
+          >
+            {activeEngine === 'web-speech' ? (
+              <Globe className="h-3.5 w-3.5 text-cyan-500" />
+            ) : (
+              <Cpu className="h-3.5 w-3.5 text-emerald-500" />
+            )}
+            <span>
+              {activeEngine === 'web-speech'
+                ? t.engineNativeBadge || 'Web Speech API'
+                : t.engineClientBadge || 'Local AI Model'}
+            </span>
+            <Info className="h-3 w-3 opacity-70 hover:opacity-100" />
+          </button>
+
+          {/* Model Background Download Pill if downloading */}
+          {modelProgress.status === 'downloading' && (
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:text-amber-300 animate-pulse">
+              <RefreshCw className="h-3 w-3 animate-spin" />
+              <span>{modelProgress.progress}%</span>
+            </div>
+          )}
+
           <button
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
             title={soundEnabled ? 'Mute voice feedback sound' : 'Enable voice feedback sound'}
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer"
           >
-            {soundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />}
+            {soundEnabled ? (
+              <Volume2 className="h-3.5 w-3.5" />
+            ) : (
+              <VolumeX className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
+            )}
           </button>
         </div>
 
@@ -795,7 +948,7 @@ export function VoiceCommandBanner({
                   ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
                   : voiceStatus === 'matched'
                   ? 'bg-emerald-400'
-                  : 'bg-slate-700/60'
+                  : 'bg-slate-300 dark:bg-slate-700/60'
               }`}
             />
           ))}
@@ -895,7 +1048,7 @@ export function VoiceCommandBanner({
             <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-cyan-600 dark:text-cyan-300 shadow-sm">
               V
             </kbd>
-            <span>Hold &apos;V&apos; to talk (or click button to toggle)</span>
+            <span>{t.holdOrPress || "Hold 'V' to talk (or click button to toggle)"}</span>
           </div>
         </div>
 
@@ -938,7 +1091,9 @@ export function VoiceCommandBanner({
           <div className="flex flex-col items-center justify-center gap-1.5">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-              <span className="text-xs font-semibold text-rose-600 dark:text-rose-400">Listening to your voice...</span>
+              <span className="text-xs font-semibold text-rose-600 dark:text-rose-400">
+                Listening to your voice...
+              </span>
             </div>
             <div className="text-base font-semibold text-slate-900 dark:text-slate-100 min-h-[28px] flex items-center justify-center">
               {liveTranscript ? (
@@ -951,6 +1106,17 @@ export function VoiceCommandBanner({
                   Say a DBD map name, source, or action command...
                 </span>
               )}
+            </div>
+          </div>
+        )}
+
+        {voiceStatus === 'processing' && (
+          <div className="flex flex-col items-center justify-center gap-1.5">
+            <div className="flex items-center gap-2">
+              <RefreshCw className="h-4 w-4 text-amber-500 animate-spin" />
+              <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                {t.statusProcessing || 'Processing voice audio...'}
+              </span>
             </div>
           </div>
         )}
@@ -1006,14 +1172,26 @@ export function VoiceCommandBanner({
         )}
 
         {voiceStatus === 'error' && (
-          <div className="flex flex-col items-center justify-center gap-1">
+          <div className="flex flex-col items-center justify-center gap-1.5">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-700 dark:text-rose-400">
               <AlertCircle className="h-4 w-4" />
-              <span>{errorMessage || 'Microphone error'}</span>
+              <span>{errorMessage || t.micBlocked || 'Microphone error'}</span>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Please ensure your browser has permission to access your microphone.
-            </p>
+            {activeEngine === 'web-speech' && (
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveEngine('client-model');
+                  initClientSpeechModel(locale);
+                  setVoiceStatus('idle');
+                  setErrorMessage('');
+                }}
+                className="mt-1 flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20 transition-all cursor-pointer"
+              >
+                <Cpu className="h-3.5 w-3.5" />
+                <span>{t.useClientModel || 'Switch to In-Browser Client Model'}</span>
+              </button>
+            )}
           </div>
         )}
 
@@ -1087,6 +1265,24 @@ export function VoiceCommandBanner({
           ))}
         </div>
       </div>
+
+      {/* ─── Engine Compatibility & Fallback Explanatory Modal ─── */}
+      <VoiceEngineInfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        currentEngine={activeEngine}
+        onSelectEngine={(eng) => {
+          setActiveEngine(eng);
+          if (eng === 'client-model') {
+            initClientSpeechModel(locale);
+          }
+        }}
+        browserName={browserInfo.browserName}
+        hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
+        modelProgress={modelProgress}
+        onPreloadModel={() => initClientSpeechModel(locale)}
+        dict={dict}
+      />
     </div>
   );
 }

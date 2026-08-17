@@ -12,18 +12,28 @@ LOCK_FILE = "/tmp/dbd_initial_scrape.lock"
 
 
 def _run_initial_scrape_if_needed():
+    with app.app_context():
+        from sqlalchemy import select, func
+        from app.extensions import db
+        from app.models import Character
+        try:
+            char_count = db.session.scalar(select(func.count(Character.id))) or 0
+        except Exception:
+            char_count = 0
+
     perk_service = PerkService()
-    if not perk_service.data_path.exists():
+    if char_count == 0 and not perk_service.data_path.exists():
         try:
             # Atomic file creation across Gunicorn workers
             fd = os.open(LOCK_FILE, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
             os.close(fd)
 
             def background_task():
-                logger.info("perks.json not found on startup. Triggering initial scrape...")
-                scraper = ScraperService()
-                scraper.run_sync_pipeline()
-                perk_service.reload_data()
+                logger.info("No character records found on startup. Triggering initial scrape & seed...")
+                with app.app_context():
+                    scraper = ScraperService()
+                    scraper.run_sync_pipeline()
+                    perk_service.reload_data()
 
             thread = threading.Thread(target=background_task, daemon=True)
             thread.start()

@@ -1,10 +1,12 @@
-from dataclasses import asdict
+import logging
 import threading
+from dataclasses import asdict
 from pathlib import Path
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from app.services.perk_service import PerkService
 from app.services.scraper_service import ScraperService
 
+logger = logging.getLogger(__name__)
 perks_bp = Blueprint("perks", __name__)
 perk_service = PerkService()
 
@@ -51,14 +53,13 @@ def list_characters():
     return jsonify({"count": len(characters), "data": characters}), 200
 
 
-
-
 @perks_bp.route("/api/v1/characters/<string:character_name>/detail", methods=["GET"])
 def get_character_detail(character_name: str):
     detail = perk_service.get_character_detail(character_name)
     if not detail:
         return jsonify({"error": "Character not found", "status": 404}), 404
     return jsonify({"data": detail}), 200
+
 
 @perks_bp.route("/api/v1/survivors", methods=["GET"])
 def list_survivors():
@@ -89,29 +90,37 @@ def list_addons():
     return jsonify({"count": len(addons), "data": addons}), 200
 
 
-@perks_bp.route("/api/v1/maps", methods=["GET"])
-def list_maps():
-    realm = request.args.get("realm")
-    search = request.args.get("search")
-    source = request.args.get("source")
-    maps = perk_service.get_maps(realm=realm, search=search, source=source)
-    return jsonify({"count": len(maps), "maps": maps, "data": maps}), 200
-
-
-@perks_bp.route("/api/v1/maps/<string:map_id>", methods=["GET"])
-def get_map_detail_route(map_id: str):
-    seed = request.args.get("seed")
-    floor = request.args.get("floor", type=int)
-    map_data = perk_service.get_map_detail(map_id, seed=seed, floor=floor)
-    if not map_data:
-        return jsonify({"error": "Map not found"}), 404
-    return jsonify({"map": map_data, "data": map_data}), 200
-
-
 def _run_background_scrape(override_source=None, override_fallback=None):
     scraper = ScraperService()
     scraper.run_sync_pipeline(override_source=override_source, override_fallback=override_fallback)
     perk_service.reload_data()
+
+
+@perks_bp.route("/api/scrape-and-seed", methods=["POST"])
+@perks_bp.route("/api/v1/scrape-and-seed", methods=["POST"])
+def scrape_and_seed():
+    """Initiates the scrape-and-seed workflow and returns execution metrics."""
+    data = request.get_json(silent=True) or {}
+    source = data.get("source")
+    fallback = data.get("fallback")
+    if fallback is None:
+        fallback = data.get("fallback_to_wiki")
+
+    scraper = ScraperService()
+    try:
+        stats = scraper.run_sync_pipeline(override_source=source, override_fallback=fallback)
+        perk_service.reload_data()
+        return jsonify({
+            "status": "success",
+            "characters_synced": stats.get("characters_synced", stats.get("total_characters", 0)),
+            "perks_synced": stats.get("perks_synced", stats.get("total_perks", 0)),
+            "items_synced": stats.get("items_synced", stats.get("total_items", 0)),
+            "addons_synced": stats.get("addons_synced", stats.get("total_addons", 0)),
+            "metrics": stats,
+        }), 200
+    except Exception as e:
+        logger.error(f"Scrape-and-seed pipeline error: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @perks_bp.route("/api/v1/scrape", methods=["POST"])

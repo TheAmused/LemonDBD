@@ -1,5 +1,26 @@
 services:
-  backend:
+  db:
+    image: postgres:16-alpine
+    container_name: dbd_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-dbd_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-dbd_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - dbd_network
+
+  web:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -11,8 +32,13 @@ services:
       - ./backend/data:/app/data
       - ./backend/app/static:/app/app/static
     environment:
-      - FLASK_ENV=production
-      - CORS_ORIGINS=*
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    depends_on:
+      db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
       interval: 10s
@@ -20,22 +46,24 @@ services:
       retries: 3
       start_period: 10s
     networks:
-      - dbd_network
+      dbd_network:
+        aliases:
+          - backend
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: https://localhost
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost}
     container_name: dbd_frontend
     restart: unless-stopped
     expose:
       - "3000"
     environment:
-      - NEXT_PUBLIC_API_URL=https://localhost
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://localhost}
     depends_on:
-      backend:
+      web:
         condition: service_healthy
     networks:
       - dbd_network
@@ -50,12 +78,16 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      backend:
+      web:
         condition: service_healthy
       frontend:
         condition: service_started
     networks:
       - dbd_network
+
+volumes:
+  postgres_data:
+    driver: local
 
 networks:
   dbd_network:

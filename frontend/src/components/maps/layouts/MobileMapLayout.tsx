@@ -71,7 +71,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
       {/* ─── Top Compact Header ────────────────────────────────────────────── */}
       <div
         className="flex items-center justify-between p-3 border-b border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shrink-0 z-10"
-        data-testid="mobile-map-header"
+        data-testid="mobile-map-topbar"
       >
         <div className="flex items-center gap-2 min-w-0">
           <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-[11px] font-extrabold text-amber-600 dark:text-amber-400 whitespace-nowrap">

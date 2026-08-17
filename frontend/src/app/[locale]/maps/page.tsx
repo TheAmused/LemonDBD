@@ -136,6 +136,7 @@ function MapsPageInner() {
           {/* ── Voice Command Banner ── */}
           <VoiceCommandBanner
             locale={locale}
+            dict={dict}
             currentSource={currentSource}
             onSourceChange={(src) => {
               console.log('[MapsPage] Source changed to:', src);

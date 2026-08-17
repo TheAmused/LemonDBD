@@ -28,7 +28,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-slate-200/80 pt-6 dark:border-slate-800/80">
       {/* Results Readout */}
-      <div className="text-xs font-medium text-slate-500 dark:text-slate-400">
+      <div className="text-xs font-medium text-slate-600 dark:text-slate-400">
         {dict.pagination.showing} <span className="font-bold text-slate-900 dark:text-slate-100">{startIdx}</span> -{' '}
         <span className="font-bold text-slate-900 dark:text-slate-100">{endIdx}</span> {dict.pagination.of}{' '}
         <span className="font-bold text-slate-900 dark:text-slate-100">{totalResults}</span> {dict.pagination.results}
@@ -38,7 +38,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       <div className="flex items-center justify-between sm:justify-end gap-3">
         {/* Limit Selector */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
             {dict.pagination.perPage}:
           </span>
           <select

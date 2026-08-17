@@ -26,27 +26,27 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
   onOpenPool,
 }) => {
   return (
-    <div className="w-full bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-xl mb-6">
+    <div className="w-full bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-sm dark:shadow-xl mb-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Left: Title & Role Switcher */}
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
           <div className="text-center sm:text-left">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2 justify-center sm:justify-start">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 justify-center sm:justify-start">
               <span className="text-amber-500">DBD</span> Win Streak Challenge
             </h1>
-            <p className="text-xs sm:text-sm text-slate-400">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
               Conquer matches, build streaks, and master the roster
             </p>
           </div>
 
           {/* Role Tabs */}
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 self-center">
+          <div className="flex bg-slate-100 dark:bg-slate-950 p-1 rounded-xl border border-slate-200 dark:border-slate-800 self-center shadow-inner">
             <button
               onClick={() => onRoleChange('survivor')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                 activeRole === 'survivor'
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-900'
               }`}
             >
               <User className="w-4 h-4" />
@@ -57,7 +57,7 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
                 activeRole === 'killer'
                   ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-900'
               }`}
             >
               <Skull className="w-4 h-4" />
@@ -69,39 +69,39 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
         {/* Right: Streak Badges & Action Triggers */}
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
           {/* Current Streak */}
-          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950/80 border border-amber-500/30 text-amber-400 shadow-sm">
+          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-amber-500/30 text-amber-600 dark:text-amber-400 shadow-sm">
             <Flame className="w-5 h-5 text-amber-500 fill-amber-500/20 animate-pulse" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold leading-none">
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
                 Current
               </span>
-              <span className="text-lg font-black text-white leading-none mt-0.5">
+              <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {currentStreak}
               </span>
             </div>
           </div>
 
           {/* Best Streak */}
-          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950/80 border border-yellow-500/30 text-yellow-400 shadow-sm">
-            <Trophy className="w-5 h-5 text-yellow-400" />
+          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-yellow-500/30 text-yellow-600 dark:text-yellow-400 shadow-sm">
+            <Trophy className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold leading-none">
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
                 Best
               </span>
-              <span className="text-lg font-black text-white leading-none mt-0.5">
+              <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {bestStreak}
               </span>
             </div>
           </div>
 
           {/* Checkpoint Level */}
-          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-950/80 border border-indigo-500/30 text-indigo-400 shadow-sm">
-            <Shield className="w-5 h-5 text-indigo-400" />
+          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 shadow-sm">
+            <Shield className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold leading-none">
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
                 Checkpoint
               </span>
-              <span className="text-lg font-black text-white leading-none mt-0.5">
+              <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {lastCheckpointStreak}
               </span>
             </div>
@@ -111,10 +111,10 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
           {onOpenRules && (
             <button
               onClick={onOpenRules}
-              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-amber-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-amber-400 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
               title="View Gauntlet Rules & Guidelines"
             >
-              <BookOpen className="w-4 h-4 text-amber-400" />
+              <BookOpen className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               <span className="hidden sm:inline">Gauntlet Rules</span>
             </button>
           )}
@@ -123,10 +123,10 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
           {onOpenPool && (
             <button
               onClick={onOpenPool}
-              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
               title="Configure Character Pool Settings"
             >
-              <Settings className="w-4 h-4 text-slate-400" />
+              <Settings className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               <span className="hidden sm:inline">Character Pool</span>
             </button>
           )}
@@ -135,7 +135,7 @@ export const ChallengeHeader: React.FC<ChallengeHeaderProps> = ({
           {onOpenStats && (
             <button
               onClick={onOpenStats}
-              className="flex items-center justify-center p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors shadow-sm cursor-pointer"
+              className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
               title="View Challenge Statistics"
             >
               <BarChart2 className="w-5 h-5" />

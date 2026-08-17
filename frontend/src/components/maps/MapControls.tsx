@@ -33,7 +33,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
 
   return (
     <div
-      className={`flex items-center gap-1.5 rounded-2xl border border-slate-800 bg-slate-900/90 p-2 backdrop-blur-md shadow-2xl z-30 select-none ${
+      className={`flex items-center gap-1.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-2 backdrop-blur-md shadow-lg dark:shadow-2xl z-30 select-none ${
         isVertical ? 'flex-col' : 'flex-wrap'
       } ${className}`}
       data-testid="map-controls-hud"
@@ -44,7 +44,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         onClick={onZoomIn}
         aria-label="Zoom In"
         title="Zoom In (+25%)"
-        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-200 hover:text-amber-400 hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
         data-testid="map-controls-zoom-in"
       >
         <ZoomIn className="h-4 w-4" />
@@ -52,7 +52,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
 
       {/* Current Zoom Percentage */}
       <span
-        className="text-xs font-mono font-bold text-amber-400 px-2 min-w-[48px] text-center"
+        className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 px-2 min-w-[48px] text-center"
         data-testid="map-controls-zoom-level"
       >
         {Math.round(zoomLevel * 100)}%
@@ -64,7 +64,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         onClick={onZoomOut}
         aria-label="Zoom Out"
         title="Zoom Out (-25%)"
-        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-200 hover:text-amber-400 hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
         data-testid="map-controls-zoom-out"
       >
         <ZoomOut className="h-4 w-4" />
@@ -74,7 +74,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
       {(!isCompact || showPresets) && (
         <div
           className={
-            isVertical ? 'w-5 h-px bg-slate-800 my-1' : 'w-px h-5 bg-slate-800 mx-1 hidden sm:block'
+            isVertical ? 'w-5 h-px bg-slate-200 dark:bg-slate-800 my-1' : 'w-px h-5 bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block'
           }
         />
       )}
@@ -92,7 +92,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             onClick={onReset}
             title="Fit to Screen"
             aria-pressed={false}
-            className="px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800 transition-all cursor-pointer"
+            className="px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800 transition-all cursor-pointer"
             data-testid="map-controls-preset-fit"
           >
             Fit
@@ -105,7 +105,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
               Math.abs(zoomLevel - 1.0) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'
-                : 'text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800'
             }`}
             data-testid="map-controls-preset-100"
           >
@@ -119,7 +119,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
               Math.abs(zoomLevel - 1.5) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'
-                : 'text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800'
             }`}
             data-testid="map-controls-preset-150"
           >
@@ -133,7 +133,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
               Math.abs(zoomLevel - 2.0) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'
-                : 'text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800'
             }`}
             data-testid="map-controls-preset-200"
           >
@@ -143,7 +143,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
       )}
 
       {/* Divider */}
-      <div className={isVertical ? 'w-5 h-px bg-slate-800 my-1' : 'w-px h-5 bg-slate-800 mx-1'} />
+      <div className={isVertical ? 'w-5 h-px bg-slate-200 dark:bg-slate-800 my-1' : 'w-px h-5 bg-slate-200 dark:bg-slate-800 mx-1'} />
 
       {/* Reset Zoom & Pan Button (44px touch target) */}
       <button
@@ -151,7 +151,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         onClick={onReset}
         aria-label="Reset View"
         title="Reset Zoom & Pan"
-        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-200 hover:text-amber-400 hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
         data-testid="map-controls-reset"
       >
         <RotateCcw className="h-4 w-4" />
@@ -164,7 +164,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
           onClick={onFullscreen}
           aria-label="Fullscreen"
           title="Fullscreen Interactive Mode"
-          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-200 hover:text-amber-400 hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
           data-testid="map-controls-fullscreen"
         >
           <Maximize2 className="h-4 w-4" />
@@ -178,7 +178,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
           onClick={onPopout}
           aria-label="Popout"
           title="Popout Map in Window"
-          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-800/80 text-slate-200 hover:text-amber-400 hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
           data-testid="map-controls-popout"
         >
           <ExternalLink className="h-4 w-4" />

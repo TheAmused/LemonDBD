@@ -61,7 +61,7 @@ const RARITY_OPTIONS = [
     label: 'Iridescent',
     bg: 'from-pink-600/30 via-red-900/40 to-slate-950',
     border: 'border-pink-500/50',
-    badgeBg: 'bg-pink-500/20 text-pink-300 border-pink-500/40',
+    badgeBg: 'bg-pink-500/10 dark:bg-pink-500/20 text-pink-700 dark:text-pink-300 border-pink-500/30 dark:border-pink-500/40',
     glow: 'shadow-pink-900/30',
   },
   {
@@ -69,7 +69,7 @@ const RARITY_OPTIONS = [
     label: 'Very Rare',
     bg: 'from-purple-600/30 via-indigo-900/40 to-slate-950',
     border: 'border-purple-500/50',
-    badgeBg: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+    badgeBg: 'bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30 dark:border-purple-500/40',
     glow: 'shadow-purple-900/30',
   },
   {
@@ -77,7 +77,7 @@ const RARITY_OPTIONS = [
     label: 'Uncommon',
     bg: 'from-emerald-600/30 via-teal-900/40 to-slate-950',
     border: 'border-emerald-500/50',
-    badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    badgeBg: 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 dark:border-emerald-500/40',
     glow: 'shadow-emerald-900/30',
   },
 ];
@@ -153,27 +153,34 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
     setIsSubmitting(true);
     try {
+      const payload = {
+        name: name.trim(),
+        role,
+        character_name: characterName.trim(),
+        rarity,
+        icon_preset: iconPreset,
+        description: description.trim(),
+        author: author.trim() || 'Anonymous',
+      };
+
       const res = await fetch(`${backendBase}/api/v1/custom-perks/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name.trim(),
-          role,
-          character_name: characterName.trim() || 'Teachable',
-          rarity,
-          icon_preset: iconPreset,
-          description: description.trim(),
-          author: author.trim() || 'Community',
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to submit perk concept.');
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to create custom perk');
       }
 
-      setSuccessToast('Custom perk published successfully!');
+      const resData = await res.json();
+      setSuccessToast(`Successfully published "${payload.name}"!`);
       setTimeout(() => setSuccessToast(''), 4000);
+
+      // Refresh gallery
       fetchCommunityPerks();
       setActiveTab('gallery');
     } catch (err: any) {
@@ -220,7 +227,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
     const lines = text.split('\n');
 
     return (
-      <div className="space-y-1.5 text-xs text-slate-300 leading-relaxed font-sans">
+      <div className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
         {lines.map((line, lIdx) => {
           if (!line.trim()) return <div key={lIdx} className="h-1" />;
           const parts = line.split(/(\*\*.*?\*\*|\*.*?\*)/g);
@@ -231,7 +238,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 if (part.startsWith('**') && part.endsWith('**')) {
                   const content = part.slice(2, -2);
                   return (
-                    <strong key={pIdx} className="font-bold text-amber-300 dark:text-amber-400">
+                    <strong key={pIdx} className="font-bold text-amber-700 dark:text-amber-400">
                       {content}
                     </strong>
                   );
@@ -239,7 +246,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 if (part.startsWith('*') && part.endsWith('*')) {
                   const content = part.slice(1, -1);
                   return (
-                    <em key={pIdx} className="italic text-slate-200">
+                    <em key={pIdx} className="italic text-slate-900 dark:text-slate-200">
                       {content}
                     </em>
                   );
@@ -260,30 +267,30 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
   return (
     <div className="space-y-8">
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-950 via-slate-900 to-purple-950 p-6 sm:p-8 border border-red-500/20 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-50 via-slate-100 to-purple-50 dark:from-red-950 dark:via-slate-900 dark:to-purple-950 p-6 sm:p-8 border border-red-500/20 shadow-sm dark:shadow-2xl">
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-bold text-red-400">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-bold text-red-600 dark:text-red-400">
               <Wand2 className="h-3.5 w-3.5 animate-pulse" />
               <span>Studio & Concept Lab</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-mono">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono">
               Custom Perk Creator Studio
             </h1>
-            <p className="text-sm text-slate-400 max-w-2xl">
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
               Design original Dead by Daylight perk concepts with a live interactive diamond card preview, or explore and upvote community-created perks.
             </p>
           </div>
 
           {/* Tab Switcher */}
-          <div className="flex items-center bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 shrink-0">
+          <div className="flex items-center bg-white/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shrink-0 shadow-sm">
             <button
               onClick={() => setActiveTab('designer')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'designer'
                   ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-900/30'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               <Wand2 className="h-4 w-4" />
@@ -294,7 +301,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'gallery'
                   ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-900/30'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               <Layers className="h-4 w-4" />
@@ -306,7 +313,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
       {/* Toast Notification */}
       {successToast && (
-        <div className="flex items-center gap-2 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-semibold animate-in fade-in slide-in-from-top-2">
+        <div className="flex items-center gap-2 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-sm font-semibold animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           <span>{successToast}</span>
         </div>
@@ -316,9 +323,9 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
       {activeTab === 'designer' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Form (7 cols) */}
-          <div className="lg:col-span-7 bg-slate-900/80 border border-slate-800/80 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-xl space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+          <div className="lg:col-span-7 bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <Sliders className="h-5 w-5 text-red-500" />
                 <span>Configure Perk Concept</span>
               </h2>
@@ -326,7 +333,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             </div>
 
             {formError && (
-              <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-semibold">
+              <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-400 text-xs font-semibold">
                 {formError}
               </div>
             )}
@@ -334,7 +341,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Perk Name */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   Perk Title *
                 </label>
                 <input
@@ -342,7 +349,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Hex: Shadow Veil, Adrenaline Overdrive..."
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   required
                 />
               </div>
@@ -350,7 +357,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               {/* Role & Character */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                     Role *
                   </label>
                   <div className="grid grid-cols-2 gap-2">
@@ -359,11 +366,11 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       onClick={() => setRole('survivor')}
                       className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                         role === 'survivor'
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-md shadow-emerald-900/20'
-                          : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                          ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/40 shadow-sm'
+                          : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                       }`}
                     >
-                      <Shield className="h-4 w-4 text-emerald-400" />
+                      <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                       <span>Survivor</span>
                     </button>
                     <button
@@ -371,18 +378,18 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       onClick={() => setRole('killer')}
                       className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                         role === 'killer'
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-md shadow-rose-900/20'
-                          : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                          ? 'bg-rose-500/20 text-rose-800 dark:text-rose-300 border-rose-500/40 shadow-sm'
+                          : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                       }`}
                     >
-                      <Skull className="h-4 w-4 text-rose-400" />
+                      <Skull className="h-4 w-4 text-rose-600 dark:text-rose-400" />
                       <span>Killer</span>
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                     Character / Teachable
                   </label>
                   <input
@@ -390,14 +397,14 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                     value={characterName}
                     onChange={(e) => setCharacterName(e.target.value)}
                     placeholder="e.g. Meg Thomas, The Trapper, Teachable..."
-                    className="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                    className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   />
                 </div>
               </div>
 
               {/* Rarity */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   Rarity *
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -409,7 +416,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       className={`py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                         rarity === r.id
                           ? r.badgeBg
-                          : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                          : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                       }`}
                     >
                       {r.label}
@@ -420,7 +427,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
               {/* Icon Preset Picker */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   Icon Preset *
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -434,8 +441,8 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                         onClick={() => setIconPreset(preset.id)}
                         className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-red-500/20 text-red-400 border-red-500/50 shadow-sm'
-                            : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                            ? 'bg-red-500/10 dark:bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/50 shadow-sm'
+                            : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'
                         }`}
                       >
                         <IconComp className="h-5 w-5 mb-1" />
@@ -448,7 +455,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
               {/* Author */}
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   Creator / Author Name
                 </label>
                 <input
@@ -456,35 +463,35 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
                   placeholder="e.g. EntityArchitect"
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                 />
               </div>
 
               {/* Description Markdown */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                     Perk Description (Markdown Supported) *
                   </label>
                   <div className="flex gap-1.5 text-[10px] font-mono">
                     <button
                       type="button"
                       onClick={() => setDescription((prev) => prev + ' **Exhausted**')}
-                      className="px-2 py-0.5 rounded bg-slate-800 text-amber-300 hover:bg-slate-700 cursor-pointer"
+                      className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
                       +**Exhausted**
                     </button>
                     <button
                       type="button"
                       onClick={() => setDescription((prev) => prev + ' **Hindered**')}
-                      className="px-2 py-0.5 rounded bg-slate-800 text-amber-300 hover:bg-slate-700 cursor-pointer"
+                      className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
                       +**Hindered**
                     </button>
                     <button
                       type="button"
                       onClick={() => setDescription((prev) => prev + ' **Aura**')}
-                      className="px-2 py-0.5 rounded bg-slate-800 text-amber-300 hover:bg-slate-700 cursor-pointer"
+                      className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
                       +**Aura**
                     </button>
@@ -495,7 +502,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
                   placeholder="Write perk mechanics... Use **bold** for key status terms."
-                  className="w-full rounded-xl bg-slate-950 border border-slate-800 p-3.5 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-3.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   required
                 />
               </div>
@@ -515,11 +522,11 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
           {/* Right Column: Live Interactive Perk Card Preview (5 cols) */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
             <div className="flex items-center justify-between px-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4 text-red-500" />
                 Live Card Preview
               </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold border border-emerald-500/30 animate-pulse">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold border border-emerald-500/30 animate-pulse">
                 REAL-TIME
               </span>
             </div>
@@ -582,7 +589,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                     {description ? (
                       renderMarkdown(description)
                     ) : (
-                      <p className="text-xs text-slate-500 italic text-center">
+                      <p className="text-xs text-slate-400 italic text-center">
                         Perk description will render live here...
                       </p>
                     )}
@@ -607,30 +614,30 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
       {activeTab === 'gallery' && (
         <div className="space-y-6">
           {/* Gallery Filters & Search */}
-          <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 backdrop-blur-xl shadow-xl space-y-4">
+          <div className="bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
               {/* Search Bar (5 cols) */}
               <div className="md:col-span-5 relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search concepts by title, mechanic, character..."
-                  className="w-full rounded-2xl bg-slate-950 border border-slate-800 pl-10 pr-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 pl-10 pr-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 />
               </div>
 
               {/* Role Filters (3 cols) */}
-              <div className="md:col-span-3 flex items-center gap-1 bg-slate-950 p-1 rounded-2xl border border-slate-800">
+              <div className="md:col-span-3 flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-2xl border border-slate-200 dark:border-slate-800">
                 {['all', 'survivor', 'killer'].map((r) => (
                   <button
                     key={r}
                     onClick={() => setFilterRole(r)}
                     className={`flex-1 py-1.5 rounded-xl text-[11px] font-bold capitalize transition-all cursor-pointer ${
                       filterRole === r
-                        ? 'bg-slate-800 text-slate-100 shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm'
+                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                     }`}
                   >
                     {r}
@@ -643,12 +650,12 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 <select
                   value={filterRarity}
                   onChange={(e) => setFilterRarity(e.target.value)}
-                  className="w-full rounded-2xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 >
-                  <option value="all">All Rarities</option>
-                  <option value="Iridescent">Iridescent</option>
-                  <option value="Very Rare">Very Rare</option>
-                  <option value="Uncommon">Uncommon</option>
+                  <option value="all" className="dark:bg-slate-900">All Rarities</option>
+                  <option value="Iridescent" className="dark:bg-slate-900">Iridescent</option>
+                  <option value="Very Rare" className="dark:bg-slate-900">Very Rare</option>
+                  <option value="Uncommon" className="dark:bg-slate-900">Uncommon</option>
                 </select>
               </div>
 
@@ -657,10 +664,10 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full rounded-2xl bg-slate-950 border border-slate-800 px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 >
-                  <option value="newest">Newest First</option>
-                  <option value="upvotes">Most Upvoted</option>
+                  <option value="newest" className="dark:bg-slate-900">Newest First</option>
+                  <option value="upvotes" className="dark:bg-slate-900">Most Upvoted</option>
                 </select>
               </div>
             </div>
@@ -668,19 +675,19 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
           {/* Cards Grid */}
           {loadingGallery ? (
-            <div className="py-16 text-center text-slate-400 animate-pulse">
+            <div className="py-16 text-center text-slate-500 dark:text-slate-400 animate-pulse font-mono text-xs">
               Loading perk concepts...
             </div>
           ) : customPerks.length === 0 ? (
-            <div className="bg-slate-900/40 border border-slate-800 rounded-3xl p-12 text-center space-y-3">
-              <Sparkles className="h-8 w-8 text-slate-600 mx-auto" />
-              <h3 className="text-base font-bold text-slate-300">No Custom Perks Found</h3>
+            <div className="bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3">
+              <Sparkles className="h-8 w-8 text-slate-400 dark:text-slate-600 mx-auto" />
+              <h3 className="text-base font-bold text-slate-800 dark:text-slate-300">No Custom Perks Found</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
                 No perk concepts match your current filter settings. Try clearing filters or create a new concept!
               </p>
               <button
                 onClick={() => setActiveTab('designer')}
-                className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-500 transition-colors cursor-pointer"
+                className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-500 transition-colors cursor-pointer shadow-md shadow-red-900/20"
               >
                 <Plus className="h-4 w-4" />
                 <span>Create New Concept</span>
@@ -696,21 +703,21 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 return (
                   <div
                     key={perk.id}
-                    className={`flex flex-col justify-between rounded-3xl bg-slate-900/90 border border-slate-800 p-5 hover:border-slate-700 transition-all duration-200 shadow-xl group`}
+                    className={`flex flex-col justify-between rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-5 hover:border-red-500/40 dark:hover:border-slate-700 transition-all duration-200 shadow-sm dark:shadow-xl group`}
                   >
                     <div>
                       {/* Top Bar: Icon + Rarity & Role Badges */}
                       <div className="flex items-start justify-between gap-3 mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 border border-slate-800 group-hover:scale-105 transition-transform overflow-hidden">
+                          <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 group-hover:scale-105 transition-transform overflow-hidden shadow-inner">
                             <div className={`absolute inset-0 bg-gradient-to-br ${rConfig.bg} opacity-40`} />
-                            <CurrentIcon className="h-6 w-6 text-slate-100 relative z-10" />
+                            <CurrentIcon className="h-6 w-6 text-slate-800 dark:text-slate-100 relative z-10" />
                           </div>
                           <div>
-                            <h4 className="font-extrabold text-sm text-slate-100 font-mono line-clamp-1">
+                            <h4 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 font-mono line-clamp-1">
                               {perk.name}
                             </h4>
-                            <p className="text-[11px] text-slate-400 line-clamp-1">
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
                               {perk.character_name || 'Teachable'}
                             </p>
                           </div>
@@ -719,8 +726,8 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider shrink-0 ${
                             perk.role === 'survivor'
-                              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                              : 'bg-rose-500/20 text-rose-400 border-rose-500/30'
+                              ? 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
+                              : 'bg-rose-500/10 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border-rose-500/30'
                           }`}
                         >
                           {perk.role}
@@ -737,13 +744,13 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       </div>
 
                       {/* Mechanics Description */}
-                      <div className="bg-slate-950/60 rounded-2xl p-3.5 border border-slate-800/80 mb-4 min-h-[90px]">
+                      <div className="bg-slate-50 dark:bg-slate-950/60 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800/80 mb-4 min-h-[90px] shadow-inner">
                         {renderMarkdown(perk.description)}
                       </div>
                     </div>
 
                     {/* Bottom Metadata & Upvote Action */}
-                    <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                    <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
                         <User className="h-3.5 w-3.5" />
                         <span className="truncate max-w-[110px]">{perk.author}</span>
@@ -752,13 +759,13 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       <button
                         onClick={() => handleUpvote(perk.id)}
                         disabled={isUpvoted}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer shadow-sm ${
                           isUpvoted
-                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                            : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700 hover:text-white'
+                            ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'
                         }`}
                       >
-                        <ThumbsUp className={`h-3.5 w-3.5 ${isUpvoted ? 'fill-amber-400 text-amber-400' : ''}`} />
+                        <ThumbsUp className={`h-3.5 w-3.5 ${isUpvoted ? 'fill-amber-500 dark:fill-amber-400 text-amber-500 dark:text-amber-400' : ''}`} />
                         <span>{perk.upvotes}</span>
                       </button>
                     </div>

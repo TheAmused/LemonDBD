@@ -624,51 +624,51 @@ export function VoiceCommandBanner({
   const statusConfig = {
     idle: {
       badge: 'IDLE • READY',
-      badgeClass: 'bg-slate-800/80 border-slate-700 text-slate-300',
-      dotClass: 'bg-cyan-400',
+      badgeClass: 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300',
+      dotClass: 'bg-cyan-500 dark:bg-cyan-400',
       icon: Mic,
       buttonColor:
-        'bg-gradient-to-br from-cyan-600 via-cyan-700 to-blue-800 text-white shadow-cyan-900/40 ring-cyan-500/30 hover:from-cyan-500 hover:to-blue-700',
+        'bg-gradient-to-br from-cyan-600 via-cyan-700 to-blue-800 text-white shadow-cyan-900/30 ring-cyan-500/30 hover:from-cyan-500 hover:to-blue-700',
     },
     listening: {
       badge: 'LISTENING • SPEAK NOW',
-      badgeClass: 'bg-rose-500/20 border-rose-500/50 text-rose-300 animate-pulse',
+      badgeClass: 'bg-rose-500/20 border-rose-500/50 text-rose-700 dark:text-rose-300 animate-pulse',
       dotClass: 'bg-rose-500 animate-ping',
       icon: Volume2,
       buttonColor:
-        'bg-gradient-to-br from-rose-500 via-red-600 to-rose-800 text-white shadow-red-900/60 ring-red-500/60 hover:from-rose-400 hover:to-red-700',
+        'bg-gradient-to-br from-rose-500 via-red-600 to-rose-800 text-white shadow-red-900/50 ring-red-500/60 hover:from-rose-400 hover:to-red-700',
     },
     processing: {
       badge: 'PROCESSING...',
-      badgeClass: 'bg-amber-500/20 border-amber-500/50 text-amber-300',
-      dotClass: 'bg-amber-400 animate-pulse',
+      badgeClass: 'bg-amber-500/20 border-amber-500/50 text-amber-800 dark:text-amber-300',
+      dotClass: 'bg-amber-500 animate-pulse',
       icon: RefreshCw,
       buttonColor:
-        'bg-gradient-to-br from-amber-600 via-amber-700 to-orange-800 text-white shadow-amber-900/50 ring-amber-500/40',
+        'bg-gradient-to-br from-amber-600 via-amber-700 to-orange-800 text-white shadow-amber-900/40 ring-amber-500/40',
     },
     matched: {
       badge: 'MATCHED • EXECUTING',
-      badgeClass: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300',
-      dotClass: 'bg-emerald-400',
+      badgeClass: 'bg-emerald-500/20 border-emerald-500/50 text-emerald-800 dark:text-emerald-300',
+      dotClass: 'bg-emerald-500',
       icon: CheckCircle2,
       buttonColor:
-        'bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-800 text-white shadow-emerald-900/50 ring-emerald-500/50',
+        'bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-800 text-white shadow-emerald-900/40 ring-emerald-500/50',
     },
     nomatch: {
       badge: 'NO MATCH • TRY AGAIN',
-      badgeClass: 'bg-amber-500/20 border-amber-500/40 text-amber-300',
-      dotClass: 'bg-amber-400',
+      badgeClass: 'bg-amber-500/20 border-amber-500/40 text-amber-800 dark:text-amber-300',
+      dotClass: 'bg-amber-500',
       icon: MicOff,
       buttonColor:
         'bg-gradient-to-br from-amber-600 via-stone-700 to-slate-800 text-white shadow-amber-900/30 ring-amber-500/30',
     },
     error: {
       badge: 'MIC BLOCKED • CHECK PERMISSION',
-      badgeClass: 'bg-red-500/20 border-red-500/50 text-red-300',
+      badgeClass: 'bg-red-500/20 border-red-500/50 text-red-800 dark:text-red-300',
       dotClass: 'bg-red-500',
       icon: AlertCircle,
       buttonColor:
-        'bg-gradient-to-br from-red-700 via-red-800 to-slate-900 text-white shadow-red-900/40 ring-red-500/40',
+        'bg-gradient-to-br from-red-700 via-red-800 to-slate-900 text-white shadow-red-900/30 ring-red-500/40',
     },
   };
 
@@ -678,15 +678,15 @@ export function VoiceCommandBanner({
   if (!isSupported) {
     return (
       <div
-        className={`relative overflow-hidden rounded-3xl border border-slate-700/60 bg-slate-900/90 p-5 text-sm text-slate-400 backdrop-blur-md ${className}`}
+        className={`relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700/60 bg-white/90 dark:bg-slate-900/90 p-5 text-sm text-slate-600 dark:text-slate-400 backdrop-blur-md shadow-sm ${className}`}
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400">
             <AlertCircle className="h-5 w-5" />
           </div>
           <div>
-            <h4 className="font-semibold text-slate-200">Voice Navigation Unsupported</h4>
-            <p className="text-xs text-slate-400">
+            <h4 className="font-semibold text-slate-900 dark:text-slate-200">Voice Navigation Unsupported</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Your current browser does not support the Web Speech API. Please switch to Google
               Chrome, Microsoft Edge, or Safari for voice navigation.
             </p>
@@ -698,14 +698,14 @@ export function VoiceCommandBanner({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-slate-900/85 p-5 sm:p-6 backdrop-blur-xl shadow-2xl shadow-cyan-950/40 transition-all duration-300 ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-white/90 dark:bg-slate-900/85 p-5 sm:p-6 backdrop-blur-xl shadow-lg dark:shadow-2xl shadow-cyan-950/20 dark:shadow-cyan-950/40 transition-all duration-300 ${className}`}
     >
       {/* Decorative ambient background glows */}
       <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/15 blur-3xl" />
       <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" />
 
       {/* ─── TOP BAR: Status HUD Badge & Provider Source Segmented Toggle ─── */}
-      <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-800/80 pb-4">
+      <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4">
         {/* Left: HUD Status Badge & Sound Toggle */}
         <div className="flex items-center gap-3">
           <div
@@ -719,14 +719,14 @@ export function VoiceCommandBanner({
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
             title={soundEnabled ? 'Mute voice feedback sound' : 'Enable voice feedback sound'}
-            className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700/60 bg-slate-800/50 text-slate-400 transition hover:border-slate-600 hover:text-slate-200"
+            className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer"
           >
-            {soundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5 text-slate-500" />}
+            {soundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />}
           </button>
         </div>
 
         {/* Right: Provider Source Segmented Toggle */}
-        <div className="flex items-center gap-1.5 rounded-2xl border border-slate-800 bg-slate-950/70 p-1">
+        <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950/70 p-1">
           <span className="px-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Source:
           </span>
@@ -734,10 +734,10 @@ export function VoiceCommandBanner({
             type="button"
             onClick={() => onSourceChange('hens333')}
             aria-pressed={currentSource === 'hens333'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all ${
+            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
               currentSource === 'hens333'
-                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md shadow-cyan-950/50 border border-cyan-400/30 font-bold'
-                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md shadow-cyan-950/30 border border-cyan-400/30 font-bold'
+                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             Hens333 (12-Clock)
@@ -747,10 +747,10 @@ export function VoiceCommandBanner({
             type="button"
             onClick={() => onSourceChange('samoelcolt')}
             aria-pressed={currentSource === 'samoelcolt'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all ${
+            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
               currentSource === 'samoelcolt'
-                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-950/50 border border-purple-400/30 font-bold'
-                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-950/30 border border-purple-400/30 font-bold'
+                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             SamoelColt (Isometric)
@@ -760,10 +760,10 @@ export function VoiceCommandBanner({
             type="button"
             onClick={() => onSourceChange('all')}
             aria-pressed={currentSource === 'all'}
-            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all ${
+            className={`rounded-xl px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
               currentSource === 'all'
-                ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-md border border-slate-600 font-bold'
-                : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
+                ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-md border border-slate-500 font-bold'
+                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             All Sources
@@ -891,8 +891,8 @@ export function VoiceCommandBanner({
           </div>
 
           {/* Keyboard shortcut hint */}
-          <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
-            <kbd className="rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-cyan-300">
+          <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+            <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-cyan-600 dark:text-cyan-300 shadow-sm">
               V
             </kbd>
             <span>Hold &apos;V&apos; to talk (or click button to toggle)</span>
@@ -921,7 +921,7 @@ export function VoiceCommandBanner({
                   ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
                   : voiceStatus === 'matched'
                   ? 'bg-emerald-400'
-                  : 'bg-slate-700/60'
+                  : 'bg-slate-300 dark:bg-slate-700/60'
               }`}
             />
           ))}
@@ -932,22 +932,22 @@ export function VoiceCommandBanner({
       <div
         role="status"
         aria-live="polite"
-        className="relative z-10 rounded-2xl border border-slate-800 bg-slate-950/75 p-4 text-center shadow-inner"
+        className="relative z-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/75 p-4 text-center shadow-inner"
       >
         {voiceStatus === 'listening' && (
           <div className="flex flex-col items-center justify-center gap-1.5">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-              <span className="text-xs font-semibold text-rose-400">Listening to your voice...</span>
+              <span className="text-xs font-semibold text-rose-600 dark:text-rose-400">Listening to your voice...</span>
             </div>
-            <div className="text-base font-semibold text-slate-100 min-h-[28px] flex items-center justify-center">
+            <div className="text-base font-semibold text-slate-900 dark:text-slate-100 min-h-[28px] flex items-center justify-center">
               {liveTranscript ? (
                 <span>
                   &ldquo;{liveTranscript}&rdquo;
                   <span className="inline-block h-4 w-1.5 bg-cyan-400 ml-1 animate-pulse" />
                 </span>
               ) : (
-                <span className="italic text-slate-500">
+                <span className="italic text-slate-400 dark:text-slate-500">
                   Say a DBD map name, source, or action command...
                 </span>
               )}
@@ -958,8 +958,8 @@ export function VoiceCommandBanner({
         {voiceStatus === 'matched' && matchedResult && (
           <div className="flex flex-col items-center justify-center gap-1.5">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-              <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
                 {matchedResult.action === 'switch_source'
                   ? 'Provider Source Switched'
                   : matchedResult.action && matchedResult.action !== 'navigate'
@@ -968,23 +968,23 @@ export function VoiceCommandBanner({
               </span>
             </div>
 
-            <div className="text-base font-extrabold text-white flex items-center gap-2">
+            <div className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
               {matchedResult.matchedMapName ? (
-                <span className="rounded-xl bg-emerald-500/20 px-3 py-1 text-emerald-300 border border-emerald-500/40">
+                <span className="rounded-xl bg-emerald-500/20 px-3 py-1 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40">
                   {matchedResult.matchedMapName}
                 </span>
               ) : matchedResult.action === 'switch_source' ? (
-                <span className="rounded-xl bg-cyan-500/20 px-3 py-1 text-cyan-300 border border-cyan-500/40">
+                <span className="rounded-xl bg-cyan-500/20 px-3 py-1 text-cyan-800 dark:text-cyan-300 border border-cyan-500/40">
                   Switched to: {matchedResult.actionPayload}
                 </span>
               ) : (
-                <span className="rounded-xl bg-purple-500/20 px-3 py-1 text-purple-300 border border-purple-500/40">
+                <span className="rounded-xl bg-purple-500/20 px-3 py-1 text-purple-800 dark:text-purple-300 border border-purple-500/40">
                   Action: {matchedResult.action}
                 </span>
               )}
 
               {matchedResult.confidence && (
-                <span className="text-xs font-normal text-emerald-400/80">
+                <span className="text-xs font-normal text-emerald-600 dark:text-emerald-400/80">
                   ({Math.round(matchedResult.confidence * 100)}% match)
                 </span>
               )}
@@ -994,11 +994,11 @@ export function VoiceCommandBanner({
 
         {voiceStatus === 'nomatch' && (
           <div className="flex flex-col items-center justify-center gap-1">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-400">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
               <AlertCircle className="h-4 w-4" />
               <span>Could not match voice query &ldquo;{liveTranscript || 'speech'}&rdquo;</span>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Try saying canonical map names like &ldquo;Dead Dawg&rdquo;, &ldquo;RPD East&rdquo;,
               &ldquo;Coal Tower 2&rdquo;, or &ldquo;Switch to Samoel&rdquo;.
             </p>
@@ -1007,19 +1007,19 @@ export function VoiceCommandBanner({
 
         {voiceStatus === 'error' && (
           <div className="flex flex-col items-center justify-center gap-1">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-400">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-700 dark:text-rose-400">
               <AlertCircle className="h-4 w-4" />
               <span>{errorMessage || 'Microphone error'}</span>
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Please ensure your browser has permission to access your microphone.
             </p>
           </div>
         )}
 
         {voiceStatus === 'idle' && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-slate-400">
-            <Compass className="h-4 w-4 text-cyan-400 shrink-0" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <Compass className="h-4 w-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
             <span>
               Speak any map name (e.g. &ldquo;Dead Dawg&rdquo;, &ldquo;RPD East&rdquo;), provider (&ldquo;Switch to Samoel&rdquo;), or action (&ldquo;Zoom In&rdquo;, &ldquo;Fullscreen&rdquo;)
             </span>
@@ -1029,16 +1029,16 @@ export function VoiceCommandBanner({
 
       {/* ─── DYNAMIC VARIANT DISAMBIGUATION PILLS ─── */}
       {disambiguationVariants.length > 0 && (
-        <div className="relative z-10 mt-4 rounded-2xl border border-cyan-500/30 bg-cyan-950/30 p-3.5 backdrop-blur-sm">
+        <div className="relative z-10 mt-4 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 p-3.5 backdrop-blur-sm">
           <div className="mb-2 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-bold text-cyan-300">
-              <Layers className="h-3.5 w-3.5 text-cyan-400" />
+            <div className="flex items-center gap-2 text-xs font-bold text-cyan-800 dark:text-cyan-300">
+              <Layers className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
               <span>Map Variants Detected — Click or speak variant:</span>
             </div>
             <button
               type="button"
               onClick={() => setDisambiguationVariants([])}
-              className="text-slate-500 hover:text-slate-300"
+              className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 cursor-pointer"
               title="Dismiss variants"
             >
               <X className="h-3.5 w-3.5" />
@@ -1051,10 +1051,10 @@ export function VoiceCommandBanner({
                 key={variant}
                 type="button"
                 onClick={() => handleExecuteCommand(variant)}
-                className="flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-cyan-900/40 px-3 py-1 text-xs font-medium text-cyan-200 transition hover:border-cyan-300 hover:bg-cyan-800/60 hover:text-white active:scale-95"
+                className="flex items-center gap-1.5 rounded-xl border border-cyan-400/40 bg-white/80 dark:bg-cyan-900/40 px-3 py-1 text-xs font-medium text-cyan-900 dark:text-cyan-200 transition hover:border-cyan-500 hover:bg-cyan-100 dark:hover:bg-cyan-800/60 hover:text-cyan-950 dark:hover:text-white active:scale-95 cursor-pointer shadow-sm"
               >
                 <span>{variant}</span>
-                <ArrowRight className="h-3 w-3 text-cyan-400" />
+                <ArrowRight className="h-3 w-3 text-cyan-500 dark:text-cyan-400" />
               </button>
             ))}
           </div>
@@ -1072,14 +1072,14 @@ export function VoiceCommandBanner({
               key={prompt.label}
               type="button"
               onClick={() => handleExecuteCommand(prompt.query)}
-              className={`rounded-lg border px-2.5 py-1 text-[11px] font-medium transition active:scale-95 ${
+              className={`rounded-lg border px-2.5 py-1 text-[11px] font-medium transition active:scale-95 cursor-pointer shadow-sm ${
                 prompt.type === 'variant'
-                  ? 'border-cyan-600/50 bg-cyan-950/40 text-cyan-300 hover:border-cyan-400 hover:bg-cyan-900/60'
+                  ? 'border-cyan-500/40 bg-cyan-500/10 text-cyan-800 dark:border-cyan-600/50 dark:bg-cyan-950/40 dark:text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/20 dark:hover:bg-cyan-900/60'
                   : prompt.type === 'source'
-                  ? 'border-purple-600/50 bg-purple-950/40 text-purple-300 hover:border-purple-400 hover:bg-purple-900/60'
+                  ? 'border-purple-500/40 bg-purple-500/10 text-purple-800 dark:border-purple-600/50 dark:bg-purple-950/40 dark:text-purple-300 hover:border-purple-400 hover:bg-purple-500/20 dark:hover:bg-purple-900/60'
                   : prompt.type === 'action'
-                  ? 'border-emerald-600/50 bg-emerald-950/40 text-emerald-300 hover:border-emerald-400 hover:bg-emerald-900/60'
-                  : 'border-slate-700 bg-slate-800/60 text-slate-300 hover:border-slate-500 hover:bg-slate-700/80 hover:text-white'
+                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-800 dark:border-emerald-600/50 dark:bg-emerald-950/40 dark:text-emerald-300 hover:border-emerald-400 hover:bg-emerald-500/20 dark:hover:bg-emerald-900/60'
+                  : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700/80 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               &ldquo;{prompt.label}&rdquo;

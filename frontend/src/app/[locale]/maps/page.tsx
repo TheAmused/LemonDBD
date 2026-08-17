@@ -92,14 +92,14 @@ function MapsPageInner() {
 
   if (!dict) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
         Loading...
       </div>
     );
   }
 
   return (
-    <div className="h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row dbd-fog-overlay">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -120,14 +120,14 @@ function MapsPageInner() {
         {/* ── Page Header ── */}
         <div className="mb-7 flex flex-col gap-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 shadow-lg shadow-cyan-950/40">
-              <Compass className="h-5 w-5 text-cyan-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 shadow-sm">
+              <Compass className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-slate-100 tracking-tight">
+              <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
                 Map Explorer
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Browse DBD maps, callouts, and guides with real-time voice navigation
               </p>
             </div>
@@ -179,7 +179,7 @@ export default function MapsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
           Loading...
         </div>
       }

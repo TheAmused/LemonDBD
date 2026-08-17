@@ -340,28 +340,28 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   return (
     <div className={`space-y-6 ${ownershipMode ? 'pb-20' : ''}`}>
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-red-950/40 p-6 sm:p-8 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-red-50/40 dark:border-slate-800 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-900 dark:to-red-950/40 p-6 sm:p-8 shadow-sm dark:shadow-2xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-600/20 text-red-400 border border-red-500/30">
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30">
                 <Flame className="h-4 w-4" />
               </span>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-100 font-mono tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
                 Characters Hub
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl">
               Explore Dead by Daylight Survivors & Killers. View character details, unique teachable perks, power add-ons, and equipment.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold">
               <Shield className="h-4 w-4" />
               <span>{survivorCount} Survivors</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-400 text-xs font-bold">
               <Skull className="h-4 w-4" />
               <span>{killerCount} Killers</span>
             </div>
@@ -372,35 +372,32 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       {/* Navigation & Search Filter Controls */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
         {/* Role Tabs */}
-        <div className="flex items-center p-1 bg-slate-900/90 border border-slate-800 rounded-2xl w-full sm:w-auto">
+        <div className="flex items-center p-1 bg-slate-100/90 border border-slate-200 dark:bg-slate-900/90 dark:border-slate-800 rounded-2xl w-full sm:w-auto shadow-inner">
           <button
             onClick={() => setActiveTab('all')}
-            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'all'
-                ? 'bg-red-600 text-white shadow-md shadow-red-900/30'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'all'
+                ? 'bg-red-600 text-white shadow-md'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+              }`}
           >
             All ({characters.length})
           </button>
           <button
             onClick={() => setActiveTab('Survivor')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'Survivor'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/30'
-                : 'text-slate-400 hover:text-emerald-400'
-            }`}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'Survivor'
+                ? 'bg-emerald-600 text-white shadow-md'
+                : 'text-slate-600 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-400'
+              }`}
           >
             <Shield className="h-3.5 w-3.5" />
             Survivors ({survivorCount})
           </button>
           <button
             onClick={() => setActiveTab('Killer')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'Killer'
-                ? 'bg-rose-600 text-white shadow-md shadow-rose-900/30'
-                : 'text-slate-400 hover:text-rose-400'
-            }`}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'Killer'
+                ? 'bg-rose-600 text-white shadow-md'
+                : 'text-slate-600 hover:text-rose-700 dark:text-slate-400 dark:hover:text-rose-400'
+              }`}
           >
             <Skull className="h-3.5 w-3.5" />
             Killers ({killerCount})
@@ -424,18 +421,18 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
         {/* Search Input */}
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-2xl border border-slate-800 bg-slate-900 text-xs font-semibold text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
+            className="w-full pl-10 pr-4 py-2 rounded-2xl border border-slate-200 bg-slate-100/90 text-xs font-semibold text-slate-900 placeholder-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -449,14 +446,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           {[...Array(12)].map((_, i) => (
             <div
               key={i}
-              className="h-64 animate-pulse rounded-2xl bg-slate-900/60 border border-slate-800"
+              className="h-64 animate-pulse rounded-2xl bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800"
             />
           ))}
         </div>
       ) : filteredCharacters.length === 0 ? (
-        <div className="my-12 rounded-3xl border border-dashed border-slate-800 p-12 text-center">
-          <User className="mx-auto h-12 w-12 text-slate-600 mb-3" />
-          <h3 className="text-lg font-bold text-slate-300">No Characters Found</h3>
+        <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center bg-white/60 dark:bg-transparent">
+          <User className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-300">No Characters Found</h3>
           <p className="mt-1 text-xs text-slate-500">
             No characters match your current filter or search query.
           </p>
@@ -480,16 +477,15 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     handleOpenDetail(char);
                   }
                 }}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 hover:bg-slate-850 hover:border-red-500/50 hover:shadow-xl hover:shadow-red-950/20 transition-all duration-300 cursor-pointer"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-800 hover:border-red-500/50 shadow-sm hover:shadow-xl dark:shadow-none transition-all duration-300 cursor-pointer"
               >
                 {/* Role Badge */}
                 <div className="absolute top-2 right-2 z-10">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold border backdrop-blur-md ${
-                      isSurvivor
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                        : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
-                    }`}
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold border backdrop-blur-md ${isSurvivor
+                        ? 'bg-emerald-100 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300'
+                        : 'bg-rose-100 text-rose-700 border-rose-500/30 dark:bg-rose-500/20 dark:text-rose-300'
+                      }`}
                   >
                     {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
                     {char.category}
@@ -509,7 +505,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 )}
 
                 {/* Avatar Portrait Image */}
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-950">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
                   <img
                     src={getAvatarUrl(char)}
                     alt={char.name}
@@ -536,16 +532,16 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   {ownershipMode && hasPartialPerks && (
                     <div className="absolute inset-y-0 left-0 w-1/2 bg-slate-950/50" />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/35 via-transparent to-transparent dark:from-slate-950/80" />
                 </div>
 
                 {/* Card Footer Info */}
                 <div className="p-3.5 space-y-1">
-                  <h3 className="font-extrabold text-sm text-slate-100 group-hover:text-red-400 transition-colors line-clamp-1">
+                  <h3 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-1">
                     {char.name}
                   </h3>
                   {char.real_name && char.real_name !== char.name && (
-                    <p className="text-[11px] font-medium text-slate-400 line-clamp-1">
+                    <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 line-clamp-1">
                       {char.real_name}
                     </p>
                   )}
@@ -573,25 +569,25 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           {/* Backdrop */}
           <div
             onClick={handleCloseModal}
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200"
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-200"
           />
 
           {/* Modal Content */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl shadow-slate-950 animate-in zoom-in-95 duration-200"
+            className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in zoom-in-95 duration-200"
           >
             {/* Header / Hero */}
-            <div className="relative border-b border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-6 sm:p-8">
+            <div className="relative border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:border-slate-800 dark:bg-gradient-to-r dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8">
               <button
                 onClick={handleCloseModal}
-                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white transition-colors cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
 
               <div className="flex flex-col sm:flex-row items-center gap-6">
-                <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl border-2 border-red-500/30 bg-slate-950 shadow-xl">
+                <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl border-2 border-red-500/30 bg-slate-100 dark:bg-slate-950 shadow-xl">
                   <img
                     src={getAvatarUrl(selectedCharacter)}
                     alt={selectedCharacter.name}
@@ -606,11 +602,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 <div className="space-y-2 text-center sm:text-left">
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                     <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-extrabold border ${
-                        selectedCharacter.category?.toLowerCase() === 'survivor'
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                          : 'bg-rose-500/20 text-rose-300 border-rose-500/30'
-                      }`}
+                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-extrabold border ${selectedCharacter.category?.toLowerCase() === 'survivor'
+                          ? 'bg-emerald-100 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300'
+                          : 'bg-rose-100 text-rose-700 border-rose-500/30 dark:bg-rose-500/20 dark:text-rose-300'
+                        }`}
                     >
                       {selectedCharacter.category?.toLowerCase() === 'survivor' ? (
                         <Shield className="h-3.5 w-3.5" />
@@ -621,13 +616,13 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     </span>
                   </div>
 
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-100 font-mono tracking-tight">
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
                     {selectedCharacter.name}
                   </h2>
 
                   {selectedCharacter.real_name && (
-                    <p className="text-sm font-semibold text-slate-400">
-                      Real Name: <span className="text-slate-200">{selectedCharacter.real_name}</span>
+                    <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+                      Real Name: <span className="text-slate-900 dark:text-slate-200">{selectedCharacter.real_name}</span>
                     </p>
                   )}
                 </div>
@@ -638,16 +633,16 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             <div className="p-6 sm:p-8 space-y-8">
               {detailLoading ? (
                 <div className="py-12 text-center space-y-3">
-                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-slate-700 border-t-red-500" />
-                  <p className="text-xs text-slate-400 font-medium">Loading character details...</p>
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-slate-300 dark:border-slate-700 border-t-red-500" />
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Loading character details...</p>
                 </div>
               ) : (
                 <>
                   {/* Teachable Perks Section */}
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-                      <Sparkles className="h-5 w-5 text-amber-400" />
-                      <h3 className="text-lg font-bold text-slate-100 font-mono">
+                    <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+                      <Sparkles className="h-5 w-5 text-amber-500 dark:text-amber-400" />
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 font-mono">
                         Teachable Perks ({detailData?.perks?.length || 0})
                       </h3>
                     </div>
@@ -659,10 +654,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                         {detailData.perks.map((perk, i) => (
                           <div
                             key={`${perk.name}-${i}`}
-                            className="flex flex-col p-4 rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-slate-700 transition-all space-y-3"
+                            className="flex flex-col p-4 rounded-2xl border border-slate-200 bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950/60 dark:hover:border-slate-700 transition-all space-y-3 shadow-sm"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="h-12 w-12 shrink-0 rounded-xl bg-slate-900 border border-slate-800 p-1 flex items-center justify-center">
+                              <div className="h-12 w-12 shrink-0 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 p-1 flex items-center justify-center">
                                 <img
                                   src={getAssetUrl(perk.icon_local_path, perk.icon_url)}
                                   alt={perk.name}
@@ -670,16 +665,16 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                                 />
                               </div>
                               <div>
-                                <h4 className="font-extrabold text-sm text-slate-100 leading-tight">
+                                <h4 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 leading-tight">
                                   {perk.name}
                                 </h4>
-                                <span className="inline-block text-[10px] font-bold text-red-400 mt-0.5">
+                                <span className="inline-block text-[10px] font-bold text-red-600 dark:text-red-400 mt-0.5">
                                   {perk.category} Perk
                                 </span>
                               </div>
                             </div>
 
-                            <p className="text-xs text-slate-300 leading-relaxed line-clamp-4">
+                            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-4">
                               {perk.description}
                             </p>
                           </div>
@@ -690,15 +685,15 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
                   {/* Associated Add-ons & Equipment Section */}
                   <div className="space-y-4 pt-4">
-                    <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-                      <Package className="h-5 w-5 text-teal-400" />
-                      <h3 className="text-lg font-bold text-slate-100 font-mono">
+                    <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+                      <Package className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 font-mono">
                         Associated Add-ons & Equipment ({(detailData?.addons?.length || 0) + (detailData?.items?.length || 0)})
                       </h3>
                     </div>
 
                     {(!detailData?.addons || detailData.addons.length === 0) &&
-                    (!detailData?.items || detailData.items.length === 0) ? (
+                      (!detailData?.items || detailData.items.length === 0) ? (
                       <p className="text-xs text-slate-500 italic">
                         No specific add-ons or equipment associated with this character in database.
                       </p>
@@ -708,9 +703,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                         {detailData?.addons?.map((addon, i) => (
                           <div
                             key={`addon-${addon.name}-${i}`}
-                            className="flex items-start gap-3 p-3 rounded-2xl border border-slate-800 bg-slate-950/60"
+                            className="flex items-start gap-3 p-3 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60 shadow-sm"
                           >
-                            <div className="h-10 w-10 shrink-0 rounded-xl bg-slate-900 border border-slate-800 p-1 flex items-center justify-center">
+                            <div className="h-10 w-10 shrink-0 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 p-1 flex items-center justify-center">
                               <img
                                 src={getAssetUrl(addon.icon_local_path, addon.icon_url)}
                                 alt={addon.name}
@@ -719,7 +714,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                             </div>
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
-                                <h4 className="font-bold text-xs text-slate-200">{addon.name}</h4>
+                                <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200">{addon.name}</h4>
                                 {addon.rarity && (
                                   <span
                                     className={`rounded px-1.5 py-0.2 text-[9px] font-bold border ${getRarityBadgeColor(
@@ -731,7 +726,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                                 )}
                               </div>
                               {addon.description && (
-                                <p className="text-[11px] text-slate-400 line-clamp-2">
+                                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
                                   {addon.description}
                                 </p>
                               )}
@@ -743,9 +738,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                         {detailData?.items?.map((item, i) => (
                           <div
                             key={`item-${item.name}-${i}`}
-                            className="flex items-start gap-3 p-3 rounded-2xl border border-slate-800 bg-slate-950/60"
+                            className="flex items-start gap-3 p-3 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60 shadow-sm"
                           >
-                            <div className="h-10 w-10 shrink-0 rounded-xl bg-slate-900 border border-slate-800 p-1 flex items-center justify-center">
+                            <div className="h-10 w-10 shrink-0 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 p-1 flex items-center justify-center">
                               <img
                                 src={getAssetUrl(item.icon_local_path, item.icon_url)}
                                 alt={item.name}
@@ -754,7 +749,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                             </div>
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
-                                <h4 className="font-bold text-xs text-slate-200">{item.name}</h4>
+                                <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200">{item.name}</h4>
                                 {item.rarity && (
                                   <span
                                     className={`rounded px-1.5 py-0.2 text-[9px] font-bold border ${getRarityBadgeColor(
@@ -766,7 +761,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                                 )}
                               </div>
                               {item.description && (
-                                <p className="text-[11px] text-slate-400 line-clamp-2">
+                                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
                                   {item.description}
                                 </p>
                               )}

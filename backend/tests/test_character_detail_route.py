@@ -17,8 +17,14 @@ class TestCharacterDetailRoute(unittest.TestCase):
                 c = Character(name="Meg Thomas", role="Survivor", release_number=2)
                 db.session.add(c)
                 db.session.flush()
+            else:
+                c = existing
+            perk = db.session.scalars(select(Perk).where(Perk.name == "Sprint Burst")).first()
+            if not perk:
                 db.session.add(Perk(name="Sprint Burst", character_id=c.id, description="Run fast", icon_url="url", icon_local_path="path"))
-                db.session.commit()
+            else:
+                perk.character_id = c.id
+            db.session.commit()
 
     def test_character_detail(self):
         response = self.client.get("/api/v1/characters/Meg%20Thomas/detail")

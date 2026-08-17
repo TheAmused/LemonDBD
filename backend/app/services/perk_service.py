@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from flask import current_app
-from sqlalchemy import func, select, or_, and_
+from sqlalchemy import func, select, or_, and_, case
 from sqlalchemy.orm import joinedload
 from pydantic import BaseModel, Field
 
@@ -502,7 +502,11 @@ class PerkService:
             )
 
             stmt = stmt.order_by(
-                Character.release_number.nulls_last(),
+                case(
+                    (and_(Character.release_number.is_not(None), Character.release_number > 0), Character.release_number),
+                    else_=9999
+                ).asc(),
+                Character.id.asc(),
                 Character.name.asc()
             )
 
@@ -516,6 +520,14 @@ class PerkService:
         results = [c for c in self._characters_cache if "overall_average" not in c.get("name", "").lower()]
         if category and category.lower() != "all":
             results = [c for c in results if c.get("category", "").lower() == category.lower()]
+
+        def _char_sort_key(c):
+            rn = c.get("release_number")
+            if isinstance(rn, int) and rn > 0:
+                return (0, rn, c.get("name", ""))
+            return (1, 9999, c.get("name", ""))
+
+        results = sorted(results, key=_char_sort_key)
 
         if not results:
             cat_clean = (category or "").lower()

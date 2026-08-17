@@ -1,4 +1,4 @@
-﻿import unittest
+import unittest
 from app import create_app
 
 
@@ -7,6 +7,18 @@ class TestCharacterDetailRoute(unittest.TestCase):
         self.app = create_app()
         self.app.config["TESTING"] = True
         self.client = self.app.test_client()
+        with self.app.app_context():
+            from app.extensions import db
+            from app.models import Character, Perk
+            from sqlalchemy import select
+            db.create_all()
+            existing = db.session.scalars(select(Character).where(Character.name == "Meg Thomas")).first()
+            if not existing:
+                c = Character(name="Meg Thomas", role="Survivor", release_number=2)
+                db.session.add(c)
+                db.session.flush()
+                db.session.add(Perk(name="Sprint Burst", character_id=c.id, description="Run fast", icon_url="url", icon_local_path="path"))
+                db.session.commit()
 
     def test_character_detail(self):
         response = self.client.get("/api/v1/characters/Meg%20Thomas/detail")

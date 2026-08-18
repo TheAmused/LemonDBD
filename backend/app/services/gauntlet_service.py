@@ -130,7 +130,13 @@ class GauntletService:
 
         target_character = self._initial_target(user_id, role)
         tier_info = self.get_tier_info(0, role)
-        initial_loadout = {"character": target_character, "perks": [], "tier_info": tier_info}
+        initial_loadout = {
+            "character": target_character,
+            "perks": [],
+            "item": None,
+            "addons": [],
+            "tier_info": tier_info,
+        }
 
         new_run = GauntletRun(
             user_id=user_id,

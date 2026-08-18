@@ -98,9 +98,7 @@ class GauntletService:
     def roll(self, user_id, role, target_character=None):
         run = self.get_or_create_run(user_id, role)
         tier_info = self.get_tier_info(run["current_streak"], role)
-        perk_limit = tier_info["perk_limit"]
 
-        role_perks = self._unlocked_role_perks(user_id, role)
         owned_names = self._owned_character_names(user_id, role)
 
         completed = run["completed_characters"]
@@ -110,29 +108,7 @@ class GauntletService:
 
         target_char = target_character if target_character else random.choice(remaining)
 
-        selected_perks = []
-        if perk_limit > 0:
-            char_perks = [p for p in role_perks if p.get("character_name") == target_char]
-            general_perks = [p for p in role_perks if not p.get("character_name")]
-
-            if char_perks:
-                max_own = min(2, len(char_perks), perk_limit)
-                selected_perks.extend(random.sample(char_perks, max_own))
-
-            needed = perk_limit - len(selected_perks)
-            if needed > 0 and general_perks:
-                available_gen = [p for p in general_perks if p not in selected_perks]
-                if available_gen:
-                    max_gen = min(1, len(available_gen), needed)
-                    selected_perks.extend(random.sample(available_gen, max_gen))
-
-            needed = perk_limit - len(selected_perks)
-            if needed > 0:
-                remaining_pool = [p for p in role_perks if p not in selected_perks]
-                if remaining_pool:
-                    selected_perks.extend(random.sample(remaining_pool, min(needed, len(remaining_pool))))
-
-        loadout = {"character": target_char, "perks": selected_perks, "tier_info": tier_info}
+        loadout = {"character": target_char, "perks": [], "tier_info": tier_info}
 
         r = db.session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
         r.current_character_id = target_char
@@ -142,21 +118,50 @@ class GauntletService:
         d["tier_info"] = tier_info
         return d
 
-    def invalidate_match(self, user_id, run_id, reason):
-        valid_reasons = ("dc_before_5_gens", "game_cancelled")
-        if reason not in valid_reasons:
-            raise ValueError(f"Invalid reason: {reason}. Must be one of {valid_reasons}")
+    def reveal_target(self, user_id, run_id):
+        r = db.session.scalars(
+            select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id)
+        ).first()
+        if not r:
+            raise ValueError("Run not found")
+        r.target_revealed = True
+        db.session.commit()
+        d = r.to_dict()
+        d["tier_info"] = self.get_tier_info(d["current_streak"], r.role)
+        return d
 
+    def set_loadout(self, user_id, run_id, perk_ids):
         r = db.session.scalars(
             select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id)
         ).first()
         if not r:
             raise ValueError("Run not found")
 
-        char_id = r.current_character_id
-        db.session.add(GauntletMatchException(run_id=run_id, character_id=char_id, reason=reason))
+        tier_info = self.get_tier_info(r.current_streak, r.role)
+        perk_limit = tier_info["perk_limit"]
+
+        if len(perk_ids) != perk_limit:
+            raise ValueError(f"Expected {perk_limit} perks, got {len(perk_ids)}")
+        if len(set(perk_ids)) != len(perk_ids):
+            raise ValueError("Duplicate perks are not allowed")
+
+        role_perks = {p["id"]: p for p in self._unlocked_role_perks(user_id, r.role)}
+        selected = []
+        for idx, pid in enumerate(perk_ids):
+            perk = role_perks.get(pid)
+            if not perk:
+                raise ValueError(f"Perk {pid} is not unlocked for this role")
+            if idx == 0 and perk.get("character") != r.current_character_id:
+                raise ValueError("The first perk must belong to the current target character")
+            selected.append(perk)
+
+        loadout = json.loads(r.current_loadout_json or "{}")
+        loadout["perks"] = selected
+        r.current_loadout_json = json.dumps(loadout)
         db.session.commit()
-        return self.roll(user_id, r.role, target_character=char_id)
+        d = r.to_dict()
+        d["tier_info"] = tier_info
+        return d
 
     def submit_result(self, user_id, run_id, result):
         if result not in ("win", "loss"):

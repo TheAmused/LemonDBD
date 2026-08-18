@@ -113,16 +113,17 @@ class TestGauntletRun(GauntletTestCase):
             run = self.service.roll(self.user_id, "killer")
             self.assertEqual(run["current_character_id"], "Trapper")
 
-    def test_roll_only_uses_unlocked_perks(self):
-        nurse_perks = db.session.scalars(select(Perk).where(Perk.character_id == self.nurse.id)).all()
-        for perk in nurse_perks:
-            self.ownership_service.set_perk_ownership(self.user_id, perk.id, is_unlocked=False)
+    def test_roll_no_longer_assigns_perks(self):
+        run = self.service.roll(self.user_id, "killer", target_character="Trapper")
+        self.assertEqual(run["current_loadout"]["perks"], [])
 
-        self.service.get_or_create_run(self.user_id, "killer")
-        for _ in range(10):
-            run = self.service.roll(self.user_id, "killer", target_character="Trapper")
-            perk_names = {p["name"] for p in run["current_loadout"]["perks"]}
-            self.assertTrue(perk_names.isdisjoint({p.name for p in nurse_perks}))
+    def test_reveal_target_flips_flag_without_changing_character(self):
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        target = run["current_character_id"]
+        self.assertFalse(run["target_revealed"])
+        revealed = self.service.reveal_target(self.user_id, run["id"])
+        self.assertTrue(revealed["target_revealed"])
+        self.assertEqual(revealed["current_character_id"], target)
 
 
 class TestGauntletResults(GauntletTestCase):
@@ -168,16 +169,48 @@ class TestGauntletResults(GauntletTestCase):
         with self.assertRaises(ValueError):
             self.service.submit_result(other_user_id, self.run["id"], "win")
 
-    def test_invalidate_match_rerolls_same_character_and_keeps_streak(self):
-        target = self.run["current_character_id"]
-        streak_before = self.run["current_streak"]
-        updated = self.service.invalidate_match(self.user_id, self.run["id"], "dc_before_5_gens")
-        self.assertEqual(updated["current_character_id"], target)
-        self.assertEqual(updated["current_streak"], streak_before)
 
-    def test_invalidate_match_rejects_invalid_reason(self):
+class TestGauntletLoadout(GauntletTestCase):
+    def setUp(self):
+        super().setUp()
+        self.trapper = seed_killer("Trapper")
+        self.nurse = seed_killer("Nurse")
+        self.user_id = self.register_user("loadoutuser")
+        self.run = self.service.get_or_create_run(self.user_id, "killer")
+        self.service.roll(self.user_id, "killer", target_character="Trapper")
+        self.run = self.service.get_or_create_run(self.user_id, "killer")
+        self.trapper_perks = db.session.scalars(
+            select(Perk).where(Perk.character_id == self.trapper.id)
+        ).all()
+        self.nurse_perks = db.session.scalars(
+            select(Perk).where(Perk.character_id == self.nurse.id)
+        ).all()
+
+    def test_set_loadout_accepts_valid_selection(self):
+        perk_ids = [self.trapper_perks[0].id, self.trapper_perks[1].id, self.nurse_perks[0].id, self.nurse_perks[1].id]
+        updated = self.service.set_loadout(self.user_id, self.run["id"], perk_ids)
+        self.assertEqual(len(updated["current_loadout"]["perks"]), 4)
+        self.assertEqual(updated["current_loadout"]["perks"][0]["id"], self.trapper_perks[0].id)
+
+    def test_set_loadout_rejects_wrong_count(self):
         with self.assertRaises(ValueError):
-            self.service.invalidate_match(self.user_id, self.run["id"], "because")
+            self.service.set_loadout(self.user_id, self.run["id"], [self.trapper_perks[0].id])
+
+    def test_set_loadout_rejects_first_slot_not_owned_by_target(self):
+        perk_ids = [self.nurse_perks[0].id, self.trapper_perks[0].id, self.trapper_perks[1].id, self.nurse_perks[1].id]
+        with self.assertRaises(ValueError):
+            self.service.set_loadout(self.user_id, self.run["id"], perk_ids)
+
+    def test_set_loadout_rejects_duplicate_perks(self):
+        pid = self.trapper_perks[0].id
+        with self.assertRaises(ValueError):
+            self.service.set_loadout(self.user_id, self.run["id"], [pid, pid, self.nurse_perks[0].id, self.nurse_perks[1].id])
+
+    def test_set_loadout_rejects_locked_perk(self):
+        self.ownership_service.set_perk_ownership(self.user_id, self.nurse_perks[0].id, is_unlocked=False)
+        perk_ids = [self.trapper_perks[0].id, self.trapper_perks[1].id, self.nurse_perks[0].id, self.nurse_perks[1].id]
+        with self.assertRaises(ValueError):
+            self.service.set_loadout(self.user_id, self.run["id"], perk_ids)
 
 
 class TestGauntletStats(GauntletTestCase):

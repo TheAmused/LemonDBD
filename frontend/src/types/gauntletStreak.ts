@@ -31,7 +31,8 @@ export interface Addon {
 
 export interface GauntletLoadout {
   character: string;
-  perks: Perk[];
+  /** The target's own teachable perks, shown as the suggested first-slot picks. */
+  character_perks: Perk[];
   item: Item | null;
   addons: Addon[];
 }

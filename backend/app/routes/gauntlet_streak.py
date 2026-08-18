@@ -59,9 +59,13 @@ def submit_result():
     service = get_gauntlet_service()
     try:
         updated_run = service.submit_result(g.current_user.id, run_id, result)
+        # A won gauntlet has no next target to draw — leave the completed run standing.
+        if updated_run.get("status") == "completed":
+            return jsonify({"run": updated_run, "previous_run": updated_run}), 200
         rolled_run = service.roll(g.current_user.id, role)
     except ValueError as e:
-        return jsonify({"error": str(e)}), 404
+        status = 404 if "not found" in str(e).lower() else 400
+        return jsonify({"error": str(e)}), status
     return jsonify({"run": rolled_run, "previous_run": updated_run}), 200
 
 
@@ -82,21 +86,19 @@ def reveal():
     return jsonify({"run": run}), 200
 
 
-@gauntlet_streak_bp.route("/loadout", methods=["POST"])
+@gauntlet_streak_bp.route("/run/reset", methods=["POST"])
 @login_required
-def set_loadout():
+def reset_run():
     data = request.get_json(silent=True) or {}
-    run_id = data.get("run_id")
-    perk_ids = data.get("perk_ids")
-    if not run_id or perk_ids is None:
-        return jsonify({"error": "Fields 'run_id' and 'perk_ids' are required"}), 400
+    role = _clean_role(data.get("role"))
+    if not role:
+        return jsonify({"error": "Field 'role' must be 'survivor' or 'killer'"}), 400
 
     service = get_gauntlet_service()
     try:
-        run = service.set_loadout(g.current_user.id, run_id, perk_ids)
+        run = service.reset_run(g.current_user.id, role)
     except ValueError as e:
-        status = 404 if "not found" in str(e).lower() else 400
-        return jsonify({"error": str(e)}), status
+        return jsonify({"error": str(e)}), 404
     return jsonify({"run": run}), 200
 
 

@@ -5,13 +5,13 @@ import logging
 from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
 from app.extensions import db
-from app.models import GauntletRun, GauntletMatchLog, Item, Addon
+from app.models import GauntletRun, GauntletMatchLog, Item, Addon, Perk, Character
 from app.services.perk_service import PerkService
 from app.services.ownership_service import OwnershipService
 
 logger = logging.getLogger(__name__)
 
-CHECKPOINT_INTERVAL = 3
+CHECKPOINT_INTERVAL = 10
 BUILD_SIZE = 4
 
 SURVIVOR_TIERS = [
@@ -66,10 +66,16 @@ class GauntletService:
         owned = self.ownership_service.get_user_characters(user_id, role=db_role)
         return [c["name"] for c in owned if c["is_owned"]]
 
-    def _unlocked_role_perks(self, user_id, role):
-        db_role = "Killer" if role == "killer" else "Survivor"
-        owned = self.ownership_service.get_user_perks(user_id, category=db_role)
-        return [p for p in owned if p["is_unlocked"]]
+    @staticmethod
+    def _character_teachable_perks(character_name):
+        """The target's own teachable perks, shown as the suggested first-slot picks."""
+        perks = db.session.scalars(
+            select(Perk)
+            .join(Character, Perk.character_id == Character.id)
+            .where(Character.name == character_name, Perk.is_teachable.is_(True))
+            .order_by(Perk.name.asc())
+        ).all()
+        return [p.to_dict() for p in perks]
 
     @staticmethod
     def _classify_survivor_item_type(name):
@@ -132,7 +138,7 @@ class GauntletService:
         tier_info = self.get_tier_info(0, role)
         initial_loadout = {
             "character": target_character,
-            "perks": [],
+            "character_perks": self._character_teachable_perks(target_character),
             "item": None,
             "addons": [],
             "tier_info": tier_info,
@@ -174,7 +180,13 @@ class GauntletService:
         else:
             item, addons = None, self._roll_killer_addons(target_char)
 
-        loadout = {"character": target_char, "perks": [], "item": item, "addons": addons, "tier_info": tier_info}
+        loadout = {
+            "character": target_char,
+            "character_perks": self._character_teachable_perks(target_char),
+            "item": item,
+            "addons": addons,
+            "tier_info": tier_info,
+        }
 
         r = db.session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
         r.current_character_id = target_char
@@ -196,38 +208,16 @@ class GauntletService:
         d["tier_info"] = self.get_tier_info(d["current_streak"], r.role)
         return d
 
-    def set_loadout(self, user_id, run_id, perk_ids):
+    def reset_run(self, user_id, role):
         r = db.session.scalars(
-            select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id)
+            select(GauntletRun).where(GauntletRun.user_id == user_id, GauntletRun.role == role)
         ).first()
         if not r:
             raise ValueError("Run not found")
 
-        tier_info = self.get_tier_info(r.current_streak, r.role)
-        perk_limit = tier_info["perk_limit"]
-
-        if len(perk_ids) != perk_limit:
-            raise ValueError(f"Expected {perk_limit} perks, got {len(perk_ids)}")
-        if len(set(perk_ids)) != len(perk_ids):
-            raise ValueError("Duplicate perks are not allowed")
-
-        role_perks = {p["id"]: p for p in self._unlocked_role_perks(user_id, r.role)}
-        selected = []
-        for idx, pid in enumerate(perk_ids):
-            perk = role_perks.get(pid)
-            if not perk:
-                raise ValueError(f"Perk {pid} is not unlocked for this role")
-            if idx == 0 and perk.get("character") != r.current_character_id:
-                raise ValueError("The first perk must belong to the current target character")
-            selected.append(perk)
-
-        loadout = json.loads(r.current_loadout_json or "{}")
-        loadout["perks"] = selected
-        r.current_loadout_json = json.dumps(loadout)
+        db.session.delete(r)
         db.session.commit()
-        d = r.to_dict()
-        d["tier_info"] = tier_info
-        return d
+        return self.get_or_create_run(user_id, role)
 
     def submit_result(self, user_id, run_id, result):
         if result not in ("win", "loss"):
@@ -238,6 +228,8 @@ class GauntletService:
         ).first()
         if not r:
             raise ValueError("Run not found")
+        if r.status == "completed":
+            raise ValueError("This run is already completed — reset it to play again")
 
         current_streak = r.current_streak
         best_streak = r.best_streak
@@ -246,7 +238,7 @@ class GauntletService:
         checkpoint_chars = json.loads(r.checkpoint_characters_json or "[]")
         char_id = r.current_character_id
         loadout = json.loads(r.current_loadout_json or "{}")
-        perks_json = json.dumps(loadout.get("perks", []))
+        perks_json = json.dumps(loadout.get("character_perks", []))
 
         if result == "win":
             streak_after = current_streak + 1
@@ -256,6 +248,10 @@ class GauntletService:
             if CHECKPOINT_INTERVAL > 0 and streak_after % CHECKPOINT_INTERVAL == 0:
                 last_checkpoint = streak_after
                 checkpoint_chars = list(completed)
+            # The gauntlet is won once every owned character has been cleared.
+            owned = self._owned_character_names(user_id, r.role)
+            if owned and all(name in completed for name in owned):
+                r.status = "completed"
         else:
             streak_after = last_checkpoint if CHECKPOINT_INTERVAL > 0 else 0
             completed = list(checkpoint_chars)

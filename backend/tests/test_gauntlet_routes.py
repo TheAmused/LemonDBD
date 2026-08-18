@@ -1,5 +1,6 @@
 import unittest
 from app import create_app
+from app.config import TestingConfig
 from app.extensions import db
 from app.models import Character, Perk
 from app.services.user_service import UserService
@@ -22,8 +23,9 @@ def seed_killer(name, perk_count=3):
 
 class TestGauntletRoutes(unittest.TestCase):
     def setUp(self):
-        self.app = create_app()
-        self.app.config["TESTING"] = True
+        # TestingConfig keeps this on an in-memory SQLite DB. Without it the tests
+        # bind to the real DATABASE_URL and tearDown's drop_all() wipes the dev database.
+        self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
         self.ctx = self.app.app_context()
         self.ctx.push()
@@ -96,26 +98,25 @@ class TestGauntletRoutes(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertTrue(res.get_json()["run"]["target_revealed"])
 
-    def test_loadout_endpoint(self):
+    def test_run_carries_the_targets_character_perks(self):
         run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
         run = run_res.get_json()["run"]
-        target = run["current_character_id"]
 
-        perks_res = self.client.get(
-            f"/api/v1/users/{self.user_id}/perks?role=Killer", headers=self.headers
-        )
-        perks = perks_res.get_json()["data"]
-        target_perk = next(p for p in perks if p["character"] == target)
-        other_perks = [p for p in perks if p["id"] != target_perk["id"]][:3]
-        perk_ids = [target_perk["id"]] + [p["id"] for p in other_perks]
+        perks = run["current_loadout"]["character_perks"]
+        self.assertTrue(perks)
+        self.assertTrue(all(p["character"] == run["current_character_id"] for p in perks))
 
+    def test_reset_endpoint(self):
+        self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
         res = self.client.post(
-            "/api/v1/gauntlet-streak/loadout",
-            json={"run_id": run["id"], "perk_ids": perk_ids},
+            "/api/v1/gauntlet-streak/run/reset",
+            json={"role": "killer"},
             headers=self.headers,
         )
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(res.get_json()["run"]["current_loadout"]["perks"]), 4)
+        run = res.get_json()["run"]
+        self.assertEqual(run["current_streak"], 0)
+        self.assertFalse(run["target_revealed"])
 
     def test_stats_endpoint(self):
         res = self.client.get("/api/v1/gauntlet-streak/stats?role=killer", headers=self.headers)

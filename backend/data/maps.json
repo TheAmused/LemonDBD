@@ -1,0 +1,2402 @@
+[
+  {
+    "id": "hens_general_realm_azarovs_resting_place",
+    "name": "Azarov's Resting Place",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/azarovs_resting_place.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Azarov's Resting Place (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Azarov's Resting Place (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_blood_lodge",
+    "name": "Blood Lodge",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/blood_lodge.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Blood Lodge (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Blood Lodge (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_gas_heaven",
+    "name": "Gas Heaven",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Gas%20Heaven.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/gas_heaven.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Gas%20Heaven.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Gas Heaven (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Gas Heaven (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_wreckers_yard",
+    "name": "Wreckers' Yard",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wreckers.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/wreckers_yard.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wreckers.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Wreckers' Yard (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Wreckers' Yard (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_wretched_shop",
+    "name": "Wretched Shop",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wretched%20Shop.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/wretched_shop.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wretched%20Shop.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Wretched Shop (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Wretched Shop (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_preschool_i",
+    "name": "Preschool I",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool1.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/preschool_i.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool1.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool I (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Preschool I (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_preschool_ii",
+    "name": "Preschool II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool2.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/preschool_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool2.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Preschool II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_preschool_iii",
+    "name": "Preschool III",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool3.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/preschool_iii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool3.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool III (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Preschool III (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_preschool_iiiv",
+    "name": "Preschool IIIV",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool4.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/preschool_iiiv.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool4.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool IIIV (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Preschool IIIV (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_preschool_v",
+    "name": "Preschool V",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool5.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/preschool_v.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool5.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Preschool V (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Preschool V (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_fractured_cowshed",
+    "name": "Fractured Cowshed",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Fractured%20Cowshed.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/fractured_cowshed.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Fractured%20Cowshed.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Fractured Cowshed (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Fractured Cowshed (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_rancid_abbatoir",
+    "name": "Rancid Abbatoir",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rancid%20Abbatoir.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/rancid_abbatoir.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rancid%20Abbatoir.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Rancid Abbatoir (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Rancid Abbatoir (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_rotten_fields",
+    "name": "Rotten Fields",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rotten%20Fields.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/rotten_fields.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rotten%20Fields.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Rotten Fields (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Rotten Fields (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_the_thompson_house",
+    "name": "The Thompson House",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/The%20Thompson%20House.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/the_thompson_house.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/The%20Thompson%20House.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Thompson House (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Thompson House (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_torment_creek",
+    "name": "Torment Creek",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Torment%20Creek.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/torment_creek.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Torment%20Creek.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Torment Creek (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Torment Creek (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_disturbed_ward",
+    "name": "Disturbed Ward",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Disturbed%20Ward.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/disturbed_ward.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Disturbed%20Ward.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Disturbed Ward (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Disturbed Ward (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_father_campbells_chapel",
+    "name": "Father Campbells Chapel",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Father%20Campbells%20Chapel.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/father_campbells_chapel.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Father%20Campbells%20Chapel.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Father Campbells Chapel (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Father Campbells Chapel (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_shattered_square",
+    "name": "Shattered Square",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Shattered%20Square.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/shattered_square.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Borgo/Shattered%20Square.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Shattered Square (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Shattered Square (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_forgotten_ruins",
+    "name": "Forgotten Ruins",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Forgotten%20Ruins.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/forgotten_ruins.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Borgo/Forgotten%20Ruins.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Forgotten Ruins (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Forgotten Ruins (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_eyrie_of_crows",
+    "name": "Eyrie of Crows",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Eyrie%20of%20Crows.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/eyrie_of_crows.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Eyrie%20of%20Crows.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Eyrie of Crows (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Eyrie of Crows (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_dead_sands",
+    "name": "Dead Sands",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Dead%20Sands.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/dead_sands.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Dead%20Sands.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Dead Sands (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Dead Sands (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_the_underground_complex",
+    "name": "The Underground Complex",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Hawkins.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/the_underground_complex.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Hawkins.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Underground Complex (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Underground Complex (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_coal_tower",
+    "name": "Coal Tower",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/coal_tower.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Coal Tower (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Coal Tower (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_coal_tower_ii",
+    "name": "Coal Tower II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower%20II.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/coal_tower_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower%20II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Coal Tower II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Coal Tower II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_groaning_storehouse",
+    "name": "Groaning Storehouse",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/groaning_storehouse.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Groaning Storehouse (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Groaning Storehouse (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_groaning_storehouse_ii",
+    "name": "Groaning Storehouse II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse%20II.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/groaning_storehouse_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse%20II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Groaning Storehouse II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Groaning Storehouse II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_ironworks_of_misery",
+    "name": "Ironworks Of Misery",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/ironworks_of_misery.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ironworks Of Misery (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Ironworks Of Misery (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_ironworks_of_misery_ii",
+    "name": "Ironworks Of Misery II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery%20II.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/ironworks_of_misery_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery%20II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ironworks Of Misery II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Ironworks Of Misery II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_shelter_woods",
+    "name": "Shelter Woods",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/shelter_woods.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Shelter Woods (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Shelter Woods (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_shelter_woods_ii",
+    "name": "Shelter Woods II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods%20II.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/shelter_woods_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods%20II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Shelter Woods II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Shelter Woods II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_suffocation_pit",
+    "name": "Suffocation Pit",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/suffocation_pit.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Suffocation Pit (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Suffocation Pit (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_suffocation_pit_ii",
+    "name": "Suffocation Pit II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit%20II.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/suffocation_pit_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit%20II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Suffocation Pit II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Suffocation Pit II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_mothers_dwelling",
+    "name": "Mother's Dwelling",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Mothers%20Dwelling.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/mothers_dwelling.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Mothers%20Dwelling.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mother's Dwelling (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Mother's Dwelling (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_temple_of_purgation",
+    "name": "Temple of Purgation",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Temple%20of%20Purgation.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/temple_of_purgation.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Temple%20of%20Purgation.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Temple of Purgation (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Temple of Purgation (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_grim_pantry",
+    "name": "Grim Pantry",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Grim%20Pantry.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/grim_pantry.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Swamp/Grim%20Pantry.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Grim Pantry (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Grim Pantry (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_the_pale_rose",
+    "name": "The Pale Rose",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Pale%20Rose.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/the_pale_rose.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Swamp/Pale%20Rose.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Pale Rose (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Pale Rose (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_family_residence",
+    "name": "Family Residence",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/family_residence.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Family Residence (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Family Residence (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_family_residence_ii",
+    "name": "Family Residence II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence%20II.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/family_residence_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence%20II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Family Residence II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Family Residence II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_sanctum_of_wrath",
+    "name": "Sanctum of Wrath",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/sanctum_of_wrath.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Sanctum of Wrath (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Sanctum of Wrath (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_sanctum_of_wrath_ii",
+    "name": "Sanctum of Wrath II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath%20II.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/sanctum_of_wrath_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath%20II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Sanctum of Wrath II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Sanctum of Wrath II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_police_station_east_wing",
+    "name": "Police Station East Wing",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20East%20Wing.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/police_station_east_wing.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20East%20Wing.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Police Station East Wing (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Police Station East Wing (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_police_station_west_wing",
+    "name": "Police Station West Wing",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20West%20Wing.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/police_station_west_wing.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20West%20Wing.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Police Station West Wing (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Police Station West Wing (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_dead_dawg_saloon",
+    "name": "Dead Dawg Saloon",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Dead%20Dawg%20Saloon.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/dead_dawg_saloon.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Dead%20Dawg%20Saloon.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Dead Dawg Saloon (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Dead Dawg Saloon (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_garden_of_joy",
+    "name": "Garden of Joy",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Garden%20of%20Joy.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/garden_of_joy.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Garden%20of%20Joy.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Garden of Joy (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Garden of Joy (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_greenville_square",
+    "name": "Greenville Square",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Greenville%20Square.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/greenville_square.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Greenville%20Square.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Greenville Square (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Greenville Square (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_fallen_refuge",
+    "name": "Fallen Refuge",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Fallen%20Refuge.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/fallen_refuge.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Fallen%20Refuge.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Fallen Refuge (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Fallen Refuge (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_freddy_fazbears_pizza",
+    "name": "Freddy Fazbears Pizza",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Freddy%20Fazbears%20Pizza.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/freddy_fazbears_pizza.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Freddy%20Fazbears%20Pizza.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Freddy Fazbears Pizza (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Freddy Fazbears Pizza (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_the_game",
+    "name": "The Game",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/The%20Game.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/the_game.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/The%20Game.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Game (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Game (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_lampkin_lane",
+    "name": "Lampkin Lane",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Haddonfield.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/lampkin_lane.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Haddonfield.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Lampkin Lane (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Lampkin Lane (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_midwich_elementary_school",
+    "name": "Midwich Elementary School",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Midwich.gif",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/midwich_elementary_school.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Midwich.gif",
+    "clock_system": {
+      "description": "12-Clock Callout System for Midwich Elementary School (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Midwich Elementary School (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_mount_ormond_resort",
+    "name": "Mount Ormond Resort",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/mount_ormond_resort.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Mount Ormond Resort (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_mount_ormond_resort_ii",
+    "name": "Mount Ormond Resort II",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20II.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/mount_ormond_resort_ii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20II.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort II (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Mount Ormond Resort II (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_mount_ormond_resort_iii",
+    "name": "Mount Ormond Resort III",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20III.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/mount_ormond_resort_iii.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20III.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort III (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Mount Ormond Resort III (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_ormond_lake_mine",
+    "name": "Ormond Lake Mine",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20Lake%20Mine.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/ormond_lake_mine.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20Lake%20Mine.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ormond Lake Mine (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Ormond Lake Mine (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_treatment_theatre",
+    "name": "Treatment Theatre",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Lerys.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/treatment_theatre.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Other/Lerys.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Treatment Theatre (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Treatment Theatre (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_toba_landing",
+    "name": "Toba Landing",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Toba%20Landing.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/toba_landing.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Toba%20Landing.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Toba Landing (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Toba Landing (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_nostromo_wreckage",
+    "name": "Nostromo Wreckage",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Nostromo%20Wreckage.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/nostromo_wreckage.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Nostromo%20Wreckage.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Nostromo Wreckage (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Nostromo Wreckage (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "hens_general_realm_tricksters_delusion",
+    "name": "Trickster's Delusion",
+    "realm": "General Realm",
+    "realm_id": "general_realm",
+    "source": "hens333",
+    "source_label": "Hens333 12-Clock Callouts",
+    "callout_image_url": "https://hens333.com/img/dbd/callouts/Sleepless%20District/Tricksters%20Delusion.webp",
+    "callout_image_local_path": "maps/callouts/hens333/general_realm/tricksters_delusion.webp",
+    "image_url": "https://hens333.com/img/dbd/callouts/Sleepless%20District/Tricksters%20Delusion.webp",
+    "clock_system": {
+      "description": "12-Clock Callout System for Trickster's Delusion (General Realm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Trickster's Delusion (General Realm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_coldwind_farm_torment_creek_1",
+    "name": "Torment Creek",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115706308/9D4C5B5F136E887CF4D0293C30728193C98C1935/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/torment_creek_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115706308/9D4C5B5F136E887CF4D0293C30728193C98C1935/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_coldwind_farm_thompson_house_2",
+    "name": "Thompson House",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115706070/5B840DE557FF99ADD1CFD98EE654B3376572FD0E/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/thompson_house_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115706070/5B840DE557FF99ADD1CFD98EE654B3376572FD0E/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_coldwind_farm_rotten_fields_3",
+    "name": "Rotten Fields",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115703871/DEFB4C57D139D35D718A0268B16E82FEDF8C027F/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/rotten_fields_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115703871/DEFB4C57D139D35D718A0268B16E82FEDF8C027F/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_coldwind_farm_rancid_abattoir_4",
+    "name": "Rancid Abattoir",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115703733/1A53C0793D3C66AC3D8D95E42B81212CCD22D5A6/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/rancid_abattoir_4.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115703733/1A53C0793D3C66AC3D8D95E42B81212CCD22D5A6/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Rancid Abattoir (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Rancid Abattoir (Coldwind Farm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_coldwind_farm_fractured_cowshed_5",
+    "name": "Fractured Cowshed",
+    "realm": "Coldwind Farm",
+    "realm_id": "coldwind_farm",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115700142/FEF35620B5AF8E3EFDB0A0A4218F743818ABA99E/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/coldwind_farm/fractured_cowshed_5.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115700142/FEF35620B5AF8E3EFDB0A0A4218F743818ABA99E/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_ironworks_of_misery_1",
+    "name": "Ironworks of Misery",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115702052/57D8F78A83CB5428AA511ACD267D03028D413124/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/ironworks_of_misery_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115702052/57D8F78A83CB5428AA511ACD267D03028D413124/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ironworks of Misery (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Ironworks of Misery (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_ironworks_of_misery_ii_2",
+    "name": "Ironworks of Misery II",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115701946/6F55A0FEC9E3EFD6A2E0425AB77568BB671572EE/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/ironworks_of_misery_ii_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115701946/6F55A0FEC9E3EFD6A2E0425AB77568BB671572EE/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ironworks of Misery II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Ironworks of Misery II (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_suffocation_pit_3",
+    "name": "Suffocation Pit",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115705288/A466F2D2C158D74C93C45FC1F4AA068C78EF003D/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/suffocation_pit_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115705288/A466F2D2C158D74C93C45FC1F4AA068C78EF003D/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Suffocation Pit (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Suffocation Pit (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_suffocation_pit_ii_4",
+    "name": "Suffocation Pit II",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115705146/FAA2217B7BA4FD4E8B616465B194917C55CF32B2/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/suffocation_pit_ii_4.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115705146/FAA2217B7BA4FD4E8B616465B194917C55CF32B2/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Suffocation Pit II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Suffocation Pit II (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_shelter_woods_5",
+    "name": "Shelter Woods",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115704964/1795242F81F39B80CEA626B434736F62FF9E7461/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/shelter_woods_5.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115704964/1795242F81F39B80CEA626B434736F62FF9E7461/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Shelter Woods (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Shelter Woods (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_shelter_woods_ii_6",
+    "name": "Shelter Woods II",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115704661/0739F0855A3AEF7A39484228D651321E9D000117/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/shelter_woods_ii_6.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115704661/0739F0855A3AEF7A39484228D651321E9D000117/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Shelter Woods II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Shelter Woods II (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_groaning_storehouse_7",
+    "name": "Groaning Storehouse",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115701839/10FE78E38093638B54BA47E9517422A2D3385D27/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/groaning_storehouse_7.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115701839/10FE78E38093638B54BA47E9517422A2D3385D27/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Groaning Storehouse (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Groaning Storehouse (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_groaning_storehouse_ii_8",
+    "name": "Groaning Storehouse II",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115701654/A2B8ABEA69CBC8C78E3B012765F5A42A777E13B2/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/groaning_storehouse_ii_8.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115701654/A2B8ABEA69CBC8C78E3B012765F5A42A777E13B2/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Groaning Storehouse II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Groaning Storehouse II (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_coal_tower_9",
+    "name": "Coal Tower",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115699083/FE359D3D6AD1406DD235F14A0A67D442D675420A/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/coal_tower_9.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115699083/FE359D3D6AD1406DD235F14A0A67D442D675420A/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Coal Tower (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Coal Tower (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_macmillan_estate_coal_tower_ii_10",
+    "name": "Coal Tower II",
+    "realm": "The Macmillan Estate",
+    "realm_id": "the_macmillan_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115698999/8149E4DF184BD2564A3255D951FBA3D4D8674BB0/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_macmillan_estate/coal_tower_ii_10.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115698999/8149E4DF184BD2564A3255D951FBA3D4D8674BB0/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Coal Tower II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Coal Tower II (The Macmillan Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_autohaven_wreckers_azarovs_resting_place_1",
+    "name": "Azarov's Resting Place",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115697951/DA38EA874DA20EEE4FE4AFDDB2C6C911ABF47C3A/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/azarovs_resting_place_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115697951/DA38EA874DA20EEE4FE4AFDDB2C6C911ABF47C3A/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_autohaven_wreckers_blood_lodge_2",
+    "name": "Blood Lodge",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115698806/6D48AB90EACC92D242648C952A9B1A345F0705EE/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/blood_lodge_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115698806/6D48AB90EACC92D242648C952A9B1A345F0705EE/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_autohaven_wreckers_gas_heaven_3",
+    "name": "Gas Heaven",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115700497/FBF7A458F4B9A13A8D5EF0D56F8359E4338309BF/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/gas_heaven_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115700497/FBF7A458F4B9A13A8D5EF0D56F8359E4338309BF/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_autohaven_wreckers_wreckers_yard_4",
+    "name": "Wreckers' Yard",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115706497/6B760048C36075B512896BBE2721A1D2568F84C7/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/wreckers_yard_4.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115706497/6B760048C36075B512896BBE2721A1D2568F84C7/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_autohaven_wreckers_wretched_shop_5",
+    "name": "Wretched Shop",
+    "realm": "Autohaven Wreckers",
+    "realm_id": "autohaven_wreckers",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115706638/C16FE7C82B89392A0AF030F932C4EB17FD4D4A28/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/autohaven_wreckers/wretched_shop_5.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115706638/C16FE7C82B89392A0AF030F932C4EB17FD4D4A28/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_disturbed_ward_crotus_prenn_asylum_1",
+    "name": "Crotus Prenn Asylum",
+    "realm": "Disturbed Ward",
+    "realm_id": "disturbed_ward",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115699195/78C23B99C0BCD69D2D35E76997EF9B39433BBDFF/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/disturbed_ward/crotus_prenn_asylum_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115699195/78C23B99C0BCD69D2D35E76997EF9B39433BBDFF/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Crotus Prenn Asylum (Disturbed Ward). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Crotus Prenn Asylum (Disturbed Ward). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_disturbed_ward_father_cambells_chapel_2",
+    "name": "Father Cambell's Chapel",
+    "realm": "Disturbed Ward",
+    "realm_id": "disturbed_ward",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115699644/83774D81FB84042909579D808BB27D3A6F77796A/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/disturbed_ward/father_cambells_chapel_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115699644/83774D81FB84042909579D808BB27D3A6F77796A/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Father Cambell's Chapel (Disturbed Ward). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Father Cambell's Chapel (Disturbed Ward). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_lerys_memorial_institute_treatment_theatre_1",
+    "name": "Treatment Theatre",
+    "realm": "Lery's Memorial Institute",
+    "realm_id": "lerys_memorial_institute",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115702368/1B17ACAC676FC978AD073B472EF5685C7C24D4F9/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/lerys_memorial_institute/treatment_theatre_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115702368/1B17ACAC676FC978AD073B472EF5685C7C24D4F9/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Treatment Theatre (Lery's Memorial Institute). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Treatment Theatre (Lery's Memorial Institute). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_backwater_swamp_the_pale_rose_1",
+    "name": "The Pale Rose",
+    "realm": "Backwater Swamp",
+    "realm_id": "backwater_swamp",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115705478/6917B866B6B3B1ECEC0E377670BF9847DEC51C96/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/backwater_swamp/the_pale_rose_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115705478/6917B866B6B3B1ECEC0E377670BF9847DEC51C96/",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_backwater_swamp_grim_pantry_2",
+    "name": "Grim Pantry",
+    "realm": "Backwater Swamp",
+    "realm_id": "backwater_swamp",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115701516/435139689EE18081A89C95CD72CE2983DF8F3A3F/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/backwater_swamp/grim_pantry_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115701516/435139689EE18081A89C95CD72CE2983DF8F3A3F/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_haddonfield_lampkin_lane_1",
+    "name": "Lampkin Lane",
+    "realm": "Haddonfield",
+    "realm_id": "haddonfield",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/10579888035103544727/97D712D1975046FC949B2A4172F46F33AF0C3D8C/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/haddonfield/lampkin_lane_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/10579888035103544727/97D712D1975046FC949B2A4172F46F33AF0C3D8C/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_red_forest_mothers_dwelling_1",
+    "name": "Mother's Dwelling",
+    "realm": "Red Forest",
+    "realm_id": "red_forest",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/16757460888309449065/A161BA7579A2C6F8C91A85459D029A97C4E70852/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/red_forest/mothers_dwelling_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/16757460888309449065/A161BA7579A2C6F8C91A85459D029A97C4E70852/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_red_forest_the_temple_of_purgation_2",
+    "name": "The Temple of Purgation",
+    "realm": "Red Forest",
+    "realm_id": "red_forest",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/13418878323076553763/AC51CBF62B3AF3FE0EED0DFCE228CEBB8B30778A/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/red_forest/the_temple_of_purgation_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/13418878323076553763/AC51CBF62B3AF3FE0EED0DFCE228CEBB8B30778A/",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_springwood_badham_preschool_i_1",
+    "name": "Badham Preschool I",
+    "realm": "Springwood",
+    "realm_id": "springwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115698108/3D82623F4133296020A99B3DCEB4A33066087E2C/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_i_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115698108/3D82623F4133296020A99B3DCEB4A33066087E2C/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Badham Preschool I (Springwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Badham Preschool I (Springwood). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_springwood_badham_preschool_ii_2",
+    "name": "Badham Preschool II",
+    "realm": "Springwood",
+    "realm_id": "springwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115698184/593A6A3F92F532495A85DB438AA61A2B7F206F45/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_ii_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115698184/593A6A3F92F532495A85DB438AA61A2B7F206F45/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Badham Preschool II (Springwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Badham Preschool II (Springwood). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_springwood_badham_preschool_iii_3",
+    "name": "Badham Preschool III",
+    "realm": "Springwood",
+    "realm_id": "springwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115698273/92AFCC4851B6FBED04385C4E65C1373FCBFD7A0A/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_iii_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115698273/92AFCC4851B6FBED04385C4E65C1373FCBFD7A0A/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Badham Preschool III (Springwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Badham Preschool III (Springwood). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_springwood_badham_preschool_iv_4",
+    "name": "Badham Preschool IV",
+    "realm": "Springwood",
+    "realm_id": "springwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115698579/57F6AFB6551678665B8C9C341E2A4B9F57963641/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_iv_4.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115698579/57F6AFB6551678665B8C9C341E2A4B9F57963641/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Badham Preschool IV (Springwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Badham Preschool IV (Springwood). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_springwood_badham_preschool_v_5",
+    "name": "Badham Preschool V",
+    "realm": "Springwood",
+    "realm_id": "springwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115698747/3F017E4476185A3862F1C9EEA86428BCA529D8B5/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/springwood/badham_preschool_v_5.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115698747/3F017E4476185A3862F1C9EEA86428BCA529D8B5/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Badham Preschool V (Springwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Badham Preschool V (Springwood). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_yamaoka_estate_sanctum_of_wrath_1",
+    "name": "Sanctum of Wrath",
+    "realm": "Yamaoka Estate",
+    "realm_id": "yamaoka_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115704239/53FC2273F44A876288B65F1E2294D33BDBA97C22/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/yamaoka_estate/sanctum_of_wrath_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115704239/53FC2273F44A876288B65F1E2294D33BDBA97C22/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_yamaoka_estate_sanctum_of_wrath_v1_2",
+    "name": "Sanctum of Wrath v1",
+    "realm": "Yamaoka Estate",
+    "realm_id": "yamaoka_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115704163/854A36ADD9A8FE400A1A7BDAE62A73F71C8F2DA3/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/yamaoka_estate/sanctum_of_wrath_v1_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115704163/854A36ADD9A8FE400A1A7BDAE62A73F71C8F2DA3/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Sanctum of Wrath v1 (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Sanctum of Wrath v1 (Yamaoka Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_yamaoka_estate_family_residence_3",
+    "name": "Family Residence",
+    "realm": "Yamaoka Estate",
+    "realm_id": "yamaoka_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115699554/D68C6C58727D973B8202D4E2C197E5BCB6BF9D2D/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/yamaoka_estate/family_residence_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115699554/D68C6C58727D973B8202D4E2C197E5BCB6BF9D2D/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_yamaoka_estate_family_residence_v1_4",
+    "name": "Family Residence v1",
+    "realm": "Yamaoka Estate",
+    "realm_id": "yamaoka_estate",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115699455/1B542FBCCDD13C27F153DEEE15AF57AF984F7E11/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/yamaoka_estate/family_residence_v1_4.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115699455/1B542FBCCDD13C27F153DEEE15AF57AF984F7E11/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Family Residence v1 (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Family Residence v1 (Yamaoka Estate). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_ormond_mount_ormond_resort_1",
+    "name": "Mount Ormond Resort",
+    "realm": "Ormond",
+    "realm_id": "ormond",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115703261/F066725C54206443DD05CEA034374E05F9666BE1/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/ormond/mount_ormond_resort_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115703261/F066725C54206443DD05CEA034374E05F9666BE1/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_ormond_mount_ormond_resort_v1_2",
+    "name": "Mount Ormond Resort v1",
+    "realm": "Ormond",
+    "realm_id": "ormond",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115703063/556E6981C5116B3CC13E34B7179D31C4EC02F425/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/ormond/mount_ormond_resort_v1_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115703063/556E6981C5116B3CC13E34B7179D31C4EC02F425/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort v1 (Ormond). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Mount Ormond Resort v1 (Ormond). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_ormond_mount_ormond_resort_v2_3",
+    "name": "Mount Ormond Resort v2",
+    "realm": "Ormond",
+    "realm_id": "ormond",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115703173/64E9B1318C2BB0E1662B16C543970E965B795946/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/ormond/mount_ormond_resort_v2_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115703173/64E9B1318C2BB0E1662B16C543970E965B795946/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Mount Ormond Resort v2 (Ormond). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Mount Ormond Resort v2 (Ormond). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_ormond_ormond_lake_mine_4",
+    "name": "Ormond Lake Mine",
+    "realm": "Ormond",
+    "realm_id": "ormond",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50205275296221137/27CAC397328884C40FF7FEB6F2E9E6D717C3C0B8/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/ormond/ormond_lake_mine_4.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50205275296221137/27CAC397328884C40FF7FEB6F2E9E6D717C3C0B8/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_hawkins_national_laboratory_the_underground_complex_1",
+    "name": "The Underground Complex",
+    "realm": "Hawkins National Laboratory",
+    "realm_id": "hawkins_national_laboratory",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115705908/C921B2D339389B154CA4E2C810751A5BA97E42A5/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/hawkins_national_laboratory/the_underground_complex_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115705908/C921B2D339389B154CA4E2C810751A5BA97E42A5/",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_gideon_meat_plant_the_game_1",
+    "name": "The Game",
+    "realm": "Gideon Meat Plant",
+    "realm_id": "gideon_meat_plant",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115700786/DF4AEB52B07F17F91DB17FE49F3F9825EF8FE8DF/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/gideon_meat_plant/the_game_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115700786/DF4AEB52B07F17F91DB17FE49F3F9825EF8FE8DF/",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_gideon_meat_plant_the_location_of_the_central_staircases_may_vary_2",
+    "name": "the location of the central staircases may vary",
+    "realm": "Gideon Meat Plant",
+    "realm_id": "gideon_meat_plant",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115700952/19BF08A8C37840B255379135BC97E70987E2DCC6/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/gideon_meat_plant/the_location_of_the_central_staircases_may_vary_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115700952/19BF08A8C37840B255379135BC97E70987E2DCC6/",
+    "clock_system": {
+      "description": "12-Clock Callout System for the location of the central staircases may vary (Gideon Meat Plant). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for the location of the central staircases may vary (Gideon Meat Plant). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_grave_of_glenvale_dead_dawg_saloon_1",
+    "name": "Dead Dawg Saloon",
+    "realm": "Grave of Glenvale",
+    "realm_id": "grave_of_glenvale",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/17442666106656078964/B9C254A21DB202E54038665084DE76BA8817225F/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/grave_of_glenvale/dead_dawg_saloon_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/17442666106656078964/B9C254A21DB202E54038665084DE76BA8817225F/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glenvale). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glenvale). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_silent_hill_midwich_elementary_school_1",
+    "name": "Midwich  Elementary  School",
+    "realm": "Silent Hill",
+    "realm_id": "silent_hill",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115702671/9D8E8DB5D79DEDEA259E90C76A6CE7239DD9E5BC/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/silent_hill/midwich_elementary_school_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115702671/9D8E8DB5D79DEDEA259E90C76A6CE7239DD9E5BC/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Midwich  Elementary  School (Silent Hill). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Midwich  Elementary  School (Silent Hill). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_silent_hill_silent_hill_map_2_2",
+    "name": "Silent Hill Map 2",
+    "realm": "Silent Hill",
+    "realm_id": "silent_hill",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115702545/F8156F8C2C8265F77501C99292CA09302D960D6E/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/silent_hill/silent_hill_map_2_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115702545/F8156F8C2C8265F77501C99292CA09302D960D6E/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Silent Hill Map 2 (Silent Hill). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Silent Hill Map 2 (Silent Hill). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_raccoon_city_raccoon_city_police_station_1",
+    "name": "Raccoon City Police Station",
+    "realm": "Raccoon City",
+    "realm_id": "raccoon_city",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115703577/3F03BC57B9E3640FBA5CC1EF6C0C48D09B79D164/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/raccoon_city/raccoon_city_police_station_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115703577/3F03BC57B9E3640FBA5CC1EF6C0C48D09B79D164/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Raccoon City Police Station (Raccoon City). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Raccoon City Police Station (Raccoon City). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_raccoon_city_raccoon_city_map_2_2",
+    "name": "Raccoon City Map 2",
+    "realm": "Raccoon City",
+    "realm_id": "raccoon_city",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115703475/3AE32A838602A2EEBBF837B52A8A30A9FA4C34F5/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/raccoon_city/raccoon_city_map_2_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115703475/3AE32A838602A2EEBBF837B52A8A30A9FA4C34F5/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Raccoon City Map 2 (Raccoon City). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Raccoon City Map 2 (Raccoon City). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_forsaken_boneyard_eyrie_of_crows_1",
+    "name": "Eyrie of Crows",
+    "realm": "Forsaken Boneyard",
+    "realm_id": "forsaken_boneyard",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/12138493578484806904/48CF7B22FC911B2536356F939F4844DE8D6E0603/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/forsaken_boneyard/eyrie_of_crows_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/12138493578484806904/48CF7B22FC911B2536356F939F4844DE8D6E0603/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_forsaken_boneyard_dead_sands_2",
+    "name": "Dead Sands",
+    "realm": "Forsaken Boneyard",
+    "realm_id": "forsaken_boneyard",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/18126358184879013563/BC6A496263E4616C6F102638F987454E505DDAFC/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/forsaken_boneyard/dead_sands_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/18126358184879013563/BC6A496263E4616C6F102638F987454E505DDAFC/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_withered_isle_garden_of_joy_1",
+    "name": "Garden of Joy",
+    "realm": "Withered Isle",
+    "realm_id": "withered_isle",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/18067104757633659929/3A42C3AA98A39DF947D10D5C2532EAE4F1930399/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/withered_isle/garden_of_joy_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/18067104757633659929/3A42C3AA98A39DF947D10D5C2532EAE4F1930399/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_withered_isle_greenville_square_2",
+    "name": "Greenville Square",
+    "realm": "Withered Isle",
+    "realm_id": "withered_isle",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/10629887876791180455/D121862772B9D0799F0432962CEB6000084A583B/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/withered_isle/greenville_square_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/10629887876791180455/D121862772B9D0799F0432962CEB6000084A583B/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_withered_isle_freddy_fazbears_pizza_3",
+    "name": "Freddy Fazbear's Pizza",
+    "realm": "Withered Isle",
+    "realm_id": "withered_isle",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/10037203792559845983/17336D7170A4403E2518EF25356CC58C03F5AB50/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/withered_isle/freddy_fazbears_pizza_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/10037203792559845983/17336D7170A4403E2518EF25356CC58C03F5AB50/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Freddy Fazbear's Pizza (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Freddy Fazbear's Pizza (Withered Isle). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_withered_isle_fallen_refuge_4",
+    "name": "Fallen Refuge",
+    "realm": "Withered Isle",
+    "realm_id": "withered_isle",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/13666604901736784078/FCB14777F976A39799365F7DBFC92E52B8DE5057/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/withered_isle/fallen_refuge_4.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/13666604901736784078/FCB14777F976A39799365F7DBFC92E52B8DE5057/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_decimated_borgo_the_shattered_square_1",
+    "name": "The Shattered square",
+    "realm": "The Decimated Borgo",
+    "realm_id": "the_decimated_borgo",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/10611140716035770038/E252FB106B0CBD2612999466F79FADB7D9F7982E/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_decimated_borgo/the_shattered_square_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/10611140716035770038/E252FB106B0CBD2612999466F79FADB7D9F7982E/",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Shattered square (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Shattered square (The Decimated Borgo). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_decimated_borgo_forgotten_ruins_2",
+    "name": "Forgotten Ruins",
+    "realm": "The Decimated Borgo",
+    "realm_id": "the_decimated_borgo",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/18047515454771346559/7F6FCF70684483F62EFE4136029AAEF4B47F554E/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_decimated_borgo/forgotten_ruins_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/18047515454771346559/7F6FCF70684483F62EFE4136029AAEF4B47F554E/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Forgotten Ruins (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Forgotten Ruins (The Decimated Borgo). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_the_decimated_borgo_the_decimated_borgo_map_3_3",
+    "name": "The Decimated Borgo Map 3",
+    "realm": "The Decimated Borgo",
+    "realm_id": "the_decimated_borgo",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/10866622961389696446/15677ED896FCE079AE34FA48B633C4F569BFBA99/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/the_decimated_borgo/the_decimated_borgo_map_3_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/10866622961389696446/15677ED896FCE079AE34FA48B633C4F569BFBA99/",
+    "clock_system": {
+      "description": "12-Clock Callout System for The Decimated Borgo Map 3 (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for The Decimated Borgo Map 3 (The Decimated Borgo). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_dvarka_deepwood_toba_landing_1",
+    "name": "Toba Landing",
+    "realm": "Dvarka Deepwood",
+    "realm_id": "dvarka_deepwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/50204544115706271/67F18582C1616611547CEFC5AF8FD12AF3B0082B/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/dvarka_deepwood/toba_landing_1.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/50204544115706271/67F18582C1616611547CEFC5AF8FD12AF3B0082B/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_dvarka_deepwood_nostromo_wreckage_2",
+    "name": "Nostromo Wreckage",
+    "realm": "Dvarka Deepwood",
+    "realm_id": "dvarka_deepwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/12233017422195700066/1D907D9E288EDE745D8CA6931271D77DCDCC54D9/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/dvarka_deepwood/nostromo_wreckage_2.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/12233017422195700066/1D907D9E288EDE745D8CA6931271D77DCDCC54D9/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_dvarka_deepwood_dvarka_deepwood_map_3_3",
+    "name": "Dvarka Deepwood Map 3",
+    "realm": "Dvarka Deepwood",
+    "realm_id": "dvarka_deepwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/2259180117385980866/195157A52FE2EC7A6C7AC36F06253C329E52F192/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/dvarka_deepwood/dvarka_deepwood_map_3_3.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/2259180117385980866/195157A52FE2EC7A6C7AC36F06253C329E52F192/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Dvarka Deepwood Map 3 (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Dvarka Deepwood Map 3 (Dvarka Deepwood). Standard top-middle starts at 12 o'clock."
+  },
+  {
+    "id": "samoel_dvarka_deepwood_dvarka_deepwood_map_4_4",
+    "name": "Dvarka Deepwood Map 4",
+    "realm": "Dvarka Deepwood",
+    "realm_id": "dvarka_deepwood",
+    "source": "samoelcolt",
+    "source_label": "SamoelColt Isometric Scheme",
+    "callout_image_url": "https://images.steamusercontent.com/ugc/2259180117385980429/DD18664314A26EA83C62E9B0127FFCB35092B53A/",
+    "callout_image_local_path": "maps/callouts/samoelcolt/dvarka_deepwood/dvarka_deepwood_map_4_4.jpg",
+    "image_url": "https://images.steamusercontent.com/ugc/2259180117385980429/DD18664314A26EA83C62E9B0127FFCB35092B53A/",
+    "clock_system": {
+      "description": "12-Clock Callout System for Dvarka Deepwood Map 4 (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "twelve_o_clock": "Main Landmark / North Exit Gate",
+      "three_o_clock": "East Loop Tile / Generator Cluster",
+      "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+      "nine_o_clock": "West Jungle Gym / Pallet Gym",
+      "center": "Center Landmark / Central Generator"
+    },
+    "description": "12-Clock Callout System for Dvarka Deepwood Map 4 (Dvarka Deepwood). Standard top-middle starts at 12 o'clock."
+  }
+]

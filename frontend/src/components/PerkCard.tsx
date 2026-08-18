@@ -192,7 +192,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, dict }) => {
         return (
           <div
             key={lineIdx}
-            className="my-2 rounded-lg border-l-2 border-amber-500 bg-slate-900/90 p-2 text-xs italic text-slate-300 font-serif shadow-inner"
+            className="my-2 rounded-lg bg-slate-900/90 p-2 text-xs italic text-slate-300 font-serif shadow-inner"
           >
             {strippedForQuote}
           </div>
@@ -220,11 +220,10 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, dict }) => {
   };
 
   return (
-    <div className="relative group flex items-center justify-center p-1 sm:p-2">
-      {/* ── BALANCED IN-GAME PERK SLOT CONTAINER ── */}
+    <div className="relative group flex items-center justify-center p-2 sm:p-3 w-full">
       <div
         onClick={() => onSelect(perk)}
-        className={`relative flex h-28 w-28 sm:h-32 sm:w-32 md:h-36 md:w-36 lg:h-38 lg:w-38 cursor-pointer items-center justify-center transition-transform duration-200 group-hover:scale-105 active:scale-95 ${!isOwned ? 'opacity-40 grayscale' : ''
+        className={`relative flex h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48 cursor-pointer items-center justify-center transition-transform duration-200 group-hover:scale-105 active:scale-95 ${!isOwned ? 'opacity-40 grayscale' : ''
           }`}
       >
         {/* Perk Diamond Icon */}
@@ -236,39 +235,34 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, dict }) => {
             className="h-full w-full object-contain filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)] group-hover:drop-shadow-[0_0_18px_rgba(6,182,212,0.6)] transition-all duration-200 pointer-events-none"
           />
         ) : (
-          <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-slate-900 border border-slate-700">
+          <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-slate-900">
             <ImageOff className="-rotate-45 h-10 w-10 text-slate-500" />
           </div>
         )}
 
-        {/* ── CHARACTER AVATAR FRAMED IN THE BOTTOM-RIGHT CORNER TRIANGLE ── */}
+        {/* Character Avatar (Scaled Up) */}
         {avatarSrc && !avatarError && !isGeneral && (
-          <div
-            className="absolute bottom-0 right-0 w-[48%] h-[48%] overflow-hidden pointer-events-none bg-slate-950/40"
-            style={{
-              clipPath: 'polygon(100% 0, 100% 100%, 0 100%)',
-            }}
-          >
+          <div className="absolute bottom-0 right-0 h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13 overflow-hidden rounded-full pointer-events-none bg-slate-950/80 shadow-lg">
             <img
               src={avatarSrc}
               alt={perk.character}
               onError={() => setAvatarError(true)}
-              className="h-full w-full object-cover object-[center_12%] scale-135 translate-y-[2%] translate-x-[4%]"
+              className="h-full w-full object-cover object-top"
             />
           </div>
         )}
 
         {/* Locked Overlay Badge */}
         {!isOwned && (
-          <div className="absolute top-1 right-1 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-slate-950/90 border border-slate-700 shadow-md">
-            <Lock className="h-3 w-3 text-slate-400" />
+          <div className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/90 shadow-md">
+            <Lock className="h-3.5 w-3.5 text-slate-400" />
           </div>
         )}
       </div>
 
-      {/* ── HOVER TOOLTIP ── */}
-      <div className="pointer-events-none absolute bottom-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 hidden group-hover:flex flex-col w-80 max-w-[90vw] rounded-2xl border border-slate-700/90 bg-[#0a0f18]/98 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.9)] backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150 text-left">
-        <div className="flex items-start justify-between gap-2 border-b border-slate-800/80 pb-2.5 mb-2.5">
+      {/* Hover Tooltip */}
+      <div className="pointer-events-none absolute bottom-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 hidden group-hover:flex flex-col w-80 max-w-[90vw] rounded-2xl bg-[#0a0f18]/98 p-4 shadow-[0_12px_40px_rgba(0,0,0,0.9)] backdrop-blur-2xl animate-in fade-in zoom-in-95 duration-150 text-left">
+        <div className="flex items-start justify-between gap-2 pb-2.5 mb-2.5">
           <div>
             <h4 className="text-sm font-black text-amber-400 tracking-tight leading-tight">
               {perk.name}
@@ -285,8 +279,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, dict }) => {
 
           <span
             className={`flex items-center gap-1 rounded-md px-2 py-0.5 text-[9px] font-black uppercase tracking-wider shrink-0 ${isSurvivor
-                ? 'bg-emerald-950/90 text-emerald-400 border border-emerald-500/40'
-                : 'bg-rose-950/90 text-rose-400 border border-rose-500/40'
+                ? 'bg-emerald-950/90 text-emerald-400'
+                : 'bg-rose-950/90 text-rose-400'
               }`}
           >
             {isSurvivor ? <Shield className="h-2.5 w-2.5" /> : <Skull className="h-2.5 w-2.5" />}
@@ -299,7 +293,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, dict }) => {
         </div>
 
         {perk.alternate_name && (
-          <div className="mt-2.5 pt-2 border-t border-slate-800 flex items-center gap-1.5 text-[10px] text-amber-400 font-bold">
+          <div className="mt-2.5 pt-2 flex items-center gap-1.5 text-[10px] text-amber-400 font-bold">
             <Repeat className="h-3 w-3 shrink-0" />
             <span>Alias: {perk.alternate_name}</span>
           </div>

@@ -31,11 +31,15 @@ import {
   LogIn,
   LogOut,
   Crown,
+  Bug,
+  Coffee,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import { AuthModal } from './AuthModal';
+import { BugReportModal } from './BugReportModal';
+import { BuyCoffeeModal } from './BuyCoffeeModal';
 
 interface SidebarProps {
   currentLocale: string;
@@ -67,6 +71,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [bugModalOpen, setBugModalOpen] = useState(false);
+  const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
   const [othersOpen, setOthersOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -317,8 +323,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 onClick={() => setOthersOpen(!othersOpen)}
                 className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${isOtherActive
-                  ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
+                    ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
                   }`}
               >
                 <div className="flex items-center gap-3">
@@ -436,8 +442,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     </p>
                     <span
                       className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${user.role === 'admin'
-                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                        : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                          : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
                         }`}
                     >
                       {user.role}
@@ -470,7 +476,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      <div className="space-y-2.5 pt-3 mt-3 border-t border-slate-200/80 dark:border-slate-800/80">
+      <div className="space-y-2 pt-3 mt-3 border-t border-slate-200/80 dark:border-slate-800/80">
+        {/* Language & Theme Controls */}
         <div className="grid grid-cols-2 gap-2">
           <Link
             href={redirectedPathName(toggleLocale)}
@@ -491,6 +498,33 @@ export const Sidebar: React.FC<SidebarProps> = ({
             ) : (
               <Sun className="h-3.5 w-3.5 text-amber-500" />
             )}
+          </button>
+        </div>
+
+        {/* Bug Report & Buy Me a Coffee Buttons */}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => {
+              setBugModalOpen(true);
+              setMobileOpen(false);
+            }}
+            aria-label="Report a Bug"
+            className="flex h-8 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 text-[11px] font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          >
+            <Bug className="h-3.5 w-3.5 text-rose-500" />
+            <span>Report Bug</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setCoffeeModalOpen(true);
+              setMobileOpen(false);
+            }}
+            aria-label="Buy Me a Coffee"
+            className="flex h-8 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 text-[11px] font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          >
+            <Coffee className="h-3.5 w-3.5 text-amber-500" />
+            <span>Buy Coffee</span>
           </button>
         </div>
       </div>
@@ -560,6 +594,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+      <BugReportModal isOpen={bugModalOpen} onClose={() => setBugModalOpen(false)} />
+      <BuyCoffeeModal isOpen={coffeeModalOpen} onClose={() => setCoffeeModalOpen(false)} />
     </>
   );
 };

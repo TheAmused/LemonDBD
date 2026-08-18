@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
+import { UserAvatar } from './UserAvatar';
 import { useAuth } from '@/context/AuthContext';
 import { AuthModal } from './AuthModal';
 import { BugReportModal } from './BugReportModal';
@@ -325,7 +326,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-xl"
           >
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 via-red-950/20 to-slate-100 dark:to-slate-900 border border-amber-500/30 text-slate-900 dark:text-white shadow-md group-hover:scale-105 transition-transform p-1.5">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 via-red-950/20 to-slate-100 dark:to-slate-900 border border-amber-500/30 text-slate-900 dark:white shadow-md group-hover:scale-105 transition-transform p-1.5">
               <LemonIcon className="h-7 w-7" />
             </div>
             <div>
@@ -351,8 +352,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 onClick={() => setOthersOpen(!othersOpen)}
                 className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${isOtherActive
-                    ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
+                  ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
                   }`}
               >
                 <div className="flex items-center gap-3">
@@ -459,19 +460,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <Link
                   href={`/${currentLocale}/user`}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity"
+                  className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity"
                 >
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400">
-                    <LemonIcon className="h-4 w-4" />
-                  </div>
+                  <UserAvatar user={user} size="sm" />
                   <div className="truncate">
                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
                       {user.username}
                     </p>
                     <span
                       className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${user.role === 'admin'
-                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                          : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
                         }`}
                     >
                       {user.role}

@@ -35,7 +35,7 @@ export const PerkPickerPanel: React.FC<PerkPickerPanelProps> = ({
   useEffect(() => {
     if (!token || !user) return;
     const dbRole = role === 'killer' ? 'Killer' : 'Survivor';
-    fetch(`${backendBase}/api/v1/users/${user.id}/perks?role=${dbRole}`, {
+    fetch(`${backendBase}/api/v1/users/${user.id}/perks?category=${dbRole}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())

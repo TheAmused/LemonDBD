@@ -143,6 +143,22 @@ In `backend/app/services/db_service.py`, inside `_init_sqlite_schema()`:
 
 - Delete the `CREATE TABLE IF NOT EXISTS gauntlet_match_exceptions (...)` block (`backend/app/services/db_service.py:200-207`) entirely.
 
+- [ ] **Step 5b: Fix the now-broken import in `gauntlet_service.py`**
+
+`backend/app/services/gauntlet_service.py:7` currently reads:
+
+```python
+from app.models import GauntletRun, GauntletMatchLog, GauntletMatchException
+```
+
+Deleting the `GauntletMatchException` class in Step 3 makes this line raise `ImportError` the moment anything imports `gauntlet_service` (including this task's own tests) — fix it now, ahead of Task 2's full rewrite of the method that uses it:
+
+```python
+from app.models import GauntletRun, GauntletMatchLog
+```
+
+Leave the rest of `gauntlet_service.py` (including the still-present `invalidate_match()` method body that references `GauntletMatchException(...)`) untouched — Task 2 deletes that method wholesale. Do not call `invalidate_match()` from anything in this task; it only needs to not break imports.
+
 - [ ] **Step 6: Run test to verify it passes**
 
 Run: `docker exec dbd_backend python -m pytest backend/tests/test_gauntlet_service.py -k defaults_to_original -v`
@@ -401,7 +417,7 @@ def seed_killer_addons(killer_name):
     return addon
 ```
 
-Add `Item, Addon` to the `from app.models import ...` line at the top of the file:
+In `backend/tests/test_gauntlet_service.py`, update the existing `from app.models import Character, Perk` line (near the top of the file) to:
 
 ```python
 from app.models import Character, Perk, Item, Addon
@@ -442,7 +458,7 @@ Expected: FAIL with `KeyError: 'item'`
 
 - [ ] **Step 3: Implement item/add-on rolling**
 
-In `backend/app/services/gauntlet_service.py`, add `Item, Addon` to the model import:
+In `backend/app/services/gauntlet_service.py`, update the model import (Task 1 already trimmed it to `from app.models import GauntletRun, GauntletMatchLog`) to:
 
 ```python
 from app.models import GauntletRun, GauntletMatchLog, Item, Addon

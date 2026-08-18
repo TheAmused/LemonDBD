@@ -4,7 +4,7 @@ import logging
 from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
 from app.extensions import db
-from app.models import GauntletRun, GauntletMatchLog
+from app.models import GauntletRun, GauntletMatchLog, Item, Addon
 from app.services.perk_service import PerkService
 from app.services.ownership_service import OwnershipService
 
@@ -55,6 +55,44 @@ class GauntletService:
         db_role = "Killer" if role == "killer" else "Survivor"
         owned = self.ownership_service.get_user_perks(user_id, category=db_role)
         return [p for p in owned if p["is_unlocked"]]
+
+    @staticmethod
+    def _singularize(value):
+        v = (value or "").strip().lower()
+        if v.endswith("es"):
+            return v[:-2]
+        if v.endswith("s"):
+            return v[:-1]
+        return v
+
+    def _roll_survivor_gear(self):
+        items = db.session.scalars(select(Item).where(Item.role == "Survivor")).all()
+        if not items:
+            return None, []
+        item = random.choice(items)
+        # Addon.associated_target stores the item category's plural form (e.g. "Toolboxes"
+        # for an Item.category of "Toolbox"), so compare singularized forms.
+        item_key = self._singularize(item.category)
+        candidates = db.session.scalars(
+            select(Addon).where(
+                Addon.category == "Survivor",
+                Addon.description != "",
+            )
+        ).all()
+        addons = [a for a in candidates if self._singularize(a.associated_target) == item_key]
+        picked = random.sample(addons, min(2, len(addons))) if addons else []
+        return item.to_dict(), [a.to_dict() for a in picked]
+
+    def _roll_killer_addons(self, target_char):
+        addons = db.session.scalars(
+            select(Addon).where(
+                Addon.category == "Killer",
+                Addon.associated_target == target_char,
+                Addon.description != "",
+            )
+        ).all()
+        picked = random.sample(addons, min(2, len(addons))) if addons else []
+        return [a.to_dict() for a in picked]
 
     # ---- runs -------------------------------------------------------------
 
@@ -108,7 +146,12 @@ class GauntletService:
 
         target_char = target_character if target_character else random.choice(remaining)
 
-        loadout = {"character": target_char, "perks": [], "tier_info": tier_info}
+        if role == "survivor":
+            item, addons = self._roll_survivor_gear()
+        else:
+            item, addons = None, self._roll_killer_addons(target_char)
+
+        loadout = {"character": target_char, "perks": [], "item": item, "addons": addons, "tier_info": tier_info}
 
         r = db.session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
         r.current_character_id = target_char

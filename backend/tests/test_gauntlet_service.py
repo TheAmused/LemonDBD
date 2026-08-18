@@ -2,7 +2,7 @@ import unittest
 from sqlalchemy import select
 from app import create_app
 from app.extensions import db
-from app.models import Character, Perk
+from app.models import Character, Perk, Item, Addon
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.services.gauntlet_service import GauntletService
@@ -21,6 +21,53 @@ def seed_killer(name, perk_count=3):
         ))
     db.session.commit()
     return character
+
+
+def seed_survivor(name="Meg Thomas", perk_count=1):
+    character = Character(name=name, role="Survivor")
+    db.session.add(character)
+    db.session.flush()
+    for i in range(1, perk_count + 1):
+        db.session.add(Perk(
+            name=f"{name} Perk {i}",
+            character_id=character.id,
+            is_teachable=True,
+            category="Survivor",
+        ))
+    db.session.commit()
+    return character
+
+
+def seed_item_and_addons():
+    item = Item(name="Commodious Toolbox", category="Toolbox", role="Survivor")
+    db.session.add(item)
+    addon = Addon(
+        name="Wire Spool",
+        associated_target="Toolboxes",
+        category="Survivor",
+        description="Increases repair speed.",
+    )
+    ghost_addon = Addon(
+        name="Uncommon Add-ons",
+        associated_target="Numbers",
+        category="Survivor",
+        description="",
+    )
+    db.session.add_all([addon, ghost_addon])
+    db.session.commit()
+    return item, addon
+
+
+def seed_killer_addons(killer_name):
+    addon = Addon(
+        name=f"{killer_name} Addon",
+        associated_target=killer_name,
+        category="Killer",
+        description="A power add-on.",
+    )
+    db.session.add(addon)
+    db.session.commit()
+    return addon
 
 
 class GauntletTestCase(unittest.TestCase):
@@ -246,6 +293,31 @@ class TestGauntletStats(GauntletTestCase):
         survivor_stats = self.service.get_stats(self.user_id, "survivor")
         self.assertEqual(killer_stats["total_matches"], 1)
         self.assertEqual(survivor_stats["total_matches"], 0)
+
+
+class TestGauntletItemsAndAddons(GauntletTestCase):
+    def test_survivor_loadout_gets_item_and_matching_addon(self):
+        seed_survivor()
+        item, addon = seed_item_and_addons()
+        user_id = self.register_user("itemuser")
+        self.service.get_or_create_run(user_id, "survivor")
+        run = self.service.roll(user_id, "survivor")
+        loadout = run["current_loadout"]
+        self.assertEqual(loadout["item"]["name"], item.name)
+        self.assertEqual(len(loadout["addons"]), 1)
+        self.assertEqual(loadout["addons"][0]["name"], addon.name)
+
+    def test_killer_loadout_gets_matching_addons_only(self):
+        killer = seed_killer("Trapper", perk_count=1)
+        seed_killer_addons("Trapper")
+        seed_killer_addons("Nurse")
+        user_id = self.register_user("killeraddonuser")
+        self.service.get_or_create_run(user_id, "killer")
+        run = self.service.roll(user_id, "killer", target_character="Trapper")
+        loadout = run["current_loadout"]
+        self.assertNotIn("item", {k: v for k, v in loadout.items() if k == "item" and v})
+        self.assertEqual(len(loadout["addons"]), 1)
+        self.assertEqual(loadout["addons"][0]["name"], "Trapper Addon")
 
 
 if __name__ == "__main__":

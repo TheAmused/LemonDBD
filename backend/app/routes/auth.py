@@ -1,5 +1,6 @@
 import logging
-from flask import Blueprint, request, jsonify, g
+import os
+from flask import Blueprint, request, jsonify, g, make_response, send_from_directory, current_app
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.utils.auth_helper import login_required, get_current_user
@@ -73,14 +74,18 @@ def logout():
 def get_current_user_profile():
     user = get_current_user()
     if not user:
-        return jsonify({"user": None, "authenticated": False}), 200
+        resp = make_response(jsonify({"user": None, "authenticated": False}))
+        resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        return resp, 200
 
     summary = ownership_service.get_user_ownership_summary(user.id)
-    return jsonify({
+    resp = make_response(jsonify({
         "authenticated": True,
         "user": user.to_dict(),
         "ownership": summary,
-    }), 200
+    }))
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return resp, 200
 
 
 @auth_bp.route("/profile", methods=["PUT"])
@@ -106,3 +111,69 @@ def update_profile():
         "message": "Profile updated successfully",
         "user": updated_user.to_dict(),
     }), 200
+
+
+@auth_bp.route("/avatar", methods=["POST"])
+@login_required
+def upload_avatar():
+    user = g.current_user
+    file = request.files.get("avatar") or request.files.get("file")
+    if not file:
+        return jsonify({"error": "No avatar file provided ('avatar' or 'file').", "status": 400}), 400
+
+    updated_user, err = user_service.save_user_avatar(user.id, file)
+    if err:
+        return jsonify({"error": err, "status": 400}), 400
+
+    return jsonify({
+        "status": "success",
+        "message": "Avatar uploaded, cropped, and converted to WebP successfully.",
+        "avatar_url": updated_user.avatar_url,
+        "user": updated_user.to_dict(),
+    }), 200
+
+
+@auth_bp.route("/avatar", methods=["DELETE"])
+@login_required
+def delete_avatar():
+    user = g.current_user
+    updated_user, err = user_service.delete_user_avatar(user.id)
+    if err:
+        return jsonify({"error": err, "status": 400}), 400
+
+    return jsonify({
+        "status": "success",
+        "message": "Avatar reset to default.",
+        "avatar_url": updated_user.avatar_url,
+        "user": updated_user.to_dict(),
+    }), 200
+
+
+@auth_bp.route("/avatar/file/<path:filename>", methods=["GET"])
+def get_avatar_file(filename):
+    """
+    Publicly serve user avatars with explicit image/webp MIME type.
+    Searches primary and alternative static folders inside the container.
+    """
+    clean_filename = os.path.basename(filename)
+    primary_dir = user_service._get_avatar_dir()
+    
+    # Candidate directory locations inside the container
+    candidate_dirs = [
+        primary_dir,
+        os.path.abspath(os.path.join(current_app.root_path, "static", "uploads", "avatars")),
+        os.path.abspath(os.path.join(os.getcwd(), "app", "static", "uploads", "avatars")),
+        os.path.abspath(os.path.join(os.getcwd(), "static", "uploads", "avatars")),
+    ]
+
+    target_dir = None
+    for d in candidate_dirs:
+        if os.path.isfile(os.path.join(d, clean_filename)):
+            target_dir = d
+            break
+
+    if not target_dir:
+        return jsonify({"error": f"Avatar image '{clean_filename}' not found on server."}), 404
+
+    mimetype = "image/webp" if clean_filename.lower().endswith(".webp") else None
+    return send_from_directory(target_dir, clean_filename, mimetype=mimetype, max_age=86400 * 30)

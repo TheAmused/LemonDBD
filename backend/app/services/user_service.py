@@ -1,8 +1,12 @@
 import logging
+import os
+import uuid
+import time
 from typing import Optional, Dict, Any, List, Tuple
 from datetime import datetime, timezone
 from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
 from sqlalchemy import select, func, or_, delete
 from app.extensions import db
@@ -10,22 +14,49 @@ from app.models import User, UserCharacterOwnership, UserPerkOwnership, Characte
 
 logger = logging.getLogger(__name__)
 
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif", "bmp", "tiff"}
+
+
+def allowed_file(filename: str) -> bool:
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 class UserService:
     def __init__(self, secret_key: Optional[str] = None):
         self._secret_key = secret_key
 
     def _get_serializer(self) -> URLSafeTimedSerializer:
-        key = self._secret_key or (current_app.config.get("SECRET_KEY", "lemon-dbd-secret-key-2026") if current_app else "lemon-dbd-secret-key-2026")
+        key = self._secret_key or (
+            current_app.config.get("SECRET_KEY", "lemon-dbd-secret-key-2026")
+            if current_app
+            else "lemon-dbd-secret-key-2026"
+        )
         return URLSafeTimedSerializer(key)
 
+    def _get_avatar_dir(self) -> str:
+        """Returns the absolute persistent directory path for storing avatars."""
+        if current_app:
+            upload_cfg = current_app.config.get("UPLOAD_FOLDER")
+            if upload_cfg:
+                base_dir = os.path.abspath(upload_cfg)
+            else:
+                base_dir = os.path.abspath(
+                    os.path.join(current_app.root_path, "static", "uploads", "avatars")
+                )
+        else:
+            base_dir = os.path.abspath(
+                os.path.join(os.getcwd(), "app", "static", "uploads", "avatars")
+            )
+        os.makedirs(base_dir, exist_ok=True)
+        return base_dir
+
     def generate_token(self, user_id: int, expires_in: int = 86400 * 7) -> str:
-        """Generate secure URL-safe timed authentication token (default 7 days)."""
         serializer = self._get_serializer()
-        return serializer.dumps({"user_id": user_id, "created_at": datetime.now(timezone.utc).timestamp()})
+        return serializer.dumps(
+            {"user_id": user_id, "created_at": datetime.now(timezone.utc).timestamp()}
+        )
 
     def verify_token(self, token: str, max_age: int = 86400 * 7) -> Optional[User]:
-        """Verify auth token and return corresponding active User."""
         serializer = self._get_serializer()
         try:
             data = serializer.loads(token, max_age=max_age)
@@ -46,9 +77,8 @@ class UserService:
         email: str,
         password: str,
         role: str = "user",
-        avatar_url: str = "default_avatar"
+        avatar_url: str = "default_avatar",
     ) -> Tuple[Optional[User], Optional[str]]:
-        """Register a new user, returning (user, error_message)."""
         clean_username = (username or "").strip()
         clean_email = (email or "").strip().lower()
 
@@ -59,12 +89,15 @@ class UserService:
         if not password or len(password) < 3:
             return None, "Password must be at least 3 characters long."
 
-        # Check existing
-        existing_username = db.session.scalars(select(User).where(User.username.ilike(clean_username))).first()
+        existing_username = db.session.scalars(
+            select(User).where(User.username.ilike(clean_username))
+        ).first()
         if existing_username:
             return None, "Username is already taken."
 
-        existing_email = db.session.scalars(select(User).where(User.email.ilike(clean_email))).first()
+        existing_email = db.session.scalars(
+            select(User).where(User.email.ilike(clean_email))
+        ).first()
         if existing_email:
             return None, "Email address is already registered."
 
@@ -82,12 +115,12 @@ class UserService:
         db.session.add(new_user)
         db.session.commit()
 
-        # Seed default ownership records for base/owned game characters if desired
         logger.info(f"User '{new_user.username}' registered with role '{new_user.role}'.")
         return new_user, None
 
-    def authenticate(self, username_or_email: str, password: str) -> Tuple[Optional[User], Optional[str]]:
-        """Authenticate user by username or email and password, returning (user, token)."""
+    def authenticate(
+        self, username_or_email: str, password: str
+    ) -> Tuple[Optional[User], Optional[str]]:
         clean_id = (username_or_email or "").strip()
         if not clean_id or not password:
             return None, None
@@ -96,7 +129,7 @@ class UserService:
             select(User).where(
                 or_(
                     User.username.ilike(clean_id),
-                    User.email.ilike(clean_id.lower())
+                    User.email.ilike(clean_id.lower()),
                 )
             )
         ).first()
@@ -145,13 +178,100 @@ class UserService:
         db.session.commit()
         return user, None
 
-    # Admin Management Methods
+    def save_user_avatar(self, user_id: int, file_storage) -> Tuple[Optional[User], Optional[str]]:
+        """
+        Always center-crops to 1:1, resizes to 256x256, and saves as .webp format.
+        """
+        user = db.session.get(User, user_id)
+        if not user:
+            return None, "User not found."
+
+        if not file_storage or not file_storage.filename:
+            return None, "No image file provided."
+
+        filename = secure_filename(file_storage.filename)
+        if not allowed_file(filename):
+            return None, f"Unsupported file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
+
+        avatar_dir = self._get_avatar_dir()
+        self._remove_old_avatar_file(user.avatar_url, avatar_dir)
+
+        # ALWAYS use .webp extension
+        unique_id = f"u{user.id}_{int(time.time())}_{uuid.uuid4().hex[:6]}"
+        new_filename = f"avatar_{unique_id}.webp"
+        destination_path = os.path.join(avatar_dir, new_filename)
+
+        try:
+            from PIL import Image, ImageOps
+
+            file_storage.stream.seek(0)
+            image = Image.open(file_storage.stream)
+            image = ImageOps.exif_transpose(image)
+
+            # Convert to RGBA for transparency support or RGB for opaque images
+            if image.mode in ("RGBA", "LA") or (image.mode == "P" and "transparency" in image.info):
+                converted_image = image.convert("RGBA")
+            else:
+                converted_image = image.convert("RGB")
+
+            # Center square crop (1:1 aspect ratio)
+            width, height = converted_image.size
+            min_dim = min(width, height)
+            left = (width - min_dim) / 2
+            top = (height - min_dim) / 2
+            right = (width + min_dim) / 2
+            bottom = (height + min_dim) / 2
+
+            cropped = converted_image.crop((left, top, right, bottom))
+            resized = cropped.resize((256, 256), Image.Resampling.LANCZOS)
+
+            # ALWAYS save as WEBP
+            resized.save(destination_path, format="WEBP", quality=90, method=4)
+
+            avatar_url = f"/api/v1/auth/avatar/file/{new_filename}"
+            user.avatar_url = avatar_url
+            db.session.commit()
+            return user, None
+
+        except Exception as e:
+            logger.error(f"Failed to process and save avatar for user {user_id}: {e}")
+            if os.path.exists(destination_path):
+                try:
+                    os.remove(destination_path)
+                except Exception:
+                    pass
+            return None, f"Failed to process image: {str(e)}"
+
+    def delete_user_avatar(self, user_id: int) -> Tuple[Optional[User], Optional[str]]:
+        user = db.session.get(User, user_id)
+        if not user:
+            return None, "User not found."
+
+        avatar_dir = self._get_avatar_dir()
+        self._remove_old_avatar_file(user.avatar_url, avatar_dir)
+
+        user.avatar_url = "default_avatar"
+        db.session.commit()
+        return user, None
+
+    def _remove_old_avatar_file(self, avatar_url: Optional[str], avatar_dir: str) -> None:
+        if not avatar_url or avatar_url == "default_avatar":
+            return
+        filename = avatar_url.split("/")[-1].split("?")[0]
+        if filename:
+            old_path = os.path.join(avatar_dir, filename)
+            if os.path.isfile(old_path):
+                try:
+                    os.remove(old_path)
+                except Exception as e:
+                    logger.warning(f"Could not remove old avatar {old_path}: {e}")
+
     def get_all_users(
         self,
         search: Optional[str] = None,
         role: Optional[str] = None,
         page: int = 1,
-        per_page: int = 20
+        per_page: int = 20,
     ) -> Dict[str, Any]:
         stmt = select(User)
 
@@ -160,12 +280,7 @@ class UserService:
 
         if search and search.strip():
             pat = f"%{search.strip().lower()}%"
-            stmt = stmt.where(
-                or_(
-                    User.username.ilike(pat),
-                    User.email.ilike(pat)
-                )
-            )
+            stmt = stmt.where(or_(User.username.ilike(pat), User.email.ilike(pat)))
 
         total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
         stmt = stmt.order_by(User.id.asc()).offset((page - 1) * per_page).limit(per_page)
@@ -174,19 +289,24 @@ class UserService:
         user_list = []
         for u in users:
             d = u.to_dict()
-            # Summary ownership stats
-            owned_chars = db.session.scalar(
-                select(func.count(UserCharacterOwnership.id)).where(
-                    UserCharacterOwnership.user_id == u.id,
-                    UserCharacterOwnership.is_owned.is_(True)
+            owned_chars = (
+                db.session.scalar(
+                    select(func.count(UserCharacterOwnership.id)).where(
+                        UserCharacterOwnership.user_id == u.id,
+                        UserCharacterOwnership.is_owned.is_(True),
+                    )
                 )
-            ) or 0
-            unlocked_perks = db.session.scalar(
-                select(func.count(UserPerkOwnership.id)).where(
-                    UserPerkOwnership.user_id == u.id,
-                    UserPerkOwnership.is_unlocked.is_(True)
+                or 0
+            )
+            unlocked_perks = (
+                db.session.scalar(
+                    select(func.count(UserPerkOwnership.id)).where(
+                        UserPerkOwnership.user_id == u.id,
+                        UserPerkOwnership.is_unlocked.is_(True),
+                    )
                 )
-            ) or 0
+                or 0
+            )
             d["owned_characters_count"] = owned_chars
             d["unlocked_perks_count"] = unlocked_perks
             user_list.append(d)
@@ -220,18 +340,34 @@ class UserService:
         user = db.session.get(User, user_id)
         if not user:
             return False
+        avatar_dir = self._get_avatar_dir()
+        self._remove_old_avatar_file(user.avatar_url, avatar_dir)
         db.session.delete(user)
         db.session.commit()
         return True
 
     def get_admin_system_stats(self) -> Dict[str, Any]:
         total_users = db.session.scalar(select(func.count(User.id))) or 0
-        active_users = db.session.scalar(select(func.count(User.id)).where(User.is_active.is_(True))) or 0
-        admin_count = db.session.scalar(select(func.count(User.id)).where(User.role == "admin")) or 0
+        active_users = (
+            db.session.scalar(select(func.count(User.id)).where(User.is_active.is_(True))) or 0
+        )
+        admin_count = (
+            db.session.scalar(select(func.count(User.id)).where(User.role == "admin")) or 0
+        )
 
         total_characters = db.session.scalar(select(func.count(Character.id))) or 0
-        survivors_count = db.session.scalar(select(func.count(Character.id)).where(Character.role == "Survivor")) or 0
-        killers_count = db.session.scalar(select(func.count(Character.id)).where(Character.role == "Killer")) or 0
+        survivors_count = (
+            db.session.scalar(
+                select(func.count(Character.id)).where(Character.role == "Survivor")
+            )
+            or 0
+        )
+        killers_count = (
+            db.session.scalar(
+                select(func.count(Character.id)).where(Character.role == "Killer")
+            )
+            or 0
+        )
         total_perks = db.session.scalar(select(func.count(Perk.id))) or 0
 
         return {
@@ -245,9 +381,9 @@ class UserService:
         }
 
     def seed_default_admin_if_empty(self) -> None:
-        """Seed default admin (lemon/lemon) and test user (user/user)."""
         try:
             from app.seeds.user_seeder import seed_default_users
+
             seed_default_users()
         except Exception as e:
             logger.debug(f"Error executing user seeder: {e}")

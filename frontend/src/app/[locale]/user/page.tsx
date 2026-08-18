@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
+import { UserAvatar } from '@/components/UserAvatar';
 import { Sidebar } from '@/components/Sidebar';
 import { AuthModal } from '@/components/AuthModal';
 import { BugReportModal } from '@/components/BugReportModal';
@@ -30,6 +31,9 @@ import {
   CheckCircle,
   XCircle,
   HelpCircle,
+  Camera,
+  Trash2,
+  Upload,
 } from 'lucide-react';
 
 interface UserBugReport {
@@ -60,6 +64,11 @@ export default function UserProfilePage() {
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
+  // Avatar Upload State & Optimistic Preview
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [optimisticPreview, setOptimisticPreview] = useState<string | null>(null);
+
   // User Bug Reports State
   const [myReports, setMyReports] = useState<UserBugReport[]>([]);
   const [loadingReports, setLoadingReports] = useState(false);
@@ -78,10 +87,10 @@ export default function UserProfilePage() {
     setLoadingReports(true);
     try {
       const backendBase = process.env.NEXT_PUBLIC_API_URL || '';
-      const res = await fetch(`${backendBase}/api/v1/bug-reports/my`, {
+      const res = await fetch(`${backendBase}/api/v1/bug-reports/my?_t=${Date.now()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Cache-Control': 'no-cache',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
         },
       });
       if (res.ok) {
@@ -95,12 +104,93 @@ export default function UserProfilePage() {
     }
   }, []);
 
-  // Fetch immediately on mount & when user authentication is confirmed
   useEffect(() => {
     if (isAuthenticated) {
       fetchMyReports();
     }
   }, [isAuthenticated, fetchMyReports]);
+
+  const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      setStatusMessage({ type: 'error', text: 'Avatar file size must be under 10MB.' });
+      return;
+    }
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    if (!token) return;
+
+    // Instant local preview
+    const localBlobUrl = URL.createObjectURL(file);
+    setOptimisticPreview(localBlobUrl);
+    setIsUploadingAvatar(true);
+    setStatusMessage(null);
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      const backendBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const res = await fetch(`${backendBase}/api/v1/auth/avatar`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setOptimisticPreview(null);
+        setStatusMessage({ type: 'error', text: data.error || 'Failed to upload avatar.' });
+      } else {
+        setStatusMessage({ type: 'success', text: 'Avatar uploaded and synced successfully!' });
+        await refreshUser();
+        setOptimisticPreview(null);
+      }
+    } catch (err: unknown) {
+      setOptimisticPreview(null);
+      const errorMsg = err instanceof Error ? err.message : 'Network error uploading avatar.';
+      setStatusMessage({ type: 'error', text: errorMsg });
+    } finally {
+      setIsUploadingAvatar(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleResetAvatar = async () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    if (!token) return;
+
+    setIsUploadingAvatar(true);
+    setStatusMessage(null);
+    setOptimisticPreview(null);
+
+    try {
+      const backendBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const res = await fetch(`${backendBase}/api/v1/auth/avatar`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setStatusMessage({ type: 'error', text: data.error || 'Failed to reset avatar.' });
+      } else {
+        setStatusMessage({ type: 'success', text: 'Avatar reset to default.' });
+        await refreshUser();
+      }
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'Network error resetting avatar.';
+      setStatusMessage({ type: 'error', text: errorMsg });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,6 +309,8 @@ export default function UserProfilePage() {
   const perkUnlocked = ownership?.perks?.unlocked ?? 0;
   const perkTotal = ownership?.perks?.total ?? 321;
 
+  const hasCustomAvatar = Boolean(user.avatar_url && user.avatar_url !== 'default_avatar');
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'in_progress':
@@ -255,7 +347,6 @@ export default function UserProfilePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex transition-colors duration-300">
-      {/* Sidebar */}
       <Sidebar
         currentLocale={currentLocale}
         dict={dummyDict}
@@ -263,22 +354,71 @@ export default function UserProfilePage() {
         onSelectCategory={() => { }}
       />
 
-      {/* Main Content Area */}
       <main className="flex-1 lg:pl-64 min-w-0">
         <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-          {/* Header Card */}
+          {/* Header Card with Interactive Avatar Upload */}
           <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-amber-50/70 via-white to-slate-100 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8 shadow-sm dark:shadow-2xl">
             <div className="absolute -right-12 -top-12 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
             <div className="absolute -left-12 -bottom-12 h-64 w-64 rounded-full bg-red-600/10 blur-3xl pointer-events-none" />
 
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleAvatarFileChange}
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              className="hidden"
+            />
+
             <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-6">
-              <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-amber-500/10 via-amber-100 to-slate-100 dark:from-amber-500/20 dark:via-red-950/40 dark:to-slate-900 border-2 border-amber-500/40 shadow-md dark:shadow-xl shadow-amber-950/30">
-                <LemonIcon className="h-14 w-14" />
-                {user.role === 'admin' && (
-                  <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-red-600 text-white shadow-lg border border-red-400">
-                    <Crown className="h-4 w-4" />
-                  </span>
-                )}
+              {/* Interactive Avatar */}
+              <div className="group relative flex flex-col items-center gap-2">
+                <div className="relative">
+                  <UserAvatar
+                    user={user}
+                    previewUrl={optimisticPreview}
+                    size="2xl"
+                    showAdminBadge={true}
+                    borderClassName="border-2 border-amber-500/40 shadow-xl shadow-amber-950/20"
+                  />
+                  {isUploadingAvatar && (
+                    <div className="absolute inset-0 z-20 flex items-center justify-center rounded-3xl bg-black/60 backdrop-blur-xs">
+                      <span className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    </div>
+                  )}
+
+                  {/* Camera overlay hover trigger */}
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingAvatar}
+                    title="Upload Custom Avatar"
+                    className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs cursor-pointer"
+                  >
+                    <Camera className="h-6 w-6 drop-shadow-md" />
+                  </button>
+                </div>
+
+                {/* Avatar Action Controls */}
+                <div className="flex items-center gap-1.5 pt-1">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingAvatar}
+                    className="flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 px-2.5 py-1 text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-xs"
+                  >
+                    <Upload className="h-3 w-3 text-amber-500" />
+                    <span>Change</span>
+                  </button>
+                  {(hasCustomAvatar || optimisticPreview) && (
+                    <button
+                      onClick={handleResetAvatar}
+                      disabled={isUploadingAvatar}
+                      title="Reset to default icon"
+                      className="flex items-center gap-1 rounded-lg border border-rose-200 dark:border-rose-500/30 bg-rose-50/80 dark:bg-rose-950/40 px-2.5 py-1 text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors cursor-pointer shadow-xs"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                      <span>Reset</span>
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="flex-1 text-center sm:text-left space-y-2">
@@ -288,8 +428,8 @@ export default function UserProfilePage() {
                   </h1>
                   <span
                     className={`rounded-xl px-2.5 py-1 text-xs font-black uppercase tracking-wider border ${user.role === 'admin'
-                        ? 'border-red-500/40 bg-red-600/10 dark:bg-red-600/20 text-red-700 dark:text-red-400'
-                        : 'border-cyan-500/40 bg-cyan-600/10 dark:bg-cyan-600/20 text-cyan-700 dark:text-cyan-400'
+                      ? 'border-red-500/40 bg-red-600/10 dark:bg-red-600/20 text-red-700 dark:text-red-400'
+                      : 'border-cyan-500/40 bg-cyan-600/10 dark:bg-cyan-600/20 text-cyan-700 dark:text-cyan-400'
                       }`}
                   >
                     {user.role}
@@ -330,8 +470,8 @@ export default function UserProfilePage() {
             <button
               onClick={() => setActiveSubTab('overview')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'overview'
-                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
             >
               <User className="h-4 w-4" />
@@ -341,8 +481,8 @@ export default function UserProfilePage() {
             <button
               onClick={() => setActiveSubTab('bugs')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'bugs'
-                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30'
+                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
             >
               <Bug className="h-4 w-4" />
@@ -453,8 +593,8 @@ export default function UserProfilePage() {
                   {statusMessage && (
                     <div
                       className={`mb-5 flex items-center gap-2.5 rounded-xl border p-3 text-xs shadow-sm ${statusMessage.type === 'success'
-                          ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
-                          : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400'
+                        ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                        : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400'
                         }`}
                     >
                       {statusMessage.type === 'success' ? (

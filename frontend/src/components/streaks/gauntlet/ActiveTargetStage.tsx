@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GauntletRun, Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
 import {
@@ -38,6 +38,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const [perkImgErrors, setPerkImgErrors] = useState<Record<number, boolean>>({});
   const [isRevealing, setIsRevealing] = useState(false);
   const [revealCycleIndex, setRevealCycleIndex] = useState(0);
+  const revealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!isRevealing || characters.length === 0) return;
@@ -47,9 +48,15 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     return () => clearInterval(interval);
   }, [isRevealing, characters.length]);
 
+  useEffect(() => {
+    return () => {
+      if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
+    };
+  }, []);
+
   const handleStartGame = () => {
     setIsRevealing(true);
-    setTimeout(() => {
+    revealTimeoutRef.current = setTimeout(() => {
       onReveal();
       setIsRevealing(false);
     }, 1300);

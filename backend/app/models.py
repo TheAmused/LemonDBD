@@ -357,7 +357,7 @@ class PerkRule(Base):
 class GauntletRun(Base):
     __tablename__ = "gauntlet_runs"
     __table_args__ = (
-        UniqueConstraint("user_id", "role", name="uq_gauntlet_run_user_role"),
+        UniqueConstraint("user_id", "role", "game_mode", name="uq_gauntlet_run_user_role_mode"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -366,6 +366,8 @@ class GauntletRun(Base):
     )
     role: Mapped[str] = mapped_column(String(20))
     status: Mapped[str] = mapped_column(String(20), default="in_progress")
+    game_mode: Mapped[str] = mapped_column(String(20), default="original")
+    target_revealed: Mapped[bool] = mapped_column(Boolean, default=False)
     current_character_id: Mapped[str] = mapped_column(String(100))
     current_streak: Mapped[int] = mapped_column(Integer, default=0)
     best_streak: Mapped[int] = mapped_column(Integer, default=0)
@@ -381,9 +383,6 @@ class GauntletRun(Base):
     match_logs: Mapped[List["GauntletMatchLog"]] = relationship(
         back_populates="run", cascade="all, delete-orphan"
     )
-    match_exceptions: Mapped[List["GauntletMatchException"]] = relationship(
-        back_populates="run", cascade="all, delete-orphan"
-    )
 
     def to_dict(self) -> dict:
         import json
@@ -392,6 +391,8 @@ class GauntletRun(Base):
             "user_id": self.user_id,
             "role": self.role,
             "status": self.status,
+            "game_mode": self.game_mode,
+            "target_revealed": self.target_revealed,
             "current_character_id": self.current_character_id,
             "current_streak": self.current_streak,
             "best_streak": self.best_streak,
@@ -436,29 +437,6 @@ class GauntletMatchLog(Base):
             "perks": json.loads(self.perks_json or "[]"),
             "streak_before": self.streak_before,
             "streak_after": self.streak_after,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
-        }
-
-
-class GauntletMatchException(Base):
-    __tablename__ = "gauntlet_match_exceptions"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    run_id: Mapped[int] = mapped_column(
-        ForeignKey("gauntlet_runs.id", ondelete="CASCADE"), index=True
-    )
-    character_id: Mapped[str] = mapped_column(String(100))
-    reason: Mapped[str] = mapped_column(String(50))
-    timestamp: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
-
-    run: Mapped["GauntletRun"] = relationship(back_populates="match_exceptions")
-
-    def to_dict(self) -> dict:
-        return {
-            "id": self.id,
-            "run_id": self.run_id,
-            "character_id": self.character_id,
-            "reason": self.reason,
             "timestamp": self.timestamp.isoformat() if self.timestamp else None,
         }
 

@@ -80,6 +80,11 @@ class TestGauntletRun(GauntletTestCase):
         self.assertEqual(run["current_streak"], 0)
         self.assertEqual(run["tier_info"]["perk_limit"], 4)
 
+    def test_new_run_defaults_to_original_mode_and_unrevealed_target(self):
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        self.assertEqual(run["game_mode"], "original")
+        self.assertFalse(run["target_revealed"])
+
     def test_get_or_create_run_is_idempotent(self):
         first = self.service.get_or_create_run(self.user_id, "killer")
         second = self.service.get_or_create_run(self.user_id, "killer")

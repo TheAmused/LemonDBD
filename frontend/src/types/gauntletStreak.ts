@@ -3,15 +3,37 @@ export type Role = 'survivor' | 'killer';
 export interface Perk {
   id?: number;
   name: string;
-  character_name?: string | null;
+  character?: string | null;
   category?: string;
   icon_url?: string;
   icon_local_path?: string;
 }
 
+export interface Item {
+  id?: number;
+  name: string;
+  category?: string;
+  role?: string;
+  icon_url?: string;
+  icon_local_path?: string;
+  rarity?: string;
+}
+
+export interface Addon {
+  id?: number;
+  name: string;
+  associated_target?: string;
+  category?: string;
+  icon_url?: string;
+  icon_local_path?: string;
+  rarity?: string;
+}
+
 export interface GauntletLoadout {
   character: string;
   perks: Perk[];
+  item: Item | null;
+  addons: Addon[];
 }
 
 export interface TierInfo {
@@ -25,6 +47,8 @@ export interface GauntletRun {
   id: number;
   role: Role;
   status: string;
+  game_mode: string;
+  target_revealed: boolean;
   current_character_id: string;
   current_loadout: GauntletLoadout;
   current_streak: number;

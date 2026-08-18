@@ -188,7 +188,6 @@ class PerkService:
                 addon_count = db.session.scalar(select(func.count(Addon.id))) or 0
                 map_count = db.session.scalar(select(func.count(MapRealm.id))) or 0
 
-                # Seed any empty tables from JSON files
                 if char_count == 0 or perk_count == 0 or item_count == 0 or addon_count == 0 or map_count == 0:
                     self._seed_database_from_json_files()
                 return
@@ -898,12 +897,18 @@ class PerkService:
             items_list: List[Dict[str, Any]] = []
 
             if char_role.lower() == "killer":
-                all_addons = db.session.scalars(select(Addon)).all()
+                all_addons = db.session.scalars(
+                    select(Addon).where(func.lower(Addon.category) == "killer")
+                ).all()
                 matched_addons = []
 
+                # Build token set for exact killer target matching
+                canonical_name = matched_char.name.strip()
+                no_article_name = re.sub(r"^the\s+", "", canonical_name, flags=re.IGNORECASE).strip()
+
                 char_tokens = {
-                    normalize_search_key(matched_char.name),
-                    normalize_search_key(matched_char.name.replace("The ", "").replace("the ", "")),
+                    normalize_search_key(canonical_name),
+                    normalize_search_key(no_article_name),
                     normalize_search_key(matched_char.real_name or ""),
                     normalize_search_key(matched_char.wiki_slug or ""),
                     normalize_search_key(matched_char.short_name or ""),
@@ -917,29 +922,38 @@ class PerkService:
                         char_tokens.add(p_norm[:-2])
                 char_tokens.discard("")
 
-                char_tokens_spaceless = {t.replace(" ", "") for t in char_tokens if t}
-
                 for a in all_addons:
                     raw_target = (a.associated_target or "").strip()
                     target_norm = normalize_search_key(raw_target)
-                    target_spaceless = target_norm.replace(" ", "")
                     if not target_norm:
                         continue
 
-                    if target_norm in char_tokens or target_spaceless in char_tokens_spaceless:
+                    # 1. Exact normalized target match
+                    if target_norm in char_tokens:
                         matched_addons.append(a)
                         continue
 
-                    is_match = False
-                    for token in char_tokens:
-                        tok_sp = token.replace(" ", "")
-                        if (
-                            (len(token) >= 3 and (token in target_norm or target_norm in token))
-                            or (len(tok_sp) >= 3 and (tok_sp in target_spaceless or target_spaceless in tok_sp))
-                        ):
-                            is_match = True
-                            break
-                    if is_match:
+                    # Target without "the"
+                    target_no_art = re.sub(r"^the\s+", "", target_norm).strip()
+                    if target_no_art in char_tokens:
+                        matched_addons.append(a)
+                        continue
+
+                    # 2. Complete word-boundary matching (prevents "oni" matching "animatronic")
+                    target_words = set(target_norm.split())
+                    matched_word = False
+                    for tok in char_tokens:
+                        tok_words = tok.split()
+                        if len(tok_words) == 1:
+                            if tok in target_words and tok not in {"the", "and", "for", "all"}:
+                                matched_word = True
+                                break
+                        else:
+                            if tok in target_norm:
+                                matched_word = True
+                                break
+
+                    if matched_word:
                         matched_addons.append(a)
 
                 addons_list = [a.to_dict() for a in matched_addons]

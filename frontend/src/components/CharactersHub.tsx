@@ -294,7 +294,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       const perksOk = perkUpdates.length === 0 || (await bulkUpdatePerkOwnership(perkUpdates));
 
       if (!charactersOk || !perksOk) {
-        setOwnershipSaveError('Nie udało się zapisać wszystkich zmian. Spróbuj ponownie.');
+        setOwnershipSaveError('Failed to save all changes. Please try again.');
         return;
       }
 
@@ -303,7 +303,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       window.setTimeout(() => setShowSavedToast(false), 2500);
     } catch (err) {
       console.error('Failed to save ownership changes:', err);
-      setOwnershipSaveError('Nie udało się zapisać zmian. Spróbuj ponownie.');
+      setOwnershipSaveError('Failed to save changes. Please try again.');
     } finally {
       setOwnershipSaving(false);
     }
@@ -892,14 +892,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               disabled={ownershipSaving}
               className="px-5 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors disabled:opacity-60"
             >
-              Anuluj
+              Cancel
             </button>
             <button
               onClick={handleSaveOwnership}
               disabled={ownershipSaving}
               className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/30 hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait"
             >
-              {ownershipSaving ? 'Zapisywanie...' : 'Akceptuj'}
+              {ownershipSaving ? 'Saving...' : 'Accept'}
             </button>
           </div>
         </div>
@@ -909,7 +909,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       {showSavedToast && (
         <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-extrabold text-white shadow-2xl shadow-emerald-900/50 ring-2 ring-emerald-400/50 animate-in fade-in slide-in-from-top-4 duration-300">
           <Check className="h-5 w-5" />
-          Zmiany zapisane
+          Changes saved
         </div>
       )}
 

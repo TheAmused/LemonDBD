@@ -52,8 +52,9 @@ function DashboardContent() {
   const [sortBy, setSortBy] = useState<'name' | 'character' | 'category'>('name');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
 
+  // In-Game Inventory Layout: 15 perks (3 rows of 5 perks)
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(24);
+  const [limit, setLimit] = useState<number>(15);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
 
@@ -214,7 +215,7 @@ function DashboardContent() {
   if (!dict) return null;
 
   return (
-    <div className="h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -233,56 +234,56 @@ function DashboardContent() {
       >
         {activeTab !== 'generator' && (
           <div className="mb-7 flex flex-col gap-4">
-            <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-100 dark:border-slate-800/80 dark:bg-gradient-to-br dark:from-slate-900/90 dark:via-slate-900/60 dark:to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-sm dark:shadow-2xl dark:shadow-slate-950/60">
+            <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60">
               <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
               <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
 
               <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/25 shadow-sm dark:shadow-lg dark:shadow-cyan-950/40">
-                    <Database className="h-6 w-6 text-cyan-500 dark:text-cyan-400" />
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/25 shadow-lg shadow-cyan-950/40">
+                    <Database className="h-6 w-6 text-cyan-400" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight sm:text-3xl">
+                    <h1 className="text-2xl font-black text-slate-100 tracking-tight sm:text-3xl">
                       Perks Vault & Codex
                     </h1>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 max-w-xl">
+                    <p className="text-xs text-slate-400 mt-1 max-w-xl">
                       Complete catalog of Dead by Daylight Survivor and Killer teachables, general perks, and aliases.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
-                  <div className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/80 px-4 py-2.5 shadow-inner">
-                    <Flame className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
+                  <div className="flex items-center gap-2.5 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 shadow-inner">
+                    <Flame className="h-4 w-4 text-cyan-400" />
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">Vault Total</span>
-                      <span className="text-xs font-black text-slate-900 dark:text-slate-100">{totalVaultPerks}</span>
+                      <span className="text-[10px] font-bold uppercase text-slate-500">Vault Total</span>
+                      <span className="text-xs font-black text-slate-100">{totalVaultPerks}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-950/30 px-4 py-2.5 shadow-inner">
-                    <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-950/30 px-4 py-2.5 shadow-inner">
+                    <Shield className="h-4 w-4 text-emerald-400" />
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-emerald-600 dark:text-emerald-400/80">Survivor</span>
-                      <span className="text-xs font-black text-emerald-700 dark:text-emerald-300">{survivorCount}</span>
+                      <span className="text-[10px] font-bold uppercase text-emerald-400/80">Survivor</span>
+                      <span className="text-xs font-black text-emerald-300">{survivorCount}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-2xl border border-rose-500/30 bg-rose-500/10 dark:bg-rose-950/30 px-4 py-2.5 shadow-inner">
-                    <Skull className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+                  <div className="flex items-center gap-2.5 rounded-2xl border border-rose-500/30 bg-rose-950/30 px-4 py-2.5 shadow-inner">
+                    <Skull className="h-4 w-4 text-rose-400" />
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-rose-600 dark:text-rose-400/80">Killer</span>
-                      <span className="text-xs font-black text-rose-700 dark:text-rose-300">{killerCount}</span>
+                      <span className="text-[10px] font-bold uppercase text-rose-400/80">Killer</span>
+                      <span className="text-xs font-black text-rose-300">{killerCount}</span>
                     </div>
                   </div>
 
                   {user && (
-                    <div className="flex items-center gap-2.5 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 px-4 py-2.5 shadow-inner">
-                      <CheckCircle2 className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+                    <div className="flex items-center gap-2.5 rounded-2xl border border-cyan-500/30 bg-cyan-950/30 px-4 py-2.5 shadow-inner">
+                      <CheckCircle2 className="h-4 w-4 text-cyan-400" />
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-bold uppercase text-cyan-600 dark:text-cyan-400/80">Owned Perks</span>
-                        <span className="text-xs font-black text-cyan-700 dark:text-cyan-300">{ownedPerksCount}</span>
+                        <span className="text-[10px] font-bold uppercase text-cyan-400/80">Owned Perks</span>
+                        <span className="text-xs font-black text-cyan-300">{ownedPerksCount}</span>
                       </div>
                     </div>
                   )}
@@ -335,39 +336,35 @@ function DashboardContent() {
             />
 
             {loading ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 mt-6">
-                {[...Array(12)].map((_, i) => (
+              <div className="grid grid-cols-5 gap-6 lg:gap-10 justify-items-center w-full max-w-7xl mx-auto py-12">
+                {[...Array(15)].map((_, i) => (
                   <div
                     key={i}
-                    className="h-48 animate-pulse rounded-3xl bg-slate-200/70 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80"
+                    className="h-36 w-36 sm:h-44 sm:w-44 md:h-48 md:w-48 lg:h-52 lg:w-52 rotate-45 animate-pulse rounded-2xl bg-slate-900/60 border border-slate-800"
                   />
                 ))}
               </div>
             ) : perks.length === 0 ? (
-              <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800/80 bg-white/40 dark:bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm">
-                <Shield className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
-                <h3 className="text-lg font-extrabold text-slate-800 dark:text-slate-200">
+              <div className="my-12 rounded-3xl border border-dashed border-slate-800/80 bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm">
+                <Shield className="mx-auto h-12 w-12 text-slate-600 mb-3" />
+                <h3 className="text-lg font-extrabold text-slate-200">
                   {dict?.empty?.title || 'No Perks Found'}
                 </h3>
-                <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
-                  {dict?.empty?.subtitle || 'Try clearing your search query, switching ownership filters, or choosing another character.'}
+                <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
+                  {dict?.empty?.subtitle ||
+                    'Try clearing your search query, switching ownership filters, or choosing another character.'}
                 </p>
                 <button
                   onClick={handleResetFilters}
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/10 dark:bg-cyan-500/20 border border-cyan-500/30 px-4 py-2 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/20 dark:hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm"
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 border border-cyan-500/30 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm"
                 >
                   Reset Filters
                 </button>
               </div>
             ) : (
               <>
-                <div
-                  className={
-                    viewMode === 'grid'
-                      ? 'grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 mt-6'
-                      : 'flex flex-col gap-4 mt-6'
-                  }
-                >
+                {/* ── 15 PERKS IN 3 ROWS OF 5 PERKS ── */}
+                <div className="grid grid-cols-5 gap-4 sm:gap-6 lg:gap-10 justify-items-center w-full max-w-7xl mx-auto py-8">
                   {perks.map((perk, idx) => (
                     <PerkCard
                       key={`${perk.name}-${idx}`}
@@ -409,7 +406,7 @@ export default function DashboardPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono">
+        <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 font-mono">
           Loading Perks Vault...
         </div>
       }

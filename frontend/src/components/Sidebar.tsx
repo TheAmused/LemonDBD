@@ -22,7 +22,6 @@ import {
   Calculator,
   Wand2,
   Compass,
-  Package,
   Repeat,
   ChevronLeft,
   ChevronRight,
@@ -108,7 +107,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const mainNavItems: NavItem[] = [
     {
       id: 'all',
-      label: dict.filters?.allCategories || 'Perks Vault',
+      label: dict?.filters?.perks || dict?.sidebar?.perks || 'Perks',
       icon: Shield,
       color: 'text-red-500',
       activeBg: 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20',
@@ -208,7 +207,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
-  // Auto-expand "Others" accordion if an item inside it is active
   const isOtherActive = otherNavItems.some(
     (item) => activeCategory === item.id || (item.href && pathname?.includes(item.href))
   );
@@ -219,7 +217,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [isOtherActive, isAdmin]);
 
-  // Calculate Survivor vs Killer distribution percentages
   const safeTotal = survivorCount + killerCount || 1;
   const survivorPct = Math.round((survivorCount / safeTotal) * 100);
   const killerPct = 100 - survivorPct;
@@ -311,17 +308,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
             Navigation
           </p>
 
-          {/* Main Top-Level Items (Visible to All Users) */}
+          {/* Main Top-Level Items */}
           {mainNavItems.map(renderNavItem)}
 
-          {/* Droppable "Others" Accordion Group (Visible Only to Admins) */}
+          {/* Droppable "Others" Accordion Group */}
           {isAdmin && (
             <div className="pt-1">
               <button
                 onClick={() => setOthersOpen(!othersOpen)}
                 className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 ${isOtherActive
-                    ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
+                  ? 'bg-cyan-500/10 text-cyan-600 border border-cyan-500/30 dark:bg-slate-800/80 dark:text-cyan-400'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/60 dark:hover:text-slate-200'
                   }`}
               >
                 <div className="flex items-center gap-3">
@@ -344,14 +341,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </button>
 
-              {/* Nested Sub-Menu List & Vault Stats */}
               {othersOpen && (
                 <div className="mt-1 ml-3 pl-2.5 space-y-3 border-l-2 border-slate-200 dark:border-slate-800/80">
                   <div className="space-y-1">
                     {otherNavItems.map(renderNavItem)}
                   </div>
 
-                  {/* LIVE VAULT STATS WIDGET */}
                   <div className="mt-3 rounded-2xl border border-slate-200/80 bg-slate-100/60 p-3 dark:border-slate-800/80 dark:bg-slate-900/50 backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-2.5">
                       <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
@@ -383,7 +378,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       </div>
                     </div>
 
-                    {/* Survivor vs Killer Ratio Bar */}
                     <div className="space-y-1 pt-0.5">
                       <div className="flex justify-between text-[10px] font-extrabold">
                         <span className="text-emerald-500 flex items-center gap-1">
@@ -415,7 +409,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </nav>
 
-        {/* User Account / Login Button Section */}
+        {/* User Account / Login Button */}
         <div className="mt-4 pt-3 border-t border-slate-200/80 dark:border-slate-800/80">
           {!isAuthenticated || !user ? (
             <button
@@ -442,8 +436,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     </p>
                     <span
                       className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${user.role === 'admin'
-                          ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                          : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
                         }`}
                     >
                       {user.role}
@@ -476,7 +470,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Sidebar Footer Controls */}
       <div className="space-y-2.5 pt-3 mt-3 border-t border-slate-200/80 dark:border-slate-800/80">
         <div className="grid grid-cols-2 gap-2">
           <Link
@@ -506,7 +499,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* ── DESKTOP ASIDE SIDEBAR WITH INTEGRATED DRAWER KNOB HANDLE ── */}
       <aside
         aria-label="Sidebar Navigation"
         className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-transform duration-300 ${isCollapsed ? '-translate-x-full' : 'translate-x-0'
@@ -514,7 +506,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {renderSidebarContent()}
 
-        {/* ── SINGLE UNIFIED DRAWER KNOB HANDLE (STAYS ATTACHED TO SIDEBAR RIGHT BORDER) ── */}
         <button
           onClick={toggleSidebar}
           title={isCollapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
@@ -529,7 +520,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </aside>
 
-      {/* ── MOBILE HEADER & DRAWER ── */}
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 lg:hidden">
         <Link href={'/' + currentLocale} className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 border border-amber-500/30 text-white p-1">

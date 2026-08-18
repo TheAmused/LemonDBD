@@ -238,7 +238,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 No items found in this category matching your filter.
               </div>
             ) : (
-              <div className="flex flex-wrap items-center justify-center gap-3 max-h-[480px] overflow-y-auto p-1">
+              <div className="flex flex-wrap items-center justify-center gap-3 p-1">
                 {categorizedData.displayedItems.map((item, idx) => {
                   const id = `item-${item.name}-${idx}`;
                   const rarityStyle = getRarityTileStyle(item.rarity);
@@ -248,31 +248,19 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                       onClick={() => onSelectEquipment(item)}
                       onMouseEnter={() => setHoveredEquipId(id)}
                       onMouseLeave={() => setHoveredEquipId(null)}
-                      className={`group relative p-3 rounded-2xl border flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 w-28 sm:w-32 ${rarityStyle.bg}`}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 hover:z-10 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                     >
-                      <div className="h-14 w-14 sm:h-16 sm:w-16 mb-1.5 flex items-center justify-center">
-                        <img
-                          src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                          alt={item.name}
-                          className="h-full w-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
-                      </div>
-
-                      <span className="text-xs font-black text-white line-clamp-1 leading-snug w-full">
-                        {item.name}
-                      </span>
-
-                      {item.rarity && (
-                        <span className="mt-1 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase bg-black/40 text-slate-300 border border-white/10">
-                          {item.rarity}
-                        </span>
-                      )}
+                      <img
+                        src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
+                        alt={item.name}
+                        className="h-full w-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
 
                       {hoveredEquipId === id && (
-                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-40 w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150">
+                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-[9999] w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150">
                           <div className="flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-slate-800">
                             <h4 className="text-xs font-black text-white truncate">{item.name}</h4>
                             {item.rarity && (
@@ -324,7 +312,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 No compatible add-ons found for this item type.
               </div>
             ) : (
-              <div className="flex flex-wrap items-center justify-center gap-2.5 max-h-[480px] overflow-y-auto p-1">
+              <div className="flex flex-wrap items-center justify-center gap-2.5 p-1">
                 {categorizedData.displayedAddons.map((item, idx) => {
                   const id = `addon-${item.name}-${idx}`;
                   const rarityStyle = getRarityTileStyle(item.rarity);
@@ -334,31 +322,19 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                       onClick={() => onSelectEquipment(item)}
                       onMouseEnter={() => setHoveredEquipId(id)}
                       onMouseLeave={() => setHoveredEquipId(null)}
-                      className={`group relative p-2.5 rounded-2xl border flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 w-24 sm:w-28 ${rarityStyle.bg}`}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 hover:z-10 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                     >
-                      <div className="h-12 w-12 sm:h-14 sm:w-14 mb-1 flex items-center justify-center">
-                        <img
-                          src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                          alt={item.name}
-                          className="h-full w-full object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
-                      </div>
-
-                      <span className="text-[11px] font-black text-white line-clamp-1 leading-snug w-full">
-                        {item.name}
-                      </span>
-
-                      {item.rarity && (
-                        <span className="mt-1 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase bg-black/40 text-slate-300 border border-white/10">
-                          {item.rarity}
-                        </span>
-                      )}
+                      <img
+                        src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
+                        alt={item.name}
+                        className="h-full w-full object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
 
                       {hoveredEquipId === id && (
-                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-40 w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150">
+                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-[9999] w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150">
                           <div className="flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-slate-800">
                             <h4 className="text-xs font-black text-white truncate">{item.name}</h4>
                             {item.rarity && (

@@ -65,22 +65,39 @@ def submit_result():
     return jsonify({"run": rolled_run, "previous_run": updated_run}), 200
 
 
-@gauntlet_streak_bp.route("/invalidate", methods=["POST"])
+@gauntlet_streak_bp.route("/reveal", methods=["POST"])
 @login_required
-def invalidate_match():
+def reveal():
     data = request.get_json(silent=True) or {}
     run_id = data.get("run_id")
-    reason = data.get("reason")
-    if not run_id or not reason:
-        return jsonify({"error": "Fields 'run_id' and 'reason' are required"}), 400
+    if not run_id:
+        return jsonify({"error": "Field 'run_id' is required"}), 400
 
     service = get_gauntlet_service()
     try:
-        updated_run = service.invalidate_match(g.current_user.id, run_id, reason)
+        run = service.reveal_target(g.current_user.id, run_id)
     except ValueError as e:
         status = 404 if "not found" in str(e).lower() else 400
         return jsonify({"error": str(e)}), status
-    return jsonify({"run": updated_run}), 200
+    return jsonify({"run": run}), 200
+
+
+@gauntlet_streak_bp.route("/loadout", methods=["POST"])
+@login_required
+def set_loadout():
+    data = request.get_json(silent=True) or {}
+    run_id = data.get("run_id")
+    perk_ids = data.get("perk_ids")
+    if not run_id or perk_ids is None:
+        return jsonify({"error": "Fields 'run_id' and 'perk_ids' are required"}), 400
+
+    service = get_gauntlet_service()
+    try:
+        run = service.set_loadout(g.current_user.id, run_id, perk_ids)
+    except ValueError as e:
+        status = 404 if "not found" in str(e).lower() else 400
+        return jsonify({"error": str(e)}), status
+    return jsonify({"run": run}), 200
 
 
 @gauntlet_streak_bp.route("/stats", methods=["GET"])

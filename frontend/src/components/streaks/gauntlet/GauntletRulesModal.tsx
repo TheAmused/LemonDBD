@@ -79,7 +79,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
               The {role} Gauntlet tests your mastery across the characters you own under escalating difficulty.
               You win the Gauntlet by clearing a match with <strong>every {role} you own</strong>. As your win
-              streak grows, perk slots are progressively restricted — reaching Tier 4 means winning trials with
+              streak grows, perk slots are progressively restricted. Reaching Tier 4 means winning trials with
               zero perks equipped.
             </p>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
@@ -87,7 +87,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
               checkpoint instead of starting over.
             </p>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-              The build shown for each match is a guide — you pick your actual perks in-game, nothing needs
+              The build shown for each match is a guide. You pick your actual perks in-game, nothing needs
               confirming here.
             </p>
           </div>
@@ -134,7 +134,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
               Disconnects & Cancelled Games
             </h3>
             <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              If someone disconnects or the game gets cancelled, just play the match again — it won't affect your streak.
+              If someone disconnects or the game gets cancelled, just play the match again. It won&apos;t affect your streak.
             </p>
           </div>
         </div>

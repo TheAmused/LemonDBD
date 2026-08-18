@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GauntletRun, Perk, Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
+import { useTargetDraw } from './useTargetDraw';
 import {
   RefreshCw,
   CheckCircle,
@@ -103,31 +104,42 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   onReveal,
 }) => {
   const [avatarError, setAvatarError] = useState(false);
-  const [isRevealing, setIsRevealing] = useState(false);
-  const [revealCycleIndex, setRevealCycleIndex] = useState(0);
-  const revealTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const targetName = run?.current_character_id || run?.current_loadout?.character || '';
+  const completed = run?.completed_characters || [];
+
+  // The reel runs through whoever is still standing, in roster order.
+  const drawPool = React.useMemo(() => {
+    const names = characters.map((c) => c.name).filter((name) => !completed.includes(name));
+    return names.includes(targetName) ? names : [...names, targetName].filter(Boolean);
+  }, [characters, completed.join('|'), targetName]);
+
+  const { displayName, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
+
+  // Which target the card is currently allowed to show. Holding this in state
+  // (rather than reacting after the fact) keeps a freshly drawn target from
+  // flashing on screen for a frame before its reel starts.
+  const [shownTarget, setShownTarget] = useState<string | null>(null);
+  const isRevealed = Boolean(run?.target_revealed);
+  const awaitingDraw = isRevealed && Boolean(targetName) && shownTarget !== targetName;
+
+  // Every later match re-runs the reel on its own, so the next target arrives
+  // as a reveal rather than just appearing in place.
   useEffect(() => {
-    if (!isRevealing || characters.length === 0) return;
-    const interval = setInterval(() => {
-      setRevealCycleIndex((i) => (i + 1) % characters.length);
-    }, 110);
-    return () => clearInterval(interval);
-  }, [isRevealing, characters.length]);
+    if (!isRevealed || !targetName) {
+      setShownTarget(null);
+      return;
+    }
+    if (shownTarget === targetName || isDrawing) return;
 
-  useEffect(() => {
-    return () => {
-      if (revealTimeoutRef.current) clearTimeout(revealTimeoutRef.current);
-    };
-  }, []);
-
-  const handleStartGame = () => {
-    setIsRevealing(true);
-    revealTimeoutRef.current = setTimeout(() => {
-      onReveal();
-      setIsRevealing(false);
-    }, 1300);
-  };
+    // A run that was already revealed before this mount (a reload, say) has
+    // nothing to reveal, so it skips straight to the card.
+    if (shownTarget === null) {
+      setShownTarget(targetName);
+      return;
+    }
+    startDraw(() => setShownTarget(targetName));
+  }, [isRevealed, targetName, shownTarget, isDrawing, startDraw]);
 
   if (!run || !run.current_loadout) {
     return (
@@ -140,24 +152,40 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     );
   }
 
-  if (!run.target_revealed) {
-    const cyclingChar = characters[revealCycleIndex];
+  if (!run.target_revealed || isDrawing || awaitingDraw) {
+    const roleLabel = role === 'survivor' ? 'Survivor' : 'Killer';
+    const drawing = isDrawing || awaitingDraw;
     return (
       <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-8 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
         <div className="w-24 h-24 mx-auto rounded-2xl p-1 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden mb-4">
-          <RevealPortrait name={isRevealing ? cyclingChar?.name : undefined} role={role} />
+          <RevealPortrait name={drawing ? displayName ?? undefined : undefined} role={role} />
         </div>
-        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Ready for the Gauntlet?</h2>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
-          Start the game to draw your {role === 'survivor' ? 'Survivor' : 'Killer'}.
-        </p>
-        <button
-          onClick={handleStartGame}
-          disabled={isRevealing || loading}
-          className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-base py-3.5 px-8 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
-        >
-          {isRevealing ? 'Drawing...' : 'START GAME'}
-        </button>
+
+        {drawing ? (
+          <>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Drawing your {roleLabel}...</h2>
+            <p className="h-6 text-sm font-bold text-amber-600 dark:text-amber-400">{displayName}</p>
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Ready for the Gauntlet?</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
+              Start the game to draw your {roleLabel}.
+            </p>
+            <button
+              onClick={() =>
+                startDraw(() => {
+                  setShownTarget(targetName);
+                  onReveal();
+                })
+              }
+              disabled={loading}
+              className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-base py-3.5 px-8 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+            >
+              START GAME
+            </button>
+          </>
+        )}
       </div>
     );
   }
@@ -169,7 +197,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     addons: rawLoadout.addons || [],
     item: rawLoadout.item ?? null,
   };
-  const targetName = loadout.character || run.current_character_id || 'Target Character';
   const tierInfo = run.tier_info || { name: 'The Warm Up', tier_level: 0, perk_limit: 4, description: '' };
   const perkLimit = tierInfo.perk_limit;
   const avatarSrc = avatarUrlFor(targetName, role);
@@ -229,7 +256,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
       </div>
 
-      {/* Build guide — informational only, you pick the actual perks in-game */}
+      {/* Build guide: informational only, you pick the actual perks in-game */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
@@ -237,7 +264,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             Your build for this match
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Pick these in-game — nothing to confirm here.
+            Pick these in-game. Nothing to confirm here.
           </p>
         </div>
 
@@ -273,7 +300,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 >
                   <div>
                     <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
-                      Slot 1 — one of these
+                      Slot 1: one of these
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                       {targetName}&apos;s own perks

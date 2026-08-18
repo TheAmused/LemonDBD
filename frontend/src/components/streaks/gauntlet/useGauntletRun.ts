@@ -50,7 +50,7 @@ export function useGauntletRun(role: Role) {
       try {
         setRun(await action());
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'That did not go through — try again');
+        setError(err instanceof Error ? err.message : 'That did not go through. Try again.');
       } finally {
         setBusy(false);
       }

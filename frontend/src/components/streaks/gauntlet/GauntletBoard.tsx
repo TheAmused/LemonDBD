@@ -79,9 +79,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
               Gauntlet complete!
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              You cleared every {role} you own — {run?.completed_characters.length} in total, with a best
-              streak of{' '}
-              <strong className="text-emerald-600 dark:text-emerald-400">{run?.best_streak}</strong>.
+              You won the {role} Gauntlet.
             </p>
             <button
               onClick={reset}

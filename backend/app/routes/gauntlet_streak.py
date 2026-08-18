@@ -32,18 +32,6 @@ def get_run():
     return jsonify({"run": run}), 200
 
 
-@gauntlet_streak_bp.route("/roll", methods=["POST"])
-@login_required
-def roll():
-    data = request.get_json(silent=True) or {}
-    role = _clean_role(data.get("role"))
-    if not role:
-        return jsonify({"error": "Field 'role' must be 'survivor' or 'killer'"}), 400
-    service = get_gauntlet_service()
-    run = service.roll(g.current_user.id, role)
-    return jsonify({"run": run}), 200
-
-
 @gauntlet_streak_bp.route("/result", methods=["POST"])
 @login_required
 def submit_result():

@@ -49,7 +49,7 @@ class TestGauntletRoutes(unittest.TestCase):
     def test_endpoints_require_login(self):
         self.assertEqual(self.client.get("/api/v1/gauntlet-streak/run?role=killer").status_code, 401)
         self.assertEqual(
-            self.client.post("/api/v1/gauntlet-streak/roll", json={"role": "killer"}).status_code, 401
+            self.client.post("/api/v1/gauntlet-streak/run/reset", json={"role": "killer"}).status_code, 401
         )
         self.assertEqual(self.client.get("/api/v1/gauntlet-streak/stats?role=killer").status_code, 401)
 
@@ -64,13 +64,6 @@ class TestGauntletRoutes(unittest.TestCase):
         self.assertEqual(run["role"], "killer")
         self.assertEqual(run["status"], "in_progress")
         self.assertIn("tier_info", run)
-
-    def test_roll_returns_a_loadout(self):
-        res = self.client.post("/api/v1/gauntlet-streak/roll", json={"role": "killer"}, headers=self.headers)
-        self.assertEqual(res.status_code, 200)
-        run = res.get_json()["run"]
-        self.assertIn("current_loadout", run)
-        self.assertIn("character", run["current_loadout"])
 
     def test_result_lifecycle(self):
         run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)

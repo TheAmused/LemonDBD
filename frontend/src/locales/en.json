@@ -205,5 +205,17 @@
     "clickToInspect": "Click to inspect",
     "clickOutsideToClose": "Esc or click outside to close",
     "close": "Close"
+  },
+  "sidebar": {
+    "perks": "Perks",
+    "challenges": "🔥 Challenges",
+    "mapExplorer": "🗺️ Map Explorer",
+    "characters": "👤 Characters",
+    "draftRoom": "🏆 Draft Room",
+    "swfPlanner": "👥 SWF Planner",
+    "killerCalc": "🎯 Killer Calc",
+    "buildVault": "🔥 Build Vault",
+    "perkStudio": "🎨 Perk Studio",
+    "quests": "📜 Quests"
   }
 }

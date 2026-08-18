@@ -206,5 +206,17 @@
     "clickToInspect": "Kliknij, aby sprawdzić",
     "clickOutsideToClose": "Esc lub kliknij poza oknem, aby zamknąć",
     "close": "Zamknij"
+  },
+  "sidebar": {
+    "perks": "Perki",
+    "challenges": "🔥 Wyzwania",
+    "mapExplorer": "🗺️ Eksplorator Map",
+    "characters": "👤 Postacie",
+    "draftRoom": "🏆 Pokój Draftu",
+    "swfPlanner": "👥 Planer SWF",
+    "killerCalc": "🎯 Kalkulator Zabójcy",
+    "buildVault": "🔥 Skarbiec Buildów",
+    "perkStudio": "🎨 Studio Perków",
+    "quests": "📜 Zadania"
   }
 }

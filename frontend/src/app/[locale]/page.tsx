@@ -11,47 +11,56 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { Pagination } from '@/components/Pagination';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { Shield, Skull, Database, Flame } from 'lucide-react';
+import { Shield, Skull, Database, Flame, CheckCircle2 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
+import { useAuth } from '@/context/AuthContext';
 
 export interface CharacterItem {
+  id?: number;
   name: string;
-  real_name: string;
-  category: string;
+  real_name?: string;
+  category?: string;
+  avatar_local_path?: string;
+  portrait_url?: string;
 }
 
-const DASHBOARD_TAB_KEY = 'lemon_dbd_active_tab_v2';
+const DASHBOARD_TAB_KEY = 'lemon_dbd_active_tab_v3';
 
 function DashboardContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
+  const { user } = useAuth();
 
-  const paramCategory = searchParams ? searchParams.get('category') : null;
   const paramTab = searchParams ? searchParams.get('tab') : null;
+  const paramRole = searchParams ? searchParams.get('role') : null;
 
   const [dict, setDict] = useState<any>(null);
   const [perks, setPerks] = useState<Perk[]>([]);
   const [allPerksForGenerator, setAllPerksForGenerator] = useState<Perk[]>([]);
-  const [characterOptions, setCharacterOptions] = useState<{ value: string; label: string }[]>([]);
+  const [characterOptions, setCharacterOptions] = useState<{ value: string; label: string; real_name?: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
-  // Vault Stats State
-  const [survivorCount, setSurvivorCount] = useState<number>(0);
-  const [killerCount, setKillerCount] = useState<number>(0);
-  const [characterCount, setCharacterCount] = useState<number>(0);
-
-  const [category, setCategory] = useState<string>('all');
-  const [search, setSearch] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<'vault' | 'generator'>('vault');
+  const [role, setRole] = useState<'Survivor' | 'Killer'>('Survivor');
+  const [scope, setScope] = useState<'all' | 'general'>('all');
+  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned'>('all');
   const [character, setCharacter] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<string>('name');
-  const [order, setOrder] = useState<string>('asc');
+  const [search, setSearch] = useState<string>('');
+  const [sortBy, setSortBy] = useState<'name' | 'character' | 'category'>('name');
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(24);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
+
+  const [survivorCount, setSurvivorCount] = useState<number>(0);
+  const [killerCount, setKillerCount] = useState<number>(0);
+  const [characterCount, setCharacterCount] = useState<number>(0);
+  const [ownedPerksCount, setOwnedPerksCount] = useState<number>(0);
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
@@ -62,41 +71,40 @@ function DashboardContent() {
     getDictionary(locale).then(setDict);
   }, [locale]);
 
-  const VALID_PERK_CATEGORIES = ['all', 'Survivor', 'Killer', 'General', 'generator'];
-
   useEffect(() => {
     if (paramTab === 'generator') {
-      setCategory('generator');
+      setActiveTab('generator');
       document.title = 'LemonDBD - Perk Randomizer';
-    } else if (paramCategory && VALID_PERK_CATEGORIES.includes(paramCategory)) {
-      setCategory(paramCategory);
-      document.title = `LemonDBD - ${paramCategory} Perks Vault`;
     } else {
-      try {
-        const savedTab = localStorage.getItem(DASHBOARD_TAB_KEY);
-        if (savedTab && VALID_PERK_CATEGORIES.includes(savedTab)) {
-          setCategory(savedTab);
-          document.title = savedTab === 'generator' ? 'LemonDBD - Perk Randomizer' : 'LemonDBD - Perks Vault & Database';
-        } else {
-          setCategory('all');
-          document.title = 'LemonDBD - Perks Vault & Database';
-        }
-      } catch (e) {
-        setCategory('all');
-        document.title = 'LemonDBD - Perks Vault & Database';
+      setActiveTab('vault');
+      if (paramRole === 'Killer' || paramRole === 'Survivor') {
+        setRole(paramRole);
       }
+      document.title = 'LemonDBD - Dead by Daylight Perks Vault';
     }
-  }, [paramCategory, paramTab]);
+  }, [paramTab, paramRole]);
 
-  const handleSelectCategory = (cat: string) => {
-    const targetCategory = VALID_PERK_CATEGORIES.includes(cat) ? cat : 'all';
-    setCategory(targetCategory);
-    setCharacter('all');
-    setPage(1);
-    try {
-      localStorage.setItem(DASHBOARD_TAB_KEY, targetCategory);
-    } catch (e) {
-      console.error(e);
+  const handleSelectCategoryFromSidebar = (selected: string) => {
+    if (selected === 'generator') {
+      setActiveTab('generator');
+      try {
+        localStorage.setItem(DASHBOARD_TAB_KEY, 'generator');
+      } catch (e) { }
+    } else {
+      setActiveTab('vault');
+      if (selected === 'Survivor' || selected === 'Killer') {
+        setRole(selected);
+        setScope('all');
+      } else if (selected === 'General') {
+        setScope('general');
+      } else {
+        setScope('all');
+      }
+      setCharacter('all');
+      setPage(1);
+      try {
+        localStorage.setItem(DASHBOARD_TAB_KEY, 'vault');
+      } catch (e) { }
     }
   };
 
@@ -108,20 +116,34 @@ function DashboardContent() {
         limit: limit.toString(),
         sort_by: sortBy,
         order: order,
+        category: role,
       });
 
-      if (category === 'General') {
-        queryParams.append('character', 'General');
-      } else if (category !== 'all' && category !== 'generator') {
-        queryParams.append('category', category);
+      if (scope === 'general') {
+        queryParams.append('scope', 'general');
       }
-      if (character !== 'all') queryParams.append('character', character);
-      if (search) queryParams.append('search', search);
+      if (character !== 'all') {
+        queryParams.append('character', character);
+      }
+      if (search) {
+        queryParams.append('search', search);
+      }
+      if (ownershipFilter === 'owned' && user) {
+        queryParams.append('owned_only', 'true');
+      }
+      if (user?.id) {
+        queryParams.append('user_id', user.id.toString());
+      }
 
-      const [perksRes, charRes, generatorRes, allCharsRes] = await Promise.all([
+      const allPerksUrl = new URLSearchParams({ limit: '1000' });
+      if (user?.id) {
+        allPerksUrl.append('user_id', user.id.toString());
+      }
+
+      const [perksRes, charRes, allPerksRes, allCharsRes] = await Promise.all([
         fetch(`${backendBase}/api/v1/perks?${queryParams.toString()}`),
-        fetch(`${backendBase}/api/v1/characters${category !== 'all' && category !== 'generator' ? `?category=${category}` : ''}`),
-        fetch(`${backendBase}/api/v1/perks?limit=1000`),
+        fetch(`${backendBase}/api/v1/characters?category=${role}`),
+        fetch(`${backendBase}/api/v1/perks?${allPerksUrl.toString()}`),
         fetch(`${backendBase}/api/v1/characters`),
       ]);
 
@@ -138,24 +160,17 @@ function DashboardContent() {
       if (allCharsRes.ok) {
         const acData = await allCharsRes.json();
         fetchedCharactersList = acData.data || [];
+        setCharacterCount(fetchedCharactersList.length);
       }
 
-      if (generatorRes.ok) {
-        const gResult = await generatorRes.json();
+      if (allPerksRes.ok) {
+        const gResult = await allPerksRes.json();
         const fullList: Perk[] = gResult.data || [];
         setAllPerksForGenerator(fullList);
 
         setSurvivorCount(fullList.filter((p) => p.category === 'Survivor').length);
         setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
-
-        if (fetchedCharactersList.length > 0) {
-          setCharacterCount(fetchedCharactersList.length);
-        } else {
-          const uniqueChars = new Set(
-            fullList.map((p) => p.character).filter((c) => c && c !== 'General')
-          );
-          setCharacterCount(uniqueChars.size);
-        }
+        setOwnedPerksCount(fullList.filter((p) => p.is_owned !== false).length);
       }
 
       if (charRes.ok) {
@@ -163,6 +178,7 @@ function DashboardContent() {
         const options = (cData.data || []).map((c: CharacterItem) => ({
           value: c.name,
           label: c.real_name && c.real_name !== c.name ? `${c.name} (${c.real_name})` : c.name,
+          real_name: c.real_name || c.name,
         }));
         setCharacterOptions(options);
       }
@@ -171,7 +187,7 @@ function DashboardContent() {
     } finally {
       setLoading(false);
     }
-  }, [backendBase, category, character, search, sortBy, order, page, limit]);
+  }, [backendBase, role, scope, character, search, sortBy, order, page, limit, ownershipFilter, user]);
 
   useEffect(() => {
     fetchPerks();
@@ -179,24 +195,31 @@ function DashboardContent() {
 
   const handleResetFilters = () => {
     setSearch('');
-    setCategory('all');
     setCharacter('all');
+    setScope('all');
+    setOwnershipFilter('all');
     setSortBy('name');
     setOrder('asc');
     setPage(1);
   };
 
-  if (!dict) return null;
+  const handleRoleChange = (newRole: 'Survivor' | 'Killer') => {
+    setRole(newRole);
+    setCharacter('all');
+    setPage(1);
+  };
 
   const totalVaultPerks = allPerksForGenerator.length || totalResults;
+
+  if (!dict) return null;
 
   return (
     <div className="h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
-        activeCategory={category}
-        onSelectCategory={handleSelectCategory}
+        activeCategory={activeTab === 'generator' ? 'generator' : role}
+        onSelectCategory={handleSelectCategoryFromSidebar}
         onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalVaultPerks}
         survivorCount={survivorCount}
@@ -208,16 +231,13 @@ function DashboardContent() {
         className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
           }`}
       >
-        {/* ── Atmospheric Hero Header (Vault View Only) ── */}
-        {category !== 'generator' && (
+        {activeTab !== 'generator' && (
           <div className="mb-7 flex flex-col gap-4">
             <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-white to-slate-100 dark:border-slate-800/80 dark:bg-gradient-to-br dark:from-slate-900/90 dark:via-slate-900/60 dark:to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-sm dark:shadow-2xl dark:shadow-slate-950/60">
-              {/* Background Glow Accents */}
               <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
               <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
 
               <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                {/* Header Title & Subtitle */}
                 <div className="flex items-start gap-4">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/25 shadow-sm dark:shadow-lg dark:shadow-cyan-950/40">
                     <Database className="h-6 w-6 text-cyan-500 dark:text-cyan-400" />
@@ -227,12 +247,11 @@ function DashboardContent() {
                       Perks Vault & Codex
                     </h1>
                     <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 max-w-xl">
-                      Explore all Dead by Daylight Survivor and Killer teachables, descriptions, and character assignments in one place.
+                      Complete catalog of Dead by Daylight Survivor and Killer teachables, general perks, and aliases.
                     </p>
                   </div>
                 </div>
 
-                {/* Dynamic Vault Counter Badges */}
                 <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
                   <div className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/80 px-4 py-2.5 shadow-inner">
                     <Flame className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
@@ -257,14 +276,23 @@ function DashboardContent() {
                       <span className="text-xs font-black text-rose-700 dark:text-rose-300">{killerCount}</span>
                     </div>
                   </div>
+
+                  {user && (
+                    <div className="flex items-center gap-2.5 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 px-4 py-2.5 shadow-inner">
+                      <CheckCircle2 className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold uppercase text-cyan-600 dark:text-cyan-400/80">Owned Perks</span>
+                        <span className="text-xs font-black text-cyan-700 dark:text-cyan-300">{ownedPerksCount}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* ── Content View ── */}
-        {category === 'generator' ? (
+        {activeTab === 'generator' ? (
           <PerkGenerator
             allPerks={allPerksForGenerator}
             onSelectPerk={setSelectedPerk}
@@ -272,24 +300,33 @@ function DashboardContent() {
           />
         ) : (
           <>
-            {/* Filter Bar */}
             <PerkFilters
               search={search}
               setSearch={(v) => {
                 setSearch(v);
                 setPage(1);
               }}
-              category={category}
-              setCategory={handleSelectCategory}
+              role={role}
+              setRole={handleRoleChange}
+              scope={scope}
+              setScope={(s) => {
+                setScope(s);
+                setPage(1);
+              }}
+              ownershipFilter={ownershipFilter}
+              setOwnershipFilter={(o) => {
+                setOwnershipFilter(o);
+                setPage(1);
+              }}
               character={character}
               setCharacter={(v) => {
                 setCharacter(v);
                 setPage(1);
               }}
               sortBy={sortBy}
-              setSortBy={setSortBy}
+              setSortBy={(s) => setSortBy(s as any)}
               order={order}
-              setOrder={setOrder}
+              setOrder={(o) => setOrder(o as any)}
               viewMode={viewMode}
               setViewMode={setViewMode}
               characterOptions={characterOptions}
@@ -297,7 +334,6 @@ function DashboardContent() {
               onReset={handleResetFilters}
             />
 
-            {/* Perks Cards Grid / List */}
             {loading ? (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 mt-6">
                 {[...Array(12)].map((_, i) => (
@@ -314,7 +350,7 @@ function DashboardContent() {
                   {dict?.empty?.title || 'No Perks Found'}
                 </h3>
                 <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
-                  {dict?.empty?.subtitle || 'Try clearing search filters or choosing another character.'}
+                  {dict?.empty?.subtitle || 'Try clearing your search query, switching ownership filters, or choosing another character.'}
                 </p>
                 <button
                   onClick={handleResetFilters}
@@ -343,7 +379,6 @@ function DashboardContent() {
                   ))}
                 </div>
 
-                {/* Pagination */}
                 <div className="mt-8">
                   <Pagination
                     page={page}

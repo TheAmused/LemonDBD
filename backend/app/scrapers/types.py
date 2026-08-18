@@ -1,12 +1,12 @@
 from dataclasses import asdict, dataclass, fields
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 
 
 @dataclass
 class ScraperConfig:
-    source: str = "nightlight"
-    fallback_to_wiki: bool = True
-    last_used_source: str = "nightlight"
+    source: str = "wikigg"
+    fallback_to_wiki: bool = False
+    last_used_source: str = "wikigg"
     last_run_timestamp: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -19,6 +19,18 @@ class ScraperConfig:
         valid_keys = {f.name for f in fields(cls)}
         filtered = {k: v for k, v in data.items() if k in valid_keys}
         return cls(**filtered)
+
+
+@dataclass
+class KillerPowerData:
+    name: str = ""
+    description: str = ""
+    icon_url: str = ""
+    icon_local_path: str = ""
+    movement_speed: str = ""
+    terror_radius: str = ""
+    terror_radius_meters: Optional[int] = None
+    height: str = ""
 
 
 @dataclass
@@ -40,6 +52,7 @@ class CharacterData:
     release_date: Optional[str] = None
     dlc_counterparts: Optional[str] = None
     lore: Optional[str] = None
+    power: Optional[KillerPowerData] = None
 
 
 @dataclass
@@ -74,6 +87,8 @@ class PerkData:
     description: str
     icon_url: str
     icon_local_path: str
+    alternate_name: Optional[str] = None
+    is_generic_counterpart: bool = False
 
 
 @dataclass

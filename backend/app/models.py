@@ -18,14 +18,13 @@ def utcnow():
     return datetime.now(timezone.utc)
 
 
-
 class Character(Base):
     __tablename__ = "characters"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100), unique=True, index=True)
-    role: Mapped[str] = mapped_column(String(20))  # e.g., "Killer" or "Survivor"
-    code_prefix: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)  # e.g., "K01", "S24"
+    role: Mapped[str] = mapped_column(String(20))
+    code_prefix: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
     portrait_url: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     real_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     short_name: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
@@ -41,9 +40,23 @@ class Character(Base):
     dlc_counterparts: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     lore: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
+    # Killer Power & Combat Attributes (Persisted in DB)
+    power_name: Mapped[Optional[str]] = mapped_column(String(150), nullable=True)
+    power_description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    power_icon_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    movement_speed: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    terror_radius: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    terror_radius_meters: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    height: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+
     perks: Mapped[List["Perk"]] = relationship(
         back_populates="character", cascade="all, delete-orphan"
     )
+
+    __mapper_args__ = {
+        "polymorphic_on": "role",
+        "polymorphic_identity": "Character",
+    }
 
     def to_dict(self) -> dict:
         import json
@@ -57,11 +70,11 @@ class Character(Base):
             except Exception:
                 counterparts = []
 
-        return {
+        data = {
             "id": self.id,
             "name": self.name,
             "role": self.role,
-            "category": self.role,  # for backwards-compatibility with category field
+            "category": self.role,
             "code_prefix": self.code_prefix,
             "portrait_url": self.portrait_url,
             "real_name": self.real_name or self.name,
@@ -70,7 +83,7 @@ class Character(Base):
             "avatar_url": self.portrait_url or "",
             "avatar_local_path": self.avatar_local_path or "",
             "release_number": self.release_number,
-            "chapter_name": self.chapter_name or "Dead by Daylight Archives",
+            "chapter_name": self.chapter_name or "Base Game",
             "chapter_number": self.chapter_number or "",
             "dlc_type": self.dlc_type or "original_chapter",
             "is_licensed": bool(self.is_licensed),
@@ -80,14 +93,46 @@ class Character(Base):
             "lore": self.lore or "",
         }
 
+        if self.role == "Killer" or self.power_name:
+            p_clean = (
+                self.power_name.lower().replace(" ", "_").replace("'", "").replace("-", "_")
+                if self.power_name
+                else ""
+            )
+            data["power"] = {
+                "name": self.power_name or "",
+                "description": self.power_description or "",
+                "icon_url": self.power_icon_url or "",
+                "icon_local_path": f"icons/powers/{p_clean}.png" if p_clean else "",
+                "movement_speed": self.movement_speed or "4.6 m/s (115%)",
+                "terror_radius": self.terror_radius or "32 m",
+                "terror_radius_meters": self.terror_radius_meters or 32,
+                "height": self.height or "Tall",
+            }
+        return data
+
+
+class Survivor(Character):
+    __mapper_args__ = {
+        "polymorphic_identity": "Survivor",
+    }
+
+
+class Killer(Character):
+    __mapper_args__ = {
+        "polymorphic_identity": "Killer",
+    }
+
 
 class Perk(Base):
     __tablename__ = "perks"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(150), unique=True, index=True)
+    alternate_name: Mapped[Optional[str]] = mapped_column(String(150), nullable=True)
+    is_generic_counterpart: Mapped[bool] = mapped_column(Boolean, default=False)
     is_teachable: Mapped[bool] = mapped_column(Boolean, default=True)
-    category: Mapped[str] = mapped_column(String(20), default="Survivor")  # "Survivor" or "Killer"
+    category: Mapped[str] = mapped_column(String(20), default="Survivor")
     description: Mapped[str] = mapped_column(Text, default="")
     icon_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     icon_local_path: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
@@ -104,6 +149,8 @@ class Perk(Base):
         return {
             "id": self.id,
             "name": self.name,
+            "alternate_name": self.alternate_name or "",
+            "is_generic_counterpart": self.is_generic_counterpart,
             "is_teachable": self.is_teachable,
             "category": self.category,
             "character": char_name,
@@ -317,7 +364,7 @@ class GauntletRun(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
-    role: Mapped[str] = mapped_column(String(20))  # "survivor" or "killer"
+    role: Mapped[str] = mapped_column(String(20))
     status: Mapped[str] = mapped_column(String(20), default="in_progress")
     current_character_id: Mapped[str] = mapped_column(String(100))
     current_streak: Mapped[int] = mapped_column(Integer, default=0)
@@ -369,7 +416,7 @@ class GauntletMatchLog(Base):
     )
     role: Mapped[str] = mapped_column(String(20))
     character_id: Mapped[str] = mapped_column(String(100))
-    result: Mapped[str] = mapped_column(String(20))  # "win" or "loss"
+    result: Mapped[str] = mapped_column(String(20))
     perks_json: Mapped[str] = mapped_column(Text)
     streak_before: Mapped[int] = mapped_column(Integer)
     streak_after: Mapped[int] = mapped_column(Integer)
@@ -519,7 +566,7 @@ class PageStreakPageLog(Base):
     attempt: Mapped[int] = mapped_column(Integer)
     page_number: Mapped[int] = mapped_column(Integer)
     perks_json: Mapped[str] = mapped_column(Text)
-    result: Mapped[str] = mapped_column(String(20))  # "win" or "loss"
+    result: Mapped[str] = mapped_column(String(20))
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
     run: Mapped["PageStreakRun"] = relationship(back_populates="page_logs")
@@ -572,7 +619,7 @@ class DailyQuest(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(200))
     description: Mapped[str] = mapped_column(Text)
-    category: Mapped[str] = mapped_column(String(20))  # "daily" or "weekly"
+    category: Mapped[str] = mapped_column(String(20))
     progress: Mapped[int] = mapped_column(Integer, default=0)
     goal: Mapped[int] = mapped_column(Integer, default=1)
     xp_reward: Mapped[int] = mapped_column(Integer, default=500)
@@ -599,8 +646,8 @@ class CommunityBuild(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(200))
     description: Mapped[str] = mapped_column(Text)
-    role: Mapped[str] = mapped_column(String(20))  # "survivor" or "killer"
-    category: Mapped[str] = mapped_column(String(50))  # "otzdarva", "meta", "meme", etc.
+    role: Mapped[str] = mapped_column(String(20))
+    category: Mapped[str] = mapped_column(String(50))
     character_id: Mapped[str] = mapped_column(String(100), default="all")
     perks_json: Mapped[str] = mapped_column(Text, default="[]")
     upvotes: Mapped[int] = mapped_column(Integer, default=0)
@@ -685,7 +732,7 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
-    role: Mapped[str] = mapped_column(String(20), default="user", nullable=False)  # "user" | "admin"
+    role: Mapped[str] = mapped_column(String(20), default="user", nullable=False)
     avatar_url: Mapped[str] = mapped_column(String(255), default="default_avatar")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)

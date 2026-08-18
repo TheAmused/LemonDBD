@@ -5,6 +5,7 @@ from typing import Optional, Type
 from pathlib import Path
 from flask import Flask, jsonify
 from flask_cors import CORS
+from sqlalchemy import text
 
 from app.config import Config
 from app.extensions import db, migrate
@@ -34,7 +35,6 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
         supports_credentials=True,
     )
 
-    # Initialize extensions
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
 
@@ -54,13 +54,54 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
         from app.services.db_service import DatabaseService
         from app.seeds.user_seeder import seed_default_users
         from app.services.scraper_service import ScraperService
+
         DatabaseService().init_db()
+
+        try:
+            db_engine = db.engine.name
+            if db_engine in ["postgresql", "postgres"]:
+                db.session.execute(text("ALTER TABLE perks ADD COLUMN IF NOT EXISTS alternate_name VARCHAR(150);"))
+                db.session.execute(text("ALTER TABLE perks ADD COLUMN IF NOT EXISTS is_generic_counterpart BOOLEAN DEFAULT FALSE;"))
+                for col_name, col_type in [
+                    ("power_name", "VARCHAR(150)"),
+                    ("power_description", "TEXT"),
+                    ("power_icon_url", "VARCHAR(500)"),
+                    ("movement_speed", "VARCHAR(100)"),
+                    ("terror_radius", "VARCHAR(100)"),
+                    ("terror_radius_meters", "INTEGER"),
+                    ("height", "VARCHAR(50)"),
+                ]:
+                    db.session.execute(text(f"ALTER TABLE characters ADD COLUMN IF NOT EXISTS {col_name} {col_type};"))
+                db.session.commit()
+            elif db_engine == "sqlite":
+                cols = [c[1] for c in db.session.execute(text("PRAGMA table_info(perks)")).fetchall()]
+                if "alternate_name" not in cols:
+                    db.session.execute(text("ALTER TABLE perks ADD COLUMN alternate_name VARCHAR(150);"))
+                if "is_generic_counterpart" not in cols:
+                    db.session.execute(text("ALTER TABLE perks ADD COLUMN is_generic_counterpart BOOLEAN DEFAULT 0;"))
+
+                char_cols = [c[1] for c in db.session.execute(text("PRAGMA table_info(characters)")).fetchall()]
+                for col_name, col_type in [
+                    ("power_name", "VARCHAR(150)"),
+                    ("power_description", "TEXT"),
+                    ("power_icon_url", "VARCHAR(500)"),
+                    ("movement_speed", "VARCHAR(100)"),
+                    ("terror_radius", "VARCHAR(100)"),
+                    ("terror_radius_meters", "INTEGER"),
+                    ("height", "VARCHAR(50)"),
+                ]:
+                    if col_name not in char_cols:
+                        db.session.execute(text(f"ALTER TABLE characters ADD COLUMN {col_name} {col_type};"))
+                db.session.commit()
+        except Exception as col_err:
+            db.session.rollback()
+            logging.debug(f"Column auto-check skipped: {col_err}")
+
         seed_default_users()
         is_testing = flask_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
         if not is_testing:
             ScraperService().seed_canonical_characters()
 
-    # Blueprints
     from app.routes.auth import auth_bp
     from app.routes.users import users_bp
     from app.routes.perks import perks_bp, _run_background_scrape, perk_service
@@ -70,7 +111,6 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     from app.routes.page_streak import page_streak_bp
     from app.routes.gauntlet_streak import gauntlet_streak_bp
 
-    # Others routes
     from app.routes.others.draft import draft_bp
     from app.routes.others.quests import quests_bp
     from app.routes.others.killer_calc import killer_calc_bp

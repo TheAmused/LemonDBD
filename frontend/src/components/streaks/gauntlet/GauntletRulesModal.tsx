@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { Role } from '@/types/gauntletStreak';
-import { X, BookOpen, Shield, AlertTriangle, Flame, Trophy, Lock } from 'lucide-react';
+import { X, BookOpen, AlertTriangle, Flame, Trophy, Lock } from 'lucide-react';
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;

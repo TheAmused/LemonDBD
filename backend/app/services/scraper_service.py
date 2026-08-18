@@ -21,13 +21,6 @@ from app.scrapers.types import (
     PerkData,
     MapData,
 )
-from app.scrapers.constants_wikigg import (
-    PORTRAIT_PATTERN,
-    CANONICAL_DLC_INFO,
-    CANONICAL_KILLER_POWERS,
-    CHARACTER_ALIASES,
-    EXCLUDED_SLUGS,
-)
 from app.scrapers.utils import (
     clean_description_text,
     normalize_name_key,
@@ -35,7 +28,6 @@ from app.scrapers.utils import (
     extract_high_res_url,
     extract_slug_from_href,
     classify_portrait,
-    normalise_character_name,
 )
 from app.scrapers.wikigg import WikiGGScraperDriver
 from app.scrapers.maps import (
@@ -48,16 +40,9 @@ logger = logging.getLogger(__name__)
 
 
 class ScraperService:
-    PERKS_URL = WikiGGScraperDriver.PERKS_URL
-    SURVIVORS_URL = WikiGGScraperDriver.SURVIVORS_URL
-    KILLERS_URL = WikiGGScraperDriver.KILLERS_URL
-
     IMPERSONATE_BROWSER = "chrome120"
     REQUEST_TIMEOUT = 30
     MAX_CONCURRENT_DOWNLOADS = 10
-
-    HEADERS = WikiGGScraperDriver.HEADERS
-    CHARACTER_ALIASES = CHARACTER_ALIASES
 
     clean_description_text = staticmethod(clean_description_text)
     normalize_name_key = staticmethod(normalize_name_key)
@@ -65,7 +50,6 @@ class ScraperService:
     extract_high_res_url = staticmethod(extract_high_res_url)
     extract_slug_from_href = staticmethod(extract_slug_from_href)
     classify_portrait = staticmethod(classify_portrait)
-    normalise_character_name = staticmethod(normalise_character_name)
 
     _lock = threading.Lock()
     _status: Dict[str, Any] = {
@@ -126,53 +110,23 @@ class ScraperService:
         with cls._lock:
             cls._status.update(kwargs)
 
-    def fetch_html(self, url: str) -> str:
-        return self.wikigg_driver.fetch_html(url)
-
-    def parse_character_page(self, html: str) -> List[CharacterData]:
-        return self.wikigg_driver.parse_character_page(html)
-
-    def scrape_characters_dynamically(self) -> List[CharacterData]:
-        return self.wikigg_driver.scrape_characters_dynamically()
-
-    def parse_perks(self, html_content: str, characters: List[CharacterData]) -> List[PerkData]:
-        return self.wikigg_driver.parse_perks(html_content, characters)
-
-    def scrape_items_and_addons(self) -> Tuple[List[ItemData], List[AddonData]]:
-        try:
-            html_items = self.wikigg_driver.fetch_html(self.wikigg_driver.ITEMS_URL)
-            items = self.wikigg_driver.parse_wiki_items(html_items)
-        except Exception as e:
-            logger.warning(f"Failed to scrape wiki.gg items: {e}")
-            items = []
-        try:
-            html_addons = self.wikigg_driver.fetch_html(self.wikigg_driver.ADDONS_URL)
-            addons = self.wikigg_driver.parse_wiki_addons(html_addons)
-        except Exception as e:
-            logger.warning(f"Failed to scrape wiki.gg addons: {e}")
-            addons = []
-        return items, addons
-
     _PERK_FRAME_TEMPLATE_PATH = Path(__file__).resolve().parent.parent / "scrapers" / "assets" / "perk_frame.png"
     _perk_frame_template_cache = None
 
     @classmethod
     def _get_perk_frame_template(cls):
         from PIL import Image
-
-        if cls._perk_frame_template_cache is None:
+        if cls._perk_frame_template_cache is None and cls._PERK_FRAME_TEMPLATE_PATH.exists():
             cls._perk_frame_template_cache = Image.open(cls._PERK_FRAME_TEMPLATE_PATH).convert("RGBA")
         return cls._perk_frame_template_cache
 
     @classmethod
     def _apply_perk_diamond_frame(cls, icon_bytes: bytes) -> bytes:
-        """wiki.gg only serves the bare perk glyph, with no rarity frame baked in
-        (unlike nightlight.gg's icons). Paste the glyph onto a real diamond-frame
-        background lifted from a nightlight.gg icon so perks keep their familiar
-        framed look regardless of rarity."""
-        from PIL import Image
-
         template = cls._get_perk_frame_template()
+        if template is None:
+            return icon_bytes
+
+        from PIL import Image
         size = template.size[0]
         canvas = template.copy()
 
@@ -207,7 +161,7 @@ class ScraperService:
 
         async with semaphore:
             try:
-                response = await client.get(url, headers=self.HEADERS, timeout=self.REQUEST_TIMEOUT)
+                response = await client.get(url, timeout=self.REQUEST_TIMEOUT)
                 response.raise_for_status()
                 content = response.content
                 if apply_perk_frame:
@@ -243,6 +197,13 @@ class ScraperService:
                     tasks.append(
                         self._download_asset(client, semaphore, char.avatar_url, char.avatar_local_path)
                     )
+                if char.power and char.power.icon_url:
+                    p_slug = sanitize_filename(char.power.name)
+                    p_path = f"icons/powers/{p_slug}.png"
+                    char.power.icon_local_path = p_path
+                    tasks.append(
+                        self._download_asset(client, semaphore, char.power.icon_url, p_path)
+                    )
             if items:
                 for item in items:
                     if item.icon_url:
@@ -264,59 +225,23 @@ class ScraperService:
 
             await asyncio.gather(*tasks)
 
-    def _preserve_release_numbers(self, characters: List[CharacterData]) -> None:
-        db_release_map = {}
+    def seed_canonical_characters(self) -> None:
         try:
-            if current_app:
-                db_chars = db.session.scalars(select(Character)).all()
-                for c in db_chars:
-                    if c.release_number and c.release_number > 0:
-                        db_release_map[normalize_name_key(c.name)] = (c.release_number, c.code_prefix)
+            existing = db.session.scalars(select(Character)).first()
+            if existing:
+                return
+            logger.info("Initializing character table from wiki.gg...")
+            chars = self.wikigg_driver.scrape_characters_dynamically()
+            self.sync_to_database(characters=chars, perks=[], items=[], addons=[], maps=[])
         except Exception as e:
-            logger.debug(f"Could not load release numbers from database: {e}")
-
-        for character in characters:
-            norm_name = normalize_name_key(character.name)
-            if norm_name in db_release_map:
-                rel_num, code_pref = db_release_map[norm_name]
-                if not character.release_number or character.release_number <= 0:
-                    character.release_number = rel_num
-                if not character.code_prefix:
-                    character.code_prefix = code_pref
-
-            dlc = CANONICAL_DLC_INFO.get(character.name.lower().strip())
-            if not dlc:
-                alias_target = CHARACTER_ALIASES.get(character.name.lower().strip())
-                if alias_target:
-                    dlc = CANONICAL_DLC_INFO.get(alias_target.lower().strip())
-
-            if dlc:
-                if not character.release_number or character.release_number <= 0:
-                    character.release_number = dlc.get("release_number", 0)
-                if not character.code_prefix:
-                    character.code_prefix = dlc.get("code_prefix")
-                if not character.chapter_name:
-                    character.chapter_name = dlc.get("chapter_name")
-                if not character.chapter_number:
-                    character.chapter_number = dlc.get("chapter_number")
-                if not character.dlc_type:
-                    character.dlc_type = dlc.get("dlc_type")
-                if not character.is_licensed:
-                    character.is_licensed = dlc.get("is_licensed", False)
-                if not character.release_year:
-                    character.release_year = dlc.get("release_year")
-                if not character.release_date:
-                    character.release_date = dlc.get("release_date")
-                if not character.dlc_counterparts:
-                    character.dlc_counterparts = dlc.get("dlc_counterparts")
-                if not character.lore:
-                    character.lore = dlc.get("lore")
+            logger.warning(f"Could not auto-seed characters on startup: {e}")
 
     def run_sync_pipeline(
         self,
         override_source: Optional[str] = None,
         override_fallback: Optional[bool] = None,
-    ) -> Dict[str, int]:
+        download_assets: bool = True,
+    ) -> Dict[str, Any]:
         if self.get_status()["is_running"]:
             logger.warning("Scrape pipeline already running.")
             return {}
@@ -332,23 +257,19 @@ class ScraperService:
         )
 
         try:
-            logger.info("Scraping deadbydaylight.wiki.gg data...")
+            logger.info("Scraping deadbydaylight.wiki.gg dynamic data via API...")
             characters, perks, items, addons = self.wikigg_driver.scrape_all()
-
-            self._preserve_release_numbers(characters)
 
             maps: List[MapData] = []
             try:
                 logger.info("Scraping Hens333 maps...")
-                hens_maps = self.hens_map_driver.scrape_maps()
-                maps.extend(hens_maps)
+                maps.extend(self.hens_map_driver.scrape_maps())
             except Exception as map_err:
                 logger.warning(f"Failed scraping Hens333 maps: {map_err}")
 
             try:
                 logger.info("Scraping SamoelColt Steam Workshop maps...")
-                samoel_maps = self.samoel_map_driver.scrape_maps()
-                maps.extend(samoel_maps)
+                maps.extend(self.samoel_map_driver.scrape_maps())
             except Exception as map_err:
                 logger.warning(f"Failed scraping SamoelColt maps: {map_err}")
 
@@ -361,24 +282,25 @@ class ScraperService:
                 maps=maps,
             )
 
-            total_downloads = (
-                len(perks)
-                + sum(1 for c in characters if getattr(c, "avatar_url", None))
-                + len(items)
-                + len(addons)
-                + len(maps)
-            )
-            self._update_status(
-                current_step="downloading_assets",
-                total=total_downloads,
-                progress=0,
-            )
-
-            asyncio.run(
-                self.download_all_assets_async(
-                    perks, characters, items=items, addons=addons, maps=maps
+            if download_assets:
+                total_downloads = (
+                    len(perks)
+                    + sum(1 for c in characters if getattr(c, "avatar_url", None))
+                    + len(items)
+                    + len(addons)
+                    + len(maps)
                 )
-            )
+                self._update_status(
+                    current_step="downloading_assets",
+                    total=total_downloads,
+                    progress=0,
+                )
+
+                asyncio.run(
+                    self.download_all_assets_async(
+                        perks, characters, items=items, addons=addons, maps=maps
+                    )
+                )
 
             now_iso = datetime.now(timezone.utc).isoformat()
             self.save_config(
@@ -389,12 +311,8 @@ class ScraperService:
                 }
             )
 
-            survivor_count = sum(
-                1 for p in perks if getattr(p, "category", "") == "Survivor"
-            )
-            killer_count = sum(
-                1 for p in perks if getattr(p, "category", "") == "Killer"
-            )
+            survivor_count = sum(1 for p in perks if getattr(p, "category", "") == "Survivor")
+            killer_count = sum(1 for p in perks if getattr(p, "category", "") == "Killer")
 
             stats = {
                 "status": "success",
@@ -427,80 +345,13 @@ class ScraperService:
             )
             raise
 
-    def seed_canonical_characters(self) -> None:
-        seen_codes = set()
-        chars: List[CharacterData] = []
-
-        for key, dlc in CANONICAL_DLC_INFO.items():
-            code = dlc.get("code_prefix")
-            if not code or code in seen_codes:
-                continue
-            seen_codes.add(code)
-
-            role = dlc.get("role", "Survivor")
-
-            if role == "Killer":
-                words = key.split()
-                display_name = " ".join(w.capitalize() for w in words)
-                if key == "the onryo":
-                    display_name = "The Onryō"
-            else:
-                words = key.split()
-                display_name = " ".join(w.capitalize() for w in words)
-                if "bill" in key:
-                    display_name = 'William "Bill" Overbeck'
-                elif "ash" in key:
-                    display_name = "Ashley J. Williams"
-                elif "elodie" in key or "élodie" in key:
-                    display_name = "Élodie Rakoto"
-                elif "leon" in key:
-                    display_name = "Leon S. Kennedy"
-                elif "yun-jin" in key or "lee yun-jin" in key:
-                    display_name = "Yun-Jin Lee"
-
-            real_name = display_name
-            if key in CANONICAL_KILLER_POWERS:
-                targets = CANONICAL_KILLER_POWERS[key].get("targets", [])
-                if len(targets) >= 3:
-                    real_name = targets[-1]
-                elif len(targets) >= 2:
-                    real_name = targets[1]
-
-            sanitized = sanitize_filename(display_name)
-            sub_dir = "survivors" if role == "Survivor" else "killers"
-            slug = display_name.replace(" ", "_")
-
-            chars.append(
-                CharacterData(
-                    name=display_name,
-                    real_name=real_name,
-                    wiki_slug=slug,
-                    short_name=key.lower(),
-                    category=role,
-                    avatar_url="",
-                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
-                    release_number=dlc.get("release_number", 0),
-                    code_prefix=code,
-                    chapter_name=dlc.get("chapter_name"),
-                    chapter_number=dlc.get("chapter_number"),
-                    dlc_type=dlc.get("dlc_type"),
-                    is_licensed=dlc.get("is_licensed", False),
-                    release_year=dlc.get("release_year"),
-                    release_date=dlc.get("release_date"),
-                    dlc_counterparts=dlc.get("dlc_counterparts"),
-                    lore=dlc.get("lore"),
-                )
-            )
-
-        self.sync_to_database(characters=chars, perks=[], items=[], addons=[], maps=[])
-
     def sync_to_database(
         self,
-        characters: List[Any],
-        perks: List[Any],
-        items: Optional[List[Any]] = None,
-        addons: Optional[List[Any]] = None,
-        maps: Optional[List[Any]] = None,
+        characters: List[CharacterData],
+        perks: List[PerkData],
+        items: Optional[List[ItemData]] = None,
+        addons: Optional[List[AddonData]] = None,
+        maps: Optional[List[MapData]] = None,
     ) -> Dict[str, int]:
         items = items or []
         addons = addons or []
@@ -513,74 +364,85 @@ class ScraperService:
 
         if characters:
             for c in characters:
-                role = getattr(c, "category", None) or getattr(c, "role", "Survivor")
-                portrait = getattr(c, "avatar_url", "")
-                code_prefix = getattr(c, "code_prefix", None)
-                if not code_prefix and portrait:
-                    m = PORTRAIT_PATTERN.search(portrait.split("/")[-1])
-                    if m:
-                        code_prefix = f"{m.group(1)}{m.group(2)}"
-
+                role = getattr(c, "category", "Survivor")
                 c_name = c.name.strip()
                 norm_c_name = normalize_name_key(c_name)
-                dlc = CANONICAL_DLC_INFO.get(c_name.lower()) or {}
 
                 existing_char = existing_chars.get(norm_c_name)
+                p_name = c.power.name if c.power else None
+                p_desc = c.power.description if c.power else None
+                p_icon = c.power.icon_url if c.power else None
+                p_speed = c.power.movement_speed if c.power else None
+                p_tr = c.power.terror_radius if c.power else None
+                p_trm = c.power.terror_radius_meters if c.power else None
+                p_height = c.power.height if c.power else None
+
+                cp_raw = getattr(c, "dlc_counterparts", None)
+                cp_str = json.dumps(cp_raw) if isinstance(cp_raw, list) else cp_raw
 
                 if existing_char:
                     existing_char.role = role
-                    if code_prefix or dlc.get("code_prefix"):
-                        existing_char.code_prefix = code_prefix or dlc.get("code_prefix")
-                    if portrait:
-                        existing_char.portrait_url = portrait
-                    if getattr(c, "real_name", None):
-                        existing_char.real_name = c.real_name
-                    if getattr(c, "short_name", None):
-                        existing_char.short_name = c.short_name
-                    if getattr(c, "wiki_slug", None):
-                        existing_char.wiki_slug = c.wiki_slug
-                    if getattr(c, "avatar_local_path", None):
-                        existing_char.avatar_local_path = c.avatar_local_path
-                    if dlc.get("release_number"):
-                        existing_char.release_number = dlc.get("release_number")
-                    if dlc.get("chapter_name"):
-                        existing_char.chapter_name = dlc.get("chapter_name")
-                    if dlc.get("chapter_number"):
-                        existing_char.chapter_number = dlc.get("chapter_number")
-                    if dlc.get("dlc_type"):
-                        existing_char.dlc_type = dlc.get("dlc_type")
-                    if "is_licensed" in dlc:
-                        existing_char.is_licensed = dlc.get("is_licensed")
-                    if dlc.get("release_year"):
-                        existing_char.release_year = dlc.get("release_year")
-                    if dlc.get("release_date"):
-                        existing_char.release_date = dlc.get("release_date")
-                    if dlc.get("dlc_counterparts"):
-                        existing_char.dlc_counterparts = dlc.get("dlc_counterparts")
-                    if dlc.get("lore"):
-                        existing_char.lore = dlc.get("lore")
+                    existing_char.code_prefix = c.code_prefix
+                    existing_char.portrait_url = c.avatar_url
+                    existing_char.real_name = c.real_name or c_name
+                    existing_char.short_name = c.short_name or ""
+                    existing_char.wiki_slug = c.wiki_slug or ""
+                    existing_char.avatar_local_path = c.avatar_local_path or ""
+                    existing_char.release_number = c.release_number
+                    if getattr(c, "chapter_name", None):
+                        existing_char.chapter_name = c.chapter_name
+                    if getattr(c, "chapter_number", None):
+                        existing_char.chapter_number = c.chapter_number
+                    if getattr(c, "dlc_type", None):
+                        existing_char.dlc_type = c.dlc_type
+                    if getattr(c, "is_licensed", None) is not None:
+                        existing_char.is_licensed = c.is_licensed
+                    if getattr(c, "release_year", None):
+                        existing_char.release_year = c.release_year
+                    if getattr(c, "release_date", None):
+                        existing_char.release_date = c.release_date
+                    if cp_str is not None:
+                        existing_char.dlc_counterparts = cp_str
+                    if getattr(c, "lore", None):
+                        existing_char.lore = c.lore
+                    if c.power:
+                        existing_char.power_name = p_name
+                        existing_char.power_description = p_desc
+                        existing_char.power_icon_url = p_icon
+                        existing_char.movement_speed = p_speed
+                        existing_char.terror_radius = p_tr
+                        existing_char.terror_radius_meters = p_trm
+                        existing_char.height = p_height
                 else:
                     new_char = Character(
                         name=c_name,
                         role=role,
-                        code_prefix=code_prefix or dlc.get("code_prefix"),
-                        portrait_url=portrait or "",
-                        real_name=getattr(c, "real_name", c_name) or c_name,
-                        short_name=getattr(c, "short_name", "") or "",
-                        wiki_slug=getattr(c, "wiki_slug", "") or "",
-                        avatar_local_path=getattr(c, "avatar_local_path", "") or "",
-                        release_number=getattr(c, "release_number", None) or dlc.get("release_number"),
-                        chapter_name=getattr(c, "chapter_name", None) or dlc.get("chapter_name"),
-                        chapter_number=getattr(c, "chapter_number", None) or dlc.get("chapter_number"),
-                        dlc_type=getattr(c, "dlc_type", None) or dlc.get("dlc_type"),
-                        is_licensed=getattr(c, "is_licensed", False) or dlc.get("is_licensed", False),
-                        release_year=getattr(c, "release_year", None) or dlc.get("release_year"),
-                        release_date=getattr(c, "release_date", None) or dlc.get("release_date"),
-                        dlc_counterparts=getattr(c, "dlc_counterparts", None) or dlc.get("dlc_counterparts"),
-                        lore=getattr(c, "lore", None) or dlc.get("lore"),
+                        code_prefix=c.code_prefix,
+                        portrait_url=c.avatar_url or "",
+                        real_name=c.real_name or c_name,
+                        short_name=c.short_name or "",
+                        wiki_slug=c.wiki_slug or "",
+                        avatar_local_path=c.avatar_local_path or "",
+                        release_number=c.release_number,
+                        chapter_name=getattr(c, "chapter_name", None),
+                        chapter_number=getattr(c, "chapter_number", None),
+                        dlc_type=getattr(c, "dlc_type", None),
+                        is_licensed=getattr(c, "is_licensed", False),
+                        release_year=getattr(c, "release_year", None),
+                        release_date=getattr(c, "release_date", None),
+                        dlc_counterparts=cp_str,
+                        lore=getattr(c, "lore", None),
+                        power_name=p_name,
+                        power_description=p_desc,
+                        power_icon_url=p_icon,
+                        movement_speed=p_speed,
+                        terror_radius=p_tr,
+                        terror_radius_meters=p_trm,
+                        height=p_height,
                     )
                     db.session.add(new_char)
                     existing_chars[norm_c_name] = new_char
+
             db.session.commit()
 
         char_lookup = {}
@@ -590,25 +452,20 @@ class ScraperService:
                 char_lookup[normalize_name_key(c.real_name)] = c.id
             if c.wiki_slug:
                 char_lookup[normalize_name_key(c.wiki_slug)] = c.id
-            if c.short_name:
-                char_lookup[normalize_name_key(c.short_name)] = c.id
 
         if perks:
             existing_perks = {
                 normalize_name_key(p.name): p
                 for p in db.session.scalars(select(Perk)).all()
             }
+
             for p in perks:
                 char_name = getattr(p, "character", None) or ""
                 norm_char = normalize_name_key(char_name)
 
                 matched_char_id = None
                 if norm_char and norm_char not in ["none", "all", "general", ""]:
-                    alias_target = CHARACTER_ALIASES.get(char_name.lower())
-                    if alias_target:
-                        matched_char_id = char_lookup.get(normalize_name_key(alias_target))
-                    if not matched_char_id:
-                        matched_char_id = char_lookup.get(norm_char)
+                    matched_char_id = char_lookup.get(norm_char)
 
                 is_teachable = matched_char_id is not None
                 desc = clean_description_text(getattr(p, "description", ""))
@@ -620,17 +477,17 @@ class ScraperService:
                 if existing_perk:
                     existing_perk.category = getattr(p, "category", "Survivor")
                     existing_perk.is_teachable = is_teachable
-                    if desc and "unavailable" not in desc.lower():
-                        existing_perk.description = desc
-                    if getattr(p, "icon_url", None):
-                        existing_perk.icon_url = p.icon_url
-                    if getattr(p, "icon_local_path", None):
-                        existing_perk.icon_local_path = p.icon_local_path
-                    if matched_char_id is not None:
-                        existing_perk.character_id = matched_char_id
+                    existing_perk.description = desc
+                    existing_perk.icon_url = p.icon_url or ""
+                    existing_perk.icon_local_path = p.icon_local_path or ""
+                    existing_perk.alternate_name = getattr(p, "alternate_name", None)
+                    existing_perk.is_generic_counterpart = getattr(p, "is_generic_counterpart", False)
+                    existing_perk.character_id = matched_char_id
                 else:
                     new_perk = Perk(
                         name=p_name,
+                        alternate_name=getattr(p, "alternate_name", None),
+                        is_generic_counterpart=getattr(p, "is_generic_counterpart", False),
                         category=getattr(p, "category", "Survivor"),
                         is_teachable=is_teachable,
                         description=desc,
@@ -640,17 +497,8 @@ class ScraperService:
                     )
                     db.session.add(new_perk)
                     existing_perks[norm_p_name] = new_perk
-            db.session.commit()
 
-            current_perk_names = {normalize_name_key(p.name.strip()) for p in perks}
-            stale_perks = [
-                row for norm_name, row in existing_perks.items()
-                if norm_name not in current_perk_names
-            ]
-            for row in stale_perks:
-                db.session.delete(row)
-            if stale_perks:
-                db.session.commit()
+            db.session.commit()
 
         if items:
             existing_items = {
@@ -660,20 +508,16 @@ class ScraperService:
             for item in items:
                 i_name = item.name.strip()
                 norm_i_name = normalize_name_key(i_name)
+                desc = clean_description_text(getattr(item, "description", ""))
                 existing_item = existing_items.get(norm_i_name)
 
-                desc = clean_description_text(getattr(item, "description", ""))
                 if existing_item:
                     existing_item.category = getattr(item, "category", "")
                     existing_item.role = getattr(item, "role", "Survivor")
-                    if desc:
-                        existing_item.description = desc
-                    if getattr(item, "icon_url", None):
-                        existing_item.icon_url = item.icon_url
-                    if getattr(item, "icon_local_path", None):
-                        existing_item.icon_local_path = item.icon_local_path
-                    if getattr(item, "rarity", None):
-                        existing_item.rarity = item.rarity
+                    existing_item.description = desc
+                    existing_item.icon_url = item.icon_url or ""
+                    existing_item.icon_local_path = item.icon_local_path or ""
+                    existing_item.rarity = getattr(item, "rarity", "") or ""
                 else:
                     new_item = Item(
                         name=i_name,
@@ -686,6 +530,7 @@ class ScraperService:
                     )
                     db.session.add(new_item)
                     existing_items[norm_i_name] = new_item
+
             db.session.commit()
 
         if addons:
@@ -696,22 +541,16 @@ class ScraperService:
             for addon in addons:
                 a_name = addon.name.strip()
                 norm_a_name = normalize_name_key(a_name)
+                desc = clean_description_text(getattr(addon, "description", ""))
                 existing_addon = existing_addons.get(norm_a_name)
 
-                desc = clean_description_text(getattr(addon, "description", ""))
                 if existing_addon:
-                    existing_addon.associated_target = (
-                        getattr(addon, "associated_target", "") or ""
-                    )
+                    existing_addon.associated_target = getattr(addon, "associated_target", "") or ""
                     existing_addon.category = getattr(addon, "category", "")
-                    if desc:
-                        existing_addon.description = desc
-                    if getattr(addon, "icon_url", None):
-                        existing_addon.icon_url = addon.icon_url
-                    if getattr(addon, "icon_local_path", None):
-                        existing_addon.icon_local_path = addon.icon_local_path
-                    if getattr(addon, "rarity", None):
-                        existing_addon.rarity = addon.rarity
+                    existing_addon.description = desc
+                    existing_addon.icon_url = addon.icon_url or ""
+                    existing_addon.icon_local_path = addon.icon_local_path or ""
+                    existing_addon.rarity = getattr(addon, "rarity", "") or ""
                 else:
                     new_addon = Addon(
                         name=a_name,
@@ -724,6 +563,7 @@ class ScraperService:
                     )
                     db.session.add(new_addon)
                     existing_addons[norm_a_name] = new_addon
+
             db.session.commit()
 
         return {

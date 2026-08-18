@@ -1,8 +1,24 @@
 import logging
 from flask import Blueprint, request, jsonify, g
+from sqlalchemy import delete
+from app.extensions import db
+from app.models import (
+    User,
+    Character,
+    Perk,
+    Item,
+    Addon,
+    MapRealm,
+    MapTile,
+    MapObjective,
+    UserCharacterOwnership,
+    UserPerkOwnership,
+    GauntletRun,
+    PageStreakRun,
+)
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
-from app.utils.auth_helper import login_required, admin_required, get_current_user
+from app.utils.auth_helper import login_required, admin_required
 
 logger = logging.getLogger(__name__)
 users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
@@ -10,8 +26,6 @@ users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
 user_service = UserService()
 ownership_service = OwnershipService()
 
-
-# ─── ADMIN USER MANAGEMENT ───────────────────────────────────────────
 
 @users_bp.route("/users", methods=["GET"])
 @admin_required
@@ -53,7 +67,6 @@ def create_user_by_admin():
 @users_bp.route("/users/<int:user_id>", methods=["GET"])
 @login_required
 def get_user_detail(user_id):
-    # Allow self or admin
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized access to user profile.", "status": 403}), 403
@@ -107,7 +120,62 @@ def get_admin_stats():
     return jsonify(stats), 200
 
 
-# ─── USER CHARACTER OWNERSHIP CRUD & BULK CRUD ────────────────────────
+@users_bp.route("/admin/database/purge", methods=["POST"])
+@admin_required
+def purge_database_tables():
+    data = request.get_json() or {}
+    targets = data.get("targets", [])
+    if not isinstance(targets, list) or not targets:
+        return jsonify({"error": "No valid purge targets specified.", "status": 400}), 400
+
+    purged = []
+    try:
+        if "perks" in targets:
+            db.session.execute(delete(Perk))
+            purged.append("perks")
+
+        if "characters" in targets:
+            db.session.execute(delete(Character))
+            purged.append("characters")
+
+        if "items" in targets:
+            db.session.execute(delete(Item))
+            purged.append("items")
+
+        if "addons" in targets:
+            db.session.execute(delete(Addon))
+            purged.append("addons")
+
+        if "maps" in targets:
+            db.session.execute(delete(MapObjective))
+            db.session.execute(delete(MapTile))
+            db.session.execute(delete(MapRealm))
+            purged.append("maps")
+
+        if "ownerships" in targets:
+            db.session.execute(delete(UserCharacterOwnership))
+            db.session.execute(delete(UserPerkOwnership))
+            purged.append("ownerships")
+
+        if "game_runs" in targets:
+            db.session.execute(delete(GauntletRun))
+            db.session.execute(delete(PageStreakRun))
+            purged.append("game_runs")
+
+        db.session.commit()
+        logger.info(f"Admin {g.current_user.username} purged tables: {purged}")
+        return jsonify({
+            "status": "success",
+            "message": f"Successfully purged tables: {', '.join(purged)}",
+            "purged_tables": purged,
+            "stats": user_service.get_admin_system_stats(),
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error purging database tables: {e}")
+        return jsonify({"error": f"Database purge failed: {str(e)}", "status": 500}), 500
+
 
 @users_bp.route("/users/<int:user_id>/characters", methods=["GET"])
 @login_required
@@ -162,8 +230,6 @@ def bulk_set_character_ownership(user_id):
     result = ownership_service.bulk_set_character_ownership(user_id, updates)
     return jsonify({"status": "success", "data": result}), 200
 
-
-# ─── USER PERK OWNERSHIP CRUD & BULK CRUD ─────────────────────────────
 
 @users_bp.route("/users/<int:user_id>/perks", methods=["GET"])
 @login_required

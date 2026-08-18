@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GauntletRun, Role } from '@/types/gauntletStreak';
+import { OwnedCharacterItem } from './useOwnedCharacters';
 import {
   RefreshCw,
   CheckCircle,
@@ -10,31 +11,49 @@ import {
   Skull,
   Sparkles,
   Lock,
-  ShieldAlert,
-  Ban,
 } from 'lucide-react';
 
 export interface ActiveTargetStageProps {
   run: GauntletRun | null;
   role: Role;
+  characters: OwnedCharacterItem[];
   loading?: boolean;
   onWin: () => void;
   onLoss: () => void;
   onReroll: () => void;
-  onInvalidateMatch: (reason: 'dc_before_5_gens' | 'game_cancelled') => void;
+  onReveal: () => void;
 }
 
 export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   run,
   role,
+  characters,
   loading = false,
   onWin,
   onLoss,
   onReroll,
-  onInvalidateMatch,
+  onReveal,
 }) => {
   const [avatarError, setAvatarError] = useState(false);
   const [perkImgErrors, setPerkImgErrors] = useState<Record<number, boolean>>({});
+  const [isRevealing, setIsRevealing] = useState(false);
+  const [revealCycleIndex, setRevealCycleIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isRevealing || characters.length === 0) return;
+    const interval = setInterval(() => {
+      setRevealCycleIndex((i) => (i + 1) % characters.length);
+    }, 120);
+    return () => clearInterval(interval);
+  }, [isRevealing, characters.length]);
+
+  const handleStartGame = () => {
+    setIsRevealing(true);
+    setTimeout(() => {
+      onReveal();
+      setIsRevealing(false);
+    }, 1300);
+  };
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -45,6 +64,30 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           <RefreshCw className="w-8 h-8" />
         </div>
         <p className="text-slate-400 text-sm">Loading active gauntlet stage...</p>
+      </div>
+    );
+  }
+
+  if (!run.target_revealed) {
+    const cyclingChar = characters[revealCycleIndex];
+    return (
+      <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-8 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
+        <div className="w-24 h-24 mx-auto rounded-2xl p-1 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden mb-4">
+          <div className="w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400 text-sm font-bold px-2">
+            {isRevealing && cyclingChar ? cyclingChar.name : role === 'survivor' ? <User className="w-10 h-10" /> : <Skull className="w-10 h-10" />}
+          </div>
+        </div>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Ready for the Gauntlet?</h2>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
+          Start the game to draw your {role === 'survivor' ? 'Survivor' : 'Killer'}.
+        </p>
+        <button
+          onClick={handleStartGame}
+          disabled={isRevealing || loading}
+          className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-base py-3.5 px-8 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+        >
+          {isRevealing ? 'Drawing...' : 'START GAME'}
+        </button>
       </div>
     );
   }
@@ -213,7 +256,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                     {perk.name}
                   </h4>
                   <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                    {perk.character_name || 'General Perk'}
+                    {perk.character || 'General Perk'}
                   </p>
                 </div>
               </div>
@@ -222,7 +265,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons & Match Exception Handlers */}
+      {/* Action Buttons */}
       <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800/80">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
@@ -250,31 +293,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             <span>Reroll</span>
-          </button>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mr-1">
-            Match Exception:
-          </span>
-          <button
-            onClick={() => onInvalidateMatch('dc_before_5_gens')}
-            disabled={loading}
-            className="px-3.5 py-2 bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-900 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
-            title="Invalidate match & re-roll for same character due to disconnect before 5 generators"
-          >
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-            <span>DC &lt; 5 Gens</span>
-          </button>
-
-          <button
-            onClick={() => onInvalidateMatch('game_cancelled')}
-            disabled={loading}
-            className="px-3.5 py-2 bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
-            title="Invalidate match & re-roll for same character due to loading disconnect"
-          >
-            <Ban className="w-3.5 h-3.5 text-slate-400" />
-            <span>Game Cancelled</span>
           </button>
         </div>
       </div>

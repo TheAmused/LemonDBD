@@ -96,19 +96,19 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
           <p className="text-xs text-slate-500">No add-ons match your filter.</p>
         </div>
       ) : (
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 max-h-[460px] overflow-y-auto p-2">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 p-2 flex-wrap">
           {filteredEquipment.map((item, idx) => {
             const rarityStyle = getRarityTileStyle(item.rarity);
             return (
               <div
                 key={`equip-${item.name}-${idx}`}
-                className="relative group"
+                className="relative group hover:z-10"
                 onMouseEnter={() => setHoveredEquipIndex(idx)}
                 onMouseLeave={() => setHoveredEquipIndex(null)}
               >
                 <button
                   onClick={() => onSelectEquipment(item)}
-                  className={`relative h-16 w-16 sm:h-18 sm:w-18 rounded-2xl border-2 p-1.5 flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer overflow-hidden ${rarityStyle.bg}`}
+                  className={`relative h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border-2 p-1.5 flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer overflow-hidden ${rarityStyle.bg}`}
                   aria-label={item.name}
                 >
                   <img
@@ -122,7 +122,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
                 </button>
 
                 {hoveredEquipIndex === idx && (
-                  <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-40 w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-[9999] w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150">
                     <div className="flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-slate-800">
                       <h4 className="text-xs font-black text-white truncate">{item.name}</h4>
                       {item.rarity && (

@@ -119,25 +119,14 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             </div>
           </div>
 
-          <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
+          <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-2 shadow-sm">
             <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-              Match Invalidation Exceptions
+              Disconnects & Cancelled Games
             </h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              <li className="flex items-start gap-2">
-                <Shield className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-amber-700 dark:text-amber-200">DC Before 5 Gens:</strong> If a teammate or Killer disconnects before 5 generators are completed, click <strong>"DC &lt; 5 Gens"</strong> to invalidate the match. Your streak and character roster remain intact, and a fresh loadout will be re-rolled for the same target character.
-                </div>
-              </li>
-              <li className="flex items-start gap-2">
-                <Shield className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-amber-700 dark:text-amber-200">Game Cancelled:</strong> If a player disconnects during the loading screen and the match is cancelled, click <strong>"Game Cancelled"</strong> to re-roll for the same target character without penalty.
-                </div>
-              </li>
-            </ul>
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              If someone disconnects or the game gets cancelled, just play the match again — it won't affect your streak.
+            </p>
           </div>
         </div>
 

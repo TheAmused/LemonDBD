@@ -1,34 +1,51 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Search,
   LayoutGrid,
   List,
   RotateCcw,
-  ArrowUpDown,
-  Filter,
-  User,
   Shield,
   Skull,
   Sparkles,
+  Layers,
+  CheckCircle2,
   X,
+  User,
+  ArrowUpAZ,
+  ArrowDownZA,
+  ChevronDown,
 } from 'lucide-react';
+
+interface PerkSuggestion {
+  id?: number;
+  name: string;
+  alternate_name?: string;
+  category?: string;
+  character?: string;
+  icon_local_path?: string;
+  icon_url?: string;
+}
 
 interface PerkFiltersProps {
   search: string;
   setSearch: (val: string) => void;
-  category?: string;
-  setCategory?: (val: string) => void;
+  role: 'Survivor' | 'Killer';
+  setRole: (role: 'Survivor' | 'Killer') => void;
+  scope: 'all' | 'general';
+  setScope: (scope: 'all' | 'general') => void;
+  ownershipFilter: 'all' | 'owned';
+  setOwnershipFilter: (filter: 'all' | 'owned') => void;
   character: string;
   setCharacter: (val: string) => void;
-  sortBy: string;
-  setSortBy: (val: string) => void;
-  order: string;
-  setOrder: (val: string) => void;
+  sortBy: 'name' | 'character' | 'category';
+  setSortBy: (val: 'name' | 'character' | 'category') => void;
+  order: 'asc' | 'desc';
+  setOrder: (val: 'asc' | 'desc') => void;
   viewMode: 'grid' | 'list';
   setViewMode: (val: 'grid' | 'list') => void;
-  characterOptions: { value: string; label: string }[];
+  characterOptions: { value: string; label: string; real_name?: string }[];
   dict: any;
   onReset: () => void;
 }
@@ -36,8 +53,12 @@ interface PerkFiltersProps {
 export const PerkFilters: React.FC<PerkFiltersProps> = ({
   search,
   setSearch,
-  category = 'all',
-  setCategory,
+  role,
+  setRole,
+  scope,
+  setScope,
+  ownershipFilter,
+  setOwnershipFilter,
   character,
   setCharacter,
   sortBy,
@@ -50,104 +71,215 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   dict,
   onReset,
 }) => {
+  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+  const [charInput, setCharInput] = useState<string>('');
+  const [isCharDropdownOpen, setIsCharDropdownOpen] = useState<boolean>(false);
+  const charDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const [perkSuggestions, setPerkSuggestions] = useState<PerkSuggestion[]>([]);
+  const [isPerkSuggestionsOpen, setIsPerkSuggestionsOpen] = useState<boolean>(false);
+  const searchDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (character === 'all') {
+      setCharInput('');
+    } else if (character === 'General') {
+      setCharInput('General Perks');
+    } else {
+      const match = characterOptions.find((c) => c.value === character);
+      setCharInput(match ? match.label : character);
+    }
+  }, [character, characterOptions]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (charDropdownRef.current && !charDropdownRef.current.contains(event.target as Node)) {
+        setIsCharDropdownOpen(false);
+      }
+      if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target as Node)) {
+        setIsPerkSuggestionsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (!search || search.trim().length < 1) {
+      setPerkSuggestions([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(search)}&category=${role}&limit=8`
+        );
+        if (res.ok) {
+          const json = await res.json();
+          setPerkSuggestions(json.data || []);
+        }
+      } catch (err) {
+        console.error('Failed fetching perk suggestions:', err);
+      }
+    }, 180);
+    return () => clearTimeout(timer);
+  }, [search, role, backendBase]);
+
+  const filteredCharacterOptions = useMemo(() => {
+    const query = charInput.toLowerCase().trim();
+    if (!query) return characterOptions;
+    return characterOptions.filter(
+      (c) =>
+        c.value.toLowerCase().includes(query) ||
+        c.label.toLowerCase().includes(query) ||
+        (c.real_name && c.real_name.toLowerCase().includes(query))
+    );
+  }, [charInput, characterOptions]);
+
   const hasActiveFilters =
-    search ||
-    category !== 'all' ||
+    search !== '' ||
     character !== 'all' ||
+    scope !== 'all' ||
+    ownershipFilter !== 'all' ||
     sortBy !== 'name' ||
     order !== 'asc';
 
-  // Extract top popular characters for quick-filter chips
-  const popularChips = useMemo(() => {
-    const defaultChips = [
-      { value: 'all', label: 'All Characters' },
-      { value: 'General', label: 'General Perks' },
-    ];
-    if (!characterOptions || characterOptions.length === 0) return defaultChips;
-
-    // Take top 8 characters for quick access chips
-    const featured = characterOptions.slice(0, 8).map((opt) => ({
-      value: opt.value,
-      label: opt.value,
-    }));
-    return [...defaultChips, ...featured];
-  }, [characterOptions]);
-
   return (
-    <div className="mb-6 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-sm dark:shadow-xl dark:shadow-slate-950/40">
-      {/* ── Top Row: Role Tabs + Controls ── */}
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        {/* 4-Way Role Segmented Toggle */}
-        {setCategory && (
-          <div className="inline-flex flex-wrap items-center gap-1.5 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1.5 shadow-inner">
+    <div className="relative z-30 mb-6 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-sm dark:shadow-xl dark:shadow-slate-950/40">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
             <button
-              onClick={() => setCategory('all')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${category === 'all'
-                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/60'
-                }`}
-            >
-              <LayoutGrid className="h-3.5 w-3.5 text-cyan-500 dark:text-cyan-400" />
-              <span>All Roles</span>
-            </button>
-
-            <button
-              onClick={() => setCategory('Survivor')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${category === 'Survivor'
+              onClick={() => setRole('Survivor')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 cursor-pointer ${role === 'Survivor'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md ring-1 ring-emerald-400/40'
                   : 'text-slate-700 hover:text-emerald-700 hover:bg-emerald-500/10 dark:text-slate-400 dark:hover:text-emerald-400 dark:hover:bg-emerald-950/30'
                 }`}
             >
-              <Shield className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              <Shield className="h-3.5 w-3.5" />
               <span>Survivor</span>
             </button>
 
             <button
-              onClick={() => setCategory('Killer')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${category === 'Killer'
+              onClick={() => setRole('Killer')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 cursor-pointer ${role === 'Killer'
                   ? 'bg-gradient-to-r from-rose-700 to-red-800 text-white shadow-md ring-1 ring-rose-500/40'
                   : 'text-slate-700 hover:text-rose-700 hover:bg-rose-500/10 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-950/30'
                 }`}
             >
-              <Skull className="h-3.5 w-3.5 text-rose-600 dark:text-rose-400" />
+              <Skull className="h-3.5 w-3.5" />
               <span>Killer</span>
+            </button>
+          </div>
+
+          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
+            <button
+              onClick={() => setScope('all')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${scope === 'all'
+                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
+            >
+              <Layers className="h-3.5 w-3.5 text-cyan-500 dark:text-cyan-400" />
+              <span>All Perks</span>
             </button>
 
             <button
-              onClick={() => setCategory('General')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${category === 'General'
+              onClick={() => setScope('general')}
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${scope === 'general'
                   ? 'bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-md ring-1 ring-amber-400/40'
-                  : 'text-slate-700 hover:text-amber-700 hover:bg-amber-500/10 dark:text-slate-400 dark:hover:text-amber-400 dark:hover:bg-amber-950/30'
+                  : 'text-slate-600 hover:text-amber-700 hover:bg-amber-500/10 dark:text-slate-400 dark:hover:text-amber-400 dark:hover:bg-amber-950/30'
                 }`}
             >
-              <Sparkles className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-              <span>General</span>
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>General Only</span>
             </button>
           </div>
-        )}
 
-        {/* Search Bar & Grid/List View Toggles */}
-        <div className="flex flex-1 items-center gap-3 lg:max-w-md">
-          <div className="relative flex-1">
+          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
+            <button
+              onClick={() => setOwnershipFilter('all')}
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${ownershipFilter === 'all'
+                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
+            >
+              <Layers className="h-3.5 w-3.5 text-slate-400" />
+              <span>Every Perk</span>
+            </button>
+
+            <button
+              onClick={() => setOwnershipFilter('owned')}
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${ownershipFilter === 'owned'
+                  ? 'bg-gradient-to-r from-cyan-600 to-teal-700 text-white shadow-md ring-1 ring-cyan-400/40'
+                  : 'text-slate-600 hover:text-cyan-700 hover:bg-cyan-500/10 dark:text-slate-400 dark:hover:text-cyan-400 dark:hover:bg-cyan-950/30'
+                }`}
+            >
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              <span>Owned Only</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div ref={searchDropdownRef} className="relative z-40 flex-1 sm:w-80">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={dict?.filters?.searchPlaceholder || 'Search perks by name...'}
+              onFocus={() => setIsPerkSuggestionsOpen(true)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setIsPerkSuggestionsOpen(true);
+              }}
+              placeholder={dict?.filters?.searchPlaceholder || 'Type perk name or alias...'}
               className="w-full rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 py-2.5 pl-10 pr-9 text-xs font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:border-cyan-500 focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all"
             />
             {search && (
               <button
-                onClick={() => setSearch('')}
+                onClick={() => {
+                  setSearch('');
+                  setIsPerkSuggestionsOpen(false);
+                }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
               >
                 <X className="h-3 w-3" />
               </button>
             )}
+
+            {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1.5 flex flex-col gap-1">
+                {perkSuggestions.map((item, idx) => (
+                  <div
+                    key={`${item.name}-${idx}`}
+                    onClick={() => {
+                      setSearch(item.name);
+                      setIsPerkSuggestionsOpen(false);
+                    }}
+                    className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-black text-slate-900 dark:text-slate-100 truncate">
+                          {item.name}
+                        </span>
+                        {item.alternate_name && (
+                          <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold truncate">
+                            Alias: {item.alternate_name}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 shrink-0">
+                      {item.character || 'General'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* View Mode Toggle */}
           <div className="flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/90 p-1 shrink-0">
             <button
               onClick={() => setViewMode('grid')}
@@ -173,78 +305,144 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         </div>
       </div>
 
-      {/* ── Middle Row: Character Quick-Filter Chips ── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 shrink-0 mr-1">
-          Quick Filter:
-        </span>
-        {popularChips.map((chip) => {
-          const isSelected = character === chip.value;
-          return (
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-800/60">
+        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+          <div ref={charDropdownRef} className="relative z-40 flex-1 sm:w-72">
+            <div className="relative">
+              <User className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              <input
+                type="text"
+                value={charInput}
+                onFocus={() => setIsCharDropdownOpen(true)}
+                onChange={(e) => {
+                  setCharInput(e.target.value);
+                  setIsCharDropdownOpen(true);
+                }}
+                placeholder="Filter by character name..."
+                className="w-full rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 py-2 pl-9 pr-8 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none transition-colors"
+              />
+              {character !== 'all' ? (
+                <button
+                  onClick={() => {
+                    setCharacter('all');
+                    setCharInput('');
+                    setIsCharDropdownOpen(false);
+                  }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              ) : (
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              )}
+            </div>
+
+            {isCharDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-1 max-h-56 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1 flex flex-col gap-0.5">
+                <div
+                  onClick={() => {
+                    setCharacter('all');
+                    setCharInput('');
+                    setIsCharDropdownOpen(false);
+                  }}
+                  className={`p-2 rounded-xl text-xs font-bold cursor-pointer transition-colors ${character === 'all'
+                      ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300'
+                      : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
+                    }`}
+                >
+                  All Characters
+                </div>
+                <div
+                  onClick={() => {
+                    setCharacter('General');
+                    setCharInput('General Perks');
+                    setIsCharDropdownOpen(false);
+                  }}
+                  className={`p-2 rounded-xl text-xs font-bold cursor-pointer transition-colors ${character === 'General'
+                      ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300'
+                      : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
+                    }`}
+                >
+                  General Perks Only
+                </div>
+                {filteredCharacterOptions.map((opt) => (
+                  <div
+                    key={opt.value}
+                    onClick={() => {
+                      setCharacter(opt.value);
+                      setCharInput(opt.label);
+                      setIsCharDropdownOpen(false);
+                    }}
+                    className={`p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${character === opt.value
+                        ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 font-black'
+                        : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
+                      }`}
+                  >
+                    {opt.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
             <button
-              key={chip.value}
-              onClick={() => setCharacter(chip.value)}
-              className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer ${isSelected
-                  ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-300 shadow-sm'
-                  : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:text-slate-200'
+              onClick={() => setSortBy('name')}
+              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${sortBy === 'name'
+                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
             >
-              <span>{chip.label}</span>
+              Name
             </button>
-          );
-        })}
-      </div>
-
-      {/* ── Bottom Row: Character Dropdown, Sorting & Reset ── */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-800/60">
-        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-          {/* Full Character Dropdown Select */}
-          <div className="relative flex-1 sm:w-64">
-            <select
-              value={character}
-              onChange={(e) => setCharacter(e.target.value)}
-              className="w-full appearance-none rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 px-3.5 py-2 pr-9 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none transition-colors"
+            <button
+              onClick={() => setSortBy('character')}
+              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${sortBy === 'character'
+                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
             >
-              <option value="all">{dict?.filters?.allCharacters || 'All Characters'}</option>
-              <option value="General">General Perks Only</option>
-              {characterOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            <User className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              Character
+            </button>
+            <button
+              onClick={() => setSortBy('category')}
+              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${sortBy === 'category'
+                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
+            >
+              Role
+            </button>
           </div>
 
-          {/* Sort By Select */}
-          <div className="relative flex-1 sm:w-44">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-full appearance-none rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 px-3.5 py-2 pr-9 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none transition-colors"
+          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
+            <button
+              onClick={() => setOrder('asc')}
+              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer ${order === 'asc'
+                  ? 'bg-white text-cyan-600 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-cyan-400 dark:border-slate-700/60'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
             >
-              <option value="name">{dict?.filters?.sortName || 'Sort by Name'}</option>
-              <option value="character">{dict?.filters?.sortCharacter || 'Sort by Character'}</option>
-              <option value="category">{dict?.filters?.sortCategory || 'Sort by Category'}</option>
-            </select>
-            <Filter className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              <ArrowUpAZ className="h-3.5 w-3.5" />
+              <span>A-Z</span>
+            </button>
+            <button
+              onClick={() => setOrder('desc')}
+              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer ${order === 'desc'
+                  ? 'bg-white text-cyan-600 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-cyan-400 dark:border-slate-700/60'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                }`}
+            >
+              <ArrowDownZA className="h-3.5 w-3.5" />
+              <span>Z-A</span>
+            </button>
           </div>
-
-          {/* Sort Order Toggle */}
-          <button
-            onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
-            className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors cursor-pointer"
-          >
-            <span>{order === 'asc' ? dict?.filters?.asc || 'Asc' : dict?.filters?.desc || 'Desc'}</span>
-            <ArrowUpDown className="h-3.5 w-3.5 text-cyan-500 dark:text-cyan-400" />
-          </button>
         </div>
 
-        {/* Clear / Reset Filters Button */}
         {hasActiveFilters && (
           <button
             onClick={onReset}
-            className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 transition-colors cursor-pointer w-full sm:w-auto justify-center"
+            className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 transition-colors cursor-pointer w-full lg:w-auto justify-center"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span>{dict?.filters?.clear || 'Reset Filters'}</span>

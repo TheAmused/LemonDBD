@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { Shield, Skull, Search, X, Sparkles, Package, User, Flame, Info, ChevronRight, Lock, Check } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { AuthModal } from './AuthModal';
@@ -92,6 +92,7 @@ interface CharactersHubProps {
 export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = (params?.locale as string) || 'en';
   const { isAuthenticated, token, user, bulkUpdateCharacterOwnership, bulkUpdatePerkOwnership } = useAuth();
   const { isCollapsed } = useSidebarState();
@@ -99,6 +100,21 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const roleParam = searchParams?.get('role') || searchParams?.get('tab') || '';
+
+  useEffect(() => {
+    if (roleParam) {
+      const lower = roleParam.toLowerCase();
+      if (lower === 'killer' || lower === 'killers') {
+        setActiveTab('Killer');
+      } else if (lower === 'survivor' || lower === 'survivors') {
+        setActiveTab('Survivor');
+      } else if (lower === 'all') {
+        setActiveTab('all');
+      }
+    }
+  }, [roleParam]);
 
   // Modal / Drawer state
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);

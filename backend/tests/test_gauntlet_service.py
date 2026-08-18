@@ -39,7 +39,10 @@ def seed_survivor(name="Meg Thomas", perk_count=1):
 
 
 def seed_item_and_addons():
-    item = Item(name="Commodious Toolbox", category="Toolbox", role="Survivor")
+    # `category` mirrors what the live wiki.gg scraper actually stores: the coarse
+    # role ("Survivor"), not an item type. The addon pool must be matched by
+    # classifying the item type from `name` instead.
+    item = Item(name="Commodious Toolbox", category="Survivor", role="Survivor")
     db.session.add(item)
     addon = Addon(
         name="Wire Spool",
@@ -306,6 +309,38 @@ class TestGauntletItemsAndAddons(GauntletTestCase):
         self.assertEqual(loadout["item"]["name"], item.name)
         self.assertEqual(len(loadout["addons"]), 1)
         self.assertEqual(loadout["addons"][0]["name"], addon.name)
+
+    def test_survivor_item_type_is_classified_from_name_not_category(self):
+        # "Worn-Out Tools" has no "toolbox" substring, unlike "Commodious Toolbox",
+        # exercising the keyword classifier's alternate pattern for the Toolbox type.
+        self.assertEqual(
+            self.service._classify_survivor_item_type("Worn-Out Tools"), "Toolboxes"
+        )
+        self.assertEqual(
+            self.service._classify_survivor_item_type("Camping Aid Kit"), "Med-Kits"
+        )
+        self.assertEqual(
+            self.service._classify_survivor_item_type("Ranger Med-Kit"), "Med-Kits"
+        )
+        self.assertEqual(
+            self.service._classify_survivor_item_type("Skeleton Key"), "Keys"
+        )
+        # "Keycard" must not match the "Keys" addon pool via a loose substring match.
+        self.assertIsNone(self.service._classify_survivor_item_type("Keycard"))
+        # Special/event items outside the 6 addon-bearing types classify to nothing.
+        self.assertIsNone(self.service._classify_survivor_item_type("Chinese Firecracker"))
+
+    def test_survivor_loadout_has_no_addons_when_item_type_is_unclassifiable(self):
+        seed_survivor()
+        item = Item(name="Chinese Firecracker", category="Survivor", role="Survivor")
+        db.session.add(item)
+        db.session.commit()
+        user_id = self.register_user("noaddonuser")
+        self.service.get_or_create_run(user_id, "survivor")
+        run = self.service.roll(user_id, "survivor")
+        loadout = run["current_loadout"]
+        self.assertEqual(loadout["item"]["name"], "Chinese Firecracker")
+        self.assertEqual(loadout["addons"], [])
 
     def test_killer_loadout_gets_matching_addons_only(self):
         killer = seed_killer("Trapper", perk_count=1)

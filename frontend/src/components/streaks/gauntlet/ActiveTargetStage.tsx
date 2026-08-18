@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GauntletRun, Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
+import { PerkPickerPanel } from './PerkPickerPanel';
 import {
   RefreshCw,
   CheckCircle,
@@ -22,6 +23,7 @@ export interface ActiveTargetStageProps {
   onLoss: () => void;
   onReroll: () => void;
   onReveal: () => void;
+  onSubmitLoadout: (perkIds: number[]) => void;
 }
 
 export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
@@ -33,6 +35,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   onLoss,
   onReroll,
   onReveal,
+  onSubmitLoadout,
 }) => {
   const [avatarError, setAvatarError] = useState(false);
   const [perkImgErrors, setPerkImgErrors] = useState<Record<number, boolean>>({});
@@ -179,6 +182,16 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
       </div>
 
+      {perkLimit > 0 && loadout.perks.length !== perkLimit && (
+        <PerkPickerPanel
+          role={role}
+          targetCharacter={targetName}
+          perkLimit={perkLimit}
+          busy={loading}
+          onSubmit={onSubmitLoadout}
+        />
+      )}
+
       {/* Perk Loadout Grid */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
@@ -272,12 +285,34 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
       </div>
 
+      {(loadout.item || loadout.addons.length > 0) && (
+        <div className="mb-8">
+          <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">
+            Rolled Gear
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {loadout.item && (
+              <div className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{loadout.item.name}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">Item</p>
+              </div>
+            )}
+            {loadout.addons.map((addon, idx) => (
+              <div key={addon.id || idx} className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{addon.name}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">Add-on</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Action Buttons */}
       <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800/80">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={onWin}
-            disabled={loading}
+            disabled={loading || (perkLimit > 0 && loadout.perks.length !== perkLimit)}
             className="w-full sm:w-auto flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
           >
             <CheckCircle className="w-5 h-5 text-emerald-100" />
@@ -286,7 +321,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
           <button
             onClick={onLoss}
-            disabled={loading}
+            disabled={loading || (perkLimit > 0 && loadout.perks.length !== perkLimit)}
             className="w-full sm:w-auto flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 active:bg-rose-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-rose-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
           >
             <XCircle className="w-5 h-5 text-rose-100" />

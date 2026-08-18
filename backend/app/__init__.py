@@ -110,6 +110,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     from app.routes.maps import maps_bp
     from app.routes.page_streak import page_streak_bp
     from app.routes.gauntlet_streak import gauntlet_streak_bp
+    from app.routes.bug_reports import bug_reports_bp
 
     from app.routes.others.draft import draft_bp
     from app.routes.others.quests import quests_bp
@@ -132,6 +133,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app.register_blueprint(page_streak_bp)
     flask_app.register_blueprint(gauntlet_streak_bp)
     flask_app.register_blueprint(guesser_bp)
+    flask_app.register_blueprint(bug_reports_bp)
 
     with flask_app.app_context():
         try:

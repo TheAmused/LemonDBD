@@ -12,7 +12,7 @@ from flask import current_app
 from sqlalchemy import select
 
 from app.extensions import db
-from app.models import Character, Perk, Item, Addon
+from app.models import Character, Perk, Item, Addon, MapRealm, MapTile, MapObjective
 from app.scrapers.types import (
     ScraperConfig,
     CharacterData,
@@ -69,6 +69,7 @@ class ScraperService:
         self.base_dir = Path(base_dir)
         self.config_file = self.base_dir / "data" / "scraper_config.json"
         self.static_dir = self.base_dir / "app" / "static"
+        self.data_dir = self.base_dir / "data"
         self.wikigg_driver = WikiGGScraperDriver(self.base_dir)
         self.hens_map_driver = HensMapScraperDriver()
         self.samoel_map_driver = SamoelColtMapScraperDriver()
@@ -282,6 +283,31 @@ class ScraperService:
                 maps=maps,
             )
 
+            # Export JSON cache backup
+            try:
+                self.data_dir.mkdir(parents=True, exist_ok=True)
+                if maps:
+                    maps_export = [
+                        {
+                            "id": m.id,
+                            "name": m.name,
+                            "realm": m.realm,
+                            "realm_id": m.realm_id,
+                            "source": m.source,
+                            "source_label": m.source_label,
+                            "callout_image_url": m.callout_image_url,
+                            "callout_image_local_path": m.callout_image_local_path,
+                            "image_url": m.callout_image_url,
+                            "clock_system": m.clock_system,
+                            "description": m.clock_system.get("description", "") if m.clock_system else "",
+                        }
+                        for m in maps
+                    ]
+                    with open(self.data_dir / "maps.json", "w", encoding="utf-8") as f:
+                        json.dump(maps_export, f, indent=2, ensure_ascii=False)
+            except Exception as export_err:
+                logger.warning(f"Could not update maps.json cache: {export_err}")
+
             if download_assets:
                 total_downloads = (
                     len(perks)
@@ -324,6 +350,7 @@ class ScraperService:
                 "killers": killer_count,
                 "total_items": len(items),
                 "total_addons": len(addons),
+                "total_maps": len(maps),
             }
             stats.update(db_sync_metrics)
 
@@ -566,9 +593,86 @@ class ScraperService:
 
             db.session.commit()
 
+        if maps:
+            existing_maps = {
+                m.map_id: m for m in db.session.scalars(select(MapRealm)).all()
+            }
+            for m in maps:
+                m_id = getattr(m, "id", None) or f"map_{sanitize_filename(m.name)}"
+                desc = ""
+                if getattr(m, "clock_system", None) and isinstance(m.clock_system, dict):
+                    desc = m.clock_system.get("description", "")
+                if not desc:
+                    desc = f"12-Clock callout map layout for {m.name} ({m.realm})."
+
+                existing_map = existing_maps.get(m_id)
+                if existing_map:
+                    existing_map.name = m.name
+                    existing_map.realm = m.realm
+                    existing_map.realm_id = m.realm_id or sanitize_filename(m.realm)
+                    existing_map.source = getattr(m, "source", "hens333")
+                    existing_map.source_label = getattr(m, "source_label", "Hens333 12-Clock Callouts")
+                    existing_map.callout_image_url = m.callout_image_url or ""
+                    existing_map.callout_image_local_path = m.callout_image_local_path or ""
+                    existing_map.image_url = m.callout_image_url or ""
+                    existing_map.description = desc
+                else:
+                    new_map = MapRealm(
+                        map_id=m_id,
+                        name=m.name,
+                        realm=m.realm,
+                        realm_id=m.realm_id or sanitize_filename(m.realm),
+                        source=getattr(m, "source", "hens333"),
+                        source_label=getattr(m, "source_label", "Hens333 12-Clock Callouts"),
+                        callout_image_url=m.callout_image_url or "",
+                        callout_image_local_path=m.callout_image_local_path or "",
+                        image_url=m.callout_image_url or "",
+                        layout_type="Standard",
+                        jungle_gyms_count=4,
+                        totem_spawns_count=5,
+                        pallet_density="Medium",
+                        shack_has_basement=True,
+                        description=desc,
+                    )
+                    db.session.add(new_map)
+                    existing_maps[m_id] = new_map
+
+                # Seed landmark clock tiles if clock_system is present and tiles don't exist yet
+                clock_sys = getattr(m, "clock_system", None)
+                if clock_sys and isinstance(clock_sys, dict):
+                    # Check if map already has tiles
+                    existing_tiles = db.session.scalars(
+                        select(MapTile).where(MapTile.map_id == m_id)
+                    ).all()
+                    if not existing_tiles:
+                        landmark_positions = [
+                            ("twelve_o_clock", "12 O'Clock: " + str(clock_sys.get("twelve_o_clock", "Main Building / North Exit Gate")), 0.5, 0.1),
+                            ("three_o_clock", "3 O'Clock: " + str(clock_sys.get("three_o_clock", "East Gym / Outer Loop")), 0.9, 0.5),
+                            ("six_o_clock", "6 O'Clock: " + str(clock_sys.get("six_o_clock", "Killer Shack / South Exit Gate")), 0.5, 0.9),
+                            ("nine_o_clock", "9 O'Clock: " + str(clock_sys.get("nine_o_clock", "West Gym / L-T Wall")), 0.1, 0.5),
+                            ("center", "Center: " + str(clock_sys.get("center", "Central Landmark")), 0.5, 0.5),
+                        ]
+                        for key, tile_name, tx, ty in landmark_positions:
+                            db.session.add(
+                                MapTile(
+                                    map_id=m_id,
+                                    name=tile_name,
+                                    type="landmark",
+                                    x=tx,
+                                    y=ty,
+                                    seed_variant="seed_a",
+                                    floor=1,
+                                    has_pallet=("shack" in tile_name.lower() or "gym" in tile_name.lower()),
+                                    has_window=("shack" in tile_name.lower() or "gym" in tile_name.lower() or "main" in tile_name.lower()),
+                                )
+                            )
+
+            db.session.commit()
+
         return {
             "characters_synced": len(characters),
             "perks_synced": len(perks),
             "items_synced": len(items),
             "addons_synced": len(addons),
+            "maps_synced": len(maps),
         }

@@ -139,14 +139,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       href: `/${currentLocale}/maps`,
     },
     {
-      id: 'items',
-      label: '📦 Items & Add-ons',
-      icon: Package,
-      color: 'text-teal-400',
-      activeBg: 'bg-teal-500/10 text-teal-400 border border-teal-500/20',
-      href: `/${currentLocale}/items`,
-    },
-    {
       id: 'characters',
       label: '👤 Characters',
       icon: Users,

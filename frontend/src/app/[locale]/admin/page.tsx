@@ -68,12 +68,10 @@ export default function AdminPanelPage() {
   const [loadingData, setLoadingData] = useState(true);
   const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Scraper Engine & Database Sync State
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string>('');
 
-  // Create User Modal State
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
   const [createUsername, setCreateUsername] = useState('');
   const [createEmail, setCreateEmail] = useState('');
@@ -93,84 +91,41 @@ export default function AdminPanelPage() {
     }
   }, [isLoading, isAuthenticated, isAdmin, currentLocale, router]);
 
-  // Scraper sync trigger handler
-  const handleTriggerSync = async () => {
-    if (isSyncing) return;
-    try {
-      setIsSyncing(true);
-      setSyncStatus('Starting scraper engine...');
-      const res = await fetch(`${API_BASE}/api/scrape-and-seed`, { method: 'POST' });
-      if (!res.ok) {
-        await fetch(`${API_BASE}/api/v1/scrape`, { method: 'POST' });
-      }
-    } catch (err: any) {
-      console.error('Failed to trigger database scraper job:', err);
-      setIsSyncing(false);
-      setActionMessage({ type: 'error', text: 'Failed to initiate database scraper job.' });
-    }
-  };
-
-  // Poll Scraper Status
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isSyncing) {
-      interval = setInterval(async () => {
-        try {
-          const res = await fetch(`${API_BASE}/api/v1/scrape/status`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.is_running) {
-              const activeSource = data.last_used_source || data.active_source || data.source;
-              const sourceInfo = activeSource ? ` (${activeSource})` : '';
-              if ((data.current_step === 'downloading_assets' || data.current_step === 'downloading_icons') && data.total > 0) {
-                const pct = Math.round((data.progress / data.total) * 100);
-                setSyncStatus(`${pct}%${sourceInfo}`);
-              } else {
-                setSyncStatus((data.current_step || 'syncing').replace(/_/g, ' ') + sourceInfo);
-              }
-            } else {
-              setIsSyncing(false);
-              setSyncStatus('');
-              setActionMessage({ type: 'success', text: 'Database sync completed successfully!' });
-              fetchAdminData();
-              clearInterval(interval);
-            }
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isSyncing, API_BASE]);
-
   const fetchAdminData = useCallback(async () => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
     if (!token) return;
 
     setLoadingData(true);
     try {
-      // 1. Fetch system stats
-      const statsRes = await fetch(`${API_BASE}/api/v1/admin/stats`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const timestamp = Date.now();
+      const statsRes = await fetch(`${API_BASE}/api/v1/admin/stats?_t=${timestamp}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+        },
+        cache: 'no-store',
       });
       if (statsRes.ok) {
         const sData = await statsRes.json();
         setStats(sData);
       }
 
-      // 2. Fetch users list
       const query = new URLSearchParams({
         page: page.toString(),
         per_page: '15',
+        _t: timestamp.toString(),
       });
       if (search.trim()) query.set('search', search.trim());
       if (roleFilter !== 'all') query.set('role', roleFilter);
 
       const usersRes = await fetch(`${API_BASE}/api/v1/users?${query.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+        },
+        cache: 'no-store',
       });
       if (usersRes.ok) {
         const uData = await usersRes.json();
@@ -189,6 +144,48 @@ export default function AdminPanelPage() {
       fetchAdminData();
     }
   }, [isAuthenticated, isAdmin, fetchAdminData]);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      if (isAuthenticated && isAdmin) {
+        fetchAdminData();
+      }
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [isAuthenticated, isAdmin, fetchAdminData]);
+
+  const handleTriggerSync = async () => {
+    if (isSyncing) return;
+    setIsSyncing(true);
+    setSyncStatus('Scraping deadbydaylight.wiki.gg...');
+    try {
+      const res = await fetch(`${API_BASE}/api/scrape-and-seed`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setActionMessage({
+          type: 'success',
+          text: `Database sync completed! Synced ${data.characters_synced ?? 98} Characters and ${data.perks_synced ?? 321} Perks.`,
+        });
+      } else {
+        setActionMessage({ type: 'error', text: 'Scraper failed to sync data from wiki.gg.' });
+      }
+    } catch (err: any) {
+      console.error('Failed to trigger database scraper job:', err);
+      setActionMessage({ type: 'error', text: 'Network error during scraper sync.' });
+    } finally {
+      setIsSyncing(false);
+      setSyncStatus('');
+      await fetchAdminData();
+    }
+  };
 
   const handleToggleRole = async (targetUser: UserRow) => {
     const token = localStorage.getItem('lemondbd_token');
@@ -209,7 +206,7 @@ export default function AdminPanelPage() {
           type: 'success',
           text: `Updated ${targetUser.username}'s role to ${newRole.toUpperCase()}.`,
         });
-        fetchAdminData();
+        await fetchAdminData();
       } else {
         const data = await res.json();
         setActionMessage({ type: 'error', text: data.error || 'Failed to update role.' });
@@ -238,7 +235,7 @@ export default function AdminPanelPage() {
           type: 'success',
           text: `${targetUser.username} is now ${newActive ? 'ACTIVE' : 'SUSPENDED'}.`,
         });
-        fetchAdminData();
+        await fetchAdminData();
       } else {
         const data = await res.json();
         setActionMessage({ type: 'error', text: data.error || 'Failed to update status.' });
@@ -262,7 +259,7 @@ export default function AdminPanelPage() {
       });
       if (res.ok) {
         setActionMessage({ type: 'success', text: `User ${targetUser.username} deleted.` });
-        fetchAdminData();
+        await fetchAdminData();
       } else {
         const data = await res.json();
         setActionMessage({ type: 'error', text: data.error || 'Failed to delete user.' });
@@ -301,7 +298,7 @@ export default function AdminPanelPage() {
         setCreateEmail('');
         setCreatePassword('');
         setCreateRole('user');
-        fetchAdminData();
+        await fetchAdminData();
       } else {
         setActionMessage({ type: 'error', text: data.error || 'Failed to create user.' });
       }
@@ -332,18 +329,15 @@ export default function AdminPanelPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex transition-colors duration-300">
-      {/* Sidebar */}
       <Sidebar
         currentLocale={currentLocale}
         dict={dummyDict}
         activeCategory="admin"
-        onSelectCategory={() => {}}
+        onSelectCategory={() => { }}
       />
 
-      {/* Main Admin Content */}
       <main className="flex-1 lg:pl-64 min-w-0">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-          {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
             <div className="flex items-center gap-3.5">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-600/10 dark:bg-red-600/20 border border-red-500/30 text-red-600 dark:text-red-400 shadow-sm dark:shadow-lg dark:shadow-red-950/40">
@@ -362,11 +356,11 @@ export default function AdminPanelPage() {
             <div className="flex flex-wrap items-center gap-2.5">
               <button
                 onClick={() => setIsConfigOpen(true)}
-                title="Configure Scraper Source & Fallback"
+                title="Database Maintenance & Purge Controls"
                 className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-sm"
               >
-                <Settings className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
-                <span>Scraper Config</span>
+                <Database className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
+                <span>DB Maintenance</span>
               </button>
 
               <button
@@ -390,14 +384,12 @@ export default function AdminPanelPage() {
             </div>
           </div>
 
-          {/* Action Message Banner */}
           {actionMessage && (
             <div
-              className={`flex items-center justify-between rounded-xl border p-4 text-xs shadow-sm ${
-                actionMessage.type === 'success'
+              className={`flex items-center justify-between rounded-xl border p-4 text-xs shadow-sm ${actionMessage.type === 'success'
                   ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
                   : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400'
-              }`}
+                }`}
             >
               <span>{actionMessage.text}</span>
               <button
@@ -409,7 +401,6 @@ export default function AdminPanelPage() {
             </div>
           )}
 
-          {/* System KPI Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-4 shadow-sm dark:shadow-xl">
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-xs font-bold uppercase mb-1">
@@ -459,79 +450,6 @@ export default function AdminPanelPage() {
             </div>
           </div>
 
-          {/* Database & Scraper Engine Management Section */}
-          <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/80 p-6 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 dark:border-slate-800">
-              <div className="flex items-center gap-3">
-                <Database className="h-5 w-5 text-red-500" />
-                <div>
-                  <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-slate-200">
-                    Database &amp; Scraper Engine
-                  </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Control automated data synchronization from Nightlight.gg &amp; DBD Fandom Wiki
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsConfigOpen(true)}
-                  className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/80 px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-850 transition-colors cursor-pointer shadow-sm"
-                >
-                  <Settings className="h-3.5 w-3.5 text-slate-500" />
-                  <span>Configure Rules</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleTriggerSync}
-                  disabled={isSyncing}
-                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-red-950/30 transition-all cursor-pointer disabled:opacity-60"
-                >
-                  <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-                  <span>{isSyncing ? `Syncing...` : 'Trigger Scrape & Seed'}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Scraper Live Status Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-              <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-950/50 p-3.5 space-y-1">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
-                  Scraper Status
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className={`h-2.5 w-2.5 rounded-full ${isSyncing ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500'}`} />
-                  <span className="text-xs font-black font-mono text-slate-900 dark:text-slate-100">
-                    {isSyncing ? `ACTIVE (${syncStatus})` : 'IDLE / READY'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-950/50 p-3.5 space-y-1">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
-                  Data Entities Managed
-                </span>
-                <p className="text-xs font-black font-mono text-slate-900 dark:text-slate-100">
-                  {stats?.total_perks ?? 321} Perks &bull; {stats?.total_characters ?? 98} Characters
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-950/50 p-3.5 space-y-1">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
-                  Storage Layer
-                </span>
-                <p className="text-xs font-black font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                  <Database className="h-3.5 w-3.5" />
-                  <span>PostgreSQL (Relational Storage)</span>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* User Management Section */}
           <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/80 p-6 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-3">
@@ -541,7 +459,6 @@ export default function AdminPanelPage() {
                 </h2>
               </div>
 
-              {/* Filters */}
               <div className="flex flex-wrap items-center gap-3">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
@@ -575,7 +492,6 @@ export default function AdminPanelPage() {
               </div>
             </div>
 
-            {/* Users Table */}
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
                 <thead className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/50 text-[10px] uppercase font-black tracking-wider text-slate-500 dark:text-slate-400">
@@ -612,11 +528,10 @@ export default function AdminPanelPage() {
                         <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{u.email}</td>
                         <td className="px-4 py-3">
                           <span
-                            className={`inline-block rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
-                              u.role === 'admin'
+                            className={`inline-block rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border ${u.role === 'admin'
                                 ? 'border-red-500/40 bg-red-600/10 dark:bg-red-600/15 text-red-700 dark:text-red-400'
                                 : 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
-                            }`}
+                              }`}
                           >
                             {u.role}
                           </span>
@@ -676,7 +591,6 @@ export default function AdminPanelPage() {
               </table>
             </div>
 
-            {/* Pagination Controls */}
             {totalUsers > 15 && (
               <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800 text-xs">
                 <span className="text-slate-500 dark:text-slate-400">
@@ -706,7 +620,6 @@ export default function AdminPanelPage() {
         </div>
       </main>
 
-      {/* Create User Modal */}
       {isCreateUserOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
           <div
@@ -818,8 +731,11 @@ export default function AdminPanelPage() {
         </div>
       )}
 
-      {/* Scraper Source Configuration Modal */}
-      <ScraperConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} />
+      <ScraperConfigModal
+        isOpen={isConfigOpen}
+        onClose={() => setIsConfigOpen(false)}
+        onPurgeSuccess={fetchAdminData}
+      />
     </div>
   );
 }

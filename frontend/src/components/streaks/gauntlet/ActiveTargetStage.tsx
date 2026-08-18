@@ -102,7 +102,13 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     );
   }
 
-  const loadout = run.current_loadout;
+  const rawLoadout = run.current_loadout;
+  const loadout = {
+    ...rawLoadout,
+    perks: rawLoadout.perks || [],
+    addons: rawLoadout.addons || [],
+    item: rawLoadout.item ?? null,
+  };
   const targetName = loadout.character || run.current_character_id || 'Target Character';
   const tierInfo = run.tier_info || { name: 'The Warm Up', tier_level: 0, perk_limit: 4, description: '' };
   const perkLimit = tierInfo.perk_limit;

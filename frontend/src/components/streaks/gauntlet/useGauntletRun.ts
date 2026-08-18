@@ -76,13 +76,10 @@ export function useGauntletRun(role: Role) {
     [token, role, run, loadStats]
   );
 
-  const invalidateMatch = useCallback(
-    (reason: 'dc_before_5_gens' | 'game_cancelled') => {
-      if (!token || !run) return;
-      return mutate(() => api.invalidateMatch(token, run.id, reason));
-    },
-    [token, run, mutate]
-  );
+  const reveal = useCallback(() => {
+    if (!token || !run) return;
+    return mutate(() => api.revealTarget(token, run.id));
+  }, [token, run, mutate]);
 
   return {
     run,
@@ -93,6 +90,6 @@ export function useGauntletRun(role: Role) {
     reload: load,
     roll: () => token && mutate(() => api.rollGauntlet(token, role)),
     submitResult,
-    invalidateMatch,
+    reveal,
   };
 }

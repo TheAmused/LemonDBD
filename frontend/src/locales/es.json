@@ -207,5 +207,17 @@
     "clickToInspect": "Haz clic para inspeccionar",
     "clickOutsideToClose": "Esc o haz clic afuera para cerrar",
     "close": "Cerrar"
+  },
+  "sidebar": {
+    "perks": "Perks",
+    "challenges": "🔥 Desafíos",
+    "mapExplorer": "🗺️ Explorador de Mapas",
+    "characters": "👤 Personajes",
+    "draftRoom": "🏆 Sala de Draft",
+    "swfPlanner": "👥 Planificador SWF",
+    "killerCalc": "🎯 Calculadora de Asesino",
+    "buildVault": "🔥 Bóveda de Builds",
+    "perkStudio": "🎨 Estudio de Perks",
+    "quests": "📜 Misiones"
   }
 }

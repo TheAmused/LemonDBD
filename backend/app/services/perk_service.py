@@ -183,9 +183,14 @@ class PerkService:
         try:
             if current_app:
                 char_count = db.session.scalar(select(func.count(Character.id))) or 0
-                if char_count > 0:
-                    return
-                self._seed_database_from_json_files()
+                perk_count = db.session.scalar(select(func.count(Perk.id))) or 0
+                item_count = db.session.scalar(select(func.count(Item.id))) or 0
+                addon_count = db.session.scalar(select(func.count(Addon.id))) or 0
+                map_count = db.session.scalar(select(func.count(MapRealm.id))) or 0
+
+                # Seed any empty tables from JSON files
+                if char_count == 0 or perk_count == 0 or item_count == 0 or addon_count == 0 or map_count == 0:
+                    self._seed_database_from_json_files()
                 return
         except Exception as e:
             logger.debug(f"Database query check during reload_data: {e}")
@@ -194,7 +199,8 @@ class PerkService:
 
     def _seed_database_from_json_files(self):
         try:
-            if self.characters_path.exists():
+            char_count = db.session.scalar(select(func.count(Character.id))) or 0
+            if char_count == 0 and self.characters_path.exists():
                 with open(self.characters_path, "r", encoding="utf-8") as f:
                     raw_chars = json.load(f)
                     for c in raw_chars:
@@ -223,26 +229,10 @@ class PerkService:
                                     lore=c.get("lore"),
                                 )
                             )
-                        else:
-                            if not existing.chapter_name and c.get("chapter_name"):
-                                existing.chapter_name = c.get("chapter_name")
-                            if not existing.chapter_number and c.get("chapter_number"):
-                                existing.chapter_number = c.get("chapter_number")
-                            if not existing.dlc_type and c.get("dlc_type"):
-                                existing.dlc_type = c.get("dlc_type")
-                            if c.get("is_licensed") is not None:
-                                existing.is_licensed = c.get("is_licensed", False)
-                            if not existing.release_year and c.get("release_year"):
-                                existing.release_year = c.get("release_year")
-                            if not existing.release_date and c.get("release_date"):
-                                existing.release_date = c.get("release_date")
-                            if not existing.dlc_counterparts and c.get("dlc_counterparts"):
-                                existing.dlc_counterparts = c.get("dlc_counterparts")
-                            if not existing.lore and c.get("lore"):
-                                existing.lore = c.get("lore")
                     db.session.commit()
 
-            if self.data_path.exists():
+            perk_count = db.session.scalar(select(func.count(Perk.id))) or 0
+            if perk_count == 0 and self.data_path.exists():
                 with open(self.data_path, "r", encoding="utf-8") as f:
                     raw_perks = json.load(f)
                     for p in raw_perks:
@@ -277,7 +267,8 @@ class PerkService:
                             )
                     db.session.commit()
 
-            if self.items_path.exists():
+            item_count = db.session.scalar(select(func.count(Item.id))) or 0
+            if item_count == 0 and self.items_path.exists():
                 with open(self.items_path, "r", encoding="utf-8") as f:
                     raw_items = json.load(f)
                     for item in raw_items:
@@ -298,7 +289,8 @@ class PerkService:
                             )
                     db.session.commit()
 
-            if self.addons_path.exists():
+            addon_count = db.session.scalar(select(func.count(Addon.id))) or 0
+            if addon_count == 0 and self.addons_path.exists():
                 with open(self.addons_path, "r", encoding="utf-8") as f:
                     raw_addons = json.load(f)
                     for addon in raw_addons:
@@ -319,7 +311,8 @@ class PerkService:
                             )
                     db.session.commit()
 
-            if self.maps_path.exists():
+            map_count = db.session.scalar(select(func.count(MapRealm.id))) or 0
+            if map_count == 0 and self.maps_path.exists():
                 with open(self.maps_path, "r", encoding="utf-8") as f:
                     raw_maps = json.load(f)
                     for m in raw_maps:
@@ -327,6 +320,11 @@ class PerkService:
                             select(MapRealm).where(MapRealm.map_id == m["id"])
                         ).first()
                         if not existing:
+                            desc = m.get("description", "")
+                            clock_sys = m.get("clock_system")
+                            if not desc and clock_sys and isinstance(clock_sys, dict):
+                                desc = clock_sys.get("description", "")
+
                             map_realm = MapRealm(
                                 map_id=m["id"],
                                 name=m["name"],
@@ -337,29 +335,54 @@ class PerkService:
                                 callout_image_url=m.get("callout_image_url", ""),
                                 callout_image_local_path=m.get("callout_image_local_path", ""),
                                 image_url=m.get("image_url", ""),
-                                layout_type=m.get("layout_type", ""),
-                                jungle_gyms_count=m.get("jungle_gyms_count", 0),
+                                layout_type=m.get("layout_type", "Standard"),
+                                jungle_gyms_count=m.get("jungle_gyms_count", 4),
                                 totem_spawns_count=m.get("totem_spawns_count", 5),
-                                pallet_density=m.get("pallet_density", ""),
+                                pallet_density=m.get("pallet_density", "Medium"),
                                 shack_has_basement=m.get("shack_has_basement", True),
-                                description=m.get("description", ""),
+                                description=desc,
                             )
                             db.session.add(map_realm)
                             db.session.flush()
 
-                            for tile in m.get("tiles", []):
-                                pos = tile.get("position", {})
-                                db.session.add(
-                                    MapTile(
-                                        map_id=map_realm.map_id,
-                                        name=tile.get("name", ""),
-                                        type=tile.get("type", ""),
-                                        x=pos.get("x", 0.0),
-                                        y=pos.get("y", 0.0),
-                                        seed_variant=m.get("seed_variant", "seed_a"),
-                                        floor=m.get("floor", 1),
+                            if m.get("tiles"):
+                                for tile in m.get("tiles", []):
+                                    pos = tile.get("position", {})
+                                    db.session.add(
+                                        MapTile(
+                                            map_id=map_realm.map_id,
+                                            name=tile.get("name", ""),
+                                            type=tile.get("type", "landmark"),
+                                            x=pos.get("x", 0.0),
+                                            y=pos.get("y", 0.0),
+                                            seed_variant=m.get("seed_variant", "seed_a"),
+                                            floor=m.get("floor", 1),
+                                            has_pallet=tile.get("has_pallet", False),
+                                            has_window=tile.get("has_window", False),
+                                        )
                                     )
-                                )
+                            elif clock_sys and isinstance(clock_sys, dict):
+                                landmark_positions = [
+                                    ("twelve_o_clock", "12 O'Clock: " + str(clock_sys.get("twelve_o_clock", "Main Building / North Exit Gate")), 0.5, 0.1),
+                                    ("three_o_clock", "3 O'Clock: " + str(clock_sys.get("three_o_clock", "East Gym / Outer Loop")), 0.9, 0.5),
+                                    ("six_o_clock", "6 O'Clock: " + str(clock_sys.get("six_o_clock", "Killer Shack / South Exit Gate")), 0.5, 0.9),
+                                    ("nine_o_clock", "9 O'Clock: " + str(clock_sys.get("nine_o_clock", "West Gym / L-T Wall")), 0.1, 0.5),
+                                    ("center", "Center: " + str(clock_sys.get("center", "Central Landmark")), 0.5, 0.5),
+                                ]
+                                for key, tile_name, tx, ty in landmark_positions:
+                                    db.session.add(
+                                        MapTile(
+                                            map_id=map_realm.map_id,
+                                            name=tile_name,
+                                            type="landmark",
+                                            x=tx,
+                                            y=ty,
+                                            seed_variant="seed_a",
+                                            floor=1,
+                                            has_pallet=("shack" in tile_name.lower() or "gym" in tile_name.lower()),
+                                            has_window=("shack" in tile_name.lower() or "gym" in tile_name.lower() or "main" in tile_name.lower()),
+                                        )
+                                    )
                     db.session.commit()
         except Exception as e:
             db.session.rollback()
@@ -1046,7 +1069,7 @@ class PerkService:
             maps = db.session.scalars(stmt).unique().all()
             for m in maps:
                 m_clean = m.map_id.lower().replace("_", "").replace("-", "").strip()
-                if m.map_id.lower() == map_id.lower() or m.name.lower() == map_id.lower() or target in m_clean:
+                if m.map_id.lower() == map_id.lower() or m.name.lower() == map_id.lower() or target in m_clean or m_clean in target:
                     res = m.to_dict()
                     res["seed_variant"] = seed or "seed_a"
                     res["floor"] = floor or 1

@@ -229,18 +229,18 @@ function DashboardContent() {
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
           }`}
       >
         {activeTab !== 'generator' && (
-          <div className="mb-7 flex flex-col gap-4">
-            <div className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60">
+          <div className="mb-6 flex flex-col gap-4 w-full">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60">
               <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
               <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
 
               <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/25 shadow-lg shadow-cyan-950/40">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 shadow-lg shadow-cyan-950/40">
                     <Database className="h-6 w-6 text-cyan-400" />
                   </div>
                   <div>
@@ -254,7 +254,7 @@ function DashboardContent() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
-                  <div className="flex items-center gap-2.5 rounded-2xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 shadow-inner">
+                  <div className="flex items-center gap-2.5 rounded-2xl bg-slate-950/80 px-4 py-2.5 shadow-inner">
                     <Flame className="h-4 w-4 text-cyan-400" />
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold uppercase text-slate-500">Vault Total</span>
@@ -262,7 +262,7 @@ function DashboardContent() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-950/30 px-4 py-2.5 shadow-inner">
+                  <div className="flex items-center gap-2.5 rounded-2xl bg-emerald-950/30 px-4 py-2.5 shadow-inner">
                     <Shield className="h-4 w-4 text-emerald-400" />
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold uppercase text-emerald-400/80">Survivor</span>
@@ -270,7 +270,7 @@ function DashboardContent() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-2xl border border-rose-500/30 bg-rose-950/30 px-4 py-2.5 shadow-inner">
+                  <div className="flex items-center gap-2.5 rounded-2xl bg-rose-950/30 px-4 py-2.5 shadow-inner">
                     <Skull className="h-4 w-4 text-rose-400" />
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold uppercase text-rose-400/80">Killer</span>
@@ -279,7 +279,7 @@ function DashboardContent() {
                   </div>
 
                   {user && (
-                    <div className="flex items-center gap-2.5 rounded-2xl border border-cyan-500/30 bg-cyan-950/30 px-4 py-2.5 shadow-inner">
+                    <div className="flex items-center gap-2.5 rounded-2xl bg-cyan-950/30 px-4 py-2.5 shadow-inner">
                       <CheckCircle2 className="h-4 w-4 text-cyan-400" />
                       <div className="flex flex-col">
                         <span className="text-[10px] font-bold uppercase text-cyan-400/80">Owned Perks</span>
@@ -336,16 +336,16 @@ function DashboardContent() {
             />
 
             {loading ? (
-              <div className="grid grid-cols-5 gap-6 lg:gap-10 justify-items-center w-full max-w-7xl mx-auto py-12">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-10 justify-items-center w-full py-12">
                 {[...Array(15)].map((_, i) => (
                   <div
                     key={i}
-                    className="h-36 w-36 sm:h-44 sm:w-44 md:h-48 md:w-48 lg:h-52 lg:w-52 rotate-45 animate-pulse rounded-2xl bg-slate-900/60 border border-slate-800"
+                    className="h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48 rotate-45 animate-pulse rounded-2xl bg-slate-900/60"
                   />
                 ))}
               </div>
             ) : perks.length === 0 ? (
-              <div className="my-12 rounded-3xl border border-dashed border-slate-800/80 bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm">
+              <div className="my-12 rounded-3xl bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm w-full">
                 <Shield className="mx-auto h-12 w-12 text-slate-600 mb-3" />
                 <h3 className="text-lg font-extrabold text-slate-200">
                   {dict?.empty?.title || 'No Perks Found'}
@@ -356,15 +356,15 @@ function DashboardContent() {
                 </p>
                 <button
                   onClick={handleResetFilters}
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 border border-cyan-500/30 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm"
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm"
                 >
                   Reset Filters
                 </button>
               </div>
             ) : (
-              <>
-                {/* ── 15 PERKS IN 3 ROWS OF 5 PERKS ── */}
-                <div className="grid grid-cols-5 gap-4 sm:gap-6 lg:gap-10 justify-items-center w-full max-w-7xl mx-auto py-8">
+              <div className="w-full">
+                {/* ── 15 PERKS IN 3 ROWS OF 5 PERKS COVERING FULL SCREEN ── */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 lg:gap-8 justify-items-center w-full py-6">
                   {perks.map((perk, idx) => (
                     <PerkCard
                       key={`${perk.name}-${idx}`}
@@ -376,7 +376,7 @@ function DashboardContent() {
                   ))}
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-8 w-full">
                   <Pagination
                     page={page}
                     totalPages={totalPages}
@@ -390,7 +390,7 @@ function DashboardContent() {
                     dict={dict}
                   />
                 </div>
-              </>
+              </div>
             )}
           </>
         )}

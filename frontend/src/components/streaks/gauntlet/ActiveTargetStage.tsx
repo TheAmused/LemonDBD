@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { GauntletRun, Perk, Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
-import { useTargetDraw } from './useTargetDraw';
+import { useTargetDraw, DrawPhase } from './useTargetDraw';
 import {
   RefreshCw,
   CheckCircle,
@@ -45,16 +45,27 @@ export interface ActiveTargetStageProps {
   onReveal: () => void;
 }
 
-/** The cycling portrait shown while the target is being drawn. */
-const RevealPortrait: React.FC<{ name?: string; role: Role }> = ({ name, role }) => {
+/**
+ * The portrait on the reel. Re-keying it per name restarts the frame animation,
+ * so each face slides in rather than swapping flatly.
+ */
+const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> = ({
+  name,
+  role,
+  phase,
+}) => {
   const [failed, setFailed] = useState(false);
   const src = name ? avatarUrlFor(name, role) : null;
 
   useEffect(() => setFailed(false), [name]);
 
+  const motion = phase === 'landed' ? 'gn-land-frame' : phase === 'spinning' ? 'gn-spin-frame' : '';
+
   if (!src || failed) {
     return (
-      <div className="w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400">
+      <div
+        className={`w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400 ${motion}`}
+      >
         {role === 'survivor' ? <User className="w-10 h-10" /> : <Skull className="w-10 h-10" />}
       </div>
     );
@@ -65,7 +76,7 @@ const RevealPortrait: React.FC<{ name?: string; role: Role }> = ({ name, role })
       src={src}
       alt=""
       aria-hidden="true"
-      className="w-full h-full object-cover rounded-xl"
+      className={`w-full h-full object-cover rounded-xl ${motion}`}
       onError={() => setFailed(true)}
     />
   );
@@ -114,7 +125,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     return names.includes(targetName) ? names : [...names, targetName].filter(Boolean);
   }, [characters, completed.join('|'), targetName]);
 
-  const { displayName, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
+  const { displayName, phase, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
 
   // Which target the card is currently allowed to show. Holding this in state
   // (rather than reacting after the fact) keeps a freshly drawn target from
@@ -157,14 +168,32 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     const drawing = isDrawing || awaitingDraw;
     return (
       <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-8 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
-        <div className="w-24 h-24 mx-auto rounded-2xl p-1 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden mb-4">
-          <RevealPortrait name={drawing ? displayName ?? undefined : undefined} role={role} />
+        <div
+          className={`w-24 h-24 mx-auto rounded-2xl p-1 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden mb-4 ${
+            phase === 'landed' ? 'gn-land-glow' : ''
+          }`}
+        >
+          <RevealPortrait
+            key={drawing ? displayName ?? 'idle' : 'idle'}
+            name={drawing ? displayName ?? undefined : undefined}
+            role={role}
+            phase={drawing ? phase : 'idle'}
+          />
         </div>
 
         {drawing ? (
           <>
-            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Drawing your {roleLabel}...</h2>
-            <p className="h-6 text-sm font-bold text-amber-600 dark:text-amber-400">{displayName}</p>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">
+              {phase === 'landed' ? `You drew ${displayName}` : `Drawing your ${roleLabel}...`}
+            </h2>
+            <p
+              key={displayName ?? ''}
+              className={`h-6 text-sm font-bold text-amber-600 dark:text-amber-400 ${
+                phase === 'landed' ? 'gn-name-in' : ''
+              }`}
+            >
+              {phase === 'landed' ? 'Good luck out there.' : displayName}
+            </p>
           </>
         ) : (
           <>
@@ -194,7 +223,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const loadout = {
     ...rawLoadout,
     character_perks: rawLoadout.character_perks || [],
-    addons: rawLoadout.addons || [],
     item: rawLoadout.item ?? null,
   };
   const tierInfo =
@@ -327,9 +355,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                         <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
                           {perk.name}
                         </h4>
-                        <p className="text-[11px] text-amber-700 dark:text-amber-300 mt-0.5">
-                          Or swap for another of their perks
-                        </p>
                       </div>
                     </>
                   ) : (
@@ -390,24 +415,16 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
       </div>
 
-      {(loadout.item || loadout.addons.length > 0) && (
+      {loadout.item && (
         <div className="mb-8">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">
-            Rolled Gear
+            Your item
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {loadout.item && (
-              <div className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{loadout.item.name}</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">Item</p>
-              </div>
-            )}
-            {loadout.addons.map((addon, idx) => (
-              <div key={addon.id || idx} className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{addon.name}</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">Add-on</p>
-              </div>
-            ))}
+          <div className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:max-w-xs">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{loadout.item.name}</h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
+              Bring any add-ons you like
+            </p>
           </div>
         </div>
       )}

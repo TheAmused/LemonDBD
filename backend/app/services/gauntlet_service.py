@@ -1,11 +1,10 @@
 import json
 import random
-import re
 import logging
 from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
 from app.extensions import db
-from app.models import GauntletRun, GauntletMatchLog, Item, Addon, Perk, Character
+from app.models import GauntletRun, GauntletMatchLog, Item, Perk, Character
 from app.services.perk_service import PerkService
 from app.services.ownership_service import OwnershipService
 
@@ -34,20 +33,6 @@ KILLER_TIERS = [
 ]
 
 GENERAL_CHARACTER = "General"
-
-# The live wiki.gg scraper only populates `Item.category` with the coarse role
-# ("Survivor"/"Killer"), not an item type, so a survivor item's addon pool can't be
-# looked up by equality on `category`. Instead we classify the item's type from its
-# name via keyword matching against the known Survivor `Addon.associated_target`
-# values (the full set of 6, confirmed during the original data audit).
-SURVIVOR_ITEM_TYPE_PATTERNS = [
-    ("Toolboxes", r"toolbox|\btools\b"),
-    ("Med-Kits", r"med-kit|aid kit"),
-    ("Flashlights", r"flashlight"),
-    ("Fog Vials", r"fog vial"),
-    ("Maps", r"\bmap\b"),
-    ("Keys", r"\bkey\b"),
-]
 
 
 class GauntletService:
@@ -81,44 +66,10 @@ class GauntletService:
         return [p.to_dict() for p in perks]
 
     @staticmethod
-    def _classify_survivor_item_type(name):
-        n = (name or "").lower()
-        for target, pattern in SURVIVOR_ITEM_TYPE_PATTERNS:
-            if re.search(pattern, n):
-                return target
-        return None
-
-    def _roll_survivor_gear(self):
+    def _roll_survivor_item():
+        """Survivors bring one drawn item; add-ons are unrestricted and not rolled."""
         items = db.session.scalars(select(Item).where(Item.role == "Survivor")).all()
-        if not items:
-            return None, []
-        item = random.choice(items)
-        # Item.category is the coarse role ("Survivor"/"Killer") from the live scraper,
-        # not an item type, so the addon pool has to be matched by classifying the item
-        # type from its name instead of comparing category/associated_target directly.
-        target = self._classify_survivor_item_type(item.name)
-        addons = []
-        if target:
-            addons = db.session.scalars(
-                select(Addon).where(
-                    Addon.category == "Survivor",
-                    Addon.associated_target == target,
-                    Addon.description != "",
-                )
-            ).all()
-        picked = random.sample(addons, min(2, len(addons))) if addons else []
-        return item.to_dict(), [a.to_dict() for a in picked]
-
-    def _roll_killer_addons(self, target_char):
-        addons = db.session.scalars(
-            select(Addon).where(
-                Addon.category == "Killer",
-                Addon.associated_target == target_char,
-                Addon.description != "",
-            )
-        ).all()
-        picked = random.sample(addons, min(2, len(addons))) if addons else []
-        return [a.to_dict() for a in picked]
+        return random.choice(items).to_dict() if items else None
 
     # ---- runs -------------------------------------------------------------
 
@@ -142,8 +93,8 @@ class GauntletService:
         initial_loadout = {
             "character": target_character,
             "character_perks": self._character_teachable_perks(target_character),
-            "item": None,
-            "addons": [],
+            # Drawn here as well as in roll(), so a run's opening match has an item too.
+            "item": self._roll_survivor_item() if role == "survivor" else None,
             "tier_info": tier_info,
         }
 
@@ -178,16 +129,10 @@ class GauntletService:
 
         target_char = target_character if target_character else random.choice(remaining)
 
-        if role == "survivor":
-            item, addons = self._roll_survivor_gear()
-        else:
-            item, addons = None, self._roll_killer_addons(target_char)
-
         loadout = {
             "character": target_char,
             "character_perks": self._character_teachable_perks(target_char),
-            "item": item,
-            "addons": addons,
+            "item": self._roll_survivor_item() if role == "survivor" else None,
             "tier_info": tier_info,
         }
 

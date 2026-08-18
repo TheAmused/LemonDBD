@@ -3,7 +3,7 @@ from sqlalchemy import select
 from app import create_app
 from app.config import TestingConfig
 from app.extensions import db
-from app.models import Character, Perk, Item, Addon
+from app.models import Character, Perk, Item
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.services.gauntlet_service import GauntletService
@@ -39,39 +39,12 @@ def seed_survivor(name="Meg Thomas", perk_count=1):
     return character
 
 
-def seed_item_and_addons():
-    # `category` mirrors what the live wiki.gg scraper actually stores: the coarse
-    # role ("Survivor"), not an item type. The addon pool must be matched by
-    # classifying the item type from `name` instead.
-    item = Item(name="Commodious Toolbox", category="Survivor", role="Survivor")
+def seed_survivor_item(name="Commodious Toolbox"):
+    # `category` mirrors what the live wiki.gg scraper stores: the coarse role.
+    item = Item(name=name, category="Survivor", role="Survivor")
     db.session.add(item)
-    addon = Addon(
-        name="Wire Spool",
-        associated_target="Toolboxes",
-        category="Survivor",
-        description="Increases repair speed.",
-    )
-    ghost_addon = Addon(
-        name="Uncommon Add-ons",
-        associated_target="Numbers",
-        category="Survivor",
-        description="",
-    )
-    db.session.add_all([addon, ghost_addon])
     db.session.commit()
-    return item, addon
-
-
-def seed_killer_addons(killer_name):
-    addon = Addon(
-        name=f"{killer_name} Addon",
-        associated_target=killer_name,
-        category="Killer",
-        description="A power add-on.",
-    )
-    db.session.add(addon)
-    db.session.commit()
-    return addon
+    return item
 
 
 class GauntletTestCase(unittest.TestCase):
@@ -349,61 +322,39 @@ class TestGauntletStats(GauntletTestCase):
         self.assertEqual(survivor_stats["total_matches"], 0)
 
 
-class TestGauntletItemsAndAddons(GauntletTestCase):
-    def test_survivor_loadout_gets_item_and_matching_addon(self):
+class TestGauntletItems(GauntletTestCase):
+    def test_survivor_loadout_draws_an_item(self):
         seed_survivor()
-        item, addon = seed_item_and_addons()
+        item = seed_survivor_item()
         user_id = self.register_user("itemuser")
         self.service.get_or_create_run(user_id, "survivor")
         run = self.service.roll(user_id, "survivor")
-        loadout = run["current_loadout"]
-        self.assertEqual(loadout["item"]["name"], item.name)
-        self.assertEqual(len(loadout["addons"]), 1)
-        self.assertEqual(loadout["addons"][0]["name"], addon.name)
+        self.assertEqual(run["current_loadout"]["item"]["name"], item.name)
 
-    def test_survivor_item_type_is_classified_from_name_not_category(self):
-        # "Worn-Out Tools" has no "toolbox" substring, unlike "Commodious Toolbox",
-        # exercising the keyword classifier's alternate pattern for the Toolbox type.
-        self.assertEqual(
-            self.service._classify_survivor_item_type("Worn-Out Tools"), "Toolboxes"
-        )
-        self.assertEqual(
-            self.service._classify_survivor_item_type("Camping Aid Kit"), "Med-Kits"
-        )
-        self.assertEqual(
-            self.service._classify_survivor_item_type("Ranger Med-Kit"), "Med-Kits"
-        )
-        self.assertEqual(
-            self.service._classify_survivor_item_type("Skeleton Key"), "Keys"
-        )
-        # "Keycard" must not match the "Keys" addon pool via a loose substring match.
-        self.assertIsNone(self.service._classify_survivor_item_type("Keycard"))
-        # Special/event items outside the 6 addon-bearing types classify to nothing.
-        self.assertIsNone(self.service._classify_survivor_item_type("Chinese Firecracker"))
-
-    def test_survivor_loadout_has_no_addons_when_item_type_is_unclassifiable(self):
+    def test_a_brand_new_survivor_run_already_has_an_item(self):
         seed_survivor()
-        item = Item(name="Chinese Firecracker", category="Survivor", role="Survivor")
-        db.session.add(item)
-        db.session.commit()
-        user_id = self.register_user("noaddonuser")
+        item = seed_survivor_item()
+        user_id = self.register_user("firstmatchitemuser")
+        run = self.service.get_or_create_run(user_id, "survivor")
+        self.assertEqual(run["current_loadout"]["item"]["name"], item.name)
+
+    def test_survivor_loadout_survives_an_empty_item_table(self):
+        seed_survivor()
+        user_id = self.register_user("noitemuser")
         self.service.get_or_create_run(user_id, "survivor")
         run = self.service.roll(user_id, "survivor")
-        loadout = run["current_loadout"]
-        self.assertEqual(loadout["item"]["name"], "Chinese Firecracker")
-        self.assertEqual(loadout["addons"], [])
+        self.assertIsNone(run["current_loadout"]["item"])
 
-    def test_killer_loadout_gets_matching_addons_only(self):
-        killer = seed_killer("Trapper", perk_count=1)
-        seed_killer_addons("Trapper")
-        seed_killer_addons("Nurse")
-        user_id = self.register_user("killeraddonuser")
+    def test_killer_loadout_carries_no_gear(self):
+        seed_killer("Trapper", perk_count=1)
+        seed_survivor_item()
+        user_id = self.register_user("killergearuser")
         self.service.get_or_create_run(user_id, "killer")
         run = self.service.roll(user_id, "killer", target_character="Trapper")
         loadout = run["current_loadout"]
-        self.assertNotIn("item", {k: v for k, v in loadout.items() if k == "item" and v})
-        self.assertEqual(len(loadout["addons"]), 1)
-        self.assertEqual(loadout["addons"][0]["name"], "Trapper Addon")
+        self.assertIsNone(loadout["item"])
+        # Add-ons are unrestricted in play, so nothing is rolled for them at all.
+        self.assertNotIn("addons", loadout)
 
 
 if __name__ == "__main__":

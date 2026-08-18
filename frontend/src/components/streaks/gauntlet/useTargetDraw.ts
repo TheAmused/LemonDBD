@@ -9,6 +9,11 @@ const MIN_STEPS = 14;
 const MAX_STEPS = 60;
 /** Higher = the reel holds its fast pace longer before braking. */
 const EASE_POWER = 2.6;
+/** Beat spent on the drawn character before the match card replaces the reel. */
+const HOLD_MS = 1100;
+
+/** idle: nothing running. spinning: reel moving. landed: holding on the pick. */
+export type DrawPhase = 'idle' | 'spinning' | 'landed';
 
 /**
  * Frame delays that add up to TOTAL_MS while getting steadily longer, so the
@@ -30,7 +35,7 @@ function easedDelays(steps: number): number[] {
  */
 export function useTargetDraw(pool: string[], target: string) {
   const [displayName, setDisplayName] = useState<string | null>(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const [phase, setPhase] = useState<DrawPhase>('idle');
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clear = () => {
@@ -59,16 +64,20 @@ export function useTargetDraw(pool: string[], target: string) {
       const delays = easedDelays(steps);
 
       clear();
-      setIsDrawing(true);
+      setPhase('spinning');
 
       let i = 0;
       const tick = () => {
         setDisplayName(pool[i % pool.length]);
         i += 1;
         if (i >= steps) {
-          timeoutRef.current = null;
-          setIsDrawing(false);
-          onDone?.();
+          // Hold on the drawn name so it registers before the card takes over.
+          setPhase('landed');
+          timeoutRef.current = setTimeout(() => {
+            timeoutRef.current = null;
+            setPhase('idle');
+            onDone?.();
+          }, HOLD_MS);
           return;
         }
         timeoutRef.current = setTimeout(tick, delays[i]);
@@ -78,5 +87,5 @@ export function useTargetDraw(pool: string[], target: string) {
     [pool, target]
   );
 
-  return { displayName, isDrawing, start };
+  return { displayName, phase, isDrawing: phase !== 'idle', start };
 }

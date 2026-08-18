@@ -19,22 +19,11 @@ export interface Item {
   rarity?: string;
 }
 
-export interface Addon {
-  id?: number;
-  name: string;
-  associated_target?: string;
-  category?: string;
-  icon_url?: string;
-  icon_local_path?: string;
-  rarity?: string;
-}
-
 export interface GauntletLoadout {
   character: string;
   /** The target's own teachable perks, shown as the suggested first-slot picks. */
   character_perks: Perk[];
   item: Item | null;
-  addons: Addon[];
 }
 
 export interface TierInfo {

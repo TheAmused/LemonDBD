@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Play, Sparkles, Skull, Zap, Eye, Ban, Flame, RefreshCw, ShieldAlert, Check, RotateCcw } from 'lucide-react';
+import { Play, RotateCcw } from 'lucide-react';
 import { Perk } from './PerkCard';
 import { ChaosMutator } from './ChaosWheelModal';
 
@@ -105,11 +105,14 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   const particleListRef = useRef<Particle[]>([]);
   const particleAnimFrameRef = useRef<number | null>(null);
 
+  const effectiveTotalPages = Math.max(1, totalPages);
+
   const getPerkIconSrc = useCallback(
     (perk?: Perk) => {
       if (!perk) return '';
       if (perk.icon_local_path) {
-        return `${backendBase}/static/${perk.icon_local_path}`;
+        const cleanPath = perk.icon_local_path.replace(/^\/?(static\/)?/, '');
+        return `${backendBase}/static/${cleanPath}`;
       }
       return perk.icon_url || '';
     },
@@ -133,7 +136,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     [activeMutator]
   );
 
-  // Preload ALL sortedPerks icons on mount for instant visual display
   useEffect(() => {
     sortedPerks.forEach((perk) => {
       const src = getPerkIconSrc(perk);
@@ -206,9 +208,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     renderParticles();
   }, [role]);
 
-  /**
-   * Draw Unified Single Wheel (800x800 High-DPI HD Canvas)
-   */
   const drawUnifiedWheel = useCallback(() => {
     const canvas = wheelCanvasRef.current;
     if (!canvas) return;
@@ -223,10 +222,9 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     ctx.clearRect(0, 0, size, size);
 
     if (wheelPhaseRef.current === 'page') {
-      // ── DRAW PAGE WHEEL SLICES ──
-      const sliceAngle = (2 * Math.PI) / totalPages;
+      const sliceAngle = (2 * Math.PI) / effectiveTotalPages;
 
-      for (let i = 0; i < totalPages; i++) {
+      for (let i = 0; i < effectiveTotalPages; i++) {
         const angle = wheelAngleRef.current + i * sliceAngle;
 
         ctx.beginPath();
@@ -249,7 +247,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         ctx.strokeStyle = '#475569';
         ctx.stroke();
 
-        // Draw Big Page Badge
         ctx.save();
         ctx.translate(centerX, centerY);
         const midAngle = angle + sliceAngle / 2;
@@ -274,7 +271,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         ctx.restore();
       }
 
-      // Center Hub Logo
       ctx.beginPath();
       ctx.arc(centerX, centerY, 58, 0, 2 * Math.PI);
       ctx.fillStyle = '#0f172a';
@@ -289,7 +285,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       ctx.textBaseline = 'middle';
       ctx.fillText('PAGE WHEEL', centerX, centerY);
 
-      // Outer Glow Ring
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
       ctx.lineWidth = 10;
@@ -297,9 +292,11 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       ctx.stroke();
 
     } else {
-      // ── DRAW PERK WHEEL SLICES (HUGE 72px RADIAL ROTATED ICONS!) ──
       const pageNumber = activePageRef.current;
-      const maxSlotsOnPage = pageNumber === totalPages ? lastPagePerks : perksPerPage;
+      const maxSlotsOnPage = Math.max(
+        1,
+        pageNumber === effectiveTotalPages ? lastPagePerks || perksPerPage : perksPerPage
+      );
       const sliceAngle = (2 * Math.PI) / maxSlotsOnPage;
 
       for (let i = 0; i < maxSlotsOnPage; i++) {
@@ -328,14 +325,13 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         ctx.fillStyle = grad;
         ctx.fill();
         ctx.lineWidth = 4;
-        ctx.strokeStyle = isBlocked ? '#e11d48' : (role === 'Survivor' ? '#047857' : '#be123c');
+        ctx.strokeStyle = isBlocked ? '#e11d48' : role === 'Survivor' ? '#047857' : '#be123c';
         ctx.stroke();
 
-        // ── RADIALLY ROTATED HUGE 72px PERK ICON ──
         ctx.save();
         ctx.translate(centerX, centerY);
         const midAngle = angle + sliceAngle / 2;
-        ctx.rotate(midAngle + Math.PI / 2); // Rotate radially along slice vector!
+        ctx.rotate(midAngle + Math.PI / 2);
 
         const iconSrc = getPerkIconSrc(perk);
         const imgObj = imageCacheRef.current.get(iconSrc);
@@ -349,20 +345,13 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
           ctx.shadowColor = role === 'Survivor' ? '#10b981' : '#f43f5e';
           ctx.shadowBlur = 16;
 
-          ctx.drawImage(
-            imgObj,
-            -iconSize / 2,
-            iconRadiusPos - iconSize / 2,
-            iconSize,
-            iconSize
-          );
+          ctx.drawImage(imgObj, -iconSize / 2, iconRadiusPos - iconSize / 2, iconSize, iconSize);
           ctx.restore();
         } else {
-          // ALWAYS-VISIBLE FALLBACK: DBD Diamond Frame + Perk Initial
           ctx.save();
           ctx.translate(0, iconRadiusPos);
           ctx.rotate(Math.PI / 4);
-          ctx.fillStyle = isBlocked ? '#4c0519' : (role === 'Survivor' ? '#047857' : '#9f1239');
+          ctx.fillStyle = isBlocked ? '#4c0519' : role === 'Survivor' ? '#047857' : '#9f1239';
           ctx.fillRect(-24, -24, 48, 48);
           ctx.strokeStyle = '#f59e0b';
           ctx.lineWidth = 2.5;
@@ -387,7 +376,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         ctx.restore();
       }
 
-      // Center Hub Logo
       ctx.beginPath();
       ctx.arc(centerX, centerY, 62, 0, 2 * Math.PI);
       ctx.fillStyle = '#0f172a';
@@ -405,7 +393,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       ctx.font = '700 12px system-ui, sans-serif';
       ctx.fillText(`${maxSlotsOnPage} PERKS`, centerX, centerY + 12);
 
-      // Outer Glow Ring
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
       ctx.lineWidth = 10;
@@ -413,7 +400,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       ctx.stroke();
     }
 
-    // Top Pointer Arrow
     ctx.beginPath();
     ctx.moveTo(centerX - 22, 2);
     ctx.lineTo(centerX + 22, 2);
@@ -425,7 +411,7 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     ctx.strokeStyle = '#ffffff';
     ctx.stroke();
   }, [
-    totalPages,
+    effectiveTotalPages,
     lastPagePerks,
     perksPerPage,
     sortedPerks,
@@ -439,16 +425,18 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   }, [drawUnifiedWheel, selectedPageUI, sortedPerks, activeMutator, wheelPhase]);
 
   const handleStartSpin = async () => {
-    if (isSpinning) return;
+    if (isSpinning || sortedPerks.length === 0) return;
     setIsSpinning(true);
 
     const totalDurationMs = Math.max(1500, spinDurationSec * 1000);
     const pageSpinDuration = totalDurationMs * 0.45;
     const perkSpinDuration = totalDurationMs * 0.55;
 
-    // Pick a valid target page
-    let targetPage = Math.floor(Math.random() * totalPages) + 1;
-    let maxSlotsOnPage = targetPage === totalPages ? lastPagePerks : perksPerPage;
+    let targetPage = Math.floor(Math.random() * effectiveTotalPages) + 1;
+    let maxSlotsOnPage = Math.max(
+      1,
+      targetPage === effectiveTotalPages ? lastPagePerks || perksPerPage : perksPerPage
+    );
 
     const isHexOrBoonPerk = (p?: Perk) => {
       if (!p) return false;
@@ -463,7 +451,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       return MEME_PERK_NAMES.has(name);
     };
 
-    // Find candidate slots on targetPage that satisfy mutator priorities
     let validSlotsOnPage: number[] = [];
     for (let s = 1; s <= maxSlotsOnPage; s++) {
       const idx = (targetPage - 1) * perksPerPage + (s - 1);
@@ -481,7 +468,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       }
     }
 
-    // Fallback if no curse-specific perk exists on this page
     if (validSlotsOnPage.length === 0) {
       for (let s = 1; s <= maxSlotsOnPage; s++) {
         const idx = (targetPage - 1) * perksPerPage + (s - 1);
@@ -498,14 +484,13 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         : Math.floor(Math.random() * maxSlotsOnPage) + 1;
 
     const targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
-    const targetPerk = sortedPerks[targetIndex];
+    const targetPerk = sortedPerks[targetIndex] || sortedPerks[0];
 
-    // ── STEP 1: SPIN PAGE WHEEL ──
     wheelPhaseRef.current = 'page';
     setWheelPhase('page');
     setStatusText(`Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`);
 
-    const pageSliceAngle = (2 * Math.PI) / totalPages;
+    const pageSliceAngle = (2 * Math.PI) / effectiveTotalPages;
     const pageTargetAngle =
       (3 * Math.PI) / 2 - (targetPage - 1) * pageSliceAngle - pageSliceAngle / 2;
 
@@ -535,12 +520,10 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       requestAnimationFrame(animatePage);
     });
 
-    // Update active page state
     activePageRef.current = targetPage;
     setSelectedPageUI(targetPage);
     setStatusText(`Landed on Page ${targetPage}! Swapping to Perk Wheel...`);
 
-    // ── 3D FLIP / SCALE MORPH ANIMATION BETWEEN PAGE & PERK WHEEL ──
     setIsMorphing(true);
     await new Promise((res) => setTimeout(res, 250));
 
@@ -552,7 +535,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     setIsMorphing(false);
     await new Promise((res) => setTimeout(res, 250));
 
-    // ── STEP 2: SPIN PERK WHEEL FOR TARGET PAGE ──
     setStatusText(`Spinning Perk Wheel (Page ${targetPage})...`);
     const perkSliceAngle = (2 * Math.PI) / maxSlotsOnPage;
     const perkTargetAngle =
@@ -600,22 +582,19 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
 
   return (
     <div className="relative flex flex-col items-center justify-center w-full p-4 sm:p-6 bg-white/90 dark:bg-slate-900/80 rounded-3xl border border-slate-200 dark:border-slate-800 backdrop-blur-xl shadow-sm dark:shadow-2xl">
-      {/* ── CHAOS CURSE BUTTON ABOVE CANVAS WITH HOVER TOOLTIP ── */}
       {onOpenChaosModal && (
         <div className="relative group mb-3 z-30">
           <button
             onClick={onOpenChaosModal}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl border text-xs font-black transition-all cursor-pointer shadow-sm dark:shadow-xl backdrop-blur-xl hover:scale-105 active:scale-95 ${
-              activeMutator
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl border text-xs font-black transition-all cursor-pointer shadow-sm dark:shadow-xl backdrop-blur-xl hover:scale-105 active:scale-95 ${activeMutator
                 ? `${activeMutator.badgeBg} ${activeMutator.borderColor} ${activeMutator.textColor} border-2 scale-105 ring-2 ring-purple-500/40`
                 : 'border-purple-500/30 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/60 shadow-purple-950/20'
-            }`}
+              }`}
           >
             <span className="text-base animate-bounce">{activeMutator ? activeMutator.icon : '🔮'}</span>
             <span>{activeMutator ? `Curse: ${activeMutator.name}` : 'Spin Chaos Curse'}</span>
           </button>
 
-          {/* Hover Tooltip explaining curse mechanics */}
           {activeMutator && (
             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 hidden group-hover:flex flex-col w-72 p-3.5 rounded-2xl bg-white/95 dark:bg-slate-950/95 border border-purple-500/60 text-slate-900 dark:text-slate-100 shadow-2xl z-50 text-xs backdrop-blur-2xl pointer-events-none">
               <div className="flex items-center gap-2 font-black text-purple-700 dark:text-purple-300 mb-1">
@@ -630,20 +609,16 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         </div>
       )}
 
-      {/* DYNAMIC HIGH-DPI RESPONSIVE SINGLE BIG WHEEL STAGE */}
       <div className="relative flex flex-col items-center justify-center w-full">
-        {/* Wheel Mode Header Indicator */}
         <div className="mb-3 flex items-center gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-amber-700 dark:text-amber-400 font-mono">
             {wheelPhase === 'page'
-              ? `Phase 1: Page Wheel (1 - ${totalPages} Pages)`
+              ? `Phase 1: Page Wheel (1 - ${effectiveTotalPages} Pages)`
               : `Phase 2: Perk Wheel (Page ${selectedPageUI})`}
           </span>
         </div>
 
-        {/* 3D FLIP / SCALE MORPH CONTAINER */}
         <div className="relative flex items-center justify-center w-full">
-          {/* Particle Burst Overlay */}
           <canvas
             ref={particlesCanvasRef}
             width={800}
@@ -651,39 +626,34 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
             className="pointer-events-none absolute inset-0 z-20 h-full w-full"
           />
 
-          {/* DYNAMIC HIGH-DPI CANVAS WITH 3D FLIP TRANSITION */}
           <div
-            className={`w-full max-w-[580px] sm:max-w-[640px] aspect-square transition-all duration-500 ease-out transform ${
-              isMorphing ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
-            }`}
+            className={`w-full max-w-[580px] sm:max-w-[640px] aspect-square transition-all duration-500 ease-out transform ${isMorphing ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
+              }`}
           >
             <canvas
               ref={wheelCanvasRef}
               width={800}
               height={800}
-              className={`h-full w-full ${
-                role === 'Survivor'
+              className={`h-full w-full ${role === 'Survivor'
                   ? 'drop-shadow-[0_0_30px_rgba(16,185,129,0.35)]'
                   : 'drop-shadow-[0_0_30px_rgba(244,63,94,0.35)]'
-              }`}
+                }`}
             />
           </div>
         </div>
       </div>
 
-      {/* Spin Control Button & Reset Wheels */}
       <div className="mt-6 flex flex-col items-center gap-3">
         <div className="flex items-center gap-3 flex-wrap justify-center">
           <button
             onClick={handleStartSpin}
-            disabled={isSpinning}
-            className={`flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-lg tracking-wider uppercase shadow-2xl transition-all cursor-pointer ${
-              isSpinning
+            disabled={isSpinning || sortedPerks.length === 0}
+            className={`flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-lg tracking-wider uppercase shadow-2xl transition-all cursor-pointer ${isSpinning || sortedPerks.length === 0
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-200 dark:border-slate-700'
                 : role === 'Survivor'
-                ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/40 active:scale-95'
-                : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/40 active:scale-95'
-            }`}
+                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/40 active:scale-95'
+                  : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/40 active:scale-95'
+              }`}
           >
             <Play className={`h-6 w-6 fill-current ${isSpinning ? 'animate-spin' : ''}`} />
             {isSpinning ? 'Spinning Wheel...' : `Spin for Perk Slot #${activeSlotIdx + 1}`}

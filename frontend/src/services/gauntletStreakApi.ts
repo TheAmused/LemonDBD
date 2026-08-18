@@ -43,12 +43,17 @@ export async function submitMatchResult(
   return postJson<SubmitResultResponse>(token, '/result', { role, run_id: runId, result });
 }
 
-export async function invalidateMatch(
+export async function revealTarget(token: string, runId: number): Promise<GauntletRun> {
+  const data = await postJson<RunResponse>(token, '/reveal', { run_id: runId });
+  return data.run;
+}
+
+export async function submitLoadout(
   token: string,
   runId: number,
-  reason: 'dc_before_5_gens' | 'game_cancelled'
+  perkIds: number[]
 ): Promise<GauntletRun> {
-  const data = await postJson<RunResponse>(token, '/invalidate', { run_id: runId, reason });
+  const data = await postJson<RunResponse>(token, '/loadout', { run_id: runId, perk_ids: perkIds });
   return data.run;
 }
 

@@ -1,6 +1,6 @@
 import logging
 from typing import Any, Dict, List, Optional, Set
-from sqlalchemy import select, func
+from sqlalchemy import select, func, case, and_
 from sqlalchemy.orm import joinedload
 from app.extensions import db
 from app.models import Character, Perk, UserCharacterOwnership, UserPerkOwnership, User
@@ -122,7 +122,17 @@ class OwnershipService:
         stmt = select(Character)
         if role and role.lower() != "all":
             stmt = stmt.where(func.lower(Character.role) == role.lower())
-        stmt = stmt.order_by(Character.name.asc())
+        # Release order, matching the Characters hub — characters without a release
+        # number sort last, then by id/name so the order stays stable.
+        stmt = stmt.order_by(
+            case(
+                (and_(Character.release_number.is_not(None), Character.release_number > 0),
+                 Character.release_number),
+                else_=9999,
+            ).asc(),
+            Character.id.asc(),
+            Character.name.asc(),
+        )
         all_chars = db.session.scalars(stmt).all()
 
         if not user_id:

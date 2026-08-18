@@ -29,11 +29,6 @@ export async function fetchRun(token: string, role: Role): Promise<RunResponse> 
   );
 }
 
-export async function rollGauntlet(token: string, role: Role): Promise<GauntletRun> {
-  const data = await postJson<RunResponse>(token, '/roll', { role });
-  return data.run;
-}
-
 export async function submitMatchResult(
   token: string,
   role: Role,
@@ -48,12 +43,8 @@ export async function revealTarget(token: string, runId: number): Promise<Gauntl
   return data.run;
 }
 
-export async function submitLoadout(
-  token: string,
-  runId: number,
-  perkIds: number[]
-): Promise<GauntletRun> {
-  const data = await postJson<RunResponse>(token, '/loadout', { run_id: runId, perk_ids: perkIds });
+export async function resetRun(token: string, role: Role): Promise<GauntletRun> {
+  const data = await postJson<RunResponse>(token, '/run/reset', { role });
   return data.run;
 }
 

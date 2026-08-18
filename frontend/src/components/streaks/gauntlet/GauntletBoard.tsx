@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { Role } from '@/types/gauntletStreak';
+import { Confetti } from '../Confetti';
 import { useGauntletRun } from './useGauntletRun';
 import { useOwnedCharacters } from './useOwnedCharacters';
 import { GauntletHeader } from './GauntletHeader';
@@ -18,13 +19,33 @@ interface GauntletBoardProps {
 }
 
 export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) => {
-  const { run, stats, loading, busy, error, roll, submitResult, reveal, submitLoadout } = useGauntletRun(role);
+  const { run, stats, loading, busy, error, submitResult, reveal, reset } = useGauntletRun(role);
   const { characters, loading: loadingRoster } = useOwnedCharacters(role);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+
+  // Fire once when the run flips to completed, not on every later render or reload.
+  const wasCompletedRef = useRef(false);
+  useEffect(() => {
+    const completed = run?.status === 'completed';
+    if (completed && !wasCompletedRef.current) {
+      setCelebrating(true);
+      wasCompletedRef.current = true;
+      const timer = setTimeout(() => setCelebrating(false), 3500);
+      return () => clearTimeout(timer);
+    }
+    if (!completed) {
+      wasCompletedRef.current = false;
+    }
+  }, [run?.status]);
+
+  const isCompleted = run?.status === 'completed';
 
   return (
     <div>
+      <Confetti active={celebrating} />
+
       <Link
         href={`/${locale}/streaks/${role}`}
         className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-orange-500 dark:text-slate-400 dark:hover:text-orange-400 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -49,24 +70,46 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           onOpenRules={() => setIsRulesOpen(true)}
         />
 
-        <ActiveTargetStage
-          run={run}
-          role={role}
-          characters={characters}
-          loading={loading || busy}
-          onWin={() => submitResult('win')}
-          onLoss={() => submitResult('loss')}
-          onReroll={roll}
-          onReveal={reveal}
-          onSubmitLoadout={submitLoadout}
-        />
+        {isCompleted ? (
+          <div className="mb-8 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
+              <Trophy className="h-8 w-8" />
+            </div>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              Gauntlet complete!
+            </h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              You cleared every {role} you own — {run?.completed_characters.length} in total, with a best
+              streak of{' '}
+              <strong className="text-emerald-600 dark:text-emerald-400">{run?.best_streak}</strong>.
+            </p>
+            <button
+              onClick={reset}
+              disabled={busy}
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Start a new run
+            </button>
+          </div>
+        ) : (
+          <ActiveTargetStage
+            run={run}
+            role={role}
+            characters={characters}
+            loading={loading || busy}
+            onWin={() => submitResult('win')}
+            onLoss={() => submitResult('loss')}
+            onReveal={reveal}
+          />
+        )}
 
         <CharacterRosterGrid
           role={role}
           characters={characters}
           completedCharacters={run?.completed_characters || []}
           checkpointCharacters={run?.checkpoint_characters || []}
-          activeCharacterId={run?.current_character_id}
+          activeCharacterId={isCompleted ? undefined : run?.current_character_id}
           loading={loadingRoster}
         />
 

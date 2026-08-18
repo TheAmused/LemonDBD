@@ -11,19 +11,19 @@ export interface GauntletRulesModalProps {
 }
 
 const SURVIVOR_TIERS = [
-  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 - 2', perkLimit: 4, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: 'Standard 4-perk loadout. Build initial momentum with full setup flexibility.' },
-  { level: 1, name: 'The Thinning', streakRange: 'Streak 3 - 5', perkLimit: 3, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: 'First perk slot locked. 3 perks available to test adaptability.' },
-  { level: 2, name: 'The Struggle', streakRange: 'Streak 6 - 8', perkLimit: 2, badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30', description: '2 perk slots locked. Half loadout capacity remaining.' },
-  { level: 3, name: 'The Hardcore', streakRange: 'Streak 9 - 11', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: '3 perk slots locked. Only 1 perk allowed per match.' },
-  { level: 4, name: 'The Legend', streakRange: 'Streak 12+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'All 4 perk slots locked. The ultimate perkless trial of skill.' },
+  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 - 9', perkLimit: 4, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: 'Standard 4-perk loadout. Build initial momentum with full setup flexibility.' },
+  { level: 1, name: 'The Thinning', streakRange: 'Streak 10 - 19', perkLimit: 3, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: 'First perk slot locked. 3 perks available to test adaptability.' },
+  { level: 2, name: 'The Struggle', streakRange: 'Streak 20 - 29', perkLimit: 2, badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30', description: '2 perk slots locked. Half loadout capacity remaining.' },
+  { level: 3, name: 'The Hardcore', streakRange: 'Streak 30 - 39', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: '3 perk slots locked. Only 1 perk allowed per match.' },
+  { level: 4, name: 'The Legend', streakRange: 'Streak 40+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'All 4 perk slots locked. The ultimate perkless trial of skill.' },
 ];
 
 const KILLER_TIERS = [
-  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 - 2', perkLimit: 4, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: 'Standard 4-perk loadout. Build initial momentum with full setup flexibility.' },
-  { level: 1, name: 'The Restriction', streakRange: 'Streak 3 - 5', perkLimit: 3, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: 'First perk slot locked. 3 perks available to test adaptability.' },
-  { level: 2, name: 'The Deprivation', streakRange: 'Streak 6 - 8', perkLimit: 2, badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30', description: '2 perk slots locked. Half loadout capacity remaining.' },
-  { level: 3, name: 'The Barebones', streakRange: 'Streak 9 - 11', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: '3 perk slots locked. Only 1 perk allowed per match.' },
-  { level: 4, name: "The Entity's Chosen", streakRange: 'Streak 12+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'All 4 perk slots locked. The ultimate perkless trial of skill.' },
+  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 - 9', perkLimit: 4, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: 'Standard 4-perk loadout. Build initial momentum with full setup flexibility.' },
+  { level: 1, name: 'The Restriction', streakRange: 'Streak 10 - 19', perkLimit: 3, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: 'First perk slot locked. 3 perks available to test adaptability.' },
+  { level: 2, name: 'The Deprivation', streakRange: 'Streak 20 - 29', perkLimit: 2, badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30', description: '2 perk slots locked. Half loadout capacity remaining.' },
+  { level: 3, name: 'The Barebones', streakRange: 'Streak 30 - 39', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: '3 perk slots locked. Only 1 perk allowed per match.' },
+  { level: 4, name: "The Entity's Chosen", streakRange: 'Streak 40+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'All 4 perk slots locked. The ultimate perkless trial of skill.' },
 ];
 
 export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, onClose, role }) => {
@@ -78,8 +78,17 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             </h3>
             <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
               The {role} Gauntlet tests your mastery across the characters you own under escalating difficulty.
-              As your win streak grows, perk slots are progressively restricted. Reaching Tier 4 requires winning
-              trials with zero perks equipped!
+              You win the Gauntlet by clearing a match with <strong>every {role} you own</strong>. As your win
+              streak grows, perk slots are progressively restricted — reaching Tier 4 means winning trials with
+              zero perks equipped.
+            </p>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              Every 10 wins banks a <strong>checkpoint</strong>. Lose a match and you fall back to your last
+              checkpoint instead of starting over.
+            </p>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              The build shown for each match is a guide — you pick your actual perks in-game, nothing needs
+              confirming here.
             </p>
           </div>
 

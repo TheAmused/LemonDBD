@@ -84,18 +84,38 @@ class TestGauntletRoutes(unittest.TestCase):
         self.assertEqual(data["previous_run"]["current_streak"], 1)
         self.assertIn("run", data)  # the freshly-rolled next run
 
-    def test_invalidate_endpoint(self):
+    def test_reveal_endpoint(self):
         run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
         run_id = run_res.get_json()["run"]["id"]
-        target = run_res.get_json()["run"]["current_character_id"]
 
         res = self.client.post(
-            "/api/v1/gauntlet-streak/invalidate",
-            json={"run_id": run_id, "reason": "game_cancelled"},
+            "/api/v1/gauntlet-streak/reveal",
+            json={"run_id": run_id},
             headers=self.headers,
         )
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.get_json()["run"]["current_character_id"], target)
+        self.assertTrue(res.get_json()["run"]["target_revealed"])
+
+    def test_loadout_endpoint(self):
+        run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
+        run = run_res.get_json()["run"]
+        target = run["current_character_id"]
+
+        perks_res = self.client.get(
+            f"/api/v1/users/{self.user_id}/perks?role=Killer", headers=self.headers
+        )
+        perks = perks_res.get_json()["data"]
+        target_perk = next(p for p in perks if p["character"] == target)
+        other_perks = [p for p in perks if p["id"] != target_perk["id"]][:3]
+        perk_ids = [target_perk["id"]] + [p["id"] for p in other_perks]
+
+        res = self.client.post(
+            "/api/v1/gauntlet-streak/loadout",
+            json={"run_id": run["id"], "perk_ids": perk_ids},
+            headers=self.headers,
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.get_json()["run"]["current_loadout"]["perks"]), 4)
 
     def test_stats_endpoint(self):
         res = self.client.get("/api/v1/gauntlet-streak/stats?role=killer", headers=self.headers)

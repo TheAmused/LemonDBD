@@ -41,6 +41,8 @@ export interface TierInfo {
   name: string;
   tier_level: number;
   perk_limit: number;
+  /** Killers run their own teachables only; survivors may fill the other slots freely. */
+  character_perks_only: boolean;
   description: string;
 }
 

@@ -111,12 +111,24 @@ class TestGauntletTiers(GauntletTestCase):
         self.assertEqual(self.service.get_tier_info(40, "survivor")["perk_limit"], 0)
         self.assertEqual(self.service.get_tier_info(999, "survivor")["perk_limit"], 0)
 
+    def test_killer_tier_perk_limits_start_at_three(self):
+        # Killers run their own 3 teachables and shed one per checkpoint.
+        self.assertEqual(self.service.get_tier_info(0, "killer")["perk_limit"], 3)
+        self.assertEqual(self.service.get_tier_info(9, "killer")["perk_limit"], 3)
+        self.assertEqual(self.service.get_tier_info(10, "killer")["perk_limit"], 2)
+        self.assertEqual(self.service.get_tier_info(20, "killer")["perk_limit"], 1)
+        self.assertEqual(self.service.get_tier_info(30, "killer")["perk_limit"], 0)
+        self.assertEqual(self.service.get_tier_info(999, "killer")["perk_limit"], 0)
+
+    def test_only_killers_are_restricted_to_their_own_perks(self):
+        self.assertTrue(self.service.get_tier_info(0, "killer")["character_perks_only"])
+        self.assertFalse(self.service.get_tier_info(0, "survivor")["character_perks_only"])
+
     def test_killer_tier_names_differ_from_survivor(self):
         survivor = self.service.get_tier_info(10, "survivor")
         killer = self.service.get_tier_info(10, "killer")
         self.assertEqual(survivor["name"], "The Thinning")
         self.assertEqual(killer["name"], "The Restriction")
-        self.assertNotIn("addon_limit", killer)
 
 
 class TestGauntletRun(GauntletTestCase):
@@ -131,7 +143,7 @@ class TestGauntletRun(GauntletTestCase):
         self.assertEqual(run["status"], "in_progress")
         self.assertIn(run["current_character_id"], ["Nurse", "Trapper"])
         self.assertEqual(run["current_streak"], 0)
-        self.assertEqual(run["tier_info"]["perk_limit"], 4)
+        self.assertEqual(run["tier_info"]["perk_limit"], 3)
 
     def test_new_run_defaults_to_original_mode_and_unrevealed_target(self):
         run = self.service.get_or_create_run(self.user_id, "killer")

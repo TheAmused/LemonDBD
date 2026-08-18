@@ -197,10 +197,15 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     addons: rawLoadout.addons || [],
     item: rawLoadout.item ?? null,
   };
-  const tierInfo = run.tier_info || { name: 'The Warm Up', tier_level: 0, perk_limit: 4, description: '' };
+  const tierInfo =
+    run.tier_info ||
+    { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
   const perkLimit = tierInfo.perk_limit;
+  const charactersPerksOnly = tierInfo.character_perks_only;
   const avatarSrc = avatarUrlFor(targetName, role);
-  const perkSlots = [0, 1, 2, 3];
+  // Killers cap at their own three teachables; survivors round out a full four.
+  const slotCount = charactersPerksOnly ? 3 : 4;
+  const perkSlots = Array.from({ length: slotCount }, (_, i) => i);
 
   return (
     <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
@@ -268,6 +273,21 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </p>
         </div>
 
+        {charactersPerksOnly && (
+          <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
+            {perkLimit === 0 ? (
+              <>
+                No perks this trial. {targetName} goes in bare.
+              </>
+            ) : (
+              <>
+                Run <strong>{perkLimit}</strong> of {targetName}&apos;s own{' '}
+                {loadout.character_perks.length || 3} perks. Nothing else is allowed.
+              </>
+            )}
+          </p>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {perkSlots.map((idx) => {
             if (idx >= perkLimit) {
@@ -291,7 +311,36 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               );
             }
 
-            // Slot 1 is the character-perk slot: one of the target's own teachables.
+            // Killers equip their own teachables in every slot, so each one names a
+            // specific perk. Survivors only owe a character perk in the first slot.
+            if (charactersPerksOnly) {
+              const perk = loadout.character_perks[idx];
+              return (
+                <div
+                  key={`char-slot-${idx}`}
+                  className="bg-amber-500/[0.07] border border-amber-500/40 rounded-xl p-4 flex items-center gap-3"
+                >
+                  {perk ? (
+                    <>
+                      <PerkIcon perk={perk} />
+                      <div className="overflow-hidden">
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                          {perk.name}
+                        </h4>
+                        <p className="text-[11px] text-amber-700 dark:text-amber-300 mt-0.5">
+                          Or swap for another of their perks
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-xs text-slate-400 dark:text-slate-500 italic">
+                      No teachable perks on record for this character.
+                    </p>
+                  )}
+                </div>
+              );
+            }
+
             if (idx === 0) {
               return (
                 <div

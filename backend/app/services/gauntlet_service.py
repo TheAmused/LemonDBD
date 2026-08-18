@@ -14,20 +14,23 @@ logger = logging.getLogger(__name__)
 CHECKPOINT_INTERVAL = 10
 BUILD_SIZE = 4
 
+# Survivors run a full four-perk build where only the first slot has to be one of
+# the character's own teachables; the rest are free picks.
 SURVIVOR_TIERS = [
-    {"tier_level": 0, "name": "The Warm Up", "perk_limit": 4, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 1, "name": "The Thinning", "perk_limit": 3, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 2, "name": "The Struggle", "perk_limit": 2, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 3, "name": "The Hardcore", "perk_limit": 1, "description": "Must be a character teachable perk"},
-    {"tier_level": 4, "name": "The Legend", "perk_limit": 0, "description": "No Perks allowed (No-perk trial)"},
+    {"tier_level": 0, "name": "The Warm Up", "perk_limit": 4, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"tier_level": 1, "name": "The Thinning", "perk_limit": 3, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"tier_level": 2, "name": "The Struggle", "perk_limit": 2, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"tier_level": 3, "name": "The Hardcore", "perk_limit": 1, "character_perks_only": False, "description": "Must be a character teachable perk"},
+    {"tier_level": 4, "name": "The Legend", "perk_limit": 0, "character_perks_only": False, "description": "No perks allowed (no-perk trial)"},
 ]
 
+# Killers play their own three teachables and nothing else, losing one of them at
+# every checkpoint until they run the trial perkless.
 KILLER_TIERS = [
-    {"tier_level": 0, "name": "The Warm Up", "perk_limit": 4, "description": "4 Perks"},
-    {"tier_level": 1, "name": "The Restriction", "perk_limit": 3, "description": "3 Perks"},
-    {"tier_level": 2, "name": "The Deprivation", "perk_limit": 2, "description": "2 Perks"},
-    {"tier_level": 3, "name": "The Barebones", "perk_limit": 1, "description": "1 Perk"},
-    {"tier_level": 4, "name": "The Entity's Chosen", "perk_limit": 0, "description": "0 Perks"},
+    {"tier_level": 0, "name": "The Warm Up", "perk_limit": 3, "character_perks_only": True, "description": "All 3 of the killer's own perks"},
+    {"tier_level": 1, "name": "The Restriction", "perk_limit": 2, "character_perks_only": True, "description": "2 of the killer's own perks"},
+    {"tier_level": 2, "name": "The Barebones", "perk_limit": 1, "character_perks_only": True, "description": "1 of the killer's own perks"},
+    {"tier_level": 3, "name": "The Entity's Chosen", "perk_limit": 0, "character_perks_only": True, "description": "No perks allowed (no-perk trial)"},
 ]
 
 GENERAL_CHARACTER = "General"
@@ -55,8 +58,8 @@ class GauntletService:
     # ---- tiers -----------------------------------------------------------
 
     def get_tier_info(self, streak, role):
-        tier_index = min(4, max(0, streak // CHECKPOINT_INTERVAL))
         tiers = KILLER_TIERS if role == "killer" else SURVIVOR_TIERS
+        tier_index = min(len(tiers) - 1, max(0, streak // CHECKPOINT_INTERVAL))
         return dict(tiers[tier_index])
 
     # ---- ownership-backed pools -------------------------------------------

@@ -19,11 +19,10 @@ const SURVIVOR_TIERS = [
 ];
 
 const KILLER_TIERS = [
-  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 - 9', perkLimit: 4, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: 'Standard 4-perk loadout. Build initial momentum with full setup flexibility.' },
-  { level: 1, name: 'The Restriction', streakRange: 'Streak 10 - 19', perkLimit: 3, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: 'First perk slot locked. 3 perks available to test adaptability.' },
-  { level: 2, name: 'The Deprivation', streakRange: 'Streak 20 - 29', perkLimit: 2, badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30', description: '2 perk slots locked. Half loadout capacity remaining.' },
-  { level: 3, name: 'The Barebones', streakRange: 'Streak 30 - 39', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: '3 perk slots locked. Only 1 perk allowed per match.' },
-  { level: 4, name: "The Entity's Chosen", streakRange: 'Streak 40+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'All 4 perk slots locked. The ultimate perkless trial of skill.' },
+  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 - 9', perkLimit: 3, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: "All 3 of the killer's own teachable perks." },
+  { level: 1, name: 'The Restriction', streakRange: 'Streak 10 - 19', perkLimit: 2, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: "Down to 2 of the killer's own perks." },
+  { level: 2, name: 'The Barebones', streakRange: 'Streak 20 - 29', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: "A single perk, still the killer's own." },
+  { level: 3, name: "The Entity's Chosen", streakRange: 'Streak 30+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'No perks at all. The ultimate perkless trial of skill.' },
 ];
 
 export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, onClose, role }) => {
@@ -79,9 +78,15 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
               The {role} Gauntlet tests your mastery across the characters you own under escalating difficulty.
               You win the Gauntlet by clearing a match with <strong>every {role} you own</strong>. As your win
-              streak grows, perk slots are progressively restricted. Reaching Tier 4 means winning trials with
-              zero perks equipped.
+              streak grows, perk slots are progressively restricted, until the last tier has you winning trials
+              with zero perks equipped.
             </p>
+            {role === 'killer' && (
+              <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                Killers run <strong>only their own teachable perks</strong>, never anyone else&apos;s. You start
+                with all 3 and lose one at every checkpoint.
+              </p>
+            )}
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
               Every 10 wins banks a <strong>checkpoint</strong>. Lose a match and you fall back to your last
               checkpoint instead of starting over.

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
+import { UserAvatar } from '@/components/UserAvatar';
 import { Sidebar } from '@/components/Sidebar';
 import { ScraperConfigModal } from '@/components/ScraperConfigModal';
 import {
@@ -50,6 +51,7 @@ interface UserRow {
   username: string;
   email: string;
   role: string;
+  avatar_url?: string;
   is_active: boolean;
   created_at: string;
   owned_characters_count: number;
@@ -534,8 +536,8 @@ export default function AdminPanelPage() {
           {actionMessage && (
             <div
               className={`flex items-center justify-between rounded-xl border p-4 text-xs shadow-sm ${actionMessage.type === 'success'
-                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
-                  : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400'
+                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400'
                 }`}
             >
               <span>{actionMessage.text}</span>
@@ -553,8 +555,8 @@ export default function AdminPanelPage() {
             <button
               onClick={() => setActiveTab('users')}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${activeTab === 'users'
-                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
             >
               <Users className="h-4 w-4" />
@@ -564,8 +566,8 @@ export default function AdminPanelPage() {
             <button
               onClick={() => setActiveTab('bugs')}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${activeTab === 'bugs'
-                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30'
-                  : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30'
+                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
                 }`}
             >
               <Bug className="h-4 w-4" />
@@ -702,10 +704,8 @@ export default function AdminPanelPage() {
                           <tr key={u.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors">
                             <td className="px-4 py-3 font-mono text-slate-400 dark:text-slate-500">#{u.id}</td>
                             <td className="px-4 py-3 font-bold text-slate-900 dark:text-slate-200">
-                              <div className="flex items-center gap-2">
-                                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 shadow-sm">
-                                  <LemonIcon className="h-4 w-4" />
-                                </div>
+                              <div className="flex items-center gap-2.5">
+                                <UserAvatar user={u} size="xs" />
                                 <span>{u.username}</span>
                               </div>
                             </td>
@@ -713,8 +713,8 @@ export default function AdminPanelPage() {
                             <td className="px-4 py-3">
                               <span
                                 className={`inline-block rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border ${u.role === 'admin'
-                                    ? 'border-red-500/40 bg-red-600/10 dark:bg-red-600/15 text-red-700 dark:text-red-400'
-                                    : 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                                  ? 'border-red-500/40 bg-red-600/10 dark:bg-red-600/15 text-red-700 dark:text-red-400'
+                                  : 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                                   }`}
                               >
                                 {u.role}
@@ -810,8 +810,8 @@ export default function AdminPanelPage() {
                 <div
                   onClick={() => setBugStatusFilter('pending')}
                   className={`rounded-2xl border p-4 transition-all cursor-pointer ${bugStatusFilter === 'pending'
-                      ? 'border-rose-500 bg-rose-500/10 shadow-md'
-                      : 'border-rose-500/20 bg-rose-500/5 dark:bg-rose-950/20 hover:border-rose-500/40'
+                    ? 'border-rose-500 bg-rose-500/10 shadow-md'
+                    : 'border-rose-500/20 bg-rose-500/5 dark:bg-rose-950/20 hover:border-rose-500/40'
                     }`}
                 >
                   <span className="text-xs font-bold uppercase text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
@@ -825,8 +825,8 @@ export default function AdminPanelPage() {
                 <div
                   onClick={() => setBugStatusFilter('in_progress')}
                   className={`rounded-2xl border p-4 transition-all cursor-pointer ${bugStatusFilter === 'in_progress'
-                      ? 'border-amber-500 bg-amber-500/10 shadow-md'
-                      : 'border-amber-500/20 bg-amber-500/5 dark:bg-amber-950/20 hover:border-amber-500/40'
+                    ? 'border-amber-500 bg-amber-500/10 shadow-md'
+                    : 'border-amber-500/20 bg-amber-500/5 dark:bg-amber-950/20 hover:border-amber-500/40'
                     }`}
                 >
                   <span className="text-xs font-bold uppercase text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
@@ -840,8 +840,8 @@ export default function AdminPanelPage() {
                 <div
                   onClick={() => setBugStatusFilter('resolved')}
                   className={`rounded-2xl border p-4 transition-all cursor-pointer ${bugStatusFilter === 'resolved'
-                      ? 'border-emerald-500 bg-emerald-500/10 shadow-md'
-                      : 'border-emerald-500/20 bg-emerald-500/5 dark:bg-emerald-950/20 hover:border-emerald-500/40'
+                    ? 'border-emerald-500 bg-emerald-500/10 shadow-md'
+                    : 'border-emerald-500/20 bg-emerald-500/5 dark:bg-emerald-950/20 hover:border-emerald-500/40'
                     }`}
                 >
                   <span className="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
@@ -855,8 +855,8 @@ export default function AdminPanelPage() {
                 <div
                   onClick={() => setBugStatusFilter('all')}
                   className={`rounded-2xl border p-4 transition-all cursor-pointer ${bugStatusFilter === 'all'
-                      ? 'border-slate-400 dark:border-slate-600 bg-slate-200/50 dark:bg-slate-800/50 shadow-md'
-                      : 'border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700'
+                    ? 'border-slate-400 dark:border-slate-600 bg-slate-200/50 dark:bg-slate-800/50 shadow-md'
+                    : 'border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700'
                     }`}
                 >
                   <span className="text-xs font-bold uppercase text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
@@ -924,8 +924,8 @@ export default function AdminPanelPage() {
                             key={report.id}
                             onClick={() => setSelectedBugId(report.id)}
                             className={`p-3.5 rounded-2xl border transition-all cursor-pointer text-left space-y-2 ${isSelected
-                                ? 'border-rose-500 dark:border-rose-500/80 bg-rose-50/50 dark:bg-rose-950/30 shadow-md ring-1 ring-rose-500/20'
-                                : 'border-slate-200/80 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700'
+                              ? 'border-rose-500 dark:border-rose-500/80 bg-rose-50/50 dark:bg-rose-950/30 shadow-md ring-1 ring-rose-500/20'
+                              : 'border-slate-200/80 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700'
                               }`}
                           >
                             <div className="flex items-start justify-between gap-2">

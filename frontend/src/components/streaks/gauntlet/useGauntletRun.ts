@@ -81,6 +81,14 @@ export function useGauntletRun(role: Role) {
     return mutate(() => api.revealTarget(token, run.id));
   }, [token, run, mutate]);
 
+  const submitLoadout = useCallback(
+    (perkIds: number[]) => {
+      if (!token || !run) return;
+      return mutate(() => api.submitLoadout(token, run.id, perkIds));
+    },
+    [token, run, mutate]
+  );
+
   return {
     run,
     stats,
@@ -91,5 +99,6 @@ export function useGauntletRun(role: Role) {
     roll: () => token && mutate(() => api.rollGauntlet(token, role)),
     submitResult,
     reveal,
+    submitLoadout,
   };
 }

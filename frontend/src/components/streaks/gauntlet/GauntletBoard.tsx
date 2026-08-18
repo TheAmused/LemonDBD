@@ -18,7 +18,7 @@ interface GauntletBoardProps {
 }
 
 export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) => {
-  const { run, stats, loading, busy, error, roll, submitResult, reveal } = useGauntletRun(role);
+  const { run, stats, loading, busy, error, roll, submitResult, reveal, submitLoadout } = useGauntletRun(role);
   const { characters, loading: loadingRoster } = useOwnedCharacters(role);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -58,6 +58,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           onLoss={() => submitResult('loss')}
           onReroll={roll}
           onReveal={reveal}
+          onSubmitLoadout={submitLoadout}
         />
 
         <CharacterRosterGrid

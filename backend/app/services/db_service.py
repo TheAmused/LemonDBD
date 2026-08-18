@@ -117,6 +117,29 @@ class DatabaseService:
                                 conn.execute(text(f"ALTER TABLE characters ADD COLUMN {col_name} {col_type};"))
                     except Exception as err:
                         logger.debug(f"Column migration notice for {col_name}: {err}")
+
+                gauntlet_run_columns = [
+                    ("game_mode", "VARCHAR(20) DEFAULT 'original'"),
+                    ("target_revealed", "BOOLEAN DEFAULT 0"),
+                ]
+                for col_name, col_type in gauntlet_run_columns:
+                    try:
+                        if is_pg:
+                            conn.execute(text(f"ALTER TABLE gauntlet_runs ADD COLUMN IF NOT EXISTS {col_name} {col_type};"))
+                        else:
+                            check_sql = text("PRAGMA table_info(gauntlet_runs);")
+                            res = conn.execute(check_sql).fetchall()
+                            existing_cols = [r[1] for r in res]
+                            if col_name not in existing_cols:
+                                conn.execute(text(f"ALTER TABLE gauntlet_runs ADD COLUMN {col_name} {col_type};"))
+                    except Exception as err:
+                        logger.debug(f"Column migration notice for {col_name}: {err}")
+
+                try:
+                    conn.execute(text("DROP TABLE IF EXISTS gauntlet_match_exceptions;"))
+                except Exception as err:
+                    logger.debug(f"Drop notice for gauntlet_match_exceptions: {err}")
+
                 conn.commit()
         except Exception as e:
             logger.debug(f"Database column migration skipped or failed: {e}")
@@ -149,6 +172,8 @@ class DatabaseService:
                 user_id INTEGER,
                 role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
                 status TEXT NOT NULL DEFAULT 'in_progress',
+                game_mode TEXT NOT NULL DEFAULT 'original',
+                target_revealed BOOLEAN NOT NULL DEFAULT 0,
                 current_character_id TEXT NOT NULL,
                 current_streak INTEGER NOT NULL DEFAULT 0,
                 best_streak INTEGER NOT NULL DEFAULT 0,
@@ -195,15 +220,6 @@ class DatabaseService:
                 perk_name TEXT NOT NULL,
                 drawn_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(role, perk_name)
-            );
-
-            CREATE TABLE IF NOT EXISTS gauntlet_match_exceptions (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                run_id INTEGER NOT NULL,
-                character_id TEXT NOT NULL,
-                reason TEXT NOT NULL CHECK (reason IN ('dc_before_5_gens', 'game_cancelled')),
-                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (run_id) REFERENCES gauntlet_runs(id) ON DELETE CASCADE
             );
 
             CREATE TABLE IF NOT EXISTS draft_sessions (

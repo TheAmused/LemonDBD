@@ -1,5 +1,6 @@
 import json
 import random
+import re
 import logging
 from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
@@ -31,6 +32,20 @@ KILLER_TIERS = [
 
 GENERAL_CHARACTER = "General"
 
+# The live wiki.gg scraper only populates `Item.category` with the coarse role
+# ("Survivor"/"Killer"), not an item type, so a survivor item's addon pool can't be
+# looked up by equality on `category`. Instead we classify the item's type from its
+# name via keyword matching against the known Survivor `Addon.associated_target`
+# values (the full set of 6, confirmed during the original data audit).
+SURVIVOR_ITEM_TYPE_PATTERNS = [
+    ("Toolboxes", r"toolbox|\btools\b"),
+    ("Med-Kits", r"med-kit|aid kit"),
+    ("Flashlights", r"flashlight"),
+    ("Fog Vials", r"fog vial"),
+    ("Maps", r"\bmap\b"),
+    ("Keys", r"\bkey\b"),
+]
+
 
 class GauntletService:
     def __init__(self, perk_service=None, ownership_service=None):
@@ -57,29 +72,31 @@ class GauntletService:
         return [p for p in owned if p["is_unlocked"]]
 
     @staticmethod
-    def _singularize(value):
-        v = (value or "").strip().lower()
-        if v.endswith("es"):
-            return v[:-2]
-        if v.endswith("s"):
-            return v[:-1]
-        return v
+    def _classify_survivor_item_type(name):
+        n = (name or "").lower()
+        for target, pattern in SURVIVOR_ITEM_TYPE_PATTERNS:
+            if re.search(pattern, n):
+                return target
+        return None
 
     def _roll_survivor_gear(self):
         items = db.session.scalars(select(Item).where(Item.role == "Survivor")).all()
         if not items:
             return None, []
         item = random.choice(items)
-        # Addon.associated_target stores the item category's plural form (e.g. "Toolboxes"
-        # for an Item.category of "Toolbox"), so compare singularized forms.
-        item_key = self._singularize(item.category)
-        candidates = db.session.scalars(
-            select(Addon).where(
-                Addon.category == "Survivor",
-                Addon.description != "",
-            )
-        ).all()
-        addons = [a for a in candidates if self._singularize(a.associated_target) == item_key]
+        # Item.category is the coarse role ("Survivor"/"Killer") from the live scraper,
+        # not an item type, so the addon pool has to be matched by classifying the item
+        # type from its name instead of comparing category/associated_target directly.
+        target = self._classify_survivor_item_type(item.name)
+        addons = []
+        if target:
+            addons = db.session.scalars(
+                select(Addon).where(
+                    Addon.category == "Survivor",
+                    Addon.associated_target == target,
+                    Addon.description != "",
+                )
+            ).all()
         picked = random.sample(addons, min(2, len(addons))) if addons else []
         return item.to_dict(), [a.to_dict() for a in picked]
 

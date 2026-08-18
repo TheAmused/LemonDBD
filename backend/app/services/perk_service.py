@@ -1,18 +1,39 @@
+import html
 import json
 import logging
 import math
 import re
+import unicodedata
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 from flask import current_app
 from sqlalchemy import func, select, or_, and_, case
 from sqlalchemy.orm import joinedload
 from pydantic import BaseModel, Field
 
 from app.extensions import db
-from app.models import Character, Perk, Item, Addon, MapRealm, MapTile, MapObjective
+from app.models import (
+    Character,
+    Perk,
+    Item,
+    Addon,
+    MapRealm,
+    MapTile,
+    MapObjective,
+    UserCharacterOwnership,
+    UserPerkOwnership,
+)
 
 logger = logging.getLogger(__name__)
+
+
+def normalize_search_key(text: str) -> str:
+    if not text:
+        return ""
+    normalized = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8")
+    normalized = normalized.lower().strip()
+    normalized = re.sub(r"[^a-z0-9]", " ", normalized)
+    return re.sub(r"\s+", " ", normalized).strip()
 
 
 class CharacterModel(BaseModel):
@@ -65,6 +86,8 @@ class MapModel(BaseModel):
 
 class PerkModel(BaseModel):
     name: str
+    alternate_name: Optional[str] = ""
+    is_generic_counterpart: bool = False
     character: str = "General"
     character_real_name: Optional[str] = "General"
     character_avatar_path: Optional[str] = ""
@@ -80,8 +103,26 @@ HEADER_EXCLUSIONS = {
     "survivor items", "killer items", "items", "add-ons", "addons", "equipment"
 }
 
-DEFAULT_SURVIVORS = ["Meg Thomas", "Claudette Morel", "Dwight Fairfield", "Jake Park", "Nea Karlsson", "Laurie Strode", "Ace Visconti"]
-DEFAULT_KILLERS = ["The Trapper", "The Wraith", "The Hillbilly", "The Nurse", "The Shape", "The Hag", "The Doctor", "The Huntress"]
+DEFAULT_SURVIVORS = [
+    "Meg Thomas",
+    "Claudette Morel",
+    "Dwight Fairfield",
+    "Jake Park",
+    "Nea Karlsson",
+    "Laurie Strode",
+    "Ace Visconti",
+]
+
+DEFAULT_KILLERS = [
+    "The Trapper",
+    "The Wraith",
+    "The Hillbilly",
+    "The Nurse",
+    "The Shape",
+    "The Hag",
+    "The Doctor",
+    "The Huntress",
+]
 
 
 class PerkService:
@@ -96,7 +137,6 @@ class PerkService:
         self.addons_path = self.data_path.parent / "addons.json"
         self.maps_path = self.data_path.parent / "maps.json"
 
-        # In-memory fallback caches
         self._cache: List[Dict[str, Any]] = []
         self._characters_cache: List[Dict[str, Any]] = []
         self._items_cache: List[Any] = []
@@ -115,7 +155,14 @@ class PerkService:
 
     @staticmethod
     def _slugify(text: str) -> str:
-        return re.sub(r"[\s\-/]+", "_", text.lower().strip())
+        if not text:
+            return ""
+        normalized = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8")
+        clean = normalized.lower().strip()
+        clean = re.sub(r"[\s\-/]+", "_", clean)
+        clean = re.sub(r"[^a-z0-9_]", "", clean)
+        clean = re.sub(r"_+", "_", clean)
+        return clean.strip("_")
 
     @staticmethod
     def clean_description(text: str) -> str:
@@ -123,7 +170,6 @@ class PerkService:
             return ""
         cleaned = re.sub(r"<[^>]+>", "", text)
         cleaned = re.sub(r'\b[a-zA-Z0-9_-]+=["\'][^"\']*["\']\s*>?', "", cleaned)
-        import html
         cleaned = html.unescape(cleaned)
         cleaned = cleaned.replace("\ufffd", '"')
         cleaned = re.sub(r'\?([A-Z"])', r'"\1', cleaned)
@@ -134,25 +180,20 @@ class PerkService:
         return cleaned.strip()
 
     def reload_data(self) -> None:
-        """Loads data from database into fallback cache or seeds from disk if DB is empty."""
         try:
             if current_app:
                 char_count = db.session.scalar(select(func.count(Character.id))) or 0
                 if char_count > 0:
                     return
-
                 self._seed_database_from_json_files()
                 return
         except Exception as e:
-            logger.debug(f"SQLAlchemy query during reload_data skipped/failed: {e}")
+            logger.debug(f"Database query check during reload_data: {e}")
 
         self._load_fallback_files()
 
     def _seed_database_from_json_files(self):
-        """Helper to seed the PostgreSQL / SQLite database from local JSON fixtures if present."""
         try:
-            from app.services.scraper_service import CANONICAL_DLC_INFO
-
             if self.characters_path.exists():
                 with open(self.characters_path, "r", encoding="utf-8") as f:
                     raw_chars = json.load(f)
@@ -160,47 +201,45 @@ class PerkService:
                         existing = db.session.scalars(
                             select(Character).where(Character.name == c["name"])
                         ).first()
-                        c_name_lower = c["name"].strip().lower()
-                        dlc = CANONICAL_DLC_INFO.get(c_name_lower, {})
                         if not existing:
                             db.session.add(
                                 Character(
                                     name=c["name"],
-                                    role=c.get("category", "Survivor"),
+                                    role=c.get("category") or c.get("role", "Survivor"),
                                     real_name=c.get("real_name", c["name"]),
                                     short_name=c.get("short_name", ""),
                                     wiki_slug=c.get("wiki_slug", ""),
                                     portrait_url=c.get("avatar_url", ""),
                                     avatar_local_path=c.get("avatar_local_path", ""),
-                                    release_number=c.get("release_number") or dlc.get("release_number"),
-                                    code_prefix=c.get("code_prefix") or dlc.get("code_prefix"),
-                                    chapter_name=c.get("chapter_name") or dlc.get("chapter_name"),
-                                    chapter_number=c.get("chapter_number") or dlc.get("chapter_number"),
-                                    dlc_type=c.get("dlc_type") or dlc.get("dlc_type"),
-                                    is_licensed=c.get("is_licensed", dlc.get("is_licensed", False)),
-                                    release_year=c.get("release_year") or dlc.get("release_year"),
-                                    release_date=c.get("release_date") or dlc.get("release_date"),
-                                    dlc_counterparts=c.get("dlc_counterparts") or dlc.get("dlc_counterparts"),
-                                    lore=c.get("lore") or dlc.get("lore"),
+                                    release_number=c.get("release_number"),
+                                    code_prefix=c.get("code_prefix"),
+                                    chapter_name=c.get("chapter_name"),
+                                    chapter_number=c.get("chapter_number"),
+                                    dlc_type=c.get("dlc_type"),
+                                    is_licensed=c.get("is_licensed", False),
+                                    release_year=c.get("release_year"),
+                                    release_date=c.get("release_date"),
+                                    dlc_counterparts=c.get("dlc_counterparts"),
+                                    lore=c.get("lore"),
                                 )
                             )
                         else:
-                            if not existing.chapter_name and dlc.get("chapter_name"):
-                                existing.chapter_name = dlc.get("chapter_name")
-                            if not existing.chapter_number and dlc.get("chapter_number"):
-                                existing.chapter_number = dlc.get("chapter_number")
-                            if not existing.dlc_type and dlc.get("dlc_type"):
-                                existing.dlc_type = dlc.get("dlc_type")
-                            if dlc.get("is_licensed") is not None:
-                                existing.is_licensed = dlc.get("is_licensed", False)
-                            if not existing.release_year and dlc.get("release_year"):
-                                existing.release_year = dlc.get("release_year")
-                            if not existing.release_date and dlc.get("release_date"):
-                                existing.release_date = dlc.get("release_date")
-                            if not existing.dlc_counterparts and dlc.get("dlc_counterparts"):
-                                existing.dlc_counterparts = dlc.get("dlc_counterparts")
-                            if not existing.lore and dlc.get("lore"):
-                                existing.lore = dlc.get("lore")
+                            if not existing.chapter_name and c.get("chapter_name"):
+                                existing.chapter_name = c.get("chapter_name")
+                            if not existing.chapter_number and c.get("chapter_number"):
+                                existing.chapter_number = c.get("chapter_number")
+                            if not existing.dlc_type and c.get("dlc_type"):
+                                existing.dlc_type = c.get("dlc_type")
+                            if c.get("is_licensed") is not None:
+                                existing.is_licensed = c.get("is_licensed", False)
+                            if not existing.release_year and c.get("release_year"):
+                                existing.release_year = c.get("release_year")
+                            if not existing.release_date and c.get("release_date"):
+                                existing.release_date = c.get("release_date")
+                            if not existing.dlc_counterparts and c.get("dlc_counterparts"):
+                                existing.dlc_counterparts = c.get("dlc_counterparts")
+                            if not existing.lore and c.get("lore"):
+                                existing.lore = c.get("lore")
                     db.session.commit()
 
             if self.data_path.exists():
@@ -226,6 +265,8 @@ class PerkService:
                             db.session.add(
                                 Perk(
                                     name=p["name"],
+                                    alternate_name=p.get("alternate_name"),
+                                    is_generic_counterpart=p.get("is_generic_counterpart", False),
                                     category=p.get("category", "Survivor"),
                                     is_teachable=(matched_char is not None),
                                     description=self.clean_description(p.get("description", "")),
@@ -372,40 +413,104 @@ class PerkService:
         self,
         category: Optional[str] = None,
         character: Optional[str] = None,
+        scope: Optional[str] = None,
         search: Optional[str] = None,
         sort_by: str = "name",
         order: str = "asc",
         page: int = 1,
         limit: int = 50,
+        user_id: Optional[int] = None,
+        owned_only: bool = False,
     ) -> Dict[str, Any]:
-        """SQLAlchemy 2.0 query for paginated and filtered perks."""
         try:
-            stmt = select(Perk).options(joinedload(Perk.character))
+            stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
 
             if category and category.lower() != "all":
                 stmt = stmt.where(func.lower(Perk.category) == category.lower())
 
             if character and character.lower() != "all":
-                stmt = stmt.join(Perk.character).where(
-                    func.lower(Character.name) == character.lower()
+                if character.lower() == "general":
+                    stmt = stmt.where(
+                        or_(
+                            Perk.character_id.is_(None),
+                            Perk.is_generic_counterpart.is_(True),
+                        )
+                    )
+                else:
+                    stmt = stmt.where(
+                        or_(
+                            func.lower(Character.name) == character.lower(),
+                            func.lower(Character.real_name) == character.lower(),
+                            func.lower(Character.short_name) == character.lower(),
+                            func.lower(Character.wiki_slug) == character.lower(),
+                        )
+                    )
+
+            if scope and scope.lower() == "general":
+                stmt = stmt.where(
+                    or_(
+                        Perk.character_id.is_(None),
+                        Perk.is_generic_counterpart.is_(True),
+                    )
+                )
+            elif scope and scope.lower() == "teachable":
+                stmt = stmt.where(
+                    and_(
+                        Perk.character_id.is_not(None),
+                        Perk.is_generic_counterpart.is_(False),
+                    )
+                )
+
+            if owned_only and user_id:
+                locked_perks_subq = select(UserPerkOwnership.perk_id).where(
+                    UserPerkOwnership.user_id == user_id,
+                    UserPerkOwnership.is_unlocked.is_(False),
+                )
+                deactivated_chars_subq = select(UserCharacterOwnership.character_id).where(
+                    UserCharacterOwnership.user_id == user_id,
+                    UserCharacterOwnership.is_owned.is_(False),
+                )
+                unlocked_perks_subq = select(UserPerkOwnership.perk_id).where(
+                    UserPerkOwnership.user_id == user_id,
+                    UserPerkOwnership.is_unlocked.is_(True),
+                )
+
+                stmt = stmt.where(
+                    or_(
+                        Perk.character_id.is_(None),
+                        Perk.is_generic_counterpart.is_(True),
+                        and_(
+                            Perk.id.not_in(locked_perks_subq),
+                            or_(
+                                Perk.id.in_(unlocked_perks_subq),
+                                Perk.character_id.not_in(deactivated_chars_subq),
+                            ),
+                        ),
+                    )
                 )
 
             if search:
                 query_str = f"%{search.strip().lower()}%"
-                stmt = stmt.outerjoin(Perk.character).where(
-                    or_(
-                        func.lower(Perk.name).like(query_str),
-                        func.lower(Perk.description).like(query_str),
-                        func.lower(Character.name).like(query_str),
-                        func.lower(Character.real_name).like(query_str),
+                is_general_match = "general" in search.strip().lower()
+                conditions = [
+                    func.lower(Perk.name).like(query_str),
+                    func.lower(Perk.alternate_name).like(query_str),
+                    func.lower(Perk.description).like(query_str),
+                    func.lower(Character.name).like(query_str),
+                    func.lower(Character.real_name).like(query_str),
+                ]
+                if is_general_match:
+                    conditions.append(
+                        or_(
+                            Perk.character_id.is_(None),
+                            Perk.is_generic_counterpart.is_(True),
+                        )
                     )
-                )
+                stmt = stmt.where(or_(*conditions))
 
-            # Sorting
             valid_sort_field = sort_by.lower() if sort_by.lower() in self.ALLOWED_SORT_FIELDS else "name"
             if valid_sort_field == "character":
-                stmt = stmt.outerjoin(Perk.character)
-                sort_col = func.coalesce(Character.name, "zzz")
+                sort_col = func.coalesce(Character.name, "General")
             elif valid_sort_field == "category":
                 sort_col = Perk.category
             else:
@@ -413,9 +518,9 @@ class PerkService:
 
             reverse = (order.lower() == "desc")
             if reverse:
-                stmt = stmt.order_by(sort_col.desc())
+                stmt = stmt.order_by(sort_col.desc(), Perk.name.desc())
             else:
-                stmt = stmt.order_by(sort_col.asc())
+                stmt = stmt.order_by(sort_col.asc(), Perk.name.asc())
 
             count_stmt = select(func.count()).select_from(stmt.subquery())
             total_count = db.session.scalar(count_stmt) or 0
@@ -427,57 +532,135 @@ class PerkService:
 
             paginated_stmt = stmt.offset(offset).limit(limit)
             perks = db.session.scalars(paginated_stmt).unique().all()
-            paginated_data = [p.to_dict() for p in perks]
 
-            if paginated_data:
-                return {
-                    "data": paginated_data,
-                    "pagination": {
-                        "total": total_count,
-                        "page": page,
-                        "limit": limit,
-                        "total_pages": total_pages,
-                        "has_next": offset + limit < total_count,
-                        "has_prev": page > 1,
-                    },
-                    "filters": {
-                        "category": category or "all",
-                        "character": character or "all",
-                        "search": search or "",
-                        "sort_by": valid_sort_field,
-                        "order": "desc" if reverse else "asc",
-                    },
-                }
+            paginated_data = []
+            if user_id:
+                deactivated_char_ids = set(
+                    db.session.scalars(
+                        select(UserCharacterOwnership.character_id).where(
+                            UserCharacterOwnership.user_id == user_id,
+                            UserCharacterOwnership.is_owned.is_(False),
+                        )
+                    ).all()
+                )
+                perk_explicit_rows = db.session.execute(
+                    select(UserPerkOwnership.perk_id, UserPerkOwnership.is_unlocked).where(
+                        UserPerkOwnership.user_id == user_id
+                    )
+                ).all()
+                perk_explicit_map = {row[0]: row[1] for row in perk_explicit_rows}
+
+                for p in perks:
+                    d = p.to_dict()
+                    is_gen = p.character_id is None or p.is_generic_counterpart
+                    if is_gen:
+                        is_owned = True
+                    elif p.id in perk_explicit_map:
+                        is_owned = perk_explicit_map[p.id]
+                    else:
+                        is_owned = (p.character_id not in deactivated_char_ids) if p.character_id else True
+                    d["is_owned"] = bool(is_owned)
+                    paginated_data.append(d)
+            else:
+                for p in perks:
+                    d = p.to_dict()
+                    d["is_owned"] = True
+                    paginated_data.append(d)
+
+            return {
+                "data": paginated_data,
+                "pagination": {
+                    "total": total_count,
+                    "page": page,
+                    "limit": limit,
+                    "total_pages": total_pages,
+                    "has_next": offset + limit < total_count,
+                    "has_prev": page > 1,
+                },
+                "filters": {
+                    "category": category or "all",
+                    "character": character or "all",
+                    "scope": scope or "all",
+                    "search": search or "",
+                    "sort_by": valid_sort_field,
+                    "order": "desc" if reverse else "asc",
+                    "owned_only": owned_only,
+                },
+            }
         except Exception as e:
             logger.debug(f"Falling back to memory cache in get_perks: {e}")
 
-        return self._get_perks_fallback(category, character, search, sort_by, order, page, limit)
+        return self._get_perks_fallback(category, character, scope, search, sort_by, order, page, limit)
 
-    def _get_perks_fallback(self, category, character, search, sort_by, order, page, limit):
+    def _get_perks_fallback(self, category, character, scope, search, sort_by, order, page, limit):
         results = self._cache
         if category and category.lower() != "all":
             results = [p for p in results if p.get("category", "").lower() == category.lower()]
+
         if character and character.lower() != "all":
-            results = [p for p in results if p.get("character", "").lower() == character.lower()]
+            if character.lower() == "general":
+                results = [
+                    p for p in results
+                    if not p.get("character")
+                    or p.get("character").lower() == "general"
+                    or p.get("is_generic_counterpart")
+                ]
+            else:
+                results = [
+                    p for p in results
+                    if p.get("character", "").lower() == character.lower()
+                    or p.get("character_real_name", "").lower() == character.lower()
+                ]
+
+        if scope and scope.lower() == "general":
+            results = [
+                p for p in results
+                if not p.get("character")
+                or p.get("character").lower() == "general"
+                or p.get("is_generic_counterpart")
+            ]
+        elif scope and scope.lower() == "teachable":
+            results = [
+                p for p in results
+                if p.get("character")
+                and p.get("character").lower() != "general"
+                and not p.get("is_generic_counterpart")
+            ]
+
         if search:
             query = search.lower().strip()
             results = [
                 p for p in results
                 if query in p.get("name", "").lower()
+                or query in p.get("alternate_name", "").lower()
                 or query in p.get("description", "").lower()
                 or query in p.get("character", "").lower()
+                or (query == "general" and (not p.get("character") or p.get("character").lower() == "general"))
             ]
+
         valid_sort_field = sort_by.lower() if sort_by.lower() in self.ALLOWED_SORT_FIELDS else "name"
         reverse = (order.lower() == "desc")
-        results = sorted(results, key=lambda x: str(x.get(valid_sort_field, "")).lower(), reverse=reverse)
+        results = sorted(
+            results,
+            key=lambda x: str(x.get(valid_sort_field, "") or ("General" if valid_sort_field == "character" else "")).lower(),
+            reverse=reverse,
+        )
+
         total_count = len(results)
         page = max(1, page)
         limit = max(1, min(limit, 10000))
         total_pages = math.ceil(total_count / limit) if total_count > 0 else 1
         start_idx = (page - 1) * limit
         end_idx = start_idx + limit
+
+        data_slice = []
+        for p in results[start_idx:end_idx]:
+            p_copy = dict(p)
+            p_copy["is_owned"] = True
+            data_slice.append(p_copy)
+
         return {
-            "data": results[start_idx:end_idx],
+            "data": data_slice,
             "pagination": {
                 "total": total_count,
                 "page": page,
@@ -489,20 +672,132 @@ class PerkService:
             "filters": {
                 "category": category or "all",
                 "character": character or "all",
+                "scope": scope or "all",
                 "search": search or "",
                 "sort_by": valid_sort_field,
                 "order": "desc" if reverse else "asc",
+                "owned_only": False,
             },
         }
 
+    def get_perk_suggestions(
+        self,
+        query: str = "",
+        category: Optional[str] = None,
+        limit: int = 10,
+    ) -> List[Dict[str, Any]]:
+        try:
+            stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
+            if category and category.lower() != "all":
+                stmt = stmt.where(func.lower(Perk.category) == category.lower())
+
+            if query:
+                q_clean = f"%{query.strip().lower()}%"
+                stmt = stmt.where(
+                    or_(
+                        func.lower(Perk.name).like(q_clean),
+                        func.lower(Perk.alternate_name).like(q_clean),
+                    )
+                )
+
+            stmt = stmt.order_by(Perk.name.asc()).limit(limit)
+            perks = db.session.scalars(stmt).unique().all()
+            return [
+                {
+                    "id": p.id,
+                    "name": p.name,
+                    "alternate_name": p.alternate_name or "",
+                    "category": p.category,
+                    "character": p.character.name if p.character else "General",
+                    "icon_url": p.icon_url or "",
+                    "icon_local_path": p.icon_local_path or "",
+                }
+                for p in perks
+            ]
+        except Exception:
+            q_clean = query.strip().lower()
+            res = []
+            for p in self._cache:
+                if category and category.lower() != "all" and p.get("category", "").lower() != category.lower():
+                    continue
+                if not q_clean or q_clean in p.get("name", "").lower() or q_clean in p.get("alternate_name", "").lower():
+                    res.append({
+                        "id": p.get("id"),
+                        "name": p.get("name", ""),
+                        "alternate_name": p.get("alternate_name", ""),
+                        "category": p.get("category", "Survivor"),
+                        "character": p.get("character", "General"),
+                        "icon_url": p.get("icon_url", ""),
+                        "icon_local_path": p.get("icon_local_path", ""),
+                    })
+                if len(res) >= limit:
+                    break
+            return res
+
+    def get_character_suggestions(
+        self,
+        query: str = "",
+        category: Optional[str] = None,
+        limit: int = 15,
+    ) -> List[Dict[str, Any]]:
+        try:
+            stmt = select(Character)
+            if category and category.lower() != "all":
+                stmt = stmt.where(func.lower(Character.role) == category.lower())
+
+            if query:
+                q_clean = f"%{query.strip().lower()}%"
+                stmt = stmt.where(
+                    or_(
+                        func.lower(Character.name).like(q_clean),
+                        func.lower(Character.real_name).like(q_clean),
+                        func.lower(Character.short_name).like(q_clean),
+                    )
+                )
+
+            stmt = stmt.order_by(Character.name.asc()).limit(limit)
+            chars = db.session.scalars(stmt).all()
+            return [
+                {
+                    "id": c.id,
+                    "name": c.name,
+                    "real_name": c.real_name or c.name,
+                    "category": c.role,
+                    "avatar_local_path": c.avatar_local_path or "",
+                    "portrait_url": c.portrait_url or "",
+                }
+                for c in chars
+            ]
+        except Exception:
+            q_clean = query.strip().lower()
+            res = []
+            for c in self._characters_cache:
+                if category and category.lower() != "all" and (c.get("category") or c.get("role", "")).lower() != category.lower():
+                    continue
+                if not q_clean or q_clean in c.get("name", "").lower() or q_clean in c.get("real_name", "").lower():
+                    res.append({
+                        "id": c.get("id"),
+                        "name": c.get("name", ""),
+                        "real_name": c.get("real_name", c.get("name", "")),
+                        "category": c.get("category") or c.get("role", "Survivor"),
+                        "avatar_local_path": c.get("avatar_local_path", ""),
+                        "portrait_url": c.get("avatar_url", ""),
+                    })
+                if len(res) >= limit:
+                    break
+            return res
+
     def get_by_identifier(self, identifier: str) -> Optional[Dict[str, Any]]:
-        """SQLAlchemy 2.0 query to retrieve a single perk by name or slug."""
         target = identifier.lower().strip()
+        target_slug = self._slugify(identifier)
+
         try:
             stmt = select(Perk).options(joinedload(Perk.character)).where(
                 or_(
                     func.lower(Perk.name) == target,
-                    func.lower(func.replace(func.replace(Perk.name, " ", "_"), "-", "_")) == target
+                    func.lower(Perk.alternate_name) == target,
+                    func.lower(func.replace(func.replace(Perk.name, " ", "_"), "-", "_")) == target_slug,
+                    func.lower(func.replace(func.replace(Perk.alternate_name, " ", "_"), "-", "_")) == target_slug,
                 )
             )
             perk = db.session.scalars(stmt).first()
@@ -513,23 +808,16 @@ class PerkService:
 
         for p in self._cache:
             p_name = p.get("name", "").lower().strip()
-            if p_name == target or self._slugify(p_name) == target:
+            p_alt = p.get("alternate_name", "").lower().strip()
+            if p_name == target or p_alt == target or self._slugify(p_name) == target_slug or self._slugify(p_alt) == target_slug:
                 return p
         return None
 
     def get_characters(self, category: Optional[str] = None) -> List[Dict[str, Any]]:
-        """SQLAlchemy 2.0 query to retrieve characters."""
         try:
             stmt = select(Character).options(joinedload(Character.perks))
             if category and category.lower() != "all":
                 stmt = stmt.where(func.lower(Character.role) == category.lower())
-
-            stmt = stmt.where(
-                and_(
-                    ~Character.name.ilike("%overall_average%"),
-                    ~Character.name.ilike("%overall average%"),
-                )
-            )
 
             stmt = stmt.order_by(
                 case(
@@ -541,82 +829,14 @@ class PerkService:
             )
 
             characters = db.session.scalars(stmt).unique().all()
-            if characters and len(characters) >= 20:
+            if characters:
                 return [c.to_dict() for c in characters]
         except Exception as e:
-            logger.debug(f"Querying characters from DB skipped/fallback: {e}")
+            logger.debug(f"Querying characters from DB: {e}")
 
-        # Comprehensive fallback from CANONICAL_DLC_INFO
-        from app.services.scraper_service import CANONICAL_DLC_INFO
-        canonical_results = []
-        seen_names = set()
-
-        # Deduplicate to canonical unique characters
-        for name_key, dlc in CANONICAL_DLC_INFO.items():
-            role = dlc.get("role", "Survivor")
-            if category and category.lower() != "all" and role.lower() != category.lower():
-                continue
-
-            display_name = name_key.title() if not name_key.startswith("the ") else f"The {name_key[4:].title()}"
-            if name_key == 'william "bill" overbeck' or name_key == "william 'bill' overbeck" or name_key == "bill overbeck":
-                display_name = 'William "Bill" Overbeck'
-            elif name_key == "detective tapp" or name_key == "david tapp":
-                display_name = "Detective David Tapp"
-            elif name_key == "ash williams" or name_key == "ashley j. williams":
-                display_name = "Ashley J. Williams"
-            elif name_key == "élodie rakoto" or name_key == "elodie rakoto":
-                display_name = "Élodie Rakoto"
-            elif name_key == "yun-jin lee" or name_key == "lee yun-jin":
-                display_name = "Yun-Jin Lee"
-            elif name_key == "leon s. kennedy" or name_key == "leon kennedy":
-                display_name = "Leon S. Kennedy"
-            elif name_key == "the onryo" or name_key == "the onryō":
-                display_name = "The Onryō"
-
-            if display_name.lower() in seen_names:
-                continue
-            seen_names.add(display_name.lower())
-
-            sub_dir = "survivors" if role == "Survivor" else "killers"
-            clean_fname = re.sub(r'[\s\-/\'"]+', "_", display_name).strip("_")
-
-            canonical_results.append({
-                "id": len(seen_names),
-                "name": display_name,
-                "role": role,
-                "category": role,
-                "real_name": display_name,
-                "short_name": name_key.lower(),
-                "wiki_slug": display_name.replace(" ", "_"),
-                "portrait_url": "",
-                "avatar_local_path": f"avatars/{sub_dir}/{clean_fname}.png",
-                "release_number": dlc.get("release_number", 9999),
-                "code_prefix": dlc.get("code_prefix"),
-                "chapter_name": dlc.get("chapter_name"),
-                "chapter_number": dlc.get("chapter_number"),
-                "dlc_type": dlc.get("dlc_type"),
-                "is_licensed": dlc.get("is_licensed", False),
-                "release_year": dlc.get("release_year"),
-                "release_date": dlc.get("release_date"),
-                "dlc_counterparts": dlc.get("dlc_counterparts", "[]"),
-                "lore": dlc.get("lore"),
-            })
-
-        canonical_results.sort(key=lambda c: (0 if c.get("release_number") and c.get("release_number") > 0 else 1, c.get("release_number", 9999), c.get("name", "")))
-        return canonical_results
-
-    @staticmethod
-    def _slugify(text: str) -> str:
-        if not text:
-            return ""
-        clean = text.lower().strip()
-        clean = re.sub(r"[\s\-/]+", "_", clean)
-        clean = re.sub(r"[^a-z0-9_]", "", clean)
-        clean = re.sub(r"_+", "_", clean)
-        return clean.strip("_")
+        return self._characters_cache
 
     def get_character_detail(self, character_name: str) -> Optional[Dict[str, Any]]:
-        """SQLAlchemy 2.0 query to retrieve full character detail, teachable perks, and items/addons."""
         target_clean = character_name.strip().lower()
         target_slug = self._slugify(character_name)
 
@@ -640,146 +860,88 @@ class PerkService:
                     or (c.short_name and self._slugify(c.short_name) == target_slug)
                     or c_slug == target_slug
                     or c_short == target_clean
-                    or (target_slug in ["yun_jin_lee", "yunjin_lee", "yun_jin"] and "yun" in c_name)
-                    or (target_slug in ["david_tapp", "tapp", "detective_tapp", "detective_david_tapp"] and "tapp" in c_name)
-                    or (target_slug in ["elodie_rakoto", "elodie", "élodie_rakoto"] and ("elodie" in c_name or "lodie" in c_name))
-                    or (target_slug in ["bill_overbeck", "william_bill_overbeck", "bill"] and ("overbeck" in c_name or c_name == 'william "bill" overbeck'))
-                    or (target_slug in ["ash_williams", "ashley_j_williams", "ash"] and ("williams" in c_name or c_name.startswith("ashley")))
-                    or (target_slug in ["the_ghost_face", "ghost_face", "ghostface"] and "ghost" in c_name)
-                    or (target_slug in ["the_onryo", "the_onryō", "onryo", "sadako"] and ("onry" in c_name or "sadako" in c_real))
-                    or (target_slug in ["the_executioner", "pyramid_head"] and "executioner" in c_name)
-                    or (target_slug in ["the_cannibal", "leatherface", "bubba_sawyer"] and "cannibal" in c_name)
-                    or (target_slug in ["the_shape", "michael_myers", "myers"] and "shape" in c_name)
-                    or (target_slug in ["the_pig", "amanda_young", "jigsaw"] and "pig" in c_name)
-                    or (target_slug in ["the_nightmare", "freddy_krueger", "freddy"] and "nightmare" in c_name)
-                    or (target_slug in ["the_cenobite", "pinhead", "elliot_spencer"] and "cenobite" in c_name)
-                    or (target_slug in ["the_good_guy", "chucky", "charles_lee_ray"] and "good_guy" in self._slugify(c.name))
-                    or (target_slug in ["the_mastermind", "albert_wesker", "wesker"] and "mastermind" in self._slugify(c.name))
-                    or (target_slug in ["the_lich", "vecna"] and "lich" in self._slugify(c.name))
-                    or (target_slug in ["the_dark_lord", "dracula"] and "dark_lord" in self._slugify(c.name))
-                    or (target_slug in ["the_houndmaster", "portia_maye"] and "houndmaster" in self._slugify(c.name))
                 ):
                     matched_char = c
                     break
 
             if not matched_char:
-                # Resolve from canonical DLC metadata if not in DB table
-                from app.services.scraper_service import CANONICAL_DLC_INFO
-                matched_dlc_key = None
-                for k in CANONICAL_DLC_INFO.keys():
-                    if k == target_clean or self._slugify(k) == target_slug:
-                        matched_dlc_key = k
-                        break
-                    if target_slug in ["claudette_morel", "claudette"] and "claudette" in k:
-                        matched_dlc_key = k
-                        break
-
-                if not matched_dlc_key:
-                    for k in CANONICAL_DLC_INFO.keys():
-                        if target_slug in self._slugify(k) or self._slugify(k) in target_slug:
-                            matched_dlc_key = k
-                            break
-
-                if matched_dlc_key:
-                    dlc = CANONICAL_DLC_INFO[matched_dlc_key]
-                    role = dlc.get("role", "Survivor")
-                    display_name = matched_dlc_key.title() if not matched_dlc_key.startswith("the ") else f"The {matched_dlc_key[4:].title()}"
-                    sub_dir = "survivors" if role == "Survivor" else "killers"
-                    clean_fname = re.sub(r'[\s\-/\'"]+', "_", display_name).strip("_")
-
-                    fallback_char = {
-                        "name": display_name,
-                        "role": role,
-                        "category": role,
-                        "real_name": display_name,
-                        "short_name": matched_dlc_key,
-                        "wiki_slug": display_name.replace(" ", "_"),
-                        "portrait_url": "",
-                        "avatar_local_path": f"avatars/{sub_dir}/{clean_fname}.png",
-                        "release_number": dlc.get("release_number"),
-                        "code_prefix": dlc.get("code_prefix"),
-                        "chapter_name": dlc.get("chapter_name"),
-                        "chapter_number": dlc.get("chapter_number"),
-                        "dlc_type": dlc.get("dlc_type"),
-                        "is_licensed": dlc.get("is_licensed", False),
-                        "release_year": dlc.get("release_year"),
-                        "release_date": dlc.get("release_date"),
-                        "dlc_counterparts": dlc.get("dlc_counterparts", "[]"),
-                        "lore": dlc.get("lore"),
-                    }
-
-                    # Find perks for this character
-                    perks = []
-                    try:
-                        perk_stmt = select(Perk).where(func.lower(Perk.character_name) == display_name.lower())
-                        db_perks = db.session.scalars(perk_stmt).all()
-                        perks = [p.to_dict() for p in db_perks]
-                    except Exception:
-                        pass
-
-                    return {
-                        "character": fallback_char,
-                        "perks": perks,
-                        "addons": [],
-                    }
-
                 return None
 
             char_dict = matched_char.to_dict()
-            char_role = matched_char.role
-
-            # Teachable perks directly from ORM relationship
+            char_role = matched_char.role or "Survivor"
             perks_list = [p.to_dict() for p in matched_char.perks]
 
-            addons_or_items: List[Dict[str, Any]] = []
-            killer_power_info: Optional[Dict[str, Any]] = None
+            addons_list: List[Dict[str, Any]] = []
+            items_list: List[Dict[str, Any]] = []
 
-            if char_role == "Killer":
-                from app.services.scraper_service import CANONICAL_KILLER_POWERS
-                k_key = matched_char.name.lower().strip()
-                power_data = CANONICAL_KILLER_POWERS.get(k_key)
-                if not power_data:
-                    for k, p in CANONICAL_KILLER_POWERS.items():
-                        if k in k_key or k_key in k:
-                            power_data = p
+            if char_role.lower() == "killer":
+                all_addons = db.session.scalars(select(Addon)).all()
+                matched_addons = []
+
+                char_tokens = {
+                    normalize_search_key(matched_char.name),
+                    normalize_search_key(matched_char.name.replace("The ", "").replace("the ", "")),
+                    normalize_search_key(matched_char.real_name or ""),
+                    normalize_search_key(matched_char.wiki_slug or ""),
+                    normalize_search_key(matched_char.short_name or ""),
+                }
+                if matched_char.power_name:
+                    p_norm = normalize_search_key(matched_char.power_name)
+                    char_tokens.add(p_norm)
+                    if p_norm.endswith("s"):
+                        char_tokens.add(p_norm[:-1])
+                    if p_norm.endswith("es"):
+                        char_tokens.add(p_norm[:-2])
+                char_tokens.discard("")
+
+                char_tokens_spaceless = {t.replace(" ", "") for t in char_tokens if t}
+
+                for a in all_addons:
+                    raw_target = (a.associated_target or "").strip()
+                    target_norm = normalize_search_key(raw_target)
+                    target_spaceless = target_norm.replace(" ", "")
+                    if not target_norm:
+                        continue
+
+                    if target_norm in char_tokens or target_spaceless in char_tokens_spaceless:
+                        matched_addons.append(a)
+                        continue
+
+                    is_match = False
+                    for token in char_tokens:
+                        tok_sp = token.replace(" ", "")
+                        if (
+                            (len(token) >= 3 and (token in target_norm or target_norm in token))
+                            or (len(tok_sp) >= 3 and (tok_sp in target_spaceless or target_spaceless in tok_sp))
+                        ):
+                            is_match = True
                             break
+                    if is_match:
+                        matched_addons.append(a)
 
-                target_names = [matched_char.name.lower(), (matched_char.real_name or "").lower()]
-                if power_data:
-                    killer_power_info = {
-                        "name": power_data["name"],
-                        "description": power_data["description"],
-                        "icon_url": power_data.get("icon_url", ""),
-                        "movement_speed": power_data.get("movement_speed", "4.6 m/s (115%)"),
-                        "terror_radius": power_data.get("terror_radius", "32 m"),
-                        "terror_radius_meters": power_data.get("terror_radius_meters", 32),
-                        "height": power_data.get("height", "Tall"),
-                    }
-                    target_names.extend([t.lower() for t in power_data.get("targets", [])])
-
-                target_filters = [func.lower(Addon.associated_target) == t for t in set(target_names) if t]
-                if target_filters:
-                    addons_stmt = select(Addon).where(or_(*target_filters))
-                    addons = db.session.scalars(addons_stmt).all()
-                    addons_or_items = [a.to_dict() for a in addons]
+                addons_list = [a.to_dict() for a in matched_addons]
             else:
-                items_stmt = select(Item).where(
-                    and_(
-                        func.lower(Item.role) == "survivor",
-                        ~Item.name.ilike("% items")
-                    )
-                )
+                items_stmt = select(Item).where(func.lower(Item.role) == "survivor")
                 items = db.session.scalars(items_stmt).all()
-                addons_or_items = [i.to_dict() for i in items if i.name.lower().strip() not in HEADER_EXCLUSIONS]
+                items_list = [i.to_dict() for i in items if i.name.lower().strip() not in HEADER_EXCLUSIONS]
+
+                survivor_addons_stmt = select(Addon).where(func.lower(Addon.category) == "survivor")
+                survivor_addons = db.session.scalars(survivor_addons_stmt).all()
+                addons_list = [
+                    a.to_dict()
+                    for a in survivor_addons
+                    if a.name.lower().strip() not in HEADER_EXCLUSIONS and "numbers" not in (a.associated_target or "").lower()
+                ]
 
             return {
                 "character": char_dict,
-                "power": killer_power_info,
+                "power": char_dict.get("power"),
                 "perks": perks_list,
-                "addons": addons_or_items,
+                "addons": addons_list,
+                "items": items_list,
             }
         except Exception as e:
-            logger.debug(f"Error getting character detail from DB: {e}")
+            logger.error(f"Error getting character detail from DB: {e}", exc_info=True)
             return None
 
     def get_items(
@@ -787,25 +949,6 @@ class PerkService:
         category: Optional[str] = None,
         search: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        """SQLAlchemy 2.0 query for items with fallback cache support."""
-        if self._items_cache:
-            results = []
-            for item in self._items_cache:
-                d = item if isinstance(item, dict) else item.model_dump()
-                if d.get("name", "").lower().strip() not in HEADER_EXCLUSIONS and not d.get("name", "").lower().strip().endswith(" items"):
-                    results.append(d)
-            if category and category.lower() != "all":
-                results = [item for item in results if item.get("category", "").lower() == category.lower()]
-            if search:
-                query = search.lower().strip()
-                results = [
-                    item for item in results
-                    if (query in item.get("name", "").lower())
-                    or (query in item.get("description", "").lower())
-                    or (query in item.get("category", "").lower())
-                ]
-            return results
-
         try:
             stmt = select(Item).where(~Item.name.ilike("% items"))
             if category and category.lower() != "all":
@@ -831,23 +974,6 @@ class PerkService:
         target: Optional[str] = None,
         search: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        """SQLAlchemy 2.0 query for addons with fallback cache support."""
-        if self._addons_cache:
-            results = [a if isinstance(a, dict) else a.model_dump() for a in self._addons_cache]
-            if category and category.lower() != "all":
-                results = [addon for addon in results if addon.get("category", "").lower() == category.lower()]
-            if target and target.lower() != "all":
-                results = [addon for addon in results if addon.get("associated_target", "").lower() == target.lower()]
-            if search:
-                query = search.lower().strip()
-                results = [
-                    addon for addon in results
-                    if (query in addon.get("name", "").lower())
-                    or (query in addon.get("description", "").lower())
-                    or (query in addon.get("category", "").lower())
-                ]
-            return results
-
         try:
             stmt = select(Addon)
             if category and category.lower() != "all":
@@ -875,7 +1001,6 @@ class PerkService:
         search: Optional[str] = None,
         source: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        """SQLAlchemy 2.0 query for map realms."""
         try:
             stmt = select(MapRealm).options(
                 joinedload(MapRealm.tiles),
@@ -912,7 +1037,6 @@ class PerkService:
         seed: Optional[str] = None,
         floor: Optional[int] = None,
     ) -> Optional[Dict[str, Any]]:
-        """SQLAlchemy 2.0 query for map detail with tiles and objectives."""
         try:
             target = map_id.lower().replace("_", "").replace("-", "").strip()
             stmt = select(MapRealm).options(

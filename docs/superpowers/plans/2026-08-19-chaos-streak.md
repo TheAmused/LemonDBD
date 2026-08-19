@@ -101,8 +101,7 @@ class TestChaosModels(unittest.TestCase):
 
     def test_unique_constraint_on_user_and_difficulty(self):
         user = self._make_user()
-        db.session.add(ChaosRun(user_id=user.id, difficulty="hell", current_character_id_placeholder=None)
-                       if False else ChaosRun(user_id=user.id, difficulty="hell"))
+        db.session.add(ChaosRun(user_id=user.id, difficulty="hell"))
         db.session.commit()
         db.session.add(ChaosRun(user_id=user.id, difficulty="hell"))
         with self.assertRaises(Exception):
@@ -2676,6 +2675,14 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               Streak {run?.current_streak ?? 0} &middot; Best {run?.best_streak ?? 0}
             </p>
           </div>
+          {stats && stats.total_matches > 0 && (
+            <div className="text-right text-xs text-slate-500 dark:text-slate-400">
+              <p className="font-bold text-slate-700 dark:text-slate-200">{stats.win_rate}% win rate</p>
+              <p>
+                {stats.wins}W / {stats.losses}L across {stats.total_matches} matches
+              </p>
+            </div>
+          )}
         </header>
 
         {isCompleted ? (

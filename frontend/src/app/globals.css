@@ -142,12 +142,12 @@ strong {
 @keyframes gnSpinFrame {
   from {
     opacity: .35;
-    transform: translateY(-14%) scale(.94);
+    transform: scale(.96);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: scale(1);
   }
 }
 

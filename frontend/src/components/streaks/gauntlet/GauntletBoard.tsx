@@ -24,6 +24,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
+  const [confirmingReset, setConfirmingReset] = useState(false);
 
   // Fire once when the run flips to completed, not on every later render or reload.
   const wasCompletedRef = useRef(false);
@@ -110,6 +111,46 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           activeCharacterId={isCompleted ? undefined : run?.current_character_id}
           loading={loadingRoster}
         />
+
+        {!isCompleted && (
+          <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-800/80">
+            {confirmingReset ? (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-rose-500/40 bg-rose-500/5 px-4 py-3">
+                <p className="text-xs text-slate-600 dark:text-slate-300">
+                  Wipe this run? Streak, checkpoints and every cleared {role} go back to zero. This cannot be
+                  undone.
+                </p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => setConfirmingReset(false)}
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      setConfirmingReset(false);
+                      reset();
+                    }}
+                    disabled={busy}
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg text-white bg-rose-600 hover:bg-rose-500 disabled:opacity-50 transition-colors cursor-pointer"
+                  >
+                    Yes, wipe it
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => setConfirmingReset(true)}
+                disabled={busy}
+                className="inline-flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-rose-500 dark:text-slate-500 dark:hover:text-rose-400 disabled:opacity-50 transition-colors cursor-pointer"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                Reset this run
+              </button>
+            )}
+          </div>
+        )}
 
         <GauntletStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
         <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} />

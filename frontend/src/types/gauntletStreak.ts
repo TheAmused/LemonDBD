@@ -9,21 +9,10 @@ export interface Perk {
   icon_local_path?: string;
 }
 
-export interface Item {
-  id?: number;
-  name: string;
-  category?: string;
-  role?: string;
-  icon_url?: string;
-  icon_local_path?: string;
-  rarity?: string;
-}
-
 export interface GauntletLoadout {
   character: string;
   /** The target's own teachable perks, shown as the suggested first-slot picks. */
   character_perks: Perk[];
-  item: Item | null;
 }
 
 export interface TierInfo {

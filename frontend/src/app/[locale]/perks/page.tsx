@@ -1,11 +1,11 @@
-// frontend/src/app/[locale]/perks/page.tsx
 'use client';
+// frontend/src/app/[locale]/perks/page.tsx
 
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { PerkFilters } from '@/components/PerkFilters';
-import { PerkCard, Perk } from '@/components/PerkCard';
+import { PerkCard } from '@/components/PerkCard';
 import { PerkModal } from '@/components/PerkModal';
 import { PerkGenerator } from '@/components/PerkGenerator';
 import { QuestsModal } from '@/components/QuestsModal';
@@ -15,17 +15,22 @@ import { Locale } from '@/i18n/config';
 import { Shield, Skull, Database, Flame, CheckCircle2 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { useAuth } from '@/context/AuthContext';
-
-export interface CharacterItem {
-  id?: number;
-  name: string;
-  real_name?: string;
-  category?: string;
-  avatar_local_path?: string;
-  portrait_url?: string;
-}
+import {
+  Perk,
+  CharacterItem,
+  CharacterOption,
+  RoleCategory,
+  ScopeFilter,
+  OwnershipFilter,
+  SortField,
+  SortOrder,
+  ViewDisplayMode,
+  PerkDictionary,
+} from '@/types/perks';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 const DASHBOARD_TAB_KEY = 'lemon_dbd_active_tab_v3';
+const DEFAULT_PERKS_PER_PAGE = 15;
 
 function PerksContent() {
   const params = useParams();
@@ -37,25 +42,24 @@ function PerksContent() {
   const paramTab = searchParams ? searchParams.get('tab') : null;
   const paramRole = searchParams ? searchParams.get('role') : null;
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<PerkDictionary | null>(null);
   const [perks, setPerks] = useState<Perk[]>([]);
   const [allPerksForGenerator, setAllPerksForGenerator] = useState<Perk[]>([]);
-  const [characterOptions, setCharacterOptions] = useState<{ value: string; label: string; real_name?: string }[]>([]);
+  const [characterOptions, setCharacterOptions] = useState<CharacterOption[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   const [activeTab, setActiveTab] = useState<'vault' | 'generator'>('vault');
-  const [role, setRole] = useState<'Survivor' | 'Killer'>('Survivor');
-  const [scope, setScope] = useState<'all' | 'general'>('all');
-  const [ownershipFilter, setOwnershipFilter] = useState<'all' | 'owned'>('all');
+  const [role, setRole] = useState<RoleCategory>('Survivor');
+  const [scope, setScope] = useState<ScopeFilter>('all');
+  const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('all');
   const [character, setCharacter] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
-  const [sortBy, setSortBy] = useState<'name' | 'character' | 'category'>('name');
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [sortBy, setSortBy] = useState<SortField>('name');
+  const [order, setOrder] = useState<SortOrder>('asc');
 
-  // In-Game Inventory Layout: 15 perks (3 rows of 5 perks)
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(15);
+  const [limit, setLimit] = useState<number>(DEFAULT_PERKS_PER_PAGE);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
 
@@ -64,13 +68,13 @@ function PerksContent() {
   const [characterCount, setCharacterCount] = useState<number>(0);
   const [ownedPerksCount, setOwnedPerksCount] = useState<number>(0);
 
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode, setViewMode] = useState<ViewDisplayMode>('grid');
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => setDict(d as PerkDictionary));
   }, [locale]);
 
   useEffect(() => {
@@ -91,7 +95,9 @@ function PerksContent() {
       setActiveTab('generator');
       try {
         localStorage.setItem(DASHBOARD_TAB_KEY, 'generator');
-      } catch (e) {}
+      } catch (e) {
+        console.error('Failed saving tab preference:', e);
+      }
     } else {
       setActiveTab('vault');
       if (selected === 'Survivor' || selected === 'Killer') {
@@ -106,7 +112,9 @@ function PerksContent() {
       setPage(1);
       try {
         localStorage.setItem(DASHBOARD_TAB_KEY, 'vault');
-      } catch (e) {}
+      } catch (e) {
+        console.error('Failed saving tab preference:', e);
+      }
     }
   };
 
@@ -158,10 +166,9 @@ function PerksContent() {
         }
       }
 
-      let fetchedCharactersList: CharacterItem[] = [];
       if (allCharsRes.ok) {
         const acData = await allCharsRes.json();
-        fetchedCharactersList = acData.data || [];
+        const fetchedCharactersList: CharacterItem[] = acData.data || [];
         setCharacterCount(fetchedCharactersList.length);
       }
 
@@ -170,18 +177,27 @@ function PerksContent() {
         const fullList: Perk[] = gResult.data || [];
         setAllPerksForGenerator(fullList);
 
-        setSurvivorCount(fullList.filter((p) => p.category === 'Survivor').length);
+        setSurvivorCount(
+          fullList.filter((p) => p.category === 'Survivor').length
+        );
         setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
-        setOwnedPerksCount(fullList.filter((p) => p.is_owned !== false).length);
+        setOwnedPerksCount(
+          fullList.filter((p) => p.is_owned !== false).length
+        );
       }
 
       if (charRes.ok) {
         const cData = await charRes.json();
-        const options = (cData.data || []).map((c: CharacterItem) => ({
-          value: c.name,
-          label: c.real_name && c.real_name !== c.name ? `${c.name} (${c.real_name})` : c.name,
-          real_name: c.real_name || c.name,
-        }));
+        const options: CharacterOption[] = (cData.data || []).map(
+          (c: CharacterItem) => ({
+            value: c.name,
+            label:
+              c.real_name && c.real_name !== c.name
+                ? `${c.name} (${c.real_name})`
+                : c.name,
+            real_name: c.real_name || c.name,
+          })
+        );
         setCharacterOptions(options);
       }
     } catch (err) {
@@ -189,7 +205,19 @@ function PerksContent() {
     } finally {
       setLoading(false);
     }
-  }, [backendBase, role, scope, character, search, sortBy, order, page, limit, ownershipFilter, user]);
+  }, [
+    backendBase,
+    role,
+    scope,
+    character,
+    search,
+    sortBy,
+    order,
+    page,
+    limit,
+    ownershipFilter,
+    user,
+  ]);
 
   useEffect(() => {
     fetchPerks();
@@ -205,7 +233,7 @@ function PerksContent() {
     setPage(1);
   };
 
-  const handleRoleChange = (newRole: 'Survivor' | 'Killer') => {
+  const handleRoleChange = (newRole: RoleCategory) => {
     setRole(newRole);
     setCharacter('all');
     setPage(1);
@@ -235,14 +263,14 @@ function PerksContent() {
         }`}
       >
         {activeTab !== 'generator' && (
-          <div className="mb-6 flex flex-col gap-4 w-full">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60">
+          <header className="mb-6 flex flex-col gap-4 w-full">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60 border border-slate-800">
               <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
               <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
 
               <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 shadow-lg shadow-cyan-950/40">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 shadow-lg shadow-cyan-950/40 border border-cyan-500/20">
                     <Database className="h-6 w-6 text-cyan-400" />
                   </div>
                   <div>
@@ -256,7 +284,7 @@ function PerksContent() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
-                  <div className="flex items-center gap-2.5 rounded-2xl bg-slate-950/80 px-4 py-2.5 shadow-inner">
+                  <div className="flex items-center gap-2.5 rounded-2xl bg-slate-950/80 px-4 py-2.5 shadow-inner border border-slate-800">
                     <Flame className="h-4 w-4 text-cyan-400" />
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold uppercase text-slate-500">Vault Total</span>
@@ -264,7 +292,7 @@ function PerksContent() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-2xl bg-emerald-950/30 px-4 py-2.5 shadow-inner">
+                  <div className="flex items-center gap-2.5 rounded-2xl bg-emerald-950/30 px-4 py-2.5 shadow-inner border border-emerald-500/20">
                     <Shield className="h-4 w-4 text-emerald-400" />
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold uppercase text-emerald-400/80">Survivor</span>
@@ -272,7 +300,7 @@ function PerksContent() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5 rounded-2xl bg-rose-950/30 px-4 py-2.5 shadow-inner">
+                  <div className="flex items-center gap-2.5 rounded-2xl bg-rose-950/30 px-4 py-2.5 shadow-inner border border-rose-500/20">
                     <Skull className="h-4 w-4 text-rose-400" />
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold uppercase text-rose-400/80">Killer</span>
@@ -281,7 +309,7 @@ function PerksContent() {
                   </div>
 
                   {user && (
-                    <div className="flex items-center gap-2.5 rounded-2xl bg-cyan-950/30 px-4 py-2.5 shadow-inner">
+                    <div className="flex items-center gap-2.5 rounded-2xl bg-cyan-950/30 px-4 py-2.5 shadow-inner border border-cyan-500/20">
                       <CheckCircle2 className="h-4 w-4 text-cyan-400" />
                       <div className="flex flex-col">
                         <span className="text-[10px] font-bold uppercase text-cyan-400/80">Owned Perks</span>
@@ -292,7 +320,7 @@ function PerksContent() {
                 </div>
               </div>
             </div>
-          </div>
+          </header>
         )}
 
         {activeTab === 'generator' ? (
@@ -327,9 +355,9 @@ function PerksContent() {
                 setPage(1);
               }}
               sortBy={sortBy}
-              setSortBy={(s) => setSortBy(s as any)}
+              setSortBy={(s) => setSortBy(s)}
               order={order}
-              setOrder={(o) => setOrder(o as any)}
+              setOrder={(o) => setOrder(o)}
               viewMode={viewMode}
               setViewMode={setViewMode}
               characterOptions={characterOptions}
@@ -338,33 +366,41 @@ function PerksContent() {
             />
 
             {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-10 justify-items-center w-full py-12">
-                {[...Array(15)].map((_, i) => (
+              <div
+                aria-busy="true"
+                aria-label="Loading perks"
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-10 justify-items-center w-full py-12"
+              >
+                {Array.from({ length: 15 }).map((_, i) => (
                   <div
                     key={i}
-                    className="h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48 rotate-45 animate-pulse rounded-2xl bg-slate-900/60"
+                    className="h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48 rotate-45 animate-pulse rounded-2xl bg-slate-900/60 border border-slate-800"
                   />
                 ))}
               </div>
             ) : perks.length === 0 ? (
-              <div className="my-12 rounded-3xl bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm w-full">
+              <section
+                aria-live="polite"
+                className="my-12 rounded-3xl bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm w-full border border-slate-800"
+              >
                 <Shield className="mx-auto h-12 w-12 text-slate-600 mb-3" />
-                <h3 className="text-lg font-extrabold text-slate-200">
+                <h2 className="text-lg font-extrabold text-slate-200">
                   {dict?.empty?.title || 'No Perks Found'}
-                </h3>
+                </h2>
                 <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
                   {dict?.empty?.subtitle ||
                     'Try clearing your search query, switching ownership filters, or choosing another character.'}
                 </p>
                 <button
+                  type="button"
                   onClick={handleResetFilters}
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm"
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/30"
                 >
                   Reset Filters
                 </button>
-              </div>
+              </section>
             ) : (
-              <div className="w-full">
+              <section aria-label="Perks Grid" className="w-full">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 lg:gap-8 justify-items-center w-full py-6">
                   {perks.map((perk, idx) => (
                     <PerkCard
@@ -391,13 +427,21 @@ function PerksContent() {
                     dict={dict}
                   />
                 </div>
-              </div>
+              </section>
             )}
           </>
         )}
 
-        <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
-        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
+        <PerkModal
+          perk={selectedPerk}
+          onClose={() => setSelectedPerk(null)}
+          dict={dict}
+        />
+        <QuestsModal
+          isOpen={isQuestsOpen}
+          onClose={() => setIsQuestsOpen(false)}
+          dict={dict}
+        />
       </main>
     </div>
   );
@@ -416,4 +460,3 @@ export default function PerksPage() {
     </Suspense>
   );
 }
-

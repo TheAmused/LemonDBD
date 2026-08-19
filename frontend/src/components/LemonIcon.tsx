@@ -4,17 +4,24 @@ import React from 'react';
 interface LemonIconProps {
   className?: string;
   size?: number;
+  alt?: string;
 }
 
-export const LemonIcon: React.FC<LemonIconProps> = ({ className = 'w-6 h-6', size }) => {
+export const LemonIcon: React.FC<LemonIconProps> = ({
+  className = 'w-6 h-6',
+  size,
+  alt = 'LemonDBD Logo',
+}) => {
+  const dimension = size || 24;
+
   return (
     <img
       src="/icon.svg"
-      alt="LemonDBD Logo"
+      alt={alt}
       className={`select-none object-contain pointer-events-none inline-block ${className}`}
       style={size ? { width: size, height: size } : undefined}
-      width={size || 24}
-      height={size || 24}
+      width={dimension}
+      height={dimension}
       draggable={false}
     />
   );

@@ -1,9 +1,9 @@
-// frontend/src/components/maps/VoiceNavButton.tsx
 'use client';
+// frontend/src/components/maps/VoiceNavButton.tsx
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { VoiceCommandBanner, VoiceCommandBannerProps } from './VoiceCommandBanner';
+import { VoiceCommandBanner } from './VoiceCommandBanner';
 
 export interface VoiceNavButtonProps {
   locale?: string;
@@ -11,16 +11,11 @@ export interface VoiceNavButtonProps {
   onSourceChange?: (source: 'all' | 'hens333' | 'samoelcolt') => void;
   onSelectMap?: (mapName: string, mapId?: string, source?: string) => void;
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
-  availableMaps?: Array<{ id: string; name: string; realm: string; source: string }>;
+  availableMaps?: Array<{ id: string; name: string; realm?: string; source?: string }>;
   className?: string;
   variant?: 'banner' | 'compact';
 }
 
-/**
- * VoiceNavButton
- * Backward-compatible wrapper component providing full VoiceCommandBanner features
- * and navigation support.
- */
 export function VoiceNavButton({
   locale = 'en',
   currentSource: propSource,
@@ -29,7 +24,6 @@ export function VoiceNavButton({
   onAction: propOnAction,
   availableMaps,
   className = '',
-  variant = 'banner',
 }: VoiceNavButtonProps) {
   const router = useRouter();
   const [internalSource, setInternalSource] = useState<'all' | 'hens333' | 'samoelcolt'>(
@@ -53,7 +47,6 @@ export function VoiceNavButton({
   const handleAction =
     propOnAction ||
     ((action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => {
-      // Default fallback for action commands when no custom action handler is provided
       if (action === 'close') {
         router.push(`/${locale}`);
       }

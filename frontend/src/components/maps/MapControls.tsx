@@ -1,5 +1,5 @@
-// frontend/src/components/maps/MapControls.tsx
 'use client';
+// frontend/src/components/maps/MapControls.tsx
 
 import React from 'react';
 import { ZoomIn, ZoomOut, RotateCcw, Maximize2, ExternalLink } from 'lucide-react';
@@ -34,53 +34,53 @@ export const MapControls: React.FC<MapControlsProps> = ({
 
   return (
     <div
+      role="toolbar"
+      aria-label="Map view zoom and navigation controls"
       className={`flex items-center gap-1.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-2 backdrop-blur-md shadow-lg dark:shadow-2xl z-30 select-none ${
         isVertical ? 'flex-col' : 'flex-wrap'
       } ${className}`}
       data-testid="map-controls-hud"
     >
-      {/* Zoom In Button (44px touch target) */}
       <button
         type="button"
         onClick={onZoomIn}
         aria-label="Zoom In"
         title="Zoom In (+25%)"
-        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
+        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
         data-testid="map-controls-zoom-in"
       >
         <ZoomIn className="h-4 w-4" />
       </button>
 
-      {/* Current Zoom Percentage */}
       <span
+        aria-live="polite"
         className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 px-2 min-w-[48px] text-center"
         data-testid="map-controls-zoom-level"
       >
         {Math.round(zoomLevel * 100)}%
       </span>
 
-      {/* Zoom Out Button (44px touch target) */}
       <button
         type="button"
         onClick={onZoomOut}
         aria-label="Zoom Out"
         title="Zoom Out (-25%)"
-        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
+        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
         data-testid="map-controls-zoom-out"
       >
         <ZoomOut className="h-4 w-4" />
       </button>
 
-      {/* Divider */}
       {(!isCompact || showPresets) && (
         <div
           className={
-            isVertical ? 'w-5 h-px bg-slate-200 dark:bg-slate-800 my-1' : 'w-px h-5 bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block'
+            isVertical
+              ? 'w-5 h-px bg-slate-200 dark:bg-slate-800 my-1'
+              : 'w-px h-5 bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block'
           }
         />
       )}
 
-      {/* Preset Buttons (Fit, 100%, 150%, 200%) */}
       {showPresets && !isCompact && (
         <div
           className={`flex items-center gap-1 ${
@@ -93,7 +93,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             onClick={onReset}
             title="Fit to Screen"
             aria-pressed={false}
-            className="px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800 transition-all cursor-pointer"
+            className="px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
             data-testid="map-controls-preset-fit"
           >
             Fit
@@ -103,7 +103,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             onClick={() => onSetZoom(1.0)}
             title="Set 100% Zoom"
             aria-pressed={Math.abs(zoomLevel - 1.0) < 0.01}
-            className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500 ${
               Math.abs(zoomLevel - 1.0) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800'
@@ -117,7 +117,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             onClick={() => onSetZoom(1.5)}
             title="Set 150% Zoom"
             aria-pressed={Math.abs(zoomLevel - 1.5) < 0.01}
-            className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500 ${
               Math.abs(zoomLevel - 1.5) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800'
@@ -131,7 +131,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             onClick={() => onSetZoom(2.0)}
             title="Set 200% Zoom"
             aria-pressed={Math.abs(zoomLevel - 2.0) < 0.01}
-            className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+            className={`px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500 ${
               Math.abs(zoomLevel - 2.0) < 0.01
                 ? 'bg-amber-500 text-slate-950 font-extrabold shadow-sm'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800'
@@ -143,43 +143,39 @@ export const MapControls: React.FC<MapControlsProps> = ({
         </div>
       )}
 
-      {/* Divider */}
       <div className={isVertical ? 'w-5 h-px bg-slate-200 dark:bg-slate-800 my-1' : 'w-px h-5 bg-slate-200 dark:bg-slate-800 mx-1'} />
 
-      {/* Reset Zoom & Pan Button (44px touch target) */}
       <button
         type="button"
         onClick={onReset}
         aria-label="Reset View"
         title="Reset Zoom & Pan"
-        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
+        className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
         data-testid="map-controls-reset"
       >
         <RotateCcw className="h-4 w-4" />
       </button>
 
-      {/* Fullscreen Button (if provided) */}
       {onFullscreen && (
         <button
           type="button"
           onClick={onFullscreen}
-          aria-label="Fullscreen"
+          aria-label="Fullscreen Interactive Mode"
           title="Fullscreen Interactive Mode"
-          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
+          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
           data-testid="map-controls-fullscreen"
         >
           <Maximize2 className="h-4 w-4" />
         </button>
       )}
 
-      {/* Popout Button (if provided) */}
       {onPopout && (
         <button
           type="button"
           onClick={onPopout}
-          aria-label="Popout"
+          aria-label="Popout Map in Window"
           title="Popout Map in Window"
-          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm"
+          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
           data-testid="map-controls-popout"
         >
           <ExternalLink className="h-4 w-4" />

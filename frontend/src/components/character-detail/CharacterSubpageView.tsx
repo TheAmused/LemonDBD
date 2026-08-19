@@ -1,5 +1,5 @@
-// frontend/src/components/character-detail/CharacterSubpageView.tsx
 'use client';
+// frontend/src/components/character-detail/CharacterSubpageView.tsx
 
 import React from 'react';
 import { CharacterDetailPayload, CharacterItem } from './types';
@@ -12,7 +12,7 @@ export * from './KillerDetailView';
 
 interface CharacterSubpageViewProps {
   currentLocale: string;
-  dict: any;
+  dict: Record<string, Record<string, string>>;
   detailData: CharacterDetailPayload;
   allCharacters?: CharacterItem[];
 }
@@ -30,3 +30,4 @@ export const CharacterSubpageView: React.FC<CharacterSubpageViewProps> = (props)
 };
 
 export default CharacterSubpageView;
+

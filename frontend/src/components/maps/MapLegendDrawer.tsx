@@ -1,5 +1,5 @@
-// frontend/src/components/maps/MapLegendDrawer.tsx
 'use client';
+// frontend/src/components/maps/MapLegendDrawer.tsx
 
 import React, { useState } from 'react';
 import { Clock, Layers, ChevronDown, ChevronUp, Info, Compass } from 'lucide-react';
@@ -26,7 +26,7 @@ export interface MapLegendDrawerProps {
   realmName?: string;
 }
 
-const GENERIC_PLACEHOLDERS = new Set([
+const GENERIC_PLACEHOLDERS: ReadonlySet<string> = new Set([
   'north sector',
   'east sector',
   'south sector',
@@ -80,27 +80,26 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
 
   const displayTitle = title || defaultTitle;
 
-  // Resolve rich landmarks from dictionary when values are generic or missing
   const fallbackLandmarks: MapLandmarks = getMapLandmarks(mapName, realmName, source);
 
   const twelveVal = isGenericOrMissing(clockSystem?.twelve_o_clock)
     ? fallbackLandmarks.twelve_o_clock
-    : clockSystem!.twelve_o_clock!;
+    : clockSystem?.twelve_o_clock ?? fallbackLandmarks.twelve_o_clock;
 
   const threeVal = isGenericOrMissing(clockSystem?.three_o_clock)
     ? fallbackLandmarks.three_o_clock
-    : clockSystem!.three_o_clock!;
+    : clockSystem?.three_o_clock ?? fallbackLandmarks.three_o_clock;
 
   const sixVal = isGenericOrMissing(clockSystem?.six_o_clock)
     ? fallbackLandmarks.six_o_clock
-    : clockSystem!.six_o_clock!;
+    : clockSystem?.six_o_clock ?? fallbackLandmarks.six_o_clock;
 
   const nineVal = isGenericOrMissing(clockSystem?.nine_o_clock)
     ? fallbackLandmarks.nine_o_clock
-    : clockSystem!.nine_o_clock!;
+    : clockSystem?.nine_o_clock ?? fallbackLandmarks.nine_o_clock;
 
   const centerVal = !isGenericOrMissing(clockSystem?.center)
-    ? clockSystem!.center!
+    ? clockSystem?.center ?? fallbackLandmarks.center
     : fallbackLandmarks.center;
 
   const descriptionVal = clockSystem?.description || fallbackLandmarks.description;
@@ -129,11 +128,11 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
   ];
 
   return (
-    <div
+    <section
+      aria-label="Map Sector Legend"
       className={`rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm dark:shadow-xl backdrop-blur-md overflow-hidden transition-all duration-300 ${className}`}
       data-testid="map-legend-drawer"
     >
-      {/* Header Bar */}
       <div
         onClick={collapsible ? handleToggle : undefined}
         className={`flex items-center justify-between p-3.5 md:p-4 border-b border-slate-200 dark:border-slate-800/80 ${
@@ -172,7 +171,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
             }}
             aria-expanded={isExpanded}
             aria-label={isExpanded ? 'Collapse Legend' : 'Expand Legend'}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors min-h-[36px] min-w-[36px] cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors min-h-[36px] min-w-[36px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
             data-testid="map-legend-toggle-btn"
           >
             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -180,10 +179,8 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
         )}
       </div>
 
-      {/* Expandable Body */}
       {isExpanded && (
         <div className="p-3.5 md:p-4 space-y-3" data-testid="map-legend-body">
-          {/* Optional System Description */}
           {descriptionVal && (
             <div className="flex items-start gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 p-3 text-xs text-slate-700 dark:text-slate-300 shadow-inner">
               <Info className="h-4 w-4 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
@@ -191,7 +188,6 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
             </div>
           )}
 
-          {/* Center Landmark Highlight Banner */}
           {centerVal && (
             <div
               className={`rounded-xl border p-3 md:p-3.5 flex items-center justify-between gap-3 shadow-inner ${
@@ -227,7 +223,6 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
             </div>
           )}
 
-          {/* 4-Sector / Clock Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {sectors.map((sector) => (
               <div
@@ -255,7 +250,6 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
-

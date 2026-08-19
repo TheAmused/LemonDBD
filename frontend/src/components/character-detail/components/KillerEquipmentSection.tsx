@@ -7,7 +7,7 @@ interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
   backendBase: string;
   onSelectEquipment: (item: AddonItem | EquipmentItem) => void;
-  t: any;
+  t: Record<string, string>;
 }
 
 export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
@@ -24,20 +24,20 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
   if (!addons || addons.length === 0) return null;
 
   return (
-    <section className="p-6 rounded-3xl bg-slate-950/40 border border-slate-800/80 shadow-xl space-y-5 relative">
+    <section className="p-5 sm:p-6 rounded-3xl bg-slate-950/40 border border-slate-800/80 shadow-xl space-y-5 relative w-full">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
         <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-500 border border-rose-500/30">
+          <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/30">
             <Flame className="h-5 w-5" />
           </span>
           <div>
-            <h2 className="text-xl font-black text-slate-100 font-mono tracking-tight flex items-center gap-2">
-              {t.killerPowerAddons || 'Killer Power Add-ons'}
+            <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight flex items-center gap-2">
+              {t.equipmentTitleKiller || 'Power Add-ons & Equipment'}
               <span className="text-sm font-bold text-rose-400 font-mono">({addons.length})</span>
             </h2>
             <p className="text-xs text-slate-400">
-              {t.hoverAddonPreview || 'Hover over add-on icons for preview, click for full details.'}
+              {t.hoverToInspect || 'Hover over add-on icons for preview, click for full details.'}
             </p>
           </div>
         </div>
@@ -47,7 +47,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
         </span>
       </div>
 
-      {/* Centered Bigger Add-ons Grid */}
+      {/* Responsive Add-ons Grid */}
       <div className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4.5 p-2">
         {addons.map((addon, idx) => {
           const id = `killer-addon-${addon.name}-${idx}`;
@@ -56,13 +56,22 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
           return (
             <div
               key={id}
+              role="button"
+              tabIndex={0}
               onClick={() => onSelectEquipment(addon)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onSelectEquipment(addon);
+                }
+              }}
               onMouseEnter={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 setActiveHover({ item: addon, rect });
               }}
               onMouseLeave={() => setActiveHover(null)}
-              className={`relative group rounded-3xl border-2 p-2.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 shadow-lg ${rarityStyle.bg}`}
+              className={`relative group rounded-3xl border-2 p-2.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 shadow-lg ${rarityStyle.bg}`}
+              aria-label={`Inspect addon: ${addon.name}`}
             >
               <img
                 src={getAssetUrl(backendBase, addon.icon_local_path, addon.icon_url)}
@@ -77,7 +86,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
         })}
       </div>
 
-      {/* Viewport-Clamped Floating Tooltip (Bypasses parent clipping & sidebars) */}
+      {/* Clamped Tooltip */}
       {activeHover && typeof window !== 'undefined' && (() => {
         const tooltipWidth = 320;
         const left = Math.max(
@@ -112,3 +121,4 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
     </section>
   );
 };
+

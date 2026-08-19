@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/streaks/killer/page.tsx
 import React from 'react';
 import { StreakPanelGrid } from '@/components/streaks/StreakPanelGrid';
 

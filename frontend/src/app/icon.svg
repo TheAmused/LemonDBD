@@ -1,28 +1,190 @@
-<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- frontend/src/app/icon.svg -->
+<svg viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="dbdLemon" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stopColor="#FACC15" />
-      <stop offset="50%" stopColor="#EAB308" />
-      <stop offset="85%" stopColor="#D97706" />
-      <stop offset="100%" stopColor="#991B1B" />
+    <!-- Entity Ambient Darkness & Fog -->
+    <radialGradient id="entityAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#DC2626" stop-opacity="0.32" />
+      <stop offset="55%" stop-color="#7F1D1D" stop-opacity="0.16" />
+      <stop offset="85%" stop-color="#180404" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Volumetric Citrus Lemon Gradient -->
+    <radialGradient id="lemonVolumetric" cx="42%" cy="36%" r="65%">
+      <stop offset="0%" stop-color="#FFF066" />    <!-- Lemon Top Highlight -->
+      <stop offset="22%" stop-color="#FDE047" />   <!-- Fresh Lemon Yellow -->
+      <stop offset="55%" stop-color="#EAB308" />   <!-- Deep Citrus Gold -->
+      <stop offset="80%" stop-color="#C2410C" />   <!-- Entity Burnt Amber -->
+      <stop offset="94%" stop-color="#7F1D1D" />   <!-- Bloodstained Shadow -->
+      <stop offset="100%" stop-color="#2D0606" />  <!-- Dark Rind Edge -->
+    </radialGradient>
+
+    <!-- Deep Gouge Trench Gradient -->
+    <linearGradient id="woundDepth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A0101" />
+      <stop offset="50%" stop-color="#1A0303" />
+      <stop offset="100%" stop-color="#050000" />
     </linearGradient>
-    <linearGradient id="leafG" x1="16" y1="2" x2="24" y2="10" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stopColor="#22C55E" />
-      <stop offset="100%" stopColor="#15803D" />
+
+    <!-- Arterial Blood Gradient -->
+    <linearGradient id="bloodFlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EF4444" />
+      <stop offset="50%" stop-color="#DC2626" />
+      <stop offset="100%" stop-color="#881337" />
     </linearGradient>
+
+    <!-- Entity Fire Glow Filter -->
+    <filter id="entityGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="0" stdDeviation="3.5" flood-color="#EF4444" flood-opacity="0.85" />
+      <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#991B1B" flood-opacity="0.5" />
+    </filter>
+
+    <!-- Drop Shadow Filter for Blood Droplets -->
+    <filter id="bloodShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.7"/>
+    </filter>
   </defs>
-  <circle cx="16" cy="17" r="13" fill="#DC2626" fill-opacity="0.25" />
-  <path d="M 5 16 C 5 8, 11 5, 17 5 C 24 5, 27 10, 27 16 C 27 24, 21 27, 15 27 C 8 27, 5 22, 5 16 Z" fill="url(#dbdLemon)" stroke="#78350F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M 11 10 L 9 22" stroke="#450A0A" stroke-width="1.8" stroke-linecap="round" />
-  <path d="M 11 10 L 9 22" stroke="#DC2626" stroke-width="0.8" stroke-linecap="round" />
-  <path d="M 14.5 9 L 12.5 23" stroke="#450A0A" stroke-width="1.8" stroke-linecap="round" />
-  <path d="M 14.5 9 L 12.5 23" stroke="#DC2626" stroke-width="0.8" stroke-linecap="round" />
-  <path d="M 18 9 L 16 23" stroke="#450A0A" stroke-width="1.8" stroke-linecap="round" />
-  <path d="M 18 9 L 16 23" stroke="#DC2626" stroke-width="0.8" stroke-linecap="round" />
-  <path d="M 21.5 10 L 19.5 22" stroke="#450A0A" stroke-width="1.8" stroke-linecap="round" />
-  <path d="M 21.5 10 L 19.5 22" stroke="#DC2626" stroke-width="0.8" stroke-linecap="round" />
-  <path d="M 7.5 18.5 L 23 13.5" stroke="#18181B" stroke-width="1.6" stroke-linecap="round" />
-  <path d="M 7.5 18.5 L 23 13.5" stroke="#EF4444" stroke-width="0.8" stroke-linecap="round" />
-  <path d="M 16 5 C 16 2, 17 1.5, 18 1" stroke="#522504" stroke-width="1.5" stroke-linecap="round" />
-  <path d="M 17 3 C 21 1.5, 24 3, 24 6 C 20 6.5, 18 5, 17 3 Z" fill="url(#leafG)" stroke="#14532D" stroke-width="0.8" />
+
+  <!-- Ambient Entity Darkness -->
+  <circle cx="128" cy="128" r="120" fill="url(#entityAura)" />
+
+  <!-- ==================== ROTATED LEMON WITH CENTERED SCRATCHES ==================== -->
+  <g transform="rotate(-15 128 128)">
+    <!-- Lemon Body Drop Shadow -->
+    <path
+      d="M 22 128 
+         C 30 114, 46 102, 66 84 
+         C 92 48, 134 38, 172 46 
+         C 208 54, 230 82, 238 114 
+         C 244 122, 248 125, 252 128 
+         C 248 131, 244 134, 238 142 
+         C 230 174, 208 202, 172 210 
+         C 134 218, 92 208, 66 172 
+         C 46 154, 30 142, 22 128 Z"
+      fill="#000000"
+      opacity="0.4"
+      transform="translate(4, 7)"
+    />
+
+    <!-- Main Lemon Body Shell -->
+    <path
+      d="M 22 128 
+         C 30 114, 46 102, 66 84 
+         C 92 48, 134 38, 172 46 
+         C 208 54, 230 82, 238 114 
+         C 244 122, 248 125, 252 128 
+         C 248 131, 244 134, 238 142 
+         C 230 174, 208 202, 172 210 
+         C 134 218, 92 208, 66 172 
+         C 46 154, 30 142, 22 128 Z"
+      fill="url(#lemonVolumetric)"
+      stroke="#270707"
+      stroke-width="4.5"
+      stroke-linejoin="round"
+    />
+
+    <!-- Citrus Skin Texture Pores -->
+    <g fill="#A16207" opacity="0.32">
+      <circle cx="56" cy="116" r="1.8" />
+      <circle cx="74" cy="94" r="1.5" />
+      <circle cx="102" cy="74" r="2" />
+      <circle cx="138" cy="62" r="1.8" />
+      <circle cx="172" cy="68" r="1.8" />
+      <circle cx="204" cy="86" r="1.6" />
+      <circle cx="226" cy="116" r="2" />
+      <circle cx="206" cy="164" r="2.2" />
+      <circle cx="178" cy="188" r="1.8" />
+      <circle cx="140" cy="198" r="2" />
+      <circle cx="98" cy="186" r="1.6" />
+      <circle cx="68" cy="154" r="2" />
+    </g>
+
+    <!-- Subtle Lemon Rind Top Edge Curve Highlight -->
+    <path
+      d="M 68 84 C 98 56, 138 48, 176 56 C 194 60, 210 70, 224 86"
+      stroke="#FEF9C3"
+      stroke-width="3"
+      stroke-linecap="round"
+      opacity="0.4"
+    />
+
+    <!-- Blood Splatter Stains on Rind -->
+    <g fill="#991B1B" opacity="0.75">
+      <circle cx="48" cy="112" r="2.5" />
+      <circle cx="42" cy="138" r="3.2" />
+      <circle cx="214" cy="144" r="2.5" />
+      <circle cx="196" cy="76" r="2.8" />
+      <circle cx="184" cy="58" r="2" />
+    </g>
+
+    <!-- ==================== PERFECTLY CENTERED DEAD BY DAYLIGHT TALLIES ==================== -->
+    <g filter="url(#entityGlow)">
+      <!-- TALLY 1 (Leftmost Vertical Strike - Center X: 86) -->
+      <path d="M 85 70 L 93 88 L 87 128 L 93 168 L 86 188 L 78 182 L 81 144 L 77 108 L 81 80 Z" fill="url(#woundDepth)" />
+      <path d="M 86 76 L 91 89 L 85 128 L 91 166 L 84 182 L 80 146 L 79 108 Z" fill="url(#bloodFlow)" />
+      <path d="M 84.5 86 L 83 128 L 86 164" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" opacity="0.9" />
+
+      <!-- TALLY 2 (Center X: 114) -->
+      <path d="M 113 58 L 123 78 L 115 128 L 123 174 L 114 198 L 105 192 L 109 148 L 105 100 L 109 70 Z" fill="url(#woundDepth)" />
+      <path d="M 114 66 L 121 80 L 113 128 L 121 172 L 112 192 L 107 150 L 107 100 Z" fill="url(#bloodFlow)" />
+      <path d="M 112.5 76 L 111 128 L 114 172" stroke="#F97316" stroke-width="2.2" stroke-linecap="round" opacity="0.95" />
+
+      <!-- TALLY 3 (Center X: 142) -->
+      <path d="M 141 58 L 151 78 L 143 128 L 151 174 L 142 198 L 133 192 L 137 148 L 133 100 L 137 70 Z" fill="url(#woundDepth)" />
+      <path d="M 142 66 L 149 80 L 141 128 L 149 172 L 140 192 L 135 150 L 135 100 Z" fill="url(#bloodFlow)" />
+      <path d="M 140.5 76 L 139 128 L 142 172" stroke="#F97316" stroke-width="2.2" stroke-linecap="round" opacity="0.95" />
+
+      <!-- TALLY 4 (Rightmost Vertical Strike - Center X: 170) -->
+      <path d="M 169 70 L 177 88 L 171 128 L 177 168 L 170 188 L 162 182 L 165 144 L 161 108 L 165 80 Z" fill="url(#woundDepth)" />
+      <path d="M 170 76 L 175 89 L 169 128 L 175 166 L 168 182 L 164 146 L 163 108 Z" fill="url(#bloodFlow)" />
+      <path d="M 168.5 86 L 167 128 L 170 164" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" opacity="0.9" />
+
+      <!-- TALLY 5: SAVAGE DIAGONAL SLASH (Crossing Center 128, 128) -->
+      <!-- Black Base Chasm -->
+      <path
+        d="M 52 170 L 78 154 L 128 128 L 178 102 L 204 86 L 207 94 L 175 114 L 125 140 L 75 166 L 49 178 Z"
+        fill="#050000"
+      />
+      <!-- Blood Channel -->
+      <path
+        d="M 55 171 L 80 155 L 128 129 L 176 103 L 202 89 L 173 111 L 126 137 L 77 163 Z"
+        fill="url(#bloodFlow)"
+      />
+      <!-- Glowing Crimson Core -->
+      <path
+        d="M 58 169 L 128 128 L 198 87"
+        stroke="#EF4444"
+        stroke-width="3"
+        stroke-linecap="round"
+        opacity="0.95"
+      />
+    </g>
+
+    <!-- ==================== OOZING BLOOD DRIPS (PURE DEEP CRIMSON) ==================== -->
+    <g filter="url(#bloodShadow)">
+      <!-- Drip from Tally 1 -->
+      <path
+        d="M 83 184 C 83 194, 79 202, 79 207 C 79 211, 82 214, 85 214 C 88 214, 91 211, 91 207 C 91 202, 87 194, 87 184 Z"
+        fill="#991B1B"
+      />
+
+      <!-- Drip from Tally 2 -->
+      <path
+        d="M 111 194 C 111 204, 107 214, 107 220 C 107 225, 111 229, 115 229 C 119 229, 123 225, 123 220 C 123 214, 116 204, 116 194 Z"
+        fill="#991B1B"
+      />
+
+      <!-- Drip from Tally 3 -->
+      <path
+        d="M 139 194 C 139 202, 142 208, 142 213 C 142 217, 139 220, 136 220 C 133 220, 130 217, 130 213 C 130 208, 134 202, 134 194 Z"
+        fill="#7F1D1D"
+      />
+
+      <!-- Drip from Diagonal Strike Tip -->
+      <path
+        d="M 50 176 C 50 182, 47 187, 47 190 C 47 193, 49 195, 51 195 C 53 195, 55 193, 55 190 C 55 187, 53 182, 53 176 Z"
+        fill="#B91C1C"
+      />
+    </g>
+  </g>
 </svg>

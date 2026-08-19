@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/killer-calculator/page.tsx
 'use client';
 
 import React, { useEffect, useState, Suspense } from 'react';

@@ -1,63 +1,26 @@
 'use client';
+// frontend/src/components/WheelOfFortune.tsx
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Play, RotateCcw } from 'lucide-react';
-import { Perk } from './PerkCard';
-import { ChaosMutator } from './ChaosWheelModal';
+import { Perk, RoleCategory, PerkDictionary } from '@/types/perks';
+import { ChaosMutator, WheelWinSlotPayload } from '@/types/chaos';
+import { EXHAUSTION_PERK_NAMES, MEME_PERK_NAMES } from '@/constants/chaosMutators';
+import { getPerkIconUrl } from '@/utils/perkUtils';
 
-export const EXHAUSTION_PERK_NAMES = new Set([
-  'adrenaline',
-  'balanced landing',
-  'dead hard',
-  'lithe',
-  'sprint burst',
-  'overcome',
-  'smash hit',
-  'background player',
-  'finesse',
-  'dramaturgy',
-  'head on',
-]);
-
-export const MEME_PERK_NAMES = new Set([
-  'no mither',
-  'diversion',
-  'head on',
-  'plot twist',
-  'red herring',
-  'slippery meat',
-  'blast mine',
-  'flashbang',
-  'scene partner',
-  'dramaturgy',
-  'deception',
-  'bardic inspiration',
-  'up the ante',
-  'autodidact',
-  'power struggle',
-  'mad grit',
-  'insidious',
-  'monstrous shrine',
-  'unrelenting',
-  'game afoot',
-  'coup de grâce',
-  'coup de grace',
-  'deerstalker',
-  'rancor',
-  'trail of torment',
-]);
+export { EXHAUSTION_PERK_NAMES, MEME_PERK_NAMES };
 
 interface WheelOfFortuneProps {
   totalPages: number;
   perksPerPage: number;
   lastPagePerks: number;
   spinDurationSec: number;
-  role: 'Survivor' | 'Killer';
+  role: RoleCategory;
   sortedPerks: Perk[];
   activeSlotIdx: number;
-  onWinSlot: (wonData: { page: number; slot: number; perk: Perk; mutator?: ChaosMutator }) => void;
-  dict: any;
-  backendBase: string;
+  onWinSlot: (wonData: WheelWinSlotPayload) => void;
+  dict?: PerkDictionary;
+  backendBase?: string;
   activeMutator?: ChaosMutator | null;
   onOpenChaosModal?: () => void;
   onResetWheels?: () => void;
@@ -90,8 +53,8 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
 }) => {
   const [wheelPhase, setWheelPhase] = useState<'page' | 'perk'>('page');
   const [selectedPageUI, setSelectedPageUI] = useState<number>(1);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [isMorphing, setIsMorphing] = useState(false);
+  const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [isMorphing, setIsMorphing] = useState<boolean>(false);
   const [statusText, setStatusText] = useState<string>('');
 
   const wheelCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -107,14 +70,9 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
 
   const effectiveTotalPages = Math.max(1, totalPages);
 
-  const getPerkIconSrc = useCallback(
+  const getIconSrc = useCallback(
     (perk?: Perk) => {
-      if (!perk) return '';
-      if (perk.icon_local_path) {
-        const cleanPath = perk.icon_local_path.replace(/^\/?(static\/)?/, '');
-        return `${backendBase}/static/${cleanPath}`;
-      }
-      return perk.icon_url || '';
+      return getPerkIconUrl(perk, backendBase) || '';
     },
     [backendBase]
   );
@@ -135,78 +93,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     },
     [activeMutator]
   );
-
-  useEffect(() => {
-    sortedPerks.forEach((perk) => {
-      const src = getPerkIconSrc(perk);
-      if (src && !imageCacheRef.current.has(src)) {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.src = src;
-        img.onload = () => {
-          drawUnifiedWheel();
-        };
-        imageCacheRef.current.set(src, img);
-      }
-    });
-  }, [sortedPerks, getPerkIconSrc]);
-
-  const triggerParticleBurst = useCallback(() => {
-    const canvas = particlesCanvasRef.current;
-    if (!canvas) return;
-    const width = canvas.width;
-    const height = canvas.height;
-    const count = 65;
-
-    const newParticles: Particle[] = [];
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 9 + 3;
-      newParticles.push({
-        x: width / 2,
-        y: height / 2,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        size: Math.random() * 7 + 2,
-        alpha: 1.0,
-        color: role === 'Survivor' ? '#10b981' : '#f43f5e',
-      });
-    }
-    particleListRef.current = newParticles;
-
-    const renderParticles = () => {
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-
-      let alive = false;
-      for (const p of particleListRef.current) {
-        if (p.alpha > 0.02) {
-          alive = true;
-          p.x += p.vx;
-          p.y += p.vy;
-          p.alpha *= 0.93;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.globalAlpha = p.alpha;
-          ctx.fill();
-        }
-      }
-      ctx.globalAlpha = 1.0;
-
-      if (alive) {
-        particleAnimFrameRef.current = requestAnimationFrame(renderParticles);
-      } else {
-        ctx.clearRect(0, 0, width, height);
-      }
-    };
-
-    if (particleAnimFrameRef.current) {
-      cancelAnimationFrame(particleAnimFrameRef.current);
-    }
-    renderParticles();
-  }, [role]);
 
   const drawUnifiedWheel = useCallback(() => {
     const canvas = wheelCanvasRef.current;
@@ -290,7 +176,6 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       ctx.lineWidth = 10;
       ctx.strokeStyle = '#f59e0b';
       ctx.stroke();
-
     } else {
       const pageNumber = activePageRef.current;
       const maxSlotsOnPage = Math.max(
@@ -333,8 +218,8 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         const midAngle = angle + sliceAngle / 2;
         ctx.rotate(midAngle + Math.PI / 2);
 
-        const iconSrc = getPerkIconSrc(perk);
-        const imgObj = imageCacheRef.current.get(iconSrc);
+        const iconSrc = getIconSrc(perk);
+        const imgObj = iconSrc ? imageCacheRef.current.get(iconSrc) : undefined;
         const iconSize = 72;
         const iconRadiusPos = -(radius - 85);
 
@@ -400,6 +285,7 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       ctx.stroke();
     }
 
+    // Top Pointer Arrow
     ctx.beginPath();
     ctx.moveTo(centerX - 22, 2);
     ctx.lineTo(centerX + 22, 2);
@@ -417,12 +303,92 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     sortedPerks,
     isPerkBlockedByMutator,
     role,
-    getPerkIconSrc,
+    getIconSrc,
   ]);
+
+  useEffect(() => {
+    sortedPerks.forEach((perk) => {
+      const src = getIconSrc(perk);
+      if (src && !imageCacheRef.current.has(src)) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = src;
+        img.onload = () => {
+          drawUnifiedWheel();
+        };
+        imageCacheRef.current.set(src, img);
+      }
+    });
+  }, [sortedPerks, getIconSrc, drawUnifiedWheel]);
 
   useEffect(() => {
     drawUnifiedWheel();
   }, [drawUnifiedWheel, selectedPageUI, sortedPerks, activeMutator, wheelPhase]);
+
+  useEffect(() => {
+    return () => {
+      if (particleAnimFrameRef.current !== null) {
+        cancelAnimationFrame(particleAnimFrameRef.current);
+      }
+    };
+  }, []);
+
+  const triggerParticleBurst = useCallback(() => {
+    const canvas = particlesCanvasRef.current;
+    if (!canvas) return;
+    const width = canvas.width;
+    const height = canvas.height;
+    const count = 65;
+
+    const newParticles: Particle[] = [];
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 9 + 3;
+      newParticles.push({
+        x: width / 2,
+        y: height / 2,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: Math.random() * 7 + 2,
+        alpha: 1.0,
+        color: role === 'Survivor' ? '#10b981' : '#f43f5e',
+      });
+    }
+    particleListRef.current = newParticles;
+
+    const renderParticles = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      let alive = false;
+      for (const p of particleListRef.current) {
+        if (p.alpha > 0.02) {
+          alive = true;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha *= 0.93;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.alpha;
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1.0;
+
+      if (alive) {
+        particleAnimFrameRef.current = requestAnimationFrame(renderParticles);
+      } else {
+        ctx.clearRect(0, 0, width, height);
+      }
+    };
+
+    if (particleAnimFrameRef.current) {
+      cancelAnimationFrame(particleAnimFrameRef.current);
+    }
+    renderParticles();
+  }, [role]);
 
   const handleStartSpin = async () => {
     if (isSpinning || sortedPerks.length === 0) return;
@@ -432,8 +398,8 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     const pageSpinDuration = totalDurationMs * 0.45;
     const perkSpinDuration = totalDurationMs * 0.55;
 
-    let targetPage = Math.floor(Math.random() * effectiveTotalPages) + 1;
-    let maxSlotsOnPage = Math.max(
+    const targetPage = Math.floor(Math.random() * effectiveTotalPages) + 1;
+    const maxSlotsOnPage = Math.max(
       1,
       targetPage === effectiveTotalPages ? lastPagePerks || perksPerPage : perksPerPage
     );
@@ -451,7 +417,7 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       return MEME_PERK_NAMES.has(name);
     };
 
-    let validSlotsOnPage: number[] = [];
+    const validSlotsOnPage: number[] = [];
     for (let s = 1; s <= maxSlotsOnPage; s++) {
       const idx = (targetPage - 1) * perksPerPage + (s - 1);
       const perk = sortedPerks[idx];
@@ -585,11 +551,13 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       {onOpenChaosModal && (
         <div className="relative group mb-3 z-30">
           <button
+            type="button"
             onClick={onOpenChaosModal}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl border text-xs font-black transition-all cursor-pointer shadow-sm dark:shadow-xl backdrop-blur-xl hover:scale-105 active:scale-95 ${activeMutator
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl border text-xs font-black transition-all cursor-pointer shadow-sm dark:shadow-xl backdrop-blur-xl hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
+              activeMutator
                 ? `${activeMutator.badgeBg} ${activeMutator.borderColor} ${activeMutator.textColor} border-2 scale-105 ring-2 ring-purple-500/40`
                 : 'border-purple-500/30 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/60 shadow-purple-950/20'
-              }`}
+            }`}
           >
             <span className="text-base animate-bounce">{activeMutator ? activeMutator.icon : '🔮'}</span>
             <span>{activeMutator ? `Curse: ${activeMutator.name}` : 'Spin Chaos Curse'}</span>
@@ -627,17 +595,19 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
           />
 
           <div
-            className={`w-full max-w-[580px] sm:max-w-[640px] aspect-square transition-all duration-500 ease-out transform ${isMorphing ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
-              }`}
+            className={`w-full max-w-[580px] sm:max-w-[640px] aspect-square transition-all duration-500 ease-out transform ${
+              isMorphing ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
+            }`}
           >
             <canvas
               ref={wheelCanvasRef}
               width={800}
               height={800}
-              className={`h-full w-full ${role === 'Survivor'
+              className={`h-full w-full ${
+                role === 'Survivor'
                   ? 'drop-shadow-[0_0_30px_rgba(16,185,129,0.35)]'
                   : 'drop-shadow-[0_0_30px_rgba(244,63,94,0.35)]'
-                }`}
+              }`}
             />
           </div>
         </div>
@@ -646,14 +616,16 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
       <div className="mt-6 flex flex-col items-center gap-3">
         <div className="flex items-center gap-3 flex-wrap justify-center">
           <button
+            type="button"
             onClick={handleStartSpin}
             disabled={isSpinning || sortedPerks.length === 0}
-            className={`flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-lg tracking-wider uppercase shadow-2xl transition-all cursor-pointer ${isSpinning || sortedPerks.length === 0
+            className={`flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-lg tracking-wider uppercase shadow-2xl transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+              isSpinning || sortedPerks.length === 0
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-200 dark:border-slate-700'
                 : role === 'Survivor'
-                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/40 active:scale-95'
-                  : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/40 active:scale-95'
-              }`}
+                ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/40 active:scale-95'
+                : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/40 active:scale-95'
+            }`}
           >
             <Play className={`h-6 w-6 fill-current ${isSpinning ? 'animate-spin' : ''}`} />
             {isSpinning ? 'Spinning Wheel...' : `Spin for Perk Slot #${activeSlotIdx + 1}`}
@@ -661,9 +633,10 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
 
           {onResetWheels && (
             <button
+              type="button"
               onClick={onResetWheels}
               disabled={isSpinning}
-              className="flex items-center gap-2 px-6 py-5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/80 text-rose-700 dark:text-rose-300 font-extrabold text-xs border border-rose-300 dark:border-rose-500/40 shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/80 text-rose-700 dark:text-rose-300 font-extrabold text-xs border border-rose-300 dark:border-rose-500/40 shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
               title="Reset wheel, clear active loadout slots, and reset slot focus"
             >
               <RotateCcw className="h-4.5 w-4.5" />
@@ -673,7 +646,7 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         </div>
 
         {statusText && (
-          <p className="text-xs font-black text-amber-700 dark:text-amber-400 animate-pulse font-mono">
+          <p aria-live="polite" className="text-xs font-black text-amber-700 dark:text-amber-400 animate-pulse font-mono">
             {statusText}
           </p>
         )}

@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/panels.ts
 import { BookOpen, History, Shuffle, Swords, type LucideIcon } from 'lucide-react';
 
 export interface StreakPanelDef {

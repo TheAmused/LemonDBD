@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/components/maps/MapExplorer.tsx
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import type { MapRealm } from '@/types/map';
@@ -36,7 +37,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 }) => {
   const [isFullscreenOpen, setIsFullscreenOpen] = useState<boolean>(false);
 
-  // 1. Manage Map Data, Search, Filtering and Variants
   const {
     maps,
     loading,
@@ -61,7 +61,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     onAvailableMapsLoaded,
   });
 
-  // 2. Manage Pan, Zoom & Touch Gestures
   const {
     zoomLevel,
     isDragging,
@@ -83,7 +82,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     onActionTriggered,
   });
 
-  // Canvas Handlers Package for Child Layouts
   const canvasHandlers = useMemo(
     () => ({
       onMouseDown: handleMouseDown,
@@ -109,12 +107,10 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     ]
   );
 
-  // Reset Zoom & Pan on Map Selection change
   useEffect(() => {
     handleResetZoomPan();
   }, [selectedMapId, handleResetZoomPan]);
 
-  // Handle external or voice trigger actions (zoom_in, zoom_out, fullscreen, close)
   useEffect(() => {
     if (!triggerAction) return;
     const action = typeof triggerAction === 'object' ? triggerAction.action : triggerAction;
@@ -129,7 +125,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     }
   }, [triggerAction, handleZoomIn, handleZoomOut]);
 
-  // Keyboard Escape listener for fullscreen interactive engine
   useEffect(() => {
     if (!isFullscreenOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -142,14 +137,12 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isFullscreenOpen, onActionTriggered]);
 
-  // Popout image window handler
   const handlePopoutImage = useCallback((url: string, title: string) => {
     handlePopoutImageWindow(url, title);
   }, []);
 
   return (
     <div className="w-full space-y-6" data-testid="map-explorer-root">
-      {/* Desktop Responsive Layout (hidden on mobile/tablet) */}
       <div className="hidden lg:block">
         <DesktopMapLayout
           maps={maps}
@@ -183,7 +176,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         />
       </div>
 
-      {/* Mobile Responsive Layout (visible on mobile/tablet) */}
       <div className="block lg:hidden">
         <MobileMapLayout
           maps={maps}
@@ -217,7 +209,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         />
       </div>
 
-      {/* Fullscreen 2D Interactive Engine Modal */}
       {isFullscreenOpen && activeMap && (
         <FullscreenMapEngine
           mapId={activeMap.id}

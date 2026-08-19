@@ -1,3 +1,4 @@
+# backend/app/routes/others/draft.py
 from flask import Blueprint, current_app, jsonify, request
 from app.services.others.draft_service import DraftService
 

@@ -1,3 +1,4 @@
+# backend/app/__init__.py
 import os
 import logging
 import threading
@@ -7,8 +8,8 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from sqlalchemy import text
 
-from app.config import Config
-from app.extensions import db, migrate
+from app.core.config import Config
+from app.core.extensions import db, migrate
 import app.models  # noqa: F401
 
 
@@ -110,6 +111,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     from app.routes.maps import maps_bp
     from app.routes.page_streak import page_streak_bp
     from app.routes.gauntlet_streak import gauntlet_streak_bp
+    from app.routes.bug_reports import bug_reports_bp
 
     from app.routes.others.draft import draft_bp
     from app.routes.others.quests import quests_bp
@@ -132,6 +134,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app.register_blueprint(page_streak_bp)
     flask_app.register_blueprint(gauntlet_streak_bp)
     flask_app.register_blueprint(guesser_bp)
+    flask_app.register_blueprint(bug_reports_bp)
 
     with flask_app.app_context():
         try:

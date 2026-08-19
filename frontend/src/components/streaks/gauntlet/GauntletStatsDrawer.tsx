@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/gauntlet/GauntletStatsDrawer.tsx
 'use client';
 
 import React, { useEffect } from 'react';

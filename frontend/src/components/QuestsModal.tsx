@@ -1,6 +1,7 @@
 'use client';
+// frontend/src/components/QuestsModal.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   X,
   Trophy,
@@ -12,11 +13,12 @@ import {
 } from 'lucide-react';
 import { Quest } from '@/types/quest';
 import { fetchQuests, claimQuest } from '@/services/questApi';
+import { PerkDictionary } from '@/types/perks';
 
 interface QuestsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: PerkDictionary;
 }
 
 export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict }) => {
@@ -26,23 +28,23 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
   const [claimingId, setClaimingId] = useState<number | null>(null);
   const [claimedToast, setClaimedToast] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      loadQuests();
-    }
-  }, [isOpen]);
-
-  const loadQuests = async () => {
+  const loadQuests = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetchQuests();
       setQuests(res.quests || []);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to fetch quests:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      loadQuests();
+    }
+  }, [isOpen, loadQuests]);
 
   const handleClaim = async (quest: Quest) => {
     if (quest.is_completed || quest.progress < quest.goal || claimingId !== null) return;
@@ -54,7 +56,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
       );
       setClaimedToast(`🎉 Claimed +${res.xp_reward || quest.xp_reward} XP for "${quest.title}"!`);
       setTimeout(() => setClaimedToast(null), 4000);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to claim quest:', err);
     } finally {
       setClaimingId(null);
@@ -89,16 +91,17 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="quests-modal-title"
     >
       <div
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-2xl text-slate-900 dark:text-slate-100 animate-in zoom-in-95 duration-200 cursor-default"
       >
-        {/* Modal Top Header */}
         <div className="relative bg-gradient-to-r from-amber-500/10 via-slate-50 to-red-500/10 dark:from-amber-600/30 dark:via-slate-900 dark:to-red-600/20 p-6 border-b border-slate-200 dark:border-slate-800">
           <button
+            type="button"
             onClick={onClose}
-            className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer"
+            className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
             aria-label="Close modal"
           >
             <X className="h-5 w-5" />
@@ -110,8 +113,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-black tracking-wide text-slate-900 dark:text-white">
-                  Trial Quests & Milestones
+                <h2 id="quests-modal-title" className="text-xl font-black tracking-wide text-slate-900 dark:text-white">
+                  Trial Quests &amp; Milestones
                 </h2>
                 <span className="rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">
                   XP System
@@ -123,7 +126,6 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             </div>
           </div>
 
-          {/* Stats Bar */}
           <div className="mt-4 grid grid-cols-2 gap-3 pt-2">
             <div className="flex items-center justify-between rounded-xl bg-white/80 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 p-3 shadow-sm">
               <div className="flex items-center gap-2">
@@ -147,17 +149,19 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           </div>
         </div>
 
-        {/* Claim Toast Notification */}
         {claimedToast && (
-          <div className="bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-500/30 px-6 py-2.5 text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-2 animate-in slide-in-from-top-2">
+          <div
+            role="status"
+            className="bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-500/30 px-6 py-2.5 text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-2 animate-in slide-in-from-top-2"
+          >
             <Sparkles className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{claimedToast}</span>
           </div>
         )}
 
-        {/* Category Tabs */}
         <div className="flex items-center gap-2 px-6 pt-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
           <button
+            type="button"
             onClick={() => setFilterCategory('all')}
             className={`px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
               filterCategory === 'all'
@@ -168,6 +172,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             All Quests ({quests.length})
           </button>
           <button
+            type="button"
             onClick={() => setFilterCategory('daily')}
             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
               filterCategory === 'daily'
@@ -179,6 +184,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             Daily Quests
           </button>
           <button
+            type="button"
             onClick={() => setFilterCategory('weekly')}
             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
               filterCategory === 'weekly'
@@ -191,7 +197,6 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           </button>
         </div>
 
-        {/* Quests List Container */}
         <div className="p-6 max-h-[50vh] overflow-y-auto space-y-4">
           {loading ? (
             <div className="space-y-3">
@@ -235,7 +240,6 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                       </div>
                       <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">{quest.description}</p>
 
-                      {/* Progress Bar */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-mono">
                           <span>Progress</span>
@@ -258,15 +262,12 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                       </div>
                     </div>
 
-                    {/* Action & Reward Badge */}
                     <div className="flex sm:flex-col items-center justify-between sm:items-end gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200 dark:border-slate-800">
-                      {/* XP Badge */}
                       <div className="flex items-center gap-1 rounded-xl bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 text-xs font-black text-amber-700 dark:text-amber-400 shadow-sm">
                         <Zap className="h-3.5 w-3.5" />
                         <span>+{quest.xp_reward} XP</span>
                       </div>
 
-                      {/* Claim Button */}
                       {quest.is_completed ? (
                         <div className="flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
                           <CheckCircle2 className="h-4 w-4" />
@@ -274,6 +275,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                         </div>
                       ) : (
                         <button
+                          type="button"
                           onClick={() => handleClaim(quest)}
                           disabled={!isReadyToClaim || claimingId === quest.id}
                           className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -300,11 +302,11 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           )}
         </div>
 
-        {/* Footer */}
         <div className="flex justify-end p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60">
           <button
+            type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+            className="px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
           >
             Close
           </button>

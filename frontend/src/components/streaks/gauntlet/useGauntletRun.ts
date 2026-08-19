@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/gauntlet/useGauntletRun.ts
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';

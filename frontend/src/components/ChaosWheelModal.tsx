@@ -1,70 +1,21 @@
 'use client';
+// frontend/src/components/ChaosWheelModal.tsx
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Skull, Sparkles, X, Check, Flame, ShieldAlert, Zap, Ban } from 'lucide-react';
+import { Skull, Sparkles, X, Check } from 'lucide-react';
+import { ChaosMutator } from '@/types/chaos';
+import { PerkDictionary } from '@/types/perks';
+import { CHAOS_MUTATORS } from '@/constants/chaosMutators';
 
-export interface ChaosMutator {
-  id: string;
-  name: string;
-  description: string;
-  type: 'curse' | 'buff';
-  icon: string;
-  badgeBg: string;
-  borderColor: string;
-  textColor: string;
-  blockedPerkKeywords?: string[];
-}
-
-export const CHAOS_MUTATORS: ChaosMutator[] = [
-  {
-    id: 'no_exhaustion',
-    name: 'No Exhaustion Perks',
-    description: 'Exhaustion perks are forbidden! Exhaustion perks are grayed out and strictly blocked from being selected.',
-    type: 'curse',
-    icon: '🚫',
-    badgeBg: 'bg-rose-950/90',
-    borderColor: 'border-rose-500',
-    textColor: 'text-rose-300',
-    blockedPerkKeywords: ['exhausted', 'exhaustion'],
-  },
-  {
-    id: 'blindness',
-    name: 'Curse of Blindness',
-    description: 'Perk icons and names are obscured during the trial! Rely purely on your memory.',
-    type: 'curse',
-    icon: '👁️',
-    badgeBg: 'bg-purple-950/90',
-    borderColor: 'border-purple-500',
-    textColor: 'text-purple-300',
-  },
-  {
-    id: 'meme_loadout',
-    name: 'Meme / Off-Meta Loadout',
-    description: 'Must run gimmick / off-meta perk combinations for maximum trial chaos!',
-    type: 'curse',
-    icon: '🤡',
-    badgeBg: 'bg-amber-950/90',
-    borderColor: 'border-amber-500',
-    textColor: 'text-amber-300',
-  },
-  {
-    id: 'hex_boon_only',
-    name: 'Hex & Boon Ritual',
-    description: 'Trial bound by ancient totems! Hex and Boon perks take priority.',
-    type: 'curse',
-    icon: '🔮',
-    badgeBg: 'bg-indigo-950/90',
-    borderColor: 'border-indigo-500',
-    textColor: 'text-indigo-300',
-  },
-];
+export { CHAOS_MUTATORS };
+export type { ChaosMutator };
 
 interface ChaosWheelModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectMutator: (mutator: ChaosMutator) => void;
   activeMutator: ChaosMutator | null;
-  dict: any;
+  dict?: PerkDictionary;
 }
 
 export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
@@ -75,9 +26,11 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
   dict,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [wonMutator, setWonMutator] = useState<ChaosMutator | null>(activeMutator);
+  const animFrameRef = useRef<number | null>(null);
   const angleRef = useRef<number>(0);
+
+  const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [wonMutator, setWonMutator] = useState<ChaosMutator | null>(activeMutator);
 
   const drawWheel = useCallback(() => {
     const canvas = canvasRef.current;
@@ -105,7 +58,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       ctx.arc(center, center, radius, startAngle, endAngle);
       ctx.closePath();
 
-      // Alternate gradient fill
       const grad = ctx.createRadialGradient(center, center, 10, center, center, radius);
       if (m.type === 'curse') {
         grad.addColorStop(0, '#31102f');
@@ -122,14 +74,13 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       ctx.strokeStyle = m.type === 'curse' ? '#9333ea' : '#10b981';
       ctx.stroke();
 
-      // Draw Slice Text with Normalized Rotation (Never Upside Down)
+      // Slice Text with Orientation Normalization
       ctx.save();
       ctx.translate(center, center);
       const midAngle = startAngle + sliceAngle / 2;
       ctx.rotate(midAngle);
 
-      // Normalize text rotation so left side of wheel reads left-to-right
-      const normalizedAngle = (midAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+      const normalizedAngle = ((midAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
       const isLeft = normalizedAngle > Math.PI / 2 && normalizedAngle < (3 * Math.PI) / 2;
 
       ctx.font = 'bold 13px system-ui, sans-serif';
@@ -183,6 +134,25 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     }
   }, [isOpen, drawWheel]);
 
+  useEffect(() => {
+    return () => {
+      if (animFrameRef.current !== null) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   const spinChaosWheel = () => {
     if (isSpinning) return;
     setIsSpinning(true);
@@ -192,7 +162,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     const sliceAngle = (2 * Math.PI) / total;
     const winningIdx = Math.floor(Math.random() * total);
 
-    // Calculate target angle so winning slice lands at 12 o'clock (top pointer)
     const targetAngle = (3 * Math.PI) / 2 - winningIdx * sliceAngle - sliceAngle / 2;
     const startAngle = angleRef.current;
     const fullSpins = 6 * 2 * Math.PI;
@@ -210,7 +179,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       drawWheel();
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        animFrameRef.current = requestAnimationFrame(animate);
       } else {
         angleRef.current = finalAngle % (2 * Math.PI);
         drawWheel();
@@ -221,22 +190,17 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       }
     };
 
-    requestAnimationFrame(animate);
+    animFrameRef.current = requestAnimationFrame(animate);
   };
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="chaos-modal-title"
+      aria-describedby="chaos-modal-desc"
       onClick={onClose}
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md cursor-pointer animate-in fade-in duration-200"
     >
@@ -245,8 +209,10 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
         className="relative w-full max-w-lg rounded-3xl border border-purple-500/30 bg-white dark:bg-slate-900 p-6 shadow-2xl text-slate-900 dark:text-slate-100 cursor-default animate-in zoom-in-95 duration-200"
       >
         <button
+          type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer"
+          aria-label={dict?.modal?.close || 'Close modal'}
+          className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
         >
           <X className="h-5 w-5" />
         </button>
@@ -256,10 +222,10 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             <Skull className="h-6 w-6 animate-pulse" />
           </div>
           <div>
-            <h3 className="text-lg font-black tracking-wide text-slate-900 dark:text-white">
+            <h2 id="chaos-modal-title" className="text-lg font-black tracking-wide text-slate-900 dark:text-white">
               Chaos Wheel of Curses
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
+            </h2>
+            <p id="chaos-modal-desc" className="text-xs text-slate-600 dark:text-slate-400">
               Spin to apply a single trial Curse or Buff to your 4 perk loadout.
             </p>
           </div>
@@ -275,6 +241,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           />
 
           <button
+            type="button"
             onClick={spinChaosWheel}
             disabled={isSpinning}
             className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all cursor-pointer ${
@@ -288,16 +255,21 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           </button>
         </div>
 
-        {/* Won Mutator Display Card */}
+        {/* Active Won Mutator Display Card */}
         {wonMutator && (
-          <div className={`mt-4 rounded-2xl border p-4 backdrop-blur-sm transition-all shadow-sm ${wonMutator.badgeBg} ${wonMutator.borderColor}`}>
+          <div
+            aria-live="polite"
+            className={`mt-4 rounded-2xl border p-4 backdrop-blur-sm transition-all shadow-sm ${wonMutator.badgeBg} ${wonMutator.borderColor}`}
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <span className="text-2xl">{wonMutator.icon}</span>
+                <span className="text-2xl" aria-hidden="true">
+                  {wonMutator.icon}
+                </span>
                 <div>
-                  <h4 className={`text-sm font-extrabold ${wonMutator.textColor}`}>
+                  <h3 className={`text-sm font-extrabold ${wonMutator.textColor}`}>
                     {wonMutator.name}
-                  </h4>
+                  </h3>
                   <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">
                     {wonMutator.description}
                   </p>
@@ -313,8 +285,9 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
 
         <div className="mt-6 flex justify-end">
           <button
+            type="button"
             onClick={onClose}
-            className="rounded-xl bg-slate-100 dark:bg-slate-800 px-5 py-2.5 font-bold text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shadow-sm"
+            className="rounded-xl bg-slate-100 dark:bg-slate-800 px-5 py-2.5 font-bold text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
           >
             Done
           </button>

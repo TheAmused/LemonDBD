@@ -1,3 +1,4 @@
+# backend/app/services/others/build_service.py
 import json
 from app.services.db_service import DatabaseService
 
@@ -78,7 +79,7 @@ DEFAULT_BUILDS = [
 import logging
 from flask import current_app
 from sqlalchemy import select, or_, func
-from app.extensions import db
+from app.core.extensions import db
 from app.models import CommunityBuild
 
 logger = logging.getLogger(__name__)

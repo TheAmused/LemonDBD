@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 'use client';
 
 import React, { useEffect } from 'react';

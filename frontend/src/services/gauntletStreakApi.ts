@@ -1,3 +1,4 @@
+// frontend/src/services/gauntletStreakApi.ts
 import { Role, RunResponse, SubmitResultResponse, StatsResponse, GauntletRun } from '../types/gauntletStreak';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';

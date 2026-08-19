@@ -1,3 +1,4 @@
+// frontend/src/utils/mapLandmarks.ts
 /**
  * mapLandmarks.ts
  *

@@ -1,3 +1,4 @@
+// frontend/src/hooks/useMapGestures.ts
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';

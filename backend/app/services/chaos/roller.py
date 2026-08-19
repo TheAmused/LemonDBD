@@ -32,28 +32,29 @@ def draw_chaos_perks(
     Returns (drawn_perks, updated_used_perk_names).
     """
     if not unlocked_perks:
-        return [], []
+        return [], list(used_perk_names)
 
-    used = set(used_perk_names)
+    used = list(used_perk_names)
     drawn: List[Dict[str, Any]] = []
-    drawn_names_set = set()
 
     for _ in range(4):
         eligible = [p for p in unlocked_perks if p["name"] not in used]
         if not eligible:
-            used = set(drawn_names_set)
-            eligible = [p for p in unlocked_perks if p["name"] not in used]
-
-        if not eligible:
-            pick = random.choice(unlocked_perks)
-        else:
-            pick = random.choice(eligible)
-
+            used = []
+            eligible = list(unlocked_perks)
+        pick = random.choice(eligible)
         drawn.append(pick)
-        used.add(pick["name"])
-        drawn_names_set.add(pick["name"])
+        used.append(pick["name"])
 
-    return drawn, list(drawn_names_set)
+    # Return unique drawn perk names from this draw
+    drawn_names = []
+    seen = set()
+    for p in drawn:
+        if p["name"] not in seen:
+            drawn_names.append(p["name"])
+            seen.add(p["name"])
+
+    return drawn, drawn_names
 
 
 def draw_addon_rarities() -> List[str]:

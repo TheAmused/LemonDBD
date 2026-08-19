@@ -3,10 +3,10 @@ from sqlalchemy import select
 from app import create_app
 from app.config import TestingConfig
 from app.extensions import db
-from app.models import Character, Perk, Item
+from app.models import Character, Perk
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
-from app.services.gauntlet_service import GauntletService
+from app.services.gauntlet_service import CHECKPOINT_INTERVAL, GauntletService
 
 
 def seed_killer(name, perk_count=3):
@@ -37,14 +37,6 @@ def seed_survivor(name="Meg Thomas", perk_count=1):
         ))
     db.session.commit()
     return character
-
-
-def seed_survivor_item(name="Commodious Toolbox"):
-    # `category` mirrors what the live wiki.gg scraper stores: the coarse role.
-    item = Item(name=name, category="Survivor", role="Survivor")
-    db.session.add(item)
-    db.session.commit()
-    return item
 
 
 class GauntletTestCase(unittest.TestCase):
@@ -85,13 +77,23 @@ class TestGauntletTiers(GauntletTestCase):
         self.assertEqual(self.service.get_tier_info(999, "survivor")["perk_limit"], 0)
 
     def test_killer_tier_perk_limits_start_at_three(self):
-        # Killers run their own 3 teachables and shed one per checkpoint.
         self.assertEqual(self.service.get_tier_info(0, "killer")["perk_limit"], 3)
         self.assertEqual(self.service.get_tier_info(9, "killer")["perk_limit"], 3)
         self.assertEqual(self.service.get_tier_info(10, "killer")["perk_limit"], 2)
         self.assertEqual(self.service.get_tier_info(20, "killer")["perk_limit"], 1)
         self.assertEqual(self.service.get_tier_info(30, "killer")["perk_limit"], 0)
         self.assertEqual(self.service.get_tier_info(999, "killer")["perk_limit"], 0)
+
+    def test_tier_steps_up_on_the_checkpoint_it_banks(self):
+        for role in ("killer", "survivor"):
+            below = self.service.get_tier_info(CHECKPOINT_INTERVAL - 1, role)
+            at = self.service.get_tier_info(CHECKPOINT_INTERVAL, role)
+            self.assertEqual(at["tier_level"], below["tier_level"] + 1)
+            self.assertEqual(at["perk_limit"], below["perk_limit"] - 1)
+
+    def test_tier_info_hides_the_internal_threshold(self):
+        self.assertNotIn("min_streak", self.service.get_tier_info(0, "killer"))
+        self.assertNotIn("min_streak", self.service.get_tier_info(0, "survivor"))
 
     def test_only_killers_are_restricted_to_their_own_perks(self):
         self.assertTrue(self.service.get_tier_info(0, "killer")["character_perks_only"])
@@ -101,7 +103,40 @@ class TestGauntletTiers(GauntletTestCase):
         survivor = self.service.get_tier_info(10, "survivor")
         killer = self.service.get_tier_info(10, "killer")
         self.assertEqual(survivor["name"], "The Thinning")
-        self.assertEqual(killer["name"], "The Restriction")
+        self.assertEqual(killer["name"], "The Obsession")
+
+
+class TestOriginalKillerRosterCap(GauntletTestCase):
+    def setUp(self):
+        super().setUp()
+        self.trapper = seed_killer("Trapper")
+        self.trapper.release_number = 1
+        self.slasher = seed_killer("The Slasher")
+        self.slasher.release_number = 43
+        self.newer = seed_killer("The Judgment")
+        self.newer.release_number = 44
+        db.session.commit()
+        self.user_id = self.register_user("gauntletcapuser")
+
+    def test_pool_excludes_killers_past_the_original_cutoff(self):
+        names = self.service._owned_character_names(self.user_id, "killer")
+        self.assertIn("Trapper", names)
+        self.assertIn("The Slasher", names)
+        self.assertNotIn("The Judgment", names)
+
+    def test_a_killer_past_the_cutoff_is_never_drawn(self):
+        for _ in range(20):
+            run = self.service.roll(self.user_id, "killer")
+            self.assertNotEqual(run["current_character_id"], "The Judgment")
+
+    def test_gauntlet_can_be_won_without_the_newer_killer(self):
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        for _ in range(2):
+            run = self.service.submit_result(self.user_id, run["id"], "win")
+            if run["status"] != "completed":
+                run = self.service.roll(self.user_id, "killer")
+        self.assertEqual(run["status"], "completed")
+        self.assertNotIn("The Judgment", run["completed_characters"])
 
 
 class TestGauntletRun(GauntletTestCase):
@@ -322,38 +357,21 @@ class TestGauntletStats(GauntletTestCase):
         self.assertEqual(survivor_stats["total_matches"], 0)
 
 
-class TestGauntletItems(GauntletTestCase):
-    def test_survivor_loadout_draws_an_item(self):
-        seed_survivor()
-        item = seed_survivor_item()
-        user_id = self.register_user("itemuser")
-        self.service.get_or_create_run(user_id, "survivor")
-        run = self.service.roll(user_id, "survivor")
-        self.assertEqual(run["current_loadout"]["item"]["name"], item.name)
-
-    def test_a_brand_new_survivor_run_already_has_an_item(self):
-        seed_survivor()
-        item = seed_survivor_item()
-        user_id = self.register_user("firstmatchitemuser")
-        run = self.service.get_or_create_run(user_id, "survivor")
-        self.assertEqual(run["current_loadout"]["item"]["name"], item.name)
-
-    def test_survivor_loadout_survives_an_empty_item_table(self):
+class TestGauntletLoadoutHasNoGear(GauntletTestCase):
+    def test_survivor_loadout_carries_no_item(self):
         seed_survivor()
         user_id = self.register_user("noitemuser")
         self.service.get_or_create_run(user_id, "survivor")
         run = self.service.roll(user_id, "survivor")
-        self.assertIsNone(run["current_loadout"]["item"])
+        self.assertNotIn("item", run["current_loadout"])
 
     def test_killer_loadout_carries_no_gear(self):
         seed_killer("Trapper", perk_count=1)
-        seed_survivor_item()
         user_id = self.register_user("killergearuser")
         self.service.get_or_create_run(user_id, "killer")
         run = self.service.roll(user_id, "killer", target_character="Trapper")
         loadout = run["current_loadout"]
-        self.assertIsNone(loadout["item"])
-        # Add-ons are unrestricted in play, so nothing is rolled for them at all.
+        self.assertNotIn("item", loadout)
         self.assertNotIn("addons", loadout)
 
 

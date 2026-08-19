@@ -11,6 +11,9 @@ export interface OwnedCharacterItem {
 
 const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
+const ORIGINAL_KILLER_ROSTER_LIMIT = 43;
+const ORIGINAL_SURVIVOR_ROSTER_LIMIT = 52;
+
 export function useOwnedCharacters(role: Role) {
   const { token, user } = useAuth();
   const [characters, setCharacters] = useState<OwnedCharacterItem[]>([]);
@@ -26,7 +29,9 @@ export function useOwnedCharacters(role: Role) {
       });
       if (res.ok) {
         const data = await res.json();
-        const owned = (data.data || []).filter((c: any) => c.is_owned);
+        let owned = (data.data || []).filter((c: any) => c.is_owned);
+        const limit = role === 'killer' ? ORIGINAL_KILLER_ROSTER_LIMIT : ORIGINAL_SURVIVOR_ROSTER_LIMIT;
+        owned = owned.filter((c: any) => c.release_number == null || c.release_number <= limit);
         setCharacters(owned.map((c: any) => ({ name: c.name })));
       }
     } catch (err) {

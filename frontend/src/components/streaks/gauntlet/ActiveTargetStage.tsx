@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GauntletRun, Perk, Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
 import { useTargetDraw, DrawPhase } from './useTargetDraw';
@@ -30,6 +30,28 @@ export const avatarUrlFor = (name: string, role: Role) => {
   return `${backendBase}/static/avatars/${subDir}/${sanitized}.png`;
 };
 
+const KILLER_SEND_OFFS = [
+  'Good luck out there.',
+  'The fog is waiting.',
+  'Make it count.',
+  'Go get them.',
+  'Your trial awaits.',
+  'Time to earn it.',
+  'Bring them home.',
+  'Good hunting.',
+  'Off you go.',
+  'Earn it.',
+];
+
+const SURVIVOR_SEND_OFFS = [
+  'Good luck out there.',
+  'Try not to die.',
+  'Run for it.',
+  'Your trial awaits.',
+  'Off you go.',
+  'Earn it.',
+];
+
 const perkIconFor = (perk: Perk) => {
   const cleanPath = (perk.icon_local_path || '').replace(/^\/?(static\/)?/, '');
   return cleanPath ? `${backendBase}/static/${cleanPath}` : perk.icon_url;
@@ -47,7 +69,7 @@ export interface ActiveTargetStageProps {
 
 /**
  * The portrait on the reel. Re-keying it per name restarts the frame animation,
- * so each face slides in rather than swapping flatly.
+ * so each face fades in rather than swapping flatly.
  */
 const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> = ({
   name,
@@ -127,6 +149,16 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   const { displayName, phase, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
 
+  const sendOffPool = role === 'killer' ? KILLER_SEND_OFFS : SURVIVOR_SEND_OFFS;
+  const [sendOff, setSendOff] = useState(sendOffPool[0]);
+  const beginDraw = useCallback(
+    (onDone: () => void) => {
+      setSendOff(sendOffPool[Math.floor(Math.random() * sendOffPool.length)]);
+      startDraw(onDone);
+    },
+    [startDraw, sendOffPool]
+  );
+
   // Which target the card is currently allowed to show. Holding this in state
   // (rather than reacting after the fact) keeps a freshly drawn target from
   // flashing on screen for a frame before its reel starts.
@@ -149,8 +181,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       setShownTarget(targetName);
       return;
     }
-    startDraw(() => setShownTarget(targetName));
-  }, [isRevealed, targetName, shownTarget, isDrawing, startDraw]);
+    beginDraw(() => setShownTarget(targetName));
+  }, [isRevealed, targetName, shownTarget, isDrawing, beginDraw]);
 
   if (!run || !run.current_loadout) {
     return (
@@ -164,7 +196,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   }
 
   if (!run.target_revealed || isDrawing || awaitingDraw) {
-    const roleLabel = role === 'survivor' ? 'Survivor' : 'Killer';
     const drawing = isDrawing || awaitingDraw;
     return (
       <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-8 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
@@ -184,26 +215,22 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         {drawing ? (
           <>
             <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">
-              {phase === 'landed' ? `You drew ${displayName}` : `Drawing your ${roleLabel}...`}
+              {displayName ?? ' '}
             </h2>
             <p
-              key={displayName ?? ''}
               className={`h-6 text-sm font-bold text-amber-600 dark:text-amber-400 ${
                 phase === 'landed' ? 'gn-name-in' : ''
               }`}
             >
-              {phase === 'landed' ? 'Good luck out there.' : displayName}
+              {phase === 'landed' ? sendOff : ' '}
             </p>
           </>
         ) : (
           <>
-            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">Ready for the Gauntlet?</h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
-              Start the game to draw your {roleLabel}.
-            </p>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6">Ready for the Gauntlet?</h2>
             <button
               onClick={() =>
-                startDraw(() => {
+                beginDraw(() => {
                   setShownTarget(targetName);
                   onReveal();
                 })
@@ -223,7 +250,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const loadout = {
     ...rawLoadout,
     character_perks: rawLoadout.character_perks || [],
-    item: rawLoadout.item ?? null,
   };
   const tierInfo =
     run.tier_info ||
@@ -231,9 +257,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
   const avatarSrc = avatarUrlFor(targetName, role);
-  // Killers cap at their own three teachables; survivors round out a full four.
-  const slotCount = charactersPerksOnly ? 3 : 4;
-  const perkSlots = Array.from({ length: slotCount }, (_, i) => i);
+  const charPerks = loadout.character_perks;
+  const perkSlots = [0, 1, 2, 3];
 
   return (
     <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
@@ -301,18 +326,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </p>
         </div>
 
-        {charactersPerksOnly && (
+        {charactersPerksOnly && perkLimit === 0 && (
           <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
-            {perkLimit === 0 ? (
-              <>
-                No perks this trial. {targetName} goes in bare.
-              </>
-            ) : (
-              <>
-                Run <strong>{perkLimit}</strong> of {targetName}&apos;s own{' '}
-                {loadout.character_perks.length || 3} perks. Nothing else is allowed.
-              </>
-            )}
+            No perks this trial. {targetName} goes in bare.
           </p>
         )}
 
@@ -324,8 +340,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   key={`locked-${idx}`}
                   className="bg-slate-100/60 border border-slate-200 border-dashed dark:bg-slate-950/40 dark:border-slate-800/80 rounded-xl p-4 flex items-center gap-3 opacity-60 select-none"
                 >
-                  <div className="w-12 h-12 shrink-0 bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600">
-                    <Lock className="w-5 h-5" />
+                  <div className="w-16 h-16 shrink-0 bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600">
+                    <Lock className="w-7 h-7" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -339,29 +355,31 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               );
             }
 
-            // Killers equip their own teachables in every slot, so each one names a
-            // specific perk. Survivors only owe a character perk in the first slot.
             if (charactersPerksOnly) {
-              const perk = loadout.character_perks[idx];
               return (
                 <div
                   key={`char-slot-${idx}`}
                   className="bg-amber-500/[0.07] border border-amber-500/40 rounded-xl p-4 flex items-center gap-3"
                 >
-                  {perk ? (
-                    <>
-                      <PerkIcon perk={perk} />
-                      <div className="overflow-hidden">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                          {perk.name}
-                        </h4>
-                      </div>
-                    </>
-                  ) : (
-                    <p className="text-xs text-slate-400 dark:text-slate-500 italic">
-                      No teachable perks on record for this character.
+                  <div className="relative w-16 h-16 shrink-0 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400">
+                    <HelpCircle className="w-9 h-9" />
+                    {avatarSrc && !avatarError && (
+                      <img
+                        src={avatarSrc}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full object-cover border-2 border-amber-400 bg-white dark:bg-slate-950 shadow-sm"
+                      />
+                    )}
+                  </div>
+                  <div className="overflow-hidden">
+                    <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
+                      Slot {idx + 1}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                      {targetName}&apos;s own perk
                     </p>
-                  )}
+                  </div>
                 </div>
               );
             }
@@ -380,9 +398,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                       {targetName}&apos;s own perks
                     </p>
                   </div>
-                  {loadout.character_perks.length > 0 ? (
+                  {charPerks.length > 0 ? (
                     <div className="flex items-center gap-2">
-                      {loadout.character_perks.map((perk, i) => (
+                      {charPerks.map((perk, i) => (
                         <PerkIcon key={perk.id ?? i} perk={perk} />
                       ))}
                     </div>
@@ -400,8 +418,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 key={`free-${idx}`}
                 className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center gap-3"
               >
-                <div className="w-12 h-12 shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-500">
-                  <HelpCircle className="w-7 h-7" />
+                <div className="w-16 h-16 shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-500">
+                  <HelpCircle className="w-9 h-9" />
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
@@ -414,20 +432,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           })}
         </div>
       </div>
-
-      {loadout.item && (
-        <div className="mb-8">
-          <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">
-            Your item
-          </h3>
-          <div className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:max-w-xs">
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{loadout.item.name}</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
-              Bring any add-ons you like
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Action Buttons */}
       <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800/80">

@@ -4,7 +4,7 @@ import logging
 from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
 from app.extensions import db
-from app.models import GauntletRun, GauntletMatchLog, Item, Perk, Character
+from app.models import GauntletRun, GauntletMatchLog, Perk, Character
 from app.services.perk_service import PerkService
 from app.services.ownership_service import OwnershipService
 
@@ -16,23 +16,24 @@ BUILD_SIZE = 4
 # Survivors run a full four-perk build where only the first slot has to be one of
 # the character's own teachables; the rest are free picks.
 SURVIVOR_TIERS = [
-    {"tier_level": 0, "name": "The Warm Up", "perk_limit": 4, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 1, "name": "The Thinning", "perk_limit": 3, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 2, "name": "The Struggle", "perk_limit": 2, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 3, "name": "The Hardcore", "perk_limit": 1, "character_perks_only": False, "description": "Must be a character teachable perk"},
-    {"tier_level": 4, "name": "The Legend", "perk_limit": 0, "character_perks_only": False, "description": "No perks allowed (no-perk trial)"},
+    {"min_streak": 0, "tier_level": 0, "name": "The Warm Up", "perk_limit": 4, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"min_streak": CHECKPOINT_INTERVAL, "tier_level": 1, "name": "The Thinning", "perk_limit": 3, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"min_streak": CHECKPOINT_INTERVAL * 2, "tier_level": 2, "name": "The Struggle", "perk_limit": 2, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"min_streak": CHECKPOINT_INTERVAL * 3, "tier_level": 3, "name": "The Hardcore", "perk_limit": 1, "character_perks_only": False, "description": "Must be a character teachable perk"},
+    {"min_streak": CHECKPOINT_INTERVAL * 4, "tier_level": 4, "name": "The Legend", "perk_limit": 0, "character_perks_only": False, "description": "No perks allowed (no-perk trial)"},
 ]
 
-# Killers play their own three teachables and nothing else, losing one of them at
-# every checkpoint until they run the trial perkless.
 KILLER_TIERS = [
-    {"tier_level": 0, "name": "The Warm Up", "perk_limit": 3, "character_perks_only": True, "description": "All 3 of the killer's own perks"},
-    {"tier_level": 1, "name": "The Restriction", "perk_limit": 2, "character_perks_only": True, "description": "2 of the killer's own perks"},
-    {"tier_level": 2, "name": "The Barebones", "perk_limit": 1, "character_perks_only": True, "description": "1 of the killer's own perks"},
-    {"tier_level": 3, "name": "The Entity's Chosen", "perk_limit": 0, "character_perks_only": True, "description": "No perks allowed (no-perk trial)"},
+    {"min_streak": 0, "tier_level": 0, "name": "The Bloodbath", "perk_limit": 3, "character_perks_only": True, "description": "All 3 of the killer's own perks"},
+    {"min_streak": CHECKPOINT_INTERVAL, "tier_level": 1, "name": "The Obsession", "perk_limit": 2, "character_perks_only": True, "description": "Any 2 of the killer's own perks"},
+    {"min_streak": CHECKPOINT_INTERVAL * 2, "tier_level": 2, "name": "The Executioner", "perk_limit": 1, "character_perks_only": True, "description": "Any 1 of the killer's own perks"},
+    {"min_streak": CHECKPOINT_INTERVAL * 3, "tier_level": 3, "name": "The Entity", "perk_limit": 0, "character_perks_only": True, "description": "No perks allowed (no-perk trial)"},
 ]
 
 GENERAL_CHARACTER = "General"
+
+ORIGINAL_KILLER_ROSTER_LIMIT = 43
+ORIGINAL_SURVIVOR_ROSTER_LIMIT = 52
 
 
 class GauntletService:
@@ -44,14 +45,24 @@ class GauntletService:
 
     def get_tier_info(self, streak, role):
         tiers = KILLER_TIERS if role == "killer" else SURVIVOR_TIERS
-        tier_index = min(len(tiers) - 1, max(0, streak // CHECKPOINT_INTERVAL))
-        return dict(tiers[tier_index])
+        tier = tiers[0]
+        for candidate in tiers:
+            if streak >= candidate["min_streak"]:
+                tier = candidate
+        info = dict(tier)
+        info.pop("min_streak")
+        return info
 
     # ---- ownership-backed pools -------------------------------------------
 
     def _owned_character_names(self, user_id, role):
         db_role = "Killer" if role == "killer" else "Survivor"
         owned = self.ownership_service.get_user_characters(user_id, role=db_role)
+        limit = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
+        owned = [
+            c for c in owned
+            if c.get("release_number") is None or c["release_number"] <= limit
+        ]
         return [c["name"] for c in owned if c["is_owned"]]
 
     @staticmethod
@@ -64,12 +75,6 @@ class GauntletService:
             .order_by(Perk.name.asc())
         ).all()
         return [p.to_dict() for p in perks]
-
-    @staticmethod
-    def _roll_survivor_item():
-        """Survivors bring one drawn item; add-ons are unrestricted and not rolled."""
-        items = db.session.scalars(select(Item).where(Item.role == "Survivor")).all()
-        return random.choice(items).to_dict() if items else None
 
     # ---- runs -------------------------------------------------------------
 
@@ -93,8 +98,6 @@ class GauntletService:
         initial_loadout = {
             "character": target_character,
             "character_perks": self._character_teachable_perks(target_character),
-            # Drawn here as well as in roll(), so a run's opening match has an item too.
-            "item": self._roll_survivor_item() if role == "survivor" else None,
             "tier_info": tier_info,
         }
 
@@ -132,7 +135,6 @@ class GauntletService:
         loadout = {
             "character": target_char,
             "character_perks": self._character_teachable_perks(target_char),
-            "item": self._roll_survivor_item() if role == "survivor" else None,
             "tier_info": tier_info,
         }
 

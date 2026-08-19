@@ -1,8 +1,10 @@
 // frontend/src/components/streaks/gauntlet/ActiveTargetStage.tsx
 'use client';
 
-import React, { useState } from 'react';
-import { GauntletRun, Role } from '@/types/gauntletStreak';
+import React, { useState, useEffect, useCallback } from 'react';
+import { GauntletRun, Perk, Role } from '@/types/gauntletStreak';
+import { OwnedCharacterItem } from './useOwnedCharacters';
+import { useTargetDraw, DrawPhase } from './useTargetDraw';
 import {
   RefreshCw,
   CheckCircle,
@@ -11,33 +13,183 @@ import {
   Skull,
   Sparkles,
   Lock,
-  ShieldAlert,
-  Ban,
+  HelpCircle,
 } from 'lucide-react';
+
+const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+export const avatarUrlFor = (name: string, role: Role) => {
+  if (!name) return null;
+  const subDir = role === 'survivor' ? 'survivors' : 'killers';
+  const sanitized = name
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\-/]+/g, '_')
+    .replace(/[\\/*?:"<>|]/g, '')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+  return `${backendBase}/static/avatars/${subDir}/${sanitized}.png`;
+};
+
+const KILLER_SEND_OFFS = [
+  'Good luck out there.',
+  'The fog is waiting.',
+  'Make it count.',
+  'Go get them.',
+  'Your trial awaits.',
+  'Time to earn it.',
+  'Bring them home.',
+  'Good hunting.',
+  'Off you go.',
+  'Earn it.',
+];
+
+const SURVIVOR_SEND_OFFS = [
+  'Good luck out there.',
+  'Try not to die.',
+  'Run for it.',
+  'Your trial awaits.',
+  'Off you go.',
+  'Earn it.',
+];
+
+const perkIconFor = (perk: Perk) => {
+  const cleanPath = (perk.icon_local_path || '').replace(/^\/?(static\/)?/, '');
+  return cleanPath ? `${backendBase}/static/${cleanPath}` : perk.icon_url;
+};
 
 export interface ActiveTargetStageProps {
   run: GauntletRun | null;
   role: Role;
+  characters: OwnedCharacterItem[];
   loading?: boolean;
   onWin: () => void;
   onLoss: () => void;
-  onReroll: () => void;
-  onInvalidateMatch: (reason: 'dc_before_5_gens' | 'game_cancelled') => void;
+  onReveal: () => void;
+  /** Holds off the next reel while something else (the checkpoint modal) has the floor. */
+  holdReel?: boolean;
 }
+
+/**
+ * The portrait on the reel. Re-keying it per name restarts the frame animation,
+ * so each face fades in rather than swapping flatly.
+ */
+const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> = ({
+  name,
+  role,
+  phase,
+}) => {
+  const [failed, setFailed] = useState(false);
+  const src = name ? avatarUrlFor(name, role) : null;
+
+  useEffect(() => setFailed(false), [name]);
+
+  const motion = phase === 'landed' ? 'gn-land-frame' : phase === 'spinning' ? 'gn-spin-frame' : '';
+
+  if (!src || failed) {
+    return (
+      <div
+        className={`w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400 ${motion}`}
+      >
+        {role === 'survivor' ? <User className="w-10 h-10" /> : <Skull className="w-10 h-10" />}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt=""
+      aria-hidden="true"
+      className={`w-full h-full object-cover rounded-xl ${motion}`}
+      onError={() => setFailed(true)}
+    />
+  );
+};
+
+const PerkIcon: React.FC<{ perk: Perk; size?: string }> = ({ perk, size = 'w-12 h-12' }) => {
+  const [failed, setFailed] = useState(false);
+  const src = perkIconFor(perk);
+
+  return (
+    <div
+      title={perk.name}
+      className={`relative ${size} shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center p-1 overflow-hidden`}
+    >
+      {src && !failed ? (
+        <img
+          src={src}
+          alt={perk.name}
+          className="w-full h-full object-contain filter drop-shadow-md"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <Sparkles className="w-5 h-5 text-amber-500/60 dark:text-amber-400/60" />
+      )}
+    </div>
+  );
+};
 
 export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   run,
   role,
+  characters,
   loading = false,
   onWin,
   onLoss,
-  onReroll,
-  onInvalidateMatch,
+  onReveal,
+  holdReel = false,
 }) => {
   const [avatarError, setAvatarError] = useState(false);
-  const [perkImgErrors, setPerkImgErrors] = useState<Record<number, boolean>>({});
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const targetName = run?.current_character_id || run?.current_loadout?.character || '';
+  const completed = run?.completed_characters || [];
+
+  // The reel runs through whoever is still standing, in roster order.
+  const drawPool = React.useMemo(() => {
+    const names = characters.map((c) => c.name).filter((name) => !completed.includes(name));
+    return names.includes(targetName) ? names : [...names, targetName].filter(Boolean);
+  }, [characters, completed.join('|'), targetName]);
+
+  const { displayName, phase, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
+
+  const sendOffPool = role === 'killer' ? KILLER_SEND_OFFS : SURVIVOR_SEND_OFFS;
+  const [sendOff, setSendOff] = useState(sendOffPool[0]);
+  const beginDraw = useCallback(
+    (onDone: () => void) => {
+      setSendOff(sendOffPool[Math.floor(Math.random() * sendOffPool.length)]);
+      startDraw(onDone);
+    },
+    [startDraw, sendOffPool]
+  );
+
+  // Which target the card is currently allowed to show. Holding this in state
+  // (rather than reacting after the fact) keeps a freshly drawn target from
+  // flashing on screen for a frame before its reel starts.
+  const [shownTarget, setShownTarget] = useState<string | null>(null);
+  const isRevealed = Boolean(run?.target_revealed);
+  const awaitingDraw = isRevealed && Boolean(targetName) && shownTarget !== targetName;
+
+  // Every later match re-runs the reel on its own, so the next target arrives
+  // as a reveal rather than just appearing in place.
+  useEffect(() => {
+    if (!isRevealed || !targetName) {
+      setShownTarget(null);
+      return;
+    }
+    if (shownTarget === targetName || isDrawing) return;
+
+    // A run that was already revealed before this mount (a reload, say) has
+    // nothing to reveal, so it skips straight to the card.
+    if (shownTarget === null) {
+      setShownTarget(targetName);
+      return;
+    }
+    // The checkpoint modal gets its moment before the next reel steals focus;
+    // this effect re-fires once holdReel drops, picking the draw back up.
+    if (holdReel) return;
+    beginDraw(() => setShownTarget(targetName));
+  }, [isRevealed, targetName, shownTarget, isDrawing, beginDraw, holdReel]);
 
   if (!run || !run.current_loadout) {
     return (
@@ -50,30 +202,69 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     );
   }
 
-  const loadout = run.current_loadout;
-  const targetName = loadout.character || run.current_character_id || 'Target Character';
-  const tierInfo = run.tier_info || { name: 'The Warm Up', tier_level: 0, perk_limit: 4, description: '' };
+  if (!run.target_revealed || isDrawing || awaitingDraw) {
+    const drawing = isDrawing || awaitingDraw;
+    return (
+      <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-8 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
+        <div
+          className={`w-24 h-24 mx-auto rounded-2xl p-1 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden mb-4 ${
+            phase === 'landed' ? 'gn-land-glow' : ''
+          }`}
+        >
+          <RevealPortrait
+            key={drawing ? displayName ?? 'idle' : 'idle'}
+            name={drawing ? displayName ?? undefined : undefined}
+            role={role}
+            phase={drawing ? phase : 'idle'}
+          />
+        </div>
+
+        {drawing ? (
+          <>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">
+              {displayName ?? ' '}
+            </h2>
+            <p
+              className={`h-6 text-sm font-bold text-amber-600 dark:text-amber-400 ${
+                phase === 'landed' ? 'gn-name-in' : ''
+              }`}
+            >
+              {phase === 'landed' ? sendOff : ' '}
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6">Ready for the Gauntlet?</h2>
+            <button
+              onClick={() =>
+                beginDraw(() => {
+                  setShownTarget(targetName);
+                  onReveal();
+                })
+              }
+              disabled={loading}
+              className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-base py-3.5 px-8 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+            >
+              START GAME
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  const rawLoadout = run.current_loadout;
+  const loadout = {
+    ...rawLoadout,
+    character_perks: rawLoadout.character_perks || [],
+  };
+  const tierInfo =
+    run.tier_info ||
+    { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
   const perkLimit = tierInfo.perk_limit;
-
-  const getAvatarUrl = () => {
-    if (!targetName) return null;
-    const subDir = role === 'survivor' ? 'survivors' : 'killers';
-    const sanitized = targetName
-      .toLowerCase()
-      .trim()
-      .replace(/[\s\-/]+/g, '_')
-      .replace(/[\\/*?:"<>|]/g, '')
-      .replace(/_+/g, '_')
-      .replace(/^_+|_+$/g, '');
-    return `${backendBase}/static/avatars/${subDir}/${sanitized}.png`;
-  };
-
-  const avatarSrc = getAvatarUrl();
-
-  const handlePerkImgError = (idx: number) => {
-    setPerkImgErrors((prev) => ({ ...prev, [idx]: true }));
-  };
-
+  const charactersPerksOnly = tierInfo.character_perks_only;
+  const avatarSrc = avatarUrlFor(targetName, role);
+  const charPerks = loadout.character_perks;
   const perkSlots = [0, 1, 2, 3];
 
   return (
@@ -130,92 +321,118 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
       </div>
 
-      {/* Perk Loadout Grid */}
+      {/* Build guide: informational only, you pick the actual perks in-game */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-            Assigned Loadout ({perkLimit} Perk{perkLimit !== 1 ? 's' : ''} Active)
+            Your build for this match
           </h3>
-          {perkLimit < 4 && (
-            <span className="text-xs text-amber-700 dark:text-amber-400 font-semibold px-2.5 py-1 bg-amber-500/10 rounded-lg border border-amber-500/20">
-              {4 - perkLimit} Slot{4 - perkLimit > 1 ? 's' : ''} Locked by Tier Rule
-            </span>
-          )}
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Pick these in-game. Nothing to confirm here.
+          </p>
         </div>
+
+        {charactersPerksOnly && perkLimit === 0 && (
+          <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
+            No perks this trial. {targetName} goes in bare.
+          </p>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {perkSlots.map((idx) => {
-            const isLocked = idx >= perkLimit;
-            const perk = (loadout.perks || [])[idx];
-
-            if (isLocked) {
+            if (idx >= perkLimit) {
               return (
                 <div
                   key={`locked-${idx}`}
                   className="bg-slate-100/60 border border-slate-200 border-dashed dark:bg-slate-950/40 dark:border-slate-800/80 rounded-xl p-4 flex items-center gap-3 opacity-60 select-none"
                 >
-                  <div className="w-14 h-14 shrink-0 bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600">
-                    <Lock className="w-6 h-6" />
+                  <div className="w-16 h-16 shrink-0 bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600">
+                    <Lock className="w-7 h-7" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Locked Slot #{idx + 1}
+                      Slot {idx + 1} locked
                     </h4>
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                      No Perk Allowed (Tier {tierInfo.tier_level})
+                      Tier {tierInfo.tier_level} rule
                     </p>
                   </div>
                 </div>
               );
             }
 
-            if (!perk) {
+            if (charactersPerksOnly) {
               return (
                 <div
-                  key={`empty-${idx}`}
-                  className="bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center gap-3 opacity-80"
+                  key={`char-slot-${idx}`}
+                  className="bg-amber-500/[0.07] border border-amber-500/40 rounded-xl p-4 flex items-center gap-3"
                 >
-                  <div className="w-14 h-14 shrink-0 bg-slate-200 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-500">
-                    <Sparkles className="w-6 h-6" />
+                  <div className="relative w-16 h-16 shrink-0 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400">
+                    <HelpCircle className="w-9 h-9" />
+                    {avatarSrc && !avatarError && (
+                      <img
+                        src={avatarSrc}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full object-cover border-2 border-amber-400 bg-white dark:bg-slate-950 shadow-sm"
+                      />
+                    )}
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400">Empty Slot</h4>
-                    <p className="text-xs text-slate-400 dark:text-slate-500">No perk selected</p>
+                  <div className="overflow-hidden">
+                    <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
+                      Slot {idx + 1}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                      {targetName}&apos;s own perk
+                    </p>
                   </div>
                 </div>
               );
             }
 
-            const cleanPath = (perk.icon_local_path || '').replace(/^\/?(static\/)?/, '');
-            const iconSrc = cleanPath ? `${backendBase}/static/${cleanPath}` : perk.icon_url;
-            const hasError = perkImgErrors[idx];
+            if (idx === 0) {
+              return (
+                <div
+                  key="character-slot"
+                  className="bg-amber-500/[0.07] border border-amber-500/40 rounded-xl p-4 flex flex-col gap-3"
+                >
+                  <div>
+                    <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
+                      Slot 1: one of these
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      {targetName}&apos;s own perks
+                    </p>
+                  </div>
+                  {charPerks.length > 0 ? (
+                    <div className="flex items-center gap-2">
+                      {charPerks.map((perk, i) => (
+                        <PerkIcon key={perk.id ?? i} perk={perk} />
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-400 dark:text-slate-500 italic">
+                      No teachable perks on record for this character.
+                    </p>
+                  )}
+                </div>
+              );
+            }
 
             return (
               <div
-                key={perk.id || idx}
-                className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center gap-3 hover:border-amber-500/40 transition-all shadow-sm group"
+                key={`free-${idx}`}
+                className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center gap-3"
               >
-                <div className="relative w-14 h-14 shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center p-1 group-hover:border-amber-400 transition-colors overflow-hidden">
-                  {iconSrc && !hasError ? (
-                    <img
-                      src={iconSrc}
-                      alt={perk.name}
-                      className="w-full h-full object-contain filter drop-shadow-md"
-                      onError={() => handlePerkImgError(idx)}
-                    />
-                  ) : (
-                    <Sparkles className="w-6 h-6 text-amber-500/60 dark:text-amber-400/60" />
-                  )}
+                <div className="w-16 h-16 shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-500">
+                  <HelpCircle className="w-9 h-9" />
                 </div>
-
-                <div className="overflow-hidden">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors">
-                    {perk.name}
+                <div>
+                  <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                    Slot {idx + 1}
                   </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                    {perk.character_name || 'General Perk'}
-                  </p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Any perk you like</p>
                 </div>
               </div>
             );
@@ -223,7 +440,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons & Match Exception Handlers */}
+      {/* Action Buttons */}
       <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800/80">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
@@ -242,40 +459,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           >
             <XCircle className="w-5 h-5 text-rose-100" />
             <span>LOSE MATCH</span>
-          </button>
-
-          <button
-            onClick={onReroll}
-            disabled={loading}
-            className="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:active:bg-slate-900 disabled:opacity-50 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold text-sm py-3.5 px-5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            <span>Reroll</span>
-          </button>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mr-1">
-            Match Exception:
-          </span>
-          <button
-            onClick={() => onInvalidateMatch('dc_before_5_gens')}
-            disabled={loading}
-            className="px-3.5 py-2 bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-900 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
-            title="Invalidate match & re-roll for same character due to disconnect before 5 generators"
-          >
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-            <span>DC &lt; 5 Gens</span>
-          </button>
-
-          <button
-            onClick={() => onInvalidateMatch('game_cancelled')}
-            disabled={loading}
-            className="px-3.5 py-2 bg-white hover:bg-slate-50 dark:bg-slate-950 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
-            title="Invalidate match & re-roll for same character due to loading disconnect"
-          >
-            <Ban className="w-3.5 h-3.5 text-slate-400" />
-            <span>Game Cancelled</span>
           </button>
         </div>
       </div>

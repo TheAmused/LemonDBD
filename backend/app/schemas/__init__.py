@@ -30,8 +30,6 @@ from app.schemas.equipment import (
     ItemResponse,
 )
 from app.schemas.gauntlet import (
-    GauntletMatchExceptionBase,
-    GauntletMatchExceptionResponse,
     GauntletMatchLogBase,
     GauntletMatchLogResponse,
     GauntletRunBase,
@@ -116,8 +114,6 @@ __all__ = [
     "GauntletRunResponse",
     "GauntletMatchLogBase",
     "GauntletMatchLogResponse",
-    "GauntletMatchExceptionBase",
-    "GauntletMatchExceptionResponse",
     "PageStreakRunBase",
     "PageStreakRunCreate",
     "PageStreakRunResponse",

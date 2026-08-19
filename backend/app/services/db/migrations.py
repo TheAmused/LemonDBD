@@ -34,6 +34,11 @@ PERK_COLUMNS = [
     ("is_generic_counterpart", "BOOLEAN DEFAULT FALSE"),
 ]
 
+GAUNTLET_RUN_COLUMNS = [
+    ("game_mode", "VARCHAR(20) DEFAULT 'original'"),
+    ("target_revealed", "BOOLEAN DEFAULT FALSE"),
+]
+
 
 def migrate_runtime_columns(db) -> None:
     """Ensure all required columns exist in active PostgreSQL or SQLite database engines."""
@@ -70,6 +75,26 @@ def migrate_runtime_columns(db) -> None:
                             conn.execute(text(f"ALTER TABLE perks ADD COLUMN {col_name} {col_type};"))
                 except Exception as err:
                     logger.debug(f"Perk column check notice for {col_name}: {err}")
+
+            # 3. Migrate Gauntlet Run Columns
+            for col_name, col_type in GAUNTLET_RUN_COLUMNS:
+                try:
+                    if is_pg:
+                        conn.execute(text(f"ALTER TABLE gauntlet_runs ADD COLUMN IF NOT EXISTS {col_name} {col_type};"))
+                    else:
+                        res = conn.execute(text("PRAGMA table_info(gauntlet_runs);")).fetchall()
+                        existing_cols = [r[1] for r in res]
+                        if col_name not in existing_cols:
+                            conn.execute(text(f"ALTER TABLE gauntlet_runs ADD COLUMN {col_name} {col_type};"))
+                except Exception as err:
+                    logger.debug(f"Gauntlet run column check notice for {col_name}: {err}")
+
+            # Original mode dropped GauntletMatchException, so an existing table is
+            # cleaned up rather than left orphaned for databases created pre-refactor.
+            try:
+                conn.execute(text("DROP TABLE IF EXISTS gauntlet_match_exceptions;"))
+            except Exception as err:
+                logger.debug(f"Drop notice for gauntlet_match_exceptions: {err}")
 
             conn.commit()
     except Exception as e:

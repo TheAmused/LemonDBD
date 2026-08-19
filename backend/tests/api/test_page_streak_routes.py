@@ -1,16 +1,18 @@
 # backend/tests/api/test_page_streak_routes.py
 import unittest
 from app import create_app
+from app.core.config import TestingConfig
 from app.core.extensions import db
 from app.services.page_streak_service import PageStreakService
 from app.services.user_service import UserService
-from tests.test_page_streak_service import FakePerkService, make_perks, seed_perks
+from tests.unit.test_page_streak_service import FakePerkService, make_perks, seed_perks
 
 
 class TestPageStreakRoutes(unittest.TestCase):
     def setUp(self):
-        self.app = create_app()
-        self.app.config["TESTING"] = True
+        # TestingConfig keeps this on an in-memory SQLite DB. Without it the tests
+        # bind to the real DATABASE_URL and tearDown's drop_all() wipes the dev database.
+        self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
         self.ctx = self.app.app_context()
         self.ctx.push()

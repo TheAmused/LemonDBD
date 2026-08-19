@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS gauntlet_runs (
     user_id INTEGER,
     role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
     status TEXT NOT NULL DEFAULT 'in_progress',
+    game_mode TEXT NOT NULL DEFAULT 'original',
+    target_revealed BOOLEAN NOT NULL DEFAULT 0,
     current_character_id TEXT NOT NULL,
     current_streak INTEGER NOT NULL DEFAULT 0,
     best_streak INTEGER NOT NULL DEFAULT 0,
@@ -67,15 +69,6 @@ CREATE TABLE IF NOT EXISTS generator_drawn_perks (
     perk_name TEXT NOT NULL,
     drawn_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(role, perk_name)
-);
-
-CREATE TABLE IF NOT EXISTS gauntlet_match_exceptions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    run_id INTEGER NOT NULL,
-    character_id TEXT NOT NULL,
-    reason TEXT NOT NULL CHECK (reason IN ('dc_before_5_gens', 'game_cancelled')),
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (run_id) REFERENCES gauntlet_runs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS draft_sessions (

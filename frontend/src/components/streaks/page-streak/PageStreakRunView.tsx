@@ -11,7 +11,7 @@ import { BuildBar } from './BuildBar';
 import { RunHistory } from './RunHistory';
 import { StartRunPanel } from './StartRunPanel';
 import { usePerkArtwork } from './usePerkArtwork';
-import { Confetti } from './Confetti';
+import { Confetti } from '../Confetti';
 
 interface PageStreakRunViewProps {
   locale: string;

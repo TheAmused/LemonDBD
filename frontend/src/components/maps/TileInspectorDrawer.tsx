@@ -1,5 +1,5 @@
-// frontend/src/components/maps/TileInspectorDrawer.tsx
 'use client';
+// frontend/src/components/maps/TileInspectorDrawer.tsx
 
 import React from 'react';
 import { X, Compass, Footprints, Flame, Shield } from 'lucide-react';
@@ -20,15 +20,14 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
 }) => {
   if (!isOpen || !selectedItem) return null;
 
-  // Normalize fields across MapTile / MapObjective / KeyTile / TotemSpawn
   const name =
     'name' in selectedItem && selectedItem.name
       ? selectedItem.name
       : 'location' in selectedItem && selectedItem.location
-        ? selectedItem.location
-        : 'location_description' in selectedItem && selectedItem.location_description
-          ? selectedItem.location_description
-          : 'Map Feature';
+      ? selectedItem.location
+      : 'location_description' in selectedItem && selectedItem.location_description
+      ? selectedItem.location_description
+      : 'Map Feature';
 
   const itemType =
     'type' in selectedItem && selectedItem.type
@@ -52,8 +51,8 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
         ? selectedItem.vault_directions.join(', ')
         : selectedItem.vault_directions
       : 'vault_direction' in selectedItem && selectedItem.vault_direction
-        ? selectedItem.vault_direction
-        : null;
+      ? selectedItem.vault_direction
+      : null;
 
   const loopingTips =
     'looping_tips' in selectedItem && selectedItem.looping_tips
@@ -69,8 +68,8 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
     'location_description' in selectedItem
       ? selectedItem.location_description
       : 'location' in selectedItem
-        ? selectedItem.location
-        : null;
+      ? selectedItem.location
+      : null;
 
   const renderPalletSafetyBadge = (rating: PalletSafetyRating | null) => {
     if (!rating) {
@@ -136,7 +135,7 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
               </div>
               <div>
                 <div className="font-extrabold text-sm text-rose-200">Death Trap / Unsafe Pallet</div>
-                <div className="text-[11px] text-rose-400/80">Low wall / short loop. Pre-drop & stun, or abandon immediately!</div>
+                <div className="text-[11px] text-rose-400/80">Low wall / short loop. Pre-drop &amp; stun, or abandon immediately!</div>
               </div>
             </div>
           </div>
@@ -147,30 +146,49 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white/95 dark:bg-slate-900/95 border-l border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl z-[60] flex flex-col justify-between transition-transform duration-300 ease-in-out">
-      {/* Header */}
+    <aside
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="inspector-title"
+      className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white/95 dark:bg-slate-900/95 border-l border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl z-[60] flex flex-col justify-between transition-transform duration-300 ease-in-out"
+    >
       <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/40">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400 text-xl font-bold">
-            {itemType === 'shack' ? '🛖' : itemType === 'main' ? '🏛️' : itemType === 'totem' ? '💀' : itemType === 'generator' ? '⚡' : itemType === 'exit_gate' ? '🚪' : itemType === 'hatch' ? '🕳️' : '🧱'}
+            {itemType === 'shack'
+              ? '🛖'
+              : itemType === 'main'
+              ? '🏛️'
+              : itemType === 'totem'
+              ? '💀'
+              : itemType === 'generator'
+              ? '⚡'
+              : itemType === 'exit_gate'
+              ? '🚪'
+              : itemType === 'hatch'
+              ? '🕳️'
+              : '🧱'}
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight">{name}</h3>
-            <span className="text-xs font-mono uppercase tracking-wider text-amber-600 dark:text-amber-400/90">{itemType}</span>
+            <h3 id="inspector-title" className="text-base font-bold text-slate-900 dark:text-white leading-tight">
+              {name}
+            </h3>
+            <span className="text-xs font-mono uppercase tracking-wider text-amber-600 dark:text-amber-400/90">
+              {itemType}
+            </span>
           </div>
         </div>
         <button
+          type="button"
           onClick={onClose}
-          className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
           aria-label="Close Inspector"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Drawer Content Body */}
       <div className="p-5 space-y-5 overflow-y-auto flex-1 scrollbar-thin">
-        {/* Pallet Safety Badge */}
         {(hasPallet || palletSafety) && (
           <div className="space-y-2">
             <h4 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -181,12 +199,11 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
           </div>
         )}
 
-        {/* Vault Direction Warnings & Vault Speed Angle Tips */}
         {(hasWindow || vaultDirections) && (
           <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border border-indigo-500/30 rounded-2xl space-y-2.5 shadow-sm">
             <h4 className="text-xs font-bold text-indigo-700 dark:text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
               <Compass className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
-              Vault Direction & Speed Angle Tips
+              Vault Direction &amp; Speed Angle Tips
             </h4>
             {vaultDirections && (
               <div className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
@@ -204,7 +221,6 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
           </div>
         )}
 
-        {/* Survivor Looping Pathing Tips */}
         <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border border-emerald-500/30 rounded-2xl space-y-2 shadow-sm">
           <h4 className="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
             <Footprints className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
@@ -219,7 +235,6 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
           </p>
         </div>
 
-        {/* Killer Counterplay Strategy */}
         <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border border-red-500/30 rounded-2xl space-y-2 shadow-sm">
           <h4 className="text-xs font-bold text-red-700 dark:text-red-400 uppercase tracking-wider flex items-center gap-1.5">
             <Flame className="w-4 h-4 text-red-500 animate-pulse" />
@@ -234,7 +249,6 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
           </p>
         </div>
 
-        {/* Location / Description Meta */}
         {locationDesc && (
           <div className="p-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between shadow-sm">
             <span className="text-slate-500">Location Note:</span>
@@ -243,10 +257,9 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
         )}
       </div>
 
-      {/* Drawer Footer */}
       <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 text-center">
         <span className="text-[11px] text-slate-500 font-mono">LemonDBD Interactive Realm Inspector</span>
       </div>
-    </div>
+    </aside>
   );
 };

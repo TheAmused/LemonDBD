@@ -1,5 +1,5 @@
 // frontend/src/components/character-detail/types.tsx
-﻿﻿import React from 'react';
+import React from 'react';
 
 export interface CharacterItem {
   id?: number;
@@ -22,18 +22,6 @@ export interface CharacterItem {
   release_date?: string;
   dlc_counterparts?: string[];
   lore?: string;
-}
-
-export function getCharacterSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\s\-/]+/g, '_')
-    .replace(/[^a-z0-9_]/g, '')
-    .replace(/_+/g, '_')
-    .replace(/^_+|_+$/g, '');
 }
 
 export interface PerkItem {
@@ -92,22 +80,46 @@ export interface CharacterDetailPayload {
   items?: EquipmentItem[];
 }
 
+export type CharacterDetailDictionary = Record<string, string>;
+
 export interface CharacterViewBaseProps {
   currentLocale: string;
-  dict: any;
+  dict?: Record<string, unknown>;
   detailData: CharacterDetailPayload;
   allCharacters?: CharacterItem[];
 }
 
-export const getAssetUrl = (backendBase: string, path?: string, url?: string) => {
+export interface RarityTileStyle {
+  bg: string;
+  badge: string;
+  text: string;
+}
+
+export function getCharacterSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s\-/]+/g, '_')
+    .replace(/[^a-z0-9_]/g, '')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+export function getAssetUrl(backendBase: string, path?: string, url?: string): string {
   if (path) {
     const cleanPath = path.replace(/^\/?(static\/)?/, '');
     return `${backendBase}/static/${cleanPath}`;
   }
   return url || '';
-};
+}
 
-export const getAvatarUrl = (backendBase: string, char: CharacterItem, isSurvivor: boolean) => {
+export function getAvatarUrl(
+  backendBase: string,
+  char: CharacterItem,
+  isSurvivor: boolean
+): string {
   let rawPath = char.avatar_local_path;
   if (!rawPath && char.name) {
     const subDir = isSurvivor ? 'survivors' : 'killers';
@@ -119,9 +131,9 @@ export const getAvatarUrl = (backendBase: string, char: CharacterItem, isSurvivo
     return `${backendBase}/static/${cleanPath}`;
   }
   return char.avatar_url || char.portrait_url || '';
-};
+}
 
-export const getRarityTileStyle = (rarity?: string) => {
+export function getRarityTileStyle(rarity?: string): RarityTileStyle {
   const r = (rarity || '').toLowerCase();
   if (r.includes('ultra') || r.includes('iridescent')) {
     return {
@@ -170,59 +182,117 @@ export const getRarityTileStyle = (rarity?: string) => {
     badge: 'bg-slate-500/20 text-slate-400 border-slate-500/40',
     text: 'text-slate-400',
   };
-};
+}
 
-// ─── DBD Keyword & Value Highlighter ─────────────────────────────────────────
-// Matches the same set as PerkModal, plus addon-specific terms
-
-const DBD_KEYWORDS = [
-  // Action verbs
-  'Increases', 'Increase', 'Decreases', 'Decrease',
-  'Grants', 'Grant', 'Reveals', 'Reveal',
-  'Causes', 'Cause', 'Unlocks', 'Unlock',
-  'Applies', 'Apply', 'Activates', 'Activate',
-  'Affects', 'Affect', 'Extends', 'Extend',
-  'Reduces', 'Reduce', 'Blocks', 'Block',
-  // Adverbs
-  'Tremendously', 'Considerably', 'Moderately', 'Slightly',
-  // Perk types
-  'Hex:', 'Hex', 'Boon:', 'Boon', 'Scourge Hook:', 'Scourge Hook',
-  // Status effects
-  'Obsession', 'Exhausted', 'Exhaustion', 'Exposed',
-  'Haste', 'Hindered', 'Blindness', 'Broken',
-  'Oblivious', 'Undetectable', 'Incapacitated',
-  'Mangled', 'Hemorrhage', 'Deep Wound', 'Cursed',
-  'Endurance', 'Bloodlust', 'Torment',
-  // Game mechanics
-  'Terror Radius', 'Killer Instinct',
-  'Aura Reading', 'Auras', 'Aura',
-  'Skill Checks', 'Skill Check',
-  'Great Skill Check', 'Good Skill Check',
-  'Bear Trap', 'Bear Traps',
-  'Dying State', 'Injured State', 'Healthy State',
-  'Hooks', 'Hook', 'Generators', 'Generator',
-  'Pallets', 'Pallet', 'Windows', 'Window',
-  'Chests', 'Chest', 'Totems', 'Totem',
-  'Bloodweb', 'Trial', 'Entity',
-  // Status Effect (title-cased in game)
-  'Status Effect', 'Haste Status Effect',
-  'Blinded', 'Hindered', 'Marked',
-  // Survivor items
-  'Med-Kit', 'Medkit', 'Toolbox', 'Flashlight',
-  'First Aid', 'Styptic', 'Serum', 'Bandage',
-  // Power descriptors  
-  'Special Ability', 'Special Attack',
-  'Lunge', 'Lullaby',
+export const DBD_KEYWORDS: readonly string[] = [
+  'Increases',
+  'Increase',
+  'Decreases',
+  'Decrease',
+  'Grants',
+  'Grant',
+  'Reveals',
+  'Reveal',
+  'Causes',
+  'Cause',
+  'Unlocks',
+  'Unlock',
+  'Applies',
+  'Apply',
+  'Activates',
+  'Activate',
+  'Affects',
+  'Affect',
+  'Extends',
+  'Extend',
+  'Reduces',
+  'Reduce',
+  'Blocks',
+  'Block',
+  'Tremendously',
+  'Considerably',
+  'Moderately',
+  'Slightly',
+  'Hex:',
+  'Hex',
+  'Boon:',
+  'Boon',
+  'Scourge Hook:',
+  'Scourge Hook',
+  'Obsession',
+  'Exhausted',
+  'Exhaustion',
+  'Exposed',
+  'Haste',
+  'Hindered',
+  'Blindness',
+  'Broken',
+  'Oblivious',
+  'Undetectable',
+  'Incapacitated',
+  'Mangled',
+  'Hemorrhage',
+  'Deep Wound',
+  'Cursed',
+  'Endurance',
+  'Bloodlust',
+  'Torment',
+  'Terror Radius',
+  'Killer Instinct',
+  'Aura Reading',
+  'Auras',
+  'Aura',
+  'Skill Checks',
+  'Skill Check',
+  'Great Skill Check',
+  'Good Skill Check',
+  'Bear Trap',
+  'Bear Traps',
+  'Dying State',
+  'Injured State',
+  'Healthy State',
+  'Hooks',
+  'Hook',
+  'Generators',
+  'Generator',
+  'Pallets',
+  'Pallet',
+  'Windows',
+  'Window',
+  'Chests',
+  'Chest',
+  'Totems',
+  'Totem',
+  'Bloodweb',
+  'Trial',
+  'Entity',
+  'Status Effect',
+  'Haste Status Effect',
+  'Blinded',
+  'Hindered',
+  'Marked',
+  'Med-Kit',
+  'Medkit',
+  'Toolbox',
+  'Flashlight',
+  'First Aid',
+  'Styptic',
+  'Serum',
+  'Bandage',
+  'Special Ability',
+  'Special Attack',
+  'Lunge',
+  'Lullaby',
 ];
 
-const TOKEN_REGEX = (() => {
+export const TOKEN_REGEX: RegExp = (() => {
   const kw = DBD_KEYWORDS.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
   return new RegExp(
     `(\\b(?:${kw})\\b|` +
-    `\\+?\\-?\\d+(?:\\.\\d+)?(?:\\s*\\/\\s*\\d+(?:\\.\\d+)?)+(?:\\s*%)?|` +
-    `\\+\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|m\\b|%|seconds?|s\\b|tokens?|charges?)|` +
-    `\\b\\d+(?:\\.\\d+)?\\s*%|` +
-    `\\b\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|seconds?|tokens?)\\b)`,
+      `\\+?\\-?\\d+(?:\\.\\d+)?(?:\\s*\\/\\s*\\d+(?:\\.\\d+)?)+(?:\\s*%)?|` +
+      `\\+\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|m\\b|%|seconds?|s\\b|tokens?|charges?)|` +
+      `\\b\\d+(?:\\.\\d+)?\\s*%|` +
+      `\\b\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|seconds?|tokens?)\\b)`,
     'gi'
   );
 })();
@@ -235,10 +305,11 @@ function parseLineTokens(text: string, lineKey: number | string): React.ReactNod
         if (!part) return null;
         const trimmed = part.trim();
 
-        // Number/value token
         const isValue =
           /^\+?\-?\d+(?:\.\d+)?(?:\s*\/\s*\d+(?:\.\d+)?)+(?:\s*%)?$/.test(trimmed) ||
-          /^\+\d+(?:\.\d+)?\s*(?:metres?|meters?|m|%|seconds?|s|tokens?|charges?)$/i.test(trimmed) ||
+          /^\+\d+(?:\.\d+)?\s*(?:metres?|meters?|m|%|seconds?|s|tokens?|charges?)$/i.test(
+            trimmed
+          ) ||
           /^\d+(?:\.\d+)?\s*%$/.test(trimmed) ||
           /^\d+(?:\.\d+)?\s*(?:metres?|meters?|seconds?|tokens?)$/i.test(trimmed);
 
@@ -246,7 +317,7 @@ function parseLineTokens(text: string, lineKey: number | string): React.ReactNod
 
         if (isKeyword || isValue) {
           return (
-            <strong key={`${lineKey}-${idx}`} className="font-black text-amber-400 dark:text-amber-300">
+            <strong key={`${lineKey}-${idx}`} className="font-black text-amber-400">
               {part}
             </strong>
           );
@@ -263,13 +334,12 @@ export function renderFormattedDbdText(
 ): React.ReactNode {
   if (!rawText) return null;
 
-  // 1. Clean markdown asterisks and quote artifacts
   const cleaned = rawText
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/\*""|\*"/g, '"')
     .replace(/""\*|"\*/g, '"')
-    .replace(/\*\*(.*?)\*\*/g, '$1')   // strip **bold** markers (handled by keyword highlighter)
+    .replace(/\*\*(.*?)\*\*/g, '$1')
     .replace(/(?<=\S)\*(?=\s|$|[.,;:!?)])/g, '')
     .replace(/\*(?=[a-zA-Z0-9+%-])/g, '')
     .replace(/(?<=[a-zA-Z0-9+%-])\*/g, '')
@@ -278,11 +348,9 @@ export function renderFormattedDbdText(
     .trim();
 
   const lines = cleaned.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-
   const elements: React.ReactNode[] = [];
 
   lines.forEach((line, lineIdx) => {
-    // Quote detection (lore quotes / dev quotes)
     const stripped = line.replace(/^[\*\s_]+/, '').replace(/[\*\s_]+$/, '');
     const isQuote =
       (stripped.startsWith('"') && stripped.endsWith('"')) ||
@@ -295,7 +363,7 @@ export function renderFormattedDbdText(
       elements.push(
         <div
           key={`q-${lineIdx}`}
-          className={`rounded-xl border-l-2 border-amber-500/80 bg-slate-900/60 dark:bg-slate-950/80 px-3 py-2 italic text-slate-300 dark:text-slate-400 font-serif shadow-inner ${
+          className={`rounded-xl border-l-2 border-amber-500/80 bg-slate-950/80 px-3 py-2 italic text-slate-300 font-serif shadow-inner ${
             isCompact ? 'my-1.5 text-[10px]' : 'my-3 text-xs sm:text-sm'
           }`}
         >
@@ -305,7 +373,6 @@ export function renderFormattedDbdText(
       return;
     }
 
-    // Event notice banner
     if (/^THIS (ITEM|UNLOCKABLE) CAN NO LONGER BE OBTAINED/i.test(line) && !isCompact) {
       elements.push(
         <div
@@ -321,7 +388,6 @@ export function renderFormattedDbdText(
       return;
     }
 
-    // Bullet list items
     const isBullet =
       line.startsWith('•') ||
       line.startsWith('* ') ||
@@ -333,7 +399,7 @@ export function renderFormattedDbdText(
       elements.push(
         <li
           key={`li-${lineIdx}`}
-          className={`ml-5 list-disc leading-relaxed text-slate-300 dark:text-slate-300 marker:text-amber-400 ${
+          className={`ml-5 list-disc leading-relaxed text-slate-300 marker:text-amber-400 ${
             isCompact ? 'my-0.5 text-xs' : 'my-1.5 text-xs sm:text-sm'
           }`}
         >
@@ -343,11 +409,10 @@ export function renderFormattedDbdText(
       return;
     }
 
-    // Normal paragraph
     elements.push(
       <p
         key={`p-${lineIdx}`}
-        className={`leading-relaxed text-slate-300 dark:text-slate-300 ${
+        className={`leading-relaxed text-slate-300 ${
           isCompact ? 'mb-1 text-xs' : 'mb-2.5 text-xs sm:text-sm'
         }`}
       >

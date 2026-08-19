@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/modals/LoreModal.tsx
 import React from 'react';
 import { BookOpen, X } from 'lucide-react';
 import { CharacterItem } from '../types';

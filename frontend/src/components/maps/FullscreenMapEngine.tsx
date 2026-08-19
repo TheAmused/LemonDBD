@@ -1,3 +1,4 @@
+// frontend/src/components/maps/FullscreenMapEngine.tsx
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';

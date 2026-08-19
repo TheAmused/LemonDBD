@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/types.tsx
 ﻿﻿import React from 'react';
 
 export interface CharacterItem {

@@ -1,3 +1,4 @@
+// frontend/src/components/maps/VariantSwitcherBar.tsx
 'use client';
 
 import React from 'react';

@@ -1,3 +1,4 @@
+# backend/app/models/map.py
 from datetime import datetime
 from typing import List, Optional
 from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text

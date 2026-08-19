@@ -1,3 +1,4 @@
+// frontend/src/components/killer/KillerCalculator.tsx
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';

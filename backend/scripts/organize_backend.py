@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# backend/scripts/organize_backend.py
 """
 Backend Structural Refactoring Script
 - Groups core files into app/core/ (config.py, extensions.py, security.py)

@@ -1,3 +1,4 @@
+// frontend/src/services/mapApi.ts
 import { MapRealm } from '@/types/map';
 
 const getApiBase = () => {

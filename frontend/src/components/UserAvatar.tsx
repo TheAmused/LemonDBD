@@ -1,3 +1,4 @@
+// frontend/src/components/UserAvatar.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';

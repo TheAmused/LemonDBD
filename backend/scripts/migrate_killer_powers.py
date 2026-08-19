@@ -1,3 +1,4 @@
+# backend/scripts/migrate_killer_powers.py
 """
 Database Migration: Add power and combat attribute columns to the 'characters' table.
 """

@@ -6,6 +6,23 @@
 LemonDBD/
 ├── backend/
 │   ├── app/
+│   │   ├── core/
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py
+│   │   │   ├── extensions.py
+│   │   │   └── security.py
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   ├── character.py
+│   │   │   ├── community.py
+│   │   │   ├── equipment.py
+│   │   │   ├── gauntlet.py
+│   │   │   ├── map.py
+│   │   │   ├── minigames.py
+│   │   │   ├── page_streak.py
+│   │   │   ├── perk.py
+│   │   │   └── user.py
 │   │   ├── routes/
 │   │   │   ├── others/
 │   │   │   │   ├── __init__.py
@@ -25,6 +42,17 @@ LemonDBD/
 │   │   │   ├── perks.py
 │   │   │   ├── synergy.py
 │   │   │   └── users.py
+│   │   ├── schemas/
+│   │   │   ├── __init__.py
+│   │   │   ├── character.py
+│   │   │   ├── community.py
+│   │   │   ├── equipment.py
+│   │   │   ├── gauntlet.py
+│   │   │   ├── map.py
+│   │   │   ├── minigames.py
+│   │   │   ├── page_streak.py
+│   │   │   ├── perk.py
+│   │   │   └── user.py
 │   │   ├── scrapers/
 │   │   │   ├── assets/ [Contains only media across subdirectories (1 files)]
 │   │   │   ├── __init__.py
@@ -36,6 +64,27 @@ LemonDBD/
 │   │   │   ├── __init__.py
 │   │   │   └── user_seeder.py
 │   │   ├── services/
+│   │   │   ├── db/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── connection.py
+│   │   │   │   ├── maintenance.py
+│   │   │   │   ├── migrations.py
+│   │   │   │   ├── raw_schema.py
+│   │   │   │   └── seeders.py
+│   │   │   ├── gauntlet/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── constants.py
+│   │   │   │   ├── roller.py
+│   │   │   │   └── stats.py
+│   │   │   ├── generator/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── config_manager.py
+│   │   │   │   └── drawn_manager.py
+│   │   │   ├── maps/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── data.py
+│   │   │   │   ├── queries.py
+│   │   │   │   └── seeder.py
 │   │   │   ├── others/
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── build_service.py
@@ -44,6 +93,42 @@ LemonDBD/
 │   │   │   │   ├── guesser_service.py
 │   │   │   │   ├── killer_calc_service.py
 │   │   │   │   └── quest_service.py
+│   │   │   ├── ownership/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── characters.py
+│   │   │   │   ├── perks.py
+│   │   │   │   └── summary.py
+│   │   │   ├── page_streak/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── helpers.py
+│   │   │   │   ├── pool.py
+│   │   │   │   ├── roster.py
+│   │   │   │   └── runs.py
+│   │   │   ├── perks/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── loader.py
+│   │   │   │   ├── queries_character.py
+│   │   │   │   ├── queries_equipment.py
+│   │   │   │   ├── queries_map.py
+│   │   │   │   ├── queries_perk.py
+│   │   │   │   └── utils.py
+│   │   │   ├── scraper/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── assets.py
+│   │   │   │   ├── db_sync.py
+│   │   │   │   ├── pipeline.py
+│   │   │   │   └── state.py
+│   │   │   ├── synergy/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── badges.py
+│   │   │   │   ├── evaluator.py
+│   │   │   │   └── rules.py
+│   │   │   ├── user/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── admin.py
+│   │   │   │   ├── auth.py
+│   │   │   │   ├── avatar.py
+│   │   │   │   └── profile.py
 │   │   │   ├── db_service.py
 │   │   │   ├── gauntlet_service.py
 │   │   │   ├── generator_service.py
@@ -55,12 +140,7 @@ LemonDBD/
 │   │   │   ├── synergy_service.py
 │   │   │   └── user_service.py
 │   │   ├── static/ [Contains only media across subdirectories (2281 files)]
-│   │   ├── utils/
-│   │   │   └── auth_helper.py
-│   │   ├── __init__.py
-│   │   ├── config.py
-│   │   ├── extensions.py
-│   │   └── models.py
+│   │   └── __init__.py
 │   ├── data/
 │   │   ├── lemon_dbd.db
 │   │   ├── maps.json
@@ -73,40 +153,48 @@ LemonDBD/
 │   │   ├── env.py
 │   │   ├── README
 │   │   └── script.py.mako
+│   ├── scripts/
+│   │   ├── check_missing_perks.py
+│   │   ├── migrate_killer_powers.py
+│   │   ├── organize_backend.py
+│   │   └── run_scrapper.py
 │   ├── tests/
-│   │   ├── test_character_detail_route.py
-│   │   ├── test_character_scraper.py
-│   │   ├── test_character_slug_routes.py
-│   │   ├── test_db_service.py
-│   │   ├── test_description_cleaner.py
-│   │   ├── test_fullscreen_maps_routes.py
-│   │   ├── test_fullscreen_maps_service.py
-│   │   ├── test_gauntlet_routes.py
-│   │   ├── test_gauntlet_service.py
-│   │   ├── test_generator_routes.py
-│   │   ├── test_generator_service.py
-│   │   ├── test_guesser.py
-│   │   ├── test_item_routes.py
-│   │   ├── test_page_streak_routes.py
-│   │   ├── test_page_streak_service.py
-│   │   ├── test_phase1_services.py
-│   │   ├── test_phase2_services.py
-│   │   ├── test_phase3_services.py
-│   │   ├── test_phase4_services.py
-│   │   ├── test_phase5_services.py
-│   │   ├── test_phase6_services.py
-│   │   ├── test_scraper_config.py
-│   │   ├── test_scraper_routes.py
-│   │   ├── test_sqlalchemy_models_and_seeder.py
-│   │   ├── test_user_ownership.py
-│   │   └── test_wikigg_items_addons.py
+│   │   ├── api/
+│   │   │   ├── __init__.py
+│   │   │   ├── test_character_detail_route.py
+│   │   │   ├── test_character_slug_routes.py
+│   │   │   ├── test_fullscreen_maps_routes.py
+│   │   │   ├── test_gauntlet_routes.py
+│   │   │   ├── test_generator_routes.py
+│   │   │   ├── test_item_routes.py
+│   │   │   ├── test_page_streak_routes.py
+│   │   │   └── test_scraper_routes.py
+│   │   ├── scrapers/
+│   │   │   ├── __init__.py
+│   │   │   ├── test_character_scraper.py
+│   │   │   ├── test_scraper_config.py
+│   │   │   └── test_wikigg_items_addons.py
+│   │   └── unit/
+│   │       ├── __init__.py
+│   │       ├── test_db_service.py
+│   │       ├── test_description_cleaner.py
+│   │       ├── test_fullscreen_maps_service.py
+│   │       ├── test_gauntlet_service.py
+│   │       ├── test_generator_service.py
+│   │       ├── test_guesser.py
+│   │       ├── test_page_streak_service.py
+│   │       ├── test_phase1_services.py
+│   │       ├── test_phase2_services.py
+│   │       ├── test_phase3_services.py
+│   │       ├── test_phase4_services.py
+│   │       ├── test_phase5_services.py
+│   │       ├── test_phase6_services.py
+│   │       ├── test_sqlalchemy_models_and_seeder.py
+│   │       └── test_user_ownership.py
 │   ├── .dockerignore
-│   ├── check_missing_perks.py
 │   ├── Dockerfile
-│   ├── migrate_killer_powers.py
 │   ├── requirements.txt
-│   ├── run.py
-│   └── run_scrapper.py
+│   └── run.py
 ├── documentation/
 │   ├── api-reference.md
 │   ├── architecture.md
@@ -341,5 +429,9 @@ LemonDBD/
 ├── .env.example
 ├── .gitignore
 ├── docker-compose.yml
+├── lemon2.py
+├── lemon3.py
+├── prompt.md
+├── response.md
 └── structure.md
 ```

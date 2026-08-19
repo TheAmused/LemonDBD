@@ -1,3 +1,4 @@
+# backend/app/routes/gauntlet_streak.py
 from flask import Blueprint, current_app, jsonify, request, g
 from app.services.gauntlet_service import GauntletService
 from app.core.security import login_required

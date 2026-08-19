@@ -1,3 +1,4 @@
+// frontend/src/components/perk-studio/CustomPerkStudio.tsx
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';

@@ -1,3 +1,4 @@
+# backend/app/models/equipment.py
 from typing import Optional
 from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column

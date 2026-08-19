@@ -1,3 +1,4 @@
+# backend/app/models/character.py
 import json
 from typing import TYPE_CHECKING, List, Optional
 from sqlalchemy import Boolean, Integer, String, Text

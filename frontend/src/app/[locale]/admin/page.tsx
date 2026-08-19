@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/admin/page.tsx
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -263,14 +264,21 @@ export default function AdminPanelPage() {
 
   const handleTriggerSync = async () => {
     if (isSyncing) return;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    if (!token) {
+      setActionMessage({ type: 'error', text: 'Authentication token not found. Please log in again.' });
+      return;
+    }
+
     setIsSyncing(true);
     setSyncStatus('Scraping deadbydaylight.wiki.gg...');
     try {
-      const res = await fetch(`${API_BASE}/api/scrape-and-seed`, {
+      const res = await fetch(`${API_BASE}/api/v1/scrape-and-seed`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'no-cache',
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -281,7 +289,11 @@ export default function AdminPanelPage() {
           text: `Database sync completed! Synced ${data.characters_synced ?? 98} Characters and ${data.perks_synced ?? 321} Perks.`,
         });
       } else {
-        setActionMessage({ type: 'error', text: 'Scraper failed to sync data from wiki.gg.' });
+        const errorData = await res.json().catch(() => ({}));
+        setActionMessage({
+          type: 'error',
+          text: errorData.error || errorData.message || 'Scraper failed to sync data from wiki.gg.',
+        });
       }
     } catch (err) {
       console.error('Failed to trigger database scraper job:', err);

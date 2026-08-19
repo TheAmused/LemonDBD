@@ -1,3 +1,4 @@
+# backend/scripts/run_scrapper.py
 import os
 import sys
 

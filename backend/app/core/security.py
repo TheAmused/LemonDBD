@@ -1,26 +1,128 @@
+# backend/app/core/security.py
 import functools
-from flask import request, jsonify, g
-from app.services.user_service import UserService
+import logging
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional
 
-user_service = UserService()
+import jwt
+from flask import current_app, g, jsonify, request
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from app.core.extensions import db
+from app.models.user import User
+
+logger = logging.getLogger(__name__)
+
+DEFAULT_JWT_ALGORITHM = "HS256"
+DEFAULT_SECRET_KEY = "dbd-lemon-secret-key-2026"
+DEFAULT_EXPIRATION = timedelta(hours=24)
 
 
-def get_current_user():
-    """Extract user from Authorization Bearer token or query param."""
+# Password Utilities
+def hash_password(password: str) -> str:
+    """Hash a plaintext password for database storage."""
+    return generate_password_hash(password)
+
+
+def verify_password(password: str, password_hash: str) -> bool:
+    """Verify a plaintext password against a stored password hash."""
+    if not password or not password_hash:
+        return False
+    return check_password_hash(password_hash, password)
+
+
+# JWT Utilities
+def generate_token(user_id: int, role: str = "user", extra_claims: Optional[Dict[str, Any]] = None) -> str:
+    """
+    Generate a signed JWT for an authenticated user with guaranteed fallback configurations.
+    """
+    now = datetime.now(timezone.utc)
+
+    if current_app:
+        expires_delta = current_app.config.get("JWT_ACCESS_TOKEN_EXPIRES") or DEFAULT_EXPIRATION
+        secret_key = current_app.config.get("JWT_SECRET_KEY") or current_app.config.get("SECRET_KEY") or DEFAULT_SECRET_KEY
+        algorithm = current_app.config.get("JWT_ALGORITHM") or DEFAULT_JWT_ALGORITHM
+    else:
+        expires_delta = DEFAULT_EXPIRATION
+        secret_key = DEFAULT_SECRET_KEY
+        algorithm = DEFAULT_JWT_ALGORITHM
+
+    payload = {
+        "sub": str(user_id),
+        "role": role,
+        "iat": now,
+        "exp": now + expires_delta,
+    }
+
+    if extra_claims:
+        payload.update(extra_claims)
+
+    return jwt.encode(payload, secret_key, algorithm=algorithm)
+
+
+def decode_token(token: str) -> Optional[Dict[str, Any]]:
+    """
+    Decode and validate a JWT string with resilient algorithm and key fallbacks.
+    """
+    if not token:
+        return None
+
+    if current_app:
+        secret_key = current_app.config.get("JWT_SECRET_KEY") or current_app.config.get("SECRET_KEY") or DEFAULT_SECRET_KEY
+        algorithm = current_app.config.get("JWT_ALGORITHM") or DEFAULT_JWT_ALGORITHM
+    else:
+        secret_key = DEFAULT_SECRET_KEY
+        algorithm = DEFAULT_JWT_ALGORITHM
+
+    try:
+        payload = jwt.decode(token, secret_key, algorithms=[algorithm])
+        return payload
+    except jwt.ExpiredSignatureError:
+        logger.warning("JWT validation failed: Token has expired.")
+        return None
+    except jwt.InvalidTokenError as e:
+        logger.warning(f"JWT validation failed: {str(e)}")
+        return None
+    except Exception as e:
+        logger.warning(f"Unexpected error during JWT validation: {str(e)}")
+        return None
+
+
+# User Retrieval Helper
+def get_current_user() -> Optional[User]:
+    """
+    Extract and verify the current user from the Authorization Bearer header or query string.
+    """
     auth_header = request.headers.get("Authorization")
     token = None
+
     if auth_header and auth_header.startswith("Bearer "):
-        token = auth_header.split(" ")[1].strip()
+        token = auth_header.split(" ", 1)[1].strip()
     elif request.args.get("token"):
         token = request.args.get("token").strip()
 
     if not token:
         return None
 
-    return user_service.verify_token(token)
+    payload = decode_token(token)
+    if not payload or "sub" not in payload:
+        return None
+
+    try:
+        user_id = int(payload["sub"])
+        user = db.session.get(User, user_id)
+        if user and user.is_active:
+            return user
+    except Exception as err:
+        logger.warning(f"Error fetching user from decoded token: {err}")
+        return None
+
+    return None
 
 
+# Route Protection Decorators
 def login_required(f):
+    """Decorator ensuring the request contains a valid JWT for an active user."""
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
         user = get_current_user()
@@ -32,6 +134,7 @@ def login_required(f):
 
 
 def admin_required(f):
+    """Decorator ensuring the request contains a valid JWT for an active admin user."""
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
         user = get_current_user()

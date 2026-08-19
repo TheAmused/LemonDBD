@@ -1,3 +1,4 @@
+# backend/app/scrapers/wikigg.py
 from __future__ import annotations
 
 import asyncio

@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/maps/page.tsx
 'use client';
 
 import React, { Suspense, useEffect, useState } from 'react';

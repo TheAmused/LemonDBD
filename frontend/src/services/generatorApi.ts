@@ -1,3 +1,4 @@
+// frontend/src/services/generatorApi.ts
 export interface GeneratorConfig {
   id?: number;
   role?: string;

@@ -1,3 +1,4 @@
+// frontend/src/components/maps/layouts/DesktopMapLayout.tsx
 'use client';
 
 import React, { useState } from 'react';

@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
 import React, { useState, useMemo } from 'react';
 import {
   Package,

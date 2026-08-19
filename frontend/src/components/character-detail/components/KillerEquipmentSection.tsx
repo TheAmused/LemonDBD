@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/KillerEquipmentSection.tsx
 import React, { useState } from 'react';
 import { Flame, Sparkles } from 'lucide-react';
 import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, renderFormattedDbdText } from '../types';

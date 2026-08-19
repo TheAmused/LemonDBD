@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/CharacterHeroAvatar.tsx
 import React, { useState } from 'react';
 import { Eye, Shield, Skull, User } from 'lucide-react';
 import { CharacterItem, getAvatarUrl } from '../types';

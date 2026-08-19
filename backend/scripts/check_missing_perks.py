@@ -1,3 +1,4 @@
+# backend/scripts/check_missing_perks.py
 import os
 import sys
 

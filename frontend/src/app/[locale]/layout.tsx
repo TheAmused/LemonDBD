@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/layout.tsx
 import React from 'react';
 import type { Metadata } from 'next';
 import { i18n, type Locale } from '@/i18n/config';

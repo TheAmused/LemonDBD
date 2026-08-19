@@ -1,3 +1,4 @@
+// frontend/src/components/maps/MapControls.tsx
 'use client';
 
 import React from 'react';

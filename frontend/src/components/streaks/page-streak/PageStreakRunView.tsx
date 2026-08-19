@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';

@@ -1,3 +1,4 @@
+// frontend/src/components/PerkCard.tsx
 'use client';
 
 import React, { useState, useMemo } from 'react';

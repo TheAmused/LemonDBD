@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/modals/KillerPowerModal.tsx
 import React from 'react';
 import { BookOpen, Flame, X } from 'lucide-react';
 import { KillerPowerInfo, CharacterItem, getAssetUrl, renderFormattedDbdText } from '../types';

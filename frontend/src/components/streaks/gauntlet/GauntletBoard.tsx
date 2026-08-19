@@ -3,9 +3,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { Role } from '@/types/gauntletStreak';
-import { Confetti } from '../Confetti';
+import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useGauntletRun } from './useGauntletRun';
 import { useOwnedCharacters } from './useOwnedCharacters';
 import { GauntletHeader } from './GauntletHeader';
@@ -13,6 +14,14 @@ import { ActiveTargetStage } from './ActiveTargetStage';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
 import { GauntletStatsDrawer } from './GauntletStatsDrawer';
 import { GauntletRulesModal } from './GauntletRulesModal';
+import { CheckpointModal } from './CheckpointModal';
+
+// Particle/Lottie code is heavy and only ever needed on this page, so it gets
+// its own chunk rather than riding along in every route that imports GauntletBoard.
+const GauntletFireBackground = dynamic(
+  () => import('./GauntletFireBackground').then((mod) => mod.GauntletFireBackground),
+  { ssr: false }
+);
 
 interface GauntletBoardProps {
   locale: string;
@@ -20,8 +29,19 @@ interface GauntletBoardProps {
 }
 
 export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) => {
-  const { run, stats, loading, busy, error, submitResult, reveal, reset } = useGauntletRun(role);
-  const { characters, loading: loadingRoster } = useOwnedCharacters(role);
+  const {
+    run,
+    stats,
+    loading,
+    busy,
+    error,
+    submitResult,
+    reveal,
+    reset,
+    justBankedCheckpoint,
+    dismissCheckpointCelebration,
+  } = useGauntletRun(role);
+  const { characters, loading: loadingRoster } = useOwnedCharacters(role, run?.tier_info?.roster_limit);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
@@ -34,7 +54,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
     if (completed && !wasCompletedRef.current) {
       setCelebrating(true);
       wasCompletedRef.current = true;
-      const timer = setTimeout(() => setCelebrating(false), 3500);
+      const timer = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
       return () => clearTimeout(timer);
     }
     if (!completed) {
@@ -42,10 +62,21 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
     }
   }, [run?.status]);
 
+  // Rides along with the checkpoint modal. Kept for the same duration as the
+  // win celebration below so the burst finishes its fall instead of being
+  // unmounted mid-flight.
+  useEffect(() => {
+    if (justBankedCheckpoint == null) return;
+    setCelebrating(true);
+    const timer = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
+    return () => clearTimeout(timer);
+  }, [justBankedCheckpoint]);
+
   const isCompleted = run?.status === 'completed';
 
   return (
     <div>
+      <GauntletFireBackground tierLevel={isCompleted ? 0 : run?.tier_info?.tier_level ?? 0} />
       <Confetti active={celebrating} />
 
       <Link
@@ -101,6 +132,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
             onWin={() => submitResult('win')}
             onLoss={() => submitResult('loss')}
             onReveal={reveal}
+            holdReel={justBankedCheckpoint != null}
           />
         )}
 
@@ -114,9 +146,9 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
         />
 
         {!isCompleted && (
-          <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-800/80">
+          <div className="mt-10 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm px-4 py-4 shadow-sm">
             {confirmingReset ? (
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-rose-500/40 bg-rose-500/5 px-4 py-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <p className="text-xs text-slate-600 dark:text-slate-300">
                   Wipe this run? Streak, checkpoints and every cleared {role} go back to zero. This cannot be
                   undone.
@@ -144,7 +176,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
               <button
                 onClick={() => setConfirmingReset(true)}
                 disabled={busy}
-                className="inline-flex items-center gap-2 text-xs font-medium text-slate-400 hover:text-rose-500 dark:text-slate-500 dark:hover:text-rose-400 disabled:opacity-50 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 disabled:opacity-50 transition-colors cursor-pointer"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 Reset this run
@@ -155,6 +187,12 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
 
         <GauntletStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
         <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} />
+        <CheckpointModal
+          checkpoint={justBankedCheckpoint}
+          role={role}
+          nextTier={run?.tier_info || null}
+          onClose={dismissCheckpointCelebration}
+        />
       </div>
     </div>
   );

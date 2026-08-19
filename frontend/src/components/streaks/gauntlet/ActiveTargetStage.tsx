@@ -66,6 +66,8 @@ export interface ActiveTargetStageProps {
   onWin: () => void;
   onLoss: () => void;
   onReveal: () => void;
+  /** Holds off the next reel while something else (the checkpoint modal) has the floor. */
+  holdReel?: boolean;
 }
 
 /**
@@ -136,6 +138,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   onWin,
   onLoss,
   onReveal,
+  holdReel = false,
 }) => {
   const [avatarError, setAvatarError] = useState(false);
 
@@ -182,8 +185,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       setShownTarget(targetName);
       return;
     }
+    // The checkpoint modal gets its moment before the next reel steals focus;
+    // this effect re-fires once holdReel drops, picking the draw back up.
+    if (holdReel) return;
     beginDraw(() => setShownTarget(targetName));
-  }, [isRevealed, targetName, shownTarget, isDrawing, beginDraw]);
+  }, [isRevealed, targetName, shownTarget, isDrawing, beginDraw, holdReel]);
 
   if (!run || !run.current_loadout) {
     return (

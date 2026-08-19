@@ -51,7 +51,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
             <Swords className="w-6 h-6 text-amber-500" />
             <span className="font-bold text-slate-900 dark:text-white">Original</span>
             <span className="text-xs text-slate-500 dark:text-slate-400">
-              The classic Gauntlet: manual perk picks, random gear, escalating tiers.
+              The classic Gauntlet: a build guide drawn from each character's own perks, escalating tiers.
             </span>
           </button>
 

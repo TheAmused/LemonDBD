@@ -12,18 +12,18 @@ export interface GauntletRulesModalProps {
 }
 
 const SURVIVOR_TIERS = [
-  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 to 10', perkLimit: 4, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: 'Full 4 perk loadout.' },
-  { level: 1, name: 'The Thinning', streakRange: 'Streak 11 to 20', perkLimit: 3, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: 'Down to 3 perks.' },
-  { level: 2, name: 'The Struggle', streakRange: 'Streak 21 to 30', perkLimit: 2, badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30', description: 'Down to 2 perks.' },
-  { level: 3, name: 'The Hardcore', streakRange: 'Streak 31 to 40', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: 'Just 1 perk.' },
-  { level: 4, name: 'The Legend', streakRange: 'Streak 41 to 52', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'No perks. The full perkless trial.' },
+  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 to 9', perkLimit: 4, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: 'Full 4 perk loadout.' },
+  { level: 1, name: 'The Thinning', streakRange: 'Streak 10 to 19', perkLimit: 3, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: 'Down to 3 perks.' },
+  { level: 2, name: 'The Struggle', streakRange: 'Streak 20 to 29', perkLimit: 2, badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30', description: 'Down to 2 perks.' },
+  { level: 3, name: 'The Hardcore', streakRange: 'Streak 30 to 39', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: 'Just 1 perk.' },
+  { level: 4, name: 'The Legend', streakRange: 'Streak 40+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'No perks. The full perkless trial.' },
 ];
 
 const KILLER_TIERS = [
-  { level: 0, name: 'The Bloodbath', streakRange: 'Streak 0 to 10', perkLimit: 3, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: "All 3 of your own perks." },
-  { level: 1, name: 'The Obsession', streakRange: 'Streak 11 to 20', perkLimit: 2, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: "Pick any 2 of your own." },
-  { level: 2, name: 'The Executioner', streakRange: 'Streak 21 to 30', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: "Pick any 1 of your own." },
-  { level: 3, name: 'The Entity', streakRange: 'Streak 31 to 43', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'No perks. The full perkless trial.' },
+  { level: 0, name: 'The Bloodbath', streakRange: 'Streak 0 to 9', perkLimit: 3, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: "All 3 of your own perks." },
+  { level: 1, name: 'The Obsession', streakRange: 'Streak 10 to 19', perkLimit: 2, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: "Pick any 2 of your own." },
+  { level: 2, name: 'The Executioner', streakRange: 'Streak 20 to 29', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: "Pick any 1 of your own." },
+  { level: 3, name: 'The Entity', streakRange: 'Streak 30+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'No perks. The full perkless trial.' },
 ];
 
 const KILLER_EXCEPTIONS: { label: string; text: React.ReactNode }[] = [

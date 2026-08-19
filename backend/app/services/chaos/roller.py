@@ -46,15 +46,7 @@ def draw_chaos_perks(
         drawn.append(pick)
         used.append(pick["name"])
 
-    # Return unique drawn perk names from this draw
-    drawn_names = []
-    seen = set()
-    for p in drawn:
-        if p["name"] not in seen:
-            drawn_names.append(p["name"])
-            seen.add(p["name"])
-
-    return drawn, drawn_names
+    return drawn, used
 
 
 def draw_addon_rarities() -> List[str]:

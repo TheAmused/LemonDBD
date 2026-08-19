@@ -204,6 +204,43 @@ strong {
   animation: gnLandGlow 900ms ease-out both;
 }
 
+/* Chaos Streak slot reel: perks blur past vertically before landing. */
+@keyframes chaosReelSpinUp {
+  from { transform: translateY(30%); opacity: .4; filter: blur(1.5px); }
+  to { transform: translateY(0); opacity: 1; filter: blur(0); }
+}
+
+@keyframes chaosReelSpinDown {
+  from { transform: translateY(-30%); opacity: .4; filter: blur(1.5px); }
+  to { transform: translateY(0); opacity: 1; filter: blur(0); }
+}
+
+@keyframes chaosLeverPull {
+  0% { transform: translateY(0) rotate(0deg); }
+  40% { transform: translateY(28px) rotate(18deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes chaosBadgePop {
+  from { transform: scale(.6); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.chaos-reel-up { animation: chaosReelSpinUp 90ms linear both; }
+.chaos-reel-down { animation: chaosReelSpinDown 90ms linear both; }
+.chaos-lever-pull { animation: chaosLeverPull 550ms cubic-bezier(.36, 0, .66, -0.56) both; }
+.chaos-badge-pop { animation: chaosBadgePop 380ms cubic-bezier(.22, 1.4, .36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chaos-reel-up,
+  .chaos-reel-down,
+  .chaos-lever-pull,
+  .chaos-badge-pop {
+    animation: none;
+  }
+}
+
 .gn-name-in {
   animation: gnNameIn 260ms ease-out both;
 }

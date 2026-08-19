@@ -36,6 +36,12 @@ from app.schemas.gauntlet import (
     GauntletRunCreate,
     GauntletRunResponse,
 )
+from app.schemas.chaos import (
+    ChaosMatchLogBase,
+    ChaosMatchLogResponse,
+    ChaosRunBase,
+    ChaosRunResponse,
+)
 from app.schemas.map import (
     MapObjectiveBase,
     MapObjectiveResponse,
@@ -114,6 +120,10 @@ __all__ = [
     "GauntletRunResponse",
     "GauntletMatchLogBase",
     "GauntletMatchLogResponse",
+    "ChaosRunBase",
+    "ChaosRunResponse",
+    "ChaosMatchLogBase",
+    "ChaosMatchLogResponse",
     "PageStreakRunBase",
     "PageStreakRunCreate",
     "PageStreakRunResponse",

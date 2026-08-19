@@ -133,8 +133,6 @@ export interface PerkDictionary {
     perksButtonLabel?: string;
     noRepeatLabel?: string;
     resetAllLabel?: string;
-    copyBuild?: string;
-    copiedBuild?: string;
     noPerksTitle?: string;
     noPerksDesc?: string;
     configureCharacters?: string;

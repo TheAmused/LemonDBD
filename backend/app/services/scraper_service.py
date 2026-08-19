@@ -11,7 +11,7 @@ from curl_cffi.requests import AsyncSession
 from flask import current_app
 from sqlalchemy import select
 
-from app.extensions import db
+from app.core.extensions import db
 from app.models import Character, Perk, Item, Addon, MapRealm, MapTile, MapObjective
 from app.scrapers.types import (
     ScraperConfig,

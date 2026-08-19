@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
 from sqlalchemy import select, func, or_, delete
-from app.extensions import db
+from app.core.extensions import db
 from app.models import User, UserCharacterOwnership, UserPerkOwnership, Character, Perk
 
 logger = logging.getLogger(__name__)

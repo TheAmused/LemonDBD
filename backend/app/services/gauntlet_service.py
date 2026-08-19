@@ -3,7 +3,7 @@ import random
 import logging
 from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
-from app.extensions import db
+from app.core.extensions import db
 from app.models import GauntletRun, GauntletMatchLog, GauntletMatchException
 from app.services.perk_service import PerkService
 from app.services.ownership_service import OwnershipService

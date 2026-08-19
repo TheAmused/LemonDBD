@@ -1,7 +1,7 @@
 import unittest
 from sqlalchemy import select
 from app import create_app
-from app.extensions import db
+from app.core.extensions import db
 from app.models import User, Character, Perk, UserCharacterOwnership, UserPerkOwnership
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService

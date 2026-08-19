@@ -13,7 +13,7 @@ from curl_cffi import requests
 from flask import Blueprint, current_app, jsonify, request
 from sqlalchemy import desc, func, or_, select
 
-from app.extensions import db
+from app.core.extensions import db
 from app.models import BugReport, User
 
 logger = logging.getLogger(__name__)

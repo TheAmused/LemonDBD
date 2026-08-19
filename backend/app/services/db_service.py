@@ -4,7 +4,7 @@ import logging
 from typing import Set, Dict, Any, Optional
 from flask import current_app
 from sqlalchemy import select, delete, text
-from app.extensions import db
+from app.core.extensions import db
 from app.models import (
     PerkRule,
     GeneratorSetting,

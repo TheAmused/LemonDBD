@@ -4,8 +4,8 @@ from sqlalchemy import select, delete
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 
 from app import create_app
-from app.config import Config, TestingConfig
-from app.extensions import db
+from app.core.config import Config, TestingConfig
+from app.core.extensions import db
 from app.models import Character, Perk, Item, Addon, MapRealm
 
 
@@ -129,7 +129,7 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
         try:
             os.environ["DATABASE_URL"] = "postgres://user:pass@localhost:5432/testdb"
             from importlib import reload
-            import app.config
+            import app.core.config
             reload(app.config)
             self.assertEqual(app.config.Config.SQLALCHEMY_DATABASE_URI, "postgresql+psycopg://user:pass@localhost:5432/testdb")
 

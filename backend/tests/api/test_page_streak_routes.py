@@ -1,6 +1,6 @@
 import unittest
 from app import create_app
-from app.extensions import db
+from app.core.extensions import db
 from app.services.page_streak_service import PageStreakService
 from app.services.user_service import UserService
 from tests.test_page_streak_service import FakePerkService, make_perks, seed_perks

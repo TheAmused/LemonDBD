@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, request, jsonify, g
 from sqlalchemy import delete
-from app.extensions import db
+from app.core.extensions import db
 from app.models import (
     User,
     Character,
@@ -18,7 +18,7 @@ from app.models import (
 )
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
-from app.utils.auth_helper import login_required, admin_required
+from app.core.security import login_required, admin_required
 
 logger = logging.getLogger(__name__)
 users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")

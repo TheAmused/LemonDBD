@@ -179,7 +179,7 @@ from typing import Optional, List, Dict, Any
 from flask import current_app
 from sqlalchemy import select, or_, func
 from sqlalchemy.orm import joinedload
-from app.extensions import db
+from app.core.extensions import db
 from app.models import MapRealm, MapTile, MapObjective
 
 logger = logging.getLogger(__name__)

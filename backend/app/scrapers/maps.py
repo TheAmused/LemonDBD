@@ -7,7 +7,7 @@ from curl_cffi import requests
 from flask import current_app
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
-from app.extensions import db
+from app.core.extensions import db
 from app.models import MapRealm
 from app.scrapers.types import MapData
 from app.scrapers.utils import normalize_name_key, sanitize_filename

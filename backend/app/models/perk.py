@@ -1,3 +1,4 @@
+# backend/app/models/perk.py
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text

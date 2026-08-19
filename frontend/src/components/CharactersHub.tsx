@@ -1,3 +1,4 @@
+// frontend/src/components/CharactersHub.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';

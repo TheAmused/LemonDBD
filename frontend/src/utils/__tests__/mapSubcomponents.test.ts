@@ -1,3 +1,4 @@
+// frontend/src/utils/__tests__/mapSubcomponents.test.ts
 import test from 'node:test';
 import assert from 'node:assert';
 import React from 'react';

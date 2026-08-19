@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/CharacterDlcMeta.tsx
 import React from 'react';
 import Link from 'next/link';
 import { ExternalLink, Calendar, Bookmark, ShieldCheck } from 'lucide-react';

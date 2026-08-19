@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/StreakPanelGrid.tsx
 import React from 'react';
 import { StreakPanel } from './StreakPanel';
 import { StreakPanelDef } from './panels';

@@ -1,3 +1,4 @@
+// frontend/src/components/maps/MapDirectoryList.tsx
 'use client';
 
 import React, { useMemo } from 'react';

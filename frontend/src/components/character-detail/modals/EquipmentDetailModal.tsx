@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
 import { X } from 'lucide-react';
 import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, renderFormattedDbdText } from '../types';

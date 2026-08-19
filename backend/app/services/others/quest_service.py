@@ -1,3 +1,4 @@
+# backend/app/services/others/quest_service.py
 from app.services.db_service import DatabaseService
 
 DEFAULT_QUESTS = [

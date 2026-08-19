@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/streaks/killer/page-streak/page.tsx
 import React from 'react';
 import { PageStreakBoard } from '@/components/streaks/PageStreakBoard';
 

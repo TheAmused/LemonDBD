@@ -1,3 +1,4 @@
+// frontend/src/components/LemonIcon.tsx
 import React from 'react';
 
 interface LemonIconProps {

@@ -1,3 +1,4 @@
+// frontend/src/hooks/useSidebarState.ts
 'use client';
 
 import { useState, useEffect } from 'react';

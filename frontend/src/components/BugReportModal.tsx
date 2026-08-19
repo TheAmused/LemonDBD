@@ -1,3 +1,4 @@
+// frontend/src/components/BugReportModal.tsx
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';

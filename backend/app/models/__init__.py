@@ -1,3 +1,4 @@
+# backend/app/models/__init__.py
 """
 Models Package
 Re-exports all database models so they can be imported directly from `app.models`.

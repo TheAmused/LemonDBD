@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/KillerDetailView.tsx
 import React, { useState } from 'react';
 import { BookOpen, Flame, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
 import { CharacterViewBaseProps, AddonItem, EquipmentItem, getAssetUrl } from './types';

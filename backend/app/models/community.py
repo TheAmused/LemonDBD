@@ -1,3 +1,4 @@
+# backend/app/models/community.py
 import json
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional

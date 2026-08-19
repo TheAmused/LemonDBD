@@ -1,3 +1,4 @@
+# backend/app/schemas/__init__.py
 """
 Schemas Package
 Exports all request and response validation DTOs.

@@ -1,71 +1,66 @@
+# backend/app/seeds/user_seeder.py
 import logging
-from werkzeug.security import generate_password_hash
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from app.core.extensions import db
-from app.models import User
+from app.core.security import hash_password
+from app.models.user import User
 
 logger = logging.getLogger(__name__)
-
-DEFAULT_USERS = [
-    {
-        "username": "lemon",
-        "email": "lemon@lemondbd.com",
-        "password": "lemon",
-        "role": "admin",
-        "avatar_url": "avatar_admin",
-    },
-    {
-        "username": "user",
-        "email": "user@lemondbd.com",
-        "password": "user",
-        "role": "user",
-        "avatar_url": "avatar_survivor",
-    },
-]
 
 
 def seed_default_users() -> None:
     """
-    Automatic seeder that ensures default users exist:
-    - Admin: lemon / lemon
-    - Test User: user / user
+    Seeds baseline default admin and test user accounts.
+    Thread-safe and idempotent to prevent unique constraint crashes under Gunicorn concurrency.
     """
-    try:
-        for u_data in DEFAULT_USERS:
-            existing = db.session.scalars(
-                select(User).where(
-                    (User.username.ilike(u_data["username"])) | 
-                    (User.email.ilike(u_data["email"]))
-                )
-            ).first()
+    default_users = [
+        {
+            "username": "lemon",
+            "email": "lemon@lemondbd.com",
+            "password": "lemon",
+            "role": "admin",
+            "avatar_url": "default_avatar",
+        },
+        {
+            "username": "user",
+            "email": "survivor@lemondbd.com",
+            "password": "user",
+            "role": "user",
+            "avatar_url": "default_avatar",
+        },
+    ]
 
+    try:
+        for udata in default_users:
+            existing = db.session.scalar(
+                select(User).where(
+                    or_(
+                        User.username == udata["username"],
+                        User.email == udata["email"],
+                    )
+                )
+            )
             if not existing:
-                user = User(
-                    username=u_data["username"],
-                    email=u_data["email"],
-                    password_hash=generate_password_hash(u_data["password"]),
-                    role=u_data["role"],
-                    avatar_url=u_data.get("avatar_url", "default_avatar"),
+                new_user = User(
+                    username=udata["username"],
+                    email=udata["email"],
+                    password_hash=hash_password(udata["password"]),
+                    role=udata["role"],
+                    avatar_url=udata["avatar_url"],
                     is_active=True,
                 )
-                db.session.add(user)
-                logger.info(f"Seeded default user '{u_data['username']}' with role '{u_data['role']}'.")
+                db.session.add(new_user)
+                try:
+                    db.session.commit()
+                    logger.info(f"Default user seeded: {udata['username']} ({udata['role']})")
+                except Exception as commit_err:
+                    db.session.rollback()
+                    logger.debug(f"Worker concurrency notice seeding user {udata['username']}: {commit_err}")
             else:
-                # Ensure correct password hash & role if already present
-                existing.role = u_data["role"]
-                existing.password_hash = generate_password_hash(u_data["password"])
-                existing.is_active = True
-                logger.debug(f"Default user '{u_data['username']}' verified and updated.")
-
-        db.session.commit()
-        logger.info("Default users seeding completed successfully.")
+                # Ensure the primary user retains admin role
+                if existing.username == "lemon" and existing.role != "admin":
+                    existing.role = "admin"
+                    db.session.commit()
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Failed to seed default users: {e}")
-
-
-if __name__ == "__main__":
-    from app import create_app
-    app = create_app()
-    with app.app_context():
-        seed_default_users()
+        logger.warning(f"Error during default user seeding: {e}")

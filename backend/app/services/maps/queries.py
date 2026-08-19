@@ -1,0 +1,235 @@
+# backend/app/services/maps/queries.py
+import json
+import logging
+from typing import Any, Dict, List, Optional
+from flask import current_app
+from sqlalchemy import func, or_, select
+from sqlalchemy.orm import joinedload
+
+from app.core.extensions import db
+from app.models import MapRealm
+from app.services.maps.data import SAMPLE_MAPS
+from app.services.maps.seeder import seed_maps_if_empty
+
+logger = logging.getLogger(__name__)
+
+
+def fetch_maps(
+    use_sqlalchemy: bool,
+    db_service: Any,
+    realm: Optional[str] = None,
+    search: Optional[str] = None,
+    source: Optional[str] = None,
+) -> List[Dict[str, Any]]:
+    """Retrieve maps list with optional realm, search, and source filtering."""
+    if use_sqlalchemy:
+        try:
+            if current_app:
+                stmt = select(MapRealm).options(
+                    joinedload(MapRealm.tiles),
+                    joinedload(MapRealm.objectives),
+                )
+                if realm and realm.lower() != "all":
+                    stmt = stmt.where(func.lower(MapRealm.realm) == realm.lower())
+                if source and source.lower() != "all":
+                    stmt = stmt.where(func.lower(MapRealm.source) == source.lower())
+                if search and search.strip():
+                    term = f"%{search.strip().lower()}%"
+                    stmt = stmt.where(
+                        or_(
+                            func.lower(MapRealm.name).ilike(term),
+                            func.lower(MapRealm.realm).ilike(term),
+                        )
+                    )
+                stmt = stmt.order_by(MapRealm.name.asc())
+                rows = db.session.scalars(stmt).unique().all()
+                if rows:
+                    return [r.to_dict() for r in rows]
+        except Exception as e:
+            logger.debug(f"SQLAlchemy get_maps fallback: {e}")
+
+    conn = db_service.get_connection()
+    seed_maps_if_empty(conn, db_service)
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM map_realms WHERE 1=1"
+    params = []
+
+    if realm and realm != "All":
+        query += " AND LOWER(realm) = LOWER(?)"
+        params.append(realm)
+    if source and source != "all":
+        query += " AND LOWER(source) = LOWER(?)"
+        params.append(source)
+    if search:
+        query += " AND (LOWER(name) LIKE ? OR LOWER(realm) LIKE ?)"
+        term = f"%{search.lower()}%"
+        params.extend([term, term])
+
+    cursor.execute(query, params)
+    rows = cursor.fetchall()
+    conn.close()
+
+    maps = []
+    for r in rows:
+        maps.append({
+            "id": r["map_id"],
+            "name": r["name"],
+            "realm": r["realm"],
+            "source": r.get("source") if hasattr(r, "keys") and "source" in r.keys() else "hens333",
+            "source_label": r.get("source_label") if hasattr(r, "keys") and "source_label" in r.keys() else "Hens333 12-Clock Callouts",
+            "layout_type": r["layout_type"],
+            "jungle_gyms_count": r["jungle_gyms_count"],
+            "totem_spawns_count": r["totem_spawns_count"],
+            "pallet_density": r["pallet_density"],
+            "shack_has_basement": bool(r["shack_has_basement"]),
+            "description": r["description"],
+            "image_url": r["image_url"],
+        })
+    return maps
+
+
+def fetch_map_by_id(
+    use_sqlalchemy: bool,
+    db_service: Any,
+    map_id: str,
+    seed_variant: str = "seed_a",
+    floor: int = 1,
+) -> Optional[Dict[str, Any]]:
+    """Retrieve detailed map info including tiles and objective coordinates."""
+    if use_sqlalchemy:
+        try:
+            if current_app:
+                clean_id = (map_id or "").strip()
+                stmt = (
+                    select(MapRealm)
+                    .options(
+                        joinedload(MapRealm.tiles),
+                        joinedload(MapRealm.objectives),
+                    )
+                    .where(
+                        or_(
+                            MapRealm.map_id == clean_id,
+                            func.lower(MapRealm.map_id) == clean_id.lower(),
+                            func.lower(MapRealm.name) == clean_id.lower().replace("_", " "),
+                        )
+                    )
+                )
+                m = db.session.scalars(stmt).unique().first()
+                if m:
+                    d = m.to_dict()
+                    d["seed_variant"] = seed_variant
+                    d["floor"] = floor
+                    return d
+        except Exception as e:
+            logger.debug(f"SQLAlchemy get_map_by_id fallback: {e}")
+
+    conn = db_service.get_connection()
+    seed_maps_if_empty(conn, db_service)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM map_realms WHERE map_id = ?", (map_id,))
+    realm_row = cursor.fetchone()
+
+    if not realm_row:
+        map_info = next((m for m in SAMPLE_MAPS if m["id"] == map_id), None)
+        if not map_info:
+            conn.close()
+            return None
+    else:
+        map_info = {
+            "id": realm_row["map_id"],
+            "name": realm_row["name"],
+            "realm": realm_row["realm"],
+            "source": realm_row.get("source") if hasattr(realm_row, "keys") and "source" in realm_row.keys() else "hens333",
+            "source_label": realm_row.get("source_label") if hasattr(realm_row, "keys") and "source_label" in realm_row.keys() else "Hens333 12-Clock Callouts",
+            "layout_type": realm_row["layout_type"],
+            "jungle_gyms_count": realm_row["jungle_gyms_count"],
+            "totem_spawns_count": realm_row["totem_spawns_count"],
+            "pallet_density": realm_row["pallet_density"],
+            "shack_has_basement": bool(realm_row["shack_has_basement"]),
+            "description": realm_row["description"],
+            "image_url": realm_row["image_url"],
+        }
+
+    cursor.execute(
+        "SELECT * FROM map_tiles WHERE map_id = ? AND seed_variant = ? AND floor = ?",
+        (map_id, seed_variant, floor),
+    )
+    tile_rows = cursor.fetchall()
+    if not tile_rows:
+        cursor.execute("SELECT * FROM map_tiles WHERE map_id = ?", (map_id,))
+        tile_rows = cursor.fetchall()
+
+    tiles = []
+    for r in tile_rows:
+        v_dirs = r["vault_directions"]
+        if isinstance(v_dirs, str):
+            try:
+                v_dirs = json.loads(v_dirs)
+            except Exception:
+                v_dirs = []
+        tiles.append({
+            "id": r["id"],
+            "name": r["name"],
+            "type": r["type"],
+            "x": r["x"],
+            "y": r["y"],
+            "has_pallet": bool(r["has_pallet"]),
+            "pallet_safety_rating": r["pallet_safety_rating"],
+            "has_window": bool(r["has_window"]),
+            "vault_directions": v_dirs if v_dirs is not None else [],
+            "looping_tips": r["looping_tips"] or "",
+            "mindgame_counter": r["mindgame_counter"] or "",
+            "seed_variant": r["seed_variant"],
+            "floor": r["floor"],
+        })
+
+    cursor.execute(
+        "SELECT * FROM map_objectives WHERE map_id = ? AND seed_variant = ? AND floor = ?",
+        (map_id, seed_variant, floor),
+    )
+    obj_rows = cursor.fetchall()
+    if not obj_rows:
+        cursor.execute("SELECT * FROM map_objectives WHERE map_id = ?", (map_id,))
+        obj_rows = cursor.fetchall()
+
+    objectives = []
+    for r in obj_rows:
+        objectives.append({
+            "id": r["id"],
+            "type": r["type"],
+            "x": r["x"],
+            "y": r["y"],
+            "location_description": r["location_description"],
+            "seed_variant": r["seed_variant"],
+            "floor": r["floor"],
+        })
+
+    conn.close()
+
+    result = dict(map_info)
+    result["seed_variant"] = seed_variant
+    result["floor"] = floor
+    result["tiles"] = tiles
+    result["objectives"] = objectives
+
+    totems = [obj for obj in objectives if obj["type"] == "totem"]
+    result["totem_spawns"] = [
+        {"id": t["id"], "x": t["x"], "y": t["y"], "location": t["location_description"]}
+        for t in totems
+    ]
+    result["key_tiles"] = [
+        {
+            "name": t["name"],
+            "type": t["type"],
+            "x": t["x"],
+            "y": t["y"],
+            "has_pallet": t["has_pallet"],
+            "has_window": t["has_window"],
+        }
+        for t in tiles
+    ]
+
+    return result
+

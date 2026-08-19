@@ -1,81 +1,53 @@
+# backend/app/services/gauntlet_service.py
 import json
-import random
 import logging
-from sqlalchemy import select, func
-from sqlalchemy.orm import joinedload
+from typing import Any, Dict, Optional
+
+from sqlalchemy import select
+
 from app.core.extensions import db
-from app.models import GauntletRun, GauntletMatchLog, GauntletMatchException
-from app.services.perk_service import PerkService
+from app.models import GauntletMatchException, GauntletMatchLog, GauntletRun
+from app.services.gauntlet import (
+    CHECKPOINT_INTERVAL,
+    fetch_gauntlet_user_stats,
+    get_tier_info,
+    pick_initial_target,
+    roll_gauntlet_loadout,
+)
 from app.services.ownership_service import OwnershipService
+from app.services.perk_service import PerkService
 
 logger = logging.getLogger(__name__)
 
-CHECKPOINT_INTERVAL = 3
-BUILD_SIZE = 4
-
-SURVIVOR_TIERS = [
-    {"tier_level": 0, "name": "The Warm Up", "perk_limit": 4, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 1, "name": "The Thinning", "perk_limit": 3, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 2, "name": "The Struggle", "perk_limit": 2, "description": "Must include at least 1 character teachable perk"},
-    {"tier_level": 3, "name": "The Hardcore", "perk_limit": 1, "description": "Must be a character teachable perk"},
-    {"tier_level": 4, "name": "The Legend", "perk_limit": 0, "description": "No Perks allowed (No-perk trial)"},
-]
-
-KILLER_TIERS = [
-    {"tier_level": 0, "name": "The Warm Up", "perk_limit": 4, "description": "4 Perks"},
-    {"tier_level": 1, "name": "The Restriction", "perk_limit": 3, "description": "3 Perks"},
-    {"tier_level": 2, "name": "The Deprivation", "perk_limit": 2, "description": "2 Perks"},
-    {"tier_level": 3, "name": "The Barebones", "perk_limit": 1, "description": "1 Perk"},
-    {"tier_level": 4, "name": "The Entity's Chosen", "perk_limit": 0, "description": "0 Perks"},
-]
-
-GENERAL_CHARACTER = "General"
-
 
 class GauntletService:
-    def __init__(self, perk_service=None, ownership_service=None):
+    def __init__(self, perk_service: Optional[PerkService] = None, ownership_service: Optional[OwnershipService] = None):
         self.perk_service = perk_service or PerkService()
         self.ownership_service = ownership_service or OwnershipService()
 
-    # ---- tiers -----------------------------------------------------------
+    def get_tier_info(self, streak: int, role: str) -> Dict[str, Any]:
+        return get_tier_info(streak, role)
 
-    def get_tier_info(self, streak, role):
-        tier_index = min(4, max(0, streak // CHECKPOINT_INTERVAL))
-        tiers = KILLER_TIERS if role == "killer" else SURVIVOR_TIERS
-        return dict(tiers[tier_index])
-
-    # ---- ownership-backed pools -------------------------------------------
-
-    def _owned_character_names(self, user_id, role):
-        db_role = "Killer" if role == "killer" else "Survivor"
-        owned = self.ownership_service.get_user_characters(user_id, role=db_role)
-        return [c["name"] for c in owned if c["is_owned"]]
-
-    def _unlocked_role_perks(self, user_id, role):
-        db_role = "Killer" if role == "killer" else "Survivor"
-        owned = self.ownership_service.get_user_perks(user_id, category=db_role)
-        return [p for p in owned if p["is_unlocked"]]
-
-    # ---- runs -------------------------------------------------------------
-
-    def _initial_target(self, user_id, role):
-        names = self._owned_character_names(user_id, role)
-        if names:
-            return random.choice(names)
-        return "Meg Thomas" if role == "survivor" else "The Trapper"
-
-    def get_or_create_run(self, user_id, role):
+    def get_or_create_run(self, user_id: int, role: str) -> Dict[str, Any]:
         run = db.session.scalars(
-            select(GauntletRun).where(GauntletRun.user_id == user_id, GauntletRun.role == role)
+            select(GauntletRun).where(
+                GauntletRun.user_id == user_id,
+                GauntletRun.role == role,
+            )
         ).first()
-        if run:
-            d = run.to_dict()
-            d["tier_info"] = self.get_tier_info(d["current_streak"], role)
-            return d
 
-        target_character = self._initial_target(user_id, role)
+        if run:
+            data = run.to_dict()
+            data["tier_info"] = self.get_tier_info(data["current_streak"], role)
+            return data
+
+        target_character = pick_initial_target(user_id, role, self.ownership_service)
         tier_info = self.get_tier_info(0, role)
-        initial_loadout = {"character": target_character, "perks": [], "tier_info": tier_info}
+        initial_loadout = {
+            "character": target_character,
+            "perks": [],
+            "tier_info": tier_info,
+        }
 
         new_run = GauntletRun(
             user_id=user_id,
@@ -91,64 +63,43 @@ class GauntletService:
         )
         db.session.add(new_run)
         db.session.commit()
-        d = new_run.to_dict()
-        d["tier_info"] = tier_info
-        return d
 
-    def roll(self, user_id, role, target_character=None):
+        data = new_run.to_dict()
+        data["tier_info"] = tier_info
+        return data
+
+    def roll(self, user_id: int, role: str, target_character: Optional[str] = None) -> Dict[str, Any]:
         run = self.get_or_create_run(user_id, role)
-        tier_info = self.get_tier_info(run["current_streak"], role)
-        perk_limit = tier_info["perk_limit"]
+        completed = run.get("completed_characters", [])
 
-        role_perks = self._unlocked_role_perks(user_id, role)
-        owned_names = self._owned_character_names(user_id, role)
-
-        completed = run["completed_characters"]
-        remaining = [c for c in owned_names if c not in completed]
-        if not remaining:
-            remaining = owned_names if owned_names else [self._initial_target(user_id, role)]
-
-        target_char = target_character if target_character else random.choice(remaining)
-
-        selected_perks = []
-        if perk_limit > 0:
-            char_perks = [p for p in role_perks if p.get("character_name") == target_char]
-            general_perks = [p for p in role_perks if not p.get("character_name")]
-
-            if char_perks:
-                max_own = min(2, len(char_perks), perk_limit)
-                selected_perks.extend(random.sample(char_perks, max_own))
-
-            needed = perk_limit - len(selected_perks)
-            if needed > 0 and general_perks:
-                available_gen = [p for p in general_perks if p not in selected_perks]
-                if available_gen:
-                    max_gen = min(1, len(available_gen), needed)
-                    selected_perks.extend(random.sample(available_gen, max_gen))
-
-            needed = perk_limit - len(selected_perks)
-            if needed > 0:
-                remaining_pool = [p for p in role_perks if p not in selected_perks]
-                if remaining_pool:
-                    selected_perks.extend(random.sample(remaining_pool, min(needed, len(remaining_pool))))
-
-        loadout = {"character": target_char, "perks": selected_perks, "tier_info": tier_info}
+        target_char, loadout, tier_info = roll_gauntlet_loadout(
+            user_id=user_id,
+            role=role,
+            current_streak=run["current_streak"],
+            completed_characters=completed,
+            ownership_service=self.ownership_service,
+            target_character=target_character,
+        )
 
         r = db.session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
         r.current_character_id = target_char
         r.current_loadout_json = json.dumps(loadout)
         db.session.commit()
-        d = r.to_dict()
-        d["tier_info"] = tier_info
-        return d
 
-    def invalidate_match(self, user_id, run_id, reason):
+        data = r.to_dict()
+        data["tier_info"] = tier_info
+        return data
+
+    def invalidate_match(self, user_id: int, run_id: int, reason: str) -> Dict[str, Any]:
         valid_reasons = ("dc_before_5_gens", "game_cancelled")
         if reason not in valid_reasons:
             raise ValueError(f"Invalid reason: {reason}. Must be one of {valid_reasons}")
 
         r = db.session.scalars(
-            select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id)
+            select(GauntletRun).where(
+                GauntletRun.id == run_id,
+                GauntletRun.user_id == user_id,
+            )
         ).first()
         if not r:
             raise ValueError("Run not found")
@@ -156,14 +107,18 @@ class GauntletService:
         char_id = r.current_character_id
         db.session.add(GauntletMatchException(run_id=run_id, character_id=char_id, reason=reason))
         db.session.commit()
+
         return self.roll(user_id, r.role, target_character=char_id)
 
-    def submit_result(self, user_id, run_id, result):
+    def submit_result(self, user_id: int, run_id: int, result: str) -> Dict[str, Any]:
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
 
         r = db.session.scalars(
-            select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id)
+            select(GauntletRun).where(
+                GauntletRun.id == run_id,
+                GauntletRun.user_id == user_id,
+            )
         ).first()
         if not r:
             raise ValueError("Run not found")
@@ -196,46 +151,23 @@ class GauntletService:
         r.completed_characters_json = json.dumps(completed)
         r.checkpoint_characters_json = json.dumps(checkpoint_chars)
 
-        db.session.add(GauntletMatchLog(
-            run_id=run_id,
-            role=r.role,
-            character_id=char_id,
-            result=result,
-            perks_json=perks_json,
-            streak_before=current_streak,
-            streak_after=streak_after,
-        ))
-        db.session.commit()
-        d = r.to_dict()
-        d["tier_info"] = self.get_tier_info(streak_after, r.role)
-        return d
-
-    def get_stats(self, user_id, role):
-        run_ids = db.session.scalars(
-            select(GauntletRun.id).where(GauntletRun.user_id == user_id, GauntletRun.role == role)
-        ).all()
-        if not run_ids:
-            return {"total_matches": 0, "wins": 0, "losses": 0, "win_rate": 0.0, "recent_logs": []}
-
-        total = db.session.scalar(
-            select(func.count(GauntletMatchLog.id)).where(GauntletMatchLog.run_id.in_(run_ids))
-        ) or 0
-        wins = db.session.scalar(
-            select(func.count(GauntletMatchLog.id)).where(
-                GauntletMatchLog.run_id.in_(run_ids), GauntletMatchLog.result == "win"
+        db.session.add(
+            GauntletMatchLog(
+                run_id=run_id,
+                role=r.role,
+                character_id=char_id,
+                result=result,
+                perks_json=perks_json,
+                streak_before=current_streak,
+                streak_after=streak_after,
             )
-        ) or 0
-        win_rate = round((wins / total * 100), 1) if total > 0 else 0.0
+        )
+        db.session.commit()
 
-        recent = db.session.scalars(
-            select(GauntletMatchLog).where(GauntletMatchLog.run_id.in_(run_ids))
-            .order_by(GauntletMatchLog.id.desc()).limit(10)
-        ).all()
+        data = r.to_dict()
+        data["tier_info"] = self.get_tier_info(streak_after, r.role)
+        return data
 
-        return {
-            "total_matches": total,
-            "wins": wins,
-            "losses": total - wins,
-            "win_rate": win_rate,
-            "recent_logs": [log.to_dict() for log in recent],
-        }
+    def get_stats(self, user_id: int, role: str) -> Dict[str, Any]:
+        return fetch_gauntlet_user_stats(user_id, role)
+

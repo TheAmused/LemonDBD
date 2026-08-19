@@ -1,3 +1,4 @@
+// frontend/src/components/maps/VoiceCommandBanner.tsx
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';

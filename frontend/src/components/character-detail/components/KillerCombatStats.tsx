@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/KillerCombatStats.tsx
 import React from 'react';
 import { Activity, Gauge, Radio, ArrowUpDown, Eye } from 'lucide-react';
 

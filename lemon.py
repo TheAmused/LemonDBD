@@ -1,3 +1,4 @@
+# lemon.py
 from pathlib import Path
 
 # Directories to ignore anywhere in the project

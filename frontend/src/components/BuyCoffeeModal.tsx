@@ -1,3 +1,4 @@
+// frontend/src/components/BuyCoffeeModal.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';

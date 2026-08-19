@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/modals/TerrorRadiusModal.tsx
 import React from 'react';
 import { Radio, X, Eye } from 'lucide-react';
 import { CharacterItem } from '../types';

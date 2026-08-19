@@ -1,3 +1,4 @@
+# backend/app/schemas/gauntlet.py
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, ConfigDict, Field

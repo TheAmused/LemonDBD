@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/streaks/layout.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';

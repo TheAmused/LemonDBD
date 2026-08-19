@@ -1,3 +1,4 @@
+# backend/app/scrapers/types.py
 from dataclasses import asdict, dataclass, fields
 from typing import Any, Dict, Optional, List
 

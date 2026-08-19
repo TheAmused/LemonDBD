@@ -1,3 +1,4 @@
+# backend/app/schemas/equipment.py
 from typing import Optional
 from pydantic import BaseModel, ConfigDict, Field
 

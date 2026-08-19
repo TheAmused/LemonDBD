@@ -1,3 +1,4 @@
+// frontend/src/components/swf/SwfPlanner.tsx
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';

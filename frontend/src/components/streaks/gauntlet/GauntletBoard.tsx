@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
 'use client';
 
 import React, { useState } from 'react';

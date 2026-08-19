@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/CharacterBreadcrumbs.tsx
 import React from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ArrowLeft, ArrowRight } from 'lucide-react';

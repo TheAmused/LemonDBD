@@ -1,3 +1,4 @@
+// frontend/src/services/clientSpeechModel.ts
 /**
  * LemonDBD - Client-Side Speech Recognition Model Service
  * 

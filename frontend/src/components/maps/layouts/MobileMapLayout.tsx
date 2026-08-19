@@ -1,3 +1,4 @@
+// frontend/src/components/maps/layouts/MobileMapLayout.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';

@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/CharacterPerksSection.tsx
 import React, { useState } from 'react';
 import { CharacterItem, PerkItem, getAssetUrl, renderFormattedDbdText } from '../types';
 import { Perk as PerkModalType } from '@/components/PerkCard';

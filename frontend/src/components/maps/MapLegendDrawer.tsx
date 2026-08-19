@@ -1,3 +1,4 @@
+// frontend/src/components/maps/MapLegendDrawer.tsx
 'use client';
 
 import React, { useState } from 'react';

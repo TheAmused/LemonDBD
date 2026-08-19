@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/modals/Model3DModal.tsx
 import React from 'react';
 import { Box, X } from 'lucide-react';
 import { CharacterItem, getAvatarUrl } from '../types';

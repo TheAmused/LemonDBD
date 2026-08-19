@@ -1,3 +1,4 @@
+// frontend/src/components/ChaosWheelModal.tsx
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';

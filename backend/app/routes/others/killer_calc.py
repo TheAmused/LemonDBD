@@ -1,3 +1,4 @@
+# backend/app/routes/others/killer_calc.py
 from flask import Blueprint, request, jsonify
 from app.services.others.killer_calc_service import KillerCalcService
 

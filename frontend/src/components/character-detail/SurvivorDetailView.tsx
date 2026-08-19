@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/SurvivorDetailView.tsx
 import React, { useState } from 'react';
 import { BookOpen, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
 import { CharacterViewBaseProps, AddonItem, EquipmentItem } from './types';

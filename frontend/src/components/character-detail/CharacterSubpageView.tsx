@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/CharacterSubpageView.tsx
 'use client';
 
 import React from 'react';

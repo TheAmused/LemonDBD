@@ -1,3 +1,4 @@
+# backend/app/models/user.py
 from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, UniqueConstraint

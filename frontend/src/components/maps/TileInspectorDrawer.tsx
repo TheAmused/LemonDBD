@@ -1,3 +1,4 @@
+// frontend/src/components/maps/TileInspectorDrawer.tsx
 'use client';
 
 import React from 'react';

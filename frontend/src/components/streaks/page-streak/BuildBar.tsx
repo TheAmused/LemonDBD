@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/page-streak/BuildBar.tsx
 'use client';
 
 import React from 'react';

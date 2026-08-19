@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/page-streak/Confetti.tsx
 'use client';
 
 import React, { useEffect, useRef } from 'react';

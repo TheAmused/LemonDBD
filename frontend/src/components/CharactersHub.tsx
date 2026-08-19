@@ -1,34 +1,35 @@
 'use client';
+// frontend/src/components/CharactersHub.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
-import { Shield, Skull, Search, X, Sparkles, Package, User, Flame, Info, ChevronRight, Lock, Check } from 'lucide-react';
+import {
+  Shield,
+  Skull,
+  Search,
+  X,
+  Sparkles,
+  Package,
+  User,
+  Flame,
+  Lock,
+  Check,
+} from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { AuthModal } from './AuthModal';
+import { AuthModal } from '@/components/AuthModal';
 import { useSidebarState } from '@/hooks/useSidebarState';
-
-function characterToSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\s\-/]+/g, '_')
-    .replace(/[^a-z0-9_]/g, '')
-    .replace(/_+/g, '_')
-    .replace(/^_+|_+$/g, '');
-}
-
-export interface Character {
-  id?: number;
-  name: string;
-  real_name: string;
-  category: string;
-  wiki_slug?: string;
-  short_name?: string;
-  avatar_url?: string;
-  avatar_local_path?: string;
-}
+import {
+  CharacterItem,
+  PerkItem,
+  AddonItem,
+  EquipmentItem,
+  getCharacterSlug,
+  getAssetUrl,
+  getAvatarUrl as resolveAvatarUrl,
+  getRarityTileStyle,
+} from '@/components/character-detail/types';
+import { RoleCategory, PerkDictionary } from '@/types/perks';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 interface OwnedCharacter {
   character_id: number;
@@ -47,46 +48,15 @@ interface OwnedPerk {
   icon_local_path?: string;
 }
 
-export interface Perk {
-  name: string;
-  character: string;
-  character_real_name?: string;
-  character_avatar_path?: string;
-  category: string;
-  description: string;
-  icon_url: string;
-  icon_local_path: string;
-}
-
-export interface Addon {
-  name: string;
-  associated_target?: string;
-  category?: string;
-  description?: string;
-  icon_url?: string;
-  icon_local_path?: string;
-  rarity?: string;
-}
-
-export interface Item {
-  name: string;
-  category: string;
-  role?: string;
-  description?: string;
-  icon_url?: string;
-  icon_local_path?: string;
-  rarity?: string;
-}
-
 export interface CharacterDetailData {
-  character: Character;
-  perks: Perk[];
-  addons: Addon[];
-  items?: Item[];
+  character: CharacterItem;
+  perks: PerkItem[];
+  addons: AddonItem[];
+  items?: EquipmentItem[];
 }
 
 interface CharactersHubProps {
-  dict?: any;
+  dict?: PerkDictionary;
 }
 
 export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
@@ -94,11 +64,18 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as string) || 'en';
-  const { isAuthenticated, token, user, bulkUpdateCharacterOwnership, bulkUpdatePerkOwnership } = useAuth();
+  const {
+    isAuthenticated,
+    token,
+    user,
+    bulkUpdateCharacterOwnership,
+    bulkUpdatePerkOwnership,
+  } = useAuth();
   const { isCollapsed } = useSidebarState();
-  const [characters, setCharacters] = useState<Character[]>([]);
+
+  const [characters, setCharacters] = useState<CharacterItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [activeTab, setActiveTab] = useState<'all' | 'Survivor' | 'Killer'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | RoleCategory>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const roleParam = searchParams?.get('role') || searchParams?.get('tab') || '';
@@ -116,12 +93,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     }
   }, [roleParam]);
 
-  // Modal / Drawer state
-  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
   const [detailLoading, setDetailLoading] = useState<boolean>(false);
   const [detailData, setDetailData] = useState<CharacterDetailData | null>(null);
 
-  // Ownership selection mode state
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [ownershipMode, setOwnershipMode] = useState<boolean>(false);
   const [ownershipLoading, setOwnershipLoading] = useState<boolean>(false);
@@ -131,9 +106,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<number, boolean>>({});
   const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
   const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
-  const [perksPopupCharacter, setPerksPopupCharacter] = useState<Character | null>(null);
+  const [perksPopupCharacter, setPerksPopupCharacter] = useState<CharacterItem | null>(null);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
     async function fetchCharacters() {
@@ -144,7 +119,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           const data = await res.json();
           setCharacters(data.data || []);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('Failed to fetch characters:', err);
       } finally {
         setLoading(false);
@@ -154,30 +129,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     fetchCharacters();
   }, [backendBase]);
 
-  const handleOpenDetail = async (char: Character) => {
-    setSelectedCharacter(char);
-    setDetailLoading(true);
-    setDetailData(null);
-
-    try {
-      const res = await fetch(`${backendBase}/api/v1/characters/${encodeURIComponent(char.name)}/detail`);
-      if (res.ok) {
-        const json = await res.json();
-        setDetailData(json.data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch character detail:', err);
-    } finally {
-      setDetailLoading(false);
-    }
-  };
-
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setSelectedCharacter(null);
     setDetailData(null);
-  };
+  }, []);
 
-  // Close modal on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && selectedCharacter) {
@@ -186,7 +142,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedCharacter]);
+  }, [selectedCharacter, handleCloseModal]);
 
   const handleToggleOwnershipMode = async () => {
     if (ownershipMode) {
@@ -231,7 +187,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       setPerkUnlockDraft(perkDraft);
       setAllPerks(perksList);
       setOwnershipMode(true);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to load ownership state:', err);
     } finally {
       setOwnershipLoading(false);
@@ -244,7 +200,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       ...prev,
       [characterId]: newIsOwned,
     }));
-    // Mirror the backend's auto-unlock/auto-lock cascade in the local draft
+
     setPerkUnlockDraft((prev) => {
       const next = { ...prev };
       allPerks
@@ -285,10 +241,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         is_unlocked: isUnlocked,
       }));
 
-      // Sequential, not parallel: the character-bulk endpoint cascades and writes
-      // to the same perk-ownership rows the perk-bulk endpoint writes to. Firing
-      // both at once races two transactions against the same rows, which can roll
-      // back the character update while the perk update still commits.
       const charactersOk =
         characterUpdates.length === 0 || (await bulkUpdateCharacterOwnership(characterUpdates));
       const perksOk = perkUpdates.length === 0 || (await bulkUpdatePerkOwnership(perkUpdates));
@@ -301,7 +253,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       handleCancelOwnershipMode();
       setShowSavedToast(true);
       window.setTimeout(() => setShowSavedToast(false), 2500);
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to save ownership changes:', err);
       setOwnershipSaveError('Failed to save changes. Please try again.');
     } finally {
@@ -316,63 +268,25 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     return { total: perksForChar.length, unlocked };
   };
 
-  const getAvatarUrl = (char: Character) => {
-    let rawPath = char.avatar_local_path;
-    if (!rawPath && char.name) {
-      const subDir = char.category?.toLowerCase() === 'survivor' ? 'survivors' : 'killers';
-      const sanitized = char.name
-        .toLowerCase()
-        .trim()
-        .replace(/[\s\-/]+/g, '_')
-        .replace(/[^a-z0-9_]/g, '')
-        .replace(/_+/g, '_')
-        .replace(/^_+|_+$/g, '');
-      rawPath = `avatars/${subDir}/${sanitized}.png`;
-    }
-    if (!rawPath) return char.avatar_url || '';
-    const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');
-    return `${backendBase}/static/${cleanPath}`;
-  };
-
-  const getAssetUrl = (path?: string, url?: string) => {
-    if (path) {
-      const cleanPath = path.replace(/^\/?(static\/)?/, '');
-      return `${backendBase}/static/${cleanPath}`;
-    }
-    return url || '';
-  };
-
-  const filteredCharacters = characters.filter((c) => {
-    const matchesTab =
-      activeTab === 'all' ? true : c.category?.toLowerCase() === activeTab.toLowerCase();
-    const query = searchQuery.toLowerCase().trim();
-    const matchesSearch =
-      !query ||
-      c.name.toLowerCase().includes(query) ||
-      (c.real_name && c.real_name.toLowerCase().includes(query));
-    return matchesTab && matchesSearch;
-  });
+  const filteredCharacters = useMemo(() => {
+    return characters.filter((c) => {
+      const matchesTab =
+        activeTab === 'all' ? true : c.category?.toLowerCase() === activeTab.toLowerCase();
+      const query = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !query ||
+        c.name.toLowerCase().includes(query) ||
+        (c.real_name && c.real_name.toLowerCase().includes(query));
+      return matchesTab && matchesSearch;
+    });
+  }, [characters, activeTab, searchQuery]);
 
   const survivorCount = characters.filter((c) => c.category === 'Survivor').length;
   const killerCount = characters.filter((c) => c.category === 'Killer').length;
 
-  const getRarityBadgeColor = (rarity?: string) => {
-    const r = (rarity || '').toLowerCase();
-    if (r.includes('ultra') || r.includes('iridescent'))
-      return 'bg-pink-500/20 text-pink-400 border-pink-500/30';
-    if (r.includes('very rare') || r.includes('purple'))
-      return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-    if (r.includes('rare') || r.includes('green'))
-      return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
-    if (r.includes('uncommon') || r.includes('yellow'))
-      return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
-    return 'bg-slate-500/20 text-slate-400 border-slate-500/30';
-  };
-
   return (
     <div className={`space-y-6 ${ownershipMode ? 'pb-20' : ''}`}>
-      {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-red-50/40 dark:border-slate-800 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-900 dark:to-red-950/40 p-6 sm:p-8 shadow-sm dark:shadow-2xl">
+      <header className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-red-50/40 dark:border-slate-800 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-900 dark:to-red-950/40 p-6 sm:p-8 shadow-sm dark:shadow-2xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -384,7 +298,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl">
-              Explore Dead by Daylight Survivors & Killers. View character details, unique teachable perks, power add-ons, and equipment.
+              Explore Dead by Daylight Survivors &amp; Killers. View character details, unique teachable perks, power add-ons, and equipment.
             </p>
           </div>
 
@@ -399,37 +313,48 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Navigation & Search Filter Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-        {/* Role Tabs */}
-        <div className="flex items-center p-1 bg-slate-100/90 border border-slate-200 dark:bg-slate-900/90 dark:border-slate-800 rounded-2xl w-full sm:w-auto shadow-inner">
+      <section
+        aria-label="Character Filter Navigation"
+        className="flex flex-col sm:flex-row gap-4 justify-between items-center"
+      >
+        <div
+          role="group"
+          aria-label="Filter characters by role"
+          className="flex items-center p-1 bg-slate-100/90 border border-slate-200 dark:bg-slate-900/90 dark:border-slate-800 rounded-2xl w-full sm:w-auto shadow-inner"
+        >
           <button
+            type="button"
             onClick={() => setActiveTab('all')}
-            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'all'
+            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'all'
                 ? 'bg-red-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
+            }`}
           >
             All ({characters.length})
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab('Survivor')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'Survivor'
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'Survivor'
                 ? 'bg-emerald-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-400'
-              }`}
+            }`}
           >
             <Shield className="h-3.5 w-3.5" />
             Survivors ({survivorCount})
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab('Killer')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'Killer'
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'Killer'
                 ? 'bg-rose-600 text-white shadow-md'
                 : 'text-slate-600 hover:text-rose-700 dark:text-slate-400 dark:hover:text-rose-400'
-              }`}
+            }`}
           >
             <Skull className="h-3.5 w-3.5" />
             Killers ({killerCount})
@@ -438,6 +363,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <button
+            type="button"
             onClick={handleToggleOwnershipMode}
             disabled={ownershipLoading}
             className={`flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs font-bold border transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait ${
@@ -451,31 +377,36 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           </button>
         </div>
 
-        {/* Search Input */}
         <div className="relative w-full sm:w-72">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search by name..."
+            aria-label="Search characters"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 rounded-2xl border border-slate-200 bg-slate-100/90 text-xs font-semibold text-slate-900 placeholder-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
           />
           {searchQuery && (
             <button
+              type="button"
               onClick={() => setSearchQuery('')}
+              aria-label="Clear search query"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
               <X className="h-3.5 w-3.5" />
             </button>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* Grid of Characters */}
       {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
-          {[...Array(12)].map((_, i) => (
+        <div
+          aria-busy="true"
+          aria-label="Loading character list"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
+        >
+          {Array.from({ length: 12 }).map((_, i) => (
             <div
               key={i}
               className="h-64 animate-pulse rounded-2xl bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800"
@@ -485,19 +416,23 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       ) : filteredCharacters.length === 0 ? (
         <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center bg-white/60 dark:bg-transparent">
           <User className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-300">No Characters Found</h3>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-300">No Characters Found</h2>
           <p className="mt-1 text-xs text-slate-500">
             No characters match your current filter or search query.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+        <section
+          aria-label="Characters Roster Grid"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
+        >
           {filteredCharacters.map((char, idx) => {
             const isSurvivor = char.category?.toLowerCase() === 'survivor';
             const isOwned = char.id ? characterOwnershipDraft[char.id] ?? true : true;
             const perkStats = ownershipMode ? getCharacterPerkStats(char.id) : { total: 0, unlocked: 0 };
             const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
             const showLockedOverlay = !isOwned;
+            const avatarSrc = resolveAvatarUrl(backendBase, char, isSurvivor);
 
             return (
               <div
@@ -506,40 +441,44 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   if (ownershipMode) {
                     if (char.id) handleToggleCharacterOwned(char.id);
                   } else {
-                    router.push(`/${locale}/characters/${characterToSlug(char.name)}`);
+                    router.push(`/${locale}/characters/${getCharacterSlug(char.name)}`);
                   }
                 }}
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-800 hover:border-red-500/50 shadow-sm hover:shadow-xl dark:shadow-none transition-all duration-300 cursor-pointer"
               >
-                {/* Role Badge */}
                 <div className="absolute top-2 right-2 z-10">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold border backdrop-blur-md ${isSurvivor
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold border backdrop-blur-md ${
+                      isSurvivor
                         ? 'bg-emerald-100 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300'
                         : 'bg-rose-100 text-rose-700 border-rose-500/30 dark:bg-rose-500/20 dark:text-rose-300'
-                      }`}
+                    }`}
                   >
                     {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
                     {char.category}
                   </span>
                 </div>
 
-                {/* Ownership Lock Badge */}
                 {ownershipMode && !isOwned && (
-                  <div className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/80 border border-amber-500/40 text-amber-400 backdrop-blur-md">
+                  <div
+                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/80 border border-amber-500/40 text-amber-400 backdrop-blur-md"
+                    title="Character Locked"
+                  >
                     <Lock className="h-3.5 w-3.5" />
                   </div>
                 )}
                 {ownershipMode && isOwned && (
-                  <div className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 backdrop-blur-md">
+                  <div
+                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 backdrop-blur-md"
+                    title="Character Owned"
+                  >
                     <Check className="h-3.5 w-3.5" />
                   </div>
                 )}
 
-                {/* Avatar Portrait Image */}
                 <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
                   <img
-                    src={getAvatarUrl(char)}
+                    src={avatarSrc}
                     alt={char.name}
                     className={`h-full w-full object-cover object-top transition-transform duration-500 ${
                       ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-105'
@@ -551,7 +490,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   />
                   {ownershipMode && showLockedOverlay && (
                     <img
-                      src={getAvatarUrl(char)}
+                      src={avatarSrc}
                       alt=""
                       aria-hidden="true"
                       className="absolute inset-0 h-full w-full object-cover object-top grayscale pointer-events-none"
@@ -567,7 +506,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/35 via-transparent to-transparent dark:from-slate-950/80" />
                 </div>
 
-                {/* Card Footer Info */}
                 <div className="p-3.5 space-y-1">
                   <h3 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-1">
                     {char.name}
@@ -579,6 +517,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   )}
                   {ownershipMode && !isOwned && (
                     <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         setPerksPopupCharacter(char);
@@ -592,227 +531,17 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               </div>
             );
           })}
-        </div>
-      )}
-
-      {/* Interactive Detail Drawer / Modal */}
-      {selectedCharacter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-          {/* Backdrop */}
-          <div
-            onClick={handleCloseModal}
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-200"
-          />
-
-          {/* Modal Content */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 animate-in zoom-in-95 duration-200"
-          >
-            {/* Header / Hero */}
-            <div className="relative border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-slate-50 dark:border-slate-800 dark:bg-gradient-to-r dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8">
-              <button
-                onClick={handleCloseModal}
-                className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white transition-colors cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
-
-              <div className="flex flex-col sm:flex-row items-center gap-6">
-                <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl border-2 border-red-500/30 bg-slate-100 dark:bg-slate-950 shadow-xl">
-                  <img
-                    src={getAvatarUrl(selectedCharacter)}
-                    alt={selectedCharacter.name}
-                    className="h-full w-full object-cover object-top"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        'https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/IconHelpLoading_players.png/revision/latest';
-                    }}
-                  />
-                </div>
-
-                <div className="space-y-2 text-center sm:text-left">
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-extrabold border ${selectedCharacter.category?.toLowerCase() === 'survivor'
-                          ? 'bg-emerald-100 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300'
-                          : 'bg-rose-100 text-rose-700 border-rose-500/30 dark:bg-rose-500/20 dark:text-rose-300'
-                        }`}
-                    >
-                      {selectedCharacter.category?.toLowerCase() === 'survivor' ? (
-                        <Shield className="h-3.5 w-3.5" />
-                      ) : (
-                        <Skull className="h-3.5 w-3.5" />
-                      )}
-                      {selectedCharacter.category}
-                    </span>
-                  </div>
-
-                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
-                    {selectedCharacter.name}
-                  </h2>
-
-                  {selectedCharacter.real_name && (
-                    <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-                      Real Name: <span className="text-slate-900 dark:text-slate-200">{selectedCharacter.real_name}</span>
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-6 sm:p-8 space-y-8">
-              {detailLoading ? (
-                <div className="py-12 text-center space-y-3">
-                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-slate-300 dark:border-slate-700 border-t-red-500" />
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Loading character details...</p>
-                </div>
-              ) : (
-                <>
-                  {/* Teachable Perks Section */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-                      <Sparkles className="h-5 w-5 text-amber-500 dark:text-amber-400" />
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 font-mono">
-                        Teachable Perks ({detailData?.perks?.length || 0})
-                      </h3>
-                    </div>
-
-                    {!detailData?.perks || detailData.perks.length === 0 ? (
-                      <p className="text-xs text-slate-500 italic">No teachable perks associated with this character.</p>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {detailData.perks.map((perk, i) => (
-                          <div
-                            key={`${perk.name}-${i}`}
-                            className="flex flex-col p-4 rounded-2xl border border-slate-200 bg-slate-50 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-950/60 dark:hover:border-slate-700 transition-all space-y-3 shadow-sm"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="h-12 w-12 shrink-0 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 p-1 flex items-center justify-center">
-                                <img
-                                  src={getAssetUrl(perk.icon_local_path, perk.icon_url)}
-                                  alt={perk.name}
-                                  className="h-full w-full object-contain"
-                                />
-                              </div>
-                              <div>
-                                <h4 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 leading-tight">
-                                  {perk.name}
-                                </h4>
-                                <span className="inline-block text-[10px] font-bold text-red-600 dark:text-red-400 mt-0.5">
-                                  {perk.category} Perk
-                                </span>
-                              </div>
-                            </div>
-
-                            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-4">
-                              {perk.description}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Associated Add-ons & Equipment Section */}
-                  <div className="space-y-4 pt-4">
-                    <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-                      <Package className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 font-mono">
-                        Associated Add-ons & Equipment ({(detailData?.addons?.length || 0) + (detailData?.items?.length || 0)})
-                      </h3>
-                    </div>
-
-                    {(!detailData?.addons || detailData.addons.length === 0) &&
-                      (!detailData?.items || detailData.items.length === 0) ? (
-                      <p className="text-xs text-slate-500 italic">
-                        No specific add-ons or equipment associated with this character in database.
-                      </p>
-                    ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-72 overflow-y-auto pr-1">
-                        {/* Render Addons */}
-                        {detailData?.addons?.map((addon, i) => (
-                          <div
-                            key={`addon-${addon.name}-${i}`}
-                            className="flex items-start gap-3 p-3 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60 shadow-sm"
-                          >
-                            <div className="h-10 w-10 shrink-0 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 p-1 flex items-center justify-center">
-                              <img
-                                src={getAssetUrl(addon.icon_local_path, addon.icon_url)}
-                                alt={addon.name}
-                                className="h-full w-full object-contain"
-                              />
-                            </div>
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200">{addon.name}</h4>
-                                {addon.rarity && (
-                                  <span
-                                    className={`rounded px-1.5 py-0.2 text-[9px] font-bold border ${getRarityBadgeColor(
-                                      addon.rarity
-                                    )}`}
-                                  >
-                                    {addon.rarity}
-                                  </span>
-                                )}
-                              </div>
-                              {addon.description && (
-                                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
-                                  {addon.description}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-
-                        {/* Render Items */}
-                        {detailData?.items?.map((item, i) => (
-                          <div
-                            key={`item-${item.name}-${i}`}
-                            className="flex items-start gap-3 p-3 rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/60 shadow-sm"
-                          >
-                            <div className="h-10 w-10 shrink-0 rounded-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800 p-1 flex items-center justify-center">
-                              <img
-                                src={getAssetUrl(item.icon_local_path, item.icon_url)}
-                                alt={item.name}
-                                className="h-full w-full object-contain"
-                              />
-                            </div>
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <h4 className="font-bold text-xs text-slate-900 dark:text-slate-200">{item.name}</h4>
-                                {item.rarity && (
-                                  <span
-                                    className={`rounded px-1.5 py-0.2 text-[9px] font-bold border ${getRarityBadgeColor(
-                                      item.rarity
-                                    )}`}
-                                  >
-                                    {item.rarity}
-                                  </span>
-                                )}
-                              </div>
-                              {item.description && (
-                                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
-                                  {item.description}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+        </section>
       )}
 
       {/* Perks Popup for a Locked Character */}
       {perksPopupCharacter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="perks-popup-title"
+        >
           <div
             onClick={() => setPerksPopupCharacter(null)}
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
@@ -822,17 +551,21 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             className="relative z-10 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-slate-800 p-5">
-              <h3 className="text-base font-bold text-slate-100">
+              <h3 id="perks-popup-title" className="text-base font-bold text-slate-100">
                 {perksPopupCharacter.name} Perks
               </h3>
               <button
+                type="button"
                 onClick={() => setPerksPopupCharacter(null)}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+                aria-label="Close perks popup"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <p className="px-5 pt-4 text-[11px] text-slate-500">Click a perk to toggle whether you own it.</p>
+            <p className="px-5 pt-4 text-[11px] text-slate-500">
+              Click a perk to toggle whether you own it.
+            </p>
             <div className="p-5 space-y-2">
               {allPerks
                 .filter((p) => p.character_id === perksPopupCharacter.id)
@@ -841,6 +574,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   return (
                     <button
                       key={perk.perk_id}
+                      type="button"
                       onClick={() => handleTogglePerkUnlocked(perk.perk_id)}
                       className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left text-xs font-semibold transition-all hover:scale-[1.02] active:scale-95 ${
                         isUnlocked
@@ -854,27 +588,33 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                         }`}
                       >
                         <img
-                          src={getAssetUrl(perk.icon_local_path, perk.icon_url)}
+                          src={getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url)}
                           alt={perk.name}
-                          className={`h-full w-full object-contain ${isUnlocked ? '' : 'grayscale opacity-50'}`}
+                          className={`h-full w-full object-contain ${
+                            isUnlocked ? '' : 'grayscale opacity-50'
+                          }`}
                         />
                       </div>
                       <span className="flex-1">{perk.name}</span>
-                      {isUnlocked ? <Check className="h-4 w-4 shrink-0" /> : <Lock className="h-4 w-4 shrink-0" />}
+                      {isUnlocked ? (
+                        <Check className="h-4 w-4 shrink-0" />
+                      ) : (
+                        <Lock className="h-4 w-4 shrink-0" />
+                      )}
                     </button>
                   );
                 })}
               {allPerks.filter((p) => p.character_id === perksPopupCharacter.id).length === 0 && (
-                <p className="text-xs text-slate-500 italic">No teachable perks for this character.</p>
+                <p className="text-xs text-slate-500 italic">
+                  No teachable perks for this character.
+                </p>
               )}
             </div>
           </div>
         </div>
       )}
 
-      {/* Save Bar for Ownership Selection Mode — fixed to the true bottom of the
-          screen, but padded to match the sidebar so it never sits behind it
-          or looks off-center relative to the visible content column. */}
+      {/* Save Bar for Ownership Selection Mode */}
       {ownershipMode && (
         <div
           className={`fixed inset-x-0 bottom-0 z-30 border-t border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-md transition-all duration-300 ${
@@ -882,22 +622,27 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           }`}
         >
           {ownershipSaveError && (
-            <p className="px-5 sm:px-7 lg:px-9 pt-2 text-center text-[11px] font-semibold text-rose-400">
+            <p
+              role="alert"
+              className="px-5 sm:px-7 lg:px-9 pt-2 text-center text-[11px] font-semibold text-rose-400"
+            >
               {ownershipSaveError}
             </p>
           )}
           <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
             <button
+              type="button"
               onClick={handleCancelOwnershipMode}
               disabled={ownershipSaving}
-              className="px-5 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors disabled:opacity-60"
+              className="px-5 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors disabled:opacity-60 cursor-pointer"
             >
               Cancel
             </button>
             <button
+              type="button"
               onClick={handleSaveOwnership}
               disabled={ownershipSaving}
-              className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/30 hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait"
+              className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/30 hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
             >
               {ownershipSaving ? 'Saving...' : 'Accept'}
             </button>
@@ -907,7 +652,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
       {/* Save confirmation toast */}
       {showSavedToast && (
-        <div className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-extrabold text-white shadow-2xl shadow-emerald-900/50 ring-2 ring-emerald-400/50 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div
+          role="status"
+          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-extrabold text-white shadow-2xl shadow-emerald-900/50 ring-2 ring-emerald-400/50 animate-in fade-in slide-in-from-top-4 duration-300"
+        >
           <Check className="h-5 w-5" />
           Changes saved
         </div>

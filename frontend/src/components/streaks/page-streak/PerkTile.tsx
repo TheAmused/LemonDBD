@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/page-streak/PerkTile.tsx
 'use client';
 
 import React, { useState } from 'react';

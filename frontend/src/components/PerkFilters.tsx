@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/components/PerkFilters.tsx
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
@@ -17,36 +18,38 @@ import {
   ArrowDownZA,
   ChevronDown,
 } from 'lucide-react';
-
-interface PerkSuggestion {
-  id?: number;
-  name: string;
-  alternate_name?: string;
-  category?: string;
-  character?: string;
-  icon_local_path?: string;
-  icon_url?: string;
-}
+import {
+  RoleCategory,
+  ScopeFilter,
+  OwnershipFilter,
+  SortField,
+  SortOrder,
+  ViewDisplayMode,
+  CharacterOption,
+  PerkSuggestion,
+  PerkDictionary,
+} from '@/types/perks';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 interface PerkFiltersProps {
   search: string;
   setSearch: (val: string) => void;
-  role: 'Survivor' | 'Killer';
-  setRole: (role: 'Survivor' | 'Killer') => void;
-  scope: 'all' | 'general';
-  setScope: (scope: 'all' | 'general') => void;
-  ownershipFilter: 'all' | 'owned';
-  setOwnershipFilter: (filter: 'all' | 'owned') => void;
+  role: RoleCategory;
+  setRole: (role: RoleCategory) => void;
+  scope: ScopeFilter;
+  setScope: (scope: ScopeFilter) => void;
+  ownershipFilter: OwnershipFilter;
+  setOwnershipFilter: (filter: OwnershipFilter) => void;
   character: string;
   setCharacter: (val: string) => void;
-  sortBy: 'name' | 'character' | 'category';
-  setSortBy: (val: 'name' | 'character' | 'category') => void;
-  order: 'asc' | 'desc';
-  setOrder: (val: 'asc' | 'desc') => void;
-  viewMode: 'grid' | 'list';
-  setViewMode: (val: 'grid' | 'list') => void;
-  characterOptions: { value: string; label: string; real_name?: string }[];
-  dict: any;
+  sortBy: SortField;
+  setSortBy: (val: SortField) => void;
+  order: SortOrder;
+  setOrder: (val: SortOrder) => void;
+  viewMode: ViewDisplayMode;
+  setViewMode: (val: ViewDisplayMode) => void;
+  characterOptions: CharacterOption[];
+  dict?: PerkDictionary;
   onReset: () => void;
 }
 
@@ -71,7 +74,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   dict,
   onReset,
 }) => {
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   const [charInput, setCharInput] = useState<string>('');
   const [isCharDropdownOpen, setIsCharDropdownOpen] = useState<boolean>(false);
@@ -85,19 +88,20 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     if (character === 'all') {
       setCharInput('');
     } else if (character === 'General') {
-      setCharInput('General Perks');
+      setCharInput(dict?.filters?.generalPerksOnly || 'General Perks');
     } else {
       const match = characterOptions.find((c) => c.value === character);
       setCharInput(match ? match.label : character);
     }
-  }, [character, characterOptions]);
+  }, [character, characterOptions, dict]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (charDropdownRef.current && !charDropdownRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (charDropdownRef.current && !charDropdownRef.current.contains(target)) {
         setIsCharDropdownOpen(false);
       }
-      if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target as Node)) {
+      if (searchDropdownRef.current && !searchDropdownRef.current.contains(target)) {
         setIsPerkSuggestionsOpen(false);
       }
     };
@@ -113,7 +117,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(
-          `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(search)}&category=${role}&limit=8`
+          `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(
+            search
+          )}&category=${role}&limit=8`
         );
         if (res.ok) {
           const json = await res.json();
@@ -146,82 +152,113 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     order !== 'asc';
 
   return (
-    <div className="relative z-30 mb-6 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-sm dark:shadow-xl dark:shadow-slate-950/40">
+    <section
+      aria-label="Perk Filters"
+      className="relative z-30 mb-6 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-sm dark:shadow-xl dark:shadow-slate-950/40"
+    >
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         <div className="flex flex-wrap items-center gap-2.5">
-          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
+          {/* Role Filter */}
+          <div
+            role="group"
+            aria-label="Filter by Role"
+            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
+          >
             <button
+              type="button"
               onClick={() => setRole('Survivor')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 cursor-pointer ${role === 'Survivor'
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 cursor-pointer ${
+                role === 'Survivor'
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md ring-1 ring-emerald-400/40'
                   : 'text-slate-700 hover:text-emerald-700 hover:bg-emerald-500/10 dark:text-slate-400 dark:hover:text-emerald-400 dark:hover:bg-emerald-950/30'
-                }`}
+              }`}
             >
               <Shield className="h-3.5 w-3.5" />
-              <span>Survivor</span>
+              <span>{dict?.filters?.survivor || 'Survivor'}</span>
             </button>
 
             <button
+              type="button"
               onClick={() => setRole('Killer')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 cursor-pointer ${role === 'Killer'
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 cursor-pointer ${
+                role === 'Killer'
                   ? 'bg-gradient-to-r from-rose-700 to-red-800 text-white shadow-md ring-1 ring-rose-500/40'
                   : 'text-slate-700 hover:text-rose-700 hover:bg-rose-500/10 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-950/30'
-                }`}
+              }`}
             >
               <Skull className="h-3.5 w-3.5" />
-              <span>Killer</span>
+              <span>{dict?.filters?.killer || 'Killer'}</span>
             </button>
           </div>
 
-          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
+          {/* Scope Filter */}
+          <div
+            role="group"
+            aria-label="Filter by Scope"
+            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
+          >
             <button
+              type="button"
               onClick={() => setScope('all')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${scope === 'all'
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${
+                scope === 'all'
                   ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
               <Layers className="h-3.5 w-3.5 text-cyan-500 dark:text-cyan-400" />
-              <span>All Perks</span>
+              <span>{dict?.filters?.allPerks || 'All Perks'}</span>
             </button>
 
             <button
+              type="button"
               onClick={() => setScope('general')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${scope === 'general'
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${
+                scope === 'general'
                   ? 'bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-md ring-1 ring-amber-400/40'
                   : 'text-slate-600 hover:text-amber-700 hover:bg-amber-500/10 dark:text-slate-400 dark:hover:text-amber-400 dark:hover:bg-amber-950/30'
-                }`}
+              }`}
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>General Only</span>
+              <span>{dict?.filters?.generalOnly || 'General Only'}</span>
             </button>
           </div>
 
-          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
+          {/* Ownership Filter */}
+          <div
+            role="group"
+            aria-label="Filter by Ownership"
+            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
+          >
             <button
+              type="button"
               onClick={() => setOwnershipFilter('all')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${ownershipFilter === 'all'
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${
+                ownershipFilter === 'all'
                   ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
               <Layers className="h-3.5 w-3.5 text-slate-400" />
-              <span>Every Perk</span>
+              <span>{dict?.filters?.everyPerk || 'Every Perk'}</span>
             </button>
 
             <button
+              type="button"
               onClick={() => setOwnershipFilter('owned')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${ownershipFilter === 'owned'
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${
+                ownershipFilter === 'owned'
                   ? 'bg-gradient-to-r from-cyan-600 to-teal-700 text-white shadow-md ring-1 ring-cyan-400/40'
                   : 'text-slate-600 hover:text-cyan-700 hover:bg-cyan-500/10 dark:text-slate-400 dark:hover:text-cyan-400 dark:hover:bg-cyan-950/30'
-                }`}
+              }`}
             >
               <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>Owned Only</span>
+              <span>{dict?.filters?.ownedOnly || 'Owned Only'}</span>
             </button>
           </div>
         </div>
 
+        {/* Search & View Mode Switcher */}
         <div className="flex items-center gap-3">
           <div ref={searchDropdownRef} className="relative z-40 flex-1 sm:w-80">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
@@ -233,15 +270,20 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                 setSearch(e.target.value);
                 setIsPerkSuggestionsOpen(true);
               }}
-              placeholder={dict?.filters?.searchPlaceholder || 'Type perk name or alias...'}
+              placeholder={
+                dict?.filters?.searchPlaceholder || 'Type perk name or alias...'
+              }
+              aria-label={dict?.filters?.searchPlaceholder || 'Search perks'}
               className="w-full rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 py-2.5 pl-10 pr-9 text-xs font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:border-cyan-500 focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all"
             />
             {search && (
               <button
+                type="button"
                 onClick={() => {
                   setSearch('');
                   setIsPerkSuggestionsOpen(false);
                 }}
+                aria-label="Clear search text"
                 className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
               >
                 <X className="h-3 w-3" />
@@ -249,15 +291,21 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             )}
 
             {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1.5 flex flex-col gap-1">
+              <div
+                role="listbox"
+                className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1.5 flex flex-col gap-1"
+              >
                 {perkSuggestions.map((item, idx) => (
-                  <div
+                  <button
                     key={`${item.name}-${idx}`}
+                    type="button"
+                    role="option"
+                    aria-selected={false}
                     onClick={() => {
                       setSearch(item.name);
                       setIsPerkSuggestionsOpen(false);
                     }}
-                    className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition-colors"
+                    className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition-colors text-left w-full"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div className="flex flex-col min-w-0">
@@ -274,30 +322,38 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                     <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 shrink-0">
                       {item.character || 'General'}
                     </span>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/90 p-1 shrink-0">
+          <div
+            role="group"
+            aria-label="View Mode Toggle"
+            className="flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/90 p-1 shrink-0"
+          >
             <button
+              type="button"
               onClick={() => setViewMode('grid')}
               aria-label="Grid View"
-              className={`rounded-xl p-2 transition-all cursor-pointer ${viewMode === 'grid'
+              className={`rounded-xl p-2 transition-all cursor-pointer ${
+                viewMode === 'grid'
                   ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
                   : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
-                }`}
+              }`}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
             <button
+              type="button"
               onClick={() => setViewMode('list')}
               aria-label="List View"
-              className={`rounded-xl p-2 transition-all cursor-pointer ${viewMode === 'list'
+              className={`rounded-xl p-2 transition-all cursor-pointer ${
+                viewMode === 'list'
                   ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
                   : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
-                }`}
+              }`}
             >
               <List className="h-4 w-4" />
             </button>
@@ -305,6 +361,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         </div>
       </div>
 
+      {/* Second Row: Character Picker, Sort & Clear */}
       <div className="flex flex-col lg:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-800/60">
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           <div ref={charDropdownRef} className="relative z-40 flex-1 sm:w-72">
@@ -318,16 +375,23 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                   setCharInput(e.target.value);
                   setIsCharDropdownOpen(true);
                 }}
-                placeholder="Filter by character name..."
+                placeholder={
+                  dict?.filters?.filterByCharacter || 'Filter by character name...'
+                }
+                aria-label={
+                  dict?.filters?.filterByCharacter || 'Filter by character'
+                }
                 className="w-full rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 py-2 pl-9 pr-8 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none transition-colors"
               />
               {character !== 'all' ? (
                 <button
+                  type="button"
                   onClick={() => {
                     setCharacter('all');
                     setCharInput('');
                     setIsCharDropdownOpen(false);
                   }}
+                  aria-label="Reset character filter"
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                 >
                   <X className="h-3 w-3" />
@@ -338,109 +402,145 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             </div>
 
             {isCharDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-1 max-h-56 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1 flex flex-col gap-0.5">
-                <div
+              <div
+                role="listbox"
+                className="absolute top-full left-0 right-0 mt-1 max-h-56 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1 flex flex-col gap-0.5"
+              >
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={character === 'all'}
                   onClick={() => {
                     setCharacter('all');
                     setCharInput('');
                     setIsCharDropdownOpen(false);
                   }}
-                  className={`p-2 rounded-xl text-xs font-bold cursor-pointer transition-colors ${character === 'all'
+                  className={`p-2 rounded-xl text-xs font-bold cursor-pointer transition-colors text-left w-full ${
+                    character === 'all'
                       ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300'
                       : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
-                    }`}
+                  }`}
                 >
-                  All Characters
-                </div>
-                <div
+                  {dict?.filters?.allCharacters || 'All Characters'}
+                </button>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={character === 'General'}
                   onClick={() => {
                     setCharacter('General');
-                    setCharInput('General Perks');
+                    setCharInput(
+                      dict?.filters?.generalPerksOnly || 'General Perks'
+                    );
                     setIsCharDropdownOpen(false);
                   }}
-                  className={`p-2 rounded-xl text-xs font-bold cursor-pointer transition-colors ${character === 'General'
+                  className={`p-2 rounded-xl text-xs font-bold cursor-pointer transition-colors text-left w-full ${
+                    character === 'General'
                       ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300'
                       : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
-                    }`}
+                  }`}
                 >
-                  General Perks Only
-                </div>
+                  {dict?.filters?.generalPerksOnly || 'General Perks Only'}
+                </button>
                 {filteredCharacterOptions.map((opt) => (
-                  <div
+                  <button
                     key={opt.value}
+                    type="button"
+                    role="option"
+                    aria-selected={character === opt.value}
                     onClick={() => {
                       setCharacter(opt.value);
                       setCharInput(opt.label);
                       setIsCharDropdownOpen(false);
                     }}
-                    className={`p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors ${character === opt.value
+                    className={`p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors text-left w-full ${
+                      character === opt.value
                         ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 font-black'
                         : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
-                      }`}
+                    }`}
                   >
                     {opt.label}
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
+          <div
+            role="group"
+            aria-label="Sort Fields"
+            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
+          >
             <button
+              type="button"
               onClick={() => setSortBy('name')}
-              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${sortBy === 'name'
+              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
+                sortBy === 'name'
                   ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
-              Name
+              {dict?.filters?.sortByName || 'Name'}
             </button>
             <button
+              type="button"
               onClick={() => setSortBy('character')}
-              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${sortBy === 'character'
+              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
+                sortBy === 'character'
                   ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
-              Character
+              {dict?.filters?.sortByCharacter || 'Character'}
             </button>
             <button
+              type="button"
               onClick={() => setSortBy('category')}
-              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${sortBy === 'category'
+              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
+                sortBy === 'category'
                   ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
-              Role
+              {dict?.filters?.sortByRole || 'Role'}
             </button>
           </div>
 
-          <div className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner">
+          <div
+            role="group"
+            aria-label="Sort Direction"
+            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
+          >
             <button
+              type="button"
               onClick={() => setOrder('asc')}
-              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer ${order === 'asc'
+              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer ${
+                order === 'asc'
                   ? 'bg-white text-cyan-600 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-cyan-400 dark:border-slate-700/60'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
               <ArrowUpAZ className="h-3.5 w-3.5" />
-              <span>A-Z</span>
+              <span>{dict?.filters?.orderAsc || 'A-Z'}</span>
             </button>
             <button
+              type="button"
               onClick={() => setOrder('desc')}
-              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer ${order === 'desc'
+              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer ${
+                order === 'desc'
                   ? 'bg-white text-cyan-600 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-cyan-400 dark:border-slate-700/60'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
               <ArrowDownZA className="h-3.5 w-3.5" />
-              <span>Z-A</span>
+              <span>{dict?.filters?.orderDesc || 'Z-A'}</span>
             </button>
           </div>
         </div>
 
         {hasActiveFilters && (
           <button
+            type="button"
             onClick={onReset}
             className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 transition-colors cursor-pointer w-full lg:w-auto justify-center"
           >
@@ -449,6 +549,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           </button>
         )}
       </div>
-    </div>
+    </section>
   );
 };

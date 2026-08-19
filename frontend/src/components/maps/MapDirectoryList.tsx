@@ -1,9 +1,11 @@
 'use client';
+// frontend/src/components/maps/MapDirectoryList.tsx
 
 import React, { useMemo } from 'react';
 import { Compass, Clock, Layers, ExternalLink, Search } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import { getMapImageSrc } from '@/utils/mapUtils';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 export interface MapDirectoryListProps {
   groupedMaps: Record<string, MapRealm[]>;
@@ -30,11 +32,10 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
   onSearchChange,
   selectedRealm = 'all',
   onSelectRealm,
-  backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
+  backendBase = getBackendBaseUrl(),
   className = '',
   showFilters = false,
 }) => {
-  // Extract all maps into a flat list or filtered by selected realm
   const flatMaps = useMemo(() => {
     const realms = Object.keys(groupedMaps || {});
     if (selectedRealm && selectedRealm !== 'all') {
@@ -43,7 +44,6 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
     return realms.flatMap((realm) => groupedMaps[realm] || []);
   }, [groupedMaps, selectedRealm]);
 
-  // Filter flatMaps further by searchQuery if provided and controlled
   const filteredMaps = useMemo(() => {
     if (!searchQuery || !searchQuery.trim()) return flatMaps;
     const query = searchQuery.toLowerCase().trim();
@@ -58,7 +58,6 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
 
   return (
     <div className={`space-y-6 ${className}`} data-testid="map-directory-list">
-      {/* Optional Filters Bar (Search & Realm Pills) */}
       {showFilters && (
         <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/80 p-4 backdrop-blur-md shadow-sm">
           {onSearchChange && (
@@ -67,6 +66,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
               <input
                 type="text"
                 placeholder="Search map or realm..."
+                aria-label="Search map or realm"
                 value={searchQuery || ''}
                 onChange={(e) => onSearchChange(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 pl-10 pr-4 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[40px] shadow-inner"
@@ -112,13 +112,14 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
         </div>
       )}
 
-      {/* Loading Skeleton */}
       {loading ? (
         <div
+          aria-busy="true"
+          aria-label="Loading map directory"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           data-testid="map-directory-loading"
         >
-          {[...Array(8)].map((_, i) => (
+          {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
               className="h-72 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800"
@@ -126,7 +127,6 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
           ))}
         </div>
       ) : filteredMaps.length === 0 ? (
-        /* Empty State */
         <div
           className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center select-none"
           data-testid="map-directory-empty"
@@ -141,7 +141,6 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
           </p>
         </div>
       ) : (
-        /* Maps Grid Showcase */
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           data-testid="map-directory-grid"
@@ -163,14 +162,13 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                     onSelectMapId(m.id);
                   }
                 }}
-                className={`group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border bg-white dark:bg-slate-900/90 shadow-sm dark:shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] ${
+                className={`group relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-3xl border bg-white dark:bg-slate-900/90 shadow-sm dark:shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
                   isSelected
                     ? 'border-amber-500 ring-2 ring-amber-500/40 shadow-md dark:shadow-[0_0_30px_rgba(245,158,11,0.25)]'
                     : 'border-slate-200 dark:border-slate-800 hover:border-amber-500/50'
                 }`}
                 data-testid={`map-card-${m.id}`}
               >
-                {/* Thumbnail Image Area */}
                 <div className="relative h-48 w-full overflow-hidden bg-slate-950">
                   {imgSrc ? (
                     <img
@@ -180,6 +178,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                         imageRendering: '-webkit-optimize-contrast' as React.CSSProperties['imageRendering'],
                       }}
                       className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-95 group-hover:opacity-100"
+                      loading="lazy"
                       data-testid={`map-thumbnail-${m.id}`}
                     />
                   ) : (
@@ -189,7 +188,6 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
 
-                  {/* Realm Tag Overlay */}
                   <div
                     className="absolute top-3 left-3 rounded-full border border-slate-700/80 bg-slate-950/80 px-3 py-1 text-[11px] font-extrabold text-amber-400 backdrop-blur-md shadow-sm"
                     data-testid={`map-realm-tag-${m.id}`}
@@ -197,7 +195,6 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                     {m.realm}
                   </div>
 
-                  {/* Source Badge Overlay */}
                   <div
                     className={`absolute bottom-3 left-3 rounded-full border px-2.5 py-0.5 text-[10px] font-black uppercase backdrop-blur-md ${
                       isSamoel
@@ -208,7 +205,6 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                     {isSamoel ? 'SamoelColt Isometric' : 'Hens333 12-Clock'}
                   </div>
 
-                  {/* Popout Quick Button */}
                   {onPopoutImage && (
                     <button
                       type="button"
@@ -216,8 +212,9 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                         e.stopPropagation();
                         onPopoutImage(imgSrc, m.name);
                       }}
-                      className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/80 text-slate-300 hover:text-amber-400 backdrop-blur-md transition-colors cursor-pointer min-h-[36px] min-w-[36px]"
+                      className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/80 text-slate-300 hover:text-amber-400 backdrop-blur-md transition-colors cursor-pointer min-h-[36px] min-w-[36px] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                       title="Popout Map Image in New Window"
+                      aria-label={`Popout ${m.name} map in a new window`}
                       data-testid={`map-popout-btn-${m.id}`}
                     >
                       <ExternalLink className="h-4 w-4" />
@@ -225,13 +222,11 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                   )}
                 </div>
 
-                {/* Card Body */}
                 <div className="p-5 flex flex-col gap-3">
                   <h3 className="text-lg font-black text-slate-900 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                     {m.name}
                   </h3>
 
-                  {/* Callout Quick Hint */}
                   <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
                     {isSamoel ? (
                       <>

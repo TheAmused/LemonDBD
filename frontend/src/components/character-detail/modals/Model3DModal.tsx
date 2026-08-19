@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/modals/Model3DModal.tsx
 import React from 'react';
 import { Box, X } from 'lucide-react';
 import { CharacterItem, getAvatarUrl } from '../types';
@@ -8,7 +9,7 @@ interface Model3DModalProps {
   character: CharacterItem;
   isSurvivor: boolean;
   backendBase: string;
-  t: any;
+  t: Record<string, string>;
 }
 
 export const Model3DModal: React.FC<Model3DModalProps> = ({
@@ -31,10 +32,10 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
       }}
     >
       <div
-        className="relative w-full max-w-xl bg-white dark:bg-slate-900 border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-xl bg-slate-900 border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-amber-500/15 via-orange-500/5 to-transparent flex items-center justify-between">
+        <div className="p-6 border-b border-slate-800 bg-gradient-to-r from-amber-500/15 via-orange-500/5 to-transparent flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-inner">
               <Box className="h-6 w-6 animate-pulse" />
@@ -43,14 +44,15 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
               <span className="text-[11px] font-mono font-black uppercase tracking-wider text-amber-400">
                 High-Res 3D Model View
               </span>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-mono">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
                 {character.name}
               </h2>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label={t.close || 'Close'}
           >
             <X className="w-5 h-5" />
@@ -75,11 +77,12 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center justify-between p-4 px-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/30">
+        <div className="flex items-center justify-between p-4 px-6 border-t border-slate-800 bg-slate-950/30">
           <span className="text-xs text-slate-400 font-mono">{t.clickOutsideToClose || 'Esc or click outside to close'}</span>
           <button
+            type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 transition-all cursor-pointer shadow-sm"
+            className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-white text-slate-900 transition-all cursor-pointer shadow-sm"
           >
             {t.close || 'Close'}
           </button>
@@ -88,3 +91,4 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
     </div>
   );
 };
+

@@ -1,3 +1,4 @@
+// frontend/src/utils/mapUtils.ts
 import type { MapRealm } from '@/types/map';
 
 const DEFAULT_BACKEND_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';

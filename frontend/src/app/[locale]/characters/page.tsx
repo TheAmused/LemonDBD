@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/app/[locale]/characters/page.tsx
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -8,13 +9,14 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
+import { CharacterItem, PerkItem } from '@/components/character-detail/types';
 
 export default function CharactersPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Record<string, unknown> | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -39,43 +41,37 @@ export default function CharactersPage() {
         ]);
         if (perksRes.ok) {
           const pData = await perksRes.json();
-          const list = pData.data || [];
+          const list: PerkItem[] = pData.data || [];
           setTotalPerksCount(pData.pagination?.total || list.length);
-          setSurvivorCount(list.filter((p: any) => p.category === 'Survivor').length);
-          setKillerCount(list.filter((p: any) => p.category === 'Killer').length);
+          setSurvivorCount(list.filter((p) => p.category === 'Survivor').length);
+          setKillerCount(list.filter((p) => p.category === 'Killer').length);
         }
         if (charsRes.ok) {
           const cData = await charsRes.json();
-          setCharacterCount(cData.count || (cData.data || []).length);
+          const charList: CharacterItem[] = cData.data || [];
+          setCharacterCount(cData.count || charList.length);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('Failed to load sidebar vault stats:', err);
       }
     }
     loadVaultStats();
   }, [backendBase]);
 
-  const handleSelectCategory = (cat: string) => {
-    if (typeof window !== 'undefined') {
-      window.location.href = `/${locale}`;
-    }
-  };
-
   if (!dict) {
     return (
-      <div className="min-h-screen bg-slate-50 text-slate-500 dark:bg-slate-950 dark:text-slate-400 flex items-center justify-center font-mono">
-        Loading...
+      <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
+        Loading Characters Hub...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
         activeCategory="characters"
-        onSelectCategory={handleSelectCategory}
         onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalPerksCount}
         survivorCount={survivorCount}
@@ -84,7 +80,7 @@ export default function CharactersPage() {
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
@@ -94,3 +90,4 @@ export default function CharactersPage() {
     </div>
   );
 }
+

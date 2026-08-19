@@ -1,7 +1,9 @@
 'use client';
+// frontend/src/components/ScraperConfigModal.tsx
 
 import React, { useState } from 'react';
 import { X, Trash2, Database, AlertTriangle, RefreshCw, CheckSquare, Square } from 'lucide-react';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 interface ScraperConfigModalProps {
   isOpen: boolean;
@@ -9,7 +11,13 @@ interface ScraperConfigModalProps {
   onPurgeSuccess?: () => void;
 }
 
-const PURGE_TARGETS = [
+interface PurgeTarget {
+  id: string;
+  label: string;
+  desc: string;
+}
+
+const PURGE_TARGETS: readonly PurgeTarget[] = [
   { id: 'characters', label: 'Characters', desc: 'Purges character records and portraits' },
   { id: 'perks', label: 'Perks', desc: 'Purges all teachable and general perks' },
   { id: 'items', label: 'Items', desc: 'Purges survivor items and equipment' },
@@ -21,11 +29,11 @@ const PURGE_TARGETS = [
 
 export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess }: ScraperConfigModalProps) {
   const [selectedTargets, setSelectedTargets] = useState<string[]>([]);
-  const [isPurging, setIsPurging] = useState(false);
+  const [isPurging, setIsPurging] = useState<boolean>(false);
   const [purgeError, setPurgeError] = useState<string | null>(null);
   const [purgeSuccess, setPurgeSuccess] = useState<string | null>(null);
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const apiBase = getBackendBaseUrl();
 
   if (!isOpen) return null;
 
@@ -68,7 +76,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess }: ScraperC
     setPurgeSuccess(null);
 
     try {
-      const res = await fetch(`${API_BASE}/api/v1/admin/database/purge`, {
+      const res = await fetch(`${apiBase}/api/v1/admin/database/purge`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,15 +98,21 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess }: ScraperC
       } else {
         setPurgeError(data.error || 'Failed to execute database purge.');
       }
-    } catch (err: any) {
-      setPurgeError(err?.message || 'Network error while attempting purge.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Network error while attempting purge.';
+      setPurgeError(message);
     } finally {
       setIsPurging(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="scraper-modal-title"
+    >
       <div
         className="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
         onClick={() => !isPurging && onClose()}
@@ -106,8 +120,10 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess }: ScraperC
 
       <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 text-slate-900 dark:text-slate-100 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 space-y-5">
         <button
+          type="button"
           onClick={() => !isPurging && onClose()}
-          className="absolute right-4 top-4 rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          className="absolute right-4 top-4 rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+          aria-label="Close database modal"
         >
           <X className="h-5 w-5" />
         </button>
@@ -117,9 +133,9 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess }: ScraperC
             <Database className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-base font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
+            <h2 id="scraper-modal-title" className="text-base font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
               Database Maintenance &amp; Purge
-            </h3>
+            </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               Select specific tables to wipe before running a fresh sync
             </p>
@@ -127,14 +143,20 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess }: ScraperC
         </div>
 
         {purgeError && (
-          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-600 dark:text-red-400 flex items-center gap-2">
+          <div
+            role="alert"
+            className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-600 dark:text-red-400 flex items-center gap-2"
+          >
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>{purgeError}</span>
           </div>
         )}
 
         {purgeSuccess && (
-          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-600 dark:text-emerald-400">
+          <div
+            role="status"
+            className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-600 dark:text-emerald-400"
+          >
             {purgeSuccess}
           </div>
         )}
@@ -160,10 +182,11 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess }: ScraperC
                 <div
                   key={target.id}
                   onClick={() => toggleTarget(target.id)}
-                  className={`flex items-start gap-3 p-2.5 rounded-xl border cursor-pointer transition-all ${isSelected
-                    ? 'border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-300'
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 hover:border-slate-300 dark:hover:border-slate-700'
-                    }`}
+                  className={`flex items-start gap-3 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                    isSelected
+                      ? 'border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-300'
+                      : 'border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/50 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
                 >
                   <div className="pt-0.5">
                     {isSelected ? (
@@ -196,7 +219,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess }: ScraperC
             type="button"
             onClick={handleExecutePurge}
             disabled={isPurging || selectedTargets.length === 0}
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-red-950/30 transition-all cursor-pointer disabled:opacity-40"
+            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-red-950/30 transition-all cursor-pointer disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
           >
             {isPurging ? (
               <RefreshCw className="h-3.5 w-3.5 animate-spin" />

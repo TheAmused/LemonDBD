@@ -1,3 +1,4 @@
+# backend/app/scrapers/__init__.py
 from app.scrapers.types import (
     ScraperConfig,
     CharacterData,

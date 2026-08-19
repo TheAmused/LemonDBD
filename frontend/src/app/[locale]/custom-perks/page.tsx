@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/custom-perks/page.tsx
 'use client';
 
 import React, { useEffect, useState, Suspense } from 'react';

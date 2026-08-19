@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/PageStreakBoard.tsx
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, BookOpen } from 'lucide-react';

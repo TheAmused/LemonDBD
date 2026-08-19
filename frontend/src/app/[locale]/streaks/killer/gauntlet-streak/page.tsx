@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/streaks/killer/gauntlet-streak/page.tsx
 import React from 'react';
 import { GauntletBoard } from '@/components/streaks/gauntlet/GauntletBoard';
 

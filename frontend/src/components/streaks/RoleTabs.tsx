@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/RoleTabs.tsx
 'use client';
 
 import React from 'react';

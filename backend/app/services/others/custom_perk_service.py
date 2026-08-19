@@ -1,8 +1,9 @@
+# backend/app/services/others/custom_perk_service.py
 import logging
 from typing import List, Dict, Any, Optional
 from flask import current_app
 from sqlalchemy import select, or_, func
-from app.extensions import db
+from app.core.extensions import db
 from app.models import CustomPerk
 from app.services.db_service import DatabaseService
 

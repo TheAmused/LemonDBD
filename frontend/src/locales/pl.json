@@ -4,7 +4,13 @@
     "syncWiki": "Synchronizuj z Wiki",
     "syncing": "Pobieranie..."
   },
-"generator": {
+  "landing": {
+    "welcomeBadge": "Kompan Dead by Daylight",
+    "welcomeTitle": "Witaj w LemonDBD",
+    "welcomeSubtitle": "Twoja baza wiedzy Dead by Daylight, interaktywny eksplorator map, losownik perków oraz pomocnik w próbach.",
+    "enterButton": "Wejdź do Skarbca Perków"
+  },
+  "generator": {
     "title": "Losownik Perkó́w",
     "subtitle": "Losuj zestawy perków na podstawie stron ekwipunku w grze [Strona/Slot].",
     "modeInstant": "Szybki Los",
@@ -28,7 +34,7 @@
     "drawnBadge": "Wylosowane: {drawn} / {total}",
     "resetDrawn": "Resetuj Użyte Perki"
   },
-"stats": {
+  "stats": {
     "vaultStats": "Statystyki Bazy",
     "totalPerks": "Wszystkie Perki",
     "characters": "Postacie",
@@ -52,7 +58,8 @@
     "asc": "Rosnąco (A-Z)",
     "desc": "Malejąco (Z-A)",
     "clear": "Resetuj Filtry",
-    "generatorTab": "Losownik Perkó́w"
+    "generatorTab": "Losownik Perkó́w",
+    "perks": "Perki"
   },
   "pagination": {
     "showing": "Pokazuje",
@@ -220,3 +227,4 @@
     "quests": "📜 Zadania"
   }
 }
+

@@ -1,3 +1,4 @@
+// frontend/src/services/questApi.ts
 import { Quest } from '../types/quest';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';

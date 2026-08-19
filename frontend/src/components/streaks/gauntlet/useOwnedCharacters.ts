@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/gauntlet/useOwnedCharacters.ts
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';

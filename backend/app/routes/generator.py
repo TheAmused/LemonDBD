@@ -1,3 +1,4 @@
+# backend/app/routes/generator.py
 from flask import Blueprint, current_app, jsonify, request
 from app.services.generator_service import GeneratorService
 

@@ -1,3 +1,4 @@
+# backend/app/routes/others/__init__.py
 from .draft import draft_bp
 from .quests import quests_bp
 from .killer_calc import killer_calc_bp

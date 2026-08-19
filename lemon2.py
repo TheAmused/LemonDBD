@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# lemon2.py
 import re
 import sys
 from pathlib import Path
@@ -7,26 +6,74 @@ from pathlib import Path
 VALID_EXTENSIONS = {
     "py", "js", "ts", "jsx", "tsx", "json", "yaml", "yml",
     "html", "css", "sql", "md", "env", "sh", "toml", "txt",
-    "c", "cpp", "h", "go", "rs", "java", "kt"
+    "c", "cpp", "h", "go", "rs", "java", "kt", "scss", "less"
 }
+
+COMMENT_STYLES = {
+    ".py": "# {}",
+    ".sh": "# {}",
+    ".bash": "# {}",
+    ".yaml": "# {}",
+    ".yml": "# {}",
+    ".toml": "# {}",
+    ".env": "# {}",
+    ".js": "// {}",
+    ".jsx": "// {}",
+    ".ts": "// {}",
+    ".tsx": "// {}",
+    ".c": "// {}",
+    ".cpp": "// {}",
+    ".h": "// {}",
+    ".go": "// {}",
+    ".rs": "// {}",
+    ".java": "// {}",
+    ".kt": "// {}",
+    ".css": "/* {} */",
+    ".scss": "/* {} */",
+    ".less": "/* {} */",
+    ".html": "<!-- {} -->",
+    ".sql": "-- {}",
+}
+
 
 def clean_text(text: str) -> str:
     """Replaces non-breaking spaces (\xa0) and normalizes whitespace."""
     return text.replace('\xa0', ' ').replace('\r\n', '\n')
 
+
 def resolve_project_path(raw_path_str: str) -> Path:
-    """Prepends 'backend/' if workspace uses 'backend/' structure but header omitted it."""
-    raw_path = Path(raw_path_str.strip())
-    
-    # If project root has a 'backend' directory and path isn't already prefixed with backend
-    if Path("backend").is_dir() and not raw_path_str.startswith("backend"):
-        return Path("backend") / raw_path
-    
-    return raw_path
+    """Smartly resolves relative paths based on project structure (backend/frontend)."""
+    raw_path_str = raw_path_str.strip().replace("\\", "/")
+
+    # 1. Do not touch if already explicitly prefixed with backend/ or frontend/
+    if raw_path_str.startswith("backend/") or raw_path_str.startswith("frontend/"):
+        return Path(raw_path_str)
+
+    # 2. Frontend specific directories/files
+    if any(raw_path_str.startswith(p) for p in ["src/", "components/", "pages/", "public/", "locales/"]):
+        if Path("frontend").is_dir():
+            return Path("frontend") / raw_path_str
+
+    # 3. Disambiguate 'app/' path (Next.js vs Python backend app)
+    if raw_path_str.startswith("app/"):
+        ext = Path(raw_path_str).suffix.lower()
+        if ext in [".tsx", ".ts", ".jsx", ".js", ".css", ".scss"] or "[locale]" in raw_path_str or "[" in raw_path_str:
+            if Path("frontend").is_dir():
+                return Path("frontend") / raw_path_str
+        elif ext in [".py", ".sql"] or any(k in raw_path_str for k in ["services", "routes", "models", "core", "db"]):
+            if Path("backend").is_dir():
+                return Path("backend") / raw_path_str
+
+    # 4. Fallback for python backend root paths
+    if Path("backend").is_dir() and Path(raw_path_str).suffix.lower() == ".py":
+        return Path("backend") / raw_path_str
+
+    return Path(raw_path_str)
+
 
 def extract_filepath_from_header(header_text: str) -> Path | None:
     header_text = clean_text(header_text)
-    
+
     # 1. Look inside parentheses: (path/to/file.ext)
     match = re.search(r'\(([^)\s]+\.[a-zA-Z0-9]+)\)', header_text)
     if match:
@@ -37,15 +84,51 @@ def extract_filepath_from_header(header_text: str) -> Path | None:
     if match:
         return resolve_project_path(match.group(1))
 
-    # 3. Look for standalone paths with valid extensions
-    tokens = re.findall(r'[a-zA-Z0-9_\-/\.]+\.[a-zA-Z0-9]+', header_text)
+    # 3. Look for standalone paths with valid extensions (supports Next.js dynamic brackets [locale])
+    tokens = re.findall(r'[a-zA-Z0-9_\-/\\\[\]@\.]+\.[a-zA-Z0-9]+', header_text)
     for token in tokens:
         ext = token.split(".")[-1].lower()
         if ext in VALID_EXTENSIONS:
-            clean_token = token.strip("`()'\"")
+            clean_token = token.strip("`()'\"#")
             return resolve_project_path(clean_token)
 
     return None
+
+
+def add_dynamic_path_comment(file_path: Path, code_lines: list[str]) -> str:
+    """Prepends dynamic path comment, keeping 'use client' / 'use server' / shebangs on top."""
+    rel_path_str = str(file_path).replace("\\", "/")
+    ext = file_path.suffix.lower()
+
+    # JSON does not support comments natively; return code as-is
+    if ext == ".json" or ext not in COMMENT_STYLES:
+        return "\n".join(code_lines) + "\n"
+
+    comment_template = COMMENT_STYLES[ext]
+    path_comment = comment_template.format(rel_path_str)
+
+    # Prevent duplicate path headers if already present in first few lines
+    header_check_block = "\n".join(code_lines[:5])
+    if rel_path_str in header_check_block:
+        return "\n".join(code_lines) + "\n"
+
+    # Determine insertion point (preserve shebangs, encoding, or 'use client' / 'use server')
+    insert_idx = 0
+    while insert_idx < len(code_lines):
+        line_clean = code_lines[insert_idx].strip().strip(";'\"")
+        if (
+            code_lines[insert_idx].startswith("#!") or
+            "coding:" in code_lines[insert_idx] or
+            line_clean in ["use client", "use server"]
+        ):
+            insert_idx += 1
+        else:
+            break
+
+    lines_copy = list(code_lines)
+    lines_copy.insert(insert_idx, path_comment)
+    return "\n".join(lines_copy) + "\n"
+
 
 def parse_and_create_ascii_trees(content: str):
     tree_lines = content.splitlines()
@@ -69,7 +152,7 @@ def parse_and_create_ascii_trees(content: str):
                 if not prefix_match:
                     i += 1
                     continue
-                
+
                 indent = prefix_match.start()
                 item_name = clean_line[prefix_match.end():].strip()
 
@@ -102,17 +185,18 @@ def parse_and_create_ascii_trees(content: str):
 
     return created_items
 
+
 def process_ai_output(content: str):
     content = clean_text(content)
-    
-    print("\n" + "="*70)
+
+    print("\n" + "=" * 70)
     print("STEP 1: Parsing directory tree diagrams...")
-    print("="*70)
+    print("=" * 70)
     parse_and_create_ascii_trees(content)
 
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("STEP 2: Extracting and writing code blocks...")
-    print("="*70)
+    print("=" * 70)
     lines = content.splitlines()
     written_count = 0
 
@@ -137,11 +221,11 @@ def process_ai_output(content: str):
                 in_code_block = False
                 if current_filepath:
                     current_filepath.parent.mkdir(parents=True, exist_ok=True)
-                    code_to_write = "\n".join(code_lines) + "\n"
-                    
+                    code_to_write = add_dynamic_path_comment(current_filepath, code_lines)
+
                     with open(current_filepath, "w", encoding="utf-8") as f:
                         f.write(code_to_write)
-                        
+
                     print(f"[LINE {line_num:03d}] ✅ FILE WRITTEN   -> {current_filepath.resolve()} ({len(code_lines)} lines)\n")
                     written_count += 1
                     current_filepath = None
@@ -149,9 +233,10 @@ def process_ai_output(content: str):
         elif in_code_block:
             code_lines.append(line)
 
-    print("="*70)
+    print("=" * 70)
     print(f"SUMMARY: Successfully wrote {written_count} file(s).")
-    print("="*70 + "\n")
+    print("=" * 70 + "\n")
+
 
 def main():
     input_file = Path("response.md")
@@ -166,6 +251,7 @@ def main():
     print(f"Reading '{input_file.resolve()}'...\n")
     content = input_file.read_text(encoding="utf-8")
     process_ai_output(content)
+
 
 if __name__ == "__main__":
     main()

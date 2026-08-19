@@ -3,7 +3,7 @@ import uuid
 import logging
 from flask import current_app
 from sqlalchemy import select
-from app.extensions import db
+from app.core.extensions import db
 from app.models import DraftSession
 from app.services.db_service import DatabaseService
 

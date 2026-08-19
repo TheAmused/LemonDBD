@@ -3,7 +3,7 @@ import logging
 from typing import Optional, List, Dict, Any
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
-from app.extensions import db
+from app.core.extensions import db
 from app.models import PageStreakRun, PageStreakPageLog, GeneratorSetting, utcnow
 from app.services.perk_service import PerkService
 from app.services.ownership_service import OwnershipService

@@ -1,7 +1,7 @@
 import logging
 from werkzeug.security import generate_password_hash
 from sqlalchemy import select
-from app.extensions import db
+from app.core.extensions import db
 from app.models import User
 
 logger = logging.getLogger(__name__)

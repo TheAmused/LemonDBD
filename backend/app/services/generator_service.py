@@ -1,7 +1,7 @@
 import logging
 from flask import current_app
 from sqlalchemy import select, delete
-from app.extensions import db
+from app.core.extensions import db
 from app.models import GeneratorSetting, GeneratorDrawnPerk
 from app.services.db_service import DatabaseService
 

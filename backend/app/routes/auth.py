@@ -3,7 +3,7 @@ import os
 from flask import Blueprint, request, jsonify, g, make_response, send_from_directory, current_app
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
-from app.utils.auth_helper import login_required, get_current_user
+from app.core.security import login_required, get_current_user
 
 logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/api/v1/auth")

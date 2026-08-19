@@ -11,7 +11,7 @@ from sqlalchemy import func, select, or_, and_, case
 from sqlalchemy.orm import joinedload
 from pydantic import BaseModel, Field
 
-from app.extensions import db
+from app.core.extensions import db
 from app.models import (
     Character,
     Perk,

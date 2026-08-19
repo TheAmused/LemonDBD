@@ -8,7 +8,7 @@ class TestCharacterDetailRoute(unittest.TestCase):
         self.app.config["TESTING"] = True
         self.client = self.app.test_client()
         with self.app.app_context():
-            from app.extensions import db
+            from app.core.extensions import db
             from app.models import Character, Perk
             from sqlalchemy import select
             db.create_all()

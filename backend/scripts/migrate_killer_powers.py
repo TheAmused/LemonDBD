@@ -16,7 +16,7 @@ elif (backend_path / "backend" / "app").exists():
 
 from sqlalchemy import inspect, text
 from app import create_app
-from app.extensions import db
+from app.core.extensions import db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("migration")

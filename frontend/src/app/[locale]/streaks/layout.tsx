@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { Lock } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { QuestsModal } from '@/components/QuestsModal';
@@ -16,6 +16,7 @@ import { useAuth } from '@/context/AuthContext';
 export default function StreaksLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
+  const pathname = usePathname();
   const { isCollapsed } = useSidebarState();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
@@ -68,6 +69,15 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
     }
   };
 
+  // The picker (role, then which challenge) lives at /streaks and /streaks/[role].
+  // Anything deeper is an actual challenge in progress, where this heading and
+  // the role tabs no longer apply.
+  const segmentsAfterStreaks = (pathname || '')
+    .split('/')
+    .filter(Boolean)
+    .slice(2); // drop the locale and "streaks" segments
+  const isPickerPage = segmentsAfterStreaks.length <= 1;
+
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
@@ -95,16 +105,20 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <header className="mb-6">
-          <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">🔥 Challenges</h1>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Long-run challenges that carry across matches. Pick a role to see what is available.
-          </p>
-        </header>
+        {isPickerPage && (
+          <>
+            <header className="mb-6">
+              <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">🔥 Challenges</h1>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                Long-run challenges that carry across matches. Pick a role to see what is available.
+              </p>
+            </header>
 
-        <div className="mb-6">
-          <RoleTabs locale={locale} />
-        </div>
+            <div className="mb-6">
+              <RoleTabs locale={locale} />
+            </div>
+          </>
+        )}
 
         {authLoading ? (
           <p className="py-10 text-center text-xs text-slate-500">Loading…</p>

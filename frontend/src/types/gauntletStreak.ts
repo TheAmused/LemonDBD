@@ -1,3 +1,4 @@
+// frontend/src/types/gauntletStreak.ts
 export type Role = 'survivor' | 'killer';
 
 export interface Perk {

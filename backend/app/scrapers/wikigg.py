@@ -1,14 +1,19 @@
+# backend/app/scrapers/wikigg.py
 from __future__ import annotations
 
+import asyncio
+import html
 import json
 import logging
 import re
 import time
+import unicodedata
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from curl_cffi import requests
+from curl_cffi.requests import AsyncSession
 
 from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, PerkData
 from app.scrapers.utils import (
@@ -46,6 +51,140 @@ GENERIC_PERK_CANONICAL_MAP = {
     "renewal": ("Second Wind", "Renewal"),
 }
 
+MONTHS_REGEX_STR = (
+    r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+)
+
+DATE_CLEAN_REGEX = re.compile(
+    rf"\b([0-9]{{1,2}})(?:st|nd|rd|th)?\s+(?:of\s+)?({MONTHS_REGEX_STR})\s+(?:of\s+)?(20[1-3][0-9])\b",
+    re.IGNORECASE,
+)
+
+DATE_MDY_REGEX = re.compile(
+    rf"\b({MONTHS_REGEX_STR})\s+([0-9]{{1,2}})(?:st|nd|rd|th)?,?\s+(?:of\s+)?(20[1-3][0-9])\b",
+    re.IGNORECASE,
+)
+
+YEAR_ONLY_REGEX = re.compile(r"\b(201[6-9]|202[0-9]|203[0-9])\b")
+
+RARITY_PATTERN = re.compile(
+    r"\b(common|uncommon|rare|very[_\s-]?rare|ultra[_\s-]?rare|event|special|artifact|limited)\b",
+    re.IGNORECASE,
+)
+
+
+def parse_date_and_year(text: str) -> Tuple[Optional[str], Optional[int]]:
+    if not text:
+        return None, None
+
+    clean = html.unescape(text)
+    m = DATE_CLEAN_REGEX.search(clean)
+    if m:
+        day = int(m.group(1))
+        month = m.group(2).capitalize()
+        year = int(m.group(3))
+        return f"{day} {month} {year}", year
+
+    m = DATE_MDY_REGEX.search(clean)
+    if m:
+        month = m.group(1).capitalize()
+        day = int(m.group(2))
+        year = int(m.group(3))
+        return f"{day} {month} {year}", year
+
+    ym = YEAR_ONLY_REGEX.search(clean)
+    if ym:
+        year = int(ym.group(1))
+        return str(year), year
+
+    return None, None
+
+
+def clean_chapter_title(raw_chapter: str) -> Tuple[Optional[str], str]:
+    if not raw_chapter:
+        return None, ""
+
+    cleaned = (
+        raw_chapter.replace("[edit]", "")
+        .replace("â„¢", "™")
+        .replace("Â®", "®")
+        .strip()
+    )
+
+    m = re.match(
+        r"^((?:CHAPTER|PARAGRAPH)\s+(?:[0-9]+(?:\.[0-9]+)?|[IVXLCDM]+)):\s*(.+)$",
+        cleaned,
+        re.IGNORECASE,
+    )
+    if m:
+        return m.group(1).strip(), m.group(2).strip()
+
+    return None, cleaned
+
+
+def extract_rarity_from_elements(
+    cells: List[Tag],
+    img_tag: Optional[Tag] = None,
+    section_context: str = "",
+) -> str:
+    """Extracts the item/add-on rarity from live wiki elements, image sources, or section context."""
+    # 1. Check direct table cells text if a designated column is present
+    if len(cells) >= 4:
+        c_text = cells[2].get_text(strip=True)
+        m = RARITY_PATTERN.search(c_text)
+        if m:
+            return normalize_rarity_name(m.group(1))
+
+    # 2. Check HTML attributes on cell elements (title, class, data-rarity, alt)
+    for cell in cells:
+        for el in [cell] + cell.find_all(["a", "div", "span", "img", "td"]):
+            for attr in ["title", "data-rarity", "class", "alt"]:
+                val = el.get(attr, "")
+                if isinstance(val, list):
+                    val = " ".join(val)
+                if val:
+                    m = RARITY_PATTERN.search(str(val))
+                    if m:
+                        return normalize_rarity_name(m.group(1))
+
+    # 3. Check Image URL / filename (e.g. IconAddon_..._veryRare.png or IconItems_..._ultraRare.png)
+    if img_tag:
+        img_src = (
+            img_tag.get("data-src")
+            or img_tag.get("src")
+            or img_tag.get("data-srcset")
+            or ""
+        )
+        if img_src:
+            m = RARITY_PATTERN.search(img_src)
+            if m:
+                return normalize_rarity_name(m.group(1))
+
+    # 4. Check section context
+    if section_context:
+        m = RARITY_PATTERN.search(section_context)
+        if m:
+            return normalize_rarity_name(m.group(1))
+
+    return "Common"
+
+
+def normalize_rarity_name(raw_rarity: str) -> str:
+    r = raw_rarity.lower().replace("_", " ").replace("-", " ").strip()
+    if "ultra" in r:
+        return "Ultra Rare"
+    if "very" in r:
+        return "Very Rare"
+    if "uncommon" in r:
+        return "Uncommon"
+    if "rare" in r:
+        return "Rare"
+    if "event" in r or "special" in r or "limited" in r:
+        return "Event"
+    if "artifact" in r:
+        return "Ultra Rare"
+    return "Common"
+
 
 class WikiGGScraperDriver:
     BASE_DOMAIN = "https://deadbydaylight.wiki.gg"
@@ -66,6 +205,7 @@ class WikiGGScraperDriver:
             "page": page_title,
             "prop": "text",
             "format": "json",
+            "redirects": "1",
         }
         for attempt in range(4):
             try:
@@ -95,8 +235,8 @@ class WikiGGScraperDriver:
         return res.text
 
     def scrape_roster_from_page(self, page_title: str, role: str) -> List[CharacterData]:
-        html = self.fetch_page_html(page_title)
-        soup = BeautifulSoup(html, "html.parser")
+        html_doc = self.fetch_page_html(page_title)
+        soup = BeautifulSoup(html_doc, "html.parser")
         content = soup.find("div", class_="mw-parser-output") or soup
 
         characters: List[CharacterData] = []
@@ -111,7 +251,9 @@ class WikiGGScraperDriver:
                     power_tag = text_links[0]
                     killer_tag = text_links[1]
                     k_slug = extract_slug_from_href(killer_tag.get("href", "")).lower()
-                    p_name = re.sub(r"\[\s*edit\s*\]", "", power_tag.get_text(strip=True), flags=re.IGNORECASE).strip()
+                    p_name = re.sub(
+                        r"\[\s*edit\s*\]", "", power_tag.get_text(strip=True), flags=re.IGNORECASE
+                    ).strip()
                     if k_slug and p_name:
                         killer_meta_by_slug[k_slug] = {
                             "power_name": p_name,
@@ -202,146 +344,141 @@ class WikiGGScraperDriver:
         return characters
 
     def scrape_dlcs_from_wiki(self) -> List[Dict[str, Any]]:
-        """Scrapes the live Downloadable_Content catalog directly from wiki.gg."""
-        try:
-            html = self.fetch_page_html("Downloadable_Content")
-            soup = BeautifulSoup(html, "html.parser")
-            dlcs = []
-            is_under_licensed_section = False
+        """Scrapes the live Downloadable_Content and Chapters catalogs directly from wiki.gg."""
+        dlcs: List[Dict[str, Any]] = []
+        seen_dlc_names = set()
 
-            for node in soup.find_all(["h2", "h3", "h4"]):
-                if node.name == "h2":
-                    h2_txt = node.get_text(strip=True).lower()
-                    if "licensed dlcs" in h2_txt:
-                        is_under_licensed_section = True
-                    elif "available dlcs" in h2_txt or "unavailable" in h2_txt:
-                        is_under_licensed_section = False
+        for page in ["Downloadable_Content", "Chapters"]:
+            try:
+                html_doc = self.fetch_page_html(page)
+                soup = BeautifulSoup(html_doc, "html.parser")
+                content = soup.find("div", class_="mw-parser-output") or soup
 
-                if node.name in ["h3", "h4"]:
-                    raw_title = (
-                        node.get_text(strip=True)
-                        .replace("[edit]", "")
-                        .replace("â„¢", "™")
-                        .replace("Â®", "®")
-                        .strip()
-                    )
-                    if not raw_title or raw_title.lower() in [
-                        "overview",
-                        "purchasing a dlc",
-                        "licensed dlcs",
-                        "available dlcs",
-                        "chapters",
-                        "clothing packs",
-                        "character packs",
-                        "original soundtrack",
-                    ]:
-                        continue
+                # 1. Parse tables on DLC/Chapters pages
+                for table in content.find_all("table", class_=re.compile(r"wikitable|article-table")):
+                    rows = table.find_all("tr")
+                    for tr in rows:
+                        tds = tr.find_all("td")
+                        if not tds:
+                            continue
 
-                    date_str = ""
-                    year_num = None
-                    chars_added = []
-                    is_licensed = (
-                        is_under_licensed_section
-                        or "™" in raw_title
-                        or "®" in raw_title
-                        or any(k in raw_title.lower() for k in [
-                            "leatherface", "saw", "halloween", "ash", "ghost face", "stranger things",
-                            "silent hill", "resident evil", "hellraiser", "sadako", "alien", "chucky",
-                            "alan wake", "dungeons & dragons", "tomb raider", "castlevania", "nicolas cage", "left behind"
-                        ])
-                    )
+                        row_text = tr.get_text(separator=" ", strip=True)
+                        date_str, year_num = parse_date_and_year(row_text)
 
-                    curr = node.find_next_sibling()
-                    while curr and curr.name not in ["h2", "h3", "h4"]:
-                        txt = curr.get_text(separator=" ", strip=True)
-                        if "was released" in txt or "released on" in txt or "released for" in txt:
-                            dm = re.search(r"\bon\s+([0-9]{1,2}\s+[A-Za-z]+\s+[0-9]{4})", txt, re.I)
-                            if dm:
-                                date_str = dm.group(1).strip()
-                            ym = re.search(r"\b(20[1-3][0-9])\b", txt)
-                            if ym:
-                                year_num = int(ym.group(1))
-                                if not date_str:
-                                    date_str = ym.group(1)
+                        # Find character links and DLC links in the row
+                        links = tr.find_all("a", href=re.compile(r"^/wiki/"))
+                        row_chars = []
+                        dlc_name = ""
+                        for a in links:
+                            txt = a.get_text(strip=True)
+                            if not txt or txt.startswith(("File:", "Special:", "Category:")):
+                                continue
+                            if any(k in txt.lower() for k in ["chapter", "paragraph", "pack"]):
+                                if not dlc_name:
+                                    dlc_name = txt
+                            elif txt not in ["Killer", "Survivor", "Map", "DLC", "Base Game", "PTB"]:
+                                row_chars.append(txt)
+
+                        if dlc_name and dlc_name.lower() not in seen_dlc_names:
+                            seen_dlc_names.add(dlc_name.lower())
+                            is_licensed = (
+                                "™" in dlc_name
+                                or "®" in dlc_name
+                                or "licensed" in row_text.lower()
+                                or ("auric cells" in row_text.lower() and "iridescent" not in row_text.lower())
+                            )
+                            dlcs.append({
+                                "dlc_name": dlc_name,
+                                "release_date": date_str or "",
+                                "release_year": year_num,
+                                "is_licensed": is_licensed,
+                                "characters": row_chars,
+                            })
+
+                # 2. Parse section headers (h2, h3, h4)
+                is_under_licensed = False
+                for node in content.find_all(["h2", "h3", "h4"]):
+                    if node.name == "h2":
+                        h2_txt = node.get_text(strip=True).lower()
+                        if "licensed" in h2_txt:
+                            is_under_licensed = True
+                        elif "original" in h2_txt or "available" in h2_txt or "retired" in h2_txt:
+                            is_under_licensed = False
+
+                    if node.name in ["h3", "h4"]:
+                        raw_title = (
+                            node.get_text(strip=True)
+                            .replace("[edit]", "")
+                            .replace("â„¢", "™")
+                            .replace("Â®", "®")
+                            .strip()
+                        )
+                        if not raw_title or raw_title.lower() in [
+                            "overview", "contents", "purchasing a dlc", "licensed dlcs",
+                            "available dlcs", "chapters", "clothing packs", "character packs",
+                            "original soundtrack", "retired dlcs", "chapter packs"
+                        ]:
+                            continue
+
+                        date_str = ""
+                        year_num = None
+                        chars_added = []
+                        is_licensed = is_under_licensed or "™" in raw_title or "®" in raw_title
+
+                        curr = node.find_next_sibling()
+                        while curr and curr.name not in ["h2", "h3", "h4"]:
+                            txt = curr.get_text(separator=" ", strip=True)
+                            d_parsed, y_parsed = parse_date_and_year(txt)
+                            if d_parsed and not date_str:
+                                date_str = d_parsed
+                                year_num = y_parsed
+
                             if "auric cells" in txt.lower() and "iridescent" not in txt.lower():
                                 is_licensed = True
+                            elif "iridescent" in txt.lower():
+                                is_licensed = False
 
-                        if "adds " in txt or "features " in txt:
                             for a in curr.find_all("a"):
                                 c_name = a.get_text(strip=True)
                                 if (
                                     c_name
-                                    and c_name not in ["Main Article", "DLC", "Chapter", "Paragraph", "Killer", "Survivor"]
-                                    and not c_name.startswith(("File:", "Special:"))
+                                    and c_name not in ["Main Article", "DLC", "Chapter", "Paragraph", "Killer", "Survivor", "Store Page", "Retired"]
+                                    and not c_name.startswith(("File:", "Special:", "Category:"))
+                                    and len(c_name) < 40
                                 ):
                                     chars_added.append(c_name)
 
-                        curr = curr.find_next_sibling()
+                            curr = curr.find_next_sibling()
 
-                    if date_str or chars_added:
-                        dlcs.append({
-                            "dlc_name": raw_title,
-                            "release_date": date_str,
-                            "release_year": year_num,
-                            "is_licensed": is_licensed,
-                            "characters": chars_added,
-                        })
-            return dlcs
-        except Exception as e:
-            logger.warning(f"Failed to scrape Downloadable_Content page: {e}")
-            return []
+                        if raw_title.lower() not in seen_dlc_names and (date_str or chars_added):
+                            seen_dlc_names.add(raw_title.lower())
+                            dlcs.append({
+                                "dlc_name": raw_title,
+                                "release_date": date_str,
+                                "release_year": year_num,
+                                "is_licensed": is_licensed,
+                                "characters": chars_added,
+                            })
+            except Exception as e:
+                logger.warning(f"Failed scraping DLC catalog from '{page}': {e}")
+
+        return dlcs
 
     def enrich_characters_from_pages(self, characters: List[CharacterData]) -> None:
-        import asyncio
-        import unicodedata
-        import urllib.parse
-        from curl_cffi.requests import AsyncSession
-
         def norm_key(text: str) -> str:
             if not text:
                 return ""
             n = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8").lower()
             return re.sub(r"[^a-z0-9]", "", n)
 
-        # 1. Scrape live DLC catalog directly from wiki.gg
+        # 1. Scrape live DLC catalog from wiki.gg
         dlcs = self.scrape_dlcs_from_wiki()
         logger.info(f"Loaded {len(dlcs)} live DLC entries from wiki.gg")
 
-        # Map DLC data to each character
-        for char in characters:
-            c_norm = norm_key(char.name)
-            matched_dlc = None
-            for d in dlcs:
-                for added_char in d.get("characters", []):
-                    ac_norm = norm_key(added_char)
-                    if ac_norm == c_norm or (len(c_norm) >= 4 and (c_norm in ac_norm or ac_norm in c_norm)):
-                        matched_dlc = d
-                        break
-                if matched_dlc:
-                    break
-
-            if matched_dlc:
-                char.chapter_name = matched_dlc["dlc_name"]
-                char.release_date = matched_dlc["release_date"]
-                char.release_year = matched_dlc["release_year"]
-                char.is_licensed = matched_dlc["is_licensed"]
-                char.dlc_type = "Chapter DLC"
-                counterparts = [
-                    c for c in matched_dlc.get("characters", [])
-                    if norm_key(c) != c_norm
-                ]
-                char.dlc_counterparts = counterparts if counterparts else None
-            elif char.release_number and char.release_number <= 4:
-                char.chapter_name = "Base Game"
-                char.release_date = "14 June 2016"
-                char.release_year = 2016
-                char.is_licensed = False
-                char.dlc_type = "base_game"
-
-        # 2. Enrich combat stats, power descriptions, and real names per character page
+        # 2. Enrich combat stats, chapter info, and release dates directly per character page
         async def _fetch_all():
             async with AsyncSession(impersonate="chrome120", verify=False) as session:
-                semaphore = asyncio.Semaphore(4)
+                semaphore = asyncio.Semaphore(5)
 
                 async def _fetch_one(char: CharacterData):
                     slug = char.wiki_slug or char.name.replace(" ", "_")
@@ -362,11 +499,13 @@ class WikiGGScraperDriver:
                                     await asyncio.sleep(1.0)
                                     continue
 
-                                html = data.get("parse", {}).get("text", {}).get("*", "")
-                                if not html:
+                                html_raw = data.get("parse", {}).get("text", {}).get("*", "")
+                                if not html_raw:
                                     return
 
-                                soup = BeautifulSoup(html, "html.parser")
+                                soup = BeautifulSoup(html_raw, "html.parser")
+                                content = soup.find("div", class_="mw-parser-output") or soup
+
                                 real_name = ""
                                 movement_speed = ""
                                 terror_radius = ""
@@ -376,8 +515,12 @@ class WikiGGScraperDriver:
                                 power_name = ""
                                 power_desc = ""
                                 power_icon_url = ""
+                                infobox_dlc_text = ""
+                                infobox_dlc_link = ""
+                                infobox_release_date = ""
 
-                                for tr in soup.find_all("tr"):
+                                # A. Parse Infobox Rows
+                                for tr in content.find_all("tr"):
                                     th = tr.find(["th", "td"], class_=lambda c: c and "title" in str(c).lower())
                                     td = tr.find(["td"], class_=lambda c: c and "value" in str(c).lower())
                                     if not (th and td):
@@ -415,10 +558,132 @@ class WikiGGScraperDriver:
                                             cost_text = v_txt
                                         elif "power" in t_txt and "attack" not in t_txt and "trivia" not in t_txt:
                                             power_name = v_txt
+                                        elif t_txt in ["dlc", "chapter"]:
+                                            infobox_dlc_text = v_txt
+                                            a_link = td.find("a")
+                                            if a_link:
+                                                infobox_dlc_link = extract_slug_from_href(a_link.get("href", ""))
+                                        elif t_txt in ["release date", "released", "release"]:
+                                            infobox_release_date = v_txt
 
-                                # Power and image extraction for Killers
+                                # B. Parse Lead Overview Paragraphs for Introduction & Release Date
+                                intro_paragraphs = []
+                                for p in content.find_all("p"):
+                                    p_txt = p.get_text(separator=" ", strip=True)
+                                    if len(p_txt) > 25 and ("introduced" in p_txt.lower() or "released" in p_txt.lower() or "featured in" in p_txt.lower()):
+                                        intro_paragraphs.append(p_txt)
+
+                                intro_full_text = " ".join(intro_paragraphs)
+
+                                parsed_chapter_name = ""
+                                parsed_chapter_number = ""
+                                parsed_dlc_type = ""
+                                parsed_release_date = ""
+                                parsed_release_year = None
+
+                                # Pattern 1: Standard wiki introductory sentence
+                                intro_match = re.search(
+                                    r"introduced as (?:the|a)\s+(?:Killer|Survivor)\s+of\s+(?:the\s+)?([^,]+?),\s+a\s+([^,]+?)\s+released\s+(?:on|in)\s+([0-9]{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+of)?\s+[0-9]{4}|[A-Za-z]+\s+[0-9]{1,2}(?:st|nd|rd|th)?,?\s+[0-9]{4}|[A-Za-z]+\s+[0-9]{4}|[0-9]{4})",
+                                    intro_full_text,
+                                    re.IGNORECASE,
+                                )
+                                if intro_match:
+                                    raw_chap = intro_match.group(1).strip()
+                                    parsed_dlc_type = intro_match.group(2).strip()
+                                    date_raw = intro_match.group(3).strip()
+                                    parsed_release_date, parsed_release_year = parse_date_and_year(date_raw)
+                                    c_num, c_title = clean_chapter_title(raw_chap)
+                                    parsed_chapter_number = c_num or ""
+                                    parsed_chapter_name = c_title or raw_chap
+
+                                # Pattern 2: Base Game intro
+                                if not parsed_release_date:
+                                    if "base game" in intro_full_text.lower() or (char.release_number and char.release_number <= 4 and "chapter" not in intro_full_text.lower()):
+                                        parsed_chapter_name = "Base Game"
+                                        parsed_dlc_type = "base_game"
+                                        d_p, y_p = parse_date_and_year(intro_full_text)
+                                        parsed_release_date = d_p or "14 June 2016"
+                                        parsed_release_year = y_p or 2016
+
+                                # Pattern 3: General release date extractor from intro paragraphs
+                                if not parsed_release_date:
+                                    d_p, y_p = parse_date_and_year(intro_full_text)
+                                    if d_p:
+                                        parsed_release_date = d_p
+                                        parsed_release_year = y_p
+
+                                # Pattern 4: Fallback to infobox DLC & release date
+                                if not parsed_release_date and infobox_release_date:
+                                    d_p, y_p = parse_date_and_year(infobox_release_date)
+                                    if d_p:
+                                        parsed_release_date = d_p
+                                        parsed_release_year = y_p
+
+                                if not parsed_chapter_name and infobox_dlc_text:
+                                    c_num, c_title = clean_chapter_title(infobox_dlc_text)
+                                    parsed_chapter_number = c_num or ""
+                                    parsed_chapter_name = c_title or infobox_dlc_text
+
+                                # Pattern 5: Cross-reference with live DLC catalog if still missing
+                                if not parsed_release_date or not parsed_chapter_name:
+                                    c_norm = norm_key(char.name)
+                                    for d in dlcs:
+                                        for ac in d.get("characters", []):
+                                            ac_norm = norm_key(ac)
+                                            if ac_norm == c_norm or (len(c_norm) >= 4 and (c_norm in ac_norm or ac_norm in c_norm)):
+                                                if not parsed_chapter_name:
+                                                    c_num, c_title = clean_chapter_title(d["dlc_name"])
+                                                    parsed_chapter_number = c_num or ""
+                                                    parsed_chapter_name = c_title or d["dlc_name"]
+                                                if not parsed_release_date and d.get("release_date"):
+                                                    parsed_release_date = d["release_date"]
+                                                    parsed_release_year = d.get("release_year")
+                                                if not parsed_dlc_type:
+                                                    parsed_dlc_type = "Chapter DLC"
+                                                break
+                                        if parsed_release_date and parsed_chapter_name:
+                                            break
+
+                                # Pattern 6: Fetch Chapter DLC page directly if date is still missing
+                                if (not parsed_release_date or not parsed_release_year) and (infobox_dlc_link or parsed_chapter_name):
+                                    chap_slug = infobox_dlc_link or parsed_chapter_name.replace(" ", "_")
+                                    try:
+                                        chap_params = {
+                                            "action": "parse",
+                                            "page": chap_slug,
+                                            "prop": "text",
+                                            "format": "json",
+                                            "redirects": "1",
+                                        }
+                                        cr = await session.get(self.API_URL, params=chap_params, timeout=12, verify=False)
+                                        cdata = cr.json()
+                                        chtml = cdata.get("parse", {}).get("text", {}).get("*", "")
+                                        if chtml:
+                                            csoup = BeautifulSoup(chtml, "html.parser")
+                                            for elem in csoup.find_all(["p", "tr"]):
+                                                ctxt = elem.get_text(separator=" ", strip=True)
+                                                cd_p, cy_p = parse_date_and_year(ctxt)
+                                                if cd_p:
+                                                    parsed_release_date = cd_p
+                                                    parsed_release_year = cy_p
+                                                    break
+                                    except Exception:
+                                        pass
+
+                                # C. Licensing Assessment
+                                is_licensed = False
+                                if cost_text:
+                                    if "auric cells" in cost_text.lower() and "iridescent" not in cost_text.lower():
+                                        is_licensed = True
+                                    elif "iridescent" in cost_text.lower():
+                                        is_licensed = False
+
+                                if not is_licensed and ("™" in char.name or "®" in char.name or "™" in parsed_chapter_name or "®" in parsed_chapter_name):
+                                    is_licensed = True
+
+                                # D. Power & Image Extraction for Killers
                                 if char.category == "Killer":
-                                    for img in soup.find_all("img"):
+                                    for img in content.find_all("img"):
                                         alt = img.get("alt", "")
                                         src = img.get("src", "")
                                         if "iconpowers" in src.lower() or "iconpowers" in alt.lower() or "power" in alt.lower():
@@ -427,7 +692,7 @@ class WikiGGScraperDriver:
                                                 power_name = alt.replace("IconPowers ", "").replace(".png", "").strip()
                                             break
 
-                                    for h in soup.find_all(["h2", "h3", "h4"]):
+                                    for h in content.find_all(["h2", "h3", "h4"]):
                                         htxt = h.get_text(strip=True).lower()
                                         if "power:" in htxt or "power" in htxt or "special ability" in htxt:
                                             p_elems = []
@@ -442,16 +707,9 @@ class WikiGGScraperDriver:
                                                 power_desc = clean_description_text("\n\n".join(p_elems[:5]))
                                                 break
 
-                                if real_name and real_name != char.name:
-                                    char.real_name = real_name
-
-                                if cost_text:
-                                    if "auric cells" in cost_text.lower() and "iridescent" not in cost_text.lower():
-                                        char.is_licensed = True
-
-                                # Lore paragraphs
+                                # E. Lore Paragraphs
                                 lore_text = ""
-                                for h in soup.find_all(["h2", "h3"]):
+                                for h in content.find_all(["h2", "h3"]):
                                     htxt = h.get_text(strip=True).lower()
                                     if "lore" in htxt or "background" in htxt or "biography" in htxt:
                                         p_list = []
@@ -465,17 +723,24 @@ class WikiGGScraperDriver:
                                         if p_list:
                                             lore_text = "\n\n".join(p_list[:6])
                                             break
-                                if lore_text:
-                                    char.lore = lore_text
 
-                                # Combat stats for killers
+                                # Assign fields to character
+                                if real_name and real_name != char.name:
+                                    char.real_name = real_name
+
+                                char.chapter_name = parsed_chapter_name or "Base Game"
+                                char.chapter_number = parsed_chapter_number or None
+                                char.dlc_type = parsed_dlc_type or ("base_game" if char.chapter_name == "Base Game" else "Chapter DLC")
+                                char.release_date = parsed_release_date or "14 June 2016"
+                                char.release_year = parsed_release_year or 2016
+                                char.is_licensed = is_licensed
+                                char.lore = lore_text or None
+
                                 if char.category == "Killer":
                                     p_name = power_name or (char.power.name if char.power else "")
                                     p_desc = power_desc or (char.power.description if char.power else "")
                                     p_icon = power_icon_url or (char.power.icon_url if char.power else "")
-                                    p_speed = movement_speed or (
-                                        char.power.movement_speed if char.power else "4.6 m/s (115%)"
-                                    )
+                                    p_speed = movement_speed or (char.power.movement_speed if char.power else "4.6 m/s (115%)")
                                     p_tr = terror_radius or (char.power.terror_radius if char.power else "32 m")
                                     p_height = height or (char.power.height if char.power else "Tall")
 
@@ -501,6 +766,17 @@ class WikiGGScraperDriver:
             asyncio.run(_fetch_all())
         except Exception as err:
             logger.error(f"Error in enrich_characters_from_pages: {err}")
+
+        # 3. Dynamic DLC Counterparts Linking
+        chapter_groups = defaultdict(list)
+        for char in characters:
+            if char.chapter_name and char.chapter_name.lower() != "base game":
+                chapter_groups[norm_key(char.chapter_name)].append(char)
+
+        for group in chapter_groups.values():
+            if len(group) > 1:
+                for c in group:
+                    c.dlc_counterparts = json.dumps([other.name for other in group if other.name != c.name])
 
     def scrape_characters_dynamically(self) -> List[CharacterData]:
         logger.info("Fetching Survivors via MediaWiki API...")
@@ -624,11 +900,11 @@ class WikiGGScraperDriver:
                         else:
                             local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.png"
 
-                        norm_key = normalize_name_key(perk_name)
-                        alternate_name = alias_backlog.get(norm_key)
+                        norm_key_str = normalize_name_key(perk_name)
+                        alternate_name = alias_backlog.get(norm_key_str)
                         is_generic = alternate_name is not None
 
-                        perks_dict[norm_key] = PerkData(
+                        perks_dict[norm_key_str] = PerkData(
                             name=perk_name,
                             character=canonical_name,
                             character_real_name=real_name,
@@ -650,11 +926,13 @@ class WikiGGScraperDriver:
         items: List[ItemData] = []
         content_area = soup.find("div", class_="mw-parser-output") or soup
         current_category = "Survivor"
+        current_section = ""
         seen_items = set()
 
         for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
             if element.name in ["h1", "h2", "h3", "h4"]:
                 htext = element.get_text().lower()
+                current_section = htext
                 if "killer" in htext:
                     current_category = "Killer"
                 elif "survivor" in htext:
@@ -685,82 +963,13 @@ class WikiGGScraperDriver:
                             continue
                         seen_items.add(norm_item)
 
-                        rarity = ""
                         description = ""
                         if len(cells) >= 4:
-                            rarity = cells[2].get_text().strip()
                             description = cells[3].get_text(separator="\n", strip=True)
                         elif len(cells) == 3:
                             description = cells[2].get_text(separator="\n", strip=True)
 
-                        if not rarity:
-                            item_rarity_lookup = {
-                                "camping aid kit": "Common",
-                                "first aid kit": "Uncommon",
-                                "emergency med-kit": "Rare",
-                                "ranger med-kit": "Very Rare",
-                                "all hallows' eve lunchbox": "Event",
-                                "anniversary med-kit": "Event",
-                                "banquet med-kit": "Event",
-                                "masquerade med-kit": "Event",
-                                "worn-out tools": "Common",
-                                "toolbox": "Uncommon",
-                                "mechanic's toolbox": "Rare",
-                                "commodious toolbox": "Rare",
-                                "alex's toolbox": "Very Rare",
-                                "engineer's toolbox": "Very Rare",
-                                "anniversary toolbox": "Event",
-                                "banquet toolbox": "Event",
-                                "festive toolbox": "Event",
-                                "masquerade toolbox": "Event",
-                                "flashlight": "Uncommon",
-                                "sport flashlight": "Rare",
-                                "utility flashlight": "Very Rare",
-                                "anniversary flashlight": "Event",
-                                "banquet flashlight": "Event",
-                                "masquerade flashlight": "Event",
-                                "will o' wisp": "Event",
-                                "broken key": "Rare",
-                                "dull key": "Very Rare",
-                                "skeleton key": "Ultra Rare",
-                                "cryptic map": "Rare",
-                                "scribbled map": "Rare",
-                                "annotated map": "Very Rare",
-                                "bloodsense map": "Ultra Rare",
-                                "chinese firecracker": "Event",
-                                "third year party starter": "Event",
-                                "winter party starter": "Event",
-                                "apprentice's fog vial": "Common",
-                                "artisan's fog vial": "Uncommon",
-                                "vigo's fog vial": "Rare",
-                                "hand of vecna": "Ultra Rare",
-                                "eye of vecna": "Ultra Rare",
-                                "lament configuration": "Ultra Rare",
-                                "emp": "Rare",
-                                "remote flame turret": "Rare",
-                                "first aid spray": "Uncommon",
-                                "vaccine": "Uncommon",
-                                "vhs tape": "Rare",
-                                "flash grenade": "Uncommon",
-                                "antidote": "Uncommon",
-                                "candelabra": "Rare",
-                                "lantern": "Rare",
-                                "keycard": "Rare",
-                                "pocket mirror": "Rare",
-                                "fragile mirror": "Rare",
-                                "searcher's pendant": "Rare",
-                                "blood can": "Rare",
-                                "glowing fungus": "Uncommon",
-                                "fog crystal": "Event",
-                                "void crystal": "Event",
-                            }
-                            rarity = item_rarity_lookup.get(item_name.lower().strip(), "")
-                            if not rarity:
-                                if "anniversary" in item_name.lower() or "masquerade" in item_name.lower() or "event" in item_name.lower() or "festive" in item_name.lower():
-                                    rarity = "Event"
-                                else:
-                                    rarity = "Common"
-
+                        rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
                         description = clean_description_text(description)
                         sanitized = sanitize_filename(item_name)
                         local_path = f"icons/items/{sanitized}.png"
@@ -786,6 +995,7 @@ class WikiGGScraperDriver:
         content_area = soup.find("div", class_="mw-parser-output") or soup
         current_target = "General"
         current_category = "Survivor"
+        current_section = ""
 
         dynamic_power_to_killer: Dict[str, str] = {}
         if characters:
@@ -813,10 +1023,11 @@ class WikiGGScraperDriver:
                     raw_header = element.get_text().strip()
 
                 cleaned_header = re.sub(r"\[\s*edit\s*\]", "", raw_header, flags=re.IGNORECASE).strip()
+                current_section = cleaned_header.lower()
 
-                if "killer" in cleaned_header.lower():
+                if "killer" in current_section:
                     current_category = "Killer"
-                elif "survivor" in cleaned_header.lower():
+                elif "survivor" in current_section:
                     current_category = "Survivor"
 
                 target_clean = re.sub(r"\s+(?:Add-ons|Addons|Add-on|Addon)$", "", cleaned_header, flags=re.IGNORECASE).strip()
@@ -828,7 +1039,7 @@ class WikiGGScraperDriver:
                     matched_killer = dynamic_power_to_killer.get(norm_target)
                     if not matched_killer:
                         for p_key, k_name in dynamic_power_to_killer.items():
-                            if p_key and (p_key in norm_target or norm_target in p_key):
+                            if p_key and (p_key == norm_target or p_key in norm_target.split()):
                                 matched_killer = k_name
                                 break
 
@@ -851,67 +1062,26 @@ class WikiGGScraperDriver:
                         if not addon_name:
                             continue
 
-                        rarity = ""
                         description = ""
                         if len(cells) >= 4:
-                            rarity = cells[2].get_text().strip()
                             description = clean_description_text(cells[3].get_text(separator="\n", strip=True))
                         elif len(cells) == 3:
                             description = clean_description_text(cells[2].get_text(separator="\n", strip=True))
 
-                        if not rarity:
-                            if row_count == 20:
-                                if row_idx < 4:
-                                    rarity = "Common"
-                                elif row_idx < 9:
-                                    rarity = "Uncommon"
-                                elif row_idx < 14:
-                                    rarity = "Rare"
-                                elif row_idx < 18:
-                                    rarity = "Very Rare"
-                                else:
-                                    rarity = "Ultra Rare"
-                            elif row_count == 14:
-                                if row_idx < 3:
-                                    rarity = "Common"
-                                elif row_idx < 7:
-                                    rarity = "Uncommon"
-                                elif row_idx < 11:
-                                    rarity = "Rare"
-                                else:
-                                    rarity = "Very Rare"
-                            elif row_count == 11:
-                                if row_idx < 3:
-                                    rarity = "Common"
-                                elif row_idx < 6:
-                                    rarity = "Uncommon"
-                                elif row_idx < 9:
-                                    rarity = "Rare"
-                                else:
-                                    rarity = "Very Rare"
-                            elif row_count == 5:
-                                if "fog" in current_target.lower():
-                                    rarities_5 = ["Common", "Uncommon", "Rare", "Very Rare", "Ultra Rare"]
-                                    rarity = rarities_5[min(row_idx, 4)]
-                                else:
-                                    rarities_5 = ["Uncommon", "Rare", "Rare", "Very Rare", "Very Rare"]
-                                    rarity = rarities_5[min(row_idx, 4)]
-                            elif "event" in current_target.lower() or "blight serum" in addon_name.lower():
-                                rarity = "Event"
-                            else:
-                                pos = row_idx / max(1, row_count - 1)
-                                if pos < 0.25:
-                                    rarity = "Common"
-                                elif pos < 0.5:
-                                    rarity = "Uncommon"
-                                elif pos < 0.75:
-                                    rarity = "Rare"
-                                elif pos < 0.9:
-                                    rarity = "Very Rare"
-                                else:
-                                    rarity = "Ultra Rare"
+                        rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
 
-                        description = clean_description_text(description)
+                        # Positional fallback if rarity is still generic Common and standard 20-row killer table
+                        if rarity == "Common" and row_count == 20:
+                            if row_idx < 4:
+                                rarity = "Common"
+                            elif row_idx < 9:
+                                rarity = "Uncommon"
+                            elif row_idx < 14:
+                                rarity = "Rare"
+                            elif row_idx < 18:
+                                rarity = "Very Rare"
+                            else:
+                                rarity = "Ultra Rare"
 
                         raw_addons.append({
                             "name": addon_name,
@@ -935,10 +1105,7 @@ class WikiGGScraperDriver:
             addon_name = a["name"]
             target = a["target"]
 
-            if len(name_target_counts[normalize_name_key(addon_name)]) > 1:
-                display_name = f"{addon_name} ({target})"
-            else:
-                display_name = addon_name
+            display_name = f"{addon_name} ({target})" if len(name_target_counts[normalize_name_key(addon_name)]) > 1 else addon_name
 
             norm_unique = normalize_name_key(display_name)
             if norm_unique in seen_unique_names:
@@ -963,7 +1130,7 @@ class WikiGGScraperDriver:
         return addons
 
     def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData]]:
-        logger.info("Scraping deadbydaylight.wiki.gg data via MediaWiki API...")
+        logger.info("Scraping deadbydaylight.wiki.gg dynamic data via MediaWiki API...")
         characters = self.scrape_characters_dynamically()
 
         logger.info("Fetching Perks...")

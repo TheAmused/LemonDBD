@@ -5,7 +5,13 @@
     "syncWiki": "Sincronizar Wiki",
     "syncing": "Sincronizando..."
   },
-"generator": {
+  "landing": {
+    "welcomeBadge": "Compañero de Dead by Daylight",
+    "welcomeTitle": "Bienvenido a LemonDBD",
+    "welcomeSubtitle": "Tu base de datos de Dead by Daylight, explorador de mapas interactivo, aleatorizador de habilidades y guía para tus partidas.",
+    "enterButton": "Entrar a la Bóveda de Perks"
+  },
+  "generator": {
     "title": "Generador de Builds",
     "subtitle": "Genera perks aleatorios según la distribución del inventario [Página/Slot].",
     "modeInstant": "Generación Rápida",
@@ -29,7 +35,7 @@
     "drawnBadge": "Usados: {drawn} / {total}",
     "resetDrawn": "Reiniciar Perks Usados"
   },
-"stats": {
+  "stats": {
     "vaultStats": "Estadísticas de Bóveda",
     "totalPerks": "Total Perks",
     "characters": "Personajes",
@@ -53,7 +59,8 @@
     "asc": "Ascendente (A-Z)",
     "desc": "Descendente (Z-A)",
     "clear": "Reiniciar Filtros",
-    "generatorTab": "Aleatorizador de Perks"
+    "generatorTab": "Aleatorizador de Perks",
+    "perks": "Perks"
   },
   "pagination": {
     "showing": "Mostrando",
@@ -207,5 +214,18 @@
     "clickToInspect": "Haz clic para inspeccionar",
     "clickOutsideToClose": "Esc o haz clic afuera para cerrar",
     "close": "Cerrar"
+  },
+  "sidebar": {
+    "perks": "Perks",
+    "challenges": "🔥 Desafíos",
+    "mapExplorer": "🗺️ Explorador de Mapas",
+    "characters": "👤 Personajes",
+    "draftRoom": "🏆 Sala de Draft",
+    "swfPlanner": "👥 Planificador SWF",
+    "killerCalc": "🎯 Calculadora de Asesino",
+    "buildVault": "🔥 Bóveda de Builds",
+    "perkStudio": "🎨 Estudio de Perks",
+    "quests": "📜 Misiones"
   }
 }
+

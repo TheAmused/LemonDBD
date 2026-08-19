@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/StreakPanel.tsx
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, type LucideIcon } from 'lucide-react';

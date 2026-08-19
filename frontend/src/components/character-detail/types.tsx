@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/types.tsx
 import React from 'react';
 
 export interface CharacterItem {
@@ -21,18 +22,6 @@ export interface CharacterItem {
   release_date?: string;
   dlc_counterparts?: string[];
   lore?: string;
-}
-
-export function getCharacterSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\s\-/]+/g, '_')
-    .replace(/[^a-z0-9_]/g, '')
-    .replace(/_+/g, '_')
-    .replace(/^_+|_+$/g, '');
 }
 
 export interface PerkItem {
@@ -91,22 +80,46 @@ export interface CharacterDetailPayload {
   items?: EquipmentItem[];
 }
 
+export type CharacterDetailDictionary = Record<string, string>;
+
 export interface CharacterViewBaseProps {
   currentLocale: string;
-  dict: any;
+  dict?: Record<string, unknown>;
   detailData: CharacterDetailPayload;
   allCharacters?: CharacterItem[];
 }
 
-export const getAssetUrl = (backendBase: string, path?: string, url?: string) => {
+export interface RarityTileStyle {
+  bg: string;
+  badge: string;
+  text: string;
+}
+
+export function getCharacterSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s\-/]+/g, '_')
+    .replace(/[^a-z0-9_]/g, '')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+export function getAssetUrl(backendBase: string, path?: string, url?: string): string {
   if (path) {
     const cleanPath = path.replace(/^\/?(static\/)?/, '');
     return `${backendBase}/static/${cleanPath}`;
   }
   return url || '';
-};
+}
 
-export const getAvatarUrl = (backendBase: string, char: CharacterItem, isSurvivor: boolean) => {
+export function getAvatarUrl(
+  backendBase: string,
+  char: CharacterItem,
+  isSurvivor: boolean
+): string {
   let rawPath = char.avatar_local_path;
   if (!rawPath && char.name) {
     const subDir = isSurvivor ? 'survivors' : 'killers';
@@ -118,9 +131,9 @@ export const getAvatarUrl = (backendBase: string, char: CharacterItem, isSurvivo
     return `${backendBase}/static/${cleanPath}`;
   }
   return char.avatar_url || char.portrait_url || '';
-};
+}
 
-export const getRarityTileStyle = (rarity?: string) => {
+export function getRarityTileStyle(rarity?: string): RarityTileStyle {
   const r = (rarity || '').toLowerCase();
   if (r.includes('ultra') || r.includes('iridescent')) {
     return {
@@ -169,7 +182,151 @@ export const getRarityTileStyle = (rarity?: string) => {
     badge: 'bg-slate-500/20 text-slate-400 border-slate-500/40',
     text: 'text-slate-400',
   };
-};
+}
+
+export const DBD_KEYWORDS: readonly string[] = [
+  'Increases',
+  'Increase',
+  'Decreases',
+  'Decrease',
+  'Grants',
+  'Grant',
+  'Reveals',
+  'Reveal',
+  'Causes',
+  'Cause',
+  'Unlocks',
+  'Unlock',
+  'Applies',
+  'Apply',
+  'Activates',
+  'Activate',
+  'Affects',
+  'Affect',
+  'Extends',
+  'Extend',
+  'Reduces',
+  'Reduce',
+  'Blocks',
+  'Block',
+  'Tremendously',
+  'Considerably',
+  'Moderately',
+  'Slightly',
+  'Hex:',
+  'Hex',
+  'Boon:',
+  'Boon',
+  'Scourge Hook:',
+  'Scourge Hook',
+  'Obsession',
+  'Exhausted',
+  'Exhaustion',
+  'Exposed',
+  'Haste',
+  'Hindered',
+  'Blindness',
+  'Broken',
+  'Oblivious',
+  'Undetectable',
+  'Incapacitated',
+  'Mangled',
+  'Hemorrhage',
+  'Deep Wound',
+  'Cursed',
+  'Endurance',
+  'Bloodlust',
+  'Torment',
+  'Terror Radius',
+  'Killer Instinct',
+  'Aura Reading',
+  'Auras',
+  'Aura',
+  'Skill Checks',
+  'Skill Check',
+  'Great Skill Check',
+  'Good Skill Check',
+  'Bear Trap',
+  'Bear Traps',
+  'Dying State',
+  'Injured State',
+  'Healthy State',
+  'Hooks',
+  'Hook',
+  'Generators',
+  'Generator',
+  'Pallets',
+  'Pallet',
+  'Windows',
+  'Window',
+  'Chests',
+  'Chest',
+  'Totems',
+  'Totem',
+  'Bloodweb',
+  'Trial',
+  'Entity',
+  'Status Effect',
+  'Haste Status Effect',
+  'Blinded',
+  'Hindered',
+  'Marked',
+  'Med-Kit',
+  'Medkit',
+  'Toolbox',
+  'Flashlight',
+  'First Aid',
+  'Styptic',
+  'Serum',
+  'Bandage',
+  'Special Ability',
+  'Special Attack',
+  'Lunge',
+  'Lullaby',
+];
+
+export const TOKEN_REGEX: RegExp = (() => {
+  const kw = DBD_KEYWORDS.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  return new RegExp(
+    `(\\b(?:${kw})\\b|` +
+      `\\+?\\-?\\d+(?:\\.\\d+)?(?:\\s*\\/\\s*\\d+(?:\\.\\d+)?)+(?:\\s*%)?|` +
+      `\\+\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|m\\b|%|seconds?|s\\b|tokens?|charges?)|` +
+      `\\b\\d+(?:\\.\\d+)?\\s*%|` +
+      `\\b\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|seconds?|tokens?)\\b)`,
+    'gi'
+  );
+})();
+
+function parseLineTokens(text: string, lineKey: number | string): React.ReactNode {
+  const parts = text.split(TOKEN_REGEX);
+  return (
+    <>
+      {parts.map((part, idx) => {
+        if (!part) return null;
+        const trimmed = part.trim();
+
+        const isValue =
+          /^\+?\-?\d+(?:\.\d+)?(?:\s*\/\s*\d+(?:\.\d+)?)+(?:\s*%)?$/.test(trimmed) ||
+          /^\+\d+(?:\.\d+)?\s*(?:metres?|meters?|m|%|seconds?|s|tokens?|charges?)$/i.test(
+            trimmed
+          ) ||
+          /^\d+(?:\.\d+)?\s*%$/.test(trimmed) ||
+          /^\d+(?:\.\d+)?\s*(?:metres?|meters?|seconds?|tokens?)$/i.test(trimmed);
+
+        const isKeyword = DBD_KEYWORDS.some((k) => k.toLowerCase() === trimmed.toLowerCase());
+
+        if (isKeyword || isValue) {
+          return (
+            <strong key={`${lineKey}-${idx}`} className="font-black text-amber-400">
+              {part}
+            </strong>
+          );
+        }
+        return <span key={`${lineKey}-${idx}`}>{part}</span>;
+      })}
+    </>
+  );
+}
 
 export function renderFormattedDbdText(
   rawText: string,
@@ -177,134 +334,92 @@ export function renderFormattedDbdText(
 ): React.ReactNode {
   if (!rawText) return null;
 
-  // 1. Clean quote syntax and duplicate spaces
-  let cleaned = rawText
-    .replace(/\*""/g, '"')
-    .replace(/""\*/g, '"')
-    .replace(/\*"/g, '"')
-    .replace(/"\*/g, '"')
+  const cleaned = rawText
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\*""|\*"/g, '"')
+    .replace(/""\*|"\*/g, '"')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/(?<=\S)\*(?=\s|$|[.,;:!?)])/g, '')
+    .replace(/\*(?=[a-zA-Z0-9+%-])/g, '')
+    .replace(/(?<=[a-zA-Z0-9+%-])\*/g, '')
     .replace(/\s+\./g, '.')
     .replace(/\s+,/g, ',')
     .trim();
 
-  // 2. Extract Event Notice if present
-  let eventNotice: string | null = null;
-  const eventNoticeMatch = cleaned.match(
-    /^(THIS ITEM CAN NO LONGER BE OBTAINED[^(]*\([^)]*\)|THIS UNLOCKABLE CAN NO LONGER BE OBTAINED[^(]*\([^)]*\))/i
-  );
-  if (eventNoticeMatch) {
-    eventNotice = eventNoticeMatch[0].trim();
-    cleaned = cleaned.slice(eventNoticeMatch[0].length).trim();
-  }
-
-  // 3. Extract Lore Quote if present
-  let quoteText: string | null = null;
-  const quoteMatch = cleaned.match(
-    /(?:“|"|\*")(.*?)(?:”|"|"\*)\s*(?:—|–|-)\s*([^.\n]+(?:\.|$))/
-  );
-  if (quoteMatch) {
-    quoteText = `${quoteMatch[1].trim()} — ${quoteMatch[2].trim()}`;
-    cleaned = cleaned.replace(quoteMatch[0], '').trim();
-  } else {
-    const standaloneQuote =
-      cleaned.match(/^"([^"]+)"$/m) || cleaned.match(/"([^"]{15,})"$/);
-    if (standaloneQuote) {
-      quoteText = standaloneQuote[1].trim();
-      cleaned = cleaned.replace(standaloneQuote[0], '').trim();
-    }
-  }
-
-  // 4. Inline formatting parser
-  const parseInline = (str: string) => {
-    const parts = str.split(/(\*\*.*?\*\*|\*.*?\*)/g);
-    return parts.map((part, pIdx) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return (
-          <strong
-            key={pIdx}
-            className="font-black text-amber-400 dark:text-amber-300"
-          >
-            {part.slice(2, -2)}
-          </strong>
-        );
-      }
-      if (part.startsWith('*') && part.endsWith('*')) {
-        return (
-          <em key={pIdx} className="italic text-slate-300 dark:text-slate-200">
-            {part.slice(1, -1)}
-          </em>
-        );
-      }
-      return part;
-    });
-  };
-
-  // 5. Build elements
+  const lines = cleaned.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   const elements: React.ReactNode[] = [];
 
-  if (eventNotice && !isCompact) {
-    elements.push(
-      <div
-        key="event-notice"
-        className="p-2.5 mb-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] font-semibold text-amber-300 flex items-start gap-2"
-      >
-        <span className="shrink-0 font-bold uppercase tracking-wider text-[10px] bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-400">
-          Notice
-        </span>
-        <span className="leading-snug">{eventNotice}</span>
-      </div>
-    );
-  }
+  lines.forEach((line, lineIdx) => {
+    const stripped = line.replace(/^[\*\s_]+/, '').replace(/[\*\s_]+$/, '');
+    const isQuote =
+      (stripped.startsWith('"') && stripped.endsWith('"')) ||
+      (stripped.startsWith('\u201c') && stripped.endsWith('\u201d')) ||
+      (stripped.startsWith('"') && stripped.includes('" -')) ||
+      (stripped.startsWith('\u201c') && stripped.includes('\u201d -')) ||
+      /^["\u201c].+["\u201d](\s*[-\u2013\u2014].+)?$/.test(stripped);
 
-  const rawLines = cleaned.split(/\n+/);
+    if (isQuote) {
+      elements.push(
+        <div
+          key={`q-${lineIdx}`}
+          className={`rounded-xl border-l-2 border-amber-500/80 bg-slate-950/80 px-3 py-2 italic text-slate-300 font-serif shadow-inner ${
+            isCompact ? 'my-1.5 text-[10px]' : 'my-3 text-xs sm:text-sm'
+          }`}
+        >
+          {stripped}
+        </div>
+      );
+      return;
+    }
 
-  rawLines.forEach((line, lIdx) => {
-    const trimmed = line.trim();
-    if (!trimmed) return;
+    if (/^THIS (ITEM|UNLOCKABLE) CAN NO LONGER BE OBTAINED/i.test(line) && !isCompact) {
+      elements.push(
+        <div
+          key={`ev-${lineIdx}`}
+          className="p-2.5 mb-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] font-semibold text-amber-300 flex items-start gap-2"
+        >
+          <span className="shrink-0 font-bold uppercase tracking-wider text-[10px] bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-400">
+            Notice
+          </span>
+          <span className="leading-snug">{line}</span>
+        </div>
+      );
+      return;
+    }
 
-    if (
-      trimmed.startsWith('* ') ||
-      trimmed.startsWith('- ') ||
-      trimmed.startsWith('• ')
-    ) {
-      const content = trimmed.replace(/^[\*\-•]\s*/, '');
+    const isBullet =
+      line.startsWith('•') ||
+      line.startsWith('* ') ||
+      line.startsWith('- ') ||
+      /^\*\s+[A-Za-z]/.test(line);
+
+    if (isBullet) {
+      const content = line.replace(/^[•\*\-]\s*/, '');
       elements.push(
         <li
-          key={`li-${lIdx}`}
-          className={`list-disc ml-4 text-slate-300 leading-relaxed ${
-            isCompact ? 'my-0.5 text-xs' : 'my-1 text-sm'
+          key={`li-${lineIdx}`}
+          className={`ml-5 list-disc leading-relaxed text-slate-300 marker:text-amber-400 ${
+            isCompact ? 'my-0.5 text-xs' : 'my-1.5 text-xs sm:text-sm'
           }`}
         >
-          {parseInline(content)}
+          {parseLineTokens(content, lineIdx)}
         </li>
       );
-    } else {
-      elements.push(
-        <p
-          key={`p-${lIdx}`}
-          className={`text-slate-200 dark:text-slate-200 leading-relaxed ${
-            isCompact ? 'mb-1 text-xs' : 'mb-2 text-sm'
-          }`}
-        >
-          {parseInline(trimmed)}
-        </p>
-      );
+      return;
     }
-  });
 
-  if (quoteText) {
     elements.push(
-      <blockquote
-        key="lore-quote"
-        className={`border-l-2 border-amber-500/50 pl-3 py-1 font-serif italic text-slate-400 dark:text-slate-400 bg-amber-500/5 rounded-r-lg ${
-          isCompact ? 'text-[10px] mt-1' : 'text-xs mt-3'
+      <p
+        key={`p-${lineIdx}`}
+        className={`leading-relaxed text-slate-300 ${
+          isCompact ? 'mb-1 text-xs' : 'mb-2.5 text-xs sm:text-sm'
         }`}
       >
-        &ldquo;{quoteText}&rdquo;
-      </blockquote>
+        {parseLineTokens(line, lineIdx)}
+      </p>
     );
-  }
+  });
 
   return <>{elements}</>;
 }
-

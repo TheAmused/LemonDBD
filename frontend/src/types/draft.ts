@@ -1,3 +1,4 @@
+// frontend/src/types/draft.ts
 export type DraftPhase = 'bans' | 'picks' | 'complete';
 
 export interface DraftRoom {

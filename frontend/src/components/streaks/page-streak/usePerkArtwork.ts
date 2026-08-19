@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/page-streak/usePerkArtwork.ts
 'use client';
 
 import { useEffect, useState } from 'react';

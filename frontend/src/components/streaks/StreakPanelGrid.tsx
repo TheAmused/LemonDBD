@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/StreakPanelGrid.tsx
 'use client';
 
 import React, { useState } from 'react';

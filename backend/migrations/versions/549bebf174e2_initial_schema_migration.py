@@ -1,3 +1,4 @@
+# backend/migrations/versions/549bebf174e2_initial_schema_migration.py
 """Initial schema migration
 
 Revision ID: 549bebf174e2

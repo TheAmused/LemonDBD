@@ -1,3 +1,4 @@
+# backend/app/routes/others/quests.py
 from flask import Blueprint, current_app, jsonify, request
 from app.services.others.quest_service import QuestService
 

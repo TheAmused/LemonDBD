@@ -1,9 +1,13 @@
+# backend/app/routes/perks.py
 import logging
 import threading
 from dataclasses import asdict
 from pathlib import Path
 from typing import Optional
-from flask import Blueprint, current_app, jsonify, request, send_from_directory, g
+
+from flask import Blueprint, current_app, g, jsonify, request, send_from_directory
+
+from app.core.security import admin_required, get_current_user
 from app.services.perk_service import PerkService
 from app.services.scraper_service import ScraperService
 
@@ -13,13 +17,14 @@ perk_service = PerkService()
 
 
 def _extract_optional_user_id() -> Optional[int]:
+    """Helper to retrieve user ID from explicit query parameter or authenticated JWT context."""
     user_id_param = request.args.get("user_id", type=int)
     if user_id_param:
         return user_id_param
 
-    curr = getattr(g, "current_user", None)
-    if curr and hasattr(curr, "id"):
-        return curr.id
+    user = get_current_user()
+    if user:
+        return user.id
 
     return None
 
@@ -31,6 +36,7 @@ def health_check():
 
 @perks_bp.route("/api/v1/perks", methods=["GET"])
 def list_perks():
+    """Retrieve perks with filtering, sorting, pagination, and ownership status."""
     category = request.args.get("category")
     character = request.args.get("character")
     scope = request.args.get("scope")
@@ -130,6 +136,10 @@ def list_addons():
     return jsonify({"count": len(addons), "data": addons}), 200
 
 
+# ==========================================
+# SCRAPER & DATA SYNC PIPELINE (ADMIN ONLY)
+# ==========================================
+
 def _run_background_scrape(app, override_source=None, override_fallback=None):
     with app.app_context():
         scraper = ScraperService()
@@ -139,7 +149,9 @@ def _run_background_scrape(app, override_source=None, override_fallback=None):
 
 @perks_bp.route("/api/scrape-and-seed", methods=["POST"])
 @perks_bp.route("/api/v1/scrape-and-seed", methods=["POST"])
+@admin_required
 def scrape_and_seed():
+    """Trigger synchronous scrape pipeline (Admin only)."""
     data = request.get_json(silent=True) or {}
     source = data.get("source")
     fallback = data.get("fallback")
@@ -164,10 +176,12 @@ def scrape_and_seed():
 
 
 @perks_bp.route("/api/v1/scrape", methods=["POST"])
+@admin_required
 def trigger_scrape():
+    """Trigger asynchronous background scraping task (Admin only)."""
     status = ScraperService.get_status()
-    if status["is_running"]:
-        return jsonify({"message": "Scrape task in progress", "status": status}), 409
+    if status.get("is_running"):
+        return jsonify({"message": "Scrape task is already in progress", "status": status}), 409
 
     data = request.get_json(silent=True) or {}
     source = data.get("source")
@@ -191,21 +205,24 @@ def get_scrape_status():
 
 
 @perks_bp.route("/api/v1/scrape/config", methods=["GET"])
+@admin_required
 def get_scrape_config():
     scraper = ScraperService()
     return jsonify(asdict(scraper.load_config())), 200
 
 
 @perks_bp.route("/api/v1/scrape/config", methods=["POST"])
+@admin_required
 def update_scrape_config():
     data = request.get_json(silent=True) or {}
     scraper = ScraperService()
     updated = scraper.save_config(data)
-    return jsonify({"message": "Configuration updated", "config": asdict(updated)}), 200
+    return jsonify({"message": "Configuration updated successfully", "config": asdict(updated)}), 200
 
 
 @perks_bp.route("/static/<path:filename>", methods=["GET"])
 def serve_static_asset(filename: str):
+    """Serve cached static game assets."""
     static_folder = Path(current_app.root_path) / "static"
     response = send_from_directory(static_folder, filename)
     response.headers["Access-Control-Allow-Origin"] = "*"

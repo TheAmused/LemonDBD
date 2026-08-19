@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/characters/guesser/page.tsx
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';

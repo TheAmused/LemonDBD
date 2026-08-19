@@ -1,3 +1,4 @@
+# backend/migrations/versions/add_alternate_name_to_perks.py
 """add alternate_name and is_generic_counterpart to perks
 
 Revision ID: add_perk_aliases_001

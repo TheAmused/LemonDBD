@@ -1,7 +1,8 @@
 'use client';
+// frontend/src/app/[locale]/characters/[slug]/page.tsx
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, UserX, RefreshCw } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
@@ -10,6 +11,7 @@ import {
   CharacterSubpageView,
   CharacterDetailPayload,
   CharacterItem,
+  PerkItem,
 } from '@/components/character-detail/CharacterSubpageView';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
@@ -17,13 +19,12 @@ import { useSidebarState } from '@/hooks/useSidebarState';
 
 export default function CharacterDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const locale = (params?.locale as Locale) || 'en';
   const slug = (params?.slug as string) || '';
 
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Record<string, Record<string, string>> | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const [detailData, setDetailData] = useState<CharacterDetailPayload | null>(null);
   const [allCharacters, setAllCharacters] = useState<CharacterItem[]>([]);
@@ -52,10 +53,10 @@ export default function CharacterDetailPage() {
         ]);
         if (perksRes.ok) {
           const pData = await perksRes.json();
-          const list = pData.data || [];
+          const list: PerkItem[] = pData.data || [];
           setTotalPerksCount(pData.pagination?.total || list.length);
-          setSurvivorCount(list.filter((p: any) => p.category === 'Survivor').length);
-          setKillerCount(list.filter((p: any) => p.category === 'Killer').length);
+          setSurvivorCount(list.filter((p) => p.category === 'Survivor').length);
+          setKillerCount(list.filter((p) => p.category === 'Killer').length);
         }
         if (charsRes.ok) {
           const cData = await charsRes.json();
@@ -63,7 +64,7 @@ export default function CharacterDetailPage() {
           setAllCharacters(charList);
           setCharacterCount(cData.count || charList.length);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('Failed to load sidebar vault stats:', err);
       }
     }
@@ -91,7 +92,7 @@ export default function CharacterDetailPage() {
         } else {
           setNotFound(true);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('Failed to fetch character detail:', err);
         setNotFound(true);
       } finally {
@@ -102,14 +103,10 @@ export default function CharacterDetailPage() {
     fetchCharacterDetail();
   }, [slug, backendBase]);
 
-  const handleSelectCategory = (cat: string) => {
-    router.push(`/${locale}`);
-  };
-
   if (!dict) {
     return (
-      <div className="min-h-screen bg-slate-50 text-slate-500 dark:bg-slate-950 dark:text-slate-400 flex items-center justify-center font-mono">
-        Loading...
+      <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
+        Loading Character Details...
       </div>
     );
   }
@@ -117,12 +114,11 @@ export default function CharacterDetailPage() {
   const t = dict?.characterDetail || {};
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
         activeCategory="characters"
-        onSelectCategory={handleSelectCategory}
         onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalPerksCount}
         survivorCount={survivorCount}
@@ -131,34 +127,34 @@ export default function CharacterDetailPage() {
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
         {loading ? (
           <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-            <RefreshCw className="h-8 w-8 text-red-500 animate-spin" />
-            <p className="text-sm font-mono text-slate-500 dark:text-slate-400">
+            <RefreshCw className="h-8 w-8 text-rose-500 animate-spin" />
+            <p className="text-xs font-mono text-slate-400">
               {t.loading || 'Loading Character Details...'}
             </p>
           </div>
         ) : notFound || !detailData ? (
           <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-5 text-center p-6">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400">
+            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-900 border border-slate-800 text-slate-400">
               <UserX className="h-8 w-8" />
             </div>
             <div className="space-y-1 max-w-md">
-              <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100 font-mono">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
                 {t.notFoundTitle || 'Character Not Found'}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
                 {t.notFoundDesc ||
                   'The character you are looking for does not exist or could not be found in the archives.'}
               </p>
             </div>
             <Link
               href={`/${locale}/characters`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-md"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
               <span>{t.backToCharacters || 'Back to Characters'}</span>
@@ -182,3 +178,4 @@ export default function CharacterDetailPage() {
     </div>
   );
 }
+

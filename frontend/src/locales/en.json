@@ -4,7 +4,13 @@
     "syncWiki": "Sync Wiki Data",
     "syncing": "Syncing Data..."
   },
-"generator": {
+  "landing": {
+    "welcomeBadge": "Dead by Daylight Companion",
+    "welcomeTitle": "Welcome to LemonDBD",
+    "welcomeSubtitle": "Your dedicated Dead by Daylight database, interactive map explorer, perk randomizer, and player companion.",
+    "enterButton": "Enter Perks Vault"
+  },
+  "generator": {
     "title": "Perk Loadout Generator",
     "subtitle": "Roll random perks based on in-game inventory coordinates [Page/Slot].",
     "modeInstant": "Instant Roll",
@@ -28,7 +34,7 @@
     "drawnBadge": "Drawn: {drawn} / {total}",
     "resetDrawn": "Reset Used Perks"
   },
-"stats": {
+  "stats": {
     "vaultStats": "Vault Statistics",
     "totalPerks": "Total Perks",
     "characters": "Characters",
@@ -52,7 +58,8 @@
     "asc": "Ascending (A-Z)",
     "desc": "Descending (Z-A)",
     "clear": "Reset Filters",
-    "generatorTab": "Perk Randomizer"
+    "generatorTab": "Perk Randomizer",
+    "perks": "Perks"
   },
   "pagination": {
     "showing": "Showing",
@@ -182,6 +189,7 @@
     "allRarities": "All Rarities",
     "loading": "Loading Character Details...",
     "notFoundTitle": "Character Not Found",
+    "notFoundDesc": "The character you are looking for does not exist or could not be found.",
     "killerPower": "Killer Power",
     "viewKillerPower": "View Power Mechanics",
     "killerPowerDesc": "Special ability and combat mechanics unique to this killer.",
@@ -205,5 +213,18 @@
     "clickToInspect": "Click to inspect",
     "clickOutsideToClose": "Esc or click outside to close",
     "close": "Close"
+  },
+  "sidebar": {
+    "perks": "Perks",
+    "challenges": "🔥 Challenges",
+    "mapExplorer": "🗺️ Map Explorer",
+    "characters": "👤 Characters",
+    "draftRoom": "🏆 Draft Room",
+    "swfPlanner": "👥 SWF Planner",
+    "killerCalc": "🎯 Killer Calc",
+    "buildVault": "🔥 Build Vault",
+    "perkStudio": "🎨 Perk Studio",
+    "quests": "📜 Quests"
   }
 }
+

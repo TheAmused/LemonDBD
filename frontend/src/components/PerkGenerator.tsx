@@ -6,8 +6,6 @@ import {
   Dices,
   Shield,
   Skull,
-  Copy,
-  Check,
   Sparkles,
   ImageOff,
   RotateCcw,
@@ -78,7 +76,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
   const [activeSlotIdx, setActiveSlotIdx] = useState<number>(0);
   const [isChaosModalOpen, setIsChaosModalOpen] = useState(false);
   const [activeMutator, setActiveMutator] = useState<ChaosMutator | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const [isCharModalOpen, setIsCharModalOpen] = useState(false);
   const [enabledSurvCharacters, setEnabledSurvCharacters] = useState<string[]>([]);
@@ -383,28 +380,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     }
   };
 
-  const handleCopyBuild = async () => {
-    const activePerks = loadout.filter(
-      (slot): slot is DrawnSlot => slot !== null
-    );
-    if (activePerks.length === 0) return;
-
-    const text = activePerks
-      .map(
-        (s, idx) =>
-          `${idx + 1}. ${s.perk ? s.perk.name : 'Empty'} [Page ${s.page} / Slot ${s.slot}]`
-      )
-      .join('\n');
-
-    try {
-      await navigator.clipboard.writeText(`DBD ${role} Build:\n${text}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (e) {
-      console.error('Failed copying build:', e);
-    }
-  };
-
   const isSurvivor = role === 'Survivor';
 
   return (
@@ -558,25 +533,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               <span>{dict?.generator?.resetAllLabel || 'Reset All'}</span>
             </button>
 
-            <button
-              type="button"
-              onClick={handleCopyBuild}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/90 text-slate-700 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
-            >
-              {copied ? (
-                <>
-                  <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    {dict?.generator?.copiedBuild || 'Copied!'}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>{dict?.generator?.copyBuild || 'Copy'}</span>
-                </>
-              )}
-            </button>
           </div>
         </div>
       </header>

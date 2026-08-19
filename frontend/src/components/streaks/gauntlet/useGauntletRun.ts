@@ -13,6 +13,9 @@ export function useGauntletRun(role: Role) {
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  // The checkpoint streak just banked by a win, so the board can show a
+  // one-off celebration. Null once dismissed or once nothing new was banked.
+  const [justBankedCheckpoint, setJustBankedCheckpoint] = useState<number | null>(null);
 
   const loadStats = useCallback(async () => {
     if (!token) return;
@@ -51,7 +54,7 @@ export function useGauntletRun(role: Role) {
       try {
         setRun(await action());
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'That did not go through — try again');
+        setError(err instanceof Error ? err.message : 'That did not go through. Try again.');
       } finally {
         setBusy(false);
       }
@@ -62,12 +65,23 @@ export function useGauntletRun(role: Role) {
   const submitResult = useCallback(
     async (result: 'win' | 'loss') => {
       if (!token || !run) return;
+      const checkpointBefore = run.last_checkpoint_streak;
       setBusy(true);
       setError(null);
       try {
         const resp = await api.submitMatchResult(token, role, run.id, result);
         setRun(resp.run);
         loadStats();
+        // A win that banks a fresh checkpoint gets its own celebration. If that
+        // same win also finished the gauntlet, the win screen covers that instead.
+        const justFinished = resp.previous_run.status === 'completed';
+        if (
+          result === 'win' &&
+          !justFinished &&
+          resp.previous_run.last_checkpoint_streak > checkpointBefore
+        ) {
+          setJustBankedCheckpoint(resp.previous_run.last_checkpoint_streak);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to record the result');
       } finally {
@@ -77,13 +91,20 @@ export function useGauntletRun(role: Role) {
     [token, role, run, loadStats]
   );
 
-  const invalidateMatch = useCallback(
-    (reason: 'dc_before_5_gens' | 'game_cancelled') => {
-      if (!token || !run) return;
-      return mutate(() => api.invalidateMatch(token, run.id, reason));
-    },
-    [token, run, mutate]
-  );
+  const dismissCheckpointCelebration = useCallback(() => {
+    setJustBankedCheckpoint(null);
+  }, []);
+
+  const reveal = useCallback(() => {
+    if (!token || !run) return;
+    return mutate(() => api.revealTarget(token, run.id));
+  }, [token, run, mutate]);
+
+  const reset = useCallback(() => {
+    if (!token) return;
+    setJustBankedCheckpoint(null);
+    return mutate(() => api.resetRun(token, role));
+  }, [token, role, mutate]);
 
   return {
     run,
@@ -92,8 +113,10 @@ export function useGauntletRun(role: Role) {
     busy,
     error,
     reload: load,
-    roll: () => token && mutate(() => api.rollGauntlet(token, role)),
     submitResult,
-    invalidateMatch,
+    reveal,
+    reset,
+    justBankedCheckpoint,
+    dismissCheckpointCelebration,
   };
 }

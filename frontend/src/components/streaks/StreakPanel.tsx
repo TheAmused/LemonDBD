@@ -12,7 +12,9 @@ interface StreakPanelBaseProps {
 }
 
 type StreakPanelProps = StreakPanelBaseProps &
-  ({ comingSoon: true; href?: never } | { comingSoon?: false; href: string });
+  ({ comingSoon: true; href?: never; onClick?: never } |
+   { comingSoon?: false; href: string; onClick?: never } |
+   { comingSoon?: false; href?: never; onClick: () => void });
 
 export const StreakPanel: React.FC<StreakPanelProps> = ({
   title,
@@ -21,6 +23,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   accent,
   accentBorder,
   href,
+  onClick,
   comingSoon,
 }) => {
   const body = (
@@ -49,6 +52,17 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
 
   if (comingSoon) {
     return <div className={`${base} bg-slate-100/50 dark:bg-slate-900/30 opacity-70`}>{body}</div>;
+  }
+
+  if (onClick) {
+    return (
+      <button
+        onClick={onClick}
+        className={`group text-left ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 hover:border-orange-500/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:shadow-lg cursor-pointer`}
+      >
+        {body}
+      </button>
+    );
   }
 
   return (

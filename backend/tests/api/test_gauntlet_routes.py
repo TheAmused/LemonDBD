@@ -1,6 +1,7 @@
 # backend/tests/api/test_gauntlet_routes.py
 import unittest
 from app import create_app
+from app.core.config import TestingConfig
 from app.core.extensions import db
 from app.models import Character, Perk
 from app.services.user_service import UserService
@@ -23,8 +24,9 @@ def seed_killer(name, perk_count=3):
 
 class TestGauntletRoutes(unittest.TestCase):
     def setUp(self):
-        self.app = create_app()
-        self.app.config["TESTING"] = True
+        # TestingConfig keeps this on an in-memory SQLite DB. Without it the tests
+        # bind to the real DATABASE_URL and tearDown's drop_all() wipes the dev database.
+        self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
         self.ctx = self.app.app_context()
         self.ctx.push()
@@ -48,7 +50,7 @@ class TestGauntletRoutes(unittest.TestCase):
     def test_endpoints_require_login(self):
         self.assertEqual(self.client.get("/api/v1/gauntlet-streak/run?role=killer").status_code, 401)
         self.assertEqual(
-            self.client.post("/api/v1/gauntlet-streak/roll", json={"role": "killer"}).status_code, 401
+            self.client.post("/api/v1/gauntlet-streak/run/reset", json={"role": "killer"}).status_code, 401
         )
         self.assertEqual(self.client.get("/api/v1/gauntlet-streak/stats?role=killer").status_code, 401)
 
@@ -64,13 +66,6 @@ class TestGauntletRoutes(unittest.TestCase):
         self.assertEqual(run["status"], "in_progress")
         self.assertIn("tier_info", run)
 
-    def test_roll_returns_a_loadout(self):
-        res = self.client.post("/api/v1/gauntlet-streak/roll", json={"role": "killer"}, headers=self.headers)
-        self.assertEqual(res.status_code, 200)
-        run = res.get_json()["run"]
-        self.assertIn("current_loadout", run)
-        self.assertIn("character", run["current_loadout"])
-
     def test_result_lifecycle(self):
         run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
         run_id = run_res.get_json()["run"]["id"]
@@ -85,18 +80,37 @@ class TestGauntletRoutes(unittest.TestCase):
         self.assertEqual(data["previous_run"]["current_streak"], 1)
         self.assertIn("run", data)  # the freshly-rolled next run
 
-    def test_invalidate_endpoint(self):
+    def test_reveal_endpoint(self):
         run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
         run_id = run_res.get_json()["run"]["id"]
-        target = run_res.get_json()["run"]["current_character_id"]
 
         res = self.client.post(
-            "/api/v1/gauntlet-streak/invalidate",
-            json={"run_id": run_id, "reason": "game_cancelled"},
+            "/api/v1/gauntlet-streak/reveal",
+            json={"run_id": run_id},
             headers=self.headers,
         )
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.get_json()["run"]["current_character_id"], target)
+        self.assertTrue(res.get_json()["run"]["target_revealed"])
+
+    def test_run_carries_the_targets_character_perks(self):
+        run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
+        run = run_res.get_json()["run"]
+
+        perks = run["current_loadout"]["character_perks"]
+        self.assertTrue(perks)
+        self.assertTrue(all(p["character"] == run["current_character_id"] for p in perks))
+
+    def test_reset_endpoint(self):
+        self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)
+        res = self.client.post(
+            "/api/v1/gauntlet-streak/run/reset",
+            json={"role": "killer"},
+            headers=self.headers,
+        )
+        self.assertEqual(res.status_code, 200)
+        run = res.get_json()["run"]
+        self.assertEqual(run["current_streak"], 0)
+        self.assertFalse(run["target_revealed"])
 
     def test_stats_endpoint(self):
         res = self.client.get("/api/v1/gauntlet-streak/stats?role=killer", headers=self.headers)

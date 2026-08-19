@@ -15,7 +15,6 @@ from app.models.community import (
 )
 from app.models.equipment import Addon, Item
 from app.models.gauntlet import (
-    GauntletMatchException,
     GauntletMatchLog,
     GauntletRun,
 )
@@ -48,7 +47,6 @@ __all__ = [
     "MapObjective",
     "GauntletRun",
     "GauntletMatchLog",
-    "GauntletMatchException",
     "GeneratorSetting",
     "GeneratorDrawnPerk",
     "PageStreakRun",

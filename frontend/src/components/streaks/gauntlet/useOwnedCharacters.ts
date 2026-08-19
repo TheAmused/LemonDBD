@@ -12,7 +12,14 @@ export interface OwnedCharacterItem {
 
 const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-export function useOwnedCharacters(role: Role) {
+/**
+ * Original mode caps its roster at the source challenge's cutoff. `rosterLimit`
+ * comes from the gauntlet run's tier_info, the backend's own
+ * ORIGINAL_KILLER_ROSTER_LIMIT / ORIGINAL_SURVIVOR_ROSTER_LIMIT, so this hook
+ * carries no copy of the number itself. Until that value has loaded, the
+ * roster is shown unfiltered rather than guessed at.
+ */
+export function useOwnedCharacters(role: Role, rosterLimit?: number) {
   const { token, user } = useAuth();
   const [characters, setCharacters] = useState<OwnedCharacterItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -27,7 +34,10 @@ export function useOwnedCharacters(role: Role) {
       });
       if (res.ok) {
         const data = await res.json();
-        const owned = (data.data || []).filter((c: any) => c.is_owned);
+        let owned = (data.data || []).filter((c: any) => c.is_owned);
+        if (rosterLimit != null) {
+          owned = owned.filter((c: any) => c.release_number == null || c.release_number <= rosterLimit);
+        }
         setCharacters(owned.map((c: any) => ({ name: c.name })));
       }
     } catch (err) {
@@ -35,7 +45,7 @@ export function useOwnedCharacters(role: Role) {
     } finally {
       setLoading(false);
     }
-  }, [token, user, role]);
+  }, [token, user, role, rosterLimit]);
 
   useEffect(() => {
     load();

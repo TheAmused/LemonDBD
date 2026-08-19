@@ -4,7 +4,7 @@ export type Role = 'survivor' | 'killer';
 export interface Perk {
   id?: number;
   name: string;
-  character_name?: string | null;
+  character?: string | null;
   category?: string;
   icon_url?: string;
   icon_local_path?: string;
@@ -12,20 +12,27 @@ export interface Perk {
 
 export interface GauntletLoadout {
   character: string;
-  perks: Perk[];
+  /** The target's own teachable perks, shown as the suggested first-slot picks. */
+  character_perks: Perk[];
 }
 
 export interface TierInfo {
   name: string;
   tier_level: number;
   perk_limit: number;
+  /** Killers run their own teachables only; survivors may fill the other slots freely. */
+  character_perks_only: boolean;
   description: string;
+  /** The original challenge's roster cutoff for this role (43 killers, 52 survivors). */
+  roster_limit: number;
 }
 
 export interface GauntletRun {
   id: number;
   role: Role;
   status: string;
+  game_mode: string;
+  target_revealed: boolean;
   current_character_id: string;
   current_loadout: GauntletLoadout;
   current_streak: number;

@@ -30,11 +30,6 @@ export async function fetchRun(token: string, role: Role): Promise<RunResponse> 
   );
 }
 
-export async function rollGauntlet(token: string, role: Role): Promise<GauntletRun> {
-  const data = await postJson<RunResponse>(token, '/roll', { role });
-  return data.run;
-}
-
 export async function submitMatchResult(
   token: string,
   role: Role,
@@ -44,12 +39,13 @@ export async function submitMatchResult(
   return postJson<SubmitResultResponse>(token, '/result', { role, run_id: runId, result });
 }
 
-export async function invalidateMatch(
-  token: string,
-  runId: number,
-  reason: 'dc_before_5_gens' | 'game_cancelled'
-): Promise<GauntletRun> {
-  const data = await postJson<RunResponse>(token, '/invalidate', { run_id: runId, reason });
+export async function revealTarget(token: string, runId: number): Promise<GauntletRun> {
+  const data = await postJson<RunResponse>(token, '/reveal', { run_id: runId });
+  return data.run;
+}
+
+export async function resetRun(token: string, role: Role): Promise<GauntletRun> {
+  const data = await postJson<RunResponse>(token, '/run/reset', { role });
   return data.run;
 }
 

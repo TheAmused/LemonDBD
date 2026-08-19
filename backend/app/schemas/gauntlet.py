@@ -21,22 +21,11 @@ class GauntletMatchLogResponse(GauntletMatchLogBase):
     model_config = ConfigDict(from_attributes=True)
 
 
-class GauntletMatchExceptionBase(BaseModel):
-    character_id: str
-    reason: str
-
-
-class GauntletMatchExceptionResponse(GauntletMatchExceptionBase):
-    id: int
-    run_id: int
-    timestamp: Optional[datetime] = None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
 class GauntletRunBase(BaseModel):
     role: str
     status: str = "in_progress"
+    game_mode: str = "original"
+    target_revealed: bool = False
     current_character_id: str
     current_streak: int = 0
     best_streak: int = 0

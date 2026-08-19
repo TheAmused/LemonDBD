@@ -2,10 +2,12 @@
 import unittest
 from sqlalchemy import select
 from app import create_app
+from app.core.config import TestingConfig
 from app.core.extensions import db
 from app.models import Character, Perk
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
+from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names
 from app.services.gauntlet_service import GauntletService
 
 
@@ -24,10 +26,26 @@ def seed_killer(name, perk_count=3):
     return character
 
 
+def seed_survivor(name="Meg Thomas", perk_count=1):
+    character = Character(name=name, role="Survivor")
+    db.session.add(character)
+    db.session.flush()
+    for i in range(1, perk_count + 1):
+        db.session.add(Perk(
+            name=f"{name} Perk {i}",
+            character_id=character.id,
+            is_teachable=True,
+            category="Survivor",
+        ))
+    db.session.commit()
+    return character
+
+
 class GauntletTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = create_app()
-        self.app.config["TESTING"] = True
+        # TestingConfig keeps this on an in-memory SQLite DB. Without it the tests
+        # bind to the real DATABASE_URL and tearDown's drop_all() wipes the dev database.
+        self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
         self.ctx = self.app.app_context()
         self.ctx.push()
@@ -53,18 +71,80 @@ class GauntletTestCase(unittest.TestCase):
 class TestGauntletTiers(GauntletTestCase):
     def test_survivor_tier_perk_limits(self):
         self.assertEqual(self.service.get_tier_info(0, "survivor")["perk_limit"], 4)
-        self.assertEqual(self.service.get_tier_info(3, "survivor")["perk_limit"], 3)
-        self.assertEqual(self.service.get_tier_info(6, "survivor")["perk_limit"], 2)
-        self.assertEqual(self.service.get_tier_info(9, "survivor")["perk_limit"], 1)
-        self.assertEqual(self.service.get_tier_info(12, "survivor")["perk_limit"], 0)
+        self.assertEqual(self.service.get_tier_info(9, "survivor")["perk_limit"], 4)
+        self.assertEqual(self.service.get_tier_info(10, "survivor")["perk_limit"], 3)
+        self.assertEqual(self.service.get_tier_info(20, "survivor")["perk_limit"], 2)
+        self.assertEqual(self.service.get_tier_info(30, "survivor")["perk_limit"], 1)
+        self.assertEqual(self.service.get_tier_info(40, "survivor")["perk_limit"], 0)
         self.assertEqual(self.service.get_tier_info(999, "survivor")["perk_limit"], 0)
 
+    def test_killer_tier_perk_limits_start_at_three(self):
+        self.assertEqual(self.service.get_tier_info(0, "killer")["perk_limit"], 3)
+        self.assertEqual(self.service.get_tier_info(9, "killer")["perk_limit"], 3)
+        self.assertEqual(self.service.get_tier_info(10, "killer")["perk_limit"], 2)
+        self.assertEqual(self.service.get_tier_info(20, "killer")["perk_limit"], 1)
+        self.assertEqual(self.service.get_tier_info(30, "killer")["perk_limit"], 0)
+        self.assertEqual(self.service.get_tier_info(999, "killer")["perk_limit"], 0)
+
+    def test_tier_steps_up_on_the_checkpoint_it_banks(self):
+        for role in ("killer", "survivor"):
+            below = self.service.get_tier_info(CHECKPOINT_INTERVAL - 1, role)
+            at = self.service.get_tier_info(CHECKPOINT_INTERVAL, role)
+            self.assertEqual(at["tier_level"], below["tier_level"] + 1)
+            self.assertEqual(at["perk_limit"], below["perk_limit"] - 1)
+
+    def test_tier_info_hides_the_internal_threshold(self):
+        self.assertNotIn("min_streak", self.service.get_tier_info(0, "killer"))
+        self.assertNotIn("min_streak", self.service.get_tier_info(0, "survivor"))
+
+    def test_tier_info_carries_the_roster_limit(self):
+        """The frontend filters its roster grid off this value instead of
+        keeping its own copy of the original challenge's cutoff."""
+        self.assertEqual(self.service.get_tier_info(0, "killer")["roster_limit"], 43)
+        self.assertEqual(self.service.get_tier_info(0, "survivor")["roster_limit"], 52)
+
+    def test_only_killers_are_restricted_to_their_own_perks(self):
+        self.assertTrue(self.service.get_tier_info(0, "killer")["character_perks_only"])
+        self.assertFalse(self.service.get_tier_info(0, "survivor")["character_perks_only"])
+
     def test_killer_tier_names_differ_from_survivor(self):
-        survivor = self.service.get_tier_info(3, "survivor")
-        killer = self.service.get_tier_info(3, "killer")
+        survivor = self.service.get_tier_info(10, "survivor")
+        killer = self.service.get_tier_info(10, "killer")
         self.assertEqual(survivor["name"], "The Thinning")
-        self.assertEqual(killer["name"], "The Restriction")
-        self.assertNotIn("addon_limit", killer)
+        self.assertEqual(killer["name"], "The Obsession")
+
+
+class TestOriginalKillerRosterCap(GauntletTestCase):
+    def setUp(self):
+        super().setUp()
+        self.trapper = seed_killer("Trapper")
+        self.trapper.release_number = 1
+        self.slasher = seed_killer("The Slasher")
+        self.slasher.release_number = 43
+        self.newer = seed_killer("The Judgment")
+        self.newer.release_number = 44
+        db.session.commit()
+        self.user_id = self.register_user("gauntletcapuser")
+
+    def test_pool_excludes_killers_past_the_original_cutoff(self):
+        names = get_owned_character_names(self.user_id, "killer", self.ownership_service)
+        self.assertIn("Trapper", names)
+        self.assertIn("The Slasher", names)
+        self.assertNotIn("The Judgment", names)
+
+    def test_a_killer_past_the_cutoff_is_never_drawn(self):
+        for _ in range(20):
+            run = self.service.roll(self.user_id, "killer")
+            self.assertNotEqual(run["current_character_id"], "The Judgment")
+
+    def test_gauntlet_can_be_won_without_the_newer_killer(self):
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        for _ in range(2):
+            run = self.service.submit_result(self.user_id, run["id"], "win")
+            if run["status"] != "completed":
+                run = self.service.roll(self.user_id, "killer")
+        self.assertEqual(run["status"], "completed")
+        self.assertNotIn("The Judgment", run["completed_characters"])
 
 
 class TestGauntletRun(GauntletTestCase):
@@ -79,7 +159,12 @@ class TestGauntletRun(GauntletTestCase):
         self.assertEqual(run["status"], "in_progress")
         self.assertIn(run["current_character_id"], ["Nurse", "Trapper"])
         self.assertEqual(run["current_streak"], 0)
-        self.assertEqual(run["tier_info"]["perk_limit"], 4)
+        self.assertEqual(run["tier_info"]["perk_limit"], 3)
+
+    def test_new_run_defaults_to_original_mode_and_unrevealed_target(self):
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        self.assertEqual(run["game_mode"], "original")
+        self.assertFalse(run["target_revealed"])
 
     def test_get_or_create_run_is_idempotent(self):
         first = self.service.get_or_create_run(self.user_id, "killer")
@@ -109,16 +194,21 @@ class TestGauntletRun(GauntletTestCase):
             run = self.service.roll(self.user_id, "killer")
             self.assertEqual(run["current_character_id"], "Trapper")
 
-    def test_roll_only_uses_unlocked_perks(self):
-        nurse_perks = db.session.scalars(select(Perk).where(Perk.character_id == self.nurse.id)).all()
-        for perk in nurse_perks:
-            self.ownership_service.set_perk_ownership(self.user_id, perk.id, is_unlocked=False)
+    def test_roll_no_longer_assigns_a_playable_build(self):
+        run = self.service.roll(self.user_id, "killer", target_character="Trapper")
+        # Only the target's own teachable perks are carried, as a reference display.
+        self.assertNotIn("perks", run["current_loadout"])
+        self.assertTrue(
+            all(p["character"] == "Trapper" for p in run["current_loadout"]["character_perks"])
+        )
 
-        self.service.get_or_create_run(self.user_id, "killer")
-        for _ in range(10):
-            run = self.service.roll(self.user_id, "killer", target_character="Trapper")
-            perk_names = {p["name"] for p in run["current_loadout"]["perks"]}
-            self.assertTrue(perk_names.isdisjoint({p.name for p in nurse_perks}))
+    def test_reveal_target_flips_flag_without_changing_character(self):
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        target = run["current_character_id"]
+        self.assertFalse(run["target_revealed"])
+        revealed = self.service.reveal_target(self.user_id, run["id"])
+        self.assertTrue(revealed["target_revealed"])
+        self.assertEqual(revealed["current_character_id"], target)
 
 
 class TestGauntletResults(GauntletTestCase):
@@ -130,19 +220,26 @@ class TestGauntletResults(GauntletTestCase):
         self.run = self.service.get_or_create_run(self.user_id, "killer")
 
     def test_win_increments_streak_and_records_checkpoint(self):
-        r1 = self.service.submit_result(self.user_id, self.run["id"], "win")
-        self.assertEqual(r1["current_streak"], 1)
-        r2 = self.service.submit_result(self.user_id, self.run["id"], "win")
-        self.assertEqual(r2["current_streak"], 2)
-        r3 = self.service.submit_result(self.user_id, self.run["id"], "win")
-        self.assertEqual(r3["current_streak"], 3)
-        self.assertEqual(r3["last_checkpoint_streak"], 3)
+        for expected in range(1, 10):
+            updated = self.service.submit_result(self.user_id, self.run["id"], "win")
+            self.assertEqual(updated["current_streak"], expected)
+            self.assertEqual(updated["last_checkpoint_streak"], 0)
+
+        tenth = self.service.submit_result(self.user_id, self.run["id"], "win")
+        self.assertEqual(tenth["current_streak"], 10)
+        self.assertEqual(tenth["last_checkpoint_streak"], 10)
 
     def test_loss_reverts_to_last_checkpoint(self):
+        for _ in range(10):
+            self.service.submit_result(self.user_id, self.run["id"], "win")
+        after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        self.assertEqual(after_loss["current_streak"], 10)
+
+    def test_loss_before_any_checkpoint_resets_to_zero(self):
         for _ in range(3):
             self.service.submit_result(self.user_id, self.run["id"], "win")
         after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
-        self.assertEqual(after_loss["current_streak"], 3)
+        self.assertEqual(after_loss["current_streak"], 0)
 
     def test_win_marks_character_completed(self):
         target = self.run["current_character_id"]
@@ -164,22 +261,79 @@ class TestGauntletResults(GauntletTestCase):
         with self.assertRaises(ValueError):
             self.service.submit_result(other_user_id, self.run["id"], "win")
 
-    def test_invalidate_match_rerolls_same_character_and_keeps_streak(self):
-        target = self.run["current_character_id"]
-        streak_before = self.run["current_streak"]
-        updated = self.service.invalidate_match(self.user_id, self.run["id"], "dc_before_5_gens")
-        self.assertEqual(updated["current_character_id"], target)
-        self.assertEqual(updated["current_streak"], streak_before)
 
-    def test_invalidate_match_rejects_invalid_reason(self):
+class TestGauntletCharacterPerks(GauntletTestCase):
+    def setUp(self):
+        super().setUp()
+        self.trapper = seed_killer("Trapper", perk_count=3)
+        seed_killer("Nurse", perk_count=3)
+        self.user_id = self.register_user("perkdisplayuser")
+
+    def test_loadout_carries_the_targets_own_teachable_perks(self):
+        self.service.get_or_create_run(self.user_id, "killer")
+        run = self.service.roll(self.user_id, "killer", target_character="Trapper")
+
+        names = {p["name"] for p in run["current_loadout"]["character_perks"]}
+        self.assertEqual(names, {"Trapper Perk 1", "Trapper Perk 2", "Trapper Perk 3"})
+
+    def test_character_perks_are_present_on_a_brand_new_run(self):
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        target = run["current_character_id"]
+
+        perks = run["current_loadout"]["character_perks"]
+        self.assertEqual(len(perks), 3)
+        self.assertTrue(all(p["character"] == target for p in perks))
+
+
+class TestGauntletCompletion(GauntletTestCase):
+    def setUp(self):
+        super().setUp()
+        seed_killer("Trapper")
+        seed_killer("Nurse")
+        self.user_id = self.register_user("completionuser")
+
+    def _clear(self, name):
+        self.service.roll(self.user_id, "killer", target_character=name)
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        return self.service.submit_result(self.user_id, run["id"], "win")
+
+    def test_run_completes_once_every_owned_character_is_cleared(self):
+        self.service.get_or_create_run(self.user_id, "killer")
+
+        after_first = self._clear("Trapper")
+        self.assertEqual(after_first["status"], "in_progress")
+
+        after_last = self._clear("Nurse")
+        self.assertEqual(after_last["status"], "completed")
+        self.assertEqual(sorted(after_last["completed_characters"]), ["Nurse", "Trapper"])
+
+    def test_completed_run_rejects_further_results(self):
+        self.service.get_or_create_run(self.user_id, "killer")
+        self._clear("Trapper")
+        self._clear("Nurse")
+
+        run = self.service.get_or_create_run(self.user_id, "killer")
         with self.assertRaises(ValueError):
-            self.service.invalidate_match(self.user_id, self.run["id"], "because")
+            self.service.submit_result(self.user_id, run["id"], "win")
+
+    def test_reset_starts_a_fresh_run(self):
+        self.service.get_or_create_run(self.user_id, "killer")
+        self._clear("Trapper")
+        self._clear("Nurse")
+
+        fresh = self.service.reset_run(self.user_id, "killer")
+        self.assertEqual(fresh["status"], "in_progress")
+        self.assertEqual(fresh["current_streak"], 0)
+        self.assertEqual(fresh["completed_characters"], [])
+        self.assertFalse(fresh["target_revealed"])
 
 
 class TestGauntletStats(GauntletTestCase):
     def setUp(self):
         super().setUp()
         seed_killer("Nurse")
+        # A second killer keeps the run from completing (and locking) after one win.
+        seed_killer("Trapper")
         self.user_id = self.register_user("statsuser")
 
     def test_stats_start_empty(self):
@@ -209,6 +363,24 @@ class TestGauntletStats(GauntletTestCase):
         survivor_stats = self.service.get_stats(self.user_id, "survivor")
         self.assertEqual(killer_stats["total_matches"], 1)
         self.assertEqual(survivor_stats["total_matches"], 0)
+
+
+class TestGauntletLoadoutHasNoGear(GauntletTestCase):
+    def test_survivor_loadout_carries_no_item(self):
+        seed_survivor()
+        user_id = self.register_user("noitemuser")
+        self.service.get_or_create_run(user_id, "survivor")
+        run = self.service.roll(user_id, "survivor")
+        self.assertNotIn("item", run["current_loadout"])
+
+    def test_killer_loadout_carries_no_gear(self):
+        seed_killer("Trapper", perk_count=1)
+        user_id = self.register_user("killergearuser")
+        self.service.get_or_create_run(user_id, "killer")
+        run = self.service.roll(user_id, "killer", target_character="Trapper")
+        loadout = run["current_loadout"]
+        self.assertNotIn("item", loadout)
+        self.assertNotIn("addons", loadout)
 
 
 if __name__ == "__main__":

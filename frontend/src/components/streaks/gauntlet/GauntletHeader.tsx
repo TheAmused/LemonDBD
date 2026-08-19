@@ -34,9 +34,6 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             )}
             <span className="capitalize">{role}</span> Gauntlet
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Conquer matches, build streaks, and master the roster you own
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">

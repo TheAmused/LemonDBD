@@ -6,13 +6,15 @@ from typing import Any, Dict, Optional
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.models import GauntletMatchException, GauntletMatchLog, GauntletRun
+from app.models import GauntletMatchLog, GauntletRun
 from app.services.gauntlet import (
     CHECKPOINT_INTERVAL,
     fetch_gauntlet_user_stats,
+    get_character_teachable_perks,
+    get_owned_character_names,
     get_tier_info,
     pick_initial_target,
-    roll_gauntlet_loadout,
+    roll_gauntlet_target,
 )
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
@@ -45,7 +47,7 @@ class GauntletService:
         tier_info = self.get_tier_info(0, role)
         initial_loadout = {
             "character": target_character,
-            "perks": [],
+            "character_perks": get_character_teachable_perks(target_character),
             "tier_info": tier_info,
         }
 
@@ -72,7 +74,7 @@ class GauntletService:
         run = self.get_or_create_run(user_id, role)
         completed = run.get("completed_characters", [])
 
-        target_char, loadout, tier_info = roll_gauntlet_loadout(
+        target_char, loadout, tier_info = roll_gauntlet_target(
             user_id=user_id,
             role=role,
             current_streak=run["current_streak"],
@@ -90,25 +92,28 @@ class GauntletService:
         data["tier_info"] = tier_info
         return data
 
-    def invalidate_match(self, user_id: int, run_id: int, reason: str) -> Dict[str, Any]:
-        valid_reasons = ("dc_before_5_gens", "game_cancelled")
-        if reason not in valid_reasons:
-            raise ValueError(f"Invalid reason: {reason}. Must be one of {valid_reasons}")
-
+    def reveal_target(self, user_id: int, run_id: int) -> Dict[str, Any]:
         r = db.session.scalars(
-            select(GauntletRun).where(
-                GauntletRun.id == run_id,
-                GauntletRun.user_id == user_id,
-            )
+            select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id)
+        ).first()
+        if not r:
+            raise ValueError("Run not found")
+        r.target_revealed = True
+        db.session.commit()
+        data = r.to_dict()
+        data["tier_info"] = self.get_tier_info(data["current_streak"], r.role)
+        return data
+
+    def reset_run(self, user_id: int, role: str) -> Dict[str, Any]:
+        r = db.session.scalars(
+            select(GauntletRun).where(GauntletRun.user_id == user_id, GauntletRun.role == role)
         ).first()
         if not r:
             raise ValueError("Run not found")
 
-        char_id = r.current_character_id
-        db.session.add(GauntletMatchException(run_id=run_id, character_id=char_id, reason=reason))
+        db.session.delete(r)
         db.session.commit()
-
-        return self.roll(user_id, r.role, target_character=char_id)
+        return self.get_or_create_run(user_id, role)
 
     def submit_result(self, user_id: int, run_id: int, result: str) -> Dict[str, Any]:
         if result not in ("win", "loss"):
@@ -122,6 +127,8 @@ class GauntletService:
         ).first()
         if not r:
             raise ValueError("Run not found")
+        if r.status == "completed":
+            raise ValueError("This run is already completed. Reset it to play again.")
 
         current_streak = r.current_streak
         best_streak = r.best_streak
@@ -130,7 +137,7 @@ class GauntletService:
         checkpoint_chars = json.loads(r.checkpoint_characters_json or "[]")
         char_id = r.current_character_id
         loadout = json.loads(r.current_loadout_json or "{}")
-        perks_json = json.dumps(loadout.get("perks", []))
+        perks_json = json.dumps(loadout.get("character_perks", []))
 
         if result == "win":
             streak_after = current_streak + 1
@@ -140,6 +147,10 @@ class GauntletService:
             if CHECKPOINT_INTERVAL > 0 and streak_after % CHECKPOINT_INTERVAL == 0:
                 last_checkpoint = streak_after
                 checkpoint_chars = list(completed)
+            # The gauntlet is won once every owned character has been cleared.
+            owned = get_owned_character_names(user_id, r.role, self.ownership_service)
+            if owned and all(name in completed for name in owned):
+                r.status = "completed"
         else:
             streak_after = last_checkpoint if CHECKPOINT_INTERVAL > 0 else 0
             completed = list(checkpoint_chars)
@@ -170,4 +181,3 @@ class GauntletService:
 
     def get_stats(self, user_id: int, role: str) -> Dict[str, Any]:
         return fetch_gauntlet_user_stats(user_id, role)
-

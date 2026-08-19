@@ -1,3 +1,4 @@
+// frontend/src/types/map.ts
 export type PalletSafetyRating = 'god' | 'safe' | 'mindgameable' | 'unsafe';
 
 export interface TotemSpawn {

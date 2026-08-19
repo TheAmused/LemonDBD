@@ -1,3 +1,4 @@
+# backend/app/__init__.py
 import os
 import logging
 import threading
@@ -7,8 +8,8 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from sqlalchemy import text
 
-from app.config import Config
-from app.extensions import db, migrate
+from app.core.config import Config
+from app.core.extensions import db, migrate
 import app.models  # noqa: F401
 
 

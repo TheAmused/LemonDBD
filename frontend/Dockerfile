@@ -1,3 +1,4 @@
+# frontend/Dockerfile
 # Stage 1: Base Alpine Setup
 FROM node:22-alpine AS base
 

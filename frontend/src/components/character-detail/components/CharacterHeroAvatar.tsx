@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/CharacterHeroAvatar.tsx
 import React, { useState } from 'react';
 import { Eye, Shield, Skull, User } from 'lucide-react';
 import { CharacterItem, getAvatarUrl } from '../types';
@@ -8,7 +9,7 @@ interface CharacterHeroAvatarProps {
   roleLabel: string;
   backendBase: string;
   onOpenModelModal: () => void;
-  t: any;
+  t: Record<string, string>;
 }
 
 export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
@@ -22,11 +23,20 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
   const [imgFailed, setImgFailed] = useState(false);
 
   return (
-    <div className="lg:col-span-4 flex flex-col items-center">
+    <div className="lg:col-span-4 flex flex-col items-center w-full">
       <div
+        role="button"
+        tabIndex={0}
         onClick={onOpenModelModal}
-        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-slate-200/90 dark:border-slate-800 bg-slate-950 shadow-2xl cursor-pointer hover:border-amber-500/60 transition-all duration-300 flex items-center justify-center"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onOpenModelModal();
+          }
+        }}
+        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-slate-800 bg-slate-950 shadow-2xl cursor-pointer hover:border-amber-500/60 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all duration-300 flex items-center justify-center"
         title={t.view3DModel || 'Click to View Full 3D Model'}
+        aria-label={`${character.name} avatar preview. Click to inspect full render.`}
       >
         {!imgFailed ? (
           <img
@@ -67,10 +77,11 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           </span>
 
           <span className="rounded-full bg-slate-900/80 border border-slate-700/80 px-2.5 py-0.5 text-[10px] font-bold text-slate-300 backdrop-blur-md">
-            {character.is_licensed ? 'Licensed' : 'Original'}
+            {character.is_licensed ? (t.dlcLicensed || 'Licensed') : (t.dlcOriginal || 'Original')}
           </span>
         </div>
       </div>
     </div>
   );
 };
+

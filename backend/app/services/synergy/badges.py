@@ -1,0 +1,104 @@
+# backend/app/services/synergy/badges.py
+from typing import Dict, List, Set
+
+BADGE_CATEGORIES: Dict[str, Set[str]] = {
+    "Gen Pressure": {
+        "scourge hook: pain resonance",
+        "pop goes the weasel",
+        "call of brine",
+        "overcharge",
+        "hex: ruin",
+        "corrupt intervention",
+        "deadlock",
+        "surge",
+        "jolt",
+        "oppression",
+        "hyperfocus",
+        "prove thyself",
+        "deja vu",
+        "fast track",
+        "built to last",
+        "stake out",
+        "tinkerer",
+        "unforeseen",
+        "hex: pentimento",
+    },
+    "Chase Specialist": {
+        "windows of opportunity",
+        "lithe",
+        "sprint burst",
+        "dead hard",
+        "balanced landing",
+        "resilience",
+        "enduring",
+        "brutal strength",
+        "bamboozle",
+        "save the best for last",
+        "spirit fury",
+        "superior anatomy",
+        "coup de grâce",
+        "head on",
+        "overcome",
+        "rapid brutality",
+        "play with your food",
+        "zanshin tactics",
+    },
+    "Stealth Master": {
+        "distortion",
+        "off the record",
+        "iron will",
+        "calm spirit",
+        "shadow step",
+        "urban evasion",
+        "diversion",
+        "pebble",
+        "lightborn",
+        "tinkerer",
+        "unforeseen",
+        "trail of torment",
+        "dark devotion",
+        "beast of prey",
+        "quick & quiet",
+        "deception",
+    },
+    "Healing Core": {
+        "botany knowledge",
+        "we'll make it",
+        "self-care",
+        "desperate measures",
+        "circle of healing",
+        "bite the bullet",
+        "empathy",
+        "pharmacy",
+        "sloppy butcher",
+        "a nurse's calling",
+        "coulrophobia",
+        "autodidact",
+        "renewal",
+        "second wind",
+        "inner healing",
+    },
+    "Support / Unhooker": {
+        "borrowed time",
+        "we'll make it",
+        "deliverance",
+        "reassurance",
+        "babysitter",
+        "guardian",
+        "kindred",
+        "for the people",
+        "breakout",
+        "background player",
+    },
+}
+
+
+def evaluate_tactical_badges(perk_lowers: Set[str]) -> List[str]:
+    """Identify build playstyle badges based on perk combinations."""
+    tactical_badges: List[str] = []
+    for badge_name, badge_perks in BADGE_CATEGORIES.items():
+        matches = perk_lowers.intersection(badge_perks)
+        if len(matches) >= 2:
+            tactical_badges.append(badge_name)
+    return tactical_badges
+

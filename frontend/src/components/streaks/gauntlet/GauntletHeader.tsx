@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/gauntlet/GauntletHeader.tsx
 'use client';
 
 import React from 'react';

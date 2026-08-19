@@ -1,5 +1,6 @@
+// frontend/src/components/character-detail/modals/TerrorRadiusModal.tsx
 import React from 'react';
-import { Radio, X, Eye } from 'lucide-react';
+import { Radio, X } from 'lucide-react';
 import { CharacterItem } from '../types';
 
 interface TerrorRadiusModalProps {
@@ -9,7 +10,7 @@ interface TerrorRadiusModalProps {
   killerTerrorRadius: string;
   killerTRMeters: number;
   killerSpeed: string;
-  t: any;
+  t: Record<string, string>;
 }
 
 export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
@@ -27,39 +28,40 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-rose-500/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl bg-slate-900 border border-rose-500/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-rose-500/15 via-red-500/5 to-transparent flex items-center justify-between">
+        <div className="p-6 border-b border-slate-800 bg-gradient-to-r from-rose-500/15 via-red-500/5 to-transparent flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-500 shadow-inner">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shadow-inner">
               <Radio className="h-6 w-6 animate-pulse" />
             </div>
             <div>
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-rose-500">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-rose-400">
                 {character.name} &bull; Acoustic Range
               </span>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-mono">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
                 {t.terrorRadiusVisualizer || 'Terror Radius Visualizer'}
               </h2>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label={t.close || 'Close'}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto space-y-6 text-sm text-slate-700 dark:text-slate-300">
+        <div className="p-6 overflow-y-auto space-y-6 text-sm text-slate-300">
           <div className="relative flex flex-col items-center justify-center p-6 rounded-3xl bg-slate-950 border border-rose-500/20 overflow-hidden">
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border border-dashed border-purple-500/30 flex items-start justify-center pt-1">
@@ -146,11 +148,11 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2">
-            <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase">
               {t.survivorComparison || 'Survivor Speed Comparison'}
             </span>
-            <p className="text-xs text-slate-700 dark:text-slate-300">
+            <p className="text-xs text-slate-300">
               {t.survivorComparisonDesc || 'Survivor standard sprint speed is 4.0 m/s (100%).'}
             </p>
             <div className="flex flex-wrap items-center gap-4 text-xs font-mono pt-1 text-slate-400">
@@ -170,11 +172,12 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center justify-between p-4 px-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/30">
+        <div className="flex items-center justify-between p-4 px-6 border-t border-slate-800 bg-slate-950/30">
           <span className="text-xs text-slate-400 font-mono">{t.clickOutsideToClose || 'Esc or click outside to close'}</span>
           <button
+            type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 transition-all cursor-pointer shadow-sm"
+            className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-white text-slate-900 transition-all cursor-pointer shadow-sm"
           >
             {t.close || 'Close'}
           </button>
@@ -183,3 +186,4 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
     </div>
   );
 };
+

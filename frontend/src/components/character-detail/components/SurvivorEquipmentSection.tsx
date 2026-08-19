@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
 import React, { useState, useMemo } from 'react';
 import {
   Package,
@@ -18,7 +19,7 @@ interface SurvivorEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
   backendBase: string;
   onSelectEquipment: (item: AddonItem | EquipmentItem) => void;
-  t: any;
+  t: Record<string, string>;
 }
 
 type SurvivorCategoryKey =
@@ -40,9 +41,12 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   const [selectedCategory, setSelectedCategory] = useState<SurvivorCategoryKey>('medkit');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [rarityFilter, setRarityFilter] = useState<string>('all');
-  const [hoveredEquipId, setHoveredEquipId] = useState<string | null>(null);
+  const [activeHover, setActiveHover] = useState<{
+    item: AddonItem | EquipmentItem;
+    rect: DOMRect;
+    accentColor: string;
+  } | null>(null);
 
-  // Group helpers
   const isMedKit = (name: string, target?: string) =>
     name.toLowerCase().includes('med-kit') ||
     name.toLowerCase().includes('lunchbox') ||
@@ -110,7 +114,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       const matchesSearch =
         !query ||
         it.name.toLowerCase().includes(query) ||
-        (it.description && it.description.toLowerCase().includes(query));
+        Boolean(it.description && it.description.toLowerCase().includes(query));
 
       const itemRarity = (it.rarity || '').toLowerCase();
       const matchesRarity =
@@ -123,7 +127,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
     const filteredAddons = addons.filter(filterItem);
 
     const matchesCategory = (it: EquipmentItem | AddonItem, isAddon: boolean) => {
-      const target = (it as any).associated_target || '';
+      const target = (it as { associated_target?: string }).associated_target || '';
       if (selectedCategory === 'medkit') return isMedKit(it.name, target);
       if (selectedCategory === 'toolbox') return isToolbox(it.name, target);
       if (selectedCategory === 'flashlight') return isFlashlight(it.name, target);
@@ -144,40 +148,40 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
     categories.find((c) => c.key === selectedCategory) || categories[0];
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 w-full">
       {/* Top Header & Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
             <Package className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
-              {t.equipmentTitleSurvivor || 'Survival Equipment & Add-ons'}
+            <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
+              {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Select an item category to explore items and their compatible add-on attachments.
+            <p className="text-xs text-slate-400">
+              {t.equipmentDescSurvivor || 'Select an item category to explore items and their compatible add-on attachments.'}
             </p>
           </div>
         </div>
 
         {/* Search & Rarity Controls */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-36 sm:w-48">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+          <div className="relative w-full sm:w-48">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
             <input
               type="text"
               placeholder={t.searchEquipment || 'Filter name...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-900 placeholder-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-inner"
             />
           </div>
 
           <select
             value={rarityFilter}
             onChange={(e) => setRarityFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 focus:outline-none"
+            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value="all">{t.allRarities || 'All Rarities'}</option>
             <option value="Common">Common</option>
@@ -190,21 +194,22 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
         </div>
       </div>
 
-      {/* Main Block Container: Left Icon Bar + 2-Column Split View */}
+      {/* Main Container */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
-        {/* Left Side Icon Navigation Bar */}
-        <div className="flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-slate-950/60 border border-slate-800/80 shrink-0 overflow-x-auto md:overflow-x-visible">
+        {/* Left Side Navigation */}
+        <div className="flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-slate-950/60 border border-slate-800 shrink-0 overflow-x-auto md:overflow-x-visible">
           {categories.map((cat) => {
             const Icon = cat.icon;
             const isSelected = selectedCategory === cat.key;
             return (
               <button
+                type="button"
                 key={cat.key}
                 onClick={() => setSelectedCategory(cat.key as SurvivorCategoryKey)}
                 className={`relative h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
                   isSelected
                     ? 'bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 shadow-lg shadow-emerald-950/60 scale-105'
-                    : 'bg-slate-900/60 border border-slate-800/80 hover:border-slate-600 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    : 'bg-slate-900/60 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                 }`}
                 title={`${cat.label} - ${cat.desc}`}
                 aria-label={cat.label}
@@ -221,11 +226,11 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           })}
         </div>
 
-        {/* 2-Column Split Content: Left = Items, Right = Addons */}
+        {/* 2-Column Split Content */}
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* 1. Usable Items Column */}
-          <div className="flex flex-col p-4 rounded-3xl bg-slate-950/40 border border-slate-800/80 shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
+          {/* Usable Items Column */}
+          <div className="flex flex-col p-4 rounded-3xl bg-slate-950/40 border border-slate-800 shadow-lg">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                 <Package className="h-4 w-4" />
                 {activeCategoryConfig.label} &bull; Items ({categorizedData.displayedItems.length})
@@ -242,13 +247,26 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 {categorizedData.displayedItems.map((item, idx) => {
                   const id = `item-${item.name}-${idx}`;
                   const rarityStyle = getRarityTileStyle(item.rarity);
+
                   return (
                     <div
                       key={id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => onSelectEquipment(item)}
-                      onMouseEnter={() => setHoveredEquipId(id)}
-                      onMouseLeave={() => setHoveredEquipId(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 hover:z-10 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelectEquipment(item);
+                        }
+                      }}
+                      onMouseEnter={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setActiveHover({ item, rect, accentColor: 'text-emerald-400' });
+                      }}
+                      onMouseLeave={() => setActiveHover(null)}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      aria-label={`Inspect item: ${item.name}`}
                     >
                       <img
                         src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
@@ -258,23 +276,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                           (e.target as HTMLImageElement).style.display = 'none';
                         }}
                       />
-
-                      {hoveredEquipId === id && (
-                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-[9999] w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150">
-                          <div className="flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-slate-800">
-                            <h4 className="text-xs font-black text-white truncate">{item.name}</h4>
-                            {item.rarity && (
-                              <span className={`text-[9px] font-bold uppercase ${rarityStyle.text}`}>{item.rarity}</span>
-                            )}
-                          </div>
-                          <div className="space-y-1 text-xs max-h-48 overflow-y-auto">
-                            {renderFormattedDbdText(item.description || '', true)}
-                          </div>
-                          <span className="block text-[9px] font-mono text-emerald-400/80 mt-2 text-right font-bold">
-                            {t.clickToInspect || 'Click to inspect full mechanics'} &rarr;
-                          </span>
-                        </div>
-                      )}
                     </div>
                   );
                 })}
@@ -282,12 +283,14 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             )}
           </div>
 
-          {/* 2. Compatible Add-ons Column */}
-          <div className="flex flex-col p-4 rounded-3xl bg-slate-950/40 border border-slate-800/80 shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
+          {/* Compatible Add-ons Column */}
+          <div className="flex flex-col p-4 rounded-3xl bg-slate-950/40 border border-slate-800 shadow-lg">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" />
-                {selectedCategory === 'trial_exclusive' ? 'Artifact Mechanics' : `Compatible Add-ons (${categorizedData.displayedAddons.length})`}
+                {selectedCategory === 'trial_exclusive'
+                  ? 'Artifact Mechanics'
+                  : `Compatible Add-ons (${categorizedData.displayedAddons.length})`}
               </h3>
               <span className="text-[10px] font-mono text-slate-400">
                 {selectedCategory === 'trial_exclusive' ? 'Special Trial Rules' : 'Attach up to 2 per item'}
@@ -316,13 +319,26 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 {categorizedData.displayedAddons.map((item, idx) => {
                   const id = `addon-${item.name}-${idx}`;
                   const rarityStyle = getRarityTileStyle(item.rarity);
+
                   return (
                     <div
                       key={id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => onSelectEquipment(item)}
-                      onMouseEnter={() => setHoveredEquipId(id)}
-                      onMouseLeave={() => setHoveredEquipId(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 hover:z-10 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelectEquipment(item);
+                        }
+                      }}
+                      onMouseEnter={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setActiveHover({ item, rect, accentColor: 'text-amber-400' });
+                      }}
+                      onMouseLeave={() => setActiveHover(null)}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      aria-label={`Inspect addon: ${item.name}`}
                     >
                       <img
                         src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
@@ -332,23 +348,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                           (e.target as HTMLImageElement).style.display = 'none';
                         }}
                       />
-
-                      {hoveredEquipId === id && (
-                        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-[9999] w-72 sm:w-80 p-3.5 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150">
-                          <div className="flex items-center justify-between gap-1 mb-1.5 pb-1 border-b border-slate-800">
-                            <h4 className="text-xs font-black text-white truncate">{item.name}</h4>
-                            {item.rarity && (
-                              <span className={`text-[9px] font-bold uppercase ${rarityStyle.text}`}>{item.rarity}</span>
-                            )}
-                          </div>
-                          <div className="space-y-1 text-xs max-h-48 overflow-y-auto">
-                            {renderFormattedDbdText(item.description || '', true)}
-                          </div>
-                          <span className="block text-[9px] font-mono text-amber-400/80 mt-2 text-right font-bold">
-                            {t.clickToInspect || 'Click to inspect full mechanics'} &rarr;
-                          </span>
-                        </div>
-                      )}
                     </div>
                   );
                 })}
@@ -357,6 +356,40 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           </div>
         </div>
       </div>
+
+      {/* Clamped Tooltip */}
+      {activeHover && typeof window !== 'undefined' && (() => {
+        const tooltipWidth = 320;
+        const left = Math.max(
+          16,
+          Math.min(window.innerWidth - tooltipWidth - 16, activeHover.rect.left + activeHover.rect.width / 2 - tooltipWidth / 2)
+        );
+        const top = activeHover.rect.bottom + 10;
+        const rarityStyle = getRarityTileStyle(activeHover.item.rarity);
+
+        return (
+          <div
+            style={{ position: 'fixed', left: `${left}px`, top: `${top}px`, width: `${tooltipWidth}px` }}
+            className="z-[99999] p-4 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150"
+          >
+            <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-800">
+              <h4 className="text-sm font-black text-white truncate font-mono">{activeHover.item.name}</h4>
+              {activeHover.item.rarity && (
+                <span className={`text-[10px] font-bold uppercase font-mono ${rarityStyle.text}`}>
+                  {activeHover.item.rarity}
+                </span>
+              )}
+            </div>
+            <div className="space-y-1 text-xs max-h-48 overflow-y-auto leading-relaxed text-slate-200">
+              {renderFormattedDbdText(activeHover.item.description || '', true)}
+            </div>
+            <span className={`block text-[10px] font-mono mt-2.5 text-right font-bold ${activeHover.accentColor}`}>
+              {t.clickToInspect || 'Click to inspect full mechanics'} &rarr;
+            </span>
+          </div>
+        );
+      })()}
     </section>
   );
 };
+

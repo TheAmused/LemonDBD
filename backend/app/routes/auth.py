@@ -1,9 +1,13 @@
+# backend/app/routes/auth.py
 import logging
 import os
-from flask import Blueprint, request, jsonify, g, make_response, send_from_directory, current_app
-from app.services.user_service import UserService
+from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
+from pydantic import ValidationError
+
+from app.core.security import get_current_user, login_required
+from app.schemas.user import UserCreate, UserResponse
 from app.services.ownership_service import OwnershipService
-from app.utils.auth_helper import login_required, get_current_user
+from app.services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/api/v1/auth")
@@ -14,44 +18,49 @@ ownership_service = OwnershipService()
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
-    data = request.get_json() or {}
-    username = data.get("username")
-    email = data.get("email")
-    password = data.get("password")
-    role = data.get("role", "user")
+    payload = request.get_json(silent=True) or {}
+    
+    # 1. Validate payload structure using Pydantic
+    try:
+        validated_data = UserCreate.model_validate(payload)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
 
+    # 2. Register user
     user, err = user_service.register_user(
-        username=username,
-        email=email,
-        password=password,
-        role=role,
+        username=validated_data.username,
+        email=validated_data.email,
+        password=validated_data.password,
+        role=validated_data.role or "user",
     )
     if err:
         return jsonify({"error": err, "status": 400}), 400
 
-    token = user_service.generate_token(user.id)
+    # 3. Generate token & get ownership summary
+    token = user_service.generate_auth_token(user)
     summary = ownership_service.get_user_ownership_summary(user.id)
 
     return jsonify({
         "status": "success",
         "message": "User registered successfully",
         "token": token,
-        "user": user.to_dict(),
+        "token_type": "Bearer",
+        "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
     }), 201
 
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     username_or_email = data.get("username") or data.get("email") or data.get("username_or_email")
     password = data.get("password")
 
     if not username_or_email or not password:
         return jsonify({"error": "Username/email and password are required.", "status": 400}), 400
 
-    user, token = user_service.authenticate(username_or_email, password)
-    if not user:
+    user, token = user_service.authenticate(username_or_email.strip(), password.strip())
+    if not user or not token:
         return jsonify({"error": "Invalid credentials or account disabled.", "status": 401}), 401
 
     summary = ownership_service.get_user_ownership_summary(user.id)
@@ -60,7 +69,8 @@ def login():
         "status": "success",
         "message": "Login successful",
         "token": token,
-        "user": user.to_dict(),
+        "token_type": "Bearer",
+        "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
     }), 200
 
@@ -81,7 +91,7 @@ def get_current_user_profile():
     summary = ownership_service.get_user_ownership_summary(user.id)
     resp = make_response(jsonify({
         "authenticated": True,
-        "user": user.to_dict(),
+        "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
     }))
     resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -92,7 +102,7 @@ def get_current_user_profile():
 @login_required
 def update_profile():
     user = g.current_user
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     email = data.get("email")
     avatar_url = data.get("avatar_url")
     new_password = data.get("new_password")
@@ -109,7 +119,7 @@ def update_profile():
     return jsonify({
         "status": "success",
         "message": "Profile updated successfully",
-        "user": updated_user.to_dict(),
+        "user": UserResponse.model_validate(updated_user).model_dump(),
     }), 200
 
 
@@ -129,7 +139,7 @@ def upload_avatar():
         "status": "success",
         "message": "Avatar uploaded, cropped, and converted to WebP successfully.",
         "avatar_url": updated_user.avatar_url,
-        "user": updated_user.to_dict(),
+        "user": UserResponse.model_validate(updated_user).model_dump(),
     }), 200
 
 
@@ -145,20 +155,15 @@ def delete_avatar():
         "status": "success",
         "message": "Avatar reset to default.",
         "avatar_url": updated_user.avatar_url,
-        "user": updated_user.to_dict(),
+        "user": UserResponse.model_validate(updated_user).model_dump(),
     }), 200
 
 
 @auth_bp.route("/avatar/file/<path:filename>", methods=["GET"])
 def get_avatar_file(filename):
-    """
-    Publicly serve user avatars with explicit image/webp MIME type.
-    Searches primary and alternative static folders inside the container.
-    """
     clean_filename = os.path.basename(filename)
     primary_dir = user_service._get_avatar_dir()
     
-    # Candidate directory locations inside the container
     candidate_dirs = [
         primary_dir,
         os.path.abspath(os.path.join(current_app.root_path, "static", "uploads", "avatars")),

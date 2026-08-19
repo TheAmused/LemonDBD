@@ -1,3 +1,4 @@
+// frontend/src/types/pageStreak.ts
 export type RunStatus = 'not_started' | 'in_progress' | 'completed';
 
 export interface RosterEntry {

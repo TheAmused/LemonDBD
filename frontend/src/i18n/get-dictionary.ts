@@ -1,3 +1,4 @@
+// frontend/src/i18n/get-dictionary.ts
 import type { Locale } from './config';
 
 const dictionaries = {

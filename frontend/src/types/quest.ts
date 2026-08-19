@@ -1,3 +1,4 @@
+// frontend/src/types/quest.ts
 export interface Quest {
   id: number;
   title: string;

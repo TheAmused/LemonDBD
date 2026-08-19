@@ -1,6 +1,7 @@
+# backend/app/routes/gauntlet_streak.py
 from flask import Blueprint, current_app, jsonify, request, g
 from app.services.gauntlet_service import GauntletService
-from app.utils.auth_helper import login_required
+from app.core.security import login_required
 
 gauntlet_streak_bp = Blueprint("gauntlet_streak", __name__, url_prefix="/api/v1/gauntlet-streak")
 _default_service = None

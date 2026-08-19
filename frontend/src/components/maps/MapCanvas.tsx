@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/components/maps/MapCanvas.tsx
 
 import React, { useState, useEffect } from 'react';
 import { Compass, ImageOff, Move } from 'lucide-react';
@@ -52,7 +53,6 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
 }) => {
   const [imageError, setImageError] = useState<boolean>(false);
 
-  // Reset image error state whenever the image URL changes
   useEffect(() => {
     setImageError(false);
   }, [imageUrl]);
@@ -66,8 +66,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
     imageAlignment === 'left'
       ? 'justify-start'
       : imageAlignment === 'right'
-        ? 'justify-end'
-        : 'justify-center';
+      ? 'justify-end'
+      : 'justify-center';
 
   return (
     <div
@@ -81,11 +81,11 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       onTouchEnd={onTouchEnd}
       onTouchCancel={onTouchCancel}
       style={{ touchAction: 'none' }}
-      className={`relative min-h-[440px] md:min-h-[520px] max-h-[85vh] h-[55vh] md:h-[65vh] w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-950 p-4 border border-slate-200/90 dark:border-slate-800/80 flex items-center justify-center select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-        } ${className}`}
+      className={`relative min-h-[440px] md:min-h-[520px] max-h-[85vh] h-[55vh] md:h-[65vh] w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-950 p-4 border border-slate-200/90 dark:border-slate-800/80 flex items-center justify-center select-none ${
+        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+      } ${className}`}
       data-testid="map-canvas-container"
     >
-      {/* Hardware-accelerated transformed container */}
       <div
         style={{
           willChange: 'transform',
@@ -130,7 +130,6 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
         )}
       </div>
 
-      {/* Pan & Zoom Hint Overlay */}
       {showPanHint && (
         <div
           className="absolute top-3 left-3 hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-200/80 dark:border-slate-800/80 bg-white/75 dark:bg-slate-950/70 px-2.5 py-1 text-[10px] font-mono text-slate-500 dark:text-slate-400 backdrop-blur-md pointer-events-none z-10"
@@ -141,7 +140,6 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
         </div>
       )}
 
-      {/* Optional Custom Overlay/Controls Elements */}
       {children}
     </div>
   );

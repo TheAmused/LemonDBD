@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/app/[locale]/maps/page.tsx
 
 import React, { Suspense, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
@@ -8,9 +9,10 @@ import { VoiceCommandBanner } from '@/components/maps/VoiceCommandBanner';
 import { QuestsModal } from '@/components/QuestsModal';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { Compass, Sparkles, MapPin, Layers } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { MapRealm } from '@/types/map';
+import { Perk, PerkDictionary } from '@/types/perks';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 function MapsPageInner() {
   const params = useParams();
@@ -18,11 +20,10 @@ function MapsPageInner() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<PerkDictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const initialMapName = searchParams?.get('mapName') || '';
 
-  // Voice Navigation & Source State
   const [currentSource, setCurrentSource] = useState<'all' | 'hens333' | 'samoelcolt'>('hens333');
   const [availableMaps, setAvailableMaps] = useState<MapRealm[]>([]);
   const [selectedMap, setSelectedMap] = useState<{
@@ -37,26 +38,24 @@ function MapsPageInner() {
     timestamp: number;
   } | null>(null);
 
-  // Sync selectedMap if URL parameter changes
   useEffect(() => {
     if (initialMapName) {
       setSelectedMap({ mapName: initialMapName, timestamp: Date.now() });
     }
   }, [initialMapName]);
 
-  // Vault Stats for Sidebar
   const [totalPerksCount, setTotalPerksCount] = useState<number>(0);
   const [survivorCount, setSurvivorCount] = useState<number>(0);
   const [killerCount, setKillerCount] = useState<number>(0);
   const [characterCount, setCharacterCount] = useState<number>(0);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
     document.title = 'LemonDBD - Tactical Map Command Explorer';
     getDictionary(locale)
-      .then(setDict)
-      .catch((err) => console.error('Failed to load maps dictionary:', err));
+      .then((d) => setDict(d as PerkDictionary))
+      .catch((err: unknown) => console.error('Failed to load maps dictionary:', err));
   }, [locale]);
 
   useEffect(() => {
@@ -68,16 +67,16 @@ function MapsPageInner() {
         ]);
         if (perksRes.ok) {
           const pData = await perksRes.json();
-          const list = pData.data || [];
+          const list: Perk[] = pData.data || [];
           setTotalPerksCount(pData.pagination?.total || list.length);
-          setSurvivorCount(list.filter((p: any) => p.category === 'Survivor').length);
-          setKillerCount(list.filter((p: any) => p.category === 'Killer').length);
+          setSurvivorCount(list.filter((p) => p.category === 'Survivor').length);
+          setKillerCount(list.filter((p) => p.category === 'Killer').length);
         }
         if (charsRes.ok) {
           const cData = await charsRes.json();
           setCharacterCount(cData.count || (cData.data || []).length);
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('Failed to load sidebar vault stats:', err);
       }
     }
@@ -117,38 +116,31 @@ function MapsPageInner() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        {/* ── Top Tactical Navigation & Voice Command Bar ── */}
         <VoiceCommandBanner
           locale={locale}
           dict={dict}
           currentSource={currentSource}
           onSourceChange={(src) => {
-            console.log('[MapsPage] Source changed to:', src);
             setCurrentSource(src);
           }}
           onSelectMap={(name, id, src) => {
-            console.log('[MapsPage] onSelectMap called with:', { name, id, src });
-            if (src) setCurrentSource(src as any);
+            if (src) setCurrentSource(src as 'all' | 'hens333' | 'samoelcolt');
             setSelectedMap({ mapName: name, timestamp: Date.now() });
           }}
           onAction={(act) => {
-            console.log('[MapsPage] onAction called with:', act);
             setTriggerAction({ action: act, timestamp: Date.now() });
           }}
           availableMaps={availableMaps}
         />
 
-        {/* ── Main Map Spatial Workspace (Desktop & Mobile) ── */}
         <MapExplorer
           initialMapName={selectedMap.mapName}
           selectedMap={selectedMap}
           selectedSource={currentSource}
           onSourceChange={(src) => {
-            console.log('[MapsPage] Explorer source changed to:', src);
             setCurrentSource(src);
           }}
           onAvailableMapsLoaded={(maps) => {
-            console.log('[MapsPage] Loaded available maps count:', maps.length);
             setAvailableMaps(maps);
           }}
           onActionTriggered={(act) => setTriggerAction({ action: act, timestamp: Date.now() })}

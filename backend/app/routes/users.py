@@ -1,24 +1,28 @@
+# backend/app/routes/users.py
 import logging
-from flask import Blueprint, request, jsonify, g
+from typing import Any, Dict, List
+from flask import Blueprint, g, jsonify, request
+from pydantic import ValidationError
 from sqlalchemy import delete
-from app.extensions import db
+
+from app.core.extensions import db
+from app.core.security import admin_required, login_required
 from app.models import (
-    User,
-    Character,
-    Perk,
-    Item,
     Addon,
+    Character,
+    GauntletRun,
+    Item,
+    MapObjective,
     MapRealm,
     MapTile,
-    MapObjective,
+    PageStreakRun,
+    Perk,
     UserCharacterOwnership,
     UserPerkOwnership,
-    GauntletRun,
-    PageStreakRun,
 )
-from app.services.user_service import UserService
+from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services.ownership_service import OwnershipService
-from app.utils.auth_helper import login_required, admin_required
+from app.services.user_service import UserService
 
 logger = logging.getLogger(__name__)
 users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
@@ -27,13 +31,18 @@ user_service = UserService()
 ownership_service = OwnershipService()
 
 
+# ==========================================
+# USER MANAGEMENT (ADMIN)
+# ==========================================
+
 @users_bp.route("/users", methods=["GET"])
 @admin_required
 def list_users():
+    """List all registered users with optional search filtering and pagination."""
     search = request.args.get("search")
     role = request.args.get("role")
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 20))
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=20, type=int)
 
     result = user_service.get_all_users(search=search, role=role, page=page, per_page=per_page)
     return jsonify(result), 200
@@ -42,17 +51,20 @@ def list_users():
 @users_bp.route("/users", methods=["POST"])
 @admin_required
 def create_user_by_admin():
-    data = request.get_json() or {}
-    username = data.get("username")
-    email = data.get("email")
-    password = data.get("password")
-    role = data.get("role", "user")
+    """Create a new user account directly via administrative privileges."""
+    payload = request.get_json(silent=True) or {}
+
+    try:
+        validated_data = UserCreate.model_validate(payload)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
 
     user, err = user_service.register_user(
-        username=username,
-        email=email,
-        password=password,
-        role=role,
+        username=validated_data.username,
+        email=validated_data.email,
+        password=validated_data.password,
+        role=validated_data.role or "user",
+        avatar_url=validated_data.avatar_url or "default_avatar",
     )
     if err:
         return jsonify({"error": err, "status": 400}), 400
@@ -60,13 +72,14 @@ def create_user_by_admin():
     return jsonify({
         "status": "success",
         "message": "User created successfully by admin",
-        "user": user.to_dict(),
+        "user": UserResponse.model_validate(user).model_dump(),
     }), 201
 
 
 @users_bp.route("/users/<int:user_id>", methods=["GET"])
 @login_required
-def get_user_detail(user_id):
+def get_user_detail(user_id: int):
+    """Retrieve detailed user account and ownership information."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized access to user profile.", "status": 403}), 403
@@ -77,32 +90,41 @@ def get_user_detail(user_id):
 
     summary = ownership_service.get_user_ownership_summary(user_id)
     return jsonify({
-        "user": user.to_dict(),
+        "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
     }), 200
 
 
 @users_bp.route("/users/<int:user_id>", methods=["PUT"])
 @admin_required
-def update_user_by_admin(user_id):
-    data = request.get_json() or {}
-    role = data.get("role")
-    is_active = data.get("is_active")
+def update_user_by_admin(user_id: int):
+    """Update role or active status for a specific user."""
+    payload = request.get_json(silent=True) or {}
 
-    user, err = user_service.admin_update_user(user_id, role=role, is_active=is_active)
+    try:
+        validated_data = UserUpdate.model_validate(payload)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
+
+    user, err = user_service.admin_update_user(
+        user_id=user_id,
+        role=validated_data.role,
+        is_active=validated_data.is_active,
+    )
     if err:
         return jsonify({"error": err, "status": 400}), 400
 
     return jsonify({
         "status": "success",
         "message": "User updated successfully",
-        "user": user.to_dict(),
+        "user": UserResponse.model_validate(user).model_dump(),
     }), 200
 
 
 @users_bp.route("/users/<int:user_id>", methods=["DELETE"])
 @admin_required
-def delete_user_by_admin(user_id):
+def delete_user_by_admin(user_id: int):
+    """Delete a user account and associated assets."""
     if g.current_user.id == user_id:
         return jsonify({"error": "Cannot delete your own admin account.", "status": 400}), 400
 
@@ -113,9 +135,14 @@ def delete_user_by_admin(user_id):
     return jsonify({"status": "success", "message": "User deleted successfully."}), 200
 
 
+# ==========================================
+# SYSTEM & DATABASE ADMINISTRATION
+# ==========================================
+
 @users_bp.route("/admin/stats", methods=["GET"])
 @admin_required
 def get_admin_stats():
+    """Retrieve system-wide entity and registration metrics."""
     stats = user_service.get_admin_system_stats()
     return jsonify(stats), 200
 
@@ -123,12 +150,13 @@ def get_admin_stats():
 @users_bp.route("/admin/database/purge", methods=["POST"])
 @admin_required
 def purge_database_tables():
-    data = request.get_json() or {}
-    targets = data.get("targets", [])
+    """Purge specific database entity tables on demand."""
+    data = request.get_json(silent=True) or {}
+    targets: List[str] = data.get("targets", [])
     if not isinstance(targets, list) or not targets:
         return jsonify({"error": "No valid purge targets specified.", "status": 400}), 400
 
-    purged = []
+    purged: List[str] = []
     try:
         if "perks" in targets:
             db.session.execute(delete(Perk))
@@ -173,13 +201,18 @@ def purge_database_tables():
 
     except Exception as e:
         db.session.rollback()
-        logger.error(f"Error purging database tables: {e}")
+        logger.error(f"Error purging database tables: {e}", exc_info=True)
         return jsonify({"error": f"Database purge failed: {str(e)}", "status": 500}), 500
 
 
+# ==========================================
+# CHARACTER OWNERSHIP
+# ==========================================
+
 @users_bp.route("/users/<int:user_id>/characters", methods=["GET"])
 @login_required
-def get_user_characters(user_id):
+def get_user_characters(user_id: int):
+    """Retrieve character ownership flags for a user."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized access to character ownership.", "status": 403}), 403
@@ -195,12 +228,13 @@ def get_user_characters(user_id):
 
 @users_bp.route("/users/<int:user_id>/characters", methods=["POST", "PUT"])
 @login_required
-def set_single_character_ownership(user_id):
+def set_single_character_ownership(user_id: int):
+    """Toggle or set character ownership for a single character."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized.", "status": 403}), 403
 
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     character_id = data.get("character_id")
     is_owned = bool(data.get("is_owned", True))
 
@@ -216,12 +250,13 @@ def set_single_character_ownership(user_id):
 
 @users_bp.route("/users/<int:user_id>/characters/bulk", methods=["POST"])
 @login_required
-def bulk_set_character_ownership(user_id):
+def bulk_set_character_ownership(user_id: int):
+    """Bulk update character ownership states."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized.", "status": 403}), 403
 
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     updates = data.get("updates", [])
 
     if not isinstance(updates, list):
@@ -231,9 +266,14 @@ def bulk_set_character_ownership(user_id):
     return jsonify({"status": "success", "data": result}), 200
 
 
+# ==========================================
+# PERK OWNERSHIP
+# ==========================================
+
 @users_bp.route("/users/<int:user_id>/perks", methods=["GET"])
 @login_required
-def get_user_perks(user_id):
+def get_user_perks(user_id: int):
+    """Retrieve perk unlock status for a specific user."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized access to perk ownership.", "status": 403}), 403
@@ -249,12 +289,13 @@ def get_user_perks(user_id):
 
 @users_bp.route("/users/<int:user_id>/perks", methods=["POST", "PUT"])
 @login_required
-def set_single_perk_ownership(user_id):
+def set_single_perk_ownership(user_id: int):
+    """Toggle or set perk unlock state for a single perk."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized.", "status": 403}), 403
 
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     perk_id = data.get("perk_id")
     is_unlocked = bool(data.get("is_unlocked", True))
 
@@ -270,12 +311,13 @@ def set_single_perk_ownership(user_id):
 
 @users_bp.route("/users/<int:user_id>/perks/bulk", methods=["POST"])
 @login_required
-def bulk_set_perk_ownership(user_id):
+def bulk_set_perk_ownership(user_id: int):
+    """Bulk update perk unlock states."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized.", "status": 403}), 403
 
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     updates = data.get("updates", [])
 
     if not isinstance(updates, list):
@@ -287,7 +329,8 @@ def bulk_set_perk_ownership(user_id):
 
 @users_bp.route("/users/<int:user_id>/ownership/summary", methods=["GET"])
 @login_required
-def get_user_ownership_summary(user_id):
+def get_user_ownership_summary(user_id: int):
+    """Retrieve an aggregated overview of owned characters and unlocked perks."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized.", "status": 403}), 403

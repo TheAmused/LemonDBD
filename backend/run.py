@@ -1,3 +1,4 @@
+# backend/run.py
 import logging
 import os
 import threading
@@ -14,7 +15,7 @@ LOCK_FILE = "/tmp/dbd_initial_scrape.lock"
 def _run_initial_scrape_if_needed():
     with app.app_context():
         from sqlalchemy import select, func
-        from app.extensions import db
+        from app.core.extensions import db
         from app.models import Character
         try:
             char_count = db.session.scalar(select(func.count(Character.id))) or 0

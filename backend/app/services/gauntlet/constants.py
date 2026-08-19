@@ -42,4 +42,8 @@ def get_tier_info(streak: int, role: str) -> Dict[str, Any]:
             tier = candidate
     info = dict(tier)
     info.pop("min_streak")
+    # Carried on every tier payload so the frontend can filter the roster grid
+    # and draw pool to the same characters the backend will ever draw, without
+    # keeping its own copy of the limit.
+    info["roster_limit"] = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
     return info

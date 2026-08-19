@@ -7,7 +7,8 @@ from app.core.extensions import db
 from app.models import Character, Perk
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
-from app.services.gauntlet_service import CHECKPOINT_INTERVAL, GauntletService
+from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names
+from app.services.gauntlet_service import GauntletService
 
 
 def seed_killer(name, perk_count=3):
@@ -96,6 +97,12 @@ class TestGauntletTiers(GauntletTestCase):
         self.assertNotIn("min_streak", self.service.get_tier_info(0, "killer"))
         self.assertNotIn("min_streak", self.service.get_tier_info(0, "survivor"))
 
+    def test_tier_info_carries_the_roster_limit(self):
+        """The frontend filters its roster grid off this value instead of
+        keeping its own copy of the original challenge's cutoff."""
+        self.assertEqual(self.service.get_tier_info(0, "killer")["roster_limit"], 43)
+        self.assertEqual(self.service.get_tier_info(0, "survivor")["roster_limit"], 52)
+
     def test_only_killers_are_restricted_to_their_own_perks(self):
         self.assertTrue(self.service.get_tier_info(0, "killer")["character_perks_only"])
         self.assertFalse(self.service.get_tier_info(0, "survivor")["character_perks_only"])
@@ -120,7 +127,7 @@ class TestOriginalKillerRosterCap(GauntletTestCase):
         self.user_id = self.register_user("gauntletcapuser")
 
     def test_pool_excludes_killers_past_the_original_cutoff(self):
-        names = self.service._owned_character_names(self.user_id, "killer")
+        names = get_owned_character_names(self.user_id, "killer", self.ownership_service)
         self.assertIn("Trapper", names)
         self.assertIn("The Slasher", names)
         self.assertNotIn("The Judgment", names)

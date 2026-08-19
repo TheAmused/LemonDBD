@@ -5,7 +5,7 @@ from app.core.config import TestingConfig
 from app.core.extensions import db
 from app.services.page_streak_service import PageStreakService
 from app.services.user_service import UserService
-from tests.test_page_streak_service import FakePerkService, make_perks, seed_perks
+from tests.unit.test_page_streak_service import FakePerkService, make_perks, seed_perks
 
 
 class TestPageStreakRoutes(unittest.TestCase):

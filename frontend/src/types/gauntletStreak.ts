@@ -23,6 +23,8 @@ export interface TierInfo {
   /** Killers run their own teachables only; survivors may fill the other slots freely. */
   character_perks_only: boolean;
   description: string;
+  /** The original challenge's roster cutoff for this role (43 killers, 52 survivors). */
+  roster_limit: number;
 }
 
 export interface GauntletRun {

@@ -28,8 +28,6 @@
     "perkWheelTitle": "パークルーレット",
     "selectedPage": "選択ページ: {page}",
     "slotBadge": "ページ {page} / スロット {slot}",
-    "copyBuild": "構成テキストをコピー",
-    "buildCopied": "コピー完了！",
     "noRepeat": "重複なし",
     "drawnBadge": "使用済: {drawn} / {total}",
     "resetDrawn": "使用済パークをリセット"
@@ -227,4 +225,3 @@
     "quests": "📜 クエスト"
   }
 }
-

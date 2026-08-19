@@ -29,8 +29,6 @@
     "perkWheelTitle": "Rueda de Perks",
     "selectedPage": "Página Seleccionada: {page}",
     "slotBadge": "Página {page} / Slot {slot}",
-    "copyBuild": "Copiar Build",
-    "buildCopied": "¡Build Copiada!",
     "noRepeat": "Sin Repetición",
     "drawnBadge": "Usados: {drawn} / {total}",
     "resetDrawn": "Reiniciar Perks Usados"
@@ -228,4 +226,3 @@
     "quests": "📜 Misiones"
   }
 }
-

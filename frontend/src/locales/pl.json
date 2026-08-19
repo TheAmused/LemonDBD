@@ -28,8 +28,6 @@
     "perkWheelTitle": "Koło Perków",
     "selectedPage": "Wybrana Strona: {page}",
     "slotBadge": "Strona {page} / Slot {slot}",
-    "copyBuild": "Kopiuj Zestaw",
-    "buildCopied": "Skopiowano Zestaw!",
     "noRepeat": "Bez Powtórzeń",
     "drawnBadge": "Wylosowane: {drawn} / {total}",
     "resetDrawn": "Resetuj Użyte Perki"
@@ -227,4 +225,3 @@
     "quests": "📜 Zadania"
   }
 }
-

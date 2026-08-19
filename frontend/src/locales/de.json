@@ -28,8 +28,6 @@
     "perkWheelTitle": "Perk-Rad",
     "selectedPage": "Ausgewählte Seite: {page}",
     "slotBadge": "Seite {page} / Slot {slot}",
-    "copyBuild": "Loadout Kopieren",
-    "buildCopied": "Loadout Kopiert!",
     "noRepeat": "Keine Wiederholungen",
     "drawnBadge": "Gezogen: {drawn} / {total}",
     "resetDrawn": "Benutzte Perks zurücksetzen"
@@ -227,4 +225,3 @@
     "quests": "📜 Quests"
   }
 }
-

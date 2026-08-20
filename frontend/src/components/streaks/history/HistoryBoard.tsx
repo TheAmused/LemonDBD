@@ -12,6 +12,7 @@ import { useOwnedKillers } from '../chaos/useOwnedKillers';
 import { useKillerPerkPool } from '../chaos/useKillerPerkPool';
 import { KillerPickerGrid } from '../chaos/KillerPickerGrid';
 import { HistoryHeader } from './HistoryHeader';
+import { HistoryStatsDrawer } from './HistoryStatsDrawer';
 import { HistoryPerkPoolPanel } from './HistoryPerkPoolPanel';
 import { HistoryPerkModal } from './HistoryPerkModal';
 import { HistoryNextRowPreview } from './HistoryNextRowPreview';
@@ -27,7 +28,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const searchParams = useSearchParams();
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
-  const { run, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
+  const { run, stats, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
   const { killers: ownedKillers, loading: loadingKillers } = useOwnedKillers();
   const { pool: perkPool } = useKillerPerkPool();
 
@@ -36,6 +37,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const [celebrating, setCelebrating] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [perkModal, setPerkModal] = useState<{ killerName: string; perks: Perk[] } | null>(null);
   const [rowClearedNumber, setRowClearedNumber] = useState<number | null>(null);
 
@@ -98,6 +100,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           bestKillersBeaten={run?.best_killers_beaten || 0}
           checkpointRowIndex={run?.checkpoint_row_index || 0}
           onOpenRules={() => setIsRulesOpen(true)}
+          onOpenStats={() => setIsStatsOpen(true)}
         />
 
         {isCompleted ? (
@@ -224,6 +227,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           </div>
         )}
 
+        <HistoryStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
         <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
         <HistoryPerkModal
           killerName={perkModal?.killerName ?? null}

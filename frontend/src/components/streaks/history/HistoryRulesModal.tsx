@@ -66,6 +66,9 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
               You start with every General perk unlocked. Beating a killer adds their own teachable perks
               to your pool. Addons and builds play no role here, pick a killer and play.
             </p>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400 italic">
+              For the full experience try to play killers in order from the oldest to newest. 🙂
+            </p>
           </div>
 
           <div>
@@ -78,16 +81,16 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
                 <span className="px-2.5 py-1 rounded-lg text-xs font-bold border bg-indigo-500/20 text-indigo-300 border-indigo-500/30 whitespace-nowrap w-fit">
                   Medium
                 </span>
-                <p className="text-xs text-slate-600 dark:text-slate-300">
-                  A checkpoint banks every time you clear a full row. A loss before that falls back to the
-                  start of the current row, not to zero.
+                <p className="text-xs text-slate-600 dark:text-slate-300 sm:text-right sm:max-w-xs">
+                  Checkpoints save each row you clear. A loss falls back to the row&apos;s start, not to
+                  zero.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-2 shadow-sm">
                 <span className="px-2.5 py-1 rounded-lg text-xs font-bold border bg-rose-500/20 text-rose-300 border-rose-500/30 whitespace-nowrap w-fit">
                   Hell
                 </span>
-                <p className="text-xs text-slate-600 dark:text-slate-300">
+                <p className="text-xs text-slate-600 dark:text-slate-300 sm:text-right sm:max-w-xs">
                   No checkpoints. One loss resets the whole run, every row and every unlocked perk.
                 </p>
               </div>

@@ -49,7 +49,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
     if (result === 'win') {
       setPerkModal({ killerName, perkNames: updated.newly_unlocked_perks || [] });
       if (updated.row_cleared && updated.status !== 'completed') {
-        setRowClearedNumber(updated.current_row_index - 1);
+        setRowClearedNumber(updated.current_row_index);
       }
     }
     if (updated.status === 'completed') {

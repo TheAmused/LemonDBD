@@ -28,8 +28,22 @@ class HistoryService:
 
     def _augment(self, run: HistoryRun, owned_names: List[str]) -> Dict[str, Any]:
         rows = build_rows(owned_names)
-        data = run.to_dict()
+
+        if run.status == "in_progress" and rows and run.current_row_index >= len(rows):
+            run.current_row_index = len(rows) - 1
+            run.completed_killers_json = "[]"
+            db.session.commit()
+
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
+
+        if current_row:
+            completed = json.loads(run.completed_killers_json or "[]")
+            filtered = [k for k in completed if k in current_row]
+            if filtered != completed:
+                run.completed_killers_json = json.dumps(filtered)
+                db.session.commit()
+
+        data = run.to_dict()
         data["current_row_killers"] = current_row
         data["row_size"] = ROW_SIZE
         data["total_rows"] = len(rows)
@@ -96,6 +110,7 @@ class HistoryService:
         completed = json.loads(run.completed_killers_json or "[]")
         unlocked = json.loads(run.unlocked_perk_names_json or "[]")
         streak_before = run.total_killers_beaten
+        row_index_for_log = run.current_row_index
         newly_unlocked: List[str] = []
         row_cleared = False
 
@@ -146,7 +161,7 @@ class HistoryService:
             run_id=run_id,
             killer_id=killer_id,
             result=result,
-            row_index=run.current_row_index,
+            row_index=row_index_for_log,
             streak_before=streak_before,
             streak_after=streak_after,
         ))

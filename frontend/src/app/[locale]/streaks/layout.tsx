@@ -109,9 +109,6 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
           <>
             <header className="mb-6">
               <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">🔥 Challenges</h1>
-              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                Long-run challenges that carry across matches. Pick a role to see what is available.
-              </p>
             </header>
 
             <div className="mb-6">

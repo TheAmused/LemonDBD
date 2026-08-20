@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, type LucideIcon } from 'lucide-react';
+import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
 
 interface StreakPanelBaseProps {
   title: string;
@@ -9,6 +10,7 @@ interface StreakPanelBaseProps {
   icon: LucideIcon;
   accent: string;
   accentBorder: string;
+  color: PanelColor;
   image?: string;
 }
 
@@ -23,11 +25,13 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   icon: Icon,
   accent,
   accentBorder,
+  color,
   image,
   href,
   onClick,
   comingSoon,
 }) => {
+  const hoverClasses = PANEL_HOVER_CLASSES[color];
   const body = (
     <>
       {image && (
@@ -35,7 +39,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           src={image}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute -right-6 -bottom-6 h-36 w-36 rounded-2xl object-cover opacity-[0.08] dark:opacity-[0.18] [mask-image:radial-gradient(circle_at_bottom_right,black,transparent_75%)]"
+          className="pointer-events-none absolute -right-5 -bottom-5 h-40 w-40 rounded-2xl object-cover opacity-[0.18] dark:opacity-[0.35] [mask-image:radial-gradient(circle_at_bottom_right,black,transparent_85%)]"
         />
       )}
 
@@ -77,7 +81,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
     return (
       <button
         onClick={onClick}
-        className={`group text-left ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 hover:border-orange-500/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:shadow-lg cursor-pointer`}
+        className={`group text-left ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 hover:shadow-lg cursor-pointer ${hoverClasses}`}
       >
         {body}
       </button>
@@ -87,7 +91,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   return (
     <Link
       href={href!}
-      className={`group ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 hover:border-orange-500/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:shadow-lg`}
+      className={`group ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 hover:shadow-lg ${hoverClasses}`}
     >
       {body}
     </Link>

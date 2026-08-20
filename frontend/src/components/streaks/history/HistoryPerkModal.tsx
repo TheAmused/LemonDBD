@@ -1,16 +1,43 @@
 // frontend/src/components/streaks/history/HistoryPerkModal.tsx
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PartyPopper, Sparkles } from 'lucide-react';
+import { Perk } from '@/types/gauntletStreak';
+
+const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+const perkIconFor = (perk: Perk) => {
+  const cleanPath = (perk.icon_local_path || '').replace(/^\/?(static\/)?/, '');
+  return cleanPath ? `${backendBase}/static/${cleanPath}` : perk.icon_url;
+};
+
+const PerkIcon: React.FC<{ perk: Perk }> = ({ perk }) => {
+  const [failed, setFailed] = useState(false);
+  const src = perkIconFor(perk);
+  return (
+    <div className="h-8 w-8 shrink-0 rounded-md overflow-hidden bg-slate-900/60 border border-emerald-500/30 flex items-center justify-center">
+      {src && !failed ? (
+        <img
+          src={src}
+          alt={perk.name}
+          className="w-full h-full object-contain p-1"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <Sparkles className="h-4 w-4 text-emerald-400" />
+      )}
+    </div>
+  );
+};
 
 export interface HistoryPerkModalProps {
   killerName: string | null;
-  perkNames: string[];
+  perks: Perk[];
   onClose: () => void;
 }
 
-export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perkNames, onClose }) => {
+export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose }) => {
   if (!killerName) return null;
 
   return (
@@ -30,17 +57,17 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
         <p className="mt-1 text-xs text-slate-400 uppercase tracking-wider font-bold">Perks unlocked</p>
 
         <div className="mt-4 space-y-2">
-          {perkNames.length === 0 ? (
+          {perks.length === 0 ? (
             <p className="text-sm text-slate-300">No new perks this time.</p>
           ) : (
-            perkNames.map((name, i) => (
+            perks.map((perk, i) => (
               <div
-                key={name}
-                className="chaos-badge-pop flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-slate-950/60 px-3 py-2 text-left"
+                key={perk.name}
+                className="chaos-badge-pop flex items-center gap-2.5 rounded-lg border border-emerald-500/30 bg-slate-950/60 px-3 py-2 text-left"
                 style={{ animationDelay: `${i * 120}ms` }}
               >
-                <Sparkles className="h-4 w-4 shrink-0 text-emerald-400" />
-                <span className="text-sm font-bold text-emerald-100">{name}</span>
+                <PerkIcon perk={perk} />
+                <span className="text-sm font-bold text-emerald-100">{perk.name}</span>
               </div>
             ))
           )}

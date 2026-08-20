@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';
-import { Flame, Trophy, Shield, Skull, BookOpen, Layers } from 'lucide-react';
+import { Flame, Trophy, Shield, Skull, BookOpen } from 'lucide-react';
 
 const MODE_ICON: Record<HistoryMode, React.ElementType> = {
   medium: Shield,
@@ -16,7 +16,6 @@ export interface HistoryHeaderProps {
   bestKillersBeaten: number;
   checkpointRowIndex: number;
   onOpenRules: () => void;
-  onOpenPerkPool: () => void;
 }
 
 export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
@@ -25,7 +24,6 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   bestKillersBeaten,
   checkpointRowIndex,
   onOpenRules,
-  onOpenPerkPool,
 }) => {
   const ModeIcon = MODE_ICON[mode] ?? Shield;
 
@@ -88,15 +86,6 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           >
             <BookOpen className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             <span className="hidden sm:inline">History Rules</span>
-          </button>
-
-          <button
-            onClick={onOpenPerkPool}
-            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
-            title="View unlocked and locked perks"
-          >
-            <Layers className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-            <span className="hidden sm:inline">Perk Pool</span>
           </button>
         </div>
       </div>

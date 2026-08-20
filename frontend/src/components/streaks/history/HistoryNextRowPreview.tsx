@@ -58,15 +58,21 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
         />
       </button>
 
-      {expanded && (
-        <div className="mt-4 flex flex-wrap justify-center gap-3">
-          {nextRow.map((name) => (
-            <div key={name} className="w-32 sm:w-36">
-              <PreviewTile name={name} />
-            </div>
-          ))}
+      <div
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+          expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
+            {nextRow.map((name) => (
+              <div key={name} className="w-32 sm:w-36">
+                <PreviewTile name={name} />
+              </div>
+            ))}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

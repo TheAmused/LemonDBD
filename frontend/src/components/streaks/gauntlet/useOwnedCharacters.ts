@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Role } from '@/types/gauntletStreak';
 import { useAuth } from '@/context/AuthContext';
+import { sortByReleaseNumber } from '@/utils/characterUtils';
 
 export interface OwnedCharacterItem {
   name: string;
@@ -38,7 +39,7 @@ export function useOwnedCharacters(role: Role, rosterLimit?: number) {
         if (rosterLimit != null) {
           owned = owned.filter((c: any) => c.release_number == null || c.release_number <= rosterLimit);
         }
-        setCharacters(owned.map((c: any) => ({ name: c.name })));
+        setCharacters(sortByReleaseNumber(owned).map((c: any) => ({ name: c.name })));
       }
     } catch (err) {
       console.error('Failed to load owned characters:', err);

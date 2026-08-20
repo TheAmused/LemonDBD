@@ -204,6 +204,40 @@ strong {
   animation: gnLandGlow 900ms ease-out both;
 }
 
+@keyframes chaosLeverPull {
+  0% { transform: rotate(0deg); }
+  35% { transform: rotate(32deg); }
+  62% { transform: rotate(-6deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes chaosBadgePop {
+  from { transform: scale(.6); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes chaosMarqueeGlow {
+  0%, 100% { opacity: .35; }
+  50% { opacity: 1; }
+}
+
+.chaos-lever-pull { animation: chaosLeverPull 550ms cubic-bezier(.34, 1.56, .64, 1) both; }
+.chaos-badge-pop { animation: chaosBadgePop 380ms cubic-bezier(.22, 1.4, .36, 1) both; }
+.chaos-marquee-bulb { animation: chaosMarqueeGlow 2.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chaos-lever-pull,
+  .chaos-badge-pop {
+    animation: none;
+  }
+
+  .chaos-marquee-bulb {
+    animation: none;
+    opacity: .7;
+  }
+}
+
 .gn-name-in {
   animation: gnNameIn 260ms ease-out both;
 }

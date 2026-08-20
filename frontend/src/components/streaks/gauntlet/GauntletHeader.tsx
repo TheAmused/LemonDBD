@@ -25,7 +25,12 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
   return (
     <div className="w-full bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-sm dark:shadow-xl mb-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="text-center sm:text-left">
+        <div className="flex items-center gap-3">
+          <img
+            src="/images/streaks/gauntlet-streak.jpg"
+            alt=""
+            className="hidden sm:block h-11 w-11 rounded-xl border border-amber-500/20 object-cover shadow-sm"
+          />
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 justify-center sm:justify-start">
             {role === 'survivor' ? (
               <User className="w-6 h-6 text-amber-500" />

@@ -206,7 +206,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       </div>
 
       <div className="relative z-10">
-        <div className="flex items-center justify-center gap-4 sm:gap-6">
+        <div className="flex items-end justify-center gap-4 sm:gap-6">
           <div className="flex items-end gap-2">
             {[0, 1, 2, 3].map((i) => (
               <ReelStrip

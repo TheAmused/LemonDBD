@@ -63,8 +63,8 @@ const ReelStrip: React.FC<{
 
   useEffect(() => {
     if (spinToken === lastToken.current) return;
-    lastToken.current = spinToken;
     if (!finalPerk || !itemPx) return;
+    lastToken.current = spinToken;
     const landedOffset = direction === 'up' ? -(STRIP_LENGTH - 1) * itemPx : 0;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

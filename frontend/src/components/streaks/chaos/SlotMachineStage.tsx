@@ -234,15 +234,15 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             </p>
           )}
         </div>
+      </div>
 
-        <div
-          className={`mt-2 flex items-center justify-center gap-2 text-violet-300/60 text-xs h-5 ${
-            loading ? 'visible' : 'invisible'
-          }`}
-        >
-          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-          <span>Loading...</span>
-        </div>
+      <div
+        className={`absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-2 text-violet-300/60 text-xs ${
+          loading ? 'visible' : 'invisible'
+        }`}
+      >
+        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+        <span>Loading...</span>
       </div>
     </div>
   );

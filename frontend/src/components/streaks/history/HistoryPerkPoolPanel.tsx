@@ -120,7 +120,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
       {unlocked.length === 0 ? (
         <p className="text-xs text-slate-400 dark:text-slate-500 mb-5">No perks unlocked yet.</p>
       ) : (
-        <div className="mb-5 grid grid-cols-5 sm:grid-cols-8 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
+        <div className="mb-5 grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {unlocked.map((perk) => (
             <UnlockedTile key={perk.id ?? perk.name} perk={perk} justUnlocked={justUnlockedNames.has(perk.name)} />
           ))}
@@ -134,7 +134,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
       {locked.length === 0 ? (
         <p className="text-xs text-slate-400 dark:text-slate-500">Every perk is unlocked.</p>
       ) : (
-        <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {locked.map((perk) => (
             <LockedTile key={perk.id ?? perk.name} perk={perk} />
           ))}

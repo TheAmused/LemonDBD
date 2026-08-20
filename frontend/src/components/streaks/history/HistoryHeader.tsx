@@ -32,16 +32,21 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   return (
     <div className="w-full bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-sm dark:shadow-xl mb-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3">
           <img
             src="/images/streaks/history-streak.jpg"
             alt=""
             className="hidden sm:block h-11 w-11 rounded-xl border border-slate-400/30 object-cover shadow-sm"
           />
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 justify-center sm:justify-start">
-            <ModeIcon className="w-6 h-6 text-slate-500 dark:text-slate-400" />
-            <span className="capitalize">{mode}</span> History Streak
-          </h1>
+          <div className="flex flex-col items-center sm:items-start">
+            <span className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 capitalize">
+              <ModeIcon className="w-4 h-4" />
+              {mode}
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight text-center sm:text-left">
+              History Streak
+            </h1>
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">

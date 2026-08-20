@@ -125,7 +125,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           </div>
         ) : (
           <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3 text-center sm:text-left">
               <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                 Pick your killer
               </h3>

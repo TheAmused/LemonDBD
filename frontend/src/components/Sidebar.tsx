@@ -168,7 +168,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'streaks',
-      label: dict?.sidebar?.challenges || '🔥 Challenges',
+      label: dict?.sidebar?.challenges || 'Challenges',
       icon: Repeat,
       color: 'text-orange-400',
       activeBg:
@@ -177,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'maps',
-      label: dict?.sidebar?.mapExplorer || '🗺️ Map Explorer',
+      label: dict?.sidebar?.mapExplorer || 'Map Explorer',
       icon: Compass,
       color: 'text-cyan-400',
       activeBg:
@@ -186,7 +186,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'characters',
-      label: dict?.sidebar?.characters || '👤 Characters',
+      label: dict?.sidebar?.characters || 'Characters',
       icon: Users,
       color: 'text-indigo-400',
       activeBg:

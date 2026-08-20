@@ -214,9 +214,9 @@
   },
   "sidebar": {
     "perks": "Perks",
-    "challenges": "🔥 Herausforderungen",
-    "mapExplorer": "🗺️ Karten-Explorer",
-    "characters": "👤 Charaktere",
+    "challenges": "Herausforderungen",
+    "mapExplorer": "Karten-Explorer",
+    "characters": "Charaktere",
     "draftRoom": "🏆 Draft-Raum",
     "swfPlanner": "👥 SWF-Planer",
     "killerCalc": "🎯 Killer-Rechner",

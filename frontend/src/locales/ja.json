@@ -214,9 +214,9 @@
   },
   "sidebar": {
     "perks": "パーク",
-    "challenges": "🔥 チャレンジ",
-    "mapExplorer": "🗺️ マップエクスプローラー",
-    "characters": "👤 キャラクター",
+    "challenges": "チャレンジ",
+    "mapExplorer": "マップエクスプローラー",
+    "characters": "キャラクター",
     "draftRoom": "🏆 ドラフトルーム",
     "swfPlanner": "👥 SWFプランナー",
     "killerCalc": "🎯 キラー計算機",

@@ -43,7 +43,6 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     icon: History,
     accent: 'text-slate-400',
     accentBorder: 'border-slate-700/60',
-    comingSoon: true,
     image: '/images/streaks/history-streak.jpg',
   },
   {

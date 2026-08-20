@@ -12,9 +12,10 @@ class TestScraperRoutes(unittest.TestCase):
         self.app.config["TESTING"] = True
         self.client = self.app.test_client()
 
+    @patch("app.core.security.get_current_user", return_value=MagicMock(is_admin=True, role="admin", is_anonymous=False))
     @patch.object(ScraperService, "load_config")
     @patch.object(ScraperService, "save_config")
-    def test_get_and_post_scrape_config(self, mock_save_config, mock_load_config):
+    def test_get_and_post_scrape_config(self, mock_save_config, mock_load_config, mock_user):
         mock_load_config.return_value = ScraperConfig(source="nightlight", fallback_to_wiki=True)
         mock_save_config.return_value = ScraperConfig(source="wiki", fallback_to_wiki=False)
 
@@ -38,9 +39,10 @@ class TestScraperRoutes(unittest.TestCase):
         self.assertFalse(post_data["config"]["fallback_to_wiki"])
         mock_save_config.assert_called_once_with(payload)
 
+    @patch("app.core.security.get_current_user", return_value=MagicMock(is_admin=True, role="admin", is_anonymous=False))
     @patch("app.routes.perks.threading.Thread")
     @patch.object(ScraperService, "get_status", return_value={"is_running": False})
-    def test_trigger_scrape_with_overrides(self, mock_status, mock_thread):
+    def test_trigger_scrape_with_overrides(self, mock_status, mock_thread, mock_user):
         response = self.client.post(
             "/api/v1/scrape",
             json={"source": "wiki", "fallback": False},

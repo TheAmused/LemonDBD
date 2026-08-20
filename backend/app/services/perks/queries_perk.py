@@ -124,6 +124,7 @@ def fetch_perks(
     limit: int = 50,
     user_id: Optional[int] = None,
     owned_only: bool = False,
+    lang: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Execute paginated, sorted perk search with optional role and ownership filtering."""
     try:
@@ -255,7 +256,7 @@ def fetch_perks(
             perk_explicit_map = {row[0]: row[1] for row in perk_explicit_rows}
 
             for p in perks:
-                d = p.to_dict()
+                d = p.to_dict(lang=lang)
                 is_gen = p.character_id is None or p.is_generic_counterpart
                 if is_gen:
                     is_owned = True
@@ -267,7 +268,7 @@ def fetch_perks(
                 paginated_data.append(d)
         else:
             for p in perks:
-                d = p.to_dict()
+                d = p.to_dict(lang=lang)
                 d["is_owned"] = True
                 paginated_data.append(d)
 
@@ -353,7 +354,7 @@ def fetch_perk_suggestions(
         return res
 
 
-def fetch_perk_by_identifier(service, identifier: str) -> Optional[Dict[str, Any]]:
+def fetch_perk_by_identifier(service, identifier: str, lang: Optional[str] = None) -> Optional[Dict[str, Any]]:
     """Find a perk by canonical title or formatted slug."""
     target = identifier.lower().strip()
     target_slug = slugify(identifier)
@@ -369,7 +370,7 @@ def fetch_perk_by_identifier(service, identifier: str) -> Optional[Dict[str, Any
         )
         perk = db.session.scalars(stmt).first()
         if perk:
-            return perk.to_dict()
+            return perk.to_dict(lang=lang)
     except Exception:
         pass
 

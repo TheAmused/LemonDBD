@@ -22,6 +22,7 @@ import {
   ChevronDown,
   Folder,
   Gamepad2,
+  Heart,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
@@ -127,6 +128,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       );
     }
 
+    if (itemId === 'smash-or-pass') {
+      return (
+        activeCategory === 'smash-or-pass' ||
+        pathname.startsWith(`/${currentLocale}/smash-or-pass`)
+      );
+    }
+
     if (activeCategory === itemId) return true;
 
     if (itemHref) {
@@ -188,6 +196,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const otherNavItems = [
+    {
+      id: 'smash-or-pass',
+      label: dict?.sidebar?.smashOrPass || '💋 Smash or Pass',
+      icon: Heart,
+      color: 'text-pink-400',
+      activeBg:
+        'bg-pink-500/10 text-pink-400 border border-pink-500/20',
+      href: `/${currentLocale}/smash-or-pass`,
+    },
     {
       id: 'guesser',
       label: dict?.guesser?.navLink ? `🎮 ${dict.guesser.navLink}` : '🎮 Guesser',

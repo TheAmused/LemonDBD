@@ -12,7 +12,7 @@ from app.services.perks.utils import HEADER_EXCLUSIONS, normalize_search_key, sl
 logger = logging.getLogger(__name__)
 
 
-def fetch_characters(service, category: Optional[str] = None) -> List[Dict[str, Any]]:
+def fetch_characters(service, category: Optional[str] = None, lang: Optional[str] = None) -> List[Dict[str, Any]]:
     """Retrieve character list ordered by canonical chapter release numbers."""
     try:
         stmt = select(Character).options(joinedload(Character.perks))
@@ -30,7 +30,7 @@ def fetch_characters(service, category: Optional[str] = None) -> List[Dict[str, 
 
         characters = db.session.scalars(stmt).unique().all()
         if characters:
-            return [c.to_dict() for c in characters]
+            return [c.to_dict(lang=lang) for c in characters]
     except Exception as e:
         logger.debug(f"Querying characters from DB: {e}")
 
@@ -92,7 +92,7 @@ def fetch_character_suggestions(
         return res
 
 
-def fetch_character_detail(service, character_name: str) -> Optional[Dict[str, Any]]:
+def fetch_character_detail(service, character_name: str, lang: Optional[str] = None) -> Optional[Dict[str, Any]]:
     """Retrieve full character detail including specific addons, powers, and teachable perks."""
     target_clean = character_name.strip().lower()
     target_slug = slugify(character_name)
@@ -124,9 +124,9 @@ def fetch_character_detail(service, character_name: str) -> Optional[Dict[str, A
         if not matched_char:
             return None
 
-        char_dict = matched_char.to_dict()
+        char_dict = matched_char.to_dict(lang=lang)
         char_role = matched_char.role or "Survivor"
-        perks_list = [p.to_dict() for p in matched_char.perks]
+        perks_list = [p.to_dict(lang=lang) for p in matched_char.perks]
 
         addons_list: List[Dict[str, Any]] = []
         items_list: List[Dict[str, Any]] = []
@@ -187,16 +187,16 @@ def fetch_character_detail(service, character_name: str) -> Optional[Dict[str, A
                 if matched_word:
                     matched_addons.append(a)
 
-            addons_list = [a.to_dict() for a in matched_addons]
+            addons_list = [a.to_dict(lang=lang) for a in matched_addons]
         else:
             items_stmt = select(Item).where(func.lower(Item.role) == "survivor")
             items = db.session.scalars(items_stmt).all()
-            items_list = [i.to_dict() for i in items if i.name.lower().strip() not in HEADER_EXCLUSIONS]
+            items_list = [i.to_dict(lang=lang) for i in items if i.name.lower().strip() not in HEADER_EXCLUSIONS]
 
             survivor_addons_stmt = select(Addon).where(func.lower(Addon.category) == "survivor")
             survivor_addons = db.session.scalars(survivor_addons_stmt).all()
             addons_list = [
-                a.to_dict()
+                a.to_dict(lang=lang)
                 for a in survivor_addons
                 if a.name.lower().strip() not in HEADER_EXCLUSIONS and "numbers" not in (a.associated_target or "").lower()
             ]

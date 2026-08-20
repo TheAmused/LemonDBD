@@ -37,20 +37,24 @@ def prune_stale_character_rows(valid_names: Optional[Set[str]], get_conn_fn) -> 
 
     # Fallback to direct SQLite connection
     conn = get_conn_fn()
-    cursor = conn.cursor()
-    cursor.execute("PRAGMA foreign_keys = ON;")
+    try:
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = ON;")
 
-    for table, column in (("gauntlet_runs", "current_character_id"), ("page_streak_runs", "killer")):
-        cursor.execute(f"SELECT id, {column} AS character_name FROM {table};")
-        stale = [row["id"] for row in cursor.fetchall() if row["character_name"] not in names]
-        if stale:
-            placeholders = ",".join("?" for _ in stale)
-            cursor.execute(f"DELETE FROM {table} WHERE id IN ({placeholders});", stale)
-        deleted[table] = len(stale)
+        for table, column in (("gauntlet_runs", "current_character_id"), ("page_streak_runs", "killer")):
+            cursor.execute(f"SELECT id, {column} AS character_name FROM {table};")
+            stale = [row["id"] for row in cursor.fetchall() if row["character_name"] not in names]
+            if stale:
+                placeholders = ",".join("?" for _ in stale)
+                cursor.execute(f"DELETE FROM {table} WHERE id IN ({placeholders});", stale)
+            deleted[table] = len(stale)
 
-    conn.commit()
-    if conn != getattr(get_conn_fn, "_mem_conn", None):
-        conn.close()
+        conn.commit()
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
 
     return deleted
 

@@ -30,8 +30,8 @@ services:
     expose:
       - "5000"
     volumes:
-      - ./backend/data:/app/data
-      - ./backend/app/static:/app/app/static
+      - backend_data:/app/data
+      - backend_static:/app/app/static
     environment:
       - FLASK_ENV=${FLASK_ENV:-production}
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
@@ -42,10 +42,10 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
-      retries: 3
-      start_period: 10s
+      retries: 5
+      start_period: 15s
     networks:
       - dbd_network
 
@@ -86,6 +86,10 @@ services:
 
 volumes:
   postgres_data:
+    driver: local
+  backend_data:
+    driver: local
+  backend_static:
     driver: local
 
 networks:

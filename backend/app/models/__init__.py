@@ -29,6 +29,10 @@ from app.models.minigames import (
 )
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.perk import Perk, PerkRule
+from app.models.smash_or_pass import (
+    SmashPassStat,
+    SmashPassVote,
+)
 from app.models.user import (
     User,
     UserCharacterOwnership,
@@ -62,6 +66,8 @@ __all__ = [
     "CommunityBuild",
     "CustomPerk",
     "GuesserStat",
+    "SmashPassStat",
+    "SmashPassVote",
     "BugReport",
     "User",
     "UserCharacterOwnership",

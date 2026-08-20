@@ -222,6 +222,25 @@
     "killerCalc": "🎯 Kalkulator Zabójcy",
     "buildVault": "🔥 Skarbiec Buildów",
     "perkStudio": "🎨 Studio Perków",
-    "quests": "📜 Zadania"
+    "quests": "📜 Zadania",
+    "smashOrPass": "💋 Smash or Pass"
+  },
+  "smashOrPass": {
+    "title": "Smash or Pass",
+    "subtitle": "Głosuj na postacie z Dead by Daylight, przeglądaj profile randkowe i odkrywaj ulubieńców społeczności.",
+    "smash": "Smash",
+    "pass": "Pass",
+    "superSmash": "Super Smash",
+    "leaderboard": "Galeria Sław",
+    "shuffle": "Przetasuj",
+    "undo": "Cofnij",
+    "mySmashes": "Twoje Smashe",
+    "allRoles": "Wszystkie Role",
+    "survivors": "Ocalali",
+    "killers": "Zabójcy",
+    "allGenders": "Wszystkie Płcie",
+    "femaleOnly": "Tylko Kobiety",
+    "maleOnly": "Tylko Mężczyźni",
+    "monsters": "Potwory i Byt"
   }
 }

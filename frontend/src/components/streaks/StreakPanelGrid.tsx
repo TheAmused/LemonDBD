@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { StreakPanel } from './StreakPanel';
-import { KILLER_STREAK_PANELS, SURVIVOR_STREAK_PANELS } from './panels';
+import { KILLER_STREAK_PANELS, SURVIVOR_STREAK_PANELS, CHALLENGE_STREAK_PANELS } from './panels';
 import { GauntletModeModal } from './gauntlet/GauntletModeModal';
 import { ChaosModeModal } from './chaos/ChaosModeModal';
 import { HistoryModeModal } from './history/HistoryModeModal';
@@ -18,7 +18,8 @@ interface StreakPanelGridProps {
 
 export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }) => {
   const router = useRouter();
-  const panels = role === 'killer' ? KILLER_STREAK_PANELS : SURVIVOR_STREAK_PANELS;
+  const panels =
+    role === 'killer' ? KILLER_STREAK_PANELS : role === 'challenge' ? CHALLENGE_STREAK_PANELS : SURVIVOR_STREAK_PANELS;
   const [isModeModalOpen, setIsModeModalOpen] = useState(false);
   const [isChaosModeModalOpen, setIsChaosModeModalOpen] = useState(false);
   const [isHistoryModeModalOpen, setIsHistoryModeModalOpen] = useState(false);
@@ -35,6 +36,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
+              color={panel.color}
               image={panel.image}
               comingSoon
             />
@@ -50,6 +52,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
+              color={panel.color}
               image={panel.image}
               onClick={() => setIsModeModalOpen(true)}
             />
@@ -65,6 +68,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
+              color={panel.color}
               image={panel.image}
               onClick={() => setIsChaosModeModalOpen(true)}
             />
@@ -80,6 +84,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
+              color={panel.color}
               image={panel.image}
               onClick={() => setIsHistoryModeModalOpen(true)}
             />
@@ -94,6 +99,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             icon={panel.icon}
             accent={panel.accent}
             accentBorder={panel.accentBorder}
+            color={panel.color}
             image={panel.image}
             href={`/${locale}/streaks/${role}/${panel.id}`}
           />

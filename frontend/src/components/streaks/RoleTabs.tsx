@@ -13,7 +13,7 @@ interface RoleTabsProps {
 const TABS = [
   { id: 'survivor', label: 'Survivor', icon: Shield, active: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/40 shadow-sm' },
   { id: 'killer', label: 'Killer', icon: Skull, active: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/40 shadow-sm' },
-  { id: 'challenge', label: 'Challenge', icon: Puzzle, active: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/40 shadow-sm' },
+  { id: 'challenge', label: 'Survivor/Killer', icon: Puzzle, active: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/40 shadow-sm' },
 ];
 
 export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {

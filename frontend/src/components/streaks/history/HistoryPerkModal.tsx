@@ -16,7 +16,7 @@ type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';
 
 const LOCK_SHAKE_DELAY_MS = 500;
 const LOCK_BREAK_DELAY_MS = 880;
-const LOCK_UNLOCKED_DELAY_MS = 1260;
+const LOCK_UNLOCKED_DELAY_MS = 1560;
 
 const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ perk, index, phase }) => {
   const [failed, setFailed] = useState(false);
@@ -24,6 +24,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
   const isUnlocked = phase === 'unlocked';
   const isRevealed = phase === 'breaking' || phase === 'unlocked';
   const delay = { transitionDelay: `${index * 150}ms` };
+  const animationDelay = { animationDelay: `${index * 150}ms` };
 
   return (
     <div
@@ -71,6 +72,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
             className={`flex h-7 w-7 items-center justify-center rounded-full bg-slate-800/90 border border-slate-500/60 shadow-md ${
               phase === 'shaking' ? 'history-lock-shake' : ''
             } ${phase === 'breaking' ? 'history-lock-break' : ''}`}
+            style={phase === 'shaking' || phase === 'breaking' ? animationDelay : undefined}
           >
             <Lock className="w-3.5 h-3.5 text-slate-300" />
           </div>

@@ -11,7 +11,6 @@ export interface KillerPickerGridProps {
   onSelect: (name: string) => void;
   disabled?: boolean;
   loading?: boolean;
-  /** Centers a short row instead of stretching it across the grid columns. */
   center?: boolean;
 }
 

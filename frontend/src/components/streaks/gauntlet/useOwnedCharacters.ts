@@ -38,6 +38,9 @@ export function useOwnedCharacters(role: Role, rosterLimit?: number) {
         if (rosterLimit != null) {
           owned = owned.filter((c: any) => c.release_number == null || c.release_number <= rosterLimit);
         }
+        owned = [...owned].sort(
+          (a: any, b: any) => (a.release_number ?? Infinity) - (b.release_number ?? Infinity)
+        );
         setCharacters(owned.map((c: any) => ({ name: c.name })));
       }
     } catch (err) {

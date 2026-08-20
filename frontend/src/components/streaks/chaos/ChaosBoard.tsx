@@ -1,7 +1,7 @@
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
@@ -9,9 +9,16 @@ import { Difficulty } from '@/types/chaosStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useChaosRun } from './useChaosRun';
 import { useOwnedKillers } from './useOwnedKillers';
+import { useKillerPerkPool } from './useKillerPerkPool';
+import { ChaosHeader } from './ChaosHeader';
+import { ChaosProgressBar } from './ChaosProgressBar';
 import { SlotMachineStage } from './SlotMachineStage';
 import { KillerPickerGrid } from './KillerPickerGrid';
 import { ChaosCheckpointModal } from './ChaosCheckpointModal';
+import { ChaosStatsDrawer } from './ChaosStatsDrawer';
+import { ChaosRulesModal } from './ChaosRulesModal';
+import { ChaosPerkPoolModal } from './ChaosPerkPoolModal';
+import { useAuth } from '@/context/AuthContext';
 
 interface ChaosBoardProps {
   locale: string;
@@ -34,24 +41,16 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
     dismissCheckpointCelebration,
   } = useChaosRun(difficulty);
   const { killers, loading: loadingKillers } = useOwnedKillers();
+  const { pool: perkPool } = useKillerPerkPool();
+  const { isAdmin } = useAuth();
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
+  const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
   const [celebrating, setCelebrating] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
-
-  const wasCompletedRef = useRef(false);
-  useEffect(() => {
-    const completed = run?.status === 'completed';
-    if (completed && !wasCompletedRef.current) {
-      setCelebrating(true);
-      wasCompletedRef.current = true;
-      const timer = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
-      return () => clearTimeout(timer);
-    }
-    if (!completed) {
-      wasCompletedRef.current = false;
-    }
-  }, [run?.status]);
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [isPerkPoolOpen, setIsPerkPoolOpen] = useState(false);
 
   useEffect(() => {
     if (justBankedCheckpoint == null) return;
@@ -60,16 +59,40 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
     return () => clearTimeout(timer);
   }, [justBankedCheckpoint]);
 
-  useEffect(() => {
-    setSelectedKillerId(null);
-  }, [run?.current_perks]);
-
   const isCompleted = run?.status === 'completed';
-  const remainingKillers = killers.filter((name) => !(run?.completed_killers || []).includes(name));
 
-  const handleResult = (result: 'win' | 'loss') => {
-    if (!selectedKillerId) return;
-    submitResult(result, selectedKillerId);
+  const clearPick = () => {
+    setSelectedKillerId(null);
+    setAcceptedKillerId(null);
+  };
+
+  const handleResult = async (result: 'win' | 'loss') => {
+    if (!acceptedKillerId) return;
+    clearPick();
+    const updated = await submitResult(result, acceptedKillerId);
+    if (updated?.status === 'completed') {
+      setCelebrating(true);
+      setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
+    }
+  };
+
+  const handleReset = () => {
+    setConfirmingReset(false);
+    clearPick();
+    reset();
+  };
+
+  const handleDevSkipToWin = async () => {
+    clearPick();
+    const remaining = killers.filter((name) => !(run?.completed_killers || []).includes(name));
+    for (const killer of remaining) {
+      const updated = await submitResult('win', killer, { silent: true });
+      if (updated?.status === 'completed') {
+        setCelebrating(true);
+        setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
+        break;
+      }
+    }
   };
 
   return (
@@ -91,24 +114,24 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           </div>
         )}
 
-        <header className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white capitalize">
-              Chaos Streak &middot; {difficulty}
-            </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Streak {run?.current_streak ?? 0} &middot; Best {run?.best_streak ?? 0}
-            </p>
-          </div>
-          {stats && stats.total_matches > 0 && (
-            <div className="text-right text-xs text-slate-500 dark:text-slate-400">
-              <p className="font-bold text-slate-700 dark:text-slate-200">{stats.win_rate}% win rate</p>
-              <p>
-                {stats.wins}W / {stats.losses}L across {stats.total_matches} matches
-              </p>
-            </div>
-          )}
-        </header>
+        <ChaosHeader
+          difficulty={difficulty}
+          currentStreak={run?.current_streak || 0}
+          bestStreak={run?.best_streak || 0}
+          lastCheckpointStreak={run?.last_checkpoint_streak || 0}
+          onOpenStats={() => setIsStatsOpen(true)}
+          onOpenRules={() => setIsRulesOpen(true)}
+          onOpenPerkPool={() => setIsPerkPoolOpen(true)}
+        />
+
+        {!isCompleted && killers.length > 0 && (
+          <ChaosProgressBar
+            currentStreak={run?.current_streak || 0}
+            lastCheckpointStreak={run?.last_checkpoint_streak || 0}
+            checkpointInterval={run?.checkpoint_interval || 0}
+            totalKillers={killers.length}
+          />
+        )}
 
         {isCompleted ? (
           <div className="mb-8 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
@@ -119,7 +142,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               Chaos Streak complete!
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              You won with every killer you own on {difficulty}.
+              You won on <span className="capitalize">{difficulty}</span> mode.
             </p>
             <button
               onClick={reset}
@@ -139,46 +162,59 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 revealed={Boolean(run?.perks_revealed)}
                 onPullLever={reveal}
                 loading={loading || busy}
+                locked={Boolean(acceptedKillerId)}
               />
             </div>
 
-            {run?.perks_revealed && (
-              <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 shadow-sm">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    Pick your killer
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    A win needs 3 kills or more.
-                  </p>
-                </div>
-                <KillerPickerGrid
-                  killers={remainingKillers}
-                  completedKillers={run?.completed_killers || []}
-                  selectedKillerId={selectedKillerId}
-                  onSelect={setSelectedKillerId}
-                  disabled={busy}
-                  loading={loadingKillers}
-                />
+            <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 shadow-sm">
+              <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
+                Pick your killer
+              </h3>
 
+              {!acceptedKillerId ? (
+                <div className="mt-5 flex items-center justify-center">
+                  <button
+                    onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
+                    disabled={busy || !run?.perks_revealed || !selectedKillerId}
+                    className="flex-1 max-w-xs bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                  >
+                    ACCEPT PICK
+                  </button>
+                </div>
+              ) : (
                 <div className="mt-5 flex items-center justify-center gap-4">
                   <button
                     onClick={() => handleResult('win')}
-                    disabled={busy || !selectedKillerId}
+                    disabled={busy}
                     className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
                     WIN MATCH
                   </button>
                   <button
                     onClick={() => handleResult('loss')}
-                    disabled={busy || !selectedKillerId}
+                    disabled={busy}
                     className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
                     LOSE MATCH
                   </button>
                 </div>
+              )}
+
+              <div
+                className={`mt-5 transition-opacity ${
+                  run?.perks_revealed ? '' : 'opacity-40 pointer-events-none'
+                }`}
+              >
+                <KillerPickerGrid
+                  killers={killers}
+                  completedKillers={run?.completed_killers || []}
+                  selectedKillerId={acceptedKillerId ?? selectedKillerId}
+                  onSelect={setSelectedKillerId}
+                  disabled={busy || Boolean(acceptedKillerId) || !run?.perks_revealed}
+                  loading={loadingKillers}
+                />
               </div>
-            )}
+            </div>
           </>
         )}
 
@@ -198,10 +234,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                     Cancel
                   </button>
                   <button
-                    onClick={() => {
-                      setConfirmingReset(false);
-                      reset();
-                    }}
+                    onClick={handleReset}
                     disabled={busy}
                     className="px-3 py-1.5 text-xs font-bold rounded-lg text-white bg-rose-600 hover:bg-rose-500 disabled:opacity-50 transition-colors cursor-pointer"
                   >
@@ -210,18 +243,40 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 </div>
               </div>
             ) : (
-              <button
-                onClick={() => setConfirmingReset(true)}
-                disabled={busy}
-                className="inline-flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 disabled:opacity-50 transition-colors cursor-pointer"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                Reset this run
-              </button>
+              <div className="flex items-center justify-between gap-3">
+                <button
+                  onClick={() => setConfirmingReset(true)}
+                  disabled={busy}
+                  className="inline-flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 disabled:opacity-50 transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  Reset this run
+                </button>
+
+                {isAdmin && (
+                  <button
+                    onClick={handleDevSkipToWin}
+                    disabled={busy || !killers.length}
+                    title="Dev only: win with every remaining killer to reach the completion screen"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
+                  >
+                    <Trophy className="h-3.5 w-3.5" />
+                    DEV: Skip to win screen
+                  </button>
+                )}
+              </div>
             )}
           </div>
         )}
 
+        <ChaosStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
+        <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
+        <ChaosPerkPoolModal
+          isOpen={isPerkPoolOpen}
+          onClose={() => setIsPerkPoolOpen(false)}
+          pool={perkPool}
+          usedPerkNames={run?.used_perks || []}
+        />
         <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />
       </div>
     </div>

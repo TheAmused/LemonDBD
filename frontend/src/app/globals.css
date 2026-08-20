@@ -204,21 +204,11 @@ strong {
   animation: gnLandGlow 900ms ease-out both;
 }
 
-/* Chaos Streak slot reel: perks blur past vertically before landing. */
-@keyframes chaosReelSpinUp {
-  from { transform: translateY(30%); opacity: .4; filter: blur(1.5px); }
-  to { transform: translateY(0); opacity: 1; filter: blur(0); }
-}
-
-@keyframes chaosReelSpinDown {
-  from { transform: translateY(-30%); opacity: .4; filter: blur(1.5px); }
-  to { transform: translateY(0); opacity: 1; filter: blur(0); }
-}
-
 @keyframes chaosLeverPull {
-  0% { transform: translateY(0) rotate(0deg); }
-  40% { transform: translateY(28px) rotate(18deg); }
-  100% { transform: translateY(0) rotate(0deg); }
+  0% { transform: rotate(0deg); }
+  35% { transform: rotate(32deg); }
+  62% { transform: rotate(-6deg); }
+  100% { transform: rotate(0deg); }
 }
 
 @keyframes chaosBadgePop {
@@ -227,17 +217,21 @@ strong {
   to { transform: scale(1); opacity: 1; }
 }
 
-.chaos-reel-up { animation: chaosReelSpinUp 90ms linear both; }
-.chaos-reel-down { animation: chaosReelSpinDown 90ms linear both; }
-.chaos-lever-pull { animation: chaosLeverPull 550ms cubic-bezier(.36, 0, .66, -0.56) both; }
+@keyframes chaosMarqueeGlow {
+  0%, 100% { opacity: .35; }
+  50% { opacity: 1; }
+}
+
+.chaos-lever-pull { animation: chaosLeverPull 550ms cubic-bezier(.34, 1.56, .64, 1) both; }
 .chaos-badge-pop { animation: chaosBadgePop 380ms cubic-bezier(.22, 1.4, .36, 1) both; }
+.chaos-marquee-bulb { animation: chaosMarqueeGlow 2.4s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .chaos-reel-up,
-  .chaos-reel-down,
   .chaos-lever-pull,
-  .chaos-badge-pop {
+  .chaos-badge-pop,
+  .chaos-marquee-bulb {
     animation: none;
+    opacity: .7;
   }
 }
 

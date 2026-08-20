@@ -21,6 +21,7 @@ export function useOwnedKillers() {
       if (res.ok) {
         const data = await res.json();
         const owned = (data.data || []).filter((c: any) => c.is_owned);
+        owned.sort((a: any, b: any) => (a.release_number ?? Infinity) - (b.release_number ?? Infinity));
         setKillers(owned.map((c: any) => c.name));
       }
     } catch (err) {

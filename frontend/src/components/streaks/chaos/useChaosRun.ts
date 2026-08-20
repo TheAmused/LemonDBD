@@ -61,7 +61,7 @@ export function useChaosRun(difficulty: Difficulty) {
   );
 
   const submitResult = useCallback(
-    async (result: 'win' | 'loss', killerId: string) => {
+    async (result: 'win' | 'loss', killerId: string, options?: { silent?: boolean }) => {
       if (!token || !run) return;
       const checkpointBefore = run.last_checkpoint_streak;
       setBusy(true);
@@ -72,14 +72,17 @@ export function useChaosRun(difficulty: Difficulty) {
         setRun(updated);
         loadStats();
         if (
+          !options?.silent &&
           result === 'win' &&
           !justFinished &&
           updated.last_checkpoint_streak > checkpointBefore
         ) {
           setJustBankedCheckpoint(updated.last_checkpoint_streak);
         }
+        return updated;
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to record the result');
+        return undefined;
       } finally {
         setBusy(false);
       }

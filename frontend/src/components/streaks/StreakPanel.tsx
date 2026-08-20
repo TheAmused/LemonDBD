@@ -39,7 +39,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           src={image}
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute -right-6 -bottom-6 h-36 w-36 rounded-2xl object-cover opacity-[0.08] dark:opacity-[0.18] [mask-image:radial-gradient(circle_at_bottom_right,black,transparent_75%)]"
+          className="pointer-events-none absolute -right-5 -bottom-5 h-40 w-40 rounded-2xl object-cover opacity-[0.18] dark:opacity-[0.35] [mask-image:radial-gradient(circle_at_bottom_right,black,transparent_85%)]"
         />
       )}
 

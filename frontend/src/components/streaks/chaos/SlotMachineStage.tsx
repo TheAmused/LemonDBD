@@ -183,7 +183,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-gradient-to-b from-[#1a0b2e] to-[#0d0517] p-3 sm:p-4 shadow-xl shadow-violet-950/50">
+    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-gradient-to-b from-[#1a0b2e] to-[#0d0517] p-6 sm:p-8 shadow-xl shadow-violet-950/50">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
         style={{
@@ -223,26 +223,26 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
           <SlotLever pulled={leverPulled} disabled={revealed || loading || locked} onPull={handlePull} />
 
-          {revealed ? (
-            <div className="flex flex-col gap-2 pl-2 sm:pl-3">
-              <RarityBadge rarity={addonRarities[0]} visible={hasSpunThisBuild} />
-              <RarityBadge rarity={addonRarities[1]} visible={hasSpunThisBuild} />
-            </div>
-          ) : (
-            <p className="pl-2 sm:pl-3 max-w-[10rem] sm:max-w-xs text-lg sm:text-xl font-black leading-tight text-violet-100">
-              Pull the lever!
-            </p>
-          )}
+          <div className="w-40 sm:w-48 shrink-0 pl-2 sm:pl-3">
+            {revealed ? (
+              <div className="flex flex-col gap-2">
+                <RarityBadge rarity={addonRarities[0]} visible={hasSpunThisBuild} />
+                <RarityBadge rarity={addonRarities[1]} visible={hasSpunThisBuild} />
+              </div>
+            ) : (
+              <p className="text-lg sm:text-xl font-black leading-tight text-violet-100">Pull the lever!</p>
+            )}
+          </div>
         </div>
+      </div>
 
-        <div
-          className={`mt-2 flex items-center justify-center gap-2 text-violet-300/60 text-xs h-5 ${
-            loading ? 'visible' : 'invisible'
-          }`}
-        >
-          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-          <span>Loading...</span>
-        </div>
+      <div
+        className={`absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-2 text-violet-300/60 text-xs ${
+          loading ? 'visible' : 'invisible'
+        }`}
+      >
+        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+        <span>Loading...</span>
       </div>
     </div>
   );

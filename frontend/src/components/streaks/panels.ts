@@ -1,5 +1,5 @@
 // frontend/src/components/streaks/panels.ts
-import { BookOpen, Coins, History, Shuffle, Smile, Swords, type LucideIcon } from 'lucide-react';
+import { BookOpen, Cat, Coins, History, Shuffle, Smile, Swords, type LucideIcon } from 'lucide-react';
 
 export interface StreakPanelDef {
   id: string;
@@ -11,6 +11,8 @@ export interface StreakPanelDef {
   /** Tailwind border color class for the card. */
   accentBorder: string;
   comingSoon?: boolean;
+  /** Themed artwork shown on the card badge and as a background watermark; falls back to `icon` when absent. */
+  image?: string;
 }
 
 export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
@@ -22,6 +24,7 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     icon: Swords,
     accent: 'text-amber-400',
     accentBorder: 'border-amber-500/20',
+    image: '/images/streaks/gauntlet-streak.jpg',
   },
   {
     id: 'page-streak',
@@ -31,6 +34,7 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     icon: BookOpen,
     accent: 'text-orange-400',
     accentBorder: 'border-orange-500/20',
+    image: '/images/streaks/page-streak.jpg',
   },
   {
     id: 'history-streak',
@@ -40,6 +44,7 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     accent: 'text-slate-400',
     accentBorder: 'border-slate-700/60',
     comingSoon: true,
+    image: '/images/streaks/history-streak.jpg',
   },
   {
     id: 'chaos-streak',
@@ -48,6 +53,7 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     icon: Shuffle,
     accent: 'text-violet-400',
     accentBorder: 'border-violet-500/20',
+    image: '/images/streaks/chaos-streak.jpg',
   },
   {
     id: 'nice-guy-streak',
@@ -57,6 +63,7 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     accent: 'text-emerald-400',
     accentBorder: 'border-emerald-500/20',
     comingSoon: true,
+    image: '/images/streaks/nice-guy-streak.jpg',
   },
   {
     id: 'blood-money-streak',
@@ -66,6 +73,17 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     accent: 'text-rose-400',
     accentBorder: 'border-rose-500/20',
     comingSoon: true,
+    image: '/images/streaks/blood-money-streak.jpg',
+  },
+  {
+    id: 'copycat-streak',
+    title: 'Copycat streak',
+    description: 'A new challenge mode. Details soon.',
+    icon: Cat,
+    accent: 'text-sky-400',
+    accentBorder: 'border-sky-500/20',
+    comingSoon: true,
+    image: '/images/streaks/copycat-streak.jpg',
   },
 ];
 
@@ -78,5 +96,6 @@ export const SURVIVOR_STREAK_PANELS: StreakPanelDef[] = [
     icon: Swords,
     accent: 'text-amber-400',
     accentBorder: 'border-amber-500/20',
+    image: '/images/streaks/gauntlet-streak.jpg',
   },
 ];

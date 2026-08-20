@@ -103,9 +103,9 @@ export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
   ));
 
   if (center) {
-    return <div className="flex flex-wrap justify-center gap-2.5">
+    return <div className="flex flex-wrap justify-center gap-3">
       {killers.map((name, i) => (
-        <div key={name} className="w-20 sm:w-24">
+        <div key={name} className="w-32 sm:w-36">
           {tiles[i]}
         </div>
       ))}

@@ -172,7 +172,19 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 </>
               )}
             </div>
+
+            {run && (
+              <HistoryNextRowPreview
+                killers={ownedKillers}
+                rowSize={run.row_size}
+                currentRowIndex={run.current_row_index}
+              />
+            )}
           </div>
+        )}
+
+        {!isCompleted && run && (
+          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} />
         )}
 
         {!isCompleted && (
@@ -210,18 +222,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               </button>
             )}
           </div>
-        )}
-
-        {!isCompleted && run && (
-          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} />
-        )}
-
-        {!isCompleted && run && (
-          <HistoryNextRowPreview
-            killers={ownedKillers}
-            rowSize={run.row_size}
-            currentRowIndex={run.current_row_index}
-          />
         )}
 
         <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />

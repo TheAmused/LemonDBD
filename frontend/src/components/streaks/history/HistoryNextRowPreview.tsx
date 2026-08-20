@@ -17,16 +17,11 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
   return (
     <div
       title={name}
-      className="flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-1.5"
+      className="flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-1.5 grayscale opacity-50"
     >
       <div className="relative w-full aspect-square rounded-md overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
         {!failed ? (
-          <img
-            src={src}
-            alt={name}
-            className="w-full h-full object-cover opacity-70"
-            onError={() => setFailed(true)}
-          />
+          <img src={src} alt={name} className="w-full h-full object-cover" onError={() => setFailed(true)} />
         ) : (
           <Skull className="w-6 h-6 text-slate-400" />
         )}
@@ -50,10 +45,10 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
   if (nextRow.length === 0) return null;
 
   return (
-    <div className="mt-10 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-4 shadow-sm">
+    <div className="mt-5 pt-4 border-t border-slate-200/80 dark:border-slate-800/80">
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center justify-between gap-2 text-left cursor-pointer"
+        className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
       >
         <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
           Next row preview &middot; Row {currentRowIndex + 2}
@@ -64,9 +59,11 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
       </button>
 
       {expanded && (
-        <div className="mt-4 grid grid-cols-4 sm:grid-cols-5 gap-2.5">
+        <div className="mt-4 flex flex-wrap justify-center gap-3">
           {nextRow.map((name) => (
-            <PreviewTile key={name} name={name} />
+            <div key={name} className="w-32 sm:w-36">
+              <PreviewTile name={name} />
+            </div>
           ))}
         </div>
       )}

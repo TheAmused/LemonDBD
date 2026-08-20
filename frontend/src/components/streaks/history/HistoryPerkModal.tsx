@@ -1,8 +1,8 @@
 // frontend/src/components/streaks/history/HistoryPerkModal.tsx
 'use client';
 
-import React, { useState } from 'react';
-import { PartyPopper, Sparkles } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { PartyPopper, Sparkles, Lock } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 
 const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
@@ -12,20 +12,53 @@ const perkIconFor = (perk: Perk) => {
   return cleanPath ? `${backendBase}/static/${cleanPath}` : perk.icon_url;
 };
 
-const PerkIcon: React.FC<{ perk: Perk }> = ({ perk }) => {
+type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';
+
+const LOCK_SHAKE_DELAY_MS = 500;
+const LOCK_BREAK_DELAY_MS = 880;
+const LOCK_UNLOCKED_DELAY_MS = 1260;
+
+const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ perk, index, phase }) => {
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
+
   return (
-    <div className="h-8 w-8 shrink-0 rounded-md overflow-hidden bg-slate-900/60 border border-emerald-500/30 flex items-center justify-center">
-      {src && !failed ? (
-        <img
-          src={src}
-          alt={perk.name}
-          className="w-full h-full object-contain p-1"
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <Sparkles className="h-4 w-4 text-emerald-400" />
+    <div
+      className="relative flex items-center gap-2.5 rounded-lg border border-emerald-500/30 bg-slate-950/60 px-3 py-2 text-left overflow-hidden"
+      style={phase === 'unlocked' ? { animationDelay: `${index * 120}ms` } : undefined}
+    >
+      <div
+        className={`h-8 w-8 shrink-0 rounded-md overflow-hidden bg-slate-900/60 border border-emerald-500/30 flex items-center justify-center ${
+          phase === 'unlocked' ? 'chaos-badge-pop' : ''
+        }`}
+      >
+        {src && !failed ? (
+          <img
+            src={src}
+            alt={perk.name}
+            className="w-full h-full object-contain p-1"
+            onError={() => setFailed(true)}
+          />
+        ) : (
+          <Sparkles className="h-4 w-4 text-emerald-400" />
+        )}
+      </div>
+      <span className="text-sm font-bold text-emerald-100">{perk.name}</span>
+
+      {phase !== 'unlocked' && (
+        <div
+          className={`absolute inset-0 flex items-center justify-center bg-slate-950/70 transition-opacity ${
+            phase === 'breaking' ? 'opacity-0 duration-300' : ''
+          }`}
+        >
+          <div
+            className={`flex h-7 w-7 items-center justify-center rounded-full bg-slate-800/90 border border-slate-500/60 shadow-md ${
+              phase === 'shaking' ? 'history-lock-shake' : ''
+            } ${phase === 'breaking' ? 'history-lock-break' : ''}`}
+          >
+            <Lock className="w-3.5 h-3.5 text-slate-300" />
+          </div>
+        </div>
       )}
     </div>
   );
@@ -38,6 +71,24 @@ export interface HistoryPerkModalProps {
 }
 
 export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose }) => {
+  const [phase, setPhase] = useState<LockPhase>('locked');
+
+  useEffect(() => {
+    if (!killerName) {
+      setPhase('locked');
+      return;
+    }
+    setPhase('locked');
+    const shakeTimer = setTimeout(() => setPhase('shaking'), LOCK_SHAKE_DELAY_MS);
+    const breakTimer = setTimeout(() => setPhase('breaking'), LOCK_BREAK_DELAY_MS);
+    const unlockTimer = setTimeout(() => setPhase('unlocked'), LOCK_UNLOCKED_DELAY_MS);
+    return () => {
+      clearTimeout(shakeTimer);
+      clearTimeout(breakTimer);
+      clearTimeout(unlockTimer);
+    };
+  }, [killerName]);
+
   if (!killerName) return null;
 
   return (
@@ -60,16 +111,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
           {perks.length === 0 ? (
             <p className="text-sm text-slate-300">No new perks this time.</p>
           ) : (
-            perks.map((perk, i) => (
-              <div
-                key={perk.name}
-                className="chaos-badge-pop flex items-center gap-2.5 rounded-lg border border-emerald-500/30 bg-slate-950/60 px-3 py-2 text-left"
-                style={{ animationDelay: `${i * 120}ms` }}
-              >
-                <PerkIcon perk={perk} />
-                <span className="text-sm font-bold text-emerald-100">{perk.name}</span>
-              </div>
-            ))
+            perks.map((perk, i) => <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />)
           )}
         </div>
 

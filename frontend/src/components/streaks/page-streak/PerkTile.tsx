@@ -56,7 +56,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
   );
 
   const shell = `flex flex-col items-center gap-2 rounded-xl border p-3 transition-all duration-150 motion-reduce:transition-none motion-reduce:scale-100 shadow-sm ${
-    selected ? 'border-orange-500 bg-orange-500/10 scale-[1.03]' : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50'
+    selected ? 'border-orange-500 bg-orange-500/10 scale-[1.03]' : 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:bg-slate-800/70'
   }`;
 
   if (disabled || !onToggle) {

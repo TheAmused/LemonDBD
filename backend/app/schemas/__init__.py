@@ -42,6 +42,12 @@ from app.schemas.chaos import (
     ChaosRunBase,
     ChaosRunResponse,
 )
+from app.schemas.history import (
+    HistoryMatchLogBase,
+    HistoryMatchLogResponse,
+    HistoryRunBase,
+    HistoryRunResponse,
+)
 from app.schemas.map import (
     MapObjectiveBase,
     MapObjectiveResponse,
@@ -124,6 +130,10 @@ __all__ = [
     "ChaosRunResponse",
     "ChaosMatchLogBase",
     "ChaosMatchLogResponse",
+    "HistoryRunBase",
+    "HistoryRunResponse",
+    "HistoryMatchLogBase",
+    "HistoryMatchLogResponse",
     "PageStreakRunBase",
     "PageStreakRunCreate",
     "PageStreakRunResponse",

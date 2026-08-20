@@ -79,6 +79,36 @@ CREATE TABLE IF NOT EXISTS chaos_match_logs (
     FOREIGN KEY (run_id) REFERENCES chaos_runs(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS history_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    mode TEXT NOT NULL CHECK (mode IN ('medium', 'hell')),
+    status TEXT NOT NULL DEFAULT 'in_progress',
+    current_row_index INTEGER NOT NULL DEFAULT 0,
+    total_killers_beaten INTEGER NOT NULL DEFAULT 0,
+    best_killers_beaten INTEGER NOT NULL DEFAULT 0,
+    completed_killers_json TEXT NOT NULL DEFAULT '[]',
+    unlocked_perk_names_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_row_index INTEGER NOT NULL DEFAULT 0,
+    checkpoint_total_killers_beaten INTEGER NOT NULL DEFAULT 0,
+    checkpoint_completed_killers_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_unlocked_perk_names_json TEXT NOT NULL DEFAULT '[]',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS history_match_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER NOT NULL,
+    killer_id TEXT NOT NULL,
+    result TEXT NOT NULL CHECK (result IN ('win', 'loss')),
+    row_index INTEGER NOT NULL,
+    streak_before INTEGER NOT NULL,
+    streak_after INTEGER NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (run_id) REFERENCES history_runs(id) ON DELETE CASCADE
+);
+
 INSERT INTO perk_rules (id, name, is_default, slot1_type, slot2_type, slot3_type, slot4_type)
 SELECT 1, 'Default Balanced (2 Own, 1 General, 1 Any)', 1, 'character_own', 'character_own', 'general_role', 'any_role'
 WHERE NOT EXISTS (SELECT 1 FROM perk_rules WHERE id = 1);

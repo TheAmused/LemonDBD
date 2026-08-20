@@ -21,33 +21,44 @@ const LOCK_UNLOCKED_DELAY_MS = 1260;
 const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ perk, index, phase }) => {
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
+  const isUnlocked = phase === 'unlocked';
 
   return (
     <div
-      className="relative flex items-center gap-2.5 rounded-lg border border-emerald-500/30 bg-slate-950/60 px-3 py-2 text-left overflow-hidden"
-      style={phase === 'unlocked' ? { animationDelay: `${index * 120}ms` } : undefined}
+      className={`relative flex flex-col items-center gap-1.5 p-2 rounded-lg border overflow-hidden ${
+        isUnlocked
+          ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300/60 dark:border-emerald-800/60 chaos-badge-pop'
+          : 'bg-slate-50 dark:bg-slate-950/60 border-dashed border-2 border-slate-400/60 dark:border-slate-700'
+      }`}
+      style={isUnlocked ? { animationDelay: `${index * 120}ms` } : undefined}
     >
       <div
-        className={`h-8 w-8 shrink-0 rounded-md overflow-hidden bg-slate-900/60 border border-emerald-500/30 flex items-center justify-center ${
-          phase === 'unlocked' ? 'chaos-badge-pop' : ''
+        className={`w-full aspect-square rounded-md overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center ${
+          isUnlocked ? '' : 'grayscale opacity-40'
         }`}
       >
         {src && !failed ? (
           <img
             src={src}
             alt={perk.name}
-            className="w-full h-full object-contain p-1"
+            className="w-full h-full object-contain p-1.5"
             onError={() => setFailed(true)}
           />
         ) : (
-          <Sparkles className="h-4 w-4 text-emerald-400" />
+          <Sparkles className="w-6 h-6 text-slate-400" />
         )}
       </div>
-      <span className="text-sm font-bold text-emerald-100">{perk.name}</span>
+      <span
+        className={`text-[11px] font-medium text-center leading-tight line-clamp-2 ${
+          isUnlocked ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-500 dark:text-slate-500 opacity-60'
+        }`}
+      >
+        {perk.name}
+      </span>
 
-      {phase !== 'unlocked' && (
+      {!isUnlocked && (
         <div
-          className={`absolute inset-0 flex items-center justify-center bg-slate-950/70 transition-opacity ${
+          className={`absolute inset-0 flex items-center justify-center bg-slate-950/25 dark:bg-slate-950/45 transition-opacity ${
             phase === 'breaking' ? 'opacity-0 duration-300' : ''
           }`}
         >
@@ -107,13 +118,15 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
         <h2 className="text-xl font-black tracking-tight text-white">{killerName} beaten!</h2>
         <p className="mt-1 text-xs text-slate-400 uppercase tracking-wider font-bold">Perks unlocked</p>
 
-        <div className="mt-4 space-y-2">
-          {perks.length === 0 ? (
-            <p className="text-sm text-slate-300">No new perks this time.</p>
-          ) : (
-            perks.map((perk, i) => <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />)
-          )}
-        </div>
+        {perks.length === 0 ? (
+          <p className="mt-4 text-sm text-slate-300">No new perks this time.</p>
+        ) : (
+          <div className="mt-4 grid grid-cols-3 gap-2.5">
+            {perks.map((perk, i) => (
+              <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />
+            ))}
+          </div>
+        )}
 
         <button
           onClick={onClose}

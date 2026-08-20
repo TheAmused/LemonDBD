@@ -22,20 +22,23 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   const isUnlocked = phase === 'unlocked';
+  const isRevealed = phase === 'breaking' || phase === 'unlocked';
+  const delay = { transitionDelay: `${index * 150}ms` };
 
   return (
     <div
-      className={`relative flex flex-col items-center gap-1.5 p-2 rounded-lg border overflow-hidden ${
-        isUnlocked
-          ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300/60 dark:border-emerald-800/60 chaos-badge-pop'
-          : 'bg-slate-50 dark:bg-slate-950/60 border-dashed border-2 border-slate-400/60 dark:border-slate-700'
+      className={`relative flex flex-col items-center gap-1.5 p-2 rounded-lg border transition-colors duration-500 overflow-hidden ${
+        isRevealed
+          ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300/60 dark:border-emerald-800/60'
+          : 'bg-slate-50 dark:bg-slate-950/60 border-slate-400/60 dark:border-slate-700'
       }`}
-      style={isUnlocked ? { animationDelay: `${index * 120}ms` } : undefined}
+      style={delay}
     >
       <div
-        className={`w-full aspect-square rounded-md overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center ${
-          isUnlocked ? '' : 'grayscale opacity-40'
+        className={`w-full aspect-square rounded-md overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center transition-all duration-500 ${
+          isRevealed ? '' : 'grayscale opacity-40'
         }`}
+        style={delay}
       >
         {src && !failed ? (
           <img
@@ -49,9 +52,10 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
         )}
       </div>
       <span
-        className={`text-[11px] font-medium text-center leading-tight line-clamp-2 ${
-          isUnlocked ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-500 dark:text-slate-500 opacity-60'
+        className={`text-[11px] font-medium text-center leading-tight line-clamp-2 transition-colors duration-500 ${
+          isRevealed ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-500 dark:text-slate-500 opacity-60'
         }`}
+        style={delay}
       >
         {perk.name}
       </span>
@@ -61,6 +65,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
           className={`absolute inset-0 flex items-center justify-center bg-slate-950/25 dark:bg-slate-950/45 transition-opacity ${
             phase === 'breaking' ? 'opacity-0 duration-300' : ''
           }`}
+          style={delay}
         >
           <div
             className={`flex h-7 w-7 items-center justify-center rounded-full bg-slate-800/90 border border-slate-500/60 shadow-md ${

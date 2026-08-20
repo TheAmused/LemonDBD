@@ -183,7 +183,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-gradient-to-b from-[#1a0b2e] to-[#0d0517] p-3 sm:p-4 shadow-xl shadow-violet-950/50">
+    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-gradient-to-b from-[#1a0b2e] to-[#0d0517] p-6 sm:p-8 shadow-xl shadow-violet-950/50">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
         style={{
@@ -206,7 +206,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       </div>
 
       <div className="relative z-10">
-        <div className="flex items-end justify-center gap-4 sm:gap-6">
+        <div className="flex items-center justify-center gap-4 sm:gap-6">
           <div className="flex items-end gap-2">
             {[0, 1, 2, 3].map((i) => (
               <ReelStrip

@@ -1,5 +1,5 @@
 // frontend/src/components/streaks/panels.ts
-import { BookOpen, History, Shuffle, Swords, type LucideIcon } from 'lucide-react';
+import { BookOpen, Coins, History, Shuffle, Smile, Swords, type LucideIcon } from 'lucide-react';
 
 export interface StreakPanelDef {
   id: string;
@@ -48,6 +48,24 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
     icon: Shuffle,
     accent: 'text-violet-400',
     accentBorder: 'border-violet-500/20',
+  },
+  {
+    id: 'nice-guy-streak',
+    title: 'Nice Guy streak',
+    description: 'A new challenge mode. Details soon.',
+    icon: Smile,
+    accent: 'text-emerald-400',
+    accentBorder: 'border-emerald-500/20',
+    comingSoon: true,
+  },
+  {
+    id: 'blood-money-streak',
+    title: 'Blood Money streak',
+    description: 'A new challenge mode. Details soon.',
+    icon: Coins,
+    accent: 'text-rose-400',
+    accentBorder: 'border-rose-500/20',
+    comingSoon: true,
   },
 ];
 

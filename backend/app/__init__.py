@@ -51,57 +51,37 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     def handle_options_preflight(path):
         return "", 200
 
-    with flask_app.app_context():
+    def _init_db_safely():
         from app.services.db_service import DatabaseService
         from app.seeds.user_seeder import seed_default_users
         from app.services.scraper_service import ScraperService
 
-        DatabaseService().init_db()
-
-        try:
-            db_engine = db.engine.name
-            if db_engine in ["postgresql", "postgres"]:
-                db.session.execute(text("ALTER TABLE perks ADD COLUMN IF NOT EXISTS alternate_name VARCHAR(150);"))
-                db.session.execute(text("ALTER TABLE perks ADD COLUMN IF NOT EXISTS is_generic_counterpart BOOLEAN DEFAULT FALSE;"))
-                for col_name, col_type in [
-                    ("power_name", "VARCHAR(150)"),
-                    ("power_description", "TEXT"),
-                    ("power_icon_url", "VARCHAR(500)"),
-                    ("movement_speed", "VARCHAR(100)"),
-                    ("terror_radius", "VARCHAR(100)"),
-                    ("terror_radius_meters", "INTEGER"),
-                    ("height", "VARCHAR(50)"),
-                ]:
-                    db.session.execute(text(f"ALTER TABLE characters ADD COLUMN IF NOT EXISTS {col_name} {col_type};"))
-                db.session.commit()
-            elif db_engine == "sqlite":
-                cols = [c[1] for c in db.session.execute(text("PRAGMA table_info(perks)")).fetchall()]
-                if "alternate_name" not in cols:
-                    db.session.execute(text("ALTER TABLE perks ADD COLUMN alternate_name VARCHAR(150);"))
-                if "is_generic_counterpart" not in cols:
-                    db.session.execute(text("ALTER TABLE perks ADD COLUMN is_generic_counterpart BOOLEAN DEFAULT 0;"))
-
-                char_cols = [c[1] for c in db.session.execute(text("PRAGMA table_info(characters)")).fetchall()]
-                for col_name, col_type in [
-                    ("power_name", "VARCHAR(150)"),
-                    ("power_description", "TEXT"),
-                    ("power_icon_url", "VARCHAR(500)"),
-                    ("movement_speed", "VARCHAR(100)"),
-                    ("terror_radius", "VARCHAR(100)"),
-                    ("terror_radius_meters", "INTEGER"),
-                    ("height", "VARCHAR(50)"),
-                ]:
-                    if col_name not in char_cols:
-                        db.session.execute(text(f"ALTER TABLE characters ADD COLUMN {col_name} {col_type};"))
-                db.session.commit()
-        except Exception as col_err:
-            db.session.rollback()
-            logging.debug(f"Column auto-check skipped: {col_err}")
-
-        seed_default_users()
         is_testing = flask_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
-        if not is_testing:
-            ScraperService().seed_canonical_characters()
+        is_pg = False
+        try:
+            is_pg = db.engine.dialect.name in ("postgresql", "postgres")
+        except Exception:
+            pass
+
+        if is_pg:
+            # Non-blocking PostgreSQL advisory lock: worker 1 runs init, workers 2-4 skip immediately without blocking
+            with db.engine.connect() as conn:
+                acquired = conn.execute(text("SELECT pg_try_advisory_lock(8882026);")).scalar()
+                if acquired:
+                    try:
+                        DatabaseService().init_db()
+                        seed_default_users()
+                    finally:
+                        conn.execute(text("SELECT pg_advisory_unlock(8882026);"))
+        else:
+            DatabaseService().init_db()
+            seed_default_users()
+
+    with flask_app.app_context():
+        try:
+            _init_db_safely()
+        except Exception as startup_err:
+            logging.debug(f"Startup initialization notice: {startup_err}")
 
     from app.routes.auth import auth_bp
     from app.routes.users import users_bp
@@ -120,6 +100,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     from app.routes.others.builds import builds_bp
     from app.routes.others.custom_perks import custom_perks_bp
     from app.routes.others.guesser import guesser_bp
+    from app.routes.others.smash_or_pass import smash_or_pass_bp
 
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(users_bp)
@@ -136,6 +117,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app.register_blueprint(gauntlet_streak_bp)
     flask_app.register_blueprint(chaos_streak_bp)
     flask_app.register_blueprint(guesser_bp)
+    flask_app.register_blueprint(smash_or_pass_bp)
     flask_app.register_blueprint(bug_reports_bp)
 
     with flask_app.app_context():

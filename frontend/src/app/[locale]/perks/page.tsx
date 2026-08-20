@@ -127,6 +127,7 @@ function PerksContent() {
         sort_by: sortBy,
         order: order,
         category: role,
+        lang: locale,
       });
 
       if (scope === 'general') {
@@ -145,16 +146,16 @@ function PerksContent() {
         queryParams.append('user_id', user.id.toString());
       }
 
-      const allPerksUrl = new URLSearchParams({ limit: '1000' });
+      const allPerksUrl = new URLSearchParams({ limit: '1000', lang: locale });
       if (user?.id) {
         allPerksUrl.append('user_id', user.id.toString());
       }
 
       const [perksRes, charRes, allPerksRes, allCharsRes] = await Promise.all([
         fetch(`${backendBase}/api/v1/perks?${queryParams.toString()}`),
-        fetch(`${backendBase}/api/v1/characters?category=${role}`),
+        fetch(`${backendBase}/api/v1/characters?category=${role}&lang=${locale}`),
         fetch(`${backendBase}/api/v1/perks?${allPerksUrl.toString()}`),
-        fetch(`${backendBase}/api/v1/characters`),
+        fetch(`${backendBase}/api/v1/characters?lang=${locale}`),
       ]);
 
       if (perksRes.ok) {

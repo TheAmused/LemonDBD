@@ -4,6 +4,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
 from app.services.perks import (
+    AddonModel,
+    CharacterModel,
+    ItemModel,
+    MapModel,
+    PerkModel,
     clean_description as _clean_description_fn,
     fetch_addons as _fetch_addons_fn,
     fetch_character_detail as _fetch_character_detail_fn,
@@ -79,6 +84,7 @@ class PerkService:
         limit: int = 50,
         user_id: Optional[int] = None,
         owned_only: bool = False,
+        lang: Optional[str] = None,
     ) -> Dict[str, Any]:
         return _fetch_perks_fn(
             self,
@@ -92,6 +98,7 @@ class PerkService:
             limit=limit,
             user_id=user_id,
             owned_only=owned_only,
+            lang=lang,
         )
 
     def _get_perks_fallback(
@@ -133,29 +140,31 @@ class PerkService:
     ) -> List[Dict[str, Any]]:
         return _fetch_character_suggestions_fn(self, query=query, category=category, limit=limit)
 
-    def get_by_identifier(self, identifier: str) -> Optional[Dict[str, Any]]:
-        return _fetch_perk_by_identifier_fn(self, identifier)
+    def get_by_identifier(self, identifier: str, lang: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        return _fetch_perk_by_identifier_fn(self, identifier, lang=lang)
 
-    def get_characters(self, category: Optional[str] = None) -> List[Dict[str, Any]]:
-        return _fetch_characters_fn(self, category)
+    def get_characters(self, category: Optional[str] = None, lang: Optional[str] = None) -> List[Dict[str, Any]]:
+        return _fetch_characters_fn(self, category, lang=lang)
 
-    def get_character_detail(self, character_name: str) -> Optional[Dict[str, Any]]:
-        return _fetch_character_detail_fn(self, character_name)
+    def get_character_detail(self, character_name: str, lang: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        return _fetch_character_detail_fn(self, character_name, lang=lang)
 
     def get_items(
         self,
         category: Optional[str] = None,
         search: Optional[str] = None,
+        lang: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        return _fetch_items_fn(self, category=category, search=search)
+        return _fetch_items_fn(self, category=category, search=search, lang=lang)
 
     def get_addons(
         self,
         category: Optional[str] = None,
         target: Optional[str] = None,
         search: Optional[str] = None,
+        lang: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        return _fetch_addons_fn(self, category=category, target=target, search=search)
+        return _fetch_addons_fn(self, category=category, target=target, search=search, lang=lang)
 
     def get_maps(
         self,

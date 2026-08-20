@@ -1,0 +1,328 @@
+// frontend/src/components/smash-or-pass/rosterTranslations.ts
+import { CharacterRosterItem, CHARACTER_ROSTER, getCharacterRosterItem } from './characterRoster';
+
+interface CharacterTranslation {
+  title?: string;
+  tagline?: string;
+  bio?: string;
+  quote?: string;
+  greenFlags?: string[];
+  redFlags?: string[];
+  datingVibe?: string;
+  turnOn?: string;
+  dealbreaker?: string;
+}
+
+// Translations mapping for key languages
+export const ROSTER_TRANSLATIONS: Record<string, Record<string, CharacterTranslation>> = {
+  pl: {
+    ada_wong: {
+      title: 'Enigmatyczna Agentka',
+      tagline: 'Szpilki, lina z hakiem i sekrety, których nigdy nie odkryjesz.',
+      bio: 'Tajna agentka, która zawsze wygląda nienagannie w trakcie pościgu. Zniknie na 3 miesiące i wróci z poufnymi danymi oraz uśmieszkiem.',
+      quote: '„Niektóre rzeczy lepiej przemilczeć, ale najpierw możesz postawić mi martini.”',
+      greenFlags: ['Zawsze ma plan ucieczki', 'Nieskazitelny styl w zamglonej apokalipsie', 'Nigdy nie odpisuje zbyt szybko'],
+      redFlags: ['Wyskoczy przez okno z hakiem, jeśli wspomnisz o stałym związku', 'Pracuje dla 4 rywalizujących agencji naraz'],
+      datingVibe: 'Zmysłowy, nieuchwytny romans o wysoką stawkę',
+      turnOn: 'Podsłuchy, gadżety i tajemnice',
+      dealbreaker: 'Zadawanie zbyt wielu pytań osobistych',
+    },
+    sable_ward: {
+      title: 'Gotycka Inwokantka',
+      tagline: 'Rytuały w piwnicy, czarna szminka i nieskończony eyeliner.',
+      bio: 'Wciągnięta prosto do Mgły przez okultystyczną inwokację w piwnicy. Zaprosi Cię do piwnicy szopy zabójcy, by posłuchać płyt winylowych.',
+      quote: '„Jeśli nie potrafisz znieść mnie w piwnicy, nie zasługujesz na mnie przy bramie wyjściowej.”',
+      greenFlags: ['Słucha Bauhaus i The Cure', 'Wygląda oszałamiająco w czerni', 'Przywoła Byt tylko po to, by spędzić z Tobą czas'],
+      redFlags: ['Spędza 90% meczu w piwnicy', 'Może użyć Twojej krwi do kręgu inwokacji'],
+      datingVibe: 'Gotycki romantyzm i mroczny klimat piwnicy',
+      turnOn: 'Kręgi okultystyczne i mroczna poezja',
+      dealbreaker: 'Strach przed ciemnością',
+    },
+    feng_min: {
+      title: 'Kompetytywna Gamerka',
+      tagline: 'Lithe przez okna, królicze uszka i wbijanie rangi o 3 nad ranem.',
+      bio: 'Była mistrzyni esportu z ponad 400 skinami. Niezwykle ambitna – jeśli zepsujesz Great Skill Checka, czeka Cię rage-quit.',
+      quote: '„GG WP, a może kupisz mi boba tea i spróbujemy jeszcze raz?”',
+      greenFlags: ['Ma idealny strój na każdą okazję', 'Przeskakuje okna z Lithe bez wysiłku', 'Może Cię wycarry’ować w 2v8'],
+      redFlags: ['Zawsze zwala winę na lagi', 'Zniszczyła klawiaturę po pomyłce o 0.1%'],
+      datingVibe: 'Uroczo chaotyczna gamerka w króliczych uszkach',
+      turnOn: 'Perfekcyjne ratunki latarką i energetyki',
+      dealbreaker: 'Granie w trybie casual i brak zaangażowania',
+    },
+    kate_denson: {
+      title: 'Pieśniarka Country',
+      tagline: 'Akustyczne ballady przy ognisku i promieniejące ciepło serca.',
+      bio: 'Wędrowna artystka o anielskim głosie, który potrafi ukoić każdego Zabójcę. Napisze piosenkę o Twoich ucieczkach z Mgły.',
+      quote: '„Muzyka to jedyna rzecz, której Mgła nie jest w stanie pochłonąć.”',
+      greenFlags: ['Pisze o Tobie piosenki', 'Królowa perków Windows of Opportunity', 'Bije od niej czyste słoneczne ciepło'],
+      redFlags: ['Zamiast uciekać, będzie śpiewać serenady Zabójcy', 'Zostawia gitary przy każdym generatorze'],
+      datingVibe: 'Ciepły, sielankowy romans przy ognisku',
+      turnOn: 'Wspólny śpiew w blasku księżyca',
+      dealbreaker: 'Narzekanie na hałas i cynizm',
+    },
+    mikaela_reid: {
+      title: 'Wiedźma Błogosławieństw',
+      tagline: 'Aromatyczna kawa, karty tarota i niebieskie totemy w każdym rogu.',
+      bio: 'Baristka, pisarka horrorów i certyfikowana wiedźma. Błogosławi niebieskie totemy na całej mapie, by leczyć rany w ułamku sekundy.',
+      quote: '„Wyciągnęłam z talii Kochanków i Wieżę. Szykuj się na emocje.”',
+      greenFlags: ['Robi najlepsze espresso we Mgle', 'Krąg Leczenia zawsze aktywny', 'Trafnie odczytuje Twój horoskop'],
+      redFlags: ['Spędza 5 minut na błogosławieniu totemu, gdy wisisz na haku', 'Czasami przynosi kryształy o dziwnej energii'],
+      datingVibe: 'Magiczna wiedźma z obsesją na punkcie kawy',
+      turnOn: 'Świeżo palona kawa i świece zapachowe',
+      dealbreaker: 'Brak szacunku dla kart tarota',
+    },
+    leon_scott_kennedy: {
+      title: 'Bohater z Raccoon City',
+      tagline: 'Grzywka z lat 90., granaty błyskowe i energia wiernego golden retrievera.',
+      bio: 'Ocalały z Raccoon City i agent rządowy. Wytworzy granat błyskowy na generatorze i rzuci go w idealnym momencie, by Cię ochronić.',
+      quote: '„Gdzie wszyscy idą? Na bingo?”',
+      greenFlags: ['Uratuje Cię granatem błyskowym', 'Idealny opiekuńczy materiał na męża', 'Grzywka, która nigdy nie traci objętości'],
+      redFlags: ['Słabość do tajemniczych kobiet w czerwonych sukienkach', 'Najgorszy pierwszy dzień w pracy w historii'],
+      datingVibe: 'Przystojny, opiekuńczy bohater akcji o złotym sercu',
+      turnOn: 'Celowniki laserowe, skórzane kurtki i praca zespołowa',
+      dealbreaker: 'Zdrada dla próbek wirusa korporacji',
+    },
+    felix_richter: {
+      title: 'Wizjonerski Architekt',
+      tagline: 'Niemiecka precyzja, garnitury szyte na miarę i szczęka ostra jak brzytwa.',
+      bio: 'Genialny architekt z Lipska w nienagannym garniturze. Zbuduje schronienie nawet w najmroczniejszym zakątku Mgły.',
+      quote: '„Każda budowla ma swój zwornik. W tej krainie to my musimy być nim dla siebie.”',
+      greenFlags: ['Niewiarygodna prędkość odhaczania', 'Nienaganny styl nawet w błocie', 'Głęboka lojalność'],
+      redFlags: ['Obsesja na punkcie tajnych stowarzyszeń', 'Pracoholik spędzający noce nad projektami'],
+      datingVibe: 'Elegancki, wyrafinowany europejski dżentelmen',
+      turnOn: 'Architektura Bauhausu i porządne espresso',
+      dealbreaker: 'Niedbałość i brak manier',
+    },
+    vittorio_toscano: {
+      title: 'Średniowieczny Uczony',
+      tagline: 'Świecące magiczne tatuaże, srebrne włosy i wieki starożytnej mądrości.',
+      bio: 'XIV-wieczny włoski lord i badacz arkanów. Przemierzał Mgłę przez stulecia, nie tracąc ani rozumu, ani imponującej formy fizycznej.',
+      quote: '„Czas jest oceanem, a wiedza łodzią, która utrzymuje nas na powierzchni.”',
+      greenFlags: ['Magazynuje energię generatorów', 'Zestarzał się jak najwspanialsze włoskie wino', 'Świecące runy na ciele'],
+      redFlags: ['Wędruje po Mgle od ponad 600 lat', 'W stresie mówi w klasycznej łacinie'],
+      datingVibe: 'Mądry, poetycki, nieśmiertelny srebrnowłosy erudyta',
+      turnOn: 'Starożytne manuskrypty i ruiny',
+      dealbreaker: 'Ignorancja i niszczenie wiedzy',
+    },
+    the_huntress: {
+      title: 'Matka z Czerwonego Lasu',
+      tagline: 'Ponad dwumetrowa siłaczka z toporami i upiorną kołysanką.',
+      bio: 'Wychowana samotnie w rosyjskiej głuszy. Potężna, niezwykle silna, nuci kołysankę „Bayu Bayushki Bayu”, rzucając toporami przez całą mapę.',
+      quote: '„(Cicha, przejmująca kołysanka niosąca się wśród sosen)”',
+      greenFlags: ['Zbuduje drewnianą fortecę gołymi rękami', 'Snajperska celność rzutów toporami', 'Zaciekle chroni każdego, kogo uzna za rodzinę'],
+      redFlags: ['Zamknie Cię w leśnej chacie na zawsze', 'Topory latają, gdy lekko się zirytuje'],
+      datingVibe: 'Potężna leśna opiekunka o imponującej sile',
+      turnOn: 'Ręcznie rzeźbione drewniane zabawki i sosnowe lasy',
+      dealbreaker: 'Słaby uścisk i uciekanie przed jej kołysanką',
+    },
+    the_spirit: {
+      title: 'Mściwa Onryō',
+      tagline: 'Cięcia kataną, krok fazowy we mgle i blask potłuczonego szkła.',
+      bio: 'Dziedziczka rodu Yamaoka. Porusza się z nadprzyrodzoną prędkością w fazie widmowej, dzierżąc ostrze swych przodków.',
+      quote: '„(Wściekły krzyk zjawy, gdy mgła rozbija się niczym szkło)”',
+      greenFlags: ['Niewiarygodna prędkość kroku fazowego', 'Mistrzowskie opanowanie katany', 'Zjawiskowy blask odłamków szkła'],
+      redFlags: ['Przechodzi w fazę za Twoimi plecami przy kłótni', 'Poważne problemy z gniewem'],
+      datingVibe: 'Eteryczna, niebezpieczna furia o tragicznej przeszłości',
+      turnOn: 'Tradycyjne japońskie chramy i precyzyjne cięcia mieczem',
+      dealbreaker: 'Nielojalność i zdrada zaufania',
+    },
+    the_skull_merchant: {
+      title: 'Dyrektorka Wysokich Technologii',
+      tagline: 'Drony radarowe, cyber-ostrza i morderczy wybieg mody.',
+      bio: 'Miliarderka i szefowa korporacji technologicznej polująca na rywali za pomocą niestandardowych dronów i podwójnych ostrzy.',
+      quote: '„Każdy rynek ma konkurencję. Ja swoją po prostu likwiduję.”',
+      greenFlags: ['Miliardowe konto bankowe', 'Drony chroniące Twoje bezpieczeństwo 24/7', 'Perfekcyjny styl z wybiegów mody'],
+      redFlags: ['Mecze z blokowaniem 3 generatorów trwały po 45 minut', 'Śledzi Twój telefon dronami termowizyjnymi'],
+      datingVibe: 'Zabójcza dziedziczka korporacji z zamiłowaniem do mangi',
+      turnOn: 'Dane z inwigilacji i przejęcia spółek',
+      dealbreaker: 'Hakowanie jej dronów i brak ambicji',
+    },
+    the_trickster: {
+      title: 'Bożyszcze K-Popu',
+      tagline: 'Neonowe włosy, noże do rzucania, chichot Main Event i urok idola.',
+      bio: 'Gwiazdor K-popu, który zamienił krzyki ofiar w hity z pierwszych miejsc list przebojów. Nosi rozpięty neonowy płaszcz i rzuca nożami do rytmu.',
+      quote: '„Podobało się show? Bis jest specjalnie dla Ciebie!”',
+      greenFlags: ['Nieskazitelny wygląd i talent wokalny', 'Kaskada noży podczas Main Eventu robi wrażenie', 'Płynny, uwodzicielski koreański'],
+      redFlags: ['Wmiksuje Twój krzyk do swoich utworów na Spotify', 'Poziom narcyzmu ponad wszelką skalę'],
+      datingVibe: 'Błyskotliwa, ekstrawagancka gwiazda K-popu',
+      turnOn: 'Bisy, neonowe reflektory i wysokie dźwięki',
+      dealbreaker: 'Zły gust muzyczny i przerywanie jego solówek',
+    },
+    the_ghost_face: {
+      title: 'Król Selfie i Skradania',
+      tagline: 'Kucanie, skradanie w Całunie Nocy i pamiątkowe selfie po mori.',
+      bio: 'Dziennikarz śledczy piszący artykuły z pierwszych stron gazet o własnych zbrodniach. Uwielbia robić pamiątkowe zdjęcia z ofiarami.',
+      quote: '„Jaki jest Twój ulubiony horror? Najpierw zróbmy sobie selfie.”',
+      greenFlags: ['Robi pamiątkowe fotki', 'Mistrz przyjacielskiego kucania', 'Pisze artykuły na pierwsze strony gazet'],
+      redFlags: ['Obserwuje Cię zza zasłony w kuchni przez 12 sekund, by Cię oznaczyć', 'Nigdy nie zdejmuje maski'],
+      datingVibe: 'Zadziorny, uwielbiający selfie stalker z horroru',
+      turnOn: '99% naładowania stalka i błysk flesza aparatu',
+      dealbreaker: 'Ujawnienie go z Całunu Nocy przed zrobieniem zdjęcia',
+    },
+    the_executioner: {
+      title: 'Piramidogłowy Tormentor',
+      tagline: 'Wielki Nóż, smugi udręki i potężna, muskularna sylwetka.',
+      bio: 'Cielesne ucieleśnienie winy z Silent Hill. Potężny, bez koszuli, ciągnący monumentalny Wielki Nóż żłobiący bruzdy w ziemi.',
+      quote: '„(Głuche tarcie stali o asfalt...)”',
+      greenFlags: ['Wyżłobi ścieżkę udręki prosto do Twojego serca', 'Brzuch jak z granitu', 'Nigdy nie narzeka i nie przerywa (typ milczący)'],
+      redFlags: ['Klatki Pokuty zamiast kulturalnego rozstania', 'Wielki Nóż rysuje drewniane parkiety'],
+      datingVibe: 'Monumentalna, milcząca siła wiecznego sądu',
+      turnOn: 'Głęboka skrucha i dźwięk szlifowanej stali',
+      dealbreaker: 'Odmowa wejścia w ścieżkę udręki',
+    },
+    the_mastermind: {
+      title: 'Mózg Operacji Uroboros',
+      tagline: 'Długie płaszcze, skoki Virulent Bound i dokładnie 7 minut dla Ciebie.',
+      bio: 'Geniusz bioterroryzmu wzmocniony wirusem Uroboros. Przemyka przez mapę z naddźwiękową prędkością w eleganckim skórzanym trenczu.',
+      quote: '„Siedem minut. Dokładnie siedem minut mogę poświęcić na zabawę z Tobą.”',
+      greenFlags: ['Zawsze punktualny (dokładnie 7 minut)', 'Rzuty Virulent Bound gwarantują podniebne loty', 'Okulary przeciwsłoneczne w nocy wyglądają zabójczo'],
+      redFlags: ['Monologi o nasyceniu globu wirusem przy kolacji', 'Wstrzyknie Ci pasożyty Uroboros w prezencie'],
+      datingVibe: 'Arogancki, genialny geniusz z kompleksem boga',
+      turnOn: 'Lepsza genetyka i globalne nasycenie',
+      dealbreaker: 'Marnowanie więcej niż 7 minut jego cennego czasu',
+    },
+    the_xenomorph: {
+      title: 'Organizm Doskonały',
+      tagline: 'Tunele podziemne, cięcia ogonem i żrący kwas w żyłach.',
+      bio: 'Najdoskonalszy drapieżnik we wszechświecie. Przemierza podziemne tunele na czterech łapach i uderza zabójczym żądłem ogona.',
+      quote: '„(Syczący kwas kapiący z wewnętrznej szczęki)”',
+      greenFlags: ['Organizm doskonały, nieskażony sumieniem', 'Błyskawiczny transport podziemnymi tunelami', 'Lśniący pancerz'],
+      redFlags: ['Krew z kwasu niszczy parkiety', 'Wewnętrzna szczęka przeszkadza przy kolacji'],
+      datingVibe: 'Przerażający obcy drapieżnik szczytowy',
+      turnOn: 'Ciemne szyby wentylacyjne i wieżyczki bez amunicji',
+      dealbreaker: 'Miotacze ognia i podnośniki ładunkowe',
+    },
+    the_demogorgon: {
+      title: 'Kwiatowy Pies z Drugiej Strony',
+      tagline: 'Płatkowa paszcza, szarża Shred, portale i urocza demo-psia energia.',
+      bio: 'Bestia z Drugiej Strony o paszczy w kształcie kwiatu. Społeczność kocha Demo-pieska za niszczenie palet i radosne ryczenie.',
+      quote: '„(Rozwiera płatki paszczy i ryczy z entuzjazmem)”',
+      greenFlags: ['Portale do Drugiej Strony ułatwiają podróżowanie', 'Najsłodszy kwiatogłowy piesek w krainie Bytu', 'Rozbija palety z wielką klasą'],
+      redFlags: ['Wymaga gofrów Eggo i surowego mięsa', 'Brak oczu, polega na echolokacji'],
+      datingVibe: 'Chaotyczny, uroczy obcy pupil z kwiatową głową',
+      turnOn: 'Portale do Upside Down i głaskanie po głowie',
+      dealbreaker: 'Zamykanie jego portali',
+    },
+  },
+  es: {
+    ada_wong: {
+      title: 'La Agente Enigmática',
+      tagline: 'Tacones altos, gancho de agarre y secretos que jamás descubrirás.',
+      bio: 'Agente secreta que siempre luce impecable en plena persecución. Desaparecerá por 3 meses y volverá con información clasificada y una sonrisa.',
+      quote: '«Algunas cosas es mejor no decirlas, pero primero invítame un martini.»',
+      greenFlags: ['Siempre tiene una ruta de escape', 'Moda impecable en el apocalipsis', 'Nunca responde mensajes demasiado rápido'],
+      redFlags: ['Usará su gancho para saltar por la ventana si hablas de compromiso', 'Trabaja para 4 agencias rivales a la vez'],
+      datingVibe: 'Romance sensual, esquivo y de alto riesgo',
+      turnOn: 'Escuchas telefónicas y misterio',
+      dealbreaker: 'Hacer demasiadas preguntas personales',
+    },
+    sable_ward: {
+      title: 'La Invocadora Gótica',
+      tagline: 'Rituales en el sótano, labial negro y delineador infinito.',
+      bio: 'Atraída directamente a la Niebla mediante una invocación en el sótano. Te invitará al sótano de la choza del asesino a escuchar vinilos.',
+      quote: '«Si no puedes soportarme en el sótano, no me mereces en la puerta de salida.»',
+      greenFlags: ['Escucha Bauhaus y The Cure', 'Luce increíble en monocromo', 'Invocará al Ente solo para pasar el rato contigo'],
+      redFlags: ['Pasa el 90% de la partida en el sótano', 'Podría usar tu sangre para un círculo mágico'],
+      datingVibe: 'Romanticismo gótico y vibras oscuras de sótano',
+      turnOn: 'Círculos ocultos y poesía oscura',
+      dealbreaker: 'Tener miedo a la oscuridad',
+    },
+    the_huntress: {
+      title: 'La Madre del Bosque Rojo',
+      tagline: 'Mamá fuerte de más de 2 metros con hachas y una nana escalofriante.',
+      bio: 'Criada sola en la estepa rusa. Imponente, fuertísima, tararea «Bayu Bayushki Bayu» mientras lanza hachas de punta a punta del mapa.',
+      quote: '«(Nana suave y fantasmal que resuena entre los pinos)»',
+      greenFlags: ['Puede construir una fortaleza de madera con sus manos', 'Puntería de francotirador con hachas', 'Protegerá ferozmente a su familia'],
+      redFlags: ['Te encerrará en una cabaña para siempre', 'Vuelan hachas cuando se enfada un poco'],
+      datingVibe: 'Imponente guardiana del bosque con fuerza descomunal',
+      turnOn: 'Juguetes de madera artesanales y bosques de pinos',
+      dealbreaker: 'Apretón de manos débil y huir de su nana',
+    },
+    the_trickster: {
+      title: 'El Ídolo de K-Pop',
+      tagline: 'Pelo neón, cuchillos arrojadizos, risas de Evento Principal y visuales de K-pop.',
+      bio: 'Cantante de K-pop que convirtió los gritos de sus víctimas en canciones de éxito. Lleva abrigos de neón abiertos y lanza cuchillos al compás.',
+      quote: '«¿Te gustó el espectáculo? ¡El bis es solo para ti!»',
+      greenFlags: ['Visuales de ídolo impecables y gran rango vocal', 'La ráfaga de cuchillos es espectacular', 'Coreano fluido y seductor'],
+      redFlags: ['Mezclará tus gritos en sus canciones de Spotify', 'Nivel de narcisismo por las nubes'],
+      datingVibe: 'Estrella de K-pop llamativa, extravagante y peligrosa',
+      turnOn: 'Bises, luces de neón y notas altas',
+      dealbreaker: 'Mal gusto musical e interrumpir su solo',
+    },
+  },
+  de: {
+    ada_wong: {
+      title: 'Die Rätselhafte Agentin',
+      tagline: 'High Heels, Enterhaken und Geheimnisse, die du nie lüften wirst.',
+      bio: 'Geheimagentin, die mitten in der Verfolgungsjagd makellos aussieht. Verschwindet für 3 Monate und taucht mit brisanten Akten wieder auf.',
+      quote: '„Manche Dinge bleiben besser ungesagt, aber lade mich erst auf einen Martini ein.“',
+      greenFlags: ['Hat immer einen Fluchtplan', 'Perfekter Modestil im Nebel', 'Antwortet nie zu schnell'],
+      redFlags: ['Flieht mit dem Enterhaken, wenn du Bindung erwähnst', 'Arbeitet für 4 Organisationen gleichzeitig'],
+      datingVibe: 'Verführerische, schwer fassbare Spionage-Romanze',
+      turnOn: 'Abhörgeräte und Geheimnisse',
+      dealbreaker: 'Zu viele persönliche Fragen',
+    },
+    sable_ward: {
+      title: 'Die Gothic-Beschwörerin',
+      tagline: 'Keller-Rituale, schwarzer Lippenstift und unendlicher Eyeliner.',
+      bio: 'Durch eine Kellerbeschwörung direkt in den Nebel gezogen. Lädt dich in den Keller ein, um Vinyl-Schallplatten zu hören.',
+      quote: '„Wenn du mich im Keller nicht erträgst, hast du mich am Ausgangstor nicht verdient.“',
+      greenFlags: ['Hört Bauhaus und The Cure', 'Sieht in Schwarz umwerfend aus', 'Beschwört den Entitus nur für dich'],
+      redFlags: ['Verbringt 90% des Spiels im Keller', 'Könnte dein Blut für Beschwörungskreise nutzen'],
+      datingVibe: 'Gothic-Romantik & Keller-Atmosphäre',
+      turnOn: 'Okkulte Zirkel und dunkle Poesie',
+      dealbreaker: 'Angst vor der Dunkelheit',
+    },
+  },
+  ja: {
+    ada_wong: {
+      title: '謎多きスパイ',
+      tagline: 'ハイヒール、フックショット、そして決して明かされない秘密。',
+      bio: 'チェイス中も常に完璧な美しさを保つ凄腕エージェント。3ヶ月姿を消しては、機密情報と魅惑の微笑みを持って戻ってきます。',
+      quote: '「言わぬが花よ。でもまずはマティーニをご馳走してくれる？」',
+      greenFlags: ['常に完璧な脱出ルートを確保', '霧の世界でも抜群のファッションセンス', '即レスしない大人の余裕'],
+      redFlags: ['将来の話をするとフックショットで窓から逃げる', '複数の組織を手玉に取っている'],
+      datingVibe: '妖艶でミステリアスな大人のスパイロマンス',
+      turnOn: '盗聴器と危険な秘密',
+      dealbreaker: 'プライベートを詮索しすぎること',
+    },
+    sable_ward: {
+      title: 'ゴス・召喚師',
+      tagline: '地下室の儀式、黒いリップ、そして永遠のアイライナー。',
+      bio: '地下室のオカルト儀式によって霧の森へ引き寄せられた少女。キラー小屋の地下室で一緒にレコードを聴こうと誘ってくれます。',
+      quote: '「地下室の私を受け入れられないなら、脱出ゲートの私に会う資格はないわ。」',
+      greenFlags: ['バウハウスやザ・キュアーを愛聴', '黒コーデが最高に似合う', 'あなたと過ごすためだけにエンティティを召喚'],
+      redFlags: ['マッチの90%を地下室で過ごす', 'あなたの血液を儀式の生贄に使うかも'],
+      datingVibe: 'ゴシックロマン＆地下室オカルトデート',
+      turnOn: 'オカルト魔法陣とダークな詩',
+      dealbreaker: '暗闇を怖がること',
+    },
+  },
+};
+
+export function getLocalizedCharacterRoster(slug: string, locale: string = 'en'): CharacterRosterItem {
+  const base = getCharacterRosterItem(slug);
+  const lang = locale.toLowerCase().slice(0, 2);
+
+  if (lang === 'en' || !ROSTER_TRANSLATIONS[lang]) {
+    return base;
+  }
+
+  const override = ROSTER_TRANSLATIONS[lang]?.[base.slug];
+  if (!override) {
+    return base;
+  }
+
+  return {
+    ...base,
+    title: override.title || base.title,
+    tagline: override.tagline || base.tagline,
+    bio: override.bio || base.bio,
+    quote: override.quote || base.quote,
+    greenFlags: override.greenFlags || base.greenFlags,
+    redFlags: override.redFlags || base.redFlags,
+    datingVibe: override.datingVibe || base.datingVibe,
+    turnOn: override.turnOn || base.turnOn,
+    dealbreaker: override.dealbreaker || base.dealbreaker,
+  };
+}

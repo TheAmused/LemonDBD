@@ -6,9 +6,36 @@ from typing import Optional, Tuple
 from urllib.parse import unquote
 from bs4 import Tag
 
-PORTRAIT_REGEX = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.IGNORECASE | re.ASCII)
+PORTRAIT_REGEX = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.ASCII)
 YEAR_REGEX = re.compile(r"\b(201[6-9]|202[0-9]|203[0-9])\b")
 TERROR_RADIUS_NUM_REGEX = re.compile(r"(\d+)\s*m(?:etre|eter)?s?", re.IGNORECASE)
+
+
+def classify_portrait(image_url: str) -> Optional[Tuple[str, int]]:
+    if not image_url:
+        return None
+    filename = image_url.split("/revision")[0].rstrip("/").split("/")[-1]
+    match = PORTRAIT_REGEX.match(filename)
+    if not match:
+        return None
+    role_letter = match.group(1)
+    if role_letter not in ("K", "S"):
+        return None
+    role = "Killer" if role_letter == "K" else "Survivor"
+    try:
+        rel_num = int(match.group(2))
+    except ValueError:
+        rel_num = 0
+    return role, rel_num
+
+
+def normalise_character_name(name: str, category: str = "") -> str:
+    if not name:
+        return ""
+    clean_name = name.strip()
+    if category.lower() == "killer" and clean_name.lower().startswith("the "):
+        return clean_name[4:].strip()
+    return clean_name
 
 
 def normalize_name_key(text: str) -> str:
@@ -54,38 +81,36 @@ def clean_description_text(text: str) -> str:
         flags=re.IGNORECASE,
     )
 
-    # Normalize paragraph linebreaks and join fragmented sentences
-    paragraphs = re.split(r"\n\s*\n", cleaned.strip())
-    cleaned_paragraphs = []
-    for p in paragraphs:
-        lines = [line.strip() for line in p.splitlines() if line.strip()]
-        if not lines:
-            continue
-        merged_lines = []
-        curr_line = ""
-        for line in lines:
-            if line.lower() in ["survivor", "killer", "survivor perk", "killer perk"]:
-                continue
-            if line.startswith(("*", "-", "•", "•", "SPECIAL", "WARNING:", "NOTE:")):
-                if curr_line:
-                    merged_lines.append(curr_line)
-                    curr_line = ""
-                merged_lines.append(line)
-            else:
-                if curr_line:
-                    curr_line += " " + line
-                else:
-                    curr_line = line
-        if curr_line:
-            merged_lines.append(curr_line)
+    lines = [line.strip() for line in cleaned.splitlines() if line.strip()]
+    if not lines:
+        return ""
 
-        for m in merged_lines:
-            m_clean = re.sub(r"\s+([.,;:!?])", r"\1", m)
-            m_clean = re.sub(r"\s+", " ", m_clean).strip()
-            if m_clean:
-                cleaned_paragraphs.append(m_clean)
+    if len(lines) > 2 and lines[-1].lower() == lines[0].lower():
+        lines = lines[:-1]
 
-    return "\n\n".join(cleaned_paragraphs).strip()
+    filtered_lines = [l for l in lines if l.lower() not in ["survivor", "killer", "survivor perk", "killer perk"]]
+    return "\n".join(filtered_lines).strip()
+
+
+def extract_cell_markdown_text(cell_tag: Optional[Tag]) -> str:
+    """Converts a MediaWiki table cell containing rich text, lists, and quotes into clean markdown."""
+    if not cell_tag:
+        return ""
+    from bs4 import BeautifulSoup
+    cell_copy = BeautifulSoup(str(cell_tag), "html.parser")
+    for icon_link in cell_copy.find_all(class_="iconLink"):
+        icon_link.decompose()
+    for li in cell_copy.find_all("li"):
+        li.replace_with(f"\n* {li.get_text().strip()}\n")
+    for br in cell_copy.find_all("br"):
+        br.replace_with("\n")
+    for p in cell_copy.find_all("p"):
+        p.replace_with(f"\n{p.get_text().strip()}\n")
+    for div in cell_copy.find_all("div"):
+        div.replace_with(f"\n{div.get_text().strip()}\n")
+
+    raw_text = cell_copy.get_text()
+    return clean_description_text(raw_text)
 
 
 def sanitize_filename(name: str) -> str:
@@ -136,20 +161,3 @@ def extract_slug_from_href(href: str) -> str:
         return ""
     raw_slug = href.split("/wiki/")[-1].split("#")[0].split("?")[0]
     return unquote(raw_slug).strip()
-
-
-def classify_portrait(image_url: str) -> Optional[Tuple[str, int, str]]:
-    if not image_url:
-        return None
-    filename = image_url.split("/revision")[0].rstrip("/").split("/")[-1]
-    match = PORTRAIT_REGEX.search(filename)
-    if not match:
-        return None
-    role_letter = match.group(1).upper()
-    role = "Killer" if role_letter == "K" else "Survivor"
-    try:
-        rel_num = int(match.group(2))
-    except ValueError:
-        rel_num = 0
-    code_prefix = f"{role_letter}{match.group(2)}"
-    return role, rel_num, code_prefix

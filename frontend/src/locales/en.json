@@ -222,6 +222,25 @@
     "killerCalc": "🎯 Killer Calc",
     "buildVault": "🔥 Build Vault",
     "perkStudio": "🎨 Perk Studio",
-    "quests": "📜 Quests"
+    "quests": "📜 Quests",
+    "smashOrPass": "💋 Smash or Pass"
+  },
+  "smashOrPass": {
+    "title": "Smash or Pass",
+    "subtitle": "Cast your votes for Dead by Daylight characters, explore twisted dating profiles, and discover the community's favorites.",
+    "smash": "Smash",
+    "pass": "Pass",
+    "superSmash": "Super Smash",
+    "leaderboard": "Hall of Fame",
+    "shuffle": "Shuffle",
+    "undo": "Undo",
+    "mySmashes": "Your Smashes",
+    "allRoles": "All Roles",
+    "survivors": "Survivors",
+    "killers": "Killers",
+    "allGenders": "All Genders",
+    "femaleOnly": "Female Only",
+    "maleOnly": "Male Only",
+    "monsters": "Monsters & Eldritch"
   }
 }

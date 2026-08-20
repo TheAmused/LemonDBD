@@ -222,6 +222,25 @@
     "killerCalc": "🎯 Killer-Rechner",
     "buildVault": "🔥 Build-Tresor",
     "perkStudio": "🎨 Perk-Studio",
-    "quests": "📜 Quests"
+    "quests": "📜 Quests",
+    "smashOrPass": "💋 Smash or Pass"
+  },
+  "smashOrPass": {
+    "title": "Smash or Pass",
+    "subtitle": "Stimme für deine Dead by Daylight Charaktere ab, entdecke düstere Dating-Profile und finde die Favoriten der Community.",
+    "smash": "Smash",
+    "pass": "Pass",
+    "superSmash": "Super Smash",
+    "leaderboard": "Ruhmeshalle",
+    "shuffle": "Mischen",
+    "undo": "Rückgängig",
+    "mySmashes": "Deine Smashes",
+    "allRoles": "Alle Rollen",
+    "survivors": "Überlebende",
+    "killers": "Killer",
+    "allGenders": "Alle Geschlechter",
+    "femaleOnly": "Nur Weiblich",
+    "maleOnly": "Nur Männlich",
+    "monsters": "Monster & Entitäten"
   }
 }

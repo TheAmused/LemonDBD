@@ -223,16 +223,16 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
           <SlotLever pulled={leverPulled} disabled={revealed || loading || locked} onPull={handlePull} />
 
-          {revealed ? (
-            <div className="flex flex-col gap-2 pl-2 sm:pl-3">
-              <RarityBadge rarity={addonRarities[0]} visible={hasSpunThisBuild} />
-              <RarityBadge rarity={addonRarities[1]} visible={hasSpunThisBuild} />
-            </div>
-          ) : (
-            <p className="pl-2 sm:pl-3 max-w-[10rem] sm:max-w-xs text-lg sm:text-xl font-black leading-tight text-violet-100">
-              Pull the lever!
-            </p>
-          )}
+          <div className="w-40 sm:w-48 shrink-0 pl-2 sm:pl-3">
+            {revealed ? (
+              <div className="flex flex-col gap-2">
+                <RarityBadge rarity={addonRarities[0]} visible={hasSpunThisBuild} />
+                <RarityBadge rarity={addonRarities[1]} visible={hasSpunThisBuild} />
+              </div>
+            ) : (
+              <p className="text-lg sm:text-xl font-black leading-tight text-violet-100">Pull the lever!</p>
+            )}
+          </div>
         </div>
       </div>
 

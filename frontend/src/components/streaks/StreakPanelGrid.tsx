@@ -7,7 +7,9 @@ import { StreakPanel } from './StreakPanel';
 import { KILLER_STREAK_PANELS, SURVIVOR_STREAK_PANELS } from './panels';
 import { GauntletModeModal } from './gauntlet/GauntletModeModal';
 import { ChaosModeModal } from './chaos/ChaosModeModal';
+import { HistoryModeModal } from './history/HistoryModeModal';
 import { Difficulty } from '@/types/chaosStreak';
+import { HistoryMode } from '@/types/historyStreak';
 
 interface StreakPanelGridProps {
   locale: string;
@@ -19,6 +21,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const panels = role === 'killer' ? KILLER_STREAK_PANELS : SURVIVOR_STREAK_PANELS;
   const [isModeModalOpen, setIsModeModalOpen] = useState(false);
   const [isChaosModeModalOpen, setIsChaosModeModalOpen] = useState(false);
+  const [isHistoryModeModalOpen, setIsHistoryModeModalOpen] = useState(false);
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -68,6 +71,21 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           );
         }
 
+        if (panel.id === 'history-streak') {
+          return (
+            <StreakPanel
+              key={panel.id}
+              title={panel.title}
+              description={panel.description}
+              icon={panel.icon}
+              accent={panel.accent}
+              accentBorder={panel.accentBorder}
+              image={panel.image}
+              onClick={() => setIsHistoryModeModalOpen(true)}
+            />
+          );
+        }
+
         return (
           <StreakPanel
             key={panel.id}
@@ -93,6 +111,14 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
         onClose={() => setIsChaosModeModalOpen(false)}
         onSelectDifficulty={(difficulty: Difficulty) =>
           router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${difficulty}`)
+        }
+      />
+
+      <HistoryModeModal
+        isOpen={isHistoryModeModalOpen}
+        onClose={() => setIsHistoryModeModalOpen(false)}
+        onSelectMode={(mode: HistoryMode) =>
+          router.push(`/${locale}/streaks/${role}/history-streak?mode=${mode}`)
         }
       />
     </div>

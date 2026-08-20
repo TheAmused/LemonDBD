@@ -8,6 +8,7 @@ This ensures SQLAlchemy registers all tables and relationships upon package impo
 from app.models.base import utcnow
 from app.models.character import Character, Killer, Survivor
 from app.models.chaos import ChaosMatchLog, ChaosRun
+from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.community import (
     BugReport,
     CommunityBuild,
@@ -39,6 +40,8 @@ __all__ = [
     "Character",
     "ChaosRun",
     "ChaosMatchLog",
+    "HistoryRun",
+    "HistoryMatchLog",
     "Survivor",
     "Killer",
     "Perk",

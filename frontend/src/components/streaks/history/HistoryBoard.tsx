@@ -12,10 +12,12 @@ import { useOwnedKillers } from '../chaos/useOwnedKillers';
 import { useKillerPerkPool } from '../chaos/useKillerPerkPool';
 import { KillerPickerGrid } from '../chaos/KillerPickerGrid';
 import { HistoryHeader } from './HistoryHeader';
-import { HistoryPerkPoolModal } from './HistoryPerkPoolModal';
+import { HistoryPerkPoolPanel } from './HistoryPerkPoolPanel';
 import { HistoryPerkModal } from './HistoryPerkModal';
+import { HistoryNextRowPreview } from './HistoryNextRowPreview';
 import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
 import { HistoryRulesModal } from './HistoryRulesModal';
+import { Perk } from '@/types/gauntletStreak';
 
 interface HistoryBoardProps {
   locale: string;
@@ -26,28 +28,35 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
   const { run, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
-  const { loading: loadingKillers } = useOwnedKillers();
+  const { killers: ownedKillers, loading: loadingKillers } = useOwnedKillers();
   const { pool: perkPool } = useKillerPerkPool();
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
+  const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
   const [celebrating, setCelebrating] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
-  const [isPerkPoolOpen, setIsPerkPoolOpen] = useState(false);
-  const [perkModal, setPerkModal] = useState<{ killerName: string; perkNames: string[] } | null>(null);
+  const [perkModal, setPerkModal] = useState<{ killerName: string; perks: Perk[] } | null>(null);
   const [rowClearedNumber, setRowClearedNumber] = useState<number | null>(null);
 
   const isCompleted = run?.status === 'completed';
 
-  const handleResult = async (result: 'win' | 'loss') => {
-    if (!selectedKillerId) return;
-    const killerName = selectedKillerId;
+  const clearPick = () => {
     setSelectedKillerId(null);
+    setAcceptedKillerId(null);
+  };
+
+  const handleResult = async (result: 'win' | 'loss') => {
+    if (!acceptedKillerId) return;
+    const killerName = acceptedKillerId;
+    clearPick();
     const updated = await submitResult(result, killerName);
     if (!updated) return;
 
     if (result === 'win') {
-      setPerkModal({ killerName, perkNames: updated.newly_unlocked_perks || [] });
+      const newlyUnlockedNames = updated.newly_unlocked_perks || [];
+      const perks = perkPool.filter((p) => newlyUnlockedNames.includes(p.name));
+      setPerkModal({ killerName, perks });
       if (updated.row_cleared && updated.status !== 'completed') {
         setRowClearedNumber(updated.current_row_index);
       }
@@ -60,7 +69,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
 
   const handleReset = () => {
     setConfirmingReset(false);
-    setSelectedKillerId(null);
+    clearPick();
     reset();
   };
 
@@ -89,7 +98,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           bestKillersBeaten={run?.best_killers_beaten || 0}
           checkpointRowIndex={run?.checkpoint_row_index || 0}
           onOpenRules={() => setIsRulesOpen(true)}
-          onOpenPerkPool={() => setIsPerkPoolOpen(true)}
         />
 
         {isCompleted ? (
@@ -129,27 +137,40 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
             <KillerPickerGrid
               killers={run?.current_row_killers || []}
               completedKillers={run?.completed_killers || []}
-              selectedKillerId={selectedKillerId}
+              selectedKillerId={acceptedKillerId ?? selectedKillerId}
               onSelect={setSelectedKillerId}
-              disabled={busy}
+              disabled={busy || Boolean(acceptedKillerId)}
               loading={loading || loadingKillers}
+              center
             />
 
             <div className="mt-5 flex items-center justify-center gap-4">
-              <button
-                onClick={() => handleResult('win')}
-                disabled={busy || !selectedKillerId}
-                className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
-              >
-                WIN MATCH
-              </button>
-              <button
-                onClick={() => handleResult('loss')}
-                disabled={busy || !selectedKillerId}
-                className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
-              >
-                LOSE MATCH
-              </button>
+              {!acceptedKillerId ? (
+                <button
+                  onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
+                  disabled={busy || !selectedKillerId}
+                  className="flex-1 max-w-xs bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                >
+                  ACCEPT PICK
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => handleResult('win')}
+                    disabled={busy}
+                    className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                  >
+                    WIN MATCH
+                  </button>
+                  <button
+                    onClick={() => handleResult('loss')}
+                    disabled={busy}
+                    className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                  >
+                    LOSE MATCH
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -191,16 +212,22 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           </div>
         )}
 
-        <HistoryPerkPoolModal
-          isOpen={isPerkPoolOpen}
-          onClose={() => setIsPerkPoolOpen(false)}
-          pool={perkPool}
-          unlockedPerkNames={run?.unlocked_perk_names || []}
-        />
+        {!isCompleted && run && (
+          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} />
+        )}
+
+        {!isCompleted && run && (
+          <HistoryNextRowPreview
+            killers={ownedKillers}
+            rowSize={run.row_size}
+            currentRowIndex={run.current_row_index}
+          />
+        )}
+
         <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
         <HistoryPerkModal
           killerName={perkModal?.killerName ?? null}
-          perkNames={perkModal?.perkNames ?? []}
+          perks={perkModal?.perks ?? []}
           onClose={() => setPerkModal(null)}
         />
         <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} />

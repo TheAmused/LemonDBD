@@ -44,11 +44,10 @@ export const KILLER_STREAK_PANELS: StreakPanelDef[] = [
   {
     id: 'chaos-streak',
     title: 'Chaos streak',
-    description: 'A run where every match randomises your loadout.',
+    description: 'Every round randomises 4 perks and 2 addon rarities. You pick which killer plays them.',
     icon: Shuffle,
-    accent: 'text-slate-400',
-    accentBorder: 'border-slate-700/60',
-    comingSoon: true,
+    accent: 'text-violet-400',
+    accentBorder: 'border-violet-500/20',
   },
 ];
 

@@ -47,6 +47,38 @@ CREATE TABLE IF NOT EXISTS gauntlet_match_logs (
     FOREIGN KEY (run_id) REFERENCES gauntlet_runs(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS chaos_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    difficulty TEXT NOT NULL CHECK (difficulty IN ('easy', 'medium', 'hell')),
+    status TEXT NOT NULL DEFAULT 'in_progress',
+    current_streak INTEGER NOT NULL DEFAULT 0,
+    best_streak INTEGER NOT NULL DEFAULT 0,
+    last_checkpoint_streak INTEGER NOT NULL DEFAULT 0,
+    completed_killers_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_killers_json TEXT NOT NULL DEFAULT '[]',
+    used_perks_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_used_perks_json TEXT NOT NULL DEFAULT '[]',
+    current_perks_json TEXT NOT NULL DEFAULT '[]',
+    current_addon_rarities_json TEXT NOT NULL DEFAULT '[]',
+    perks_revealed BOOLEAN NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS chaos_match_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER NOT NULL,
+    killer_id TEXT NOT NULL,
+    result TEXT NOT NULL CHECK (result IN ('win', 'loss')),
+    perks_json TEXT NOT NULL,
+    addon_rarities_json TEXT NOT NULL,
+    streak_before INTEGER NOT NULL,
+    streak_after INTEGER NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (run_id) REFERENCES chaos_runs(id) ON DELETE CASCADE
+);
+
 INSERT INTO perk_rules (id, name, is_default, slot1_type, slot2_type, slot3_type, slot4_type)
 SELECT 1, 'Default Balanced (2 Own, 1 General, 1 Any)', 1, 'character_own', 'character_own', 'general_role', 'any_role'
 WHERE NOT EXISTS (SELECT 1 FROM perk_rules WHERE id = 1);

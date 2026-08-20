@@ -11,6 +11,7 @@ export interface KillerPickerGridProps {
   onSelect: (name: string) => void;
   disabled?: boolean;
   loading?: boolean;
+  center?: boolean;
 }
 
 const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
@@ -83,23 +84,36 @@ export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
   onSelect,
   disabled = false,
   loading = false,
+  center = false,
 }) => {
   if (loading) {
     return <p className="text-xs text-slate-500 dark:text-slate-400">Loading your killers...</p>;
   }
 
+  const tiles = killers.map((name) => (
+    <KillerTile
+      key={name}
+      name={name}
+      isCompleted={completedKillers.includes(name)}
+      isSelected={selectedKillerId === name}
+      disabled={disabled}
+      onSelect={onSelect}
+    />
+  ));
+
+  if (center) {
+    return <div className="flex flex-wrap justify-center gap-3">
+      {killers.map((name, i) => (
+        <div key={name} className="w-32 sm:w-36">
+          {tiles[i]}
+        </div>
+      ))}
+    </div>;
+  }
+
   return (
     <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 gap-2.5">
-      {killers.map((name) => (
-        <KillerTile
-          key={name}
-          name={name}
-          isCompleted={completedKillers.includes(name)}
-          isSelected={selectedKillerId === name}
-          disabled={disabled}
-          onSelect={onSelect}
-        />
-      ))}
+      {tiles}
     </div>
   );
 };

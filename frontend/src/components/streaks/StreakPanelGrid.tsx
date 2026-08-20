@@ -32,6 +32,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
+              image={panel.image}
               comingSoon
             />
           );
@@ -46,6 +47,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
+              image={panel.image}
               onClick={() => setIsModeModalOpen(true)}
             />
           );
@@ -60,6 +62,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
+              image={panel.image}
               onClick={() => setIsChaosModeModalOpen(true)}
             />
           );

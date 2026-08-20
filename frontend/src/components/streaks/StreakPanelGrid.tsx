@@ -76,6 +76,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             icon={panel.icon}
             accent={panel.accent}
             accentBorder={panel.accentBorder}
+            image={panel.image}
             href={`/${locale}/streaks/${role}/${panel.id}`}
           />
         );

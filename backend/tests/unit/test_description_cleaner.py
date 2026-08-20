@@ -78,14 +78,11 @@ class TestDescriptionCleaner(unittest.TestCase):
                 json.dump(addons_data, f)
 
             service = PerkService(data_path=perks_file)
+            service._load_fallback_files()
 
-            perks = service.get_perks()["data"]
-            items = service.get_items()
-            addons = service.get_addons()
-
-            self.assertEqual(perks[0]["description"], "Test perk description.")
-            self.assertEqual(items[0]["description"], "Test item description.")
-            self.assertEqual(addons[0]["description"], "Test addon description.")
+            self.assertEqual(service._cache[0]["description"], "Test perk description.")
+            self.assertEqual(service._items_cache[0]["description"], "Test item description.")
+            self.assertEqual(service._addons_cache[0]["description"], "Test addon description.")
 
 
 if __name__ == '__main__':

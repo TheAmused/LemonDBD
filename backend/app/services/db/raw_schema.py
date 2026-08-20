@@ -272,6 +272,29 @@ INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, 
 INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses) VALUES ('perk_name_to_icon', 0, 0, 0, 0);
 INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses) VALUES ('perk_icon_to_name', 0, 0, 0, 0);
 INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses) VALUES ('memes', 0, 0, 0, 0);
+
+CREATE TABLE IF NOT EXISTS smash_pass_stats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_slug TEXT UNIQUE NOT NULL,
+    character_name TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'Survivor',
+    gender TEXT NOT NULL DEFAULT 'female',
+    smash_count INTEGER NOT NULL DEFAULT 0,
+    pass_count INTEGER NOT NULL DEFAULT 0,
+    super_smash_count INTEGER NOT NULL DEFAULT 0,
+    total_votes INTEGER NOT NULL DEFAULT 0,
+    smash_rate REAL NOT NULL DEFAULT 50.0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS smash_pass_votes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_slug TEXT NOT NULL,
+    vote_type TEXT NOT NULL,
+    user_id INTEGER,
+    session_id TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 """
 
 

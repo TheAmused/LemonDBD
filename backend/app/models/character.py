@@ -1,7 +1,8 @@
 # backend/app/models/character.py
 import json
-from typing import TYPE_CHECKING, List, Optional
-from sqlalchemy import Boolean, Integer, String, Text
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from sqlalchemy import JSON, Boolean, Integer, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 
@@ -66,6 +67,9 @@ class Character(Base):
         Integer, nullable=True
     )
     height: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    translations: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
+    )
 
     perks: Mapped[List["Perk"]] = relationship(
         back_populates="character", cascade="all, delete-orphan"
@@ -76,7 +80,7 @@ class Character(Base):
         "polymorphic_identity": "Character",
     }
 
-    def to_dict(self) -> dict:
+    def to_dict(self, lang: Optional[str] = None) -> dict:
         counterparts = []
         if self.dlc_counterparts:
             try:
@@ -91,9 +95,24 @@ class Character(Base):
             except Exception:
                 counterparts = []
 
+        name = self.name
+        lore = self.lore or ""
+        chapter_name = self.chapter_name or "Base Game"
+        power_name = self.power_name or ""
+        power_desc = self.power_description or ""
+
+        if lang and self.translations and lang in self.translations:
+            trans = self.translations.get(lang) or {}
+            if isinstance(trans, dict):
+                name = trans.get("name") or name
+                lore = trans.get("lore") or lore
+                chapter_name = trans.get("chapter_name") or chapter_name
+                power_name = trans.get("power_name") or power_name
+                power_desc = trans.get("power_description") or power_desc
+
         data = {
             "id": self.id,
-            "name": self.name,
+            "name": name,
             "role": self.role,
             "category": self.role,
             "code_prefix": self.code_prefix,
@@ -104,14 +123,15 @@ class Character(Base):
             "avatar_url": self.portrait_url or "",
             "avatar_local_path": self.avatar_local_path or "",
             "release_number": self.release_number,
-            "chapter_name": self.chapter_name or "Base Game",
+            "chapter_name": chapter_name,
             "chapter_number": self.chapter_number or "",
             "dlc_type": self.dlc_type or "original_chapter",
             "is_licensed": bool(self.is_licensed),
             "release_year": self.release_year or 2016,
             "release_date": self.release_date or "",
             "dlc_counterparts": counterparts,
-            "lore": self.lore or "",
+            "lore": lore,
+            "translations": self.translations or {},
         }
 
         if self.role == "Killer" or self.power_name:
@@ -124,8 +144,8 @@ class Character(Base):
                 else ""
             )
             data["power"] = {
-                "name": self.power_name or "",
-                "description": self.power_description or "",
+                "name": power_name,
+                "description": power_desc,
                 "icon_url": self.power_icon_url or "",
                 "icon_local_path": f"icons/powers/{p_clean}.png"
                 if p_clean

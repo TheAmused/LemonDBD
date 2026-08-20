@@ -29,6 +29,32 @@ def _extract_optional_user_id() -> Optional[int]:
     return None
 
 
+import re
+
+def _extract_lang() -> Optional[str]:
+    """Extract requested language from query parameter, Referer path, or Accept-Language header."""
+    # 1. Explicit query parameter (?lang=pl)
+    lang = request.args.get("lang")
+    if lang:
+        return lang.strip().lower()
+
+    # 2. Referer URL path (e.g. /pl/perks, /de/characters)
+    referer = request.headers.get("Referer", "")
+    if referer:
+        m = re.search(r"/(pl|de|es|fr|it|en)(?:/|$|\?)", referer, re.IGNORECASE)
+        if m:
+            return m.group(1).lower()
+
+    # 3. Accept-Language header
+    accept_lang = request.headers.get("Accept-Language", "")
+    if accept_lang:
+        primary = accept_lang.split(",")[0].split(";")[0].split("-")[0].strip().lower()
+        if primary in {"pl", "de", "es", "fr", "it", "en"}:
+            return primary
+
+    return None
+
+
 @perks_bp.route("/api/v1/health", methods=["GET"])
 def health_check():
     return jsonify({"status": "healthy", "service": "dbd-backend-api"}), 200
@@ -45,6 +71,7 @@ def list_perks():
     order = request.args.get("order", default="asc", type=str)
     page = request.args.get("page", default=1, type=int)
     limit = request.args.get("limit", default=50, type=int)
+    lang = _extract_lang()
 
     owned_only_param = request.args.get("owned_only", "false").lower()
     owned_only = owned_only_param in ["true", "1", "yes"]
@@ -62,6 +89,7 @@ def list_perks():
         limit=limit,
         user_id=user_id,
         owned_only=owned_only,
+        lang=lang,
     )
     return jsonify(result), 200
 
@@ -86,7 +114,8 @@ def get_character_suggestions():
 
 @perks_bp.route("/api/v1/perks/<string:identifier>", methods=["GET"])
 def get_perk(identifier: str):
-    perk = perk_service.get_by_identifier(identifier)
+    lang = _extract_lang()
+    perk = perk_service.get_by_identifier(identifier, lang=lang)
     if not perk:
         return jsonify({"error": "Perk not found", "status": 404}), 404
     return jsonify({"data": perk}), 200
@@ -95,13 +124,15 @@ def get_perk(identifier: str):
 @perks_bp.route("/api/v1/characters", methods=["GET"])
 def list_characters():
     category = request.args.get("category")
-    characters = perk_service.get_characters(category)
+    lang = _extract_lang()
+    characters = perk_service.get_characters(category, lang=lang)
     return jsonify({"count": len(characters), "data": characters}), 200
 
 
 @perks_bp.route("/api/v1/characters/<string:character_name>/detail", methods=["GET"])
 def get_character_detail(character_name: str):
-    detail = perk_service.get_character_detail(character_name)
+    lang = _extract_lang()
+    detail = perk_service.get_character_detail(character_name, lang=lang)
     if not detail:
         return jsonify({"error": "Character not found", "status": 404}), 404
     return jsonify({"data": detail}), 200
@@ -109,13 +140,15 @@ def get_character_detail(character_name: str):
 
 @perks_bp.route("/api/v1/survivors", methods=["GET"])
 def list_survivors():
-    survivors = perk_service.get_characters("Survivor")
+    lang = _extract_lang()
+    survivors = perk_service.get_characters("Survivor", lang=lang)
     return jsonify({"count": len(survivors), "data": survivors}), 200
 
 
 @perks_bp.route("/api/v1/killers", methods=["GET"])
 def list_killers():
-    killers = perk_service.get_characters("Killer")
+    lang = _extract_lang()
+    killers = perk_service.get_characters("Killer", lang=lang)
     return jsonify({"count": len(killers), "data": killers}), 200
 
 
@@ -123,7 +156,8 @@ def list_killers():
 def list_items():
     category = request.args.get("category")
     search = request.args.get("search")
-    items = perk_service.get_items(category=category, search=search)
+    lang = _extract_lang()
+    items = perk_service.get_items(category=category, search=search, lang=lang)
     return jsonify({"count": len(items), "data": items}), 200
 
 
@@ -132,7 +166,8 @@ def list_addons():
     category = request.args.get("category")
     target = request.args.get("target") or request.args.get("associated_target")
     search = request.args.get("search")
-    addons = perk_service.get_addons(category=category, target=target, search=search)
+    lang = _extract_lang()
+    addons = perk_service.get_addons(category=category, target=target, search=search, lang=lang)
     return jsonify({"count": len(addons), "data": addons}), 200
 
 

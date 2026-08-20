@@ -12,6 +12,15 @@ from app.scrapers.utils import clean_description_text, normalize_name_key, sanit
 logger = logging.getLogger(__name__)
 
 
+def ensure_translations_columns():
+    """Ensure translations JSONB/JSON column exists in SQLite/PostgreSQL tables."""
+    try:
+        from app.services.db.migrations import migrate_runtime_columns
+        migrate_runtime_columns(db)
+    except Exception as e:
+        logger.debug(f"ensure_translations_columns error: {e}")
+
+
 def sync_characters_to_db(characters: List[CharacterData]) -> Dict[str, Character]:
     """Upsert canonical characters and return lookup dictionary."""
     existing_chars = {
@@ -38,6 +47,7 @@ def sync_characters_to_db(characters: List[CharacterData]) -> Dict[str, Characte
 
         cp_raw = getattr(c, "dlc_counterparts", None)
         cp_str = json.dumps(cp_raw) if isinstance(cp_raw, list) else cp_raw
+        trans = getattr(c, "translations", None) or {}
 
         if existing_char:
             existing_char.role = role
@@ -64,6 +74,8 @@ def sync_characters_to_db(characters: List[CharacterData]) -> Dict[str, Characte
                 existing_char.dlc_counterparts = cp_str
             if getattr(c, "lore", None):
                 existing_char.lore = c.lore
+            if trans:
+                existing_char.translations = trans
             if c.power:
                 existing_char.power_name = p_name
                 existing_char.power_description = p_desc
@@ -98,6 +110,7 @@ def sync_characters_to_db(characters: List[CharacterData]) -> Dict[str, Characte
                 terror_radius=p_tr,
                 terror_radius_meters=p_trm,
                 height=p_height,
+                translations=trans,
             )
             db.session.add(new_char)
             existing_chars[norm_c_name] = new_char
@@ -128,6 +141,7 @@ def sync_perks_to_db(perks: List[PerkData], char_lookup: Dict[str, int]) -> None
         desc = clean_description_text(getattr(p, "description", ""))
         p_name = p.name.strip()
         norm_p_name = normalize_name_key(p_name)
+        trans = getattr(p, "translations", None) or {}
 
         existing_perk = existing_perks.get(norm_p_name)
 
@@ -140,6 +154,8 @@ def sync_perks_to_db(perks: List[PerkData], char_lookup: Dict[str, int]) -> None
             existing_perk.alternate_name = getattr(p, "alternate_name", None)
             existing_perk.is_generic_counterpart = getattr(p, "is_generic_counterpart", False)
             existing_perk.character_id = matched_char_id
+            if trans:
+                existing_perk.translations = trans
         else:
             new_perk = Perk(
                 name=p_name,
@@ -151,6 +167,7 @@ def sync_perks_to_db(perks: List[PerkData], char_lookup: Dict[str, int]) -> None
                 icon_url=getattr(p, "icon_url", "") or "",
                 icon_local_path=getattr(p, "icon_local_path", "") or "",
                 character_id=matched_char_id,
+                translations=trans,
             )
             db.session.add(new_perk)
             existing_perks[norm_p_name] = new_perk
@@ -167,10 +184,13 @@ def sync_items_to_db(items: List[ItemData]) -> None:
         normalize_name_key(i.name): i
         for i in db.session.scalars(select(Item)).all()
     }
+    valid_keys = set()
     for item in items:
         i_name = item.name.strip()
         norm_i_name = normalize_name_key(i_name)
+        valid_keys.add(norm_i_name)
         desc = clean_description_text(getattr(item, "description", ""))
+        trans = getattr(item, "translations", None) or {}
         existing_item = existing_items.get(norm_i_name)
 
         if existing_item:
@@ -180,6 +200,8 @@ def sync_items_to_db(items: List[ItemData]) -> None:
             existing_item.icon_url = item.icon_url or ""
             existing_item.icon_local_path = item.icon_local_path or ""
             existing_item.rarity = getattr(item, "rarity", "") or ""
+            if trans:
+                existing_item.translations = trans
         else:
             new_item = Item(
                 name=i_name,
@@ -189,9 +211,14 @@ def sync_items_to_db(items: List[ItemData]) -> None:
                 icon_url=getattr(item, "icon_url", "") or "",
                 icon_local_path=getattr(item, "icon_local_path", "") or "",
                 rarity=getattr(item, "rarity", "") or "",
+                translations=trans,
             )
             db.session.add(new_item)
             existing_items[norm_i_name] = new_item
+
+    for k, item in existing_items.items():
+        if k not in valid_keys:
+            db.session.delete(item)
 
     db.session.commit()
 
@@ -205,10 +232,13 @@ def sync_addons_to_db(addons: List[AddonData]) -> None:
         normalize_name_key(a.name): a
         for a in db.session.scalars(select(Addon)).all()
     }
+    valid_keys = set()
     for addon in addons:
         a_name = addon.name.strip()
         norm_a_name = normalize_name_key(a_name)
+        valid_keys.add(norm_a_name)
         desc = clean_description_text(getattr(addon, "description", ""))
+        trans = getattr(addon, "translations", None) or {}
         existing_addon = existing_addons.get(norm_a_name)
 
         if existing_addon:
@@ -218,6 +248,8 @@ def sync_addons_to_db(addons: List[AddonData]) -> None:
             existing_addon.icon_url = addon.icon_url or ""
             existing_addon.icon_local_path = addon.icon_local_path or ""
             existing_addon.rarity = getattr(addon, "rarity", "") or ""
+            if trans:
+                existing_addon.translations = trans
         else:
             new_addon = Addon(
                 name=a_name,
@@ -227,9 +259,14 @@ def sync_addons_to_db(addons: List[AddonData]) -> None:
                 icon_url=getattr(addon, "icon_url", "") or "",
                 icon_local_path=getattr(addon, "icon_local_path", "") or "",
                 rarity=getattr(addon, "rarity", "") or "",
+                translations=trans,
             )
             db.session.add(new_addon)
             existing_addons[norm_a_name] = new_addon
+
+    for k, addon in existing_addons.items():
+        if k not in valid_keys:
+            db.session.delete(addon)
 
     db.session.commit()
 
@@ -321,6 +358,7 @@ def sync_all_to_database(
     maps: Optional[List[MapData]] = None,
 ) -> Dict[str, int]:
     """Execute complete database synchronization pipeline across all DBD entity domains."""
+    ensure_translations_columns()
     items = items or []
     addons = addons or []
     maps = maps or []

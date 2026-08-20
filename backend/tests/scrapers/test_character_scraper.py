@@ -238,14 +238,18 @@ class TestPerkOwnerMatching(unittest.TestCase):
 
 
 import os
+import uuid
 from app.services.db_service import DatabaseService
 
 
 class TestPruneStaleCharacterRows(unittest.TestCase):
     def setUp(self):
-        self.db_path = "test_prune_stale.db"
+        self.db_path = f"test_prune_stale_{uuid.uuid4().hex}.db"
         if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+            try:
+                os.remove(self.db_path)
+            except Exception:
+                pass
         self.db_service = DatabaseService(db_path=self.db_path)
         self.db_service.init_db()
 
@@ -280,7 +284,10 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
 
     def tearDown(self):
         if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+            try:
+                os.remove(self.db_path)
+            except Exception:
+                pass
 
     def _count(self, table):
         conn = self.db_service.get_connection()

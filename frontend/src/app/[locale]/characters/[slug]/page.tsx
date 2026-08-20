@@ -80,7 +80,7 @@ export default function CharacterDetailPage() {
       setNotFound(false);
       try {
         const cleanSlug = encodeURIComponent(slug);
-        const res = await fetch(`${backendBase}/api/v1/characters/${cleanSlug}/detail`);
+        const res = await fetch(`${backendBase}/api/v1/characters/${cleanSlug}/detail?lang=${locale}`);
         if (res.ok) {
           const json = await res.json();
           if (json.data && json.data.character) {
@@ -101,7 +101,7 @@ export default function CharacterDetailPage() {
     }
 
     fetchCharacterDetail();
-  }, [slug, backendBase]);
+  }, [slug, backendBase, locale]);
 
   if (!dict) {
     return (

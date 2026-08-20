@@ -262,7 +262,26 @@ def reload_service_data(service) -> None:
             map_count = db.session.scalar(select(func.count(MapRealm.id))) or 0
 
             if char_count == 0 or perk_count == 0 or item_count == 0 or addon_count == 0 or map_count == 0:
-                seed_database_from_json_files(service)
+                is_pg = False
+                try:
+                    is_pg = db.engine.dialect.name in ("postgresql", "postgres")
+                except Exception:
+                    pass
+
+                if is_pg:
+                    from sqlalchemy import text
+                    with db.engine.connect() as conn:
+                        acquired = conn.execute(text("SELECT pg_try_advisory_lock(8882027);")).scalar()
+                        if acquired:
+                            try:
+                                cc = db.session.scalar(select(func.count(Character.id))) or 0
+                                pc = db.session.scalar(select(func.count(Perk.id))) or 0
+                                if cc == 0 or pc == 0:
+                                    seed_database_from_json_files(service)
+                            finally:
+                                conn.execute(text("SELECT pg_advisory_unlock(8882027);"))
+                else:
+                    seed_database_from_json_files(service)
             return
     except Exception as e:
         logger.debug(f"Database query check during reload_data: {e}")

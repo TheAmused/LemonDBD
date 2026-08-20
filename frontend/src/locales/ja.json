@@ -222,6 +222,25 @@
     "killerCalc": "🎯 キラー計算機",
     "buildVault": "🔥 ビルド保管庫",
     "perkStudio": "🎨 パークスタジオ",
-    "quests": "📜 クエスト"
+    "quests": "📜 クエスト",
+    "smashOrPass": "💋 Smash or Pass"
+  },
+  "smashOrPass": {
+    "title": "Smash or Pass",
+    "subtitle": "Dead by Daylightのキャラクターに投票し、デートプロフィールをチェックして、コミュニティの人気キャラクターを発見しましょう。",
+    "smash": "Smash",
+    "pass": "Pass",
+    "superSmash": "Super Smash",
+    "leaderboard": "殿堂入り",
+    "shuffle": "シャッフル",
+    "undo": "元に戻す",
+    "mySmashes": "あなたのSmash",
+    "allRoles": "すべての役割",
+    "survivors": "サバイバー",
+    "killers": "キラー",
+    "allGenders": "すべての性別",
+    "femaleOnly": "女性のみ",
+    "maleOnly": "男性のみ",
+    "monsters": "モンスター & その他"
   }
 }

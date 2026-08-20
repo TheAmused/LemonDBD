@@ -60,11 +60,15 @@ async def download_single_asset(
         return
 
     destination = static_dir / relative_path
-    if destination.exists():
+    try:
+        if destination.exists():
+            ScraperStateManager.increment_progress()
+            return
+        destination.parent.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        logger.warning(f"Could not prepare destination for [{relative_path}]: {e}")
         ScraperStateManager.increment_progress()
         return
-
-    destination.parent.mkdir(parents=True, exist_ok=True)
 
     async with semaphore:
         try:

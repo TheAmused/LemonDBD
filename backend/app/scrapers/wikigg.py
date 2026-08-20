@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup, Tag
 from curl_cffi import requests
 from curl_cffi.requests import AsyncSession
 
+from app.scrapers.constants import KNOWN_KILLER_POWER_ALIASES
 from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, PerkData
 from app.scrapers.utils import (
     clean_description_text,
@@ -27,6 +28,21 @@ from app.scrapers.utils import (
 logger = logging.getLogger(__name__)
 
 PORTRAIT_PATTERN = re.compile(r"(?:^|/)(K|S)(\d+)[-_]", re.IGNORECASE)
+
+
+def extract_icon_token(src_or_alt: str) -> str:
+    if not src_or_alt:
+        return ""
+    m = re.search(r"(?:Full_)?Icon(?:Perks|Items|Addons|Addon|Powers|Help)_([^./?]+)", src_or_alt, re.IGNORECASE)
+    if m:
+        return re.sub(r"[^a-zA-Z0-9]", "", m.group(1)).lower()
+    m2 = re.search(r"(?:^|/)(K|S)(\d+)[-_]", src_or_alt, re.IGNORECASE)
+    if m2:
+        return f"{m2.group(1).upper()}{int(m2.group(2)):02d}"
+    fn = src_or_alt.split("/")[-1].split(".")[0]
+    fn = re.sub(r"^\d+px-", "", fn, flags=re.IGNORECASE)
+    fn = re.sub(r"^(?:Full_)?(?:Icon(?:Addon|Addons|Items|Perks|Powers)_)?", "", fn, flags=re.IGNORECASE)
+    return re.sub(r"[^a-zA-Z0-9]", "", fn).lower()
 
 GENERIC_PERK_CANONICAL_MAP = {
     "will to live": ("Decisive Strike", "Will to Live"),
@@ -1010,7 +1026,20 @@ class WikiGGScraperDriver:
                     if c.short_name:
                         dynamic_power_to_killer[normalize_name_key(c.short_name)] = c.name
                     if c.power and c.power.name:
-                        dynamic_power_to_killer[normalize_name_key(c.power.name)] = c.name
+                        p_norm = normalize_name_key(c.power.name)
+                        dynamic_power_to_killer[p_norm] = c.name
+                        if p_norm.endswith("s"):
+                            dynamic_power_to_killer[p_norm[:-1]] = c.name
+                        else:
+                            dynamic_power_to_killer[p_norm + "s"] = c.name
+                        if p_norm.startswith("the "):
+                            dynamic_power_to_killer[p_norm[4:]] = c.name
+                        else:
+                            dynamic_power_to_killer["the " + p_norm] = c.name
+
+        for k, v in KNOWN_KILLER_POWER_ALIASES.items():
+            if k not in dynamic_power_to_killer:
+                dynamic_power_to_killer[k] = v
 
         for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
             if element.name in ["h1", "h2", "h3", "h4"]:
@@ -1046,6 +1075,28 @@ class WikiGGScraperDriver:
                     current_target = matched_killer if matched_killer else target_clean
 
             elif element.name == "table" and "wikitable" in element.get("class", []):
+                if current_section in ["contents", "overview", "stacking", "numbers", "change log"]:
+                    continue
+
+                intro_target = None
+                p_prev = element.previous_sibling
+                while p_prev and getattr(p_prev, "name", None) not in ["h1", "h2", "h3", "h4", "table"]:
+                    if getattr(p_prev, "name", None) == "p":
+                        txt = p_prev.get_text()
+                        m = re.search(r"is the Power of (?:The\s+)?([^.]+)", txt, re.IGNORECASE)
+                        if m:
+                            candidate_killer = m.group(1).strip()
+                            norm_cand = normalize_name_key(candidate_killer)
+                            matched_k = dynamic_power_to_killer.get(norm_cand)
+                            if not matched_k:
+                                matched_k = dynamic_power_to_killer.get("the " + norm_cand)
+                            if matched_k:
+                                intro_target = matched_k
+                                break
+                    p_prev = p_prev.previous_sibling
+
+                table_target = intro_target or current_target
+
                 rows = element.find_all("tr")[1:]
                 row_count = len(rows)
                 for row_idx, row in enumerate(rows):
@@ -1085,7 +1136,7 @@ class WikiGGScraperDriver:
 
                         raw_addons.append({
                             "name": addon_name,
-                            "target": current_target,
+                            "target": table_target,
                             "category": current_category,
                             "description": description,
                             "icon_url": icon_url,
@@ -1129,7 +1180,72 @@ class WikiGGScraperDriver:
 
         return addons
 
-    def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData]]:
+    def fetch_lang_page_html(self, lang: str, page_title: str) -> str:
+        from app.scrapers.drivers import LANGUAGE_DRIVERS
+        lang_key = lang.lower().strip()
+        driver_cls = LANGUAGE_DRIVERS.get(lang_key)
+        if driver_cls and driver_cls is not WikiGGDriverEN:
+            driver = driver_cls(base_dir=self.base_dir)
+            return driver.fetch_page_html(page_title)
+        return self.fetch_page_html(page_title)
+
+    def scrape_translations(
+        self,
+        characters: List[CharacterData],
+        perks: List[PerkData],
+        items: List[ItemData],
+        addons: List[AddonData],
+        languages: Optional[Union[str, List[str]]] = None,
+    ) -> None:
+        """Enriches entities using dedicated language drivers."""
+        from app.scrapers.drivers import LANGUAGE_DRIVERS
+        for p in perks:
+            if "en" not in p.translations and p.description:
+                p.translations["en"] = {"name": p.name, "description": p.description}
+        for c in characters:
+            if "en" not in c.translations:
+                p_name = c.power.name if c.power else ""
+                p_desc = c.power.description if c.power else ""
+                c.translations["en"] = {
+                    "name": c.name,
+                    "lore": c.lore or "",
+                    "chapter_name": c.chapter_name or "",
+                    "power_name": p_name,
+                    "power_description": p_desc,
+                }
+        for i in items:
+            if "en" not in i.translations and i.description:
+                i.translations["en"] = {"name": i.name, "description": i.description}
+        for a in addons:
+            if "en" not in a.translations and a.description:
+                a.translations["en"] = {"name": a.name, "description": a.description}
+
+        if languages == "all" or languages is None:
+            target_langs = ["pl", "de", "es", "ja", "fr", "it"]
+        elif isinstance(languages, list):
+            target_langs = [l for l in languages if l.lower() != "en"]
+        else:
+            target_langs = []
+
+        for lang in target_langs:
+            lang_key = lang.lower().strip()
+            driver_cls = LANGUAGE_DRIVERS.get(lang_key)
+            if not driver_cls or driver_cls is WikiGGScraperDriver:
+                continue
+
+            try:
+                driver_instance = driver_cls(base_dir=self.base_dir)
+                if hasattr(self, "fetch_lang_page_html") and callable(self.fetch_lang_page_html):
+                    driver_instance.fetch_page_html = lambda p, l=lang_key: self.fetch_lang_page_html(l, p)
+                if hasattr(driver_instance, "enrich_translations"):
+                    driver_instance.enrich_translations(characters, perks, items, addons)
+            except Exception as e:
+                logger.warning(f"Failed running translation driver for '{lang_key}': {e}")
+
+    def scrape_all(
+        self,
+        languages: Optional[Union[str, List[str]]] = None,
+    ) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData]]:
         logger.info("Scraping deadbydaylight.wiki.gg dynamic data via MediaWiki API...")
         characters = self.scrape_characters_dynamically()
 
@@ -1152,5 +1268,11 @@ class WikiGGScraperDriver:
         except Exception as e:
             logger.warning(f"Failed to scrape wiki.gg addons: {e}")
             addons = []
+
+        if languages:
+            try:
+                self.scrape_translations(characters, perks, items, addons, languages=languages)
+            except Exception as e:
+                logger.warning(f"Error during multi-language translation enrichment: {e}")
 
         return characters, perks, items, addons

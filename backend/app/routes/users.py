@@ -205,6 +205,87 @@ def purge_database_tables():
         return jsonify({"error": f"Database purge failed: {str(e)}", "status": 500}), 500
 
 
+@users_bp.route("/admin/database/export", methods=["GET"])
+@admin_required
+def export_database():
+    """Export complete or selective database entities as JSON."""
+    from datetime import datetime, timezone
+    from flask import Response
+    import json
+    from app.services.db.export_import import DatabaseExportImportService
+
+    targets_param = request.args.get("targets")
+    targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
+
+    try:
+        data = DatabaseExportImportService.export_database(targets=targets)
+        download = request.args.get("download", "false").lower() in ["true", "1", "yes"]
+        if download:
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            json_str = json.dumps(data, indent=2, ensure_ascii=False)
+            return Response(
+                json_str,
+                mimetype="application/json",
+                headers={
+                    "Content-Disposition": f"attachment; filename=lemondbd_export_{timestamp}.json"
+                },
+            )
+        return jsonify(data), 200
+    except Exception as e:
+        logger.error(f"Database export error: {e}", exc_info=True)
+        return jsonify({"error": f"Failed to export database: {str(e)}", "status": 500}), 500
+
+
+@users_bp.route("/admin/database/import", methods=["POST"])
+@admin_required
+def import_database():
+    """Import database entities from JSON payload or uploaded .json file."""
+    import json
+    from app.services.db.export_import import DatabaseExportImportService
+
+    mode = request.form.get("mode") or request.args.get("mode") or "merge"
+    targets_param = request.form.get("targets") or request.args.get("targets")
+    targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
+
+    payload = None
+
+    # 1. Handle uploaded multipart file
+    if "file" in request.files:
+        file = request.files["file"]
+        if not file or not file.filename:
+            return jsonify({"error": "Uploaded file is empty.", "status": 400}), 400
+        try:
+            content = file.read().decode("utf-8")
+            payload = json.loads(content)
+        except Exception as json_err:
+            return jsonify({"error": f"Invalid JSON file: {str(json_err)}", "status": 400}), 400
+
+    # 2. Handle JSON request body
+    if payload is None:
+        body = request.get_json(silent=True) or {}
+        if not isinstance(body, dict):
+            return jsonify({"error": "Invalid JSON payload: root must be an object.", "status": 400}), 400
+        mode = body.get("mode", mode)
+        if "targets" in body and isinstance(body["targets"], list):
+            targets = body["targets"]
+        payload = body.get("data", body)
+
+    if not payload or not isinstance(payload, dict):
+        return jsonify({"error": "No valid JSON payload provided for import.", "status": 400}), 400
+
+    try:
+        result = DatabaseExportImportService.import_database(
+            payload=payload,
+            mode=mode,
+            targets=targets,
+        )
+        logger.info(f"Admin {g.current_user.username} imported database (mode={mode}): {result.get('summary')}")
+        return jsonify(result), 200
+    except Exception as e:
+        logger.error(f"Database import error: {e}", exc_info=True)
+        return jsonify({"error": f"Database import failed: {str(e)}", "status": 500}), 500
+
+
 # ==========================================
 # CHARACTER OWNERSHIP
 # ==========================================

@@ -29,7 +29,35 @@ class TestCharacterSlugRoutes(unittest.TestCase):
                 db.session.add(Perk(name="Agitation", character_id=trapper.id, description="Carry fast", icon_url="url", icon_local_path="path"))
             else:
                 trapper.real_name = "Evan MacMillan"
-            
+
+            nemesis = db.session.scalars(select(Character).where(Character.name == "The Nemesis")).first()
+            if not nemesis:
+                nemesis = Character(
+                    name="The Nemesis",
+                    role="Killer",
+                    release_number=24,
+                    real_name="Nemesis-T Type",
+                    wiki_slug="The_Nemesis",
+                    short_name="the_nemesis",
+                    chapter_name="Chapter 20: Resident Evil",
+                    chapter_number="20",
+                    dlc_type="licensed_chapter",
+                    is_licensed=True,
+                    release_year=2021,
+                    dlc_counterparts="Leon S. Kennedy, Jill Valentine",
+                    lore="The Nemesis-T Type was an experimental Bio-Organic Weapon...",
+                )
+                db.session.add(nemesis)
+            else:
+                nemesis.chapter_name = "Chapter 20: Resident Evil"
+                nemesis.chapter_number = "20"
+                nemesis.dlc_type = "licensed_chapter"
+                nemesis.is_licensed = True
+                nemesis.release_year = 2021
+                nemesis.dlc_counterparts = "Leon S. Kennedy, Jill Valentine"
+                if not nemesis.lore:
+                    nemesis.lore = "The Nemesis-T Type was an experimental Bio-Organic Weapon..."
+
             db.session.commit()
 
     def test_lookup_by_exact_name(self):

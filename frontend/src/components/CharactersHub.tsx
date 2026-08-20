@@ -114,7 +114,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     async function fetchCharacters() {
       setLoading(true);
       try {
-        const res = await fetch(`${backendBase}/api/v1/characters`);
+        const res = await fetch(`${backendBase}/api/v1/characters?lang=${locale}`);
         if (res.ok) {
           const data = await res.json();
           setCharacters(data.data || []);
@@ -127,7 +127,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     }
 
     fetchCharacters();
-  }, [backendBase]);
+  }, [backendBase, locale]);
 
   const handleCloseModal = useCallback(() => {
     setSelectedCharacter(null);

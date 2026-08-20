@@ -1,7 +1,8 @@
 # backend/app/models/perk.py
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
+from typing import TYPE_CHECKING, Any, Dict, Optional
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.models.base import utcnow
@@ -28,6 +29,9 @@ class Perk(Base):
     icon_local_path: Mapped[Optional[str]] = mapped_column(
         String(255), nullable=True
     )
+    translations: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
+    )
 
     character_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey("characters.id", ondelete="SET NULL"), nullable=True
@@ -36,7 +40,7 @@ class Perk(Base):
         back_populates="perks"
     )
 
-    def to_dict(self) -> dict:
+    def to_dict(self, lang: Optional[str] = None) -> dict:
         char_name = self.character.name if self.character else "General"
         char_real = (
             self.character.real_name
@@ -46,9 +50,17 @@ class Perk(Base):
         char_avatar = (
             self.character.avatar_local_path if self.character else ""
         )
+        name = self.name
+        description = self.description
+        if lang and self.translations and lang in self.translations:
+            trans = self.translations.get(lang) or {}
+            if isinstance(trans, dict):
+                name = trans.get("name") or name
+                description = trans.get("description") or description
+
         return {
             "id": self.id,
-            "name": self.name,
+            "name": name,
             "alternate_name": self.alternate_name or "",
             "is_generic_counterpart": self.is_generic_counterpart,
             "is_teachable": self.is_teachable,
@@ -57,9 +69,10 @@ class Perk(Base):
             "character_real_name": char_real,
             "character_avatar_path": char_avatar or "",
             "character_id": self.character_id,
-            "description": self.description,
+            "description": description,
             "icon_url": self.icon_url or "",
             "icon_local_path": self.icon_local_path or "",
+            "translations": self.translations or {},
         }
 
 

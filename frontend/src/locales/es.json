@@ -223,6 +223,25 @@
     "killerCalc": "🎯 Calculadora de Asesino",
     "buildVault": "🔥 Bóveda de Builds",
     "perkStudio": "🎨 Estudio de Perks",
-    "quests": "📜 Misiones"
+    "quests": "📜 Misiones",
+    "smashOrPass": "💋 Smash or Pass"
+  },
+  "smashOrPass": {
+    "title": "Smash or Pass",
+    "subtitle": "Vota por tus personajes favoritos de Dead by Daylight, explora perfiles románticos oscuros y descubre a los más deseados.",
+    "smash": "Smash",
+    "pass": "Pass",
+    "superSmash": "Super Smash",
+    "leaderboard": "Salón de la Fama",
+    "shuffle": "Barajar",
+    "undo": "Deshacer",
+    "mySmashes": "Tus Smashes",
+    "allRoles": "Todos los Roles",
+    "survivors": "Supervivientes",
+    "killers": "Asesinos",
+    "allGenders": "Todos los Géneros",
+    "femaleOnly": "Solo Mujeres",
+    "maleOnly": "Solo Hombres",
+    "monsters": "Monstruos y Entidades"
   }
 }

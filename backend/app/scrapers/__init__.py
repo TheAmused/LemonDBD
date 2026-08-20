@@ -16,6 +16,10 @@ from app.scrapers.utils import (
     classify_portrait,
 )
 from app.scrapers.wikigg import WikiGGScraperDriver
+from app.scrapers.constants import (
+    GENERIC_PERK_CANONICAL_MAP,
+    KNOWN_KILLER_POWER_ALIASES,
+)
 from app.scrapers.maps import (
     get_map_landmarks_data,
     HensMapScraperDriver,
@@ -29,6 +33,8 @@ __all__ = [
     "AddonData",
     "PerkData",
     "MapData",
+    "GENERIC_PERK_CANONICAL_MAP",
+    "KNOWN_KILLER_POWER_ALIASES",
     "clean_description_text",
     "normalize_name_key",
     "sanitize_filename",

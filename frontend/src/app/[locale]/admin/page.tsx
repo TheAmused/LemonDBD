@@ -57,6 +57,7 @@ export default function AdminPanelPage() {
 
   // Modals & Scraper State
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [modalTab, setModalTab] = useState<'export' | 'import' | 'purge'>('export');
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string>('');
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
@@ -412,7 +413,10 @@ export default function AdminPanelPage() {
             isSyncing={isSyncing}
             syncStatus={syncStatus}
             isLoading={loadingData || loadingBugs}
-            onOpenDbMaintenance={() => setIsConfigOpen(true)}
+            onOpenDbMaintenance={(tab) => {
+              if (tab) setModalTab(tab);
+              setIsConfigOpen(true);
+            }}
             onTriggerSync={handleTriggerSync}
             onRefreshData={() => (activeTab === 'users' ? fetchAdminData() : fetchBugReports())}
           />
@@ -529,7 +533,9 @@ export default function AdminPanelPage() {
       />
 
       <ScraperConfigModal
+        key={modalTab}
         isOpen={isConfigOpen}
+        initialTab={modalTab}
         onClose={() => setIsConfigOpen(false)}
         onPurgeSuccess={() => {
           fetchAdminData();

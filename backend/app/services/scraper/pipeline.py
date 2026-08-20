@@ -25,6 +25,15 @@ def seed_canonical_characters_initial(wikigg_driver: WikiGGScraperDriver) -> Non
         existing = db.session.scalars(select(Character)).first()
         if existing:
             return
+
+        chars_file = Path(__file__).resolve().parent.parent.parent.parent / "data" / "characters.json"
+        if chars_file.exists():
+            logger.info("Initializing character table from local seed data/characters.json...")
+            from app.services.perk_service import PerkService
+            perk_service = PerkService()
+            perk_service.reload_data()
+            return
+
         logger.info("Initializing character table from wiki.gg...")
         chars = wikigg_driver.scrape_characters_dynamically()
         sync_all_to_database(characters=chars, perks=[], items=[], addons=[], maps=[])
@@ -126,19 +135,28 @@ def execute_sync_pipeline(
                 progress=0,
             )
 
-            asyncio.run(
-                download_all_assets(
-                    static_dir,
-                    perks,
-                    characters,
-                    items=items,
-                    addons=addons,
-                    maps=maps,
-                    impersonate_browser=impersonate_browser,
-                    max_concurrent_downloads=max_concurrent_downloads,
-                    request_timeout=request_timeout,
+            try:
+                static_dir.mkdir(parents=True, exist_ok=True)
+                (static_dir / "icons").mkdir(parents=True, exist_ok=True)
+            except Exception as static_prep_err:
+                logger.warning(f"Could not prepare static icons directory {static_dir}: {static_prep_err}")
+
+            try:
+                asyncio.run(
+                    download_all_assets(
+                        static_dir,
+                        perks,
+                        characters,
+                        items=items,
+                        addons=addons,
+                        maps=maps,
+                        impersonate_browser=impersonate_browser,
+                        max_concurrent_downloads=max_concurrent_downloads,
+                        request_timeout=request_timeout,
+                    )
                 )
-            )
+            except Exception as asset_err:
+                logger.warning(f"Asset downloading encountered an issue: {asset_err}")
 
         now_iso = datetime.now(timezone.utc).isoformat()
         ScraperStateManager.save_config(

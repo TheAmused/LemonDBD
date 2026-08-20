@@ -1,5 +1,5 @@
 # backend/app/scrapers/types.py
-from dataclasses import asdict, dataclass, fields
+from dataclasses import asdict, dataclass, field, fields
 from typing import Any, Dict, Optional, List
 
 
@@ -54,6 +54,7 @@ class CharacterData:
     dlc_counterparts: Optional[str] = None
     lore: Optional[str] = None
     power: Optional[KillerPowerData] = None
+    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -65,6 +66,7 @@ class ItemData:
     icon_url: str
     icon_local_path: str
     rarity: str
+    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -76,6 +78,7 @@ class AddonData:
     icon_url: str
     icon_local_path: str
     rarity: str
+    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -90,6 +93,7 @@ class PerkData:
     icon_local_path: str
     alternate_name: Optional[str] = None
     is_generic_counterpart: bool = False
+    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass

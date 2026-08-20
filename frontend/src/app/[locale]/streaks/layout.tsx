@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, usePathname } from 'next/navigation';
-import { Lock } from 'lucide-react';
+import { Lock, Repeat } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { QuestsModal } from '@/components/QuestsModal';
 import { AuthModal } from '@/components/AuthModal';
@@ -107,8 +107,11 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
       >
         {isPickerPage && (
           <>
-            <header className="mb-6">
-              <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">🔥 Challenges</h1>
+            <header className="mb-6 flex items-center gap-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500 border border-orange-500/20">
+                <Repeat className="h-4 w-4" />
+              </span>
+              <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">Challenges</h1>
             </header>
 
             <div className="mb-6">

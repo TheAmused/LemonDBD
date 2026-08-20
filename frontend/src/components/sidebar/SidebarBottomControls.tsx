@@ -6,13 +6,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { Sun, Moon, Bug, Coffee } from 'lucide-react';
+import { FlagIcon } from './FlagIcon';
 
-export const LANGUAGES: { code: string; label: string; flag: string }[] = [
-  { code: 'en', label: 'English', flag: '🇬🇧' },
-  { code: 'pl', label: 'Polski', flag: '🇵🇱' },
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
-  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
-  { code: 'ja', label: '日本語', flag: '🇯🇵' },
+export const LANGUAGES: { code: string; label: string }[] = [
+  { code: 'en', label: 'English' },
+  { code: 'pl', label: 'Polski' },
+  { code: 'es', label: 'Español' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'ja', label: '日本語' },
 ];
 
 export interface SidebarBottomControlsProps {
@@ -83,7 +84,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-expanded={isLangMenuOpen}
             className="flex h-8 w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
-            <span className="text-sm leading-none">{currentLanguage.flag}</span>
+            <FlagIcon code={currentLanguage.code} />
             <span className="uppercase">{currentLanguage.code}</span>
           </button>
 
@@ -106,7 +107,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                       : 'text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800')
                   }
                 >
-                  <span className="text-base leading-none">{lang.flag}</span>
+                  <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-sm shrink-0" />
                   <span>{lang.label}</span>
                 </Link>
               ))}

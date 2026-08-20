@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { sortByReleaseNumber } from '@/utils/characterUtils';
 
 const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -21,8 +22,7 @@ export function useOwnedKillers() {
       if (res.ok) {
         const data = await res.json();
         const owned = (data.data || []).filter((c: any) => c.is_owned);
-        owned.sort((a: any, b: any) => (a.release_number ?? Infinity) - (b.release_number ?? Infinity));
-        setKillers(owned.map((c: any) => c.name));
+        setKillers(sortByReleaseNumber(owned).map((c: any) => c.name));
       }
     } catch (err) {
       console.error('Failed to load owned killers:', err);

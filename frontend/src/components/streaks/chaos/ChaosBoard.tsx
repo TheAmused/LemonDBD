@@ -1,7 +1,7 @@
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
@@ -52,11 +52,19 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isPerkPoolOpen, setIsPerkPoolOpen] = useState(false);
 
+  const celebrationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const celebrate = () => {
+    if (celebrationTimerRef.current) clearTimeout(celebrationTimerRef.current);
+    setCelebrating(true);
+    celebrationTimerRef.current = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
+  };
+  useEffect(() => () => {
+    if (celebrationTimerRef.current) clearTimeout(celebrationTimerRef.current);
+  }, []);
+
   useEffect(() => {
     if (justBankedCheckpoint == null) return;
-    setCelebrating(true);
-    const timer = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
-    return () => clearTimeout(timer);
+    celebrate();
   }, [justBankedCheckpoint]);
 
   const isCompleted = run?.status === 'completed';
@@ -68,11 +76,11 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
 
   const handleResult = async (result: 'win' | 'loss') => {
     if (!acceptedKillerId) return;
-    clearPick();
     const updated = await submitResult(result, acceptedKillerId);
-    if (updated?.status === 'completed') {
-      setCelebrating(true);
-      setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
+    if (!updated) return;
+    clearPick();
+    if (updated.status === 'completed') {
+      celebrate();
     }
   };
 
@@ -88,8 +96,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
     for (const killer of remaining) {
       const updated = await submitResult('win', killer, { silent: true });
       if (updated?.status === 'completed') {
-        setCelebrating(true);
-        setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
+        celebrate();
         break;
       }
     }

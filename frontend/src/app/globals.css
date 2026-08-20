@@ -228,7 +228,10 @@ strong {
 
 @media (prefers-reduced-motion: reduce) {
   .chaos-lever-pull,
-  .chaos-badge-pop,
+  .chaos-badge-pop {
+    animation: none;
+  }
+
   .chaos-marquee-bulb {
     animation: none;
     opacity: .7;

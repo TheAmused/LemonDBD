@@ -1,7 +1,7 @@
 // frontend/src/components/streaks/PageStreakBoard.tsx
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, BookOpen } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { PageStreakRoster } from './page-streak/PageStreakRoster';
 
 interface PageStreakBoardProps {
@@ -19,9 +19,11 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => (
     </Link>
 
     <div className="mt-4 mb-6 flex items-center gap-3">
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-orange-500/20 bg-orange-500/10 dark:bg-slate-900/60 shadow-sm">
-        <BookOpen className="h-5 w-5 text-orange-500 dark:text-orange-400" />
-      </div>
+      <img
+        src="/images/streaks/page-streak.jpg"
+        alt=""
+        className="h-11 w-11 rounded-xl border border-orange-500/20 object-cover shadow-sm"
+      />
       <div>
         <h2 className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100">Page streak</h2>
         <p className="text-xs text-slate-500 dark:text-slate-400">

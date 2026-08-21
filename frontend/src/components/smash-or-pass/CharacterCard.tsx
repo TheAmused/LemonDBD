@@ -3,14 +3,17 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
-  RotateCw,
   Heart,
-  ThumbsDown,
+  RotateCw,
   Maximize2,
   X,
   Sparkles,
+  Shield,
+  Skull,
   CheckCircle2,
   AlertTriangle,
+  ThumbsDown,
+  Flame,
 } from 'lucide-react';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
 import { SmashSounds } from './SmashSoundEffects';
@@ -20,9 +23,9 @@ import { EntityItem } from '@/types/smashOrPass';
 
 interface CharacterCardProps {
   character: EntityItem;
-  onVote: (vote: 'smash' | 'pass', coords?: { x: number; y: number }) => void;
+  onVote: (type: 'smash' | 'pass', origin?: { x: number; y: number }) => void;
   isTopCard?: boolean;
-  onDragUpdate?: (deltaX: number, deltaY: number, isDragging: boolean) => void;
+  onDragUpdate?: (x: number, y: number, isDragging: boolean) => void;
   isExiting?: boolean;
   exitType?: 'smash' | 'pass' | null;
   initialExitOffset?: { x: number; y: number } | null;
@@ -40,6 +43,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   exitType = null,
   initialExitOffset = null,
   onExitComplete,
+  locale = 'en',
+  dict,
 }) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
@@ -61,13 +66,61 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const isSurvivor = character.role === 'Survivor';
 
   const metadata = character.metadata || character.metadata_json || {};
-  const charTitle = metadata.title || metadata.archetype || character.role;
-  const charBio = metadata.bio || `A formidable candidate in the realm of the Fog.`;
-  const charQuote = metadata.quote || metadata.lore_quote || `"${character.name}"`;
-  const greenFlags: string[] = metadata.green_flags || metadata.greenFlags || ['Loyal trial companion', 'Protective instincts'];
-  const redFlags: string[] = metadata.red_flags || metadata.redFlags || ['Unpredictable in the fog'];
-  const turnOn: string = metadata.turn_on || metadata.turnOn || 'Courage and loyalty under pressure';
-  const dealbreaker: string = metadata.dealbreaker || 'Betrayal of trust';
+  const currentLoc = locale || 'en';
+  const locMeta = metadata.translations?.[currentLoc] || metadata.i18n?.[currentLoc] || {};
+
+  const charTitle =
+    locMeta.title ||
+    metadata.title ||
+    metadata.archetype ||
+    (currentLoc === 'pl' ? (isSurvivor ? 'Ocalały we Mgle' : 'Zabójca we Mgle') : character.role);
+
+  const charTagline =
+    locMeta.tagline ||
+    metadata.tagline ||
+    (isSurvivor
+      ? currentLoc === 'pl'
+        ? 'Szuka drogi ucieczki w mrocznym wymiarze próby.'
+        : 'Searching for an escape in the fog'
+      : currentLoc === 'pl'
+      ? 'Poluje na swoje ofiary w królestwie Bytu.'
+      : 'Stalking prey in the entity’s realm');
+
+  const charBio =
+    locMeta.bio ||
+    metadata.bio ||
+    (currentLoc === 'pl'
+      ? `${character.name} to wyrazista postać we Mgle, gotowa na wszystko w obliczu próby.`
+      : `A formidable candidate in the realm of the Fog.`);
+
+  const charQuote = locMeta.quote || metadata.quote || metadata.lore_quote || `"${character.name}"`;
+
+  const greenFlags: string[] =
+    locMeta.green_flags ||
+    metadata.green_flags ||
+    metadata.greenFlags ||
+    (currentLoc === 'pl'
+      ? ['Lojalny towarzysz w próbie', 'Instynkt przetrwania']
+      : ['Loyal trial companion', 'Protective instincts']);
+
+  const redFlags: string[] =
+    locMeta.red_flags ||
+    metadata.red_flags ||
+    metadata.redFlags ||
+    (currentLoc === 'pl' ? ['Nieprzewidywalny we mgle'] : ['Unpredictable in the fog']);
+
+  const turnOn: string =
+    locMeta.turn_on ||
+    metadata.turn_on ||
+    metadata.turnOn ||
+    (currentLoc === 'pl' ? 'Odwaga i lojalność pod presją' : 'Courage and loyalty under pressure');
+
+  const dealbreaker: string =
+    locMeta.dealbreaker ||
+    metadata.dealbreaker ||
+    (currentLoc === 'pl' ? 'Zdrada i brak zaufania' : 'Betrayal of trust');
+
+  const charMeme: string = locMeta.meme || metadata.meme || '';
 
   const rawMedia = (character.media_url || '').replace('/static/icons/', '/static/avatars/');
   const avatarSrc =
@@ -113,58 +166,81 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   };
 
   const handleMouseLeave = () => {
-    if (!isExiting) {
-      setTilt({ x: 0, y: 0, glossX: 50, glossY: 50 });
-    }
+    setTilt({ x: 0, y: 0, glossX: 50, glossY: 50 });
   };
 
-  // Touch Gestures & Drag Swiping
+  // Touch Swipe & Drag Handlers
   const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
-    if (!isTopCard || isExiting) return;
-    setIsDragging(true);
-    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    if (!isTopCard || isExiting || isFlipped) return;
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
     touchStartRef.current = { x: clientX, y: clientY };
+    setIsDragging(true);
     onDragUpdate?.(0, 0, true);
+    SmashSounds.playHoverTick();
   };
 
   const handleTouchMove = useCallback(
     (e: TouchEvent | MouseEvent) => {
-      if (!isDragging || !isTopCard || isExiting) return;
-      const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
-      const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
+      if (!isDragging || !isTopCard || isExiting || isFlipped) return;
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
       const deltaX = clientX - touchStartRef.current.x;
       const deltaY = clientY - touchStartRef.current.y;
 
       setDragOffset({ x: deltaX, y: deltaY });
       onDragUpdate?.(deltaX, deltaY, true);
+
+      if (Math.abs(deltaX) > 80 && Math.abs(deltaX) % 30 < 5) {
+        SmashSounds.playHeartbeat(1.1);
+      }
     },
-    [isDragging, isTopCard, isExiting, onDragUpdate]
+    [isDragging, isTopCard, isExiting, isFlipped, onDragUpdate]
   );
 
   const handleTouchEnd = useCallback(() => {
-    if (!isDragging || !isTopCard || isExiting) return;
+    if (!isDragging || !isTopCard || isExiting || isFlipped) return;
     setIsDragging(false);
-    onDragUpdate?.(0, 0, false);
 
-    const threshold = 85;
-    if (dragOffset.x > threshold) {
-      onVote('smash');
-    } else if (dragOffset.x < -threshold) {
-      onVote('pass');
+    const SWIPE_THRESHOLD = 110;
+
+    if (dragOffset.x > SWIPE_THRESHOLD) {
+      if (cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
+      } else {
+        onVote('smash');
+      }
+    } else if (dragOffset.x < -SWIPE_THRESHOLD) {
+      if (cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
+      } else {
+        onVote('pass');
+      }
     } else {
+      // Spring back to center
       setDragOffset({ x: 0, y: 0 });
+      onDragUpdate?.(0, 0, false);
+      SmashSounds.playFlipSound();
     }
-  }, [isDragging, isTopCard, isExiting, dragOffset, onVote, onDragUpdate]);
+  }, [isDragging, isTopCard, isExiting, isFlipped, dragOffset, onVote, onDragUpdate]);
 
   useEffect(() => {
     if (isDragging) {
       window.addEventListener('mousemove', handleTouchMove);
       window.addEventListener('mouseup', handleTouchEnd);
-      window.addEventListener('touchmove', handleTouchMove, { passive: false });
+      window.addEventListener('touchmove', handleTouchMove, { passive: true });
       window.addEventListener('touchend', handleTouchEnd);
+    } else {
+      window.removeEventListener('mousemove', handleTouchMove);
+      window.removeEventListener('mouseup', handleTouchEnd);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     }
+
     return () => {
       window.removeEventListener('mousemove', handleTouchMove);
       window.removeEventListener('mouseup', handleTouchEnd);
@@ -180,6 +256,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   return (
     <>
+      {/* ROOT 3D CARD WRAPPER - Handles physics translation, drag & perspective */}
       <div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -193,67 +270,63 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           transition: isDragging
             ? 'none'
             : isExiting
-            ? 'transform 500ms ease-out'
+            ? 'transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1)'
             : 'transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1)',
           perspective: 1200,
         }}
-        className={`relative select-none w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 cursor-grab active:cursor-grabbing shadow-2xl transition-all duration-300 ${
-          isSwipingRight
-            ? 'border-pink-500 bg-rose-950/90 shadow-[0_0_50px_rgba(244,63,94,0.6)]'
-            : isSwipingLeft
-            ? 'border-slate-600 bg-slate-950 shadow-[0_0_50px_rgba(15,23,42,0.85)]'
-            : 'border-pink-500/30 bg-slate-950 shadow-[0_0_35px_rgba(0,0,0,0.85)]'
-        }`}
+        className="relative select-none w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] cursor-grab active:cursor-grabbing"
       >
-        {/* Specular gloss reflection */}
-        <div
-          className="pointer-events-none absolute inset-0 z-20 opacity-25 mix-blend-overlay transition-opacity"
-          style={{
-            background: `radial-gradient(circle at ${tilt.glossX}% ${tilt.glossY}%, rgba(255,255,255,0.7) 0%, transparent 60%)`,
-          }}
-        />
-
         {/* ACTIVE DISINTEGRATION OVERLAY */}
         {isExiting && exitType && (
           <CardDisintegrationOverlay exitType={exitType} onComplete={onExitComplete} />
         )}
 
         {/* SWIPE STAMP BADGES */}
-        {isSwipingRight && !isExiting && (
-          <div className="pointer-events-none absolute top-8 left-8 z-30 transform -rotate-12 border-4 border-rose-500 bg-rose-950/90 p-3.5 sm:p-4 rounded-3xl shadow-2xl animate-in zoom-in-75 duration-150">
+        {isSwipingRight && !isExiting && !isFlipped && (
+          <div className="pointer-events-none absolute top-8 left-8 z-40 transform -rotate-12 border-4 border-rose-500 bg-rose-950/90 p-3.5 sm:p-4 rounded-3xl shadow-2xl animate-in zoom-in-75 duration-150">
             <Heart className="h-8 w-8 sm:h-10 sm:w-10 fill-rose-400 text-rose-400 animate-pulse" />
           </div>
         )}
 
-        {isSwipingLeft && !isExiting && (
-          <div className="pointer-events-none absolute top-8 right-8 z-30 transform rotate-12 border-4 border-slate-400 bg-slate-950/90 p-3.5 sm:p-4 rounded-3xl shadow-2xl animate-in zoom-in-75 duration-150">
+        {isSwipingLeft && !isExiting && !isFlipped && (
+          <div className="pointer-events-none absolute top-8 right-8 z-40 transform rotate-12 border-4 border-slate-400 bg-slate-950/90 p-3.5 sm:p-4 rounded-3xl shadow-2xl animate-in zoom-in-75 duration-150">
             <ThumbsDown className="h-8 w-8 sm:h-10 sm:w-10 text-slate-300" />
           </div>
         )}
 
-        {/* 3D FLIPPABLE CONTAINER */}
+        {/* ========================================================================= */}
+        {/* TRUE 3D ROTATING CARD (WHOLE CARD WITH BORDERS AND SIDES FLIPS TOGETHER) */}
+        {/* ========================================================================= */}
         <div
           style={{
             transformStyle: 'preserve-3d',
             transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            transition: 'transform 600ms cubic-bezier(0.4, 0.0, 0.2, 1), opacity 1500ms ease-out, filter 1500ms ease-out',
-            opacity: isExiting ? 0.0 : 1,
-            filter:
-              isExiting && exitType === 'pass'
-                ? 'grayscale(1) contrast(1.5) brightness(0.2) blur(4px)'
-                : isExiting && exitType === 'smash'
-                ? 'brightness(1.3) contrast(1.2) drop-shadow(0 0 40px rgba(244,63,94,0.9))'
-                : 'none',
+            transition: 'transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1)',
           }}
           className="relative h-full w-full"
         >
-          {/* ================= CARD FRONT (PURE ARTWORK WITH ZERO TEXT) ================= */}
+          {/* ================= FRONT FACE (PURE ARTWORK + FULL BORDER) ================= */}
           <div
-            style={{ backfaceVisibility: 'hidden' }}
-            className={`absolute inset-0 h-full w-full flex flex-col justify-between transition-opacity duration-300 ${
-              isFlipped ? 'pointer-events-none opacity-0 invisible' : 'pointer-events-auto opacity-100 z-20'
+            style={{
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+            }}
+            className={`absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 transition-all duration-300 shadow-2xl flex flex-col justify-between ${
+              isSwipingRight
+                ? 'border-[#ff0055] bg-rose-950/90 shadow-[0_0_55px_rgba(255,0,85,0.7)]'
+                : isSwipingLeft
+                ? 'border-slate-500 bg-slate-950 shadow-[0_0_55px_rgba(15,23,42,0.9)]'
+                : 'border-pink-500/40 bg-slate-950 shadow-[0_0_35px_rgba(0,0,0,0.85)]'
             }`}
           >
+            {/* Specular gloss reflection */}
+            <div
+              className="pointer-events-none absolute inset-0 z-20 opacity-25 mix-blend-overlay transition-opacity"
+              style={{
+                background: `radial-gradient(circle at ${tilt.glossX}% ${tilt.glossY}%, rgba(255,255,255,0.7) 0%, transparent 60%)`,
+              }}
+            />
+
             {/* Edge-to-Edge Full Portrait Artwork */}
             <div className="absolute inset-0 z-0 bg-slate-950 overflow-hidden">
               <img
@@ -283,8 +356,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playFlipSound();
                   setIsFlipped(true);
                 }}
-                title="Flip for Character Lore & Stats"
-                className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-slate-950/85 border border-slate-700/80 text-slate-200 hover:text-pink-300 hover:border-pink-400 hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer"
+                title={currentLoc === 'pl' ? 'Obróć, by zobaczyć profil i statystyki' : 'Flip for Character Lore & Stats'}
+                className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-slate-950/85 border border-pink-500/40 text-pink-300 hover:text-white hover:border-[#ff0055] hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer"
               >
                 <RotateCw className="h-5 w-5" />
               </button>
@@ -299,7 +372,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playHoverTick();
                   setIsZoomed(true);
                 }}
-                title="Zoom Full Portrait"
+                title={currentLoc === 'pl' ? 'Powiększ portret' : 'Zoom Full Portrait'}
                 className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-slate-950/85 border border-slate-700/80 text-slate-200 hover:text-white hover:border-pink-400 hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer"
               >
                 <Maximize2 className="h-5 w-5" />
@@ -335,25 +408,24 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
                 title="Smash"
-                className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-600 to-pink-600 text-white hover:scale-110 active:scale-95 transition-all shadow-[0_0_25px_rgba(244,63,94,0.5)] cursor-pointer"
+                className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-600 to-[#ff0055] text-white hover:scale-110 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,0,85,0.6)] cursor-pointer"
               >
                 <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-white" />
               </button>
             </div>
           </div>
 
-          {/* ================= CARD BACK (CHARACTER LORE & PROFILE FROM DATABASE) ================= */}
+          {/* ================= BACK FACE (OCCULT DOSSIER + FULL BORDER) ================= */}
           <div
             style={{
               backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
             }}
-            className={`absolute inset-0 h-full w-full bg-slate-950/95 border border-slate-800 p-4 sm:p-5 flex flex-col justify-between overflow-y-auto custom-scrollbar transition-opacity duration-300 ${
-              isFlipped ? 'pointer-events-auto opacity-100 z-20' : 'pointer-events-none opacity-0 invisible'
-            }`}
+            className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-[#ff0055]/50 bg-[#09090b]/95 shadow-[0_0_55px_rgba(255,0,85,0.45)] backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between overflow-y-auto custom-scrollbar font-mono text-zinc-100"
           >
-            {/* Top Back Controls */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            {/* Top Back Controls Bar */}
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5 shrink-0">
               <button
                 type="button"
                 onMouseDown={(e) => e.stopPropagation()}
@@ -363,84 +435,110 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playFlipSound();
                   setIsFlipped(false);
                 }}
-                title="Flip Back to Artwork"
-                className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-pink-300 hover:border-pink-400 hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer"
+                title={currentLoc === 'pl' ? 'Obróć z powrotem' : 'Flip Back to Artwork'}
+                className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-zinc-900/90 border border-pink-500/40 text-pink-300 hover:text-white hover:border-[#ff0055] hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer"
               >
                 <RotateCw className="h-5 w-5" />
               </button>
 
               <div className="flex items-center gap-1.5 px-2">
                 <Sparkles className="h-4 w-4 text-pink-400 shrink-0" />
-                <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-100 truncate max-w-[170px] sm:max-w-[200px]">
+                <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-zinc-100 truncate max-w-[170px] sm:max-w-[200px]">
                   {character.name}
                 </h3>
               </div>
 
-              <button
-                type="button"
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  SmashSounds.playHoverTick();
-                  setIsZoomed(true);
-                }}
-                title="Zoom Full Portrait"
-                className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-slate-900/90 border border-slate-700/80 text-slate-200 hover:text-white hover:border-pink-400 hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer"
+              <span
+                className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-lg border ${
+                  isSurvivor
+                    ? 'bg-[#00f5d4]/15 text-[#00f5d4] border-[#00f5d4]/30'
+                    : 'bg-[#ff0055]/15 text-[#ff0055] border-[#ff0055]/30'
+                }`}
               >
-                <Maximize2 className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Lore & Bio from DB */}
-            <div className="space-y-1 my-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                Lore &amp; Personality
+                {isSurvivor
+                  ? dict?.smashOrPass?.filters?.survivors || 'Survivor'
+                  : dict?.smashOrPass?.filters?.killers || 'Killer'}
               </span>
-              <p className="text-xs text-slate-200 leading-relaxed bg-slate-900/80 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
-                {charBio}
-              </p>
             </div>
 
-            {/* Green & Red Flags from DB */}
-            <div className="grid grid-cols-1 gap-1.5 sm:gap-2 my-1">
-              <div className="space-y-0.5 sm:space-y-1 bg-emerald-950/30 border border-emerald-500/20 p-2.5 rounded-2xl">
-                <span className="flex items-center gap-1 text-xs font-extrabold text-emerald-400">
-                  <CheckCircle2 className="h-3.5 w-3.5" /> Green Flags
+            {/* Scrollable Dossier Content */}
+            <div className="space-y-2.5 my-2 flex-1 overflow-y-auto pr-1">
+              {/* Archetype & Tagline */}
+              <div className="p-2.5 rounded-2xl bg-zinc-950/80 border border-pink-500/30 space-y-0.5">
+                <span className="text-[10px] font-bold uppercase text-pink-400 flex items-center gap-1">
+                  <Flame className="h-3 w-3 text-pink-400" />
+                  {charTitle}
                 </span>
-                <ul className="text-xs text-emerald-200/90 space-y-0.5 pl-4 list-disc">
-                  {greenFlags.map((flag: string, idx: number) => (
-                    <li key={idx}>{flag}</li>
-                  ))}
-                </ul>
+                <p className="text-[11px] text-zinc-300 italic leading-snug">{charTagline}</p>
               </div>
 
-              <div className="space-y-0.5 sm:space-y-1 bg-rose-950/30 border border-rose-500/20 p-2.5 rounded-2xl">
-                <span className="flex items-center gap-1 text-xs font-extrabold text-rose-400">
-                  <AlertTriangle className="h-3.5 w-3.5" /> Red Flags
+              {/* Bio Story */}
+              <div className="p-2.5 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                  {currentLoc === 'pl' ? 'Profil i Osobowość' : 'Lore & Personality'}
                 </span>
-                <ul className="text-xs text-rose-200/90 space-y-0.5 pl-4 list-disc">
-                  {redFlags.map((flag: string, idx: number) => (
-                    <li key={idx}>{flag}</li>
-                  ))}
-                </ul>
+                <p className="text-xs text-zinc-200 leading-relaxed">{charBio}</p>
+              </div>
+
+              {/* Meme & Trial Rumor Section */}
+              {charMeme && (
+                <div className="p-2.5 rounded-2xl bg-purple-950/40 border border-purple-500/30 space-y-0.5">
+                  <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-purple-300">
+                    <Sparkles className="h-3 w-3 text-purple-400 animate-spin" style={{ animationDuration: '6s' }} />
+                    {currentLoc === 'pl' ? 'Plotka z Próby & Memy' : 'Trial Rumor & Meme'}
+                  </span>
+                  <p className="text-[11px] text-purple-200/90 italic leading-snug">
+                    {charMeme}
+                  </p>
+                </div>
+              )}
+
+              {/* Green & Red Flags */}
+              <div className="grid grid-cols-1 gap-1.5">
+                <div className="bg-emerald-950/40 border border-emerald-500/30 p-2.5 rounded-2xl space-y-0.5">
+                  <span className="flex items-center gap-1 text-xs font-black text-emerald-400">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    {currentLoc === 'pl' ? 'Zielone Flagi' : 'Green Flags'}
+                  </span>
+                  <ul className="text-xs text-emerald-200/90 space-y-0.5 pl-4 list-disc font-sans">
+                    {greenFlags.map((flag: string, idx: number) => (
+                      <li key={idx}>{flag}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-rose-950/40 border border-rose-500/30 p-2.5 rounded-2xl space-y-0.5">
+                  <span className="flex items-center gap-1 text-xs font-black text-rose-400">
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    {currentLoc === 'pl' ? 'Czerwone Flagi' : 'Red Flags'}
+                  </span>
+                  <ul className="text-xs text-rose-200/90 space-y-0.5 pl-4 list-disc font-sans">
+                    {redFlags.map((flag: string, idx: number) => (
+                      <li key={idx}>{flag}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Turn-On & Dealbreaker */}
+              <div className="grid grid-cols-2 gap-1.5 text-xs">
+                <div className="bg-zinc-950/80 border border-zinc-800 p-2 rounded-2xl space-y-0.5">
+                  <span className="font-bold text-pink-400 uppercase text-[10px]">
+                    {currentLoc === 'pl' ? 'Na Plus:' : 'Turn On:'}
+                  </span>
+                  <p className="text-zinc-300 font-medium text-[11px] leading-tight font-sans">{turnOn}</p>
+                </div>
+                <div className="bg-zinc-950/80 border border-zinc-800 p-2 rounded-2xl space-y-0.5">
+                  <span className="font-bold text-amber-400 uppercase text-[10px]">
+                    {currentLoc === 'pl' ? 'Na Minus:' : 'Dealbreaker:'}
+                  </span>
+                  <p className="text-zinc-300 font-medium text-[11px] leading-tight font-sans">{dealbreaker}</p>
+                </div>
               </div>
             </div>
 
-            {/* Turn-On & Dealbreaker from DB */}
-            <div className="grid grid-cols-2 gap-1.5 sm:gap-2 text-xs my-1">
-              <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-2xl space-y-0.5">
-                <span className="font-bold text-pink-400 uppercase text-[10px]">Turn On:</span>
-                <p className="text-slate-300 font-medium text-[11px] leading-tight">{turnOn}</p>
-              </div>
-              <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-2xl space-y-0.5">
-                <span className="font-bold text-amber-400 uppercase text-[10px]">Dealbreaker:</span>
-                <p className="text-slate-300 font-medium text-[11px] leading-tight">{dealbreaker}</p>
-              </div>
-            </div>
-
-            {/* Bottom Actions on Back face */}
-            <div className="pt-2 flex items-center justify-between border-t border-slate-800">
+            {/* Bottom Quick-Vote Action Bar on Card Back */}
+            <div className="pt-2 flex items-center justify-between border-t border-zinc-800 shrink-0">
               <button
                 type="button"
                 onMouseDown={(e) => e.stopPropagation()}
@@ -451,9 +549,10 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
                 title="Pass"
-                className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-slate-900 border-2 border-slate-700 text-slate-300 hover:text-white hover:border-slate-400 transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-zinc-900 border-2 border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 text-xs font-bold transition-all cursor-pointer"
               >
-                <ThumbsDown className="h-5 w-5 sm:h-6 sm:w-6" />
+                <ThumbsDown className="h-4 w-4" />
+                <span>Pass</span>
               </button>
 
               <button
@@ -466,9 +565,10 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
                 title="Smash"
-                className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-600 to-pink-600 text-white hover:scale-110 active:scale-95 transition-all shadow-md cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-rose-600 to-[#ff0055] text-white text-xs font-black hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,0,85,0.5)] cursor-pointer"
               >
-                <Heart className="h-5 w-5 sm:h-6 sm:w-6 fill-white" />
+                <Heart className="h-4 w-4 fill-white" />
+                <span>Smash</span>
               </button>
             </div>
           </div>
@@ -482,45 +582,30 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           aria-modal="true"
           aria-label={`${character.name} Full Portrait`}
           onClick={() => setIsZoomed(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl animate-in fade-in duration-200 cursor-zoom-out"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090b]/90 backdrop-blur-2xl animate-in fade-in duration-200"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-h-[90vh] max-w-[90vw] md:max-w-2xl overflow-hidden rounded-3xl border border-pink-500/30 bg-slate-900 shadow-2xl flex flex-col cursor-default"
+            className="relative max-w-2xl w-full max-h-[90vh] flex flex-col items-center justify-center"
           >
-            <div className="flex items-center justify-between border-b border-slate-800 p-4 bg-slate-950/60">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-black text-slate-100">{character.name}</span>
-                <span className="text-xs text-rose-400">({charTitle})</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsZoomed(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setIsZoomed(false)}
+              className="absolute -top-12 right-0 sm:right-2 flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer shadow-lg z-10"
+            >
+              <X className="h-5 w-5" />
+            </button>
 
-            <div className="relative aspect-[3/4] w-full bg-slate-950 overflow-hidden flex items-center justify-center p-2">
+            <div className="relative overflow-hidden rounded-3xl border-2 border-pink-500/40 bg-zinc-950 shadow-[0_0_60px_rgba(255,0,85,0.4)]">
               <img
                 src={avatarSrc}
                 alt={character.name}
-                className="h-full w-full object-contain drop-shadow-2xl"
+                className="max-h-[80vh] w-auto object-contain rounded-3xl"
               />
-            </div>
-
-            <div className="p-4 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between">
-              <span className="text-xs text-slate-400 italic font-serif">
-                {charQuote}
-              </span>
-              <button
-                type="button"
-                onClick={() => setIsZoomed(false)}
-                className="px-4 py-1.5 rounded-xl bg-slate-800 text-xs font-bold text-slate-200 hover:bg-slate-700 transition-colors cursor-pointer"
-              >
-                Close View
-              </button>
+              <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-[#09090b] via-[#09090b]/80 to-transparent text-center font-mono">
+                <h3 className="text-lg font-black text-zinc-100">{character.name}</h3>
+                <p className="text-xs text-pink-300 font-sans italic">{charTagline}</p>
+              </div>
             </div>
           </div>
         </div>

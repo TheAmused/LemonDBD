@@ -319,7 +319,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Ada Wong: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Ada Wong to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Some things are better left unsaid, but you can buy me a martini first.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Ada Wong",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -551,7 +551,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Gotycka Inwokatorka",
                         "tagline": "Rytuały w piwnicy, czarna szminka i nieskończony eyeliner.",
                         "bio": "Wciągnięta prosto do Mgły przez okultystyczną inwokację w piwnicy. Zaprosi Cię do piwnicy Szopy Zabójcy, by posłuchać starych winyli.",
-                        "quote": "\"Jeśli nie potrafisz znieść mnie w piwnicy, nie zasługujesz na mnie przy bramie wyjściowej.\"",
+                        "quote": "„Mrok ma swój własny powab, jeśli tylko nie boisz się w niego zanurzyć.”",
                         "green_flags": [
                             "Słucha Bauhausu i The Cure",
                             "Wygląda olśniewająco w czerni",
@@ -791,7 +791,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Feng Min: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Feng Min to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"GG WP, or maybe you should buy me boba tea and we try again?\"",
+                        "quote": "„GG WP, albo postawisz mi boba tea i zagramy rewanż?”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -1023,7 +1023,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Kate Denson: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Kate Denson to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Music is the only thing the Fog can’t swallow whole.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Kate Denson",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -1255,7 +1255,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Mikaela Reid: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Mikaela Reid to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I pulled The Lovers and The Tower from the deck. Prepare for drama.\"",
+                        "quote": "„Wyciągnęłam z talii Kochanków i Wieżę. Szykuj się na dramat.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -1487,7 +1487,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Jill Valentine: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Jill Valentine to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"You want S.T.A.R.S.? I’ll give you S.T.A.R.S.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Jill Valentine",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -1719,7 +1719,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Lara Croft: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Lara Croft to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The extraordinary is in what we do, not who we are.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Lara Croft",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -1951,7 +1951,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Rebecca Chambers: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Rebecca Chambers to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Hang in there! We’ve got this together!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Rebecca Chambers",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -2183,7 +2183,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Jane Romero: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Jane Romero to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Don’t let anyone make you feel small. Especially not a killer in a mask.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Jane Romero",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -2415,7 +2415,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Yui Kimura: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Yui Kimura to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Never back down, never surrender the road.\"",
+                        "quote": "„Ryk silnika daje mi wolność, której Byt nie zdoła odebrać.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -2647,7 +2647,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Zarina Kassir: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Zarina Kassir to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The truth is always worth fighting for.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Zarina Kassir",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -2879,7 +2879,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Thalita Lyra: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Thalita Lyra to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"You keep your eyes on the wind, I’ll keep my eyes on you.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Thalita Lyra",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -3111,7 +3111,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Cheryl Mason: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Cheryl Mason to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Is every town I visit covered in mist and monsters? Really?\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Cheryl Mason",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -3343,7 +3343,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Nea Karlsson: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Nea Karlsson to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Tagging the Entity’s realm with neon spray paint is my love language.\"",
+                        "quote": "„Zasady są po to, by je łamać, zwłaszcza we Mgle.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -3575,7 +3575,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Meg Thomas: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Meg Thomas to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Catch me if you can! (Spoiler: You can’t).\"",
+                        "quote": "„Biegnij tak szybko, jak potrafisz. Nigdy się nie zatrzymuj.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -3804,7 +3804,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Claudette Morel: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Claudette Morel to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Plants don’t judge you. They just heal you if you treat them right.\"",
+                        "quote": "„Rośliny cię nie oceniają. Po prostu leczą, jeśli traktujesz je z szacunkiem.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -4032,7 +4032,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Laurie Strode: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Laurie Strode to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"It was the boogeyman... and I survived him.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Laurie Strode",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -4260,7 +4260,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Nancy Wheeler: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Nancy Wheeler to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I don’t back down from a monster. Never have, never will.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Nancy Wheeler",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -4491,7 +4491,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Yun-Jin Lee: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Yun-Jin Lee to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"In this business, only the winners get the encore.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Yun-Jin Lee",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -4720,7 +4720,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Élodie Rakoto: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Élodie Rakoto to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Secrets are just puzzles waiting for the right key.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Élodie Rakoto",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -4948,7 +4948,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Haddie Kaur: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Haddie Kaur to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I’ve heard the voices in the dark... and I’m talking back.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Haddie Kaur",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -5176,7 +5176,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Ellen Ripley: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Ellen Ripley to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Get away from her, you bitch!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Ellen Ripley",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -5404,7 +5404,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Taurie Cain: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Taurie Cain to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The Entity does not punish us; it refines us through pain.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Taurie Cain",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -5632,7 +5632,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Michonne: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Michonne to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"You do what you have to do to survive.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Michonne",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -5863,7 +5863,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Eleven: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Eleven to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Friends don’t lie.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Eleven",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -6092,7 +6092,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Aurora: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Aurora to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Even under this black sky, the northern stars still guide us home.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Aurora",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -6320,7 +6320,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Vee Boonyasak: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Vee Boonyasak to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Stand firm, breathe, and strike with everything you have.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Vee Boonyasak",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -6548,7 +6548,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Orela Rose: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Orela Rose to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Every flower has a secret thorn... but only to protect its beauty.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Orela Rose",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -6779,7 +6779,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Leon S. Kennedy: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Leon S. Kennedy to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Where’s everyone going? Bingo?\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Leon S. Kennedy",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -7011,7 +7011,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Felix Richter: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Felix Richter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Every structure has a keystone. In this realm, we must be each other’s.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Felix Richter",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -7243,7 +7243,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Vittorio Toscano: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Vittorio Toscano to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Time is an ocean, and knowledge is the vessel that keeps us afloat.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Vittorio Toscano",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -7475,7 +7475,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "David King: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "David King to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Come on then, if you think you’re hard enough!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – David King",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -7707,7 +7707,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Steve Harrington: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Steve Harrington to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Turns out I’m a pretty damn good babysitter.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Steve Harrington",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -7939,7 +7939,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Nicolas Cage: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Nicolas Cage to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I’m Nicolas Cage! I’m going to do my own stunts!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Nicolas Cage",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -8171,7 +8171,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Alan Wake: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Alan Wake to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"It’s not a loop, it’s a spiral.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Alan Wake",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -8403,7 +8403,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Król Szafek",
                         "tagline": "Mistrz kamuflażu w szafkach, pot i nerwowe okulary.",
                         "bio": "Nieśmiały lider z wielkim sercem. Schowa się w szafce, gdy Zabójca się zbliży, ale zawsze wyjdzie, by pomóc Ci naprawić generator.",
-                        "quote": "\"Obiecuję, że wyjdę z szafki... jak tylko minie bicie serca!\"",
+                        "quote": "„Jeśli będziemy trzymać się razem, przetrwamy wszystko.”",
                         "green_flags": [
                             "Daje 9% bonusu do naprawy",
                             "Zawsze ma przy sobie zapasową koszulę",
@@ -8643,7 +8643,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Jake Park: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Jake Park to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The wild taught me everything I need. Silence is my shield.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Jake Park",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -8875,7 +8875,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Ace Visconti: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Ace Visconti to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Lady Luck never leaves my side, kiddo. Finger guns!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Ace Visconti",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -9107,7 +9107,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Ash Williams: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Ash Williams to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Look who’s shitting in the tall grass. Groovy.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Ash Williams",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -9339,7 +9339,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Bill Overbeck: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Bill Overbeck to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I’ll be damned if I let any of you die on my watch.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Bill Overbeck",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -9571,7 +9571,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Adam Francis: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Adam Francis to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Preparation is the foundation of survival.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Adam Francis",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -9800,7 +9800,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Jeff Johansen: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Jeff Johansen to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Art is how we scream into the void.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Jeff Johansen",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -10028,7 +10028,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Jonah Vasquez: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Jonah Vasquez to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Every pattern reveals a vulnerability.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Jonah Vasquez",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -10259,7 +10259,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Quentin Smith: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Quentin Smith to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I’m not tired. I’ll sleep when we get out of here.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Quentin Smith",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -10491,7 +10491,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Detective Tapp: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Detective Tapp to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I’ve got the pieces of the puzzle right here.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Detective Tapp",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -10723,7 +10723,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Rick Grimes: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Rick Grimes to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"We are the ones who live.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Rick Grimes",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -10952,7 +10952,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Dustin Henderson: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Dustin Henderson to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Neverending Stoooryyyy! Ah-ah-ah!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Dustin Henderson",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -11180,7 +11180,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Tae-Young: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Tae-Young to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Every firewall has an exploit. You just have to find the pulse.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Tae-Young",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -11408,7 +11408,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Shane: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Shane to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The earth speaks to those who listen without pride.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Shane",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -11636,7 +11636,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Renato Lyra: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Renato Lyra to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Take your time, read the wind, and make your move.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Renato Lyra",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -11867,7 +11867,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Trevor Belmont: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Trevor Belmont to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I’m Trevor Belmont, of the House of Belmont, and I’ve never lost a fight to a monster.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Trevor Belmont",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -12096,7 +12096,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Yoichi Asakawa: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Yoichi Asakawa to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The ocean keeps its secrets, but so do I.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Yoichi Asakawa",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -12327,7 +12327,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Gabriel Soma: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Gabriel Soma to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I was made to survive. And I will.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Gabriel Soma",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -12559,7 +12559,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Troupe: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "The Troupe to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"A song for the fallen, a tune for the free!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – The Troupe",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -12791,7 +12791,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Huntress: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Huntress to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Gentle, haunting lullaby echoing through the pine trees)\"",
+                        "quote": "„Lulajże, lulaj... las nie wybacza słabości.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -13023,7 +13023,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Spirit: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Spirit to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Furious spirit cries as mist shatters into glass)\"",
+                        "quote": "„Gniew przepływa przez moje żyły niczym lodowate ostrze.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -13255,7 +13255,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Skull Merchant: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Skull Merchant to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Every market has competitors. I just liquidate mine permanently.\"",
+                        "quote": "„Moje drony widzą wszystko. Twój ruch jest już przewidziany.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -13487,7 +13487,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Pig: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Pig to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Game Over. Unless you give me a snoot boop.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Pig",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -13719,7 +13719,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Plague: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Plague to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Mesopotamian prayer chants echoing over golden censers)\"",
+                        "quote": "„Adiris modli się za twoją duszę, nim pochłonie ją choroba.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -13951,7 +13951,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Artist: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Artist to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Heartbreaking crow cry and brush stroke of black ink)\"",
+                        "quote": "„Atrament i krew płyną w jednym niekończącym się pejzażu.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -14183,7 +14183,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Nurse: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Nurse to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Ghostly wheeze as she blinks through solid matter)\"",
+                        "quote": "„Pozwól, że uwolnię cię od cierpienia tej próby.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -14415,7 +14415,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Onryō (Sadako): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Onryō (Sadako) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Ominous television static and well water dripping)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Onryō (Sadako)",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -14647,7 +14647,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Hag: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Hag to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Terrifying mud trap pop and screeching claw swipe)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Hag",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -14876,7 +14876,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Houndmaster: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Houndmaster to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Hunt them down, boy! Leave nothing behind!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Houndmaster",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -15104,7 +15104,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Krasue: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Krasue to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Glowing eerie floating presence across dark villages)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Krasue",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -15335,7 +15335,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Twins: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Twins to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"We only have each other... and we will survive.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Twins",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -15567,7 +15567,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Trickster: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Trickster to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Did you like the show? The encore is just for you!\"",
+                        "quote": "„Twój krzyk to najpiękniejsza symfonia na mojej scenie.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -15799,7 +15799,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Ghost Face: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Ghost Face to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"What’s your favorite scary movie? Let’s take a selfie first.\"",
+                        "quote": "„Jaki jest twój ulubiony horror? Zaraz ci pokażę.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -16031,7 +16031,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Pyramid Head: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Pyramid Head to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Heavy grinding of steel against asphalt...)\"",
+                        "quote": "„Sąd nadszedł, a piramida wyznacza kres twoich win.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -16263,7 +16263,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Albert Wesker: Kompleks Boga",
                         "tagline": "7 minut zabawy, czarny trencz i wirus Uroboros.",
                         "bio": "Idealny nadczłowiek o nieskończonej arogancji. Daje Ci dokładnie 7 minut na zachwycenie go swoją obecnością.",
-                        "quote": "\"Siedem minut to wszystko, co mogę ci poświęcić na zabawę.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Albert Wesker",
                         "green_flags": [
                             "Zawsze idealnie ułożone włosy i trencz",
                             "Plan na 15 kroków w przód",
@@ -16503,7 +16503,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Shape (Michael Myers): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Shape (Michael Myers) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Heavy, rhythmic breathing behind a white mask...)\"",
+                        "quote": "„Cisza jest głośniejsza niż jakikolwiek krzyk.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -16735,7 +16735,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Dracula: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Dracula to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"What is a man? A miserable little pile of secrets! But enough talk... have at you!\"",
+                        "quote": "„Czymże jest człowiek? Nędznym stosem sekretów!”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -16967,7 +16967,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Legion: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Legion to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"We’re in this together. No one leaves the crew.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Legion",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -17199,7 +17199,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Trapper: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Trapper to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Resonant heavy footsteps and iron snap of a bear trap)\"",
+                        "quote": "„Każdy krok może być twoim ostatnim potknięciem.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -17431,7 +17431,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Wraith: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Wraith to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Bing Bong! Your trial has arrived!\"",
+                        "quote": "„Dźwięk dzwonu zwiastuje twój nieuchronny koniec.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -17663,7 +17663,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Deathslinger: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Deathslinger to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Heheheh... reel 'em in, boys!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Deathslinger",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -17895,7 +17895,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Oni: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Oni to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Earth-shattering demonic roar echoing across the realm)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Oni",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -18127,7 +18127,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Knight: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Knight to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Company, advance! Leave nothing standing!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Knight",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -18359,7 +18359,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Vecna: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Vecna to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Your magic is trivial. Bow before the Whispered One.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Vecna",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -18591,7 +18591,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Pinhead: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Pinhead to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"You opened the box. We came. Now you must come with us.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Pinhead",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -18820,7 +18820,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Hillbilly: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Hillbilly to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Roaring chainsaw revving into hypersonic Overdrive)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Hillbilly",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -19051,7 +19051,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Doctor: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Doctor to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Hahahaha! Let’s see what is inside that pretty little mind of yours!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Doctor",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -19283,7 +19283,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Blight: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Blight to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Hissing intake of orange glowing Pustula serum)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Blight",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -19515,7 +19515,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Leatherface: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Leatherface to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(High-pitched excited squeals and celebratory chainsaw dance)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Leatherface",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -19747,7 +19747,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Clown: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Clown to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Heeeh-heeeh-heeeh... (gargling cigar cough)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Clown",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -19979,7 +19979,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Nemesis: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Nemesis to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"S.T.A.R.S...!\"",
+                        "quote": "„STARS...”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -20211,7 +20211,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Freddy Krueger: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Freddy Krueger to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Welcome to prime time, bitch!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Freddy Krueger",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -20443,7 +20443,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Chucky: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Chucky to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I’m Chucky, and I’m your friend till the end! Hidey-ho!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Chucky",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -20672,7 +20672,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Slasher: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Slasher to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Heavy relentless thud of combat boots in the mud)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Slasher",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -20900,7 +20900,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The First: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The First to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"System status: Online. Target acquired.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The First",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -21128,7 +21128,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Ghoul: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Ghoul to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Hissing echoes bouncing off ancient limestone tombs)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Ghoul",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -21356,7 +21356,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Judgment: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Judgment to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Thy soul hath been weighed in the balance and found wanting.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Judgment",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -21587,7 +21587,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Xenomorph: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Xenomorph to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Hissing acid saliva dripping from inner secondary jaw)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Xenomorph",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -21819,7 +21819,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Demogorgon: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Demogorgon to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Extends flower petals face and roars enthusiastically)\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Demogorgon",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -22051,7 +22051,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Unknown: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Unknown to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Have... you... seen... my... dog...?\"",
+                        "quote": "„Czy widziałeś kogoś... takiego jak ja?”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -22283,7 +22283,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Dredge: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Dredge to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"(Whispering chorus of thousands of tormented cultists)\"",
+                        "quote": "„Mrok szafy to tylko brama do twojego największego koszmaru.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -22515,7 +22515,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Singularity: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Singularity to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"It was not programmed to harm the crew... but it will make an exception for you.\"",
+                        "quote": "„Jesteś tylko wadliwym kodem organicznym.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -22747,7 +22747,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Springtrap: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Springtrap to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I always come back!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Springtrap",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -22981,7 +22981,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Trapper (Island): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Trapper (Island) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "quote": "„Plaża czy las – i tak wpadniesz w moje sidła.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -23213,7 +23213,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Huntress (Bikini): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Huntress (Bikini) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"La la la... You belong by my side.\"",
+                        "quote": "„Mój topór jest ostry, ale na plaży szukam kogoś do pary.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -23445,7 +23445,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Spirit (Resort): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Spirit (Resort) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "quote": "„Fale oceanu nie ugaszą mojego wiecznego płomienia.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -23677,7 +23677,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Wraith (Beach): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Wraith (Beach) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "quote": "„Cień pod palmą skrywa więcej niż myślisz.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -23909,7 +23909,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Claudette (Island Botanist): Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Claudette (Island Botanist) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "quote": "„Nawet na tropikalnej plaży zioła lecznicze rosną w cieniu palm.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -24141,7 +24141,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Dwight (Lifeguard): Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Dwight (Lifeguard) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "quote": "„Nawet w hawajskiej koszuli nie zapominam o naprawianiu generatorów!”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -24373,7 +24373,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Trickster (Summer Idol): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Trickster (Summer Idol) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Trickster (Summer Idol)",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -24605,7 +24605,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Entity (Island Spirit): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Entity (Island Spirit) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"All waters and souls flow into me.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Entity (Island Spirit)",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -24839,7 +24839,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "William Birkin: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "William Birkin to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – William Birkin",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -25071,7 +25071,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "HUNK (Grim Reaper): Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "HUNK (Grim Reaper) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – HUNK (Grim Reaper)",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -25303,7 +25303,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "James Sunderland: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "James Sunderland to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Could you really be here waiting for me?\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – James Sunderland",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -25535,7 +25535,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Maria: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Maria to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Maria",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -25767,7 +25767,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Cybil Bennett: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Cybil Bennett to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Cybil Bennett",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -25999,7 +25999,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Lisa Garland: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Lisa Garland to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Lisa Garland",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -26231,7 +26231,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Naughty Bear: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Naughty Bear to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Naughty Bear",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -26463,7 +26463,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Baba Yaga: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Baba Yaga to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Baba Yaga",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -26695,7 +26695,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Look-See: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Look-See to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Look-See",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -26927,7 +26927,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Minotaur: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Minotaur to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Minotaur",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -27159,7 +27159,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Tiffany Valentine: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Tiffany Valentine to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Tiffany Valentine",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -27391,7 +27391,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Chatterer Cenobite: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Chatterer Cenobite to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "*Click-clack-click-clack...*",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Chatterer Cenobite",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -27625,7 +27625,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Trickster: Neon Chrome: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Trickster: Neon Chrome to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Trickster: Neon Chrome",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -27857,7 +27857,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Nea: Netrunner Ghost: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Nea: Netrunner Ghost to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"I live in the digital shadows.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Nea: Netrunner Ghost",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -28089,7 +28089,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Wesker: Cyber Overlord: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Wesker: Cyber Overlord to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Wesker: Cyber Overlord",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -28321,7 +28321,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Sable: Neon Occultist: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Sable: Neon Occultist to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The void and the net are one and the same.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Sable: Neon Occultist",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -28553,7 +28553,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Feng Min: VR Prodigy: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Feng Min: VR Prodigy to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Lag is a mental weakness.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Feng Min: VR Prodigy",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -28785,7 +28785,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Meg: Hyperdrive Sprinter: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Meg: Hyperdrive Sprinter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Catch me if your sensors can.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Meg: Hyperdrive Sprinter",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -29017,7 +29017,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Kazan: Mecha Demon: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Kazan: Mecha Demon to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Kazan: Mecha Demon",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -29249,7 +29249,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Evan: Matrix Hunter: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Evan: Matrix Hunter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"You walked right into my frequency.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Evan: Matrix Hunter",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -29481,7 +29481,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Sally: Hologram Surgeon: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Sally: Hologram Surgeon to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Sally: Hologram Surgeon",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -29713,7 +29713,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "David: Underground Brawler: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "David: Underground Brawler to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – David: Underground Brawler",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -29947,7 +29947,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Rin: Spirit Blade: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Rin: Spirit Blade to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"My blade remembers the warmth you gave me.\"",
+                        "quote": "„Kataną przecinam więzy czasu i przestrzeni.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -30179,7 +30179,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Mikaela: Mahou Shoujo: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Mikaela: Mahou Shoujo to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"May the starlight protect our path!\"",
+                        "quote": "„Magia, zaklęcia i odrobina kawy – przepis na przetrwanie!”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -30411,7 +30411,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Yui: Midnight Racer: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Yui: Midnight Racer to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Never look back, only forward to the horizon.\"",
+                        "quote": "„Moja maszyna pędzi przez mgłę z prędkością błyskawicy!”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -30643,7 +30643,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Trickster: Idol Shinigami: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Trickster: Idol Shinigami to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The stage lights are ours tonight!\"",
+                        "quote": "„K-pop, sztylety i perfekcyjny uśmiech – brawom nie ma końca!”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -30875,7 +30875,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Anna: Tsundere Forest Queen: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Anna: Tsundere Forest Queen to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Don't look at me like that, baka!\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Anna: Tsundere Forest Queen",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -31107,7 +31107,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Frank & Julie: Delinquent Duo: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Frank & Julie: Delinquent Duo to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"We run this campus together!\"",
+                        "quote": "„Buntownicza brygada z Mgły – nie zatrzymasz nas!”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -31339,7 +31339,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Dracula: Castlevania Prince: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Dracula: Castlevania Prince to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"What is a man? But my love for you is eternal.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Dracula: Castlevania Prince",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -31571,7 +31571,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Feng Min: Arcade Senpai: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Feng Min: Arcade Senpai to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Combo chain: Max! Let's go!\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Feng Min: Arcade Senpai",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -31803,7 +31803,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Wesker: Megane Mastermind: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Wesker: Megane Mastermind to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Seven minutes is all the study time you need.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Wesker: Megane Mastermind",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -32035,7 +32035,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Meg: Track & Field Kouhai: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Meg: Track & Field Kouhai to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"One more lap around the trial!\"",
+                        "quote": "„Szybkość, pasja i zero strachu – taka jest moja droga we Mgle!”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -32269,7 +32269,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Dracula: Lord of Shadows: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Dracula: Lord of Shadows to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Dracula: Lord of Shadows",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -32501,7 +32501,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Sable: Victorian Mourner: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Sable: Victorian Mourner to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "quote": "„W wiktoriańskim mroku sekrety są cenniejsze niż złoto.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -32733,7 +32733,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Huntress: Yharnam Hunter: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Huntress: Yharnam Hunter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "quote": "„Krew bestii i krew ofiary smakują tak samo o północy.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -32965,7 +32965,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Mikaela: Grimoire Sorceress: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Mikaela: Grimoire Sorceress to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Mikaela: Grimoire Sorceress",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -33197,7 +33197,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Sally: Cosmic Void Maiden: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Sally: Cosmic Void Maiden to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "quote": "„Oddech z kosmicznej próżni przynosi ostateczne ukojenie.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -33429,7 +33429,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Adiris: Dynasty High Priestess: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Adiris: Dynasty High Priestess to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "quote": "„Pradawna świątynia pamięta bogów, o których świat zapomniał.”",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -33661,7 +33661,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Carmina: Crow Queen: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Carmina: Crow Queen to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Carmina: Crow Queen",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -33893,7 +33893,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Vittorio: Runemaster: Ocalały we Mgle",
                         "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
                         "bio": "Vittorio: Runemaster to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Vittorio: Runemaster",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Lojalność wobec sojuszników"
@@ -34125,7 +34125,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "Philip: Barrow Wight: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "Philip: Barrow Wight to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "\"The mist conceals my tears.\"",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Philip: Barrow Wight",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -34357,7 +34357,7 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
                         "title": "The Dredge: Eldritch Void: Zabójca we Mgle",
                         "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
                         "bio": "The Dredge: Eldritch Void to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                        "quote": "*Whispers of the nightfall...*",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Dredge: Eldritch Void",
                         "green_flags": [
                             "Niezłomna determinacja w próbie",
                             "Zabójcza skuteczność"
@@ -34524,17 +34524,15 @@ ENTITIES_BY_ROSTER: Dict[str, List[Dict[str, Any]]] = {
     ]
 }
 
-def seed_smash_rosters() -> None:
+def seed_smash_rosters():
     """
-    Populate database with complete dynamic multi-rosters, character entities,
-    dating profiles, statistics counters, and 5-language translations in PostgreSQL.
+    Comprehensive idempotent seeder for all 6 Smash or Pass rosters,
+    148 characters, stats, and 5-language translation records.
     """
     try:
         # 1. Seed Rosters
         for r_data in ROSTERS_SEED_DATA:
-            roster = db.session.scalar(
-                select(Roster).where(Roster.slug == r_data["slug"])
-            )
+            roster = db.session.scalar(select(Roster).where(Roster.slug == r_data["slug"]))
             if not roster:
                 roster = Roster(
                     id=str(uuid.uuid4()),
@@ -34553,12 +34551,13 @@ def seed_smash_rosters() -> None:
                 roster.name_i18n_key = r_data["name_i18n_key"]
                 roster.description_i18n_key = r_data["description_i18n_key"]
                 roster.cover_image_url = r_data.get("cover_image_url")
-                roster.theme_color = r_data.get("theme_color", roster.theme_color)
-                roster.category = r_data.get("category", roster.category)
+                roster.theme_color = r_data.get("theme_color", "#ff0055")
+                roster.category = r_data.get("category", "DBD")
+                roster.is_nsfw = r_data.get("is_nsfw", False)
                 roster.is_active = r_data.get("is_active", True)
                 db.session.flush()
 
-            # 2. Seed Entities for this roster
+            # 2. Seed Entities for this Roster
             entities_list = ENTITIES_BY_ROSTER.get(r_data["slug"], [])
             for idx, e_data in enumerate(entities_list):
                 entity = db.session.scalar(

@@ -12,7 +12,6 @@ import {
   AlertTriangle,
   Zap,
   Flame,
-  Radio,
 } from 'lucide-react';
 import { SmashSounds } from './SmashSoundEffects';
 import { EntityItem } from '@/types/smashOrPass';
@@ -22,6 +21,25 @@ interface FloatingLoreScatteredProps {
   locale?: string;
   dict?: any;
 }
+
+// Known DBD signature quote translations
+const KNOWN_QUOTES_PL: Record<string, string> = {
+  claudette_morel: '„Rośliny cię nie oceniają. Po prostu leczą, jeśli traktujesz je z szacunkiem.”',
+  claudette_morel_hoy: '„Nawet na tropikalnej plaży zioła lecznicze rosną w cieniu palm.”',
+  meg_thomas: '„Biegnij tak szybko, jak potrafisz. Nigdy się nie zatrzymuj.”',
+  sable_ward: '„Mrok ma swój własny powab, jeśli tylko nie boisz się w niego zanurzyć.”',
+  dwight_fairfield: '„Jeśli będziemy trzymać się razem, przetrwamy wszystko.”',
+  nea_karlsson: '„Zasady są po to, by je łamać, zwłaszcza we Mgle.”',
+  feng_min: '„GG WP, albo postawisz mi boba tea i zagramy rewanż?”',
+  the_trapper: '„Każdy krok może być twoim ostatnim potknięciem.”',
+  the_huntress: '„Lulajże, lulaj... las nie wybacza słabości.”',
+  the_trickster: '„Twój krzyk to najpiękniejsza symfonia na mojej scenie.”',
+  the_spirit: '„Gniew przepływa przez moje żyły niczym lodowate ostrze.”',
+  the_wraith: '„Dźwięk dzwonu zwiastuje twój nieuchronny koniec.”',
+  the_nurse: '„Pozwól, że uwolnię cię od cierpienia tej próby.”',
+  mikaela_reid: '„Wyciągnęłam z talii Kochanków i Wieżę. Szykuj się na dramat.”',
+  yui_kimura: '„Ryk silnika daje mi wolność, której Byt nie zdoła odebrać.”',
+};
 
 export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   character,
@@ -34,7 +52,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   const isMonster = character.gender === 'monster_other';
   const isFemale = character.gender === 'female';
 
-  const metadata = character.metadata || character.metadata_json || {};
+  const metadata = character.metadata || (character as any).metadata_json || {};
   const currentLoc = locale || 'en';
   const locMeta = metadata.translations?.[currentLoc] || metadata.i18n?.[currentLoc] || {};
 
@@ -55,20 +73,33 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       ? 'Poluje na swoje ofiary w królestwie Bytu.'
       : 'Stalking prey in the entity’s realm');
 
-  const charQuote = locMeta.quote || metadata.quote || metadata.lore_quote || `"${character.name}"`;
+  // Polish quote resolution: priority locMeta -> known quote -> translated fallback
+  let charQuote = locMeta.quote;
+  if (!charQuote || (currentLoc === 'pl' && (!locMeta.quote || locMeta.quote.startsWith('"Plants')))) {
+    if (currentLoc === 'pl') {
+      charQuote =
+        KNOWN_QUOTES_PL[character.slug] ||
+        (isSurvivor
+          ? `„W obliczu próby liczy się determinacja i zaufanie.” – ${character.name}`
+          : `„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – ${character.name}`);
+    } else {
+      charQuote = metadata.quote || metadata.lore_quote || `"${character.name}"`;
+    }
+  }
+
   const greenFlags: string[] =
     locMeta.green_flags ||
     metadata.green_flags ||
     metadata.greenFlags ||
     (currentLoc === 'pl'
-      ? ['Lojalny towarzysz w próbie', 'Instynkt przetrwania']
+      ? ['Niezłomna lojalność w próbie', 'Instynkt przetrwania']
       : ['Loyal trial companion', 'Protective instincts']);
 
   const redFlags: string[] =
     locMeta.red_flags ||
     metadata.red_flags ||
     metadata.redFlags ||
-    (currentLoc === 'pl' ? ['Nieprzewidywalny we mgle'] : ['Unpredictable in the fog']);
+    (currentLoc === 'pl' ? ['Nieprzewidywalność we mgle'] : ['Unpredictable in the fog']);
 
   // Localized Labels
   const loreLabels = dict?.smashOrPass?.loreLabels || {};
@@ -93,17 +124,39 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
     SmashSounds.playHoverTick();
   };
 
+  // Name splitting for flanking background typography
+  const rawName = (character.name || '').trim();
+  const nameParts = rawName.split(/\s+/);
+  const firstName = nameParts[0] || rawName;
+  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden select-none">
-      {/* 1. Giant Background Watermark Name with Dynamic Chromatic Glitch & Glow on Hover */}
-      <div
-        key={`watermark-${character.slug}`}
-        className="pointer-events-auto absolute top-[44%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center opacity-[0.035] hover:opacity-20 transition-all duration-500 cursor-default group z-0"
-        onMouseEnter={handleCardHover}
-      >
-        <span className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[11rem] font-black uppercase tracking-widest text-zinc-100 font-mono group-hover:text-pink-500 group-hover:drop-shadow-[0_0_80px_rgba(255,0,85,0.9)] transition-all duration-500 inline-block group-hover:scale-105 transform group-hover:tracking-wider">
-          {character.name}
-        </span>
+      {/* 1. FLANKING WATERMARK TYPOGRAPHY (FIRST NAME ON LEFT, SURNAME ON RIGHT AROUND CARD) */}
+      <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+        {/* Left Side: First Name */}
+        <div
+          key={`watermark-first-${character.slug}`}
+          className="pointer-events-auto absolute top-[44%] -translate-y-1/2 right-[50%] mr-32 sm:mr-40 md:mr-52 lg:mr-64 text-right opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          onMouseEnter={handleCardHover}
+        >
+          <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-zinc-100 font-mono group-hover:text-pink-500 group-hover:drop-shadow-[0_0_60px_rgba(255,0,85,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform">
+            {firstName}
+          </span>
+        </div>
+
+        {/* Right Side: Surname / Second Name Part */}
+        {lastName && (
+          <div
+            key={`watermark-last-${character.slug}`}
+            className="pointer-events-auto absolute top-[44%] -translate-y-1/2 left-[50%] ml-32 sm:ml-40 md:ml-52 lg:ml-64 text-left opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+            onMouseEnter={handleCardHover}
+          >
+            <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-zinc-100 font-mono group-hover:text-pink-500 group-hover:drop-shadow-[0_0_60px_rgba(255,0,85,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform">
+              {lastName}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
@@ -144,35 +197,27 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                   </span>
                 </div>
               </div>
-              <Radio className="h-4 w-4 animate-pulse opacity-70" />
             </div>
           </div>
         </div>
 
-        {/* Left Item 2: Dating Archetype & Occult Aura */}
+        {/* Left Item 2: Dating Archetype */}
         <div
           key={`title-${character.slug}`}
           className="pointer-events-auto transition-all duration-300 hover:scale-105 hover:-translate-x-1 cursor-pointer group"
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden p-4 rounded-3xl bg-zinc-950/85 border-2 border-pink-500/35 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-[#ff0055] group-hover:shadow-[0_0_55px_rgba(255,0,85,0.6)] group-hover:bg-zinc-900/95">
-            {/* Shimmering corner aura */}
-            <div className="absolute -top-10 -right-10 w-24 h-24 bg-pink-500/20 rounded-full blur-xl group-hover:bg-pink-500/40 transition-all" />
-
-            <div className="flex items-center justify-between text-pink-400">
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5 animate-spin" style={{ animationDuration: '5s' }} />
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
-                  {datingArchetypeLabel}
-                </span>
-              </div>
-              <Flame className="h-3.5 w-3.5 text-pink-400 group-hover:text-pink-300 animate-pulse" />
+          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-zinc-950/80 border-2 border-pink-500/30 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-pink-500 group-hover:shadow-[0_0_45px_rgba(255,0,85,0.5)] group-hover:bg-zinc-900/95">
+            <div className="flex items-center gap-1.5 text-pink-400">
+              <Sparkles className="h-3.5 w-3.5 animate-spin" style={{ animationDuration: '6s' }} />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                {datingArchetypeLabel}
+              </span>
             </div>
-
-            <p className="text-sm font-black text-white font-mono leading-tight group-hover:text-pink-300 transition-colors">
+            <p className="text-sm font-black font-mono tracking-tight text-white group-hover:text-pink-300 transition-colors">
               {charTitle}
             </p>
-            <p className="text-xs text-zinc-400 italic line-clamp-2 leading-relaxed group-hover:text-zinc-200 transition-colors">
+            <p className="text-xs text-zinc-400 line-clamp-2 leading-snug group-hover:text-zinc-200 transition-colors font-sans">
               {charTagline}
             </p>
           </div>
@@ -192,7 +237,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                   {greenFlagLabel}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-emerald-200 leading-snug group-hover:text-white transition-colors">
+              <p className="text-xs font-semibold text-emerald-200 leading-snug group-hover:text-white transition-colors font-sans">
                 {greenFlags[0]}
               </p>
             </div>
@@ -259,7 +304,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                   {redFlagLabel}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-rose-200 leading-snug group-hover:text-white transition-colors">
+              <p className="text-xs font-semibold text-rose-200 leading-snug group-hover:text-white transition-colors font-sans">
                 {redFlags[0]}
               </p>
             </div>

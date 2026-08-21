@@ -4,7 +4,7 @@ from sqlalchemy import select
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import Character, GauntletRun, Perk
+from app.models import Character, GauntletMatchLog, GauntletRun, Perk
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names
@@ -291,6 +291,20 @@ class TestGauntletResults(GauntletTestCase):
         run = self.service.submit_result(self.user_id, run["id"], "win")
         self.assertEqual(run["status"], "completed")
         self.assertIn("Huntress", run["owned_characters"])
+
+    def test_submit_result_records_triggered_by_player_by_default(self):
+        updated = self.service.submit_result(self.user_id, self.run["id"], "win")
+        log = db.session.scalars(
+            select(GauntletMatchLog).where(GauntletMatchLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.triggered_by, "player")
+
+    def test_submit_result_records_triggered_by_inactivity_when_passed(self):
+        self.service.submit_result(self.user_id, self.run["id"], "loss", triggered_by="inactivity")
+        log = db.session.scalars(
+            select(GauntletMatchLog).where(GauntletMatchLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.triggered_by, "inactivity")
 
 
 class TestGauntletLazyFreeze(GauntletTestCase):

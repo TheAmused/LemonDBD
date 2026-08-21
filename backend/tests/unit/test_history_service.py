@@ -130,6 +130,27 @@ class TestSubmitResultWithinARow(HistoryTestCase):
         self.assertEqual(len(logs), 1)
         self.assertEqual(logs[0].row_index, 0)
 
+    def test_apply_inactivity_loss_writes_a_flagged_match_log(self):
+        self.service.apply_inactivity_loss(self.run["id"])
+        log = db.session.scalars(
+            select(HistoryMatchLog).where(HistoryMatchLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.result, "loss")
+        self.assertEqual(log.triggered_by, "inactivity")
+
+    def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self):
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        self.assertEqual(final["status"], "completed")
+
+        before_count = db.session.query(HistoryMatchLog).count()
+        self.service.apply_inactivity_loss(self.run["id"])
+        self.assertEqual(db.session.query(HistoryMatchLog).count(), before_count)
+
+        reloaded = self.service.get_or_create_run(self.user_id, "hell")
+        self.assertEqual(reloaded["status"], "completed")
+
 
 class TestHellModeLoss(HistoryTestCase):
     def setUp(self):

@@ -123,7 +123,7 @@ class GauntletService:
         db.session.commit()
         return self.get_or_create_run(user_id, role)
 
-    def submit_result(self, user_id: int, run_id: int, result: str) -> Dict[str, Any]:
+    def submit_result(self, user_id: int, run_id: int, result: str, triggered_by: str = "player") -> Dict[str, Any]:
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
 
@@ -182,6 +182,7 @@ class GauntletService:
                 role=r.role,
                 character_id=char_id,
                 result=result,
+                triggered_by=triggered_by,
                 perks_json=perks_json,
                 streak_before=current_streak,
                 streak_after=streak_after,

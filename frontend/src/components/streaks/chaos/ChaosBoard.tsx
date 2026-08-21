@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
+import { Perk } from '@/types/gauntletStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
 import { ResetConfirmModal } from '../ResetConfirmModal';
 import { useChaosRun } from './useChaosRun';
@@ -46,7 +47,22 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const { isAdmin } = useAuth();
 
   const rosterKillers = run ? run.owned_killers : killers;
-  const rosterPerkPool = run?.unlocked_perks_detail ?? perkPool;
+  // The frozen run only ever needs to carry *which* perk names are in the
+  // pool (run.unlocked_perks) -- resolving those to full display objects
+  // (icon, description) client-side against the already-fetched perk
+  // catalog avoids re-sending every pool perk's full payload from the
+  // backend on every single run mutation (get_or_create_run/reveal/
+  // submit_result), which used to add ~450KB to each of those responses.
+  const perkPoolByName = React.useMemo(
+    () => new Map(perkPool.map((p) => [p.name, p] as const)),
+    [perkPool]
+  );
+  const rosterPerkPool: Perk[] = React.useMemo(() => {
+    if (!run) return perkPool;
+    return run.unlocked_perks
+      .map((name) => perkPoolByName.get(name))
+      .filter((p): p is Perk => Boolean(p));
+  }, [run, perkPool, perkPoolByName]);
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);

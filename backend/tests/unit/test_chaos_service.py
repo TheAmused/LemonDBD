@@ -98,19 +98,15 @@ class TestReveal(ChaosTestCase):
         with self.assertRaises(ValueError):
             self.service.reveal(self.user_id, 999999)
 
-    def test_reveal_includes_resolved_perk_pool_detail(self):
-        # Regression: reveal() used to return only the bare unlocked_perks
-        # name list, leaving unlocked_perks_detail undefined in the
-        # response. The frontend's ChaosPerkPoolModal calls .filter() on
-        # that field unconditionally, so a missing/undefined value crashed
-        # the page the moment a player pulled the slot machine lever.
+    def test_reveal_carries_the_frozen_perk_pool_names(self):
+        # reveal() must return the same frozen unlocked_perks name list as
+        # get_or_create_run -- the frontend resolves those names to full
+        # display objects (icon, description) client-side against its own
+        # already-fetched perk catalog, so reveal() only needs to carry the
+        # name list, not a re-resolved full-object copy of the whole pool.
         run = self.service.get_or_create_run(self.user_id, "hell")
         revealed = self.service.reveal(self.user_id, run["id"])
-        self.assertIn("unlocked_perks_detail", revealed)
-        self.assertEqual(
-            sorted(p["name"] for p in revealed["unlocked_perks_detail"]),
-            sorted(revealed["unlocked_perks"]),
-        )
+        self.assertEqual(sorted(revealed["unlocked_perks"]), sorted(run["unlocked_perks"]))
 
 
 class TestHellDifficulty(ChaosTestCase):
@@ -136,14 +132,6 @@ class TestHellDifficulty(ChaosTestCase):
         seed_new_perk("Brand New Perk")
         drawn_names = {p["name"] for p in run["current_perks"]}
         self.assertFalse(drawn_names - unlocked_names_before)
-
-    def test_unlocked_perks_detail_resolves_full_objects(self):
-        run = self.run
-        self.assertEqual(
-            sorted(p["name"] for p in run["unlocked_perks_detail"]),
-            sorted(run["unlocked_perks"]),
-        )
-        self.assertIn("icon_local_path", run["unlocked_perks_detail"][0])
 
     def test_loss_to_zero_refreezes_both_pools(self):
         seed_killer("Huntress")

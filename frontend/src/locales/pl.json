@@ -376,6 +376,29 @@
       "resetAction": "Zresetuj i Głosuj Ponownie",
       "viewLeaderboard": "Zobacz Tabelę Wyników",
       "switchRoster": "Wybierz Inny Zestaw"
+    },
+    "loreLabels": {
+      "trialClassification": "Klasyfikacja Próby",
+      "datingArchetype": "Archetyp Randkowy",
+      "greenFlag": "Zielona Flaga",
+      "redFlag": "Czerwona Flaga",
+      "identityProfile": "Profil Tożsamości",
+      "signatureQuote": "Charakterystyczny Cytat",
+      "trialWarning": "Ostrzeżenie Próby",
+      "female": "Kobieta",
+      "male": "Mężczyzna",
+      "monster": "Potwór / Przedwieczny"
+    },
+    "hud": {
+      "left": "pozostało",
+      "smash": "Smash",
+      "pass": "Pass",
+      "smashRate": "Wskaźnik",
+      "bgm": "BGM",
+      "archetype": "Archetyp",
+      "hallOfFame": "Galeria Sław",
+      "howToPlay": "Jak Grać",
+      "shuffle": "Przetasuj"
     }
   }
 }

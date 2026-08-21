@@ -376,6 +376,29 @@
       "resetAction": "Reset & Vote Again",
       "viewLeaderboard": "View Leaderboard",
       "switchRoster": "Choose Another Roster"
+    },
+    "loreLabels": {
+      "trialClassification": "Trial Classification",
+      "datingArchetype": "Dating Archetype",
+      "greenFlag": "Trial Green Flag",
+      "redFlag": "Trial Warning",
+      "identityProfile": "Identity Profile",
+      "signatureQuote": "Signature Quote",
+      "trialWarning": "Trial Warning",
+      "female": "Female",
+      "male": "Male",
+      "monster": "Eldritch / Monster"
+    },
+    "hud": {
+      "left": "left",
+      "smash": "Smash",
+      "pass": "Pass",
+      "smashRate": "Rate",
+      "bgm": "BGM",
+      "archetype": "Archetype",
+      "hallOfFame": "Hall of Fame",
+      "howToPlay": "How to Play",
+      "shuffle": "Shuffle"
     }
   }
 }

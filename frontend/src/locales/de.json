@@ -376,6 +376,29 @@
       "resetAction": "Zurücksetzen & Erneut Abstimmen",
       "viewLeaderboard": "Rangliste anzeigen",
       "switchRoster": "Andere Liste wählen"
+    },
+    "loreLabels": {
+      "trialClassification": "Prüfungsklassifizierung",
+      "datingArchetype": "Dating-Archetyp",
+      "greenFlag": "Grüne Flagge",
+      "redFlag": "Prüfungswarnung",
+      "identityProfile": "Identitätsprofil",
+      "signatureQuote": "Signatur-Zitat",
+      "trialWarning": "Prüfungswarnung",
+      "female": "Weiblich",
+      "male": "Männlich",
+      "monster": "Monster / Eldritch"
+    },
+    "hud": {
+      "left": "übrig",
+      "smash": "Smash",
+      "pass": "Pass",
+      "smashRate": "Rate",
+      "bgm": "BGM",
+      "archetype": "Archetyp",
+      "hallOfFame": "Ruhmeshalle",
+      "howToPlay": "Spielanleitung",
+      "shuffle": "Mischen"
     }
   }
 }

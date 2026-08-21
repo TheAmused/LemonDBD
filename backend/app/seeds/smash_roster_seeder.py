@@ -91,7 +91,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Ada Wong",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/ada_wong.png",
+        "media_url": "/static/avatars/survivors/ada_wong.png",
         "metadata": {
             "title": "The Enigmatic Operative",
             "tagline": "High heels, grappling hooks, and secrets you will never uncover.",
@@ -136,7 +136,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Sable Ward",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/sable_ward.png",
+        "media_url": "/static/avatars/survivors/sable_ward.png",
         "metadata": {
             "title": "The Goth Invocator",
             "tagline": "Basement rituals, black lipstick, and infinite eyeliner.",
@@ -181,7 +181,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Feng Min",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/feng_min.png",
+        "media_url": "/static/avatars/survivors/feng_min.png",
         "metadata": {
             "title": "The Competitive Gamer",
             "tagline": "Litheness, bunny hoodies, and 3 AM ranked grinding.",
@@ -226,7 +226,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Kate Denson",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/kate_denson.png",
+        "media_url": "/static/avatars/survivors/kate_denson.png",
         "metadata": {
             "title": "The Country Songbird",
             "tagline": "Acoustic serenades around the campfire with golden heart energy.",
@@ -271,7 +271,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Mikaela Reid",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/mikaela_reid.png",
+        "media_url": "/static/avatars/survivors/mikaela_reid.png",
         "metadata": {
             "title": "The Witch of the Boon",
             "tagline": "Coffee brews, tarot readings, and blue totems everywhere.",
@@ -316,7 +316,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Jill Valentine",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/jill_valentine.png",
+        "media_url": "/static/avatars/survivors/jill_valentine.png",
         "metadata": {
             "title": "The Master of Unlocking",
             "tagline": "S.T.A.R.S. veteran who plants blast mines on generators for fun.",
@@ -361,7 +361,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Lara Croft",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/lara_croft.png",
+        "media_url": "/static/avatars/survivors/lara_croft.png",
         "metadata": {
             "title": "The Tomb Raider",
             "tagline": "Acrobatic treasure hunter with zero fear of the unknown.",
@@ -406,7 +406,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Rebecca Chambers",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/rebecca_chambers.png",
+        "media_url": "/static/avatars/survivors/rebecca_chambers.png",
         "metadata": {
             "title": "The Rookie Medic",
             "tagline": "Thumbs up, hyperfocus skill checks, and instant medical care.",
@@ -451,7 +451,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Jane Romero",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/jane_romero.png",
+        "media_url": "/static/avatars/survivors/jane_romero.png",
         "metadata": {
             "title": "The Influential Host",
             "tagline": "Head On locker stuns, talk-show charisma, and sheer presence.",
@@ -496,7 +496,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Yui Kimura",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/yui_kimura.png",
+        "media_url": "/static/avatars/survivors/yui_kimura.png",
         "metadata": {
             "title": "The Hardened Street Racer",
             "tagline": "Leather jackets, neon motorcycles, and resetting dropped pallets.",
@@ -541,7 +541,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Zarina Kassir",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/zarina_kassir.png",
+        "media_url": "/static/avatars/survivors/zarina_kassir.png",
         "metadata": {
             "title": "The Truth-Seeking Filmmaker",
             "tagline": "Documentary director, For The People heroics, and investigative fire.",
@@ -586,7 +586,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Thalita Lyra",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/thalita_lyra.png",
+        "media_url": "/static/avatars/survivors/thalita_lyra.png",
         "metadata": {
             "title": "The Rio Kite Fighter",
             "tagline": "Sunny beaches, kite combat, and infectious Brazilian warmth.",
@@ -631,7 +631,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Cheryl Mason",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/cheryl_mason.png",
+        "media_url": "/static/avatars/survivors/cheryl_mason.png",
         "metadata": {
             "title": "The Reincarnated Survivor",
             "tagline": "Silent Hill veteran, Soul Guard endurance, and demon slayer.",
@@ -676,7 +676,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Nea Karlsson",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/nea_karlsson.png",
+        "media_url": "/static/avatars/survivors/nea_karlsson.png",
         "metadata": {
             "title": "The Urban Artist",
             "tagline": "Graffiti, Urban Evasion crouch-walking, and street rebellion.",
@@ -721,7 +721,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Meg Thomas",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/meg_thomas.png",
+        "media_url": "/static/avatars/survivors/meg_thomas.png",
         "metadata": {
             "title": "The Energetic Sprinter",
             "tagline": "Sprint Burst away from all commitment at 150% speed.",
@@ -766,7 +766,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Claudette Morel",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/claudette_morel.png",
+        "media_url": "/static/avatars/survivors/claudette_morel.png",
         "metadata": {
             "title": "The Botanical Healer",
             "tagline": "Self-Care in the bush, herbal remedies, and shy genius.",
@@ -809,7 +809,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Laurie Strode",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/laurie_strode.png",
+        "media_url": "/static/avatars/survivors/laurie_strode.png",
         "metadata": {
             "title": "The Original Final Girl",
             "tagline": "Decisive Strike glass shards and Halloween nightmare survival.",
@@ -852,7 +852,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Nancy Wheeler",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/nancy_wheeler.png",
+        "media_url": "/static/avatars/survivors/nancy_wheeler.png",
         "metadata": {
             "title": "The Hawkins Journalist",
             "tagline": "Shotgun aim, investigative grit, and Inner Strength locker heals.",
@@ -895,7 +895,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Yun-Jin Lee",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/lee_yun_jin.png",
+        "media_url": "/static/avatars/survivors/lee_yun_jin.png",
         "metadata": {
             "title": "The Ruthless Music Producer",
             "tagline": "Fur coats, Fast Track tokens, and calculating corporate ambition.",
@@ -940,7 +940,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Élodie Rakoto",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/élodie_rakoto.png",
+        "media_url": "/static/avatars/survivors/élodie_rakoto.png",
         "metadata": {
             "title": "The Occult Investigator",
             "tagline": "Paranormal treasure hunting, Parisian chic, and Deception locker tricks.",
@@ -983,7 +983,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Haddie Kaur",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/haddie_kaur.png",
+        "media_url": "/static/avatars/survivors/haddie_kaur.png",
         "metadata": {
             "title": "The Ravages of the Abyss Host",
             "tagline": "Paranormal podcasting, psychic sight, and blue hair highlights.",
@@ -1026,7 +1026,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Ellen Ripley",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/ellen_ripley.png",
+        "media_url": "/static/avatars/survivors/ellen_ripley.png",
         "metadata": {
             "title": "The Nostromo Warrant Officer",
             "tagline": "Flame turrets, Chemical Traps, and Jonesy the cat lover.",
@@ -1069,7 +1069,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Taurie Cain",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/taurie_cain.png",
+        "media_url": "/static/avatars/survivors/taurie_cain.png",
         "metadata": {
             "title": "The Black Vale Devotee",
             "tagline": "Entity worship, dark ritual devotion, and sinister charisma.",
@@ -1112,7 +1112,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Michonne",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/michonne_grimes.png",
+        "media_url": "/static/avatars/survivors/michonne_grimes.png",
         "metadata": {
             "title": "The Katana Survivor",
             "tagline": "Katana slashes, unyielding gaze, and post-apocalyptic grit.",
@@ -1155,7 +1155,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Eleven",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/eleven.png",
+        "media_url": "/static/avatars/survivors/eleven.png",
         "metadata": {
             "title": "The Telekinetic Girl",
             "tagline": "Eggo waffles, telekinetic powers, and Hawkins loyalty.",
@@ -1200,7 +1200,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Aurora",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/aurora_stardotter.png",
+        "media_url": "/static/avatars/survivors/aurora_stardotter.png",
         "metadata": {
             "title": "The Nordic Dreamer",
             "tagline": "Northern lights, celestial navigation, and warm winter wool.",
@@ -1243,7 +1243,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Vee Boonyasak",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/vee_boonyasak.png",
+        "media_url": "/static/avatars/survivors/vee_boonyasak.png",
         "metadata": {
             "title": "The Bangkok Muay Thai Prodigy",
             "tagline": "Muay Thai elbows, street markets, and unstoppable energy.",
@@ -1286,7 +1286,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Orela Rose",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/orela_rose.png",
+        "media_url": "/static/avatars/survivors/orela_rose.png",
         "metadata": {
             "title": "The Botanical Alchemist",
             "tagline": "Herbal elixirs, glowing greenhouse blooms, and quiet warmth.",
@@ -1329,7 +1329,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Leon S. Kennedy",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/leon_scott_kennedy.png",
+        "media_url": "/static/avatars/survivors/leon_scott_kennedy.png",
         "metadata": {
             "title": "The Rookie Raccoon City Hero",
             "tagline": "Floppy 90s bangs, Flashbang crafts, and golden retriever energy.",
@@ -1374,7 +1374,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Felix Richter",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/felix_richter.png",
+        "media_url": "/static/avatars/survivors/felix_richter.png",
         "metadata": {
             "title": "The Visionary Architect",
             "tagline": "German architecture, three-piece tailored suits, and jawlines that cut glass.",
@@ -1419,7 +1419,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Vittorio Toscano",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/vittorio_toscano.png",
+        "media_url": "/static/avatars/survivors/vittorio_toscano.png",
         "metadata": {
             "title": "The Medieval Scholar",
             "tagline": "Glowing arcane tattoos, silver hair, and centuries of ancient wisdom.",
@@ -1464,7 +1464,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "David King",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/david_king.png",
+        "media_url": "/static/avatars/survivors/david_king.png",
         "metadata": {
             "title": "The Manchester Brawler",
             "tagline": "Bare-knuckle boxing, Dead Hard dodges, and shirtless confidence.",
@@ -1509,7 +1509,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Steve Harrington",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/steve_harrington.png",
+        "media_url": "/static/avatars/survivors/steve_harrington.png",
         "metadata": {
             "title": "The Babysitter & Scoops Ahoy King",
             "tagline": "Scoops Ahoy sailor suit, Farrah Fawcett hairspray, and nail bat heroics.",
@@ -1554,7 +1554,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Nicolas Cage",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/nicolas_cage.png",
+        "media_url": "/static/avatars/survivors/nicolas_cage.png",
         "metadata": {
             "title": "The Hollywood Legend",
             "tagline": "Dramaturgy rolls, Plot Twist plays, and pure unadulterated cinema.",
@@ -1599,7 +1599,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Alan Wake",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/alan_wake.png",
+        "media_url": "/static/avatars/survivors/alan_wake.png",
         "metadata": {
             "title": "The Dark Place Author",
             "tagline": "Champion of Light flashlight beams, typewriter reels, and dark noir poetry.",
@@ -1644,7 +1644,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Dwight Fairfield",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/dwight_fairfield.png",
+        "media_url": "/static/avatars/survivors/dwight_fairfield.png",
         "metadata": {
             "title": "The Anxious Leader",
             "tagline": "Locker hideouts, Prove Thyself co-op speed, and nerd-cute leadership.",
@@ -1689,7 +1689,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Jake Park",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/jake_park.png",
+        "media_url": "/static/avatars/survivors/jake_park.png",
         "metadata": {
             "title": "The Solitary Survivalist",
             "tagline": "Hook sabotages, wilderness survival, and quiet outdoor ruggedness.",
@@ -1734,7 +1734,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Ace Visconti",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/ace_visconti.png",
+        "media_url": "/static/avatars/survivors/ace_visconti.png",
         "metadata": {
             "title": "The High-Rolling Gambler",
             "tagline": "Finger guns, lucky chest plunder, and silver-tongued charm.",
@@ -1779,7 +1779,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Ash Williams",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/ash_williams.png",
+        "media_url": "/static/avatars/survivors/ash_williams.png",
         "metadata": {
             "title": "The Deadite Slayer",
             "tagline": "Chainsaw hand, boomstick quotes, and pure Groovy energy.",
@@ -1824,7 +1824,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Bill Overbeck",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/bill_overbeck.png",
+        "media_url": "/static/avatars/survivors/bill_overbeck.png",
         "metadata": {
             "title": "The Vietnam Veteran",
             "tagline": "Cigarettes, green beret, Borrowed Time, and Unbreakable spirit.",
@@ -1869,7 +1869,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Adam Francis",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/adam_francis.png",
+        "media_url": "/static/avatars/survivors/adam_francis.png",
         "metadata": {
             "title": "The Resourceful Teacher",
             "tagline": "Pebble throws (Diversion), Deliverance 100% unhook, and sharp intellect.",
@@ -1914,7 +1914,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Jeff Johansen",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/jeff_johansen.png",
+        "media_url": "/static/avatars/survivors/jeff_johansen.png",
         "metadata": {
             "title": "The Heavy Metal Artist",
             "tagline": "Beards, oil painting, black metal vinyl, and gentle giant heart.",
@@ -1957,7 +1957,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Jonah Vasquez",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/jonah_vasquez.png",
+        "media_url": "/static/avatars/survivors/jonah_vasquez.png",
         "metadata": {
             "title": "The CIA Cryptographer",
             "tagline": "Mathematical formulas, Boon: Exponential, and analytical brilliance.",
@@ -2000,7 +2000,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Quentin Smith",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/quentin_smith.png",
+        "media_url": "/static/avatars/survivors/quentin_smith.png",
         "metadata": {
             "title": "The Insomniac Dream Fighter",
             "tagline": "Energy drinks, sleep deprivation, Pharmacy chests, and sheer grit.",
@@ -2045,7 +2045,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Detective Tapp",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/david_tapp.png",
+        "media_url": "/static/avatars/survivors/david_tapp.png",
         "metadata": {
             "title": "The Obsessive Detective",
             "tagline": "Tenacity crawling, Stake Out great skill checks, and trench coats.",
@@ -2090,7 +2090,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Rick Grimes",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/rick_grimes.png",
+        "media_url": "/static/avatars/survivors/rick_grimes.png",
         "metadata": {
             "title": "The Alexandria Sheriff",
             "tagline": "Colt Python revolver, sheriff hat, and leader of the survivors.",
@@ -2135,7 +2135,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Dustin Henderson",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/dustin_henderson.png",
+        "media_url": "/static/avatars/survivors/dustin_henderson.png",
         "metadata": {
             "title": "The Cerebro Technician",
             "tagline": "Radio towers, D&D strategy, and never-ending optimism.",
@@ -2178,7 +2178,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Tae-Young",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/kwon_tae_young.png",
+        "media_url": "/static/avatars/survivors/kwon_tae_young.png",
         "metadata": {
             "title": "The Seoul Tech Specialist",
             "tagline": "Cybersecurity, drone bypassing, and sleek urban aesthetics.",
@@ -2221,7 +2221,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Shane",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/shane_wiigwaas.png",
+        "media_url": "/static/avatars/survivors/shane_wiigwaas.png",
         "metadata": {
             "title": "The Great Lakes Tracker",
             "tagline": "Forest navigation, birchbark canoe craft, and silent footsteps.",
@@ -2264,7 +2264,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Renato Lyra",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/renato_lyra.png",
+        "media_url": "/static/avatars/survivors/renato_lyra.png",
         "metadata": {
             "title": "The Rio Strategist",
             "tagline": "Background Player sprint bursts, kite tactics, and chill Brazilian charm.",
@@ -2307,7 +2307,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Trevor Belmont",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/trevor_belmont.png",
+        "media_url": "/static/avatars/survivors/trevor_belmont.png",
         "metadata": {
             "title": "The Vampire Hunter",
             "tagline": "Vampire Killer whip, leather armor, and centuries of monster slaying.",
@@ -2352,7 +2352,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Yoichi Asakawa",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/yoichi_asakawa.png",
+        "media_url": "/static/avatars/survivors/yoichi_asakawa.png",
         "metadata": {
             "title": "The Marine Biologist",
             "tagline": "Yellow raincoat, ocean research, Boon: Dark Theory, and Sadako survivor.",
@@ -2395,7 +2395,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Gabriel Soma",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/gabriel_soma.png",
+        "media_url": "/static/avatars/survivors/gabriel_soma.png",
         "metadata": {
             "title": "The Deep Space Clone",
             "tagline": "Made For This endurance, sci-fi engineering, and resilient humanity.",
@@ -2440,7 +2440,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Troupe",
         "role": "Survivor",
         "gender": "monster_other",
-        "media_url": "/static/icons/survivors/the_troupe.png",
+        "media_url": "/static/avatars/survivors/the_troupe.png",
         "metadata": {
             "title": "The D&D Bards",
             "tagline": "Bardic Inspiration dice rolls, lute solos, and illusion magic.",
@@ -2485,7 +2485,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Huntress",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_huntress.png",
+        "media_url": "/static/avatars/killers/the_huntress.png",
         "metadata": {
             "title": "The Red Forest Mother",
             "tagline": "7-foot tall muscle mommy with hatchets and a haunting lullaby.",
@@ -2530,7 +2530,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Spirit",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_spirit.png",
+        "media_url": "/static/avatars/killers/the_spirit.png",
         "metadata": {
             "title": "The Vengeful Onryō",
             "tagline": "Katana strikes, phase-walking mist, and shattered glass aesthetic.",
@@ -2575,7 +2575,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Skull Merchant",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_skull_merchant.png",
+        "media_url": "/static/avatars/killers/the_skull_merchant.png",
         "metadata": {
             "title": "The High-Tech Executive",
             "tagline": "Radar drones, claw gauntlets, and high-fashion catwalk killer.",
@@ -2620,7 +2620,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Pig",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_pig.png",
+        "media_url": "/static/avatars/killers/the_pig.png",
         "metadata": {
             "title": "The Jigsaw Apprentice",
             "tagline": "Boop the snoot, Reverse Bear Traps, and stealth ambush roar.",
@@ -2665,7 +2665,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Plague",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_plague.png",
+        "media_url": "/static/avatars/killers/the_plague.png",
         "metadata": {
             "title": "The High Priestess of Babylon",
             "tagline": "Golden censer, Corrupt Purge, and 7-foot tall ancient beauty.",
@@ -2710,7 +2710,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Artist",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_artist.png",
+        "media_url": "/static/avatars/killers/the_artist.png",
         "metadata": {
             "title": "The Ink-Drenched Surrealist",
             "tagline": "Dire Crows, black ink hands, and avant-garde Chilean art.",
@@ -2755,7 +2755,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Nurse",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_nurse.png",
+        "media_url": "/static/avatars/killers/the_nurse.png",
         "metadata": {
             "title": "The Blink Mistress",
             "tagline": "Spencer’s Last Breath blinks, bonesaw elegance, and S-tier lethality.",
@@ -2800,7 +2800,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Onryō (Sadako)",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_onryō.png",
+        "media_url": "/static/avatars/killers/the_onryō.png",
         "metadata": {
             "title": "The Well Spectre",
             "tagline": "TV projections, cursed videotapes, and spooky condemned moris.",
@@ -2845,7 +2845,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Hag",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_hag.png",
+        "media_url": "/static/avatars/killers/the_hag.png",
         "metadata": {
             "title": "The Swamp Witch",
             "tagline": "Phantasm mud traps, mud teleportation, and wetland sorcery.",
@@ -2890,7 +2890,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Houndmaster",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_houndmaster.png",
+        "media_url": "/static/avatars/killers/the_houndmaster.png",
         "metadata": {
             "title": "The Canine Commander",
             "tagline": "War hounds, hunting whistles, and seaside tracking.",
@@ -2933,7 +2933,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Krasue",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_krasue.png",
+        "media_url": "/static/avatars/killers/the_krasue.png",
         "metadata": {
             "title": "The Floating Viscera Spirit",
             "tagline": "Floating head, glowing entrails, Southeast Asian folklore terror.",
@@ -2976,7 +2976,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Twins",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_twins.png",
+        "media_url": "/static/avatars/killers/the_twins.png",
         "metadata": {
             "title": "The Bound Siblings",
             "tagline": "Sickles, pouncing Victor, and 17th-century French bond.",
@@ -3021,7 +3021,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Trickster",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_trickster.png",
+        "media_url": "/static/avatars/killers/the_trickster.png",
         "metadata": {
             "title": "The K-Pop Heartthrob",
             "tagline": "Neon hair, throwing knives, Main Event giggles, and K-pop visuals.",
@@ -3066,7 +3066,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Ghost Face",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_ghost_face.png",
+        "media_url": "/static/avatars/killers/the_ghost_face.png",
         "metadata": {
             "title": "The Stalker & Selfie King",
             "tagline": "Crouch teabagging, night shroud stalking, and post-mori selfies.",
@@ -3111,7 +3111,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Pyramid Head",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_executioner.png",
+        "media_url": "/static/avatars/killers/the_executioner.png",
         "metadata": {
             "title": "The Great Knife Tormentor",
             "tagline": "Great Knife drags, Rites of Judgment trails, and sheer menacing bulk.",
@@ -3156,7 +3156,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Albert Wesker",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_mastermind.png",
+        "media_url": "/static/avatars/killers/the_mastermind.png",
         "metadata": {
             "title": "The Uroboros Mastermind",
             "tagline": "Trench coats, Virulent Bounds, and 7 minutes to spare for you.",
@@ -3201,7 +3201,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Shape (Michael Myers)",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_shape.png",
+        "media_url": "/static/avatars/killers/the_shape.png",
         "metadata": {
             "title": "The Boogeyman of Haddonfield",
             "tagline": "Tier III stalk, tombstone moris, and 0m terror radius breathing.",
@@ -3246,7 +3246,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Dracula",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_dark_lord.png",
+        "media_url": "/static/avatars/killers/the_dark_lord.png",
         "metadata": {
             "title": "The Castlevania Dark Lord",
             "tagline": "Vampiric shifts, bat swarms, hellfire pillars, and gothic nobility.",
@@ -3291,7 +3291,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Legion",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_legion.png",
+        "media_url": "/static/avatars/killers/the_legion.png",
         "metadata": {
             "title": "The Teenage Gang",
             "tagline": "Feral Frenzy vaulting, mixtapes, and angsty teen energy.",
@@ -3336,7 +3336,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Trapper",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_trapper.png",
+        "media_url": "/static/avatars/killers/the_trapper.png",
         "metadata": {
             "title": "The Poster Boy of the Fog",
             "tagline": "Bear traps, broad shoulders, MacMillan legacy, and the OG killer.",
@@ -3381,7 +3381,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Wraith",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_wraith.png",
+        "media_url": "/static/avatars/killers/the_wraith.png",
         "metadata": {
             "title": "The Bell Ringer",
             "tagline": "Wailing Bell bing-bongs, invisible speed, and tragic car-crusher past.",
@@ -3426,7 +3426,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Deathslinger",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_deathslinger.png",
+        "media_url": "/static/avatars/killers/the_deathslinger.png",
         "metadata": {
             "title": "The Wild West Bounty Hunter",
             "tagline": "The Redeemer harpoon gun, cowboy hats, and raspy laugh.",
@@ -3471,7 +3471,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Oni",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_oni.png",
+        "media_url": "/static/avatars/killers/the_oni.png",
         "metadata": {
             "title": "The Raging Samurai Ogre",
             "tagline": "Demon Dash, blood absorption, Kanabō club smashes, and 8-foot rage.",
@@ -3516,7 +3516,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Knight",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_knight.png",
+        "media_url": "/static/avatars/killers/the_knight.png",
         "metadata": {
             "title": "The Commander of the Guardia Compagnia",
             "tagline": "Carnifex, Assassin, Jailer summoner, and heavy medieval plate armor.",
@@ -3561,7 +3561,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Vecna",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_lich.png",
+        "media_url": "/static/avatars/killers/the_lich.png",
         "metadata": {
             "title": "The Arch-Lich of D&D",
             "tagline": "Fly spells, Mage Hand pallet pickups, Flight of the Damned, and godhood.",
@@ -3606,7 +3606,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Pinhead",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_cenobite.png",
+        "media_url": "/static/avatars/killers/the_cenobite.png",
         "metadata": {
             "title": "The Explorer in Further Regions of Experience",
             "tagline": "Lament Configuration, chain hunts, and sweet suffering.",
@@ -3651,7 +3651,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Hillbilly",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_hillbilly.png",
+        "media_url": "/static/avatars/killers/the_hillbilly.png",
         "metadata": {
             "title": "The Overdrive Chainsaw Runner",
             "tagline": "Overdrive sprint curves, chainsaw sprints, and Coldwind farm speed.",
@@ -3694,7 +3694,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Doctor",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_doctor.png",
+        "media_url": "/static/avatars/killers/the_doctor.png",
         "metadata": {
             "title": "The Shock Therapist",
             "tagline": "Carter’s Spark, Static Blasts, Madness madness tiers, and maniacal laughter.",
@@ -3739,7 +3739,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Blight",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_blight.png",
+        "media_url": "/static/avatars/killers/the_blight.png",
         "metadata": {
             "title": "The Pustula Alchemist",
             "tagline": "Blight rushes, serum injections, wall bounces, and pinball speed.",
@@ -3784,7 +3784,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Leatherface",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_cannibal.png",
+        "media_url": "/static/avatars/killers/the_cannibal.png",
         "metadata": {
             "title": "The Texas Chainsaw Squeezer",
             "tagline": "Chainsaw sweeps, pretty woman masks, BBQ & Chili, and basement king.",
@@ -3829,7 +3829,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Clown",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_clown.png",
+        "media_url": "/static/avatars/killers/the_clown.png",
         "metadata": {
             "title": "The Finger Collector",
             "tagline": "Afterpiece Tonic gas, pink bottles, yellow haste, and wheezing chuckles.",
@@ -3874,7 +3874,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Nemesis",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_nemesis.png",
+        "media_url": "/static/avatars/killers/the_nemesis.png",
         "metadata": {
             "title": "The Umbrella Bio-Weapon",
             "tagline": "Tentacle strikes, zombie minions, Tier III mutation, and S.T.A.R.S. roar.",
@@ -3919,7 +3919,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Freddy Krueger",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_nightmare.png",
+        "media_url": "/static/avatars/killers/the_nightmare.png",
         "metadata": {
             "title": "The Springwood Slasher",
             "tagline": "Dream World projection, blood snare pools, and sharp razor glove.",
@@ -3964,7 +3964,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Chucky",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_good_guy.png",
+        "media_url": "/static/avatars/killers/the_good_guy.png",
         "metadata": {
             "title": "The Lakeshore Strangler",
             "tagline": "Hidey-Ho mode, Scamper vaulting, kitchen knives, and foul-mouthed comedy.",
@@ -4009,7 +4009,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Slasher",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_slasher.png",
+        "media_url": "/static/avatars/killers/the_slasher.png",
         "metadata": {
             "title": "The Classic Camp Stalker",
             "tagline": "Machetes, bloodied overalls, relentless march, and lakeside terror.",
@@ -4052,7 +4052,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The First",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_first.png",
+        "media_url": "/static/avatars/killers/the_first.png",
         "metadata": {
             "title": "The Cybernetic Prototype",
             "tagline": "Cybernetic implants, thermal laser tracking, and experimental fury.",
@@ -4095,7 +4095,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Ghoul",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_ghoul.png",
+        "media_url": "/static/avatars/killers/the_ghoul.png",
         "metadata": {
             "title": "The Catacomb Feeder",
             "tagline": "Tomb scavenging, bone-cracking speed, and underground ambush.",
@@ -4138,7 +4138,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Judgment",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_judgment.png",
+        "media_url": "/static/avatars/killers/the_judgment.png",
         "metadata": {
             "title": "The Arcane Inquisitor",
             "tagline": "Iron scales, burning brands, divine retribution, and grim conviction.",
@@ -4181,7 +4181,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Xenomorph",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/the_xenomorph.png",
+        "media_url": "/static/avatars/killers/the_xenomorph.png",
         "metadata": {
             "title": "The Perfect Organism",
             "tagline": "Tunnel systems, tail attacks, runner stance, and acid blood.",
@@ -4226,7 +4226,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Demogorgon",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/the_demogorgon.png",
+        "media_url": "/static/avatars/killers/the_demogorgon.png",
         "metadata": {
             "title": "The Upside Down Flower Dog",
             "tagline": "Petal face, shred lunges, portal tunnels, and sweet demo-dog energy.",
@@ -4271,7 +4271,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Unknown",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/the_unknown.png",
+        "media_url": "/static/avatars/killers/the_unknown.png",
         "metadata": {
             "title": "The Uncanny Cryptid",
             "tagline": "Twisted neck angles, UVX bounce shots, hallucinations, and mimicked voices.",
@@ -4316,7 +4316,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Dredge",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/the_dredge.png",
+        "media_url": "/static/avatars/killers/the_dredge.png",
         "metadata": {
             "title": "The Lord of Nightfall",
             "tagline": "Locker teleports, pitch black Nightfall, and eldritch shadow limbs.",
@@ -4361,7 +4361,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Singularity",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/the_singularity.png",
+        "media_url": "/static/avatars/killers/the_singularity.png",
         "metadata": {
             "title": "The Superior AI Machine",
             "tagline": "Biopods, slipstream teleports, overclock mode, and mechanical superiority.",
@@ -4406,7 +4406,7 @@ CANON_ENTITIES: List[Dict[str, Any]] = [
         "name": "Springtrap",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/the_animatronic.png",
+        "media_url": "/static/avatars/killers/the_animatronic.png",
         "metadata": {
             "title": "The Purple Rotting Animatronic",
             "tagline": "Springlocks, ventilation stealth, and the immortal promise: I ALWAYS COME BACK.",
@@ -4458,7 +4458,7 @@ HOOKED_ON_YOU_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Trapper (Island)",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_trapper_hoy.png",
+        "media_url": "/static/avatars/killers/the_trapper_hoy.png",
         "metadata": {
             "title": "The Brooding Beach Jock",
             "tagline": "Muscles, bear traps, and secretly loves carving romantic driftwood.",
@@ -4503,7 +4503,7 @@ HOOKED_ON_YOU_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Huntress (Bikini)",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_huntress_hoy.png",
+        "media_url": "/static/avatars/killers/the_huntress_hoy.png",
         "metadata": {
             "title": "The Amazonian Beach Queen",
             "tagline": "Loves coconut bowling, throwing hatchets, and singing island lullabies.",
@@ -4548,7 +4548,7 @@ HOOKED_ON_YOU_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Spirit (Resort)",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/the_spirit_hoy.png",
+        "media_url": "/static/avatars/killers/the_spirit_hoy.png",
         "metadata": {
             "title": "The Goth Resort Princess",
             "tagline": "Sunhat, dark parasol, and loves sipping tropical mocktails in the shade.",
@@ -4593,7 +4593,7 @@ HOOKED_ON_YOU_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Wraith (Beach)",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_wraith_hoy.png",
+        "media_url": "/static/avatars/killers/the_wraith_hoy.png",
         "metadata": {
             "title": "The Gentle Bell Chimer",
             "tagline": "Wears vibrant floral shorts and plays steel drums by the bonfire.",
@@ -4638,7 +4638,7 @@ HOOKED_ON_YOU_ENTITIES: List[Dict[str, Any]] = [
         "name": "Claudette (Island Botanist)",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/claudette_morel_hoy.png",
+        "media_url": "/static/avatars/survivors/claudette_morel_hoy.png",
         "metadata": {
             "title": "The Tropical Herbalist",
             "tagline": "Crafts hibiscus flower crowns and aloe vera sun lotions.",
@@ -4683,7 +4683,7 @@ HOOKED_ON_YOU_ENTITIES: List[Dict[str, Any]] = [
         "name": "Dwight (Lifeguard)",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/dwight_fairfield_hoy.png",
+        "media_url": "/static/avatars/survivors/dwight_fairfield_hoy.png",
         "metadata": {
             "title": "The Anxious Lifeguard",
             "tagline": "Whistle around his neck, oversized sunglasses, and trying his very best.",
@@ -4728,7 +4728,7 @@ HOOKED_ON_YOU_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Trickster (Summer Idol)",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/the_trickster_hoy.png",
+        "media_url": "/static/avatars/killers/the_trickster_hoy.png",
         "metadata": {
             "title": "The K-Pop Poolside Sensation",
             "tagline": "Neon sunglasses, open tropical silk shirt, and unlimited charisma.",
@@ -4773,7 +4773,7 @@ HOOKED_ON_YOU_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Entity (Island Spirit)",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/the_ocean_hoy.png",
+        "media_url": "/static/avatars/killers/the_ocean_hoy.png",
         "metadata": {
             "title": "The Eldritch Island Sovereign",
             "tagline": "Sparkling bioluminescent waves and cosmic tentacle embraces.",
@@ -4825,7 +4825,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "William Birkin",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/william_birkin.png",
+        "media_url": "/static/avatars/killers/william_birkin.png",
         "metadata": {
             "title": "The G-Virus Colossus",
             "tagline": "Massive shoulder eye, unstoppable bio-hazard strength.",
@@ -4870,7 +4870,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "HUNK (Grim Reaper)",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/hunk.png",
+        "media_url": "/static/avatars/killers/hunk.png",
         "metadata": {
             "title": "The Unstoppable Operative",
             "tagline": "Gas mask, tactical armor, and never leaves an extraction point.",
@@ -4915,7 +4915,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "James Sunderland",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/james_sunderland.png",
+        "media_url": "/static/avatars/survivors/james_sunderland.png",
         "metadata": {
             "title": "The Silent Hill Wanderer",
             "tagline": "Green military jacket, searching for letters from lost love.",
@@ -4960,7 +4960,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "Maria",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/maria.png",
+        "media_url": "/static/avatars/survivors/maria.png",
         "metadata": {
             "title": "The Seductive Enigma",
             "tagline": "Leopard print, butterfly tattoo, and alluring charm.",
@@ -5005,7 +5005,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "Cybil Bennett",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/cybil_bennett.png",
+        "media_url": "/static/avatars/survivors/cybil_bennett.png",
         "metadata": {
             "title": "The Brave Patrol Officer",
             "tagline": "Motorcycle boots, service revolver, and fierce protective instincts.",
@@ -5050,7 +5050,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "Lisa Garland",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/lisa_garland.png",
+        "media_url": "/static/avatars/survivors/lisa_garland.png",
         "metadata": {
             "title": "The Compassionate Nurse",
             "tagline": "Alchemilla hospital uniform, warm bedside manner, and a heart of gold.",
@@ -5095,7 +5095,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "Naughty Bear",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/naughty_bear.png",
+        "media_url": "/static/avatars/killers/naughty_bear.png",
         "metadata": {
             "title": "The Vengeful Teddy",
             "tagline": "Plush fur, party hat, and loves throwing chaotic celebrations.",
@@ -5140,7 +5140,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "Baba Yaga",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/baba_yaga.png",
+        "media_url": "/static/avatars/killers/baba_yaga.png",
         "metadata": {
             "title": "The Slavic Witch",
             "tagline": "Hut on chicken legs, ancient herbal cauldrons, and folklore wisdom.",
@@ -5185,7 +5185,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Look-See",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/the_look_see.png",
+        "media_url": "/static/avatars/killers/the_look_see.png",
         "metadata": {
             "title": "The Crypt TV Spectre",
             "tagline": "Tailored suit, wide toothy grin, and helps you let go of grief.",
@@ -5230,7 +5230,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Minotaur",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/minotaur.png",
+        "media_url": "/static/avatars/killers/minotaur.png",
         "metadata": {
             "title": "The Labyrinth Champion",
             "tagline": "Towering horns, ancient bronze armor, and unstoppable labyrinth guide.",
@@ -5275,7 +5275,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "Tiffany Valentine",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/tiffany_valentine.png",
+        "media_url": "/static/avatars/killers/tiffany_valentine.png",
         "metadata": {
             "title": "The Blonde Doll of Mayhem",
             "tagline": "Leather jacket, bridal veil, and loves candlelit crime sprees.",
@@ -5320,7 +5320,7 @@ LEGENDARY_COSPLAY_ENTITIES: List[Dict[str, Any]] = [
         "name": "Chatterer Cenobite",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/chatterer.png",
+        "media_url": "/static/avatars/killers/chatterer.png",
         "metadata": {
             "title": "The Rhythmic Cenobite",
             "tagline": "Chattering teeth, leather vestments, and cosmic sensations.",
@@ -5372,7 +5372,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Trickster: Neon Chrome",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/cyber_trickster.png",
+        "media_url": "/static/avatars/killers/cyber_trickster.png",
         "metadata": {
             "title": "Night City Virtuoso",
             "tagline": "Holographic throwing blades, sub-dermal audio implants.",
@@ -5417,7 +5417,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Nea: Netrunner Ghost",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/netrunner_nea.png",
+        "media_url": "/static/avatars/survivors/netrunner_nea.png",
         "metadata": {
             "title": "Cyberspace Street Rebel",
             "tagline": "Cyberdeck strapped to hip, graffiti overlays in augmented reality.",
@@ -5462,7 +5462,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Wesker: Cyber Overlord",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/chrome_wesker.png",
+        "media_url": "/static/avatars/killers/chrome_wesker.png",
         "metadata": {
             "title": "Arasaka Biotech Director",
             "tagline": "Refined black trench coat, ocular cyberware, and complete global saturation.",
@@ -5507,7 +5507,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Sable: Neon Occultist",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/neon_sable.png",
+        "media_url": "/static/avatars/survivors/neon_sable.png",
         "metadata": {
             "title": "Cyber-Goth Invoker",
             "tagline": "Bioluminescent tattoo circuitry, dark web grimoires.",
@@ -5552,7 +5552,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Feng Min: VR Prodigy",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/cyber_feng_min.png",
+        "media_url": "/static/avatars/survivors/cyber_feng_min.png",
         "metadata": {
             "title": "Holo-Arcade Champion",
             "tagline": "Augmented reality bunny ears, neural gaming rigs.",
@@ -5597,7 +5597,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Meg: Hyperdrive Sprinter",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/meg_turbo.png",
+        "media_url": "/static/avatars/survivors/meg_turbo.png",
         "metadata": {
             "title": "Sub-Orbital Courier",
             "tagline": "Bionic legs, hydraulic dash turbines, neon tracksuits.",
@@ -5642,7 +5642,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Kazan: Mecha Demon",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/cyber_oni.png",
+        "media_url": "/static/avatars/killers/cyber_oni.png",
         "metadata": {
             "title": "Chromed Blood Titan",
             "tagline": "Hydraulic club, titanium horns, and boiling plasma fury.",
@@ -5687,7 +5687,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Evan: Matrix Hunter",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/high_tech_trapper.png",
+        "media_url": "/static/avatars/killers/high_tech_trapper.png",
         "metadata": {
             "title": "Laser Snare Engineer",
             "tagline": "Proximity laser traps, carbon fiber armor, reinforced bear claws.",
@@ -5732,7 +5732,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "Sally: Hologram Surgeon",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/cyber_nurse.png",
+        "media_url": "/static/avatars/killers/cyber_nurse.png",
         "metadata": {
             "title": "Quantum Phase Medic",
             "tagline": "Holographic phase-blink, medical laser scalpel, cybernetic levitation.",
@@ -5777,7 +5777,7 @@ CYBERPUNK_2077_ENTITIES: List[Dict[str, Any]] = [
         "name": "David: Underground Brawler",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/cyber_david_king.png",
+        "media_url": "/static/avatars/survivors/cyber_david_king.png",
         "metadata": {
             "title": "Chromed Fist Rebel",
             "tagline": "Reinforced cyber-knuckles, leather jacket with neon trim, unyielding grit.",
@@ -5829,7 +5829,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Rin: Spirit Blade",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/anime_spirit.png",
+        "media_url": "/static/avatars/killers/anime_spirit.png",
         "metadata": {
             "title": "Phantasmagoric Shonen Blade",
             "tagline": "Floating ethereal shards, dramatic anime wind, and tragic backstory.",
@@ -5874,7 +5874,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Mikaela: Mahou Shoujo",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/anime_mikaela.png",
+        "media_url": "/static/avatars/survivors/anime_mikaela.png",
         "metadata": {
             "title": "Boon Witch of Starlight",
             "tagline": "Pastel witch hat, glowing magical circle boons, and wholesome coffee stories.",
@@ -5919,7 +5919,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Yui: Midnight Racer",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/anime_yui.png",
+        "media_url": "/static/avatars/survivors/anime_yui.png",
         "metadata": {
             "title": "Tokyo Drift Champion",
             "tagline": "Leather racing jacket, custom turbocharged motorcycle, fierce leadership.",
@@ -5964,7 +5964,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Trickster: Idol Shinigami",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/anime_trickster.png",
+        "media_url": "/static/avatars/killers/anime_trickster.png",
         "metadata": {
             "title": "Shonen Stage Virtuoso",
             "tagline": "Golden microphone dagger, anime sparkle effects, and concert choreography.",
@@ -6009,7 +6009,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Anna: Tsundere Forest Queen",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/anime_huntress.png",
+        "media_url": "/static/avatars/killers/anime_huntress.png",
         "metadata": {
             "title": "Bavarian Forest Tsundere",
             "tagline": "Rabbit mask with bunny ears, huge hatchet, flustered blushes.",
@@ -6054,7 +6054,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Frank & Julie: Delinquent Duo",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/anime_legion.png",
+        "media_url": "/static/avatars/killers/anime_legion.png",
         "metadata": {
             "title": "High School Rebel Squad",
             "tagline": "Graffiti hoodie, sprint frenzy, high-energy school festival romance.",
@@ -6099,7 +6099,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Dracula: Castlevania Prince",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/anime_dracula.png",
+        "media_url": "/static/avatars/killers/anime_dracula.png",
         "metadata": {
             "title": "Bishounen Dark Sovereign",
             "tagline": "Flowing silver hair, velvet cape, tragic shonen backstory.",
@@ -6144,7 +6144,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Feng Min: Arcade Senpai",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/anime_feng_min.png",
+        "media_url": "/static/avatars/survivors/anime_feng_min.png",
         "metadata": {
             "title": "Rhythm Game Queen",
             "tagline": "Neon bunny headphones, perfect 100% combo streak, boba lover.",
@@ -6189,7 +6189,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Wesker: Megane Mastermind",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/anime_wesker.png",
+        "media_url": "/static/avatars/killers/anime_wesker.png",
         "metadata": {
             "title": "Calculating Student President",
             "tagline": "Pushes glasses up nose, trench coat, seven minutes plan.",
@@ -6234,7 +6234,7 @@ ANIME_MANGA_ENTITIES: List[Dict[str, Any]] = [
         "name": "Meg: Track & Field Kouhai",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/anime_meg.png",
+        "media_url": "/static/avatars/survivors/anime_meg.png",
         "metadata": {
             "title": "Energetic Athletics Star",
             "tagline": "Twin tails, track baton, morning jogging dates.",
@@ -6286,7 +6286,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Dracula: Lord of Shadows",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/gothic_dracula.png",
+        "media_url": "/static/avatars/killers/gothic_dracula.png",
         "metadata": {
             "title": "Victorian Sovereign",
             "tagline": "Crimson velvet cape, grand castle ballrooms, and timeless aristocratic charm.",
@@ -6331,7 +6331,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Sable: Victorian Mourner",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/gothic_sable.png",
+        "media_url": "/static/avatars/survivors/gothic_sable.png",
         "metadata": {
             "title": "Gothic Cemetery Maiden",
             "tagline": "Lace corsets, black roses, and Victorian poetry by midnight tombstones.",
@@ -6376,7 +6376,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Huntress: Yharnam Hunter",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/bloodborne_huntress.png",
+        "media_url": "/static/avatars/killers/bloodborne_huntress.png",
         "metadata": {
             "title": "Beast-Cleaving Huntress",
             "tagline": "Tricorn hunter hat, heavy bone-cleaver, and stalking the nightmare moon.",
@@ -6421,7 +6421,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Mikaela: Grimoire Sorceress",
         "role": "Survivor",
         "gender": "female",
-        "media_url": "/static/icons/survivors/dark_fantasy_mikaela.png",
+        "media_url": "/static/avatars/survivors/dark_fantasy_mikaela.png",
         "metadata": {
             "title": "Arcane Scholar",
             "tagline": "Dark grimoire, blood seal blessings, Gothic witch allure.",
@@ -6466,7 +6466,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Sally: Cosmic Void Maiden",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/eldritch_nurse.png",
+        "media_url": "/static/avatars/killers/eldritch_nurse.png",
         "metadata": {
             "title": "Star-Spawn Spectre",
             "tagline": "Constellation shroud, void blink, cosmic lullabies.",
@@ -6511,7 +6511,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Adiris: Dynasty High Priestess",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/plague_priestess.png",
+        "media_url": "/static/avatars/killers/plague_priestess.png",
         "metadata": {
             "title": "Babylonian Sovereign",
             "tagline": "Golden headdress, swinging censer, ancient sacred devotion.",
@@ -6556,7 +6556,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Carmina: Crow Queen",
         "role": "Killer",
         "gender": "female",
-        "media_url": "/static/icons/killers/raven_artist.png",
+        "media_url": "/static/avatars/killers/raven_artist.png",
         "metadata": {
             "title": "Gothic Surrealist Painter",
             "tagline": "Feather dress, ink-stained hands, flight of dire crows.",
@@ -6601,7 +6601,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Vittorio: Runemaster",
         "role": "Survivor",
         "gender": "male",
-        "media_url": "/static/icons/survivors/occult_vittorio.png",
+        "media_url": "/static/avatars/survivors/occult_vittorio.png",
         "metadata": {
             "title": "Centuries-Old Scholar",
             "tagline": "Glowing blue runes, medieval parchment, profound ancient wisdom.",
@@ -6646,7 +6646,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "Philip: Barrow Wight",
         "role": "Killer",
         "gender": "male",
-        "media_url": "/static/icons/killers/phantom_wraith.png",
+        "media_url": "/static/avatars/killers/phantom_wraith.png",
         "metadata": {
             "title": "Gothic Bell Mourner",
             "tagline": "Spectral tattered cloak, wailing bell, graveyard mist.",
@@ -6691,7 +6691,7 @@ GOTHIC_ELDRITCH_ENTITIES: List[Dict[str, Any]] = [
         "name": "The Dredge: Eldritch Void",
         "role": "Killer",
         "gender": "monster_other",
-        "media_url": "/static/icons/killers/abyssal_dredge.png",
+        "media_url": "/static/avatars/killers/abyssal_dredge.png",
         "metadata": {
             "title": "Amalgamation of Nightfall",
             "tagline": "Nightfall shroud, thousands of whispering hands, cosmic darkness.",

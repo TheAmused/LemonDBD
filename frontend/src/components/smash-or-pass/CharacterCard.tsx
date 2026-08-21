@@ -69,9 +69,12 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const turnOn: string = metadata.turn_on || metadata.turnOn || 'Courage and loyalty under pressure';
   const dealbreaker: string = metadata.dealbreaker || 'Betrayal of trust';
 
+  const rawMedia = (character.media_url || '').replace('/static/icons/', '/static/avatars/');
   const avatarSrc =
-    character.media_url?.startsWith('http') || character.media_url?.startsWith('/static')
-      ? `${character.media_url.startsWith('http') ? '' : backendBase}${character.media_url}`
+    rawMedia.startsWith('http')
+      ? rawMedia
+      : rawMedia.startsWith('/static')
+      ? `${backendBase}${rawMedia}`
       : resolveAvatarUrl(
           backendBase,
           {
@@ -258,8 +261,11 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 alt={character.name}
                 className="h-full w-full object-cover object-top pointer-events-none transition-transform duration-700 select-none"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    'https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/IconHelpLoading_players.png/revision/latest';
+                  const target = e.target as HTMLImageElement;
+                  if (!target.dataset.fallback) {
+                    target.dataset.fallback = '1';
+                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
+                  }
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950/60 pointer-events-none" />

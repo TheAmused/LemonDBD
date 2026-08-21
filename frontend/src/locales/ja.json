@@ -376,6 +376,29 @@
       "resetAction": "リセットしてもう一度投票",
       "viewLeaderboard": "リーダーボードを見る",
       "switchRoster": "他のロスターを選択"
+    },
+    "loreLabels": {
+      "trialClassification": "試練の分類",
+      "datingArchetype": "デートの原型",
+      "greenFlag": "グリーンフラグ",
+      "redFlag": "試練の警告",
+      "identityProfile": "アイデンティティ",
+      "signatureQuote": "特徴的な台詞",
+      "trialWarning": "試練の警告",
+      "female": "女性",
+      "male": "男性",
+      "monster": "異形 / 狂気"
+    },
+    "hud": {
+      "left": "残り",
+      "smash": "スマッシュ",
+      "pass": "パス",
+      "smashRate": "率",
+      "bgm": "BGM",
+      "archetype": "原型",
+      "hallOfFame": "殿堂",
+      "howToPlay": "遊び方",
+      "shuffle": "シャッフル"
     }
   }
 }

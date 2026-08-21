@@ -12,47 +12,19 @@ import {
   X,
   Flame,
   Sparkles,
-  Zap,
-  Activity,
   Layers,
   Info,
-  Filter,
 } from 'lucide-react';
-import { CharacterRosterItem } from './characterRoster';
-import { getLocalizedCharacterRoster } from './rosterTranslations';
-import { DangerLevelType } from './ChaosMetricsDisplay';
-import { EntityMetadata, TierClassification } from '@/types/smashOrPass';
+import { EntityMetadata, TierClassification, LeaderboardItem } from '@/types/smashOrPass';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-
-export interface LeaderboardItem {
-  id?: string | number;
-  character_slug: string;
-  character_name: string;
-  role: 'Killer' | 'Survivor' | string;
-  gender: 'female' | 'male' | 'monster_other' | string;
-  slug?: string;
-  name?: string;
-  edition?: string;
-  media_url?: string | null;
-  metadata?: EntityMetadata;
-  smash_count: number;
-  pass_count: number;
-  super_smash_count?: number;
-  total_votes: number;
-  smash_rate: number;
-  chaos_rating?: number;
-  tier?: TierClassification | string;
-  rank?: number;
-  [key: string]: any;
-}
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
   onClose: () => void;
   items: LeaderboardItem[];
-  userSmashes?: Array<{ slug: string; vote: 'smash' | 'pass' | 'super_smash'; timestamp: number }>;
-  onSelectCharacter?: (character: CharacterRosterItem | any) => void;
+  userSmashes?: Array<{ slug: string; vote: 'smash' | 'pass'; timestamp: number }>;
+  onSelectCharacter?: (character: LeaderboardItem | any) => void;
   editionName?: string;
   isAuthenticated?: boolean;
   locale?: string;
@@ -76,7 +48,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const [roleFilter, setRoleFilter] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'monster_other'>('all');
   const [tierFilter, setTierFilter] = useState<'all' | TierKey>('all');
-  const [sortBy, setSortBy] = useState<'smash_rate' | 'total_votes' | 'smash_count' | 'chaos_rating'>('smash_rate');
+  const [sortBy, setSortBy] = useState<'smash_rate' | 'total_votes' | 'smash_count'>('smash_rate');
   const [viewMode, setViewMode] = useState<'flat' | 'grouped'>('flat');
 
   const backendBase = getBackendBaseUrl();
@@ -84,23 +56,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const userVotedSet = useMemo(() => {
     return new Set(userSmashes.map((s) => s.slug));
   }, [userSmashes]);
-
-  // Helper to compute chaos score
-  const computeChaos = (item: LeaderboardItem): number => {
-    if (item.chaos_rating !== undefined && item.chaos_rating !== null) return Number(item.chaos_rating);
-    if (item.metadata?.chaos_score !== undefined) return Number(item.metadata.chaos_score);
-    const slugStr = item.slug || item.character_slug || item.name || item.character_name || 'dbd';
-    let hash = 0;
-    for (let i = 0; i < slugStr.length; i++) {
-      hash = (hash << 5) - hash + slugStr.charCodeAt(i);
-      hash |= 0;
-    }
-    const absHash = Math.abs(hash);
-    const isKiller = item.role === 'Killer';
-    const isMonster = item.gender === 'monster_other';
-    if (isKiller) return isMonster ? 88 + (absHash % 12) : 68 + (absHash % 25);
-    return 20 + (absHash % 42);
-  };
 
   // Helper to derive tier classification
   const getItemTierKey = (smashRate: number): TierKey => {
@@ -154,7 +109,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
         // Tier Filter
         if (tierFilter !== 'all') {
-          const itemTier = getItemTierKey(item.smash_rate);
+          const itemRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
+          const itemTier = getItemTierKey(itemRate);
           if (itemTier !== tierFilter) return false;
         }
 
@@ -170,28 +126,30 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         return true;
       })
       .sort((a, b) => {
+        const aRate = a.smash_rate ?? a.stat?.smash_rate ?? 0;
+        const bRate = b.smash_rate ?? b.stat?.smash_rate ?? 0;
+        const aTotal = a.total_votes ?? a.stat?.total_votes ?? 0;
+        const bTotal = b.total_votes ?? b.stat?.total_votes ?? 0;
+        const aSmash = a.smash_count ?? a.stat?.smash_count ?? 0;
+        const bSmash = b.smash_count ?? b.stat?.smash_count ?? 0;
+
         if (sortBy === 'smash_rate') {
-          if (b.smash_rate !== a.smash_rate) return b.smash_rate - a.smash_rate;
-          return b.total_votes - a.total_votes;
+          if (bRate !== aRate) return bRate - aRate;
+          return bTotal - aTotal;
         }
         if (sortBy === 'total_votes') {
-          if (b.total_votes !== a.total_votes) return b.total_votes - a.total_votes;
-          return b.smash_rate - a.smash_rate;
+          if (bTotal !== aTotal) return bTotal - aTotal;
+          return bRate - aRate;
         }
         if (sortBy === 'smash_count') {
-          const aSmashes = a.smash_count + (a.super_smash_count || 0);
-          const bSmashes = b.smash_count + (b.super_smash_count || 0);
-          return bSmashes - aSmashes;
-        }
-        if (sortBy === 'chaos_rating') {
-          return computeChaos(b) - computeChaos(a);
+          return bSmash - aSmash;
         }
         return 0;
       });
   }, [items, roleFilter, genderFilter, tierFilter, searchQuery, sortBy]);
 
   const totalCommunityVotes = useMemo(() => {
-    return items.reduce((acc, curr) => acc + curr.total_votes, 0);
+    return items.reduce((acc, curr) => acc + (curr.total_votes ?? curr.stat?.total_votes ?? 0), 0);
   }, [items]);
 
   // Grouped by Tier
@@ -203,7 +161,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       eldritchVoid: [],
     };
     filteredItems.forEach((item) => {
-      const tierKey = getItemTierKey(item.smash_rate);
+      const rate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
+      const tierKey = getItemTierKey(rate);
       groups[tierKey].push(item);
     });
     return groups;
@@ -212,47 +171,74 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   if (!isOpen) return null;
 
   // Localized Labels
-  const title = dict?.smashOrPass?.leaderboard || 'Hall of Fame';
+  const title = dict?.smashOrPass?.leaderboard || (locale === 'pl' ? 'Galeria Sław' : 'Hall of Fame');
   const subtitle =
     dict?.smashOrPass?.leaderboardSubtitle ||
-    'Official community voting statistics across all Killers & Survivors';
-  const searchPlaceholder = dict?.smashOrPass?.search || 'Search candidates or leaderboard...';
-  const allRolesLabel = dict?.smashOrPass?.allRoles || 'All Roles';
-  const survivorsLabel = dict?.smashOrPass?.survivors || 'Survivors';
-  const killersLabel = dict?.smashOrPass?.killers || 'Killers';
-  const allGendersLabel = dict?.smashOrPass?.allGenders || 'All Genders';
-  const femaleOnlyLabel = dict?.smashOrPass?.femaleOnly || 'Female';
-  const maleOnlyLabel = dict?.smashOrPass?.maleOnly || 'Male';
-  const monstersLabel = dict?.smashOrPass?.monsters || 'Monsters & Eldritch';
-  const closeLabel = dict?.smashOrPass?.close || 'Close Leaderboard';
+    (locale === 'pl'
+      ? 'Oficjalne statystyki głosowania społeczności dla wszystkich Zabójców i Ocalałych'
+      : 'Official community voting statistics across all Killers & Survivors');
+  const searchPlaceholder = dict?.smashOrPass?.search || (locale === 'pl' ? 'Szukaj kandydatów lub w rankingu...' : 'Search candidates or leaderboard...');
+  const allRolesLabel = dict?.smashOrPass?.filters?.allRoles || dict?.smashOrPass?.allRoles || (locale === 'pl' ? 'Wszystkie Role' : 'All Roles');
+  const survivorsLabel = dict?.smashOrPass?.filters?.survivors || dict?.smashOrPass?.survivors || (locale === 'pl' ? 'Ocalali' : 'Survivors');
+  const killersLabel = dict?.smashOrPass?.filters?.killers || dict?.smashOrPass?.killers || (locale === 'pl' ? 'Zabójcy' : 'Killers');
+  const allGendersLabel = dict?.smashOrPass?.filters?.allGenders || dict?.smashOrPass?.allGenders || (locale === 'pl' ? 'Wszystkie Płcie' : 'All Genders');
+  const femaleOnlyLabel = dict?.smashOrPass?.filters?.femaleOnly || dict?.smashOrPass?.femaleOnly || (locale === 'pl' ? 'Kobiety' : 'Female');
+  const maleOnlyLabel = dict?.smashOrPass?.filters?.maleOnly || dict?.smashOrPass?.maleOnly || (locale === 'pl' ? 'Mężczyźni' : 'Male');
+  const monstersLabel = dict?.smashOrPass?.filters?.monsters || dict?.smashOrPass?.monsters || (locale === 'pl' ? 'Potwory i Przedwieczni' : 'Monsters & Eldritch');
+  const closeLabel = dict?.smashOrPass?.close || (locale === 'pl' ? 'Zamknij' : 'Close Leaderboard');
+
+  const loginNotice = locale === 'pl'
+    ? 'Zaloguj się, aby Twoje głosy liczyły się do globalnej Galerii Sław!'
+    : 'Log in to have your votes counted toward the global community Hall of Fame!';
+  const groupByTierLabel = locale === 'pl' ? 'Grupuj wg Poziomu' : 'Group by Tier';
+  const rankedListLabel = locale === 'pl' ? 'Lista Rankingowa' : 'Ranked List';
+  const sortLabel = locale === 'pl' ? 'Sortuj:' : 'Sort:';
+  const sortSmashRateLabel = locale === 'pl' ? 'Wskaźnik Smash (%)' : 'Smash Rate (%)';
+  const sortTotalVotesLabel = locale === 'pl' ? 'Liczba Głosów' : 'Total Votes';
+  const sortMostSmashesLabel = locale === 'pl' ? 'Najwięcej Smashy' : 'Most Smashes';
+  const noVotesTitle = locale === 'pl' ? 'Brak Głosów Społeczności' : 'No Community Votes Yet';
+  const noVotesDesc = locale === 'pl'
+    ? 'Bądź pierwszym Czempionem Bytu! Oddaj głosy, aby stworzyć rankingi Galerii Sław.'
+    : 'Be the first Entity Champion to rate candidates! Cast votes to populate the Hall of Fame rankings.';
+  const noMatchesText = locale === 'pl'
+    ? 'Nie znaleziono kandydatów spełniających podane kryteria.'
+    : 'No candidates found matching your filter criteria.';
+  const votesWord = locale === 'pl' ? 'głosów' : 'votes';
+  const smashWord = locale === 'pl' ? 'smash' : 'smash';
+  const passWord = locale === 'pl' ? 'pass' : 'pass';
 
   const renderCandidateRow = (item: LeaderboardItem, index: number) => {
     const itemSlug = item.slug || item.character_slug || '';
-    const localized = getLocalizedCharacterRoster(itemSlug, locale);
-    const itemName = item.name || item.character_name || localized.name;
+    const itemName = item.name || item.character_name || itemSlug;
     const isSurvivor = item.role === 'Survivor';
     const isTop3 = index < 3 && !searchQuery && tierFilter === 'all';
     const hasUserSmashed = userVotedSet.has(itemSlug);
-    const tierKey = getItemTierKey(item.smash_rate);
+
+    const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
+    const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
+    const smashCount = item.smash_count ?? item.stat?.smash_count ?? 0;
+    const passCount = item.pass_count ?? item.stat?.pass_count ?? 0;
+
+    const tierKey = getItemTierKey(smashRate);
     const tier = tierMetadata[tierKey];
-    const itemChaos = computeChaos(item);
 
     const avatarSrc =
-      item.media_url ||
-      resolveAvatarUrl(
-        backendBase,
-        {
-          name: itemName,
-          category: item.role,
-          avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${itemSlug}.png`,
-        },
-        isSurvivor
-      );
+      item.media_url?.startsWith('http') || item.media_url?.startsWith('/static')
+        ? `${item.media_url.startsWith('http') ? '' : backendBase}${item.media_url}`
+        : resolveAvatarUrl(
+            backendBase,
+            {
+              name: itemName,
+              category: item.role,
+              avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${itemSlug}.png`,
+            },
+            isSurvivor
+          );
 
     return (
       <div
         key={itemSlug}
-        onClick={() => onSelectCharacter?.({ ...localized, ...item, slug: itemSlug, name: itemName })}
+        onClick={() => onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName })}
         className={`flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
           hasUserSmashed
             ? 'bg-rose-950/30 border-[#ff0055]/40 hover:border-[#ff0055]'
@@ -312,35 +298,43 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                 <span>{tier.name}</span>
               </span>
             </div>
-            <p className="text-[11px] text-zinc-400 italic line-clamp-1">
-              {localized.title || item.metadata?.title}
-            </p>
+            {(() => {
+              const meta = item.metadata || (item as any).metadata_json || {};
+              const currentLoc = locale || 'en';
+              const locMeta = (meta.translations as any)?.[currentLoc] || (meta.i18n as any)?.[currentLoc] || {};
+              const itemSubtitle =
+                locMeta.title ||
+                meta.title ||
+                locMeta.tagline ||
+                meta.tagline ||
+                (currentLoc === 'pl' ? (isSurvivor ? 'Ocalały we Mgle' : 'Zabójca we Mgle') : item.role);
+              return (
+                <p className="text-[11px] text-zinc-400 italic line-clamp-1">
+                  {itemSubtitle}
+                </p>
+              );
+            })()}
           </div>
         </div>
 
-        {/* Smash Rate + Votes + Chaos */}
+        {/* Smash Rate + Votes */}
         <div className="flex items-center gap-4 text-right shrink-0">
           <div>
             <div className="flex items-center gap-1 justify-end font-black font-mono text-sm text-[#ff0055]">
               <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
-              <span>{item.smash_rate}%</span>
+              <span>{smashRate}%</span>
             </div>
             <span className="text-[10px] font-mono text-zinc-400">
-              {item.total_votes.toLocaleString()} votes
+              {totalVotes.toLocaleString()} {votesWord}
             </span>
           </div>
 
           <div className="hidden sm:block text-right font-mono text-[10px]">
-            <span className="text-[#00f5d4] font-bold">
-              {item.smash_count + (item.super_smash_count || 0)} smash
+            <span className="text-[#ff0055] font-bold">
+              {smashCount} {smashWord}
             </span>
             <br />
-            <span className="text-zinc-500">{item.pass_count} pass</span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-1 px-2 py-1 rounded-xl bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-[#ffd166]">
-            <Activity className="h-3 w-3" />
-            <span>{itemChaos}%</span>
+            <span className="text-zinc-500">{passCount} {passWord}</span>
           </div>
         </div>
       </div>
@@ -393,7 +387,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           <div className="bg-rose-950/30 border-b border-[#ff0055]/20 px-4 py-2 flex items-center justify-between text-xs text-rose-300 shrink-0">
             <div className="flex items-center gap-2">
               <Info className="h-4 w-4 text-[#ff0055] shrink-0" />
-              <span>Log in to have your votes counted toward the global community Hall of Fame!</span>
+              <span>{loginNotice}</span>
             </div>
           </div>
         )}
@@ -517,7 +511,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               className="px-2.5 py-1 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white text-[11px] font-bold cursor-pointer transition-all flex items-center gap-1"
             >
               <Layers className="h-3 w-3" />
-              <span>{viewMode === 'flat' ? 'Group by Tier' : 'Ranked List'}</span>
+              <span>{viewMode === 'flat' ? groupByTierLabel : rankedListLabel}</span>
             </button>
           </div>
         </div>
@@ -537,17 +531,16 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end text-xs font-mono">
             <span className="text-zinc-400 flex items-center gap-1 font-bold">
-              <ArrowUpDown className="h-3.5 w-3.5 text-zinc-500" /> Sort:
+              <ArrowUpDown className="h-3.5 w-3.5 text-zinc-500" /> {sortLabel}
             </span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
               className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs focus:outline-none focus:border-[#ff0055]/50 cursor-pointer font-mono"
             >
-              <option value="smash_rate">Smash Rate (%)</option>
-              <option value="total_votes">Total Votes</option>
-              <option value="smash_count">Most Smashes</option>
-              <option value="chaos_rating">Chaos Rating</option>
+              <option value="smash_rate">{sortSmashRateLabel}</option>
+              <option value="total_votes">{sortTotalVotesLabel}</option>
+              <option value="smash_count">{sortMostSmashesLabel}</option>
             </select>
           </div>
         </div>
@@ -560,15 +553,15 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                 <Heart className="h-7 w-7 fill-[#ff0055]/20 text-[#ff0055] animate-pulse" />
               </div>
               <div className="space-y-1 max-w-sm">
-                <h3 className="text-base font-extrabold text-zinc-200 font-mono">No Community Votes Yet</h3>
+                <h3 className="text-base font-extrabold text-zinc-200 font-mono">{noVotesTitle}</h3>
                 <p className="text-xs text-zinc-400">
-                  Be the first Entity Champion to rate candidates! Cast votes to populate the Hall of Fame rankings.
+                  {noVotesDesc}
                 </p>
               </div>
             </div>
           ) : filteredItems.length === 0 ? (
             <div className="py-12 text-center text-xs text-zinc-500 font-mono">
-              No candidates found matching your filter criteria.
+              {noMatchesText}
             </div>
           ) : viewMode === 'grouped' ? (
             // Grouped By Tier View
@@ -587,7 +580,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                       <span className="text-[10px] opacity-80">({meta.range})</span>
                     </div>
                     <span className="text-[11px] font-mono font-bold">
-                      {tierList.length} candidate{tierList.length > 1 ? 's' : ''}
+                      {tierList.length} {locale === 'pl' ? 'kandydatów' : 'candidates'}
                     </span>
                   </div>
 
@@ -607,7 +600,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-zinc-800 p-3 sm:px-5 bg-zinc-950/90 text-xs text-zinc-400 shrink-0 font-mono">
-          <span>Showing {filteredItems.length} candidates</span>
+          <span>{locale === 'pl' ? `Wyświetlono ${filteredItems.length} kandydatów` : `Showing ${filteredItems.length} candidates`}</span>
           <button
             type="button"
             onClick={onClose}

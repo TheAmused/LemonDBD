@@ -1,0 +1,1992 @@
+{
+    "roster": {
+        "slug": "hooked_on_you",
+        "name_i18n_key": "smashOrPass.rosters.hooked_on_you.name",
+        "description_i18n_key": "smashOrPass.rosters.hooked_on_you.desc",
+        "cover_image_url": "/static/avatars/rosters/hooked_on_you.png",
+        "theme_color": "#00f5d4",
+        "category": "Dating Sim",
+        "is_nsfw": false,
+        "is_active": true
+    },
+    "translations": {
+        "en": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Fog Canon",
+            "smashOrPass.rosters.canon.desc": "The complete 98-character roster of all official Killers and Survivors.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Island Romance",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendary Skins & Collabs",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Iconic legendary skins and crossover collabs from gaming history.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunk Fog 2077 Edition",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "High-tech neon augmented champions fighting in a dystopian fog.",
+            "smashOrPass.rosters.anime_manga.name": "Fog Anime / Manga Aesthetic",
+            "smashOrPass.rosters.anime_manga.desc": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Victorian & Gothic Eldritch Legends",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Island Romance",
+            "smashOrPass.rosters.hoy.desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
+            "smashOrPass.rosters.legendary.name": "Legendary Skins & Collabs",
+            "smashOrPass.rosters.legendary.desc": "Iconic legendary skins and crossover collabs from gaming history.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunk Fog 2077 Edition",
+            "smashOrPass.rosters.cyberpunk.desc": "High-tech neon augmented champions fighting in a dystopian fog.",
+            "smashOrPass.rosters.anime.name": "Fog Anime / Manga Aesthetic",
+            "smashOrPass.rosters.anime.desc": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
+            "smashOrPass.rosters.gothic.name": "Victorian & Gothic Eldritch Legends",
+            "smashOrPass.rosters.gothic.desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors."
+        },
+        "pl": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Kanon Mgły",
+            "smashOrPass.rosters.canon.desc": "Kompletny zestaw 98 oficjalnych postaci Zabójców i Ocalałych.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Romans na Wyspie",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropikalna edycja symulatora randkowego w plażowych strojach.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendarne Skórki i Kolaboracje",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Kultowe legendarne skórki i crossovery z historii gier wideo.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunkowa Mgła 2077",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle.",
+            "smashOrPass.rosters.anime_manga.name": "Estetyka Anime / Mangi w Mgle",
+            "smashOrPass.rosters.anime_manga.desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Romans na Wyspie",
+            "smashOrPass.rosters.hoy.desc": "Tropikalna edycja symulatora randkowego w plażowych strojach.",
+            "smashOrPass.rosters.legendary.name": "Legendarne Skórki i Kolaboracje",
+            "smashOrPass.rosters.legendary.desc": "Kultowe legendarne skórki i crossovery z historii gier wideo.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunkowa Mgła 2077",
+            "smashOrPass.rosters.cyberpunk.desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle.",
+            "smashOrPass.rosters.anime.name": "Estetyka Anime / Mangi w Mgle",
+            "smashOrPass.rosters.anime.desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły.",
+            "smashOrPass.rosters.gothic.name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+            "smashOrPass.rosters.gothic.desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych."
+        },
+        "es": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Canon de la Niebla",
+            "smashOrPass.rosters.canon.desc": "El elenco completo de 98 personajes de asesinos y supervivientes oficiales.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Romance en la Isla",
+            "smashOrPass.rosters.hooked_on_you.desc": "Edición simulador de citas en un paraíso tropical con trajes de playa.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Skins Legendarias y Colaboraciones",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Edición Niebla Cyberpunk 2077",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica.",
+            "smashOrPass.rosters.anime_manga.name": "Estética Anime y Manga de la Niebla",
+            "smashOrPass.rosters.anime_manga.desc": "Adaptaciones estilizadas en anime de tus personajes favoritos.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Leyendas Góticas y Primigenias Victorianas",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Romance en la Isla",
+            "smashOrPass.rosters.hoy.desc": "Edición simulador de citas en un paraíso tropical con trajes de playa.",
+            "smashOrPass.rosters.legendary.name": "Skins Legendarias y Colaboraciones",
+            "smashOrPass.rosters.legendary.desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos.",
+            "smashOrPass.rosters.cyberpunk.name": "Edición Niebla Cyberpunk 2077",
+            "smashOrPass.rosters.cyberpunk.desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica.",
+            "smashOrPass.rosters.anime.name": "Estética Anime y Manga de la Niebla",
+            "smashOrPass.rosters.anime.desc": "Adaptaciones estilizadas en anime de tus personajes favoritos.",
+            "smashOrPass.rosters.gothic.name": "Leyendas Góticas y Primigenias Victorianas",
+            "smashOrPass.rosters.gothic.desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios."
+        },
+        "de": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Nebel-Kanon",
+            "smashOrPass.rosters.canon.desc": "Die vollständige Liste aller 98 offiziellen Killer und Überlebenden.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Insel-Romanze",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendäre Skins & Kollaborationen",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Ikonische legendäre Skins und Crossover-Kollaborationen.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunk-Nebel 2077 Edition",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel.",
+            "smashOrPass.rosters.anime_manga.name": "Nebel Anime / Manga Ästhetik",
+            "smashOrPass.rosters.anime_manga.desc": "Stilisierte Anime-Adaptionen beliebter Charaktere.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Viktorianische & Gotische Eldritch-Legenden",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Insel-Romanze",
+            "smashOrPass.rosters.hoy.desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes.",
+            "smashOrPass.rosters.legendary.name": "Legendäre Skins & Kollaborationen",
+            "smashOrPass.rosters.legendary.desc": "Ikonische legendäre Skins und Crossover-Kollaborationen.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunk-Nebel 2077 Edition",
+            "smashOrPass.rosters.cyberpunk.desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel.",
+            "smashOrPass.rosters.anime.name": "Nebel Anime / Manga Ästhetik",
+            "smashOrPass.rosters.anime.desc": "Stilisierte Anime-Adaptionen beliebter Charaktere.",
+            "smashOrPass.rosters.gothic.name": "Viktorianische & Gotische Eldritch-Legenden",
+            "smashOrPass.rosters.gothic.desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror."
+        },
+        "ja": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: 霧の正史 (カノン)",
+            "smashOrPass.rosters.canon.desc": "公式の殺人鬼と生存者全98キャラクターの完全ロスター。",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: 狂気の島恋愛シミュレーション",
+            "smashOrPass.rosters.hooked_on_you.desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。",
+            "smashOrPass.rosters.legendary_cosplay.name": "レジェンダリースキン＆コラボ",
+            "smashOrPass.rosters.legendary_cosplay.desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。",
+            "smashOrPass.rosters.cyberpunk_2077.name": "サイバーパンク・フォグ 2077 エディション",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。",
+            "smashOrPass.rosters.anime_manga.name": "フォグ・アニメ / マンガ美学",
+            "smashOrPass.rosters.anime_manga.desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。",
+            "smashOrPass.rosters.gothic_eldritch.name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+            "smashOrPass.rosters.gothic_eldritch.desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: 狂気の島恋愛シミュレーション",
+            "smashOrPass.rosters.hoy.desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。",
+            "smashOrPass.rosters.legendary.name": "レジェンダリースキン＆コラボ",
+            "smashOrPass.rosters.legendary.desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。",
+            "smashOrPass.rosters.cyberpunk.name": "サイバーパンク・フォグ 2077 エディション",
+            "smashOrPass.rosters.cyberpunk.desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。",
+            "smashOrPass.rosters.anime.name": "フォグ・アニメ / マンガ美学",
+            "smashOrPass.rosters.anime.desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。",
+            "smashOrPass.rosters.gothic.name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+            "smashOrPass.rosters.gothic.desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。"
+        }
+    },
+    "entities": [
+        {
+            "slug": "the_trapper_hoy",
+            "name": "The Trapper (Island)",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/the_trapper_hoy.png",
+            "metadata": {
+                "title": "The Brooding Beach Jock",
+                "tagline": "Muscles, bear traps, and secretly loves carving romantic driftwood.",
+                "bio": "He may look intimidating with his machete and spiked traps, but take him on a walk along the tropical beach and he might just show you his soft, artistic side.",
+                "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                "green_flags": [
+                    "Enjoys romantic sunsets",
+                    "Will carry you when tired",
+                    "Protective to a fault"
+                ],
+                "red_flags": [
+                    "Steps on his own traps when flustered",
+                    "Aggressive arm wrestling"
+                ],
+                "greenFlags": [
+                    "Enjoys romantic sunsets",
+                    "Will carry you when tired",
+                    "Protective to a fault"
+                ],
+                "redFlags": [
+                    "Steps on his own traps when flustered",
+                    "Aggressive arm wrestling"
+                ],
+                "turn_on": "Sun-kissed skin and deep philosophical conversations under the stars",
+                "turnOn": "Sun-kissed skin and deep philosophical conversations under the stars",
+                "dealbreaker": "People who touch his private trap stash",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Trapper (Island) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Brooding Beach Jock",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Brooding Beach Jock",
+                "translations": {
+                    "en": {
+                        "title": "The Brooding Beach Jock",
+                        "tagline": "Muscles, bear traps, and secretly loves carving romantic driftwood.",
+                        "bio": "He may look intimidating with his machete and spiked traps, but take him on a walk along the tropical beach and he might just show you his soft, artistic side.",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "Enjoys romantic sunsets",
+                            "Will carry you when tired",
+                            "Protective to a fault"
+                        ],
+                        "red_flags": [
+                            "Steps on his own traps when flustered",
+                            "Aggressive arm wrestling"
+                        ],
+                        "turn_on": "Sun-kissed skin and deep philosophical conversations under the stars",
+                        "dealbreaker": "People who touch his private trap stash",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Trapper (Island) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Trapper (Island): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Trapper (Island) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Plaża czy las – i tak wpadniesz w moje sidła.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Trapper (Island) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Trapper (Island): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Trapper (Island) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Trapper (Island) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Trapper (Island): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Trapper (Island) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Trapper (Island) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Trapper (Island): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Trapper (Island)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Trapper (Island) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Brooding Beach Jock",
+                        "tagline": "Muscles, bear traps, and secretly loves carving romantic driftwood.",
+                        "bio": "He may look intimidating with his machete and spiked traps, but take him on a walk along the tropical beach and he might just show you his soft, artistic side.",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "Enjoys romantic sunsets",
+                            "Will carry you when tired",
+                            "Protective to a fault"
+                        ],
+                        "red_flags": [
+                            "Steps on his own traps when flustered",
+                            "Aggressive arm wrestling"
+                        ],
+                        "turn_on": "Sun-kissed skin and deep philosophical conversations under the stars",
+                        "dealbreaker": "People who touch his private trap stash",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Trapper (Island) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Trapper (Island): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Trapper (Island) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Trapper (Island) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Trapper (Island): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Trapper (Island) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Trapper (Island) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Trapper (Island): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Trapper (Island) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Trapper (Island) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Trapper (Island): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Trapper (Island)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"If you step into my snare, I won’t let you go easily.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Trapper (Island) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "the_huntress_hoy",
+            "name": "The Huntress (Bikini)",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/the_huntress_hoy.png",
+            "metadata": {
+                "title": "The Amazonian Beach Queen",
+                "tagline": "Loves coconut bowling, throwing hatchets, and singing island lullabies.",
+                "bio": "Standing tall with undeniable athletic grace, she will catch fish with her bare hands for your candlelit beach dinner and sing you gentle melodies until dawn.",
+                "quote": "\"La la la... You belong by my side.\"",
+                "green_flags": [
+                    "Provides abundant seafood feasts",
+                    "Towering Amazonian cuddles",
+                    "Passionate singer"
+                ],
+                "red_flags": [
+                    "Throws hatchets at rival suitors",
+                    "Communication via animal grunts"
+                ],
+                "greenFlags": [
+                    "Provides abundant seafood feasts",
+                    "Towering Amazonian cuddles",
+                    "Passionate singer"
+                ],
+                "redFlags": [
+                    "Throws hatchets at rival suitors",
+                    "Communication via animal grunts"
+                ],
+                "turn_on": "Courage, loyalty, and someone who appreciates a good bear hug",
+                "turnOn": "Courage, loyalty, and someone who appreciates a good bear hug",
+                "dealbreaker": "Cowards who run away from a friendly sparring match",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Huntress (Bikini) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Amazonian Beach Queen",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Amazonian Beach Queen",
+                "translations": {
+                    "en": {
+                        "title": "The Amazonian Beach Queen",
+                        "tagline": "Loves coconut bowling, throwing hatchets, and singing island lullabies.",
+                        "bio": "Standing tall with undeniable athletic grace, she will catch fish with her bare hands for your candlelit beach dinner and sing you gentle melodies until dawn.",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "Provides abundant seafood feasts",
+                            "Towering Amazonian cuddles",
+                            "Passionate singer"
+                        ],
+                        "red_flags": [
+                            "Throws hatchets at rival suitors",
+                            "Communication via animal grunts"
+                        ],
+                        "turn_on": "Courage, loyalty, and someone who appreciates a good bear hug",
+                        "dealbreaker": "Cowards who run away from a friendly sparring match",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Huntress (Bikini) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Huntress (Bikini): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Huntress (Bikini) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Mój topór jest ostry, ale na plaży szukam kogoś do pary.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Huntress (Bikini) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Huntress (Bikini): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Huntress (Bikini) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Huntress (Bikini) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Huntress (Bikini): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Huntress (Bikini) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Huntress (Bikini) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Huntress (Bikini): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Huntress (Bikini)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Huntress (Bikini) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Amazonian Beach Queen",
+                        "tagline": "Loves coconut bowling, throwing hatchets, and singing island lullabies.",
+                        "bio": "Standing tall with undeniable athletic grace, she will catch fish with her bare hands for your candlelit beach dinner and sing you gentle melodies until dawn.",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "Provides abundant seafood feasts",
+                            "Towering Amazonian cuddles",
+                            "Passionate singer"
+                        ],
+                        "red_flags": [
+                            "Throws hatchets at rival suitors",
+                            "Communication via animal grunts"
+                        ],
+                        "turn_on": "Courage, loyalty, and someone who appreciates a good bear hug",
+                        "dealbreaker": "Cowards who run away from a friendly sparring match",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Huntress (Bikini) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Huntress (Bikini): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Huntress (Bikini) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Huntress (Bikini) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Huntress (Bikini): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Huntress (Bikini) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Huntress (Bikini) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Huntress (Bikini): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Huntress (Bikini) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Huntress (Bikini) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Huntress (Bikini): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Huntress (Bikini)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"La la la... You belong by my side.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Huntress (Bikini) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "the_spirit_hoy",
+            "name": "The Spirit (Resort)",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/the_spirit_hoy.png",
+            "metadata": {
+                "title": "The Goth Resort Princess",
+                "tagline": "Sunhat, dark parasol, and loves sipping tropical mocktails in the shade.",
+                "bio": "Floating just above the warm sand, Rin enjoys quiet afternoons reading gothic literature under a wide palm umbrella, phasing in and out of your vision to tease you.",
+                "quote": "\"I will appear where you least expect me... next to you.\"",
+                "green_flags": [
+                    "Extremely loyal once trust is earned",
+                    "Aesthetic goth fashion sense",
+                    "Intense eye contact"
+                ],
+                "red_flags": [
+                    "Phases away during arguments",
+                    "Sword practice near poolside"
+                ],
+                "greenFlags": [
+                    "Extremely loyal once trust is earned",
+                    "Aesthetic goth fashion sense",
+                    "Intense eye contact"
+                ],
+                "redFlags": [
+                    "Phases away during arguments",
+                    "Sword practice near poolside"
+                ],
+                "turn_on": "Patience, shared silence, and genuine emotional honesty",
+                "turnOn": "Patience, shared silence, and genuine emotional honesty",
+                "dealbreaker": "Loud party crashers and betrayal of trust",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Spirit (Resort) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Goth Resort Princess",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Goth Resort Princess",
+                "translations": {
+                    "en": {
+                        "title": "The Goth Resort Princess",
+                        "tagline": "Sunhat, dark parasol, and loves sipping tropical mocktails in the shade.",
+                        "bio": "Floating just above the warm sand, Rin enjoys quiet afternoons reading gothic literature under a wide palm umbrella, phasing in and out of your vision to tease you.",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "Extremely loyal once trust is earned",
+                            "Aesthetic goth fashion sense",
+                            "Intense eye contact"
+                        ],
+                        "red_flags": [
+                            "Phases away during arguments",
+                            "Sword practice near poolside"
+                        ],
+                        "turn_on": "Patience, shared silence, and genuine emotional honesty",
+                        "dealbreaker": "Loud party crashers and betrayal of trust",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Spirit (Resort) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Spirit (Resort): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Spirit (Resort) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Fale oceanu nie ugaszą mojego wiecznego płomienia.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Spirit (Resort) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Spirit (Resort): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Spirit (Resort) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Spirit (Resort) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Spirit (Resort): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Spirit (Resort) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Spirit (Resort) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Spirit (Resort): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Spirit (Resort)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Spirit (Resort) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Goth Resort Princess",
+                        "tagline": "Sunhat, dark parasol, and loves sipping tropical mocktails in the shade.",
+                        "bio": "Floating just above the warm sand, Rin enjoys quiet afternoons reading gothic literature under a wide palm umbrella, phasing in and out of your vision to tease you.",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "Extremely loyal once trust is earned",
+                            "Aesthetic goth fashion sense",
+                            "Intense eye contact"
+                        ],
+                        "red_flags": [
+                            "Phases away during arguments",
+                            "Sword practice near poolside"
+                        ],
+                        "turn_on": "Patience, shared silence, and genuine emotional honesty",
+                        "dealbreaker": "Loud party crashers and betrayal of trust",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Spirit (Resort) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Spirit (Resort): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Spirit (Resort) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Spirit (Resort) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Spirit (Resort): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Spirit (Resort) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Spirit (Resort) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Spirit (Resort): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Spirit (Resort) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Spirit (Resort) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Spirit (Resort): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Spirit (Resort)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"I will appear where you least expect me... next to you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Spirit (Resort) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "the_wraith_hoy",
+            "name": "The Wraith (Beach)",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/the_wraith_hoy.png",
+            "metadata": {
+                "title": "The Gentle Bell Chimer",
+                "tagline": "Wears vibrant floral shorts and plays steel drums by the bonfire.",
+                "bio": "Philip is the gentle soul of the island. He enjoys chiming his bell to create melodic rhythms, helping injured tropical birds, and sharing mango smoothies.",
+                "quote": "\"Bing bong... My heart rings for you.\"",
+                "green_flags": [
+                    "Soft-spoken and deeply empathetic",
+                    "Great listener",
+                    "Gentle hands"
+                ],
+                "red_flags": [
+                    "Disappears into thin air when embarrassed",
+                    "Overthinks every text"
+                ],
+                "greenFlags": [
+                    "Soft-spoken and deeply empathetic",
+                    "Great listener",
+                    "Gentle hands"
+                ],
+                "redFlags": [
+                    "Disappears into thin air when embarrassed",
+                    "Overthinks every text"
+                ],
+                "turn_on": "Kindness, musical harmony, and warm smiles",
+                "turnOn": "Kindness, musical harmony, and warm smiles",
+                "dealbreaker": "Cruelty to island wildlife and loud yelling",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Wraith (Beach) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Gentle Bell Chimer",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Gentle Bell Chimer",
+                "translations": {
+                    "en": {
+                        "title": "The Gentle Bell Chimer",
+                        "tagline": "Wears vibrant floral shorts and plays steel drums by the bonfire.",
+                        "bio": "Philip is the gentle soul of the island. He enjoys chiming his bell to create melodic rhythms, helping injured tropical birds, and sharing mango smoothies.",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "Soft-spoken and deeply empathetic",
+                            "Great listener",
+                            "Gentle hands"
+                        ],
+                        "red_flags": [
+                            "Disappears into thin air when embarrassed",
+                            "Overthinks every text"
+                        ],
+                        "turn_on": "Kindness, musical harmony, and warm smiles",
+                        "dealbreaker": "Cruelty to island wildlife and loud yelling",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Wraith (Beach) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Wraith (Beach): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Wraith (Beach) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Cień pod palmą skrywa więcej niż myślisz.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Wraith (Beach) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Wraith (Beach): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Wraith (Beach) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Wraith (Beach) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Wraith (Beach): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Wraith (Beach) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Wraith (Beach) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Wraith (Beach): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Wraith (Beach)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Wraith (Beach) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Gentle Bell Chimer",
+                        "tagline": "Wears vibrant floral shorts and plays steel drums by the bonfire.",
+                        "bio": "Philip is the gentle soul of the island. He enjoys chiming his bell to create melodic rhythms, helping injured tropical birds, and sharing mango smoothies.",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "Soft-spoken and deeply empathetic",
+                            "Great listener",
+                            "Gentle hands"
+                        ],
+                        "red_flags": [
+                            "Disappears into thin air when embarrassed",
+                            "Overthinks every text"
+                        ],
+                        "turn_on": "Kindness, musical harmony, and warm smiles",
+                        "dealbreaker": "Cruelty to island wildlife and loud yelling",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Wraith (Beach) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Wraith (Beach): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Wraith (Beach) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Wraith (Beach) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Wraith (Beach): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Wraith (Beach) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Wraith (Beach) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Wraith (Beach): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Wraith (Beach) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Wraith (Beach) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Wraith (Beach): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Wraith (Beach)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Bing bong... My heart rings for you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Wraith (Beach) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "claudette_morel_hoy",
+            "name": "Claudette (Island Botanist)",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/claudette_morel_hoy.png",
+            "metadata": {
+                "title": "The Tropical Herbalist",
+                "tagline": "Crafts hibiscus flower crowns and aloe vera sun lotions.",
+                "bio": "She knows the secret properties of every exotic tropical flower on the island. Spend an afternoon with her in the greenhouse learning how to blend aromatic island teas.",
+                "quote": "\"This flower only blooms when two hearts are near.\"",
+                "green_flags": [
+                    "Always has natural remedies ready",
+                    "Soft and caring demeanor",
+                    "Quiet dates in nature"
+                ],
+                "red_flags": [
+                    "Hides in the jungle bushes when approached",
+                    "Prioritizes rare orchids over dates"
+                ],
+                "greenFlags": [
+                    "Always has natural remedies ready",
+                    "Soft and caring demeanor",
+                    "Quiet dates in nature"
+                ],
+                "redFlags": [
+                    "Hides in the jungle bushes when approached",
+                    "Prioritizes rare orchids over dates"
+                ],
+                "turn_on": "Curiosity about botany and gentle stargazing",
+                "turnOn": "Curiosity about botany and gentle stargazing",
+                "dealbreaker": "Trampling rare island flora",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Claudette (Island Botanist) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Tropical Herbalist",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "The Tropical Herbalist",
+                "translations": {
+                    "en": {
+                        "title": "The Tropical Herbalist",
+                        "tagline": "Crafts hibiscus flower crowns and aloe vera sun lotions.",
+                        "bio": "She knows the secret properties of every exotic tropical flower on the island. Spend an afternoon with her in the greenhouse learning how to blend aromatic island teas.",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "Always has natural remedies ready",
+                            "Soft and caring demeanor",
+                            "Quiet dates in nature"
+                        ],
+                        "red_flags": [
+                            "Hides in the jungle bushes when approached",
+                            "Prioritizes rare orchids over dates"
+                        ],
+                        "turn_on": "Curiosity about botany and gentle stargazing",
+                        "dealbreaker": "Trampling rare island flora",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Claudette (Island Botanist) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Claudette (Island Botanist): Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Claudette (Island Botanist) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nawet na tropikalnej plaży zioła lecznicze rosną w cieniu palm.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Claudette (Island Botanist) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Claudette (Island Botanist): Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Claudette (Island Botanist) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Claudette (Island Botanist) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Claudette (Island Botanist): Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Claudette (Island Botanist) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Claudette (Island Botanist) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Claudette (Island Botanist): 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Claudette (Island Botanist)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のClaudette (Island Botanist) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Tropical Herbalist",
+                        "tagline": "Crafts hibiscus flower crowns and aloe vera sun lotions.",
+                        "bio": "She knows the secret properties of every exotic tropical flower on the island. Spend an afternoon with her in the greenhouse learning how to blend aromatic island teas.",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "Always has natural remedies ready",
+                            "Soft and caring demeanor",
+                            "Quiet dates in nature"
+                        ],
+                        "red_flags": [
+                            "Hides in the jungle bushes when approached",
+                            "Prioritizes rare orchids over dates"
+                        ],
+                        "turn_on": "Curiosity about botany and gentle stargazing",
+                        "dealbreaker": "Trampling rare island flora",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Claudette (Island Botanist) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Claudette (Island Botanist): Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Claudette (Island Botanist) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Claudette (Island Botanist) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Claudette (Island Botanist): Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Claudette (Island Botanist) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Claudette (Island Botanist) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Claudette (Island Botanist): Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Claudette (Island Botanist) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Claudette (Island Botanist) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Claudette (Island Botanist): 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Claudette (Island Botanist)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"This flower only blooms when two hearts are near.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のClaudette (Island Botanist) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "dwight_fairfield_hoy",
+            "name": "Dwight (Lifeguard)",
+            "role": "Survivor",
+            "gender": "male",
+            "media_url": "/static/avatars/survivors/dwight_fairfield_hoy.png",
+            "metadata": {
+                "title": "The Anxious Lifeguard",
+                "tagline": "Whistle around his neck, oversized sunglasses, and trying his very best.",
+                "bio": "He took a 3-week online lifeguard certification course and takes his beach patrol duties very seriously. He will personally apply sunscreen to your shoulders with shaking hands.",
+                "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                "green_flags": [
+                    "Unconditional devotion",
+                    "Wholesome dad jokes",
+                    "Will jump into water to save you"
+                ],
+                "red_flags": [
+                    "Panics in waist-deep water",
+                    "Hides in beach lockers when overwhelmed"
+                ],
+                "greenFlags": [
+                    "Unconditional devotion",
+                    "Wholesome dad jokes",
+                    "Will jump into water to save you"
+                ],
+                "redFlags": [
+                    "Panics in waist-deep water",
+                    "Hides in beach lockers when overwhelmed"
+                ],
+                "turn_on": "Reassurance, positive affirmations, and holding hands",
+                "turnOn": "Reassurance, positive affirmations, and holding hands",
+                "dealbreaker": "Criticizing his leadership skills in front of the crew",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Dwight (Lifeguard) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Anxious Lifeguard",
+                    "Survivor",
+                    "male"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "The Anxious Lifeguard",
+                "translations": {
+                    "en": {
+                        "title": "The Anxious Lifeguard",
+                        "tagline": "Whistle around his neck, oversized sunglasses, and trying his very best.",
+                        "bio": "He took a 3-week online lifeguard certification course and takes his beach patrol duties very seriously. He will personally apply sunscreen to your shoulders with shaking hands.",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "Unconditional devotion",
+                            "Wholesome dad jokes",
+                            "Will jump into water to save you"
+                        ],
+                        "red_flags": [
+                            "Panics in waist-deep water",
+                            "Hides in beach lockers when overwhelmed"
+                        ],
+                        "turn_on": "Reassurance, positive affirmations, and holding hands",
+                        "dealbreaker": "Criticizing his leadership skills in front of the crew",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Dwight (Lifeguard) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Dwight (Lifeguard): Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Dwight (Lifeguard) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nawet w hawajskiej koszuli nie zapominam o naprawianiu generatorów!”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Dwight (Lifeguard) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Dwight (Lifeguard): Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Dwight (Lifeguard) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Dwight (Lifeguard) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Dwight (Lifeguard): Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Dwight (Lifeguard) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Dwight (Lifeguard) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Dwight (Lifeguard): 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Dwight (Lifeguard)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のDwight (Lifeguard) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Anxious Lifeguard",
+                        "tagline": "Whistle around his neck, oversized sunglasses, and trying his very best.",
+                        "bio": "He took a 3-week online lifeguard certification course and takes his beach patrol duties very seriously. He will personally apply sunscreen to your shoulders with shaking hands.",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "Unconditional devotion",
+                            "Wholesome dad jokes",
+                            "Will jump into water to save you"
+                        ],
+                        "red_flags": [
+                            "Panics in waist-deep water",
+                            "Hides in beach lockers when overwhelmed"
+                        ],
+                        "turn_on": "Reassurance, positive affirmations, and holding hands",
+                        "dealbreaker": "Criticizing his leadership skills in front of the crew",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Dwight (Lifeguard) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Dwight (Lifeguard): Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Dwight (Lifeguard) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Dwight (Lifeguard) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Dwight (Lifeguard): Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Dwight (Lifeguard) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Dwight (Lifeguard) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Dwight (Lifeguard): Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Dwight (Lifeguard) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Dwight (Lifeguard) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Dwight (Lifeguard): 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Dwight (Lifeguard)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のDwight (Lifeguard) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "the_trickster_hoy",
+            "name": "The Trickster (Summer Idol)",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/the_trickster_hoy.png",
+            "metadata": {
+                "title": "The K-Pop Poolside Sensation",
+                "tagline": "Neon sunglasses, open tropical silk shirt, and unlimited charisma.",
+                "bio": "Ji-Woon brings VIP concert energy to every beach cabana. He will write you private acoustic ballads and throw rose-colored throwing knives at fruit targets for your entertainment.",
+                "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                "green_flags": [
+                    "Flawless sense of style",
+                    "Romantic serenades on demand",
+                    "Treats you like a superstar"
+                ],
+                "red_flags": [
+                    "Extremely vain",
+                    "Records his own voice memo compliments"
+                ],
+                "greenFlags": [
+                    "Flawless sense of style",
+                    "Romantic serenades on demand",
+                    "Treats you like a superstar"
+                ],
+                "redFlags": [
+                    "Extremely vain",
+                    "Records his own voice memo compliments"
+                ],
+                "turn_on": "Adoring praise, high fashion, and spotlight drama",
+                "turnOn": "Adoring praise, high fashion, and spotlight drama",
+                "dealbreaker": "Refusing to be his VIP muse",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Trickster (Summer Idol) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The K-Pop Poolside Sensation",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The K-Pop Poolside Sensation",
+                "translations": {
+                    "en": {
+                        "title": "The K-Pop Poolside Sensation",
+                        "tagline": "Neon sunglasses, open tropical silk shirt, and unlimited charisma.",
+                        "bio": "Ji-Woon brings VIP concert energy to every beach cabana. He will write you private acoustic ballads and throw rose-colored throwing knives at fruit targets for your entertainment.",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "Flawless sense of style",
+                            "Romantic serenades on demand",
+                            "Treats you like a superstar"
+                        ],
+                        "red_flags": [
+                            "Extremely vain",
+                            "Records his own voice memo compliments"
+                        ],
+                        "turn_on": "Adoring praise, high fashion, and spotlight drama",
+                        "dealbreaker": "Refusing to be his VIP muse",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Trickster (Summer Idol) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Trickster (Summer Idol): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Trickster (Summer Idol) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Trickster (Summer Idol)",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Trickster (Summer Idol) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Trickster (Summer Idol): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Trickster (Summer Idol) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Trickster (Summer Idol) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Trickster (Summer Idol): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Trickster (Summer Idol) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Trickster (Summer Idol) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Trickster (Summer Idol): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Trickster (Summer Idol)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Trickster (Summer Idol) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The K-Pop Poolside Sensation",
+                        "tagline": "Neon sunglasses, open tropical silk shirt, and unlimited charisma.",
+                        "bio": "Ji-Woon brings VIP concert energy to every beach cabana. He will write you private acoustic ballads and throw rose-colored throwing knives at fruit targets for your entertainment.",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "Flawless sense of style",
+                            "Romantic serenades on demand",
+                            "Treats you like a superstar"
+                        ],
+                        "red_flags": [
+                            "Extremely vain",
+                            "Records his own voice memo compliments"
+                        ],
+                        "turn_on": "Adoring praise, high fashion, and spotlight drama",
+                        "dealbreaker": "Refusing to be his VIP muse",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Trickster (Summer Idol) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Trickster (Summer Idol): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Trickster (Summer Idol) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Trickster (Summer Idol) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Trickster (Summer Idol): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Trickster (Summer Idol) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Trickster (Summer Idol) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Trickster (Summer Idol): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Trickster (Summer Idol) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Trickster (Summer Idol) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Trickster (Summer Idol): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Trickster (Summer Idol)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Every melody I write has your name hidden in the chorus.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Trickster (Summer Idol) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "the_ocean_hoy",
+            "name": "The Entity (Island Spirit)",
+            "role": "Killer",
+            "gender": "monster_other",
+            "media_url": "/static/avatars/killers/the_ocean_hoy.png",
+            "metadata": {
+                "title": "The Eldritch Island Sovereign",
+                "tagline": "Sparkling bioluminescent waves and cosmic tentacle embraces.",
+                "bio": "The ancient being that created the island paradise. A cosmic romantic who controls the tides and manifests warm ocean breezes whenever you are feeling down.",
+                "quote": "\"All waters and souls flow into me.\"",
+                "green_flags": [
+                    "Created an entire private paradise for you",
+                    "Cosmic devotion across dimensions",
+                    "Controls the weather"
+                ],
+                "red_flags": [
+                    "Might consume your soul for eternity",
+                    "Incomprehensible eldritch whispers"
+                ],
+                "greenFlags": [
+                    "Created an entire private paradise for you",
+                    "Cosmic devotion across dimensions",
+                    "Controls the weather"
+                ],
+                "redFlags": [
+                    "Might consume your soul for eternity",
+                    "Incomprehensible eldritch whispers"
+                ],
+                "turn_on": "Total devotion and willing sacrifice of your mortal concerns",
+                "turnOn": "Total devotion and willing sacrifice of your mortal concerns",
+                "dealbreaker": "Leaving the island paradise without saying goodbye",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Entity (Island Spirit) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Eldritch Island Sovereign",
+                    "Killer",
+                    "monster_other"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Eldritch Island Sovereign",
+                "translations": {
+                    "en": {
+                        "title": "The Eldritch Island Sovereign",
+                        "tagline": "Sparkling bioluminescent waves and cosmic tentacle embraces.",
+                        "bio": "The ancient being that created the island paradise. A cosmic romantic who controls the tides and manifests warm ocean breezes whenever you are feeling down.",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "Created an entire private paradise for you",
+                            "Cosmic devotion across dimensions",
+                            "Controls the weather"
+                        ],
+                        "red_flags": [
+                            "Might consume your soul for eternity",
+                            "Incomprehensible eldritch whispers"
+                        ],
+                        "turn_on": "Total devotion and willing sacrifice of your mortal concerns",
+                        "dealbreaker": "Leaving the island paradise without saying goodbye",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Entity (Island Spirit) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Entity (Island Spirit): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Entity (Island Spirit) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Entity (Island Spirit)",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Entity (Island Spirit) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Entity (Island Spirit): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Entity (Island Spirit) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Entity (Island Spirit) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Entity (Island Spirit): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Entity (Island Spirit) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Entity (Island Spirit) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Entity (Island Spirit): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Entity (Island Spirit)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Entity (Island Spirit) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Eldritch Island Sovereign",
+                        "tagline": "Sparkling bioluminescent waves and cosmic tentacle embraces.",
+                        "bio": "The ancient being that created the island paradise. A cosmic romantic who controls the tides and manifests warm ocean breezes whenever you are feeling down.",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "Created an entire private paradise for you",
+                            "Cosmic devotion across dimensions",
+                            "Controls the weather"
+                        ],
+                        "red_flags": [
+                            "Might consume your soul for eternity",
+                            "Incomprehensible eldritch whispers"
+                        ],
+                        "turn_on": "Total devotion and willing sacrifice of your mortal concerns",
+                        "dealbreaker": "Leaving the island paradise without saying goodbye",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Entity (Island Spirit) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Entity (Island Spirit): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Entity (Island Spirit) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Entity (Island Spirit) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Entity (Island Spirit): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Entity (Island Spirit) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Entity (Island Spirit) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Entity (Island Spirit): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Entity (Island Spirit) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Entity (Island Spirit) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Entity (Island Spirit): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Entity (Island Spirit)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"All waters and souls flow into me.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Entity (Island Spirit) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        }
+    ]
+}

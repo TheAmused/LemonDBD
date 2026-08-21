@@ -65,11 +65,15 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
                     try:
                         DatabaseService().init_db()
                         seed_default_users()
+                        from app.seeds.smash_roster_seeder import seed_smash_rosters
+                        seed_smash_rosters()
                     finally:
                         conn.execute(text("SELECT pg_advisory_unlock(8882026);"))
         else:
             DatabaseService().init_db()
             seed_default_users()
+            from app.seeds.smash_roster_seeder import seed_smash_rosters
+            seed_smash_rosters()
 
     with flask_app.app_context():
         try:
@@ -115,6 +119,8 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app.register_blueprint(guesser_bp)
     flask_app.register_blueprint(smash_or_pass_bp)
     flask_app.register_blueprint(bug_reports_bp)
+
+
 
     @flask_app.route("/api/v1/i18n/<locale>", methods=["GET"])
     def get_i18n_translations(locale: str):

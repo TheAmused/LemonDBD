@@ -1,28 +1,50 @@
 // frontend/src/components/smash-or-pass/FloatingLoreScattered.tsx
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   Skull,
   Shield,
-  Heart,
-  AlertTriangle,
   CheckCircle2,
   Sparkles,
   Quote,
-  Flame,
   User,
-  Compass,
+  AlertTriangle,
+  Zap,
+  Flame,
 } from 'lucide-react';
-import { CharacterRosterItem } from './characterRoster';
+import { SmashSounds } from './SmashSoundEffects';
+import { EntityItem } from '@/types/smashOrPass';
 
 interface FloatingLoreScatteredProps {
-  character: CharacterRosterItem | null;
+  character: EntityItem | null;
   locale?: string;
+  dict?: any;
 }
+
+// Known DBD signature quote translations
+const KNOWN_QUOTES_PL: Record<string, string> = {
+  claudette_morel: '„Rośliny cię nie oceniają. Po prostu leczą, jeśli traktujesz je z szacunkiem.”',
+  claudette_morel_hoy: '„Nawet na tropikalnej plaży zioła lecznicze rosną w cieniu palm.”',
+  meg_thomas: '„Biegnij tak szybko, jak potrafisz. Nigdy się nie zatrzymuj.”',
+  sable_ward: '„Mrok ma swój własny powab, jeśli tylko nie boisz się w niego zanurzyć.”',
+  dwight_fairfield: '„Jeśli będziemy trzymać się razem, przetrwamy wszystko.”',
+  nea_karlsson: '„Zasady są po to, by je łamać, zwłaszcza we Mgle.”',
+  feng_min: '„GG WP, albo postawisz mi boba tea i zagramy rewanż?”',
+  the_trapper: '„Każdy krok może być twoim ostatnim potknięciem.”',
+  the_huntress: '„Lulajże, lulaj... las nie wybacza słabości.”',
+  the_trickster: '„Twój krzyk to najpiękniejsza symfonia na mojej scenie.”',
+  the_spirit: '„Gniew przepływa przez moje żyły niczym lodowate ostrze.”',
+  the_wraith: '„Dźwięk dzwonu zwiastuje twój nieuchronny koniec.”',
+  the_nurse: '„Pozwól, że uwolnię cię od cierpienia tej próby.”',
+  mikaela_reid: '„Wyciągnęłam z talii Kochanków i Wieżę. Szykuj się na dramat.”',
+  yui_kimura: '„Ryk silnika daje mi wolność, której Byt nie zdoła odebrać.”',
+};
 
 export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   character,
+  locale = 'en',
+  dict,
 }) => {
   if (!character) return null;
 
@@ -30,181 +52,272 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   const isMonster = character.gender === 'monster_other';
   const isFemale = character.gender === 'female';
 
-  // Seed randomized but collision-safe coordinates for this character
-  const layout = useMemo(() => {
-    let seed = 0;
-    for (let i = 0; i < character.slug.length; i++) {
-      seed = (seed << 5) - seed + character.slug.charCodeAt(i);
-      seed |= 0;
+  const metadata = character.metadata || (character as any).metadata_json || {};
+  const currentLoc = locale || 'en';
+  const locMeta = metadata.translations?.[currentLoc] || metadata.i18n?.[currentLoc] || {};
+
+  const charTitle =
+    locMeta.title ||
+    metadata.title ||
+    metadata.archetype ||
+    (currentLoc === 'pl' ? (isSurvivor ? 'Ocalały we Mgle' : 'Zabójca we Mgle') : character.role);
+
+  const charTagline =
+    locMeta.tagline ||
+    metadata.tagline ||
+    (isSurvivor
+      ? currentLoc === 'pl'
+        ? 'Szuka drogi ucieczki w mrocznym wymiarze próby.'
+        : 'Searching for an escape in the fog'
+      : currentLoc === 'pl'
+      ? 'Poluje na swoje ofiary w królestwie Bytu.'
+      : 'Stalking prey in the entity’s realm');
+
+  // Polish quote resolution: priority locMeta -> known quote -> translated fallback
+  let charQuote = locMeta.quote;
+  if (!charQuote || (currentLoc === 'pl' && (!locMeta.quote || locMeta.quote.startsWith('"Plants')))) {
+    if (currentLoc === 'pl') {
+      charQuote =
+        KNOWN_QUOTES_PL[character.slug] ||
+        (isSurvivor
+          ? `„W obliczu próby liczy się determinacja i zaufanie.” – ${character.name}`
+          : `„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – ${character.name}`);
+    } else {
+      charQuote = metadata.quote || metadata.lore_quote || `"${character.name}"`;
     }
-    const rand = (min: number, max: number, offset: number) => {
-      const v = Math.abs((seed * (offset + 1) * 9301 + 49297) % 233280) / 233280;
-      return Math.floor(min + v * (max - min));
-    };
+  }
 
-    return {
-      // Left Wing: Role Badge (Top-Left safe zone: top 170px - 260px, left 3% - 15%)
-      roleTop: rand(170, 240, 1),
-      roleLeft: rand(2, 8, 2),
+  const greenFlags: string[] =
+    locMeta.green_flags ||
+    metadata.green_flags ||
+    metadata.greenFlags ||
+    (currentLoc === 'pl'
+      ? ['Niezłomna lojalność w próbie', 'Instynkt przetrwania']
+      : ['Loyal trial companion', 'Protective instincts']);
 
-      // Left Wing: Title & Tagline (Mid-Left safe zone: top 310px - 440px, left 2% - 10%)
-      titleTop: rand(310, 420, 3),
-      titleLeft: rand(1, 6, 4),
+  const redFlags: string[] =
+    locMeta.red_flags ||
+    metadata.red_flags ||
+    metadata.redFlags ||
+    (currentLoc === 'pl' ? ['Nieprzewidywalność we mgle'] : ['Unpredictable in the fog']);
 
-      // Left Wing: Green Flag (Bottom-Left safe zone: top 510px - 640px, left 3% - 12%)
-      greenTop: rand(510, 620, 5),
-      greenLeft: rand(2, 9, 6),
+  // Localized Labels
+  const loreLabels = dict?.smashOrPass?.loreLabels || {};
+  const trialClassificationLabel = loreLabels.trialClassification || (currentLoc === 'pl' ? 'Klasyfikacja Próby' : 'Trial Classification');
+  const datingArchetypeLabel = loreLabels.datingArchetype || (currentLoc === 'pl' ? 'Archetyp Randkowy' : 'Dating Archetype');
+  const greenFlagLabel = loreLabels.greenFlag || (currentLoc === 'pl' ? 'Zielona Flaga' : 'Trial Green Flag');
+  const redFlagLabel = loreLabels.redFlag || (currentLoc === 'pl' ? 'Ostrzeżenie Próby' : 'Trial Warning');
+  const identityProfileLabel = loreLabels.identityProfile || (currentLoc === 'pl' ? 'Profil Tożsamości' : 'Identity Profile');
+  const signatureQuoteLabel = loreLabels.signatureQuote || (currentLoc === 'pl' ? 'Charakterystyczny Cytat' : 'Signature Quote');
 
-      // Right Wing: Gender/Identity Badge (Top-Right safe zone: top 170px - 250px, right 3% - 15%)
-      genderTop: rand(170, 240, 7),
-      genderRight: rand(2, 8, 8),
+  const genderLabel = isMonster
+    ? loreLabels.monster || (currentLoc === 'pl' ? 'Potwór / Przedwieczny' : 'Eldritch / Monster')
+    : isFemale
+    ? loreLabels.female || (currentLoc === 'pl' ? 'Kobieta' : 'Female')
+    : loreLabels.male || (currentLoc === 'pl' ? 'Mężczyzna' : 'Male');
 
-      // Right Wing: Quote Card (Mid-Right safe zone: top 310px - 430px, right 2% - 10%)
-      quoteTop: rand(310, 420, 9),
-      quoteRight: rand(1, 6, 10),
+  const roleLabel = isSurvivor
+    ? dict?.smashOrPass?.filters?.survivors || (currentLoc === 'pl' ? 'Ocalały' : 'Survivor')
+    : dict?.smashOrPass?.filters?.killers || (currentLoc === 'pl' ? 'Zabójca' : 'Killer');
 
-      // Right Wing: Red Flag / Turn-On (Bottom-Right safe zone: top 510px - 640px, right 3% - 12%)
-      redTop: rand(510, 620, 11),
-      redRight: rand(2, 9, 12),
-    };
-  }, [character.slug]);
+  const handleCardHover = () => {
+    SmashSounds.playHoverTick();
+  };
+
+  // Name splitting for flanking background typography
+  const rawName = (character.name || '').trim();
+  const nameParts = rawName.split(/\s+/);
+  const firstName = nameParts[0] || rawName;
+  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none hidden lg:block">
-      {/* 1. Giant Background Watermark Name */}
-      <div
-        key={`watermark-${character.slug}`}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center opacity-[0.045] pointer-events-none transition-all duration-700 animate-in fade-in zoom-in-95"
-      >
-        <span className="text-8xl xl:text-[11rem] font-black uppercase tracking-widest text-white font-mono blur-[0.5px]">
-          {character.name}
-        </span>
-      </div>
-
-      {/* 2. Left Wing - Role Classification Badge */}
-      <div
-        key={`role-${character.slug}`}
-        style={{ top: `${layout.roleTop}px`, left: `${layout.roleLeft}vw` }}
-        className="absolute max-w-[280px] transition-all duration-700 animate-in fade-in slide-in-from-left-6"
-      >
+    <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden select-none">
+      {/* 1. FLANKING WATERMARK TYPOGRAPHY (FIRST NAME ON LEFT, SURNAME ON RIGHT AROUND CARD) */}
+      <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+        {/* Left Side: First Name */}
         <div
-          className={`flex items-center gap-3 p-4 rounded-3xl border-2 backdrop-blur-xl shadow-2xl ${
-            isSurvivor
-              ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300 shadow-[0_0_25px_rgba(16,185,129,0.2)]'
-              : isMonster
-              ? 'bg-purple-950/60 border-purple-500/40 text-purple-300 shadow-[0_0_25px_rgba(168,85,247,0.2)]'
-              : 'bg-rose-950/60 border-rose-500/40 text-rose-300 shadow-[0_0_25px_rgba(244,63,94,0.2)]'
-          }`}
+          key={`watermark-first-${character.slug}`}
+          className="pointer-events-auto anim-watermark-enter absolute top-[44%] -translate-y-1/2 right-[50%] mr-32 sm:mr-40 md:mr-52 lg:mr-64 text-right opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          onMouseEnter={handleCardHover}
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black/40 border border-white/10 shrink-0">
-            {isSurvivor ? <Shield className="h-6 w-6" /> : <Skull className="h-6 w-6" />}
-          </div>
-          <div className="text-left">
-            <span className="text-xs font-black uppercase tracking-widest block opacity-75">
-              Role Classification
+          <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-zinc-100 font-mono group-hover:text-pink-500 group-hover:drop-shadow-[0_0_60px_rgba(255,0,85,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform">
+            {firstName}
+          </span>
+        </div>
+
+        {/* Right Side: Surname / Second Name Part */}
+        {lastName && (
+          <div
+            key={`watermark-last-${character.slug}`}
+            className="pointer-events-auto anim-watermark-enter absolute top-[44%] -translate-y-1/2 left-[50%] ml-32 sm:ml-40 md:ml-52 lg:ml-64 text-left opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+            style={{ animationDelay: '100ms' }}
+            onMouseEnter={handleCardHover}
+          >
+            <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-zinc-100 font-mono group-hover:text-pink-500 group-hover:drop-shadow-[0_0_60px_rgba(255,0,85,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform">
+              {lastName}
             </span>
-            <span className="text-base font-black tracking-wide">{character.role}</span>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* 3. Left Wing - Character Title & Tagline */}
-      <div
-        key={`title-${character.slug}`}
-        style={{ top: `${layout.titleTop}px`, left: `${layout.titleLeft}vw` }}
-        className="absolute max-w-[320px] transition-all duration-700 animate-in fade-in slide-in-from-left-8"
-      >
-        <div className="p-5 rounded-3xl bg-slate-950/80 border-2 border-pink-500/30 backdrop-blur-xl shadow-2xl space-y-1.5 text-left">
-          <div className="flex items-center gap-2 text-pink-400">
-            <Sparkles className="h-4 w-4" />
-            <span className="text-xs font-black uppercase tracking-widest">Character Lore</span>
-          </div>
-          <h4 className="text-base font-black text-slate-100 italic tracking-tight">{character.title}</h4>
-          <p className="text-xs text-slate-300 leading-relaxed font-medium pt-0.5">{character.tagline}</p>
-        </div>
-      </div>
-
-      {/* 4. Left Wing - Green Flag */}
-      {character.greenFlags?.[0] && (
+      {/* 2. LEFT FLANKING DOSSIER WING */}
+      <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-16 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none">
+        {/* Left Item 1: Trial Classification & Radar Beacon (Tilt Left -2deg & Emerald Aura) */}
         <div
-          key={`green-${character.slug}`}
-          style={{ top: `${layout.greenTop}px`, left: `${layout.greenLeft}vw` }}
-          className="absolute max-w-[300px] transition-all duration-700 animate-in fade-in slide-in-from-left-6"
+          key={`role-${character.slug}`}
+          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:-rotate-2 cursor-pointer group"
+          style={{ animationDelay: '0ms' }}
+          onMouseEnter={handleCardHover}
         >
-          <div className="flex items-start gap-3 p-4 rounded-3xl bg-emerald-950/60 border-2 border-emerald-500/40 text-emerald-200 backdrop-blur-xl shadow-2xl text-left">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5">
-              <CheckCircle2 className="h-5 w-5" />
+          <div
+            className={`relative overflow-hidden p-4 rounded-3xl border-2 backdrop-blur-2xl shadow-2xl transition-all duration-300 ${
+              isSurvivor
+                ? 'bg-emerald-950/75 border-emerald-500/40 text-emerald-300 shadow-[0_0_30px_rgba(16,185,129,0.25)] group-hover:border-emerald-400 group-hover:shadow-[0_0_60px_rgba(16,185,129,0.65)] group-hover:bg-emerald-900/95'
+                : isMonster
+                ? 'bg-purple-950/75 border-purple-500/40 text-purple-300 shadow-[0_0_30px_rgba(168,85,247,0.25)] group-hover:border-purple-400 group-hover:shadow-[0_0_60px_rgba(168,85,247,0.65)] group-hover:bg-purple-900/95'
+                : 'bg-rose-950/75 border-rose-500/40 text-rose-300 shadow-[0_0_30px_rgba(255,0,85,0.25)] group-hover:border-rose-400 group-hover:shadow-[0_0_60px_rgba(255,0,85,0.65)] group-hover:bg-rose-900/95'
+            }`}
+          >
+            {/* Holographic scanlines */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none opacity-40 group-hover:opacity-70 transition-opacity" />
+
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black/70 border border-white/10 shrink-0 group-hover:scale-110 group-hover:rotate-6 group-hover:border-white/30 transition-all shadow-inner">
+                  {isSurvivor ? (
+                    <Shield className="h-5 w-5 text-emerald-400" />
+                  ) : (
+                    <Skull className="h-5 w-5 text-rose-400" />
+                  )}
+                </span>
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400 block group-hover:text-zinc-200 transition-colors">
+                    {trialClassificationLabel}
+                  </span>
+                  <span className="text-sm font-black font-mono tracking-tight text-white block group-hover:text-pink-300 transition-colors">
+                    {roleLabel}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400 block">
-                Green Flag
+          </div>
+        </div>
+
+        {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
+        <div
+          key={`title-${character.slug}`}
+          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:rotate-2 cursor-pointer group"
+          style={{ animationDelay: '80ms' }}
+          onMouseEnter={handleCardHover}
+        >
+          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-zinc-950/80 border-2 border-pink-500/30 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-pink-500 group-hover:shadow-[0_0_60px_rgba(255,0,85,0.7)] group-hover:bg-zinc-900/95">
+            <div className="flex items-center gap-1.5 text-pink-400">
+              <Sparkles className="h-3.5 w-3.5 animate-spin group-hover:scale-125 transition-transform" style={{ animationDuration: '4s' }} />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                {datingArchetypeLabel}
               </span>
-              <p className="text-xs font-semibold leading-snug pt-0.5">{character.greenFlags[0]}</p>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* 5. Right Wing - Gender & Identity Badge */}
-      <div
-        key={`gender-${character.slug}`}
-        style={{ top: `${layout.genderTop}px`, right: `${layout.genderRight}vw` }}
-        className="absolute max-w-[280px] transition-all duration-700 animate-in fade-in slide-in-from-right-6"
-      >
-        <div className="flex items-center gap-3 p-4 rounded-3xl bg-slate-950/70 border-2 border-slate-700/60 text-slate-200 backdrop-blur-xl shadow-2xl">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/20 text-pink-400 border border-pink-500/30 shrink-0">
-            <User className="h-6 w-6" />
-          </div>
-          <div className="text-left">
-            <span className="text-xs font-black uppercase tracking-widest block text-slate-400">
-              Identity &amp; Gender
-            </span>
-            <span className="text-base font-black capitalize text-slate-100">
-              {isFemale ? 'Female' : isMonster ? 'Monster & Eldritch' : 'Male'}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 6. Right Wing - Atmospheric Voice Quote */}
-      {character.quote && (
-        <div
-          key={`quote-${character.slug}`}
-          style={{ top: `${layout.quoteTop}px`, right: `${layout.quoteRight}vw` }}
-          className="absolute max-w-[320px] transition-all duration-700 animate-in fade-in slide-in-from-right-8"
-        >
-          <div className="p-5 rounded-3xl bg-slate-950/80 border-2 border-rose-500/30 backdrop-blur-xl shadow-2xl space-y-1.5 text-left">
-            <div className="flex items-center gap-2 text-rose-400">
-              <Quote className="h-4 w-4" />
-              <span className="text-xs font-black uppercase tracking-widest">Voice of the Trial</span>
-            </div>
-            <p className="text-xs italic font-serif text-slate-200 leading-relaxed pt-0.5">
-              {character.quote}
+            <p className="text-sm font-black font-mono tracking-tight text-white group-hover:text-pink-300 transition-colors">
+              {charTitle}
+            </p>
+            <p className="text-xs text-zinc-400 line-clamp-2 leading-snug group-hover:text-zinc-200 transition-colors font-sans">
+              {charTagline}
             </p>
           </div>
         </div>
-      )}
 
-      {/* 7. Right Wing - Red Flag / Warning */}
-      {character.redFlags?.[0] && (
-        <div
-          key={`red-${character.slug}`}
-          style={{ top: `${layout.redTop}px`, right: `${layout.redRight}vw` }}
-          className="absolute max-w-[300px] transition-all duration-700 animate-in fade-in slide-in-from-right-6"
-        >
-          <div className="flex items-start gap-3 p-4 rounded-3xl bg-rose-950/60 border-2 border-rose-500/40 text-rose-200 backdrop-blur-xl shadow-2xl text-left">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-500/20 text-rose-400 shrink-0 mt-0.5">
-              <AlertTriangle className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-rose-400 block">
-                Red Flag
-              </span>
-              <p className="text-xs font-semibold leading-snug pt-0.5">{character.redFlags[0]}</p>
+        {/* Left Item 3: Trial Green Flag (Scale +10% & Emerald Strobe) */}
+        {greenFlags.length > 0 && (
+          <div
+            key={`green-${character.slug}`}
+            className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-110 hover:-rotate-1 cursor-pointer group"
+            style={{ animationDelay: '160ms' }}
+            onMouseEnter={handleCardHover}
+          >
+            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-emerald-950/70 border-2 border-emerald-500/35 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-emerald-400 group-hover:shadow-[0_0_55px_rgba(16,185,129,0.7)] group-hover:bg-emerald-900/95">
+              <div className="flex items-center gap-1.5 text-emerald-400">
+                <CheckCircle2 className="h-4 w-4 shrink-0 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                  {greenFlagLabel}
+                </span>
+              </div>
+              <p className="text-xs font-semibold text-emerald-200 leading-snug group-hover:text-white transition-colors font-sans">
+                {greenFlags[0]}
+              </p>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* 3. RIGHT FLANKING DOSSIER WING */}
+      <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-16 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none">
+        {/* Right Item 1: Identity Profile & Cyber Tag (Tilt Right +1deg & Cyan Glitch) */}
+        <div
+          key={`gender-${character.slug}`}
+          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:rotate-1 cursor-pointer group"
+          style={{ animationDelay: '40ms' }}
+          onMouseEnter={handleCardHover}
+        >
+          <div className="relative overflow-hidden flex items-center justify-between p-4 rounded-3xl bg-zinc-950/85 border-2 border-cyan-500/35 backdrop-blur-2xl shadow-2xl transition-all duration-300 group-hover:border-cyan-400 group-hover:shadow-[0_0_65px_rgba(6,182,212,0.75)] group-hover:bg-zinc-900/95">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/30 shrink-0 text-cyan-400 group-hover:scale-115 group-hover:-rotate-6 transition-transform shadow-inner">
+                <User className="h-5 w-5" />
+              </span>
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400 block group-hover:text-zinc-200 transition-colors">
+                  {identityProfileLabel}
+                </span>
+                <span className="text-sm font-black font-mono tracking-tight text-white capitalize block group-hover:text-cyan-300 transition-colors">
+                  {genderLabel}
+                </span>
+              </div>
+            </div>
+            <Zap className="h-4 w-4 text-cyan-400/70 group-hover:text-cyan-300 group-hover:scale-125 animate-pulse transition-transform" />
+          </div>
         </div>
-      )}
+
+        {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}
+        <div
+          key={`quote-${character.slug}`}
+          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:-rotate-1 cursor-pointer group"
+          style={{ animationDelay: '120ms' }}
+          onMouseEnter={handleCardHover}
+        >
+          <div className="relative overflow-hidden p-4 rounded-3xl bg-zinc-950/85 border-2 border-amber-500/35 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-amber-400 group-hover:shadow-[0_0_65px_rgba(245,158,11,0.75)] group-hover:bg-zinc-900/95">
+            <div className="flex items-center gap-1.5 text-amber-400">
+              <Quote className="h-3.5 w-3.5 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                {signatureQuoteLabel}
+              </span>
+            </div>
+            <p className="text-xs text-amber-100 font-serif italic leading-relaxed group-hover:text-white transition-colors">
+              {charQuote}
+            </p>
+          </div>
+        </div>
+
+        {/* Right Item 3: Trial Warning / Red Flag (Tilt Right +2deg & Warning Flare) */}
+        {redFlags.length > 0 && (
+          <div
+            key={`red-${character.slug}`}
+            className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-110 hover:rotate-2 cursor-pointer group"
+            style={{ animationDelay: '200ms' }}
+            onMouseEnter={handleCardHover}
+          >
+            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-rose-950/70 border-2 border-rose-500/35 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-rose-400 group-hover:shadow-[0_0_65px_rgba(255,0,85,0.75)] group-hover:bg-rose-900/95">
+              <div className="flex items-center gap-1.5 text-rose-400">
+                <AlertTriangle className="h-4 w-4 shrink-0 group-hover:scale-125 group-hover:-rotate-12 transition-transform" />
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                  {redFlagLabel}
+                </span>
+              </div>
+              <p className="text-xs font-semibold text-rose-200 leading-snug group-hover:text-white transition-colors font-sans">
+                {redFlags[0]}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -14,14 +14,17 @@ LemonDBD/
 │   │   ├── models/
 │   │   │   ├── __init__.py
 │   │   │   ├── base.py
+│   │   │   ├── chaos.py
 │   │   │   ├── character.py
 │   │   │   ├── community.py
 │   │   │   ├── equipment.py
 │   │   │   ├── gauntlet.py
+│   │   │   ├── history.py
 │   │   │   ├── map.py
 │   │   │   ├── minigames.py
 │   │   │   ├── page_streak.py
 │   │   │   ├── perk.py
+│   │   │   ├── smash_or_pass.py
 │   │   │   └── user.py
 │   │   ├── routes/
 │   │   │   ├── others/
@@ -31,12 +34,15 @@ LemonDBD/
 │   │   │   │   ├── draft.py
 │   │   │   │   ├── guesser.py
 │   │   │   │   ├── killer_calc.py
-│   │   │   │   └── quests.py
+│   │   │   │   ├── quests.py
+│   │   │   │   └── smash_or_pass.py
 │   │   │   ├── __init__.py
 │   │   │   ├── auth.py
 │   │   │   ├── bug_reports.py
+│   │   │   ├── chaos_streak.py
 │   │   │   ├── gauntlet_streak.py
 │   │   │   ├── generator.py
+│   │   │   ├── history_streak.py
 │   │   │   ├── maps.py
 │   │   │   ├── page_streak.py
 │   │   │   ├── perks.py
@@ -44,10 +50,12 @@ LemonDBD/
 │   │   │   └── users.py
 │   │   ├── schemas/
 │   │   │   ├── __init__.py
+│   │   │   ├── chaos.py
 │   │   │   ├── character.py
 │   │   │   ├── community.py
 │   │   │   ├── equipment.py
 │   │   │   ├── gauntlet.py
+│   │   │   ├── history.py
 │   │   │   ├── map.py
 │   │   │   ├── minigames.py
 │   │   │   ├── page_streak.py
@@ -55,8 +63,20 @@ LemonDBD/
 │   │   │   └── user.py
 │   │   ├── scrapers/
 │   │   │   ├── assets/ [Contains only media across subdirectories (1 files)]
+│   │   │   ├── drivers/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── base.py
+│   │   │   │   ├── de.py
+│   │   │   │   ├── en.py
+│   │   │   │   ├── es.py
+│   │   │   │   ├── fr.py
+│   │   │   │   ├── it.py
+│   │   │   │   ├── ja.py
+│   │   │   │   └── pl.py
 │   │   │   ├── __init__.py
+│   │   │   ├── constants.py
 │   │   │   ├── maps.py
+│   │   │   ├── roster_images.py
 │   │   │   ├── types.py
 │   │   │   ├── utils.py
 │   │   │   └── wikigg.py
@@ -64,11 +84,16 @@ LemonDBD/
 │   │   │   ├── __init__.py
 │   │   │   └── user_seeder.py
 │   │   ├── services/
+│   │   │   ├── chaos/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── constants.py
+│   │   │   │   ├── roller.py
+│   │   │   │   └── stats.py
 │   │   │   ├── db/
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── connection.py
+│   │   │   │   ├── export_import.py
 │   │   │   │   ├── maintenance.py
-│   │   │   │   ├── migrations.py
 │   │   │   │   ├── raw_schema.py
 │   │   │   │   └── seeders.py
 │   │   │   ├── gauntlet/
@@ -80,6 +105,9 @@ LemonDBD/
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── config_manager.py
 │   │   │   │   └── drawn_manager.py
+│   │   │   ├── history/
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── roster.py
 │   │   │   ├── maps/
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── data.py
@@ -92,7 +120,8 @@ LemonDBD/
 │   │   │   │   ├── draft_service.py
 │   │   │   │   ├── guesser_service.py
 │   │   │   │   ├── killer_calc_service.py
-│   │   │   │   └── quest_service.py
+│   │   │   │   ├── quest_service.py
+│   │   │   │   └── smash_or_pass_service.py
 │   │   │   ├── ownership/
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── characters.py
@@ -123,15 +152,20 @@ LemonDBD/
 │   │   │   │   ├── badges.py
 │   │   │   │   ├── evaluator.py
 │   │   │   │   └── rules.py
+│   │   │   ├── translations/
+│   │   │   │   ├── __init__.py
+│   │   │   │   └── translation_service.py
 │   │   │   ├── user/
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── admin.py
 │   │   │   │   ├── auth.py
 │   │   │   │   ├── avatar.py
 │   │   │   │   └── profile.py
+│   │   │   ├── chaos_service.py
 │   │   │   ├── db_service.py
 │   │   │   ├── gauntlet_service.py
 │   │   │   ├── generator_service.py
+│   │   │   ├── history_service.py
 │   │   │   ├── map_service.py
 │   │   │   ├── ownership_service.py
 │   │   │   ├── page_streak_service.py
@@ -139,12 +173,11 @@ LemonDBD/
 │   │   │   ├── scraper_service.py
 │   │   │   ├── synergy_service.py
 │   │   │   └── user_service.py
-│   │   ├── static/ [Contains only media across subdirectories (2281 files)]
+│   │   ├── static/ [Contains only media across subdirectories (1719 files)]
+│   │   ├── translations/
+│   │   │   ├── translations.json
+│   │   │   └── translations.min.json
 │   │   └── __init__.py
-│   ├── data/
-│   │   ├── lemon_dbd.db
-│   │   ├── maps.json
-│   │   └── scraper_config.json
 │   ├── migrations/
 │   │   ├── versions/
 │   │   │   ├── 549bebf174e2_initial_schema_migration.py
@@ -161,36 +194,52 @@ LemonDBD/
 │   ├── tests/
 │   │   ├── api/
 │   │   │   ├── __init__.py
+│   │   │   ├── test_chaos_routes.py
 │   │   │   ├── test_character_detail_route.py
 │   │   │   ├── test_character_slug_routes.py
+│   │   │   ├── test_db_export_import.py
 │   │   │   ├── test_fullscreen_maps_routes.py
 │   │   │   ├── test_gauntlet_routes.py
 │   │   │   ├── test_generator_routes.py
+│   │   │   ├── test_history_routes.py
 │   │   │   ├── test_item_routes.py
 │   │   │   ├── test_page_streak_routes.py
 │   │   │   └── test_scraper_routes.py
 │   │   ├── scrapers/
 │   │   │   ├── __init__.py
 │   │   │   ├── test_character_scraper.py
+│   │   │   ├── test_modular_drivers.py
 │   │   │   ├── test_scraper_config.py
-│   │   │   └── test_wikigg_items_addons.py
-│   │   └── unit/
-│   │       ├── __init__.py
-│   │       ├── test_db_service.py
-│   │       ├── test_description_cleaner.py
-│   │       ├── test_fullscreen_maps_service.py
-│   │       ├── test_gauntlet_service.py
-│   │       ├── test_generator_service.py
-│   │       ├── test_guesser.py
-│   │       ├── test_page_streak_service.py
-│   │       ├── test_phase1_services.py
-│   │       ├── test_phase2_services.py
-│   │       ├── test_phase3_services.py
-│   │       ├── test_phase4_services.py
-│   │       ├── test_phase5_services.py
-│   │       ├── test_phase6_services.py
-│   │       ├── test_sqlalchemy_models_and_seeder.py
-│   │       └── test_user_ownership.py
+│   │   │   ├── test_wikigg_items_addons.py
+│   │   │   └── test_wikigg_translations.py
+│   │   ├── unit/
+│   │   │   ├── __init__.py
+│   │   │   ├── test_chaos_models.py
+│   │   │   ├── test_chaos_roller.py
+│   │   │   ├── test_chaos_service.py
+│   │   │   ├── test_chaos_stats.py
+│   │   │   ├── test_db_service.py
+│   │   │   ├── test_description_cleaner.py
+│   │   │   ├── test_fullscreen_maps_service.py
+│   │   │   ├── test_gauntlet_service.py
+│   │   │   ├── test_generator_service.py
+│   │   │   ├── test_guesser.py
+│   │   │   ├── test_history_models.py
+│   │   │   ├── test_history_roster.py
+│   │   │   ├── test_history_service.py
+│   │   │   ├── test_page_streak_service.py
+│   │   │   ├── test_phase1_services.py
+│   │   │   ├── test_phase2_services.py
+│   │   │   ├── test_phase3_services.py
+│   │   │   ├── test_phase4_services.py
+│   │   │   ├── test_phase5_services.py
+│   │   │   ├── test_phase6_services.py
+│   │   │   ├── test_sqlalchemy_models_and_seeder.py
+│   │   │   └── test_user_ownership.py
+│   │   ├── conftest.py
+│   │   ├── test_roster_image_scraper.py
+│   │   ├── test_translations_jsonb.py
+│   │   └── test_translations_verification.py
 │   ├── .dockerignore
 │   ├── Dockerfile
 │   ├── requirements.txt
@@ -202,6 +251,7 @@ LemonDBD/
 │   └── scraper.md
 ├── frontend/
 │   ├── public/
+│   │   ├── images/ [Contains only media across subdirectories (12 files)]
 │   │   ├── models/
 │   │   │   └── Xenova/
 │   │   │       ├── whisper-tiny/
@@ -224,15 +274,16 @@ LemonDBD/
 │   │   │           ├── tokenizer.json
 │   │   │           ├── tokenizer_config.json
 │   │   │           └── vocab.json
-│   │   └── transformers/
-│   │       ├── ort-wasm-simd-threaded.wasm
-│   │       ├── ort-wasm-simd.wasm
-│   │       ├── ort-wasm-threaded.wasm
-│   │       ├── ort-wasm.wasm
-│   │       ├── transformers.js
-│   │       ├── transformers.js.map
-│   │       ├── transformers.min.js
-│   │       └── transformers.min.js.map
+│   │   ├── transformers/
+│   │   │   ├── ort-wasm-simd-threaded.wasm
+│   │   │   ├── ort-wasm-simd.wasm
+│   │   │   ├── ort-wasm-threaded.wasm
+│   │   │   ├── ort-wasm.wasm
+│   │   │   ├── transformers.js
+│   │   │   ├── transformers.js.map
+│   │   │   ├── transformers.min.js
+│   │   │   └── transformers.min.js.map
+│   │   └── [1 media file]
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── [locale]/
@@ -254,11 +305,21 @@ LemonDBD/
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── maps/
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── perks/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── quests/
 │   │   │   │   │   └── page.tsx
+│   │   │   │   ├── smash-or-pass/
+│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── streaks/
+│   │   │   │   │   ├── challenge/
+│   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   ├── killer/
+│   │   │   │   │   │   ├── chaos-streak/
+│   │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   │   ├── gauntlet-streak/
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── history-streak/
 │   │   │   │   │   │   │   └── page.tsx
 │   │   │   │   │   │   ├── page-streak/
 │   │   │   │   │   │   │   ├── [killer]/
@@ -280,6 +341,12 @@ LemonDBD/
 │   │   │   ├── globals.css
 │   │   │   └── [1 media file]
 │   │   ├── components/
+│   │   │   ├── admin/
+│   │   │   │   ├── AdminBugReportsWorkbench.tsx
+│   │   │   │   ├── AdminCreateUserModal.tsx
+│   │   │   │   ├── AdminHeader.tsx
+│   │   │   │   ├── AdminStatsGrid.tsx
+│   │   │   │   └── AdminUserTable.tsx
 │   │   │   ├── builds/
 │   │   │   │   └── BuildVault.tsx
 │   │   │   ├── character-detail/
@@ -290,6 +357,7 @@ LemonDBD/
 │   │   │   │   │   ├── CharacterPerksSection.tsx
 │   │   │   │   │   ├── KillerCombatStats.tsx
 │   │   │   │   │   ├── KillerEquipmentSection.tsx
+│   │   │   │   │   ├── OfferingsSection.tsx
 │   │   │   │   │   └── SurvivorEquipmentSection.tsx
 │   │   │   │   ├── modals/
 │   │   │   │   │   ├── EquipmentDetailModal.tsx
@@ -323,19 +391,72 @@ LemonDBD/
 │   │   │   │   └── VoiceNavButton.tsx
 │   │   │   ├── perk-studio/
 │   │   │   │   └── CustomPerkStudio.tsx
+│   │   │   ├── sidebar/
+│   │   │   │   ├── BugReportModal.tsx
+│   │   │   │   ├── BuyCoffeeModal.tsx
+│   │   │   │   ├── FlagIcon.tsx
+│   │   │   │   ├── SidebarBottomControls.tsx
+│   │   │   │   ├── SidebarNavLink.tsx
+│   │   │   │   ├── SidebarStatsCard.tsx
+│   │   │   │   └── SidebarUserSection.tsx
+│   │   │   ├── smash-or-pass/
+│   │   │   │   ├── CardDisintegrationOverlay.tsx
+│   │   │   │   ├── CharacterCard.tsx
+│   │   │   │   ├── characterRoster.ts
+│   │   │   │   ├── CharacterStatsModal.tsx
+│   │   │   │   ├── editionsRegistry.ts
+│   │   │   │   ├── FloatingHeartsBackground.tsx
+│   │   │   │   ├── FloatingLoreScattered.tsx
+│   │   │   │   ├── InteractiveDragBackground.tsx
+│   │   │   │   ├── RomancePersonaModal.tsx
+│   │   │   │   ├── rosterTranslations.ts
+│   │   │   │   ├── SmashAnimations.tsx
+│   │   │   │   ├── SmashLeaderboardModal.tsx
+│   │   │   │   ├── SmashOrPassHub.tsx
+│   │   │   │   └── SmashSoundEffects.ts
 │   │   │   ├── streaks/
+│   │   │   │   ├── chaos/
+│   │   │   │   │   ├── ChaosBoard.tsx
+│   │   │   │   │   ├── ChaosCheckpointModal.tsx
+│   │   │   │   │   ├── ChaosHeader.tsx
+│   │   │   │   │   ├── ChaosModeModal.tsx
+│   │   │   │   │   ├── ChaosPerkPoolModal.tsx
+│   │   │   │   │   ├── ChaosProgressBar.tsx
+│   │   │   │   │   ├── ChaosRulesModal.tsx
+│   │   │   │   │   ├── ChaosStatsDrawer.tsx
+│   │   │   │   │   ├── KillerPickerGrid.tsx
+│   │   │   │   │   ├── SlotMachineStage.tsx
+│   │   │   │   │   ├── useChaosRun.ts
+│   │   │   │   │   ├── useKillerPerkPool.ts
+│   │   │   │   │   ├── useOwnedKillers.ts
+│   │   │   │   │   └── useSlotReels.ts
 │   │   │   │   ├── gauntlet/
 │   │   │   │   │   ├── ActiveTargetStage.tsx
 │   │   │   │   │   ├── CharacterRosterGrid.tsx
+│   │   │   │   │   ├── CheckpointModal.tsx
 │   │   │   │   │   ├── GauntletBoard.tsx
+│   │   │   │   │   ├── GauntletFireBackground.tsx
+│   │   │   │   │   ├── gauntletFlame.json
 │   │   │   │   │   ├── GauntletHeader.tsx
+│   │   │   │   │   ├── GauntletModeModal.tsx
 │   │   │   │   │   ├── GauntletRulesModal.tsx
 │   │   │   │   │   ├── GauntletStatsDrawer.tsx
 │   │   │   │   │   ├── useGauntletRun.ts
-│   │   │   │   │   └── useOwnedCharacters.ts
+│   │   │   │   │   ├── useOwnedCharacters.ts
+│   │   │   │   │   └── useTargetDraw.ts
+│   │   │   │   ├── history/
+│   │   │   │   │   ├── HistoryBoard.tsx
+│   │   │   │   │   ├── HistoryHeader.tsx
+│   │   │   │   │   ├── HistoryModeModal.tsx
+│   │   │   │   │   ├── HistoryNextRowPreview.tsx
+│   │   │   │   │   ├── HistoryPerkModal.tsx
+│   │   │   │   │   ├── HistoryPerkPoolPanel.tsx
+│   │   │   │   │   ├── HistoryRowClearedBanner.tsx
+│   │   │   │   │   ├── HistoryRulesModal.tsx
+│   │   │   │   │   ├── HistoryStatsDrawer.tsx
+│   │   │   │   │   └── useHistoryRun.ts
 │   │   │   │   ├── page-streak/
 │   │   │   │   │   ├── BuildBar.tsx
-│   │   │   │   │   ├── Confetti.tsx
 │   │   │   │   │   ├── KillerRosterGrid.tsx
 │   │   │   │   │   ├── PageStreakRoster.tsx
 │   │   │   │   │   ├── PageStreakRunView.tsx
@@ -346,22 +467,27 @@ LemonDBD/
 │   │   │   │   │   ├── StartRunPanel.tsx
 │   │   │   │   │   ├── usePageStreakRun.ts
 │   │   │   │   │   └── usePerkArtwork.ts
+│   │   │   │   ├── Confetti.tsx
 │   │   │   │   ├── PageStreakBoard.tsx
+│   │   │   │   ├── panelColors.ts
 │   │   │   │   ├── panels.ts
 │   │   │   │   ├── RoleTabs.tsx
 │   │   │   │   ├── StreakPanel.tsx
 │   │   │   │   └── StreakPanelGrid.tsx
 │   │   │   ├── swf/
 │   │   │   │   └── SwfPlanner.tsx
+│   │   │   ├── user/
+│   │   │   │   ├── UserBugReportsList.tsx
+│   │   │   │   ├── UserMetricsGrid.tsx
+│   │   │   │   └── UserProfileForm.tsx
 │   │   │   ├── AuthModal.tsx
-│   │   │   ├── BugReportModal.tsx
-│   │   │   ├── BuyCoffeeModal.tsx
 │   │   │   ├── ChaosWheelModal.tsx
 │   │   │   ├── CharacterConfigModal.tsx
 │   │   │   ├── CharactersHub.tsx
 │   │   │   ├── LemonIcon.tsx
 │   │   │   ├── Pagination.tsx
 │   │   │   ├── PerkCard.tsx
+│   │   │   ├── PerkDescription.tsx
 │   │   │   ├── PerkFilters.tsx
 │   │   │   ├── PerkGenerator.tsx
 │   │   │   ├── PerkModal.tsx
@@ -371,6 +497,9 @@ LemonDBD/
 │   │   │   ├── ThemeProvider.tsx
 │   │   │   ├── UserAvatar.tsx
 │   │   │   └── WheelOfFortune.tsx
+│   │   ├── constants/
+│   │   │   ├── addonRarityIcons.ts
+│   │   │   └── chaosMutators.ts
 │   │   ├── context/
 │   │   │   └── AuthContext.tsx
 │   │   ├── hooks/
@@ -387,19 +516,27 @@ LemonDBD/
 │   │   │   ├── ja.json
 │   │   │   └── pl.json
 │   │   ├── services/
+│   │   │   ├── chaosStreakApi.ts
 │   │   │   ├── clientSpeechModel.ts
 │   │   │   ├── draftApi.ts
 │   │   │   ├── gauntletStreakApi.ts
 │   │   │   ├── generatorApi.ts
+│   │   │   ├── historyStreakApi.ts
 │   │   │   ├── mapApi.ts
 │   │   │   ├── pageStreakApi.ts
 │   │   │   └── questApi.ts
 │   │   ├── types/
+│   │   │   ├── admin.ts
+│   │   │   ├── chaos.ts
+│   │   │   ├── chaosStreak.ts
 │   │   │   ├── draft.ts
 │   │   │   ├── gauntletStreak.ts
+│   │   │   ├── historyStreak.ts
 │   │   │   ├── map.ts
 │   │   │   ├── pageStreak.ts
-│   │   │   └── quest.ts
+│   │   │   ├── perks.ts
+│   │   │   ├── quest.ts
+│   │   │   └── userProfile.ts
 │   │   ├── utils/
 │   │   │   ├── __tests__/
 │   │   │   │   ├── mapHooks.test.ts
@@ -407,11 +544,15 @@ LemonDBD/
 │   │   │   │   ├── mapLayouts.test.ts
 │   │   │   │   ├── mapSubcomponents.test.ts
 │   │   │   │   ├── mapVoiceMatcher.test.ts
+│   │   │   │   ├── smashOrPass.test.ts
 │   │   │   │   ├── voiceClientModel.test.ts
 │   │   │   │   └── voiceComponents.test.ts
+│   │   │   ├── characterUtils.ts
 │   │   │   ├── mapLandmarks.ts
 │   │   │   ├── mapUtils.ts
-│   │   │   └── mapVoiceMatcher.ts
+│   │   │   ├── mapVoiceMatcher.ts
+│   │   │   ├── perkUtils.tsx
+│   │   │   └── textFormatter.tsx
 │   │   └── proxy.ts
 │   ├── .dockerignore
 │   ├── Dockerfile
@@ -425,6 +566,22 @@ LemonDBD/
 ├── nginx/
 │   ├── default.conf
 │   └── Dockerfile
+├── translations/
+│   ├── characters_dump - Copy.json
+│   ├── characters_dump.json
+│   ├── create_translations.py
+│   ├── de.json
+│   ├── en.json
+│   ├── es.json
+│   ├── gameplay_dump.json
+│   ├── hentai.py
+│   ├── hentai2.py
+│   ├── hentai3.py
+│   ├── items_dump.json
+│   ├── ja.json
+│   ├── lemondbd.json
+│   ├── pl.json
+│   └── pl_dump.json
 ├── .env
 ├── .env.example
 ├── .gitignore
@@ -432,6 +589,7 @@ LemonDBD/
 ├── lemon2.py
 ├── lemon3.py
 ├── prompt.md
+├── prompt2.md
 ├── response.md
 └── structure.md
 ```

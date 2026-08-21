@@ -83,6 +83,16 @@ class ScraperService:
         target_static = static_dir or self.static_dir
         return self.roster_driver.sync_edition_assets(edition_id, target_static)
 
+    def sync_translations(self, locales: Optional[List[str]] = None, translations_dir: Optional[Path] = None) -> Dict[str, Any]:
+        """Synchronize official translations (EN, PL, DE, ES, JA) to the database."""
+        from app.services.translations import TranslationService
+        service = TranslationService(translations_dir=translations_dir)
+        return service.sync_all_locales_to_db(locales=locales)
+
+    def sync_game_dump_translations(self, locales: Optional[List[str]] = None, translations_dir: Optional[Path] = None) -> Dict[str, Any]:
+        """Backwards compatibility alias for sync_translations."""
+        return self.sync_translations(locales=locales, translations_dir=translations_dir)
+
     def parse_character_page(self, html: str, page_category: str = "") -> List[CharacterData]:
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, "html.parser")

@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 
 revision = "add_perk_aliases_001"
-down_revision = None
+down_revision = "549bebf174e2"
 branch_labels = None
 depends_on = None
 

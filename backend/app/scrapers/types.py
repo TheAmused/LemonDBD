@@ -82,6 +82,18 @@ class AddonData:
 
 
 @dataclass
+class OfferingData:
+    name: str
+    category: str
+    role: str
+    description: str
+    icon_url: str
+    icon_local_path: str
+    rarity: str
+    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+
+
+@dataclass
 class PerkData:
     name: str
     character: str

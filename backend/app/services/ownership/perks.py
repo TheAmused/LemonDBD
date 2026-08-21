@@ -19,6 +19,8 @@ def fetch_user_perks(user_id: Optional[int] = None, category: Optional[str] = No
         result = []
         for p in all_perks:
             d = p.to_dict()
+            d["perk_id"] = p.id
+            d["character_id"] = p.character_id
             d["is_unlocked"] = True
             d["is_general"] = bool(p.character_id is None or p.is_generic_counterpart)
             result.append(d)
@@ -37,6 +39,8 @@ def fetch_user_perks(user_id: Optional[int] = None, category: Optional[str] = No
     result = []
     for p in all_perks:
         d = p.to_dict()
+        d["perk_id"] = p.id
+        d["character_id"] = p.character_id
         is_general = p.character_id is None or p.is_generic_counterpart
         if is_general:
             is_unlocked = True

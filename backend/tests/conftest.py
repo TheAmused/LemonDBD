@@ -24,3 +24,9 @@ def test_db(app):
         yield db
         db.session.remove()
         db.drop_all()
+
+
+@pytest.fixture
+def db_session(test_db):
+    return test_db.session
+

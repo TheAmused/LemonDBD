@@ -84,6 +84,7 @@ class ChaosService:
         db.session.commit()
         data = r.to_dict()
         data["checkpoint_interval"] = checkpoint_interval(r.difficulty)
+        data["unlocked_perks_detail"] = resolve_perks_by_names(data["unlocked_perks"])
         return data
 
     def reset_run(self, user_id: int, difficulty: str) -> Dict[str, Any]:

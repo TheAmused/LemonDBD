@@ -98,6 +98,20 @@ class TestReveal(ChaosTestCase):
         with self.assertRaises(ValueError):
             self.service.reveal(self.user_id, 999999)
 
+    def test_reveal_includes_resolved_perk_pool_detail(self):
+        # Regression: reveal() used to return only the bare unlocked_perks
+        # name list, leaving unlocked_perks_detail undefined in the
+        # response. The frontend's ChaosPerkPoolModal calls .filter() on
+        # that field unconditionally, so a missing/undefined value crashed
+        # the page the moment a player pulled the slot machine lever.
+        run = self.service.get_or_create_run(self.user_id, "hell")
+        revealed = self.service.reveal(self.user_id, run["id"])
+        self.assertIn("unlocked_perks_detail", revealed)
+        self.assertEqual(
+            sorted(p["name"] for p in revealed["unlocked_perks_detail"]),
+            sorted(revealed["unlocked_perks"]),
+        )
+
 
 class TestHellDifficulty(ChaosTestCase):
     def setUp(self):

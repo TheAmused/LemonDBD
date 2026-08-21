@@ -46,7 +46,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const { isAdmin } = useAuth();
 
   const rosterKillers = run ? run.owned_killers : killers;
-  const rosterPerkPool = run ? run.unlocked_perks_detail : perkPool;
+  const rosterPerkPool = run?.unlocked_perks_detail ?? perkPool;
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);

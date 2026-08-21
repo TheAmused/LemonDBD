@@ -28,6 +28,40 @@ class HistoryService:
         run.owned_killers_json = json.dumps(names)
         return names
 
+    def _resolve_loss(self, run: HistoryRun):
+        """Computes and applies the state a loss resets History progress to:
+        medium-mode checkpoint fallback, or a full reset to row 0 (hell mode,
+        or medium with no checkpoint banked yet -- the checkpoint fields
+        still sit at their creation-time zero defaults in that case, so the
+        medium branch below naturally restores to zero too). Mutates run's
+        row/checkpoint fields in place, refreezes the roster when the
+        resulting state is genuinely zero progress (Task 4's rule), and
+        returns (completed, unlocked) for the caller to persist. Shared by
+        submit_result's real-match loss branch and apply_inactivity_loss's
+        synthetic one, since this exact computation caused the same
+        medium-checkpoint-zero-detection bug twice before being unified
+        here."""
+        if run.mode == "medium":
+            run.current_row_index = run.checkpoint_row_index
+            run.total_killers_beaten = run.checkpoint_total_killers_beaten
+            completed = json.loads(run.checkpoint_completed_killers_json or "[]")
+            unlocked = json.loads(run.checkpoint_unlocked_perk_names_json or "[]")
+        else:
+            general = get_general_killer_perk_names()
+            run.current_row_index = 0
+            run.total_killers_beaten = 0
+            completed = []
+            unlocked = general
+            run.checkpoint_row_index = 0
+            run.checkpoint_total_killers_beaten = 0
+            run.checkpoint_completed_killers_json = "[]"
+            run.checkpoint_unlocked_perk_names_json = json.dumps(general)
+
+        if run.current_row_index == 0 and run.total_killers_beaten == 0:
+            self._freeze_pool(run)
+
+        return completed, unlocked
+
     def _augment(self, run: HistoryRun) -> Dict[str, Any]:
         owned_names = json.loads(run.owned_killers_json or "[]")
         if not owned_names:
@@ -144,24 +178,7 @@ class HistoryService:
                     run.checkpoint_completed_killers_json = "[]"
                     run.checkpoint_unlocked_perk_names_json = json.dumps(unlocked)
         else:
-            if run.mode == "medium":
-                run.current_row_index = run.checkpoint_row_index
-                run.total_killers_beaten = run.checkpoint_total_killers_beaten
-                completed = json.loads(run.checkpoint_completed_killers_json or "[]")
-                unlocked = json.loads(run.checkpoint_unlocked_perk_names_json or "[]")
-            else:
-                general = get_general_killer_perk_names()
-                run.current_row_index = 0
-                run.total_killers_beaten = 0
-                completed = []
-                unlocked = general
-                run.checkpoint_row_index = 0
-                run.checkpoint_total_killers_beaten = 0
-                run.checkpoint_completed_killers_json = "[]"
-                run.checkpoint_unlocked_perk_names_json = json.dumps(general)
-
-            if run.current_row_index == 0 and run.total_killers_beaten == 0:
-                self._freeze_pool(run)
+            completed, unlocked = self._resolve_loss(run)
 
         streak_after = run.total_killers_beaten
         run.completed_killers_json = json.dumps(completed)
@@ -193,24 +210,7 @@ class HistoryService:
         streak_before = run.total_killers_beaten
         row_index_for_log = run.current_row_index
 
-        if run.mode == "medium":
-            run.current_row_index = run.checkpoint_row_index
-            run.total_killers_beaten = run.checkpoint_total_killers_beaten
-            completed = json.loads(run.checkpoint_completed_killers_json or "[]")
-            unlocked = json.loads(run.checkpoint_unlocked_perk_names_json or "[]")
-        else:
-            general = get_general_killer_perk_names()
-            run.current_row_index = 0
-            run.total_killers_beaten = 0
-            completed = []
-            unlocked = general
-            run.checkpoint_row_index = 0
-            run.checkpoint_total_killers_beaten = 0
-            run.checkpoint_completed_killers_json = "[]"
-            run.checkpoint_unlocked_perk_names_json = json.dumps(general)
-
-        if run.current_row_index == 0 and run.total_killers_beaten == 0:
-            self._freeze_pool(run)
+        completed, unlocked = self._resolve_loss(run)
 
         streak_after = run.total_killers_beaten
         run.completed_killers_json = json.dumps(completed)

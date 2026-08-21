@@ -35,6 +35,32 @@ class ChaosService:
         addon_rarities = draw_addon_rarities()
         return perks, updated_used, addon_rarities
 
+    def _compute_loss_outcome(self, r: ChaosRun):
+        """Computes the state a loss resets Chaos progress to: checkpoint
+        fallback if this difficulty has one, otherwise reset to zero.
+        Read-only -- does not mutate r. Shared by submit_result's real-match
+        loss branch and apply_inactivity_loss's synthetic one, since this
+        exact computation caused the same checkpoint-zero-detection bug
+        class (see History's identical history) when it was duplicated."""
+        last_checkpoint = r.last_checkpoint_streak
+        interval = checkpoint_interval(r.difficulty)
+
+        if interval > 0:
+            streak_after = last_checkpoint
+            completed = json.loads(r.checkpoint_killers_json or "[]")
+            used_perks = json.loads(r.checkpoint_used_perks_json or "[]")
+            checkpoint_killers = list(completed)
+            checkpoint_used_perks = list(used_perks)
+        else:
+            streak_after = 0
+            completed = []
+            used_perks = []
+            last_checkpoint = 0
+            checkpoint_killers = []
+            checkpoint_used_perks = []
+
+        return streak_after, completed, used_perks, last_checkpoint, checkpoint_killers, checkpoint_used_perks
+
     def get_or_create_run(self, user_id: int, difficulty: str) -> Dict[str, Any]:
         run = db.session.scalars(
             select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
@@ -134,17 +160,14 @@ class ChaosService:
                 checkpoint_used_perks = list(used_perks)
         else:
             best_after = best_streak
-            if interval > 0:
-                streak_after = last_checkpoint
-                completed = list(checkpoint_killers)
-                used_perks = list(checkpoint_used_perks)
-            else:
-                streak_after = 0
-                completed = []
-                used_perks = []
-                last_checkpoint = 0
-                checkpoint_killers = []
-                checkpoint_used_perks = []
+            (
+                streak_after,
+                completed,
+                used_perks,
+                last_checkpoint,
+                checkpoint_killers,
+                checkpoint_used_perks,
+            ) = self._compute_loss_outcome(r)
 
         db.session.add(ChaosMatchLog(
             run_id=run_id,
@@ -195,22 +218,14 @@ class ChaosService:
             return
 
         current_streak = r.current_streak
-        last_checkpoint = r.last_checkpoint_streak
-        interval = checkpoint_interval(r.difficulty)
-
-        if interval > 0:
-            streak_after = last_checkpoint
-            completed = json.loads(r.checkpoint_killers_json or "[]")
-            used_perks = json.loads(r.checkpoint_used_perks_json or "[]")
-            checkpoint_killers = list(completed)
-            checkpoint_used_perks = list(used_perks)
-        else:
-            streak_after = 0
-            completed = []
-            used_perks = []
-            last_checkpoint = 0
-            checkpoint_killers = []
-            checkpoint_used_perks = []
+        (
+            streak_after,
+            completed,
+            used_perks,
+            last_checkpoint,
+            checkpoint_killers,
+            checkpoint_used_perks,
+        ) = self._compute_loss_outcome(r)
 
         db.session.add(ChaosMatchLog(
             run_id=run_id,

@@ -1247,6 +1247,53 @@ class WikiGGScraperDriver:
         offerings: List[OfferingData] = []
         seen_offerings: Set[str] = set()
 
+        # Build a flat list of all top-level content elements in document order so
+        # we can walk backwards from any <tr> to find the nearest section heading.
+        # wiki.gg Offerings page structure:
+        #   <h4 id="Survivor">        → role = Survivor
+        #     <h5 id="Altruism">      → still Survivor
+        #     <h5 id="Boldness">      → still Survivor
+        #     …
+        #   <h4 id="Killer">          → role = Killer
+        #     <h5 id="Brutality">     → still Killer
+        #     …
+        #   <h4 id="All_Categories">  → role = All
+        #   <h4 id="Memento_Mori">    → role = Killer
+        #   <h4 id="Luck">            → role = Survivor
+        #   (Map Modifications, Realm, Shrouds, Splinters, Wards) → All
+
+        # Heading-id → role mapping
+        HEADING_ROLE: dict[str, str] = {
+            "survivor": "Survivor",
+            "altruism": "Survivor",
+            "boldness": "Survivor",
+            "objectives": "Survivor",
+            "survival": "Survivor",
+            "luck": "Survivor",
+            "killer": "Killer",
+            "brutality": "Killer",
+            "deviousness": "Killer",
+            "hunter": "Killer",
+            "sacrifice": "Killer",
+            "memento_mori": "Killer",
+        }
+
+        def role_from_heading(heading_id: str) -> str:
+            return HEADING_ROLE.get(heading_id.lower().replace("-", "_"), "All")
+
+        def nearest_section_role(tag) -> str:
+            """Walk previous siblings and parents to find the nearest heading."""
+            for ancestor in [tag] + list(tag.parents):
+                for sibling in ancestor.find_all_previous(["h2", "h3", "h4", "h5"]):
+                    span = sibling.find("span", class_="mw-headline")
+                    if span:
+                        hid = span.get("id", "").lower().replace("-", "_")
+                        return role_from_heading(hid)
+                    hid = sibling.get("id", "").lower().replace("-", "_")
+                    if hid:
+                        return role_from_heading(hid)
+            return "All"
+
         for img in soup.find_all("img"):
             src = img.get("src") or img.get("data-src") or ""
             if "IconFavors_" in src or "IconsFavors_" in src or "IconFavor_" in src:
@@ -1291,13 +1338,29 @@ class WikiGGScraperDriver:
                 sanitized = sanitize_filename(off_name)
                 local_path = f"icons/offerings/{sanitized}.png"
 
-                row_text = row.get_text().lower()
-                role = "All"
-                if "killer" in row_text and "survivor" not in row_text:
-                    role = "Killer"
-                elif "survivor" in row_text and "killer" not in row_text:
-                    role = "Survivor"
+                # Determine role from nearest section heading, not row text
+                role = nearest_section_role(row)
 
+                # For offerings under "All Categories", the individual description
+                # may still target only one role, e.g. "to all Survivors" or
+                # "to the Killer". Refine in that case.
+                if role == "All":
+                    raw_desc = row.get_text().lower()
+                    survivors_only = (
+                        "to all survivors" in raw_desc
+                        or "all survivor" in raw_desc
+                    ) and "killer" not in raw_desc
+                    killers_only = (
+                        "to the killer" in raw_desc
+                        or "to all killers" in raw_desc
+                        or "killer only" in raw_desc
+                    ) and "survivor" not in raw_desc
+                    if survivors_only:
+                        role = "Survivor"
+                    elif killers_only:
+                        role = "Killer"
+
+                row_text = row.get_text().lower()
                 category = "Offering"
                 if "mori" in row_text:
                     category = "Memento Mori"
@@ -1327,6 +1390,7 @@ class WikiGGScraperDriver:
                 )
 
         return offerings
+
 
     def scrape_offerings(self) -> List[OfferingData]:
         try:

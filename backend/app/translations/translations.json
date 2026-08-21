@@ -41717,23 +41717,23 @@
       "translations": {
         "de": {
           "name": "Primelblütenduftkissen",
-          "description": "Gewährt <b>50 %</b> Bonus-Blutpunkte in der Kategorie „Selbstlosigkeit“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Ein handtellergroßes, handgenähtes Säckchen, mit 4 goldenen Blütenblättern darin. Die Primel öffnet sich erst, kurz bevor die Nacht den Tag ablöst.“</span>"
+          "description": "Gewährt 50 % Bonus-Blutpunkte in der Kategorie „Selbstlosigkeit“.\nBetrifft nur den Besitzer.\n„Ein handtellergroßes, handgenähtes Säckchen, mit 4 goldenen Blütenblättern darin. Die Primel öffnet sich erst, kurz bevor die Nacht den Tag ablöst.“"
         },
         "en": {
           "name": "Primrose Blossom Sachet",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the Altruism category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet containing 4 gold petals. The primrose opens at the very last moment before the sun gives place to the night.\"</span>"
+          "description": "Grants 50% bonus Bloodpoints in the Altruism category.\nPersonal.\n\"A palm-sized hand-sewn sachet containing 4 gold petals. The primrose opens at the very last moment before the sun gives place to the night.\""
         },
         "es": {
           "name": "Saquito con flores de primavera",
-          "description": "Otorga un <b>50 %</b> de puntos de sangre adicionales en la categoría Altruismo.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Un saquito, del tamaño de un puño, cosido a mano. Contiene 4 pétalos de oro. La primavera florece en el instante previo a que el sol ceda el paso a la noche\".</span>"
+          "description": "Otorga un 50 % de puntos de sangre adicionales en la categoría Altruismo.\nPersonal.\n\"Un saquito, del tamaño de un puño, cosido a mano. Contiene 4 pétalos de oro. La primavera florece en el instante previo a que el sol ceda el paso a la noche\"."
         },
         "ja": {
           "name": "イチゲサクラソウの匂い袋",
-          "description": "協力カテゴリーのブラッドポイントを<b>50%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「金色の花びらが4枚入った、小さな手縫いの匂い袋。サクラソウは、夜の帳が下りる直前に花開く。」</span>"
+          "description": "協力カテゴリーのブラッドポイントを50%追加取得する。\n自分のみ\n「金色の花びらが4枚入った、小さな手縫いの匂い袋。サクラソウは、夜の帳が下りる直前に花開く。」"
         },
         "pl": {
           "name": "Saszetka Kwitnących Pierwiosnków",
-          "description": "Zapewnia <b>50%</b> dodatkowych Punktów Krwi w kategorii Altruizm.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Ręcznie szyta saszetka zawierająca 4 złote płatki. Pierwiosnek otwiera się tuż przed tym, jak słońce ustępuje miejsca nocy”.</span>"
+          "description": "Zapewnia 50% dodatkowych Punktów Krwi w kategorii Altruizm.\nPrzedmiot osobisty.\n„Ręcznie szyta saszetka zawierająca 4 złote płatki. Pierwiosnek otwiera się tuż przed tym, jak słońce ustępuje miejsca nocy”."
         }
       }
     },
@@ -41747,23 +41747,23 @@
       "translations": {
         "de": {
           "name": "Frische Primelblüten",
-          "description": "Gewährt <b>75 %</b> Bonus-Blutpunkte in der Kategorie „Selbstlosigkeit“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Goldene Blumen, genau im richtigen Moment geerntet. Die Primel öffnet sich erst, kurz bevor die Nacht den Tag ablöst.“</span>"
+          "description": "Gewährt 75 % Bonus-Blutpunkte in der Kategorie „Selbstlosigkeit“.\nBetrifft nur den Besitzer.\n„Goldene Blumen, genau im richtigen Moment geerntet. Die Primel öffnet sich erst, kurz bevor die Nacht den Tag ablöst.“"
         },
         "en": {
           "name": "Fresh Primrose Blossom",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the Altruism category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Golden flowers harvested at their peak. The primrose opens at the very last moment before the sun gives place to the night.\"</span>"
+          "description": "Grants 75% bonus Bloodpoints in the Altruism category.\nPersonal.\n\"Golden flowers harvested at their peak. The primrose opens at the very last moment before the sun gives place to the night.\""
         },
         "es": {
           "name": "Flor de primavera fresca",
-          "description": "Otorga un <b>75 %</b> de puntos de sangre adicionales en la categoría Altruismo.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Flores doradas, cosechadas en su punto álgido. La primavera florece en el instante previo a que el sol ceda el paso a la noche\".</span>"
+          "description": "Otorga un 75 % de puntos de sangre adicionales en la categoría Altruismo.\nPersonal.\n\"Flores doradas, cosechadas en su punto álgido. La primavera florece en el instante previo a que el sol ceda el paso a la noche\"."
         },
         "ja": {
           "name": "新鮮なイチゲサクラソウ",
-          "description": "協力カテゴリーのブラッドポイントを<b>75%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「最も色づいた時に摘まれた金色の花々。サクラソウは、夜の帳が下りる直前に花開く。」</span>"
+          "description": "協力カテゴリーのブラッドポイントを75%追加取得する。\n自分のみ\n「最も色づいた時に摘まれた金色の花々。サクラソウは、夜の帳が下りる直前に花開く。」"
         },
         "pl": {
           "name": "Świeże Kwitnące Pierwiosnki",
-          "description": "Zapewnia <b>75%</b> dodatkowych Punktów Krwi w kategorii Altruizm.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Złote, zerwane przy czubku kwiaty. Pierwiosnek otwiera się tuż przed tym, jak słońce ustępuje miejsca nocy”.</span>"
+          "description": "Zapewnia 75% dodatkowych Punktów Krwi w kategorii Altruizm.\nPrzedmiot osobisty.\n„Złote, zerwane przy czubku kwiaty. Pierwiosnek otwiera się tuż przed tym, jak słońce ustępuje miejsca nocy”."
         }
       }
     },
@@ -41777,23 +41777,23 @@
       "translations": {
         "de": {
           "name": "Wohlriechende Primelblüten",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in der Kategorie „Selbstlosigkeit“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Goldene Blumen, genau im richtigen Moment geerntet. Verbreiten ein stark erdiges und beruhigendes Aroma.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Selbstlosigkeit“.\nBetrifft nur den Besitzer.\n„Goldene Blumen, genau im richtigen Moment geerntet. Verbreiten ein stark erdiges und beruhigendes Aroma.“"
         },
         "en": {
           "name": "Fragrant Primrose Blossom",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the Altruism category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Golden flowers harvested at their peak. Releases a strong earthy and comforting aroma.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in the Altruism category.\nPersonal.\n\"Golden flowers harvested at their peak. Releases a strong earthy and comforting aroma.\""
         },
         "es": {
           "name": "Flor de primavera aromática",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en la categoría Altruismo.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Flores doradas, cosechadas en su punto álgido. Desprenden un fuerte y reconfortante aroma a tierra\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en la categoría Altruismo.\nPersonal.\n\"Flores doradas, cosechadas en su punto álgido. Desprenden un fuerte y reconfortante aroma a tierra\"."
         },
         "ja": {
           "name": "いい香りのイチゲサクラソウ",
-          "description": "協力カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「最も色づいた時に摘まれた金色の花々。心地よい大地の香りをひときわ放つ。」</span>"
+          "description": "協力カテゴリーのブラッドポイントを100%追加取得する。\n自分のみ\n「最も色づいた時に摘まれた金色の花々。心地よい大地の香りをひときわ放つ。」"
         },
         "pl": {
           "name": "Pachnące Kwitnące Pierwiosnki",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi w kategorii Altruizm.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Złote, zerwane przy czubku kwiaty. Uwalniają mocny, ziemisty, lecz kojący zapach”.</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi w kategorii Altruizm.\nPrzedmiot osobisty.\n„Złote, zerwane przy czubku kwiaty. Uwalniają mocny, ziemisty, lecz kojący zapach”."
         }
       }
     },
@@ -41807,23 +41807,23 @@
       "translations": {
         "de": {
           "name": "Bartnelkenduftkissen",
-          "description": "Gewährt <b>50 %</b> Bonus-Blutpunkte in der Kategorie „Tapferkeit“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Ein handtellergroßes, handgenähtes Säckchen mit einer Mischung aus blassen Blütenblättern und graublauem Blattwerk darin. Verbreitet einen stark würzigen, nelkenähnlichen Duft.“</span>"
+          "description": "Gewährt 50 % Bonus-Blutpunkte in der Kategorie „Tapferkeit“.\nBetrifft nur den Besitzer.\n„Ein handtellergroßes, handgenähtes Säckchen mit einer Mischung aus blassen Blütenblättern und graublauem Blattwerk darin. Verbreitet einen stark würzigen, nelkenähnlichen Duft.“"
         },
         "en": {
           "name": "Sweet William Sachet",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the Boldness category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet containing a mix of pale petals and glaucous bluish leaves. Releases a strong spicy, clove-like scent.\"</span>"
+          "description": "Grants 50% bonus Bloodpoints in the Boldness category.\nPersonal.\n\"A palm-sized hand-sewn sachet containing a mix of pale petals and glaucous bluish leaves. Releases a strong spicy, clove-like scent.\""
         },
         "es": {
           "name": "Saquito con minutisa",
-          "description": "Otorga un <b>50 %</b> de puntos de sangre adicionales en la categoría Audacia.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Un saquito, del tamaño de un puño, cosido a mano. Está lleno de una mezcla de pétalos pálidos y hojas glaucas. Desprende un fuerte aroma a especias similar al clavo\".</span>"
+          "description": "Otorga un 50 % de puntos de sangre adicionales en la categoría Audacia.\nPersonal.\n\"Un saquito, del tamaño de un puño, cosido a mano. Está lleno de una mezcla de pétalos pálidos y hojas glaucas. Desprende un fuerte aroma a especias similar al clavo\"."
         },
         "ja": {
           "name": "ナデシコの匂い袋",
-          "description": "大胆カテゴリーのブラッドポイントを<b>50%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「淡い花びらと青い葉が入った、小さな手縫いの匂い袋。ツンとする香辛料のような香りを放つ。」</span>"
+          "description": "大胆カテゴリーのブラッドポイントを50%追加取得する。\n自分のみ\n「淡い花びらと青い葉が入った、小さな手縫いの匂い袋。ツンとする香辛料のような香りを放つ。」"
         },
         "pl": {
           "name": "Saszetka Goździków",
-          "description": "Zapewnia <b>50%</b> dodatkowych Punktów Krwi w kategorii Zuchwałość.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Ręcznie szyta saszetka zawierająca mieszaninę bladych płatków oraz zielonkawo-niebieskich liści. Uwalnia mocny i ostry goździkowy zapach”.</span>"
+          "description": "Zapewnia 50% dodatkowych Punktów Krwi w kategorii Zuchwałość.\nPrzedmiot osobisty.\n„Ręcznie szyta saszetka zawierająca mieszaninę bladych płatków oraz zielonkawo-niebieskich liści. Uwalnia mocny i ostry goździkowy zapach”."
         }
       }
     },
@@ -41837,23 +41837,23 @@
       "translations": {
         "de": {
           "name": "Frische Bartnelke",
-          "description": "Gewährt <b>75 %</b> Bonus-Blutpunkte in der Kategorie „Tapferkeit“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Blumen mit pinken Blütenblättern und einem blutroten Inneren. Verbreitet einen würzigen, nelkenähnlichen Duft.“</span>"
+          "description": "Gewährt 75 % Bonus-Blutpunkte in der Kategorie „Tapferkeit“.\nBetrifft nur den Besitzer.\n„Blumen mit pinken Blütenblättern und einem blutroten Inneren. Verbreitet einen würzigen, nelkenähnlichen Duft.“"
         },
         "en": {
           "name": "Fresh Sweet William",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the Boldness category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A bunch of flowers with pink petals and a blood red core. Releases a spicy, clove-like scent.\"</span>"
+          "description": "Grants 75% bonus Bloodpoints in the Boldness category.\nPersonal.\n\"A bunch of flowers with pink petals and a blood red core. Releases a spicy, clove-like scent.\""
         },
         "es": {
           "name": "Minutisa Fresca",
-          "description": "Otorga un <b>75 %</b> de puntos de sangre adicionales en la categoría Audacia.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Un ramito de flores con pétalos color rosa y núcleo rojo sangre. Desprende un aroma a especias similar al clavo\".</span>"
+          "description": "Otorga un 75 % de puntos de sangre adicionales en la categoría Audacia.\nPersonal.\n\"Un ramito de flores con pétalos color rosa y núcleo rojo sangre. Desprende un aroma a especias similar al clavo\"."
         },
         "ja": {
           "name": "新鮮なナデシコ",
-          "description": "大胆カテゴリーのブラッドポイントを<b>75%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「深紅の花芯が桃色の花びらで囲われた花々。ツンとする香辛料のような香りを放つ。」</span>"
+          "description": "大胆カテゴリーのブラッドポイントを75%追加取得する。\n自分のみ\n「深紅の花芯が桃色の花びらで囲われた花々。ツンとする香辛料のような香りを放つ。」"
         },
         "pl": {
           "name": "Świeże Goździki",
-          "description": "Zapewnia <b>75%</b> dodatkowych Punktów Krwi w kategorii Zuchwałość.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Pęk kwiatów z różowymi płatkami oraz krwistoczerwoną owocnią. Uwalnia ostry goździkowy zapach”.</span>"
+          "description": "Zapewnia 75% dodatkowych Punktów Krwi w kategorii Zuchwałość.\nPrzedmiot osobisty.\n„Pęk kwiatów z różowymi płatkami oraz krwistoczerwoną owocnią. Uwalnia ostry goździkowy zapach”."
         }
       }
     },
@@ -41867,23 +41867,23 @@
       "translations": {
         "de": {
           "name": "Wohlriechende Bartnelke",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in der Kategorie „Tapferkeit“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Blumen mit pinken Blütenblättern und einem blutroten Inneren. Verbreitet einen stark würzigen, nelkenähnlichen Duft.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Tapferkeit“.\nBetrifft nur den Besitzer.\n„Blumen mit pinken Blütenblättern und einem blutroten Inneren. Verbreitet einen stark würzigen, nelkenähnlichen Duft.“"
         },
         "en": {
           "name": "Fragrant Sweet William",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the Boldness category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A bunch of flowers with pink petals and a blood red core. Releases a strong spicy, clove-like scent.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in the Boldness category.\nPersonal.\n\"A bunch of flowers with pink petals and a blood red core. Releases a strong spicy, clove-like scent.\""
         },
         "es": {
           "name": "Minutisa aromática",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en la categoría Audacia.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Un ramito de flores con pétalos color rosa y núcleo rojo sangre. Desprende un fuerte aroma a especias similar al clavo\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en la categoría Audacia.\nPersonal.\n\"Un ramito de flores con pétalos color rosa y núcleo rojo sangre. Desprende un fuerte aroma a especias similar al clavo\"."
         },
         "ja": {
           "name": "いい香りのナデシコ",
-          "description": "大胆カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「深紅の花芯が桃色の花びらで囲われた花々。ツンとする香辛料のような強い香りを放つ。」</span>"
+          "description": "大胆カテゴリーのブラッドポイントを100%追加取得する。\n自分のみ\n「深紅の花芯が桃色の花びらで囲われた花々。ツンとする香辛料のような強い香りを放つ。」"
         },
         "pl": {
           "name": "Pachnący Goździk Brodaty",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi w kategorii Zuchwałość.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Pęk kwiatów z różowymi płatkami i krwistoczerwoną owocnią. Uwalnia silny korzenno-goździkowy zapach”.</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi w kategorii Zuchwałość.\nPrzedmiot osobisty.\n„Pęk kwiatów z różowymi płatkami i krwistoczerwoną owocnią. Uwalnia silny korzenno-goździkowy zapach”."
         }
       }
     },
@@ -41897,23 +41897,23 @@
       "translations": {
         "de": {
           "name": "Lorbeerrosenduftsäckchen",
-          "description": "Gewährt <b>50 %</b> Bonus-Blutpunkte in der Kategorie „Ziel“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Ein handtellergroßes, handgenähtes Säckchen, gefüllt mit getrockneten Blättern. Verbreitet ein schwaches, teeähnliches Aroma.“</span>"
+          "description": "Gewährt 50 % Bonus-Blutpunkte in der Kategorie „Ziel“.\nBetrifft nur den Besitzer.\n„Ein handtellergroßes, handgenähtes Säckchen, gefüllt mit getrockneten Blättern. Verbreitet ein schwaches, teeähnliches Aroma.“"
         },
         "en": {
           "name": "Bog Laurel Sachet",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the Objective category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet filled with dry leaves. Releases a faint tea-like aroma.\"</span>"
+          "description": "Grants 50% bonus Bloodpoints in the Objective category.\nPersonal.\n\"A palm-sized hand-sewn sachet filled with dry leaves. Releases a faint tea-like aroma.\""
         },
         "es": {
           "name": "Saquito con laurel salvaje",
-          "description": "Otorga un <b>50 %</b> de puntos de sangre adicionales en la categoría Objetivos.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Un saquito, del tamaño de un puño, cosido a mano. Está lleno de hojas secas. Desprende un sutil aroma a té\".</span>"
+          "description": "Otorga un 50 % de puntos de sangre adicionales en la categoría Objetivos.\nPersonal.\n\"Un saquito, del tamaño de un puño, cosido a mano. Está lleno de hojas secas. Desprende un sutil aroma a té\"."
         },
         "ja": {
           "name": "月桂樹の匂い袋",
-          "description": "目標カテゴリーのブラッドポイントを<b>50%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「乾いた葉が詰まった、小さな手縫いの匂い袋。かすかにお茶のような香りを放つ。」</span>"
+          "description": "目標カテゴリーのブラッドポイントを50%追加取得する。\n自分のみ\n「乾いた葉が詰まった、小さな手縫いの匂い袋。かすかにお茶のような香りを放つ。」"
         },
         "pl": {
           "name": "Saszetka z Bagienną Lawendą",
-          "description": "Zapewnia <b>50%</b> premii do Punktów Krwi w kategorii Cel.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Ręcznie szyta saszetka wypełniona suchymi liśćmi. Uwalnia mdły herbaciany zapach”.</span>"
+          "description": "Zapewnia 50% premii do Punktów Krwi w kategorii Cel.\nPrzedmiot osobisty.\n„Ręcznie szyta saszetka wypełniona suchymi liśćmi. Uwalnia mdły herbaciany zapach”."
         }
       }
     },
@@ -41927,23 +41927,23 @@
       "translations": {
         "de": {
           "name": "Frische Lorbeerrosen",
-          "description": "Gewährt <b>75 %</b> Bonus-Blutpunkte in der Kategorie „Ziel“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Eine wundervolle lila Blume, die inmitten des verdorbenen Sumpfes gedeiht. Verbreitet ein mildes, teeähnliches Aroma.“</span>"
+          "description": "Gewährt 75 % Bonus-Blutpunkte in der Kategorie „Ziel“.\nBetrifft nur den Besitzer.\n„Eine wundervolle lila Blume, die inmitten des verdorbenen Sumpfes gedeiht. Verbreitet ein mildes, teeähnliches Aroma.“"
         },
         "en": {
           "name": "Fresh Bog Laurel",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the Objective category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A beautiful purple flower that grows in the midst of the tainted swamp. Releases a mild tea-like aroma.\"</span>"
+          "description": "Grants 75% bonus Bloodpoints in the Objective category.\nPersonal.\n\"A beautiful purple flower that grows in the midst of the tainted swamp. Releases a mild tea-like aroma.\""
         },
         "es": {
           "name": "Laurel salvaje fresco",
-          "description": "Otorga un <b>75 %</b> de puntos de sangre adicionales en la categoría Objetivos.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Una hermosa flor púrpura que crece en medio de la ciénaga contaminada. Desprende un leve aroma a té\".</span>"
+          "description": "Otorga un 75 % de puntos de sangre adicionales en la categoría Objetivos.\nPersonal.\n\"Una hermosa flor púrpura que crece en medio de la ciénaga contaminada. Desprende un leve aroma a té\"."
         },
         "ja": {
           "name": "新鮮な月桂樹",
-          "description": "目標カテゴリーのブラッドポイントを<b>75%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「淀んだ沼の中で育つ、美しい紫の花。かすかにお茶のような香りを放つ。」</span>"
+          "description": "目標カテゴリーのブラッドポイントを75%追加取得する。\n自分のみ\n「淀んだ沼の中で育つ、美しい紫の花。かすかにお茶のような香りを放つ。」"
         },
         "pl": {
           "name": "Świeża Bagienna Lawenda",
-          "description": "Zapewnia <b>75%</b> dodatkowych Punktów Krwi w kategorii Cel.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Przepiękny fioletowy kwiat, który rośnie w środku skażonych bagien. Uwalnia łagodny herbaciany zapach”.</span>"
+          "description": "Zapewnia 75% dodatkowych Punktów Krwi w kategorii Cel.\nPrzedmiot osobisty.\n„Przepiękny fioletowy kwiat, który rośnie w środku skażonych bagien. Uwalnia łagodny herbaciany zapach”."
         }
       }
     },
@@ -41957,23 +41957,23 @@
       "translations": {
         "de": {
           "name": "Wohlriechende Lorbeerrosen",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in der Kategorie „Ziel“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Eine wundervolle lila Blume, die inmitten des verdorbenen Sumpfes gedeiht. Verbreitet ein starkes, teeähnliches Aroma.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Ziel“.\nBetrifft nur den Besitzer.\n„Eine wundervolle lila Blume, die inmitten des verdorbenen Sumpfes gedeiht. Verbreitet ein starkes, teeähnliches Aroma.“"
         },
         "en": {
           "name": "Fragrant Bog Laurel",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the Objective category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A beautiful purple flower that grows in the midst of the tainted swamp. Releases a strong tea-like aroma.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in the Objective category.\nPersonal.\n\"A beautiful purple flower that grows in the midst of the tainted swamp. Releases a strong tea-like aroma.\""
         },
         "es": {
           "name": "Laurel salvaje aromático",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en la categoría Objetivos.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Una hermosa flor púrpura que crece en medio de la ciénaga contaminada. Desprende un intenso aroma a té\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en la categoría Objetivos.\nPersonal.\n\"Una hermosa flor púrpura que crece en medio de la ciénaga contaminada. Desprende un intenso aroma a té\"."
         },
         "ja": {
           "name": "いい香りの月桂樹",
-          "description": "目標カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「淀んだ沼の中で育つ、美しい紫の花。お茶のような強い香りを放つ。」</span>"
+          "description": "目標カテゴリーのブラッドポイントを100%追加取得する。\n自分のみ\n「淀んだ沼の中で育つ、美しい紫の花。お茶のような強い香りを放つ。」"
         },
         "pl": {
           "name": "Pachnąca Bagienna Lawenda",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi w kategorii Cel.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Przepiękny fioletowy kwiat, który rośnie w samym centrum skażonego bagna. Uwalnia silny herbaciany zapach”.</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi w kategorii Cel.\nPrzedmiot osobisty.\n„Przepiękny fioletowy kwiat, który rośnie w samym centrum skażonego bagna. Uwalnia silny herbaciany zapach”."
         }
       }
     },
@@ -41987,23 +41987,23 @@
       "translations": {
         "de": {
           "name": "Fuchsschwanz-Duftkissen",
-          "description": "Gewährt <b>50 %</b> Bonus-Blutpunkte in der Kategorie „Überleben“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Ein handtellergroßes, handgenähtes Säckchen, gefüllt mit perlenähnlichen Körnern. Amaranth, sagt man, ist unvergänglich.“</span>"
+          "description": "Gewährt 50 % Bonus-Blutpunkte in der Kategorie „Überleben“.\nBetrifft nur den Besitzer.\n„Ein handtellergroßes, handgenähtes Säckchen, gefüllt mit perlenähnlichen Körnern. Amaranth, sagt man, ist unvergänglich.“"
         },
         "en": {
           "name": "Crispleaf Amaranth Sachet",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the Survival category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet stuffed with bead-like grain. Amaranth is said to be everlasting.\"</span>"
+          "description": "Grants 50% bonus Bloodpoints in the Survival category.\nPersonal.\n\"A palm-sized hand-sewn sachet stuffed with bead-like grain. Amaranth is said to be everlasting.\""
         },
         "es": {
           "name": "Saquito con amaranto",
-          "description": "Otorga un <b>50 %</b> de puntos de sangre adicionales en la categoría Supervivencia.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Un saquito, del tamaño de un puño, cosido a mano. Está lleno de granos redondos. Se dice que el amaranto es eterno\".</span>"
+          "description": "Otorga un 50 % de puntos de sangre adicionales en la categoría Supervivencia.\nPersonal.\n\"Un saquito, del tamaño de un puño, cosido a mano. Está lleno de granos redondos. Se dice que el amaranto es eterno\"."
         },
         "ja": {
           "name": "アマランサスの匂い袋",
-          "description": "生存カテゴリーのブラッドポイントを<b>50%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「丸い穀物が詰まった、小さな手縫いの匂い袋。アマランサスは枯れることがないと言われている。」</span>"
+          "description": "生存カテゴリーのブラッドポイントを50%追加取得する。\n自分のみ\n「丸い穀物が詰まった、小さな手縫いの匂い袋。アマランサスは枯れることがないと言われている。」"
         },
         "pl": {
           "name": "Saszetka z liśćmi Szarłatu Wyniosłego",
-          "description": "Zapewnia <b>50%</b> dodatkowych Punktów Krwi w kategorii Przetrwanie.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Ręcznie szyta saszetka wypchana paciorkowatym zbożem. Powiada się, że Szarłat jest wieczny”.</span>"
+          "description": "Zapewnia 50% dodatkowych Punktów Krwi w kategorii Przetrwanie.\nPrzedmiot osobisty.\n„Ręcznie szyta saszetka wypchana paciorkowatym zbożem. Powiada się, że Szarłat jest wieczny”."
         }
       }
     },
@@ -42017,23 +42017,23 @@
       "translations": {
         "de": {
           "name": "Frischer Fuchsschwanz",
-          "description": "Gewährt <b>75 %</b> Bonus-Blutpunkte in der Kategorie „Überleben“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Die hellgrünen Blätter sind von eigenartigen, purpurroten Adern durchzogen. Amaranth, sagt man, ist unvergänglich.“</span>"
+          "description": "Gewährt 75 % Bonus-Blutpunkte in der Kategorie „Überleben“.\nBetrifft nur den Besitzer.\n„Die hellgrünen Blätter sind von eigenartigen, purpurroten Adern durchzogen. Amaranth, sagt man, ist unvergänglich.“"
         },
         "en": {
           "name": "Fresh Crispleaf Amaranth",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the Survival category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"The pale green leaves are highlighted with peculiar crimson veins. Amaranth is said to be everlasting.\"</span>"
+          "description": "Grants 75% bonus Bloodpoints in the Survival category.\nPersonal.\n\"The pale green leaves are highlighted with peculiar crimson veins. Amaranth is said to be everlasting.\""
         },
         "es": {
           "name": "Amaranto fresco",
-          "description": "Otorga un <b>75 %</b> de puntos de sangre adicionales en la categoría Supervivencia.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Unas peculiares venas carmesíes resaltan en el fondo verde pálido de las hojas. Se dice que el amaranto es eterno\".</span>"
+          "description": "Otorga un 75 % de puntos de sangre adicionales en la categoría Supervivencia.\nPersonal.\n\"Unas peculiares venas carmesíes resaltan en el fondo verde pálido de las hojas. Se dice que el amaranto es eterno\"."
         },
         "ja": {
           "name": "新鮮なアマランサス",
-          "description": "生存カテゴリーのブラッドポイントを<b>75%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「深紅の葉脈が目立つ、淡い緑色の葉。アマランサスは枯れることがないと言われている。」</span>"
+          "description": "生存カテゴリーのブラッドポイントを75%追加取得する。\n自分のみ\n「深紅の葉脈が目立つ、淡い緑色の葉。アマランサスは枯れることがないと言われている。」"
         },
         "pl": {
           "name": "Świeży Szarłat Wyniosły",
-          "description": "Zapewnia <b>75%</b> dodatkowych Punktów Krwi w kategorii Przetrwanie.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Bladozielone liście są poprzeplatane dziwnymi szkarłatnymi żyłkami. O szarłacie mówi się, że jest wieczny”.</span>"
+          "description": "Zapewnia 75% dodatkowych Punktów Krwi w kategorii Przetrwanie.\nPrzedmiot osobisty.\n„Bladozielone liście są poprzeplatane dziwnymi szkarłatnymi żyłkami. O szarłacie mówi się, że jest wieczny”."
         }
       }
     },
@@ -42047,23 +42047,23 @@
       "translations": {
         "de": {
           "name": "Wohlriechender Fuchsschwanz",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in der Kategorie „Überleben“.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Die hellgrünen Blätter sind von eigenartigen, purpurroten Adern durchzogen. Riecht stark nach Rettich.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Überleben“.\nBetrifft nur den Besitzer.\n„Die hellgrünen Blätter sind von eigenartigen, purpurroten Adern durchzogen. Riecht stark nach Rettich.“"
         },
         "en": {
           "name": "Fragrant Crispleaf Amaranth",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the Survival category.<br><li>Personal.</li><br><span class=\"FlavorText\">\"The pale green leaves are highlighted with peculiar crimson veins. Releases a strong radish aroma.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in the Survival category.\nPersonal.\n\"The pale green leaves are highlighted with peculiar crimson veins. Releases a strong radish aroma.\""
         },
         "es": {
           "name": "Amaranto aromático",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en la categoría Supervivencia.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Unas peculiares venas carmesíes resaltan en el fondo verde pálido de las hojas. Desprende un fuerte aroma a rábano\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en la categoría Supervivencia.\nPersonal.\n\"Unas peculiares venas carmesíes resaltan en el fondo verde pálido de las hojas. Desprende un fuerte aroma a rábano\"."
         },
         "ja": {
           "name": "いい香りのアマランサス",
-          "description": "生存カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「深紅の葉脈が目立つ、淡い緑色の葉。根菜の強い香りを放つ。」</span>"
+          "description": "生存カテゴリーのブラッドポイントを100%追加取得する。\n自分のみ\n「深紅の葉脈が目立つ、淡い緑色の葉。根菜の強い香りを放つ。」"
         },
         "pl": {
           "name": "Pachnący Szarłat Wyniosły",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi w kategorii Przetrwanie.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Bladozielone liście są poprzeplatane dziwnymi karmazynowymi żyłkami. Uwalnia silny rzodkiewkowy zapach”.</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi w kategorii Przetrwanie.\nPrzedmiot osobisty.\n„Bladozielone liście są poprzeplatane dziwnymi karmazynowymi żyłkami. Uwalnia silny rzodkiewkowy zapach”."
         }
       }
     },
@@ -42257,23 +42257,23 @@
       "translations": {
         "de": {
           "name": "Angelaufene Münze",
-          "description": "Eine Münze, die einen Vogel mit einem Lorbeerkranz zeigt. Sie ist in der Mitte zerbrochen.<li>Entfernt <b>1</b> Vorratskoffer aus der Prüfung.</li><br><br><span class=\"FlavorText\">„So habe ich mir meinen ersten Tag nicht vorgestellt.“ – Leon S. Kennedy</span>"
+          "description": "Eine Münze, die einen Vogel mit einem Lorbeerkranz zeigt. Sie ist in der Mitte zerbrochen.Entfernt 1 Vorratskoffer aus der Prüfung.\n\n„So habe ich mir meinen ersten Tag nicht vorgestellt.“ – Leon S. Kennedy"
         },
         "en": {
           "name": "Tarnished Coin",
-          "description": "A coin depicting a bird framed by a laurel wreath. It’s broken in half.<li>Removes <b>1</b> Supply Case from the trial.</li><br><br><span class=\"FlavorText\">\"This is not how I imagined my first day.\" —Leon S. Kennedy</span>"
+          "description": "A coin depicting a bird framed by a laurel wreath. It’s broken in half.Removes 1 Supply Case from the trial.\n\n\"This is not how I imagined my first day.\" —Leon S. Kennedy"
         },
         "es": {
           "name": "Moneda deslustrada",
-          "description": "Una moneda partida en dos con la imagen de un pájaro alrededor de una corona de laureles.<li>Elimina <b>1</b> caja de suministros de la partida.</li><br><br><span class=\"FlavorText\">\"Jamás pensé que mi primer día sería así\". (Leon S. Kennedy)</span>"
+          "description": "Una moneda partida en dos con la imagen de un pájaro alrededor de una corona de laureles.Elimina 1 caja de suministros de la partida.\n\n\"Jamás pensé que mi primer día sería así\". (Leon S. Kennedy)"
         },
         "ja": {
           "name": "変色したコイン",
-          "description": "月桂冠の中に鳥が描かれた硬貨。半分に割れている。<li>儀式からサプライケースを<b>1個</b>減らす。</li><br><br><span class=\"FlavorText\">「想像していた初日とは大違いだな」 —レオン・S・ケネディ</span>"
+          "description": "月桂冠の中に鳥が描かれた硬貨。半分に割れている。儀式からサプライケースを1個減らす。\n\n「想像していた初日とは大違いだな」 —レオン・S・ケネディ"
         },
         "pl": {
           "name": "Zaśniedziała Moneta",
-          "description": "Żeton przedstawiający ptaka otoczonego wieńcem laurowym. Pęknięty na pół.<li>Usuwa <b>1</b> skrzynię z zapasami z próby.</li><br><br><span class=\"FlavorText\">„Nie tak wyobrażałem sobie swój pierwszy dzień”. – Leon. S Kennedy</span>"
+          "description": "Żeton przedstawiający ptaka otoczonego wieńcem laurowym. Pęknięty na pół.Usuwa 1 skrzynię z zapasami z próby.\n\n„Nie tak wyobrażałem sobie swój pierwszy dzień”. – Leon. S Kennedy"
         }
       }
     },
@@ -42407,23 +42407,23 @@
       "translations": {
         "de": {
           "name": "Weiße Abwehr",
-          "description": "Die Verbrennung dieser Opfergabe gewährt dir Schutz gegen den Verlust deiner Gegenstände und Zusätze.<li>Geheim.</li><br><span class=\"FlavorText\">„Bewahre mich vor dem Bösen, verteidige mich und stirb.“</span>"
+          "description": "Die Verbrennung dieser Opfergabe gewährt dir Schutz gegen den Verlust deiner Gegenstände und Zusätze.Geheim.\n„Bewahre mich vor dem Bösen, verteidige mich und stirb.“"
         },
         "en": {
           "name": "White Ward",
-          "description": "Burning this offering grants you protection against the loss of your item and add-ons.<li>Secret.</li><br><span class=\"FlavorText\">\"Keep me from evil, defend me, and pass away.\"</span>"
+          "description": "Burning this offering grants you protection against the loss of your item and add-ons.Secret.\n\"Keep me from evil, defend me, and pass away.\""
         },
         "es": {
           "name": "Guardián blanco",
-          "description": "Quemar esta ofrenda te otorga protección contra la pérdida de tu objeto y tus accesorios.<li>Secreto.</li><br><span class=\"FlavorText\">\"Aléjame del mal, defiéndeme y desaparece\".</span>"
+          "description": "Quemar esta ofrenda te otorga protección contra la pérdida de tu objeto y tus accesorios.Secreto.\n\"Aléjame del mal, defiéndeme y desaparece\"."
         },
         "ja": {
           "name": "白の魔除け",
-          "description": "このオファリングを燃やすと、アイテムとアドオンを失わなくなる。<li>シークレット</li><br><span class=\"FlavorText\">「かの邪悪を退けてください。私を守ってください。そして、消え去ってください。」</span>"
+          "description": "このオファリングを燃やすと、アイテムとアドオンを失わなくなる。シークレット\n「かの邪悪を退けてください。私を守ってください。そして、消え去ってください。」"
         },
         "pl": {
           "name": "Biały Strażnik",
-          "description": "Spalenie tego daru zapewnia ochronę przed utratą przedmiotów oraz dodatków do przedmiotu.<li>Tajemnica.</li><br><span class=\"FlavorText\">„I trzymaj mnie ode złego, ochroń mnie i odejdź”.</span>"
+          "description": "Spalenie tego daru zapewnia ochronę przed utratą przedmiotów oraz dodatków do przedmiotu.Tajemnica.\n„I trzymaj mnie ode złego, ochroń mnie i odejdź”."
         }
       }
     },
@@ -42437,23 +42437,23 @@
       "translations": {
         "de": {
           "name": "Pudding des Überlebenden",
-          "description": "Gewährt <b>100 %</b> zusätzliche Blutpunkte in allen Kategorien.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Ein ziemlich versalzener Pudding ...“</span>"
+          "description": "Gewährt 100 % zusätzliche Blutpunkte in allen Kategorien.\nBetrifft nur den Besitzer.\n„Ein ziemlich versalzener Pudding ...“"
         },
         "en": {
           "name": "Survivor Pudding",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in all categories.<br><li>Personal.</li><br><span class=\"FlavorText\">\"A heavily salted pudding…\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in all categories.\nPersonal.\n\"A heavily salted pudding…\""
         },
         "es": {
           "name": "Mousse de superviviente",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en todas las categorías.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Una mousse muy salada\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en todas las categorías.\nPersonal.\n\"Una mousse muy salada\"."
         },
         "ja": {
           "name": "生存者のプリン",
-          "description": "全カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「めちゃくちゃしょっぱいプリンだ…」</span>"
+          "description": "全カテゴリーのブラッドポイントを100%追加取得する。\n自分のみ\n「めちゃくちゃしょっぱいプリンだ…」"
         },
         "pl": {
           "name": "Pudding Ocalałego",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi we wszystkich kategoriach.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Przesolony pudding…”</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi we wszystkich kategoriach.\nPrzedmiot osobisty.\n„Przesolony pudding…”"
         }
       }
     },
@@ -42467,23 +42467,23 @@
       "translations": {
         "de": {
           "name": "Tangarkranz",
-          "description": "Gewährt <b>50 %</b> Bonus-Blutpunkte in der Brutalitätskategorie.<br><span class=\"FlavorText\">„Gefertigt aus blutigen Stöcken und Gedärmen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 50 % Bonus-Blutpunkte in der Brutalitätskategorie.\n„Gefertigt aus blutigen Stöcken und Gedärmen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Tanager Wreath",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the Brutality category.<br><span class=\"FlavorText\">\"Crafted out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 50% bonus Bloodpoints in the Brutality category.\n\"Crafted out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del cardenal",
-          "description": "Otorga un <b>50 %</b> de puntos de sangre adicionales en la categoría Brutalidad.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con devoción a base de palos ensangrentados y tripas, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 50 % de puntos de sangre adicionales en la categoría Brutalidad.\n\"Esta guirnalda, fabricada con devoción a base de palos ensangrentados y tripas, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "フウキンチョウのリース",
-          "description": "残忍カテゴリーのブラッドポイントを<b>50%</b>追加取得する。<br><span class=\"FlavorText\">「血塗れの小枝や内臓で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "残忍カテゴリーのブラッドポイントを50%追加取得する。\n「血塗れの小枝や内臓で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Wieniec Pirangi",
-          "description": "Zapewnia <b>50%</b> dodatkowych Punktów Krwi w kategorii Brutalność.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z krwawych patyków oraz wnętrzności, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 50% dodatkowych Punktów Krwi w kategorii Brutalność.\n„Ten wieniec, stworzony z krwawych patyków oraz wnętrzności, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42497,23 +42497,23 @@
       "translations": {
         "de": {
           "name": "Andächtiger Tangarkranz",
-          "description": "Gewährt <b>75 %</b> Bonus-Blutpunkte in der Kategorie „Brutalität“.<br><span class=\"FlavorText\">„Inbrünstig hergestellt aus blutigen Stöcken und Gedärmen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 75 % Bonus-Blutpunkte in der Kategorie „Brutalität“.\n„Inbrünstig hergestellt aus blutigen Stöcken und Gedärmen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Devout Tanager Wreath",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the Brutality category.<br><span class=\"FlavorText\">\"Devoutly crafted out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 75% bonus Bloodpoints in the Brutality category.\n\"Devoutly crafted out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del cardenal devoto",
-          "description": "Otorga un <b>75 %</b> de puntos de sangre adicionales en la categoría Brutalidad.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con devoción a base de palos ensangrentados y tripas, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 75 % de puntos de sangre adicionales en la categoría Brutalidad.\n\"Esta guirnalda, fabricada con devoción a base de palos ensangrentados y tripas, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "信心深いフウキンチョウのリース",
-          "description": "残忍カテゴリーのブラッドポイントを<b>75%</b>追加取得する。<br><span class=\"FlavorText\">「強い祈りをこめて血塗れの小枝や内臓で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "残忍カテゴリーのブラッドポイントを75%追加取得する。\n「強い祈りをこめて血塗れの小枝や内臓で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Gorliwy Wieniec Pirangi",
-          "description": "Zapewnia <b>75%</b> dodatkowych Punktów Krwi w kategorii Brutalność.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z krwawych patyków oraz wnętrzności, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 75% dodatkowych Punktów Krwi w kategorii Brutalność.\n„Ten wieniec, stworzony z krwawych patyków oraz wnętrzności, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42527,23 +42527,23 @@
       "translations": {
         "de": {
           "name": "Inbrünstiger Tangarkranz",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in der Kategorie „Brutalität“.<br><span class=\"FlavorText\">„Mit feuriger, unsterblicher Leidenschaft aus blutigen Stöcken und Gedärmen hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Brutalität“.\n„Mit feuriger, unsterblicher Leidenschaft aus blutigen Stöcken und Gedärmen hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Ardent Tanager Wreath",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the Brutality category.<br><span class=\"FlavorText\">\"Crafted with a fiery, undying passion out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in the Brutality category.\n\"Crafted with a fiery, undying passion out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del cardenal ferviente",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en la categoría Brutalidad.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con una pasión intensa y eterna a base de palos ensangrentados y tripas, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en la categoría Brutalidad.\n\"Esta guirnalda, fabricada con una pasión intensa y eterna a base de palos ensangrentados y tripas, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "熱烈なフウキンチョウのリース",
-          "description": "残忍カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><span class=\"FlavorText\">「燃えるような不滅の執念をこめて血塗れの小枝や内臓で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "残忍カテゴリーのブラッドポイントを100%追加取得する。\n「燃えるような不滅の執念をこめて血塗れの小枝や内臓で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Gorejący Wieniec Pirangi",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi w kategorii Brutalność.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z płomienną, nieśmiertelną pasją z krwawych patyków oraz wnętrzności, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi w kategorii Brutalność.\n„Ten wieniec, stworzony z płomienną, nieśmiertelną pasją z krwawych patyków oraz wnętrzności, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42557,23 +42557,23 @@
       "translations": {
         "de": {
           "name": "Rabenkranz",
-          "description": "Gewährt <b>50 %</b> Bonus-Blutpunkte in der Hinterhältigkeitskategorie.<br><span class=\"FlavorText\">„Hergestellt aus geschwärzten Zweigen und Kohlen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 50 % Bonus-Blutpunkte in der Hinterhältigkeitskategorie.\n„Hergestellt aus geschwärzten Zweigen und Kohlen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Raven Wreath",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the Deviousness category.<br><span class=\"FlavorText\">\"Crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 50% bonus Bloodpoints in the Deviousness category.\n\"Crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del cuervo",
-          "description": "Otorga un <b>50 %</b> de puntos de sangre adicionales en la categoría Malicia.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada a base de ramas oscurecidas y carbón, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 50 % de puntos de sangre adicionales en la categoría Malicia.\n\"Esta guirnalda, fabricada a base de ramas oscurecidas y carbón, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "カラスのリース",
-          "description": "邪悪カテゴリーのブラッドポイントを<b>50%</b>追加取得する。<br><span class=\"FlavorText\">「黒ずんだ木の枝や炭で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "邪悪カテゴリーのブラッドポイントを50%追加取得する。\n「黒ずんだ木の枝や炭で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Kruczy Wieniec",
-          "description": "Zapewnia <b>50%</b> dodatkowych Punktów Krwi w kategorii Przebiegłość.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z przypalonych gałązek i węgielków, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 50% dodatkowych Punktów Krwi w kategorii Przebiegłość.\n„Ten wieniec, stworzony z przypalonych gałązek i węgielków, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42587,23 +42587,23 @@
       "translations": {
         "de": {
           "name": "Andächtiger Rabenkranz",
-          "description": "Gewährt <b>75 %</b> Bonus-Blutpunkte in der Kategorie „Hinterhältigkeit“.<br><span class=\"FlavorText\">„Inbrünstig hergestellt aus geschwärzten Zweigen und Kohlen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 75 % Bonus-Blutpunkte in der Kategorie „Hinterhältigkeit“.\n„Inbrünstig hergestellt aus geschwärzten Zweigen und Kohlen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Devout Raven Wreath",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the Deviousness category.<br><span class=\"FlavorText\">\"Devoutly crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 75% bonus Bloodpoints in the Deviousness category.\n\"Devoutly crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del cuervo devoto",
-          "description": "Otorga un <b>75 %</b> de puntos de sangre adicionales en la categoría Malicia.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con devoción a base de ramas oscurecidas y carbón, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 75 % de puntos de sangre adicionales en la categoría Malicia.\n\"Esta guirnalda, fabricada con devoción a base de ramas oscurecidas y carbón, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "信心深いカラスのリース",
-          "description": "邪悪カテゴリーのブラッドポイントを<b>75%</b>追加取得する。<br><span class=\"FlavorText\">「強い祈りをこめて黒ずんだ木の枝や炭で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "邪悪カテゴリーのブラッドポイントを75%追加取得する。\n「強い祈りをこめて黒ずんだ木の枝や炭で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Gorliwy Wieniec Kruka",
-          "description": "Zapewnia <b>75%</b> dodatkowych Punktów Krwi w kategorii Przebiegłość.<br><span class=\"FlavorText\">„Ten wieniec, stworzony w pocie czoła ze sczerniałych gałęzi i węgla, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 75% dodatkowych Punktów Krwi w kategorii Przebiegłość.\n„Ten wieniec, stworzony w pocie czoła ze sczerniałych gałęzi i węgla, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42617,23 +42617,23 @@
       "translations": {
         "de": {
           "name": "Inbrünstiger Rabenkranz",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in der Kategorie „Hinterhältigkeit“.<br><span class=\"FlavorText\">„Mit feuriger, unsterblicher Leidenschaft aus geschwärzten Zweigen und Kohlen hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Hinterhältigkeit“.\n„Mit feuriger, unsterblicher Leidenschaft aus geschwärzten Zweigen und Kohlen hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Ardent Raven Wreath",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the Deviousness category.<br><span class=\"FlavorText\">\"Crafted with a fiery, undying passion out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in the Deviousness category.\n\"Crafted with a fiery, undying passion out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del cuervo ferviente",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en la categoría Malicia.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con una pasión intensa y eterna a base de ramas oscurecidas y carbón, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en la categoría Malicia.\n\"Esta guirnalda, fabricada con una pasión intensa y eterna a base de ramas oscurecidas y carbón, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "熱烈なカラスのリース",
-          "description": "邪悪カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><span class=\"FlavorText\">「燃えるような不滅の執念をこめて黒ずんだ木の枝や炭で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "邪悪カテゴリーのブラッドポイントを100%追加取得する。\n「燃えるような不滅の執念をこめて黒ずんだ木の枝や炭で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Gorejący Wieniec Kruka",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi w kategorii Przebiegłość.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z płomienną, nieśmiertelną pasją ze sczerniałych gałęzi oraz węgla, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi w kategorii Przebiegłość.\n„Ten wieniec, stworzony z płomienną, nieśmiertelną pasją ze sczerniałych gałęzi oraz węgla, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42647,23 +42647,23 @@
       "translations": {
         "de": {
           "name": "Fleckenkauzkranz",
-          "description": "Gewährt <b>50 %</b> Bonus-Blutpunkte in der Kategorie „Opfer“.<br><span class=\"FlavorText\">„Hergestellt aus Stöcken, Schnüren und Knochen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 50 % Bonus-Blutpunkte in der Kategorie „Opfer“.\n„Hergestellt aus Stöcken, Schnüren und Knochen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Spotted Owl Wreath",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the Sacrifice category.<br><span class=\"FlavorText\">\"Crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 50% bonus Bloodpoints in the Sacrifice category.\n\"Crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del búho moteado",
-          "description": "Otorga un <b>50 %</b> de puntos de sangre adicionales en la categoría Sacrificio.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada a base de palos, cuerdas y huesos, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 50 % de puntos de sangre adicionales en la categoría Sacrificio.\n\"Esta guirnalda, fabricada a base de palos, cuerdas y huesos, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "フクロウのリース",
-          "description": "処刑カテゴリーのブラッドポイントを<b>50%</b>追加取得する。<br><span class=\"FlavorText\">「小枝や紐、骨で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "処刑カテゴリーのブラッドポイントを50%追加取得する。\n「小枝や紐、骨で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Wieniec Puszczyka Plamistego",
-          "description": "Zapewnia <b>50%</b> dodatkowych Punktów Krwi w kategorii Ofiara.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z patyków, sznurków i kości, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 50% dodatkowych Punktów Krwi w kategorii Ofiara.\n„Ten wieniec, stworzony z patyków, sznurków i kości, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42677,23 +42677,23 @@
       "translations": {
         "de": {
           "name": "Andächtiger Fleckenkauzkranz",
-          "description": "Gewährt <b>75 %</b> Bonus-Blutpunkte in der Opferkategorie.<br><span class=\"FlavorText\">„Andächtig hergestellt aus Stöcken, Schnüren und Knochen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 75 % Bonus-Blutpunkte in der Opferkategorie.\n„Andächtig hergestellt aus Stöcken, Schnüren und Knochen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Devout Spotted Owl Wreath",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the Sacrifice category.<br><span class=\"FlavorText\">\"Devoutly crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 75% bonus Bloodpoints in the Sacrifice category.\n\"Devoutly crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del búho moteado devoto",
-          "description": "Otorga un <b>75 %</b> de puntos de sangre adicionales en la categoría Sacrificio.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con devoción a base de palos, cuerdas y huesos, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 75 % de puntos de sangre adicionales en la categoría Sacrificio.\n\"Esta guirnalda, fabricada con devoción a base de palos, cuerdas y huesos, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "信心深いフクロウのリース",
-          "description": "処刑カテゴリーのブラッドポイントを<b>75%</b>追加取得する。<br><span class=\"FlavorText\">「強い祈りをこめて小枝や紐、骨で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "処刑カテゴリーのブラッドポイントを75%追加取得する。\n「強い祈りをこめて小枝や紐、骨で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Gorliwy Wieniec Cętkowanej Sowy",
-          "description": "Zapewnia <b>75%</b> dodatkowych Punktów Krwi w kategorii Ofiara.<br><span class=\"FlavorText\">„Ten wieniec, stworzony w pocie czoła z patyków, nici oraz kości, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 75% dodatkowych Punktów Krwi w kategorii Ofiara.\n„Ten wieniec, stworzony w pocie czoła z patyków, nici oraz kości, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42707,23 +42707,23 @@
       "translations": {
         "de": {
           "name": "Inbrünstiger Fleckenkauzkranz",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in der Kategorie „Opfer“.<br><span class=\"FlavorText\">„Mit feuriger, unsterblicher Leidenschaft aus Stöcken, Schnüren und Knochen hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Opfer“.\n„Mit feuriger, unsterblicher Leidenschaft aus Stöcken, Schnüren und Knochen hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Ardent Spotted Owl Wreath",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the Sacrifice category.<br><span class=\"FlavorText\">\"Crafted with a fiery, undying passion out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in the Sacrifice category.\n\"Crafted with a fiery, undying passion out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del búho moteado ferviente",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en la categoría Sacrificio.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con una pasión intensa y eterna a base de palos, cuerdas y huesos, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en la categoría Sacrificio.\n\"Esta guirnalda, fabricada con una pasión intensa y eterna a base de palos, cuerdas y huesos, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "熱烈なフクロウのリース",
-          "description": "処刑カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><span class=\"FlavorText\">「燃えるような不滅の執念をこめて小枝や紐、骨で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "処刑カテゴリーのブラッドポイントを100%追加取得する。\n「燃えるような不滅の執念をこめて小枝や紐、骨で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Gorejący Wieniec Puszczyka Plamistego",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi w kategorii Ofiara.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z płomienną, nieśmiertelną pasją z patyków, nici oraz kości, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi w kategorii Ofiara.\n„Ten wieniec, stworzony z płomienną, nieśmiertelną pasją z patyków, nici oraz kości, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42737,23 +42737,23 @@
       "translations": {
         "de": {
           "name": "Würgerkranz",
-          "description": "Gewährt <b>50 %</b> Bonus-Blutpunkte in der Kategorie „Jäger“.<br><span class=\"FlavorText\">„Hergestellt aus scharfkantigen Metallen, Seilen und Federn, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 50 % Bonus-Blutpunkte in der Kategorie „Jäger“.\n„Hergestellt aus scharfkantigen Metallen, Seilen und Federn, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Shrike Wreath",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the Hunting category.<br><span class=\"FlavorText\">\"Crafted out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 50% bonus Bloodpoints in the Hunting category.\n\"Crafted out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del alcaudón",
-          "description": "Otorga un <b>50 %</b> de puntos de sangre adicionales en la categoría Caza.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada a base de metales afilados, cuerdas y plumas, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 50 % de puntos de sangre adicionales en la categoría Caza.\n\"Esta guirnalda, fabricada a base de metales afilados, cuerdas y plumas, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "モズのリース",
-          "description": "狩猟カテゴリーのブラッドポイントを<b>50%</b>追加取得する。<br><span class=\"FlavorText\">「鋭い金属片やロープ、羽根で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "狩猟カテゴリーのブラッドポイントを50%追加取得する。\n「鋭い金属片やロープ、羽根で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Sroczy Wieniec",
-          "description": "Zapewnia <b>50%</b> dodatkowych Punktów Krwi w kategorii Polowanie.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z ostrych kawałków metalu, lin oraz piór, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 50% dodatkowych Punktów Krwi w kategorii Polowanie.\n„Ten wieniec, stworzony z ostrych kawałków metalu, lin oraz piór, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42767,23 +42767,23 @@
       "translations": {
         "de": {
           "name": "Andächtiger Würgerkranz",
-          "description": "Gewährt <b>75 %</b> Bonus-Blutpunkte in der Verfolgungskategorie.<br><span class=\"FlavorText\">„Andächtig hergestellt aus scharfkantigen Metallen, Seilen und Federn, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 75 % Bonus-Blutpunkte in der Verfolgungskategorie.\n„Andächtig hergestellt aus scharfkantigen Metallen, Seilen und Federn, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Devout Shrike Wreath",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the Hunting category.<br><span class=\"FlavorText\">\"Devoutly crafted out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 75% bonus Bloodpoints in the Hunting category.\n\"Devoutly crafted out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del alcaudón devoto",
-          "description": "Otorga un <b>75 %</b> de puntos de sangre adicionales en la categoría Caza.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con devoción a base de metales afilados, cuerdas y plumas, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 75 % de puntos de sangre adicionales en la categoría Caza.\n\"Esta guirnalda, fabricada con devoción a base de metales afilados, cuerdas y plumas, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "信心深いモズのリース",
-          "description": "狩猟カテゴリーのブラッドポイントを<b>75%</b>追加取得する。<br><span class=\"FlavorText\">「強い祈りをこめて鋭い金属片やロープ、羽根で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "狩猟カテゴリーのブラッドポイントを75%追加取得する。\n「強い祈りをこめて鋭い金属片やロープ、羽根で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Gorliwy Wieniec Sroki",
-          "description": "Zapewnia <b>75%</b> dodatkowych Punktów Krwi w kategorii Polowanie.<br><span class=\"FlavorText\">„Ten wieniec, stworzony w pocie czoła z ostrych metali, sznurów oraz piór, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 75% dodatkowych Punktów Krwi w kategorii Polowanie.\n„Ten wieniec, stworzony w pocie czoła z ostrych metali, sznurów oraz piór, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42797,23 +42797,23 @@
       "translations": {
         "de": {
           "name": "Inbrünstiger Würgerkranz",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in der Kategorie „Jäger“.<br><span class=\"FlavorText\">„Mit feuriger, unsterblicher Leidenschaft aus scharfkantigen Metallen, Seilen und Federn hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Jäger“.\n„Mit feuriger, unsterblicher Leidenschaft aus scharfkantigen Metallen, Seilen und Federn hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“"
         },
         "en": {
           "name": "Ardent Shrike Wreath",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the Hunting category.<br><span class=\"FlavorText\">\"Crafted with a fiery, undying passion out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in the Hunting category.\n\"Crafted with a fiery, undying passion out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\""
         },
         "es": {
           "name": "Guirnalda del alcaudón ferviente",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en la categoría Caza.<br><span class=\"FlavorText\">\"Esta guirnalda, fabricada con una pasión intensa y eterna a base de metales afilados, cuerdas y plumas, suplica la bendición del Ente para conseguir más sangre\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en la categoría Caza.\n\"Esta guirnalda, fabricada con una pasión intensa y eterna a base de metales afilados, cuerdas y plumas, suplica la bendición del Ente para conseguir más sangre\"."
         },
         "ja": {
           "name": "熱烈なモズのリース",
-          "description": "狩猟カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><span class=\"FlavorText\">「燃えるような不滅の執念をこめて鋭い金属片やロープ、羽根で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」</span>"
+          "description": "狩猟カテゴリーのブラッドポイントを100%追加取得する。\n「燃えるような不滅の執念をこめて鋭い金属片やロープ、羽根で作られたリース。更なる獲物を求め、エンティティの祝福を願う。」"
         },
         "pl": {
           "name": "Gorejący Wieniec Sroki",
-          "description": "Zapewnia <b>100%</b> dodatkowych Punktów Krwi w kategorii Polowanie.<br><span class=\"FlavorText\">„Ten wieniec, stworzony z płomienną, nieśmiertelną pasją z ostrego metalu, lin i piór, prosi Byt o więcej krwi”.</span>"
+          "description": "Zapewnia 100% dodatkowych Punktów Krwi w kategorii Polowanie.\n„Ten wieniec, stworzony z płomienną, nieśmiertelną pasją z ostrego metalu, lin i piór, prosi Byt o więcej krwi”."
         }
       }
     },
@@ -42827,23 +42827,23 @@
       "translations": {
         "de": {
           "name": "Zerkratzte Münze",
-          "description": "Eine Münze, die einen Vogel mit einem Lorbeerkranz zeigt. Sie ist in der Mitte zerbrochen.<li>Entfernt <b>1</b> Vorratskoffer aus der Prüfung.</li><br><br><span class=\"FlavorText\">„So habe ich mir meinen ersten Tag nicht vorgestellt.“ – Leon S. Kennedy</span>"
+          "description": "Eine Münze, die einen Vogel mit einem Lorbeerkranz zeigt. Sie ist in der Mitte zerbrochen.Entfernt 1 Vorratskoffer aus der Prüfung.\n\n„So habe ich mir meinen ersten Tag nicht vorgestellt.“ – Leon S. Kennedy"
         },
         "en": {
           "name": "Scratched Coin",
-          "description": "A coin depicting a bird framed by a laurel wreath. It’s broken in half.<li>Removes <b>1</b> Supply Case from the trial.</li><br><br><span class=\"FlavorText\">\"This is not how I imagined my first day.\" —Leon S. Kennedy</span>"
+          "description": "A coin depicting a bird framed by a laurel wreath. It’s broken in half.Removes 1 Supply Case from the trial.\n\n\"This is not how I imagined my first day.\" —Leon S. Kennedy"
         },
         "es": {
           "name": "Moneda rayada",
-          "description": "Una moneda partida en dos con la imagen de un pájaro alrededor de una corona de laureles.<li>Elimina <b>1</b> caja de suministros de la partida.</li><br><br><span class=\"FlavorText\">\"Jamás pensé que mi primer día sería así\". (Leon S. Kennedy)</span>"
+          "description": "Una moneda partida en dos con la imagen de un pájaro alrededor de una corona de laureles.Elimina 1 caja de suministros de la partida.\n\n\"Jamás pensé que mi primer día sería así\". (Leon S. Kennedy)"
         },
         "ja": {
           "name": "傷ついたコイン",
-          "description": "月桂冠の中に鳥が描かれた硬貨。半分に割れている。<li>儀式からサプライケースを<b>1個</b>減らす。</li><br><br><span class=\"FlavorText\">「想像していた初日とは大違いだな」 —レオン・S・ケネディ</span>"
+          "description": "月桂冠の中に鳥が描かれた硬貨。半分に割れている。儀式からサプライケースを1個減らす。\n\n「想像していた初日とは大違いだな」 —レオン・S・ケネディ"
         },
         "pl": {
           "name": "Porysowana Moneta",
-          "description": "Żeton przedstawiający ptaka otoczonego wieńcem laurowym. Pęknięty na pół.<li>Usuwa <b>1</b> skrzynię z zapasami z próby.</li><br><br><span class=\"FlavorText\">„Nie tak wyobrażałem sobie swój pierwszy dzień”. – Leon. S Kennedy</span>"
+          "description": "Żeton przedstawiający ptaka otoczonego wieńcem laurowym. Pęknięty na pół.Usuwa 1 skrzynię z zapasami z próby.\n\n„Nie tak wyobrażałem sobie swój pierwszy dzień”. – Leon. S Kennedy"
         }
       }
     },
@@ -43097,23 +43097,23 @@
       "translations": {
         "de": {
           "name": "Schwarze Abwehr",
-          "description": "Die Verbrennung dieser Opfergabe gewährt dir Schutz gegen den Verlust deiner Zusätze am Ende der Prüfung.<li>Geheim.</li><br><span class=\"FlavorText\">„Höre meine Stimme, verschone mich, bewahre mich vor der Leere.“</span>"
+          "description": "Die Verbrennung dieser Opfergabe gewährt dir Schutz gegen den Verlust deiner Zusätze am Ende der Prüfung.Geheim.\n„Höre meine Stimme, verschone mich, bewahre mich vor der Leere.“"
         },
         "en": {
           "name": "Black Ward",
-          "description": "Burning this offering grants you protection against the loss of your add-ons at the end of the trial.<li>Secret.</li><br><span class=\"FlavorText\">\"Hear my voice, spare my ways, protect me from the void.\"</span>"
+          "description": "Burning this offering grants you protection against the loss of your add-ons at the end of the trial.Secret.\n\"Hear my voice, spare my ways, protect me from the void.\""
         },
         "es": {
           "name": "Defensa negra",
-          "description": "Quemar esta ofrenda te otorga protección contra la pérdida de tus accesorios al final de la partida.<li>Secreto.</li><br><span class=\"FlavorText\">\"Oye mi voz, perdona mis actos y protégeme del vacío\".</span>"
+          "description": "Quemar esta ofrenda te otorga protección contra la pérdida de tus accesorios al final de la partida.Secreto.\n\"Oye mi voz, perdona mis actos y protégeme del vacío\"."
         },
         "ja": {
           "name": "黒の魔除け",
-          "description": "このオファリングを燃やすと、マッチ終了後にアドオンを失わなくなる。<li>シークレット</li><br><span class=\"FlavorText\">「我が声を聞き給え。我を赦し給え。我を虚無から守り給え。」</span>"
+          "description": "このオファリングを燃やすと、マッチ終了後にアドオンを失わなくなる。シークレット\n「我が声を聞き給え。我を赦し給え。我を虚無から守り給え。」"
         },
         "pl": {
           "name": "Czarny Strażnik",
-          "description": "Spalenie tego daru zapewnia ochronę przed utratą dodatków do mocy aż do zakończenia rozgrywki.<li>Tajemnica.</li><br><span class=\"FlavorText\">„Usłysz mój głos, zachowaj mój sposób życia, chroń mnie przed pustką”.</span>"
+          "description": "Spalenie tego daru zapewnia ochronę przed utratą dodatków do mocy aż do zakończenia rozgrywki.Tajemnica.\n„Usłysz mój głos, zachowaj mój sposób życia, chroń mnie przed pustką”."
         }
       }
     },
@@ -43127,23 +43127,23 @@
       "translations": {
         "de": {
           "name": "Kuchen der Flucht",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in allen Kategorien.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Das Bild dieses Kuchens ist auf jeden Fall echt.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in allen Kategorien.\nBetrifft nur den Besitzer.\n„Das Bild dieses Kuchens ist auf jeden Fall echt.“"
         },
         "en": {
           "name": "Escape! Cake",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in all categories.<br><li>Personal.</li><br><span class=\"FlavorText\">\"This picture of a cake sure is real.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in all categories.\nPersonal.\n\"This picture of a cake sure is real.\""
         },
         "es": {
           "name": "Tarta de... ¡huida!",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en todas las categorías.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Esta imagen de una tarta sí que es real\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en todas las categorías.\nPersonal.\n\"Esta imagen de una tarta sí que es real\"."
         },
         "ja": {
           "name": "脱出だ！ケーキ",
-          "description": "全カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「このケーキの絵は、もちろん本物だ。」</span>"
+          "description": "全カテゴリーのブラッドポイントを100%追加取得する。\n自分のみ\n「このケーキの絵は、もちろん本物だ。」"
         },
         "pl": {
           "name": "Ucieczkowe Ciasto",
-          "description": "Zapewnia <b>100%</b> premię do otrzymywanych Punktów Krwi we wszystkich kategoriach.<br><li>Osobiste.</li><br><span class=\"FlavorText\">„Zdjęcie tego ciasta jest z pewnością prawdziwe”.</span>"
+          "description": "Zapewnia 100% premię do otrzymywanych Punktów Krwi we wszystkich kategoriach.\nOsobiste.\n„Zdjęcie tego ciasta jest z pewnością prawdziwe”."
         }
       }
     },
@@ -43157,23 +43157,23 @@
       "translations": {
         "de": {
           "name": "Leere Hülle",
-          "description": "Gewährt <b>25 %</b> Bonus-Blutpunkte in allen Kategorien.<br><span class=\"FlavorText\">„Ein nicht identifizierbarer Kokon, der von dem Wesen, das in ihm schlummerte, geöffnet wurde.“</span>"
+          "description": "Gewährt 25 % Bonus-Blutpunkte in allen Kategorien.\n„Ein nicht identifizierbarer Kokon, der von dem Wesen, das in ihm schlummerte, geöffnet wurde.“"
         },
         "en": {
           "name": "Hollow Shell",
-          "description": "Grants <b>25%</b> bonus Bloodpoints in all categories.<br><span class=\"FlavorText\">\"An unidentifiable cocoon which was breached by whatever was inside.\"</span>"
+          "description": "Grants 25% bonus Bloodpoints in all categories.\n\"An unidentifiable cocoon which was breached by whatever was inside.\""
         },
         "es": {
           "name": "Cáscara hueca",
-          "description": "Otorga un <b>25 %</b> de puntos de sangre adicionales en todas las categorías.<br><span class=\"FlavorText\">\"Un capullo irreconocible que ha sido rasgado por lo que albergaba en su interior\".</span>"
+          "description": "Otorga un 25 % de puntos de sangre adicionales en todas las categorías.\n\"Un capullo irreconocible que ha sido rasgado por lo que albergaba en su interior\"."
         },
         "ja": {
           "name": "空の抜け殻",
-          "description": "全カテゴリーのブラッドポイントを<b>25%</b>追加取得する。<br><span class=\"FlavorText\">「内側から破られた、正体不明のサナギの抜け殻。」</span>"
+          "description": "全カテゴリーのブラッドポイントを25%追加取得する。\n「内側から破られた、正体不明のサナギの抜け殻。」"
         },
         "pl": {
           "name": "Dziurawa muszla",
-          "description": "Zapewnia <b>25%</b> dodatkowych Punktów Krwi we wszystkich kategoriach.<br><span class=\"FlavorText\">„Niezidentyfikowany kokon, rozerwany przez coś, co wyszło ze środka”.</span>"
+          "description": "Zapewnia 25% dodatkowych Punktów Krwi we wszystkich kategoriach.\n„Niezidentyfikowany kokon, rozerwany przez coś, co wyszło ze środka”."
         }
       }
     },
@@ -43187,23 +43187,23 @@
       "translations": {
         "de": {
           "name": "Versiegelter Umschlag",
-          "description": "Gewährt <b>25 %</b> Bonus-Blutpunkte in allen Kategorien.<br><li>Betrifft nur den Besitzer.</li><br><span class=\"FlavorText\">„Ein nicht adressierter, ungeöffneter Brief, der im Lauf der Zeit vergilbt ist. Sein Inhalt wird nie bekannt werden.“</span>"
+          "description": "Gewährt 25 % Bonus-Blutpunkte in allen Kategorien.\nBetrifft nur den Besitzer.\n„Ein nicht adressierter, ungeöffneter Brief, der im Lauf der Zeit vergilbt ist. Sein Inhalt wird nie bekannt werden.“"
         },
         "en": {
           "name": "Sealed Envelope",
-          "description": "Grants <b>25%</b> bonus Bloodpoints in all categories.<br><li>Personal.</li><br><span class=\"FlavorText\">\"An unaddressed and unopened envelope yellowed by time. Its message will never be known.\"</span>"
+          "description": "Grants 25% bonus Bloodpoints in all categories.\nPersonal.\n\"An unaddressed and unopened envelope yellowed by time. Its message will never be known.\""
         },
         "es": {
           "name": "Sobre sellado",
-          "description": "Otorga un <b>25 %</b> de puntos de sangre adicionales en todas las categorías.<br><li>Personal.</li><br><span class=\"FlavorText\">\"Un sobre sin abrir y sin destinatario, amarilleado por el tiempo. Nunca se llegará a conocer su mensaje\".</span>"
+          "description": "Otorga un 25 % de puntos de sangre adicionales en todas las categorías.\nPersonal.\n\"Un sobre sin abrir y sin destinatario, amarilleado por el tiempo. Nunca se llegará a conocer su mensaje\"."
         },
         "ja": {
           "name": "封がされた封筒",
-          "description": "全カテゴリーのブラッドポイントを<b>25%</b>追加取得する。<br><li>自分のみ</li><br><span class=\"FlavorText\">「宛先が書かれておらず、開封されていない黄ばんだ封筒。手紙の内容は永遠に謎となった。」</span>"
+          "description": "全カテゴリーのブラッドポイントを25%追加取得する。\n自分のみ\n「宛先が書かれておらず、開封されていない黄ばんだ封筒。手紙の内容は永遠に謎となった。」"
         },
         "pl": {
           "name": "Zapieczętowana Koperta",
-          "description": "Zapewnia <b>25%</b> dodatkowych Punktów Krwi we wszystkich kategoriach.<br><li>Przedmiot osobisty.</li><br><span class=\"FlavorText\">„Niezaadresowana, zamknięta koperta, która pożółkła wraz z upływem czasu. Znajdująca się w środku wiadomość na zawsze pozostanie tajemnicą”.</span>"
+          "description": "Zapewnia 25% dodatkowych Punktów Krwi we wszystkich kategoriach.\nPrzedmiot osobisty.\n„Niezaadresowana, zamknięta koperta, która pożółkła wraz z upływem czasu. Znajdująca się w środku wiadomość na zawsze pozostanie tajemnicą”."
         }
       }
     },
@@ -43217,23 +43217,23 @@
       "translations": {
         "de": {
           "name": "Blutige Partyluftschlangen",
-          "description": "Gewährt <b>100 %</b> Bonus-Blutpunkte in allen Kategorien für alle Spieler in dieser Prüfung.<br><span class=\"FlavorText\">„Eine Erinnerung an eine fantastische Feier, bei der sich Leute versammelt hatten, dann aber schreiend flüchteten.“</span>"
+          "description": "Gewährt 100 % Bonus-Blutpunkte in allen Kategorien für alle Spieler in dieser Prüfung.\n„Eine Erinnerung an eine fantastische Feier, bei der sich Leute versammelt hatten, dann aber schreiend flüchteten.“"
         },
         "en": {
           "name": "Bloody Party Streamers",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in all categories for all players this trial.<br><span class=\"FlavorText\">\"A reminder of a bloody good time when people came together, but left screaming.\"</span>"
+          "description": "Grants 100% bonus Bloodpoints in all categories for all players this trial.\n\"A reminder of a bloody good time when people came together, but left screaming.\""
         },
         "es": {
           "name": "Serpentinas de fiesta ensangrentadas",
-          "description": "Otorga un <b>100 %</b> de puntos de sangre adicionales en todas las categorías a todos los jugadores de esta partida.<br><span class=\"FlavorText\">\"Un recuerdo de un momento en que la gente vino toda junta a pasárselo de muerte y se marchó gritando\".</span>"
+          "description": "Otorga un 100 % de puntos de sangre adicionales en todas las categorías a todos los jugadores de esta partida.\n\"Un recuerdo de un momento en que la gente vino toda junta a pasárselo de muerte y se marchó gritando\"."
         },
         "ja": {
           "name": "血塗れのパーティーリボン",
-          "description": "このマッチの全プレイヤーが、全カテゴリーのブラッドポイントを<b>100%</b>追加取得する。<br><span class=\"FlavorText\">「団結した人々が、叫びながら去っていったあの素晴らしい瞬間を思い出すための証。」</span>"
+          "description": "このマッチの全プレイヤーが、全カテゴリーのブラッドポイントを100%追加取得する。\n「団結した人々が、叫びながら去っていったあの素晴らしい瞬間を思い出すための証。」"
         },
         "pl": {
           "name": "Krwawa Zabawa Streamerów",
-          "description": "Zapewnia wszystkim graczom bonus <b>100%</b> do Punktów Krwi we wszystkich kategoriach podczas jednej próby.<br><span class=\"FlavorText\">„Pamiątka cholernie dobrych czasów, kiedy ludzie zbierali się razem, a potem uciekali z krzykiem”.</span>"
+          "description": "Zapewnia wszystkim graczom bonus 100% do Punktów Krwi we wszystkich kategoriach podczas jednej próby.\n„Pamiątka cholernie dobrych czasów, kiedy ludzie zbierali się razem, a potem uciekali z krzykiem”."
         }
       }
     },
@@ -43247,23 +43247,23 @@
       "translations": {
         "de": {
           "name": "Umwickelter Umschlag",
-          "description": "Gewährt <b>25 %</b> Bonus-Blutpunkte in <b>allen</b> Kategorien für alle Überlebenden.<br><span class=\"FlavorText\">„Ein offener Umschlag, der wieder verschlossen und mit 4 farbigen Bändern umwickelt wurde.“</span>"
+          "description": "Gewährt 25 % Bonus-Blutpunkte in allen Kategorien für alle Überlebenden.\n„Ein offener Umschlag, der wieder verschlossen und mit 4 farbigen Bändern umwickelt wurde.“"
         },
         "en": {
           "name": "Bound Envelope",
-          "description": "Grants <b>25%</b> bonus Bloodpoints in <b>all</b> categories to all Survivors.<br><span class=\"FlavorText\">\"An opened envelope re-sealed and bound with 4 colored ribbons.\"</span>"
+          "description": "Grants 25% bonus Bloodpoints in all categories to all Survivors.\n\"An opened envelope re-sealed and bound with 4 colored ribbons.\""
         },
         "es": {
           "name": "Sobre atado",
-          "description": "Otorga un <b>25 %</b> de puntos de sangre adicionales a todos los supervivientes en <b>todas</b> las categorías.<br><span class=\"FlavorText\">\"Un sobre abierto que se volvió a sellar y se ató con 4 cintas de colores\".</span>"
+          "description": "Otorga un 25 % de puntos de sangre adicionales a todos los supervivientes en todas las categorías.\n\"Un sobre abierto que se volvió a sellar y se ató con 4 cintas de colores\"."
         },
         "ja": {
           "name": "縛られた封筒",
-          "description": "生存者全員が、<b>全ての</b>カテゴリーのブラッドポイントを<b>25%</b>追加取得する。<br><span class=\"FlavorText\">「開封されて再び封をされた後、4色のリボンで縛られた封筒。」</span>"
+          "description": "生存者全員が、全てのカテゴリーのブラッドポイントを25%追加取得する。\n「開封されて再び封をされた後、4色のリボンで縛られた封筒。」"
         },
         "pl": {
           "name": "Związana Koperta",
-          "description": "Zapewnia <b>25%</b> premii do Punktów Krwi we <b>wszystkich</b> kategoriach dla każdego z ocalałych.<br><span class=\"FlavorText\">„Otwarta koperta, ponownie zapieczętowana oraz związana 4 kolorowymi wstążkami”.</span>"
+          "description": "Zapewnia 25% premii do Punktów Krwi we wszystkich kategoriach dla każdego z ocalałych.\n„Otwarta koperta, ponownie zapieczętowana oraz związana 4 kolorowymi wstążkami”."
         }
       }
     },
@@ -43607,23 +43607,23 @@
       "translations": {
         "de": {
           "name": "Roter Umschlag",
-          "description": "Eine großzügige Geste, um weniger Glücklichen ein wenig Glück zu bringen. Ruft den Entitus, um bei der Prüfung <b>1 roten Umschlag</b> zu erzeugen.<br><ul><li>Die Aura deines eigenen Umschlags wird dir zu Beginn der Prüfung angezeigt.</li><li>Wenn du mit deinem eigenen roten Umschlag interagierst, wird seine Aura allen anderen Spielern in der Prüfung angezeigt, bis er abgeholt wurde.</li><li>Wenn du den roten Umschlag eines anderen Spielers öffnest, erhältst du <b>eine zufällige Anzahl von Blutpunkten</b>.</li><li>Wenn ein anderer Spieler deinen Umschlag während einer Prüfung öffnet, erhältst du Blutpunkte und einen kosmetischen Gegenstand der Sammlung <b>Mondlichthöhle</b>.</li><li>Mond-Neujahr-Generatoren und -Haken gewähren mehr Blutpunkte.</li></ul>"
+          "description": "Eine großzügige Geste, um weniger Glücklichen ein wenig Glück zu bringen. Ruft den Entitus, um bei der Prüfung 1 roten Umschlag zu erzeugen.\nDie Aura deines eigenen Umschlags wird dir zu Beginn der Prüfung angezeigt.Wenn du mit deinem eigenen roten Umschlag interagierst, wird seine Aura allen anderen Spielern in der Prüfung angezeigt, bis er abgeholt wurde.Wenn du den roten Umschlag eines anderen Spielers öffnest, erhältst du eine zufällige Anzahl von Blutpunkten.Wenn ein anderer Spieler deinen Umschlag während einer Prüfung öffnet, erhältst du Blutpunkte und einen kosmetischen Gegenstand der Sammlung Mondlichthöhle.Mond-Neujahr-Generatoren und -Haken gewähren mehr Blutpunkte."
         },
         "en": {
           "name": "Red Envelope",
-          "description": "A gesture of generosity to bring good fortune to the unfortunate. Calls upon The Entity to generate <b>1 Red Envelope</b> in the trial.<br><ul><li>The aura of your own envelope is revealed to you at the start of the trial.</li><li>Interacting with your own Red Envelope reveals its aura to all other players in the trial until claimed.</li><li>Opening another player's Red Envelope awards you with <b>Bloodpoints of a random amount.</b></li><li>When another player opens your envelope during the trial, you are awarded Bloodpoints and a cosmetic from the <b>Moonlight Burrow</b> collection.</li><li>Increased Bloodpoints awarded from Lunar New Year Generators and Hooks.</li></ul>"
+          "description": "A gesture of generosity to bring good fortune to the unfortunate. Calls upon The Entity to generate 1 Red Envelope in the trial.\nThe aura of your own envelope is revealed to you at the start of the trial.Interacting with your own Red Envelope reveals its aura to all other players in the trial until claimed.Opening another player's Red Envelope awards you with Bloodpoints of a random amount.When another player opens your envelope during the trial, you are awarded Bloodpoints and a cosmetic from the Moonlight Burrow collection.Increased Bloodpoints awarded from Lunar New Year Generators and Hooks."
         },
         "es": {
           "name": "Sobre rojo",
-          "description": "Un gesto de generosidad para traer buena suerte a los más desdichados. Invoca al Ente para generar <b>1 sobre rojo</b> en la partida.<br><ul><li>Puedes ver el aura de tu propio sobre al comienzo de la partida.</li><li>Si interactúas con tu propio sobre rojo, se mostrará el aura a los demás jugadores de la partida hasta que se recoja.</li><li>Si abres el sobre rojo de otro jugador, recibirás una cantidad de <b>puntos de sangre aleatoria</b>.</li><li>Cuando otro jugador abre tu sobre durante la partida, recibirás puntos de sangre y un objeto cosmético de la colección <b>Madriguera de luz de luna</b>.</li><li>Aumenta la cantidad de puntos de sangre que se obtienen en generadores de Año Nuevo lunar y ganchos.</li></ul>"
+          "description": "Un gesto de generosidad para traer buena suerte a los más desdichados. Invoca al Ente para generar 1 sobre rojo en la partida.\nPuedes ver el aura de tu propio sobre al comienzo de la partida.Si interactúas con tu propio sobre rojo, se mostrará el aura a los demás jugadores de la partida hasta que se recoja.Si abres el sobre rojo de otro jugador, recibirás una cantidad de puntos de sangre aleatoria.Cuando otro jugador abre tu sobre durante la partida, recibirás puntos de sangre y un objeto cosmético de la colección Madriguera de luz de luna.Aumenta la cantidad de puntos de sangre que se obtienen en generadores de Año Nuevo lunar y ganchos."
         },
         "ja": {
           "name": "赤い封筒",
-          "description": "不運な者に幸運をもたらす寛大な心のしるし。儀式で<b>赤い封筒を1つ</b>エンティティに出してもらう。<br><ul><li>儀式開始時に、自分の封筒のオーラが自分だけに表示される。</li><li>自分の赤い封筒にアクションを起こすと、誰かが拾うまで儀式にいる他の全員にそのオーラが表示される</li><li>他のプレイヤーの赤い封筒を開封すると<b>ランダムな数のブラッドポイント</b>を取得する。</li><li>儀式中に自分の封筒が他の誰かによって開封されると、ブラッドポイントと<b>月明かりの巣穴</b>コレクションのスキンを獲得する</li><li>旧正月の発電機とフックから獲得するブラッドポイントが増加する</li></ul>"
+          "description": "不運な者に幸運をもたらす寛大な心のしるし。儀式で赤い封筒を1つエンティティに出してもらう。\n儀式開始時に、自分の封筒のオーラが自分だけに表示される。自分の赤い封筒にアクションを起こすと、誰かが拾うまで儀式にいる他の全員にそのオーラが表示される他のプレイヤーの赤い封筒を開封するとランダムな数のブラッドポイントを取得する。儀式中に自分の封筒が他の誰かによって開封されると、ブラッドポイントと月明かりの巣穴コレクションのスキンを獲得する旧正月の発電機とフックから獲得するブラッドポイントが増加する"
         },
         "pl": {
           "name": "Czerwona Koperta",
-          "description": "Gest szczodrości, który ma przynieść szczęście nieszczęśnikom. Wzywa Byt do wygenerowania <b>1 czerwonej koperty</b> podczas próby.<br><ul><li>Aura twojej koperty zostaje ci ujawniona na początku próby.</li><li>Interakcja z czerwoną kopertą ujawnia jej aurę wszystkim graczom w próbie, aż do odebrania.</li><li>Otwarcie czerwonej koperty innego gracza nagradza cię <b>losową liczbą Punktów Krwi.</b></li><li>Kiedy inny gracz otworzy twoją kopertę podczas próby, otrzymujesz Punkty Krwi i przedmiot kosmetyczny z kolekcji <b>Nora w blasku księżyca</b>.</li><li>Większa liczba Punktów Krwi otrzymywana z generatorów i haków Księżycowego Nowego Roku.</li></ul>"
+          "description": "Gest szczodrości, który ma przynieść szczęście nieszczęśnikom. Wzywa Byt do wygenerowania 1 czerwonej koperty podczas próby.\nAura twojej koperty zostaje ci ujawniona na początku próby.Interakcja z czerwoną kopertą ujawnia jej aurę wszystkim graczom w próbie, aż do odebrania.Otwarcie czerwonej koperty innego gracza nagradza cię losową liczbą Punktów Krwi.Kiedy inny gracz otworzy twoją kopertę podczas próby, otrzymujesz Punkty Krwi i przedmiot kosmetyczny z kolekcji Nora w blasku księżyca.Większa liczba Punktów Krwi otrzymywana z generatorów i haków Księżycowego Nowego Roku."
         }
       }
     },
@@ -43637,23 +43637,23 @@
       "translations": {
         "de": {
           "name": "Blutunterlaufenes Auge",
-          "description": "Ein Auge, das mit seltsamem Blut gefüllt ist und dieses auch aufspüren kann.<br><ul><li>Betrifft nur den Besitzer.</li><li>Gewährt einen Blutpunktebonus von +<b>100 %</b> auf alle Blutmond-Punktereignisse.</li></ul><li><i>Nur verwendbar im <b>Event: Blutmond</b>.</i></li>"
+          "description": "Ein Auge, das mit seltsamem Blut gefüllt ist und dieses auch aufspüren kann.\nBetrifft nur den Besitzer.Gewährt einen Blutpunktebonus von +100 % auf alle Blutmond-Punktereignisse.Nur verwendbar im Event: Blutmond."
         },
         "en": {
           "name": "Bloodshot Eye",
-          "description": "An eye filled with, and capable of finding, strange blood.<br><ul><li>Personal.</li><li>Provides a +<b>100%</b> Bloodpoints bonus to all Blood Moon score events.</li></ul><li><i>Only usable when playing <b>Event: Blood Moon</b>.</i></li>"
+          "description": "An eye filled with, and capable of finding, strange blood.\nPersonal.Provides a +100% Bloodpoints bonus to all Blood Moon score events.Only usable when playing Event: Blood Moon."
         },
         "es": {
           "name": "Ojo sanguinolento",
-          "description": "Un ojo lleno de una sangre extraña y con la capacidad de encontrarla.<br><ul><li>Personal.</li><li>Otorga un <b>100 %</b> de puntos de sangre adicionales en todos los eventos de puntuación de Luna de sangre.</li></ul><li><i>Solo se puede utilizar al jugar en el <b>evento: Luna de sangre</b>.</i></li>"
+          "description": "Un ojo lleno de una sangre extraña y con la capacidad de encontrarla.\nPersonal.Otorga un 100 % de puntos de sangre adicionales en todos los eventos de puntuación de Luna de sangre.Solo se puede utilizar al jugar en el evento: Luna de sangre."
         },
         "ja": {
           "name": "血走った眼",
-          "description": "奇妙な血で満たされ、同じく奇妙な血を探知する力を持った眼。<br><ul><li>自分のみ</li><li>「ブラッドムーン」で得点が発生するといつもブラッドポイントを<b>100%</b>追加取得する</li></ul><li><i><b>「ブラッドムーン」イベント</b>をプレイ中のみ使用可能。</i></li>"
+          "description": "奇妙な血で満たされ、同じく奇妙な血を探知する力を持った眼。\n自分のみ「ブラッドムーン」で得点が発生するといつもブラッドポイントを100%追加取得する「ブラッドムーン」イベントをプレイ中のみ使用可能。"
         },
         "pl": {
           "name": "Przekrwione oko",
-          "description": "Oko wypełnione dziwną krwią i zdolne do jej odnajdywania.<br><ul><li>Osobiste.</li><li>Zapewnia <b>+100%</b> do Punktów Krwi w wydarzeniach „Krwawy Księżyc”.</li></ul><li><i>Możliwe do użycia wyłącznie w trakcie wydarzenia <b>Krwawy Księżyc</b>.</i></li>"
+          "description": "Oko wypełnione dziwną krwią i zdolne do jej odnajdywania.\nOsobiste.Zapewnia +100% do Punktów Krwi w wydarzeniach „Krwawy Księżyc”.Możliwe do użycia wyłącznie w trakcie wydarzenia Krwawy Księżyc."
         }
       }
     },
@@ -43697,23 +43697,23 @@
       "translations": {
         "de": {
           "name": "Blutige Blaupause",
-          "description": "Enthüllt für dich zu Beginn der Prüfung <b>20 Sekunden</b> lang die Auren der Kellerhaken. <b>Erhöht enorm</b> die Wahrscheinlichkeit, dass der Keller in der Hütte des Killers erscheint, sofern es auf der Karte eine Hütte des Killers gibt.<li>Geheim.</li><br><span class=\"FlavorText\">„Der Plan ist teilweise von Blutflecken bedeckt.“</span>"
+          "description": "Enthüllt für dich zu Beginn der Prüfung 20 Sekunden lang die Auren der Kellerhaken. Erhöht enorm die Wahrscheinlichkeit, dass der Keller in der Hütte des Killers erscheint, sofern es auf der Karte eine Hütte des Killers gibt.Geheim.\n„Der Plan ist teilweise von Blutflecken bedeckt.“"
         },
         "en": {
           "name": "Bloodied Blueprint",
-          "description": "Reveals the aura of the basement hooks to you for <b>20 seconds</b> at the start of the trial. <b>Tremendously</b> increases the chance of spawning the basement in the Killer Shack, if the map has a Killer Shack.<li>Secret.</li><br><span class=\"FlavorText\">\"Spatters of dried blood partially conceal the design.”</span>"
+          "description": "Reveals the aura of the basement hooks to you for 20 seconds at the start of the trial. Tremendously increases the chance of spawning the basement in the Killer Shack, if the map has a Killer Shack.Secret.\n\"Spatters of dried blood partially conceal the design.”"
         },
         "es": {
           "name": "Planos ensangrentados",
-          "description": "Te muestra el aura de los ganchos del sótano durante <b>20 segundos</b> al inicio de la partida. Si el mapa tiene una cabaña de asesino, aumenta <b>tremendamente</b> la probabilidad de que el sótano aparezca debajo de ella.<li>Secreto.</li><br><span class=\"FlavorText\">\"Las manchas de sangre secas ocultan parte del diseño\".</span>"
+          "description": "Te muestra el aura de los ganchos del sótano durante 20 segundos al inicio de la partida. Si el mapa tiene una cabaña de asesino, aumenta tremendamente la probabilidad de que el sótano aparezca debajo de ella.Secreto.\n\"Las manchas de sangre secas ocultan parte del diseño\"."
         },
         "ja": {
           "name": "血塗られた設計図",
-          "description": "儀式開始時に、地下室のフックのオーラが<b>20秒間</b>視えるようになる。マップに殺人鬼の小屋がある場合、殺人鬼の小屋に地下室が出現する確率が<b>とてつもなく</b>上昇する。<li>シークレット</li><br><span class=\"FlavorText\">「乾いた血しぶきで、ところどころが見えなくなっている。」</span>"
+          "description": "儀式開始時に、地下室のフックのオーラが20秒間視えるようになる。マップに殺人鬼の小屋がある場合、殺人鬼の小屋に地下室が出現する確率がとてつもなく上昇する。シークレット\n「乾いた血しぶきで、ところどころが見えなくなっている。」"
         },
         "pl": {
           "name": "Skrwawione plany",
-          "description": "Dostrzegasz aury haków znajdujących się w piwnicy przez <b>20 sekund</b> na początku próby. <b>Ogromnie</b> zwiększa szansę na pojawienie się piwnicy w chacie zabójcy (o ile chata znajduje się na mapie).<li>Tajemnica.</li><br><span class=\"FlavorText\">„Plamy zaschniętej krwi częściowo zasłaniają plany”.</span>"
+          "description": "Dostrzegasz aury haków znajdujących się w piwnicy przez 20 sekund na początku próby. Ogromnie zwiększa szansę na pojawienie się piwnicy w chacie zabójcy (o ile chata znajduje się na mapie).Tajemnica.\n„Plamy zaschniętej krwi częściowo zasłaniają plany”."
         }
       }
     },
@@ -43727,23 +43727,23 @@
       "translations": {
         "de": {
           "name": "Zerrissene Blaupause",
-          "description": "Enthüllt für dich zu Beginn der Prüfung <b>20 Sekunden</b> lang die Auren der Kellerhaken. <b>Erhöht enorm</b> die Wahrscheinlichkeit, dass der Keller im Hauptgebäude erscheint, sofern es auf der Karte ein Hauptgebäude gibt.<li>Geheim.</li><br><span class=\"FlavorText\">„Der Plan ist zwar rissig und zerfetzt, aber durchaus lesbar.“</span>"
+          "description": "Enthüllt für dich zu Beginn der Prüfung 20 Sekunden lang die Auren der Kellerhaken. Erhöht enorm die Wahrscheinlichkeit, dass der Keller im Hauptgebäude erscheint, sofern es auf der Karte ein Hauptgebäude gibt.Geheim.\n„Der Plan ist zwar rissig und zerfetzt, aber durchaus lesbar.“"
         },
         "en": {
           "name": "Torn Blueprint",
-          "description": "Reveals the aura of the basement hooks to you for <b>20 seconds</b> at the start of the trial. <b>Tremendously</b> increases the chance of spawning the basement in the main building, if the map has a main building.<li>Secret.</li><br><span class=\"FlavorText\">\"Though brittle and torn, the design is mostly legible.”</span>"
+          "description": "Reveals the aura of the basement hooks to you for 20 seconds at the start of the trial. Tremendously increases the chance of spawning the basement in the main building, if the map has a main building.Secret.\n\"Though brittle and torn, the design is mostly legible.”"
         },
         "es": {
           "name": "Planos rotos",
-          "description": "Te muestra el aura de los ganchos del sótano durante <b>20 segundos</b> al inicio de la partida. Si el mapa tiene un edificio principal, aumenta <b>tremendamente</b> la probabilidad de que el sótano aparezca debajo de él.<li>Secreto.</li><br><span class=\"FlavorText\">\"A pesar de sus malas condiciones, aún resulta bastante legible\".</span>"
+          "description": "Te muestra el aura de los ganchos del sótano durante 20 segundos al inicio de la partida. Si el mapa tiene un edificio principal, aumenta tremendamente la probabilidad de que el sótano aparezca debajo de él.Secreto.\n\"A pesar de sus malas condiciones, aún resulta bastante legible\"."
         },
         "ja": {
           "name": "破れた設計図",
-          "description": "儀式開始時に、地下室のフックのオーラが<b>20秒間</b>視えるようになる。マップに主要な建物がある場合、建物に地下室が出現する確率が<b>とてつもなく</b>上昇する。<li>シークレット</li><br><span class=\"FlavorText\">「もろく破れているが、大半は確認できる。」</span>"
+          "description": "儀式開始時に、地下室のフックのオーラが20秒間視えるようになる。マップに主要な建物がある場合、建物に地下室が出現する確率がとてつもなく上昇する。シークレット\n「もろく破れているが、大半は確認できる。」"
         },
         "pl": {
           "name": "Podarte plany",
-          "description": "Dostrzegasz aury haków znajdujących się w piwnicy przez <b>20 sekund</b> na początku próby. <b>Ogromnie</b> zwiększa szansę na pojawienie się piwnicy w głównym budynku (o ile główny budynek znajduje się na mapie).<li>Tajemnica.</li><br><span class=\"FlavorText\">„Chociaż kruche i porwane, plany są w większości czytelne”.</span>"
+          "description": "Dostrzegasz aury haków znajdujących się w piwnicy przez 20 sekund na początku próby. Ogromnie zwiększa szansę na pojawienie się piwnicy w głównym budynku (o ile główny budynek znajduje się na mapie).Tajemnica.\n„Chociaż kruche i porwane, plany są w większości czytelne”."
         }
       }
     },
@@ -43757,23 +43757,23 @@
       "translations": {
         "de": {
           "name": "Klares Reagenz",
-          "description": "<b>Verringert leicht</b> den dunklen Nebelschleier.<li>Geheim.</li><br><span class=\"FlavorText\">„Der Nebelschleier bricht herein, er zieht alles in seinen dunklen Wahnsinn. Es gibt kein Weglaufen, kein Entrinnen, keine Zuflucht, abgesehen vom reinen Wasser des im Wald verlorenen Teichs.“ – Notizbuch eines unbekannten Verfassers</span>"
+          "description": "Verringert leicht den dunklen Nebelschleier.Geheim.\n„Der Nebelschleier bricht herein, er zieht alles in seinen dunklen Wahnsinn. Es gibt kein Weglaufen, kein Entrinnen, keine Zuflucht, abgesehen vom reinen Wasser des im Wald verlorenen Teichs.“ – Notizbuch eines unbekannten Verfassers"
         },
         "en": {
           "name": "Clear Reagent",
-          "description": "<b>Slightly lessens</b> the Dark Mist.<li>Secret.</li><br><span class=\"FlavorText\">\"The Mist rolls in, traps all in Its deep madness. There is no running, no escape, no asylum, except for the clear waters of the pond lost in the forest.\" -Unknown, Notebook</span>"
+          "description": "Slightly lessens the Dark Mist.Secret.\n\"The Mist rolls in, traps all in Its deep madness. There is no running, no escape, no asylum, except for the clear waters of the pond lost in the forest.\" -Unknown, Notebook"
         },
         "es": {
           "name": "Reactivo transparente",
-          "description": "<b>Aclara ligeramente</b> la niebla oscura.<li>Secreto.</li><br><span class=\"FlavorText\">\"La bruma llega y atrapa todo dentro su intensa locura. No hay salida, ni escape, ni refugio, salvo por las aguas cristalinas del estanque perdido en el bosque\". (Autor desconocido, cuaderno)</span>"
+          "description": "Aclara ligeramente la niebla oscura.Secreto.\n\"La bruma llega y atrapa todo dentro su intensa locura. No hay salida, ni escape, ni refugio, salvo por las aguas cristalinas del estanque perdido en el bosque\". (Autor desconocido, cuaderno)"
         },
         "ja": {
           "name": "澄んだ試験薬",
-          "description": "闇の霧の濃度が<b>少し減少する。</b><li>シークレット</li><br><span class=\"FlavorText\">「霧が立ち込め、全てを狂気に呑み込んでいく。そこには逃げ場も、出口も、安全な場所も無いが、池で汲んだ綺麗な水はある。」- 筆者不明の手帳</span>"
+          "description": "闇の霧の濃度が少し減少する。シークレット\n「霧が立ち込め、全てを狂気に呑み込んでいく。そこには逃げ場も、出口も、安全な場所も無いが、池で汲んだ綺麗な水はある。」- 筆者不明の手帳"
         },
         "pl": {
           "name": "Czysty Odczynnik",
-          "description": "<b>Nieznacznie rozrzedza</b> Mroczną Mgłę.<li>Tajemnica.</li><br><span class=\"FlavorText\">„Mgła napływa i więzi wszystko w swym gęstym szaleństwie. Nie ma tu drogi ucieczki, nie ma tu żadnego schronienia. Można się jedynie schować w czystych wodach stawu zagubionego w lesie” – Nieznany Autor, Notatnik</span>"
+          "description": "Nieznacznie rozrzedza Mroczną Mgłę.Tajemnica.\n„Mgła napływa i więzi wszystko w swym gęstym szaleństwie. Nie ma tu drogi ucieczki, nie ma tu żadnego schronienia. Można się jedynie schować w czystych wodach stawu zagubionego w lesie” – Nieznany Autor, Notatnik"
         }
       }
     },
@@ -43787,23 +43787,23 @@
       "translations": {
         "de": {
           "name": "Schwaches Reagenz",
-          "description": "<b>Verdichtet leicht</b> den dunklen Nebelschleier.<li>Geheim.</li><br><span class=\"FlavorText\">„Gelähmt stehe ich in der Kälte, zurückbleibend mit dem Tod.“</span>"
+          "description": "Verdichtet leicht den dunklen Nebelschleier.Geheim.\n„Gelähmt stehe ich in der Kälte, zurückbleibend mit dem Tod.“"
         },
         "en": {
           "name": "Faint Reagent",
-          "description": "<b>Slightly thickens</b> the Dark Mist.<li>Secret.</li><br><span class=\"FlavorText\">\"Paralyzed, I stand in the cold as death lingers.\"</span>"
+          "description": "Slightly thickens the Dark Mist.Secret.\n\"Paralyzed, I stand in the cold as death lingers.\""
         },
         "es": {
           "name": "Reactivo translúcido",
-          "description": "<b>Espesa ligeramente</b> la niebla oscura.<li>Secreto.</li><br><span class=\"FlavorText\">\"Incapaz de moverme, permanezco en medio del frío mientras la muerte merodea por el lugar\".</span>"
+          "description": "Espesa ligeramente la niebla oscura.Secreto.\n\"Incapaz de moverme, permanezco en medio del frío mientras la muerte merodea por el lugar\"."
         },
         "ja": {
           "name": "薄い試験薬",
-          "description": "闇の霧の濃度が<b>少し増加する。</b><li>シークレット</li><br><span class=\"FlavorText\">「身体が痺れる。命に関わるほどの寒さだ。」</span>"
+          "description": "闇の霧の濃度が少し増加する。シークレット\n「身体が痺れる。命に関わるほどの寒さだ。」"
         },
         "pl": {
           "name": "Słaby Odczynnik",
-          "description": "<b>Nieznacznie zagęszcza</b> Mroczną Mgłę.<li>Tajemnica.</li><br><span class=\"FlavorText\">„Stoję sparaliżowany na zimnie, a śmierć wisi nade mną”.</span>"
+          "description": "Nieznacznie zagęszcza Mroczną Mgłę.Tajemnica.\n„Stoję sparaliżowany na zimnie, a śmierć wisi nade mną”."
         }
       }
     },
@@ -43817,23 +43817,23 @@
       "translations": {
         "de": {
           "name": "Trübes Reagenz",
-          "description": "<b>Verdichtet moderat</b> den dunklen Nebelschleier.<li>Geheim.</li><br><span class=\"FlavorText\">„Der Nebelschleier ist verführerisch, hypnotisierend. Ich liebe ihn und fürchte ihn zugleich.“ – Donnas Skizzenbuch</span>"
+          "description": "Verdichtet moderat den dunklen Nebelschleier.Geheim.\n„Der Nebelschleier ist verführerisch, hypnotisierend. Ich liebe ihn und fürchte ihn zugleich.“ – Donnas Skizzenbuch"
         },
         "en": {
           "name": "Hazy Reagent",
-          "description": "<b>Moderately thickens</b> the Dark Mist.<li>Secret.</li><br><span class=\"FlavorText\">\"The Mist is alluring, hypnotizing. I love It and fear It at the same time.\" -Donna's Sketchbook</span>"
+          "description": "Moderately thickens the Dark Mist.Secret.\n\"The Mist is alluring, hypnotizing. I love It and fear It at the same time.\" -Donna's Sketchbook"
         },
         "es": {
           "name": "Reactivo turbio",
-          "description": "<b>Espesa moderadamente</b> la niebla oscura.<li>Secreto.</li><br><span class=\"FlavorText\">\"La niebla es seductora e hipnotizante. La amo y la temo al mismo tiempo\". (Cuaderno de bocetos de Donna)</span>"
+          "description": "Espesa moderadamente la niebla oscura.Secreto.\n\"La niebla es seductora e hipnotizante. La amo y la temo al mismo tiempo\". (Cuaderno de bocetos de Donna)"
         },
         "ja": {
           "name": "霞がかった試験薬",
-          "description": "闇の霧の濃度が<b>そこそこ増加する。</b><li>シークレット</li><br><span class=\"FlavorText\">「この霧はとても魅惑的で、うっとりする。愛おしいと同時に、恐ろしくもある。」- ドナのスケッチブック</span>"
+          "description": "闇の霧の濃度がそこそこ増加する。シークレット\n「この霧はとても魅惑的で、うっとりする。愛おしいと同時に、恐ろしくもある。」- ドナのスケッチブック"
         },
         "pl": {
           "name": "Mglisty Odczynnik",
-          "description": "<b>Znacznie zagęszcza</b> Mroczną Mgłę.<li>Tajemnica.</li><br><span class=\"FlavorText\">„Ta Mgła jest pociągająca, hipnotyzująca. Uwielbiam ją, ale jednocześnie się jej boję” – Szkicownik Donny</span>"
+          "description": "Znacznie zagęszcza Mroczną Mgłę.Tajemnica.\n„Ta Mgła jest pociągająca, hipnotyzująca. Uwielbiam ją, ale jednocześnie się jej boję” – Szkicownik Donny"
         }
       }
     },
@@ -43847,23 +43847,23 @@
       "translations": {
         "de": {
           "name": "Dunkles Reagenz",
-          "description": "<b>Verdichtet stark</b> den dunklen Nebelschleier.<li>Geheim.</li><br><span class=\"FlavorText\">„Der Nebelschleier scheint uns vor der Bestie zu beschützen, aber er ist ein Gift, ein Geschwür, welches uns mit Dunkelheit und Wahnsinn erfüllt.“ – Notizbuch eines unbekannten Verfassers</span>"
+          "description": "Verdichtet stark den dunklen Nebelschleier.Geheim.\n„Der Nebelschleier scheint uns vor der Bestie zu beschützen, aber er ist ein Gift, ein Geschwür, welches uns mit Dunkelheit und Wahnsinn erfüllt.“ – Notizbuch eines unbekannten Verfassers"
         },
         "en": {
           "name": "Murky Reagent",
-          "description": "<b>Greatly thickens</b> the Dark Mist.<li>Secret.</li><br><span class=\"FlavorText\">\"The Mist seems to protect us from the beast, but it is a poison, a cancer, filling us with darkness and insanity.\" -Unknown, Notebook</span>"
+          "description": "Greatly thickens the Dark Mist.Secret.\n\"The Mist seems to protect us from the beast, but it is a poison, a cancer, filling us with darkness and insanity.\" -Unknown, Notebook"
         },
         "es": {
           "name": "Reactivo opaco",
-          "description": "<b>Espesa enormemente</b> la niebla oscura.<li>Secreto.</li><br><span class=\"FlavorText\">\"La niebla parece protegernos de la bestia, pero es un veneno, un cáncer que nos llena de oscuridad y locura\". (Autor desconocido, cuaderno)</span>"
+          "description": "Espesa enormemente la niebla oscura.Secreto.\n\"La niebla parece protegernos de la bestia, pero es un veneno, un cáncer que nos llena de oscuridad y locura\". (Autor desconocido, cuaderno)"
         },
         "ja": {
           "name": "濁った試験薬",
-          "description": "闇の霧の濃度が<b>すごく増加する。</b><li>シークレット</li><br><span class=\"FlavorText\">「どうやらこの霧は俺達をあの化け物から守ってくれるようだ。だがこの霧は毒であり、俺達を蝕んで闇と狂気で満たしていく。」- 筆者不明の手帳</span>"
+          "description": "闇の霧の濃度がすごく増加する。シークレット\n「どうやらこの霧は俺達をあの化け物から守ってくれるようだ。だがこの霧は毒であり、俺達を蝕んで闇と狂気で満たしていく。」- 筆者不明の手帳"
         },
         "pl": {
           "name": "Mroczny Odczynnik",
-          "description": "<b>Ogromnie zagęszcza</b> Mroczną Mgłę.<li>Tajemnica.</li><br><span class=\"FlavorText\">„Mgła zdaje się chronić nas przed bestią, ale jest to trucizna, rak wypełniający nas mrokiem i szaleństwem” – Autor nieznany, Notatnik</span>"
+          "description": "Ogromnie zagęszcza Mroczną Mgłę.Tajemnica.\n„Mgła zdaje się chronić nas przed bestią, ale jest to trucizna, rak wypełniający nas mrokiem i szaleństwem” – Autor nieznany, Notatnik"
         }
       }
     },
@@ -43877,23 +43877,23 @@
       "translations": {
         "de": {
           "name": "Blaupause mit Notizen",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, dass die Bodenluke in der Hütte des Killers erscheint, sofern es auf der Karte eine Hütte des Killers gibt.<li>Geheim.</li><br><span class=\"FlavorText\">„Wichtige Informationen sind am Rand notiert, aber von wem?“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, dass die Bodenluke in der Hütte des Killers erscheint, sofern es auf der Karte eine Hütte des Killers gibt.Geheim.\n„Wichtige Informationen sind am Rand notiert, aber von wem?“"
         },
         "en": {
           "name": "Annotated Blueprint",
-          "description": "<b>Tremendously</b> increases the chance of spawning the Hatch in the Killer Shack, if the map has a Killer Shack.<li>Secret.</li><br><span class=\"FlavorText\">\"Essential information is scribbled along the side, but by whom?”</span>"
+          "description": "Tremendously increases the chance of spawning the Hatch in the Killer Shack, if the map has a Killer Shack.Secret.\n\"Essential information is scribbled along the side, but by whom?”"
         },
         "es": {
           "name": "Planos anotados",
-          "description": "Si el mapa tiene una cabaña de asesino, aumenta <b>tremendamente</b> la probabilidad de que la trampilla aparezca en su interior.<li>Secreto.</li><br><span class=\"FlavorText\">\"Hay información imprescindible escrita por el lado, pero ¿quién la ha escrito?\".</span>"
+          "description": "Si el mapa tiene una cabaña de asesino, aumenta tremendamente la probabilidad de que la trampilla aparezca en su interior.Secreto.\n\"Hay información imprescindible escrita por el lado, pero ¿quién la ha escrito?\"."
         },
         "ja": {
           "name": "注釈付きの設計図",
-          "description": "マップに殺人鬼の小屋がある場合、殺人鬼の小屋にハッチが出現する確率が<b>とてつもなく</b>上昇する。<li>シークレット</li><br><span class=\"FlavorText\">「重要な情報が横に書かれている。しかし、誰が書いたのだろうか？」</span>"
+          "description": "マップに殺人鬼の小屋がある場合、殺人鬼の小屋にハッチが出現する確率がとてつもなく上昇する。シークレット\n「重要な情報が横に書かれている。しかし、誰が書いたのだろうか？」"
         },
         "pl": {
           "name": "Plany z adnotacjami",
-          "description": "<b>Ogromnie</b> zwiększa szansę na pojawienie się włazu w chacie zabójcy (o ile chata znajduje się na mapie).<li>Tajemnica.</li><br><span class=\"FlavorText\">„Ktoś napisał z boku niezbędne informacje, ale kto?”</span>"
+          "description": "Ogromnie zwiększa szansę na pojawienie się włazu w chacie zabójcy (o ile chata znajduje się na mapie).Tajemnica.\n„Ktoś napisał z boku niezbędne informacje, ale kto?”"
         }
       }
     },
@@ -43907,23 +43907,23 @@
       "translations": {
         "de": {
           "name": "Azarovs Schlüssel",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zum Autohaven-Schrottplatz geschickt zu werden, wenn er verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Ein zerbrochener Schlüssel, der zu einem Fahrzeug unbekannter Marke gehört. Ein daran befestigtes Schlüsselband identifiziert den Besitzer als einen gewissen A. Azarov.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zum Autohaven-Schrottplatz geschickt zu werden, wenn er verbrannt wird.Geheim.Nicht kombinierbar.\n„Ein zerbrochener Schlüssel, der zu einem Fahrzeug unbekannter Marke gehört. Ein daran befestigtes Schlüsselband identifiziert den Besitzer als einen gewissen A. Azarov.“"
         },
         "en": {
           "name": "Azarov's Key",
-          "description": "<b>Tremendously increases</b> the chances of being sent to the Autohaven Wreckers when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"A broken key belonging to a vehicle of unknown brand. A keychain attached to it identifies the owner as a certain A. Azarov.\"</span>"
+          "description": "Tremendously increases the chances of being sent to the Autohaven Wreckers when burnt.Secret.Does not stack.\n\"A broken key belonging to a vehicle of unknown brand. A keychain attached to it identifies the owner as a certain A. Azarov.\""
         },
         "es": {
           "name": "Llave de Azarov",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe al desguace Autohaven.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Una llave rota de un vehículo de marca desconocida. El llavero identifica al dueño como un tal A. Azarov\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe al desguace Autohaven.Secreto.No se acumula.\n\"Una llave rota de un vehículo de marca desconocida. El llavero identifica al dueño como un tal A. Azarov\"."
         },
         "ja": {
           "name": "アザロフのカギ",
-          "description": "これを燃やすとオートヘイヴン・レッカーズに送られる確率が<b>とてつもなく上昇する。</b><li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「どの車のものか分からない壊れたカギ。キーホルダーにより、持ち主はA. アザロフという名前であることがわかる。」</span>"
+          "description": "これを燃やすとオートヘイヴン・レッカーズに送られる確率がとてつもなく上昇する。シークレット重複しない\n「どの車のものか分からない壊れたカギ。キーホルダーにより、持ち主はA. アザロフという名前であることがわかる。」"
         },
         "pl": {
           "name": "Klucz Azarowa",
-          "description": "Po spaleniu <b>ogromnie zwiększa</b> szansę na wylosowanie mapy „Złomowisko Aut”.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Zepsuty klucz do samochodu nieznanej marki. Brelok dołączony do klucza wskazuje na to, że jego właścicielem jest niejaki A.Azarow”.</span>"
+          "description": "Po spaleniu ogromnie zwiększa szansę na wylosowanie mapy „Złomowisko Aut”.Tajemnica.Nie łączy się.\n„Zepsuty klucz do samochodu nieznanej marki. Brelok dołączony do klucza wskazuje na to, że jego właścicielem jest niejaki A.Azarow”."
         }
       }
     },
@@ -43937,23 +43937,23 @@
       "translations": {
         "de": {
           "name": "Großmutters Kochbuch",
-          "description": "<b>Erhöht leicht</b> die Wahrscheinlichkeit, zum Backwater-Sumpf geschickt zu werden, wenn es verbrannt wird.<br><li>Kombinierbar.</li><br><span class=\"FlavorText\">„Ein verkohltes Stück eines Schiffsseils, das noch immer warmen Rauch verströmt.“</span>"
+          "description": "Erhöht leicht die Wahrscheinlichkeit, zum Backwater-Sumpf geschickt zu werden, wenn es verbrannt wird.\nKombinierbar.\n„Ein verkohltes Stück eines Schiffsseils, das noch immer warmen Rauch verströmt.“"
         },
         "en": {
           "name": "Grandma's Cookbook",
-          "description": "<b>Slightly increases</b> the chances of being sent to Backwater Swamp when burnt.<br><li>Stacks.</li><br><span class=\"FlavorText\">\"A burnt piece of marine rope still emitting a warm smoke.\"</span>"
+          "description": "Slightly increases the chances of being sent to Backwater Swamp when burnt.\nStacks.\n\"A burnt piece of marine rope still emitting a warm smoke.\""
         },
         "es": {
           "name": "Libro de cocina de la abuela",
-          "description": "<b>Aumenta ligeramente</b> la probabilidad de que se te envíe al pantano de aguas estancadas.<br><li>Acumulable</li><br><span class=\"FlavorText\">\"Un trozo quemado de cuerda náutica que todavía emite humo caliente\".</span>"
+          "description": "Aumenta ligeramente la probabilidad de que se te envíe al pantano de aguas estancadas.\nAcumulable\n\"Un trozo quemado de cuerda náutica que todavía emite humo caliente\"."
         },
         "ja": {
           "name": "おばあちゃんの料理本",
-          "description": "これを燃やすとバックウォーター・スワンプに送られる確率が<b>少し上昇する。</b><br><li>重複する</li><br><span class=\"FlavorText\">「まだ温かい煙が出ている、焼けた船舶用ロープ。」</span>"
+          "description": "これを燃やすとバックウォーター・スワンプに送られる確率が少し上昇する。\n重複する\n「まだ温かい煙が出ている、焼けた船舶用ロープ。」"
         },
         "pl": {
           "name": "Książka Kucharska Babci",
-          "description": "Po spaleniu <b>nieznacznie zwiększa</b> szansę na wylosowanie mapy „Bagienne Rozlewisko”.<br><li>Łączy się</li><br><span class=\"FlavorText\">„Spalony kawałek liny żeglarskiej, wciąż dymiący się ciepło”.</span>"
+          "description": "Po spaleniu nieznacznie zwiększa szansę na wylosowanie mapy „Bagienne Rozlewisko”.\nŁączy się\n„Spalony kawałek liny żeglarskiej, wciąż dymiący się ciepło”."
         }
       }
     },
@@ -43967,23 +43967,23 @@
       "translations": {
         "de": {
           "name": "Herzmedaillon",
-          "description": "<b>Erhöht leicht</b> die Wahrscheinlichkeit, zur Coldwind Farm geschickt zu werden, wenn sie verbrannt wird.<br><li>Kombinierbar.</li><br><span class=\"FlavorText\">„Eine blutverschmierte Rindermarke mit der Nummer 28.“</span>"
+          "description": "Erhöht leicht die Wahrscheinlichkeit, zur Coldwind Farm geschickt zu werden, wenn sie verbrannt wird.\nKombinierbar.\n„Eine blutverschmierte Rindermarke mit der Nummer 28.“"
         },
         "en": {
           "name": "Heart Locket",
-          "description": "<b>Slightly increases</b> the chances of being sent to Coldwind Farm when burnt.<br><li>Stacks.</li><br><span class=\"FlavorText\">\"A bloodstained cattle tag identified with the number '28'.\"</span>"
+          "description": "Slightly increases the chances of being sent to Coldwind Farm when burnt.\nStacks.\n\"A bloodstained cattle tag identified with the number '28'.\""
         },
         "es": {
           "name": "Medallón de corazón",
-          "description": "<b>Aumenta ligeramente</b> la probabilidad de que se te envíe a la Granja Coldwind.<br><li>Acumulable.</li><br><span class=\"FlavorText\">\"Una etiqueta de ganado manchada de sangre que lleva el número 28\".</span>"
+          "description": "Aumenta ligeramente la probabilidad de que se te envíe a la Granja Coldwind.\nAcumulable.\n\"Una etiqueta de ganado manchada de sangre que lleva el número 28\"."
         },
         "ja": {
           "name": "ハート型のロケットペンダント",
-          "description": "これを燃やすとコールドウィンド・ファームに送られる確率が<b>少し上昇する。</b><br><li>重複する</li><br><span class=\"FlavorText\">「『28』と番号が振られた血痕つきの牛用タグ。」</span>"
+          "description": "これを燃やすとコールドウィンド・ファームに送られる確率が少し上昇する。\n重複する\n「『28』と番号が振られた血痕つきの牛用タグ。」"
         },
         "pl": {
           "name": "Medalik w Kształcie Serca",
-          "description": "Po spaleniu <b>nieznacznie zwiększa</b> szansę na wylosowanie mapy „Farma Coldwind”.<br><li>Łączy się.</li><br><span class=\"FlavorText\">„Zakrwawiony znacznik bydła z wygrawerowaną liczbą 28”.</span>"
+          "description": "Po spaleniu nieznacznie zwiększa szansę na wylosowanie mapy „Farma Coldwind”.\nŁączy się.\n„Zakrwawiony znacznik bydła z wygrawerowaną liczbą 28”."
         }
       }
     },
@@ -43997,23 +43997,23 @@
       "translations": {
         "de": {
           "name": "Verkohltes Hochzeitsfoto",
-          "description": "<b>Erhöht leicht</b> die Wahrscheinlichkeit, in die Crotus-Prenn-Anstalt geschickt zu werden, wenn er verbrannt wird.<br><li>Kombinierbar.</li><br><span class=\"FlavorText\">„Ein abgenutzter, verblichener Überweisungsschein mit unleserlicher Aufschrift.“</span>"
+          "description": "Erhöht leicht die Wahrscheinlichkeit, in die Crotus-Prenn-Anstalt geschickt zu werden, wenn er verbrannt wird.\nKombinierbar.\n„Ein abgenutzter, verblichener Überweisungsschein mit unleserlicher Aufschrift.“"
         },
         "en": {
           "name": "Charred Wedding Photograph",
-          "description": "<b>Slightly increases</b> the chances of being sent to Crotus Prenn Asylum when burnt.<br><li>Stacks.</li><br><span class=\"FlavorText\">\"A worn and faded-out ticket of paper with unreadable information.\"</span>"
+          "description": "Slightly increases the chances of being sent to Crotus Prenn Asylum when burnt.\nStacks.\n\"A worn and faded-out ticket of paper with unreadable information.\""
         },
         "es": {
           "name": "Fotografía de boda quemada",
-          "description": "<b>Aumenta ligeramente</b> la probabilidad de que se te envíe al psiquiátrico Crotus Prenn.<br><li>Acumulable. </li><br><span class=\"FlavorText\">\"Un billete de papel desgastado y descolorido con información ilegible\".</span>"
+          "description": "Aumenta ligeramente la probabilidad de que se te envíe al psiquiátrico Crotus Prenn.\nAcumulable.\n\"Un billete de papel desgastado y descolorido con información ilegible\"."
         },
         "ja": {
           "name": "黒焦げた結婚写真",
-          "description": "これを燃やすとクロータス・プレン・アサイラムに送られる確率が<b>少し上昇する。</b><br><li>重複する</li><br><span class=\"FlavorText\">「破れて霞み、字を読むことができない札。」</span>"
+          "description": "これを燃やすとクロータス・プレン・アサイラムに送られる確率が少し上昇する。\n重複する\n「破れて霞み、字を読むことができない札。」"
         },
         "pl": {
           "name": "Zwęglona Fotografia Ślubna",
-          "description": "Po spaleniu <b>nieznacznie zwiększa</b> szansę na wylosowanie mapy „Przytułek Crotus Prenn”.<br><li> Łączy się></li><br><span class=\"FlavorText\">„Zużyty oraz wyblakły bilet z nieczytelną informacją”.</span>"
+          "description": "Po spaleniu nieznacznie zwiększa szansę na wylosowanie mapy „Przytułek Crotus Prenn”.\nŁączy się>\n„Zużyty oraz wyblakły bilet z nieczytelną informacją”."
         }
       }
     },
@@ -44027,23 +44027,23 @@
       "translations": {
         "de": {
           "name": "Rindertalgmischung",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, ins Reich „Das dezimierte Borgo“ geschickt zu werden, wenn sie verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Der Gestank verrottenden biologischen Abfalls dringt aus dieser üblen Mischung. Sie soll ein Feuer ermöglichen, das sehr heiß und sehr lange brennt.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, ins Reich „Das dezimierte Borgo“ geschickt zu werden, wenn sie verbrannt wird.Geheim.Nicht kombinierbar.\n„Der Gestank verrottenden biologischen Abfalls dringt aus dieser üblen Mischung. Sie soll ein Feuer ermöglichen, das sehr heiß und sehr lange brennt.“"
         },
         "en": {
           "name": "Beef Tallow Mixture",
-          "description": "<b>Tremendously increases</b> the chance to be sent to The Decimated Borgo when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">“The stink of rotting organic matter emanates from this foul mixture, designed with the grim intent to create a fire that burns very hot and very long.”</span>"
+          "description": "Tremendously increases the chance to be sent to The Decimated Borgo when burnt.Secret.Does not stack.\n“The stink of rotting organic matter emanates from this foul mixture, designed with the grim intent to create a fire that burns very hot and very long.”"
         },
         "es": {
           "name": "Mezcla de sebo de ternera",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe al Burgo diezmado al quemarse.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"El hedor de la materia orgánica pudriéndose proviene de esta horrible mezcla, creada con el horrible fin de propagar un fuego intenso y duradero\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe al Burgo diezmado al quemarse.Secreto.No se acumula.\n\"El hedor de la materia orgánica pudriéndose proviene de esta horrible mezcla, creada con el horrible fin de propagar un fuego intenso y duradero\"."
         },
         "ja": {
           "name": "牛脂ミックス",
-          "description": "これを燃やすと壊滅したボルゴに送られる確率が<b>とてつもなく上昇する</b>。<li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「腐敗した有機物の悪臭を放つ、朽ちた混合物。恐ろしい念力が込められ、非常に熱い炎を長時間燃やし続ける。」</span>"
+          "description": "これを燃やすと壊滅したボルゴに送られる確率がとてつもなく上昇する。シークレット重複しない\n「腐敗した有機物の悪臭を放つ、朽ちた混合物。恐ろしい念力が込められ、非常に熱い炎を長時間燃やし続ける。」"
         },
         "pl": {
           "name": "Mieszanka łoju wołowego",
-          "description": "<b>Ogromnie zwiększa</b> szansę na trafienie do Zdziesiątkowanego Borgo po spaleniu.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Smród gnijącej materii organicznej emanuje z tej paskudnej mieszanki, stworzonej z mrocznym zamiarem stworzenia ognia, który pali się bardzo gorąco i bardzo długo”.</span>"
+          "description": "Ogromnie zwiększa szansę na trafienie do Zdziesiątkowanego Borgo po spaleniu.Tajemnica.Nie łączy się.\n„Smród gnijącej materii organicznej emanuje z tej paskudnej mieszanki, stworzonej z mrocznym zamiarem stworzenia ognia, który pali się bardzo gorąco i bardzo długo”."
         }
       }
     },
@@ -44057,23 +44057,23 @@
       "translations": {
         "de": {
           "name": "Luftschleusentore",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zum <b>Nostromo-Wrack</b> geschickt zu werden, wenn sie verbrannt werden.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Du kennst die Quarantänevorschriften. 24 Stunden für die Dekontaminierung.“ – Ellen Ripley</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zum Nostromo-Wrack geschickt zu werden, wenn sie verbrannt werden.Geheim.Nicht kombinierbar.\n„Du kennst die Quarantänevorschriften. 24 Stunden für die Dekontaminierung.“ – Ellen Ripley"
         },
         "en": {
           "name": "Airlock Doors",
-          "description": "<b>Tremendously increases</b> the chance to be sent to <b>Nostromo Wreckage</b> when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">“You know the quarantine procedure. 24 hours for decontamination.” –Ellen Ripley</span>"
+          "description": "Tremendously increases the chance to be sent to Nostromo Wreckage when burnt.Secret.Does not stack.\n“You know the quarantine procedure. 24 hours for decontamination.” –Ellen Ripley"
         },
         "es": {
           "name": "Puertas de cámara de descompresión",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a <b>Restos de la Nostromo</b> al quemarse.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Conoces el procedimiento de cuarentena. 24 horas para la descontaminación\". (Ellen Ripley)</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a Restos de la Nostromo al quemarse.Secreto.No se acumula.\n\"Conoces el procedimiento de cuarentena. 24 horas para la descontaminación\". (Ellen Ripley)"
         },
         "ja": {
           "name": "エアロックの扉",
-          "description": "これを燃やすと<b>ノストロモ号の残骸</b>に送られる確率が<b>とてつもなく上昇する</b>。<li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「検疫規則を知ってるでしょ。24時間の隔離が必要よ」- エレン・リプリー</span>"
+          "description": "これを燃やすとノストロモ号の残骸に送られる確率がとてつもなく上昇する。シークレット重複しない\n「検疫規則を知ってるでしょ。24時間の隔離が必要よ」- エレン・リプリー"
         },
         "pl": {
           "name": "Śluza powietrzna",
-          "description": "<b>Ogromnie zwiększa</b> szansę na wysłanie do <b>wraku Nostromo</b> po spaleniu.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Znacie procedurę kwarantanny. 24 godziny na dekontaminację”. – Ellen Ripley</span>"
+          "description": "Ogromnie zwiększa szansę na wysłanie do wraku Nostromo po spaleniu.Tajemnica.Nie łączy się.\n„Znacie procedurę kwarantanny. 24 godziny na dekontaminację”. – Ellen Ripley"
         }
       }
     },
@@ -44087,23 +44087,23 @@
       "translations": {
         "de": {
           "name": "Außerirdische Flora",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zum <b>„Toba-Landeplatz“</b> geschickt zu werden, wenn sie verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Unsere Ankunft wird diesen Planeten, wie wir ihn kennen, völlig verändern.“ – Sarah, Wissenschaftsoffizierin</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zum „Toba-Landeplatz“ geschickt zu werden, wenn sie verbrannt wird.Geheim.Nicht kombinierbar.\n„Unsere Ankunft wird diesen Planeten, wie wir ihn kennen, völlig verändern.“ – Sarah, Wissenschaftsoffizierin"
         },
         "en": {
           "name": "Alien Flora",
-          "description": "<b>Tremendously increases</b> the chance to be sent to <b>Toba Landing</b> when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"Our arrival will change the face of this planet as we know it.” –Sarah, Science Officer</span>"
+          "description": "Tremendously increases the chance to be sent to Toba Landing when burnt.Secret.Does not stack.\n\"Our arrival will change the face of this planet as we know it.” –Sarah, Science Officer"
         },
         "es": {
           "name": "Flora alienígena",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a <b>Aterrizaje en Toba</b> al quemarse.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Nuestra llegada cambiará la faz de este planeta tal y como lo conocemos\". (Sarah, oficial científica)</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a Aterrizaje en Toba al quemarse.Secreto.No se acumula.\n\"Nuestra llegada cambiará la faz de este planeta tal y como lo conocemos\". (Sarah, oficial científica)"
         },
         "ja": {
           "name": "不思議な惑星の植物",
-          "description": "これを燃やすと<b>トーバ着陸地点</b>に送られる確率が<b>とてつもなく上昇する。</b><li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「私たちが到着したことにより、この惑星は様変わりするでしょう」– サラ、科学士官</span>"
+          "description": "これを燃やすとトーバ着陸地点に送られる確率がとてつもなく上昇する。シークレット重複しない\n「私たちが到着したことにより、この惑星は様変わりするでしょう」– サラ、科学士官"
         },
         "pl": {
           "name": "Obca flora",
-          "description": "<b>Ogromnie zwiększa</b> szansę na wysłanie na <b>Ziemie Toba</b> po spaleniu. <li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Nasze przybycie zmieni oblicze tej planety” – Sarah, oficer naukowy</span>"
+          "description": "Ogromnie zwiększa szansę na wysłanie na Ziemie Toba po spaleniu. Tajemnica.Nie łączy się.\n„Nasze przybycie zmieni oblicze tej planety” – Sarah, oficer naukowy"
         }
       }
     },
@@ -44117,23 +44117,23 @@
       "translations": {
         "de": {
           "name": "Krähenauge",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zum Einsamen Friedhof geschickt zu werden, wenn es verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Das dunkle, glänzende Auge bewegt sich hin und her, als würde es einen blutigen Fetzen Aas suchen.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zum Einsamen Friedhof geschickt zu werden, wenn es verbrannt wird.Geheim.Nicht kombinierbar.\n„Das dunkle, glänzende Auge bewegt sich hin und her, als würde es einen blutigen Fetzen Aas suchen.“"
         },
         "en": {
           "name": "Crow's Eye",
-          "description": "<b>Tremendously increases</b> the chance to be sent to Forsaken Boneyard when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"The dark, beady eye shifts back and forth as if searching for a bloody strip of carrion.\"</span>"
+          "description": "Tremendously increases the chance to be sent to Forsaken Boneyard when burnt.Secret.Does not stack.\n\"The dark, beady eye shifts back and forth as if searching for a bloody strip of carrion.\""
         },
         "es": {
           "name": "Ojo de cuervo",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe al Cementerio abandonado al quemarse.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Ese ojo oscuro, pequeño y cruel otea en todas direcciones como si buscara una tira ensangrentada de carroña\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe al Cementerio abandonado al quemarse.Secreto.No se acumula.\n\"Ese ojo oscuro, pequeño y cruel otea en todas direcciones como si buscara una tira ensangrentada de carroña\"."
         },
         "ja": {
           "name": "烏の眼",
-          "description": "焼かれた時に「荒れ果てた墓場」に送られる確率が<b>とてつもなく増加する</b>。<li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「血が滴る死肉の一片を探しているかのように、黒いビーズのような目がギョロギョロと動く」</span>"
+          "description": "焼かれた時に「荒れ果てた墓場」に送られる確率がとてつもなく増加する。シークレット重複しない\n「血が滴る死肉の一片を探しているかのように、黒いビーズのような目がギョロギョロと動く」"
         },
         "pl": {
           "name": "Krucze oko",
-          "description": "Po spaleniu <b>ogromnie zwiększa</b> szansę na wysłanie na Zapomniany Cmentarz.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Ciemne paciorkowate oko porusza się tam i z powrotem, jakby szukało krwawego ochłapu padliny”.</span>"
+          "description": "Po spaleniu ogromnie zwiększa szansę na wysłanie na Zapomniany Cmentarz.Tajemnica.Nie łączy się.\n„Ciemne paciorkowate oko porusza się tam i z powrotem, jakby szukało krwawego ochłapu padliny”."
         }
       }
     },
@@ -44147,23 +44147,23 @@
       "translations": {
         "de": {
           "name": "Puzzleteil",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, in die Gideon-Fleischfabrik geschickt zu werden, wenn es verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Herzlichen Glückwunsch. Sie leben weiter. Die meisten Menschen sind so undankbar, dass sie noch leben. Aber Sie nicht. Jetzt nicht mehr.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, in die Gideon-Fleischfabrik geschickt zu werden, wenn es verbrannt wird.Geheim.Nicht kombinierbar.\n„Herzlichen Glückwunsch. Sie leben weiter. Die meisten Menschen sind so undankbar, dass sie noch leben. Aber Sie nicht. Jetzt nicht mehr.“"
         },
         "en": {
           "name": "Jigsaw Piece",
-          "description": "<b>Tremendously increases</b> the chances of being sent to Gideon Meat Plant when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"Congratulations. You are still alive. Most people are so ungrateful to be alive. But not you. Not anymore.\"</span>"
+          "description": "Tremendously increases the chances of being sent to Gideon Meat Plant when burnt.Secret.Does not stack.\n\"Congratulations. You are still alive. Most people are so ungrateful to be alive. But not you. Not anymore.\""
         },
         "es": {
           "name": "Pieza de Puzle",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a la planta procesadora de carne Gideon.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Enhorabuena. Sigues con vida. La mayoría de la gente no agradece seguir con vida. Pero tú no. Ya no\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a la planta procesadora de carne Gideon.Secreto.No se acumula.\n\"Enhorabuena. Sigues con vida. La mayoría de la gente no agradece seguir con vida. Pero tú no. Ya no\"."
         },
         "ja": {
           "name": "ジグソーパズルのピース",
-          "description": "これを燃やすとギデオン食肉工場に送られる可能性が<b>とてつもなく上昇する。</b><li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「おめでとう。君はまだ生きている。多くの人間は\"生\"に感謝をしない。 だが君は違う。今日からはな。」</span>"
+          "description": "これを燃やすとギデオン食肉工場に送られる可能性がとてつもなく上昇する。シークレット重複しない\n「おめでとう。君はまだ生きている。多くの人間は\"生\"に感謝をしない。 だが君は違う。今日からはな。」"
         },
         "pl": {
           "name": "Kawałek Układanki",
-          "description": "Po spaleniu <b>znacznie zwiększa</b> szansę na wylosowanie mapy „Zakład mięsny Gideon”.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Gratulacje. Wciąż żyjesz. Większość ludzi nie potrafi docenić faktu, że żyje. Ale nie ty. Już nie”.</span>"
+          "description": "Po spaleniu znacznie zwiększa szansę na wylosowanie mapy „Zakład mięsny Gideon”.Tajemnica.Nie łączy się.\n„Gratulacje. Wciąż żyjesz. Większość ludzi nie potrafi docenić faktu, że żyje. Ale nie ty. Już nie”."
         }
       }
     },
@@ -44177,23 +44177,23 @@
       "translations": {
         "de": {
           "name": "Zerbrochene Flasche",
-          "description": "<b>Erhöht leicht</b> die Wahrscheinlichkeit, in die Crotus-Prenn-Anstalt geschickt zu werden, wenn er verbrannt wird.<br><li>Kombinierbar.</li><br><span class=\"FlavorText\">„Ein abgenutzter, verblichener Überweisungsschein mit unleserlicher Aufschrift.“</span>"
+          "description": "Erhöht leicht die Wahrscheinlichkeit, in die Crotus-Prenn-Anstalt geschickt zu werden, wenn er verbrannt wird.\nKombinierbar.\n„Ein abgenutzter, verblichener Überweisungsschein mit unleserlicher Aufschrift.“"
         },
         "en": {
           "name": "Shattered Bottle",
-          "description": "<b>Slightly increases</b> the chances of being sent to Crotus Prenn Asylum when burnt.<br><li>Stacks.</li><br><span class=\"FlavorText\">\"A worn and faded-out ticket of paper with unreadable information.\"</span>"
+          "description": "Slightly increases the chances of being sent to Crotus Prenn Asylum when burnt.\nStacks.\n\"A worn and faded-out ticket of paper with unreadable information.\""
         },
         "es": {
           "name": "Botella rota",
-          "description": "<b>Aumenta ligeramente</b> la probabilidad de que se te envíe al psiquiátrico Crotus Prenn.<br><li>Acumulable. </li><br><span class=\"FlavorText\">\"Un billete de papel desgastado y descolorido con información ilegible\".</span>"
+          "description": "Aumenta ligeramente la probabilidad de que se te envíe al psiquiátrico Crotus Prenn.\nAcumulable.\n\"Un billete de papel desgastado y descolorido con información ilegible\"."
         },
         "ja": {
           "name": "砕けたボトル",
-          "description": "これを燃やすとクロータス・プレン・アサイラムに送られる確率が<b>少し上昇する。</b><br><li>重複する</li><br><span class=\"FlavorText\">「破れて霞み、字を読むことができない札。」</span>"
+          "description": "これを燃やすとクロータス・プレン・アサイラムに送られる確率が少し上昇する。\n重複する\n「破れて霞み、字を読むことができない札。」"
         },
         "pl": {
           "name": "Roztrzaskana butelka",
-          "description": "Po spaleniu <b>nieznacznie zwiększa</b> szansę na wylosowanie mapy „Przytułek Crotus Prenn”.<br><li> Łączy się></li><br><span class=\"FlavorText\">„Zużyty oraz wyblakły bilet z nieczytelną informacją”.</span>"
+          "description": "Po spaleniu nieznacznie zwiększa szansę na wylosowanie mapy „Przytułek Crotus Prenn”.\nŁączy się>\n„Zużyty oraz wyblakły bilet z nieczytelną informacją”."
         }
       }
     },
@@ -44207,23 +44207,23 @@
       "translations": {
         "de": {
           "name": "Strode-Immobilienschlüssel",
-          "description": "<b>Erhöht deutlich</b> die Wahrscheinlichkeit, nach Haddonfield geschickt zu werden, wenn sie verbrannt wird.<br><li>Kombinierbar.</li><br><span class=\"FlavorText\">„Eine modrige und verfaulte Dachschindel aus Eichenholz, wie man sie auf fast allen Häusern in Haddonfield findet.“</span>"
+          "description": "Erhöht deutlich die Wahrscheinlichkeit, nach Haddonfield geschickt zu werden, wenn sie verbrannt wird.\nKombinierbar.\n„Eine modrige und verfaulte Dachschindel aus Eichenholz, wie man sie auf fast allen Häusern in Haddonfield findet.“"
         },
         "en": {
           "name": "Strode Realty Key",
-          "description": "<b>Considerably increases</b> the chances of being sent to Haddonfield when burnt.<br><li>Stacks.</li><br><span class=\"FlavorText\">\"A moldy and rotten beaded oak clapboard like the ones found on most houses of Haddonfield.\"</span>"
+          "description": "Considerably increases the chances of being sent to Haddonfield when burnt.\nStacks.\n\"A moldy and rotten beaded oak clapboard like the ones found on most houses of Haddonfield.\""
         },
         "es": {
           "name": "Llave de la inmobiliaria Strode",
-          "description": "<b>Aumenta considerablemente</b> la probabilidad de que se te envíe a Haddonfield.<br><li>Acumulable.</li><br><span class=\"FlavorText\">\"Una tablilla de roble mohosa y podrida, similar a las de la mayoría de las casas de Haddonfield\".</span>"
+          "description": "Aumenta considerablemente la probabilidad de que se te envíe a Haddonfield.\nAcumulable.\n\"Una tablilla de roble mohosa y podrida, similar a las de la mayoría de las casas de Haddonfield\"."
         },
         "ja": {
           "name": "ストロード不動産のカギ",
-          "description": "これを燃やすとハドンフィールドに送られる確率が<b>かなり上昇する。</b><br><li>重複する</li><br><span class=\"FlavorText\">「カビが生えて腐食した樫の板。似たものがハドンフィールドのほとんどの家で見られる。」</span>"
+          "description": "これを燃やすとハドンフィールドに送られる確率がかなり上昇する。\n重複する\n「カビが生えて腐食した樫の板。似たものがハドンフィールドのほとんどの家で見られる。」"
         },
         "pl": {
           "name": "Klucz do Nieruchomości Strode",
-          "description": "Po spaleniu <b>znacznie zwiększa</b> szansę na wylosowanie mapy „Haddonfield”.<br><li>Łączy się</li><br><span class=\"FlavorText\">„Zapleśniała i zgniła deska dębowa, taka sama jak te użyte w większości domów w Haddonfield”.</span>"
+          "description": "Po spaleniu znacznie zwiększa szansę na wylosowanie mapy „Haddonfield”.\nŁączy się\n„Zapleśniała i zgniła deska dębowa, taka sama jak te użyte w większości domów w Haddonfield”."
         }
       }
     },
@@ -44237,23 +44237,23 @@
       "translations": {
         "de": {
           "name": "Laborausweis vom Hawkins National Laboratory",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zum Hawkins National Laboratory geschickt zu werden, wenn er verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Ein durchnässter und blutverschmierter Ausweis mit einer Seriennummer.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zum Hawkins National Laboratory geschickt zu werden, wenn er verbrannt wird.Geheim.Nicht kombinierbar.\n„Ein durchnässter und blutverschmierter Ausweis mit einer Seriennummer.“"
         },
         "en": {
           "name": "Hawkins National Laboratory I.D.",
-          "description": "<b>Tremendously increases</b> the chance to be sent to Hawkins National Laboratory when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"A soggy, bloodstained identification card with a serial number.\"</span>"
+          "description": "Tremendously increases the chance to be sent to Hawkins National Laboratory when burnt.Secret.Does not stack.\n\"A soggy, bloodstained identification card with a serial number.\""
         },
         "es": {
           "name": "Tarjeta de identificación del Laboratorio Nacional de Hawkins",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe al Laboratorio Nacional de Hawkins.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Una tarjeta de identificación ensangrentada y húmeda con un número de serie\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe al Laboratorio Nacional de Hawkins.Secreto.No se acumula.\n\"Una tarjeta de identificación ensangrentada y húmeda con un número de serie\"."
         },
         "ja": {
           "name": "ホーキンス国立研究所のIDカード",
-          "description": "燃やされると、ホーキンス国立研究所に送られる可能性が<b>とてつもなく上昇する</b>。<li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「びしょ濡れで血の染みが付いた、シリアル番号の書かれたIDカード」</span>"
+          "description": "燃やされると、ホーキンス国立研究所に送られる可能性がとてつもなく上昇する。シークレット重複しない\n「びしょ濡れで血の染みが付いた、シリアル番号の書かれたIDカード」"
         },
         "pl": {
           "name": "Karta Hawkins National Laboratory",
-          "description": "<b>Ogromnie zwiększa</b> szansę wysłania do Hawkins National Laboratory w razie spalenia.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Przemoczona i zakrwawiona karta identyfikacyjna z numerem”.</span>"
+          "description": "Ogromnie zwiększa szansę wysłania do Hawkins National Laboratory w razie spalenia.Tajemnica.Nie łączy się.\n„Przemoczona i zakrwawiona karta identyfikacyjna z numerem”."
         }
       }
     },
@@ -44267,23 +44267,23 @@
       "translations": {
         "de": {
           "name": "Kaputte Brille",
-          "description": "<b>Erhöht leicht</b> die Wahrscheinlichkeit, in Lérys Gedenkinstitut geschickt zu werden, wenn es verbrannt wird.<br><li>Kombinierbar.</li><br><span class=\"FlavorText\">„Ein gelbes, durchschreibendes Formular, das einen Patienten sofort zur Notbehandlung einweist. Die kopierten Informationen sind verschmiert und unleserlich.“</span>"
+          "description": "Erhöht leicht die Wahrscheinlichkeit, in Lérys Gedenkinstitut geschickt zu werden, wenn es verbrannt wird.\nKombinierbar.\n„Ein gelbes, durchschreibendes Formular, das einen Patienten sofort zur Notbehandlung einweist. Die kopierten Informationen sind verschmiert und unleserlich.“"
         },
         "en": {
           "name": "Shattered Glasses",
-          "description": "<b>Slightly increases</b> the chances of being sent to Léry's Memorial Institute when burnt.<br><li>Stacks.</li><br><span class=\"FlavorText\">\"A yellow carbon-copy certificate which admits a patient into immediate detention for emergency treatment. Copied information are smudged and unreadable.\"</span>"
+          "description": "Slightly increases the chances of being sent to Léry's Memorial Institute when burnt.\nStacks.\n\"A yellow carbon-copy certificate which admits a patient into immediate detention for emergency treatment. Copied information are smudged and unreadable.\""
         },
         "es": {
           "name": "Gafas rotas",
-          "description": "<b>Aumenta ligeramente</b> la probabilidad de que se te envíe al Instituto Conmemorativo Léry.<br><li>Acumulable.</li><br><span class=\"FlavorText\">\"Una fotocopia de un certificado para ingresar a un paciente que necesita tratamiento de emergencia. La información está borrosa y resulta ilegible\".</span>"
+          "description": "Aumenta ligeramente la probabilidad de que se te envíe al Instituto Conmemorativo Léry.\nAcumulable.\n\"Una fotocopia de un certificado para ingresar a un paciente que necesita tratamiento de emergencia. La información está borrosa y resulta ilegible\"."
         },
         "ja": {
           "name": "割れた眼鏡",
-          "description": "これを燃やすとレリー記念研究所に送られる確率が<b>少し上昇する。</b><br><li>重複する</li><br><span class=\"FlavorText\">「緊急治療のため患者の即時勾留を認める、黄色いカーボンコピーの証明書。写った情報は汚れていて読めない。」</span>"
+          "description": "これを燃やすとレリー記念研究所に送られる確率が少し上昇する。\n重複する\n「緊急治療のため患者の即時勾留を認める、黄色いカーボンコピーの証明書。写った情報は汚れていて読めない。」"
         },
         "pl": {
           "name": "Roztrzaskane Okulary",
-          "description": "Po spaleniu <b>nieznacznie zwiększa</b> szansę na wylosowanie mapy „Léry's Memorial Institute\".<br><li>Łączy się.</li><br><span class=\"FlavorText\">„Żółta, wykonana węglem kopia dokumentu, który w nagłych przypadkach umożliwia natychmiastowe osadzenie pacjenta w placówce medycznej. Skopiowane informacje są rozmazane i nieczytelne”.</span>"
+          "description": "Po spaleniu nieznacznie zwiększa szansę na wylosowanie mapy „Léry's Memorial Institute\".\nŁączy się.\n„Żółta, wykonana węglem kopia dokumentu, który w nagłych przypadkach umożliwia natychmiastowe osadzenie pacjenta w placówce medycznej. Skopiowane informacje są rozmazane i nieczytelne”."
         }
       }
     },
@@ -44297,23 +44297,23 @@
       "translations": {
         "de": {
           "name": "MacMillans Fingerknochen",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zum MacMillan-Anwesen geschickt zu werden, wenn er verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„MacMillans Skelett wurde im Keller des Bergbaulagerhauses gefunden. Seine Beinknochen waren zerschmettert und ein Bergbauhammer lag in seinem Schoß.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zum MacMillan-Anwesen geschickt zu werden, wenn er verbrannt wird.Geheim.Nicht kombinierbar.\n„MacMillans Skelett wurde im Keller des Bergbaulagerhauses gefunden. Seine Beinknochen waren zerschmettert und ein Bergbauhammer lag in seinem Schoß.“"
         },
         "en": {
           "name": "MacMillan's Phalanx Bone",
-          "description": "<b>Tremendously increases</b> the chances of being sent to the MacMillan Estate when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"MacMillan's skeletal remains were found in the basement of the mine's storehouse. His leg bones shattered into pieces and a mining hammer lying in his lap.\"</span>"
+          "description": "Tremendously increases the chances of being sent to the MacMillan Estate when burnt.Secret.Does not stack.\n\"MacMillan's skeletal remains were found in the basement of the mine's storehouse. His leg bones shattered into pieces and a mining hammer lying in his lap.\""
         },
         "es": {
           "name": "Hueso de falange de MacMillan",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a la finca MacMillan.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Los restos óseos de MacMillan fueron hallados en el sótano del depósito de la mina. En su regazo tenía los huesos destrozados de sus piernas y un martillo de minero\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a la finca MacMillan.Secreto.No se acumula.\n\"Los restos óseos de MacMillan fueron hallados en el sótano del depósito de la mina. En su regazo tenía los huesos destrozados de sus piernas y un martillo de minero\"."
         },
         "ja": {
           "name": "マクミランの指骨",
-          "description": "これを燃やすとマクミラン・エステートに送られる確率が<b>とてつもなく上昇する。</b><li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「マクミランの白骨死体が鉱山の倉庫の地下で発見された。彼の足の骨は粉々に打ち砕かれており、膝の上に採掘用ハンマーが置いてあった。」</span>"
+          "description": "これを燃やすとマクミラン・エステートに送られる確率がとてつもなく上昇する。シークレット重複しない\n「マクミランの白骨死体が鉱山の倉庫の地下で発見された。彼の足の骨は粉々に打ち砕かれており、膝の上に採掘用ハンマーが置いてあった。」"
         },
         "pl": {
           "name": "Kość Paliczkowa Macmillana",
-          "description": "Po spaleniu <b>ogromnie zwiększa</b> szansę na wylosowanie mapy „Posiadłość MacMillanów”.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„W piwnicy znajdującej się w magazynie kopalni odnaleziono pozostałości szkieletu MacMillana. Kości nóg były roztrzaskane na kawałki, a obok leżał młot górniczy”.</span>"
+          "description": "Po spaleniu ogromnie zwiększa szansę na wylosowanie mapy „Posiadłość MacMillanów”.Tajemnica.Nie łączy się.\n„W piwnicy znajdującej się w magazynie kopalni odnaleziono pozostałości szkieletu MacMillana. Kości nóg były roztrzaskane na kawałki, a obok leżał młot górniczy”."
         }
       }
     },
@@ -44327,23 +44327,23 @@
       "translations": {
         "de": {
           "name": "Beschädigtes Foto",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, nach Ormond geschickt zu werden, wenn es verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><b>28. Aug. 1996</b><br><span class=\"FlavorText\">„Hinter seinem kindhaften Lächeln schlummert eine Dunkelheit, die bald erwachen wird.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, nach Ormond geschickt zu werden, wenn es verbrannt wird.Geheim.Nicht kombinierbar.\n28. Aug. 1996\n„Hinter seinem kindhaften Lächeln schlummert eine Dunkelheit, die bald erwachen wird.“"
         },
         "en": {
           "name": "Damaged Photo",
-          "description": "<b>Tremendously increases</b> the chance to be sent to Ormond when burnt.<li>Secret.</li><li>Does not stack.</li><br><b>Aug. 28th, ‘96</b><br><span class=\"FlavorText\">“A dormant darkness lies beneath his childlike smile, about to be awaken.”</span>"
+          "description": "Tremendously increases the chance to be sent to Ormond when burnt.Secret.Does not stack.\nAug. 28th, ‘96\n“A dormant darkness lies beneath his childlike smile, about to be awaken.”"
         },
         "es": {
           "name": "Fotografía estropeada",
-          "description": "<b>Aumenta enormemente</b> la probabilidad de ser enviado a Ormond cuando se quema.<li>Secreto.</li><li>No se acumula.</li><br><b>28 de agosto del 96</b><br><span class=\"FlavorText\">\"Una oscuridad yace aletargada bajo su sonrisa infantil, a punto de despertar\".</span>"
+          "description": "Aumenta enormemente la probabilidad de ser enviado a Ormond cuando se quema.Secreto.No se acumula.\n28 de agosto del 96\n\"Una oscuridad yace aletargada bajo su sonrisa infantil, a punto de despertar\"."
         },
         "ja": {
           "name": "傷んだ写真",
-          "description": "これを燃やすとオーモンドに送られる確率が<b>とてつもなく上昇する。</b><li>シークレット</li><li>重複しない</li><br><b>1996年8月28日</b><br><span class=\"FlavorText\">「奴の子供みたいな微笑みの下に眠っている闇が、今まさに呼び起こされようとしている」</span>"
+          "description": "これを燃やすとオーモンドに送られる確率がとてつもなく上昇する。シークレット重複しない\n1996年8月28日\n「奴の子供みたいな微笑みの下に眠っている闇が、今まさに呼び起こされようとしている」"
         },
         "pl": {
           "name": "Podniszczone zdjęcie",
-          "description": "Po spaleniu <b>ogromnie zwiększa</b> szansę na przeniesienie się do Ormond.<li>Tajemnica.</li><li>Nie łączy się.</li><br><b>28 sierpnia 1996</b><br><span class=\"FlavorText\">„Uśpiona ciemność skrywa się za jego dziecięcym uśmiechem, czekając na przebudzenie”.</span>"
+          "description": "Po spaleniu ogromnie zwiększa szansę na przeniesienie się do Ormond.Tajemnica.Nie łączy się.\n28 sierpnia 1996\n„Uśpiona ciemność skrywa się za jego dziecięcym uśmiechem, czekając na przebudzenie”."
         }
       }
     },
@@ -44357,23 +44357,23 @@
       "translations": {
         "de": {
           "name": "RPD-Abzeichen",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, in die Polizeistation von Raccoon City geschickt zu werden, wenn es verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Wenn wir hier bleiben, wird uns dieses Monster finden.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, in die Polizeistation von Raccoon City geschickt zu werden, wenn es verbrannt wird.Geheim.Nicht kombinierbar.\n„Wenn wir hier bleiben, wird uns dieses Monster finden.“"
         },
         "en": {
           "name": "RPD Badge",
-          "description": "<b>Tremendously increases</b> the chance of being sent to Raccoon City police station when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"If we stay here that monster will find us.\"</span>"
+          "description": "Tremendously increases the chance of being sent to Raccoon City police station when burnt.Secret.Does not stack.\n\"If we stay here that monster will find us.\""
         },
         "es": {
           "name": "Placa de policía de Raccoon City",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a la comisaría de Raccoon City al quemarse.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Si nos quedamos aquí, ese monstruo terminará encontrándonos\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a la comisaría de Raccoon City al quemarse.Secreto.No se acumula.\n\"Si nos quedamos aquí, ese monstruo terminará encontrándonos\"."
         },
         "ja": {
           "name": "R.P.D.のバッジ",
-          "description": "燃えるとラクーンシティ警察署に送られる確率が<b>とてつもなく高くなる</b>。<li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「ここにいたら、あの化け物に見つかってしまう」</span>"
+          "description": "燃えるとラクーンシティ警察署に送られる確率がとてつもなく高くなる。シークレット重複しない\n「ここにいたら、あの化け物に見つかってしまう」"
         },
         "pl": {
           "name": "Odznaka RPD",
-          "description": "<b>Ogromnie zwiększa</b> szansę na wysłanie na posterunek policji Raccoon City po spaleniu.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Jeśli tu zostaniemy, ten potwór nas znajdzie”.</span>"
+          "description": "Ogromnie zwiększa szansę na wysłanie na posterunek policji Raccoon City po spaleniu.Tajemnica.Nie łączy się.\n„Jeśli tu zostaniemy, ten potwór nas znajdzie”."
         }
       }
     },
@@ -44387,23 +44387,23 @@
       "translations": {
         "de": {
           "name": "Die letzte Maske",
-          "description": "<b>Erhöht deutlich</b> die Wahrscheinlichkeit, in den roten Wald geschickt zu werden, wenn es verbrannt wird.<br><li>Kombinierbar.</li><br><span class=\"FlavorText\">„Ein uraltes, zerfleddertes Geschichtenbuch, dessen Seiten Opfer der Elemente wurden.“</span>"
+          "description": "Erhöht deutlich die Wahrscheinlichkeit, in den roten Wald geschickt zu werden, wenn es verbrannt wird.\nKombinierbar.\n„Ein uraltes, zerfleddertes Geschichtenbuch, dessen Seiten Opfer der Elemente wurden.“"
         },
         "en": {
           "name": "The Last Mask",
-          "description": "<b>Considerably increases</b> the chances of being sent to Red Forest when burnt.<br><li>Stacks.</li><br><span class=\"FlavorText\">\"An ancient and decrepit story book, the pages of which have been lost to the elements.\"</span>"
+          "description": "Considerably increases the chances of being sent to Red Forest when burnt.\nStacks.\n\"An ancient and decrepit story book, the pages of which have been lost to the elements.\""
         },
         "es": {
           "name": "La última máscara",
-          "description": "<b>Aumenta considerablemente</b> la probabilidad de que se te envíe al bosque rojo.<br><li>Acumulable.</li><br><span class=\"FlavorText\">\"Un libro de cuentos viejo y ajado, cuyas páginas se han perdido debido a los elementos\".</span>"
+          "description": "Aumenta considerablemente la probabilidad de que se te envíe al bosque rojo.\nAcumulable.\n\"Un libro de cuentos viejo y ajado, cuyas páginas se han perdido debido a los elementos\"."
         },
         "ja": {
           "name": "最後のマスク",
-          "description": "これを燃やすとレッド・フォレストに送られる確率が<b>かなり上昇する。</b><br><li>重複する</li><br><span class=\"FlavorText\">「古びてボロボロな童話集。ページはどこかに失われてしまっている。」</span>"
+          "description": "これを燃やすとレッド・フォレストに送られる確率がかなり上昇する。\n重複する\n「古びてボロボロな童話集。ページはどこかに失われてしまっている。」"
         },
         "pl": {
           "name": "Ostatnia Maska",
-          "description": "Po spaleniu <b>znacznie zwiększa</b> szansę na wylosowanie mapy Czerwony Las.<br><li>Łączy się.</li><br><span class=\"FlavorText\">„Pradawna i zniszczona książka z opowieściami, której strony zostały wydarte przez wszelkie możliwe żywioły”.</span>"
+          "description": "Po spaleniu znacznie zwiększa szansę na wylosowanie mapy Czerwony Las.\nŁączy się.\n„Pradawna i zniszczona książka z opowieściami, której strony zostały wydarte przez wszelkie możliwe żywioły”."
         }
       }
     },
@@ -44417,23 +44417,23 @@
       "translations": {
         "de": {
           "name": "Marys Brief",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zur Midwich Elementary School geschickt zu werden, wenn er verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„In meinen rastlosen Träumen sehe ich diese Stadt.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zur Midwich Elementary School geschickt zu werden, wenn er verbrannt wird.Geheim.Nicht kombinierbar.\n„In meinen rastlosen Träumen sehe ich diese Stadt.“"
         },
         "en": {
           "name": "Mary’s Letter",
-          "description": "<b>Tremendously increases</b> the chance to be sent to Midwich Elementary School when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"In my restless dreams, I see that town.\"</span>"
+          "description": "Tremendously increases the chance to be sent to Midwich Elementary School when burnt.Secret.Does not stack.\n\"In my restless dreams, I see that town.\""
         },
         "es": {
           "name": "Carta de Mary",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a la Escuela de primaria Midwich.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"En mis sueños más inquietos veo esa ciudad\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a la Escuela de primaria Midwich.Secreto.No se acumula.\n\"En mis sueños más inquietos veo esa ciudad\"."
         },
         "ja": {
           "name": "メアリーへの手紙",
-          "description": "燃えるとミッドウィッチ小学校に送り込まれる確率が<b>とてつもなく上昇する</b>。<li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「あいまいな眠りの中で、夢見るのはあの町。」</span>"
+          "description": "燃えるとミッドウィッチ小学校に送り込まれる確率がとてつもなく上昇する。シークレット重複しない\n「あいまいな眠りの中で、夢見るのはあの町。」"
         },
         "pl": {
           "name": "List Mary",
-          "description": "<b>Ogromnie zwiększa</b> szansę na zesłanie do szkoły podstawowej Midwich Elementary po spaleniu.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„W niespokojnych snach widzę to miasto”.</span>"
+          "description": "Ogromnie zwiększa szansę na zesłanie do szkoły podstawowej Midwich Elementary po spaleniu.Tajemnica.Nie łączy się.\n„W niespokojnych snach widzę to miasto”."
         }
       }
     },
@@ -44447,23 +44447,23 @@
       "translations": {
         "de": {
           "name": "Der Rattenfänger",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, nach Springwood geschickt zu werden, wenn er verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Von der Stadt verraten, holt er sich seine Rache, indem er ihnen alle ihre Kinder nimmt.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, nach Springwood geschickt zu werden, wenn er verbrannt wird.Geheim.Nicht kombinierbar.\n„Von der Stadt verraten, holt er sich seine Rache, indem er ihnen alle ihre Kinder nimmt.“"
         },
         "en": {
           "name": "The Pied Piper",
-          "description": "<b>Tremendously increases</b> the chances of being sent to Springwood when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"Betrayed by the town, he exacts his revenge by taking all their children.\"</span>"
+          "description": "Tremendously increases the chances of being sent to Springwood when burnt.Secret.Does not stack.\n\"Betrayed by the town, he exacts his revenge by taking all their children.\""
         },
         "es": {
           "name": "El flautista de Hamelín",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a Springwood.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Traicionado por la ciudad, consuma su venganza llevándose a todos sus hijos\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a Springwood.Secreto.No se acumula.\n\"Traicionado por la ciudad, consuma su venganza llevándose a todos sus hijos\"."
         },
         "ja": {
           "name": "ハーメルンの笛吹き",
-          "description": "これを燃やすとスプリングウッドに送られる確率が<b>とてつもなく</b>上昇する。<li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「町に裏切られた彼は、復讐として彼らの子供達全員を求めた。」</span>"
+          "description": "これを燃やすとスプリングウッドに送られる確率がとてつもなく上昇する。シークレット重複しない\n「町に裏切られた彼は、復讐として彼らの子供達全員を求めた。」"
         },
         "pl": {
           "name": "Flecista z Hameln",
-          "description": "Po spaleniu <b>ogromnie zwiększa</b> szansę na wylosowanie mapy „Springwood”.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Zdradzony przez mieszkańców miasta, wypełnia swoją zemstę poprzez porywanie ich dzieci”.</span>"
+          "description": "Po spaleniu ogromnie zwiększa szansę na wylosowanie mapy „Springwood”.Tajemnica.Nie łączy się.\n„Zdradzony przez mieszkańców miasta, wypełnia swoją zemstę poprzez porywanie ich dzieci”."
         }
       }
     },
@@ -44477,23 +44477,23 @@
       "translations": {
         "de": {
           "name": "Eiterlehm",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zur Verkümmerten Insel geschickt zu werden, wenn er verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Verbannt alle bösen Gedanken aus eurem Verstand, aus eurem Herzen und aus eurem Mund, damit die Dunkelheit eure Wahrheit nicht korrumpieren kann. Denn wer zulässt, dass die Dunkelheit in seiner Seele keimt, lädt den Druanee ein.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zur Verkümmerten Insel geschickt zu werden, wenn er verbrannt wird.Geheim.Nicht kombinierbar.\n„Verbannt alle bösen Gedanken aus eurem Verstand, aus eurem Herzen und aus eurem Mund, damit die Dunkelheit eure Wahrheit nicht korrumpieren kann. Denn wer zulässt, dass die Dunkelheit in seiner Seele keimt, lädt den Druanee ein.“"
         },
         "en": {
           "name": "Ichorous Loam",
-          "description": "<b>Tremendously increases</b> the chance to be sent to Withered Isle when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"Expel malthought from your mind, from your heart, from your mouth to prevent the darkness from corrupting your truth. For to let darkness find seed in your soul is to invite the Druanee.\"</span>"
+          "description": "Tremendously increases the chance to be sent to Withered Isle when burnt.Secret.Does not stack.\n\"Expel malthought from your mind, from your heart, from your mouth to prevent the darkness from corrupting your truth. For to let darkness find seed in your soul is to invite the Druanee.\""
         },
         "es": {
           "name": "Marga de icor",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a Isla marchita al quemarse.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Expulsa el malpensamiento de tu mente, tu corazón y tus labios para impedir que la oscuridad corrompa tu verdad. Si dejas que la oscuridad germine en tu alma, invitarás al Druanee en tu vida\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a Isla marchita al quemarse.Secreto.No se acumula.\n\"Expulsa el malpensamiento de tu mente, tu corazón y tus labios para impedir que la oscuridad corrompa tu verdad. Si dejas que la oscuridad germine en tu alma, invitarás al Druanee en tu vida\"."
         },
         "ja": {
           "name": "膿漿ローム",
-          "description": "これを燃やすと枯死の島に送られる確率が<b>とてつもなく上昇する</b>。<li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「頭から、心から、そして口から不平不満の邪念を追い出さなくては、真実は闇によって腐敗するだろう。そなたらの魂の中に闇が種を見出すことは、ドゥルーアニーが招かれることを意味する」</span>"
+          "description": "これを燃やすと枯死の島に送られる確率がとてつもなく上昇する。シークレット重複しない\n「頭から、心から、そして口から不平不満の邪念を追い出さなくては、真実は闇によって腐敗するだろう。そなたらの魂の中に闇が種を見出すことは、ドゥルーアニーが招かれることを意味する」"
         },
         "pl": {
           "name": "Ił posokowaty",
-          "description": "<b>Ogromnie zwiększa</b> szansę na trafienie na Uschniętą Wyspę po spaleniu.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Wyrzuć złe myśli ze swojego umysłu, ze swojego serca i ze swoich ust, aby zapobiec zepsuciu prawdy przez ciemność. Wszak pozwolić ciemności zasiać ziarno w duszy to zaprosić Druanee”.</span>"
+          "description": "Ogromnie zwiększa szansę na trafienie na Uschniętą Wyspę po spaleniu.Tajemnica.Nie łączy się.\n„Wyrzuć złe myśli ze swojego umysłu, ze swojego serca i ze swoich ust, aby zapobiec zepsuciu prawdy przez ciemność. Wszak pozwolić ciemności zasiać ziarno w duszy to zaprosić Druanee”."
         }
       }
     },
@@ -44507,23 +44507,23 @@
       "translations": {
         "de": {
           "name": "Wappen der Yamaoka-Familie",
-          "description": "<b>Erhöht enorm</b> die Wahrscheinlichkeit, zum Yamaoka-Anwesen geschickt zu werden, wenn es verbrannt wird.<li>Geheim.</li><li>Nicht kombinierbar.</li><br><span class=\"FlavorText\">„Ein zerstörtes Zuhause verlässt man nie. Man läuft nur so lange davon, bis einen die Erinnerungen nicht mehr verfolgen.“</span>"
+          "description": "Erhöht enorm die Wahrscheinlichkeit, zum Yamaoka-Anwesen geschickt zu werden, wenn es verbrannt wird.Geheim.Nicht kombinierbar.\n„Ein zerstörtes Zuhause verlässt man nie. Man läuft nur so lange davon, bis einen die Erinnerungen nicht mehr verfolgen.“"
         },
         "en": {
           "name": "Yamaoka Family Crest",
-          "description": "<b>Tremendously increases</b> the chances of being sent to Yamaoka Estate when burnt.<li>Secret.</li><li>Does not stack.</li><br><span class=\"FlavorText\">\"You never leave a broken home. You only run away until the memories stop haunting you.\"</span>"
+          "description": "Tremendously increases the chances of being sent to Yamaoka Estate when burnt.Secret.Does not stack.\n\"You never leave a broken home. You only run away until the memories stop haunting you.\""
         },
         "es": {
           "name": "Blasón familiar de los Yamaoka",
-          "description": "<b>Aumenta tremendamente</b> la probabilidad de que se te envíe a la residencia Yamaoka.<li>Secreto.</li><li>No se acumula.</li><br><span class=\"FlavorText\">\"Nunca abandonas un hogar roto. Solo huyes hasta que los recuerdos dejan de atormentarte\".</span>"
+          "description": "Aumenta tremendamente la probabilidad de que se te envíe a la residencia Yamaoka.Secreto.No se acumula.\n\"Nunca abandonas un hogar roto. Solo huyes hasta que los recuerdos dejan de atormentarte\"."
         },
         "ja": {
           "name": "山岡家の家紋",
-          "description": "これを燃やすと山岡邸に送られる確率が<b>とてつもなく上昇する。</b><li>シークレット</li><li>重複しない</li><br><span class=\"FlavorText\">「崩壊した家庭を抜け出すことはできない。あの記憶に付きまとわれなくなるまで逃げるしかない。」</span>"
+          "description": "これを燃やすと山岡邸に送られる確率がとてつもなく上昇する。シークレット重複しない\n「崩壊した家庭を抜け出すことはできない。あの記憶に付きまとわれなくなるまで逃げるしかない。」"
         },
         "pl": {
           "name": "Herb Rodziny Yamaoka",
-          "description": "Po spaleniu <b>ogromnie zwiększa</b> szansę na wylosowanie mapy „Posiadłość Rodziny Yamaoka”.<li>Tajemnica.</li><li>Nie łączy się.</li><br><span class=\"FlavorText\">„Ucieczka z domu przypomina walkę z wiatrakami: prędzej czy później dopadną cię wspomnienia, podążą twym szlakiem i nie pozwolą o sobie zapomnieć.\"</span>"
+          "description": "Po spaleniu ogromnie zwiększa szansę na wylosowanie mapy „Posiadłość Rodziny Yamaoka”.Tajemnica.Nie łączy się.\n„Ucieczka z domu przypomina walkę z wiatrakami: prędzej czy później dopadną cię wspomnienia, podążą twym szlakiem i nie pozwolą o sobie zapomnieć.\""
         }
       }
     },
@@ -44537,23 +44537,23 @@
       "translations": {
         "de": {
           "name": "Tuch des Verschwindens",
-          "description": "Bittet den Entitus, alle Opfergaben aufzuheben, die den Startpunkt von Überlebenden verändern würden.<br><li>Geheim.</li><br><span class=\"FlavorText\">„In einem Augenblick war ihre Macht verschwunden.“</span>"
+          "description": "Bittet den Entitus, alle Opfergaben aufzuheben, die den Startpunkt von Überlebenden verändern würden.\nGeheim.\n„In einem Augenblick war ihre Macht verschwunden.“"
         },
         "en": {
           "name": "Shroud of Vanishing",
-          "description": "Calls on The Entity to nullify any offerings that would change the Survivors' starting locations.<br><li>Secret.</li><br><span class=\"FlavorText\">\"In an instant, their power was lost.\"</span>"
+          "description": "Calls on The Entity to nullify any offerings that would change the Survivors' starting locations.\nSecret.\n\"In an instant, their power was lost.\""
         },
         "es": {
           "name": "Velo de desvanecimiento",
-          "description": "Llama al Ente para anular cualquier ofrenda que cambie las ubicaciones iniciales de los supervivientes.<br><li>Secreto.</li><br><span class=\"FlavorText\">\"En un instante, su poder se ha perdido\".</span>"
+          "description": "Llama al Ente para anular cualquier ofrenda que cambie las ubicaciones iniciales de los supervivientes.\nSecreto.\n\"En un instante, su poder se ha perdido\"."
         },
         "ja": {
           "name": "消滅の覆布",
-          "description": "生存者の開始場所を変更するオファリングを無効にするようエンティティに願う。<br><li>シークレット</li><br><span class=\"FlavorText\">「一瞬にして、その力は失われた」</span>"
+          "description": "生存者の開始場所を変更するオファリングを無効にするようエンティティに願う。\nシークレット\n「一瞬にして、その力は失われた」"
         },
         "pl": {
           "name": "Całun Znikania",
-          "description": "Wzywa Byt, by unieważnił wszystkie dary zmieniające początkowe lokalizacje ocalałych.<br><li>Tajemnica.</li><br><span class=\"FlavorText\">„W jednej chwili utracili swoją moc”."
+          "description": "Wzywa Byt, by unieważnił wszystkie dary zmieniające początkowe lokalizacje ocalałych.\nTajemnica.\n„W jednej chwili utracili swoją moc”."
         }
       }
     },
@@ -44567,23 +44567,23 @@
       "translations": {
         "de": {
           "name": "Opferabwehr",
-          "description": "Bittet den Entitus, alle Opfergaben abzulehnen, die die Wahrscheinlichkeit ändern, zu einem bestimmten Reich geschickt zu werden.<br>Lässt sich nur abbrechen, wenn vier identische Reich-Opfergaben gespielt werden.<br><span class=\"FlavorText\">„Blind unterwerfen wir uns deinem Willen und bitten dich um Führung.“</span>"
+          "description": "Bittet den Entitus, alle Opfergaben abzulehnen, die die Wahrscheinlichkeit ändern, zu einem bestimmten Reich geschickt zu werden.\nLässt sich nur abbrechen, wenn vier identische Reich-Opfergaben gespielt werden.\n„Blind unterwerfen wir uns deinem Willen und bitten dich um Führung.“"
         },
         "en": {
           "name": "Sacrificial Ward",
-          "description": "Calls upon The Entity to reject all offerings that alter the chance of being sent to a specific realm.<br>This can only be canceled if four identical realm offerings are played.<br><span class=\"FlavorText\">“With blind eyes, we surrender our will and appeal to you for guidance.”</span>"
+          "description": "Calls upon The Entity to reject all offerings that alter the chance of being sent to a specific realm.\nThis can only be canceled if four identical realm offerings are played.\n“With blind eyes, we surrender our will and appeal to you for guidance.”"
         },
         "es": {
           "name": "Cámara de sacrificios",
-          "description": "Invoca al Ente para que rechace todas las ofrendas que alteren la posibilidad de ser enviados a un reino específico.<br>Su efecto solo se puede neutralizar con cuatro ofrendas idénticas al mismo reino.<br><span class=\"FlavorText\">\"Con ojos ciegos, renunciamos a nuestra voluntad y rogamos que nos guíes\".</span>"
+          "description": "Invoca al Ente para que rechace todas las ofrendas que alteren la posibilidad de ser enviados a un reino específico.\nSu efecto solo se puede neutralizar con cuatro ofrendas idénticas al mismo reino.\n\"Con ojos ciegos, renunciamos a nuestra voluntad y rogamos que nos guíes\"."
         },
         "ja": {
           "name": "生贄の魔除け",
-          "description": "エンティティに呼びかけ、特定の領域に送られる確率を変えるオファリングをすべて拒否してもらう。<br>4つの同一の領域オファリングがプレイされた場合のみ、この効果は解除される。<br><span class=\"FlavorText\">「我々は盲目に意志を捨て、あなたのお導きを請う。」</span>"
+          "description": "エンティティに呼びかけ、特定の領域に送られる確率を変えるオファリングをすべて拒否してもらう。\n4つの同一の領域オファリングがプレイされた場合のみ、この効果は解除される。\n「我々は盲目に意志を捨て、あなたのお導きを請う。」"
         },
         "pl": {
           "name": "Strażnik ofiarny",
-          "description": "Wzywa Byt, aby odrzucił wszystkie dary, które zmieniają szansę na odesłanie do określonego wymiaru.<br>Może zostać anulowane tylko w wypadku, kiedy zostaną złożone cztery identyczne dary.<br><span class=\"FlavorText\">„Ślepi, poddajemy się twej woli i błagamy o przewodnictwo”.</span>"
+          "description": "Wzywa Byt, aby odrzucił wszystkie dary, które zmieniają szansę na odesłanie do określonego wymiaru.\nMoże zostać anulowane tylko w wypadku, kiedy zostaną złożone cztery identyczne dary.\n„Ślepi, poddajemy się twej woli i błagamy o przewodnictwo”."
         }
       }
     },

@@ -91,6 +91,6 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 
-# New
-backend/app/static
-/translations/
+backend/app/static/
+translations/*
+!translations/create_translations.py

@@ -10,12 +10,13 @@ import {
   Quote,
   User,
   AlertTriangle,
+  Flame,
 } from 'lucide-react';
-import { CharacterRosterItem } from './characterRoster';
 import { SmashSounds } from './SmashSoundEffects';
+import { EntityItem } from '@/types/smashOrPass';
 
 interface FloatingLoreScatteredProps {
-  character: CharacterRosterItem | null;
+  character: EntityItem | null;
   locale?: string;
 }
 
@@ -28,7 +29,18 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   const isMonster = character.gender === 'monster_other';
   const isFemale = character.gender === 'female';
 
-  // Seed randomized but collision-safe coordinates for this character
+  const metadata = character.metadata || character.metadata_json || {};
+  const charTitle = metadata.title || metadata.archetype || character.role;
+  const charTagline =
+    metadata.tagline ||
+    (isSurvivor ? 'Searching for an escape in the fog' : 'Stalking prey in the entity’s realm');
+  const charQuote = metadata.quote || metadata.lore_quote || `"${character.name}"`;
+  const greenFlags: string[] =
+    metadata.green_flags || metadata.greenFlags || ['Loyal trial companion', 'Protective instincts'];
+  const redFlags: string[] =
+    metadata.red_flags || metadata.redFlags || ['Unpredictable in the fog'];
+
+  // Collision-safe responsive coordinates for floating elements
   const layout = useMemo(() => {
     let seed = 0;
     for (let i = 0; i < character.slug.length; i++) {
@@ -41,29 +53,29 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
     };
 
     return {
-      // Left Wing: Role Badge (Top-Left safe zone: top 170px - 260px, left 3% - 15%)
-      roleTop: rand(170, 240, 1),
-      roleLeft: rand(2, 8, 2),
+      // Left Wing: Role Badge
+      roleTop: rand(160, 230, 1),
+      roleLeft: rand(2, 6, 2),
 
-      // Left Wing: Title & Tagline (Mid-Left safe zone: top 310px - 440px, left 2% - 10%)
-      titleTop: rand(310, 420, 3),
-      titleLeft: rand(1, 6, 4),
+      // Left Wing: Archetype & Tagline
+      titleTop: rand(300, 390, 3),
+      titleLeft: rand(1, 5, 4),
 
-      // Left Wing: Green Flag (Bottom-Left safe zone: top 510px - 640px, left 3% - 12%)
-      greenTop: rand(510, 620, 5),
-      greenLeft: rand(2, 9, 6),
+      // Left Wing: Green Flag
+      greenTop: rand(480, 580, 5),
+      greenLeft: rand(2, 7, 6),
 
-      // Right Wing: Gender/Identity Badge (Top-Right safe zone: top 170px - 250px, right 3% - 15%)
-      genderTop: rand(170, 240, 7),
-      genderRight: rand(2, 8, 8),
+      // Right Wing: Gender/Identity Badge
+      genderTop: rand(160, 230, 7),
+      genderRight: rand(2, 6, 8),
 
-      // Right Wing: Quote Card (Mid-Right safe zone: top 310px - 430px, right 2% - 10%)
-      quoteTop: rand(310, 420, 9),
-      quoteRight: rand(1, 6, 10),
+      // Right Wing: Signature Quote Card
+      quoteTop: rand(300, 400, 9),
+      quoteRight: rand(1, 5, 10),
 
-      // Right Wing: Red Flag / Warning (Bottom-Right safe zone: top 510px - 640px, right 3% - 12%)
-      redTop: rand(510, 620, 11),
-      redRight: rand(2, 9, 12),
+      // Right Wing: Red Flag / Warning
+      redTop: rand(480, 580, 11),
+      redRight: rand(2, 7, 12),
     };
   }, [character.slug]);
 
@@ -72,13 +84,14 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   };
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none hidden lg:block">
-      {/* 1. Giant Background Watermark Name with Hover Glow */}
+    <div className="pointer-events-none fixed inset-0 z-10 overflow-hidden select-none">
+      {/* 1. Giant Background Watermark Name with Dynamic Chromatic Glitch & Glow on Hover */}
       <div
         key={`watermark-${character.slug}`}
-        className="pointer-events-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center opacity-[0.045] hover:opacity-[0.14] transition-all duration-700 animate-in fade-in zoom-in-95 cursor-default group"
+        className="pointer-events-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center opacity-10 hover:opacity-30 transition-all duration-500 cursor-default group z-0"
+        onMouseEnter={handleCardHover}
       >
-        <span className="text-8xl xl:text-[11rem] font-black uppercase tracking-widest text-white font-mono blur-[0.5px] group-hover:text-pink-400 group-hover:blur-0 transition-all duration-500 inline-block group-hover:scale-105">
+        <span className="text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] font-black uppercase tracking-widest text-zinc-100/30 font-mono group-hover:text-pink-500/80 group-hover:drop-shadow-[0_0_60px_rgba(255,0,85,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform group-hover:tracking-wider">
           {character.name}
         </span>
       </div>
@@ -87,129 +100,141 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       <div
         key={`role-${character.slug}`}
         style={{ top: `${layout.roleTop}px`, left: `${layout.roleLeft}vw` }}
-        className="pointer-events-auto absolute max-w-[280px] transition-all duration-500 animate-in fade-in slide-in-from-left-6 hover:scale-105 hover:-rotate-1 hover:z-20 cursor-default group"
+        className="pointer-events-auto absolute hidden md:block max-w-[280px] z-10 transition-all duration-300 hover:scale-110 hover:-rotate-2 hover:z-30 cursor-pointer group"
         onMouseEnter={handleCardHover}
       >
         <div
-          className={`flex items-center gap-3 p-4 rounded-3xl border-2 backdrop-blur-xl shadow-2xl transition-all duration-300 ${
+          className={`flex items-center gap-3 p-4 rounded-3xl border-2 backdrop-blur-2xl shadow-2xl transition-all duration-300 animate-pulse-subtle ${
             isSurvivor
-              ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-300 shadow-[0_0_25px_rgba(16,185,129,0.2)] group-hover:border-emerald-400 group-hover:shadow-[0_0_35px_rgba(16,185,129,0.5)] group-hover:bg-emerald-950/80'
+              ? 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300 shadow-[0_0_25px_rgba(16,185,129,0.25)] group-hover:border-emerald-400 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.7)] group-hover:bg-emerald-900/90'
               : isMonster
-              ? 'bg-purple-950/60 border-purple-500/40 text-purple-300 shadow-[0_0_25px_rgba(168,85,247,0.2)] group-hover:border-purple-400 group-hover:shadow-[0_0_35px_rgba(168,85,247,0.5)] group-hover:bg-purple-950/80'
-              : 'bg-rose-950/60 border-rose-500/40 text-rose-300 shadow-[0_0_25px_rgba(244,63,94,0.2)] group-hover:border-rose-400 group-hover:shadow-[0_0_35px_rgba(244,63,94,0.5)] group-hover:bg-rose-950/80'
+              ? 'bg-purple-950/80 border-purple-500/40 text-purple-300 shadow-[0_0_25px_rgba(168,85,247,0.25)] group-hover:border-purple-400 group-hover:shadow-[0_0_40px_rgba(168,85,247,0.7)] group-hover:bg-purple-900/90'
+              : 'bg-rose-950/80 border-rose-500/40 text-rose-300 shadow-[0_0_25px_rgba(255,0,85,0.25)] group-hover:border-rose-400 group-hover:shadow-[0_0_40px_rgba(255,0,85,0.7)] group-hover:bg-rose-900/90'
           }`}
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black/40 border border-white/10 shrink-0 group-hover:scale-110 transition-transform">
-            {isSurvivor ? <Shield className="h-6 w-6" /> : <Skull className="h-6 w-6" />}
-          </div>
-          <div className="text-left">
-            <span className="text-xs font-black uppercase tracking-widest block opacity-75 group-hover:opacity-100 transition-opacity">
-              Role Classification
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black/60 border border-white/10 shrink-0 group-hover:scale-110 transition-transform">
+            {isSurvivor ? (
+              <Shield className="h-6 w-6 text-emerald-400" />
+            ) : (
+              <Skull className="h-6 w-6 text-rose-400" />
+            )}
+          </span>
+          <div>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400 block group-hover:text-white transition-colors">
+              Trial Classification
             </span>
-            <span className="text-base font-black tracking-wide group-hover:tracking-wider transition-all">{character.role}</span>
+            <span className="text-sm font-black font-mono tracking-tight text-white block group-hover:text-pink-300 transition-colors">
+              {character.role}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* 3. Left Wing - Character Title & Tagline */}
+      {/* 3. Left Wing - Archetype & Tagline */}
       <div
         key={`title-${character.slug}`}
         style={{ top: `${layout.titleTop}px`, left: `${layout.titleLeft}vw` }}
-        className="pointer-events-auto absolute max-w-[320px] transition-all duration-500 animate-in fade-in slide-in-from-left-8 hover:scale-105 hover:rotate-1 hover:z-20 cursor-default group"
+        className="pointer-events-auto absolute hidden md:block max-w-[310px] z-10 transition-all duration-300 hover:scale-110 hover:rotate-2 hover:z-30 cursor-pointer group"
         onMouseEnter={handleCardHover}
       >
-        <div className="p-5 rounded-3xl bg-slate-950/80 border-2 border-pink-500/30 backdrop-blur-xl shadow-2xl space-y-1.5 text-left group-hover:border-pink-500 group-hover:shadow-[0_0_35px_rgba(236,72,153,0.4)] group-hover:bg-slate-950/95 transition-all duration-300">
-          <div className="flex items-center gap-2 text-pink-400">
-            <Sparkles className="h-4 w-4 group-hover:rotate-12 transition-transform" />
-            <span className="text-xs font-black uppercase tracking-widest">Character Lore</span>
+        <div className="p-4 rounded-3xl bg-zinc-950/85 border-2 border-pink-500/40 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-pink-500 group-hover:shadow-[0_0_45px_rgba(255,0,85,0.6)] group-hover:bg-zinc-900/95">
+          <div className="flex items-center gap-1.5 text-pink-400">
+            <Sparkles className="h-4 w-4 animate-spin" style={{ animationDuration: '4s' }} />
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+              Dating Archetype
+            </span>
           </div>
-          <h4 className="text-base font-black text-slate-100 italic tracking-tight group-hover:text-pink-200 transition-colors">{character.title}</h4>
-          <p className="text-xs text-slate-300 leading-relaxed font-medium pt-0.5 group-hover:text-slate-100 transition-colors">{character.tagline}</p>
+          <p className="text-sm font-black text-white font-mono leading-tight group-hover:text-pink-300 transition-colors">
+            {charTitle}
+          </p>
+          <p className="text-xs text-zinc-300 italic line-clamp-2 leading-relaxed group-hover:text-white transition-colors">
+            {charTagline}
+          </p>
         </div>
       </div>
 
-      {/* 4. Left Wing - Green Flag */}
-      {character.greenFlags?.[0] && (
+      {/* 4. Left Wing - Signature Green Flag */}
+      {greenFlags.length > 0 && (
         <div
           key={`green-${character.slug}`}
           style={{ top: `${layout.greenTop}px`, left: `${layout.greenLeft}vw` }}
-          className="pointer-events-auto absolute max-w-[300px] transition-all duration-500 animate-in fade-in slide-in-from-left-6 hover:scale-105 hover:-rotate-1 hover:z-20 cursor-default group"
+          className="pointer-events-auto absolute hidden lg:block max-w-[280px] z-10 transition-all duration-300 hover:scale-110 hover:-rotate-2 hover:z-30 cursor-pointer group"
           onMouseEnter={handleCardHover}
         >
-          <div className="flex items-start gap-3 p-4 rounded-3xl bg-emerald-950/60 border-2 border-emerald-500/40 text-emerald-200 backdrop-blur-xl shadow-2xl text-left group-hover:border-emerald-400 group-hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] group-hover:bg-emerald-950/90 transition-all duration-300">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-              <CheckCircle2 className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400 block">
-                Green Flag
+          <div className="p-3.5 rounded-3xl bg-emerald-950/70 border-2 border-emerald-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-emerald-400 group-hover:shadow-[0_0_45px_rgba(16,185,129,0.6)] group-hover:bg-emerald-900/90">
+            <div className="flex items-center gap-1.5 text-emerald-400">
+              <CheckCircle2 className="h-4 w-4 shrink-0 group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                Trial Green Flag
               </span>
-              <p className="text-xs font-semibold leading-snug pt-0.5 group-hover:text-white transition-colors">{character.greenFlags[0]}</p>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* 5. Right Wing - Gender & Identity Badge */}
-      <div
-        key={`gender-${character.slug}`}
-        style={{ top: `${layout.genderTop}px`, right: `${layout.genderRight}vw` }}
-        className="pointer-events-auto absolute max-w-[280px] transition-all duration-500 animate-in fade-in slide-in-from-right-6 hover:scale-105 hover:rotate-1 hover:z-20 cursor-default group"
-        onMouseEnter={handleCardHover}
-      >
-        <div className="flex items-center gap-3 p-4 rounded-3xl bg-slate-950/70 border-2 border-slate-700/60 text-slate-200 backdrop-blur-xl shadow-2xl group-hover:border-pink-400/80 group-hover:shadow-[0_0_30px_rgba(244,63,94,0.35)] group-hover:bg-slate-950/95 transition-all duration-300">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-pink-500/20 text-pink-400 border border-pink-500/30 shrink-0 group-hover:scale-110 transition-transform">
-            <User className="h-6 w-6" />
-          </div>
-          <div className="text-left">
-            <span className="text-xs font-black uppercase tracking-widest block text-slate-400 group-hover:text-slate-200 transition-colors">
-              Identity &amp; Gender
-            </span>
-            <span className="text-base font-black capitalize text-slate-100 group-hover:text-pink-300 transition-colors">
-              {isFemale ? 'Female' : isMonster ? 'Monster & Eldritch' : 'Male'}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 6. Right Wing - Atmospheric Voice Quote */}
-      {character.quote && (
-        <div
-          key={`quote-${character.slug}`}
-          style={{ top: `${layout.quoteTop}px`, right: `${layout.quoteRight}vw` }}
-          className="pointer-events-auto absolute max-w-[320px] transition-all duration-500 animate-in fade-in slide-in-from-right-8 hover:scale-105 hover:-rotate-1 hover:z-20 cursor-default group"
-          onMouseEnter={handleCardHover}
-        >
-          <div className="p-5 rounded-3xl bg-slate-950/80 border-2 border-rose-500/30 backdrop-blur-xl shadow-2xl space-y-1.5 text-left group-hover:border-rose-500 group-hover:shadow-[0_0_35px_rgba(244,63,94,0.4)] group-hover:bg-slate-950/95 transition-all duration-300">
-            <div className="flex items-center gap-2 text-rose-400">
-              <Quote className="h-4 w-4 group-hover:rotate-12 transition-transform" />
-              <span className="text-xs font-black uppercase tracking-widest">Voice of the Trial</span>
-            </div>
-            <p className="text-xs italic font-serif text-slate-200 leading-relaxed pt-0.5 group-hover:text-white transition-colors">
-              {character.quote}
+            <p className="text-xs font-semibold text-emerald-200 leading-snug group-hover:text-white transition-colors">
+              {greenFlags[0]}
             </p>
           </div>
         </div>
       )}
 
+      {/* 5. Right Wing - Gender / Identity Badge */}
+      <div
+        key={`gender-${character.slug}`}
+        style={{ top: `${layout.genderTop}px`, right: `${layout.genderRight}vw` }}
+        className="pointer-events-auto absolute hidden md:block max-w-[280px] z-10 transition-all duration-300 hover:scale-110 hover:rotate-2 hover:z-30 cursor-pointer group"
+        onMouseEnter={handleCardHover}
+      >
+        <div className="flex items-center gap-3 p-4 rounded-3xl bg-zinc-950/85 border-2 border-cyan-500/40 backdrop-blur-2xl shadow-2xl transition-all duration-300 group-hover:border-cyan-400 group-hover:shadow-[0_0_45px_rgba(6,182,212,0.6)] group-hover:bg-zinc-900/95">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/30 shrink-0 text-cyan-400 group-hover:scale-110 transition-transform">
+            <User className="h-6 w-6" />
+          </span>
+          <div>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400 block group-hover:text-white transition-colors">
+              Identity Profile
+            </span>
+            <span className="text-sm font-black font-mono tracking-tight text-white capitalize block group-hover:text-cyan-300 transition-colors">
+              {isMonster ? 'Eldritch Monster' : isFemale ? 'Female' : 'Male'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 6. Right Wing - Signature Voice Quote */}
+      <div
+        key={`quote-${character.slug}`}
+        style={{ top: `${layout.quoteTop}px`, right: `${layout.quoteRight}vw` }}
+        className="pointer-events-auto absolute hidden md:block max-w-[320px] z-10 transition-all duration-300 hover:scale-110 hover:-rotate-2 hover:z-30 cursor-pointer group"
+        onMouseEnter={handleCardHover}
+      >
+        <div className="p-4 rounded-3xl bg-zinc-950/85 border-2 border-amber-500/40 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-amber-400 group-hover:shadow-[0_0_45px_rgba(245,158,11,0.6)] group-hover:bg-zinc-900/95">
+          <div className="flex items-center gap-1.5 text-amber-400">
+            <Quote className="h-4 w-4 group-hover:scale-110 transition-transform" />
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+              Signature Quote
+            </span>
+          </div>
+          <p className="text-xs text-amber-100 font-serif italic leading-relaxed group-hover:text-white transition-colors">
+            {charQuote}
+          </p>
+        </div>
+      </div>
+
       {/* 7. Right Wing - Red Flag / Warning */}
-      {character.redFlags?.[0] && (
+      {redFlags.length > 0 && (
         <div
           key={`red-${character.slug}`}
           style={{ top: `${layout.redTop}px`, right: `${layout.redRight}vw` }}
-          className="pointer-events-auto absolute max-w-[300px] transition-all duration-500 animate-in fade-in slide-in-from-right-6 hover:scale-105 hover:rotate-1 hover:z-20 cursor-default group"
+          className="pointer-events-auto absolute hidden lg:block max-w-[280px] z-10 transition-all duration-300 hover:scale-110 hover:rotate-2 hover:z-30 cursor-pointer group"
           onMouseEnter={handleCardHover}
         >
-          <div className="flex items-start gap-3 p-4 rounded-3xl bg-rose-950/60 border-2 border-rose-500/40 text-rose-200 backdrop-blur-xl shadow-2xl text-left group-hover:border-rose-400 group-hover:shadow-[0_0_30px_rgba(244,63,94,0.4)] group-hover:bg-rose-950/90 transition-all duration-300">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-500/20 text-rose-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
-              <AlertTriangle className="h-5 w-5" />
-            </div>
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-rose-400 block">
-                Red Flag
+          <div className="p-3.5 rounded-3xl bg-rose-950/70 border-2 border-rose-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-rose-400 group-hover:shadow-[0_0_45px_rgba(255,0,85,0.6)] group-hover:bg-rose-900/90">
+            <div className="flex items-center gap-1.5 text-rose-400">
+              <AlertTriangle className="h-4 w-4 shrink-0 group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                Trial Warning
               </span>
-              <p className="text-xs font-semibold leading-snug pt-0.5 group-hover:text-white transition-colors">{character.redFlags[0]}</p>
             </div>
+            <p className="text-xs font-semibold text-rose-200 leading-snug group-hover:text-white transition-colors">
+              {redFlags[0]}
+            </p>
           </div>
         </div>
       )}

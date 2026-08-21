@@ -14,10 +14,10 @@ import {
   Check,
   RotateCcw,
 } from 'lucide-react';
-import { CharacterRosterItem } from './characterRoster';
+import { EntityItem } from '@/types/smashOrPass';
 
 interface VoteRecord {
-  character: CharacterRosterItem;
+  character: EntityItem;
   vote: 'smash' | 'pass' | 'super_smash';
   timestamp: number;
 }
@@ -36,7 +36,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   onClose,
   votes,
   onResetAll,
-  locale = 'en',
   dict,
 }) => {
   const [copied, setCopied] = React.useState(false);
@@ -71,36 +70,42 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
     const survivorAffinity = 100 - killerAffinity;
 
     // Determine Archetype
-    let title = 'The Balanced Heartseeker';
-    let subtitle = 'A connoisseur of beauty across both sides of the Fog.';
-    let description = 'You appreciate both the protective warmth of survivors and the dangerous allure of the killers in equal measure.';
+    let title = 'The Balanced Trial Romantic';
+    let subtitle = 'You appreciate both the danger of the Fog and the warmth of campfire bonds.';
+    let description =
+      'You don’t judge solely on roles or terror radiuses—you seek authentic connections, balancing survival instinct with fatal attraction.';
     let badgeColor = 'from-purple-600 to-pink-600';
 
     if (smashedMonsters >= 2) {
-      title = 'The Eldritch & Monster Devotee';
-      subtitle = 'Love beyond mortal comprehension.';
-      description = 'You are fascinated by tentacles, biomatter, and cosmic entities. Conventional romance is too ordinary for your taste.';
-      badgeColor = 'from-indigo-600 to-purple-800';
-    } else if (smashRate >= 75) {
-      title = 'The Seductive Entity Champion';
-      subtitle = 'A heart big enough to embrace the entire Trial.';
-      description = 'You see romance and charisma in almost everyone. Your passion burns bright and hot across the Fog.';
-      badgeColor = 'from-rose-600 to-pink-600';
-    } else if (smashRate <= 25) {
-      title = 'The Cold-Blooded Trial Judge';
-      subtitle = 'Standards as sharp as the Executioner’s Great Knife.';
-      description = 'Very few earn your affection. You maintain razor-sharp standards and only the absolute elite catch your eye.';
-      badgeColor = 'from-slate-700 to-slate-900';
-    } else if (killerAffinity >= 70) {
-      title = 'The Danger Romantic (Killer Lover)';
-      subtitle = 'You like them lethal, intense, and sharp.';
-      description = 'Red flags look like carnival lights to you. You love the adrenaline rush of dating someone who could mori you.';
-      badgeColor = 'from-red-600 to-rose-900';
-    } else if (survivorAffinity >= 70) {
-      title = 'The Campfire Sweetheart';
-      subtitle = 'Wholesome teamwork and soothing company.';
-      description = 'You seek loyalty, generator repairs, and comforting cuddles by the campfire when the darkness creeps in.';
-      badgeColor = 'from-emerald-600 to-teal-700';
+      title = 'The Eldritch Devotee';
+      subtitle = 'Incomprehensible horrors and ancient beings are your true love language.';
+      description =
+        'Why settle for mortal romance when the cosmic void is calling? You embrace tentacles, teeth, and cosmic mystery.';
+      badgeColor = 'from-indigo-600 to-purple-900';
+    } else if (killerAffinity >= 75) {
+      title = 'The Red Stain Addict';
+      subtitle = 'Danger is your turn-on, and terror radiuses make your heart flutter.';
+      description =
+        'Mori animations are just aggressive cuddles in your book. You are drawn to power, menace, and dark charisma.';
+      badgeColor = 'from-rose-600 to-red-800';
+    } else if (survivorAffinity >= 75) {
+      title = 'The Campfire Soulmate';
+      subtitle = 'Wholesome teamwork and altruistic healing melt your heart.';
+      description =
+        'You seek companionship, genuine smiles, and someone who will unhook you before opening the exit gate.';
+      badgeColor = 'from-emerald-500 to-teal-700';
+    } else if (smashRate >= 85) {
+      title = 'The Entity’s Paramour';
+      subtitle = 'You see beauty, charm, and romance in almost every single soul in the Fog.';
+      description =
+        'High standards? Never heard of them. Your heart is an endless sanctuary for all survivors and killers alike.';
+      badgeColor = 'from-pink-500 to-rose-500';
+    } else if (smashRate <= 20) {
+      title = 'The Cold-Hearted Pragmatist';
+      subtitle = 'Extremely selective, immune to charms, focused solely on survival.';
+      description =
+        'Very few can pass your stringent dating checklist. You need perfection, flawless perks, and zero red flags.';
+      badgeColor = 'from-slate-600 to-slate-800';
     }
 
     return {
@@ -118,10 +123,21 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   if (!isOpen) return null;
 
   const handleShare = () => {
-    const text = `Dead by Daylight Smash or Pass: My Romance Archetype is [${persona.title}]! (${persona.smashRate}% Smash Rate). Find your match on LemonDBD!`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `My DBD Romance Archetype: ${persona.title}`,
+          text: `I took the Dead by Daylight Smash or Pass test and got "${persona.title}"! (${persona.smashRate}% Smash Rate)`,
+          url: window.location.href,
+        })
+        .catch(() => {});
+    } else {
+      navigator.clipboard.writeText(
+        `I took the Dead by Daylight Smash or Pass test and got "${persona.title}"! (${persona.smashRate}% Smash Rate) - Play at ${window.location.href}`
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
   };
 
   return (
@@ -133,92 +149,91 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-pink-500/40 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 p-6 sm:p-7 shadow-2xl space-y-5"
+        className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-pink-500/30 bg-slate-900 shadow-2xl text-slate-100"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/40">
-              <Sparkles className="h-4 w-4" />
+        {/* Header Ribbon */}
+        <div className={`p-6 bg-gradient-to-r ${persona.badgeColor} text-white flex items-start justify-between relative`}>
+          <div className="space-y-1 z-10">
+            <span className="flex items-center gap-1.5 text-xs uppercase tracking-widest font-black text-pink-200/90 font-mono">
+              <Sparkles className="h-4 w-4 text-amber-300" /> Trial Romance Archetype
             </span>
-            <div>
-              <h2 className="text-base font-black text-slate-100">Trial Romance Archetype</h2>
-              <span className="text-[11px] text-slate-400">Based on your {votes.length} votes</span>
-            </div>
+            <h2 className="text-2xl font-black font-mono tracking-tight">{persona.title}</h2>
+            <p className="text-xs text-white/80 leading-snug max-w-sm">{persona.subtitle}</p>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors cursor-pointer shrink-0 z-10"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Archetype Hero Card */}
-        <div
-          className={`rounded-2xl p-5 border border-white/10 bg-gradient-to-br ${persona.badgeColor} shadow-xl space-y-2 text-center text-white`}
-        >
-          <span className="inline-block px-3 py-1 rounded-full bg-black/30 backdrop-blur-md text-[10px] font-black uppercase tracking-widest text-pink-200 border border-white/10">
-            Your Match Identity
-          </span>
-          <h3 className="text-xl sm:text-2xl font-black tracking-tight">{persona.title}</h3>
-          <p className="text-xs text-white/90 italic font-medium">{persona.subtitle}</p>
-          <p className="text-xs text-white/80 leading-relaxed pt-1">{persona.description}</p>
-        </div>
+        {/* Content Body */}
+        <div className="p-6 space-y-5 text-xs">
+          {/* Persona Analysis Card */}
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <span className="font-bold text-pink-400 uppercase tracking-wider text-[10px] block">
+              Dating Psychology Breakdown
+            </span>
+            <p className="text-slate-300 leading-relaxed text-xs">{persona.description}</p>
+          </div>
 
-        {/* Breakdown Stats Grid */}
-        <div className="grid grid-cols-3 gap-2.5 text-center">
-          <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
-            <span className="text-[10px] font-bold text-rose-400 uppercase">Smash Rate</span>
-            <p className="text-lg font-black text-slate-100">{persona.smashRate}%</p>
-          </div>
-          <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
-            <span className="text-[10px] font-bold text-red-400 uppercase">Killer Love</span>
-            <p className="text-lg font-black text-slate-100">{persona.killerAffinity}%</p>
-          </div>
-          <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
-            <span className="text-[10px] font-bold text-emerald-400 uppercase">Survivor Love</span>
-            <p className="text-lg font-black text-slate-100">{persona.survivorAffinity}%</p>
-          </div>
-        </div>
+          {/* Affinities Breakdown */}
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-[11px] font-bold">
+                <span className="flex items-center gap-1 text-emerald-400">
+                  <Shield className="h-3.5 w-3.5" /> Survivors ({persona.survivorAffinity}%)
+                </span>
+                <span className="flex items-center gap-1 text-rose-400">
+                  <Skull className="h-3.5 w-3.5" /> Killers ({persona.killerAffinity}%)
+                </span>
+              </div>
+              <div className="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex">
+                <div
+                  style={{ width: `${persona.survivorAffinity}%` }}
+                  className="h-full bg-emerald-500 transition-all duration-700"
+                />
+                <div
+                  style={{ width: `${persona.killerAffinity}%` }}
+                  className="h-full bg-rose-500 transition-all duration-700"
+                />
+              </div>
+            </div>
 
-        {/* Top Flame/Smash Highlight */}
-        {persona.favoriteChar && (
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-900/80 border border-pink-500/20">
-            <Flame className="h-6 w-6 text-amber-400 shrink-0" />
-            <div className="text-left text-xs">
-              <span className="text-[10px] font-bold text-slate-400 uppercase">Your Top Flame</span>
-              <p className="font-extrabold text-slate-100">{persona.favoriteChar.name} <span className="text-rose-400 font-normal">({persona.favoriteChar.title})</span></p>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800 font-mono">
+              <span className="text-slate-400">Total Evaluated:</span>
+              <span className="font-bold text-slate-200">{votes.length} candidates</span>
             </div>
           </div>
-        )}
 
-        {/* Footer Actions */}
-        <div className="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-slate-800/80">
-          <button
-            type="button"
-            onClick={handleShare}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-extrabold text-xs transition-all shadow-md cursor-pointer"
-          >
-            {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
-            <span>{copied ? 'Copied to Clipboard!' : 'Share Persona'}</span>
-          </button>
-
-          {onResetAll && (
+          {/* Bottom Actions */}
+          <div className="flex gap-2.5 pt-2">
             <button
               type="button"
-              onClick={() => {
-                onResetAll();
-                onClose();
-              }}
-              className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-rose-950/40 hover:text-rose-300 text-slate-300 text-xs font-bold transition-all border border-slate-700 cursor-pointer"
+              onClick={handleShare}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold text-xs hover:from-rose-500 hover:to-pink-500 transition-all shadow-lg cursor-pointer"
             >
-              <RotateCcw className="h-3.5 w-3.5" />
-              <span>Reset Votes</span>
+              {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
+              <span>{copied ? 'Copied to Clipboard!' : 'Share Archetype'}</span>
             </button>
-          )}
+
+            {onResetAll && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onResetAll();
+                }}
+                className="px-4 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                title="Reset Voting Data"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

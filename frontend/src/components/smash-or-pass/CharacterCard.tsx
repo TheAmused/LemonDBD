@@ -12,16 +12,14 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from 'lucide-react';
-import { CharacterRosterItem } from './characterRoster';
-import { getLocalizedCharacterRoster } from './rosterTranslations';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
 import { SmashSounds } from './SmashSoundEffects';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { EntityItem } from '../../types/smashOrPass';
+import { EntityItem } from '@/types/smashOrPass';
 
 interface CharacterCardProps {
-  character: CharacterRosterItem | EntityItem;
+  character: EntityItem;
   onVote: (vote: 'smash' | 'pass', coords?: { x: number; y: number }) => void;
   isTopCard?: boolean;
   onDragUpdate?: (deltaX: number, deltaY: number, isDragging: boolean) => void;
@@ -34,7 +32,7 @@ interface CharacterCardProps {
 }
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({
-  character: rawCharacter,
+  character,
   onVote,
   isTopCard = true,
   onDragUpdate,
@@ -42,7 +40,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   exitType = null,
   initialExitOffset = null,
   onExitComplete,
-  locale = 'en',
 }) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
@@ -52,9 +49,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     glossX: 50,
     glossY: 50,
   });
-
-  // Localized Character Data
-  const character = getLocalizedCharacterRoster(rawCharacter.slug, locale);
 
   // Touch Swipe Drag State
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>(initialExitOffset || { x: 0, y: 0 });
@@ -66,15 +60,27 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   const isSurvivor = character.role === 'Survivor';
 
-  const avatarSrc = resolveAvatarUrl(
-    backendBase,
-    {
-      name: character.name,
-      category: character.role,
-      avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`,
-    },
-    isSurvivor
-  );
+  const metadata = character.metadata || character.metadata_json || {};
+  const charTitle = metadata.title || metadata.archetype || character.role;
+  const charBio = metadata.bio || `A formidable candidate in the realm of the Fog.`;
+  const charQuote = metadata.quote || metadata.lore_quote || `"${character.name}"`;
+  const greenFlags: string[] = metadata.green_flags || metadata.greenFlags || ['Loyal trial companion', 'Protective instincts'];
+  const redFlags: string[] = metadata.red_flags || metadata.redFlags || ['Unpredictable in the fog'];
+  const turnOn: string = metadata.turn_on || metadata.turnOn || 'Courage and loyalty under pressure';
+  const dealbreaker: string = metadata.dealbreaker || 'Betrayal of trust';
+
+  const avatarSrc =
+    character.media_url?.startsWith('http') || character.media_url?.startsWith('/static')
+      ? `${character.media_url.startsWith('http') ? '' : backendBase}${character.media_url}`
+      : resolveAvatarUrl(
+          backendBase,
+          {
+            name: character.name,
+            category: character.role,
+            avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`,
+          },
+          isSurvivor
+        );
 
   useEffect(() => {
     if (isExiting && initialExitOffset) {
@@ -330,7 +336,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             </div>
           </div>
 
-          {/* ================= CARD BACK (CHARACTER LORE & PROFILE) ================= */}
+          {/* ================= CARD BACK (CHARACTER LORE & PROFILE FROM DATABASE) ================= */}
           <div
             style={{
               backfaceVisibility: 'hidden',
@@ -380,24 +386,24 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               </button>
             </div>
 
-            {/* Lore & Bio */}
+            {/* Lore & Bio from DB */}
             <div className="space-y-1 my-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Lore &amp; Personality
               </span>
               <p className="text-xs text-slate-200 leading-relaxed bg-slate-900/80 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
-                {character.bio}
+                {charBio}
               </p>
             </div>
 
-            {/* Green & Red Flags */}
+            {/* Green & Red Flags from DB */}
             <div className="grid grid-cols-1 gap-1.5 sm:gap-2 my-1">
               <div className="space-y-0.5 sm:space-y-1 bg-emerald-950/30 border border-emerald-500/20 p-2.5 rounded-2xl">
                 <span className="flex items-center gap-1 text-xs font-extrabold text-emerald-400">
                   <CheckCircle2 className="h-3.5 w-3.5" /> Green Flags
                 </span>
                 <ul className="text-xs text-emerald-200/90 space-y-0.5 pl-4 list-disc">
-                  {character.greenFlags.map((flag: string, idx: number) => (
+                  {greenFlags.map((flag: string, idx: number) => (
                     <li key={idx}>{flag}</li>
                   ))}
                 </ul>
@@ -408,22 +414,22 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   <AlertTriangle className="h-3.5 w-3.5" /> Red Flags
                 </span>
                 <ul className="text-xs text-rose-200/90 space-y-0.5 pl-4 list-disc">
-                  {character.redFlags.map((flag: string, idx: number) => (
+                  {redFlags.map((flag: string, idx: number) => (
                     <li key={idx}>{flag}</li>
                   ))}
                 </ul>
               </div>
             </div>
 
-            {/* Turn-On & Dealbreaker */}
+            {/* Turn-On & Dealbreaker from DB */}
             <div className="grid grid-cols-2 gap-1.5 sm:gap-2 text-xs my-1">
               <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-2xl space-y-0.5">
                 <span className="font-bold text-pink-400 uppercase text-[10px]">Turn On:</span>
-                <p className="text-slate-300 font-medium text-[11px] leading-tight">{character.turnOn}</p>
+                <p className="text-slate-300 font-medium text-[11px] leading-tight">{turnOn}</p>
               </div>
               <div className="bg-slate-900/80 border border-slate-800 p-2 rounded-2xl space-y-0.5">
                 <span className="font-bold text-amber-400 uppercase text-[10px]">Dealbreaker:</span>
-                <p className="text-slate-300 font-medium text-[11px] leading-tight">{character.dealbreaker}</p>
+                <p className="text-slate-300 font-medium text-[11px] leading-tight">{dealbreaker}</p>
               </div>
             </div>
 
@@ -479,7 +485,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             <div className="flex items-center justify-between border-b border-slate-800 p-4 bg-slate-950/60">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-black text-slate-100">{character.name}</span>
-                <span className="text-xs text-rose-400">({character.title})</span>
+                <span className="text-xs text-rose-400">({charTitle})</span>
               </div>
               <button
                 type="button"
@@ -500,7 +506,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
             <div className="p-4 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between">
               <span className="text-xs text-slate-400 italic font-serif">
-                {character.quote || character.tagline}
+                {charQuote}
               </span>
               <button
                 type="button"

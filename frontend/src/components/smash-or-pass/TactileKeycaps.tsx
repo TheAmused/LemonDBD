@@ -18,6 +18,7 @@ export interface TactileKeycapsProps {
   onReset: () => void;
   disabled?: boolean;
   dict?: any;
+  className?: string;
 }
 
 interface KeycapConfig {
@@ -46,6 +47,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
   onReset,
   disabled = false,
   dict,
+  className,
 }) => {
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
@@ -182,7 +184,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
   }, [disabled, keycaps]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 mt-4 select-none">
+    <div className={`flex flex-col items-center justify-center gap-2 select-none ${className || ''}`}>
       {/* 3D Tactile Keycaps Container */}
       <div className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 rounded-2xl bg-zinc-950/80 border border-zinc-800/60 shadow-2xl backdrop-blur-xl">
         {keycaps.map((cap) => {

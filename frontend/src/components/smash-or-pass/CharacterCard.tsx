@@ -279,17 +279,22 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         onMouseDown={handleTouchStart}
         onTouchStart={handleTouchStart}
         style={{
-          transform: `translate3d(${dragOffset.x}px, ${dragOffset.y}px, 0px) rotate(${
-            isDragging || isExiting ? dragRotation : tilt.y * 0.5
-          }deg) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+          transform: isTopCard
+            ? `translate3d(${dragOffset.x}px, ${dragOffset.y}px, 0px) rotate(${
+                isDragging || isExiting ? dragRotation : tilt.y * 0.5
+              }deg) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`
+            : undefined,
           transition: isDragging
             ? 'none'
             : isExiting
-            ? 'transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1)'
-            : 'transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+            ? 'transform 550ms cubic-bezier(0.16, 1, 0.3, 1), opacity 550ms ease-out'
+            : 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1)',
           perspective: 1200,
+          opacity: isExiting ? 0 : 1,
         }}
-        className="relative select-none w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] cursor-grab active:cursor-grabbing"
+        className={`relative select-none w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] ${
+          isTopCard ? 'cursor-grab active:cursor-grabbing z-30' : 'pointer-events-none'
+        }`}
       >
         {/* ACTIVE DISINTEGRATION OVERLAY */}
         {isExiting && exitType && (

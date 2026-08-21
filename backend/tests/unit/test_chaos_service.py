@@ -1,5 +1,7 @@
 # backend/tests/unit/test_chaos_service.py
 import unittest
+from sqlalchemy import select
+
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
@@ -20,6 +22,14 @@ def seed_killer(name, perk_count=3):
         ))
     db.session.commit()
     return character
+
+
+def seed_new_perk(name, character_name="The Trapper"):
+    character = db.session.scalars(select(Character).where(Character.name == character_name)).first()
+    perk = Perk(name=name, character_id=character.id, is_teachable=True, category="Killer")
+    db.session.add(perk)
+    db.session.commit()
+    return perk
 
 
 class ChaosTestCase(unittest.TestCase):
@@ -95,7 +105,37 @@ class TestHellDifficulty(ChaosTestCase):
         seed_killer("The Trapper")
         seed_killer("The Wraith")
         self.user_id = self.register_user("hellplayer")
-        self.run = self.service.get_or_create_run(self.user_id, "hell")
+        self.difficulty = "hell"
+        self.run = self.service.get_or_create_run(self.user_id, self.difficulty)
+
+    def test_new_killer_mid_run_is_not_in_the_completion_check(self):
+        seed_killer("Huntress")
+        run = self.run
+        remaining = list(run["owned_killers"])
+        for killer in remaining:
+            run = self.service.submit_result(self.user_id, run["id"], "win", killer)
+        self.assertEqual(run["status"], "completed")
+
+    def test_new_perk_mid_run_is_not_drawn(self):
+        run = self.service.submit_result(self.user_id, self.run["id"], "win", self.run["owned_killers"][0])
+        unlocked_names_before = set(run["unlocked_perks"])
+        seed_new_perk("Brand New Perk")
+        drawn_names = {p["name"] for p in run["current_perks"]}
+        self.assertFalse(drawn_names - unlocked_names_before)
+
+    def test_unlocked_perks_detail_resolves_full_objects(self):
+        run = self.run
+        self.assertEqual(
+            sorted(p["name"] for p in run["unlocked_perks_detail"]),
+            sorted(run["unlocked_perks"]),
+        )
+        self.assertIn("icon_local_path", run["unlocked_perks_detail"][0])
+
+    def test_loss_to_zero_refreezes_both_pools(self):
+        self.service.submit_result(self.user_id, self.run["id"], "loss", self.run["owned_killers"][0])
+        seed_killer("Huntress")
+        refrozen = self.service.get_or_create_run(self.user_id, self.difficulty)
+        self.assertIn("Huntress", refrozen["owned_killers"])
 
     def test_win_advances_streak_and_completes_killer(self):
         updated = self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")

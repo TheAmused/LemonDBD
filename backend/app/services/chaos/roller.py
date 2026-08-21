@@ -2,6 +2,10 @@
 import random
 from typing import Any, Dict, List, Tuple
 
+from sqlalchemy import select
+
+from app.core.extensions import db
+from app.models import Perk
 from app.services.chaos.constants import ADDON_RARITY_POOL
 from app.services.ownership_service import OwnershipService
 
@@ -16,6 +20,18 @@ def get_unlocked_killer_perks(user_id: int, ownership_service: OwnershipService)
     """Every unlocked perk in the Killer category, teachables of any killer plus general perks."""
     perks = ownership_service.get_user_perks(user_id, category="Killer")
     return [p for p in perks if p["is_unlocked"]]
+
+
+def resolve_perks_by_names(names: List[str]) -> List[Dict[str, Any]]:
+    """Turns a frozen name list back into full perk dicts (icon, description).
+    Plain DB lookup, no lang param -- this is an internal service call, not
+    the locale-aware /api/v1/perks route, so it can't reintroduce the
+    Page-Streak-icon-style name/translation drift."""
+    if not names:
+        return []
+    perks = db.session.scalars(select(Perk).where(Perk.name.in_(names))).all()
+    by_name = {p.name: p.to_dict() for p in perks}
+    return [by_name[n] for n in names if n in by_name]
 
 
 def draw_chaos_perks(

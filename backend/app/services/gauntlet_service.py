@@ -30,6 +30,11 @@ class GauntletService:
     def get_tier_info(self, streak: int, role: str) -> Dict[str, Any]:
         return get_tier_info(streak, role)
 
+    def _freeze_pool(self, r: GauntletRun) -> list:
+        names = get_owned_character_names(r.user_id, r.role, self.ownership_service)
+        r.owned_characters_json = json.dumps(names)
+        return names
+
     def get_or_create_run(self, user_id: int, role: str) -> Dict[str, Any]:
         run = db.session.scalars(
             select(GauntletRun).where(
@@ -39,6 +44,9 @@ class GauntletService:
         ).first()
 
         if run:
+            if not json.loads(run.owned_characters_json or "[]"):
+                self._freeze_pool(run)
+                db.session.commit()
             data = run.to_dict()
             data["tier_info"] = self.get_tier_info(data["current_streak"], role)
             return data
@@ -63,6 +71,7 @@ class GauntletService:
             checkpoint_characters_json="[]",
             current_loadout_json=json.dumps(initial_loadout),
         )
+        self._freeze_pool(new_run)
         db.session.add(new_run)
         db.session.commit()
 
@@ -75,11 +84,10 @@ class GauntletService:
         completed = run.get("completed_characters", [])
 
         target_char, loadout, tier_info = roll_gauntlet_target(
-            user_id=user_id,
             role=role,
             current_streak=run["current_streak"],
             completed_characters=completed,
-            ownership_service=self.ownership_service,
+            owned_characters=run["owned_characters"],
             target_character=target_character,
         )
 
@@ -147,8 +155,9 @@ class GauntletService:
             if CHECKPOINT_INTERVAL > 0 and streak_after % CHECKPOINT_INTERVAL == 0:
                 last_checkpoint = streak_after
                 checkpoint_chars = list(completed)
-            # The gauntlet is won once every owned character has been cleared.
-            owned = get_owned_character_names(user_id, r.role, self.ownership_service)
+            # The gauntlet is won once every character frozen into this
+            # run's pool has been cleared.
+            owned = json.loads(r.owned_characters_json or "[]")
             if owned and all(name in completed for name in owned):
                 r.status = "completed"
         else:
@@ -161,6 +170,15 @@ class GauntletService:
         r.last_checkpoint_streak = last_checkpoint
         r.completed_characters_json = json.dumps(completed)
         r.checkpoint_characters_json = json.dumps(checkpoint_chars)
+
+        # Mark the pool dirty rather than eagerly recomputing here: the
+        # actual refreeze happens lazily, the next time get_or_create_run
+        # reads this run, so it picks up any ownership change that lands
+        # between this event and that next read.
+        if result == "win" and r.status == "completed":
+            r.owned_characters_json = "[]"
+        elif result == "loss" and streak_after == 0:
+            r.owned_characters_json = "[]"
 
         db.session.add(
             GauntletMatchLog(

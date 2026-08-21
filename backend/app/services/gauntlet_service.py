@@ -171,14 +171,10 @@ class GauntletService:
         r.completed_characters_json = json.dumps(completed)
         r.checkpoint_characters_json = json.dumps(checkpoint_chars)
 
-        # Mark the pool dirty rather than eagerly recomputing here: the
-        # actual refreeze happens lazily, the next time get_or_create_run
-        # reads this run, so it picks up any ownership change that lands
-        # between this event and that next read.
         if result == "win" and r.status == "completed":
-            r.owned_characters_json = "[]"
+            self._freeze_pool(r)
         elif result == "loss" and streak_after == 0:
-            r.owned_characters_json = "[]"
+            self._freeze_pool(r)
 
         db.session.add(
             GauntletMatchLog(

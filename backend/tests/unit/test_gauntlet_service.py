@@ -279,21 +279,18 @@ class TestGauntletResults(GauntletTestCase):
         self.assertEqual(run["status"], "completed")
 
     def test_loss_to_zero_refreezes_the_pool(self):
-        self.service.submit_result(self.user_id, self.run["id"], "loss")
         seed_killer("Huntress")
-        refrozen = self.service.get_or_create_run(self.user_id, "killer")
-        self.assertIn("Huntress", refrozen["owned_characters"])
+        after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        self.assertIn("Huntress", after_loss["owned_characters"])
 
     def test_completing_the_run_refreezes_the_pool(self):
         run = self.run
-        for _ in range(2):
-            run = self.service.submit_result(self.user_id, run["id"], "win")
-            if run["status"] != "completed":
-                run = self.service.roll(self.user_id, "killer")
-        self.assertEqual(run["status"], "completed")
+        self.service.submit_result(self.user_id, run["id"], "win")
+        run = self.service.roll(self.user_id, "killer")
         seed_killer("Huntress")
-        reloaded = self.service.get_or_create_run(self.user_id, "killer")
-        self.assertIn("Huntress", reloaded["owned_characters"])
+        run = self.service.submit_result(self.user_id, run["id"], "win")
+        self.assertEqual(run["status"], "completed")
+        self.assertIn("Huntress", run["owned_characters"])
 
 
 class TestGauntletLazyFreeze(GauntletTestCase):

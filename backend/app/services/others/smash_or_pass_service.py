@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from sqlalchemy import delete, func, or_, select
+from sqlalchemy.orm import joinedload
 from app.core.extensions import db
 from app.models.base import utcnow
 from app.models.smash_or_pass import (
@@ -154,9 +155,13 @@ class SmashOrPassService:
             voted_stmt = select(Vote.entity_id).where(or_(*voted_conditions))
             voted_entity_ids = db.session.scalars(voted_stmt).all()
 
-        stmt = select(Entity).where(
-            Entity.roster_id == roster.id,
-            Entity.is_active.is_(True),
+        stmt = (
+            select(Entity)
+            .options(joinedload(Entity.stat))
+            .where(
+                Entity.roster_id == roster.id,
+                Entity.is_active.is_(True),
+            )
         )
 
         if voted_entity_ids:
@@ -253,13 +258,15 @@ class SmashOrPassService:
                     )
                 )
 
+            prev_vote_type = None
             if existing_vote:
+                prev_vote_type = existing_vote.vote_type
                 # Unwind previous vote count
-                if existing_vote.vote_type == "smash":
+                if prev_vote_type == "smash":
                     stat.smash_count = max(0, stat.smash_count - 1)
-                elif existing_vote.vote_type == "pass":
+                elif prev_vote_type == "pass":
                     stat.pass_count = max(0, stat.pass_count - 1)
-                elif existing_vote.vote_type == "super_smash":
+                elif prev_vote_type == "super_smash":
                     stat.super_smash_count = max(0, stat.super_smash_count - 1)
 
                 existing_vote.vote_type = vote_type
@@ -296,6 +303,16 @@ class SmashOrPassService:
                     )
                 )
                 if leg_stat:
+                    if prev_vote_type:
+                        if prev_vote_type == "smash":
+                            leg_stat.smash_count = max(0, leg_stat.smash_count - 1)
+                        elif prev_vote_type == "pass":
+                            leg_stat.pass_count = max(0, leg_stat.pass_count - 1)
+                        elif prev_vote_type == "super_smash":
+                            leg_stat.super_smash_count = max(
+                                0, leg_stat.super_smash_count - 1
+                            )
+
                     if vote_type == "smash":
                         leg_stat.smash_count += 1
                     elif vote_type == "pass":
@@ -548,9 +565,13 @@ class SmashOrPassService:
         if not roster:
             return []
 
-        stmt = select(Entity).where(
-            Entity.roster_id == roster.id,
-            Entity.is_active.is_(True),
+        stmt = (
+            select(Entity)
+            .options(joinedload(Entity.stat))
+            .where(
+                Entity.roster_id == roster.id,
+                Entity.is_active.is_(True),
+            )
         )
         if role and role != "all":
             stmt = stmt.where(Entity.role == role)
@@ -592,7 +613,9 @@ class SmashOrPassService:
         if not roster:
             return None
         entity = db.session.scalar(
-            select(Entity).where(
+            select(Entity)
+            .options(joinedload(Entity.stat))
+            .where(
                 Entity.roster_id == roster.id,
                 Entity.slug == character_slug,
             )

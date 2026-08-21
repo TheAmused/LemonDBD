@@ -210,6 +210,20 @@ def test_service_cast_vote_atomic_counts_and_rate(db_session):
     assert res4["stat"]["total_votes"] == 3
     assert res4["stat"]["smash_rate"] == 33.3
 
+    # Verify legacy SmashPassStat is in exact sync
+    leg_stat = db_session.scalar(
+        select(SmashPassStat).where(
+            SmashPassStat.character_slug == "ada_wong",
+            SmashPassStat.edition == "canon",
+        )
+    )
+    assert leg_stat is not None
+    assert leg_stat.smash_count == 0
+    assert leg_stat.pass_count == 2
+    assert leg_stat.super_smash_count == 1
+    assert leg_stat.total_votes == 3
+    assert leg_stat.smash_rate == 33.3
+
 
 def test_service_cast_vote_by_entity_id(db_session):
     """Verify cast_vote works with entity_id directly."""

@@ -193,9 +193,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
       href: `/${currentLocale}/characters`,
     },
-  ];
-
-  const otherNavItems = [
     {
       id: 'smash-or-pass',
       label: dict?.sidebar?.smashOrPass || '💋 Smash or Pass',
@@ -205,6 +202,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         'bg-pink-500/10 text-pink-400 border border-pink-500/20',
       href: `/${currentLocale}/smash-or-pass`,
     },
+  ];
+
+  const otherNavItems = [
     {
       id: 'guesser',
       label: dict?.guesser?.navLink ? `🎮 ${dict.guesser.navLink}` : '🎮 Guesser',

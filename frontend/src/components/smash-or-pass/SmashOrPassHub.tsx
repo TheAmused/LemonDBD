@@ -8,6 +8,7 @@ import {
   Shield,
   Volume2,
   VolumeX,
+  Music,
   Trophy,
   RotateCcw,
   Sparkles,
@@ -18,13 +19,16 @@ import {
   Trash2,
   AlertTriangle,
   ThumbsDown,
+  X,
+  RotateCw,
+  Maximize2,
+  Gamepad2,
 } from 'lucide-react';
 import { CharacterCard } from './CharacterCard';
 import { SmashAnimations } from './SmashAnimations';
 import { InteractiveDragBackground } from './InteractiveDragBackground';
 import { FloatingLoreScattered } from './FloatingLoreScattered';
 import { TactileKeycaps } from './TactileKeycaps';
-import { ChaosMetricsDisplay } from './ChaosMetricsDisplay';
 import { SmashLeaderboardModal, LeaderboardItem } from './SmashLeaderboardModal';
 import { CharacterStatsModal } from './CharacterStatsModal';
 import { RomancePersonaModal } from './RomancePersonaModal';
@@ -60,7 +64,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const [roleFilter, setRoleFilter] = useState<'all' | CharacterRole>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | CharacterGender>('all');
 
-  // Synchronous LocalStorage Load to prevent reset on page refresh
+  // Synchronous LocalStorage Load
   const [votedSlugs, setVotedSlugs] = useState<Set<string>>(() => {
     if (typeof window === 'undefined') return new Set();
     try {
@@ -79,7 +83,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // Single-Card Exit Lifecycle (1.6s Full Duration)
   const [isExiting, setIsExiting] = useState<boolean>(false);
-  const [exitVote, setExitVote] = useState<'smash' | 'super_smash' | 'pass' | null>(null);
+  const [exitVote, setExitVote] = useState<'smash' | 'pass' | null>(null);
   const [exitOffset, setExitOffset] = useState<{ x: number; y: number } | undefined>(undefined);
   const exitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -92,14 +96,14 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // Voting History & Session State
   const [voteHistory, setVoteHistory] = useState<
-    Array<{ character: CharacterRosterItem; vote: 'smash' | 'pass' | 'super_smash'; timestamp: number }>
+    Array<{ character: CharacterRosterItem; vote: 'smash' | 'pass'; timestamp: number }>
   >([]);
   const [sessionSmashes, setSessionSmashes] = useState<number>(0);
   const [sessionPasses, setSessionPasses] = useState<number>(0);
 
   // Animation Triggers
   const [animTrigger, setAnimTrigger] = useState<{
-    type: 'smash' | 'super_smash' | 'pass' | null;
+    type: 'smash' | 'pass' | null;
     key: number;
     originX?: number;
     originY?: number;
@@ -109,9 +113,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
   const [isPersonaOpen, setIsPersonaOpen] = useState<boolean>(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState<boolean>(false);
+  const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
   const [selectedStatCharacter, setSelectedStatCharacter] = useState<CharacterRosterItem | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(SmashSounds.getIsMuted());
-  const [showKeybindings, setShowKeybindings] = useState<boolean>(false);
+  const [isBgmPlaying, setIsBgmPlaying] = useState<boolean>(SmashSounds.getIsBgmPlaying());
 
   // 1. Fetch live community statistics
   const fetchStats = useCallback(async () => {
@@ -157,7 +162,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     [activeEdition, locale, roleFilter, genderFilter]
   );
 
-  // 3. Load User Votes (from LocalStorage immediately, then merge DB if authenticated)
+  // 3. Load User Votes (LocalStorage first, merge DB if authenticated)
   useEffect(() => {
     async function loadVotesAndInit() {
       setLoading(true);
@@ -165,7 +170,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
       const voted = new Set<string>();
 
-      // Check LocalStorage first
       try {
         const localStored = localStorage.getItem(`dbd_smash_votes_${selectedEditionId}`);
         if (localStored) {
@@ -174,7 +178,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         }
       } catch (e) {}
 
-      // Check Backend DB
       if (isAuthenticated || token || user?.id) {
         try {
           const authHeaders: Record<string, string> = {};
@@ -190,7 +193,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             (json.data || []).forEach((v: any) => {
               voted.add(v.character_slug);
             });
-            // Sync merged set back to localStorage
             try {
               localStorage.setItem(
                 `dbd_smash_votes_${selectedEditionId}`,
@@ -212,13 +214,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [backendBase, selectedEditionId, isAuthenticated, user?.id, token]);
 
-  // Re-filter when user explicitly changes Role / Gender filter
   const handleFilterChange = (type: 'role' | 'gender', value: any) => {
     if (type === 'role') setRoleFilter(value);
     if (type === 'gender') setGenderFilter(value);
   };
 
-  // Rebuild deck when filters change
   useEffect(() => {
     buildDeck(votedSlugs);
   }, [roleFilter, genderFilter]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -230,13 +230,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   const currentCharacter = deck[currentIndex] || null;
 
-  // 4. Complete Exit Transition (Called ONLY after 1.6s Disintegration Animation)
+  // 4. Complete Exit Transition (Called after Disintegration Animation)
   const handleExitComplete = useCallback(() => {
     if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
 
     const evaluatedChar = deck[currentIndex];
     if (evaluatedChar) {
-      // Add to voted set
       setVotedSlugs((prev) => {
         const next = new Set(prev);
         next.add(evaluatedChar.slug);
@@ -257,16 +256,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     setDragPhysics({ x: 0, y: 0, isDragging: false });
   }, [deck, currentIndex, selectedEditionId]);
 
-  // 5. Handle Vote
+  // 5. Handle Vote (Smash or Pass)
   const handleVote = useCallback(
-    (vote: 'smash' | 'pass' | 'super_smash', origin?: { x: number; y: number }) => {
+    (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
       if (!currentCharacter || isExiting) return;
 
-      // Play Sound
-      if (vote === 'super_smash') {
-        SmashSounds.playSuperSmashSound();
-        setSessionSmashes((s) => s + 1);
-      } else if (vote === 'smash') {
+      if (vote === 'smash') {
         SmashSounds.playSmashSound();
         setSessionSmashes((s) => s + 1);
       } else {
@@ -274,7 +269,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         setSessionPasses((p) => p + 1);
       }
 
-      // Background Reaction
       setAnimTrigger((prev) => ({
         type: vote,
         key: prev.key + 1,
@@ -282,28 +276,22 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         originY: origin?.y,
       }));
 
-      // Calculate initial exit offset
       let initialOffset = { x: 0, y: 0 };
       if (dragPhysics.x !== 0 || dragPhysics.y !== 0) {
         initialOffset = { x: dragPhysics.x, y: dragPhysics.y };
       } else {
-        if (vote === 'smash') initialOffset = { x: 130, y: 0 };
-        else if (vote === 'super_smash') initialOffset = { x: 0, y: 140 };
-        else initialOffset = { x: -130, y: 0 };
+        initialOffset = vote === 'smash' ? { x: 130, y: 0 } : { x: -130, y: 0 };
       }
 
-      // Mark Card as Exiting (Card stays mounted while Canvas Overlay plays 1.6s animation)
       setIsExiting(true);
       setExitVote(vote);
       setExitOffset(initialOffset);
 
-      // Watchdog timeout to guarantee progression after full 1.65s animation
       if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
       exitTimeoutRef.current = setTimeout(() => {
         handleExitComplete();
       }, 1650);
 
-      // Record to vote history
       setVoteHistory((prev) => [
         ...prev,
         { character: currentCharacter, vote, timestamp: Date.now() },
@@ -319,13 +307,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           edition: selectedEditionId,
           smash_count: 0,
           pass_count: 0,
-          super_smash_count: 0,
           total_votes: 0,
           smash_rate: 0,
         };
 
-        const newSmash = existing.smash_count + (vote === 'smash' || vote === 'super_smash' ? 1 : 0);
-        const newSuperSmash = (existing.super_smash_count || 0) + (vote === 'super_smash' ? 1 : 0);
+        const newSmash = existing.smash_count + (vote === 'smash' ? 1 : 0);
         const newPass = existing.pass_count + (vote === 'pass' ? 1 : 0);
         const newTotal = newSmash + newPass;
         const newRate = newTotal > 0 ? Math.round((newSmash / newTotal) * 1000) / 10 : 0;
@@ -335,7 +321,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           [currentCharacter.slug]: {
             ...existing,
             smash_count: newSmash,
-            super_smash_count: newSuperSmash,
             pass_count: newPass,
             total_votes: newTotal,
             smash_rate: newRate,
@@ -408,7 +393,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     SmashSounds.playFlipSound();
   }, [backendBase, selectedEditionId, isAuthenticated, token, user?.id, buildDeck, fetchStats]);
 
-  // Global Non-Deck Keyboard Shortcuts (Mute, Help) - Deck keys handled exclusively by TactileKeycaps
+  // Global Non-Deck Keyboard Shortcuts (Mute, Help, Music)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -422,9 +407,13 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         e.preventDefault();
         const next = SmashSounds.toggleMute();
         setIsMuted(next);
+      } else if (e.key === 'b' || e.key === 'B') {
+        e.preventDefault();
+        const next = SmashSounds.toggleBgm();
+        setIsBgmPlaying(next);
       } else if (e.key === '?' || e.key === '/') {
         e.preventDefault();
-        setShowKeybindings((prev) => !prev);
+        setIsHowToPlayOpen((prev) => !prev);
       }
     };
 
@@ -436,6 +425,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     const next = SmashSounds.toggleMute();
     setIsMuted(next);
     if (!next) SmashSounds.playHeartbeat(1.1);
+  };
+
+  const toggleMusic = () => {
+    const next = SmashSounds.toggleBgm();
+    setIsBgmPlaying(next);
   };
 
   const userSmashesList = useMemo(() => {
@@ -451,6 +445,13 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const totalEditionCount = activeEdition.characters.length;
   const evaluatedCount = votedSlugs.size;
   const remainingInDeck = Math.max(0, deck.length - currentIndex);
+
+  const areModalsOpen =
+    isLeaderboardOpen ||
+    isPersonaOpen ||
+    isResetConfirmOpen ||
+    isHowToPlayOpen ||
+    Boolean(selectedStatCharacter);
 
   // Localized Strings
   const title = dict?.smashOrPass?.title || 'Smash or Pass';
@@ -478,7 +479,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         triggerKey={animTrigger.key}
       />
 
-      {/* Scattered Ambient Lore in Safe Zones with Large Typography */}
+      {/* Scattered Ambient Lore in Safe Zones with Interactive Hover State */}
       <FloatingLoreScattered character={currentCharacter} locale={locale} />
 
       {/* Particle & Visual Overlay Animation Engine */}
@@ -525,7 +526,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
           {/* Integrated HUD Status Bar & Action Badges */}
           <div className="flex items-center flex-wrap gap-2.5">
-            {/* Live Session Counter Badges: EXACT "0 Smash | 0 Pass" */}
+            {/* Live Session Counter Badges */}
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs font-bold shadow-inner">
               <span className="flex items-center gap-1 text-slate-400" title="Remaining Candidates in Deck">
                 <Layers className="h-3.5 w-3.5 text-slate-500" />
@@ -545,6 +546,21 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <span className="text-slate-600">|</span>
               <span className="text-pink-400 font-mono" title="Session Smash Rate">{sessionSmashRate}%</span>
             </div>
+
+            {/* Sexy Twisted Background Music Toggle */}
+            <button
+              type="button"
+              onClick={toggleMusic}
+              title={isBgmPlaying ? 'Pause Sexy Ambience Music (B)' : 'Play Sexy Ambience Music (B)'}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border text-xs font-black transition-all shadow-md cursor-pointer ${
+                isBgmPlaying
+                  ? 'bg-rose-950/80 border-[#ff0055] text-pink-300 shadow-[0_0_15px_rgba(255,0,85,0.4)] animate-pulse'
+                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Music className="h-3.5 w-3.5 text-pink-400" />
+              <span>BGM</span>
+            </button>
 
             {/* Romance Archetype Button */}
             <button
@@ -580,7 +596,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={toggleSound}
-              title={isMuted ? 'Unmute Sound (M)' : 'Mute Sound (M)'}
+              title={isMuted ? 'Unmute Sound FX (M)' : 'Mute Sound FX (M)'}
               className={`flex h-8 w-8 items-center justify-center rounded-2xl border transition-all cursor-pointer ${
                 isMuted
                   ? 'bg-slate-900 border-slate-800 text-slate-500'
@@ -590,47 +606,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
             </button>
 
-            {/* Help Button */}
+            {/* How to Play Help Button */}
             <button
               type="button"
-              onClick={() => setShowKeybindings(!showKeybindings)}
-              title="Keyboard Shortcuts"
+              onClick={() => setIsHowToPlayOpen(true)}
+              title="How to Play & Controls"
               className="flex h-8 w-8 items-center justify-center rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 transition-all cursor-pointer"
             >
               <HelpCircle className="h-4 w-4" />
             </button>
           </div>
         </div>
-
-        {/* Keybindings Help Banner */}
-        {showKeybindings && (
-          <div className="mt-3 pt-3 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-6 gap-2 text-[11px] text-slate-400 animate-in fade-in duration-200">
-            <div className="flex items-center gap-1.5">
-              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-cyan-500/40 text-[#00f5d4] font-mono">A / ←</kbd>
-              <span>Pass</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-rose-500/40 text-[#ff0055] font-mono">D / →</kbd>
-              <span>Smash</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-emerald-500/40 text-emerald-300 font-mono">W / ↑</kbd>
-              <span>Dossier</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-amber-500/40 text-[#ffd166] font-mono">S / ↓</kbd>
-              <span>Super Smash</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-purple-500/40 text-purple-300 font-mono">R</kbd>
-              <span>Reset</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-200 font-mono">M</kbd>
-              <span>Mute</span>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* FILTER CONTROLS BAR */}
@@ -748,9 +734,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <CharacterCard
               key={`${currentCharacter.slug}-${currentIndex}`}
               character={currentCharacter}
-              stats={statsMap[currentCharacter.slug]}
               onVote={handleVote}
-              onOpenStats={(char) => setSelectedStatCharacter(char)}
               onDragUpdate={(x, y, isDragging) => setDragPhysics({ x, y, isDragging })}
               isTopCard={true}
               isExiting={isExiting}
@@ -765,12 +749,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <TactileKeycaps
               onPass={() => handleVote('pass')}
               onSmash={() => handleVote('smash')}
-              onSuperSmash={() => handleVote('super_smash')}
               onStats={() => currentCharacter && setSelectedStatCharacter(currentCharacter)}
               onReset={() => setIsResetConfirmOpen(true)}
               dict={dict}
-              disabled={!currentCharacter || isExiting}
-              className="mt-1 sm:mt-2"
+              disabled={areModalsOpen || !currentCharacter || isExiting}
             />
           </div>
         ) : (
@@ -821,6 +803,111 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           </div>
         )}
       </main>
+
+      {/* HOW TO PLAY MODAL */}
+      {isHowToPlayOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="how-to-play-title"
+          onClick={() => setIsHowToPlayOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-xl animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg rounded-3xl border border-pink-500/40 bg-slate-900 p-6 space-y-5 shadow-2xl text-left"
+          >
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-pink-500/20 text-pink-400 border border-pink-500/30">
+                  <Gamepad2 className="h-5 w-5" />
+                </span>
+                <h3 id="how-to-play-title" className="text-base font-black text-slate-100 font-mono">
+                  How to Play Smash or Pass
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsHowToPlayOpen(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3.5 text-xs text-slate-300">
+              {/* 1. Drag / Swipe */}
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+                <span className="text-xl shrink-0">👆</span>
+                <div>
+                  <span className="font-bold text-pink-300 block text-xs">Swipe or Drag Cards</span>
+                  <p className="text-slate-400 leading-relaxed pt-0.5">
+                    Drag card <strong className="text-pink-400">Right</strong> to <strong>Smash</strong> 💋 or drag <strong className="text-cyan-400">Left</strong> to <strong>Pass</strong> ✖.
+                  </p>
+                </div>
+              </div>
+
+              {/* 2. On-card Tactile Buttons */}
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+                <span className="text-xl shrink-0">🎯</span>
+                <div>
+                  <span className="font-bold text-pink-300 block text-xs">On-Card Buttons</span>
+                  <p className="text-slate-400 leading-relaxed pt-0.5">
+                    Click the <strong>Flip</strong> (<RotateCw className="inline h-3 w-3" />) icon at top-left to read bio & flags. Click <strong>Zoom</strong> (<Maximize2 className="inline h-3 w-3" />) for high-res art. Use the bottom icons for instant one-click voting.
+                  </p>
+                </div>
+              </div>
+
+              {/* 3. Keyboard Shortcuts */}
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+                <span className="text-xl shrink-0">⌨️</span>
+                <div>
+                  <span className="font-bold text-pink-300 block text-xs">Keyboard Controls</span>
+                  <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
+                    <div className="flex items-center gap-1.5">
+                      <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-cyan-500/40 text-[#00f5d4]">A / ←</kbd>
+                      <span>Pass</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-rose-500/40 text-[#ff0055]">D / →</kbd>
+                      <span>Smash</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-emerald-500/40 text-emerald-300">W / ↑</kbd>
+                      <span>Dossier</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-purple-500/40 text-purple-300">R</kbd>
+                      <span>Reset</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. Background Lore & Atmosphere */}
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+                <span className="text-xl shrink-0">🌌</span>
+                <div>
+                  <span className="font-bold text-pink-300 block text-xs">Atmospheric Background & Music</span>
+                  <p className="text-slate-400 leading-relaxed pt-0.5">
+                    Hover over scattered text in the background to inspect quotes and traits. Click <strong>BGM</strong> or press <kbd className="px-1 py-0.2 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">B</kbd> to enjoy dark sensual background music!
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsHowToPlayOpen(false)}
+                className="px-5 py-2 rounded-xl bg-pink-600 hover:bg-pink-500 text-xs font-bold text-white transition-colors cursor-pointer"
+              >
+                Got It, Let&apos;s Play!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODALS */}
       <SmashLeaderboardModal

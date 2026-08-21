@@ -5,20 +5,17 @@ import React, { useMemo } from 'react';
 import {
   X,
   Heart,
+  ThumbsDown,
   Flame,
   Skull,
   Shield,
   Sparkles,
-  Zap,
-  Activity,
   AlertTriangle,
   CheckCircle2,
   Quote,
-  Layers,
 } from 'lucide-react';
 import { CharacterRosterItem } from './characterRoster';
 import { getLocalizedCharacterRoster } from './rosterTranslations';
-import { DangerLevelType } from './ChaosMetricsDisplay';
 import { EntityItem, EntityMetadata } from '@/types/smashOrPass';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -30,10 +27,8 @@ export interface CharacterStatsModalProps {
   stats?: {
     smash_count?: number;
     pass_count?: number;
-    super_smash_count?: number;
     total_votes?: number;
     smash_rate?: number;
-    chaos_rating?: number;
     rank?: number;
     [key: string]: any;
   } | null;
@@ -65,7 +60,6 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
   const name = rawCharacter?.name || rawCharacter?.character_name || localized?.name || 'Candidate';
   const role = rawCharacter?.role || localized?.role || 'Survivor';
-  const gender = rawCharacter?.gender || localized?.gender || 'female';
   const title = meta.title || rawCharacter?.title || localized?.title || 'Trial Candidate';
   const bio = meta.backstory || rawCharacter?.bio || localized?.bio || '';
   const quote = meta.lore_quote || meta.quote || rawCharacter?.quote || localized?.quote || '';
@@ -89,45 +83,18 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
   // Community Votes calculation
   const smashCount = stats?.smash_count ?? 0;
-  const superSmashCount = stats?.super_smash_count ?? 0;
   const passCount = stats?.pass_count ?? 0;
-  const totalVotes = stats?.total_votes ?? (smashCount + superSmashCount + passCount);
+  const totalVotes = stats?.total_votes ?? (smashCount + passCount);
   const effectiveTotal = totalVotes > 0 ? totalVotes : 1;
   const smashRate =
     stats?.smash_rate !== undefined
       ? stats.smash_rate
       : totalVotes > 0
-      ? Math.round(((smashCount + superSmashCount) / totalVotes) * 1000) / 10
+      ? Math.round((smashCount / totalVotes) * 1000) / 10
       : 50;
 
   const smashPct = Math.round((smashCount / effectiveTotal) * 100);
-  const superPct = Math.round((superSmashCount / effectiveTotal) * 100);
-  const passPct = Math.max(0, 100 - smashPct - superPct);
-
-  // Chaos Score (0-100) & Danger Level
-  const chaosScore = useMemo(() => {
-    if (meta.chaos_score !== undefined) return Number(meta.chaos_score);
-    if (stats?.chaos_rating !== undefined && stats.chaos_rating !== null) return Number(stats.chaos_rating);
-    const slugStr = slug || name || 'dbd';
-    let hash = 0;
-    for (let i = 0; i < slugStr.length; i++) {
-      hash = (hash << 5) - hash + slugStr.charCodeAt(i);
-      hash |= 0;
-    }
-    const absHash = Math.abs(hash);
-    const isKiller = role === 'Killer';
-    const isMonster = gender === 'monster_other';
-    if (isKiller) return isMonster ? 88 + (absHash % 12) : 68 + (absHash % 25);
-    return 20 + (absHash % 42);
-  }, [meta.chaos_score, stats?.chaos_rating, slug, name, role, gender]);
-
-  const dangerLevel: DangerLevelType = useMemo(() => {
-    if (meta.danger_level) return meta.danger_level as DangerLevelType;
-    if (chaosScore >= 88) return 'Lethal';
-    if (chaosScore >= 68) return 'High';
-    if (chaosScore >= 42) return 'Medium';
-    return 'Low';
-  }, [meta.danger_level, chaosScore]);
+  const passPct = Math.max(0, 100 - smashPct);
 
   // Dynamic Consensus Rating Tiers (God Tier, Fatal Attraction, Friendzone, Eldritch Void)
   const tierInfo = useMemo(() => {
@@ -136,7 +103,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         name: dict?.smashOrPass?.tiers?.godTier || 'God Tier',
         theme: 'border-[#ffd166]/50 bg-[#ffd166]/15 text-[#ffd166] shadow-[0_0_15px_rgba(255,209,102,0.4)]',
         icon: <Sparkles className="h-3.5 w-3.5 text-[#ffd166]" />,
-        desc: 'Transcendent trial chemistry and undisputed community favorite.',
+        desc: 'Undisputed community icon and top pick across the Fog.',
       };
     }
     if (smashRate >= 65) {
@@ -144,7 +111,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         name: dict?.smashOrPass?.tiers?.fatalAttraction || 'Fatal Attraction',
         theme: 'border-[#ff0055]/50 bg-[#ff0055]/15 text-[#ff0055] shadow-[0_0_15px_rgba(255,0,85,0.4)]',
         icon: <Flame className="h-3.5 w-3.5 text-[#ff0055]" />,
-        desc: 'High-voltage passion with intense danger and volatile magnetism.',
+        desc: 'High community passion with intense attraction rating.',
       };
     }
     if (smashRate >= 40) {
@@ -152,56 +119,16 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         name: dict?.smashOrPass?.tiers?.friendzone || 'Friendzone',
         theme: 'border-[#00f5d4]/50 bg-[#00f5d4]/15 text-[#00f5d4] shadow-[0_0_15px_rgba(0,245,212,0.4)]',
         icon: <Shield className="h-3.5 w-3.5 text-[#00f5d4]" />,
-        desc: 'Solid companion aura, dependable ally at generators and campfires.',
+        desc: 'Solid companion aura and dependable campfire ally.',
       };
     }
     return {
       name: dict?.smashOrPass?.tiers?.eldritchVoid || 'Eldritch Void',
       theme: 'border-purple-500/50 bg-purple-950/40 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.4)]',
       icon: <Skull className="h-3.5 w-3.5 text-purple-300" />,
-      desc: 'Deep cosmic isolation and supernatural primal terror resonance.',
+      desc: 'Rare resonance with mysterious and isolating trial aura.',
     };
   }, [smashRate, dict]);
-
-  // Danger theme details
-  const dangerTheme = useMemo(() => {
-    switch (dangerLevel) {
-      case 'Lethal':
-      case 'Eldritch':
-        return {
-          border: 'border-[#ff0055]/60',
-          bg: 'bg-[#ff0055]/15',
-          text: 'text-[#ff0055]',
-          glow: 'shadow-[0_0_12px_rgba(255,0,85,0.4)]',
-          icon: <Flame className="h-3 w-3 text-[#ff0055] animate-pulse" />,
-        };
-      case 'High':
-        return {
-          border: 'border-orange-500/50',
-          bg: 'bg-orange-950/40',
-          text: 'text-orange-400',
-          glow: 'shadow-[0_0_12px_rgba(249,115,22,0.4)]',
-          icon: <AlertTriangle className="h-3 w-3 text-orange-400" />,
-        };
-      case 'Medium':
-        return {
-          border: 'border-[#ffd166]/50',
-          bg: 'bg-amber-950/40',
-          text: 'text-[#ffd166]',
-          glow: 'shadow-[0_0_12px_rgba(255,209,102,0.4)]',
-          icon: <Zap className="h-3 w-3 text-[#ffd166]" />,
-        };
-      case 'Low':
-      default:
-        return {
-          border: 'border-[#00f5d4]/50',
-          bg: 'bg-emerald-950/40',
-          text: 'text-[#00f5d4]',
-          glow: 'shadow-[0_0_12px_rgba(0,245,212,0.4)]',
-          icon: <Shield className="h-3 w-3 text-[#00f5d4]" />,
-        };
-    }
-  }, [dangerLevel]);
 
   if (!isOpen || !rawCharacter) return null;
 
@@ -209,10 +136,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
   const modalTitle = dict?.smashOrPass?.modals?.statsTitle || dict?.smashOrPass?.stats || 'Candidate Dossier';
   const smashLabel = dict?.smashOrPass?.smash || 'Smash';
   const passLabel = dict?.smashOrPass?.pass || 'Pass';
-  const superSmashLabel = dict?.smashOrPass?.superSmash || 'Super Smash';
   const communityRateLabel = dict?.smashOrPass?.communitySmashRate || 'Community Smash Rate';
-  const chaosRatingLabel = dict?.smashOrPass?.chaosRating || 'Chaos Rating';
-  const dangerLevelLabel = dict?.smashOrPass?.dangerLevel || 'Danger Level';
   const traitsLabel = dict?.smashOrPass?.traits || 'Compatibility Traits';
   const closeLabel = dict?.smashOrPass?.close || 'Close Dossier';
 
@@ -270,10 +194,6 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
                     {tierInfo.icon}
                     <span>{tierInfo.name}</span>
                   </span>
-                  <span className={`inline-flex items-center gap-1 rounded-xl px-2 py-0.5 text-[10px] font-mono font-bold border ${dangerTheme.border} ${dangerTheme.bg} ${dangerTheme.text}`}>
-                    {dangerTheme.icon}
-                    <span>{dangerLevel}</span>
-                  </span>
                 </div>
               </div>
             </div>
@@ -290,38 +210,19 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
         {/* Body Stats Content */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 text-left">
-          {/* Main Smash Rate & Chaos Numerical Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Community Smash Rate */}
-            <div className="flex items-center justify-between rounded-2xl bg-zinc-950/80 border border-[#ff0055]/30 p-4 shadow-inner">
-              <div className="space-y-1">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
-                  {communityRateLabel}
-                </span>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-3xl font-black font-mono text-[#ff0055]">{smashRate}%</span>
-                </div>
-                <p className="text-[11px] text-zinc-400 font-sans">{tierInfo.desc}</p>
+          {/* Main Smash Rate Card */}
+          <div className="flex items-center justify-between rounded-2xl bg-zinc-950/80 border border-[#ff0055]/30 p-4 shadow-inner">
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+                {communityRateLabel}
+              </span>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-3xl font-black font-mono text-[#ff0055]">{smashRate}%</span>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff0055]/15 border border-[#ff0055]/30 text-[#ff0055] shrink-0">
-                <Heart className="h-6 w-6 fill-[#ff0055] animate-pulse" />
-              </div>
+              <p className="text-[11px] text-zinc-400 font-sans">{tierInfo.desc}</p>
             </div>
-
-            {/* Chaos Rating */}
-            <div className="flex items-center justify-between rounded-2xl bg-zinc-950/80 border border-[#ffd166]/30 p-4 shadow-inner">
-              <div className="space-y-1">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
-                  {chaosRatingLabel}
-                </span>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-3xl font-black font-mono text-[#ffd166]">{chaosScore}%</span>
-                </div>
-                <p className="text-[11px] text-zinc-400 font-sans">{dangerLevel} Volatility Field</p>
-              </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ffd166]/15 border border-[#ffd166]/30 text-[#ffd166] shrink-0">
-                <Activity className="h-6 w-6 text-[#ffd166] animate-pulse" />
-              </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff0055]/15 border border-[#ff0055]/30 text-[#ff0055] shrink-0">
+              <Heart className="h-6 w-6 fill-[#ff0055] animate-pulse" />
             </div>
           </div>
 
@@ -331,34 +232,24 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
               <span className="text-[#ff0055] flex items-center gap-1">
                 <Heart className="h-3 w-3 fill-[#ff0055]" /> {smashLabel} ({smashPct}%)
               </span>
-              <span className="text-[#ffd166] flex items-center gap-1">
-                <Zap className="h-3 w-3 fill-[#ffd166]" /> {superSmashLabel} ({superPct}%)
-              </span>
-              <span className="text-[#00f5d4] flex items-center gap-1">
-                <X className="h-3 w-3" /> {passLabel} ({passPct}%)
+              <span className="text-zinc-400 flex items-center gap-1">
+                <ThumbsDown className="h-3 w-3" /> {passLabel} ({passPct}%)
               </span>
             </div>
 
             <div className="h-3 w-full overflow-hidden rounded-full bg-zinc-950 border border-zinc-800 flex shadow-inner">
               <div style={{ width: `${smashPct}%` }} className="bg-[#ff0055] shadow-[0_0_10px_rgba(255,0,85,0.6)] transition-all duration-500" />
-              <div style={{ width: `${superPct}%` }} className="bg-[#ffd166] shadow-[0_0_10px_rgba(255,209,102,0.6)] transition-all duration-500" />
               <div style={{ width: `${passPct}%` }} className="bg-zinc-700 transition-all duration-500" />
             </div>
           </div>
 
           {/* Detailed Counts Grid */}
-          <div className="grid grid-cols-4 gap-2 text-center">
+          <div className="grid grid-cols-3 gap-2 text-center">
             <div className="rounded-2xl bg-zinc-950/60 border border-zinc-800 p-2.5 space-y-0.5">
               <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#ff0055] block truncate">
                 {smashLabel}
               </span>
               <p className="text-base font-black font-mono text-zinc-100">{smashCount.toLocaleString()}</p>
-            </div>
-            <div className="rounded-2xl bg-zinc-950/60 border border-zinc-800 p-2.5 space-y-0.5">
-              <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#ffd166] block truncate">
-                {superSmashLabel}
-              </span>
-              <p className="text-base font-black font-mono text-zinc-100">{superSmashCount.toLocaleString()}</p>
             </div>
             <div className="rounded-2xl bg-zinc-950/60 border border-zinc-800 p-2.5 space-y-0.5">
               <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#00f5d4] block truncate">
@@ -375,31 +266,51 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           </div>
 
           {/* Trait Tags & Compatibility */}
-          <div className="space-y-2">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400 block">
-              {traitsLabel}
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {greenFlags.map((flag, idx) => (
-                <span
-                  key={`gf-${idx}`}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-medium border border-[#00f5d4]/40 bg-[#00f5d4]/10 text-[#00f5d4]"
-                >
-                  <CheckCircle2 className="h-3 w-3" />
-                  <span>{flag}</span>
-                </span>
-              ))}
-              {redFlags.map((flag, idx) => (
-                <span
-                  key={`rf-${idx}`}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-medium border border-[#ff0055]/40 bg-[#ff0055]/10 text-[#ff0055]"
-                >
-                  <AlertTriangle className="h-3 w-3" />
-                  <span>{flag}</span>
-                </span>
-              ))}
+          {(greenFlags.length > 0 || redFlags.length > 0) && (
+            <div className="space-y-2">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400 block">
+                {traitsLabel}
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {greenFlags.map((flag, idx) => (
+                  <span
+                    key={`gf-${idx}`}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-medium border border-[#00f5d4]/40 bg-[#00f5d4]/10 text-[#00f5d4]"
+                  >
+                    <CheckCircle2 className="h-3 w-3" />
+                    <span>{flag}</span>
+                  </span>
+                ))}
+                {redFlags.map((flag, idx) => (
+                  <span
+                    key={`rf-${idx}`}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-medium border border-[#ff0055]/40 bg-[#ff0055]/10 text-[#ff0055]"
+                  >
+                    <AlertTriangle className="h-3 w-3" />
+                    <span>{flag}</span>
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Turn On & Dealbreaker */}
+          {(turnOn || dealbreaker) && (
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              {turnOn && (
+                <div className="bg-zinc-950/70 border border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
+                  <span className="font-bold text-pink-400 uppercase text-[10px]">Turn On:</span>
+                  <p className="text-zinc-300 font-medium text-[11px] leading-tight">{turnOn}</p>
+                </div>
+              )}
+              {dealbreaker && (
+                <div className="bg-zinc-950/70 border border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
+                  <span className="font-bold text-amber-400 uppercase text-[10px]">Dealbreaker:</span>
+                  <p className="text-zinc-300 font-medium text-[11px] leading-tight">{dealbreaker}</p>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Lore / Backstory & Full Quote */}
           {bio && (

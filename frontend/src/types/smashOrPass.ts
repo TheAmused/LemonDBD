@@ -1,4 +1,4 @@
-﻿// frontend/src/types/smashOrPass.ts
+// frontend/src/types/smashOrPass.ts
 
 export type CharacterRole = 'Survivor' | 'Killer' | 'all';
 export type CharacterGender = 'female' | 'male' | 'monster_other' | 'all';
@@ -11,11 +11,23 @@ export type TierClassification =
   | 'Eldritch Void';
 
 export interface EntityMetadata {
-  chaos_score?: number;
-  danger_level?: 'Low' | 'Medium' | 'High' | 'Lethal' | 'Eldritch' | string;
-  archetype?: string;
+  title?: string;
+  tagline?: string;
+  bio?: string;
   quote?: string;
   lore_quote?: string;
+  green_flags?: string[];
+  greenFlags?: string[];
+  red_flags?: string[];
+  redFlags?: string[];
+  turn_on?: string;
+  turnOn?: string;
+  dealbreaker?: string;
+  dating_vibe?: string;
+  datingVibe?: string;
+  chapter?: string;
+  danger_level?: 'Low' | 'Medium' | 'High' | 'Lethal' | 'Eldritch' | string;
+  archetype?: string;
   compatibility_tags?: string[];
   audio_cue?: string;
   backstory?: string;

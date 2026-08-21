@@ -29,21 +29,25 @@ import { SmashAnimations } from './SmashAnimations';
 import { InteractiveDragBackground } from './InteractiveDragBackground';
 import { FloatingLoreScattered } from './FloatingLoreScattered';
 import { TactileKeycaps } from './TactileKeycaps';
-import { SmashLeaderboardModal, LeaderboardItem } from './SmashLeaderboardModal';
+import { SmashLeaderboardModal } from './SmashLeaderboardModal';
 import { CharacterStatsModal } from './CharacterStatsModal';
 import { RomancePersonaModal } from './RomancePersonaModal';
 import { SmashSounds } from './SmashSoundEffects';
 import {
-  CharacterGender,
+  EntityItem,
+  RosterItem,
   CharacterRole,
-  CharacterRosterItem,
-} from './characterRoster';
+  CharacterGender,
+  LeaderboardItem,
+} from '@/types/smashOrPass';
 import {
-  SMASH_OR_PASS_EDITIONS,
-  getEdition,
-  SmashEdition,
-} from './editionsRegistry';
-import { getLocalizedCharacterRoster } from './rosterTranslations';
+  fetchRosters,
+  fetchRosterFeed,
+  castVote as apiCastVote,
+  fetchLeaderboard,
+  resetSessionVotes as apiResetSessionVotes,
+  resetUserVotes as apiResetUserVotes,
+} from '@/services/smashApi';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
@@ -56,29 +60,19 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const backendBase = getBackendBaseUrl();
   const { user, token, isAuthenticated } = useAuth();
 
-  // Edition Selection
-  const [selectedEditionId, setSelectedEditionId] = useState<string>('canon');
-  const activeEdition: SmashEdition = useMemo(() => getEdition(selectedEditionId), [selectedEditionId]);
+  // Rosters State (Database-Driven)
+  const [rosters, setRosters] = useState<RosterItem[]>([]);
+  const [selectedRosterSlug, setSelectedRosterSlug] = useState<string>('canon');
 
   // Filters State
   const [roleFilter, setRoleFilter] = useState<'all' | CharacterRole>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | CharacterGender>('all');
 
-  // Synchronous LocalStorage Load
-  const [votedSlugs, setVotedSlugs] = useState<Set<string>>(() => {
-    if (typeof window === 'undefined') return new Set();
-    try {
-      const saved = localStorage.getItem('dbd_smash_votes_canon');
-      return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch (e) {
-      return new Set();
-    }
-  });
-
-  // Deck & Card State
-  const [deck, setDeck] = useState<CharacterRosterItem[]>([]);
+  // Deck & Card State (Database-Driven Entities)
+  const [deck, setDeck] = useState<EntityItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [statsMap, setStatsMap] = useState<Record<string, LeaderboardItem>>({});
+  const [totalRemaining, setTotalRemaining] = useState<number>(0);
+  const [leaderboardItems, setLeaderboardItems] = useState<LeaderboardItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Single-Card Exit Lifecycle (1.6s Full Duration)
@@ -96,7 +90,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // Voting History & Session State
   const [voteHistory, setVoteHistory] = useState<
-    Array<{ character: CharacterRosterItem; vote: 'smash' | 'pass'; timestamp: number }>
+    Array<{ character: EntityItem; vote: 'smash' | 'pass'; timestamp: number }>
   >([]);
   const [sessionSmashes, setSessionSmashes] = useState<number>(0);
   const [sessionPasses, setSessionPasses] = useState<number>(0);
@@ -114,151 +108,115 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const [isPersonaOpen, setIsPersonaOpen] = useState<boolean>(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState<boolean>(false);
   const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
-  const [selectedStatCharacter, setSelectedStatCharacter] = useState<CharacterRosterItem | null>(null);
+  const [selectedStatCharacter, setSelectedStatCharacter] = useState<EntityItem | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(SmashSounds.getIsMuted());
   const [isBgmPlaying, setIsBgmPlaying] = useState<boolean>(SmashSounds.getIsBgmPlaying());
 
-  // 1. Fetch live community statistics
-  const fetchStats = useCallback(async () => {
+  // Active Roster Metadata
+  const activeRoster: RosterItem = useMemo(() => {
+    return (
+      rosters.find((r) => r.slug === selectedRosterSlug) || {
+        id: 'canon',
+        slug: 'canon',
+        name_i18n_key: 'smashOrPass.rosters.canon.name',
+        description_i18n_key: 'smashOrPass.rosters.canon.desc',
+        name: 'Dead by Daylight: Fog Canon',
+        description: 'Official 98 Characters',
+        theme_color: '#ff0055',
+        category: 'DBD Canon',
+        is_nsfw: false,
+        is_active: true,
+      }
+    );
+  }, [rosters, selectedRosterSlug]);
+
+  // 1. Fetch available rosters from PostgreSQL database
+  const loadRosters = useCallback(async () => {
     try {
-      const res = await fetch(`${backendBase}/api/v1/smash-or-pass/characters?edition=${selectedEditionId}`);
-      if (res.ok) {
-        const json = await res.json();
-        const map: Record<string, LeaderboardItem> = {};
-        (json.data || []).forEach((item: LeaderboardItem) => {
-          map[item.character_slug] = item;
-        });
-        setStatsMap(map);
+      const rosterList = await fetchRosters();
+      if (rosterList && rosterList.length > 0) {
+        setRosters(rosterList);
       }
     } catch (err) {
-      console.debug('Failed to fetch stats:', err);
+      console.debug('Failed to fetch rosters:', err);
     }
-  }, [backendBase, selectedEditionId]);
+  }, []);
 
-  // 2. Build Unvoted Roster Deck
-  const buildDeck = useCallback(
-    (customVotedSlugs: Set<string>, customRole?: string, customGender?: string) => {
-      const activeRole = customRole !== undefined ? customRole : roleFilter;
-      const activeGender = customGender !== undefined ? customGender : genderFilter;
+  // 2. Fetch Leaderboard from PostgreSQL database
+  const loadLeaderboard = useCallback(async () => {
+    try {
+      const items = await fetchLeaderboard(selectedRosterSlug);
+      if (items) {
+        setLeaderboardItems(items);
+      }
+    } catch (err) {
+      console.debug('Failed to fetch leaderboard:', err);
+    }
+  }, [selectedRosterSlug]);
 
-      const localizedList = activeEdition.characters.map((c) =>
-        getLocalizedCharacterRoster(c.slug, locale)
-      );
-
-      const unvoted = localizedList.filter((char) => {
-        if (customVotedSlugs.has(char.slug)) return false;
-        if (activeRole !== 'all' && char.role !== activeRole) return false;
-        if (activeGender !== 'all' && char.gender !== activeGender) return false;
-        return true;
+  // 3. Fetch Roster Feed from PostgreSQL database
+  const loadFeed = useCallback(async () => {
+    setLoading(true);
+    try {
+      const feed = await fetchRosterFeed(selectedRosterSlug, {
+        role: roleFilter !== 'all' ? roleFilter : undefined,
+        gender: genderFilter !== 'all' ? genderFilter : undefined,
       });
 
-      const shuffled = [...unvoted].sort(() => Math.random() - 0.5);
-      setDeck(shuffled);
-      setCurrentIndex(0);
+      if (feed && feed.entities) {
+        const shuffled = [...feed.entities].sort(() => Math.random() - 0.5);
+        setDeck(shuffled);
+        setCurrentIndex(0);
+        setTotalRemaining(feed.total_remaining ?? feed.entities.length);
+      }
+    } catch (err) {
+      console.debug('Failed to load feed from database:', err);
+    } finally {
+      setLoading(false);
       setIsExiting(false);
       setExitVote(null);
       setExitOffset(undefined);
-    },
-    [activeEdition, locale, roleFilter, genderFilter]
-  );
-
-  // 3. Load User Votes (LocalStorage first, merge DB if authenticated)
-  useEffect(() => {
-    async function loadVotesAndInit() {
-      setLoading(true);
-      await fetchStats();
-
-      const voted = new Set<string>();
-
-      try {
-        const localStored = localStorage.getItem(`dbd_smash_votes_${selectedEditionId}`);
-        if (localStored) {
-          const parsed = JSON.parse(localStored);
-          parsed.forEach((slug: string) => voted.add(slug));
-        }
-      } catch (e) {}
-
-      if (isAuthenticated || token || user?.id) {
-        try {
-          const authHeaders: Record<string, string> = {};
-          if (token) authHeaders['Authorization'] = `Bearer ${token}`;
-
-          const userQuery = user?.id ? `user_id=${user.id}&` : '';
-          const res = await fetch(
-            `${backendBase}/api/v1/smash-or-pass/user-votes?${userQuery}edition=${selectedEditionId}`,
-            { headers: authHeaders }
-          );
-          if (res.ok) {
-            const json = await res.json();
-            (json.data || []).forEach((v: any) => {
-              voted.add(v.character_slug);
-            });
-            try {
-              localStorage.setItem(
-                `dbd_smash_votes_${selectedEditionId}`,
-                JSON.stringify(Array.from(voted))
-              );
-            } catch (e) {}
-          }
-        } catch (err) {
-          console.debug('Backend user vote fetch:', err);
-        }
-      }
-
-      setVotedSlugs(voted);
-      buildDeck(voted);
-      setLoading(false);
     }
+  }, [selectedRosterSlug, roleFilter, genderFilter]);
 
-    loadVotesAndInit();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [backendBase, selectedEditionId, isAuthenticated, user?.id, token]);
+  // Initial Load
+  useEffect(() => {
+    loadRosters();
+  }, [loadRosters]);
+
+  useEffect(() => {
+    loadFeed();
+    loadLeaderboard();
+  }, [loadFeed, loadLeaderboard]);
 
   const handleFilterChange = (type: 'role' | 'gender', value: any) => {
     if (type === 'role') setRoleFilter(value);
     if (type === 'gender') setGenderFilter(value);
   };
 
-  useEffect(() => {
-    buildDeck(votedSlugs);
-  }, [roleFilter, genderFilter]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const shuffleDeck = useCallback(() => {
-    buildDeck(votedSlugs);
+    setDeck((prev) => [...prev].sort(() => Math.random() - 0.5));
+    setCurrentIndex(0);
     SmashSounds.playFlipSound();
-  }, [buildDeck, votedSlugs]);
+  }, []);
 
   const currentCharacter = deck[currentIndex] || null;
 
-  // 4. Complete Exit Transition (Called after Disintegration Animation)
+  // 4. Complete Exit Transition
   const handleExitComplete = useCallback(() => {
     if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
 
-    const evaluatedChar = deck[currentIndex];
-    if (evaluatedChar) {
-      setVotedSlugs((prev) => {
-        const next = new Set(prev);
-        next.add(evaluatedChar.slug);
-        try {
-          localStorage.setItem(
-            `dbd_smash_votes_${selectedEditionId}`,
-            JSON.stringify(Array.from(next))
-          );
-        } catch (e) {}
-        return next;
-      });
-    }
-
     setCurrentIndex((idx) => idx + 1);
+    setTotalRemaining((r) => Math.max(0, r - 1));
     setIsExiting(false);
     setExitVote(null);
     setExitOffset(undefined);
     setDragPhysics({ x: 0, y: 0, isDragging: false });
-  }, [deck, currentIndex, selectedEditionId]);
+  }, []);
 
-  // 5. Handle Vote (Smash or Pass)
+  // 5. Handle Vote (Smash or Pass) with Database API
   const handleVote = useCallback(
-    (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
+    async (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
       if (!currentCharacter || isExiting) return;
 
       if (vote === 'smash') {
@@ -297,103 +255,48 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         { character: currentCharacter, vote, timestamp: Date.now() },
       ]);
 
-      // Optimistic Stats Update
-      setStatsMap((prev) => {
-        const existing = prev[currentCharacter.slug] || {
-          character_slug: currentCharacter.slug,
-          character_name: currentCharacter.name,
-          role: currentCharacter.role,
-          gender: currentCharacter.gender,
-          edition: selectedEditionId,
-          smash_count: 0,
-          pass_count: 0,
-          total_votes: 0,
-          smash_rate: 0,
-        };
-
-        const newSmash = existing.smash_count + (vote === 'smash' ? 1 : 0);
-        const newPass = existing.pass_count + (vote === 'pass' ? 1 : 0);
-        const newTotal = newSmash + newPass;
-        const newRate = newTotal > 0 ? Math.round((newSmash / newTotal) * 1000) / 10 : 0;
-
-        return {
-          ...prev,
-          [currentCharacter.slug]: {
-            ...existing,
-            smash_count: newSmash,
-            pass_count: newPass,
-            total_votes: newTotal,
-            smash_rate: newRate,
-          },
-        };
-      });
-
-      // Async backend vote
-      const voteHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (token) voteHeaders['Authorization'] = `Bearer ${token}`;
-
-      fetch(`${backendBase}/api/v1/smash-or-pass/vote`, {
-        method: 'POST',
-        headers: voteHeaders,
-        body: JSON.stringify({
-          character_slug: currentCharacter.slug,
-          vote_type: vote,
-          edition: selectedEditionId,
-          user_id: user?.id || null,
-        }),
-      }).catch((err) => console.debug('Backend vote push:', err));
+      // Call database API to cast vote
+      try {
+        await apiCastVote(currentCharacter.id, vote, currentCharacter.slug);
+      } catch (err) {
+        console.debug('Failed to cast vote to database:', err);
+      }
     },
-    [
-      currentCharacter,
-      isExiting,
-      dragPhysics,
-      handleExitComplete,
-      backendBase,
-      selectedEditionId,
-      user?.id,
-      token,
-    ]
+    [currentCharacter, isExiting, dragPhysics, handleExitComplete]
   );
 
-  // 6. Reset All Votes
+  // 6. Reset All Votes via Database API
   const handleResetAllVotes = useCallback(async () => {
     setIsResetConfirmOpen(false);
 
-    if (isAuthenticated || token || user?.id) {
-      try {
-        const resetHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
-        if (token) resetHeaders['Authorization'] = `Bearer ${token}`;
-
-        await fetch(`${backendBase}/api/v1/smash-or-pass/user-votes/reset`, {
-          method: 'POST',
-          headers: resetHeaders,
-          body: JSON.stringify({
-            user_id: user?.id || null,
-            edition: selectedEditionId,
-          }),
-        });
-      } catch (err) {
-        console.error('Failed to reset votes on backend:', err);
+    try {
+      if (isAuthenticated || token || user?.id) {
+        await apiResetUserVotes(selectedRosterSlug);
+      } else {
+        await apiResetSessionVotes(selectedRosterSlug);
       }
+    } catch (err) {
+      console.error('Failed to reset votes on backend database:', err);
     }
 
-    try {
-      localStorage.removeItem(`dbd_smash_votes_${selectedEditionId}`);
-    } catch (e) {}
-
-    const empty = new Set<string>();
-    setVotedSlugs(empty);
     setVoteHistory([]);
     setSessionSmashes(0);
     setSessionPasses(0);
     setRoleFilter('all');
     setGenderFilter('all');
-    buildDeck(empty, 'all', 'all');
-    await fetchStats();
+    await loadFeed();
+    await loadLeaderboard();
     SmashSounds.playFlipSound();
-  }, [backendBase, selectedEditionId, isAuthenticated, token, user?.id, buildDeck, fetchStats]);
+  }, [selectedRosterSlug, isAuthenticated, token, user?.id, loadFeed, loadLeaderboard]);
 
-  // Global Non-Deck Keyboard Shortcuts (Mute, Help, Music)
+  const areModalsOpen =
+    isLeaderboardOpen ||
+    isPersonaOpen ||
+    isResetConfirmOpen ||
+    isHowToPlayOpen ||
+    Boolean(selectedStatCharacter);
+
+  // Keyboard Shortcuts (Deck Voting & Global HUD)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -403,6 +306,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         return;
       }
 
+      // Audio & Modals
       if (e.key === 'm' || e.key === 'M') {
         e.preventDefault();
         const next = SmashSounds.toggleMute();
@@ -415,11 +319,28 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         e.preventDefault();
         setIsHowToPlayOpen((prev) => !prev);
       }
+
+      // Deck voting keys (only when no modal is open and candidate is active)
+      if (areModalsOpen || !currentCharacter || isExiting) return;
+
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        e.preventDefault();
+        handleVote('pass');
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        e.preventDefault();
+        handleVote('smash');
+      } else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+        e.preventDefault();
+        setSelectedStatCharacter(currentCharacter);
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        setIsResetConfirmOpen(true);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [areModalsOpen, currentCharacter, isExiting, handleVote]);
 
   const toggleSound = () => {
     const next = SmashSounds.toggleMute();
@@ -442,16 +363,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const sessionSmashRate =
     totalSessionVotes > 0 ? Math.round((sessionSmashes / totalSessionVotes) * 100) : 0;
 
-  const totalEditionCount = activeEdition.characters.length;
-  const evaluatedCount = votedSlugs.size;
+  const totalEditionCount = activeRoster.entity_count || deck.length;
   const remainingInDeck = Math.max(0, deck.length - currentIndex);
-
-  const areModalsOpen =
-    isLeaderboardOpen ||
-    isPersonaOpen ||
-    isResetConfirmOpen ||
-    isHowToPlayOpen ||
-    Boolean(selectedStatCharacter);
 
   // Localized Strings
   const title = dict?.smashOrPass?.title || 'Smash or Pass';
@@ -479,7 +392,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         triggerKey={animTrigger.key}
       />
 
-      {/* Scattered Ambient Lore in Safe Zones with Interactive Hover State */}
+      {/* Scattered Ambient Lore in Safe Zones with High-Intensity Interactive Hover Effects */}
       <FloatingLoreScattered character={currentCharacter} locale={locale} />
 
       {/* Particle & Visual Overlay Animation Engine */}
@@ -503,18 +416,24 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 {title}
               </h1>
 
-              {/* Edition Selector Dropdown */}
+              {/* Dynamic PostgreSQL Database Roster Dropdown */}
               <div className="relative inline-block">
                 <select
-                  value={selectedEditionId}
-                  onChange={(e) => setSelectedEditionId(e.target.value)}
+                  value={selectedRosterSlug}
+                  onChange={(e) => setSelectedRosterSlug(e.target.value)}
                   className="appearance-none pl-3 pr-8 py-1 rounded-xl bg-slate-900 border border-pink-500/30 text-xs font-black text-pink-300 hover:border-pink-400 focus:outline-none cursor-pointer transition-all shadow-md"
                 >
-                  {Object.values(SMASH_OR_PASS_EDITIONS).map((ed) => (
-                    <option key={ed.id} value={ed.id} className="bg-slate-950 text-slate-200">
-                      {ed.name} ({ed.characters.length})
-                    </option>
-                  ))}
+                  {rosters.length > 0
+                    ? rosters.map((r) => (
+                        <option key={r.slug} value={r.slug} className="bg-slate-950 text-slate-200">
+                          {r.name || r.slug} ({r.entity_count ?? r.character_count ?? 0})
+                        </option>
+                      ))
+                    : (
+                        <option value="canon" className="bg-slate-950 text-slate-200">
+                          Dead by Daylight: Fog Canon (98)
+                        </option>
+                      )}
                 </select>
                 <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-pink-400 pointer-events-none" />
               </div>
@@ -531,7 +450,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <span className="flex items-center gap-1 text-slate-400" title="Remaining Candidates in Deck">
                 <Layers className="h-3.5 w-3.5 text-slate-500" />
                 <span>{remainingInDeck} left</span>
-                <span className="text-[10px] text-slate-500">({evaluatedCount}/{totalEditionCount})</span>
+                <span className="text-[10px] text-slate-500">({totalSessionVotes}/{totalEditionCount})</span>
               </span>
               <span className="text-slate-600">|</span>
               <span className="flex items-center gap-1 text-rose-400" title="Smash Count">
@@ -722,17 +641,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         </div>
       </section>
 
-      {/* MAIN INTERACTIVE ARENA */}
-      <main className="relative flex-1 flex flex-col items-center justify-center my-4 z-10">
+      {/* MAIN INTERACTIVE ARENA (ZERO KEYCAPS ON MAIN SCREEN) */}
+      <main className="relative flex-1 flex flex-col items-center justify-center my-4 z-20 pointer-events-none">
         {loading ? (
-          <div className="flex flex-col items-center gap-3 py-20 text-slate-400">
+          <div className="flex flex-col items-center gap-3 py-20 text-slate-400 pointer-events-auto">
             <Heart className="h-10 w-10 text-rose-500 animate-ping" />
-            <span className="text-xs font-mono">Summoning {activeEdition.name}...</span>
+            <span className="text-xs font-mono">Loading {activeRoster.name || selectedRosterSlug} from Database...</span>
           </div>
         ) : currentCharacter ? (
-          <div className="relative w-full flex flex-col items-center justify-center space-y-4">
+          <div className="relative flex flex-col items-center justify-center pointer-events-auto">
             <CharacterCard
-              key={`${currentCharacter.slug}-${currentIndex}`}
+              key={`${currentCharacter.id || currentCharacter.slug}-${currentIndex}`}
               character={currentCharacter}
               onVote={handleVote}
               onDragUpdate={(x, y, isDragging) => setDragPhysics({ x, y, isDragging })}
@@ -744,20 +663,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               locale={locale}
               dict={dict}
             />
-
-            {/* Interactive PC Tactile Keycaps HUD */}
-            <TactileKeycaps
-              onPass={() => handleVote('pass')}
-              onSmash={() => handleVote('smash')}
-              onStats={() => currentCharacter && setSelectedStatCharacter(currentCharacter)}
-              onReset={() => setIsResetConfirmOpen(true)}
-              dict={dict}
-              disabled={areModalsOpen || !currentCharacter || isExiting}
-            />
           </div>
         ) : (
           // Finished Deck State
-          <div className="max-w-md w-full rounded-3xl border border-pink-500/30 bg-slate-900/90 p-8 text-center space-y-5 shadow-2xl backdrop-blur-md">
+          <div className="max-w-md w-full rounded-3xl border border-pink-500/30 bg-slate-900/90 p-8 text-center space-y-5 shadow-2xl backdrop-blur-md pointer-events-auto">
             <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-pink-500/15 border border-pink-500/30 text-pink-400">
               <Heart className="h-8 w-8 fill-pink-400 animate-bounce" />
             </div>
@@ -765,7 +674,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <div className="space-y-1">
               <h3 className="text-xl font-black text-slate-100">All Candidates Evaluated!</h3>
               <p className="text-xs text-slate-400">
-                You have completed all {totalEditionCount} candidates in {activeEdition.name}.
+                You have completed all available candidates in {activeRoster.name || selectedRosterSlug}.
               </p>
             </div>
 
@@ -804,7 +713,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         )}
       </main>
 
-      {/* HOW TO PLAY MODAL */}
+      {/* HOW TO PLAY MODAL (CONTAINING THE KEYBOARD KEYCAPS & CONTROLS EXPLANATION) */}
       {isHowToPlayOpen && (
         <div
           role="dialog"
@@ -851,37 +760,39 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
                 <span className="text-xl shrink-0">🎯</span>
                 <div>
-                  <span className="font-bold text-pink-300 block text-xs">On-Card Buttons</span>
+                  <span className="font-bold text-pink-300 block text-xs">On-Card Action Icons</span>
                   <p className="text-slate-400 leading-relaxed pt-0.5">
                     Click the <strong>Flip</strong> (<RotateCw className="inline h-3 w-3" />) icon at top-left to read bio & flags. Click <strong>Zoom</strong> (<Maximize2 className="inline h-3 w-3" />) for high-res art. Use the bottom icons for instant one-click voting.
                   </p>
                 </div>
               </div>
 
-              {/* 3. Keyboard Shortcuts */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
-                <span className="text-xl shrink-0">⌨️</span>
-                <div>
-                  <span className="font-bold text-pink-300 block text-xs">Keyboard Controls</span>
-                  <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
-                    <div className="flex items-center gap-1.5">
-                      <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-cyan-500/40 text-[#00f5d4]">A / ←</kbd>
-                      <span>Pass</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-rose-500/40 text-[#ff0055]">D / →</kbd>
-                      <span>Smash</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-emerald-500/40 text-emerald-300">W / ↑</kbd>
-                      <span>Dossier</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-purple-500/40 text-purple-300">R</kbd>
-                      <span>Reset</span>
-                    </div>
-                  </div>
+              {/* 3. Keyboard Keycaps Component INSIDE the Modal */}
+              <div className="space-y-2 p-3 rounded-2xl bg-slate-950/70 border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl shrink-0">⌨️</span>
+                  <span className="font-bold text-pink-300 block text-xs">Tactile Keyboard Keycaps</span>
                 </div>
+                <TactileKeycaps
+                  onPass={() => {
+                    handleVote('pass');
+                    setIsHowToPlayOpen(false);
+                  }}
+                  onSmash={() => {
+                    handleVote('smash');
+                    setIsHowToPlayOpen(false);
+                  }}
+                  onStats={() => {
+                    setIsHowToPlayOpen(false);
+                    if (currentCharacter) setSelectedStatCharacter(currentCharacter);
+                  }}
+                  onReset={() => {
+                    setIsHowToPlayOpen(false);
+                    setIsResetConfirmOpen(true);
+                  }}
+                  dict={dict}
+                  className="my-1"
+                />
               </div>
 
               {/* 4. Background Lore & Atmosphere */}
@@ -890,7 +801,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 <div>
                   <span className="font-bold text-pink-300 block text-xs">Atmospheric Background & Music</span>
                   <p className="text-slate-400 leading-relaxed pt-0.5">
-                    Hover over scattered text in the background to inspect quotes and traits. Click <strong>BGM</strong> or press <kbd className="px-1 py-0.2 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">B</kbd> to enjoy dark sensual background music!
+                    Hover over scattered text in the background to inspect quotes and traits with glowing animations. Click <strong>BGM</strong> or press <kbd className="px-1 py-0.2 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono">B</kbd> to enjoy dark sensual synth music!
                   </p>
                 </div>
               </div>
@@ -913,9 +824,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       <SmashLeaderboardModal
         isOpen={isLeaderboardOpen}
         onClose={() => setIsLeaderboardOpen(false)}
-        items={Object.values(statsMap)}
+        items={leaderboardItems}
         userSmashes={userSmashesList}
-        editionName={activeEdition.name}
+        editionName={activeRoster.name || selectedRosterSlug}
         isAuthenticated={isAuthenticated}
         onSelectCharacter={(char) => setSelectedStatCharacter(char)}
         locale={locale}
@@ -926,7 +837,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         isOpen={Boolean(selectedStatCharacter)}
         onClose={() => setSelectedStatCharacter(null)}
         character={selectedStatCharacter}
-        stats={selectedStatCharacter ? statsMap[selectedStatCharacter.slug] : undefined}
+        stats={selectedStatCharacter ? selectedStatCharacter.stat : undefined}
         locale={locale}
         dict={dict}
       />
@@ -934,7 +845,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       <RomancePersonaModal
         isOpen={isPersonaOpen}
         onClose={() => setIsPersonaOpen(false)}
-        votes={voteHistory}
+        votes={voteHistory as any}
         onResetAll={() => setIsResetConfirmOpen(true)}
         locale={locale}
         dict={dict}
@@ -959,7 +870,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <div className="space-y-1">
               <h3 className="text-base font-black text-slate-100">Reset All Votes?</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                This will clear your voting history for <span className="text-pink-300 font-bold">{activeEdition.name}</span> and restore all {totalEditionCount} candidates to your deck.
+                This will clear your voting history for <span className="text-pink-300 font-bold">{activeRoster.name || selectedRosterSlug}</span> and restore all {totalEditionCount} candidates to your deck.
               </p>
             </div>
 

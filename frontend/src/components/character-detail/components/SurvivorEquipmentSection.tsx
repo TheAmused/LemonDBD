@@ -12,7 +12,14 @@ import {
   Map as MapIcon,
   Bomb,
 } from 'lucide-react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, renderFormattedDbdText } from '../types';
+import {
+  AddonItem,
+  EquipmentItem,
+  getAssetUrl,
+  getRarityTileStyle,
+  getRarityRank,
+  renderFormattedDbdText,
+} from '../types';
 
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
@@ -68,11 +75,12 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   const isMap = (name: string, target?: string) =>
     name.toLowerCase().includes('map') || (target || '').toLowerCase().includes('map');
 
-  const isFirecrackerOrVial = (name: string, target?: string) =>
+  const isFirecracker = (name: string, target?: string) =>
     name.toLowerCase().includes('firecracker') ||
     name.toLowerCase().includes('party starter') ||
-    name.toLowerCase().includes('fog vial') ||
-    (target || '').toLowerCase().includes('fog vial');
+    name.toLowerCase().includes('flashbang') ||
+    name.toLowerCase().includes('firework') ||
+    (target || '').toLowerCase().includes('firecracker');
 
   const isTrialExclusive = (name: string) => {
     const n = name.toLowerCase();
@@ -103,7 +111,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
     { key: 'flashlight', label: 'Flashlights', icon: Flashlight, desc: 'Blinding & Saves' },
     { key: 'key', label: 'Keys', icon: Key, desc: 'Auras & Hatch' },
     { key: 'map', label: 'Maps', icon: MapIcon, desc: 'Objectives & Totems' },
-    { key: 'firecracker', label: 'Firecrackers', icon: Bomb, desc: 'Fireworks & Vials' },
+    { key: 'firecracker', label: 'Firecrackers', icon: Bomb, desc: 'Fireworks & Party Starters' },
     { key: 'trial_exclusive', label: 'Trial Artifacts', icon: ShieldAlert, desc: 'In-Trial Counter Items' },
   ];
 
@@ -133,14 +141,25 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       if (selectedCategory === 'flashlight') return isFlashlight(it.name, target);
       if (selectedCategory === 'key') return isKey(it.name, target);
       if (selectedCategory === 'map') return isMap(it.name, target);
-      if (selectedCategory === 'firecracker') return isFirecrackerOrVial(it.name, target);
+      if (selectedCategory === 'firecracker') return isFirecracker(it.name, target);
       if (selectedCategory === 'trial_exclusive') return !isAddon && isTrialExclusive(it.name);
       return true;
     };
 
+    const sortByRarity = (a: EquipmentItem | AddonItem, b: EquipmentItem | AddonItem) => {
+      const rankA = getRarityRank(a.rarity);
+      const rankB = getRarityRank(b.rarity);
+      if (rankA !== rankB) return rankA - rankB;
+      return a.name.localeCompare(b.name);
+    };
+
     return {
-      displayedItems: filteredItems.filter((it) => matchesCategory(it, false)),
-      displayedAddons: filteredAddons.filter((ad) => matchesCategory(ad, true)),
+      displayedItems: filteredItems
+        .filter((it) => matchesCategory(it, false))
+        .sort(sortByRarity),
+      displayedAddons: filteredAddons
+        .filter((ad) => matchesCategory(ad, true))
+        .sort(sortByRarity),
     };
   }, [items, addons, selectedCategory, searchQuery, rarityFilter]);
 

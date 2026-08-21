@@ -72,12 +72,24 @@ export interface KillerPowerInfo {
   height?: string;
 }
 
+export interface OfferingItem {
+  id?: number;
+  name: string;
+  category: string;
+  role?: string;
+  description?: string;
+  icon_url?: string;
+  icon_local_path?: string;
+  rarity?: string;
+}
+
 export interface CharacterDetailPayload {
   character: CharacterItem;
   power?: KillerPowerInfo | null;
   perks: PerkItem[];
   addons: (AddonItem | EquipmentItem)[];
   items?: EquipmentItem[];
+  offerings?: OfferingItem[];
 }
 
 export type CharacterDetailDictionary = Record<string, string>;
@@ -93,6 +105,50 @@ export interface RarityTileStyle {
   bg: string;
   badge: string;
   text: string;
+}
+
+export function getRarityRank(rarity?: string): number {
+  const r = (rarity || '').toLowerCase();
+  if (r.includes('common') && !r.includes('uncommon')) return 1;
+  if (r.includes('uncommon')) return 2;
+  if (r.includes('rare') && !r.includes('very') && !r.includes('ultra')) return 3;
+  if (r.includes('very rare') || r.includes('purple')) return 4;
+  if (r.includes('ultra') || r.includes('iridescent') || r.includes('pink')) return 5;
+  if (r.includes('event')) return 6;
+  return 99;
+}
+
+export function formatLocalizedReleaseDate(rawDate?: string, locale: string = 'en'): string {
+  if (!rawDate) return '2016';
+  const trimmed = rawDate.trim();
+  const parsed = new Date(trimmed);
+  if (!isNaN(parsed.getTime())) {
+    try {
+      const locMap: Record<string, string> = {
+        en: 'en-US',
+        pl: 'pl-PL',
+        de: 'de-DE',
+        es: 'es-ES',
+        ja: 'ja-JP',
+      };
+      return parsed.toLocaleDateString(locMap[locale] || locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch {
+      return rawDate;
+    }
+  }
+  return rawDate;
+}
+
+export function formatKillerHeight(height?: string, t?: Record<string, string>): string {
+  const h = (height || '').toLowerCase().trim();
+  if (h === 'tall') return t?.heightTall || 'Tall';
+  if (h === 'average') return t?.heightAverage || 'Average';
+  if (h === 'short') return t?.heightShort || 'Short';
+  return height || t?.heightAverage || 'Average';
 }
 
 export function getCharacterSlug(name: string): string {
@@ -184,242 +240,12 @@ export function getRarityTileStyle(rarity?: string): RarityTileStyle {
   };
 }
 
-export const DBD_KEYWORDS: readonly string[] = [
-  'Increases',
-  'Increase',
-  'Decreases',
-  'Decrease',
-  'Grants',
-  'Grant',
-  'Reveals',
-  'Reveal',
-  'Causes',
-  'Cause',
-  'Unlocks',
-  'Unlock',
-  'Applies',
-  'Apply',
-  'Activates',
-  'Activate',
-  'Affects',
-  'Affect',
-  'Extends',
-  'Extend',
-  'Reduces',
-  'Reduce',
-  'Blocks',
-  'Block',
-  'Tremendously',
-  'Considerably',
-  'Moderately',
-  'Slightly',
-  'Hex:',
-  'Hex',
-  'Boon:',
-  'Boon',
-  'Scourge Hook:',
-  'Scourge Hook',
-  'Obsession',
-  'Exhausted',
-  'Exhaustion',
-  'Exposed',
-  'Haste',
-  'Hindered',
-  'Blindness',
-  'Broken',
-  'Oblivious',
-  'Undetectable',
-  'Incapacitated',
-  'Mangled',
-  'Hemorrhage',
-  'Deep Wound',
-  'Cursed',
-  'Endurance',
-  'Bloodlust',
-  'Torment',
-  'Terror Radius',
-  'Killer Instinct',
-  'Aura Reading',
-  'Auras',
-  'Aura',
-  'Skill Checks',
-  'Skill Check',
-  'Great Skill Check',
-  'Good Skill Check',
-  'Bear Trap',
-  'Bear Traps',
-  'Dying State',
-  'Injured State',
-  'Healthy State',
-  'Hooks',
-  'Hook',
-  'Generators',
-  'Generator',
-  'Pallets',
-  'Pallet',
-  'Windows',
-  'Window',
-  'Chests',
-  'Chest',
-  'Totems',
-  'Totem',
-  'Bloodweb',
-  'Trial',
-  'Entity',
-  'Status Effect',
-  'Haste Status Effect',
-  'Blinded',
-  'Hindered',
-  'Marked',
-  'Med-Kit',
-  'Medkit',
-  'Toolbox',
-  'Flashlight',
-  'First Aid',
-  'Styptic',
-  'Serum',
-  'Bandage',
-  'Special Ability',
-  'Special Attack',
-  'Lunge',
-  'Lullaby',
-];
+export {
+  DBD_KEYWORDS,
+  ACTION_KEYWORDS,
+  TOKEN_REGEX,
+  createDbdTokenRegex,
+  parseLineTokens,
+  renderFormattedDbdText,
+} from '@/utils/textFormatter';
 
-export const TOKEN_REGEX: RegExp = (() => {
-  const kw = DBD_KEYWORDS.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-  return new RegExp(
-    `(\\b(?:${kw})\\b|` +
-      `\\+?\\-?\\d+(?:\\.\\d+)?(?:\\s*\\/\\s*\\d+(?:\\.\\d+)?)+(?:\\s*%)?|` +
-      `\\+\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|m\\b|%|seconds?|s\\b|tokens?|charges?)|` +
-      `\\b\\d+(?:\\.\\d+)?\\s*%|` +
-      `\\b\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|seconds?|tokens?)\\b)`,
-    'gi'
-  );
-})();
-
-function parseLineTokens(text: string, lineKey: number | string): React.ReactNode {
-  const parts = text.split(TOKEN_REGEX);
-  return (
-    <>
-      {parts.map((part, idx) => {
-        if (!part) return null;
-        const trimmed = part.trim();
-
-        const isValue =
-          /^\+?\-?\d+(?:\.\d+)?(?:\s*\/\s*\d+(?:\.\d+)?)+(?:\s*%)?$/.test(trimmed) ||
-          /^\+\d+(?:\.\d+)?\s*(?:metres?|meters?|m|%|seconds?|s|tokens?|charges?)$/i.test(
-            trimmed
-          ) ||
-          /^\d+(?:\.\d+)?\s*%$/.test(trimmed) ||
-          /^\d+(?:\.\d+)?\s*(?:metres?|meters?|seconds?|tokens?)$/i.test(trimmed);
-
-        const isKeyword = DBD_KEYWORDS.some((k) => k.toLowerCase() === trimmed.toLowerCase());
-
-        if (isKeyword || isValue) {
-          return (
-            <strong key={`${lineKey}-${idx}`} className="font-black text-amber-400">
-              {part}
-            </strong>
-          );
-        }
-        return <span key={`${lineKey}-${idx}`}>{part}</span>;
-      })}
-    </>
-  );
-}
-
-export function renderFormattedDbdText(
-  rawText: string,
-  isCompact: boolean = false
-): React.ReactNode {
-  if (!rawText) return null;
-
-  const cleaned = rawText
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/\*""|\*"/g, '"')
-    .replace(/""\*|"\*/g, '"')
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/(?<=\S)\*(?=\s|$|[.,;:!?)])/g, '')
-    .replace(/\*(?=[a-zA-Z0-9+%-])/g, '')
-    .replace(/(?<=[a-zA-Z0-9+%-])\*/g, '')
-    .replace(/\s+\./g, '.')
-    .replace(/\s+,/g, ',')
-    .trim();
-
-  const lines = cleaned.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-  const elements: React.ReactNode[] = [];
-
-  lines.forEach((line, lineIdx) => {
-    const stripped = line.replace(/^[\*\s_]+/, '').replace(/[\*\s_]+$/, '');
-    const isQuote =
-      (stripped.startsWith('"') && stripped.endsWith('"')) ||
-      (stripped.startsWith('\u201c') && stripped.endsWith('\u201d')) ||
-      (stripped.startsWith('"') && stripped.includes('" -')) ||
-      (stripped.startsWith('\u201c') && stripped.includes('\u201d -')) ||
-      /^["\u201c].+["\u201d](\s*[-\u2013\u2014].+)?$/.test(stripped);
-
-    if (isQuote) {
-      elements.push(
-        <div
-          key={`q-${lineIdx}`}
-          className={`rounded-xl border-l-2 border-amber-500/80 bg-slate-950/80 px-3 py-2 italic text-slate-300 font-serif shadow-inner ${
-            isCompact ? 'my-1.5 text-[10px]' : 'my-3 text-xs sm:text-sm'
-          }`}
-        >
-          {stripped}
-        </div>
-      );
-      return;
-    }
-
-    if (/^THIS (ITEM|UNLOCKABLE) CAN NO LONGER BE OBTAINED/i.test(line) && !isCompact) {
-      elements.push(
-        <div
-          key={`ev-${lineIdx}`}
-          className="p-2.5 mb-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] font-semibold text-amber-300 flex items-start gap-2"
-        >
-          <span className="shrink-0 font-bold uppercase tracking-wider text-[10px] bg-amber-500/20 px-1.5 py-0.5 rounded text-amber-400">
-            Notice
-          </span>
-          <span className="leading-snug">{line}</span>
-        </div>
-      );
-      return;
-    }
-
-    const isBullet =
-      line.startsWith('•') ||
-      line.startsWith('* ') ||
-      line.startsWith('- ') ||
-      /^\*\s+[A-Za-z]/.test(line);
-
-    if (isBullet) {
-      const content = line.replace(/^[•\*\-]\s*/, '');
-      elements.push(
-        <li
-          key={`li-${lineIdx}`}
-          className={`ml-5 list-disc leading-relaxed text-slate-300 marker:text-amber-400 ${
-            isCompact ? 'my-0.5 text-xs' : 'my-1.5 text-xs sm:text-sm'
-          }`}
-        >
-          {parseLineTokens(content, lineIdx)}
-        </li>
-      );
-      return;
-    }
-
-    elements.push(
-      <p
-        key={`p-${lineIdx}`}
-        className={`leading-relaxed text-slate-300 ${
-          isCompact ? 'mb-1 text-xs' : 'mb-2.5 text-xs sm:text-sm'
-        }`}
-      >
-        {parseLineTokens(line, lineIdx)}
-      </p>
-    );
-  });
-
-  return <>{elements}</>;
-}

@@ -93,3 +93,4 @@ frontend/pnpm-debug.log*
 
 # New
 backend/app/static
+/translations/

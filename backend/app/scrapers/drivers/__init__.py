@@ -108,9 +108,9 @@ class WikiGGScraperDriver(WikiGGDriverEN):
     def scrape_all(
         self,
         languages: Optional[Union[str, List[str]]] = None,
-    ) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData]]:
+    ) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData], List[OfferingData]]:
         """Scrapes canonical data and optionally enriches with multi-language translations."""
-        characters, perks, items, addons = super().scrape_all()
+        characters, perks, items, addons, offerings = super().scrape_all()
 
         if languages:
             try:
@@ -118,7 +118,7 @@ class WikiGGScraperDriver(WikiGGDriverEN):
             except Exception as e:
                 logger.warning(f"Error during multi-language translation enrichment: {e}")
 
-        return characters, perks, items, addons
+        return characters, perks, items, addons, offerings
 
 
 __all__ = [

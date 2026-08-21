@@ -1,11 +1,12 @@
 # backend/tests/api/test_character_slug_routes.py
 import unittest
 from app import create_app
+from app.core.config import TestingConfig
 
 
 class TestCharacterSlugRoutes(unittest.TestCase):
     def setUp(self):
-        self.app = create_app()
+        self.app = create_app(TestingConfig)
         self.app.config["TESTING"] = True
         self.client = self.app.test_client()
         with self.app.app_context():

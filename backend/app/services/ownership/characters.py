@@ -58,8 +58,37 @@ def mutate_character_ownership(user_id: int, character_id: int, is_owned: bool) 
     else:
         record.is_owned = is_owned
 
+    # Cascade to character's teachable perks
+    from app.models import Perk, UserPerkOwnership
+    teachable_perks = db.session.scalars(
+        select(Perk).where(Perk.character_id == character_id)
+    ).all()
+
+    cascade_count = len(teachable_perks)
+    for perk in teachable_perks:
+        p_rec = db.session.scalars(
+            select(UserPerkOwnership).where(
+                UserPerkOwnership.user_id == user_id,
+                UserPerkOwnership.perk_id == perk.id,
+            )
+        ).first()
+        if not p_rec:
+            p_rec = UserPerkOwnership(
+                user_id=user_id,
+                perk_id=perk.id,
+                is_unlocked=is_owned,
+            )
+            db.session.add(p_rec)
+        else:
+            p_rec.is_unlocked = is_owned
+
     db.session.commit()
-    return record.to_dict()
+    res = record.to_dict()
+    if is_owned:
+        res["auto_unlocked_teachable_perks_count"] = cascade_count
+    else:
+        res["auto_locked_teachable_perks_count"] = cascade_count
+    return res
 
 
 def bulk_mutate_character_ownership(
@@ -68,7 +97,10 @@ def bulk_mutate_character_ownership(
     summary_fn: Callable[[Optional[int]], Dict[str, Any]],
 ) -> Dict[str, Any]:
     """Bulk update multiple character ownership entries in a single database transaction."""
+    from app.models import Perk, UserPerkOwnership
     updated_count = 0
+    auto_unlocked_perks_count = 0
+    auto_locked_perks_count = 0
     for item in updates:
         cid = item.get("character_id")
         if not cid:
@@ -92,10 +124,38 @@ def bulk_mutate_character_ownership(
             record.is_owned = is_owned
         updated_count += 1
 
+        teachable_perks = db.session.scalars(
+            select(Perk).where(Perk.character_id == int(cid))
+        ).all()
+        for perk in teachable_perks:
+            p_rec = db.session.scalars(
+                select(UserPerkOwnership).where(
+                    UserPerkOwnership.user_id == user_id,
+                    UserPerkOwnership.perk_id == perk.id,
+                )
+            ).first()
+            if not p_rec:
+                p_rec = UserPerkOwnership(
+                    user_id=user_id,
+                    perk_id=perk.id,
+                    is_unlocked=is_owned,
+                )
+                db.session.add(p_rec)
+            else:
+                p_rec.is_unlocked = is_owned
+
+            if is_owned:
+                auto_unlocked_perks_count += 1
+            else:
+                auto_locked_perks_count += 1
+
     db.session.commit()
     return {
         "user_id": user_id,
         "updated_count": updated_count,
+        "characters_updated_count": updated_count,
+        "auto_unlocked_perks_count": auto_unlocked_perks_count,
+        "auto_locked_perks_count": auto_locked_perks_count,
         "summary": summary_fn(user_id),
     }
 

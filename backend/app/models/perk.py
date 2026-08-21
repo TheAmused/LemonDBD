@@ -41,15 +41,15 @@ class Perk(Base):
     )
 
     def to_dict(self, lang: Optional[str] = None) -> dict:
-        char_name = self.character.name if self.character else "General"
-        char_real = (
-            self.character.real_name
-            if (self.character and self.character.real_name)
-            else char_name
-        )
-        char_avatar = (
-            self.character.avatar_local_path if self.character else ""
-        )
+        char_name = "General"
+        char_real = "General"
+        char_avatar = ""
+        if self.character:
+            c_dict = self.character.to_dict(lang=lang)
+            char_name = c_dict.get("name") or self.character.name
+            char_real = c_dict.get("real_name") or self.character.real_name or char_name
+            char_avatar = self.character.avatar_local_path or ""
+
         name = self.name
         description = self.description
         if lang and self.translations and lang in self.translations:

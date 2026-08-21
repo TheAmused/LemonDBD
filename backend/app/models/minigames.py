@@ -120,3 +120,25 @@ class GuesserStat(Base):
             else None,
         }
 
+
+class ScraperSetting(Base):
+    __tablename__ = "scraper_settings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    source: Mapped[str] = mapped_column(String(50), default="wikigg")
+    fallback_to_wiki: Mapped[bool] = mapped_column(Boolean, default=False)
+    last_used_source: Mapped[str] = mapped_column(String(50), default="wikigg")
+    last_run_timestamp: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=utcnow, onupdate=utcnow
+    )
+
+    def to_dict(self) -> dict:
+        return {
+            "source": self.source,
+            "fallback_to_wiki": self.fallback_to_wiki,
+            "last_used_source": self.last_used_source,
+            "last_run_timestamp": self.last_run_timestamp,
+        }
+
+

@@ -38,10 +38,10 @@ def _extract_lang() -> Optional[str]:
     if lang:
         return lang.strip().lower()
 
-    # 2. Referer URL path (e.g. /pl/perks, /de/characters)
+    # 2. Referer URL path (e.g. /pl/perks, /de/characters, /ja/characters)
     referer = request.headers.get("Referer", "")
     if referer:
-        m = re.search(r"/(pl|de|es|fr|it|en)(?:/|$|\?)", referer, re.IGNORECASE)
+        m = re.search(r"/(pl|de|es|fr|it|ja|en)(?:/|$|\?)", referer, re.IGNORECASE)
         if m:
             return m.group(1).lower()
 
@@ -49,7 +49,7 @@ def _extract_lang() -> Optional[str]:
     accept_lang = request.headers.get("Accept-Language", "")
     if accept_lang:
         primary = accept_lang.split(",")[0].split(";")[0].split("-")[0].strip().lower()
-        if primary in {"pl", "de", "es", "fr", "it", "en"}:
+        if primary in {"pl", "de", "es", "fr", "it", "ja", "en"}:
             return primary
 
     return None
@@ -253,6 +253,25 @@ def update_scrape_config():
     scraper = ScraperService()
     updated = scraper.save_config(data)
     return jsonify({"message": "Configuration updated successfully", "config": asdict(updated)}), 200
+
+
+@perks_bp.route("/api/v1/scrape/translations/game-dumps", methods=["POST"])
+@admin_required
+def sync_game_dump_translations_route():
+    """Synchronize official Unreal Engine translations (EN, PL, DE, ES, JA) to the database (Admin only)."""
+    try:
+        data = request.get_json(silent=True) or {}
+        locales = data.get("locales") or ["en", "pl", "de", "es", "ja"]
+        scraper = ScraperService()
+        result = scraper.sync_game_dump_translations(locales=locales)
+        return jsonify({
+            "status": "success",
+            "message": "Game dump translations successfully synchronized to database",
+            "result": result,
+        }), 200
+    except Exception as e:
+        logger.error(f"Error syncing game dump translations: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @perks_bp.route("/static/<path:filename>", methods=["GET"])

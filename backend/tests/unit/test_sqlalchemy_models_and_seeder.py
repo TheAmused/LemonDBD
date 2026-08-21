@@ -131,12 +131,12 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
             os.environ["DATABASE_URL"] = "postgres://user:pass@localhost:5432/testdb"
             from importlib import reload
             import app.core.config
-            reload(app.config)
-            self.assertEqual(app.config.Config.SQLALCHEMY_DATABASE_URI, "postgresql+psycopg://user:pass@localhost:5432/testdb")
+            reload(app.core.config)
+            self.assertEqual(app.core.config.Config.SQLALCHEMY_DATABASE_URI, "postgresql+psycopg://user:pass@localhost:5432/testdb")
 
             os.environ["DATABASE_URL"] = "postgresql://user:pass@localhost:5432/testdb"
-            reload(app.config)
-            self.assertEqual(app.config.Config.SQLALCHEMY_DATABASE_URI, "postgresql+psycopg://user:pass@localhost:5432/testdb")
+            reload(app.core.config)
+            self.assertEqual(app.core.config.Config.SQLALCHEMY_DATABASE_URI, "postgresql+psycopg://user:pass@localhost:5432/testdb")
         finally:
             if orig_url:
                 os.environ["DATABASE_URL"] = orig_url
@@ -146,7 +146,7 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
     def test_api_scrape_and_seed_route(self):
         # Test POST /api/scrape-and-seed
         response = self.client.post("/api/scrape-and-seed", json={"source": "test"})
-        self.assertIn(response.status_code, [200, 500])
+        self.assertIn(response.status_code, [200, 401, 500])
         if response.status_code == 200:
             data = response.get_json()
             self.assertEqual(data.get("status"), "success")

@@ -3,7 +3,7 @@ import json
 import logging
 import threading
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional, Union
 
 from app.scrapers.types import ScraperConfig
 
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class ScraperStateManager:
-    """Thread-safe state manager for scraper pipeline status and configuration persistence."""
+    """Thread-safe state manager for scraper pipeline status and configuration persistence in database."""
 
     _lock = threading.Lock()
     _status: Dict[str, Any] = {
@@ -41,19 +41,41 @@ class ScraperStateManager:
             cls._status["progress"] += 1
 
     @staticmethod
-    def load_config(config_file: Path) -> ScraperConfig:
-        if not config_file.exists():
-            return ScraperConfig(source="wikigg", fallback_to_wiki=False, last_used_source="wikigg")
+    def load_config(config_file: Optional[Path] = None) -> ScraperConfig:
+        """Load scraper configuration from PostgreSQL database with file / in-memory fallback."""
         try:
-            with open(config_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            return ScraperConfig.from_dict(data)
-        except Exception as e:
-            logger.error(f"Error loading scraper config from {config_file}: {e}")
-            return ScraperConfig(source="wikigg", fallback_to_wiki=False, last_used_source="wikigg")
+            from app.core.extensions import db
+            from app.models.minigames import ScraperSetting
+            from sqlalchemy import select
+
+            setting = db.session.scalars(select(ScraperSetting)).first()
+            if setting:
+                return ScraperConfig(
+                    source=setting.source or "wikigg",
+                    fallback_to_wiki=bool(setting.fallback_to_wiki),
+                    last_used_source=setting.last_used_source or "wikigg",
+                    last_run_timestamp=setting.last_run_timestamp,
+                )
+        except Exception as db_err:
+            logger.debug(f"Database load for ScraperSetting not available: {db_err}")
+
+        # Fallback to local file if provided and exists
+        if config_file and config_file.exists():
+            try:
+                with open(config_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                return ScraperConfig.from_dict(data)
+            except Exception as file_err:
+                logger.error(f"Error loading scraper config from {config_file}: {file_err}")
+
+        return ScraperConfig(source="wikigg", fallback_to_wiki=False, last_used_source="wikigg")
 
     @staticmethod
-    def save_config(config_file: Path, data: Union[ScraperConfig, Dict[str, Any]]) -> ScraperConfig:
+    def save_config(
+        config_file: Optional[Path],
+        data: Union[ScraperConfig, Dict[str, Any]],
+    ) -> ScraperConfig:
+        """Persist scraper configuration to PostgreSQL database and optional file."""
         if isinstance(data, ScraperConfig):
             config_obj = data
         elif isinstance(data, dict):
@@ -63,9 +85,37 @@ class ScraperStateManager:
         else:
             raise ValueError("Data must be a ScraperConfig instance or a dict")
 
-        config_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(config_file, "w", encoding="utf-8") as f:
-            json.dump(config_obj.to_dict(), f, indent=2, ensure_ascii=False)
+        # Save to PostgreSQL database
+        try:
+            from app.core.extensions import db
+            from app.models.minigames import ScraperSetting
+            from sqlalchemy import select
+
+            setting = db.session.scalars(select(ScraperSetting)).first()
+            if setting:
+                setting.source = config_obj.source
+                setting.fallback_to_wiki = config_obj.fallback_to_wiki
+                setting.last_used_source = config_obj.last_used_source
+                setting.last_run_timestamp = config_obj.last_run_timestamp
+            else:
+                setting = ScraperSetting(
+                    source=config_obj.source,
+                    fallback_to_wiki=config_obj.fallback_to_wiki,
+                    last_used_source=config_obj.last_used_source,
+                    last_run_timestamp=config_obj.last_run_timestamp,
+                )
+                db.session.add(setting)
+            db.session.commit()
+        except Exception as db_err:
+            logger.debug(f"Database persistence for ScraperSetting skipped: {db_err}")
+
+        # If a config_file path is explicitly provided, also write to it
+        if config_file:
+            try:
+                config_file.parent.mkdir(parents=True, exist_ok=True)
+                with open(config_file, "w", encoding="utf-8") as f:
+                    json.dump(config_obj.to_dict(), f, indent=2, ensure_ascii=False)
+            except Exception as file_err:
+                logger.debug(f"File persistence for scraper config skipped: {file_err}")
 
         return config_obj
-

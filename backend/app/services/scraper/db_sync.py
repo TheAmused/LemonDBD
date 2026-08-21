@@ -5,20 +5,11 @@ from typing import Dict, List, Optional
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.models import Addon, Character, Item, MapRealm, MapTile, Perk
-from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, PerkData
+from app.models import Addon, Character, Item, MapRealm, MapTile, Offering, Perk
+from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData
 from app.scrapers.utils import clean_description_text, normalize_name_key, sanitize_filename
 
 logger = logging.getLogger(__name__)
-
-
-def ensure_translations_columns():
-    """Ensure translations JSONB/JSON column exists in SQLite/PostgreSQL tables."""
-    try:
-        from app.services.db.migrations import migrate_runtime_columns
-        migrate_runtime_columns(db)
-    except Exception as e:
-        logger.debug(f"ensure_translations_columns error: {e}")
 
 
 def sync_characters_to_db(characters: List[CharacterData]) -> Dict[str, Character]:
@@ -350,18 +341,66 @@ def sync_maps_to_db(maps: List[MapData]) -> None:
     db.session.commit()
 
 
+def sync_offerings_to_db(offerings: List[OfferingData]) -> None:
+    """Upsert offering items and preserve valid entries."""
+    if not offerings:
+        return
+
+    existing_offerings = {
+        normalize_name_key(o.name): o
+        for o in db.session.scalars(select(Offering)).all()
+    }
+
+    for off in offerings:
+        o_name = off.name.strip()
+        norm_o_name = normalize_name_key(o_name)
+        desc = clean_description_text(off.description)
+        trans = getattr(off, "translations", None) or {}
+
+        existing_off = existing_offerings.get(norm_o_name)
+        if existing_off:
+            existing_off.category = getattr(off, "category", "") or "Offering"
+            existing_off.role = getattr(off, "role", "All") or "All"
+            if desc:
+                existing_off.description = desc
+            if getattr(off, "icon_url", ""):
+                existing_off.icon_url = off.icon_url
+            if getattr(off, "icon_local_path", ""):
+                existing_off.icon_local_path = off.icon_local_path
+            if getattr(off, "rarity", ""):
+                existing_off.rarity = off.rarity
+            if trans:
+                existing_off.translations = trans
+        else:
+            new_off = Offering(
+                name=o_name,
+                category=getattr(off, "category", "") or "Offering",
+                role=getattr(off, "role", "All") or "All",
+                description=desc,
+                icon_url=getattr(off, "icon_url", "") or "",
+                icon_local_path=getattr(off, "icon_local_path", "") or "",
+                rarity=getattr(off, "rarity", "") or "Common",
+                translations=trans,
+            )
+            db.session.add(new_off)
+            existing_offerings[norm_o_name] = new_off
+
+    db.session.commit()
+
+
 def sync_all_to_database(
     characters: List[CharacterData],
     perks: List[PerkData],
     items: Optional[List[ItemData]] = None,
     addons: Optional[List[AddonData]] = None,
     maps: Optional[List[MapData]] = None,
+    offerings: Optional[List[OfferingData]] = None,
 ) -> Dict[str, int]:
     """Execute complete database synchronization pipeline across all DBD entity domains."""
-    ensure_translations_columns()
     items = items or []
     addons = addons or []
     maps = maps or []
+    offerings = offerings or []
 
     existing_chars = sync_characters_to_db(characters)
 
@@ -377,6 +416,7 @@ def sync_all_to_database(
     sync_items_to_db(items)
     sync_addons_to_db(addons)
     sync_maps_to_db(maps)
+    sync_offerings_to_db(offerings)
 
     return {
         "characters_synced": len(characters),
@@ -384,5 +424,6 @@ def sync_all_to_database(
         "items_synced": len(items),
         "addons_synced": len(addons),
         "maps_synced": len(maps),
+        "offerings_synced": len(offerings),
     }
 

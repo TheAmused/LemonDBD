@@ -8,7 +8,7 @@ from typing import List, Optional
 from curl_cffi.requests import AsyncSession
 from PIL import Image
 
-from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, PerkData
+from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData
 from app.scrapers.utils import sanitize_filename
 from app.services.scraper.state import ScraperStateManager
 
@@ -94,11 +94,12 @@ async def download_all_assets(
     items: Optional[List[ItemData]] = None,
     addons: Optional[List[AddonData]] = None,
     maps: Optional[List[MapData]] = None,
+    offerings: Optional[List[OfferingData]] = None,
     impersonate_browser: str = "chrome120",
     max_concurrent_downloads: int = 10,
     request_timeout: int = 30,
 ) -> None:
-    """Batch concurrent asset downloader for characters, powers, perks, items, addons, and maps."""
+    """Batch concurrent asset downloader for characters, powers, perks, items, addons, maps, and offerings."""
     semaphore = asyncio.Semaphore(max_concurrent_downloads)
     async with AsyncSession(impersonate=impersonate_browser, verify=False) as client:
         tasks = [
@@ -162,6 +163,19 @@ async def download_all_assets(
                             static_dir,
                             addon.icon_url,
                             addon.icon_local_path,
+                            timeout=request_timeout,
+                        )
+                    )
+        if offerings:
+            for off in offerings:
+                if off.icon_url:
+                    tasks.append(
+                        download_single_asset(
+                            client,
+                            semaphore,
+                            static_dir,
+                            off.icon_url,
+                            off.icon_local_path,
                             timeout=request_timeout,
                         )
                     )

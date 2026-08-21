@@ -16,7 +16,7 @@ from curl_cffi import requests
 from curl_cffi.requests import AsyncSession
 
 from app.scrapers.constants import GENERIC_PERK_CANONICAL_MAP, KNOWN_KILLER_POWER_ALIASES
-from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, PerkData
+from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, OfferingData, PerkData
 from app.scrapers.utils import (
     clean_description_text,
     extract_high_res_url,
@@ -1204,7 +1204,104 @@ class WikiGGDriverEN:
 
         return addons
 
-    def scrape_all(self) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData]]:
+    def parse_wiki_offerings(self, html_content: str) -> List[OfferingData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        offerings: List[OfferingData] = []
+        seen_offerings: Set[str] = set()
+
+        for img in soup.find_all("img"):
+            src = img.get("src") or img.get("data-src") or ""
+            if "IconFavors_" in src or "IconsFavors_" in src or "IconFavor_" in src:
+                row = img.find_parent("tr")
+                if not row:
+                    continue
+                cells = row.find_all(["td", "th"])
+                off_name = ""
+                for c in cells:
+                    links = c.find_all("a")
+                    for l in links:
+                        txt = l.get_text(strip=True)
+                        if txt and not txt.startswith("File:") and len(txt) > 1:
+                            off_name = txt
+                            break
+                    if off_name:
+                        break
+                if not off_name and len(cells) > 1:
+                    off_name = cells[1].get_text(strip=True)
+                if not off_name:
+                    off_name = img.get("alt", "").replace(".png", "").replace("IconFavors_", "").replace("IconsFavors_", "").strip()
+
+                if not off_name or off_name.lower().startswith("category:"):
+                    continue
+
+                norm_key = normalize_name_key(off_name)
+                if norm_key in seen_offerings:
+                    continue
+                seen_offerings.add(norm_key)
+
+                icon_url = extract_high_res_url(img, self.BASE_DOMAIN)
+                description = ""
+                if len(cells) >= 4:
+                    description = cells[3].get_text(separator="\n", strip=True)
+                elif len(cells) == 3:
+                    description = cells[2].get_text(separator="\n", strip=True)
+                elif len(cells) == 2:
+                    description = cells[1].get_text(separator="\n", strip=True)
+
+                rarity = extract_rarity_from_elements(cells, img_tag=img)
+                description = clean_description_text(description)
+                sanitized = sanitize_filename(off_name)
+                local_path = f"icons/offerings/{sanitized}.png"
+
+                row_text = row.get_text().lower()
+                role = "All"
+                if "killer" in row_text and "survivor" not in row_text:
+                    role = "Killer"
+                elif "survivor" in row_text and "killer" not in row_text:
+                    role = "Survivor"
+
+                category = "Offering"
+                if "mori" in row_text:
+                    category = "Memento Mori"
+                elif "bloodpoint" in row_text or "point" in row_text:
+                    category = "Bloodpoints"
+                elif "shroud" in row_text:
+                    category = "Shroud"
+                elif "ward" in row_text:
+                    category = "Ward"
+                elif "luck" in row_text or "salt" in row_text or "chalk" in row_text:
+                    category = "Luck"
+                elif "chest" in row_text or "fog" in row_text or "oak" in row_text or "blueprint" in row_text:
+                    category = "Map Modifications"
+                elif "chance" in row_text or "realm" in row_text:
+                    category = "Realm"
+
+                offerings.append(
+                    OfferingData(
+                        name=off_name,
+                        category=category,
+                        role=role,
+                        description=description,
+                        icon_url=icon_url,
+                        icon_local_path=local_path,
+                        rarity=rarity,
+                    )
+                )
+
+        return offerings
+
+    def scrape_offerings(self) -> List[OfferingData]:
+        try:
+            logger.info("Fetching Offerings...")
+            html_offerings = self.fetch_page_html("Offerings")
+            return self.parse_wiki_offerings(html_offerings)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
+            return []
+
+    def scrape_all(
+        self,
+    ) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData], List[OfferingData]]:
         logger.info("Scraping deadbydaylight.wiki.gg dynamic data via MediaWiki API...")
         characters = self.scrape_characters_dynamically()
 
@@ -1228,4 +1325,11 @@ class WikiGGDriverEN:
             logger.warning(f"Failed to scrape wiki.gg addons: {e}")
             addons = []
 
-        return characters, perks, items, addons
+        try:
+            logger.info("Fetching Offerings...")
+            offerings = self.scrape_offerings()
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
+            offerings = []
+
+        return characters, perks, items, addons, offerings

@@ -1,21 +1,26 @@
 # backend/tests/unit/test_generator_service.py
+import gc
 import os
+import tempfile
 import unittest
+from pathlib import Path
 from app.services.db_service import DatabaseService
 from app.services.generator_service import GeneratorService
 
 class TestGeneratorService(unittest.TestCase):
     def setUp(self):
-        self.db_path = "test_generator.db"
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+        self._temp_dir = tempfile.TemporaryDirectory()
+        self.db_path = str(Path(self._temp_dir.name) / "test_generator.db")
         self.db_service = DatabaseService(db_path=self.db_path)
         self.db_service.init_db()
         self.service = GeneratorService(db_service=self.db_service)
 
     def tearDown(self):
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+        gc.collect()
+        try:
+            self._temp_dir.cleanup()
+        except Exception:
+            pass
 
     def test_add_drawn_perks_and_reset(self):
         drawn_before = self.service.get_drawn_perks("Survivor")

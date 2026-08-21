@@ -7,11 +7,14 @@ import {
   CharacterViewBaseProps,
   AddonItem,
   EquipmentItem,
+  OfferingItem,
+  formatLocalizedReleaseDate,
 } from './types';
 import { CharacterBreadcrumbs } from './components/CharacterBreadcrumbs';
 import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection';
+import { OfferingsSection } from './components/OfferingsSection';
 import { LoreModal } from './modals/LoreModal';
 import { Model3DModal } from './modals/Model3DModal';
 import { EquipmentDetailModal } from './modals/EquipmentDetailModal';
@@ -29,15 +32,18 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
   const rawDict = (dict || {}) as Record<string, Record<string, string>>;
   const t: Record<string, string> = rawDict.characterDetail || rawDict.characters || {};
 
-  const { character, perks = [], addons = [], items = [] } = detailData;
+  const { character, perks = [], addons = [], items = [], offerings = [] } = detailData;
 
   const [isLoreModalOpen, setIsLoreModalOpen] = useState<boolean>(false);
   const [isModelModalOpen, setIsModelModalOpen] = useState<boolean>(false);
-  const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | null>(null);
+  const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | OfferingItem | null>(null);
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
   const chapterName = character.chapter_name || t.baseGame || 'Base Game';
-  const releaseDate = character.release_date || String(character.release_year || '2016');
+  const releaseDate = formatLocalizedReleaseDate(
+    character.release_date || String(character.release_year || '2016'),
+    currentLocale
+  );
   const rawLoreText = character.lore || t.noLoreFound || "No lore records discovered in the Entity's Archives yet.";
 
   return (
@@ -131,6 +137,15 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         addons={addons}
         backendBase={backendBase}
         onSelectEquipment={(item) => setSelectedEquipment(item)}
+        t={t}
+      />
+
+      {/* 4. Dedicated Survivor Offerings Section */}
+      <OfferingsSection
+        offerings={offerings}
+        role="Survivor"
+        backendBase={backendBase}
+        onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
         t={t}
       />
 

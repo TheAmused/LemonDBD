@@ -1,7 +1,9 @@
 # backend/tests/unit/test_phase1_services.py
+import gc
 import os
 import tempfile
 import unittest
+from pathlib import Path
 from app import create_app
 from app.services.db_service import DatabaseService
 from app.services.others.draft_service import DraftService
@@ -10,7 +12,8 @@ from app.services.others.quest_service import QuestService
 
 class TestPhase1Services(unittest.TestCase):
     def setUp(self):
-        self.db_fd, self.db_path = tempfile.mkstemp()
+        self._temp_dir = tempfile.TemporaryDirectory()
+        self.db_path = str(Path(self._temp_dir.name) / "test_phase1.db")
         self.db_service = DatabaseService(db_path=self.db_path)
         self.db_service.init_db()
 
@@ -21,9 +24,11 @@ class TestPhase1Services(unittest.TestCase):
         self.client = self.app.test_client()
 
     def tearDown(self):
-        os.close(self.db_fd)
-        if os.path.exists(self.db_path):
-            os.unlink(self.db_path)
+        gc.collect()
+        try:
+            self._temp_dir.cleanup()
+        except Exception:
+            pass
 
     # -------------------------------------------------------------
     # 1. Tournament Draft Service & API Tests

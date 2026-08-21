@@ -48,6 +48,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 }) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [tilt, setTilt] = useState<{ x: number; y: number; glossX: number; glossY: number }>({
     x: 0,
     y: 0,
@@ -55,8 +56,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     glossY: 50,
   });
 
-  // Touch Swipe Drag State
-  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>(initialExitOffset || { x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const touchStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
@@ -65,9 +64,15 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   const isSurvivor = character.role === 'Survivor';
 
-  const metadata = character.metadata || character.metadata_json || {};
+  const metadata = character.metadata || (character as any).metadata_json || {};
   const currentLoc = locale || 'en';
   const locMeta = metadata.translations?.[currentLoc] || metadata.i18n?.[currentLoc] || {};
+
+  // Reset flip and zoom state when changing candidate
+  useEffect(() => {
+    setIsFlipped(false);
+    setIsZoomed(false);
+  }, [character.slug, (character as any).id]);
 
   const charTitle =
     locMeta.title ||
@@ -93,7 +98,19 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       ? `${character.name} to wyrazista postać we Mgle, gotowa na wszystko w obliczu próby.`
       : `A formidable candidate in the realm of the Fog.`);
 
-  const charQuote = locMeta.quote || metadata.quote || metadata.lore_quote || `"${character.name}"`;
+  let charQuote = locMeta.quote;
+  if (!charQuote || (currentLoc === 'pl' && (!locMeta.quote || locMeta.quote.startsWith('"Plants')))) {
+    if (currentLoc === 'pl') {
+      charQuote =
+        (character.slug === 'claudette_morel'
+          ? '„Rośliny cię nie oceniają. Po prostu leczą, jeśli traktujesz je z szacunkiem.”'
+          : isSurvivor
+          ? `„W obliczu próby liczy się determinacja i zaufanie.” – ${character.name}`
+          : `„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – ${character.name}`);
+    } else {
+      charQuote = metadata.quote || metadata.lore_quote || `"${character.name}"`;
+    }
+  }
 
   const greenFlags: string[] =
     locMeta.green_flags ||
@@ -118,16 +135,14 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const dealbreaker: string =
     locMeta.dealbreaker ||
     metadata.dealbreaker ||
+    metadata.dealbreaker ||
     (currentLoc === 'pl' ? 'Zdrada i brak zaufania' : 'Betrayal of trust');
 
   const charMeme: string = locMeta.meme || metadata.meme || '';
 
-  const rawMedia = (character.media_url || '').replace('/static/icons/', '/static/avatars/');
   const avatarSrc =
-    rawMedia.startsWith('http')
-      ? rawMedia
-      : rawMedia.startsWith('/static')
-      ? `${backendBase}${rawMedia}`
+    character.media_url?.startsWith('http') || character.media_url?.startsWith('/static')
+      ? `${character.media_url.startsWith('http') ? '' : backendBase}${character.media_url}`
       : resolveAvatarUrl(
           backendBase,
           {
@@ -310,6 +325,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             style={{
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
+              pointerEvents: isFlipped ? 'none' : 'auto',
+              visibility: isFlipped ? 'hidden' : 'visible',
             }}
             className={`absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 transition-all duration-300 shadow-2xl flex flex-col justify-between ${
               isSwipingRight
@@ -421,6 +438,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
+              pointerEvents: isFlipped ? 'auto' : 'none',
+              visibility: isFlipped ? 'visible' : 'hidden',
             }}
             className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-[#ff0055]/50 bg-[#09090b]/95 shadow-[0_0_55px_rgba(255,0,85,0.45)] backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between overflow-y-auto custom-scrollbar font-mono text-zinc-100"
           >
@@ -601,6 +620,13 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 src={avatarSrc}
                 alt={character.name}
                 className="max-h-[80vh] w-auto object-contain rounded-3xl"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (!target.dataset.fallback) {
+                    target.dataset.fallback = '1';
+                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
+                  }
+                }}
               />
               <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-[#09090b] via-[#09090b]/80 to-transparent text-center font-mono">
                 <h3 className="text-lg font-black text-zinc-100">{character.name}</h3>

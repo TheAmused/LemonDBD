@@ -31,7 +31,7 @@ services:
       - "5000"
     volumes:
       - backend_data:/app/data
-      - backend_static:/app/app/static
+      - ./backend/app/static:/app/app/static
     environment:
       - FLASK_ENV=${FLASK_ENV:-production}
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}

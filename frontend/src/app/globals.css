@@ -260,6 +260,71 @@ strong {
   animation: gnNameIn 260ms ease-out both;
 }
 
+/* ========================================================================= */
+/* SMASH OR PASS: SILKY ANIMATIONS & CARD QUEUE TRANSITIONS                  */
+/* ========================================================================= */
+@keyframes lorePodEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes watermarkEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.9);
+    filter: blur(8px);
+  }
+  50% {
+    opacity: 0.15;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 0.05;
+    transform: translateY(-50%) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cardQueuePromote {
+  0% {
+    transform: scale(0.93) translateY(18px);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes neonCockpitPulse {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(255, 0, 85, 0.08), 0 20px 50px rgba(0, 0, 0, 0.85);
+    border-color: rgba(255, 0, 85, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 0, 85, 0.18), 0 20px 50px rgba(0, 0, 0, 0.85);
+    border-color: rgba(255, 0, 85, 0.45);
+  }
+}
+
+.anim-lore-enter {
+  animation: lorePodEnter 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.anim-watermark-enter {
+  animation: watermarkEnter 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.cockpit-neon-pulse {
+  animation: neonCockpitPulse 4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .ps-page-enter,
@@ -269,7 +334,10 @@ strong {
   .gn-spin-frame,
   .gn-land-frame,
   .gn-land-glow,
-  .gn-name-in {
+  .gn-name-in,
+  .anim-lore-enter,
+  .anim-watermark-enter,
+  .cockpit-neon-pulse {
     animation: none;
   }
 }

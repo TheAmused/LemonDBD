@@ -360,6 +360,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   if (!target.dataset.fallback) {
                     target.dataset.fallback = '1';
                     target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
+                  } else if (target.dataset.fallback === '1') {
+                    target.dataset.fallback = '2';
+                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
                   }
                 }}
               />
@@ -630,6 +633,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   if (!target.dataset.fallback) {
                     target.dataset.fallback = '1';
                     target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
+                  } else if (target.dataset.fallback === '1') {
+                    target.dataset.fallback = '2';
+                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
                   }
                 }}
               />

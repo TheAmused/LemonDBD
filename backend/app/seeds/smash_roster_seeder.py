@@ -135,6 +135,16 @@ def seed_smash_rosters():
     Comprehensive idempotent seeder that dynamically reads all rosters from
     backend/app/seeds/rosters/*.json and upserts rosters, characters, stats, and translations.
     """
+    from flask import has_app_context
+    if not has_app_context():
+        from app import create_app
+        app = create_app()
+        with app.app_context():
+            return _seed_smash_rosters_impl()
+    return _seed_smash_rosters_impl()
+
+
+def _seed_smash_rosters_impl():
     try:
         rosters_list, entities_by_roster, translations_map = load_rosters_from_json_files()
 

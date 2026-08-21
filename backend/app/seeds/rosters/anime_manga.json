@@ -3,7 +3,7 @@
         "slug": "anime_manga",
         "name_i18n_key": "smashOrPass.rosters.anime_manga.name",
         "description_i18n_key": "smashOrPass.rosters.anime_manga.desc",
-        "cover_image_url": "/static/avatars/killers/the_spirit.png",
+        "cover_image_url": "/static/avatars/rosters/anime_manga.png",
         "theme_color": "#ec4899",
         "category": "Anime",
         "is_nsfw": false,

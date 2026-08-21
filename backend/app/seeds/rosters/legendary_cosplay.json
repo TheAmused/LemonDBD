@@ -3,7 +3,7 @@
         "slug": "legendary_cosplay",
         "name_i18n_key": "smashOrPass.rosters.legendary_cosplay.name",
         "description_i18n_key": "smashOrPass.rosters.legendary_cosplay.desc",
-        "cover_image_url": "/static/avatars/killers/baba_yaga.png",
+        "cover_image_url": "/static/avatars/rosters/legendary_cosplay.png",
         "theme_color": "#ffd166",
         "category": "Collabs",
         "is_nsfw": false,

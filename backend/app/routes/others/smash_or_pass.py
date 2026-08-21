@@ -1,7 +1,15 @@
 # backend/app/routes/others/smash_or_pass.py
 import logging
+import threading
+import time
+from collections import defaultdict
+from typing import Dict, List, Optional
 from flask import Blueprint, jsonify, request
+from sqlalchemy import func, or_, select
+
+from app.core.extensions import db
 from app.core.security import get_current_user
+from app.models.smash_or_pass import Entity, Roster, Vote
 from app.services.others.smash_or_pass_service import SmashOrPassService
 
 logger = logging.getLogger(__name__)
@@ -10,12 +18,331 @@ smash_or_pass_bp = Blueprint("smash_or_pass", __name__, url_prefix="/api/v1/smas
 smash_service = SmashOrPassService()
 
 
+class SlidingWindowRateLimiter:
+    """In-memory sliding window rate limiter per client identifier."""
+
+    def __init__(self, max_requests: int = 60, window_seconds: int = 60):
+        self.max_requests = max_requests
+        self.window_seconds = window_seconds
+        self._requests: Dict[str, List[float]] = defaultdict(list)
+        self._lock = threading.Lock()
+
+    def is_allowed(self, client_key: str) -> bool:
+        now = time.time()
+        cutoff = now - self.window_seconds
+        with self._lock:
+            timestamps = self._requests[client_key]
+            filtered = [t for t in timestamps if t > cutoff]
+            if len(filtered) >= self.max_requests:
+                self._requests[client_key] = filtered
+                return False
+            filtered.append(now)
+            self._requests[client_key] = filtered
+            return True
+
+    def reset(self) -> None:
+        with self._lock:
+            self._requests.clear()
+
+
+vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
+
+
+# ============================================================================
+# Core Multi-Roster API Endpoints
+# ============================================================================
+
+
+@smash_or_pass_bp.route("/rosters", methods=["GET"])
+def get_rosters():
+    """Retrieve all active rosters with real-time stats."""
+    try:
+        rosters = smash_service.get_rosters(active_only=True)
+        return jsonify({"data": rosters, "count": len(rosters)}), 200
+    except Exception as e:
+        logger.error(f"Error fetching smash-or-pass rosters: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/rosters/<slug>/feed", methods=["GET"])
+def get_roster_feed(slug: str):
+    """Retrieve unvoted entities feed for a given roster and session/user."""
+    session_id = (
+        request.args.get("session_id")
+        or request.headers.get("X-Session-ID")
+        or request.cookies.get("session_id")
+    )
+    user_id = request.args.get("user_id", type=int)
+    role = request.args.get("role")
+    gender = request.args.get("gender")
+    limit = request.args.get("limit", default=50, type=int)
+
+    current_user = get_current_user()
+    if current_user and not user_id:
+        user_id = current_user.id
+
+    try:
+        # Check roster existence
+        roster_obj = db.session.scalar(select(Roster).where(Roster.slug == slug))
+        if not roster_obj:
+            return jsonify({"error": f"Roster '{slug}' not found"}), 404
+
+        roster_info = next(
+            (r for r in smash_service.get_rosters(active_only=False) if r["slug"] == slug),
+            roster_obj.to_dict(),
+        )
+
+        # Calculate total_remaining unvoted entities matching filters
+        voted_conditions = []
+        if user_id is not None:
+            voted_conditions.append(Vote.user_id == user_id)
+        if session_id is not None:
+            voted_conditions.append(Vote.session_id == session_id)
+
+        count_stmt = select(func.count(Entity.id)).where(
+            Entity.roster_id == roster_obj.id,
+            Entity.is_active.is_(True),
+        )
+        if voted_conditions:
+            voted_stmt = select(Vote.entity_id).where(or_(*voted_conditions))
+            count_stmt = count_stmt.where(Entity.id.not_in(voted_stmt))
+
+        if role and role != "all":
+            count_stmt = count_stmt.where(Entity.role == role)
+        if gender and gender != "all":
+            count_stmt = count_stmt.where(Entity.gender == gender)
+
+        total_remaining = db.session.scalar(count_stmt) or 0
+
+        entities = smash_service.get_feed(
+            roster_slug=slug,
+            session_id=session_id,
+            user_id=user_id,
+            role=role,
+            gender=gender,
+            limit=limit,
+        )
+
+        return (
+            jsonify(
+                {
+                    "data": {
+                        "roster": roster_info,
+                        "entities": entities,
+                        "total_remaining": total_remaining,
+                    }
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        logger.error(f"Error fetching feed for roster '{slug}': {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/vote", methods=["POST"])
+def cast_vote():
+    """
+    Cast a vote (smash, pass, super_smash) for an entity or character.
+    Applies sliding-window rate limiting per session_id / remote_addr.
+    """
+    payload = request.get_json(silent=True) or {}
+    entity_id = payload.get("entity_id")
+    character_slug = payload.get("character_slug") or payload.get("slug")
+    vote_type = payload.get("vote_type") or payload.get("vote")
+    roster_slug = payload.get("roster_slug") or payload.get("edition") or "canon"
+    edition = payload.get("edition") or payload.get("roster_slug") or "canon"
+    user_id = payload.get("user_id")
+    session_id = (
+        payload.get("session_id")
+        or request.headers.get("X-Session-ID")
+        or request.cookies.get("session_id")
+    )
+
+    # Extract authenticated user if available
+    current_user = get_current_user()
+    if current_user and not user_id:
+        user_id = current_user.id
+
+    # Rate limiting per session_id or remote_addr
+    client_key = session_id or (
+        f"user:{user_id}" if user_id else f"ip:{request.remote_addr or '127.0.0.1'}"
+    )
+    if not vote_rate_limiter.is_allowed(client_key):
+        return (
+            jsonify(
+                {
+                    "error": "Rate limit exceeded. Maximum 60 votes per minute allowed.",
+                    "status": 429,
+                }
+            ),
+            429,
+        )
+
+    if not entity_id and not character_slug:
+        return (
+            jsonify(
+                {"error": "Fields 'entity_id' or 'character_slug' and 'vote_type' are required"}
+            ),
+            400,
+        )
+
+    if not vote_type:
+        return jsonify({"error": "Field 'vote_type' is required"}), 400
+
+    if vote_type not in {"smash", "pass", "super_smash"}:
+        return (
+            jsonify(
+                {
+                    "error": f"Invalid vote_type '{vote_type}'. Must be one of ('smash', 'pass', 'super_smash')"
+                }
+            ),
+            400,
+        )
+
+    try:
+        result = smash_service.cast_vote(
+            entity_id=entity_id,
+            character_slug=character_slug,
+            vote_type=vote_type,
+            session_id=session_id,
+            user_id=user_id,
+            roster_slug=roster_slug,
+            edition=edition,
+        )
+        return jsonify({"data": result, "status": "success"}), 200
+    except ValueError as val_err:
+        return jsonify({"error": str(val_err)}), 400
+    except Exception as e:
+        logger.error(f"Error casting smash-or-pass vote: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/rosters/<slug>/leaderboard", methods=["GET"])
+def get_roster_leaderboard(slug: str):
+    """Retrieve ranked leaderboard for a given roster."""
+    sort_by = request.args.get("sort_by", "smash_rate")
+    role = request.args.get("role")
+    gender = request.args.get("gender")
+    limit = request.args.get("limit", default=100, type=int)
+
+    try:
+        roster_obj = db.session.scalar(select(Roster).where(Roster.slug == slug))
+        if not roster_obj:
+            return jsonify({"error": f"Roster '{slug}' not found"}), 404
+
+        leaderboard = smash_service.get_leaderboard(
+            roster_slug=slug,
+            role=role,
+            gender=gender,
+            sort_by=sort_by,
+            limit=limit,
+        )
+        return (
+            jsonify(
+                {
+                    "data": leaderboard,
+                    "count": len(leaderboard),
+                    "roster": slug,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        logger.error(f"Error fetching leaderboard for roster '{slug}': {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/session/reset", methods=["POST"])
+def reset_session():
+    """Reset and unwind votes cast in a session."""
+    payload = request.get_json(silent=True) or {}
+    session_id = (
+        payload.get("session_id")
+        or request.args.get("session_id")
+        or request.headers.get("X-Session-ID")
+        or request.cookies.get("session_id")
+    )
+    roster_slug = (
+        payload.get("roster_slug")
+        or payload.get("edition")
+        or request.args.get("roster_slug")
+        or request.args.get("edition")
+    )
+
+    if not session_id:
+        return jsonify({"error": "Field 'session_id' is required to reset session votes"}), 400
+
+    try:
+        result = smash_service.reset_session_votes(
+            session_id=session_id, roster_slug=roster_slug
+        )
+        return jsonify({"data": result, "status": "success"}), 200
+    except Exception as e:
+        logger.error(f"Error resetting session votes: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/user-votes/reset", methods=["POST"])
+def reset_user_votes():
+    """Reset and wipe all votes for a specific user and recalculate stats."""
+    payload = request.get_json(silent=True) or {}
+    user_id = payload.get("user_id") or request.args.get("user_id", type=int)
+    roster_slug = (
+        payload.get("roster_slug")
+        or payload.get("edition")
+        or request.args.get("roster_slug")
+        or request.args.get("edition")
+    )
+    edition = (
+        payload.get("edition")
+        or payload.get("roster_slug")
+        or request.args.get("edition")
+        or request.args.get("roster_slug")
+    )
+
+    current_user = get_current_user()
+    if current_user and not user_id:
+        user_id = current_user.id
+
+    if not user_id:
+        return jsonify({"error": "Field 'user_id' is required to reset user votes"}), 400
+
+    try:
+        result = smash_service.reset_user_votes(
+            user_id=user_id,
+            roster_slug=roster_slug,
+            edition=edition,
+        )
+        return jsonify({"data": result, "status": "success"}), 200
+    except Exception as e:
+        logger.error(f"Error resetting user smash-or-pass votes: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/translations", methods=["GET"])
+def get_translations():
+    """Retrieve dynamic translations dictionary for a given locale."""
+    locale = request.args.get("locale", "en")
+    try:
+        translations = smash_service.get_translations(locale=locale)
+        return jsonify({"data": translations, "locale": locale}), 200
+    except Exception as e:
+        logger.error(f"Error fetching translations for locale '{locale}': {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+# ============================================================================
+# Legacy Endpoints (Backward Compatibility)
+# ============================================================================
+
+
 @smash_or_pass_bp.route("/editions", methods=["GET"])
 def get_editions():
-    """Retrieve available smash or pass editions."""
+    """Retrieve available smash or pass editions (legacy)."""
     try:
         editions = smash_service.get_editions()
-        return jsonify({"data": editions}), 200
+        return jsonify({"data": editions, "count": len(editions)}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass editions: {e}")
         return jsonify({"error": str(e)}), 500
@@ -23,7 +350,7 @@ def get_editions():
 
 @smash_or_pass_bp.route("/characters", methods=["GET"])
 def get_characters():
-    """Retrieve character list with stats filtered by edition, role, gender, or search query."""
+    """Retrieve character list with stats filtered by edition, role, gender, or search query (legacy)."""
     edition = request.args.get("edition", "canon")
     role = request.args.get("role")
     gender = request.args.get("gender")
@@ -39,46 +366,9 @@ def get_characters():
         return jsonify({"error": str(e)}), 500
 
 
-@smash_or_pass_bp.route("/vote", methods=["POST"])
-def cast_vote():
-    """
-    Cast a vote (smash, pass) for a given character.
-    Only logged-in users with user_id count towards community leaderboard totals.
-    """
-    payload = request.get_json(silent=True) or {}
-    character_slug = payload.get("character_slug") or payload.get("slug")
-    vote_type = payload.get("vote_type") or payload.get("vote")
-    edition = payload.get("edition", "canon")
-    user_id = payload.get("user_id")
-    session_id = payload.get("session_id") or request.headers.get("X-Session-ID")
-
-    # Extract authenticated user if available
-    current_user = get_current_user()
-    if current_user and not user_id:
-        user_id = current_user.id
-
-    if not character_slug or not vote_type:
-        return jsonify({"error": "Fields 'character_slug' and 'vote_type' are required"}), 400
-
-    try:
-        result = smash_service.cast_vote(
-            character_slug=character_slug,
-            vote_type=vote_type,
-            edition=edition,
-            user_id=user_id,
-            session_id=session_id,
-        )
-        return jsonify({"data": result, "status": "success"}), 200
-    except ValueError as val_err:
-        return jsonify({"error": str(val_err)}), 400
-    except Exception as e:
-        logger.error(f"Error casting smash-or-pass vote: {e}")
-        return jsonify({"error": str(e)}), 500
-
-
 @smash_or_pass_bp.route("/user-votes", methods=["GET"])
 def get_user_votes():
-    """Retrieve all votes cast by the current user for no-repeat deck filtering."""
+    """Retrieve all votes cast by the current user for no-repeat deck filtering (legacy)."""
     user_id = request.args.get("user_id", type=int)
     edition = request.args.get("edition", "canon")
 
@@ -94,26 +384,4 @@ def get_user_votes():
         return jsonify({"data": votes, "count": len(votes)}), 200
     except Exception as e:
         logger.error(f"Error fetching user smash-or-pass votes: {e}")
-        return jsonify({"error": str(e)}), 500
-
-
-@smash_or_pass_bp.route("/user-votes/reset", methods=["POST"])
-def reset_user_votes():
-    """Reset and wipe all votes for a specific user and recalculate leaderboard."""
-    payload = request.get_json(silent=True) or {}
-    user_id = payload.get("user_id") or request.args.get("user_id", type=int)
-    edition = payload.get("edition") or request.args.get("edition")
-
-    current_user = get_current_user()
-    if current_user and not user_id:
-        user_id = current_user.id
-
-    if not user_id:
-        return jsonify({"error": "Field 'user_id' is required to reset user votes"}), 400
-
-    try:
-        result = smash_service.reset_user_votes(user_id=user_id, edition=edition)
-        return jsonify({"data": result, "status": "success"}), 200
-    except Exception as e:
-        logger.error(f"Error resetting user smash-or-pass votes: {e}")
         return jsonify({"error": str(e)}), 500

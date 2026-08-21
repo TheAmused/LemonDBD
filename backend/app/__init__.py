@@ -116,6 +116,18 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app.register_blueprint(smash_or_pass_bp)
     flask_app.register_blueprint(bug_reports_bp)
 
+    @flask_app.route("/api/v1/i18n/<locale>", methods=["GET"])
+    def get_i18n_translations(locale: str):
+        from app.services.others.smash_or_pass_service import SmashOrPassService
+
+        try:
+            service = SmashOrPassService()
+            translations = service.get_translations(locale=locale)
+            return jsonify({"data": translations, "locale": locale}), 200
+        except Exception as e:
+            logging.error(f"Error fetching i18n translations for locale '{locale}': {e}")
+            return jsonify({"error": str(e)}), 500
+
     with flask_app.app_context():
         try:
             perk_service.reload_data()

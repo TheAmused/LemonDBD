@@ -30,7 +30,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
   const { run, stats, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
-  const { killers: ownedKillers, loading: loadingKillers } = useOwnedKillers();
+  const { loading: loadingKillers } = useOwnedKillers();
   const { pool: perkPool } = useKillerPerkPool();
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
@@ -180,7 +180,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
 
             {run && (
               <HistoryNextRowPreview
-                killers={ownedKillers}
+                killers={run.owned_killers}
                 rowSize={run.row_size}
                 currentRowIndex={run.current_row_index}
               />

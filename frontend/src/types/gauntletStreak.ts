@@ -40,6 +40,7 @@ export interface GauntletRun {
   last_checkpoint_streak: number;
   completed_characters: string[];
   checkpoint_characters: string[];
+  owned_characters: string[];
   tier_info: TierInfo;
   created_at?: string;
   updated_at?: string;

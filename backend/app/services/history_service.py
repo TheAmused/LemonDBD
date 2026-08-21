@@ -208,6 +208,8 @@ class HistoryService:
             run.checkpoint_total_killers_beaten = 0
             run.checkpoint_completed_killers_json = "[]"
             run.checkpoint_unlocked_perk_names_json = json.dumps(general)
+
+        if run.current_row_index == 0 and run.total_killers_beaten == 0:
             self._freeze_pool(run)
 
         streak_after = run.total_killers_beaten

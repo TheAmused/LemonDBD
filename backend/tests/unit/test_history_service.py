@@ -286,6 +286,15 @@ class TestFrozenKillerRoster(HistoryTestCase):
         )
         self.assertIn("Some New Killer", after_loss["owned_killers"])
 
+    def test_medium_apply_inactivity_loss_before_any_checkpoint_refreezes_the_roster(self):
+        # Same as test_medium_loss_before_any_checkpoint_refreezes_the_roster above,
+        # but via the inactivity path instead of a real submit_result loss.
+        run = self.service.get_or_create_run(self.user_id, "medium")
+        seed_killer("Some New Killer", release_number=99)
+        self.service.apply_inactivity_loss(run["id"])
+        reloaded = self.service.get_or_create_run(self.user_id, "medium")
+        self.assertIn("Some New Killer", reloaded["owned_killers"])
+
 
 class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
     def setUp(self):
@@ -312,6 +321,22 @@ class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
         after_loss = self.service.submit_result(self.user_id, run["id"], "loss", "Killer 5")
         self.assertEqual(after_loss["owned_killers"], snapshot_before)
         self.assertNotIn("Some New Killer", after_loss["owned_killers"])
+
+    def test_medium_apply_inactivity_loss_after_checkpoint_does_not_refreeze(self):
+        # Same as test_medium_checkpoint_loss_does_not_refreeze above, but via
+        # the inactivity path instead of a real submit_result loss.
+        run = self.service.get_or_create_run(self.user_id, "medium")
+        for name in ["Killer 0", "Killer 1", "Killer 2", "Killer 3", "Killer 4"]:
+            cleared = self.service.submit_result(self.user_id, run["id"], "win", name)
+        self.assertTrue(cleared["row_cleared"])
+        snapshot_before = cleared["owned_killers"]
+        self.assertNotIn("Some New Killer", snapshot_before)
+
+        seed_killer("Some New Killer", release_number=99)
+        self.service.apply_inactivity_loss(run["id"])
+        reloaded = self.service.get_or_create_run(self.user_id, "medium")
+        self.assertEqual(reloaded["owned_killers"], snapshot_before)
+        self.assertNotIn("Some New Killer", reloaded["owned_killers"])
 
 
 class TestOwnershipShrinksMidRun(HistoryTestCase):

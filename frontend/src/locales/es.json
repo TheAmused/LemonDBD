@@ -377,6 +377,29 @@
       "resetAction": "Reiniciar y Votar de Nuevo",
       "viewLeaderboard": "Ver Clasificación",
       "switchRoster": "Elegir Otro Elenco"
+    },
+    "loreLabels": {
+      "trialClassification": "Clasificación de Prueba",
+      "datingArchetype": "Arquetipo de Citas",
+      "greenFlag": "Bandera Verde",
+      "redFlag": "Advertencia de Prueba",
+      "identityProfile": "Perfil de Identidad",
+      "signatureQuote": "Cita Distintiva",
+      "trialWarning": "Advertencia de Prueba",
+      "female": "Femenino",
+      "male": "Masculino",
+      "monster": "Monstruo / Primigenio"
+    },
+    "hud": {
+      "left": "restantes",
+      "smash": "Smash",
+      "pass": "Pass",
+      "smashRate": "Tasa",
+      "bgm": "BGM",
+      "archetype": "Arquetipo",
+      "hallOfFame": "Salón de la Fama",
+      "howToPlay": "Cómo Jugar",
+      "shuffle": "Barajar"
     }
   }
 }

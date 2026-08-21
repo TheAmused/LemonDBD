@@ -37,6 +37,12 @@ def seed_canonical_characters_initial(wikigg_driver: WikiGGScraperDriver) -> Non
         logger.info("Initializing character table from wiki.gg...")
         chars = wikigg_driver.scrape_characters_dynamically()
         sync_all_to_database(characters=chars, perks=[], items=[], addons=[], maps=[])
+
+        try:
+            from app.seeds.smash_roster_seeder import seed_smash_rosters
+            seed_smash_rosters()
+        except Exception as seed_err:
+            logger.warning(f"Could not auto-seed Smash or Pass: {seed_err}")
     except Exception as e:
         logger.warning(f"Could not auto-seed characters on startup: {e}")
 
@@ -146,6 +152,23 @@ def execute_sync_pipeline(
             trans_service.sync_all_locales_to_db(locales=["en", "pl", "de", "es", "ja"])
         except Exception as trans_pipeline_err:
             logger.warning(f"Could not auto-sync translations in scraper pipeline: {trans_pipeline_err}")
+
+        # Auto-sync Smash or Pass multi-rosters, rich entity profiles, and stats
+        try:
+            logger.info("Auto-seeding Smash or Pass rosters, rich entities, and stats...")
+            from app.seeds.smash_roster_seeder import seed_smash_rosters
+            seed_smash_rosters()
+        except Exception as smash_seed_err:
+            logger.warning(f"Could not auto-seed Smash or Pass in scraper pipeline: {smash_seed_err}")
+
+        # Auto-sync custom edition assets (Hooked on You, Legendary, etc.)
+        try:
+            from app.scrapers.roster_images import RosterImageScraperDriver
+            roster_driver = RosterImageScraperDriver(timeout=request_timeout)
+            for ed in ["hooked_on_you", "legendary_cosplay"]:
+                roster_driver.sync_edition_assets(ed, static_dir)
+        except Exception as ed_asset_err:
+            logger.warning(f"Could not sync custom edition assets: {ed_asset_err}")
 
         now_iso = datetime.now(timezone.utc).isoformat()
         ScraperStateManager.save_config(

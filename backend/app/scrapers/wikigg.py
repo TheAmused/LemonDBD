@@ -990,6 +990,41 @@ class WikiGGScraperDriver:
                         sanitized = sanitize_filename(item_name)
                         local_path = f"icons/items/{sanitized}.png"
 
+                        name_low = item_name.lower().strip()
+                        special_items = [
+                            "first aid spray", "vaccine", "emp", "remote flame turret", "pocket mirror",
+                            "lament configuration", "hand of vecna", "eye of vecna", "flash grenade",
+                            "candelabra", "antidote", "keycard", "vhs tape", "void crystal",
+                            "glowing fungus", "blood can", "fragile mirror", "searcher's pendant", "fog crystal"
+                        ]
+                        if name_low in special_items or "spray" in name_low or "vaccine" in name_low or "turret" in name_low:
+                            item_category = "Special"
+                            item_role = "Survivor"
+                        elif "med-kit" in name_low or "aid kit" in name_low or "lunchbox" in name_low:
+                            item_category = "Med-Kit"
+                            item_role = "Survivor"
+                        elif "toolbox" in name_low or "tools" in name_low:
+                            item_category = "Toolbox"
+                            item_role = "Survivor"
+                        elif "flashlight" in name_low or "wisp" in name_low:
+                            item_category = "Flashlight"
+                            item_role = "Survivor"
+                        elif "key" in name_low and "keycard" not in name_low:
+                            item_category = "Key"
+                            item_role = "Survivor"
+                        elif "map" in name_low:
+                            item_category = "Map"
+                            item_role = "Survivor"
+                        elif "firecracker" in name_low or "party starter" in name_low:
+                            item_category = "Firecracker"
+                            item_role = "Survivor"
+                        elif "fog vial" in name_low:
+                            item_category = "Fog Vial"
+                            item_role = "Survivor"
+                        else:
+                            item_category = current_category
+                            item_role = current_category
+
                         items.append(
                             ItemData(
                                 name=item_name,
@@ -1151,10 +1186,13 @@ class WikiGGScraperDriver:
 
         addons: List[AddonData] = []
         seen_unique_names = set()
-
         for a in raw_addons:
             addon_name = a["name"]
             target = a["target"]
+
+            if "serum" in addon_name.lower():
+                if a["category"] == "Survivor" or "survivor" in str(target).lower():
+                    target = "Special"
 
             display_name = f"{addon_name} ({target})" if len(name_target_counts[normalize_name_key(addon_name)]) > 1 else addon_name
 
@@ -1179,6 +1217,7 @@ class WikiGGScraperDriver:
             )
 
         return addons
+
 
     def fetch_lang_page_html(self, lang: str, page_title: str) -> str:
         from app.scrapers.drivers import LANGUAGE_DRIVERS
@@ -1374,8 +1413,25 @@ class WikiGGScraperDriver:
                     category = "Luck"
                 elif "chest" in row_text or "fog" in row_text or "oak" in row_text or "blueprint" in row_text:
                     category = "Map Modifications"
-                elif "chance" in row_text or "realm" in row_text:
-                    category = "Realm"
+                name_lower = off_name.lower()
+                if (
+                    rarity == "Event"
+                    or "dousing" in name_lower
+                    or "dowsing" in name_lower
+                    or "cobbler" in name_lower
+                    or "terrormisu" in name_lower
+                    or "flan" in name_lower
+                    or "torte" in name_lower
+                    or "scream pie" in name_lower
+                    or "gateau" in name_lower
+                    or "sacrificial cake" in name_lower
+                    or "cursed seed" in name_lower
+                    or "pustula" in name_lower
+                    or "bbq" in name_lower
+                    or "red envelope" in name_lower
+                    or "bloodshot eye" in name_lower
+                ):
+                    category = "Special"
 
                 offerings.append(
                     OfferingData(
@@ -1435,10 +1491,5 @@ class WikiGGScraperDriver:
             logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
             offerings = []
 
-        if languages:
-            try:
-                self.scrape_translations(characters, perks, items, addons, languages=languages)
-            except Exception as e:
-                logger.warning(f"Error during multi-language translation enrichment: {e}")
-
+        # Multi-language translations are strictly managed by TranslationService from translations.json
         return characters, perks, items, addons, offerings

@@ -1,6 +1,17 @@
 // frontend/src/components/character-detail/components/OfferingsSection.tsx
 import React, { useState, useMemo } from 'react';
-import { Sparkles, Search, Gift, ShieldAlert, Award } from 'lucide-react';
+import {
+  Search,
+  Gift,
+  Skull,
+  Coins,
+  Map as MapIcon,
+  EyeOff,
+  Shield,
+  Sparkles,
+  Layers,
+  Box,
+} from 'lucide-react';
 import {
   OfferingItem,
   getAssetUrl,
@@ -24,38 +35,44 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   onSelectOffering,
   t,
 }) => {
+  const isKiller = role === 'Killer';
+
+  const categories = useMemo(() => {
+    if (isKiller) {
+      return [
+        { key: 'special', label: t.categorySpecial || 'Special & Events', icon: Sparkles, desc: 'Anniversary & celebration offerings' },
+        { key: 'mori', label: t.categoryMori || 'Memento Mori', icon: Skull, desc: 'Execution rites' },
+        { key: 'bloodpoint', label: t.categoryBloodpoints || 'Bloodpoints', icon: Coins, desc: 'Score multipliers' },
+        { key: 'map', label: t.categoryMap || 'Realm Offerings', icon: MapIcon, desc: 'Location selections' },
+        { key: 'shroud', label: t.categoryShroud || 'Shrouds', icon: EyeOff, desc: 'Spawn positions' },
+        { key: 'ward', label: t.categoryWard || 'Wards', icon: Shield, desc: 'Protection against loss' },
+      ];
+    }
+    return [
+      { key: 'special', label: t.categorySpecial || 'Special & Events', icon: Sparkles, desc: 'Anniversary & celebration offerings' },
+      { key: 'bloodpoint', label: t.categoryBloodpoints || 'Bloodpoints', icon: Coins, desc: 'Score multipliers' },
+      { key: 'luck', label: t.categoryLuck || 'Luck Charms', icon: Sparkles, desc: 'Trial fortune' },
+      { key: 'map', label: t.categoryMap || 'Realm Offerings', icon: MapIcon, desc: 'Location selections' },
+      { key: 'shroud', label: t.categoryShroud || 'Shrouds', icon: EyeOff, desc: 'Spawn positions' },
+      { key: 'blueprint', label: t.categoryBlueprint || 'Blueprints', icon: Layers, desc: 'Hatch & basement placement' },
+      { key: 'chest', label: t.categoryChest || 'Chests & Fog', icon: Box, desc: 'Chest spawns & fog density' },
+      { key: 'ward', label: t.categoryWard || 'Wards', icon: Shield, desc: 'Item & offering preservation' },
+    ];
+  }, [isKiller, t]);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    isKiller ? 'mori' : 'bloodpoint'
+  );
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [rarityFilter, setRarityFilter] = useState<string>('all');
+  const [sortOrder, setSortOrder] = useState<'rarity_desc' | 'rarity_asc' | 'name_asc'>('rarity_asc');
   const [activeHover, setActiveHover] = useState<{
     item: OfferingItem;
     rect: DOMRect;
   } | null>(null);
 
-  const isKiller = role === 'Killer';
-
-  // Category definitions
-  const categories = useMemo(() => {
-    if (isKiller) {
-      return [
-        { key: 'all', label: t.allOfferings || 'All Offerings' },
-        { key: 'mori', label: t.categoryMori || 'Memento Moris' },
-        { key: 'bloodpoint', label: t.categoryBloodpoints || 'Bloodpoints' },
-        { key: 'map', label: t.categoryMap || 'Realm Realms' },
-        { key: 'shroud', label: t.categoryShroud || 'Shrouds' },
-        { key: 'ward', label: t.categoryWard || 'Wards' },
-      ];
-    }
-    return [
-      { key: 'all', label: t.allOfferings || 'All Offerings' },
-      { key: 'bloodpoint', label: t.categoryBloodpoints || 'Bloodpoints' },
-      { key: 'luck', label: t.categoryLuck || 'Luck Charms' },
-      { key: 'map', label: t.categoryMap || 'Realm Realms' },
-      { key: 'shroud', label: t.categoryShroud || 'Shrouds' },
-      { key: 'blueprint', label: t.categoryBlueprint || 'Blueprints' },
-      { key: 'chest', label: t.categoryChest || 'Chests & Fog' },
-    ];
-  }, [isKiller, t]);
+  const activeCategoryConfig =
+    categories.find((c) => c.key === selectedCategory) || categories[0];
 
   const sortedAndFilteredOfferings = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
@@ -65,105 +82,138 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         const matchesSearch =
           !query ||
           off.name.toLowerCase().includes(query) ||
+          Boolean(off.raw_name && off.raw_name.toLowerCase().includes(query)) ||
           Boolean(off.description && off.description.toLowerCase().includes(query));
 
         const offRarity = (off.rarity || '').toLowerCase();
         const matchesRarity =
           rarityFilter === 'all' || offRarity.includes(rarityFilter.toLowerCase());
 
-        let matchesCat = true;
+        let matchesCat = false;
         const nameLower = off.name.toLowerCase();
+        const rawLower = (off.raw_name || '').toLowerCase();
         const descLower = (off.description || '').toLowerCase();
         const catLower = (off.category || '').toLowerCase();
+        const text = `${nameLower} ${rawLower} ${descLower} ${catLower}`;
 
-        if (selectedCategory === 'mori') {
-          matchesCat = nameLower.includes('mori') || catLower.includes('mori');
+        const isEventOffering =
+          offRarity === 'event' ||
+          catLower === 'special' ||
+          text.includes('dousing') ||
+          text.includes('dowsing') ||
+          text.includes('flan') ||
+          text.includes('cobbler') ||
+          text.includes('terrormisu') ||
+          text.includes('torte') ||
+          text.includes('scream pie') ||
+          text.includes('gateau') ||
+          text.includes('sacrificial cake') ||
+          text.includes('pustula') ||
+          text.includes('cursed seed') ||
+          text.includes('bbq invitation') ||
+          text.includes('red envelope') ||
+          text.includes('bloodshot eye');
+
+        if (selectedCategory === 'special') {
+          matchesCat = isEventOffering;
+        } else if (selectedCategory === 'mori') {
+          matchesCat = text.includes('mori') || text.includes('cypress') || text.includes('ivory') || text.includes('ebony');
         } else if (selectedCategory === 'bloodpoint') {
           matchesCat =
-            nameLower.includes('streamers') ||
-            nameLower.includes('cake') ||
-            nameLower.includes('pudding') ||
-            nameLower.includes('envelope') ||
-            nameLower.includes('wreath') ||
-            nameLower.includes('flan') ||
-            nameLower.includes('cobbler') ||
-            descLower.includes('bloodpoint');
+            !isEventOffering &&
+            (text.includes('streamers') ||
+              text.includes('cake') ||
+              text.includes('pudding') ||
+              text.includes('envelope') ||
+              text.includes('wreath') ||
+              text.includes('sachet') ||
+              text.includes('blossom') ||
+              text.includes('laurel') ||
+              text.includes('amaranth') ||
+              text.includes('hollow shell') ||
+              text.includes('bloodpoint') ||
+              text.includes('punkty krwi') ||
+              text.includes('blutpunkte'));
         } else if (selectedCategory === 'map') {
           matchesCat =
-            catLower.includes('realm') ||
-            catLower.includes('map') ||
-            nameLower.includes('plate') ||
-            nameLower.includes('license') ||
-            nameLower.includes('badge') ||
-            nameLower.includes('whistle') ||
-            nameLower.includes('glass') ||
-            nameLower.includes('eye') ||
-            nameLower.includes('stew') ||
-            nameLower.includes('drawing') ||
-            nameLower.includes('crow') ||
-            descLower.includes('increases the chance of being sent to');
+            text.includes('realm') ||
+            text.includes('chance of being sent to') ||
+            text.includes('plate') ||
+            text.includes('license') ||
+            text.includes('badge') ||
+            text.includes('whistle') ||
+            text.includes('glass') ||
+            text.includes('eye') ||
+            text.includes('stew') ||
+            text.includes('drawing') ||
+            text.includes('crow') ||
+            text.includes('charred') ||
+            text.includes('beef') ||
+            text.includes('heart') ||
+            text.includes('branch') ||
+            text.includes('photograph') ||
+            text.includes('gramophone') ||
+            text.includes('królestwo');
         } else if (selectedCategory === 'shroud') {
-          matchesCat = nameLower.includes('shroud');
+          matchesCat = text.includes('shroud') || text.includes('całun');
         } else if (selectedCategory === 'ward') {
-          matchesCat = nameLower.includes('ward');
+          matchesCat = text.includes('ward') || text.includes('protection') || text.includes('ochron');
         } else if (selectedCategory === 'luck') {
-          matchesCat = nameLower.includes('chalk') || nameLower.includes('jar') || nameLower.includes('lip');
+          matchesCat = text.includes('chalk') || text.includes('jar') || text.includes('lip') || text.includes('luck') || text.includes('szczęśc');
         } else if (selectedCategory === 'blueprint') {
-          matchesCat = nameLower.includes('blueprint');
+          matchesCat = text.includes('blueprint') || text.includes('hatch') || text.includes('basement') || text.includes('plan');
         } else if (selectedCategory === 'chest') {
-          matchesCat = nameLower.includes('coin') || nameLower.includes('reagent') || nameLower.includes('vial');
+          matchesCat = text.includes('coin') || text.includes('reagent') || text.includes('vial') || text.includes('fog') || text.includes('chest') || text.includes('mgł') || text.includes('skrzyn');
         }
 
         return matchesSearch && matchesRarity && matchesCat;
       })
       .sort((a, b) => {
+        if (sortOrder === 'name_asc') {
+          return a.name.localeCompare(b.name);
+        }
         const rankA = getRarityRank(a.rarity);
         const rankB = getRarityRank(b.rarity);
-        if (rankA !== rankB) return rankA - rankB;
+        if (sortOrder === 'rarity_asc') {
+          if (rankA !== rankB) return rankA - rankB;
+          return a.name.localeCompare(b.name);
+        }
+        if (rankA !== rankB) return rankB - rankA;
         return a.name.localeCompare(b.name);
       });
-  }, [offerings, searchQuery, rarityFilter, selectedCategory]);
+  }, [offerings, searchQuery, rarityFilter, selectedCategory, sortOrder]);
 
   if (!offerings || offerings.length === 0) return null;
 
   return (
-    <section className="p-5 sm:p-6 rounded-3xl bg-slate-950/40 border border-slate-800/80 shadow-xl space-y-5 relative w-full">
-      {/* Header */}
+    <section className="space-y-6 w-full pt-2">
+      {/* Top Controls Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <span
-            className={`flex h-9 w-9 items-center justify-center rounded-2xl border ${
+            className={`flex h-8 w-8 items-center justify-center rounded-xl border ${
               isKiller
                 ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
                 : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
             }`}
           >
-            <Gift className="h-5 w-5" />
+            <Gift className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
               {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
-              <span
-                className={`text-sm font-bold font-mono ${
-                  isKiller ? 'text-rose-400' : 'text-emerald-400'
-                }`}
-              >
-                ({sortedAndFilteredOfferings.length})
-              </span>
             </h2>
             <p className="text-xs text-slate-400">
               {isKiller
-                ? t.offeringsDescKiller ||
-                  'Explore Memento Moris, wards, dark shrouds, and hooks burned to empower the Entity.'
-                : t.offeringsDescSurvivor ||
-                  'Explore realm reagents, luck charms, shrouds, and blueprints burned before a Trial.'}
+                ? t.offeringsDescKiller || 'Burn offerings to the Entity to alter Realm conditions, score gains, and execution rules.'
+                : t.offeringsDescSurvivor || 'Burn offerings before a Trial to modify luck, chests, maps, and protection.'}
             </p>
           </div>
         </div>
 
-        {/* Filter / Search bar */}
+        {/* Filter / Search Controls */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-full sm:w-48">
+          <div className="relative w-full sm:w-44">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
             <input
               type="text"
@@ -177,84 +227,129 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           <select
             value={rarityFilter}
             onChange={(e) => setRarityFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-amber-500 font-medium"
+            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value="all">{t.allRarities || 'All Rarities'}</option>
-            <option value="common">Common</option>
-            <option value="uncommon">Uncommon</option>
-            <option value="rare">Rare</option>
-            <option value="very rare">Very Rare</option>
-            <option value="ultra rare">Ultra Rare</option>
-            <option value="event">Event</option>
+            <option value="Common">Common</option>
+            <option value="Uncommon">Uncommon</option>
+            <option value="Rare">Rare</option>
+            <option value="Very Rare">Very Rare</option>
+            <option value="Ultra Rare">Ultra Rare</option>
+            <option value="Event">Event</option>
+          </select>
+
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value as 'rarity_desc' | 'rarity_asc' | 'name_asc')}
+            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
+            aria-label="Order offerings"
+          >
+            <option value="rarity_asc">Rarity: Low &rarr; High</option>
+            <option value="rarity_desc">Rarity: High &rarr; Low</option>
+            <option value="name_asc">Name: A &rarr; Z</option>
           </select>
         </div>
       </div>
 
-      {/* Category Pills */}
-      <div className="flex flex-wrap items-center gap-1.5 pb-1">
-        {categories.map((cat) => {
-          const isActive = selectedCategory === cat.key;
-          return (
-            <button
-              key={cat.key}
-              type="button"
-              onClick={() => setSelectedCategory(cat.key)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none ${
-                isActive
-                  ? isKiller
-                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm'
-                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                  : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:bg-slate-800 hover:text-slate-200'
-              }`}
-            >
-              {cat.label}
-            </button>
-          );
-        })}
-      </div>
+      {/* Main Container with Centered Category Buttons Straddling the Top Border */}
+      <div className="relative mt-8 pt-8 pb-5 px-5 sm:px-6 rounded-3xl bg-slate-950/40 border border-slate-800 shadow-lg w-full">
+        {/* Buttons Centered on the Top Border */}
+        <div className="absolute -top-5 inset-x-0 flex justify-center z-10 px-2 pointer-events-none">
+          <div
+            role="tablist"
+            aria-label="Offering categories"
+            className="flex flex-wrap items-center justify-center gap-1.5 p-1 rounded-2xl bg-slate-900 border border-slate-700 shadow-xl backdrop-blur-md pointer-events-auto max-w-full"
+          >
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              const isSelected = selectedCategory === cat.key;
+              return (
+                <button
+                  type="button"
+                  key={cat.key}
+                  role="tab"
+                  aria-selected={isSelected}
+                  onClick={() => setSelectedCategory(cat.key)}
+                  className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 cursor-pointer text-xs font-bold ${
+                    isSelected
+                      ? isKiller
+                        ? 'bg-rose-500/20 border border-rose-500/60 text-rose-300 shadow-md shadow-rose-950/50 scale-105'
+                        : 'bg-emerald-500/20 border border-emerald-500/60 text-emerald-300 shadow-md shadow-emerald-950/50 scale-105'
+                      : 'bg-slate-950/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80'
+                  }`}
+                  title={`${cat.label} - ${cat.desc}`}
+                >
+                  <Icon className="h-3.5 w-3.5 shrink-0" />
+                  <span>{cat.label}</span>
+                  {isSelected && (
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        isKiller ? 'bg-rose-400' : 'bg-emerald-400'
+                      }`}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-      {/* Offerings Grid */}
-      <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 p-2">
+        {/* Section Subtitle */}
+        <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-4">
+          <h3
+            className={`text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 ${
+              isKiller ? 'text-rose-400' : 'text-emerald-400'
+            }`}
+          >
+            <Gift className="h-4 w-4" />
+            {activeCategoryConfig.label} &bull; Offerings ({sortedAndFilteredOfferings.length})
+          </h3>
+          <span className="text-[10px] font-mono text-slate-400">Click offering for details</span>
+        </div>
+
+        {/* Offerings Grid */}
         {sortedAndFilteredOfferings.length === 0 ? (
-          <div className="py-8 text-center text-slate-500 text-xs font-mono">
-            {t.noMatchingOfferings || 'No offerings match the active filters.'}
+          <div className="flex items-center justify-center p-12 text-center text-slate-500 text-xs italic">
+            No offerings found in this category matching your active filter.
           </div>
         ) : (
-          sortedAndFilteredOfferings.map((offering, idx) => {
-            const id = `offering-${offering.name}-${idx}`;
-            const rarityStyle = getRarityTileStyle(offering.rarity);
+          <div className="flex flex-wrap items-center justify-center gap-3.5 p-2">
+            {sortedAndFilteredOfferings.map((offering, idx) => {
+              const id = `offering-${offering.name}-${idx}`;
+              const rarityStyle = getRarityTileStyle(offering.rarity);
 
-            return (
-              <div
-                key={id}
-                role="button"
-                tabIndex={0}
-                onClick={() => onSelectOffering?.(offering)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onSelectOffering?.(offering);
-                  }
-                }}
-                onMouseEnter={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setActiveHover({ item: offering, rect });
-                }}
-                onMouseLeave={() => setActiveHover(null)}
-                className={`relative group rounded-3xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 lg:h-28 lg:w-28 shadow-lg ${rarityStyle.bg}`}
-                aria-label={`Inspect offering: ${offering.name}`}
-              >
-                <img
-                  src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}
-                  alt={offering.name}
-                  className="h-full w-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)] group-hover:scale-105 transition-transform"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
+              return (
+                <div
+                  key={id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => onSelectOffering?.(offering)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onSelectOffering?.(offering);
+                    }
                   }}
-                />
-              </div>
-            );
-          })
+                  onMouseEnter={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setActiveHover({ item: offering, rect });
+                  }}
+                  onMouseLeave={() => setActiveHover(null)}
+                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                  aria-label={`Inspect offering: ${offering.name}`}
+                >
+                  <img
+                    src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}
+                    alt={offering.name}
+                    className="h-full w-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 
@@ -309,3 +404,4 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
     </section>
   );
 };
+

@@ -182,12 +182,19 @@ class TranslationService:
                 )
                 db.session.add(matched)
                 item_map[simplify_lookup_key(i_name)] = matched
-            elif trans:
-                curr = dict(matched.translations or {})
-                for l in target_locales:
-                    if l in trans:
-                        curr[l] = trans[l]
-                matched.translations = curr
+            else:
+                if i_val.get("category"):
+                    matched.category = i_val.get("category")
+                if i_val.get("role"):
+                    matched.role = i_val.get("role")
+                if i_val.get("translations", {}).get("en", {}).get("description"):
+                    matched.description = i_val.get("translations", {}).get("en", {}).get("description")
+                if trans:
+                    curr = dict(matched.translations or {})
+                    for l in target_locales:
+                        if l in trans:
+                            curr[l] = trans[l]
+                    matched.translations = curr
 
         # 4. Sync Addons
         addon_map = {simplify_lookup_key(a.name): a for a in db_addons}
@@ -204,12 +211,19 @@ class TranslationService:
                 )
                 db.session.add(matched)
                 addon_map[simplify_lookup_key(a_name)] = matched
-            elif trans:
-                curr = dict(matched.translations or {})
-                for l in target_locales:
-                    if l in trans:
-                        curr[l] = trans[l]
-                matched.translations = curr
+            else:
+                if a_val.get("associated_target"):
+                    matched.associated_target = a_val.get("associated_target")
+                if a_val.get("category"):
+                    matched.category = a_val.get("category")
+                if a_val.get("translations", {}).get("en", {}).get("description"):
+                    matched.description = a_val.get("translations", {}).get("en", {}).get("description")
+                if trans:
+                    curr = dict(matched.translations or {})
+                    for l in target_locales:
+                        if l in trans:
+                            curr[l] = trans[l]
+                    matched.translations = curr
 
         # 5. Sync Offerings
         from app.models.equipment import Offering
@@ -232,12 +246,18 @@ class TranslationService:
                 db.session.add(matched)
                 offering_map[simplify_lookup_key(o_name)] = matched
             else:
+                if o_val.get("category"):
+                    matched.category = o_val.get("category")
+                if o_val.get("role"):
+                    matched.role = o_val.get("role")
+                if o_val.get("rarity"):
+                    matched.rarity = o_val.get("rarity")
                 if o_val.get("icon_local_path"):
                     matched.icon_local_path = o_val.get("icon_local_path")
                 if o_val.get("icon_url"):
                     matched.icon_url = o_val.get("icon_url")
-                if o_val.get("rarity"):
-                    matched.rarity = o_val.get("rarity")
+                if o_val.get("translations", {}).get("en", {}).get("description"):
+                    matched.description = o_val.get("translations", {}).get("en", {}).get("description")
                 trans = o_val.get("translations", {})
                 if trans:
                     curr = dict(matched.translations or {})

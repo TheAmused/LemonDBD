@@ -32,7 +32,11 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
   const rawDict = (dict || {}) as Record<string, Record<string, string>>;
   const t: Record<string, string> = rawDict.characterDetail || rawDict.characters || {};
 
-  const { character, perks = [], addons = [], items = [], offerings = [] } = detailData;
+  const character = detailData?.character || { name: '', category: 'Survivor' };
+  const perks = Array.isArray(detailData?.perks) ? detailData.perks : [];
+  const addons = Array.isArray(detailData?.addons) ? detailData.addons : [];
+  const items = Array.isArray(detailData?.items) ? detailData.items : [];
+  const offerings = Array.isArray(detailData?.offerings) ? detailData.offerings : [];
 
   const [isLoreModalOpen, setIsLoreModalOpen] = useState<boolean>(false);
   const [isModelModalOpen, setIsModelModalOpen] = useState<boolean>(false);
@@ -48,7 +52,6 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
 
   return (
     <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={`${character.name} Details`}>
-      {/* 1. Breadcrumbs & Character Navigator */}
       <CharacterBreadcrumbs
         currentLocale={currentLocale}
         character={character}
@@ -58,9 +61,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         t={t}
       />
 
-      {/* 2. Main Hero Showcase */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: Avatar Showcase */}
         <CharacterHeroAvatar
           character={character}
           isSurvivor={true}
@@ -70,7 +71,6 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
           t={t}
         />
 
-        {/* Right: Character Info & Identity */}
         <div className="lg:col-span-8 space-y-5">
           <header className="flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -120,7 +120,6 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
             </div>
           </header>
 
-          {/* Perks Section */}
           <CharacterPerksSection
             perks={perks}
             character={character}
@@ -131,7 +130,6 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         </div>
       </section>
 
-      {/* 3. Survival Equipment & Add-ons Section */}
       <SurvivorEquipmentSection
         items={items}
         addons={addons}
@@ -140,7 +138,6 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         t={t}
       />
 
-      {/* 4. Dedicated Survivor Offerings Section */}
       <OfferingsSection
         offerings={offerings}
         role="Survivor"
@@ -149,7 +146,6 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         t={t}
       />
 
-      {/* Modals */}
       <LoreModal
         isOpen={isLoreModalOpen}
         onClose={() => setIsLoreModalOpen(false)}
@@ -184,3 +180,4 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
     </article>
   );
 };
+

@@ -10,6 +10,7 @@ from app.services.chaos.roller import (
     draw_chaos_perks,
     get_owned_killer_names,
     get_unlocked_killer_perks,
+    resolve_perks_by_names,
 )
 from app.services.chaos.stats import fetch_chaos_user_stats
 
@@ -20,6 +21,7 @@ __all__ = [
     "checkpoint_interval",
     "get_owned_killer_names",
     "get_unlocked_killer_perks",
+    "resolve_perks_by_names",
     "draw_chaos_perks",
     "draw_addon_rarities",
     "fetch_chaos_user_stats",

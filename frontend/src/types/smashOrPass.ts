@@ -43,6 +43,7 @@ export interface EntityStatItem {
   total_votes: number;
   smash_rate: number;
   chaos_rating: number;
+  rank?: number | null;
   updated_at?: string | null;
 }
 

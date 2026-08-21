@@ -497,7 +497,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={toggleMusic}
-                title={isBgmPlaying ? 'Pause Sexy Ambience Music (B)' : 'Play Sexy Ambience Music (B)'}
+                title={isBgmPlaying ? dict?.smashOrPass?.tooltips?.pauseBgm || 'Pause BGM (B)' : dict?.smashOrPass?.tooltips?.playBgm || 'Play BGM (B)'}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${
                   isBgmPlaying
                     ? 'bg-rose-950/80 border-[#ff0055] text-pink-300 shadow-[0_0_15px_rgba(255,0,85,0.4)] animate-pulse'
@@ -532,7 +532,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={shuffleDeck}
-                title={hudLabels.shuffle || 'Shuffle Remaining'}
+                title={dict?.smashOrPass?.tooltips?.shuffle || hudLabels.shuffle || 'Shuffle Remaining'}
                 className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
               >
                 <Shuffle className="h-3.5 w-3.5" />
@@ -542,7 +542,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={toggleSound}
-                title={isMuted ? 'Unmute Sound FX (M)' : 'Mute Sound FX (M)'}
+                title={isMuted ? dict?.smashOrPass?.tooltips?.unmute || 'Unmute Sound FX (M)' : dict?.smashOrPass?.tooltips?.mute || 'Mute Sound FX (M)'}
                 className={`flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer ${
                   isMuted
                     ? 'bg-zinc-900/90 border-zinc-800 text-zinc-600'
@@ -556,7 +556,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={() => setIsResetConfirmOpen(true)}
-                title="Reset All My Votes"
+                title={dict?.smashOrPass?.tooltips?.resetAllVotes || 'Reset All My Votes'}
                 className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-rose-400 hover:border-rose-500/40 transition-all cursor-pointer"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -566,7 +566,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={() => setIsHowToPlayOpen(true)}
-                title={hudLabels.howToPlay || 'How to Play & Keybindings'}
+                title={dict?.smashOrPass?.tooltips?.howToPlay || hudLabels.howToPlay || 'How to Play & Keybindings'}
                 className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
               >
                 <HelpCircle className="h-3.5 w-3.5" />
@@ -757,7 +757,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <Gamepad2 className="h-5 w-5" />
                 </span>
                 <h3 id="how-to-play-title" className="text-base font-black text-zinc-100">
-                  {hudLabels.howToPlay || 'How to Play Smash or Pass'}
+                  {dict?.smashOrPass?.howToPlayModal?.title || hudLabels.howToPlay || 'How to Play Smash or Pass'}
                 </h3>
               </div>
               <button
@@ -774,9 +774,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800">
                 <span className="text-xl shrink-0">👆</span>
                 <div>
-                  <span className="font-bold text-pink-300 block text-xs font-mono">Swipe or Drag Cards</span>
+                  <span className="font-bold text-pink-300 block text-xs font-mono">
+                    {dict?.smashOrPass?.howToPlayModal?.swipeTitle || 'Swipe or Drag Cards'}
+                  </span>
                   <p className="text-zinc-400 leading-relaxed pt-0.5">
-                    Drag card <strong className="text-pink-400">Right</strong> to <strong>Smash</strong> 💋 or drag <strong className="text-[#00f5d4]">Left</strong> to <strong>Pass</strong> ✖.
+                    {dict?.smashOrPass?.howToPlayModal?.swipeDesc || 'Drag card Right to Smash or drag Left to Pass.'}
                   </p>
                 </div>
               </div>
@@ -785,9 +787,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800">
                 <span className="text-xl shrink-0">🎯</span>
                 <div>
-                  <span className="font-bold text-pink-300 block text-xs font-mono">On-Card Action Icons</span>
+                  <span className="font-bold text-pink-300 block text-xs font-mono">
+                    {dict?.smashOrPass?.howToPlayModal?.iconsTitle || 'On-Card Action Icons'}
+                  </span>
                   <p className="text-zinc-400 leading-relaxed pt-0.5">
-                    Click the <strong>Flip</strong> (<RotateCw className="inline h-3 w-3" />) icon at top-left to read bio & flags. Click <strong>Zoom</strong> (<Maximize2 className="inline h-3 w-3" />) for high-res art. Use the bottom icons for instant one-click voting.
+                    {dict?.smashOrPass?.howToPlayModal?.iconsDesc || 'Click Flip to read bio and memes. Click Zoom for high-res portrait art.'}
                   </p>
                 </div>
               </div>
@@ -796,7 +800,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <div className="space-y-2 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800">
                 <div className="flex items-center gap-2">
                   <span className="text-xl shrink-0">⌨️</span>
-                  <span className="font-bold text-pink-300 block text-xs font-mono">Tactile Keyboard Keycaps</span>
+                  <span className="font-bold text-pink-300 block text-xs font-mono">
+                    {dict?.smashOrPass?.howToPlayModal?.keycapsTitle || 'Tactile Keyboard Keycaps'}
+                  </span>
                 </div>
                 <TactileKeycaps
                   onPass={() => {
@@ -824,9 +830,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800">
                 <span className="text-xl shrink-0">🌌</span>
                 <div>
-                  <span className="font-bold text-pink-300 block text-xs font-mono">Atmospheric Background & Music</span>
+                  <span className="font-bold text-pink-300 block text-xs font-mono">
+                    {dict?.smashOrPass?.howToPlayModal?.atmosphereTitle || 'Atmospheric Background & Music'}
+                  </span>
                   <p className="text-zinc-400 leading-relaxed pt-0.5">
-                    Hover over scattered text in the background to inspect quotes and traits with glowing animations. Click <strong>BGM</strong> or press <kbd className="px-1 py-0.2 rounded bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono">B</kbd> to enjoy dark sensual synth music!
+                    {dict?.smashOrPass?.howToPlayModal?.atmosphereDesc || 'Hover over background text elements to inspect quotes and lore with glowing effects.'}
                   </p>
                 </div>
               </div>
@@ -838,7 +846,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 onClick={() => setIsHowToPlayOpen(false)}
                 className="px-5 py-2 rounded-xl bg-pink-600 hover:bg-pink-500 text-xs font-bold font-mono text-white transition-colors cursor-pointer"
               >
-                Got It, Let&apos;s Play!
+                {dict?.smashOrPass?.howToPlayModal?.letsPlay || "Got It, Let's Play!"}
               </button>
             </div>
           </div>
@@ -862,7 +870,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         isOpen={Boolean(selectedStatCharacter)}
         onClose={() => setSelectedStatCharacter(null)}
         character={selectedStatCharacter}
-        stats={selectedStatCharacter ? selectedStatCharacter.stat : undefined}
+        stats={selectedStatCharacter?.stat ?? undefined}
         locale={locale}
         dict={dict}
       />

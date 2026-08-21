@@ -303,6 +303,26 @@
       "gothic": {
         "name": "Victorian & Gothic Eldritch Legends",
         "desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors."
+      },
+      "hooked_on_you": {
+        "name": "Hooked on You: Island Romance",
+        "desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes."
+      },
+      "legendary_cosplay": {
+        "name": "Legendary Skins & Collabs",
+        "desc": "Iconic legendary skins and crossover collabs from gaming history."
+      },
+      "cyberpunk_2077": {
+        "name": "Cyberpunk Fog 2077 Edition",
+        "desc": "High-tech neon augmented champions fighting in a dystopian fog."
+      },
+      "anime_manga": {
+        "name": "Fog Anime / Manga Aesthetic",
+        "desc": "Stylized anime aesthetic adaptations of your favorite Fog characters."
+      },
+      "gothic_eldritch": {
+        "name": "Victorian & Gothic Eldritch Legends",
+        "desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors."
       }
     },
     "controls": {
@@ -399,6 +419,58 @@
       "hallOfFame": "Hall of Fame",
       "howToPlay": "How to Play",
       "shuffle": "Shuffle"
+    },
+    "howToPlayModal": {
+      "title": "How to Play Smash or Pass",
+      "swipeTitle": "Swipe or Drag Cards",
+      "swipeDesc": "Drag card Right to Smash 💋 or drag Left to Pass ✖.",
+      "iconsTitle": "On-Card Action Icons",
+      "iconsDesc": "Click Flip (top-left icon) to read bio, traits, green/red flags, and community memes. Click Zoom for high-res portrait art.",
+      "keycapsTitle": "Tactile Keyboard Keycaps",
+      "atmosphereTitle": "Atmospheric Background & Music",
+      "atmosphereDesc": "Hover over background text elements to inspect quotes and lore with glowing effects. Toggle BGM (B key) for dark synth ambience!",
+      "letsPlay": "Got It, Let's Play!"
+    },
+    "personaArchetypes": {
+      "eldritchDevotee": {
+        "title": "The Eldritch Devotee",
+        "subtitle": "Incomprehensible horrors and ancient beings are your true love language.",
+        "desc": "Why settle for mortal romance when the cosmic void is calling? You embrace tentacles, teeth, and cosmic mystery."
+      },
+      "redStainAddict": {
+        "title": "The Red Stain Addict",
+        "subtitle": "Danger is your turn-on, and terror radiuses make your heart flutter.",
+        "desc": "Mori animations are just aggressive cuddles in your book. You are drawn to power, menace, and dark charisma."
+      },
+      "campfireSoulmate": {
+        "title": "The Campfire Soulmate",
+        "subtitle": "Wholesome teamwork and altruistic healing melt your heart.",
+        "desc": "You seek companionship, genuine smiles, and someone who will unhook you before opening the exit gate."
+      },
+      "entitysParamour": {
+        "title": "The Entity’s Paramour",
+        "subtitle": "You see beauty, charm, and romance in almost every single soul in the Fog.",
+        "desc": "High standards? Never heard of them. Your heart is an endless sanctuary for all survivors and killers alike."
+      },
+      "coldHeartedPragmatist": {
+        "title": "The Cold-Hearted Pragmatist",
+        "subtitle": "Extremely selective, immune to charms, focused solely on survival.",
+        "desc": "Very few can pass your stringent dating checklist. You need perfection, flawless perks, and zero red flags."
+      },
+      "fogRomantic": {
+        "title": "The Fog Romantic",
+        "subtitle": "A balanced soul seeking passion and adrenaline across the trials.",
+        "desc": "You believe that even within the infinite trials of the Entity, a true spark of romance can always be found."
+      }
+    },
+    "tooltips": {
+      "mute": "Mute sound FX (M)",
+      "unmute": "Unmute sound FX (M)",
+      "playBgm": "Play dark ambience BGM (B)",
+      "pauseBgm": "Pause dark ambience BGM (B)",
+      "resetAllVotes": "Reset all my votes",
+      "howToPlay": "How to play & keybindings",
+      "shuffle": "Shuffle remaining candidates"
     }
   }
 }

@@ -71,7 +71,6 @@ class ChaosService:
                 db.session.commit()
             data = run.to_dict()
             data["checkpoint_interval"] = checkpoint_interval(difficulty)
-            data["unlocked_perks_detail"] = resolve_perks_by_names(data["unlocked_perks"])
             return data
 
         new_run = ChaosRun(
@@ -97,7 +96,6 @@ class ChaosService:
 
         data = new_run.to_dict()
         data["checkpoint_interval"] = checkpoint_interval(difficulty)
-        data["unlocked_perks_detail"] = unlocked_detail
         return data
 
     def reveal(self, user_id: int, run_id: int) -> Dict[str, Any]:
@@ -110,7 +108,6 @@ class ChaosService:
         db.session.commit()
         data = r.to_dict()
         data["checkpoint_interval"] = checkpoint_interval(r.difficulty)
-        data["unlocked_perks_detail"] = resolve_perks_by_names(data["unlocked_perks"])
         return data
 
     def reset_run(self, user_id: int, difficulty: str) -> Dict[str, Any]:
@@ -205,7 +202,6 @@ class ChaosService:
 
         data = r.to_dict()
         data["checkpoint_interval"] = interval
-        data["unlocked_perks_detail"] = resolve_perks_by_names(data["unlocked_perks"])
         return data
 
     def apply_inactivity_loss(self, run_id: int) -> None:

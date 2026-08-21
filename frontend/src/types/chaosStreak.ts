@@ -21,7 +21,6 @@ export interface ChaosRun {
   checkpoint_used_perks: string[];
   owned_killers: string[];
   unlocked_perks: string[];
-  unlocked_perks_detail: Perk[];
   current_perks: Perk[];
   current_addon_rarities: AddonRarity[];
   perks_revealed: boolean;

@@ -29,6 +29,7 @@ class HistoryRun(Base):
     checkpoint_total_killers_beaten: Mapped[int] = mapped_column(Integer, default=0)
     checkpoint_completed_killers_json: Mapped[str] = mapped_column(Text, default="[]")
     checkpoint_unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]")
+    owned_killers_json: Mapped[str] = mapped_column(Text, default="[]")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=utcnow, onupdate=utcnow
@@ -49,6 +50,7 @@ class HistoryRun(Base):
             "best_killers_beaten": self.best_killers_beaten,
             "completed_killers": json.loads(self.completed_killers_json or "[]"),
             "unlocked_perk_names": json.loads(self.unlocked_perk_names_json or "[]"),
+            "owned_killers": json.loads(self.owned_killers_json or "[]"),
             "checkpoint_row_index": self.checkpoint_row_index,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,

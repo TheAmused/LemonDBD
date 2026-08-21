@@ -29,6 +29,7 @@ class GauntletRun(Base):
     completed_characters_json: Mapped[str] = mapped_column(Text, default="[]")
     checkpoint_characters_json: Mapped[str] = mapped_column(Text, default="[]")
     current_loadout_json: Mapped[str] = mapped_column(Text, default="{}")
+    owned_characters_json: Mapped[str] = mapped_column(Text, default="[]")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=utcnow, onupdate=utcnow
@@ -60,6 +61,7 @@ class GauntletRun(Base):
                 self.checkpoint_characters_json or "[]"
             ),
             "current_loadout": json.loads(self.current_loadout_json or "{}"),
+            "owned_characters": json.loads(self.owned_characters_json or "[]"),
             "created_at": self.created_at.isoformat()
             if self.created_at
             else None,

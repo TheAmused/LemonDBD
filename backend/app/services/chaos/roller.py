@@ -29,7 +29,7 @@ def resolve_perks_by_names(names: List[str]) -> List[Dict[str, Any]]:
     Page-Streak-icon-style name/translation drift."""
     if not names:
         return []
-    perks = db.session.scalars(select(Perk).where(Perk.name.in_(names))).all()
+    perks = db.session.scalars(select(Perk).where(Perk.name.in_(names), Perk.category == "Killer")).all()
     by_name = {p.name: p.to_dict() for p in perks}
     return [by_name[n] for n in names if n in by_name]
 

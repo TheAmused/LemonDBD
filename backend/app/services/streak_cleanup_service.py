@@ -32,13 +32,27 @@ def apply_inactivity_losses(inactive_after_days: int = 90) -> Dict[str, int]:
     the pass. Skipped entirely on non-Postgres dialects (the test suite
     runs on in-memory SQLite, which has no advisory lock function), so this
     stays directly unit-testable without a Postgres fixture.
+
+    The lock is held on a single dedicated connection for the whole call,
+    independent of db.session's pooled connections -- session-level
+    advisory locks are tied to the physical connection, and db.session's
+    own commit() calls during the work below would otherwise risk the
+    acquire and release landing on two different pooled connections,
+    silently leaving the lock stuck forever on whichever one actually
+    holds it.
     """
     is_postgres = db.engine.dialect.name == "postgresql"
+    lock_conn = None
     if is_postgres:
-        got_lock = db.session.execute(
+        lock_conn = db.engine.connect().execution_options(isolation_level="AUTOCOMMIT")
+        got_lock = lock_conn.execute(
             text("SELECT pg_try_advisory_lock(:key)"), {"key": _ADVISORY_LOCK_KEY}
         ).scalar()
         if not got_lock:
+            logger.warning(
+                "Inactivity cleanup skipped: advisory lock already held by another worker"
+            )
+            lock_conn.close()
             return {}
 
     try:
@@ -84,6 +98,8 @@ def apply_inactivity_losses(inactive_after_days: int = 90) -> Dict[str, int]:
                 )
         return affected
     finally:
-        if is_postgres:
-            db.session.execute(text("SELECT pg_advisory_unlock(:key)"), {"key": _ADVISORY_LOCK_KEY})
-            db.session.commit()
+        if lock_conn is not None:
+            try:
+                lock_conn.execute(text("SELECT pg_advisory_unlock(:key)"), {"key": _ADVISORY_LOCK_KEY})
+            finally:
+                lock_conn.close()

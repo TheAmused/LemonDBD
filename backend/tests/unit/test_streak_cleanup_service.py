@@ -97,3 +97,19 @@ class StreakCleanupTestCase(unittest.TestCase):
         self.assertEqual(db.session.query(ChaosMatchLog).filter_by(triggered_by="inactivity").count(), 1)
         self.assertEqual(db.session.query(HistoryMatchLog).filter_by(triggered_by="inactivity").count(), 1)
         self.assertEqual(db.session.query(PageStreakPageLog).filter_by(triggered_by="inactivity").count(), 1)
+
+    def test_dedicated_lock_connection_plumbing_is_a_noop_on_sqlite(self):
+        # The advisory-lock acquire/release now happens on a dedicated,
+        # autocommit connection instead of db.session -- but that plumbing
+        # is skipped entirely on non-Postgres dialects. This confirms the
+        # refactor didn't disturb the SQLite (no-lock) path: the function
+        # still runs end to end, applies the loss, and returns normally
+        # without ever touching a lock connection.
+        run = self._stale_gauntlet_run(days_old=91)
+        self.assertEqual(db.engine.dialect.name, "sqlite")
+        affected = apply_inactivity_losses(inactive_after_days=90)
+        self.assertEqual(affected["gauntlet_runs"], 1)
+        log = db.session.scalars(
+            select(GauntletMatchLog).where(GauntletMatchLog.run_id == run.id)
+        ).first()
+        self.assertEqual(log.triggered_by, "inactivity")

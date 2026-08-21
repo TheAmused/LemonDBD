@@ -254,6 +254,17 @@ class TestFrozenKillerRoster(HistoryTestCase):
         )
         self.assertIn("Some New Killer", refrozen["owned_killers"])
 
+    def test_medium_loss_before_any_checkpoint_refreezes_the_roster(self):
+        # Fresh medium-mode run, no checkpoint banked yet (checkpoint_row_index == 0
+        # and checkpoint_total_killers_beaten == 0), so a loss here falls back to
+        # zero -- a genuine reset, same as hell mode -- and must refreeze.
+        run = self.service.get_or_create_run(self.user_id, "medium")
+        seed_killer("Some New Killer", release_number=99)
+        after_loss = self.service.submit_result(
+            self.user_id, run["id"], "loss", run["current_row_killers"][0]
+        )
+        self.assertIn("Some New Killer", after_loss["owned_killers"])
+
 
 class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
     def setUp(self):

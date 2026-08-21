@@ -40,14 +40,7 @@ class ChaosService:
             select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
         ).first()
         if run:
-            pools_empty = not json.loads(run.owned_killers_json or "[]") or not json.loads(
-                run.unlocked_perks_json or "[]"
-            )
-            # At streak 0 nothing is pinned to the frozen pool (no completed killers,
-            # no used perks carried over), so it's safe -- and desirable -- to resync
-            # with any ownership changes that landed after the last freeze point.
-            at_reset_boundary = run.status == "in_progress" and run.current_streak == 0
-            if pools_empty or at_reset_boundary:
+            if not json.loads(run.owned_killers_json or "[]") or not json.loads(run.unlocked_perks_json or "[]"):
                 self._freeze_pools(run)
                 db.session.commit()
             data = run.to_dict()

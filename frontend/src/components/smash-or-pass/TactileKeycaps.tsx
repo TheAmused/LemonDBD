@@ -1,7 +1,7 @@
 // frontend/src/components/smash-or-pass/TactileKeycaps.tsx
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUp, ArrowDown, RotateCcw, Heart, ThumbsDown, Zap, FileText } from 'lucide-react';
 
 export interface TactileKeycapsProps {
@@ -73,93 +73,96 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
   // ↑ Up Arrow: Dossier / Stats (Cyber Mint glow #00f5d4)
   // ↓ Down Arrow: Super Smash / Chaos (Eldritch Gold glow #ffd166)
   // R Key: Reset Deck (Deep Velvet Purple glow #2e0854 / #a855f7)
-  const keycaps: KeycapConfig[] = [
-    {
-      id: 'pass',
-      keys: ['ArrowLeft', 'a', 'A'],
-      symbol: '←',
-      subLegend: 'A',
-      label: passLabel,
-      icon: <ThumbsDown className="h-3.5 w-3.5" />,
-      theme: {
-        baseBorder: 'border-cyan-500/30 hover:border-cyan-400/60',
-        baseText: 'text-cyan-300',
-        activeGlow: 'shadow-[0_0_25px_rgba(0,245,212,0.8),inset_0_0_12px_rgba(0,245,212,0.4)]',
-        activeBorder: 'border-[#00f5d4]',
-        activeBg: 'bg-[#00f5d4]/20',
-        activeShadow: 'shadow-[0_1px_0_0_#0e7490]',
-        accentColor: '#00f5d4',
+  const keycaps: KeycapConfig[] = useMemo(
+    () => [
+      {
+        id: 'pass',
+        keys: ['ArrowLeft', 'a', 'A'],
+        symbol: '←',
+        subLegend: 'A',
+        label: passLabel,
+        icon: <ThumbsDown className="h-3.5 w-3.5" />,
+        theme: {
+          baseBorder: 'border-cyan-500/30 hover:border-cyan-400/60',
+          baseText: 'text-cyan-300',
+          activeGlow: 'shadow-[0_0_25px_rgba(0,245,212,0.8),inset_0_0_12px_rgba(0,245,212,0.4)]',
+          activeBorder: 'border-[#00f5d4]',
+          activeBg: 'bg-[#00f5d4]/20',
+          activeShadow: 'shadow-[0_1px_0_0_#0e7490]',
+          accentColor: '#00f5d4',
+        },
       },
-    },
-    {
-      id: 'stats',
-      keys: ['ArrowUp', 'w', 'W'],
-      symbol: '↑',
-      subLegend: 'W',
-      label: statsLabel,
-      icon: <FileText className="h-3.5 w-3.5" />,
-      theme: {
-        baseBorder: 'border-emerald-500/30 hover:border-emerald-400/60',
-        baseText: 'text-emerald-300',
-        activeGlow: 'shadow-[0_0_25px_rgba(0,245,212,0.8),inset_0_0_12px_rgba(0,245,212,0.4)]',
-        activeBorder: 'border-[#00f5d4]',
-        activeBg: 'bg-[#00f5d4]/20',
-        activeShadow: 'shadow-[0_1px_0_0_#047857]',
-        accentColor: '#00f5d4',
+      {
+        id: 'stats',
+        keys: ['ArrowUp', 'w', 'W'],
+        symbol: '↑',
+        subLegend: 'W',
+        label: statsLabel,
+        icon: <FileText className="h-3.5 w-3.5" />,
+        theme: {
+          baseBorder: 'border-emerald-500/30 hover:border-emerald-400/60',
+          baseText: 'text-emerald-300',
+          activeGlow: 'shadow-[0_0_25px_rgba(0,245,212,0.8),inset_0_0_12px_rgba(0,245,212,0.4)]',
+          activeBorder: 'border-[#00f5d4]',
+          activeBg: 'bg-[#00f5d4]/20',
+          activeShadow: 'shadow-[0_1px_0_0_#047857]',
+          accentColor: '#00f5d4',
+        },
       },
-    },
-    {
-      id: 'super_smash',
-      keys: ['ArrowDown', 's', 'S'],
-      symbol: '↓',
-      subLegend: 'S',
-      label: superSmashLabel,
-      icon: <Zap className="h-3.5 w-3.5" />,
-      theme: {
-        baseBorder: 'border-amber-500/30 hover:border-amber-400/60',
-        baseText: 'text-amber-300',
-        activeGlow: 'shadow-[0_0_25px_rgba(255,209,102,0.85),inset_0_0_12px_rgba(255,209,102,0.4)]',
-        activeBorder: 'border-[#ffd166]',
-        activeBg: 'bg-[#ffd166]/20',
-        activeShadow: 'shadow-[0_1px_0_0_#b45309]',
-        accentColor: '#ffd166',
+      {
+        id: 'super_smash',
+        keys: ['ArrowDown', 's', 'S'],
+        symbol: '↓',
+        subLegend: 'S',
+        label: superSmashLabel,
+        icon: <Zap className="h-3.5 w-3.5" />,
+        theme: {
+          baseBorder: 'border-amber-500/30 hover:border-amber-400/60',
+          baseText: 'text-amber-300',
+          activeGlow: 'shadow-[0_0_25px_rgba(255,209,102,0.85),inset_0_0_12px_rgba(255,209,102,0.4)]',
+          activeBorder: 'border-[#ffd166]',
+          activeBg: 'bg-[#ffd166]/20',
+          activeShadow: 'shadow-[0_1px_0_0_#b45309]',
+          accentColor: '#ffd166',
+        },
       },
-    },
-    {
-      id: 'smash',
-      keys: ['ArrowRight', 'd', 'D'],
-      symbol: '→',
-      subLegend: 'D',
-      label: smashLabel,
-      icon: <Heart className="h-3.5 w-3.5 fill-current" />,
-      theme: {
-        baseBorder: 'border-rose-500/30 hover:border-rose-400/60',
-        baseText: 'text-rose-300',
-        activeGlow: 'shadow-[0_0_25px_rgba(255,0,85,0.85),inset_0_0_12px_rgba(255,0,85,0.4)]',
-        activeBorder: 'border-[#ff0055]',
-        activeBg: 'bg-[#ff0055]/20',
-        activeShadow: 'shadow-[0_1px_0_0_#be123c]',
-        accentColor: '#ff0055',
+      {
+        id: 'smash',
+        keys: ['ArrowRight', 'd', 'D'],
+        symbol: '→',
+        subLegend: 'D',
+        label: smashLabel,
+        icon: <Heart className="h-3.5 w-3.5 fill-current" />,
+        theme: {
+          baseBorder: 'border-rose-500/30 hover:border-rose-400/60',
+          baseText: 'text-rose-300',
+          activeGlow: 'shadow-[0_0_25px_rgba(255,0,85,0.85),inset_0_0_12px_rgba(255,0,85,0.4)]',
+          activeBorder: 'border-[#ff0055]',
+          activeBg: 'bg-[#ff0055]/20',
+          activeShadow: 'shadow-[0_1px_0_0_#be123c]',
+          accentColor: '#ff0055',
+        },
       },
-    },
-    {
-      id: 'reset',
-      keys: ['r', 'R'],
-      symbol: 'R',
-      subLegend: 'RESET',
-      label: resetLabel,
-      icon: <RotateCcw className="h-3.5 w-3.5" />,
-      theme: {
-        baseBorder: 'border-purple-500/30 hover:border-purple-400/60',
-        baseText: 'text-purple-300',
-        activeGlow: 'shadow-[0_0_25px_rgba(168,85,247,0.8),inset_0_0_12px_rgba(168,85,247,0.4)]',
-        activeBorder: 'border-[#a855f7]',
-        activeBg: 'bg-[#2e0854]/40',
-        activeShadow: 'shadow-[0_1px_0_0_#6b21a8]',
-        accentColor: '#a855f7',
+      {
+        id: 'reset',
+        keys: ['r', 'R'],
+        symbol: 'R',
+        subLegend: 'RESET',
+        label: resetLabel,
+        icon: <RotateCcw className="h-3.5 w-3.5" />,
+        theme: {
+          baseBorder: 'border-purple-500/30 hover:border-purple-400/60',
+          baseText: 'text-purple-300',
+          activeGlow: 'shadow-[0_0_25px_rgba(168,85,247,0.8),inset_0_0_12px_rgba(168,85,247,0.4)]',
+          activeBorder: 'border-[#a855f7]',
+          activeBg: 'bg-[#2e0854]/40',
+          activeShadow: 'shadow-[0_1px_0_0_#6b21a8]',
+          accentColor: '#a855f7',
+        },
       },
-    },
-  ];
+    ],
+    [passLabel, smashLabel, superSmashLabel, statsLabel, resetLabel]
+  );
 
   // Trigger Action
   const triggerAction = useCallback(

@@ -264,7 +264,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
       // Play Sound
       if (vote === 'super_smash') {
-        SmashSounds.playSmashSound();
+        SmashSounds.playSuperSmashSound();
         setSessionSmashes((s) => s + 1);
       } else if (vote === 'smash') {
         SmashSounds.playSmashSound();
@@ -408,54 +408,29 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     SmashSounds.playFlipSound();
   }, [backendBase, selectedEditionId, isAuthenticated, token, user?.id, buildDeck, fetchStats]);
 
-  // Keyboard Shortcuts
+  // Global Non-Deck Keyboard Shortcuts (Mute, Help) - Deck keys handled exclusively by TactileKeycaps
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
         document.activeElement?.tagName === 'INPUT' ||
-        document.activeElement?.tagName === 'TEXTAREA' ||
-        isLeaderboardOpen ||
-        isPersonaOpen ||
-        isResetConfirmOpen ||
-        selectedStatCharacter ||
-        isExiting
+        document.activeElement?.tagName === 'TEXTAREA'
       ) {
         return;
       }
 
-      if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') {
-        e.preventDefault();
-        handleVote('smash');
-      } else if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') {
-        e.preventDefault();
-        handleVote('pass');
-      } else if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        handleVote('super_smash');
-      } else if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        if (currentCharacter) setSelectedStatCharacter(currentCharacter);
-      } else if (e.key === 'r' || e.key === 'R') {
-        e.preventDefault();
-        setIsResetConfirmOpen(true);
-      } else if (e.key === 'm' || e.key === 'M') {
+      if (e.key === 'm' || e.key === 'M') {
         e.preventDefault();
         const next = SmashSounds.toggleMute();
         setIsMuted(next);
+      } else if (e.key === '?' || e.key === '/') {
+        e.preventDefault();
+        setShowKeybindings((prev) => !prev);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [
-    handleVote,
-    isLeaderboardOpen,
-    isPersonaOpen,
-    isResetConfirmOpen,
-    selectedStatCharacter,
-    isExiting,
-    currentCharacter,
-  ]);
+  }, []);
 
   const toggleSound = () => {
     const next = SmashSounds.toggleMute();

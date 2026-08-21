@@ -1,16 +1,18 @@
 # backend/tests/unit/test_guesser.py
+import gc
 import os
 import json
+import tempfile
 import unittest
+from pathlib import Path
 from app import create_app
 from app.services.db_service import DatabaseService
 from app.services.others.guesser_service import GuesserService
 
 class TestGuesserModule(unittest.TestCase):
     def setUp(self):
-        self.db_path = "test_guesser.db"
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+        self._temp_dir = tempfile.TemporaryDirectory()
+        self.db_path = str(Path(self._temp_dir.name) / "test_guesser.db")
             
         # Initialize database
         self.db_service = DatabaseService(db_path=self.db_path)
@@ -30,8 +32,11 @@ class TestGuesserModule(unittest.TestCase):
     def tearDown(self):
         from app.routes.others.guesser import guesser_service
         guesser_service.db_service = self.original_db
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+        gc.collect()
+        try:
+            self._temp_dir.cleanup()
+        except Exception:
+            pass
 
     def test_database_initialization(self):
         stats = self.service.get_all_stats()

@@ -128,78 +128,48 @@ def seed_database_from_json_files(service) -> None:
                 db.session.commit()
 
         map_count = db.session.scalar(select(func.count(MapRealm.id))) or 0
-        if map_count == 0 and service.maps_path.exists():
-            with open(service.maps_path, "r", encoding="utf-8") as f:
-                raw_maps = json.load(f)
-                for m in raw_maps:
-                    existing = db.session.scalars(
-                        select(MapRealm).where(MapRealm.map_id == m["id"])
-                    ).first()
-                    if not existing:
-                        desc = m.get("description", "")
-                        clock_sys = m.get("clock_system")
-                        if not desc and clock_sys and isinstance(clock_sys, dict):
-                            desc = clock_sys.get("description", "")
+        if map_count == 0:
+            from app.services.maps.data import SAMPLE_MAPS, DEFAULT_TILES_SEED_A
+            for m in SAMPLE_MAPS:
+                existing = db.session.scalars(
+                    select(MapRealm).where(MapRealm.map_id == m["id"])
+                ).first()
+                if not existing:
+                    map_realm = MapRealm(
+                        map_id=m["id"],
+                        name=m["name"],
+                        realm=m["realm"],
+                        realm_id=m.get("realm_id") or m["id"],
+                        source=m.get("source", "hens333"),
+                        source_label=m.get("source_label", "Hens333 12-Clock Callouts"),
+                        callout_image_url=m.get("callout_image_url", m.get("image_url", "")),
+                        callout_image_local_path=m.get("callout_image_local_path", ""),
+                        image_url=m.get("image_url", ""),
+                        layout_type=m.get("layout_type", "Standard"),
+                        jungle_gyms_count=m.get("jungle_gyms_count", 4),
+                        totem_spawns_count=m.get("totem_spawns_count", 5),
+                        pallet_density=m.get("pallet_density", "Medium"),
+                        shack_has_basement=m.get("shack_has_basement", True),
+                        description=m.get("description", ""),
+                    )
+                    db.session.add(map_realm)
+                    db.session.flush()
 
-                        map_realm = MapRealm(
-                            map_id=m["id"],
-                            name=m["name"],
-                            realm=m["realm"],
-                            realm_id=m.get("realm_id", ""),
-                            source=m.get("source", "hens333"),
-                            source_label=m.get("source_label", "Hens333 12-Clock Callouts"),
-                            callout_image_url=m.get("callout_image_url", ""),
-                            callout_image_local_path=m.get("callout_image_local_path", ""),
-                            image_url=m.get("image_url", ""),
-                            layout_type=m.get("layout_type", "Standard"),
-                            jungle_gyms_count=m.get("jungle_gyms_count", 4),
-                            totem_spawns_count=m.get("totem_spawns_count", 5),
-                            pallet_density=m.get("pallet_density", "Medium"),
-                            shack_has_basement=m.get("shack_has_basement", True),
-                            description=desc,
+                    for t_data in DEFAULT_TILES_SEED_A:
+                        db.session.add(
+                            MapTile(
+                                map_id=map_realm.map_id,
+                                name=t_data["name"],
+                                type=t_data.get("type", "landmark"),
+                                x=t_data.get("x", 0.0),
+                                y=t_data.get("y", 0.0),
+                                seed_variant="seed_a",
+                                floor=1,
+                                has_pallet=t_data.get("has_pallet", False),
+                                has_window=t_data.get("has_window", False),
+                            )
                         )
-                        db.session.add(map_realm)
-                        db.session.flush()
-
-                        if m.get("tiles"):
-                            for tile in m.get("tiles", []):
-                                pos = tile.get("position", {})
-                                db.session.add(
-                                    MapTile(
-                                        map_id=map_realm.map_id,
-                                        name=tile.get("name", ""),
-                                        type=tile.get("type", "landmark"),
-                                        x=pos.get("x", 0.0),
-                                        y=pos.get("y", 0.0),
-                                        seed_variant=m.get("seed_variant", "seed_a"),
-                                        floor=m.get("floor", 1),
-                                        has_pallet=tile.get("has_pallet", False),
-                                        has_window=tile.get("has_window", False),
-                                    )
-                                )
-                        elif clock_sys and isinstance(clock_sys, dict):
-                            landmark_positions = [
-                                ("twelve_o_clock", "12 O'Clock: " + str(clock_sys.get("twelve_o_clock", "Main Building / North Exit Gate")), 0.5, 0.1),
-                                ("three_o_clock", "3 O'Clock: " + str(clock_sys.get("three_o_clock", "East Gym / Outer Loop")), 0.9, 0.5),
-                                ("six_o_clock", "6 O'Clock: " + str(clock_sys.get("six_o_clock", "Killer Shack / South Exit Gate")), 0.5, 0.9),
-                                ("nine_o_clock", "9 O'Clock: " + str(clock_sys.get("nine_o_clock", "West Gym / L-T Wall")), 0.1, 0.5),
-                                ("center", "Center: " + str(clock_sys.get("center", "Central Landmark")), 0.5, 0.5),
-                            ]
-                            for key, tile_name, tx, ty in landmark_positions:
-                                db.session.add(
-                                    MapTile(
-                                        map_id=map_realm.map_id,
-                                        name=tile_name,
-                                        type="landmark",
-                                        x=tx,
-                                        y=ty,
-                                        seed_variant="seed_a",
-                                        floor=1,
-                                        has_pallet=("shack" in tile_name.lower() or "gym" in tile_name.lower()),
-                                        has_window=("shack" in tile_name.lower() or "gym" in tile_name.lower() or "main" in tile_name.lower()),
-                                    )
-                                )
-                db.session.commit()
+            db.session.commit()
     except Exception as e:
         db.session.rollback()
         logger.error(f"Error seeding database from JSON files: {e}")

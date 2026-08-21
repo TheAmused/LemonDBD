@@ -237,19 +237,18 @@ class TestPerkOwnerMatching(unittest.TestCase):
         self.assertEqual(iron_grasp.character, "General")
 
 
+import gc
 import os
-import uuid
+import tempfile
+import unittest
+from pathlib import Path
 from app.services.db_service import DatabaseService
 
 
 class TestPruneStaleCharacterRows(unittest.TestCase):
     def setUp(self):
-        self.db_path = f"test_prune_stale_{uuid.uuid4().hex}.db"
-        if os.path.exists(self.db_path):
-            try:
-                os.remove(self.db_path)
-            except Exception:
-                pass
+        self._temp_dir = tempfile.TemporaryDirectory()
+        self.db_path = str(Path(self._temp_dir.name) / "test_prune_stale.db")
         self.db_service = DatabaseService(db_path=self.db_path)
         self.db_service.init_db()
 
@@ -283,11 +282,11 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
         conn.close()
 
     def tearDown(self):
-        if os.path.exists(self.db_path):
-            try:
-                os.remove(self.db_path)
-            except Exception:
-                pass
+        gc.collect()
+        try:
+            self._temp_dir.cleanup()
+        except Exception:
+            pass
 
     def _count(self, table):
         conn = self.db_service.get_connection()

@@ -7,13 +7,17 @@ import {
   CharacterViewBaseProps,
   AddonItem,
   EquipmentItem,
+  OfferingItem,
   getAssetUrl,
+  formatLocalizedReleaseDate,
+  formatKillerHeight,
 } from './types';
 import { CharacterBreadcrumbs } from './components/CharacterBreadcrumbs';
 import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
 import { KillerCombatStats } from './components/KillerCombatStats';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { KillerEquipmentSection } from './components/KillerEquipmentSection';
+import { OfferingsSection } from './components/OfferingsSection';
 import { LoreModal } from './modals/LoreModal';
 import { Model3DModal } from './modals/Model3DModal';
 import { KillerPowerModal } from './modals/KillerPowerModal';
@@ -33,22 +37,25 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
   const rawDict = (dict || {}) as Record<string, Record<string, string>>;
   const t: Record<string, string> = rawDict.characterDetail || rawDict.characters || {};
 
-  const { character, power: killerPower, perks = [], addons = [] } = detailData;
+  const { character, power: killerPower, perks = [], addons = [], offerings = [] } = detailData;
 
   const [isLoreModalOpen, setIsLoreModalOpen] = useState<boolean>(false);
   const [isModelModalOpen, setIsModelModalOpen] = useState<boolean>(false);
   const [isPowerModalOpen, setIsPowerModalOpen] = useState<boolean>(false);
   const [isTerrorRadiusModalOpen, setIsTerrorRadiusModalOpen] = useState<boolean>(false);
-  const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | null>(null);
+  const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | OfferingItem | null>(null);
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
   const killerSpeed = killerPower?.movement_speed || '4.6 m/s (115%)';
   const killerTerrorRadius = killerPower?.terror_radius || '32 metres';
   const killerTRMeters = killerPower?.terror_radius_meters || 32;
-  const killerHeight = killerPower?.height || 'Tall';
+  const killerHeight = formatKillerHeight(killerPower?.height, t);
 
   const chapterName = character.chapter_name || t.baseGame || 'Base Game';
-  const releaseDate = character.release_date || String(character.release_year || '2016');
+  const releaseDate = formatLocalizedReleaseDate(
+    character.release_date || String(character.release_year || '2016'),
+    currentLocale
+  );
   const rawLoreText = character.lore || t.noLoreFound || "No lore records discovered in the Entity's Archives yet.";
 
   return (
@@ -182,6 +189,15 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
         addons={addons}
         backendBase={backendBase}
         onSelectEquipment={(item) => setSelectedEquipment(item)}
+        t={t}
+      />
+
+      {/* 4. Dedicated Killer Offerings Section */}
+      <OfferingsSection
+        offerings={offerings}
+        role="Killer"
+        backendBase={backendBase}
+        onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
         t={t}
       />
 

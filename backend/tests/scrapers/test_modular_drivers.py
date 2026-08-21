@@ -171,6 +171,7 @@ def test_wiki_gg_scraper_orchestrator_selective():
     orchestrator.parse_perks = MagicMock(return_value=[])
     orchestrator.parse_wiki_items = MagicMock(return_value=[])
     orchestrator.parse_wiki_addons = MagicMock(return_value=[])
+    orchestrator.scrape_offerings = MagicMock(return_value=[])
     orchestrator.scrape_translations = MagicMock()
 
     orchestrator.scrape_all(languages=["pl", "de"])

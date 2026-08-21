@@ -1,7 +1,7 @@
 # docker-compose.yml
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:alpine
     container_name: dbd_db
     restart: unless-stopped
     environment:

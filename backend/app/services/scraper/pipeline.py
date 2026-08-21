@@ -73,7 +73,7 @@ def execute_sync_pipeline(
 
     try:
         logger.info("Scraping deadbydaylight.wiki.gg dynamic data via API...")
-        characters, perks, items, addons = wikigg_driver.scrape_all()
+        characters, perks, items, addons, offerings = wikigg_driver.scrape_all()
 
         maps: List[MapData] = []
         try:
@@ -95,31 +95,8 @@ def execute_sync_pipeline(
             items=items,
             addons=addons,
             maps=maps,
+            offerings=offerings,
         )
-
-        try:
-            data_dir.mkdir(parents=True, exist_ok=True)
-            if maps:
-                maps_export = [
-                    {
-                        "id": m.id,
-                        "name": m.name,
-                        "realm": m.realm,
-                        "realm_id": m.realm_id,
-                        "source": m.source,
-                        "source_label": m.source_label,
-                        "callout_image_url": m.callout_image_url,
-                        "callout_image_local_path": m.callout_image_local_path,
-                        "image_url": m.callout_image_url,
-                        "clock_system": m.clock_system,
-                        "description": m.clock_system.get("description", "") if m.clock_system else "",
-                    }
-                    for m in maps
-                ]
-                with open(data_dir / "maps.json", "w", encoding="utf-8") as f:
-                    json.dump(maps_export, f, indent=2, ensure_ascii=False)
-        except Exception as export_err:
-            logger.warning(f"Could not update maps.json cache: {export_err}")
 
         if download_assets:
             total_downloads = (
@@ -128,6 +105,7 @@ def execute_sync_pipeline(
                 + len(items)
                 + len(addons)
                 + len(maps)
+                + len(offerings)
             )
             ScraperStateManager.update_status(
                 current_step="downloading_assets",
@@ -138,6 +116,7 @@ def execute_sync_pipeline(
             try:
                 static_dir.mkdir(parents=True, exist_ok=True)
                 (static_dir / "icons").mkdir(parents=True, exist_ok=True)
+                (static_dir / "icons" / "offerings").mkdir(parents=True, exist_ok=True)
             except Exception as static_prep_err:
                 logger.warning(f"Could not prepare static icons directory {static_dir}: {static_prep_err}")
 
@@ -150,6 +129,7 @@ def execute_sync_pipeline(
                         items=items,
                         addons=addons,
                         maps=maps,
+                        offerings=offerings,
                         impersonate_browser=impersonate_browser,
                         max_concurrent_downloads=max_concurrent_downloads,
                         request_timeout=request_timeout,
@@ -157,6 +137,15 @@ def execute_sync_pipeline(
                 )
             except Exception as asset_err:
                 logger.warning(f"Asset downloading encountered an issue: {asset_err}")
+
+        # Auto-sync official translations across all 5 languages
+        try:
+            logger.info("Auto-syncing translations across EN, PL, DE, ES, JA...")
+            from app.services.translations import TranslationService
+            trans_service = TranslationService()
+            trans_service.sync_all_locales_to_db(locales=["en", "pl", "de", "es", "ja"])
+        except Exception as trans_pipeline_err:
+            logger.warning(f"Could not auto-sync translations in scraper pipeline: {trans_pipeline_err}")
 
         now_iso = datetime.now(timezone.utc).isoformat()
         ScraperStateManager.save_config(
@@ -182,6 +171,7 @@ def execute_sync_pipeline(
             "total_items": len(items),
             "total_addons": len(addons),
             "total_maps": len(maps),
+            "total_offerings": len(offerings),
         }
         stats.update(db_sync_metrics)
 

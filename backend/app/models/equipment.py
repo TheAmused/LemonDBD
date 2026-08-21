@@ -85,3 +85,43 @@ class Addon(Base):
             "translations": self.translations or {},
         }
 
+
+class Offering(Base):
+    __tablename__ = "offerings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(150), unique=True, index=True)
+    category: Mapped[str] = mapped_column(String(50), default="Offering")
+    role: Mapped[str] = mapped_column(String(20), default="All")  # "Survivor", "Killer", "All"
+    description: Mapped[str] = mapped_column(Text, default="")
+    icon_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    icon_local_path: Mapped[Optional[str]] = mapped_column(
+        String(255), nullable=True
+    )
+    rarity: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    translations: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
+    )
+
+    def to_dict(self, lang: Optional[str] = None) -> dict:
+        name = self.name
+        description = self.description
+        if lang and self.translations and lang in self.translations:
+            trans = self.translations.get(lang) or {}
+            if isinstance(trans, dict):
+                name = trans.get("name") or name
+                description = trans.get("description") or description
+
+        return {
+            "id": self.id,
+            "name": name,
+            "category": self.category,
+            "role": self.role,
+            "description": description,
+            "icon_url": self.icon_url or "",
+            "icon_local_path": self.icon_local_path or "",
+            "rarity": self.rarity or "",
+            "translations": self.translations or {},
+        }
+
+

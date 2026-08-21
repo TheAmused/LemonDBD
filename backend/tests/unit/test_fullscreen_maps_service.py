@@ -1,21 +1,26 @@
 # backend/tests/unit/test_fullscreen_maps_service.py
+import gc
 import os
+import tempfile
 import unittest
+from pathlib import Path
 from app.services.db_service import DatabaseService
 from app.services.map_service import MapService
 
 class TestFullscreenMapsService(unittest.TestCase):
     def setUp(self):
-        self.db_path = "test_fullscreen_maps.db"
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+        self._temp_dir = tempfile.TemporaryDirectory()
+        self.db_path = str(Path(self._temp_dir.name) / "test_fullscreen_maps.db")
         self.db_service = DatabaseService(db_path=self.db_path)
         self.db_service.init_db()
         self.service = MapService(db_service=self.db_service)
 
     def tearDown(self):
-        if os.path.exists(self.db_path):
-            os.remove(self.db_path)
+        gc.collect()
+        try:
+            self._temp_dir.cleanup()
+        except Exception:
+            pass
 
     def test_get_map_with_seed_variants_and_pallets(self):
         detail = self.service.get_map_by_id("coal_tower", seed_variant="seed_a", floor=1)

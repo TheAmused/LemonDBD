@@ -13,9 +13,30 @@ def prune_stale_character_rows(valid_names: Optional[Set[str]], get_conn_fn) -> 
         return {}
 
     deleted: Dict[str, int] = {}
+    if get_conn_fn:
+        conn = get_conn_fn()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("PRAGMA foreign_keys = ON;")
+
+            for table, column in (("gauntlet_runs", "current_character_id"), ("page_streak_runs", "killer")):
+                cursor.execute(f"SELECT id, {column} AS character_name FROM {table};")
+                stale = [row["id"] for row in cursor.fetchall() if row["character_name"] not in names]
+                if stale:
+                    placeholders = ",".join("?" for _ in stale)
+                    cursor.execute(f"DELETE FROM {table} WHERE id IN ({placeholders});", stale)
+                deleted[table] = len(stale)
+
+            conn.commit()
+            return deleted
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
     try:
         if current_app:
-            # SQLAlchemy ORM deletion
             stale_cr = db.session.scalars(
                 select(GauntletRun).where(~GauntletRun.current_character_id.in_(names))
             ).all()
@@ -34,27 +55,6 @@ def prune_stale_character_rows(valid_names: Optional[Set[str]], get_conn_fn) -> 
             return deleted
     except Exception:
         pass
-
-    # Fallback to direct SQLite connection
-    conn = get_conn_fn()
-    try:
-        cursor = conn.cursor()
-        cursor.execute("PRAGMA foreign_keys = ON;")
-
-        for table, column in (("gauntlet_runs", "current_character_id"), ("page_streak_runs", "killer")):
-            cursor.execute(f"SELECT id, {column} AS character_name FROM {table};")
-            stale = [row["id"] for row in cursor.fetchall() if row["character_name"] not in names]
-            if stale:
-                placeholders = ",".join("?" for _ in stale)
-                cursor.execute(f"DELETE FROM {table} WHERE id IN ({placeholders});", stale)
-            deleted[table] = len(stale)
-
-        conn.commit()
-    finally:
-        try:
-            conn.close()
-        except Exception:
-            pass
 
     return deleted
 

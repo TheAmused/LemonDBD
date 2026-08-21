@@ -63,7 +63,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // Rosters State (Database-Driven)
   const [rosters, setRosters] = useState<RosterItem[]>([]);
-  const [selectedRosterSlug, setSelectedRosterSlug] = useState<string>('canon');
+  const [selectedRosterSlug, setSelectedRosterSlug] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('dbd_smash_selected_roster') || 'canon';
+    }
+    return 'canon';
+  });
 
   // Filters State
   const [roleFilter, setRoleFilter] = useState<'all' | CharacterRole>('all');
@@ -946,6 +951,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         selectedRosterSlug={selectedRosterSlug}
         onSelectRoster={(slug) => {
           setSelectedRosterSlug(slug);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('dbd_smash_selected_roster', slug);
+          }
           setRosterSwitchEffect(slug);
           setTimeout(() => setRosterSwitchEffect(null), 1200);
         }}

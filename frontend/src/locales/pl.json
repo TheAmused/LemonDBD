@@ -242,8 +242,12 @@
     "smashOrPass": "💋 Smash or Pass"
   },
   "smashOrPass": {
-    "title": "Smash or Pass",
-    "subtitle": "Oceń kandydatów z Dead by Daylight, odkryj swój archetyp romansu we Mgle i współtwórz rankingi społeczności.",
+    "title": "Smash czy Pass",
+    "selectRoster": "WYBIERZ ZESTAW",
+    "dwellHint": "Chwyć i obróć. Przytrzymaj 1s na środku, aby wybrać.",
+    "active": "AKTYWNY",
+    "dwellActive": "Aktywny ({seconds}s)",
+    "subtitle": "Oceń kandydatów Dead by Daylight, odkryj swój Archetyp Randkowy Próby i głosuj. Współtwórz rankingi społeczności.",
     "smash": "Smash",
     "pass": "Pass",
     "superSmash": "Super Smash",

@@ -243,6 +243,10 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
+    "selectRoster": "名簿を選択",
+    "dwellHint": "ドラッグして回転。中央で1秒長押しして選択。",
+    "active": "有効",
+    "dwellActive": "有効 ({seconds}秒)",
     "subtitle": "Dead by Daylightの候補者を評価し、あなたの霧の恋愛アーキタイプを発見して、コミュニティランキングに参加しましょう。",
     "smash": "スマッシュ",
     "pass": "パス",

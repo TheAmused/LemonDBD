@@ -295,6 +295,66 @@ CREATE TABLE IF NOT EXISTS smash_pass_votes (
     session_id TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS rosters (
+    id TEXT PRIMARY KEY,
+    slug TEXT UNIQUE NOT NULL,
+    name_i18n_key TEXT NOT NULL,
+    description_i18n_key TEXT NOT NULL,
+    cover_image_url TEXT,
+    theme_color TEXT NOT NULL DEFAULT '#ff0055',
+    category TEXT NOT NULL DEFAULT 'DBD',
+    is_nsfw BOOLEAN NOT NULL DEFAULT 0,
+    is_active BOOLEAN NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS entities (
+    id TEXT PRIMARY KEY,
+    roster_id TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    name TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'Survivor',
+    gender TEXT NOT NULL DEFAULT 'female',
+    media_url TEXT,
+    media_type TEXT NOT NULL DEFAULT 'image',
+    metadata_json TEXT DEFAULT '{}',
+    order_index INTEGER NOT NULL DEFAULT 0,
+    is_active BOOLEAN NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (roster_id) REFERENCES rosters(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS entity_stats (
+    id TEXT PRIMARY KEY,
+    entity_id TEXT UNIQUE NOT NULL,
+    smash_count INTEGER NOT NULL DEFAULT 0,
+    pass_count INTEGER NOT NULL DEFAULT 0,
+    super_smash_count INTEGER NOT NULL DEFAULT 0,
+    total_votes INTEGER NOT NULL DEFAULT 0,
+    smash_rate REAL NOT NULL DEFAULT 0.0,
+    chaos_rating REAL NOT NULL DEFAULT 50.0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS votes (
+    id TEXT PRIMARY KEY,
+    entity_id TEXT NOT NULL,
+    session_id TEXT,
+    user_id INTEGER,
+    vote_type TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS translations (
+    id TEXT PRIMARY KEY,
+    locale TEXT NOT NULL,
+    key TEXT NOT NULL,
+    value TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 """
 
 

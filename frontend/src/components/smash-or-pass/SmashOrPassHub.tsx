@@ -201,6 +201,22 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   }, []);
 
   const currentCharacter = deck[currentIndex] || null;
+  const nextCharacter = deck[currentIndex + 1] || null;
+  const thirdCharacter = deck[currentIndex + 2] || null;
+
+  // Preload next 3 images in queue
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const preloads = deck.slice(currentIndex + 1, currentIndex + 4);
+    preloads.forEach((item) => {
+      if (item.media_url) {
+        const img = new Image();
+        img.src = item.media_url.startsWith('http')
+          ? item.media_url
+          : `${getBackendBaseUrl()}${item.media_url}`;
+      }
+    });
+  }, [currentIndex, deck]);
 
   // 4. Complete Exit Transition
   const handleExitComplete = useCallback(() => {
@@ -253,11 +269,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       let initialOffset = { x: 0, y: 0 };
       if (dragPhysics.x !== 0 || dragPhysics.y !== 0) {
         initialOffset = {
-          x: dragPhysics.x > 0 ? screenWidth * 0.85 : -screenWidth * 0.85,
-          y: dragPhysics.y * 1.5,
+          x: dragPhysics.x > 0 ? screenWidth * 1.15 : -screenWidth * 1.15,
+          y: dragPhysics.y * 1.2,
         };
       } else {
-        initialOffset = vote === 'smash' ? { x: screenWidth * 0.85, y: -20 } : { x: -screenWidth * 0.85, y: 20 };
+        initialOffset = vote === 'smash' ? { x: screenWidth * 1.15, y: -20 } : { x: -screenWidth * 1.15, y: 20 };
       }
 
       setIsExiting(true);
@@ -265,10 +281,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       setExitOffset(initialOffset);
 
       if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
-      // Snappy and visceral 400ms transition
+      // Silky 550ms gesture curve
       exitTimeoutRef.current = setTimeout(() => {
         handleExitComplete();
-      }, 400);
+      }, 550);
 
       setVoteHistory((prev) => [
         ...prev,
@@ -427,28 +443,32 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       {/* ========================================================================= */}
       {/* REDESIGNED UNIFIED COMMAND DOCK (TOP BAR + TELEMETRY + FILTERS + ACTIONS) */}
       {/* ========================================================================= */}
-      <header className="relative z-20 mx-auto w-full max-w-6xl rounded-3xl bg-[#09090b]/85 border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.8)] backdrop-blur-2xl p-3 sm:p-4 space-y-2.5 transition-all">
+      <header className="relative z-20 mx-auto w-full max-w-6xl rounded-3xl bg-zinc-950/85 border border-pink-500/25 shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_35px_rgba(255,0,85,0.08)] backdrop-blur-2xl p-3.5 sm:p-4 md:p-5 space-y-3.5 transition-all cockpit-neon-pulse">
         {/* ROW 1: Brand + Dynamic Roster Selector + Telemetry HUD + Action Cluster */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
+        <div className="flex flex-col xl:flex-row items-center justify-between gap-3 sm:gap-4">
           {/* Brand & Edition Dropdown */}
-          <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-start">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-600/30 to-[#ff0055]/30 border border-[#ff0055]/50 text-[#ff0055] shadow-[0_0_15px_rgba(255,0,85,0.35)]">
-                <Heart className="h-4 w-4 fill-[#ff0055] animate-pulse" />
-              </span>
-              <div>
-                <h1 className="text-base sm:text-lg font-black tracking-tight font-mono text-transparent bg-clip-text bg-gradient-to-r from-pink-100 via-rose-200 to-red-300">
+          <div className="flex items-center gap-3 w-full xl:w-auto justify-between xl:justify-start">
+            <div className="flex items-center gap-3">
+              <div className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-600/30 via-pink-600/20 to-[#ff0055]/30 border border-[#ff0055]/60 text-[#ff0055] shadow-[0_0_20px_rgba(255,0,85,0.45)] group shrink-0">
+                <Heart className="h-5 w-5 fill-[#ff0055] animate-pulse" />
+                <div className="absolute -inset-0.5 rounded-2xl bg-[#ff0055] opacity-20 blur group-hover:opacity-40 transition-opacity" />
+              </div>
+              <div className="leading-tight">
+                <h1 className="text-base sm:text-lg font-black tracking-wider font-mono text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-rose-100 to-white drop-shadow-[0_0_12px_rgba(255,0,85,0.4)]">
                   {title}
                 </h1>
+                <span className="text-[9px] font-mono font-bold tracking-widest text-pink-400/80 uppercase block">
+                  {activeRoster.category || 'DBD'} OCCULT DOSSIER
+                </span>
               </div>
             </div>
 
             {/* Custom Glass Roster Dropdown Pill */}
-            <div className="relative">
+            <div className="relative shrink-0">
               <select
                 value={selectedRosterSlug}
                 onChange={(e) => setSelectedRosterSlug(e.target.value)}
-                className="appearance-none pl-3 pr-8 py-1.5 rounded-xl bg-zinc-900/90 border border-pink-500/30 hover:border-[#ff0055] text-xs font-mono font-bold text-pink-200 focus:outline-none cursor-pointer transition-all shadow-inner"
+                className="appearance-none pl-3.5 pr-8 py-2 rounded-2xl bg-zinc-900/90 border border-pink-500/40 hover:border-[#ff0055] text-xs font-mono font-bold text-pink-100 focus:outline-none focus:ring-2 focus:ring-[#ff0055]/40 cursor-pointer transition-all shadow-inner hover:shadow-[0_0_15px_rgba(255,0,85,0.25)]"
               >
                 {rosters.length > 0
                   ? rosters.map((r) => (
@@ -462,36 +482,36 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                       </option>
                     )}
               </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-pink-400 pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-pink-400 pointer-events-none" />
             </div>
           </div>
 
           {/* Telemetry HUD & Action Cluster */}
-          <div className="flex items-center flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
-            {/* Live Session Telemetry Pill */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-900/80 border border-zinc-800 text-xs font-mono shadow-inner">
-              <span className="flex items-center gap-1.5 text-zinc-400">
-                <Layers className="h-3.5 w-3.5 text-zinc-500" />
-                <span className="font-bold text-zinc-200">{remainingInDeck}</span>
-                <span className="text-[10px] text-zinc-500">
-                  {hudLabels.left || 'left'} ({totalSessionVotes}/{totalEditionCount})
+          <div className="flex items-center flex-wrap gap-2.5 w-full xl:w-auto justify-between xl:justify-end">
+            {/* Live Session Telemetry Capsule */}
+            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-xs font-mono shadow-inner">
+              <span className="flex items-center gap-1.5 text-cyan-400 font-bold">
+                <Layers className="h-3.5 w-3.5 text-cyan-400/80" />
+                <span className="text-zinc-100 font-black">{remainingInDeck}</span>
+                <span className="text-[10px] text-zinc-400 font-medium">
+                  {hudLabels.left || (locale === 'pl' ? 'pozostało' : 'left')}
                 </span>
               </span>
               <span className="text-zinc-700">|</span>
-              <span className="flex items-center gap-1 text-[#ff0055] font-bold">
-                <Heart className="h-3 w-3 fill-[#ff0055]" />
+              <span className="flex items-center gap-1 text-[#ff0055] font-black">
+                <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
                 <span>{sessionSmashes}</span>
               </span>
               <span className="text-zinc-700">|</span>
-              <span className="flex items-center gap-1 text-zinc-400 font-bold">
-                <ThumbsDown className="h-3 w-3 text-zinc-500" />
+              <span className="flex items-center gap-1 text-slate-400 font-black">
+                <ThumbsDown className="h-3.5 w-3.5 text-slate-400" />
                 <span>{sessionPasses}</span>
               </span>
               <span className="text-zinc-700">|</span>
-              <span className="text-pink-400 font-black">{sessionSmashRate}%</span>
+              <span className="text-amber-300 font-black tracking-wide">{sessionSmashRate}%</span>
             </div>
 
-            {/* Compact Action Buttons */}
+            {/* Micro Action Controls */}
             <div className="flex items-center gap-1.5">
               {/* BGM Toggle */}
               <button
@@ -500,8 +520,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 title={isBgmPlaying ? dict?.smashOrPass?.tooltips?.pauseBgm || 'Pause BGM (B)' : dict?.smashOrPass?.tooltips?.playBgm || 'Play BGM (B)'}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${
                   isBgmPlaying
-                    ? 'bg-rose-950/80 border-[#ff0055] text-pink-300 shadow-[0_0_15px_rgba(255,0,85,0.4)] animate-pulse'
-                    : 'bg-zinc-900/90 border-zinc-800 text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-rose-950/90 border-[#ff0055] text-pink-300 shadow-[0_0_15px_rgba(255,0,85,0.5)] animate-pulse'
+                    : 'bg-zinc-900/90 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
                 }`}
               >
                 <Music className="h-3.5 w-3.5 text-pink-400" />
@@ -512,17 +532,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={() => setIsPersonaOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-500/15 border border-pink-500/30 hover:border-pink-500/60 text-pink-300 text-xs font-mono font-bold transition-all shadow-md cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-500/15 border border-pink-500/30 hover:border-pink-500/60 text-pink-300 text-xs font-mono font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
               >
                 <Sparkles className="h-3.5 w-3.5 text-pink-400" />
-                <span className="hidden sm:inline">{hudLabels.archetype || 'Archetype'}</span>
+                <span className="hidden sm:inline">{hudLabels.archetype || (locale === 'pl' ? 'Archetyp' : 'Archetype')}</span>
               </button>
 
               {/* Leaderboard Modal */}
               <button
                 type="button"
                 onClick={() => setIsLeaderboardOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 text-xs font-mono font-bold transition-all shadow-md cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 text-xs font-mono font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
               >
                 <Trophy className="h-3.5 w-3.5 text-amber-400" />
                 <span className="hidden sm:inline">{hudLabels.hallOfFame || leaderboardLabel}</span>
@@ -533,7 +553,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={shuffleDeck}
                 title={dict?.smashOrPass?.tooltips?.shuffle || hudLabels.shuffle || 'Shuffle Remaining'}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
               >
                 <Shuffle className="h-3.5 w-3.5" />
               </button>
@@ -543,7 +563,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={toggleSound}
                 title={isMuted ? dict?.smashOrPass?.tooltips?.unmute || 'Unmute Sound FX (M)' : dict?.smashOrPass?.tooltips?.mute || 'Mute Sound FX (M)'}
-                className={`flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer ${
+                className={`flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 ${
                   isMuted
                     ? 'bg-zinc-900/90 border-zinc-800 text-zinc-600'
                     : 'bg-pink-500/15 border-pink-500/40 text-pink-400 shadow-[0_0_12px_rgba(255,0,85,0.3)]'
@@ -557,7 +577,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsResetConfirmOpen(true)}
                 title={dict?.smashOrPass?.tooltips?.resetAllVotes || 'Reset All My Votes'}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-rose-400 hover:border-rose-500/40 transition-all cursor-pointer"
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-rose-400 hover:border-rose-500/40 transition-all cursor-pointer hover:scale-105 active:scale-95"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -567,7 +587,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsHowToPlayOpen(true)}
                 title={dict?.smashOrPass?.tooltips?.howToPlay || hudLabels.howToPlay || 'How to Play & Keybindings'}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 transition-all cursor-pointer"
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
               >
                 <HelpCircle className="h-3.5 w-3.5" />
               </button>
@@ -575,16 +595,16 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           </div>
         </div>
 
-        {/* ROW 2: Integrated Filter Capsule (Segmented Micro-Switches) */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 pt-2 border-t border-zinc-800/80">
+        {/* ROW 2: Tactical Filter Array (Roles & Genders) */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-3 border-t border-zinc-800/80">
           {/* Role Segmented Switch */}
-          <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800 rounded-xl w-full md:w-auto shadow-inner text-xs font-mono font-bold">
+          <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800/90 rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold">
             <button
               type="button"
               onClick={() => handleFilterChange('role', 'all')}
-              className={`flex-1 md:flex-none px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`flex-1 md:flex-none px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
                 roleFilter === 'all'
-                  ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.4)]'
+                  ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.5)]'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
@@ -593,9 +613,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => handleFilterChange('role', 'Survivor')}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
                 roleFilter === 'Survivor'
-                  ? 'bg-[#00f5d4] text-zinc-950 font-black shadow-[0_0_12px_rgba(0,245,212,0.4)]'
+                  ? 'bg-[#00f5d4] text-zinc-950 font-black shadow-[0_0_14px_rgba(0,245,212,0.45)]'
                   : 'text-zinc-400 hover:text-[#00f5d4]'
               }`}
             >
@@ -605,9 +625,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => handleFilterChange('role', 'Killer')}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
                 roleFilter === 'Killer'
-                  ? 'bg-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.4)]'
+                  ? 'bg-[#ff0055] text-white shadow-[0_0_14px_rgba(255,0,85,0.45)]'
                   : 'text-zinc-400 hover:text-[#ff0055]'
               }`}
             >
@@ -617,11 +637,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           </div>
 
           {/* Gender Segmented Switch */}
-          <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800 rounded-xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
+          <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800/90 rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
             <button
               type="button"
               onClick={() => handleFilterChange('gender', 'all')}
-              className={`px-3 py-1.5 rounded-lg transition-all shrink-0 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
                 genderFilter === 'all'
                   ? 'bg-zinc-800 text-white border border-zinc-700 shadow'
                   : 'text-zinc-400 hover:text-zinc-200'
@@ -632,9 +652,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => handleFilterChange('gender', 'female')}
-              className={`px-3 py-1.5 rounded-lg transition-all shrink-0 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
                 genderFilter === 'female'
-                  ? 'bg-pink-600 text-white shadow-[0_0_10px_rgba(219,39,119,0.4)]'
+                  ? 'bg-pink-600 text-white shadow-[0_0_12px_rgba(219,39,119,0.45)]'
                   : 'text-zinc-400 hover:text-pink-300'
               }`}
             >
@@ -643,9 +663,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => handleFilterChange('gender', 'male')}
-              className={`px-3 py-1.5 rounded-lg transition-all shrink-0 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
                 genderFilter === 'male'
-                  ? 'bg-cyan-600 text-white shadow-[0_0_10px_rgba(8,145,178,0.4)]'
+                  ? 'bg-cyan-600 text-white shadow-[0_0_12px_rgba(8,145,178,0.45)]'
                   : 'text-zinc-400 hover:text-cyan-300'
               }`}
             >
@@ -654,9 +674,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => handleFilterChange('gender', 'monster_other')}
-              className={`px-3 py-1.5 rounded-lg transition-all shrink-0 cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
                 genderFilter === 'monster_other'
-                  ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(147,51,234,0.4)]'
+                  ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(147,51,234,0.45)]'
                   : 'text-zinc-400 hover:text-purple-300'
               }`}
             >
@@ -666,7 +686,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         </div>
       </header>
 
-      {/* MAIN INTERACTIVE ARENA (ZERO KEYCAPS ON MAIN SCREEN) */}
+      {/* MAIN INTERACTIVE ARENA WITH MULTI-CARD STACK QUEUE */}
       <main className="relative flex-1 flex flex-col items-center justify-center my-2 z-20 pointer-events-none">
         {loading ? (
           <div className="flex flex-col items-center gap-3 py-20 text-zinc-400 pointer-events-auto">
@@ -674,20 +694,69 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <span className="text-xs font-mono">Loading {activeRoster.name || selectedRosterSlug} from Database...</span>
           </div>
         ) : currentCharacter ? (
-          <div className="relative flex flex-col items-center justify-center pointer-events-auto">
-            <CharacterCard
-              key={`${currentCharacter.id || currentCharacter.slug}-${currentIndex}`}
-              character={currentCharacter}
-              onVote={handleVote}
-              onDragUpdate={(x, y, isDragging) => setDragPhysics({ x, y, isDragging })}
-              isTopCard={true}
-              isExiting={isExiting}
-              exitType={exitVote}
-              initialExitOffset={exitOffset}
-              onExitComplete={handleExitComplete}
-              locale={locale}
-              dict={dict}
-            />
+          <div className="relative flex flex-col items-center justify-center pointer-events-auto min-h-[460px] sm:min-h-[520px]">
+            {/* CARD 3 IN QUEUE (DEPTH 2) */}
+            {thirdCharacter && (
+              <div
+                key={`queue-3-${thirdCharacter.id || thirdCharacter.slug}`}
+                className="absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-500 ease-out"
+                style={{
+                  transform: 'scale(0.86) translateY(30px)',
+                  opacity: 0.35,
+                  zIndex: 5,
+                }}
+              >
+                <CharacterCard
+                  character={thirdCharacter}
+                  onVote={() => {}}
+                  isTopCard={false}
+                  locale={locale}
+                  dict={dict}
+                />
+              </div>
+            )}
+
+            {/* CARD 2 IN QUEUE (DEPTH 1 - INTERACTIVE PROMOTION) */}
+            {nextCharacter && (
+              <div
+                key={`queue-2-${nextCharacter.id || nextCharacter.slug}`}
+                className="absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-500 ease-out"
+                style={{
+                  transform: dragPhysics.isDragging
+                    ? `scale(${0.93 + Math.min(0.07, Math.abs(dragPhysics.x) / 1200)}) translateY(${Math.max(0, 14 - Math.abs(dragPhysics.x) * 0.035)}px)`
+                    : isExiting
+                    ? 'scale(1) translateY(0px)'
+                    : 'scale(0.93) translateY(14px)',
+                  opacity: isExiting ? 1 : 0.85,
+                  zIndex: 10,
+                }}
+              >
+                <CharacterCard
+                  character={nextCharacter}
+                  onVote={() => {}}
+                  isTopCard={false}
+                  locale={locale}
+                  dict={dict}
+                />
+              </div>
+            )}
+
+            {/* CARD 1 (ACTIVE TOP CARD) */}
+            <div className="relative z-20">
+              <CharacterCard
+                key={`${currentCharacter.id || currentCharacter.slug}-${currentIndex}`}
+                character={currentCharacter}
+                onVote={handleVote}
+                onDragUpdate={(x, y, isDragging) => setDragPhysics({ x, y, isDragging })}
+                isTopCard={true}
+                isExiting={isExiting}
+                exitType={exitVote}
+                initialExitOffset={exitOffset}
+                onExitComplete={handleExitComplete}
+                locale={locale}
+                dict={dict}
+              />
+            </div>
           </div>
         ) : (
           // Finished Deck State

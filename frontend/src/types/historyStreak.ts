@@ -14,6 +14,7 @@ export interface HistoryRun {
   unlocked_perk_names: string[];
   checkpoint_row_index: number;
   current_row_killers: string[];
+  owned_killers: string[];
   row_size: number;
   total_rows: number;
   total_owned_killers: number;

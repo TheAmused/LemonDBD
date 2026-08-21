@@ -71,6 +71,7 @@ class PageStreakPageLog(Base):
     perks_json: Mapped[str] = mapped_column(Text)
     result: Mapped[str] = mapped_column(String(20))
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    triggered_by: Mapped[str] = mapped_column(String(20), default="player")
 
     run: Mapped["PageStreakRun"] = relationship(back_populates="page_logs")
 
@@ -86,5 +87,6 @@ class PageStreakPageLog(Base):
             "timestamp": self.timestamp.isoformat()
             if self.timestamp
             else None,
+            "triggered_by": self.triggered_by,
         }
 

@@ -136,12 +136,17 @@ class SmashOrPassService:
         role: Optional[str] = None,
         gender: Optional[str] = None,
         limit: int = 50,
-    ) -> List[Dict[str, Any]]:
-        """Retrieve feed of unvoted entities for a given session/user within a roster."""
+    ) -> Optional[Dict[str, Any]]:
+        """Retrieve feed of unvoted entities, roster info, and total remaining count."""
         self.ensure_seeded()
         roster = db.session.scalar(select(Roster).where(Roster.slug == roster_slug))
         if not roster:
-            return []
+            return None
+
+        roster_info = next(
+            (r for r in self.get_rosters(active_only=False) if r["slug"] == roster_slug),
+            roster.to_dict(),
+        )
 
         # Identify entities already voted on by this user or session
         voted_conditions = []
@@ -155,6 +160,22 @@ class SmashOrPassService:
             voted_stmt = select(Vote.entity_id).where(or_(*voted_conditions))
             voted_entity_ids = db.session.scalars(voted_stmt).all()
 
+        # Calculate total remaining count
+        count_stmt = select(func.count(Entity.id)).where(
+            Entity.roster_id == roster.id,
+            Entity.is_active.is_(True),
+        )
+        if voted_entity_ids:
+            count_stmt = count_stmt.where(Entity.id.not_in(voted_entity_ids))
+
+        if role and role != "all":
+            count_stmt = count_stmt.where(Entity.role == role)
+        if gender and gender != "all":
+            count_stmt = count_stmt.where(Entity.gender == gender)
+
+        total_remaining = db.session.scalar(count_stmt) or 0
+
+        # Query feed entities
         stmt = (
             select(Entity)
             .options(joinedload(Entity.stat))
@@ -174,7 +195,12 @@ class SmashOrPassService:
 
         stmt = stmt.order_by(Entity.order_index).limit(limit)
         entities = db.session.scalars(stmt).all()
-        return [e.to_dict() for e in entities]
+
+        return {
+            "roster": roster_info,
+            "entities": [e.to_dict() for e in entities],
+            "total_remaining": int(total_remaining),
+        }
 
     def cast_vote(
         self,

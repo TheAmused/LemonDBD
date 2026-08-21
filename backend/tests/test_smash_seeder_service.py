@@ -114,7 +114,10 @@ def test_service_get_feed_and_unvoted_filtering(db_session):
     service = SmashOrPassService()
 
     # Initial feed
-    feed = service.get_feed(roster_slug="canon", limit=10)
+    feed_res = service.get_feed(roster_slug="canon", limit=10)
+    assert feed_res is not None
+    assert feed_res["total_remaining"] == 98
+    feed = feed_res["entities"]
     assert len(feed) == 10
 
     first_entity = feed[0]
@@ -133,26 +136,30 @@ def test_service_get_feed_and_unvoted_filtering(db_session):
     )
 
     # Feed for session_test_1 should now exclude the two voted entities
-    feed_filtered = service.get_feed(
+    feed_filtered_res = service.get_feed(
         roster_slug="canon", session_id="session_test_1", limit=10
     )
-    filtered_ids = {e["id"] for e in feed_filtered}
+    assert feed_filtered_res["total_remaining"] == 96
+    filtered_ids = {e["id"] for e in feed_filtered_res["entities"]}
     assert first_entity["id"] not in filtered_ids
     assert second_entity["id"] not in filtered_ids
 
     # Another session still sees them
-    feed_other = service.get_feed(
+    feed_other_res = service.get_feed(
         roster_slug="canon", session_id="session_other", limit=10
     )
-    other_ids = {e["id"] for e in feed_other}
+    assert feed_other_res["total_remaining"] == 98
+    other_ids = {e["id"] for e in feed_other_res["entities"]}
     assert first_entity["id"] in other_ids
     assert second_entity["id"] in other_ids
 
     # Test role & gender filters
-    female_survivors = service.get_feed(
+    female_survivors_res = service.get_feed(
         roster_slug="canon", role="Survivor", gender="female", limit=50
     )
+    female_survivors = female_survivors_res["entities"]
     assert len(female_survivors) == 28
+    assert female_survivors_res["total_remaining"] == 28
     assert all(e["role"] == "Survivor" and e["gender"] == "female" for e in female_survivors)
 
 
@@ -228,8 +235,8 @@ def test_service_cast_vote_atomic_counts_and_rate(db_session):
 def test_service_cast_vote_by_entity_id(db_session):
     """Verify cast_vote works with entity_id directly."""
     service = SmashOrPassService()
-    feed = service.get_feed(roster_slug="cyberpunk_2077", limit=1)
-    target = feed[0]
+    feed_res = service.get_feed(roster_slug="cyberpunk_2077", limit=1)
+    target = feed_res["entities"][0]
 
     res = service.cast_vote(
         entity_id=target["id"],

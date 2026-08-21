@@ -5,11 +5,11 @@ import time
 from collections import defaultdict
 from typing import Dict, List, Optional
 from flask import Blueprint, jsonify, request
-from sqlalchemy import func, or_, select
+from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.security import get_current_user
-from app.models.smash_or_pass import Entity, Roster, Vote
+from app.models.smash_or_pass import Roster
 from app.services.others.smash_or_pass_service import SmashOrPassService
 
 logger = logging.getLogger(__name__)
@@ -19,18 +19,25 @@ smash_service = SmashOrPassService()
 
 
 class SlidingWindowRateLimiter:
-    """In-memory sliding window rate limiter per client identifier."""
+    """In-memory sliding window rate limiter per client identifier with auto-pruning."""
 
-    def __init__(self, max_requests: int = 60, window_seconds: int = 60):
+    def __init__(self, max_requests: int = 60, window_seconds: int = 60, prune_interval: int = 50):
         self.max_requests = max_requests
         self.window_seconds = window_seconds
+        self.prune_interval = prune_interval
         self._requests: Dict[str, List[float]] = defaultdict(list)
         self._lock = threading.Lock()
+        self._call_count = 0
 
     def is_allowed(self, client_key: str) -> bool:
         now = time.time()
         cutoff = now - self.window_seconds
         with self._lock:
+            self._call_count += 1
+            if self._call_count >= self.prune_interval:
+                self._prune_stale_keys(cutoff)
+                self._call_count = 0
+
             timestamps = self._requests[client_key]
             filtered = [t for t in timestamps if t > cutoff]
             if len(filtered) >= self.max_requests:
@@ -40,9 +47,15 @@ class SlidingWindowRateLimiter:
             self._requests[client_key] = filtered
             return True
 
+    def _prune_stale_keys(self, cutoff: float) -> None:
+        stale_keys = [k for k, v in self._requests.items() if not v or max(v) <= cutoff]
+        for k in stale_keys:
+            del self._requests[k]
+
     def reset(self) -> None:
         with self._lock:
             self._requests.clear()
+            self._call_count = 0
 
 
 vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
@@ -78,43 +91,11 @@ def get_roster_feed(slug: str):
     limit = request.args.get("limit", default=50, type=int)
 
     current_user = get_current_user()
-    if current_user and not user_id:
+    if current_user:
         user_id = current_user.id
 
     try:
-        # Check roster existence
-        roster_obj = db.session.scalar(select(Roster).where(Roster.slug == slug))
-        if not roster_obj:
-            return jsonify({"error": f"Roster '{slug}' not found"}), 404
-
-        roster_info = next(
-            (r for r in smash_service.get_rosters(active_only=False) if r["slug"] == slug),
-            roster_obj.to_dict(),
-        )
-
-        # Calculate total_remaining unvoted entities matching filters
-        voted_conditions = []
-        if user_id is not None:
-            voted_conditions.append(Vote.user_id == user_id)
-        if session_id is not None:
-            voted_conditions.append(Vote.session_id == session_id)
-
-        count_stmt = select(func.count(Entity.id)).where(
-            Entity.roster_id == roster_obj.id,
-            Entity.is_active.is_(True),
-        )
-        if voted_conditions:
-            voted_stmt = select(Vote.entity_id).where(or_(*voted_conditions))
-            count_stmt = count_stmt.where(Entity.id.not_in(voted_stmt))
-
-        if role and role != "all":
-            count_stmt = count_stmt.where(Entity.role == role)
-        if gender and gender != "all":
-            count_stmt = count_stmt.where(Entity.gender == gender)
-
-        total_remaining = db.session.scalar(count_stmt) or 0
-
-        entities = smash_service.get_feed(
+        feed_data = smash_service.get_feed(
             roster_slug=slug,
             session_id=session_id,
             user_id=user_id,
@@ -122,19 +103,10 @@ def get_roster_feed(slug: str):
             gender=gender,
             limit=limit,
         )
+        if feed_data is None:
+            return jsonify({"error": f"Roster '{slug}' not found"}), 404
 
-        return (
-            jsonify(
-                {
-                    "data": {
-                        "roster": roster_info,
-                        "entities": entities,
-                        "total_remaining": total_remaining,
-                    }
-                }
-            ),
-            200,
-        )
+        return jsonify({"data": feed_data}), 200
     except Exception as e:
         logger.error(f"Error fetching feed for roster '{slug}': {e}")
         return jsonify({"error": str(e)}), 500
@@ -144,7 +116,7 @@ def get_roster_feed(slug: str):
 def cast_vote():
     """
     Cast a vote (smash, pass, super_smash) for an entity or character.
-    Applies sliding-window rate limiting per session_id / remote_addr.
+    Applies sliding-window rate limiting per IP and session identifier.
     """
     payload = request.get_json(silent=True) or {}
     entity_id = payload.get("entity_id")
@@ -152,22 +124,21 @@ def cast_vote():
     vote_type = payload.get("vote_type") or payload.get("vote")
     roster_slug = payload.get("roster_slug") or payload.get("edition") or "canon"
     edition = payload.get("edition") or payload.get("roster_slug") or "canon"
-    user_id = payload.get("user_id")
     session_id = (
         payload.get("session_id")
         or request.headers.get("X-Session-ID")
         or request.cookies.get("session_id")
     )
 
-    # Extract authenticated user if available
+    # Extract authenticated user: always enforce current_user.id if logged in, prevent spoofing
     current_user = get_current_user()
-    if current_user and not user_id:
-        user_id = current_user.id
+    user_id = current_user.id if current_user else None
 
-    # Rate limiting per session_id or remote_addr
-    client_key = session_id or (
-        f"user:{user_id}" if user_id else f"ip:{request.remote_addr or '127.0.0.1'}"
-    )
+    # Hardened rate limiting: include client IP in rate limiter key
+    remote_ip = request.remote_addr or "127.0.0.1"
+    sub_key = session_id or (f"user:{user_id}" if user_id else "anon")
+    client_key = f"{remote_ip}:{sub_key}"
+
     if not vote_rate_limiter.is_allowed(client_key):
         return (
             jsonify(
@@ -287,7 +258,7 @@ def reset_session():
 def reset_user_votes():
     """Reset and wipe all votes for a specific user and recalculate stats."""
     payload = request.get_json(silent=True) or {}
-    user_id = payload.get("user_id") or request.args.get("user_id", type=int)
+    requested_user_id = payload.get("user_id") or request.args.get("user_id", type=int)
     roster_slug = (
         payload.get("roster_slug")
         or payload.get("edition")
@@ -302,15 +273,18 @@ def reset_user_votes():
     )
 
     current_user = get_current_user()
-    if current_user and not user_id:
-        user_id = current_user.id
-
-    if not user_id:
+    if current_user:
+        if requested_user_id and requested_user_id != current_user.id and current_user.role != "admin":
+            return jsonify({"error": "Forbidden: Cannot reset votes for another user"}), 403
+        target_user_id = requested_user_id if (current_user.role == "admin" and requested_user_id) else current_user.id
+    else:
+        if requested_user_id:
+            return jsonify({"error": "Authentication required to reset user votes"}), 401
         return jsonify({"error": "Field 'user_id' is required to reset user votes"}), 400
 
     try:
         result = smash_service.reset_user_votes(
-            user_id=user_id,
+            user_id=target_user_id,
             roster_slug=roster_slug,
             edition=edition,
         )
@@ -369,18 +343,22 @@ def get_characters():
 @smash_or_pass_bp.route("/user-votes", methods=["GET"])
 def get_user_votes():
     """Retrieve all votes cast by the current user for no-repeat deck filtering (legacy)."""
-    user_id = request.args.get("user_id", type=int)
+    requested_user_id = request.args.get("user_id", type=int)
     edition = request.args.get("edition", "canon")
 
     current_user = get_current_user()
-    if current_user and not user_id:
-        user_id = current_user.id
+    if current_user:
+        if requested_user_id and requested_user_id != current_user.id and current_user.role != "admin":
+            return jsonify({"error": "Forbidden: Cannot view votes for another user"}), 403
+        target_user_id = requested_user_id if (current_user.role == "admin" and requested_user_id) else current_user.id
+    else:
+        target_user_id = requested_user_id
 
-    if not user_id:
+    if not target_user_id:
         return jsonify({"data": [], "message": "No user_id provided"}), 200
 
     try:
-        votes = smash_service.get_user_votes(user_id=user_id, edition=edition)
+        votes = smash_service.get_user_votes(user_id=target_user_id, edition=edition)
         return jsonify({"data": votes, "count": len(votes)}), 200
     except Exception as e:
         logger.error(f"Error fetching user smash-or-pass votes: {e}")

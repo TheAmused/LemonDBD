@@ -3,7 +3,7 @@
         "slug": "canon",
         "name_i18n_key": "smashOrPass.rosters.canon.name",
         "description_i18n_key": "smashOrPass.rosters.canon.desc",
-        "cover_image_url": "/static/avatars/survivors/sable_ward.png",
+        "cover_image_url": "/static/avatars/rosters/canon.png",
         "theme_color": "#ff0055",
         "category": "DBD",
         "is_nsfw": false,

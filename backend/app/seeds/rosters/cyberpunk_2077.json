@@ -3,7 +3,7 @@
         "slug": "cyberpunk_2077",
         "name_i18n_key": "smashOrPass.rosters.cyberpunk_2077.name",
         "description_i18n_key": "smashOrPass.rosters.cyberpunk_2077.desc",
-        "cover_image_url": "/static/avatars/survivors/feng_min.png",
+        "cover_image_url": "/static/avatars/rosters/cyberpunk_2077.png",
         "theme_color": "#00f5d4",
         "category": "Cyberpunk",
         "is_nsfw": false,

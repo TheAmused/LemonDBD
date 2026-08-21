@@ -139,16 +139,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         ? r.cover_image_url
         : `${getBackendBaseUrl()}${r.cover_image_url}`;
     }
-    const fallbackMap: Record<string, string> = {
-      canon: '/static/avatars/survivors/sable_ward.png',
-      hooked_on_you: '/static/avatars/killers/the_huntress_hoy.png',
-      legendary_cosplay: '/static/avatars/killers/baba_yaga.png',
-      cyberpunk_2077: '/static/avatars/survivors/feng_min.png',
-      anime_manga: '/static/avatars/killers/the_spirit.png',
-      gothic_eldritch: '/static/avatars/killers/the_dark_lord.png',
-    };
-    const path = fallbackMap[r.slug] || '/static/avatars/survivors/sable_ward.png';
-    return `${getBackendBaseUrl()}${path}`;
+    return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.png`;
   }, []);
 
   // 1. Fetch available rosters from PostgreSQL database

@@ -70,17 +70,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
         ? r.cover_image_url
         : `${getBackendBaseUrl()}${r.cover_image_url}`;
     }
-    // Fallback cover based on slug
-    const fallbackSlugMap: Record<string, string> = {
-      canon: '/static/avatars/survivors/sable_ward.png',
-      hooked_on_you: '/static/avatars/killers/the_huntress_hoy.png',
-      legendary_cosplay: '/static/avatars/killers/baba_yaga.png',
-      cyberpunk_2077: '/static/avatars/survivors/feng_min.png',
-      anime_manga: '/static/avatars/killers/the_spirit.png',
-      gothic_eldritch: '/static/avatars/killers/the_dark_lord.png',
-    };
-    const path = fallbackSlugMap[r.slug] || '/static/avatars/survivors/sable_ward.png';
-    return `${getBackendBaseUrl()}${path}`;
+    return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.png`;
   };
 
   const handleCardClick = (slug: string) => {
@@ -134,7 +124,11 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   src={coverUrl}
                   alt={r.name || r.slug}
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.png`;
+                    const target = e.target as HTMLImageElement;
+                    if (!target.dataset.triedWebp) {
+                      target.dataset.triedWebp = '1';
+                      target.src = `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.webp`;
+                    }
                   }}
                   className="absolute inset-0 h-full w-full object-cover object-center brightness-90 group-hover:scale-105 group-hover:brightness-100 transition-all duration-500"
                 />

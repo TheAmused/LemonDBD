@@ -3,7 +3,7 @@
         "slug": "hooked_on_you",
         "name_i18n_key": "smashOrPass.rosters.hooked_on_you.name",
         "description_i18n_key": "smashOrPass.rosters.hooked_on_you.desc",
-        "cover_image_url": "/static/avatars/killers/the_huntress_hoy.png",
+        "cover_image_url": "/static/avatars/rosters/hooked_on_you.png",
         "theme_color": "#00f5d4",
         "category": "Dating Sim",
         "is_nsfw": false,

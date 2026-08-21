@@ -3,7 +3,7 @@
         "slug": "gothic_eldritch",
         "name_i18n_key": "smashOrPass.rosters.gothic_eldritch.name",
         "description_i18n_key": "smashOrPass.rosters.gothic_eldritch.desc",
-        "cover_image_url": "/static/avatars/killers/the_dark_lord.png",
+        "cover_image_url": "/static/avatars/rosters/gothic_eldritch.png",
         "theme_color": "#a855f7",
         "category": "Eldritch",
         "is_nsfw": false,

@@ -243,20 +243,139 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
-    "subtitle": "Dead by Daylightのキャラクターに投票し、デートプロフィールをチェックして、コミュニティの人気キャラクターを発見しましょう。",
-    "smash": "Smash",
-    "pass": "Pass",
-    "superSmash": "Super Smash",
+    "subtitle": "Dead by Daylightの候補者を評価し、あなたの霧の恋愛アーキタイプを発見して、コミュニティランキングに参加しましょう。",
+    "smash": "スマッシュ",
+    "pass": "パス",
+    "superSmash": "スーパースマッシュ",
     "leaderboard": "殿堂入り",
+    "leaderboardSubtitle": "全キラー＆サバイバーの公式コミュニティ投票統計",
+    "search": "候補者やランキングを検索...",
+    "close": "閉じる",
     "shuffle": "シャッフル",
     "undo": "元に戻す",
-    "mySmashes": "あなたのSmash",
+    "mySmashes": "あなたのスマッシュ",
+    "stats": "調査書と統計",
+    "reset": "デッキをリセット",
+    "keybindings": "キーバインド",
+    "hint": "矢印キーまたはスワイプで投票",
+    "godTier": "神ティア",
+    "fatalAttraction": "致命的魅力",
+    "friendzone": "フレンドゾーン",
+    "eldritchVoid": "狂気の虚無",
+    "chaosRating": "カオスレート",
+    "dangerLevel": "危険度",
+    "archetype": "アーキタイプ",
+    "compatibilityScore": "相性スコア",
+    "communitySmashRate": "コミュニティスマッシュ率",
+    "totalVotes": "総投票数",
+    "traits": "相性特徴",
+    "all": "すべて",
     "allRoles": "すべての役割",
     "survivors": "サバイバー",
     "killers": "キラー",
     "allGenders": "すべての性別",
+    "female": "女性",
     "femaleOnly": "女性のみ",
+    "male": "男性",
     "maleOnly": "男性のみ",
-    "monsters": "モンスター & その他"
+    "monsters": "モンスター & エルドリッチ",
+    "rosters": {
+      "canon": {
+        "name": "Dead by Daylight: 霧の正史 (カノン)",
+        "desc": "公式の殺人鬼と生存者全98キャラクターの完全ロスター。"
+      },
+      "hoy": {
+        "name": "Hooked on You: 狂気の島恋愛シミュレーション",
+        "desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。"
+      },
+      "legendary": {
+        "name": "レジェンダリースキン＆コラボ",
+        "desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。"
+      },
+      "cyberpunk": {
+        "name": "サイバーパンク・フォグ 2077 エディション",
+        "desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。"
+      },
+      "anime": {
+        "name": "フォグ・アニメ / マンガ美学",
+        "desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。"
+      },
+      "gothic": {
+        "name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+        "desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。"
+      }
+    },
+    "controls": {
+      "pass": "パス",
+      "smash": "スマッシュ",
+      "superSmash": "スーパースマッシュ",
+      "stats": "調査書と統計",
+      "reset": "デッキをリセット",
+      "keybindings": "キーバインド",
+      "hint": "矢印キーまたはスワイプで投票",
+      "arrowLeft": "パス (左矢印キー)",
+      "arrowRight": "スマッシュ (右矢印キー)",
+      "arrowUp": "統計 (上矢印キー)",
+      "arrowDown": "スーパースマッシュ (下矢印キー)",
+      "keyR": "リセット (Rキー)"
+    },
+    "tiers": {
+      "godTier": "神ティア",
+      "fatalAttraction": "致命的魅力",
+      "friendzone": "フレンドゾーン",
+      "eldritchVoid": "狂気の虚無"
+    },
+    "statsDetail": {
+      "chaosRating": "カオスレート",
+      "dangerLevel": "危険度",
+      "archetype": "アーキタイプ",
+      "compatibilityScore": "相性スコア",
+      "communitySmashRate": "コミュニティスマッシュ率",
+      "totalVotes": "総投票数",
+      "traits": "相性特徴",
+      "smashCount": "スマッシュ数",
+      "passCount": "パス数",
+      "superSmashCount": "スーパースマッシュ数",
+      "rank": "順位",
+      "quote": "引用セリフ"
+    },
+    "filters": {
+      "all": "すべて",
+      "allRoles": "すべての役割",
+      "survivors": "サバイバー",
+      "killers": "キラー",
+      "allGenders": "すべての性別",
+      "female": "女性",
+      "femaleOnly": "女性のみ",
+      "male": "男性",
+      "maleOnly": "男性のみ",
+      "monsters": "モンスター & エルドリッチ"
+    },
+    "modals": {
+      "statsTitle": "候補者調査書",
+      "leaderboardTitle": "殿堂入り",
+      "leaderboardSubtitle": "全キラー＆サバイバーの公式コミュニティ投票統計",
+      "personaTitle": "霧の恋愛アーキタイプ",
+      "personaSubtitle": "あなたの投票傾向に基づく心理的相性レポート",
+      "resetConfirmTitle": "すべての投票をリセットしますか？",
+      "resetConfirmDesc": "このセッションの投票がすべてリセットされ、候補者デッキが再シャッフルされます。",
+      "confirm": "確認",
+      "cancel": "キャンセル",
+      "close": "閉じる"
+    },
+    "notifications": {
+      "voteRecorded": "投票が記録されました！",
+      "deckReset": "デッキがリセットされました。",
+      "rateLimit": "投票が早すぎます！少し時間をおいてください。",
+      "errorLoading": "候補者フィードの読み込みに失敗しました。",
+      "errorVoting": "投票の記録に失敗しました。"
+    },
+    "empty": {
+      "title": "デッキ完了！",
+      "subtitle": "このロスターの全候補者の評価が完了しました。",
+      "resetAction": "リセットしてもう一度投票",
+      "viewLeaderboard": "リーダーボードを見る",
+      "switchRoster": "他のロスターを選択"
+    }
   }
 }

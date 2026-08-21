@@ -243,20 +243,139 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
-    "subtitle": "Stimme für deine Dead by Daylight Charaktere ab, entdecke düstere Dating-Profile und finde die Favoriten der Community.",
+    "subtitle": "Bewerte Dead by Daylight-Kandidaten, entdecke deinen Nebel-Romanzen-Archetyp und gestalte die Community-Ranglisten mit.",
     "smash": "Smash",
     "pass": "Pass",
     "superSmash": "Super Smash",
     "leaderboard": "Ruhmeshalle",
+    "leaderboardSubtitle": "Offizielle Community-Abstimmungsstatistiken über alle Killer und Überlebenden",
+    "search": "Kandidaten oder Rangliste durchsuchen...",
+    "close": "Schließen",
     "shuffle": "Mischen",
     "undo": "Rückgängig",
     "mySmashes": "Deine Smashes",
+    "stats": "Dossier & Statistiken",
+    "reset": "Deck zurücksetzen",
+    "keybindings": "Tastenbelegung",
+    "hint": "Pfeiltasten oder Wischen zum Abstimmen nutzen",
+    "godTier": "Götter-Stufe",
+    "fatalAttraction": "Fatale Anziehung",
+    "friendzone": "Friendzone",
+    "eldritchVoid": "Eldritch-Leere",
+    "chaosRating": "Chaos-Bewertung",
+    "dangerLevel": "Gefahrenstufe",
+    "archetype": "Archetyp",
+    "compatibilityScore": "Kompatibilitätswert",
+    "communitySmashRate": "Community-Smash-Rate",
+    "totalVotes": "Gesamtstimmen",
+    "traits": "Kompatibilitätsmerkmale",
+    "all": "Alle",
     "allRoles": "Alle Rollen",
     "survivors": "Überlebende",
     "killers": "Killer",
     "allGenders": "Alle Geschlechter",
+    "female": "Weiblich",
     "femaleOnly": "Nur Weiblich",
+    "male": "Männlich",
     "maleOnly": "Nur Männlich",
-    "monsters": "Monster & Entitäten"
+    "monsters": "Monster & Eldritch",
+    "rosters": {
+      "canon": {
+        "name": "Dead by Daylight: Nebel-Kanon",
+        "desc": "Die vollständige Liste aller 98 offiziellen Killer und Überlebenden."
+      },
+      "hoy": {
+        "name": "Hooked on You: Insel-Romanze",
+        "desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes."
+      },
+      "legendary": {
+        "name": "Legendäre Skins & Kollaborationen",
+        "desc": "Ikonische legendäre Skins und Crossover-Kollaborationen der Videospielgeschichte."
+      },
+      "cyberpunk": {
+        "name": "Cyberpunk-Nebel 2077 Edition",
+        "desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel."
+      },
+      "anime": {
+        "name": "Nebel Anime / Manga Ästhetik",
+        "desc": "Stilisierte Anime-Adaptionen deiner liebsten Nebel-Charaktere."
+      },
+      "gothic": {
+        "name": "Viktorianische & Gotische Eldritch-Legenden",
+        "desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror."
+      }
+    },
+    "controls": {
+      "pass": "Pass",
+      "smash": "Smash",
+      "superSmash": "Super Smash",
+      "stats": "Dossier & Statistiken",
+      "reset": "Deck zurücksetzen",
+      "keybindings": "Tastenbelegung",
+      "hint": "Pfeiltasten oder Wischen zum Abstimmen nutzen",
+      "arrowLeft": "Pass (Pfeil Links)",
+      "arrowRight": "Smash (Pfeil Rechts)",
+      "arrowUp": "Statistiken (Pfeil Oben)",
+      "arrowDown": "Super Smash (Pfeil Unten)",
+      "keyR": "Zurücksetzen (Taste R)"
+    },
+    "tiers": {
+      "godTier": "Götter-Stufe",
+      "fatalAttraction": "Fatale Anziehung",
+      "friendzone": "Friendzone",
+      "eldritchVoid": "Eldritch-Leere"
+    },
+    "statsDetail": {
+      "chaosRating": "Chaos-Bewertung",
+      "dangerLevel": "Gefahrenstufe",
+      "archetype": "Archetyp",
+      "compatibilityScore": "Kompatibilitätswert",
+      "communitySmashRate": "Community-Smash-Rate",
+      "totalVotes": "Gesamtstimmen",
+      "traits": "Kompatibilitätsmerkmale",
+      "smashCount": "Smashes",
+      "passCount": "Passes",
+      "superSmashCount": "Super Smashes",
+      "rank": "Rang",
+      "quote": "Zitat"
+    },
+    "filters": {
+      "all": "Alle",
+      "allRoles": "Alle Rollen",
+      "survivors": "Überlebende",
+      "killers": "Killer",
+      "allGenders": "Alle Geschlechter",
+      "female": "Weiblich",
+      "femaleOnly": "Nur Weiblich",
+      "male": "Männlich",
+      "maleOnly": "Nur Männlich",
+      "monsters": "Monster & Eldritch"
+    },
+    "modals": {
+      "statsTitle": "Kandidaten-Dossier",
+      "leaderboardTitle": "Ruhmeshalle",
+      "leaderboardSubtitle": "Offizielle Community-Abstimmungsstatistiken über alle Killer und Überlebenden",
+      "personaTitle": "Nebel-Romanzen-Archetyp",
+      "personaSubtitle": "Dein psychologischer Kompatibilitätsbericht basierend auf deinen Stimmen",
+      "resetConfirmTitle": "Alle Stimmen zurücksetzen?",
+      "resetConfirmDesc": "Dies setzt alle deine Stimmen in dieser Sitzung zurück und mischt das Kandidatendeck neu.",
+      "confirm": "Bestätigen",
+      "cancel": "Abbrechen",
+      "close": "Schließen"
+    },
+    "notifications": {
+      "voteRecorded": "Stimme aufgezeichnet!",
+      "deckReset": "Deck wurde zurückgesetzt.",
+      "rateLimit": "Zu schnelle Abstimmung! Bitte verlangsamen.",
+      "errorLoading": "Fehler beim Laden des Kandidaten-Feeds.",
+      "errorVoting": "Fehler beim Aufzeichnen der Stimme."
+    },
+    "empty": {
+      "title": "Deck Abgeschlossen!",
+      "subtitle": "Du hast alle verfügbaren Kandidaten in dieser Liste bewertet.",
+      "resetAction": "Zurücksetzen & Erneut Abstimmen",
+      "viewLeaderboard": "Rangliste anzeigen",
+      "switchRoster": "Andere Liste wählen"
+    }
   }
 }

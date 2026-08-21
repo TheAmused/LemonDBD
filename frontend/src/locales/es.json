@@ -244,20 +244,139 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
-    "subtitle": "Vota por tus personajes favoritos de Dead by Daylight, explora perfiles románticos oscuros y descubre a los más deseados.",
+    "subtitle": "Evalúa a los candidatos de Dead by Daylight, descubre tu arquetipo romántico de la Niebla y contribuye a las clasificaciones globales.",
     "smash": "Smash",
     "pass": "Pass",
     "superSmash": "Super Smash",
     "leaderboard": "Salón de la Fama",
+    "leaderboardSubtitle": "Estadísticas oficiales de votación comunitaria de todos los Asesinos y Supervivientes",
+    "search": "Buscar candidatos o clasificación...",
+    "close": "Cerrar",
     "shuffle": "Barajar",
     "undo": "Deshacer",
     "mySmashes": "Tus Smashes",
+    "stats": "Expediente y Estadísticas",
+    "reset": "Reiniciar Baraja",
+    "keybindings": "Atajos de Teclado",
+    "hint": "Usa las flechas o desliza para votar",
+    "godTier": "Nivel Dios",
+    "fatalAttraction": "Atracción Fatal",
+    "friendzone": "Zona de Amigos",
+    "eldritchVoid": "Vacío Primigenio",
+    "chaosRating": "Nivel de Caos",
+    "dangerLevel": "Nivel de Peligro",
+    "archetype": "Arquetipo",
+    "compatibilityScore": "Puntuación de Compatibilidad",
+    "communitySmashRate": "Tasa de Smash Comunitaria",
+    "totalVotes": "Votos Totales",
+    "traits": "Rasgos de Compatibilidad",
+    "all": "Todos",
     "allRoles": "Todos los Roles",
     "survivors": "Supervivientes",
     "killers": "Asesinos",
     "allGenders": "Todos los Géneros",
+    "female": "Femenino",
     "femaleOnly": "Solo Mujeres",
+    "male": "Masculino",
     "maleOnly": "Solo Hombres",
-    "monsters": "Monstruos y Entidades"
+    "monsters": "Monstruos y Primigenios",
+    "rosters": {
+      "canon": {
+        "name": "Dead by Daylight: Canon de la Niebla",
+        "desc": "El elenco completo de 98 personajes de asesinos y supervivientes oficiales."
+      },
+      "hoy": {
+        "name": "Hooked on You: Romance en la Isla",
+        "desc": "Edición simulador de citas en un paraíso tropical con trajes de playa y vibras veraniegas."
+      },
+      "legendary": {
+        "name": "Skins Legendarias y Colaboraciones",
+        "desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos."
+      },
+      "cyberpunk": {
+        "name": "Edición Niebla Cyberpunk 2077",
+        "desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica."
+      },
+      "anime": {
+        "name": "Estética Anime y Manga de la Niebla",
+        "desc": "Adaptaciones estilizadas en anime de tus personajes favoritos de la Niebla."
+      },
+      "gothic": {
+        "name": "Leyendas Góticas y Primigenias Victorianas",
+        "desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios."
+      }
+    },
+    "controls": {
+      "pass": "Pass",
+      "smash": "Smash",
+      "superSmash": "Super Smash",
+      "stats": "Expediente y Estadísticas",
+      "reset": "Reiniciar Baraja",
+      "keybindings": "Atajos de Teclado",
+      "hint": "Usa las flechas o desliza para votar",
+      "arrowLeft": "Pass (Flecha Izquierda)",
+      "arrowRight": "Smash (Flecha Derecha)",
+      "arrowUp": "Estadísticas (Flecha Arriba)",
+      "arrowDown": "Super Smash (Flecha Abajo)",
+      "keyR": "Reiniciar (Tecla R)"
+    },
+    "tiers": {
+      "godTier": "Nivel Dios",
+      "fatalAttraction": "Atracción Fatal",
+      "friendzone": "Zona de Amigos",
+      "eldritchVoid": "Vacío Primigenio"
+    },
+    "statsDetail": {
+      "chaosRating": "Nivel de Caos",
+      "dangerLevel": "Nivel de Peligro",
+      "archetype": "Arquetipo",
+      "compatibilityScore": "Puntuación de Compatibilidad",
+      "communitySmashRate": "Tasa de Smash Comunitaria",
+      "totalVotes": "Votos Totales",
+      "traits": "Rasgos de Compatibilidad",
+      "smashCount": "Smashes",
+      "passCount": "Passes",
+      "superSmashCount": "Super Smashes",
+      "rank": "Rango",
+      "quote": "Cita"
+    },
+    "filters": {
+      "all": "Todos",
+      "allRoles": "Todos los Roles",
+      "survivors": "Supervivientes",
+      "killers": "Asesinos",
+      "allGenders": "Todos los Géneros",
+      "female": "Femenino",
+      "femaleOnly": "Solo Mujeres",
+      "male": "Masculino",
+      "maleOnly": "Solo Hombres",
+      "monsters": "Monstruos y Primigenios"
+    },
+    "modals": {
+      "statsTitle": "Expediente del Candidato",
+      "leaderboardTitle": "Salón de la Fama",
+      "leaderboardSubtitle": "Estadísticas oficiales de votación comunitaria de todos los Asesinos y Supervivientes",
+      "personaTitle": "Arquetipo Romántico de la Niebla",
+      "personaSubtitle": "Tu informe de compatibilidad psicológica basado en tus votos",
+      "resetConfirmTitle": "¿Reiniciar todos los votos?",
+      "resetConfirmDesc": "Esto rebobinará todos tus votos en esta sesión y reorganizará la baraja de candidatos.",
+      "confirm": "Confirmar",
+      "cancel": "Cancelar",
+      "close": "Cerrar"
+    },
+    "notifications": {
+      "voteRecorded": "¡Voto registrado!",
+      "deckReset": "La baraja ha sido reiniciada.",
+      "rateLimit": "¡Votando muy rápido! Por favor, ve más despacio.",
+      "errorLoading": "Error al cargar la lista de candidatos.",
+      "errorVoting": "Error al registrar el voto."
+    },
+    "empty": {
+      "title": "¡Baraja Completada!",
+      "subtitle": "Has evaluado a todos los candidatos disponibles en este elenco.",
+      "resetAction": "Reiniciar y Votar de Nuevo",
+      "viewLeaderboard": "Ver Clasificación",
+      "switchRoster": "Elegir Otro Elenco"
+    }
   }
 }

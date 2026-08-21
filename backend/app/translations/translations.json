@@ -6925,33 +6925,6 @@
         }
       }
     },
-    "Save the best for last": {
-      "name": "Save the best for last",
-      "character_code": "K06",
-      "character_name": "The Shape",
-      "translations": {
-        "de": {
-          "name": "Das Beste kommt zum Schluss",
-          "description": "Ein Überlebender wird Ziel deiner Besessenheit.\n\nDu verdienst einen Zähler für jeden erfolgreichen Grundangriff, der nicht das Ziel der Besessenheit trifft. Jeder Zähler gewährt eine kombinierbare, um {0} % verringerte Abklingzeit bei erfolgreichen Grundangriffen. Du kannst bis zu {1} Zähler verdienen.\n\nWenn du aber dein Ziel der Besessenheit mit einem Grundangriff oder Spezialangriff triffst, verlierst du {2} Zähler. Wird das Ziel der Besessenheit geopfert oder getötet, kannst du keine Zähler verdienen.\n\nDer Killer kann immer nur von je einem Überlebenden besessen sein.\n\n„Der Tod ist in deine kleine Stadt gekommen, Sheriff.“ – Dr. Sam Loomis"
-        },
-        "en": {
-          "name": "Save the best for last",
-          "description": "You become obsessed with one Survivor.\n\nEarn a token for each successful basic attack that is not dealt to the Obsession. Each token grants a stackable {0}% decreased successful basic attack cooldown, you can earn up to {1} tokens.\n\nWhen you hit the Obsession with a Basic Attack or Special Attack, lose {2} tokens. You cannot gain tokens as long as your Obsession is sacrificed or killed.\n\nThe Killer can only be obsessed with one Survivor at a time.\n\n\"Death has come to your little town, sheriff.\" -Dr. Sam Loomis"
-        },
-        "es": {
-          "name": "Lo mejor para el final",
-          "description": "Te obsesionas con un superviviente.\n\nConsigues un distintivo cada vez que golpeas con un ataque básico a alguien que no sea la obsesión. Cada uno otorga una reducción acumulable del {0} % en el tiempo de recarga de ataques básicos acertados. Puedes ganar hasta un máximo de {1} distintivos.\n\nCuando la obsesión pierde un estado de salud del modo que sea, pierdes {2} distintivos. Si tu obsesión muere o es sacrificada, no podrás ganar distintivos.\n\nEl asesino no puede obsesionarse con más de un superviviente.\n\n\"La muerte ha llegado a su pueblo, sheriff.\" (Dr. Sam Loomis)"
-        },
-        "ja": {
-          "name": "最後のお楽しみ",
-          "description": "1人の生存者に執着する。\n\nオブセッション以外の生存者に通常攻撃を命中させる度にトークンを1個獲得する。1トークンにつき、通常攻撃成功後のクールダウンが{0}%ずつ減少する。トークンは最大{1}個まで獲得できる。\n\nオブセッションに通常攻撃または特殊攻撃を命中させると{2}個のトークンを失う。オブセッションが処刑されるか死亡するとトークンを獲得できない。\n\nオブセッションの対象は一度に1人のみ。\n\n「町に死が訪れつつある」- サム・ルーミス医師"
-        },
-        "pl": {
-          "name": "Najlepsze zostaw na koniec",
-          "description": "Jeden z ocalałych staje się twoją obsesją.\n\nOtrzymujesz żeton za każdy udany podstawowy atak, który nie został wymierzony w obsesję. Każdy żeton umożliwia wykonanie kolejnego podstawowego ataku o {0}% szybciej. Możesz zebrać maksymalnie {1} żetonów.\n\nGdy trafisz obsesję podstawowym lub specjalnym atakiem, tracisz żetony ({2}). Gdy twoja obsesja zostanie poświęcona lub zabita, nie otrzymasz więcej żetonów.\n\nZabójca może mieć obsesję wyłącznie na punkcie jednego ocalałego naraz.\n\n„Śmierć zawitała do twojego małego miasteczka, szeryfie” – Dr Sam Loomis"
-        }
-      }
-    },
     "Dying Light": {
       "name": "Dying Light",
       "character_code": "K06",
@@ -6976,33 +6949,6 @@
         "pl": {
           "name": "Umierające Światło",
           "description": "Jeden z ocalałych staje się twoją obsesją.\nTwoja obsesja otrzymuje premię {0}% do szybkości czynności przy zdejmowaniu z haka i leczeniu innych ocalałych.\nZa każdym razem, kiedy powiesisz ocalałego innego niż twoja obsesja, otrzymasz żeton.\nJeśli obsesja żyje, każdy inny ocalały otrzymuje {1}% kary do szybkości naprawy, leczenia i sabotażu za każdy żeton.\n\nZabójca może mieć obsesję na punkcie tylko jednego ocalałego naraz.\n\n„To nie jest człowiek...” – dr Sam Loomis"
-        }
-      }
-    },
-    "Play With Your Food": {
-      "name": "Play With Your Food",
-      "character_code": "K06",
-      "character_name": "The Shape",
-      "translations": {
-        "de": {
-          "name": "Spiele mit deinem Essen",
-          "description": "Ein Überlebender wird Ziel deiner Besessenheit.\nJedes Mal, wenn du das Ziel der Besessenheit jagst und es entkommen lässt, erhältst du einen Zähler (bis zu maximal {0} Zähler).\nJeder Zähler bringt dir {1} % Eile.\nJeder Grundangriff oder Spezialangriff verbraucht einen Zähler.\n\nDer Killer kann immer nur von je einem Überlebenden besessen sein.\nEile erhöht die Bewegungsgeschwindigkeit des Killers.\n\n„Du hast sie zum Narren gehalten, nicht wahr, Michael? Aber nicht mich.“ – Dr. Sam Loomis"
-        },
-        "en": {
-          "name": "Play With Your Food",
-          "description": "You become obsessed with one Survivor.\nEvery time you chase your Obsession and let them escape, you receive a token up to a maximum of {0} tokens.\nFor each token, you have {1}% Haste.\nPerforming a Basic Attack or Special Attack spends one token.\n\nThe Killer can only be Obsessed with one Survivor at a time.\nHaste increases Killer movement speed.\n\n“You've fooled them, haven't you Michael? But not me.” -Dr. Sam Loomis"
-        },
-        "es": {
-          "name": "Jugar con la comida",
-          "description": "Te obsesionas con un superviviente.\nCada vez que persigues a tu obsesión y la dejas escapar, ganas un distintivo, hasta un máximo de {0}.\nPor cada uno que tengas, obtienes un {1} % de Celeridad.\nCada ataque básico o especial consume un distintivo.\n\nEl asesino no puede obsesionarse con más de un superviviente.\nCeleridad aumenta la velocidad de movimiento del asesino.\n\n\"Has engañado a todos excepto a mí, Michael\". (Dr. Sam Loomis)"
-        },
-        "ja": {
-          "name": "弄ばれる獲物",
-          "description": "1人の生存者に執着する。\nオブセッション状態の生存者を追いかけて取り逃がすたびにトークンが1個貯まる（{0}個まで）。\nトークン1個につき{1}%の迅速を得る。\n通常攻撃または特殊攻撃を実行するたびにトークンを1個消費する。\n\nオブセッションの対象は一度に1人のみ。\n殺人鬼は迅速状態になると移動速度が上昇する。\n\n「奴らはうまく騙せても、私には通用せんぞ。」- サム・ルーミス医師"
-        },
-        "pl": {
-          "name": "Baw się Jedzeniem",
-          "description": "Jeden z ocalałych staje się twoją obsesją.\nZa każdym razem, kiedy go ścigasz i pozwalasz mu uciec, otrzymasz żeton (maksymalnie {0}).\nZa każdy żeton otrzymujesz {1}%Pośpiechu.\nWykonanie ataku podstawowego lub specjalnego zużywa jeden żeton.\n\nZabójca może mieć obsesję wyłącznie na punkcie jednego ocalałego naraz.\nPośpiech zwiększa prędkość ruchu zabójcy.\n\n„Oszukałeś ich, prawda, Michael? Ale nie mnie”. – Dr Sam Loomis"
         }
       }
     },
@@ -7168,8 +7114,8 @@
         }
       }
     },
-    "Barbecue & Chili": {
-      "name": "Barbecue & Chili",
+    "Barbecue & Chilli": {
+      "name": "Barbecue & Chilli",
       "character_code": "K09",
       "character_name": "The Cannibal",
       "translations": {
@@ -7178,7 +7124,7 @@
           "description": "Eine tiefe Verbundenheit mit dem Entitus entfesselt das Potenzial der Aurawahrnehmungsfähigkeit.Nachdem du einen Überlebenden festgehakt hast, siehst du {0} Sek. lang die Auren aller anderen Überlebenden, wenn sie weiter als {1} Meter vom Haken entfernt sind.\n„Das Töten bereitet mir kein Vergnügen. Aber es gibt Dinge, die getan werden müssen. Das heißt nicht, dass man es gern tun muss.“ – Drayton Sawyer"
         },
         "en": {
-          "name": "Barbecue & Chili",
+          "name": "Barbecue & Chilli",
           "description": "A deep bond with The Entity unlocks potential in one's aura reading ability.After hooking a Survivor, all other Survivors' auras are revealed to you for {0} seconds when they are further than {1} meters from the hook.\n\"I just can't take no pleasure in killing. There's just some things you gotta do. Don't mean you have to like it.\" -Drayton Sawyer"
         },
         "es": {
@@ -7381,33 +7327,6 @@
         "pl": {
           "name": "Inwigilacja",
           "description": "Odblokowuje możliwość dostrzegania aury. Wszystkie niszczejące generatory będą otoczone białą aurą. Kiedy niszczenie generatora zostanie przerwane, będzie podświetlany na żółto przez {0} s.\nHałas powstały w trakcie naprawy generatora rozchodzi się na dodatkowe {1} m.\n\n„Będziesz się zachowywać?” – Amanda Young"
-        }
-      }
-    },
-    "Make your Choice": {
-      "name": "Make your Choice",
-      "character_code": "K11",
-      "character_name": "The Pig",
-      "translations": {
-        "de": {
-          "name": "Triff deine Wahl",
-          "description": "Wenn ein Überlebender einen anderen mindestens {0} Meter von dir entfernt vom Haken rettet, löst Triff deine Wahl den Statuseffekt Gefährdet aus und wendet ihn für {1} Sekunden auf den Retter an.\nTriff deine Wahl hat eine Abklingzeit von {2} Sekunden.\n\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\n„Du wärst überrascht, welche Werkzeuge Leben retten können.“ – Amanda Young"
-        },
-        "en": {
-          "name": "Make your Choice",
-          "description": "When a Survivor rescues another from a hook at least {0} meters away from you, Make your Choice causes the Survivor to scream and applies the Exposed status effect to them for {1} seconds.\nMake your Choice has a cooldown of {2} seconds.\n\nExposed Survivors will be downed by basic attacks even if uninjured.\n\n\"You'd be surprised what tools can save a life.\" -Amanda Young"
-        },
-        "es": {
-          "name": "Toma una decisión",
-          "description": "Cuando un superviviente rescata a otro de un gancho a una distancia de al menos {0} metros de ti, Toma una decisión hace gritar al superviviente y le aplica el efecto de estado Vulnerabilidad durante {1} segundos.\nToma una decisión tiene un tiempo de recarga de {2} segundos.\n\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\n\"Te sorprenderían las herramientas que pueden salvar vidas\". (Amanda Young)"
-        },
-        "ja": {
-          "name": "選択は君次第だ",
-          "description": "生存者があなたから{0}メートル以上離れたフックに吊るされた仲間を救助すると、選択は君次第だが発動して救助者が叫び、{1}秒間無防備のステータス効果を受ける。\n選択は君次第だには{2}秒間のクールダウンがある。\n\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\n「思わぬモノが命を救うのよ。」- アマンダ・ヤング"
-        },
-        "pl": {
-          "name": "Dokonaj Wyboru",
-          "description": "Kiedy ocalały ratuje sojusznika z haka w odległości co najmniej {0} m od ciebie, Dokonaj Wyboru zmusza ratującego do krzyku i nakłada na niego efekt Narażenia. Efekt trwa przez {1} s.\nDokonaj Wyboru odnawia się przez {2} s.\n\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\n„Zdziwiłbyś się, jakie narzędzia mogą uratować życie”. – Amanda Young"
         }
       }
     },
@@ -8005,33 +7924,6 @@
         }
       }
     },
-    "Dead Man’s Switch": {
-      "name": "Dead Man’s Switch",
-      "character_code": "K19",
-      "character_name": "The Deathslinger",
-      "translations": {
-        "de": {
-          "name": "Totenschalter",
-          "description": "Wenn du einen Überlebenden festhakst, wird Totenschalter aktiviert. Wenn der erste Überlebende mit der Reparatur eines Generators aufhört, blockiert der Entitus diesen für {0} Sekunden.\n\nDer betroffene Generator wird durch eine weiße Aura hervorgehoben.\n\nTotenschalter kann nicht erneut aktiviert werden, solange ein Generator dadurch blockiert wird.\n\n„Ich kenne den Gesichtsausdruck von Menschen, die begreifen, dass sie sterben werden.“ – Caleb Quinn"
-        },
-        "en": {
-          "name": "Dead Man’s Switch",
-          "description": "When you hook a Survivor, Dead Man’s Switch activates. The first Survivor that stops repairing a generator causes The Entity to block it for {0} seconds.\n\nThe affected generator is highlighted by a white aura.\n\nDead Man’s Switch cannot reactivate while it is blocking a generator.\n\n\"I've seen the look on a man's face when he realizes he's going to die.\" -Caleb Quinn"
-        },
-        "es": {
-          "name": "Interruptor del hombre muerto",
-          "description": "Cuando enganchas a un superviviente, se activa Interruptor del hombre muerto. El primer superviviente que deje de reparar un generador hace que el Ente lo bloquee durante {0} segundos.\n\nEl generador afectado se iluminará con un aura blanca.\n\nInterruptor del hombre muerto no se puede reactivar mientras está bloqueando un generador.\n\n\"He visto la expresión en la cara de un hombre cuando se da cuenta de que va a morir\". (Caleb Quinn)"
-        },
-        "ja": {
-          "name": "死人のスイッチ",
-          "description": "生存者をフックに吊るしたとき、死人のスイッチが発動する。そのあと最初に生存者が発電機の修理を中断した際、その発電機がエンティティによって{0}秒間ブロックされる。\n\nブロックされた発電機は白いオーラで強調表示される。\n\n死人のスイッチは発電機をブロックしている間は再び発動しない。\n\n「自分が死ぬことに気付いたときの人間の顔なら見たことがあるぜ」 - カレブ・クイン"
-        },
-        "pl": {
-          "name": "Czuwak",
-          "description": "Gdy wieszasz ocalałego na haku, Czuwak aktywuje się. Pierwszy ocalały, który kończy naprawę generatora, wywołuje jego blokadę przez Byt na {0} s.\n\nGenerator zostaje podświetlony białą aurą.\n\nCzuwak nie może się ponownie aktywować, gdy blokuje generator.\n\n„Widziałem wyraz jego twarzy, gdy zorientował się, że zaraz umrze”. – Caleb Quinn"
-        }
-      }
-    },
     "Hex: Retribution": {
       "name": "Hex: Retribution",
       "character_code": "K19",
@@ -8137,33 +8029,6 @@
         "pl": {
           "name": "Skazany na śmierć",
           "description": "Przeznaczeniem osób, których życia są splecione w ciemności, jest wspólne cierpienie.\n\nGdy ocalały leczy innego ocalałego, leczący krzyczy i aktywuje efekt Skazany na Śmierć. Gdy są oddaleni przynajmniej {0} m od siebie, leczący widzi aurę ocalałego, którego leczył i otrzymuje efekt Nieświadomy. Efekt Skazany na Śmierć trwa, aż leczący utraci stan zdrowia.\n\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
-        }
-      }
-    },
-    "Dragon’s Grip": {
-      "name": "Dragon’s Grip",
-      "character_code": "K21",
-      "character_name": "The Blight",
-      "translations": {
-        "de": {
-          "name": "Drachengriff",
-          "description": "Nachdem du einen Generator beschädigt hast, gibt der erste Überlebende, der in den nächsten {0} Sekunden damit interagiert, für {1} Sekunden seine Position bekannt, indem er schreit, und erleidet den Statuseffekt Gefährdet für {2} Sekunden.\n\nDrachengriff hat eine Abklingzeit von {3} Sekunden.\n\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\n„In diesem Präparat steckt so viel Potenzial ... Selbst die kleinste Menge davon bewirkt übernatürliche Effekte.“ – Tagebuch von Talbot Grimes"
-        },
-        "en": {
-          "name": "Dragon’s Grip",
-          "description": "After damaging a generator, for the next {0} seconds, the first Survivor that interacts with it will scream, revealing their location for {1} seconds, and becoming afflicted with the Exposed status effect for {2} seconds.\n\nDragon’s Grip has a cooldown of {3} seconds.\n\nExposed Survivors will be downed by basic attacks even if uninjured.\n\n“Such potential in this compound... even the slightest trace causes unnatural effects.” —Journal of Talbot Grimes"
-        },
-        "es": {
-          "name": "Agarre del dragón",
-          "description": "Tras dañar un generador, el primer superviviente que interaccione con él durante los siguientes {0} segundos gritará, revelará su ubicación durante {1} segundos y sufrirá el efecto de estado Vulnerabilidad durante {2} segundos.\n\nAgarre del dragón tiene un tiempo de recarga de {3} segundos.\n\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\n\"Este compuesto tiene tanto potencial... que hasta la cantidad más mínima causa efectos sobrenaturales\". (Diario de Talbot Grimes)"
-        },
-        "ja": {
-          "name": "ドラゴンの掌握",
-          "description": "発電機にダメージを与えたとき、次の{0}秒間、最初にその発電機にアクションを行った生存者は叫び声を上げ、{1}秒間位置が判明し、{2}秒間無防備のステータス効果を受ける。\n\nドラゴンの掌握には{3}秒間のクールダウンが発生する。\n\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\n「この化合物には大きな可能性がある。微量であっても、不自然な効果を引き起こすのだ。」 —タルボット・グライムズの日記"
-        },
-        "pl": {
-          "name": "Uścisk smoka",
-          "description": "Po uszkodzeniu generatora pierwszy ocalały, który wejdzie z nim w interakcję w trakcie kolejnych {0} s krzyknie. ujawni swoją lokalizację na {1} s i otrzyma efekt Narażony na {2} s.\n\nUścisk Smoka odnawia się {3} s.\n\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\n„W tej miksturze drzemie taki potencjał… Nawet jej odrobina wywołuje nietypowe efekty”. – Dziennik Talbota Grimesa"
         }
       }
     },
@@ -9220,33 +9085,6 @@
         }
       }
     },
-    "Friends ‘Til the End": {
-      "name": "Friends ‘Til the End",
-      "character_code": "K34",
-      "character_name": "The Good Guy",
-      "translations": {
-        "de": {
-          "name": "Freunde bis zum Schluss",
-          "description": "Du tötest alle, die sich zwischen dich und dein Ziel stellen.\n\nEin Überlebender wird Ziel deiner Besessenheit.\n\nWenn du einen Überlebenden festhakst, von dem du nicht besessen bist, wird das Ziel deiner Besessenheit für {0} Sekunden Gefährdet und seine Aura wird für {1} Sekunden enthüllt.\n\nWenn du das Ziel deiner Besessenheit festhakst, schreit ein zufälliger anderer Überlebender, gibt seine Position preis und wird zum Ziel deiner Besessenheit.\n\nDer Killer kann immer nur von je einem Überlebenden besessen sein.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\n„Ich habe frisches Fleisch vorbereitet und das werde ich mir von dir nicht verderben lassen, dieses Mal nicht!“ – Chucky"
-        },
-        "en": {
-          "name": "Friends ‘Til the End",
-          "description": "You’ll kill anyone who gets between you and your target.\n\nYou become obsessed with one Survivor.\n\nWhen you hook a Survivor that is not the Obsession, the Obsession becomes Exposed for {0} seconds and reveals their aura for {1} seconds.\n\nWhen you hook the Obsession, another random Survivor screams and reveals their position and becomes the Obsession.\n\nThe Killer can only be obsessed with one Survivor at a time.\nExposed Survivors will be downed by basic attacks even if uninjured\n\n\"I got some fresh meat lined up, and I'm not gonna let you spoil it, not this time!\" – Chucky"
-        },
-        "es": {
-          "name": "Amigos para siempre",
-          "description": "Matarás a todos los que se interpongan entre tu objetivo y tú.\n\nTe obsesionas con un superviviente.\n\nCuando cuelgas a un superviviente que no sea tu obsesión, la obsesión sufrirá Vulnerabilidad durante {0} segundos y revelará su aura durante {1} segundos.\n\nCuando cuelgas a tu obsesión, otro superviviente aleatorio gritará y revelará su posición, convirtiéndose así en la obsesión.\n\nEl asesino no puede obsesionarse con más de un superviviente.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\n\"¡Tengo preparada carne fresca, y esta vez no voy a permitir que lo arruines todo!\". (Chucky)"
-        },
-        "ja": {
-          "name": "死ぬまで親友",
-          "description": "あなたは自分と自分の獲物の間に入る者は誰でも殺す。\n\n1人の生存者に執着する。\n\nオブセッションでない生存者をフックに吊るすと、オブセッションが{0}秒間無防備となり、そのオーラが{1}秒間視える。\n\nオブセッションをフックに吊るすと、別のランダムな生存者が叫び声を上げて位置を知らせ、オブセッションになる。\n\nオブセッションの対象は一度に1人のみ。\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\n「新しい体を見つけたんだ。今度ばかりは邪魔させねえからな！」– チャッキー"
-        },
-        "pl": {
-          "name": "Przyjaciele do Końca",
-          "description": "Zabijesz każdego, kto stanie między tobą a twoim celem.\n\nMasz obsesję na punkcie jednego ocalałego.\n\nGdy zawiesisz na haku ocalałego, który nie jest obsesją, obsesja otrzymuje efekt Narażony na {0} s, a jej aura ujawnia się na {1} s.\n\nGdy zawiesisz na haku obsesję, inny losowy ocalały krzyczy i ujawnia swoją pozycję, a następnie staje się obsesją.\n\nZabójca może mieć obsesję wyłącznie na punkcie jednego ocalałego jednocześnie.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\n„Mam świeże mięso w kolejce i nie pozwolę ci go zepsuć. Nie tym razem!” – Chucky"
-        }
-      }
-    },
     "Batteries Included": {
       "name": "Batteries Included",
       "character_code": "K34",
@@ -9598,33 +9436,6 @@
         }
       }
     },
-    "Hex: Nothing But Misery": {
-      "name": "Hex: Nothing But Misery",
-      "character_code": "K39",
-      "character_name": "The Ghoul",
-      "translations": {
-        "de": {
-          "name": "Fluch: Nichts als Leid",
-          "description": "Du hast die Untiefen des Schmerzens erkundet und bist nun bereit, diesen anderen zuzufügen.\n\nWenn du Überlebenden {0}-mal mit Grundangriffen Schaden zugefügt hast, wird ein glanzloses Totem zu einem Fluchtotem, das alle Überlebenden verflucht.\n\nWenn du einem Überlebenden mit einem Grundangriff Schaden zufügst, erleidet dieser Eingeschränkt mit {1} % für {2} Sekunden.\n\nDer Effekt hält an, bis das Fluchtotem zerstört wurde.\n\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden.\n\n„Jede Niederlage dieser Welt wird durch das Unvermögen eines jeden Einzelnen verursacht.“ – Ken Kaneki"
-        },
-        "en": {
-          "name": "Hex: Nothing But Misery",
-          "description": "You've been driven to the absolute depths of pain, and now you're ready to inflict that pain on others.\n\nAfter you damage Survivors {0} times with basic attacks, a Dull Totem becomes a Hex Totem, cursing all Survivors.\n\nWhen you damage a Survivor with a basic attack, they gain {1}% Hindered for {2} seconds.\n\nThe effects last until the Hex Totem is cleansed.\n\nHindered reduces Survivor movement speed.\n\n\"All of the liabilities of this world are due to the inadequacies of the person involved.\" - Ken Kaneki"
-        },
-        "es": {
-          "name": "Maleficio: Solo hay miseria",
-          "description": "Te han empujado a las profundidades más recónditas del dolor, y ahora vas a hacer que otros sufran como tú.\n\nTras dañar a supervivientes {0} veces con ataques básicos, un tótem apagado se convierte en un tótem de maleficio que maldice a todos los supervivientes.\n\nCuando dañes a un superviviente con un ataque básico, este obtiene un {1} % de Entorpecimiento durante {2} segundos.\n\nLos efectos duran hasta que se purifique el tótem de maleficio.\n\nEntorpecimiento reduce la velocidad de movimiento del superviviente.\n\n\"Toda la culpa de este mundo se debe a la incapacidad de la persona involucrada\". (Ken Kaneki)"
-        },
-        "ja": {
-          "name": "呪術：生き地獄",
-          "description": "底無しの苦痛を課せられたあなたは、他の者も生き地獄に陥れようとする。\n\n通常攻撃で生存者に{0}回ダメージを与えると、無力なトーテムが呪いのトーテムとなり、全ての生存者を呪う。\n\n通常攻撃で生存者にダメージを与えると、その生存者が{1}%の妨害を{2}秒間受ける。\n\nこの効果は、呪いのトーテムが浄化されるまで続く。\n\n妨害によって生存者は移動速度が低下する。\n\n「この世のすべての不利益は当人の能力不足」- 金木 研"
-        },
-        "pl": {
-          "name": "Klątwa: nic poza cierpieniem",
-          "description": "Doprowadzono cię do granic bólu i teraz jesteś gotów zadawać go innym.\n\nPo trafieniu ocalałych{0} razy podstawowymi atakami, zwykły totem staje się przeklętym totemem i przeklina wszystkich ocalałych.\n\nGdy trafisz ocalałego podstawowym atakiem, otrzymuje on {1}% Skrępowania  na {2} s.\n\nEfekty trwają do oczyszczenia przeklętego totemu.\n\nSkrępowanie zmniejsza prędkość ruchu ocalałego.\n\n„Wszystkie nieszczęścia tego świata wynikają z niekompetencji jednostek”. – Ken Kaneki"
-        }
-      }
-    },
     "Forever Entwined": {
       "name": "Forever Entwined",
       "character_code": "K39",
@@ -9838,33 +9649,6 @@
         "pl": {
           "name": "Klątwa: Uwertura Zagłady",
           "description": "Klątwa, która żeruje na paranoi innych.\n\nPrzywołuje Totem Klątwy, który przeklina najdalszy generator i ujawnia jego aurę na żółto.\n\nGdy ocalały naprawia przeklęty generator przez {0} s, zyskujesz status Niewykrywalny, a twój zasięg terroru zostaje przypisany do generatora na {1} s.\n\nGdy przeklęty generator zostanie naprawiony, klątwa przenosi się na najdalszy inny generator.\n\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\n„Z ruin zbawienia, bądź ostrzeżony – śmierć nadchodzi z każdej strony”. – Mglista Góra, Giovanni Serrata"
-        }
-      }
-    },
-    "Turn Back The Clock": {
-      "name": "Turn Back The Clock",
-      "character_code": "K42",
-      "character_name": "The First",
-      "translations": {
-        "de": {
-          "name": "Die Uhr zurückdrehen",
-          "description": "Sie können sich wehren, so viel sie wollen. Die Zeit schreitet voran und dein Masterplan nähert sich seiner Erfüllung.\n\nNachdem du einen Überlebenden festgehakt hast, kannst du innerhalb von {0} Sek. die Taste für die aktive Fähigkeit 1 drücken, um einen Zielgenerator in deinem Blickfeld in einem Umkreis von {1} Metern explodieren zu lassen, ihm {2} % Fortschritt zu nehmen und ihn weiter Fortschritt abbauen zu lassen.\n\n„Dir wird nichts passieren ... Nichts, das du nicht verdient hättest!“ – Henry Creel"
-        },
-        "en": {
-          "name": "Turn Back The Clock",
-          "description": "Resist as they might, time marches on, and your master plan comes closer to fruition.\n\nAfter hooking a Survivor, for {0} seconds, press the Ability button 1 to make a target generator you can see within {1} meters explode, lose {2}% progress and start regressing.\n\n“Nothing will happen to you... Nothing that you don’t deserve!” —Henry Creel"
-        },
-        "es": {
-          "name": "Retrasa el reloj",
-          "description": "Por mucho que se resistan, el tiempo avanza inexorablemente, y tu plan maestro está cada vez más cerca de hacerse realidad.\n\nTras colgar a un superviviente, durante {0} segundos, pulsa el botón de la habilidad 1 para hacer que un generador objetivo que puedas ver en un radio de {1} metros explote, pierda un {2} % de progreso y empiece a revertirse.\n\n\"No te pasará nada... ¡Nada que no te merezcas!\". (Henry Creel)"
-        },
-        "ja": {
-          "name": "時間の逆行",
-          "description": "彼らがどんなに抵抗しようと、時間は進み、あなたの計画を邪魔することはできない。\n\n生存者をフックに吊るしたあと{0}秒以内に{1}メートル以内の目視できる発電機を選んでアビリティ発動のボタン1を押すと、その発電機が爆発して進行度が即座に{2}%失われ、さらに後退し始める。\n\n「お前には何も起こらない…当然の報い以外は！」- ヘンリー・クリール"
-        },
-        "pl": {
-          "name": "Cofnij zegar",
-          "description": "Mogą stawiać opór, ale czas płynie nieubłaganie, a twój wielki plan zbliża się do realizacji.\n\nGdy powiesisz ocalałego na haku, naciśnij przycisk umiejętności 1 i przytrzymaj go przez {0} s, aby wskazany generator, który widzisz w promieniu {1} m wybuchł, stracił {2}% postępu naprawy i jego stan zaczął się pogarszać.\n\n„Nic wam się nie stanie... Nic, na co nie zasłużyliście!” – Henry Creel"
         }
       }
     },
@@ -11758,33 +11542,6 @@
         }
       }
     },
-    "Repressed Alliance": {
-      "name": "Repressed Alliance",
-      "character_code": "S22",
-      "character_name": "Cheryl Mason",
-      "translations": {
-        "de": {
-          "name": "Verdrängtes Bündnis",
-          "description": "Du bist daran gewöhnt, von boshaften Kräften gejagt zu werden, und du hast angefangen, dies zu deinem Vorteil zu nutzen.\n\nVerdrängtes Bündnis wird aktiviert, nachdem Generatoren für insgesamt {0} Sekunden repariert wurden.\n\nReparierst du einen Generator, während dieses Talent aktiv ist, kannst du die Taste für die aktive Fähigkeit 1 drücken, um den Entitus zu rufen, damit er den Generator für {1} Sekunden blockiert. Das Talent wird dann deaktiviert.\n\nDiese Interaktion ist nicht verfügbar, wenn andere Überlebende den Generator reparieren.\n\nBetroffene Generatoren sind für alle Überlebenden anhand einer weißen Aura zu erkennen."
-        },
-        "en": {
-          "name": "Repressed Alliance",
-          "description": "You’re accustomed to being hunted by malicious forces, and you’ve begun using it to your advantage.\n\nRepressed Alliance activates after repairing generators for a total of {0} seconds.\n\nWhen repairing a generator while the perk is active, press the Active Ability Button 1 to call upon The Entity to block the generator for {1} seconds. The perk deactivates.\n\nThis interaction is not available if other Survivors are repairing the generator.\n\nAffected generators will be revealed by a white aura to all Survivors."
-        },
-        "es": {
-          "name": "Supresión de alianza",
-          "description": "Te has acostumbrado a que te persigan las fuerzas malignas y has empezado a usarlo a tu favor.\n\nSupresión de alianza se activa tras reparar generadores durante un total de {0} segundos.\n\nAl reparar un generador mientras la habilidad está activa, pulsa el botón de la habilidad activa 1 para invocar al Ente y bloquear el generador durante {1} segundos. La habilidad se desactiva.\n\nEsta interacción no está disponible si otros supervivientes están reparando el generador.\n\nLos generadores afectados brillarán con un aura blanca que se mostrará a todos los supervivientes."
-        },
-        "ja": {
-          "name": "抑圧の同盟",
-          "description": "悪意に満ちた力によって駆り立てられることに慣れたあなたは、それを自分の有利になるよう利用し始めた。\n\n発電機を合計で{0}秒間修理すると、抑圧の同盟が発動する。\n\nこのパークが発動中、発電機を修理しながらアビリティ発動のボタン1を押すとエンティティが招集され、その発電機が{1}秒間ブロックされる。このパークは無効になる。\n\n他の生存者が発電機を修理中の場合、このアクションは利用できない。\n\nパークによって作用した発電機は、白いオーラで生存者全員に表示される。"
-        },
-        "pl": {
-          "name": "Stłumiony sojusz",
-          "description": "Unikanie złowrogich mocy nie jest dla ciebie niczym nowym i potrafisz obrócić to na własną korzyść.\n\nStłumiony sojusz aktywuje się po naprawianiu generatorów przez łącznie {0} s.\n\nPodczas naprawy generatora z aktywną umiejętnością naciśnij przycisk aktywnej umiejętności 1, aby wezwać Byt i zablokować generator na {1} s. Umiejętność wyłącza się.\n\nInterakcja nie jest dostępna, jeśli inni ocalali naprawiają generatora.\n\nZablokowane generatory zostaną podświetlone białą aurą dla wszystkich ocalałych."
-        }
-      }
-    },
     "Visionary": {
       "name": "Visionary",
       "character_code": "S23",
@@ -12595,33 +12352,6 @@
         }
       }
     },
-    "Better Than New": {
-      "name": "Better Than New",
-      "character_code": "S33",
-      "character_name": "Rebecca Chambers",
-      "translations": {
-        "de": {
-          "name": "Besser als neu",
-          "description": "Du kennst dich mit der medizinischen Behandlung in Gefechten aus. Patienten, die von dir versorgt wurden, haben neue Kraft.\n\nWenn du eine Heilaktion an einem anderen Überlebenden abgeschlossen hast, erhält der betroffene Überlebende einen Geschwindigkeitsbonus von {0} % für das Heilen, Öffnen von Truhen und Zerstören und Segnen von Totems.\n\nÜberlebende behalten den Bonus, bis sie einen Gesundheitsstatus verlieren."
-        },
-        "en": {
-          "name": "Better Than New",
-          "description": "You are an expert in combat medicine. Patients leave your care reinvigorated.\n\nUpon completing a healing action on another Survivor, the targeted Survivor gets a {0}% speed boost to healing, opening chests, cleansing and blessing Totems.\n\nSurvivors keep the bonus until they lose a health state."
-        },
-        "es": {
-          "name": "Mejor que nuevo",
-          "description": "Eres una experta en medicina de combate y siempre logras recuperar a tus pacientes.\n\nTras completar una acción curativa en otro superviviente, el superviviente que la reciba obtiene un aumento de velocidad del {0} % para curar, abrir cofres, purificar y bendecir tótems.\n\nLos supervivientes mantienen la bonificación hasta que pierden un estado de salud."
-        },
-        "ja": {
-          "name": "みなぎる活力",
-          "description": "あなたは戦闘医療に長けている。患者は元気になってあなたのもとを去っていく。\n\n他の生存者への治療アクションを完了すると、その生存者の治療、チェスト開放、トーテム浄化・清めのアクション速度が{0}%上昇する。\n\nアクション速度の上昇はその生存者自身が1段階負傷するまで持続する。"
-        },
-        "pl": {
-          "name": "Lepsze niż nowe",
-          "description": "Jesteś specjalistką od medycyny pola walki. Pacjenci opuszczają twoją opiekę pełni sił.\n\nPo ukończeniu leczenia innego ocalałego zyskuje on {0}% przyśpieszenia do leczenia, otwierania skrzyń, oczyszczania i błogosławienia totemów.\n\nOcalali zachowują bonus do chwili utraty stanu zdrowia."
-        }
-      }
-    },
     "Reassurance": {
       "name": "Reassurance",
       "character_code": "S33",
@@ -13132,33 +12862,6 @@
         "pl": {
           "name": "Pułapka Chemiczna",
           "description": "We mgle oficer zawsze musi umieć skorzystać z dostępnych materiałów.\n\nPułapka Chemiczna aktywuje się po osiągnięciu {0}%  postępu naprawy generatorów.\n\nGdy stoisz obok przewróconej palety, naciśnij przycisk aktywnej umiejętności 2, aby zamontować pułapkę, która pozostaje aktywna przez {1} s.\n\nAura palet z pułapkami jest widoczna w kolorze żółtym dla wszystkich ocalałych. Na palecie może być aktywna tylko jedna Pułapka Chemiczna.\n\nKiedy zabójca zniszczy paletę, Pułapka Chemicznaeksploduje, a on otrzymuje {2}% Skrępowania na {3} s.\n\nSkrępowanie zmniejsza prędkość ruchu zabójcy.\n\n„Jak to zabić, Ash?” – Ellen Ripley"
-        }
-      }
-    },
-    "Light-footed": {
-      "name": "Light-footed",
-      "character_code": "S39",
-      "character_name": "Ellen Ripley",
-      "translations": {
-        "de": {
-          "name": "Behände",
-          "description": "Bei der Begegnung mit tödlichen Killern hast du gelernt, wie wichtig es ist, geräuschlos zu sein.\n\nWenn du gesund bist, wird dieses Talent aktiviert.\n\nDeine Schritte beim Laufen sind lautlos.\n\nDieses Talent hat eine Abklingzeit von {0} Sekunden, nachdem du eine übereilte Aktion ausgeführt hast.\n\n„Komm schon, Katze.“ – Ellen Ripley"
-        },
-        "en": {
-          "name": "Light-footed",
-          "description": "Crossing paths with deadly killers has taught you the value of discretion.\n\nWhen you are healthy, this perk activates.\n\nYour running footsteps are silent.\n\nThis perk goes on cooldown for {0} seconds after performing a rushed action.\n\n“Come on, cat.” –Ellen Ripley"
-        },
-        "es": {
-          "name": "Ligera de pies",
-          "description": "Has aprendido a ser discreta por haberte encontrado en tu camino a asesinos letales.\n\nEsta habilidad se activa cuando estás ilesa.\n\nTus pisadas al correr no emiten ningún sonido.\n\nEsta habilidad tiene un tiempo de recarga de {0} segundos tras realizar una acción rápida.\n\n\"Vamos, gatito\". (Ellen Ripley)"
-        },
-        "ja": {
-          "name": "忍び足",
-          "description": "あなたは危険な殺人鬼と対決したことで、音を立てないことの大切さを学んだ。\n\n無傷の状態のとき、このパークが発動する。\n\n走行時に足音がしなくなる。\n\nこのパークには、高速アクションを行ったあと{0}秒間のクールダウンがある。\n\n「おいで、ネコちゃん」- エレン・リプリー"
-        },
-        "pl": {
-          "name": "Lekki Krok",
-          "description": "Spotkania ze śmiertelnie niebezpiecznymi zabójcami nauczyły cię dyskrecji.\n\nUmiejętność aktywuje się przy pełnym zdrowiu.\n\nTwoje kroki są ciche.\n\nCzas odnowienia umiejętności wynosi {0} s po wykonaniu szybkiej akcji.\n\n„Chodź, kocie”. – Ellen Ripley"
         }
       }
     },
@@ -13918,33 +13621,6 @@
         }
       }
     },
-    "ONE-TWO-THREE-FOUR!": {
-      "name": "ONE-TWO-THREE-FOUR!",
-      "character_code": "S49",
-      "character_name": "Vee Boonyasak",
-      "translations": {
-        "de": {
-          "name": "EINS, ZWEI, DREI, VIER!",
-          "description": "Ein gleichmäßiger Rhythmus animiert zu gleichmäßigen Arbeitsabläufen.\n\nDrücke die Taste für die aktive Fähigkeit 2, wenn du stehst und nichts tust, um die Auftritt-Interaktion zu starten, die bis zu 15 Sek. anhält und Überlebende in einem Umkreis von {0} Metern verstärkt. Während des Auftritts erhältst du fortlaufend Fähigkeitschecks. Der Effekt hält {1} Sek. lang an, wenn der Auftritt abgeschlossen wird.Erhöht die Wahrscheinlichkeit, Fähigkeitschecks für die Heilung und Reparatur zu erhalten, um {2} %.\nWenn die Fähigkeit abgebrochen wird oder der Auftritt beendet ist, beginnt die Abklingzeit von {3} Sek.\n\n„Wir sind laut! Wir sind wild! WIR SIND AXEKICK!“\n– Vee Boonyasak"
-        },
-        "en": {
-          "name": "ONE-TWO-THREE-FOUR!",
-          "description": "A steady beat makes for steady work.\n\nPress Active Ability button 2 while standing and idle to enter the \"performance\" interaction that lasts up to 15 seconds and empowers Survivors within {0} meters. You will get continuous Skill Checks during the performance. The effect lasts for {1} seconds if the performance is completed.Increases the odds of getting healing and repair Skill Checks by {2}%.\nWhen the ability is canceled or the performance completes, it goes on cooldown for {3} seconds.\n\n“We are loud! We are heavy! WE ARE AXEKICK!”\n— Vee Boonyasak"
-        },
-        "es": {
-          "name": "¡UNO, DOS, TRES, CUATRO!",
-          "description": "Un ritmo constante hace que las cosas funcionen como deben.\n\nPulsa el botón de la habilidad activa 2 cuando estés de pie sin moverte para activar la interacción de \"actuación\" que dura hasta 15 segundos y potencia a los supervivientes en un radio de {0} metros. Obtendrás pruebas de habilidad continuamente durante la actuación. El efecto dura {1} segundos si completas la actuación.Aumenta la probabilidad de obtener pruebas de habilidad de curación y reparación un {2} %.\nCuando se cancele la habilidad o completes la actuación, entra en tiempo de recarga durante {3} segundos.\n\n\"¡Somos ruidosos! ¡Somos cañeros! ¡SOMOS AXEKICK!\".\n(Vee Boonyasak)"
-        },
-        "ja": {
-          "name": "ワンツースリーフォー！",
-          "description": "あなたは安定したリズムで、着実に作業を進める。\n\n立ち止まった状態でアビリティ発動のボタン2を押すと、最長15秒続く演奏を始め、{0}メートル以内の生存者にバフを与える。演奏中は連続でスキルチェックが発生する。この効果は演奏を完了すると{1}秒間持続する。治療と修理のスキルチェックが発生する確率が{2}%増加する\nアビリティがキャンセルされた時、または演奏を完了した時、このパークは{3}秒間のクールダウンに入る。\n\n「やかましくてヘビーなサウンドを楽しんで！アクスキック万歳！」- ヴィー・ブーニャサク"
-        },
-        "pl": {
-          "name": "RAZ-DWA-TRZY-CZTERY!",
-          "description": "Stały rytm to solidna robota.\n\nNaciśnij przycisk aktywnej umiejętności 2, stojąc bez ruchu, aby rozpocząć interakcję „występu”, która trwa do 15 s i wzmacnia ocalałych w promieniu {0} m. Podczas występu otrzymujesz ciągłe testy umiejętności. Jeśli występ zostanie ukończony, efekt utrzymuje się przez {1} s.Zwiększa szansę na otrzymanie testów umiejętności leczenia i naprawy o {2}%.\nPo anulowaniu umiejętności lub zakończeniu występu następuje czas odnawiania wynoszący {3} s.\n\n„Gramy głośno! Gramy mocno! JESTEŚMY AXEKICK!”\n— Vee Boonyasak"
-        }
-      }
-    },
     "Ghost Notes": {
       "name": "Ghost Notes",
       "character_code": "S49",
@@ -14293,6 +13969,330 @@
         "pl": {
           "name": "Przesłuchanie krzyżowe",
           "description": "PERK_S53P03_DESC"
+        }
+      }
+    },
+    "Save the Best for Last": {
+      "name": "Save the Best for Last",
+      "character_code": "K06",
+      "character_name": "The Shape",
+      "translations": {
+        "de": {
+          "name": "Das Beste kommt zum Schluss",
+          "description": "Ein Überlebender wird Ziel deiner Besessenheit.\n\nDu verdienst einen Zähler für jeden erfolgreichen Grundangriff, der nicht das Ziel der Besessenheit trifft. Jeder Zähler gewährt eine kombinierbare, um {0} % verringerte Abklingzeit bei erfolgreichen Grundangriffen. Du kannst bis zu {1} Zähler verdienen.\n\nWenn du aber dein Ziel der Besessenheit mit einem Grundangriff oder Spezialangriff triffst, verlierst du {2} Zähler. Wird das Ziel der Besessenheit geopfert oder getötet, kannst du keine Zähler verdienen.\n\nDer Killer kann immer nur von je einem Überlebenden besessen sein.\n\n„Der Tod ist in deine kleine Stadt gekommen, Sheriff.“ – Dr. Sam Loomis"
+        },
+        "en": {
+          "name": "Save the Best for Last",
+          "description": "You become obsessed with one Survivor.\n\nEarn a token for each successful basic attack that is not dealt to the Obsession. Each token grants a stackable {0}% decreased successful basic attack cooldown, you can earn up to {1} tokens.\n\nWhen you hit the Obsession with a Basic Attack or Special Attack, lose {2} tokens. You cannot gain tokens as long as your Obsession is sacrificed or killed.\n\nThe Killer can only be obsessed with one Survivor at a time.\n\n\"Death has come to your little town, sheriff.\" -Dr. Sam Loomis"
+        },
+        "es": {
+          "name": "Lo mejor para el final",
+          "description": "Te obsesionas con un superviviente.\n\nConsigues un distintivo cada vez que golpeas con un ataque básico a alguien que no sea la obsesión. Cada uno otorga una reducción acumulable del {0} % en el tiempo de recarga de ataques básicos acertados. Puedes ganar hasta un máximo de {1} distintivos.\n\nCuando la obsesión pierde un estado de salud del modo que sea, pierdes {2} distintivos. Si tu obsesión muere o es sacrificada, no podrás ganar distintivos.\n\nEl asesino no puede obsesionarse con más de un superviviente.\n\n\"La muerte ha llegado a su pueblo, sheriff.\" (Dr. Sam Loomis)"
+        },
+        "ja": {
+          "name": "最後のお楽しみ",
+          "description": "1人の生存者に執着する。\n\nオブセッション以外の生存者に通常攻撃を命中させる度にトークンを1個獲得する。1トークンにつき、通常攻撃成功後のクールダウンが{0}%ずつ減少する。トークンは最大{1}個まで獲得できる。\n\nオブセッションに通常攻撃または特殊攻撃を命中させると{2}個のトークンを失う。オブセッションが処刑されるか死亡するとトークンを獲得できない。\n\nオブセッションの対象は一度に1人のみ。\n\n「町に死が訪れつつある」- サム・ルーミス医師"
+        },
+        "pl": {
+          "name": "Najlepsze zostaw na koniec",
+          "description": "Jeden z ocalałych staje się twoją obsesją.\n\nOtrzymujesz żeton za każdy udany podstawowy atak, który nie został wymierzony w obsesję. Każdy żeton umożliwia wykonanie kolejnego podstawowego ataku o {0}% szybciej. Możesz zebrać maksymalnie {1} żetonów.\n\nGdy trafisz obsesję podstawowym lub specjalnym atakiem, tracisz żetony ({2}). Gdy twoja obsesja zostanie poświęcona lub zabita, nie otrzymasz więcej żetonów.\n\nZabójca może mieć obsesję wyłącznie na punkcie jednego ocalałego naraz.\n\n„Śmierć zawitała do twojego małego miasteczka, szeryfie” – Dr Sam Loomis"
+        }
+      }
+    },
+    "Play with Your Food": {
+      "name": "Play with Your Food",
+      "character_code": "K06",
+      "character_name": "The Shape",
+      "translations": {
+        "de": {
+          "name": "Spiele mit deinem Essen",
+          "description": "Ein Überlebender wird Ziel deiner Besessenheit.\nJedes Mal, wenn du das Ziel der Besessenheit jagst und es entkommen lässt, erhältst du einen Zähler (bis zu maximal {0} Zähler).\nJeder Zähler bringt dir {1} % Eile.\nJeder Grundangriff oder Spezialangriff verbraucht einen Zähler.\n\nDer Killer kann immer nur von je einem Überlebenden besessen sein.\nEile erhöht die Bewegungsgeschwindigkeit des Killers.\n\n„Du hast sie zum Narren gehalten, nicht wahr, Michael? Aber nicht mich.“ – Dr. Sam Loomis"
+        },
+        "en": {
+          "name": "Play with Your Food",
+          "description": "You become obsessed with one Survivor.\nEvery time you chase your Obsession and let them escape, you receive a token up to a maximum of {0} tokens.\nFor each token, you have {1}% Haste.\nPerforming a Basic Attack or Special Attack spends one token.\n\nThe Killer can only be Obsessed with one Survivor at a time.\nHaste increases Killer movement speed.\n\n“You've fooled them, haven't you Michael? But not me.” -Dr. Sam Loomis"
+        },
+        "es": {
+          "name": "Jugar con la comida",
+          "description": "Te obsesionas con un superviviente.\nCada vez que persigues a tu obsesión y la dejas escapar, ganas un distintivo, hasta un máximo de {0}.\nPor cada uno que tengas, obtienes un {1} % de Celeridad.\nCada ataque básico o especial consume un distintivo.\n\nEl asesino no puede obsesionarse con más de un superviviente.\nCeleridad aumenta la velocidad de movimiento del asesino.\n\n\"Has engañado a todos excepto a mí, Michael\". (Dr. Sam Loomis)"
+        },
+        "ja": {
+          "name": "弄ばれる獲物",
+          "description": "1人の生存者に執着する。\nオブセッション状態の生存者を追いかけて取り逃がすたびにトークンが1個貯まる（{0}個まで）。\nトークン1個につき{1}%の迅速を得る。\n通常攻撃または特殊攻撃を実行するたびにトークンを1個消費する。\n\nオブセッションの対象は一度に1人のみ。\n殺人鬼は迅速状態になると移動速度が上昇する。\n\n「奴らはうまく騙せても、私には通用せんぞ。」- サム・ルーミス医師"
+        },
+        "pl": {
+          "name": "Baw się Jedzeniem",
+          "description": "Jeden z ocalałych staje się twoją obsesją.\nZa każdym razem, kiedy go ścigasz i pozwalasz mu uciec, otrzymasz żeton (maksymalnie {0}).\nZa każdy żeton otrzymujesz {1}%Pośpiechu.\nWykonanie ataku podstawowego lub specjalnego zużywa jeden żeton.\n\nZabójca może mieć obsesję wyłącznie na punkcie jednego ocalałego naraz.\nPośpiech zwiększa prędkość ruchu zabójcy.\n\n„Oszukałeś ich, prawda, Michael? Ale nie mnie”. – Dr Sam Loomis"
+        }
+      }
+    },
+    "Make Your Choice": {
+      "name": "Make Your Choice",
+      "character_code": "K11",
+      "character_name": "The Pig",
+      "translations": {
+        "de": {
+          "name": "Triff deine Wahl",
+          "description": "Wenn ein Überlebender einen anderen mindestens {0} Meter von dir entfernt vom Haken rettet, löst Triff deine Wahl den Statuseffekt Gefährdet aus und wendet ihn für {1} Sekunden auf den Retter an.\nTriff deine Wahl hat eine Abklingzeit von {2} Sekunden.\n\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\n„Du wärst überrascht, welche Werkzeuge Leben retten können.“ – Amanda Young"
+        },
+        "en": {
+          "name": "Make Your Choice",
+          "description": "When a Survivor rescues another from a hook at least {0} meters away from you, Make your Choice causes the Survivor to scream and applies the Exposed status effect to them for {1} seconds.\nMake your Choice has a cooldown of {2} seconds.\n\nExposed Survivors will be downed by basic attacks even if uninjured.\n\n\"You'd be surprised what tools can save a life.\" -Amanda Young"
+        },
+        "es": {
+          "name": "Toma una decisión",
+          "description": "Cuando un superviviente rescata a otro de un gancho a una distancia de al menos {0} metros de ti, Toma una decisión hace gritar al superviviente y le aplica el efecto de estado Vulnerabilidad durante {1} segundos.\nToma una decisión tiene un tiempo de recarga de {2} segundos.\n\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\n\"Te sorprenderían las herramientas que pueden salvar vidas\". (Amanda Young)"
+        },
+        "ja": {
+          "name": "選択は君次第だ",
+          "description": "生存者があなたから{0}メートル以上離れたフックに吊るされた仲間を救助すると、選択は君次第だが発動して救助者が叫び、{1}秒間無防備のステータス効果を受ける。\n選択は君次第だには{2}秒間のクールダウンがある。\n\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\n「思わぬモノが命を救うのよ。」- アマンダ・ヤング"
+        },
+        "pl": {
+          "name": "Dokonaj Wyboru",
+          "description": "Kiedy ocalały ratuje sojusznika z haka w odległości co najmniej {0} m od ciebie, Dokonaj Wyboru zmusza ratującego do krzyku i nakłada na niego efekt Narażenia. Efekt trwa przez {1} s.\nDokonaj Wyboru odnawia się przez {2} s.\n\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\n„Zdziwiłbyś się, jakie narzędzia mogą uratować życie”. – Amanda Young"
+        }
+      }
+    },
+    "Dead Man's Switch": {
+      "name": "Dead Man's Switch",
+      "character_code": "K19",
+      "character_name": "The Deathslinger",
+      "translations": {
+        "de": {
+          "name": "Totenschalter",
+          "description": "Wenn du einen Überlebenden festhakst, wird Totenschalter aktiviert. Wenn der erste Überlebende mit der Reparatur eines Generators aufhört, blockiert der Entitus diesen für {0} Sekunden.\n\nDer betroffene Generator wird durch eine weiße Aura hervorgehoben.\n\nTotenschalter kann nicht erneut aktiviert werden, solange ein Generator dadurch blockiert wird.\n\n„Ich kenne den Gesichtsausdruck von Menschen, die begreifen, dass sie sterben werden.“ – Caleb Quinn"
+        },
+        "en": {
+          "name": "Dead Man's Switch",
+          "description": "When you hook a Survivor, Dead Man’s Switch activates. The first Survivor that stops repairing a generator causes The Entity to block it for {0} seconds.\n\nThe affected generator is highlighted by a white aura.\n\nDead Man’s Switch cannot reactivate while it is blocking a generator.\n\n\"I've seen the look on a man's face when he realizes he's going to die.\" -Caleb Quinn"
+        },
+        "es": {
+          "name": "Interruptor del hombre muerto",
+          "description": "Cuando enganchas a un superviviente, se activa Interruptor del hombre muerto. El primer superviviente que deje de reparar un generador hace que el Ente lo bloquee durante {0} segundos.\n\nEl generador afectado se iluminará con un aura blanca.\n\nInterruptor del hombre muerto no se puede reactivar mientras está bloqueando un generador.\n\n\"He visto la expresión en la cara de un hombre cuando se da cuenta de que va a morir\". (Caleb Quinn)"
+        },
+        "ja": {
+          "name": "死人のスイッチ",
+          "description": "生存者をフックに吊るしたとき、死人のスイッチが発動する。そのあと最初に生存者が発電機の修理を中断した際、その発電機がエンティティによって{0}秒間ブロックされる。\n\nブロックされた発電機は白いオーラで強調表示される。\n\n死人のスイッチは発電機をブロックしている間は再び発動しない。\n\n「自分が死ぬことに気付いたときの人間の顔なら見たことがあるぜ」 - カレブ・クイン"
+        },
+        "pl": {
+          "name": "Czuwak",
+          "description": "Gdy wieszasz ocalałego na haku, Czuwak aktywuje się. Pierwszy ocalały, który kończy naprawę generatora, wywołuje jego blokadę przez Byt na {0} s.\n\nGenerator zostaje podświetlony białą aurą.\n\nCzuwak nie może się ponownie aktywować, gdy blokuje generator.\n\n„Widziałem wyraz jego twarzy, gdy zorientował się, że zaraz umrze”. – Caleb Quinn"
+        }
+      }
+    },
+    "Dragon's Grip": {
+      "name": "Dragon's Grip",
+      "character_code": "K21",
+      "character_name": "The Blight",
+      "translations": {
+        "de": {
+          "name": "Drachengriff",
+          "description": "Nachdem du einen Generator beschädigt hast, gibt der erste Überlebende, der in den nächsten {0} Sekunden damit interagiert, für {1} Sekunden seine Position bekannt, indem er schreit, und erleidet den Statuseffekt Gefährdet für {2} Sekunden.\n\nDrachengriff hat eine Abklingzeit von {3} Sekunden.\n\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\n„In diesem Präparat steckt so viel Potenzial ... Selbst die kleinste Menge davon bewirkt übernatürliche Effekte.“ – Tagebuch von Talbot Grimes"
+        },
+        "en": {
+          "name": "Dragon's Grip",
+          "description": "After damaging a generator, for the next {0} seconds, the first Survivor that interacts with it will scream, revealing their location for {1} seconds, and becoming afflicted with the Exposed status effect for {2} seconds.\n\nDragon’s Grip has a cooldown of {3} seconds.\n\nExposed Survivors will be downed by basic attacks even if uninjured.\n\n“Such potential in this compound... even the slightest trace causes unnatural effects.” —Journal of Talbot Grimes"
+        },
+        "es": {
+          "name": "Agarre del dragón",
+          "description": "Tras dañar un generador, el primer superviviente que interaccione con él durante los siguientes {0} segundos gritará, revelará su ubicación durante {1} segundos y sufrirá el efecto de estado Vulnerabilidad durante {2} segundos.\n\nAgarre del dragón tiene un tiempo de recarga de {3} segundos.\n\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\n\"Este compuesto tiene tanto potencial... que hasta la cantidad más mínima causa efectos sobrenaturales\". (Diario de Talbot Grimes)"
+        },
+        "ja": {
+          "name": "ドラゴンの掌握",
+          "description": "発電機にダメージを与えたとき、次の{0}秒間、最初にその発電機にアクションを行った生存者は叫び声を上げ、{1}秒間位置が判明し、{2}秒間無防備のステータス効果を受ける。\n\nドラゴンの掌握には{3}秒間のクールダウンが発生する。\n\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\n「この化合物には大きな可能性がある。微量であっても、不自然な効果を引き起こすのだ。」 —タルボット・グライムズの日記"
+        },
+        "pl": {
+          "name": "Uścisk smoka",
+          "description": "Po uszkodzeniu generatora pierwszy ocalały, który wejdzie z nim w interakcję w trakcie kolejnych {0} s krzyknie. ujawni swoją lokalizację na {1} s i otrzyma efekt Narażony na {2} s.\n\nUścisk Smoka odnawia się {3} s.\n\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\n„W tej miksturze drzemie taki potencjał… Nawet jej odrobina wywołuje nietypowe efekty”. – Dziennik Talbota Grimesa"
+        }
+      }
+    },
+    "Friends 'til the End": {
+      "name": "Friends 'til the End",
+      "character_code": "K34",
+      "character_name": "The Good Guy",
+      "translations": {
+        "de": {
+          "name": "Freunde bis zum Schluss",
+          "description": "Du tötest alle, die sich zwischen dich und dein Ziel stellen.\n\nEin Überlebender wird Ziel deiner Besessenheit.\n\nWenn du einen Überlebenden festhakst, von dem du nicht besessen bist, wird das Ziel deiner Besessenheit für {0} Sekunden Gefährdet und seine Aura wird für {1} Sekunden enthüllt.\n\nWenn du das Ziel deiner Besessenheit festhakst, schreit ein zufälliger anderer Überlebender, gibt seine Position preis und wird zum Ziel deiner Besessenheit.\n\nDer Killer kann immer nur von je einem Überlebenden besessen sein.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\n„Ich habe frisches Fleisch vorbereitet und das werde ich mir von dir nicht verderben lassen, dieses Mal nicht!“ – Chucky"
+        },
+        "en": {
+          "name": "Friends 'til the End",
+          "description": "You’ll kill anyone who gets between you and your target.\n\nYou become obsessed with one Survivor.\n\nWhen you hook a Survivor that is not the Obsession, the Obsession becomes Exposed for {0} seconds and reveals their aura for {1} seconds.\n\nWhen you hook the Obsession, another random Survivor screams and reveals their position and becomes the Obsession.\n\nThe Killer can only be obsessed with one Survivor at a time.\nExposed Survivors will be downed by basic attacks even if uninjured\n\n\"I got some fresh meat lined up, and I'm not gonna let you spoil it, not this time!\" – Chucky"
+        },
+        "es": {
+          "name": "Amigos para siempre",
+          "description": "Matarás a todos los que se interpongan entre tu objetivo y tú.\n\nTe obsesionas con un superviviente.\n\nCuando cuelgas a un superviviente que no sea tu obsesión, la obsesión sufrirá Vulnerabilidad durante {0} segundos y revelará su aura durante {1} segundos.\n\nCuando cuelgas a tu obsesión, otro superviviente aleatorio gritará y revelará su posición, convirtiéndose así en la obsesión.\n\nEl asesino no puede obsesionarse con más de un superviviente.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\n\"¡Tengo preparada carne fresca, y esta vez no voy a permitir que lo arruines todo!\". (Chucky)"
+        },
+        "ja": {
+          "name": "死ぬまで親友",
+          "description": "あなたは自分と自分の獲物の間に入る者は誰でも殺す。\n\n1人の生存者に執着する。\n\nオブセッションでない生存者をフックに吊るすと、オブセッションが{0}秒間無防備となり、そのオーラが{1}秒間視える。\n\nオブセッションをフックに吊るすと、別のランダムな生存者が叫び声を上げて位置を知らせ、オブセッションになる。\n\nオブセッションの対象は一度に1人のみ。\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\n「新しい体を見つけたんだ。今度ばかりは邪魔させねえからな！」– チャッキー"
+        },
+        "pl": {
+          "name": "Przyjaciele do Końca",
+          "description": "Zabijesz każdego, kto stanie między tobą a twoim celem.\n\nMasz obsesję na punkcie jednego ocalałego.\n\nGdy zawiesisz na haku ocalałego, który nie jest obsesją, obsesja otrzymuje efekt Narażony na {0} s, a jej aura ujawnia się na {1} s.\n\nGdy zawiesisz na haku obsesję, inny losowy ocalały krzyczy i ujawnia swoją pozycję, a następnie staje się obsesją.\n\nZabójca może mieć obsesję wyłącznie na punkcie jednego ocalałego jednocześnie.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\n„Mam świeże mięso w kolejce i nie pozwolę ci go zepsuć. Nie tym razem!” – Chucky"
+        }
+      }
+    },
+    "Hex: Nothing but Misery": {
+      "name": "Hex: Nothing but Misery",
+      "character_code": "K39",
+      "character_name": "The Ghoul",
+      "translations": {
+        "de": {
+          "name": "Fluch: Nichts als Leid",
+          "description": "Du hast die Untiefen des Schmerzens erkundet und bist nun bereit, diesen anderen zuzufügen.\n\nWenn du Überlebenden {0}-mal mit Grundangriffen Schaden zugefügt hast, wird ein glanzloses Totem zu einem Fluchtotem, das alle Überlebenden verflucht.\n\nWenn du einem Überlebenden mit einem Grundangriff Schaden zufügst, erleidet dieser Eingeschränkt mit {1} % für {2} Sekunden.\n\nDer Effekt hält an, bis das Fluchtotem zerstört wurde.\n\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden.\n\n„Jede Niederlage dieser Welt wird durch das Unvermögen eines jeden Einzelnen verursacht.“ – Ken Kaneki"
+        },
+        "en": {
+          "name": "Hex: Nothing but Misery",
+          "description": "You've been driven to the absolute depths of pain, and now you're ready to inflict that pain on others.\n\nAfter you damage Survivors {0} times with basic attacks, a Dull Totem becomes a Hex Totem, cursing all Survivors.\n\nWhen you damage a Survivor with a basic attack, they gain {1}% Hindered for {2} seconds.\n\nThe effects last until the Hex Totem is cleansed.\n\nHindered reduces Survivor movement speed.\n\n\"All of the liabilities of this world are due to the inadequacies of the person involved.\" - Ken Kaneki"
+        },
+        "es": {
+          "name": "Maleficio: Solo hay miseria",
+          "description": "Te han empujado a las profundidades más recónditas del dolor, y ahora vas a hacer que otros sufran como tú.\n\nTras dañar a supervivientes {0} veces con ataques básicos, un tótem apagado se convierte en un tótem de maleficio que maldice a todos los supervivientes.\n\nCuando dañes a un superviviente con un ataque básico, este obtiene un {1} % de Entorpecimiento durante {2} segundos.\n\nLos efectos duran hasta que se purifique el tótem de maleficio.\n\nEntorpecimiento reduce la velocidad de movimiento del superviviente.\n\n\"Toda la culpa de este mundo se debe a la incapacidad de la persona involucrada\". (Ken Kaneki)"
+        },
+        "ja": {
+          "name": "呪術：生き地獄",
+          "description": "底無しの苦痛を課せられたあなたは、他の者も生き地獄に陥れようとする。\n\n通常攻撃で生存者に{0}回ダメージを与えると、無力なトーテムが呪いのトーテムとなり、全ての生存者を呪う。\n\n通常攻撃で生存者にダメージを与えると、その生存者が{1}%の妨害を{2}秒間受ける。\n\nこの効果は、呪いのトーテムが浄化されるまで続く。\n\n妨害によって生存者は移動速度が低下する。\n\n「この世のすべての不利益は当人の能力不足」- 金木 研"
+        },
+        "pl": {
+          "name": "Klątwa: nic poza cierpieniem",
+          "description": "Doprowadzono cię do granic bólu i teraz jesteś gotów zadawać go innym.\n\nPo trafieniu ocalałych{0} razy podstawowymi atakami, zwykły totem staje się przeklętym totemem i przeklina wszystkich ocalałych.\n\nGdy trafisz ocalałego podstawowym atakiem, otrzymuje on {1}% Skrępowania  na {2} s.\n\nEfekty trwają do oczyszczenia przeklętego totemu.\n\nSkrępowanie zmniejsza prędkość ruchu ocalałego.\n\n„Wszystkie nieszczęścia tego świata wynikają z niekompetencji jednostek”. – Ken Kaneki"
+        }
+      }
+    },
+    "Turn Back the Clock": {
+      "name": "Turn Back the Clock",
+      "character_code": "K42",
+      "character_name": "The First",
+      "translations": {
+        "de": {
+          "name": "Die Uhr zurückdrehen",
+          "description": "Sie können sich wehren, so viel sie wollen. Die Zeit schreitet voran und dein Masterplan nähert sich seiner Erfüllung.\n\nNachdem du einen Überlebenden festgehakt hast, kannst du innerhalb von {0} Sek. die Taste für die aktive Fähigkeit 1 drücken, um einen Zielgenerator in deinem Blickfeld in einem Umkreis von {1} Metern explodieren zu lassen, ihm {2} % Fortschritt zu nehmen und ihn weiter Fortschritt abbauen zu lassen.\n\n„Dir wird nichts passieren ... Nichts, das du nicht verdient hättest!“ – Henry Creel"
+        },
+        "en": {
+          "name": "Turn Back the Clock",
+          "description": "Resist as they might, time marches on, and your master plan comes closer to fruition.\n\nAfter hooking a Survivor, for {0} seconds, press the Ability button 1 to make a target generator you can see within {1} meters explode, lose {2}% progress and start regressing.\n\n“Nothing will happen to you... Nothing that you don’t deserve!” —Henry Creel"
+        },
+        "es": {
+          "name": "Retrasa el reloj",
+          "description": "Por mucho que se resistan, el tiempo avanza inexorablemente, y tu plan maestro está cada vez más cerca de hacerse realidad.\n\nTras colgar a un superviviente, durante {0} segundos, pulsa el botón de la habilidad 1 para hacer que un generador objetivo que puedas ver en un radio de {1} metros explote, pierda un {2} % de progreso y empiece a revertirse.\n\n\"No te pasará nada... ¡Nada que no te merezcas!\". (Henry Creel)"
+        },
+        "ja": {
+          "name": "時間の逆行",
+          "description": "彼らがどんなに抵抗しようと、時間は進み、あなたの計画を邪魔することはできない。\n\n生存者をフックに吊るしたあと{0}秒以内に{1}メートル以内の目視できる発電機を選んでアビリティ発動のボタン1を押すと、その発電機が爆発して進行度が即座に{2}%失われ、さらに後退し始める。\n\n「お前には何も起こらない…当然の報い以外は！」- ヘンリー・クリール"
+        },
+        "pl": {
+          "name": "Cofnij zegar",
+          "description": "Mogą stawiać opór, ale czas płynie nieubłaganie, a twój wielki plan zbliża się do realizacji.\n\nGdy powiesisz ocalałego na haku, naciśnij przycisk umiejętności 1 i przytrzymaj go przez {0} s, aby wskazany generator, który widzisz w promieniu {1} m wybuchł, stracił {2}% postępu naprawy i jego stan zaczął się pogarszać.\n\n„Nic wam się nie stanie... Nic, na co nie zasłużyliście!” – Henry Creel"
+        }
+      }
+    },
+    "Repressed Alliance": {
+      "name": "Repressed Alliance",
+      "character_code": "S22",
+      "character_name": "Cheryl Mason",
+      "translations": {
+        "de": {
+          "name": "Verdrängtes Bündnis",
+          "description": "Du bist daran gewöhnt, von boshaften Kräften gejagt zu werden, und du hast angefangen, dies zu deinem Vorteil zu nutzen.\n\nVerdrängtes Bündnis wird aktiviert, nachdem Generatoren für insgesamt {0} Sekunden repariert wurden.\n\nReparierst du einen Generator, während dieses Talent aktiv ist, kannst du die Taste für die aktive Fähigkeit 1 drücken, um den Entitus zu rufen, damit er den Generator für {1} Sekunden blockiert. Das Talent wird dann deaktiviert.\n\nDiese Interaktion ist nicht verfügbar, wenn andere Überlebende den Generator reparieren.\n\nBetroffene Generatoren sind für alle Überlebenden anhand einer weißen Aura zu erkennen."
+        },
+        "en": {
+          "name": "Repressed Alliance",
+          "description": "You’re accustomed to being hunted by malicious forces, and you’ve begun using it to your advantage.\n\nRepressed Alliance activates after repairing generators for a total of {0} seconds.\n\nWhen repairing a generator while the perk is active, press the Active Ability Button 1 to call upon The Entity to block the generator for {1} seconds. The perk deactivates.\n\nThis interaction is not available if other Survivors are repairing the generator.\n\nAffected generators will be revealed by a white aura to all Survivors."
+        },
+        "es": {
+          "name": "Supresión de alianza",
+          "description": "Te has acostumbrado a que te persigan las fuerzas malignas y has empezado a usarlo a tu favor.\n\nSupresión de alianza se activa tras reparar generadores durante un total de {0} segundos.\n\nAl reparar un generador mientras la habilidad está activa, pulsa el botón de la habilidad activa 1 para invocar al Ente y bloquear el generador durante {1} segundos. La habilidad se desactiva.\n\nEsta interacción no está disponible si otros supervivientes están reparando el generador.\n\nLos generadores afectados brillarán con un aura blanca que se mostrará a todos los supervivientes."
+        },
+        "ja": {
+          "name": "抑圧の同盟",
+          "description": "悪意に満ちた力によって駆り立てられることに慣れたあなたは、それを自分の有利になるよう利用し始めた。\n\n発電機を合計で{0}秒間修理すると、抑圧の同盟が発動する。\n\nこのパークが発動中、発電機を修理しながらアビリティ発動のボタン1を押すとエンティティが招集され、その発電機が{1}秒間ブロックされる。このパークは無効になる。\n\n他の生存者が発電機を修理中の場合、このアクションは利用できない。\n\nパークによって作用した発電機は、白いオーラで生存者全員に表示される。"
+        },
+        "pl": {
+          "name": "Stłumiony sojusz",
+          "description": "Unikanie złowrogich mocy nie jest dla ciebie niczym nowym i potrafisz obrócić to na własną korzyść.\n\nStłumiony sojusz aktywuje się po naprawianiu generatorów przez łącznie {0} s.\n\nPodczas naprawy generatora z aktywną umiejętnością naciśnij przycisk aktywnej umiejętności 1, aby wezwać Byt i zablokować generator na {1} s. Umiejętność wyłącza się.\n\nInterakcja nie jest dostępna, jeśli inni ocalali naprawiają generatora.\n\nZablokowane generatory zostaną podświetlone białą aurą dla wszystkich ocalałych."
+        }
+      }
+    },
+    "Better than New": {
+      "name": "Better than New",
+      "character_code": "S33",
+      "character_name": "Rebecca Chambers",
+      "translations": {
+        "de": {
+          "name": "Besser als neu",
+          "description": "Du kennst dich mit der medizinischen Behandlung in Gefechten aus. Patienten, die von dir versorgt wurden, haben neue Kraft.\n\nWenn du eine Heilaktion an einem anderen Überlebenden abgeschlossen hast, erhält der betroffene Überlebende einen Geschwindigkeitsbonus von {0} % für das Heilen, Öffnen von Truhen und Zerstören und Segnen von Totems.\n\nÜberlebende behalten den Bonus, bis sie einen Gesundheitsstatus verlieren."
+        },
+        "en": {
+          "name": "Better than New",
+          "description": "You are an expert in combat medicine. Patients leave your care reinvigorated.\n\nUpon completing a healing action on another Survivor, the targeted Survivor gets a {0}% speed boost to healing, opening chests, cleansing and blessing Totems.\n\nSurvivors keep the bonus until they lose a health state."
+        },
+        "es": {
+          "name": "Mejor que nuevo",
+          "description": "Eres una experta en medicina de combate y siempre logras recuperar a tus pacientes.\n\nTras completar una acción curativa en otro superviviente, el superviviente que la reciba obtiene un aumento de velocidad del {0} % para curar, abrir cofres, purificar y bendecir tótems.\n\nLos supervivientes mantienen la bonificación hasta que pierden un estado de salud."
+        },
+        "ja": {
+          "name": "みなぎる活力",
+          "description": "あなたは戦闘医療に長けている。患者は元気になってあなたのもとを去っていく。\n\n他の生存者への治療アクションを完了すると、その生存者の治療、チェスト開放、トーテム浄化・清めのアクション速度が{0}%上昇する。\n\nアクション速度の上昇はその生存者自身が1段階負傷するまで持続する。"
+        },
+        "pl": {
+          "name": "Lepsze niż nowe",
+          "description": "Jesteś specjalistką od medycyny pola walki. Pacjenci opuszczają twoją opiekę pełni sił.\n\nPo ukończeniu leczenia innego ocalałego zyskuje on {0}% przyśpieszenia do leczenia, otwierania skrzyń, oczyszczania i błogosławienia totemów.\n\nOcalali zachowują bonus do chwili utraty stanu zdrowia."
+        }
+      }
+    },
+    "Light-Footed": {
+      "name": "Light-Footed",
+      "character_code": "S39",
+      "character_name": "Ellen Ripley",
+      "translations": {
+        "de": {
+          "name": "Behände",
+          "description": "Bei der Begegnung mit tödlichen Killern hast du gelernt, wie wichtig es ist, geräuschlos zu sein.\n\nWenn du gesund bist, wird dieses Talent aktiviert.\n\nDeine Schritte beim Laufen sind lautlos.\n\nDieses Talent hat eine Abklingzeit von {0} Sekunden, nachdem du eine übereilte Aktion ausgeführt hast.\n\n„Komm schon, Katze.“ – Ellen Ripley"
+        },
+        "en": {
+          "name": "Light-Footed",
+          "description": "Crossing paths with deadly killers has taught you the value of discretion.\n\nWhen you are healthy, this perk activates.\n\nYour running footsteps are silent.\n\nThis perk goes on cooldown for {0} seconds after performing a rushed action.\n\n“Come on, cat.” –Ellen Ripley"
+        },
+        "es": {
+          "name": "Ligera de pies",
+          "description": "Has aprendido a ser discreta por haberte encontrado en tu camino a asesinos letales.\n\nEsta habilidad se activa cuando estás ilesa.\n\nTus pisadas al correr no emiten ningún sonido.\n\nEsta habilidad tiene un tiempo de recarga de {0} segundos tras realizar una acción rápida.\n\n\"Vamos, gatito\". (Ellen Ripley)"
+        },
+        "ja": {
+          "name": "忍び足",
+          "description": "あなたは危険な殺人鬼と対決したことで、音を立てないことの大切さを学んだ。\n\n無傷の状態のとき、このパークが発動する。\n\n走行時に足音がしなくなる。\n\nこのパークには、高速アクションを行ったあと{0}秒間のクールダウンがある。\n\n「おいで、ネコちゃん」- エレン・リプリー"
+        },
+        "pl": {
+          "name": "Lekki Krok",
+          "description": "Spotkania ze śmiertelnie niebezpiecznymi zabójcami nauczyły cię dyskrecji.\n\nUmiejętność aktywuje się przy pełnym zdrowiu.\n\nTwoje kroki są ciche.\n\nCzas odnowienia umiejętności wynosi {0} s po wykonaniu szybkiej akcji.\n\n„Chodź, kocie”. – Ellen Ripley"
+        }
+      }
+    },
+    "One-Two-Three-Four!": {
+      "name": "One-Two-Three-Four!",
+      "character_code": "S49",
+      "character_name": "Vee Boonyasak",
+      "translations": {
+        "de": {
+          "name": "EINS, ZWEI, DREI, VIER!",
+          "description": "Ein gleichmäßiger Rhythmus animiert zu gleichmäßigen Arbeitsabläufen.\n\nDrücke die Taste für die aktive Fähigkeit 2, wenn du stehst und nichts tust, um die Auftritt-Interaktion zu starten, die bis zu 15 Sek. anhält und Überlebende in einem Umkreis von {0} Metern verstärkt. Während des Auftritts erhältst du fortlaufend Fähigkeitschecks. Der Effekt hält {1} Sek. lang an, wenn der Auftritt abgeschlossen wird.Erhöht die Wahrscheinlichkeit, Fähigkeitschecks für die Heilung und Reparatur zu erhalten, um {2} %.\nWenn die Fähigkeit abgebrochen wird oder der Auftritt beendet ist, beginnt die Abklingzeit von {3} Sek.\n\n„Wir sind laut! Wir sind wild! WIR SIND AXEKICK!“\n– Vee Boonyasak"
+        },
+        "en": {
+          "name": "One-Two-Three-Four!",
+          "description": "A steady beat makes for steady work.\n\nPress Active Ability button 2 while standing and idle to enter the \"performance\" interaction that lasts up to 15 seconds and empowers Survivors within {0} meters. You will get continuous Skill Checks during the performance. The effect lasts for {1} seconds if the performance is completed.Increases the odds of getting healing and repair Skill Checks by {2}%.\nWhen the ability is canceled or the performance completes, it goes on cooldown for {3} seconds.\n\n“We are loud! We are heavy! WE ARE AXEKICK!”\n— Vee Boonyasak"
+        },
+        "es": {
+          "name": "¡UNO, DOS, TRES, CUATRO!",
+          "description": "Un ritmo constante hace que las cosas funcionen como deben.\n\nPulsa el botón de la habilidad activa 2 cuando estés de pie sin moverte para activar la interacción de \"actuación\" que dura hasta 15 segundos y potencia a los supervivientes en un radio de {0} metros. Obtendrás pruebas de habilidad continuamente durante la actuación. El efecto dura {1} segundos si completas la actuación.Aumenta la probabilidad de obtener pruebas de habilidad de curación y reparación un {2} %.\nCuando se cancele la habilidad o completes la actuación, entra en tiempo de recarga durante {3} segundos.\n\n\"¡Somos ruidosos! ¡Somos cañeros! ¡SOMOS AXEKICK!\".\n(Vee Boonyasak)"
+        },
+        "ja": {
+          "name": "ワンツースリーフォー！",
+          "description": "あなたは安定したリズムで、着実に作業を進める。\n\n立ち止まった状態でアビリティ発動のボタン2を押すと、最長15秒続く演奏を始め、{0}メートル以内の生存者にバフを与える。演奏中は連続でスキルチェックが発生する。この効果は演奏を完了すると{1}秒間持続する。治療と修理のスキルチェックが発生する確率が{2}%増加する\nアビリティがキャンセルされた時、または演奏を完了した時、このパークは{3}秒間のクールダウンに入る。\n\n「やかましくてヘビーなサウンドを楽しんで！アクスキック万歳！」- ヴィー・ブーニャサク"
+        },
+        "pl": {
+          "name": "RAZ-DWA-TRZY-CZTERY!",
+          "description": "Stały rytm to solidna robota.\n\nNaciśnij przycisk aktywnej umiejętności 2, stojąc bez ruchu, aby rozpocząć interakcję „występu”, która trwa do 15 s i wzmacnia ocalałych w promieniu {0} m. Podczas występu otrzymujesz ciągłe testy umiejętności. Jeśli występ zostanie ukończony, efekt utrzymuje się przez {1} s.Zwiększa szansę na otrzymanie testów umiejętności leczenia i naprawy o {2}%.\nPo anulowaniu umiejętności lub zakończeniu występu następuje czas odnawiania wynoszący {3} s.\n\n„Gramy głośno! Gramy mocno! JESTEŚMY AXEKICK!”\n— Vee Boonyasak"
         }
       }
     }

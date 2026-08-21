@@ -68,6 +68,9 @@ export interface ActiveTargetStageProps {
   onReveal: () => void;
   /** Holds off the next reel while something else (the checkpoint modal) has the floor. */
   holdReel?: boolean;
+  /** The target the reel has actually finished landing on, lifted so the roster grid can share it. */
+  shownTarget: string | null;
+  onShownTargetChange: (name: string | null) => void;
 }
 
 /**
@@ -139,6 +142,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   onLoss,
   onReveal,
   holdReel = false,
+  shownTarget,
+  onShownTargetChange,
 }) => {
   const [avatarError, setAvatarError] = useState(false);
 
@@ -166,7 +171,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   // Which target the card is currently allowed to show. Holding this in state
   // (rather than reacting after the fact) keeps a freshly drawn target from
   // flashing on screen for a frame before its reel starts.
-  const [shownTarget, setShownTarget] = useState<string | null>(null);
   const isRevealed = Boolean(run?.target_revealed);
   const awaitingDraw = isRevealed && Boolean(targetName) && shownTarget !== targetName;
 
@@ -174,7 +178,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   // as a reveal rather than just appearing in place.
   useEffect(() => {
     if (!isRevealed || !targetName) {
-      setShownTarget(null);
+      onShownTargetChange(null);
       return;
     }
     if (shownTarget === targetName || isDrawing) return;
@@ -182,14 +186,26 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     // A run that was already revealed before this mount (a reload, say) has
     // nothing to reveal, so it skips straight to the card.
     if (shownTarget === null) {
-      setShownTarget(targetName);
+      onShownTargetChange(targetName);
       return;
     }
     // The checkpoint modal gets its moment before the next reel steals focus;
     // this effect re-fires once holdReel drops, picking the draw back up.
     if (holdReel) return;
-    beginDraw(() => setShownTarget(targetName));
-  }, [isRevealed, targetName, shownTarget, isDrawing, beginDraw, holdReel]);
+    beginDraw(() => onShownTargetChange(targetName));
+  }, [isRevealed, targetName, shownTarget, isDrawing, beginDraw, holdReel, onShownTargetChange]);
+
+  // The very first reveal is player-triggered (the START GAME click) and its
+  // backend confirmation (target_revealed flipping true) lands after the
+  // reel's local hold already ended. `revealing` spans that whole window
+  // explicitly, from click to confirmation, so the card never falls back to
+  // "Ready for the Gauntlet?" mid-flow -- unlike deriving the gap from
+  // shownTarget/targetName equality, it doesn't care whether those two end up
+  // spelled identically once the backend response lands.
+  const [revealing, setRevealing] = useState(false);
+  useEffect(() => {
+    if (isRevealed && !isDrawing) setRevealing(false);
+  }, [isRevealed, isDrawing]);
 
   if (!run || !run.current_loadout) {
     return (
@@ -202,12 +218,12 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     );
   }
 
-  if (!run.target_revealed || isDrawing || awaitingDraw) {
-    const drawing = isDrawing || awaitingDraw;
+  if (!run.target_revealed || isDrawing || awaitingDraw || revealing) {
+    const drawing = isDrawing || awaitingDraw || revealing;
     return (
-      <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-8 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
+      <div className="w-full min-h-[420px] flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-8 py-4 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
         <div
-          className={`w-24 h-24 mx-auto rounded-2xl p-1 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden mb-4 ${
+          className={`w-36 h-36 sm:w-40 sm:h-40 mx-auto rounded-2xl p-1.5 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden mb-6 ${
             phase === 'landed' ? 'gn-land-glow' : ''
           }`}
         >
@@ -221,11 +237,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
         {drawing ? (
           <>
-            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
               {displayName ?? ' '}
             </h2>
             <p
-              className={`h-6 text-sm font-bold text-amber-600 dark:text-amber-400 ${
+              className={`h-6 text-base font-bold text-amber-600 dark:text-amber-400 ${
                 phase === 'landed' ? 'gn-name-in' : ''
               }`}
             >
@@ -234,16 +250,17 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </>
         ) : (
           <>
-            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6">Ready for the Gauntlet?</h2>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8">Ready for the Gauntlet?</h2>
             <button
-              onClick={() =>
+              onClick={() => {
+                setRevealing(true);
                 beginDraw(() => {
-                  setShownTarget(targetName);
+                  onShownTargetChange(targetName);
                   onReveal();
-                })
-              }
+                });
+              }}
               disabled={loading}
-              className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-base py-3.5 px-8 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+              className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-lg py-4 px-10 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
             >
               START GAME
             </button>
@@ -268,7 +285,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const perkSlots = [0, 1, 2, 3];
 
   return (
-    <div className="w-full bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
+    <div className="w-full min-h-[420px] bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
       {/* Top Banner / Stage Header */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-6 mb-6">
         <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">

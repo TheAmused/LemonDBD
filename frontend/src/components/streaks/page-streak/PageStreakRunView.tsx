@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ChevronRight, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -12,6 +12,7 @@ import { RunHistory } from './RunHistory';
 import { StartRunPanel } from './StartRunPanel';
 import { usePerkArtwork } from './usePerkArtwork';
 import { Confetti } from '../Confetti';
+import { ResetConfirmModal } from '../ResetConfirmModal';
 
 interface PageStreakRunViewProps {
   locale: string;
@@ -94,7 +95,11 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
 
       {!loading && run && (
         <div className="mt-5">
-          <RunHeader run={run} avatarSrc={avatarByKiller[run.killer]} />
+          <RunHeader
+            run={run}
+            avatarSrc={avatarByKiller[run.killer]}
+            onOpenReset={() => setConfirmingReset(true)}
+          />
 
           {run.status === 'completed' ? (
             <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] px-5 py-6 text-center">
@@ -183,40 +188,16 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           <SectionLabel>History</SectionLabel>
           <RunHistory history={run.history} iconByPerk={iconByPerk} />
 
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            {confirmingReset ? (
-              <>
-                <span className="text-xs text-slate-400">Reset {killer} to page 1? History is kept.</span>
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => {
-                    setConfirmingReset(false);
-                    resetRun();
-                  }}
-                  className="rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-extrabold text-rose-400 disabled:opacity-50"
-                >
-                  Yes, reset
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setConfirmingReset(false)}
-                  className="rounded-lg border border-slate-800 px-3 py-1.5 text-xs font-bold text-slate-400"
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setConfirmingReset(true)}
-                className="flex items-center gap-1.5 text-xs font-bold text-slate-600 transition-colors hover:text-rose-400"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                Reset this streak
-              </button>
-            )}
-          </div>
+          <ResetConfirmModal
+            open={confirmingReset}
+            busy={busy}
+            message={`Reset ${killer} to page 1? History is kept.`}
+            onCancel={() => setConfirmingReset(false)}
+            onConfirm={() => {
+              setConfirmingReset(false);
+              resetRun();
+            }}
+          />
         </div>
       )}
     </div>

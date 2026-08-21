@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
+import { ResetConfirmModal } from '../ResetConfirmModal';
 import { useChaosRun } from './useChaosRun';
 import { useOwnedKillers } from './useOwnedKillers';
 import { useKillerPerkPool } from './useKillerPerkPool';
@@ -129,6 +130,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenPerkPool={() => setIsPerkPoolOpen(true)}
+          onOpenReset={() => setConfirmingReset(true)}
         />
 
         {!isCompleted && killers.length > 0 && (
@@ -225,56 +227,27 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           </>
         )}
 
-        {!isCompleted && (
+        {!isCompleted && isAdmin && (
           <div className="mt-10 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm px-4 py-4 shadow-sm">
-            {confirmingReset ? (
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <p className="text-xs text-slate-600 dark:text-slate-300">
-                  Wipe this run? Streak, checkpoints and every cleared killer go back to zero. This cannot be
-                  undone.
-                </p>
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => setConfirmingReset(false)}
-                    className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleReset}
-                    disabled={busy}
-                    className="px-3 py-1.5 text-xs font-bold rounded-lg text-white bg-rose-600 hover:bg-rose-500 disabled:opacity-50 transition-colors cursor-pointer"
-                  >
-                    Yes, wipe it
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between gap-3">
-                <button
-                  onClick={() => setConfirmingReset(true)}
-                  disabled={busy}
-                  className="inline-flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 disabled:opacity-50 transition-colors cursor-pointer"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                  Reset this run
-                </button>
-
-                {isAdmin && (
-                  <button
-                    onClick={handleDevSkipToWin}
-                    disabled={busy || !killers.length}
-                    title="Dev only: win with every remaining killer to reach the completion screen"
-                    className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
-                  >
-                    <Trophy className="h-3.5 w-3.5" />
-                    DEV: Skip to win screen
-                  </button>
-                )}
-              </div>
-            )}
+            <button
+              onClick={handleDevSkipToWin}
+              disabled={busy || !killers.length}
+              title="Dev only: win with every remaining killer to reach the completion screen"
+              className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
+            >
+              <Trophy className="h-3.5 w-3.5" />
+              DEV: Skip to win screen
+            </button>
           </div>
         )}
+
+        <ResetConfirmModal
+          open={confirmingReset}
+          busy={busy}
+          message="Streak, checkpoints and every cleared killer go back to zero. This cannot be undone."
+          onCancel={() => setConfirmingReset(false)}
+          onConfirm={handleReset}
+        />
 
         <ChaosStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
         <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />

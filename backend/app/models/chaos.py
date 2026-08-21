@@ -84,6 +84,7 @@ class ChaosMatchLog(Base):
     streak_before: Mapped[int] = mapped_column(Integer)
     streak_after: Mapped[int] = mapped_column(Integer)
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    triggered_by: Mapped[str] = mapped_column(String(20), default="player")
 
     run: Mapped["ChaosRun"] = relationship(back_populates="match_logs")
 
@@ -100,4 +101,5 @@ class ChaosMatchLog(Base):
             "streak_before": self.streak_before,
             "streak_after": self.streak_after,
             "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "triggered_by": self.triggered_by,
         }

@@ -23,6 +23,8 @@ import { CharacterCard } from './CharacterCard';
 import { SmashAnimations } from './SmashAnimations';
 import { InteractiveDragBackground } from './InteractiveDragBackground';
 import { FloatingLoreScattered } from './FloatingLoreScattered';
+import { TactileKeycaps } from './TactileKeycaps';
+import { ChaosMetricsDisplay } from './ChaosMetricsDisplay';
 import { SmashLeaderboardModal, LeaderboardItem } from './SmashLeaderboardModal';
 import { CharacterStatsModal } from './CharacterStatsModal';
 import { RomancePersonaModal } from './RomancePersonaModal';
@@ -77,7 +79,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // Single-Card Exit Lifecycle (1.6s Full Duration)
   const [isExiting, setIsExiting] = useState<boolean>(false);
-  const [exitVote, setExitVote] = useState<'smash' | 'pass' | null>(null);
+  const [exitVote, setExitVote] = useState<'smash' | 'super_smash' | 'pass' | null>(null);
   const [exitOffset, setExitOffset] = useState<{ x: number; y: number } | undefined>(undefined);
   const exitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -90,14 +92,14 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // Voting History & Session State
   const [voteHistory, setVoteHistory] = useState<
-    Array<{ character: CharacterRosterItem; vote: 'smash' | 'pass'; timestamp: number }>
+    Array<{ character: CharacterRosterItem; vote: 'smash' | 'pass' | 'super_smash'; timestamp: number }>
   >([]);
   const [sessionSmashes, setSessionSmashes] = useState<number>(0);
   const [sessionPasses, setSessionPasses] = useState<number>(0);
 
   // Animation Triggers
   const [animTrigger, setAnimTrigger] = useState<{
-    type: 'smash' | 'pass' | null;
+    type: 'smash' | 'super_smash' | 'pass' | null;
     key: number;
     originX?: number;
     originY?: number;
@@ -257,11 +259,14 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // 5. Handle Vote
   const handleVote = useCallback(
-    (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
+    (vote: 'smash' | 'pass' | 'super_smash', origin?: { x: number; y: number }) => {
       if (!currentCharacter || isExiting) return;
 
       // Play Sound
-      if (vote === 'smash') {
+      if (vote === 'super_smash') {
+        SmashSounds.playSmashSound();
+        setSessionSmashes((s) => s + 1);
+      } else if (vote === 'smash') {
         SmashSounds.playSmashSound();
         setSessionSmashes((s) => s + 1);
       } else {
@@ -283,6 +288,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         initialOffset = { x: dragPhysics.x, y: dragPhysics.y };
       } else {
         if (vote === 'smash') initialOffset = { x: 130, y: 0 };
+        else if (vote === 'super_smash') initialOffset = { x: 0, y: 140 };
         else initialOffset = { x: -130, y: 0 };
       }
 
@@ -318,7 +324,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           smash_rate: 0,
         };
 
-        const newSmash = existing.smash_count + (vote === 'smash' ? 1 : 0);
+        const newSmash = existing.smash_count + (vote === 'smash' || vote === 'super_smash' ? 1 : 0);
+        const newSuperSmash = (existing.super_smash_count || 0) + (vote === 'super_smash' ? 1 : 0);
         const newPass = existing.pass_count + (vote === 'pass' ? 1 : 0);
         const newTotal = newSmash + newPass;
         const newRate = newTotal > 0 ? Math.round((newSmash / newTotal) * 1000) / 10 : 0;
@@ -328,6 +335,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           [currentCharacter.slug]: {
             ...existing,
             smash_count: newSmash,
+            super_smash_count: newSuperSmash,
             pass_count: newPass,
             total_votes: newTotal,
             smash_rate: newRate,
@@ -358,6 +366,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       backendBase,
       selectedEditionId,
       user?.id,
+      token,
     ]
   );
 
@@ -420,6 +429,15 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       } else if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') {
         e.preventDefault();
         handleVote('pass');
+      } else if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        handleVote('super_smash');
+      } else if (e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentCharacter) setSelectedStatCharacter(currentCharacter);
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        setIsResetConfirmOpen(true);
       } else if (e.key === 'm' || e.key === 'M') {
         e.preventDefault();
         const next = SmashSounds.toggleMute();
@@ -429,7 +447,15 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleVote, isLeaderboardOpen, isPersonaOpen, isResetConfirmOpen, selectedStatCharacter, isExiting]);
+  }, [
+    handleVote,
+    isLeaderboardOpen,
+    isPersonaOpen,
+    isResetConfirmOpen,
+    selectedStatCharacter,
+    isExiting,
+    currentCharacter,
+  ]);
 
   const toggleSound = () => {
     const next = SmashSounds.toggleMute();
@@ -486,6 +512,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         triggerKey={animTrigger.key}
         originX={animTrigger.originX}
         originY={animTrigger.originY}
+        dict={dict}
       />
 
       {/* HEADER BAR WITH EMBEDDED HUD METRICS */}
@@ -602,18 +629,30 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
         {/* Keybindings Help Banner */}
         {showKeybindings && (
-          <div className="mt-3 pt-3 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] text-slate-400 animate-in fade-in duration-200">
+          <div className="mt-3 pt-3 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-6 gap-2 text-[11px] text-slate-400 animate-in fade-in duration-200">
             <div className="flex items-center gap-1.5">
-              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-200 font-mono">D / →</kbd>
-              <span>Smash</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-200 font-mono">A / ←</kbd>
+              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-cyan-500/40 text-[#00f5d4] font-mono">A / ←</kbd>
               <span>Pass</span>
             </div>
             <div className="flex items-center gap-1.5">
+              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-rose-500/40 text-[#ff0055] font-mono">D / →</kbd>
+              <span>Smash</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-emerald-500/40 text-emerald-300 font-mono">W / ↑</kbd>
+              <span>Dossier</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-amber-500/40 text-[#ffd166] font-mono">S / ↓</kbd>
+              <span>Super Smash</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-purple-500/40 text-purple-300 font-mono">R</kbd>
+              <span>Reset</span>
+            </div>
+            <div className="flex items-center gap-1.5">
               <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-200 font-mono">M</kbd>
-              <span>Mute / Unmute</span>
+              <span>Mute</span>
             </div>
           </div>
         )}
@@ -730,7 +769,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <span className="text-xs font-mono">Summoning {activeEdition.name}...</span>
           </div>
         ) : currentCharacter ? (
-          <div className="relative w-full flex items-center justify-center">
+          <div className="relative w-full flex flex-col items-center justify-center space-y-4">
             <CharacterCard
               key={`${currentCharacter.slug}-${currentIndex}`}
               character={currentCharacter}
@@ -745,6 +784,18 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               onExitComplete={handleExitComplete}
               locale={locale}
               dict={dict}
+            />
+
+            {/* Interactive PC Tactile Keycaps HUD */}
+            <TactileKeycaps
+              onPass={() => handleVote('pass')}
+              onSmash={() => handleVote('smash')}
+              onSuperSmash={() => handleVote('super_smash')}
+              onStats={() => currentCharacter && setSelectedStatCharacter(currentCharacter)}
+              onReset={() => setIsResetConfirmOpen(true)}
+              dict={dict}
+              disabled={!currentCharacter || isExiting}
+              className="mt-1 sm:mt-2"
             />
           </div>
         ) : (

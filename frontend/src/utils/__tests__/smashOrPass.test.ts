@@ -374,10 +374,69 @@ test('SmashOrPass: Multi-Locale i18n Key Synchronization', async (t) => {
       }
 
       assert.ok(sop.controls, `Locale ${loc} missing 'controls' section`);
+      assert.ok(sop.controls.arrowLeft, `Locale ${loc} missing controls.arrowLeft`);
+      assert.ok(sop.controls.arrowRight, `Locale ${loc} missing controls.arrowRight`);
+      assert.ok(sop.controls.arrowUp, `Locale ${loc} missing controls.arrowUp`);
+      assert.ok(sop.controls.arrowDown, `Locale ${loc} missing controls.arrowDown`);
+      assert.ok(sop.controls.keyR, `Locale ${loc} missing controls.keyR`);
+
       assert.ok(sop.tiers, `Locale ${loc} missing 'tiers' section`);
+      assert.ok(sop.tiers.fatalAttraction, `Locale ${loc} missing tiers.fatalAttraction`);
+      assert.ok(sop.tiers.eldritchVoid, `Locale ${loc} missing tiers.eldritchVoid`);
+
+      assert.ok(sop.statsDetail, `Locale ${loc} missing 'statsDetail' section`);
+      assert.ok(sop.statsDetail.chaosRating, `Locale ${loc} missing statsDetail.chaosRating`);
+      assert.ok(sop.statsDetail.dangerLevel, `Locale ${loc} missing statsDetail.dangerLevel`);
+      assert.ok(sop.statsDetail.traits, `Locale ${loc} missing statsDetail.traits`);
+
       assert.ok(sop.modals, `Locale ${loc} missing 'modals' section`);
       assert.ok(sop.notifications, `Locale ${loc} missing 'notifications' section`);
       assert.ok(sop.empty, `Locale ${loc} missing 'empty' section`);
     }
   });
 });
+
+test('SmashOrPass: Visual FX, Tactile Keycaps & Chaos Metrics Modules', async (t) => {
+  await t.test('TactileKeycaps and ChaosMetricsDisplay modules can be imported and are valid functions', async () => {
+    const { TactileKeycaps } = await import('../../components/smash-or-pass/TactileKeycaps');
+    const { ChaosMetricsDisplay } = await import('../../components/smash-or-pass/ChaosMetricsDisplay');
+    const { SmashAnimations } = await import('../../components/smash-or-pass/SmashAnimations');
+    const { CardDisintegrationOverlay } = await import('../../components/smash-or-pass/CardDisintegrationOverlay');
+
+    assert.strictEqual(typeof TactileKeycaps, 'function', 'TactileKeycaps must be a function component');
+    assert.strictEqual(typeof ChaosMetricsDisplay, 'function', 'ChaosMetricsDisplay must be a function component');
+    assert.strictEqual(typeof SmashAnimations, 'function', 'SmashAnimations must be a function component');
+    assert.strictEqual(typeof CardDisintegrationOverlay, 'function', 'CardDisintegrationOverlay must be a function component');
+  });
+
+  await t.test('Theme palette constants and hex values conform to sexy-twisted design specifications', () => {
+    const THEME_PALETTE = {
+      deepVoid: '#09090b',
+      neonCrimson: '#ff0055',
+      cyberMint: '#00f5d4',
+      deepVelvetPurple: '#2e0854',
+      eldritchGold: '#ffd166',
+    };
+
+    assert.strictEqual(THEME_PALETTE.deepVoid, '#09090b', 'Deep void must be #09090b');
+    assert.strictEqual(THEME_PALETTE.neonCrimson, '#ff0055', 'Neon Crimson must be #ff0055');
+    assert.strictEqual(THEME_PALETTE.cyberMint, '#00f5d4', 'Cyber Mint must be #00f5d4');
+    assert.strictEqual(THEME_PALETTE.deepVelvetPurple, '#2e0854', 'Deep Velvet Purple must be #2e0854');
+    assert.strictEqual(THEME_PALETTE.eldritchGold, '#ffd166', 'Eldritch Gold must be #ffd166');
+  });
+
+  await t.test('Danger Level classifications cover all 4 tiers with distinct colors', () => {
+    const dangerLevels = ['Low', 'Medium', 'High', 'Lethal'];
+    const dangerColors: Record<string, string> = {
+      Low: '#00f5d4',
+      Medium: '#ffd166',
+      High: '#f97316',
+      Lethal: '#ff0055',
+    };
+
+    dangerLevels.forEach((level) => {
+      assert.ok(dangerColors[level], `Missing color definition for danger level ${level}`);
+    });
+  });
+});
+

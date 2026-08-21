@@ -18,7 +18,7 @@ import { CharacterRosterItem } from './characterRoster';
 
 interface VoteRecord {
   character: CharacterRosterItem;
-  vote: 'smash' | 'pass';
+  vote: 'smash' | 'pass' | 'super_smash';
   timestamp: number;
 }
 
@@ -56,7 +56,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       };
     }
 
-    const smashes = votes.filter((v) => v.vote === 'smash');
+    const smashes = votes.filter((v) => v.vote === 'smash' || v.vote === 'super_smash');
     const passes = votes.filter((v) => v.vote === 'pass');
 
     const total = votes.length;

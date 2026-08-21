@@ -15,6 +15,7 @@ import {
 import { CharacterRosterItem } from './characterRoster';
 import { getLocalizedCharacterRoster } from './rosterTranslations';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
+import { ChaosMetricsDisplay } from './ChaosMetricsDisplay';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
@@ -27,12 +28,12 @@ export interface CharacterCardProps {
     total_votes: number;
     smash_rate: number;
   };
-  onVote: (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => void;
+  onVote: (vote: 'smash' | 'pass' | 'super_smash', origin?: { x: number; y: number }) => void;
   onOpenStats?: (character: CharacterRosterItem) => void;
   onDragUpdate?: (x: number, y: number, isDragging: boolean) => void;
   isTopCard?: boolean;
   isExiting?: boolean;
-  exitType?: 'smash' | 'pass' | null;
+  exitType?: 'smash' | 'pass' | 'super_smash' | null;
   initialExitOffset?: { x: number; y: number };
   onExitComplete?: () => void;
   locale?: string;
@@ -41,7 +42,9 @@ export interface CharacterCardProps {
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({
   character: rawCharacter,
+  stats,
   onVote,
+  onOpenStats,
   onDragUpdate,
   isTopCard = true,
   isExiting = false,
@@ -49,6 +52,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   initialExitOffset,
   onExitComplete,
   locale = 'en',
+  dict,
 }) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
@@ -238,8 +242,10 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             filter:
               isExiting && exitType === 'pass'
                 ? 'grayscale(1) contrast(1.5) brightness(0.2) blur(4px)'
+                : isExiting && exitType === 'super_smash'
+                ? 'brightness(1.5) contrast(1.3) drop-shadow(0 0 50px rgba(255,209,102,0.95))'
                 : isExiting && exitType === 'smash'
-                ? 'brightness(1.3) contrast(1.2) drop-shadow(0 0 40px rgba(244,63,94,0.9))'
+                ? 'brightness(1.3) contrast(1.2) drop-shadow(0 0 40px rgba(255,0,85,0.9))'
                 : 'none',
           }}
           className="relative h-full w-full"
@@ -427,6 +433,17 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 <span className="font-bold text-amber-400 uppercase text-[10px]">Dealbreaker:</span>
                 <p className="text-slate-300 font-medium text-[11px] leading-tight">{character.dealbreaker}</p>
               </div>
+            </div>
+
+            {/* Chaos & Compatibility Metrics */}
+            <div className="pt-1">
+              <ChaosMetricsDisplay
+                compact={true}
+                character={character}
+                stats={stats}
+                dict={dict}
+                onOpenStats={() => onOpenStats?.(character)}
+              />
             </div>
 
             {/* Bottom Actions on Back face (PURE ICONS, NO TEXT LABELS) */}

@@ -5,7 +5,7 @@ from sqlalchemy import select
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import Character, Perk, User
+from app.models import ChaosMatchLog, Character, Perk, User
 from app.services.chaos_service import ChaosService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
@@ -159,6 +159,28 @@ class TestHellDifficulty(ChaosTestCase):
         run = self.service.get_or_create_run(self.user_id, "hell")
         with self.assertRaises(ValueError):
             self.service.submit_result(self.user_id, run["id"], "win", "The Trapper")
+
+    def test_apply_inactivity_loss_resets_to_zero_with_no_checkpoint(self):
+        self.service.apply_inactivity_loss(self.run["id"])
+        reloaded = self.service.get_or_create_run(self.user_id, self.difficulty)
+        self.assertEqual(reloaded["current_streak"], 0)
+
+    def test_apply_inactivity_loss_writes_a_flagged_match_log(self):
+        self.service.apply_inactivity_loss(self.run["id"])
+        log = db.session.scalars(
+            select(ChaosMatchLog).where(ChaosMatchLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.result, "loss")
+        self.assertEqual(log.triggered_by, "inactivity")
+
+    def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self):
+        run = self.run
+        for killer in run["owned_killers"]:
+            run = self.service.submit_result(self.user_id, run["id"], "win", killer)
+        self.assertEqual(run["status"], "completed")
+        before_count = db.session.query(ChaosMatchLog).count()
+        self.service.apply_inactivity_loss(run["id"])
+        self.assertEqual(db.session.query(ChaosMatchLog).count(), before_count)
 
 
 class TestEasyCheckpoint(ChaosTestCase):

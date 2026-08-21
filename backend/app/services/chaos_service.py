@@ -184,5 +184,61 @@ class ChaosService:
         data["unlocked_perks_detail"] = resolve_perks_by_names(data["unlocked_perks"])
         return data
 
+    def apply_inactivity_loss(self, run_id: int) -> None:
+        """Applies the same state transition submit_result's loss branch
+        would, without a killer_id -- there's no real match being played.
+        Used only by the inactivity cleanup job (Task 11). A no-op if the
+        run doesn't exist or is already completed."""
+        r = db.session.scalars(select(ChaosRun).where(ChaosRun.id == run_id)).first()
+        if not r or r.status == "completed":
+            return
+
+        current_streak = r.current_streak
+        last_checkpoint = r.last_checkpoint_streak
+        interval = checkpoint_interval(r.difficulty)
+
+        if interval > 0:
+            streak_after = last_checkpoint
+            completed = json.loads(r.checkpoint_killers_json or "[]")
+            used_perks = json.loads(r.checkpoint_used_perks_json or "[]")
+            checkpoint_killers = list(completed)
+            checkpoint_used_perks = list(used_perks)
+        else:
+            streak_after = 0
+            completed = []
+            used_perks = []
+            last_checkpoint = 0
+            checkpoint_killers = []
+            checkpoint_used_perks = []
+
+        db.session.add(ChaosMatchLog(
+            run_id=run_id,
+            killer_id="",
+            result="loss",
+            perks_json=r.current_perks_json,
+            addon_rarities_json=r.current_addon_rarities_json,
+            streak_before=current_streak,
+            streak_after=streak_after,
+            triggered_by="inactivity",
+        ))
+
+        r.current_streak = streak_after
+        r.last_checkpoint_streak = last_checkpoint
+        r.completed_killers_json = json.dumps(completed)
+        r.checkpoint_killers_json = json.dumps(checkpoint_killers)
+        r.checkpoint_used_perks_json = json.dumps(checkpoint_used_perks)
+
+        unlocked_detail = resolve_perks_by_names(json.loads(r.unlocked_perks_json or "[]"))
+        new_perks, updated_used, addon_rarities = self._draw_build(unlocked_detail, used_perks)
+        r.used_perks_json = json.dumps(updated_used)
+        r.current_perks_json = json.dumps(new_perks)
+        r.current_addon_rarities_json = json.dumps(addon_rarities)
+        r.perks_revealed = False
+
+        if streak_after == 0:
+            self._freeze_pools(r)
+
+        db.session.commit()
+
     def get_stats(self, user_id: int, difficulty: str) -> Dict[str, Any]:
         return fetch_chaos_user_stats(user_id, difficulty)

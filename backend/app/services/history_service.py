@@ -182,6 +182,49 @@ class HistoryService:
         data["row_cleared"] = row_cleared
         return data
 
+    def apply_inactivity_loss(self, run_id: int) -> None:
+        """Applies the same state transition submit_result's loss branch
+        would, without a killer_id. Used only by the inactivity cleanup job
+        (Task 11). A no-op if the run doesn't exist or is already completed."""
+        run = db.session.scalars(select(HistoryRun).where(HistoryRun.id == run_id)).first()
+        if not run or run.status == "completed":
+            return
+
+        streak_before = run.total_killers_beaten
+        row_index_for_log = run.current_row_index
+
+        if run.mode == "medium":
+            run.current_row_index = run.checkpoint_row_index
+            run.total_killers_beaten = run.checkpoint_total_killers_beaten
+            completed = json.loads(run.checkpoint_completed_killers_json or "[]")
+            unlocked = json.loads(run.checkpoint_unlocked_perk_names_json or "[]")
+        else:
+            general = get_general_killer_perk_names()
+            run.current_row_index = 0
+            run.total_killers_beaten = 0
+            completed = []
+            unlocked = general
+            run.checkpoint_row_index = 0
+            run.checkpoint_total_killers_beaten = 0
+            run.checkpoint_completed_killers_json = "[]"
+            run.checkpoint_unlocked_perk_names_json = json.dumps(general)
+            self._freeze_pool(run)
+
+        streak_after = run.total_killers_beaten
+        run.completed_killers_json = json.dumps(completed)
+        run.unlocked_perk_names_json = json.dumps(unlocked)
+
+        db.session.add(HistoryMatchLog(
+            run_id=run_id,
+            killer_id="",
+            result="loss",
+            row_index=row_index_for_log,
+            streak_before=streak_before,
+            streak_after=streak_after,
+            triggered_by="inactivity",
+        ))
+        db.session.commit()
+
     def get_stats(self, user_id: int, mode: str) -> Dict[str, Any]:
         run_ids = db.session.scalars(
             select(HistoryRun.id).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)

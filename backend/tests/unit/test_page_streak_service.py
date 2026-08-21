@@ -4,10 +4,11 @@ from sqlalchemy import select
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import Character, Perk
+from app.models import Character, Perk, PageStreakPageLog, PageStreakRun
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak_service import PageStreakService
+from app.services.page_streak.runs import apply_inactivity_loss
 
 GENERAL_CHARACTER = "General"
 
@@ -382,6 +383,31 @@ class TestPageStreakResults(PageStreakTestCase):
     def test_reset_without_a_run_is_rejected(self):
         with self.assertRaises(ValueError):
             self.service.reset_run(self.user_id, "Trapper")
+
+    def test_apply_inactivity_loss_resets_page_and_increments_attempt(self):
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        apply_inactivity_loss(self.run["id"])
+        updated = self.service.get_run(self.user_id, "Nurse")
+        self.assertEqual(updated["current_page"], 1)
+        self.assertEqual(updated["attempt"], 2)
+
+    def test_apply_inactivity_loss_writes_a_flagged_page_log(self):
+        apply_inactivity_loss(self.run["id"])
+        log = db.session.scalars(
+            select(PageStreakPageLog).where(PageStreakPageLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.result, "loss")
+        self.assertEqual(log.triggered_by, "inactivity")
+
+    def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self):
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+        before_count = db.session.query(PageStreakPageLog).count()
+        apply_inactivity_loss(self.run["id"])
+        self.assertEqual(db.session.query(PageStreakPageLog).count(), before_count)
+        reloaded = self.service.get_run(self.user_id, "Nurse")
+        self.assertEqual(reloaded["status"], "completed")
 
 
 class TestPageStreakRosterOrder(PageStreakTestCase):

@@ -39,7 +39,7 @@ interface SmashLeaderboardModalProps {
   isOpen: boolean;
   onClose: () => void;
   items: LeaderboardItem[];
-  userSmashes?: Array<{ slug: string; vote: 'smash' | 'pass'; timestamp: number }>;
+  userSmashes?: Array<{ slug: string; vote: 'smash' | 'pass' | 'super_smash'; timestamp: number }>;
   onSelectCharacter?: (character: CharacterRosterItem) => void;
   editionName?: string;
   isAuthenticated?: boolean;

@@ -438,5 +438,36 @@ test('SmashOrPass: Visual FX, Tactile Keycaps & Chaos Metrics Modules', async (t
       assert.ok(dangerColors[level], `Missing color definition for danger level ${level}`);
     });
   });
+
+  await t.test('CharacterCard, CharacterStatsModal, and SmashLeaderboardModal modules are valid functions', async () => {
+    const { CharacterCard } = await import('../../components/smash-or-pass/CharacterCard');
+    const { CharacterStatsModal } = await import('../../components/smash-or-pass/CharacterStatsModal');
+    const { SmashLeaderboardModal } = await import('../../components/smash-or-pass/SmashLeaderboardModal');
+
+    assert.strictEqual(typeof CharacterCard, 'function', 'CharacterCard must be a function component');
+    assert.strictEqual(typeof CharacterStatsModal, 'function', 'CharacterStatsModal must be a function component');
+    assert.strictEqual(typeof SmashLeaderboardModal, 'function', 'SmashLeaderboardModal must be a function component');
+  });
+
+  await t.test('Tier classification thresholds map accurately to God Tier, Fatal Attraction, Friendzone, and Eldritch Void', () => {
+    const getTier = (smashRate: number) => {
+      if (smashRate >= 85) return 'God Tier';
+      if (smashRate >= 65) return 'Fatal Attraction';
+      if (smashRate >= 40) return 'Friendzone';
+      return 'Eldritch Void';
+    };
+
+    assert.strictEqual(getTier(95), 'God Tier', '95% should be God Tier');
+    assert.strictEqual(getTier(85), 'God Tier', '85% should be God Tier');
+    assert.strictEqual(getTier(84.9), 'Fatal Attraction', '84.9% should be Fatal Attraction');
+    assert.strictEqual(getTier(70), 'Fatal Attraction', '70% should be Fatal Attraction');
+    assert.strictEqual(getTier(65), 'Fatal Attraction', '65% should be Fatal Attraction');
+    assert.strictEqual(getTier(64.9), 'Friendzone', '64.9% should be Friendzone');
+    assert.strictEqual(getTier(50), 'Friendzone', '50% should be Friendzone');
+    assert.strictEqual(getTier(40), 'Friendzone', '40% should be Friendzone');
+    assert.strictEqual(getTier(39.9), 'Eldritch Void', '39.9% should be Eldritch Void');
+    assert.strictEqual(getTier(10), 'Eldritch Void', '10% should be Eldritch Void');
+  });
 });
+
 

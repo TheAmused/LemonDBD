@@ -1,7 +1,9 @@
 # backend/app/scrapers/roster_images.py
+import json
 import logging
 import os
 import re
+import shutil
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib.parse import unquote, urljoin
@@ -49,6 +51,9 @@ EDITION_PORTRAIT_DIRECT_MAP: Dict[str, Dict[str, str]] = {
         "carlita": "https://deadbydaylight.wiki.gg/images/CC022_charSelect_portrait.png",
         "tubular_david": "https://deadbydaylight.wiki.gg/images/CC013_charSelect_portrait.png",
         "rain_david": "https://deadbydaylight.wiki.gg/images/CC014_charSelect_portrait.png",
+        "minotaur": "https://deadbydaylight.wiki.gg/images/CC005_charSelect_portrait.png",
+        "tiffany_valentine": "https://deadbydaylight.wiki.gg/images/CC029_charSelect_portrait.png",
+        "chatterer": "https://deadbydaylight.wiki.gg/images/CC010_charSelect_portrait.png",
     },
 }
 
@@ -76,6 +81,55 @@ EDITION_ROLE_DIR_MAP: Dict[str, str] = {
     "carlita": "survivors",
     "tubular_david": "survivors",
     "rain_david": "survivors",
+    "minotaur": "killers",
+    "tiffany_valentine": "killers",
+    "chatterer": "killers",
+}
+
+# Fallback base portraits for styled/cyberpunk/anime/gothic rosters
+FALLBACK_AVATAR_MAP: Dict[str, str] = {
+    # Cyberpunk
+    "killers/cyber_trickster.png": "killers/the_trickster.png",
+    "survivors/netrunner_nea.png": "survivors/nea_karlsson.png",
+    "killers/chrome_wesker.png": "killers/the_mastermind.png",
+    "survivors/neon_sable.png": "survivors/sable_ward.png",
+    "survivors/cyber_feng_min.png": "survivors/feng_min.png",
+    "killers/high_tech_trapper.png": "killers/the_trapper.png",
+    "killers/hightech_trapper.png": "killers/the_trapper.png",
+    "survivors/meg_turbo.png": "survivors/meg_thomas.png",
+    "killers/cyber_oni.png": "killers/the_oni.png",
+    "survivors/netrunner_dwight.png": "survivors/dwight_fairfield.png",
+    "killers/neon_skull_merchant.png": "killers/the_skull_merchant.png",
+    "killers/cyber_nurse.png": "killers/the_nurse.png",
+    "survivors/cyber_david_king.png": "survivors/david_king.png",
+    # Anime / Manga
+    "killers/anime_spirit.png": "killers/the_spirit.png",
+    "survivors/anime_mikaela.png": "survivors/mikaela_reid.png",
+    "survivors/anime_yui.png": "survivors/yui_kimura.png",
+    "killers/anime_trickster.png": "killers/the_trickster.png",
+    "killers/anime_huntress.png": "killers/the_huntress.png",
+    "killers/anime_legion.png": "killers/the_legion.png",
+    "survivors/anime_meg.png": "survivors/meg_thomas.png",
+    "survivors/anime_feng.png": "survivors/feng_min.png",
+    "survivors/anime_feng_min.png": "survivors/feng_min.png",
+    "killers/anime_dracula.png": "killers/the_dark_lord.png",
+    "survivors/anime_sable.png": "survivors/sable_ward.png",
+    "killers/anime_wesker.png": "killers/the_mastermind.png",
+    # Gothic Eldritch
+    "killers/gothic_dracula.png": "killers/the_dark_lord.png",
+    "survivors/gothic_sable.png": "survivors/sable_ward.png",
+    "killers/bloodborne_huntress.png": "killers/the_huntress.png",
+    "survivors/dark_fantasy_mikaela.png": "survivors/mikaela_reid.png",
+    "killers/eldritch_nurse.png": "killers/the_nurse.png",
+    "killers/victorian_blight.png": "killers/the_blight.png",
+    "killers/plague_priestess.png": "killers/the_plague.png",
+    "killers/gothic_artist.png": "killers/the_artist.png",
+    "killers/raven_artist.png": "killers/the_artist.png",
+    "killers/eldritch_dredge.png": "killers/the_dredge.png",
+    "killers/abyssal_dredge.png": "killers/the_dredge.png",
+    "killers/gothic_knight.png": "killers/the_knight.png",
+    "survivors/occult_vittorio.png": "survivors/vittorio_toscano.png",
+    "killers/phantom_wraith.png": "killers/the_wraith.png",
 }
 
 
@@ -127,7 +181,7 @@ class RosterImageScraperDriver:
                 })
 
         # 2. Scrape live wiki page for any newly released cosmetics or characters
-        target_url = ROSTER_GALLERY_URLS.get(edition_id, ROSTER_GALLERY_URLS["hooked_on_you"])
+        target_url = ROSTER_GALLERY_URLS.get(edition_id, ROSTER_GALLERY_URLS.get("hooked_on_you", WIKI_BASE_URL))
         soup = self.fetch_page_soup(target_url)
         if soup:
             for img_tag in soup.find_all("img"):
@@ -159,6 +213,8 @@ class RosterImageScraperDriver:
     def download_roster_image(self, image_url: str, output_path: Path) -> bool:
         """Download a single roster image to the target local filesystem path."""
         try:
+            if output_path.exists() and output_path.stat().st_size > 500:
+                return True
             output_path.parent.mkdir(parents=True, exist_ok=True)
             resp = self.session.get(image_url, timeout=self.timeout, impersonate="chrome120", verify=False)
             if resp.status_code == 200 and len(resp.content) > 500:
@@ -170,22 +226,70 @@ class RosterImageScraperDriver:
             logger.error(f"Failed to download image from {image_url}: {e}")
         return False
 
-    def sync_edition_assets(self, edition_id: str, static_dir: Path) -> Dict[str, Any]:
+    def sync_all_rosters(self, static_dir: Path) -> Dict[str, Any]:
         """
-        Scrapes and downloads all portraits for a custom roster edition into the static folder.
+        Scrapes and downloads all portraits and covers across all custom rosters,
+        applying high-fidelity fallback copies where applicable.
         """
-        portraits = self.scrape_roster_portraits(edition_id)
-        downloaded = 0
+        total_downloaded = 0
+        avatars_dir = static_dir / "avatars"
+        survivors_dir = avatars_dir / "survivors"
+        killers_dir = avatars_dir / "killers"
+        rosters_cover_dir = avatars_dir / "rosters"
 
-        for item in portraits:
-            dest = static_dir / item["relative_path"]
-            ok = self.download_roster_image(item["image_url"], dest)
-            if ok or dest.exists():
-                downloaded += 1
+        survivors_dir.mkdir(parents=True, exist_ok=True)
+        killers_dir.mkdir(parents=True, exist_ok=True)
+        rosters_cover_dir.mkdir(parents=True, exist_ok=True)
+
+        # 1. Download mapped online images
+        for edition_id in ["hooked_on_you", "legendary_cosplay"]:
+            portraits = self.scrape_roster_portraits(edition_id)
+            for item in portraits:
+                dest = static_dir / item["relative_path"]
+                if not dest.exists():
+                    ok = self.download_roster_image(item["image_url"], dest)
+                    if ok:
+                        total_downloaded += 1
+
+        # 2. Apply fallback copies for any themed/augmented cosmetics
+        for rel_dest, rel_src in FALLBACK_AVATAR_MAP.items():
+            dest = avatars_dir / rel_dest
+            src = avatars_dir / rel_src
+            if not dest.exists() and src.exists():
+                shutil.copyfile(src, dest)
+                logger.info(f"Copied fallback avatar {rel_dest} from {rel_src}")
+
+        # 3. Ensure roster cover images exist
+        cover_mappings = [
+            ("canon", "survivors/sable_ward.png"),
+            ("hooked_on_you", "killers/the_huntress_hoy.png"),
+            ("legendary_cosplay", "killers/baba_yaga.png"),
+            ("cyberpunk_2077", "survivors/feng_min.png"),
+            ("anime_manga", "killers/the_spirit.png"),
+            ("gothic_eldritch", "killers/the_dark_lord.png"),
+        ]
+        for r_slug, rel_src in cover_mappings:
+            cover_dest = rosters_cover_dir / f"{r_slug}.png"
+            src = avatars_dir / rel_src
+            if not cover_dest.exists() and src.exists():
+                shutil.copyfile(src, cover_dest)
 
         return {
-            "edition": edition_id,
-            "total_found": len(portraits),
-            "downloaded": downloaded,
-            "output_directory": str(static_dir / "avatars"),
+            "status": "success",
+            "total_downloaded": total_downloaded,
+            "static_avatars_dir": str(avatars_dir),
         }
+
+    def sync_and_seed_all(self, static_dir: Path) -> Dict[str, Any]:
+        """
+        Syncs all assets across rosters and automatically invokes seed_smash_rosters()
+        to upsert the database.
+        """
+        sync_result = self.sync_all_rosters(static_dir)
+
+        # Upsert database records from JSON files
+        from app.seeds.smash_roster_seeder import seed_smash_rosters
+        seed_smash_rosters()
+
+        sync_result["database_seeded"] = True
+        return sync_result

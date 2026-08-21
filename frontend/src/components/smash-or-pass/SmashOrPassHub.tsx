@@ -32,6 +32,7 @@ import { TactileKeycaps } from './TactileKeycaps';
 import { SmashLeaderboardModal } from './SmashLeaderboardModal';
 import { CharacterStatsModal } from './CharacterStatsModal';
 import { RomancePersonaModal } from './RomancePersonaModal';
+import { RosterSelectModal } from './RosterSelectModal';
 import { SmashSounds } from './SmashSoundEffects';
 import {
   EntityItem,
@@ -104,6 +105,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   }>({ type: null, key: 0 });
 
   // Modals & UI Controls
+  const [isRosterModalOpen, setIsRosterModalOpen] = useState<boolean>(false);
+  const [rosterSwitchEffect, setRosterSwitchEffect] = useState<string | null>(null);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
   const [isPersonaOpen, setIsPersonaOpen] = useState<boolean>(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState<boolean>(false);
@@ -129,6 +132,24 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       }
     );
   }, [rosters, selectedRosterSlug]);
+
+  const getRosterCover = useCallback((r: RosterItem) => {
+    if (r.cover_image_url) {
+      return r.cover_image_url.startsWith('http')
+        ? r.cover_image_url
+        : `${getBackendBaseUrl()}${r.cover_image_url}`;
+    }
+    const fallbackMap: Record<string, string> = {
+      canon: '/static/avatars/survivors/sable_ward.png',
+      hooked_on_you: '/static/avatars/killers/the_huntress_hoy.png',
+      legendary_cosplay: '/static/avatars/killers/baba_yaga.png',
+      cyberpunk_2077: '/static/avatars/survivors/feng_min.png',
+      anime_manga: '/static/avatars/killers/the_spirit.png',
+      gothic_eldritch: '/static/avatars/killers/the_dark_lord.png',
+    };
+    const path = fallbackMap[r.slug] || '/static/avatars/survivors/sable_ward.png';
+    return `${getBackendBaseUrl()}${path}`;
+  }, []);
 
   // 1. Fetch available rosters from PostgreSQL database
   const loadRosters = useCallback(async () => {
@@ -446,44 +467,48 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       <header className="relative z-20 mx-auto w-full max-w-6xl rounded-3xl bg-zinc-950/85 border border-pink-500/25 shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_35px_rgba(255,0,85,0.08)] backdrop-blur-2xl p-3.5 sm:p-4 md:p-5 space-y-3.5 transition-all cockpit-neon-pulse">
         {/* ROW 1: Brand + Dynamic Roster Selector + Telemetry HUD + Action Cluster */}
         <div className="flex flex-col xl:flex-row items-center justify-between gap-3 sm:gap-4">
-          {/* Brand & Edition Dropdown */}
-          <div className="flex items-center gap-3 w-full xl:w-auto justify-between xl:justify-start">
-            <div className="flex items-center gap-3">
+          {/* Brand & Edition Roster Trigger */}
+          <div className="flex items-center gap-4 w-full xl:w-auto justify-between xl:justify-start">
+            {/* Brand Title (Horizontal, Proud, Zero Squish) */}
+            <div className="flex items-center gap-3 shrink-0">
               <div className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-600/30 via-pink-600/20 to-[#ff0055]/30 border border-[#ff0055]/60 text-[#ff0055] shadow-[0_0_20px_rgba(255,0,85,0.45)] group shrink-0">
                 <Heart className="h-5 w-5 fill-[#ff0055] animate-pulse" />
                 <div className="absolute -inset-0.5 rounded-2xl bg-[#ff0055] opacity-20 blur group-hover:opacity-40 transition-opacity" />
               </div>
-              <div className="leading-tight">
-                <h1 className="text-base sm:text-lg font-black tracking-wider font-mono text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-rose-100 to-white drop-shadow-[0_0_12px_rgba(255,0,85,0.4)]">
+              <div className="leading-tight shrink-0 whitespace-nowrap">
+                <h1 className="text-base sm:text-lg font-black tracking-wider font-mono text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-rose-100 to-white drop-shadow-[0_0_12px_rgba(255,0,85,0.5)]">
                   {title}
                 </h1>
-                <span className="text-[9px] font-mono font-bold tracking-widest text-pink-400/80 uppercase block">
+                <span className="text-[9px] font-mono font-bold tracking-widest text-pink-400/90 uppercase block">
                   {activeRoster.category || 'DBD'} OCCULT DOSSIER
                 </span>
               </div>
             </div>
 
-            {/* Custom Glass Roster Dropdown Pill */}
-            <div className="relative shrink-0">
-              <select
-                value={selectedRosterSlug}
-                onChange={(e) => setSelectedRosterSlug(e.target.value)}
-                className="appearance-none pl-3.5 pr-8 py-2 rounded-2xl bg-zinc-900/90 border border-pink-500/40 hover:border-[#ff0055] text-xs font-mono font-bold text-pink-100 focus:outline-none focus:ring-2 focus:ring-[#ff0055]/40 cursor-pointer transition-all shadow-inner hover:shadow-[0_0_15px_rgba(255,0,85,0.25)]"
-              >
-                {rosters.length > 0
-                  ? rosters.map((r) => (
-                      <option key={r.slug} value={r.slug} className="bg-[#09090b] text-zinc-200">
-                        {getRosterDisplayName(r)} ({r.entity_count ?? r.character_count ?? 0})
-                      </option>
-                    ))
-                  : (
-                      <option value="canon" className="bg-[#09090b] text-zinc-200">
-                        {getRosterDisplayName({ slug: 'canon' })} (98)
-                      </option>
-                    )}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-pink-400 pointer-events-none" />
-            </div>
+            {/* Custom Glass Roster Selector Trigger (Opens Modal) */}
+            <button
+              type="button"
+              onClick={() => setIsRosterModalOpen(true)}
+              className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-zinc-900/90 border border-pink-500/40 hover:border-[#ff0055] hover:shadow-[0_0_20px_rgba(255,0,85,0.35)] text-xs font-mono font-bold text-pink-100 transition-all cursor-pointer group shrink-0"
+            >
+              <span className="relative flex h-5 w-5 items-center justify-center rounded-lg overflow-hidden border border-pink-500/50 shrink-0">
+                <img
+                  src={getRosterCover(activeRoster)}
+                  alt=""
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.png`;
+                  }}
+                  className="h-full w-full object-cover"
+                />
+              </span>
+              <span className="truncate max-w-[140px] sm:max-w-[200px] text-zinc-200 group-hover:text-white">
+                {getRosterDisplayName(activeRoster)}
+              </span>
+              <span className="px-1.5 py-0.5 rounded-md bg-pink-500/20 text-pink-300 text-[10px]">
+                {activeRoster.entity_count ?? activeRoster.character_count ?? 0}
+              </span>
+              <ChevronDown className="h-3.5 w-3.5 text-pink-400 group-hover:translate-y-0.5 transition-transform" />
+            </button>
           </div>
 
           {/* Telemetry HUD & Action Cluster */}
@@ -923,6 +948,33 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       )}
 
       {/* MODALS */}
+      <RosterSelectModal
+        isOpen={isRosterModalOpen}
+        onClose={() => setIsRosterModalOpen(false)}
+        rosters={rosters}
+        selectedRosterSlug={selectedRosterSlug}
+        onSelectRoster={(slug) => {
+          setSelectedRosterSlug(slug);
+          setRosterSwitchEffect(slug);
+          setTimeout(() => setRosterSwitchEffect(null), 1200);
+        }}
+        locale={locale}
+        dict={dict}
+      />
+
+      {/* ROSTER SWITCH STARTING ANIMATION EFFECT */}
+      {rosterSwitchEffect && (
+        <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center animate-in fade-in duration-300">
+          <div className="absolute inset-0 bg-[#ff0055]/15 backdrop-blur-sm animate-pulse" />
+          <div className="relative flex flex-col items-center gap-2 p-6 rounded-3xl bg-black/90 border-2 border-[#ff0055] shadow-[0_0_80px_rgba(255,0,85,0.7)] text-center animate-in zoom-in-75 duration-300">
+            <Heart className="h-14 w-14 text-[#ff0055] fill-[#ff0055] animate-bounce" />
+            <span className="text-xl font-mono font-black tracking-widest text-pink-100 uppercase drop-shadow-[0_0_20px_rgba(255,0,85,0.8)]">
+              {getRosterDisplayName({ slug: rosterSwitchEffect })}
+            </span>
+          </div>
+        </div>
+      )}
+
       <SmashLeaderboardModal
         isOpen={isLeaderboardOpen}
         onClose={() => setIsLeaderboardOpen(false)}

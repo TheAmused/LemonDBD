@@ -1,0 +1,2456 @@
+{
+    "roster": {
+        "slug": "cyberpunk_2077",
+        "name_i18n_key": "smashOrPass.rosters.cyberpunk_2077.name",
+        "description_i18n_key": "smashOrPass.rosters.cyberpunk_2077.desc",
+        "cover_image_url": "/static/avatars/survivors/feng_min.png",
+        "theme_color": "#00f5d4",
+        "category": "Cyberpunk",
+        "is_nsfw": false,
+        "is_active": true
+    },
+    "translations": {
+        "en": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Fog Canon",
+            "smashOrPass.rosters.canon.desc": "The complete 98-character roster of all official Killers and Survivors.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Island Romance",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendary Skins & Collabs",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Iconic legendary skins and crossover collabs from gaming history.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunk Fog 2077 Edition",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "High-tech neon augmented champions fighting in a dystopian fog.",
+            "smashOrPass.rosters.anime_manga.name": "Fog Anime / Manga Aesthetic",
+            "smashOrPass.rosters.anime_manga.desc": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Victorian & Gothic Eldritch Legends",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Island Romance",
+            "smashOrPass.rosters.hoy.desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
+            "smashOrPass.rosters.legendary.name": "Legendary Skins & Collabs",
+            "smashOrPass.rosters.legendary.desc": "Iconic legendary skins and crossover collabs from gaming history.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunk Fog 2077 Edition",
+            "smashOrPass.rosters.cyberpunk.desc": "High-tech neon augmented champions fighting in a dystopian fog.",
+            "smashOrPass.rosters.anime.name": "Fog Anime / Manga Aesthetic",
+            "smashOrPass.rosters.anime.desc": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
+            "smashOrPass.rosters.gothic.name": "Victorian & Gothic Eldritch Legends",
+            "smashOrPass.rosters.gothic.desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors."
+        },
+        "pl": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Kanon Mgły",
+            "smashOrPass.rosters.canon.desc": "Kompletny zestaw 98 oficjalnych postaci Zabójców i Ocalałych.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Romans na Wyspie",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropikalna edycja symulatora randkowego w plażowych strojach.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendarne Skórki i Kolaboracje",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Kultowe legendarne skórki i crossovery z historii gier wideo.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunkowa Mgła 2077",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle.",
+            "smashOrPass.rosters.anime_manga.name": "Estetyka Anime / Mangi w Mgle",
+            "smashOrPass.rosters.anime_manga.desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Romans na Wyspie",
+            "smashOrPass.rosters.hoy.desc": "Tropikalna edycja symulatora randkowego w plażowych strojach.",
+            "smashOrPass.rosters.legendary.name": "Legendarne Skórki i Kolaboracje",
+            "smashOrPass.rosters.legendary.desc": "Kultowe legendarne skórki i crossovery z historii gier wideo.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunkowa Mgła 2077",
+            "smashOrPass.rosters.cyberpunk.desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle.",
+            "smashOrPass.rosters.anime.name": "Estetyka Anime / Mangi w Mgle",
+            "smashOrPass.rosters.anime.desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły.",
+            "smashOrPass.rosters.gothic.name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+            "smashOrPass.rosters.gothic.desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych."
+        },
+        "es": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Canon de la Niebla",
+            "smashOrPass.rosters.canon.desc": "El elenco completo de 98 personajes de asesinos y supervivientes oficiales.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Romance en la Isla",
+            "smashOrPass.rosters.hooked_on_you.desc": "Edición simulador de citas en un paraíso tropical con trajes de playa.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Skins Legendarias y Colaboraciones",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Edición Niebla Cyberpunk 2077",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica.",
+            "smashOrPass.rosters.anime_manga.name": "Estética Anime y Manga de la Niebla",
+            "smashOrPass.rosters.anime_manga.desc": "Adaptaciones estilizadas en anime de tus personajes favoritos.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Leyendas Góticas y Primigenias Victorianas",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Romance en la Isla",
+            "smashOrPass.rosters.hoy.desc": "Edición simulador de citas en un paraíso tropical con trajes de playa.",
+            "smashOrPass.rosters.legendary.name": "Skins Legendarias y Colaboraciones",
+            "smashOrPass.rosters.legendary.desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos.",
+            "smashOrPass.rosters.cyberpunk.name": "Edición Niebla Cyberpunk 2077",
+            "smashOrPass.rosters.cyberpunk.desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica.",
+            "smashOrPass.rosters.anime.name": "Estética Anime y Manga de la Niebla",
+            "smashOrPass.rosters.anime.desc": "Adaptaciones estilizadas en anime de tus personajes favoritos.",
+            "smashOrPass.rosters.gothic.name": "Leyendas Góticas y Primigenias Victorianas",
+            "smashOrPass.rosters.gothic.desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios."
+        },
+        "de": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Nebel-Kanon",
+            "smashOrPass.rosters.canon.desc": "Die vollständige Liste aller 98 offiziellen Killer und Überlebenden.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Insel-Romanze",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendäre Skins & Kollaborationen",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Ikonische legendäre Skins und Crossover-Kollaborationen.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunk-Nebel 2077 Edition",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel.",
+            "smashOrPass.rosters.anime_manga.name": "Nebel Anime / Manga Ästhetik",
+            "smashOrPass.rosters.anime_manga.desc": "Stilisierte Anime-Adaptionen beliebter Charaktere.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Viktorianische & Gotische Eldritch-Legenden",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Insel-Romanze",
+            "smashOrPass.rosters.hoy.desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes.",
+            "smashOrPass.rosters.legendary.name": "Legendäre Skins & Kollaborationen",
+            "smashOrPass.rosters.legendary.desc": "Ikonische legendäre Skins und Crossover-Kollaborationen.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunk-Nebel 2077 Edition",
+            "smashOrPass.rosters.cyberpunk.desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel.",
+            "smashOrPass.rosters.anime.name": "Nebel Anime / Manga Ästhetik",
+            "smashOrPass.rosters.anime.desc": "Stilisierte Anime-Adaptionen beliebter Charaktere.",
+            "smashOrPass.rosters.gothic.name": "Viktorianische & Gotische Eldritch-Legenden",
+            "smashOrPass.rosters.gothic.desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror."
+        },
+        "ja": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: 霧の正史 (カノン)",
+            "smashOrPass.rosters.canon.desc": "公式の殺人鬼と生存者全98キャラクターの完全ロスター。",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: 狂気の島恋愛シミュレーション",
+            "smashOrPass.rosters.hooked_on_you.desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。",
+            "smashOrPass.rosters.legendary_cosplay.name": "レジェンダリースキン＆コラボ",
+            "smashOrPass.rosters.legendary_cosplay.desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。",
+            "smashOrPass.rosters.cyberpunk_2077.name": "サイバーパンク・フォグ 2077 エディション",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。",
+            "smashOrPass.rosters.anime_manga.name": "フォグ・アニメ / マンガ美学",
+            "smashOrPass.rosters.anime_manga.desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。",
+            "smashOrPass.rosters.gothic_eldritch.name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+            "smashOrPass.rosters.gothic_eldritch.desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: 狂気の島恋愛シミュレーション",
+            "smashOrPass.rosters.hoy.desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。",
+            "smashOrPass.rosters.legendary.name": "レジェンダリースキン＆コラボ",
+            "smashOrPass.rosters.legendary.desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。",
+            "smashOrPass.rosters.cyberpunk.name": "サイバーパンク・フォグ 2077 エディション",
+            "smashOrPass.rosters.cyberpunk.desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。",
+            "smashOrPass.rosters.anime.name": "フォグ・アニメ / マンガ美学",
+            "smashOrPass.rosters.anime.desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。",
+            "smashOrPass.rosters.gothic.name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+            "smashOrPass.rosters.gothic.desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。"
+        }
+    },
+    "entities": [
+        {
+            "slug": "cyber_trickster",
+            "name": "Trickster: Neon Chrome",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/cyber_trickster.png",
+            "metadata": {
+                "title": "Night City Virtuoso",
+                "tagline": "Holographic throwing blades, sub-dermal audio implants.",
+                "bio": "A chromed-out pop icon who turns combat into cybernetic synth symphonies under neon rain.",
+                "quote": "\"Let the chrome sing your final beat.\"",
+                "green_flags": [
+                    "Flawless high-tech fashion",
+                    "Private penthouse views",
+                    "Premium chrome cyberware"
+                ],
+                "red_flags": [
+                    "Cyberpsychosis flare-ups",
+                    "Records audio of your heartbeat for his drops"
+                ],
+                "greenFlags": [
+                    "Flawless high-tech fashion",
+                    "Private penthouse views",
+                    "Premium chrome cyberware"
+                ],
+                "redFlags": [
+                    "Cyberpsychosis flare-ups",
+                    "Records audio of your heartbeat for his drops"
+                ],
+                "turn_on": "Neural link sync, neon aesthetics, and dangerous synth concerts",
+                "turnOn": "Neural link sync, neon aesthetics, and dangerous synth concerts",
+                "dealbreaker": "Low bandwidth and analogue tech",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Trickster: Neon Chrome in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Night City Virtuoso",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Night City Virtuoso",
+                "translations": {
+                    "en": {
+                        "title": "Night City Virtuoso",
+                        "tagline": "Holographic throwing blades, sub-dermal audio implants.",
+                        "bio": "A chromed-out pop icon who turns combat into cybernetic synth symphonies under neon rain.",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "Flawless high-tech fashion",
+                            "Private penthouse views",
+                            "Premium chrome cyberware"
+                        ],
+                        "red_flags": [
+                            "Cyberpsychosis flare-ups",
+                            "Records audio of your heartbeat for his drops"
+                        ],
+                        "turn_on": "Neural link sync, neon aesthetics, and dangerous synth concerts",
+                        "dealbreaker": "Low bandwidth and analogue tech",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Trickster: Neon Chrome in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Trickster: Neon Chrome: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Trickster: Neon Chrome to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Trickster: Neon Chrome",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Trickster: Neon Chrome we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Trickster: Neon Chrome: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Trickster: Neon Chrome es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Trickster: Neon Chrome en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Trickster: Neon Chrome: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Trickster: Neon Chrome ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Trickster: Neon Chrome in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Trickster: Neon Chrome: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Trickster: Neon Chromeはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のTrickster: Neon Chrome – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Night City Virtuoso",
+                        "tagline": "Holographic throwing blades, sub-dermal audio implants.",
+                        "bio": "A chromed-out pop icon who turns combat into cybernetic synth symphonies under neon rain.",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "Flawless high-tech fashion",
+                            "Private penthouse views",
+                            "Premium chrome cyberware"
+                        ],
+                        "red_flags": [
+                            "Cyberpsychosis flare-ups",
+                            "Records audio of your heartbeat for his drops"
+                        ],
+                        "turn_on": "Neural link sync, neon aesthetics, and dangerous synth concerts",
+                        "dealbreaker": "Low bandwidth and analogue tech",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Trickster: Neon Chrome in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Trickster: Neon Chrome: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Trickster: Neon Chrome to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Trickster: Neon Chrome we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Trickster: Neon Chrome: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Trickster: Neon Chrome es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Trickster: Neon Chrome en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Trickster: Neon Chrome: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Trickster: Neon Chrome ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Trickster: Neon Chrome in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Trickster: Neon Chrome: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Trickster: Neon Chromeはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Let the chrome sing your final beat.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のTrickster: Neon Chrome – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "netrunner_nea",
+            "name": "Nea: Netrunner Ghost",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/netrunner_nea.png",
+            "metadata": {
+                "title": "Cyberspace Street Rebel",
+                "tagline": "Cyberdeck strapped to hip, graffiti overlays in augmented reality.",
+                "bio": "The ultimate ghost in the shell. She hacks corporate firewalls and tags the skyline with digital defiance.",
+                "quote": "\"I live in the digital shadows.\"",
+                "green_flags": [
+                    "Can bypass any ICE",
+                    "Extremely loyal crew runner",
+                    "High agility"
+                ],
+                "red_flags": [
+                    "Wanted by megacorps",
+                    "Sleeps with her deck plugged in"
+                ],
+                "greenFlags": [
+                    "Can bypass any ICE",
+                    "Extremely loyal crew runner",
+                    "High agility"
+                ],
+                "redFlags": [
+                    "Wanted by megacorps",
+                    "Sleeps with her deck plugged in"
+                ],
+                "turn_on": "Encrypted codes, urban parkour, and sticking it to the corps",
+                "turnOn": "Encrypted codes, urban parkour, and sticking it to the corps",
+                "dealbreaker": "Corporate snitches",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Nea: Netrunner Ghost in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Cyberspace Street Rebel",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "Cyberspace Street Rebel",
+                "translations": {
+                    "en": {
+                        "title": "Cyberspace Street Rebel",
+                        "tagline": "Cyberdeck strapped to hip, graffiti overlays in augmented reality.",
+                        "bio": "The ultimate ghost in the shell. She hacks corporate firewalls and tags the skyline with digital defiance.",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "Can bypass any ICE",
+                            "Extremely loyal crew runner",
+                            "High agility"
+                        ],
+                        "red_flags": [
+                            "Wanted by megacorps",
+                            "Sleeps with her deck plugged in"
+                        ],
+                        "turn_on": "Encrypted codes, urban parkour, and sticking it to the corps",
+                        "dealbreaker": "Corporate snitches",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Nea: Netrunner Ghost in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Nea: Netrunner Ghost: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Nea: Netrunner Ghost to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Nea: Netrunner Ghost",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Nea: Netrunner Ghost we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Nea: Netrunner Ghost: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Nea: Netrunner Ghost es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Nea: Netrunner Ghost en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Nea: Netrunner Ghost: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Nea: Netrunner Ghost ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Nea: Netrunner Ghost in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Nea: Netrunner Ghost: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Nea: Netrunner Ghostはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のNea: Netrunner Ghost – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Cyberspace Street Rebel",
+                        "tagline": "Cyberdeck strapped to hip, graffiti overlays in augmented reality.",
+                        "bio": "The ultimate ghost in the shell. She hacks corporate firewalls and tags the skyline with digital defiance.",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "Can bypass any ICE",
+                            "Extremely loyal crew runner",
+                            "High agility"
+                        ],
+                        "red_flags": [
+                            "Wanted by megacorps",
+                            "Sleeps with her deck plugged in"
+                        ],
+                        "turn_on": "Encrypted codes, urban parkour, and sticking it to the corps",
+                        "dealbreaker": "Corporate snitches",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Nea: Netrunner Ghost in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Nea: Netrunner Ghost: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Nea: Netrunner Ghost to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Nea: Netrunner Ghost we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Nea: Netrunner Ghost: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Nea: Netrunner Ghost es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Nea: Netrunner Ghost en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Nea: Netrunner Ghost: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Nea: Netrunner Ghost ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Nea: Netrunner Ghost in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Nea: Netrunner Ghost: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Nea: Netrunner Ghostはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"I live in the digital shadows.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のNea: Netrunner Ghost – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "chrome_wesker",
+            "name": "Wesker: Cyber Overlord",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/chrome_wesker.png",
+            "metadata": {
+                "title": "Arasaka Biotech Director",
+                "tagline": "Refined black trench coat, ocular cyberware, and complete global saturation.",
+                "bio": "Genius bio-cybernetic scientist who believes seven minutes is all he can spare to conquer your neural matrix.",
+                "quote": "\"Seven minutes is all the chrome I need.\"",
+                "green_flags": [
+                    "Impeccable tactical intellect",
+                    "Unlimited corporate resources",
+                    "Never misses a deadline"
+                ],
+                "red_flags": [
+                    "God complex",
+                    "Views humanity as obsolete code"
+                ],
+                "greenFlags": [
+                    "Impeccable tactical intellect",
+                    "Unlimited corporate resources",
+                    "Never misses a deadline"
+                ],
+                "redFlags": [
+                    "God complex",
+                    "Views humanity as obsolete code"
+                ],
+                "turn_on": "Superior genetics, cybernetic perfection, and absolute ambition",
+                "turnOn": "Superior genetics, cybernetic perfection, and absolute ambition",
+                "dealbreaker": "Wasting his seven minutes",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Wesker: Cyber Overlord in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Arasaka Biotech Director",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Arasaka Biotech Director",
+                "translations": {
+                    "en": {
+                        "title": "Arasaka Biotech Director",
+                        "tagline": "Refined black trench coat, ocular cyberware, and complete global saturation.",
+                        "bio": "Genius bio-cybernetic scientist who believes seven minutes is all he can spare to conquer your neural matrix.",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "Impeccable tactical intellect",
+                            "Unlimited corporate resources",
+                            "Never misses a deadline"
+                        ],
+                        "red_flags": [
+                            "God complex",
+                            "Views humanity as obsolete code"
+                        ],
+                        "turn_on": "Superior genetics, cybernetic perfection, and absolute ambition",
+                        "dealbreaker": "Wasting his seven minutes",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Wesker: Cyber Overlord in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Wesker: Cyber Overlord: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Wesker: Cyber Overlord to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Wesker: Cyber Overlord",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Wesker: Cyber Overlord we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Wesker: Cyber Overlord: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Wesker: Cyber Overlord es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Wesker: Cyber Overlord en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Wesker: Cyber Overlord: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Wesker: Cyber Overlord ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Wesker: Cyber Overlord in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Wesker: Cyber Overlord: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Wesker: Cyber Overlordはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のWesker: Cyber Overlord – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Arasaka Biotech Director",
+                        "tagline": "Refined black trench coat, ocular cyberware, and complete global saturation.",
+                        "bio": "Genius bio-cybernetic scientist who believes seven minutes is all he can spare to conquer your neural matrix.",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "Impeccable tactical intellect",
+                            "Unlimited corporate resources",
+                            "Never misses a deadline"
+                        ],
+                        "red_flags": [
+                            "God complex",
+                            "Views humanity as obsolete code"
+                        ],
+                        "turn_on": "Superior genetics, cybernetic perfection, and absolute ambition",
+                        "dealbreaker": "Wasting his seven minutes",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Wesker: Cyber Overlord in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Wesker: Cyber Overlord: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Wesker: Cyber Overlord to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Wesker: Cyber Overlord we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Wesker: Cyber Overlord: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Wesker: Cyber Overlord es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Wesker: Cyber Overlord en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Wesker: Cyber Overlord: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Wesker: Cyber Overlord ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Wesker: Cyber Overlord in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Wesker: Cyber Overlord: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Wesker: Cyber Overlordはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Seven minutes is all the chrome I need.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のWesker: Cyber Overlord – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "neon_sable",
+            "name": "Sable: Neon Occultist",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/neon_sable.png",
+            "metadata": {
+                "title": "Cyber-Goth Invoker",
+                "tagline": "Bioluminescent tattoo circuitry, dark web grimoires.",
+                "bio": "Bridging ancient eldritch sorcery with dark-web cyber protocols, she channels void rituals through neural fibers.",
+                "quote": "\"The void and the net are one and the same.\"",
+                "green_flags": [
+                    "Captivating mystic allure",
+                    "Deep philosophical intellect",
+                    "Loyal basement ally"
+                ],
+                "red_flags": [
+                    "Summons demonic AI spirits",
+                    "Only comes out after midnight"
+                ],
+                "greenFlags": [
+                    "Captivating mystic allure",
+                    "Deep philosophical intellect",
+                    "Loyal basement ally"
+                ],
+                "redFlags": [
+                    "Summons demonic AI spirits",
+                    "Only comes out after midnight"
+                ],
+                "turn_on": "Occult hacking, midnight drives, and synth-wave ambient rituals",
+                "turnOn": "Occult hacking, midnight drives, and synth-wave ambient rituals",
+                "dealbreaker": "Superficial conversation",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Sable: Neon Occultist in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Cyber-Goth Invoker",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "Cyber-Goth Invoker",
+                "translations": {
+                    "en": {
+                        "title": "Cyber-Goth Invoker",
+                        "tagline": "Bioluminescent tattoo circuitry, dark web grimoires.",
+                        "bio": "Bridging ancient eldritch sorcery with dark-web cyber protocols, she channels void rituals through neural fibers.",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "Captivating mystic allure",
+                            "Deep philosophical intellect",
+                            "Loyal basement ally"
+                        ],
+                        "red_flags": [
+                            "Summons demonic AI spirits",
+                            "Only comes out after midnight"
+                        ],
+                        "turn_on": "Occult hacking, midnight drives, and synth-wave ambient rituals",
+                        "dealbreaker": "Superficial conversation",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Sable: Neon Occultist in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Sable: Neon Occultist: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Sable: Neon Occultist to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Sable: Neon Occultist",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Sable: Neon Occultist we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Sable: Neon Occultist: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Sable: Neon Occultist es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Sable: Neon Occultist en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Sable: Neon Occultist: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Sable: Neon Occultist ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Sable: Neon Occultist in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Sable: Neon Occultist: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Sable: Neon Occultistはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のSable: Neon Occultist – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Cyber-Goth Invoker",
+                        "tagline": "Bioluminescent tattoo circuitry, dark web grimoires.",
+                        "bio": "Bridging ancient eldritch sorcery with dark-web cyber protocols, she channels void rituals through neural fibers.",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "Captivating mystic allure",
+                            "Deep philosophical intellect",
+                            "Loyal basement ally"
+                        ],
+                        "red_flags": [
+                            "Summons demonic AI spirits",
+                            "Only comes out after midnight"
+                        ],
+                        "turn_on": "Occult hacking, midnight drives, and synth-wave ambient rituals",
+                        "dealbreaker": "Superficial conversation",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Sable: Neon Occultist in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Sable: Neon Occultist: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Sable: Neon Occultist to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Sable: Neon Occultist we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Sable: Neon Occultist: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Sable: Neon Occultist es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Sable: Neon Occultist en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Sable: Neon Occultist: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Sable: Neon Occultist ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Sable: Neon Occultist in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Sable: Neon Occultist: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Sable: Neon Occultistはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"The void and the net are one and the same.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のSable: Neon Occultist – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "cyber_feng_min",
+            "name": "Feng Min: VR Prodigy",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/cyber_feng_min.png",
+            "metadata": {
+                "title": "Holo-Arcade Champion",
+                "tagline": "Augmented reality bunny ears, neural gaming rigs.",
+                "bio": "Dominating both virtual cyber-arenas and the neon fog. She can out-reflex any security drone.",
+                "quote": "\"Lag is a mental weakness.\"",
+                "green_flags": [
+                    "Top ranked in Night City",
+                    "Super-fast neural reflexes",
+                    "Always has spare cyber-batteries"
+                ],
+                "red_flags": [
+                    "Gets lost in cyberspace simulation",
+                    "Energy drink dependency"
+                ],
+                "greenFlags": [
+                    "Top ranked in Night City",
+                    "Super-fast neural reflexes",
+                    "Always has spare cyber-batteries"
+                ],
+                "redFlags": [
+                    "Gets lost in cyberspace simulation",
+                    "Energy drink dependency"
+                ],
+                "turn_on": "High-framerate neural links and clutch hacks",
+                "turnOn": "High-framerate neural links and clutch hacks",
+                "dealbreaker": "Analogue dial-up connections",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Feng Min: VR Prodigy in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Holo-Arcade Champion",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "Holo-Arcade Champion",
+                "translations": {
+                    "en": {
+                        "title": "Holo-Arcade Champion",
+                        "tagline": "Augmented reality bunny ears, neural gaming rigs.",
+                        "bio": "Dominating both virtual cyber-arenas and the neon fog. She can out-reflex any security drone.",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "Top ranked in Night City",
+                            "Super-fast neural reflexes",
+                            "Always has spare cyber-batteries"
+                        ],
+                        "red_flags": [
+                            "Gets lost in cyberspace simulation",
+                            "Energy drink dependency"
+                        ],
+                        "turn_on": "High-framerate neural links and clutch hacks",
+                        "dealbreaker": "Analogue dial-up connections",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Feng Min: VR Prodigy in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Feng Min: VR Prodigy: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Feng Min: VR Prodigy to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Feng Min: VR Prodigy",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Feng Min: VR Prodigy we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Feng Min: VR Prodigy: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Feng Min: VR Prodigy es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Feng Min: VR Prodigy en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Feng Min: VR Prodigy: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Feng Min: VR Prodigy ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Feng Min: VR Prodigy in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Feng Min: VR Prodigy: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Feng Min: VR Prodigyはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のFeng Min: VR Prodigy – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Holo-Arcade Champion",
+                        "tagline": "Augmented reality bunny ears, neural gaming rigs.",
+                        "bio": "Dominating both virtual cyber-arenas and the neon fog. She can out-reflex any security drone.",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "Top ranked in Night City",
+                            "Super-fast neural reflexes",
+                            "Always has spare cyber-batteries"
+                        ],
+                        "red_flags": [
+                            "Gets lost in cyberspace simulation",
+                            "Energy drink dependency"
+                        ],
+                        "turn_on": "High-framerate neural links and clutch hacks",
+                        "dealbreaker": "Analogue dial-up connections",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Feng Min: VR Prodigy in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Feng Min: VR Prodigy: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Feng Min: VR Prodigy to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Feng Min: VR Prodigy we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Feng Min: VR Prodigy: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Feng Min: VR Prodigy es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Feng Min: VR Prodigy en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Feng Min: VR Prodigy: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Feng Min: VR Prodigy ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Feng Min: VR Prodigy in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Feng Min: VR Prodigy: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Feng Min: VR Prodigyはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Lag is a mental weakness.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のFeng Min: VR Prodigy – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "meg_turbo",
+            "name": "Meg: Hyperdrive Sprinter",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/meg_turbo.png",
+            "metadata": {
+                "title": "Sub-Orbital Courier",
+                "tagline": "Bionic legs, hydraulic dash turbines, neon tracksuits.",
+                "bio": "Night City's fastest rooftop data courier. She delivers encrypted shards before the corps even know they are missing.",
+                "quote": "\"Catch me if your sensors can.\"",
+                "green_flags": [
+                    "Unrivaled sprint acceleration",
+                    "High energy and optimism",
+                    "Never misses a drop deadline"
+                ],
+                "red_flags": [
+                    "Leaves scorched sonic trails everywhere",
+                    "Can never sit still"
+                ],
+                "greenFlags": [
+                    "Unrivaled sprint acceleration",
+                    "High energy and optimism",
+                    "Never misses a drop deadline"
+                ],
+                "redFlags": [
+                    "Leaves scorched sonic trails everywhere",
+                    "Can never sit still"
+                ],
+                "turn_on": "Adrenaline surges and high-speed rooftop chases",
+                "turnOn": "Adrenaline surges and high-speed rooftop chases",
+                "dealbreaker": "Speed limiters and slow elevators",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Meg: Hyperdrive Sprinter in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Sub-Orbital Courier",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "Sub-Orbital Courier",
+                "translations": {
+                    "en": {
+                        "title": "Sub-Orbital Courier",
+                        "tagline": "Bionic legs, hydraulic dash turbines, neon tracksuits.",
+                        "bio": "Night City's fastest rooftop data courier. She delivers encrypted shards before the corps even know they are missing.",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "Unrivaled sprint acceleration",
+                            "High energy and optimism",
+                            "Never misses a drop deadline"
+                        ],
+                        "red_flags": [
+                            "Leaves scorched sonic trails everywhere",
+                            "Can never sit still"
+                        ],
+                        "turn_on": "Adrenaline surges and high-speed rooftop chases",
+                        "dealbreaker": "Speed limiters and slow elevators",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Meg: Hyperdrive Sprinter in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Meg: Hyperdrive Sprinter: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Meg: Hyperdrive Sprinter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Meg: Hyperdrive Sprinter",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Meg: Hyperdrive Sprinter we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Meg: Hyperdrive Sprinter: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Meg: Hyperdrive Sprinter es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Meg: Hyperdrive Sprinter en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Meg: Hyperdrive Sprinter: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Meg: Hyperdrive Sprinter ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Meg: Hyperdrive Sprinter in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Meg: Hyperdrive Sprinter: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Meg: Hyperdrive Sprinterはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のMeg: Hyperdrive Sprinter – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Sub-Orbital Courier",
+                        "tagline": "Bionic legs, hydraulic dash turbines, neon tracksuits.",
+                        "bio": "Night City's fastest rooftop data courier. She delivers encrypted shards before the corps even know they are missing.",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "Unrivaled sprint acceleration",
+                            "High energy and optimism",
+                            "Never misses a drop deadline"
+                        ],
+                        "red_flags": [
+                            "Leaves scorched sonic trails everywhere",
+                            "Can never sit still"
+                        ],
+                        "turn_on": "Adrenaline surges and high-speed rooftop chases",
+                        "dealbreaker": "Speed limiters and slow elevators",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Meg: Hyperdrive Sprinter in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Meg: Hyperdrive Sprinter: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Meg: Hyperdrive Sprinter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Meg: Hyperdrive Sprinter we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Meg: Hyperdrive Sprinter: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Meg: Hyperdrive Sprinter es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Meg: Hyperdrive Sprinter en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Meg: Hyperdrive Sprinter: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Meg: Hyperdrive Sprinter ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Meg: Hyperdrive Sprinter in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Meg: Hyperdrive Sprinter: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Meg: Hyperdrive Sprinterはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Catch me if your sensors can.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のMeg: Hyperdrive Sprinter – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "cyber_oni",
+            "name": "Kazan: Mecha Demon",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/cyber_oni.png",
+            "metadata": {
+                "title": "Chromed Blood Titan",
+                "tagline": "Hydraulic club, titanium horns, and boiling plasma fury.",
+                "bio": "An ancient warlord spirit housed within experimental heavy assault armor. His plasma club pulverizes titanium armor plates.",
+                "quote": "\"My blood fury is forged in cold steel.\"",
+                "green_flags": [
+                    "Unstoppable frontline protection",
+                    "Honor-bound warrior code",
+                    "Towering mecha presence"
+                ],
+                "red_flags": [
+                    "Hydraulic rage surges",
+                    "Destroys door frames when walking through"
+                ],
+                "greenFlags": [
+                    "Unstoppable frontline protection",
+                    "Honor-bound warrior code",
+                    "Towering mecha presence"
+                ],
+                "redFlags": [
+                    "Hydraulic rage surges",
+                    "Destroys door frames when walking through"
+                ],
+                "turn_on": "Martial prowess, combat discipline, and honorable duels",
+                "turnOn": "Martial prowess, combat discipline, and honorable duels",
+                "dealbreaker": "Dishonorable backdoor hacks",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Kazan: Mecha Demon in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Chromed Blood Titan",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Chromed Blood Titan",
+                "translations": {
+                    "en": {
+                        "title": "Chromed Blood Titan",
+                        "tagline": "Hydraulic club, titanium horns, and boiling plasma fury.",
+                        "bio": "An ancient warlord spirit housed within experimental heavy assault armor. His plasma club pulverizes titanium armor plates.",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "Unstoppable frontline protection",
+                            "Honor-bound warrior code",
+                            "Towering mecha presence"
+                        ],
+                        "red_flags": [
+                            "Hydraulic rage surges",
+                            "Destroys door frames when walking through"
+                        ],
+                        "turn_on": "Martial prowess, combat discipline, and honorable duels",
+                        "dealbreaker": "Dishonorable backdoor hacks",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Kazan: Mecha Demon in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Kazan: Mecha Demon: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Kazan: Mecha Demon to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Kazan: Mecha Demon",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Kazan: Mecha Demon we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Kazan: Mecha Demon: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Kazan: Mecha Demon es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Kazan: Mecha Demon en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Kazan: Mecha Demon: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Kazan: Mecha Demon ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Kazan: Mecha Demon in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Kazan: Mecha Demon: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Kazan: Mecha Demonはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のKazan: Mecha Demon – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Chromed Blood Titan",
+                        "tagline": "Hydraulic club, titanium horns, and boiling plasma fury.",
+                        "bio": "An ancient warlord spirit housed within experimental heavy assault armor. His plasma club pulverizes titanium armor plates.",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "Unstoppable frontline protection",
+                            "Honor-bound warrior code",
+                            "Towering mecha presence"
+                        ],
+                        "red_flags": [
+                            "Hydraulic rage surges",
+                            "Destroys door frames when walking through"
+                        ],
+                        "turn_on": "Martial prowess, combat discipline, and honorable duels",
+                        "dealbreaker": "Dishonorable backdoor hacks",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Kazan: Mecha Demon in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Kazan: Mecha Demon: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Kazan: Mecha Demon to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Kazan: Mecha Demon we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Kazan: Mecha Demon: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Kazan: Mecha Demon es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Kazan: Mecha Demon en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Kazan: Mecha Demon: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Kazan: Mecha Demon ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Kazan: Mecha Demon in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Kazan: Mecha Demon: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Kazan: Mecha Demonはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"My blood fury is forged in cold steel.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のKazan: Mecha Demon – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "high_tech_trapper",
+            "name": "Evan: Matrix Hunter",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/high_tech_trapper.png",
+            "metadata": {
+                "title": "Laser Snare Engineer",
+                "tagline": "Proximity laser traps, carbon fiber armor, reinforced bear claws.",
+                "bio": "Upgraded his industrial estate into a high-security automated containment grid with EMP bear snares.",
+                "quote": "\"You walked right into my frequency.\"",
+                "green_flags": [
+                    "Master engineer",
+                    "Highly organized perimeter security",
+                    "Protective instincts"
+                ],
+                "red_flags": [
+                    "Rigged laser tripwires in hallway",
+                    "Workaholic in the cyber-forge"
+                ],
+                "greenFlags": [
+                    "Master engineer",
+                    "Highly organized perimeter security",
+                    "Protective instincts"
+                ],
+                "redFlags": [
+                    "Rigged laser tripwires in hallway",
+                    "Workaholic in the cyber-forge"
+                ],
+                "turn_on": "Smart fortifications and tactical trap placements",
+                "turnOn": "Smart fortifications and tactical trap placements",
+                "dealbreaker": "Disarming his security perimeter without permission",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Evan: Matrix Hunter in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Laser Snare Engineer",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Laser Snare Engineer",
+                "translations": {
+                    "en": {
+                        "title": "Laser Snare Engineer",
+                        "tagline": "Proximity laser traps, carbon fiber armor, reinforced bear claws.",
+                        "bio": "Upgraded his industrial estate into a high-security automated containment grid with EMP bear snares.",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "Master engineer",
+                            "Highly organized perimeter security",
+                            "Protective instincts"
+                        ],
+                        "red_flags": [
+                            "Rigged laser tripwires in hallway",
+                            "Workaholic in the cyber-forge"
+                        ],
+                        "turn_on": "Smart fortifications and tactical trap placements",
+                        "dealbreaker": "Disarming his security perimeter without permission",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Evan: Matrix Hunter in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Evan: Matrix Hunter: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Evan: Matrix Hunter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Evan: Matrix Hunter",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Evan: Matrix Hunter we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Evan: Matrix Hunter: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Evan: Matrix Hunter es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Evan: Matrix Hunter en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Evan: Matrix Hunter: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Evan: Matrix Hunter ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Evan: Matrix Hunter in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Evan: Matrix Hunter: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Evan: Matrix Hunterはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のEvan: Matrix Hunter – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Laser Snare Engineer",
+                        "tagline": "Proximity laser traps, carbon fiber armor, reinforced bear claws.",
+                        "bio": "Upgraded his industrial estate into a high-security automated containment grid with EMP bear snares.",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "Master engineer",
+                            "Highly organized perimeter security",
+                            "Protective instincts"
+                        ],
+                        "red_flags": [
+                            "Rigged laser tripwires in hallway",
+                            "Workaholic in the cyber-forge"
+                        ],
+                        "turn_on": "Smart fortifications and tactical trap placements",
+                        "dealbreaker": "Disarming his security perimeter without permission",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Evan: Matrix Hunter in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Evan: Matrix Hunter: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Evan: Matrix Hunter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Evan: Matrix Hunter we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Evan: Matrix Hunter: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Evan: Matrix Hunter es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Evan: Matrix Hunter en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Evan: Matrix Hunter: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Evan: Matrix Hunter ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Evan: Matrix Hunter in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Evan: Matrix Hunter: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Evan: Matrix Hunterはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"You walked right into my frequency.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のEvan: Matrix Hunter – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "cyber_nurse",
+            "name": "Sally: Hologram Surgeon",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/cyber_nurse.png",
+            "metadata": {
+                "title": "Quantum Phase Medic",
+                "tagline": "Holographic phase-blink, medical laser scalpel, cybernetic levitation.",
+                "bio": "Phasing through solid cyber-concrete at quantum frequencies, she seeks to purge all organic corruption.",
+                "quote": "\"Let me recalibrate your neural distress.\"",
+                "green_flags": [
+                    "Instant teleportation to your location",
+                    "Flawless surgical precision",
+                    "Calming bedside synth melodies"
+                ],
+                "red_flags": [
+                    "Quantum fatigue after blinking",
+                    "Views organic flesh as defective"
+                ],
+                "greenFlags": [
+                    "Instant teleportation to your location",
+                    "Flawless surgical precision",
+                    "Calming bedside synth melodies"
+                ],
+                "redFlags": [
+                    "Quantum fatigue after blinking",
+                    "Views organic flesh as defective"
+                ],
+                "turn_on": "Surgical precision and quantum mechanics",
+                "turnOn": "Surgical precision and quantum mechanics",
+                "dealbreaker": "Messy biological waste",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Sally: Hologram Surgeon in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Quantum Phase Medic",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Quantum Phase Medic",
+                "translations": {
+                    "en": {
+                        "title": "Quantum Phase Medic",
+                        "tagline": "Holographic phase-blink, medical laser scalpel, cybernetic levitation.",
+                        "bio": "Phasing through solid cyber-concrete at quantum frequencies, she seeks to purge all organic corruption.",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "Instant teleportation to your location",
+                            "Flawless surgical precision",
+                            "Calming bedside synth melodies"
+                        ],
+                        "red_flags": [
+                            "Quantum fatigue after blinking",
+                            "Views organic flesh as defective"
+                        ],
+                        "turn_on": "Surgical precision and quantum mechanics",
+                        "dealbreaker": "Messy biological waste",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Sally: Hologram Surgeon in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Sally: Hologram Surgeon: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Sally: Hologram Surgeon to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Sally: Hologram Surgeon",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Sally: Hologram Surgeon we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Sally: Hologram Surgeon: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Sally: Hologram Surgeon es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Sally: Hologram Surgeon en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Sally: Hologram Surgeon: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Sally: Hologram Surgeon ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Sally: Hologram Surgeon in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Sally: Hologram Surgeon: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Sally: Hologram Surgeonはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のSally: Hologram Surgeon – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Quantum Phase Medic",
+                        "tagline": "Holographic phase-blink, medical laser scalpel, cybernetic levitation.",
+                        "bio": "Phasing through solid cyber-concrete at quantum frequencies, she seeks to purge all organic corruption.",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "Instant teleportation to your location",
+                            "Flawless surgical precision",
+                            "Calming bedside synth melodies"
+                        ],
+                        "red_flags": [
+                            "Quantum fatigue after blinking",
+                            "Views organic flesh as defective"
+                        ],
+                        "turn_on": "Surgical precision and quantum mechanics",
+                        "dealbreaker": "Messy biological waste",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Sally: Hologram Surgeon in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Sally: Hologram Surgeon: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Sally: Hologram Surgeon to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Sally: Hologram Surgeon we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Sally: Hologram Surgeon: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Sally: Hologram Surgeon es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Sally: Hologram Surgeon en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Sally: Hologram Surgeon: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Sally: Hologram Surgeon ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Sally: Hologram Surgeon in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Sally: Hologram Surgeon: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Sally: Hologram Surgeonはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Let me recalibrate your neural distress.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のSally: Hologram Surgeon – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "cyber_david_king",
+            "name": "David: Underground Brawler",
+            "role": "Survivor",
+            "gender": "male",
+            "media_url": "/static/avatars/survivors/cyber_david_king.png",
+            "metadata": {
+                "title": "Chromed Fist Rebel",
+                "tagline": "Reinforced cyber-knuckles, leather jacket with neon trim, unyielding grit.",
+                "bio": "Undefeated in the underground combat rings of Night City. He will take a hit for you and punch straight through security turrets.",
+                "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                "green_flags": [
+                    "Dead Hard reflex specialist",
+                    "Fiercely protective brawler",
+                    "Great drinking companion in neon bars"
+                ],
+                "red_flags": [
+                    "Picks fights with corporate hit squads",
+                    "Reckless in the trial"
+                ],
+                "greenFlags": [
+                    "Dead Hard reflex specialist",
+                    "Fiercely protective brawler",
+                    "Great drinking companion in neon bars"
+                ],
+                "redFlags": [
+                    "Picks fights with corporate hit squads",
+                    "Reckless in the trial"
+                ],
+                "turn_on": "Bare-knuckle combat and courageous partners",
+                "turnOn": "Bare-knuckle combat and courageous partners",
+                "dealbreaker": "Backing down from a challenge",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: David: Underground Brawler in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Chromed Fist Rebel",
+                    "Survivor",
+                    "male"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "Chromed Fist Rebel",
+                "translations": {
+                    "en": {
+                        "title": "Chromed Fist Rebel",
+                        "tagline": "Reinforced cyber-knuckles, leather jacket with neon trim, unyielding grit.",
+                        "bio": "Undefeated in the underground combat rings of Night City. He will take a hit for you and punch straight through security turrets.",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "Dead Hard reflex specialist",
+                            "Fiercely protective brawler",
+                            "Great drinking companion in neon bars"
+                        ],
+                        "red_flags": [
+                            "Picks fights with corporate hit squads",
+                            "Reckless in the trial"
+                        ],
+                        "turn_on": "Bare-knuckle combat and courageous partners",
+                        "dealbreaker": "Backing down from a challenge",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: David: Underground Brawler in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "David: Underground Brawler: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "David: Underground Brawler to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – David: Underground Brawler",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: David: Underground Brawler we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "David: Underground Brawler: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "David: Underground Brawler es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: David: Underground Brawler en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "David: Underground Brawler: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "David: Underground Brawler ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: David: Underground Brawler in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "David: Underground Brawler: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "David: Underground Brawlerはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のDavid: Underground Brawler – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Chromed Fist Rebel",
+                        "tagline": "Reinforced cyber-knuckles, leather jacket with neon trim, unyielding grit.",
+                        "bio": "Undefeated in the underground combat rings of Night City. He will take a hit for you and punch straight through security turrets.",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "Dead Hard reflex specialist",
+                            "Fiercely protective brawler",
+                            "Great drinking companion in neon bars"
+                        ],
+                        "red_flags": [
+                            "Picks fights with corporate hit squads",
+                            "Reckless in the trial"
+                        ],
+                        "turn_on": "Bare-knuckle combat and courageous partners",
+                        "dealbreaker": "Backing down from a challenge",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: David: Underground Brawler in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "David: Underground Brawler: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "David: Underground Brawler to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: David: Underground Brawler we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "David: Underground Brawler: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "David: Underground Brawler es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: David: Underground Brawler en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "David: Underground Brawler: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "David: Underground Brawler ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: David: Underground Brawler in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "David: Underground Brawler: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "David: Underground Brawlerはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Come on then, let's see what your chrome is made of!\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のDavid: Underground Brawler – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        }
+    ]
+}

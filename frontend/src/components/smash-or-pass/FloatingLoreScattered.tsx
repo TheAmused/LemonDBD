@@ -162,28 +162,28 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
       <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-16 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none">
-        {/* Left Item 1: Trial Classification & Radar Beacon */}
+        {/* Left Item 1: Trial Classification & Radar Beacon (Tilt Left -2deg & Emerald Aura) */}
         <div
           key={`role-${character.slug}`}
-          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:-translate-x-1 cursor-pointer group"
+          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:-rotate-2 cursor-pointer group"
           style={{ animationDelay: '0ms' }}
           onMouseEnter={handleCardHover}
         >
           <div
             className={`relative overflow-hidden p-4 rounded-3xl border-2 backdrop-blur-2xl shadow-2xl transition-all duration-300 ${
               isSurvivor
-                ? 'bg-emerald-950/75 border-emerald-500/40 text-emerald-300 shadow-[0_0_30px_rgba(16,185,129,0.25)] group-hover:border-emerald-400 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.55)] group-hover:bg-emerald-900/90'
+                ? 'bg-emerald-950/75 border-emerald-500/40 text-emerald-300 shadow-[0_0_30px_rgba(16,185,129,0.25)] group-hover:border-emerald-400 group-hover:shadow-[0_0_60px_rgba(16,185,129,0.65)] group-hover:bg-emerald-900/95'
                 : isMonster
-                ? 'bg-purple-950/75 border-purple-500/40 text-purple-300 shadow-[0_0_30px_rgba(168,85,247,0.25)] group-hover:border-purple-400 group-hover:shadow-[0_0_50px_rgba(168,85,247,0.55)] group-hover:bg-purple-900/90'
-                : 'bg-rose-950/75 border-rose-500/40 text-rose-300 shadow-[0_0_30px_rgba(255,0,85,0.25)] group-hover:border-rose-400 group-hover:shadow-[0_0_50px_rgba(255,0,85,0.55)] group-hover:bg-rose-900/90'
+                ? 'bg-purple-950/75 border-purple-500/40 text-purple-300 shadow-[0_0_30px_rgba(168,85,247,0.25)] group-hover:border-purple-400 group-hover:shadow-[0_0_60px_rgba(168,85,247,0.65)] group-hover:bg-purple-900/95'
+                : 'bg-rose-950/75 border-rose-500/40 text-rose-300 shadow-[0_0_30px_rgba(255,0,85,0.25)] group-hover:border-rose-400 group-hover:shadow-[0_0_60px_rgba(255,0,85,0.65)] group-hover:bg-rose-900/95'
             }`}
           >
             {/* Holographic scanlines */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none opacity-40" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none opacity-40 group-hover:opacity-70 transition-opacity" />
 
             <div className="relative z-10 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black/70 border border-white/10 shrink-0 group-hover:scale-110 group-hover:border-white/30 transition-all shadow-inner">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black/70 border border-white/10 shrink-0 group-hover:scale-110 group-hover:rotate-6 group-hover:border-white/30 transition-all shadow-inner">
                   {isSurvivor ? (
                     <Shield className="h-5 w-5 text-emerald-400" />
                   ) : (
@@ -203,16 +203,16 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           </div>
         </div>
 
-        {/* Left Item 2: Dating Archetype */}
+        {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
         <div
           key={`title-${character.slug}`}
-          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:-translate-x-1 cursor-pointer group"
+          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:rotate-2 cursor-pointer group"
           style={{ animationDelay: '80ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-zinc-950/80 border-2 border-pink-500/30 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-pink-500 group-hover:shadow-[0_0_45px_rgba(255,0,85,0.5)] group-hover:bg-zinc-900/95">
+          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-zinc-950/80 border-2 border-pink-500/30 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-pink-500 group-hover:shadow-[0_0_60px_rgba(255,0,85,0.7)] group-hover:bg-zinc-900/95">
             <div className="flex items-center gap-1.5 text-pink-400">
-              <Sparkles className="h-3.5 w-3.5 animate-spin" style={{ animationDuration: '6s' }} />
+              <Sparkles className="h-3.5 w-3.5 animate-spin group-hover:scale-125 transition-transform" style={{ animationDuration: '4s' }} />
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                 {datingArchetypeLabel}
               </span>
@@ -226,17 +226,17 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           </div>
         </div>
 
-        {/* Left Item 3: Trial Green Flag */}
+        {/* Left Item 3: Trial Green Flag (Scale +10% & Emerald Strobe) */}
         {greenFlags.length > 0 && (
           <div
             key={`green-${character.slug}`}
-            className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:-translate-x-1 cursor-pointer group"
+            className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-110 hover:-rotate-1 cursor-pointer group"
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-emerald-950/70 border-2 border-emerald-500/35 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-emerald-400 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.55)] group-hover:bg-emerald-900/90">
+            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-emerald-950/70 border-2 border-emerald-500/35 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-emerald-400 group-hover:shadow-[0_0_55px_rgba(16,185,129,0.7)] group-hover:bg-emerald-900/95">
               <div className="flex items-center gap-1.5 text-emerald-400">
-                <CheckCircle2 className="h-4 w-4 shrink-0 group-hover:scale-110 transition-transform" />
+                <CheckCircle2 className="h-4 w-4 shrink-0 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                   {greenFlagLabel}
                 </span>
@@ -251,16 +251,16 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
       <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-16 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none">
-        {/* Right Item 1: Identity Profile & Cyber Tag */}
+        {/* Right Item 1: Identity Profile & Cyber Tag (Tilt Right +1deg & Cyan Glitch) */}
         <div
           key={`gender-${character.slug}`}
-          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:translate-x-1 cursor-pointer group"
+          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:rotate-1 cursor-pointer group"
           style={{ animationDelay: '40ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden flex items-center justify-between p-4 rounded-3xl bg-zinc-950/85 border-2 border-cyan-500/35 backdrop-blur-2xl shadow-2xl transition-all duration-300 group-hover:border-cyan-400 group-hover:shadow-[0_0_55px_rgba(6,182,212,0.6)] group-hover:bg-zinc-900/95">
+          <div className="relative overflow-hidden flex items-center justify-between p-4 rounded-3xl bg-zinc-950/85 border-2 border-cyan-500/35 backdrop-blur-2xl shadow-2xl transition-all duration-300 group-hover:border-cyan-400 group-hover:shadow-[0_0_65px_rgba(6,182,212,0.75)] group-hover:bg-zinc-900/95">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/30 shrink-0 text-cyan-400 group-hover:scale-110 transition-transform shadow-inner">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/30 shrink-0 text-cyan-400 group-hover:scale-115 group-hover:-rotate-6 transition-transform shadow-inner">
                 <User className="h-5 w-5" />
               </span>
               <div>
@@ -272,20 +272,20 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                 </span>
               </div>
             </div>
-            <Zap className="h-4 w-4 text-cyan-400/70 group-hover:text-cyan-300 animate-pulse" />
+            <Zap className="h-4 w-4 text-cyan-400/70 group-hover:text-cyan-300 group-hover:scale-125 animate-pulse transition-transform" />
           </div>
         </div>
 
-        {/* Right Item 2: Signature Quote */}
+        {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}
         <div
           key={`quote-${character.slug}`}
-          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:translate-x-1 cursor-pointer group"
+          className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:-rotate-1 cursor-pointer group"
           style={{ animationDelay: '120ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden p-4 rounded-3xl bg-zinc-950/85 border-2 border-amber-500/35 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-amber-400 group-hover:shadow-[0_0_55px_rgba(245,158,11,0.6)] group-hover:bg-zinc-900/95">
+          <div className="relative overflow-hidden p-4 rounded-3xl bg-zinc-950/85 border-2 border-amber-500/35 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-amber-400 group-hover:shadow-[0_0_65px_rgba(245,158,11,0.75)] group-hover:bg-zinc-900/95">
             <div className="flex items-center gap-1.5 text-amber-400">
-              <Quote className="h-3.5 w-3.5 group-hover:scale-110 transition-transform" />
+              <Quote className="h-3.5 w-3.5 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                 {signatureQuoteLabel}
               </span>
@@ -296,17 +296,17 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           </div>
         </div>
 
-        {/* Right Item 3: Trial Warning / Red Flag */}
+        {/* Right Item 3: Trial Warning / Red Flag (Tilt Right +2deg & Warning Flare) */}
         {redFlags.length > 0 && (
           <div
             key={`red-${character.slug}`}
-            className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-105 hover:translate-x-1 cursor-pointer group"
+            className="pointer-events-auto anim-lore-enter transition-all duration-300 hover:scale-110 hover:rotate-2 cursor-pointer group"
             style={{ animationDelay: '200ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-rose-950/70 border-2 border-rose-500/35 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-rose-400 group-hover:shadow-[0_0_50px_rgba(255,0,85,0.55)] group-hover:bg-rose-900/90">
+            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-rose-950/70 border-2 border-rose-500/35 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-rose-400 group-hover:shadow-[0_0_65px_rgba(255,0,85,0.75)] group-hover:bg-rose-900/95">
               <div className="flex items-center gap-1.5 text-rose-400">
-                <AlertTriangle className="h-4 w-4 shrink-0 group-hover:scale-110 transition-transform" />
+                <AlertTriangle className="h-4 w-4 shrink-0 group-hover:scale-125 group-hover:-rotate-12 transition-transform" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                   {redFlagLabel}
                 </span>

@@ -32,7 +32,7 @@ import { RoleCategory, PerkDictionary } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 interface OwnedCharacter {
-  character_id: number;
+  id: number;
   name: string;
   role: string;
   is_owned: boolean;
@@ -169,7 +169,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       if (charsRes.ok) {
         const data = await charsRes.json();
         (data.data as OwnedCharacter[]).forEach((c) => {
-          charDraft[c.character_id] = c.is_owned;
+          charDraft[c.id] = c.is_owned;
         });
       }
 

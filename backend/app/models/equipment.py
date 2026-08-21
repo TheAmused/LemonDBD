@@ -24,7 +24,8 @@ class Item(Base):
     )
 
     def to_dict(self, lang: Optional[str] = None) -> dict:
-        name = self.name
+        canonical_name = self.name
+        name = canonical_name
         description = self.description
         if lang and self.translations and lang in self.translations:
             trans = self.translations.get(lang) or {}
@@ -35,6 +36,7 @@ class Item(Base):
         return {
             "id": self.id,
             "name": name,
+            "raw_name": canonical_name,
             "category": self.category,
             "role": self.role,
             "description": description,
@@ -65,7 +67,8 @@ class Addon(Base):
     )
 
     def to_dict(self, lang: Optional[str] = None) -> dict:
-        name = self.name
+        canonical_name = self.name
+        name = canonical_name
         description = self.description
         if lang and self.translations and lang in self.translations:
             trans = self.translations.get(lang) or {}
@@ -76,6 +79,7 @@ class Addon(Base):
         return {
             "id": self.id,
             "name": name,
+            "raw_name": canonical_name,
             "associated_target": self.associated_target or "",
             "category": self.category,
             "description": description,
@@ -92,7 +96,7 @@ class Offering(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(150), unique=True, index=True)
     category: Mapped[str] = mapped_column(String(50), default="Offering")
-    role: Mapped[str] = mapped_column(String(20), default="All")  # "Survivor", "Killer", "All"
+    role: Mapped[str] = mapped_column(String(20), default="All")
     description: Mapped[str] = mapped_column(Text, default="")
     icon_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     icon_local_path: Mapped[Optional[str]] = mapped_column(
@@ -104,7 +108,8 @@ class Offering(Base):
     )
 
     def to_dict(self, lang: Optional[str] = None) -> dict:
-        name = self.name
+        canonical_name = self.name
+        name = canonical_name
         description = self.description
         if lang and self.translations and lang in self.translations:
             trans = self.translations.get(lang) or {}
@@ -115,6 +120,7 @@ class Offering(Base):
         return {
             "id": self.id,
             "name": name,
+            "raw_name": canonical_name,
             "category": self.category,
             "role": self.role,
             "description": description,
@@ -123,5 +129,4 @@ class Offering(Base):
             "rarity": self.rarity or "",
             "translations": self.translations or {},
         }
-
 

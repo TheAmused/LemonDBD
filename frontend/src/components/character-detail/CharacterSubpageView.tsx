@@ -19,7 +19,8 @@ interface CharacterSubpageViewProps {
 
 export const CharacterSubpageView: React.FC<CharacterSubpageViewProps> = (props) => {
   const { detailData } = props;
-  const role = (detailData.character.category || detailData.character.role || '').toLowerCase();
+  const character = detailData?.character;
+  const role = (character?.category || character?.role || '').toLowerCase();
   const isSurvivor = role === 'survivor';
 
   if (isSurvivor) {

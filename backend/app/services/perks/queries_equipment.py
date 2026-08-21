@@ -27,18 +27,19 @@ def fetch_items(
                     func.lower(Item.role) == cat_clean,
                 )
             )
-        if search:
-            q = f"%{search.strip().lower()}%"
-            stmt = stmt.where(
-                or_(
-                    func.lower(Item.name).like(q),
-                    func.lower(Item.description).like(q),
-                    func.lower(Item.category).like(q),
-                    func.lower(Item.role).like(q),
-                )
-            )
         items = db.session.scalars(stmt).all()
-        return [i.to_dict(lang=lang) for i in items if i.name.lower().strip() not in HEADER_EXCLUSIONS]
+        result = [i.to_dict(lang=lang) for i in items if i.name.lower().strip() not in HEADER_EXCLUSIONS]
+        if search:
+            q = search.strip().lower()
+            filtered = []
+            for it in result:
+                name_m = q in it.get("name", "").lower() or q in it.get("raw_name", "").lower()
+                desc_m = q in it.get("description", "").lower()
+                cat_m = q in it.get("category", "").lower() or q in it.get("role", "").lower()
+                if name_m or desc_m or cat_m:
+                    filtered.append(it)
+            return filtered
+        return result
     except Exception:
         return []
 
@@ -74,18 +75,21 @@ def fetch_addons(
                     func.lower(Addon.associated_target) == f"the {t_no_article}",
                 )
             )
-        if search:
-            q = f"%{search.strip().lower()}%"
-            stmt = stmt.where(
-                or_(
-                    func.lower(Addon.name).like(q),
-                    func.lower(Addon.description).like(q),
-                    func.lower(Addon.category).like(q),
-                    func.lower(Addon.associated_target).like(q),
-                )
-            )
         addons = db.session.scalars(stmt).all()
-        return [a.to_dict(lang=lang) for a in addons]
+        result = [a.to_dict(lang=lang) for a in addons]
+        if search:
+            q = search.strip().lower()
+            filtered = []
+            for ad in result:
+                name_m = q in ad.get("name", "").lower() or q in ad.get("raw_name", "").lower()
+                desc_m = q in ad.get("description", "").lower()
+                cat_m = q in ad.get("category", "").lower()
+                target_m = q in ad.get("associated_target", "").lower()
+                if name_m or desc_m or cat_m or target_m:
+                    filtered.append(ad)
+            return filtered
+        return result
     except Exception:
         return []
+
 

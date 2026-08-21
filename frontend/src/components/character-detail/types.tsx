@@ -27,6 +27,7 @@ export interface CharacterItem {
 export interface PerkItem {
   id?: number;
   name: string;
+  raw_name?: string;
   category: string;
   character: string;
   character_real_name?: string;
@@ -41,6 +42,7 @@ export interface PerkItem {
 export interface AddonItem {
   id?: number;
   name: string;
+  raw_name?: string;
   associated_target?: string;
   category?: string;
   description?: string;
@@ -52,6 +54,7 @@ export interface AddonItem {
 export interface EquipmentItem {
   id?: number;
   name: string;
+  raw_name?: string;
   category: string;
   role?: string;
   description?: string;
@@ -63,6 +66,7 @@ export interface EquipmentItem {
 
 export interface KillerPowerInfo {
   name: string;
+  raw_name?: string;
   description: string;
   icon_url?: string;
   icon_local_path?: string;
@@ -75,6 +79,7 @@ export interface KillerPowerInfo {
 export interface OfferingItem {
   id?: number;
   name: string;
+  raw_name?: string;
   category: string;
   role?: string;
   description?: string;

@@ -37,7 +37,11 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
   const rawDict = (dict || {}) as Record<string, Record<string, string>>;
   const t: Record<string, string> = rawDict.characterDetail || rawDict.characters || {};
 
-  const { character, power: killerPower, perks = [], addons = [], offerings = [] } = detailData;
+  const character = detailData?.character || { name: '', category: 'Killer' };
+  const killerPower = detailData?.power;
+  const perks = detailData?.perks || [];
+  const addons = detailData?.addons || [];
+  const offerings = detailData?.offerings || [];
 
   const [isLoreModalOpen, setIsLoreModalOpen] = useState<boolean>(false);
   const [isModelModalOpen, setIsModelModalOpen] = useState<boolean>(false);
@@ -260,3 +264,4 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
     </article>
   );
 };
+

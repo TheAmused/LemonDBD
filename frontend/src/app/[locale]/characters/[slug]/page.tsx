@@ -19,8 +19,10 @@ import { useSidebarState } from '@/hooks/useSidebarState';
 
 export default function CharacterDetailPage() {
   const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
-  const slug = (params?.slug as string) || '';
+  const rawLocale = params?.locale;
+  const locale = (Array.isArray(rawLocale) ? rawLocale[0] : rawLocale || 'en') as Locale;
+  const rawSlug = params?.slug;
+  const slug = (Array.isArray(rawSlug) ? rawSlug[0] : rawSlug || '') as string;
 
   const { isCollapsed } = useSidebarState();
 
@@ -40,17 +42,31 @@ export default function CharacterDetailPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    getDictionary(locale).then(setDict);
+    let isMounted = true;
+    getDictionary(locale)
+      .then((res) => {
+        if (isMounted) {
+          setDict(res as unknown as Record<string, Record<string, string>>);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load dictionary:', err);
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [locale]);
 
   // Load Vault stats & all characters list
   useEffect(() => {
+    let isMounted = true;
     async function loadVaultStats() {
       try {
         const [perksRes, charsRes] = await Promise.all([
           fetch(`${backendBase}/api/v1/perks?limit=1000`),
           fetch(`${backendBase}/api/v1/characters`),
         ]);
+        if (!isMounted) return;
         if (perksRes.ok) {
           const pData = await perksRes.json();
           const list: PerkItem[] = pData.data || [];
@@ -69,11 +85,15 @@ export default function CharacterDetailPage() {
       }
     }
     loadVaultStats();
+    return () => {
+      isMounted = false;
+    };
   }, [backendBase]);
 
   // Fetch character details by slug
   useEffect(() => {
     if (!slug) return;
+    let isMounted = true;
 
     async function fetchCharacterDetail() {
       setLoading(true);
@@ -81,11 +101,14 @@ export default function CharacterDetailPage() {
       try {
         const cleanSlug = encodeURIComponent(slug);
         const res = await fetch(`${backendBase}/api/v1/characters/${cleanSlug}/detail?lang=${locale}`);
+        if (!isMounted) return;
         if (res.ok) {
           const json = await res.json();
-          if (json.data && json.data.character) {
+          if (json && json.data && json.data.character) {
             setDetailData(json.data);
-            document.title = `${json.data.character.name} - LemonDBD`;
+            if (typeof document !== 'undefined') {
+              document.title = `${json.data.character.name || 'Character'} - LemonDBD`;
+            }
           } else {
             setNotFound(true);
           }
@@ -94,30 +117,29 @@ export default function CharacterDetailPage() {
         }
       } catch (err: unknown) {
         console.error('Failed to fetch character detail:', err);
-        setNotFound(true);
+        if (isMounted) {
+          setNotFound(true);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
 
     fetchCharacterDetail();
+    return () => {
+      isMounted = false;
+    };
   }, [slug, backendBase, locale]);
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-        Loading Character Details...
-      </div>
-    );
-  }
-
-  const t = dict?.characterDetail || {};
+  const t = dict?.characterDetail || dict?.characters || {};
 
   return (
     <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
-        dict={dict}
+        dict={dict || {}}
         activeCategory="characters"
         onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalPerksCount}
@@ -163,7 +185,7 @@ export default function CharacterDetailPage() {
         ) : (
           <CharacterSubpageView
             currentLocale={locale}
-            dict={dict}
+            dict={dict || {}}
             detailData={detailData}
             allCharacters={allCharacters}
           />
@@ -172,7 +194,7 @@ export default function CharacterDetailPage() {
         <QuestsModal
           isOpen={isQuestsOpen}
           onClose={() => setIsQuestsOpen(false)}
-          dict={dict}
+          dict={dict || {}}
         />
       </main>
     </div>

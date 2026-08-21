@@ -41,6 +41,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   onSelectCharacter,
   editionName = 'Fog Canon',
   isAuthenticated = false,
+  locale = 'en',
   dict,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -275,9 +276,22 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                 <span>{tier.name}</span>
               </span>
             </div>
-            <p className="text-[11px] text-zinc-400 italic line-clamp-1">
-              {item.metadata?.title || item.metadata?.tagline || item.role}
-            </p>
+            {(() => {
+              const meta = item.metadata || (item as any).metadata_json || {};
+              const currentLoc = locale || 'en';
+              const locMeta = (meta.translations as any)?.[currentLoc] || (meta.i18n as any)?.[currentLoc] || {};
+              const itemSubtitle =
+                locMeta.title ||
+                meta.title ||
+                locMeta.tagline ||
+                meta.tagline ||
+                (currentLoc === 'pl' ? (isSurvivor ? 'Ocalały we Mgle' : 'Zabójca we Mgle') : item.role);
+              return (
+                <p className="text-[11px] text-zinc-400 italic line-clamp-1">
+                  {itemSubtitle}
+                </p>
+              );
+            })()}
           </div>
         </div>
 

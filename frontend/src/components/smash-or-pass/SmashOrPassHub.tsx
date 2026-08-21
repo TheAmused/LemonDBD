@@ -214,6 +214,21 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     setDragPhysics({ x: 0, y: 0, isDragging: false });
   }, []);
 
+  const getRosterDisplayName = useCallback(
+    (r: { slug: string; name?: string }) => {
+      const locName = dict?.smashOrPass?.rosters?.[r.slug]?.name;
+      if (locName) return locName;
+      if (r.slug === 'canon') return locale === 'pl' ? 'Dead by Daylight: Kanon Mgły' : 'Dead by Daylight: Fog Canon';
+      if (r.slug === 'hooked_on_you') return locale === 'pl' ? 'Hooked on You: Romans na Wyspie' : 'Hooked on You: Island Romance';
+      if (r.slug === 'legendary_cosplay') return locale === 'pl' ? 'Legendarne Skórki i Kolaboracje' : 'Legendary Skins & Collabs';
+      if (r.slug === 'cyberpunk_2077') return locale === 'pl' ? 'Cyberpunk Mgła 2077' : 'Cyberpunk Fog 2077';
+      if (r.slug === 'anime_manga') return locale === 'pl' ? 'Estetyka Anime / Mangi' : 'Fog Anime / Manga Aesthetic';
+      if (r.slug === 'gothic_eldritch') return locale === 'pl' ? 'Wiktoriańskie i Gotyckie Legendy' : 'Victorian & Gothic Eldritch';
+      return r.name || r.slug;
+    },
+    [dict, locale]
+  );
+
   // 5. Handle Vote (Smash or Pass) with Database API
   const handleVote = useCallback(
     async (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
@@ -234,11 +249,15 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         originY: origin?.y,
       }));
 
+      const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 600;
       let initialOffset = { x: 0, y: 0 };
       if (dragPhysics.x !== 0 || dragPhysics.y !== 0) {
-        initialOffset = { x: dragPhysics.x, y: dragPhysics.y };
+        initialOffset = {
+          x: dragPhysics.x > 0 ? screenWidth * 0.85 : -screenWidth * 0.85,
+          y: dragPhysics.y * 1.5,
+        };
       } else {
-        initialOffset = vote === 'smash' ? { x: 130, y: 0 } : { x: -130, y: 0 };
+        initialOffset = vote === 'smash' ? { x: screenWidth * 0.85, y: -20 } : { x: -screenWidth * 0.85, y: 20 };
       }
 
       setIsExiting(true);
@@ -246,9 +265,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       setExitOffset(initialOffset);
 
       if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
+      // Snappy and visceral 400ms transition
       exitTimeoutRef.current = setTimeout(() => {
         handleExitComplete();
-      }, 1650);
+      }, 400);
 
       setVoteHistory((prev) => [
         ...prev,
@@ -433,12 +453,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 {rosters.length > 0
                   ? rosters.map((r) => (
                       <option key={r.slug} value={r.slug} className="bg-[#09090b] text-zinc-200">
-                        {r.name || r.slug} ({r.entity_count ?? r.character_count ?? 0})
+                        {getRosterDisplayName(r)} ({r.entity_count ?? r.character_count ?? 0})
                       </option>
                     ))
                   : (
                       <option value="canon" className="bg-[#09090b] text-zinc-200">
-                        Dead by Daylight: Fog Canon (98)
+                        {getRosterDisplayName({ slug: 'canon' })} (98)
                       </option>
                     )}
               </select>

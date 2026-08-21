@@ -39,6 +39,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
   onClose,
   character: rawCharacter,
   stats,
+  locale = 'en',
   dict,
 }) => {
   const backendBase = getBackendBaseUrl();
@@ -53,16 +54,56 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     [rawCharacter]
   );
 
+  const currentLoc = locale || 'en';
+  const locMeta = (meta.translations as any)?.[currentLoc] || (meta.i18n as any)?.[currentLoc] || {};
+
   const name = rawCharacter?.name || rawCharacter?.character_name || 'Candidate';
   const role = rawCharacter?.role || 'Survivor';
-  const title = meta.title || meta.archetype || rawCharacter?.title || role;
-  const bio = meta.bio || meta.backstory || rawCharacter?.bio || 'A formidable candidate in the Fog.';
-  const quote = meta.lore_quote || meta.quote || rawCharacter?.quote || `"${name}"`;
-  const greenFlags: string[] = meta.green_flags || meta.greenFlags || rawCharacter?.greenFlags || ['Loyal trial companion'];
-  const redFlags: string[] = meta.red_flags || meta.redFlags || rawCharacter?.redFlags || ['Unpredictable in the fog'];
-  const turnOn = meta.turn_on || meta.turnOn || rawCharacter?.turnOn || 'Courage and loyalty under pressure';
-  const dealbreaker = meta.dealbreaker || rawCharacter?.dealbreaker || 'Betrayal of trust';
   const isSurvivor = role === 'Survivor';
+  const title =
+    locMeta.title ||
+    meta.title ||
+    meta.archetype ||
+    rawCharacter?.title ||
+    (currentLoc === 'pl' ? (isSurvivor ? 'Ocalały we Mgle' : 'Zabójca we Mgle') : role);
+
+  const bio =
+    locMeta.bio ||
+    meta.bio ||
+    meta.backstory ||
+    rawCharacter?.bio ||
+    (currentLoc === 'pl'
+      ? `${name} to wyrazista postać we Mgle, gotowa na wszystko w obliczu próby.`
+      : 'A formidable candidate in the Fog.');
+
+  const quote = locMeta.quote || meta.lore_quote || meta.quote || rawCharacter?.quote || `"${name}"`;
+
+  const greenFlags: string[] =
+    locMeta.green_flags ||
+    meta.green_flags ||
+    meta.greenFlags ||
+    rawCharacter?.greenFlags ||
+    (currentLoc === 'pl' ? ['Lojalny towarzysz w próbie', 'Instynkt przetrwania'] : ['Loyal trial companion']);
+
+  const redFlags: string[] =
+    locMeta.red_flags ||
+    meta.red_flags ||
+    meta.redFlags ||
+    rawCharacter?.redFlags ||
+    (currentLoc === 'pl' ? ['Nieprzewidywalny we mgle'] : ['Unpredictable in the fog']);
+
+  const turnOn =
+    locMeta.turn_on ||
+    meta.turn_on ||
+    meta.turnOn ||
+    rawCharacter?.turnOn ||
+    (currentLoc === 'pl' ? 'Odwaga i lojalność pod presją' : 'Courage and loyalty under pressure');
+
+  const dealbreaker =
+    locMeta.dealbreaker ||
+    meta.dealbreaker ||
+    rawCharacter?.dealbreaker ||
+    (currentLoc === 'pl' ? 'Zdrada i brak zaufania' : 'Betrayal of trust');
 
   const avatarSrc =
     rawCharacter?.media_url?.startsWith('http') || rawCharacter?.media_url?.startsWith('/static')

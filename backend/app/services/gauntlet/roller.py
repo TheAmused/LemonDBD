@@ -49,11 +49,10 @@ def pick_initial_target(user_id: int, role: str, ownership_service: OwnershipSer
 
 
 def roll_gauntlet_target(
-    user_id: int,
     role: str,
     current_streak: int,
     completed_characters: List[str],
-    ownership_service: OwnershipService,
+    owned_characters: List[str],
     target_character: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any], Dict[str, Any]]:
     """
@@ -62,10 +61,11 @@ def roll_gauntlet_target(
     """
     tier_info = get_tier_info(current_streak, role)
 
-    owned_names = get_owned_character_names(user_id, role, ownership_service)
-    remaining = [c for c in owned_names if c not in completed_characters]
+    remaining = [c for c in owned_characters if c not in completed_characters]
     if not remaining:
-        remaining = owned_names if owned_names else [pick_initial_target(user_id, role, ownership_service)]
+        remaining = owned_characters if owned_characters else [
+            "Meg Thomas" if role == "survivor" else "The Trapper"
+        ]
 
     target_char = target_character if target_character else random.choice(remaining)
 

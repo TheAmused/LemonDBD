@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';
-import { Flame, Trophy, Shield, User, Skull, BarChart2, BookOpen } from 'lucide-react';
+import { Flame, Trophy, Shield, User, Skull, BarChart2, BookOpen, RotateCcw } from 'lucide-react';
 
 export interface GauntletHeaderProps {
   role: Role;
@@ -12,6 +12,7 @@ export interface GauntletHeaderProps {
   lastCheckpointStreak: number;
   onOpenStats: () => void;
   onOpenRules: () => void;
+  onOpenReset: () => void;
 }
 
 export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
@@ -21,6 +22,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
   lastCheckpointStreak,
   onOpenStats,
   onOpenRules,
+  onOpenReset,
 }) => {
   return (
     <div className="w-full bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-sm dark:shadow-xl mb-6">
@@ -93,6 +95,14 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             title="View Gauntlet Statistics"
           >
             <BarChart2 className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={onOpenReset}
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/60 dark:text-slate-200 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
+            title="Reset this run"
+          >
+            <RotateCcw className="w-5 h-5" />
           </button>
         </div>
       </div>

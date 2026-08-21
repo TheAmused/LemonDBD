@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
+import { ResetConfirmModal } from '../ResetConfirmModal';
 import { useHistoryRun } from './useHistoryRun';
 import { useOwnedKillers } from '../chaos/useOwnedKillers';
 import { useKillerPerkPool } from '../chaos/useKillerPerkPool';
@@ -101,6 +102,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           checkpointRowIndex={run?.checkpoint_row_index || 0}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenStats={() => setIsStatsOpen(true)}
+          onOpenReset={() => setConfirmingReset(true)}
         />
 
         {isCompleted ? (
@@ -190,42 +192,13 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} />
         )}
 
-        {!isCompleted && (
-          <div className="mt-10 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm px-4 py-4 shadow-sm">
-            {confirmingReset ? (
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <p className="text-xs text-slate-600 dark:text-slate-300">
-                  Wipe this run? Row progress and every unlocked perk go back to the start. This cannot be
-                  undone.
-                </p>
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => setConfirmingReset(false)}
-                    className="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleReset}
-                    disabled={busy}
-                    className="px-3 py-1.5 text-xs font-bold rounded-lg text-white bg-rose-600 hover:bg-rose-500 disabled:opacity-50 transition-colors cursor-pointer"
-                  >
-                    Yes, wipe it
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={() => setConfirmingReset(true)}
-                disabled={busy}
-                className="inline-flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-rose-500 dark:text-slate-400 dark:hover:text-rose-400 disabled:opacity-50 transition-colors cursor-pointer"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                Reset this run
-              </button>
-            )}
-          </div>
-        )}
+        <ResetConfirmModal
+          open={confirmingReset}
+          busy={busy}
+          message="Row progress and every unlocked perk go back to the start. This cannot be undone."
+          onCancel={() => setConfirmingReset(false)}
+          onConfirm={handleReset}
+        />
 
         <HistoryStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
         <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />

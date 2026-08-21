@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';
-import { Flame, Trophy, Shield, Skull, BookOpen, BarChart2 } from 'lucide-react';
+import { Flame, Trophy, Shield, Skull, BookOpen, BarChart2, RotateCcw } from 'lucide-react';
 
 const MODE_ICON: Record<HistoryMode, React.ElementType> = {
   medium: Shield,
@@ -17,6 +17,7 @@ export interface HistoryHeaderProps {
   checkpointRowIndex: number;
   onOpenRules: () => void;
   onOpenStats: () => void;
+  onOpenReset: () => void;
 }
 
 export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
@@ -26,6 +27,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   checkpointRowIndex,
   onOpenRules,
   onOpenStats,
+  onOpenReset,
 }) => {
   const ModeIcon = MODE_ICON[mode] ?? Shield;
 
@@ -101,6 +103,14 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             title="View History Streak Statistics"
           >
             <BarChart2 className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={onOpenReset}
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/60 dark:text-slate-200 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
+            title="Reset this run"
+          >
+            <RotateCcw className="w-5 h-5" />
           </button>
         </div>
       </div>

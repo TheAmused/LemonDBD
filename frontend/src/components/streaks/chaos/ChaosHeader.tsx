@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Difficulty } from '@/types/chaosStreak';
-import { Coins, Flame, Trophy, Shield, Skull, BarChart2, BookOpen, Layers } from 'lucide-react';
+import { Coins, Flame, Trophy, Shield, Skull, BarChart2, BookOpen, Layers, RotateCcw } from 'lucide-react';
 
 const DIFFICULTY_ICON: Record<Difficulty, React.ElementType> = {
   easy: Coins,
@@ -19,6 +19,7 @@ export interface ChaosHeaderProps {
   onOpenStats: () => void;
   onOpenRules: () => void;
   onOpenPerkPool: () => void;
+  onOpenReset: () => void;
 }
 
 export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
@@ -29,6 +30,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
   onOpenStats,
   onOpenRules,
   onOpenPerkPool,
+  onOpenReset,
 }) => {
   const DifficultyIcon = DIFFICULTY_ICON[difficulty] ?? Skull;
 
@@ -108,6 +110,14 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
             title="View Chaos Streak Statistics"
           >
             <BarChart2 className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={onOpenReset}
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/60 dark:text-slate-200 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
+            title="Reset this run"
+          >
+            <RotateCcw className="w-5 h-5" />
           </button>
         </div>
       </div>

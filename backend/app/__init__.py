@@ -26,7 +26,13 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     )
 
-    allowed_origins = flask_app.config.get("CORS_ORIGINS", "*")
+    # Configure Cross-Origin Resource Sharing (CORS)
+    raw_cors = flask_app.config.get("CORS_ORIGINS", "*")
+    if isinstance(raw_cors, str) and "," in raw_cors:
+        allowed_origins = [o.strip() for o in raw_cors.split(",") if o.strip()]
+    else:
+        allowed_origins = raw_cors
+
     CORS(
         flask_app,
         resources={
@@ -38,18 +44,6 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
 
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
-
-    @flask_app.after_request
-    def apply_cors_headers(response):
-        response.headers["Access-Control-Allow-Origin"] = allowed_origins
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With, Accept"
-        return response
-
-    @flask_app.route("/", defaults={"path": ""}, methods=["OPTIONS"])
-    @flask_app.route("/<path:path>", methods=["OPTIONS"])
-    def handle_options_preflight(path):
-        return "", 200
 
     def _init_db_safely():
         from app.services.db_service import DatabaseService

@@ -1,7 +1,13 @@
-// frontend/src/components/character-detail/components/KillerEquipmentSection.tsx
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Flame, Sparkles } from 'lucide-react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, renderFormattedDbdText } from '../types';
+import {
+  AddonItem,
+  EquipmentItem,
+  getAssetUrl,
+  getRarityTileStyle,
+  getRarityRank,
+  renderFormattedDbdText,
+} from '../types';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -21,6 +27,15 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
     rect: DOMRect;
   } | null>(null);
 
+  const sortedAddons = useMemo(() => {
+    return [...addons].sort((a, b) => {
+      const rankA = getRarityRank(a.rarity);
+      const rankB = getRarityRank(b.rarity);
+      if (rankA !== rankB) return rankA - rankB;
+      return a.name.localeCompare(b.name);
+    });
+  }, [addons]);
+
   if (!addons || addons.length === 0) return null;
 
   return (
@@ -34,7 +49,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
           <div>
             <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight flex items-center gap-2">
               {t.equipmentTitleKiller || 'Power Add-ons & Equipment'}
-              <span className="text-sm font-bold text-rose-400 font-mono">({addons.length})</span>
+              <span className="text-sm font-bold text-rose-400 font-mono">({sortedAddons.length})</span>
             </h2>
             <p className="text-xs text-slate-400">
               {t.hoverToInspect || 'Hover over add-on icons for preview, click for full details.'}
@@ -49,7 +64,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
 
       {/* Responsive Add-ons Grid */}
       <div className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4.5 p-2">
-        {addons.map((addon, idx) => {
+        {sortedAddons.map((addon, idx) => {
           const id = `killer-addon-${addon.name}-${idx}`;
           const rarityStyle = getRarityTileStyle(addon.rarity);
 

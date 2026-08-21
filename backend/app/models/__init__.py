@@ -15,7 +15,7 @@ from app.models.community import (
     CustomPerk,
     DailyQuest,
 )
-from app.models.equipment import Addon, Item
+from app.models.equipment import Addon, Item, Offering
 from app.models.gauntlet import (
     GauntletMatchLog,
     GauntletRun,
@@ -26,6 +26,7 @@ from app.models.minigames import (
     GeneratorDrawnPerk,
     GeneratorSetting,
     GuesserStat,
+    ScraperSetting,
 )
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.perk import Perk, PerkRule
@@ -52,6 +53,7 @@ __all__ = [
     "PerkRule",
     "Item",
     "Addon",
+    "Offering",
     "MapRealm",
     "MapTile",
     "MapObjective",
@@ -59,6 +61,7 @@ __all__ = [
     "GauntletMatchLog",
     "GeneratorSetting",
     "GeneratorDrawnPerk",
+    "ScraperSetting",
     "PageStreakRun",
     "PageStreakPageLog",
     "DraftSession",

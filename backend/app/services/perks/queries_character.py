@@ -1,12 +1,12 @@
 # backend/app/services/perks/queries_character.py
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
-from app.models import Addon, Character, Item
+from app.models import Addon, Character, Item, Offering
 from app.services.perks.utils import HEADER_EXCLUSIONS, normalize_search_key, slugify
 
 logger = logging.getLogger(__name__)
@@ -107,17 +107,39 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
             c_real = (c.real_name or "").lower()
             c_slug = (c.wiki_slug or "").lower()
             c_short = (c.short_name or "").lower()
+            c_prefix = (c.code_prefix or "").lower()
 
-            if (
-                c_name == target_clean
-                or c_real == target_clean
-                or slugify(c.name) == target_slug
-                or (c.real_name and slugify(c.real_name) == target_slug)
-                or (c.wiki_slug and slugify(c.wiki_slug) == target_slug)
-                or (c.short_name and slugify(c.short_name) == target_slug)
-                or c_slug == target_slug
-                or c_short == target_clean
-            ):
+            candidate_slugs = {
+                c_name,
+                c_real,
+                c_slug,
+                c_short,
+                c_prefix,
+                slugify(c.name),
+                slugify(c.real_name or ""),
+                slugify(c.wiki_slug or ""),
+                slugify(c.short_name or ""),
+                slugify(c.code_prefix or ""),
+                normalize_search_key(c.name),
+                normalize_search_key(c.real_name or ""),
+                normalize_search_key(c.short_name or ""),
+            }
+
+            if c.translations and isinstance(c.translations, dict):
+                for l_code, l_data in c.translations.items():
+                    if isinstance(l_data, dict):
+                        loc_name = l_data.get("name")
+                        if loc_name:
+                            candidate_slugs.add(loc_name.lower())
+                            candidate_slugs.add(slugify(loc_name))
+                            candidate_slugs.add(normalize_search_key(loc_name))
+                        loc_real = l_data.get("real_name")
+                        if loc_real:
+                            candidate_slugs.add(loc_real.lower())
+                            candidate_slugs.add(slugify(loc_real))
+                            candidate_slugs.add(normalize_search_key(loc_real))
+
+            if target_clean in candidate_slugs or target_slug in candidate_slugs or normalize_search_key(character_name) in candidate_slugs:
                 matched_char = c
                 break
 
@@ -125,11 +147,31 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
             return None
 
         char_dict = matched_char.to_dict(lang=lang)
+        RARITY_RANK = {
+            "common": 1,
+            "uncommon": 2,
+            "rare": 3,
+            "very rare": 4,
+            "ultra rare": 5,
+            "iridescent": 5,
+            "event": 6,
+        }
+
+        def get_rarity_sort_key(item_dict: Dict[str, Any]) -> Tuple[int, str]:
+            r = (item_dict.get("rarity") or "").lower().strip()
+            for k, rank in RARITY_RANK.items():
+                if k in r:
+                    return (rank, item_dict.get("name", ""))
+            return (99, item_dict.get("name", ""))
+
         char_role = matched_char.role or "Survivor"
         perks_list = [p.to_dict(lang=lang) for p in matched_char.perks]
 
         addons_list: List[Dict[str, Any]] = []
         items_list: List[Dict[str, Any]] = []
+        offerings_list: List[Dict[str, Any]] = []
+
+        from app.models.equipment import Offering
 
         if char_role.lower() == "killer":
             all_addons = db.session.scalars(
@@ -188,10 +230,19 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
                     matched_addons.append(a)
 
             addons_list = [a.to_dict(lang=lang) for a in matched_addons]
+            addons_list.sort(key=get_rarity_sort_key)
+
+            # Query Killer offerings
+            killer_offerings = db.session.scalars(
+                select(Offering).where(func.lower(Offering.role).in_(["killer", "all"]))
+            ).all()
+            offerings_list = [o.to_dict(lang=lang) for o in killer_offerings]
+            offerings_list.sort(key=get_rarity_sort_key)
         else:
             items_stmt = select(Item).where(func.lower(Item.role) == "survivor")
             items = db.session.scalars(items_stmt).all()
             items_list = [i.to_dict(lang=lang) for i in items if i.name.lower().strip() not in HEADER_EXCLUSIONS]
+            items_list.sort(key=get_rarity_sort_key)
 
             survivor_addons_stmt = select(Addon).where(func.lower(Addon.category) == "survivor")
             survivor_addons = db.session.scalars(survivor_addons_stmt).all()
@@ -200,6 +251,14 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
                 for a in survivor_addons
                 if a.name.lower().strip() not in HEADER_EXCLUSIONS and "numbers" not in (a.associated_target or "").lower()
             ]
+            addons_list.sort(key=get_rarity_sort_key)
+
+            # Query Survivor offerings
+            survivor_offerings = db.session.scalars(
+                select(Offering).where(func.lower(Offering.role).in_(["survivor", "all"]))
+            ).all()
+            offerings_list = [o.to_dict(lang=lang) for o in survivor_offerings]
+            offerings_list.sort(key=get_rarity_sort_key)
 
         return {
             "character": char_dict,
@@ -207,6 +266,7 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
             "perks": perks_list,
             "addons": addons_list,
             "items": items_list,
+            "offerings": offerings_list,
         }
     except Exception as e:
         logger.error(f"Error getting character detail from DB: {e}", exc_info=True)

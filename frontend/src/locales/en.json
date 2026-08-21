@@ -243,7 +243,11 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
-    "subtitle": "Evaluate Dead by Daylight candidates, discover your Trial Romance Archetype, and contribute to the community rankings.",
+    "selectRoster": "SELECT ROSTER",
+    "dwellHint": "Grab and spin. Dwell 1s in center to select.",
+    "active": "ACTIVE",
+    "dwellActive": "Active ({seconds}s)",
+    "subtitle": "Rate Dead by Daylight candidates, discover your Trial Romance Archetype, and vote.",
     "smash": "Smash",
     "pass": "Pass",
     "superSmash": "Super Smash",

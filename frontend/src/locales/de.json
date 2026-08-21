@@ -243,6 +243,10 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
+    "selectRoster": "ROSTER AUSWÄHLEN",
+    "dwellHint": "Ziehen und drehen. 1s in der Mitte halten zum Auswählen.",
+    "active": "AKTIV",
+    "dwellActive": "Aktiv ({seconds}s)",
     "subtitle": "Bewerte Dead by Daylight-Kandidaten, entdecke deinen Nebel-Romanzen-Archetyp und gestalte die Community-Ranglisten mit.",
     "smash": "Smash",
     "pass": "Pass",

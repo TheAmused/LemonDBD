@@ -244,6 +244,10 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
+    "selectRoster": "SELECCIONAR ROSTER",
+    "dwellHint": "Arrastra y gira. Mantén 1s en el centro para seleccionar.",
+    "active": "ACTIVO",
+    "dwellActive": "Activo ({seconds}s)",
     "subtitle": "Evalúa a los candidatos de Dead by Daylight, descubre tu arquetipo romántico de la Niebla y contribuye a las clasificaciones globales.",
     "smash": "Smash",
     "pass": "Pass",

@@ -231,6 +231,57 @@ class TestGetStats(HistoryTestCase):
         self.assertEqual(stats["wins"], 1)
 
 
+class TestFrozenKillerRoster(HistoryTestCase):
+    def setUp(self):
+        super().setUp()
+        seed_general_perk("Whispers")
+        for i, name in enumerate(["The Trapper", "The Wraith", "The Hillbilly"], start=1):
+            seed_killer(name, release_number=i)
+        self.user_id = self.register_user("frozenplayer")
+
+    def test_new_killer_mid_run_does_not_reshuffle_the_active_row(self):
+        before = self.service.get_or_create_run(self.user_id, "hell")
+        row_before = before["current_row_killers"]
+        seed_killer("Some New Killer", release_number=99)
+        after = self.service.get_or_create_run(self.user_id, "hell")
+        self.assertEqual(after["current_row_killers"], row_before)
+
+    def test_hell_loss_refreezes_the_roster(self):
+        run = self.service.get_or_create_run(self.user_id, "hell")
+        seed_killer("Some New Killer", release_number=99)
+        refrozen = self.service.submit_result(
+            self.user_id, run["id"], "loss", run["current_row_killers"][0]
+        )
+        self.assertIn("Some New Killer", refrozen["owned_killers"])
+
+
+class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
+    def setUp(self):
+        super().setUp()
+        seed_general_perk("Whispers")
+        for i, name in enumerate([f"Killer {n}" for n in range(10)], start=1):
+            seed_killer(name, release_number=i)
+        self.user_id = self.register_user("mediumfreezeplayer")
+
+    def test_medium_checkpoint_loss_does_not_refreeze(self):
+        # Win the whole first row to bank a medium-mode checkpoint (with only the
+        # original 10 killers frozen), then seed a new killer, then lose in the
+        # second row -- since a checkpoint was already banked, the loss falls back
+        # to that checkpoint (not to zero) and must NOT refreeze, so the snapshot
+        # should stay exactly what it was at row start.
+        run = self.service.get_or_create_run(self.user_id, "medium")
+        for name in ["Killer 0", "Killer 1", "Killer 2", "Killer 3", "Killer 4"]:
+            cleared = self.service.submit_result(self.user_id, run["id"], "win", name)
+        self.assertTrue(cleared["row_cleared"])
+        snapshot_before = cleared["owned_killers"]
+        self.assertNotIn("Some New Killer", snapshot_before)
+
+        seed_killer("Some New Killer", release_number=99)
+        after_loss = self.service.submit_result(self.user_id, run["id"], "loss", "Killer 5")
+        self.assertEqual(after_loss["owned_killers"], snapshot_before)
+        self.assertNotIn("Some New Killer", after_loss["owned_killers"])
+
+
 class TestOwnershipShrinksMidRun(HistoryTestCase):
     def setUp(self):
         super().setUp()

@@ -106,3 +106,278 @@ test('SmashOrPass: Character Roster Integrity', async (t) => {
     assert.strictEqual(legendary.characters.length, 12);
   });
 });
+
+test('SmashOrPass: API Service Layer & Types', async (t) => {
+  const {
+    getSessionId,
+    fetchRosters,
+    fetchRosterFeed,
+    castVote,
+    fetchLeaderboard,
+    resetSessionVotes,
+    resetUserVotes,
+    fetchDynamicTranslations,
+  } = await import('../../services/smashApi');
+
+  await t.test('getSessionId returns valid session identifier', () => {
+    const id = getSessionId();
+    assert.ok(typeof id === 'string');
+    assert.ok(id.length > 0);
+  });
+
+  await t.test('fetchRosters sends request and returns roster array', async () => {
+    const originalFetch = globalThis.fetch;
+    const mockRosters = [
+      {
+        id: 'r-1',
+        slug: 'canon',
+        name_i18n_key: 'smashOrPass.rosters.canon.name',
+        description_i18n_key: 'smashOrPass.rosters.canon.desc',
+        theme_color: '#ff0055',
+        category: 'DBD Canon',
+        is_nsfw: false,
+        is_active: true,
+        entity_count: 98,
+        total_votes: 120,
+      },
+    ];
+
+    globalThis.fetch = async (url: any, opts: any) => {
+      assert.ok(String(url).includes('/api/v1/smash-or-pass/rosters'));
+      return {
+        ok: true,
+        json: async () => ({ data: mockRosters, count: 1 }),
+      } as any;
+    };
+
+    try {
+      const rosters = await fetchRosters(true);
+      assert.strictEqual(rosters.length, 1);
+      assert.strictEqual(rosters[0].slug, 'canon');
+      assert.strictEqual(rosters[0].entity_count, 98);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test('fetchRosterFeed queries feed with session header', async () => {
+    const originalFetch = globalThis.fetch;
+    const mockFeed = {
+      roster: { id: 'r-1', slug: 'canon' },
+      entities: [
+        {
+          id: 'e-1',
+          roster_id: 'r-1',
+          slug: 'ada_wong',
+          name: 'Ada Wong',
+          role: 'Survivor',
+          gender: 'female',
+          metadata: { chaos_score: 75, danger_level: 'Moderate' },
+        },
+      ],
+      total_remaining: 97,
+    };
+
+    globalThis.fetch = async (url: any, opts: any) => {
+      assert.ok(String(url).includes('/api/v1/smash-or-pass/rosters/canon/feed'));
+      assert.ok(opts.headers['X-Session-ID']);
+      return {
+        ok: true,
+        json: async () => ({ data: mockFeed }),
+      } as any;
+    };
+
+    try {
+      const feed = await fetchRosterFeed('canon', { role: 'Survivor', limit: 20 });
+      assert.strictEqual(feed.total_remaining, 97);
+      assert.strictEqual(feed.entities.length, 1);
+      assert.strictEqual(feed.entities[0].name, 'Ada Wong');
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test('castVote posts vote and returns result', async () => {
+    const originalFetch = globalThis.fetch;
+    const mockVoteResult = {
+      id: 'e-1',
+      slug: 'ada_wong',
+      name: 'Ada Wong',
+      role: 'Survivor',
+      gender: 'female',
+      smash_count: 5,
+      pass_count: 1,
+      total_votes: 6,
+      smash_rate: 83.3,
+    };
+
+    globalThis.fetch = async (url: any, opts: any) => {
+      assert.ok(String(url).includes('/api/v1/smash-or-pass/vote'));
+      assert.strictEqual(opts.method, 'POST');
+      const body = JSON.parse(opts.body);
+      assert.strictEqual(body.entity_id, 'e-1');
+      assert.strictEqual(body.vote_type, 'smash');
+      return {
+        ok: true,
+        json: async () => ({ data: mockVoteResult, status: 'success' }),
+      } as any;
+    };
+
+    try {
+      const res = await castVote('e-1', 'smash', 'ada_wong');
+      assert.strictEqual(res.status, 'success');
+      assert.strictEqual(res.data.smash_count, 5);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test('fetchLeaderboard returns ranked items', async () => {
+    const originalFetch = globalThis.fetch;
+    const mockLeaderboard = [
+      {
+        id: 'e-1',
+        slug: 'ada_wong',
+        name: 'Ada Wong',
+        role: 'Survivor',
+        gender: 'female',
+        tier: 'God Tier',
+        rank: 1,
+        smash_rate: 92.5,
+      },
+    ];
+
+    globalThis.fetch = async (url: any, opts: any) => {
+      assert.ok(String(url).includes('/api/v1/smash-or-pass/rosters/canon/leaderboard'));
+      return {
+        ok: true,
+        json: async () => ({ data: mockLeaderboard, count: 1, roster: 'canon' }),
+      } as any;
+    };
+
+    try {
+      const leaderboard = await fetchLeaderboard('canon', { sortBy: 'smash_rate' });
+      assert.strictEqual(leaderboard.length, 1);
+      assert.strictEqual(leaderboard[0].tier, 'God Tier');
+      assert.strictEqual(leaderboard[0].rank, 1);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test('resetSessionVotes and resetUserVotes handle reset endpoints', async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async (url: any, opts: any) => {
+      return {
+        ok: true,
+        json: async () => ({ status: 'success', reset_count: 5 }),
+      } as any;
+    };
+
+    try {
+      const sessionReset = await resetSessionVotes('canon');
+      assert.strictEqual(sessionReset.reset_count, 5);
+      const userReset = await resetUserVotes('canon');
+      assert.strictEqual(userReset.reset_count, 5);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test('fetchDynamicTranslations fetches remote localization map', async () => {
+    const originalFetch = globalThis.fetch;
+    const mockDict = {
+      'smashOrPass.ui.smash': 'Smash',
+      'smashOrPass.ui.pass': 'Pass',
+    };
+
+    globalThis.fetch = async (url: any, opts: any) => {
+      assert.ok(String(url).includes('/api/v1/smash-or-pass/translations?locale=en'));
+      return {
+        ok: true,
+        json: async () => ({ data: mockDict, locale: 'en' }),
+      } as any;
+    };
+
+    try {
+      const translations = await fetchDynamicTranslations('en');
+      assert.strictEqual(translations['smashOrPass.ui.smash'], 'Smash');
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+});
+
+test('SmashOrPass: Multi-Locale i18n Key Synchronization', async (t) => {
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+
+  const locales = ['en', 'es', 'de', 'ja', 'pl'];
+  const dictionaries: Record<string, any> = {};
+
+  for (const loc of locales) {
+    const p = path.resolve(process.cwd(), `src/locales/${loc}.json`);
+    const raw = fs.readFileSync(p, 'utf-8');
+    dictionaries[loc] = JSON.parse(raw);
+  }
+
+  await t.test('all 5 locale files have complete smashOrPass sections and required keys', () => {
+    const requiredTopKeys = [
+      'title',
+      'subtitle',
+      'smash',
+      'pass',
+      'superSmash',
+      'leaderboard',
+      'stats',
+      'reset',
+      'keybindings',
+      'hint',
+      'godTier',
+      'fatalAttraction',
+      'friendzone',
+      'eldritchVoid',
+      'chaosRating',
+      'dangerLevel',
+      'archetype',
+      'compatibilityScore',
+      'communitySmashRate',
+      'totalVotes',
+      'traits',
+      'all',
+      'allRoles',
+      'survivors',
+      'killers',
+      'allGenders',
+      'female',
+      'femaleOnly',
+      'male',
+      'maleOnly',
+      'monsters',
+    ];
+
+    const requiredRosters = ['canon', 'hoy', 'legendary', 'cyberpunk', 'anime', 'gothic'];
+
+    for (const loc of locales) {
+      const sop = dictionaries[loc].smashOrPass;
+      assert.ok(sop, `Locale ${loc} missing smashOrPass section`);
+
+      for (const key of requiredTopKeys) {
+        assert.ok(sop[key], `Locale ${loc} missing top-level key '${key}'`);
+      }
+
+      assert.ok(sop.rosters, `Locale ${loc} missing 'rosters' section`);
+      for (const r of requiredRosters) {
+        assert.ok(sop.rosters[r], `Locale ${loc} missing roster '${r}'`);
+        assert.ok(sop.rosters[r].name, `Locale ${loc} missing roster '${r}.name'`);
+        assert.ok(sop.rosters[r].desc, `Locale ${loc} missing roster '${r}.desc'`);
+      }
+
+      assert.ok(sop.controls, `Locale ${loc} missing 'controls' section`);
+      assert.ok(sop.tiers, `Locale ${loc} missing 'tiers' section`);
+      assert.ok(sop.modals, `Locale ${loc} missing 'modals' section`);
+      assert.ok(sop.notifications, `Locale ${loc} missing 'notifications' section`);
+      assert.ok(sop.empty, `Locale ${loc} missing 'empty' section`);
+    }
+  });
+});

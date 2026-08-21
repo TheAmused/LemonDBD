@@ -243,20 +243,139 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
-    "subtitle": "Cast your votes for Dead by Daylight characters, explore twisted dating profiles, and discover the community's favorites.",
+    "subtitle": "Evaluate Dead by Daylight candidates, discover your Trial Romance Archetype, and contribute to the community rankings.",
     "smash": "Smash",
     "pass": "Pass",
     "superSmash": "Super Smash",
     "leaderboard": "Hall of Fame",
+    "leaderboardSubtitle": "Official community voting statistics across all Killers & Survivors",
+    "search": "Search candidates or leaderboard...",
+    "close": "Close",
     "shuffle": "Shuffle",
     "undo": "Undo",
     "mySmashes": "Your Smashes",
+    "stats": "Dossier & Stats",
+    "reset": "Reset Deck",
+    "keybindings": "Keybindings",
+    "hint": "Use Arrow Keys or Swipe to Vote",
+    "godTier": "God Tier",
+    "fatalAttraction": "Fatal Attraction",
+    "friendzone": "Friendzone",
+    "eldritchVoid": "Eldritch Void",
+    "chaosRating": "Chaos Rating",
+    "dangerLevel": "Danger Level",
+    "archetype": "Archetype",
+    "compatibilityScore": "Compatibility Score",
+    "communitySmashRate": "Community Smash Rate",
+    "totalVotes": "Total Votes",
+    "traits": "Compatibility Traits",
+    "all": "All",
     "allRoles": "All Roles",
     "survivors": "Survivors",
     "killers": "Killers",
     "allGenders": "All Genders",
+    "female": "Female",
     "femaleOnly": "Female Only",
+    "male": "Male",
     "maleOnly": "Male Only",
-    "monsters": "Monsters & Eldritch"
+    "monsters": "Monsters & Eldritch",
+    "rosters": {
+      "canon": {
+        "name": "Dead by Daylight: Fog Canon",
+        "desc": "The complete 98-character roster of all official Killers and Survivors."
+      },
+      "hoy": {
+        "name": "Hooked on You: Island Romance",
+        "desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes."
+      },
+      "legendary": {
+        "name": "Legendary Skins & Collabs",
+        "desc": "Iconic legendary skins and crossover collabs from gaming history."
+      },
+      "cyberpunk": {
+        "name": "Cyberpunk Fog 2077 Edition",
+        "desc": "High-tech neon augmented champions fighting in a dystopian fog."
+      },
+      "anime": {
+        "name": "Fog Anime / Manga Aesthetic",
+        "desc": "Stylized anime aesthetic adaptations of your favorite Fog characters."
+      },
+      "gothic": {
+        "name": "Victorian & Gothic Eldritch Legends",
+        "desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors."
+      }
+    },
+    "controls": {
+      "pass": "Pass",
+      "smash": "Smash",
+      "superSmash": "Super Smash",
+      "stats": "Dossier & Stats",
+      "reset": "Reset Deck",
+      "keybindings": "Keybindings",
+      "hint": "Use Arrow Keys or Swipe to Vote",
+      "arrowLeft": "Pass (Left Arrow)",
+      "arrowRight": "Smash (Right Arrow)",
+      "arrowUp": "Stats (Up Arrow)",
+      "arrowDown": "Super Smash (Down Arrow)",
+      "keyR": "Reset (R Key)"
+    },
+    "tiers": {
+      "godTier": "God Tier",
+      "fatalAttraction": "Fatal Attraction",
+      "friendzone": "Friendzone",
+      "eldritchVoid": "Eldritch Void"
+    },
+    "statsDetail": {
+      "chaosRating": "Chaos Rating",
+      "dangerLevel": "Danger Level",
+      "archetype": "Archetype",
+      "compatibilityScore": "Compatibility Score",
+      "communitySmashRate": "Community Smash Rate",
+      "totalVotes": "Total Votes",
+      "traits": "Compatibility Traits",
+      "smashCount": "Smashes",
+      "passCount": "Passes",
+      "superSmashCount": "Super Smashes",
+      "rank": "Rank",
+      "quote": "Quote"
+    },
+    "filters": {
+      "all": "All",
+      "allRoles": "All Roles",
+      "survivors": "Survivors",
+      "killers": "Killers",
+      "allGenders": "All Genders",
+      "female": "Female",
+      "femaleOnly": "Female Only",
+      "male": "Male",
+      "maleOnly": "Male Only",
+      "monsters": "Monsters & Eldritch"
+    },
+    "modals": {
+      "statsTitle": "Candidate Dossier",
+      "leaderboardTitle": "Hall of Fame",
+      "leaderboardSubtitle": "Official community voting statistics across all Killers & Survivors",
+      "personaTitle": "Trial Romance Archetype",
+      "personaSubtitle": "Your psychological compatibility report based on your voting tendencies",
+      "resetConfirmTitle": "Reset All Votes?",
+      "resetConfirmDesc": "This will rewind all your votes in this session and reshuffle the candidate deck.",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "close": "Close"
+    },
+    "notifications": {
+      "voteRecorded": "Vote recorded!",
+      "deckReset": "Deck has been reset.",
+      "rateLimit": "Voting too fast! Please slow down.",
+      "errorLoading": "Failed to load candidate feed.",
+      "errorVoting": "Failed to record vote."
+    },
+    "empty": {
+      "title": "Deck Completed!",
+      "subtitle": "You have evaluated all available candidates in this roster.",
+      "resetAction": "Reset & Vote Again",
+      "viewLeaderboard": "View Leaderboard",
+      "switchRoster": "Choose Another Roster"
+    }
   }
 }

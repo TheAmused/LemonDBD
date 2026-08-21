@@ -243,20 +243,139 @@
   },
   "smashOrPass": {
     "title": "Smash or Pass",
-    "subtitle": "Głosuj na postacie z Dead by Daylight, przeglądaj profile randkowe i odkrywaj ulubieńców społeczności.",
+    "subtitle": "Oceń kandydatów z Dead by Daylight, odkryj swój archetyp romansu we Mgle i współtwórz rankingi społeczności.",
     "smash": "Smash",
     "pass": "Pass",
     "superSmash": "Super Smash",
     "leaderboard": "Galeria Sław",
+    "leaderboardSubtitle": "Oficjalne statystyki głosowania społeczności dla wszystkich Zabójców i Ocalałych",
+    "search": "Szukaj kandydatów lub w rankingu...",
+    "close": "Zamknij",
     "shuffle": "Przetasuj",
     "undo": "Cofnij",
     "mySmashes": "Twoje Smashe",
+    "stats": "Teczka i Statystyki",
+    "reset": "Zresetuj Talię",
+    "keybindings": "Skróty Klawiszowe",
+    "hint": "Użyj strzałek lub przeciągnij, aby zagłosować",
+    "godTier": "Boski Poziom",
+    "fatalAttraction": "Zguba z Miłości",
+    "friendzone": "Strefa Przyjaźni",
+    "eldritchVoid": "Kosmiczna Otchłań",
+    "chaosRating": "Wskaźnik Chaosu",
+    "dangerLevel": "Poziom Zagrożenia",
+    "archetype": "Archetyp",
+    "compatibilityScore": "Wynik Zgodności",
+    "communitySmashRate": "Wskaźnik Smash Społeczności",
+    "totalVotes": "Liczba Głosów",
+    "traits": "Cechy Zgodności",
+    "all": "Wszystko",
     "allRoles": "Wszystkie Role",
     "survivors": "Ocalali",
     "killers": "Zabójcy",
     "allGenders": "Wszystkie Płcie",
+    "female": "Kobiety",
     "femaleOnly": "Tylko Kobiety",
+    "male": "Mężczyźni",
     "maleOnly": "Tylko Mężczyźni",
-    "monsters": "Potwory i Byt"
+    "monsters": "Potwory i Przedwieczni",
+    "rosters": {
+      "canon": {
+        "name": "Dead by Daylight: Kanon Mgły",
+        "desc": "Kompletny zestaw 98 oficjalnych postaci Zabójców i Ocalałych."
+      },
+      "hoy": {
+        "name": "Hooked on You: Romans na Wyspie",
+        "desc": "Tropikalna edycja symulatora randkowego w plażowych strojach i wakacyjnym klimacie."
+      },
+      "legendary": {
+        "name": "Legendarne Skórki i Kolaboracje",
+        "desc": "Kultowe legendarne skórki i crossovery z historii gier wideo."
+      },
+      "cyberpunk": {
+        "name": "Cyberpunkowa Mgła 2077",
+        "desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle."
+      },
+      "anime": {
+        "name": "Estetyka Anime / Mangi w Mgle",
+        "desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły."
+      },
+      "gothic": {
+        "name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+        "desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych."
+      }
+    },
+    "controls": {
+      "pass": "Pass",
+      "smash": "Smash",
+      "superSmash": "Super Smash",
+      "stats": "Teczka i Statystyki",
+      "reset": "Zresetuj Talię",
+      "keybindings": "Skróty Klawiszowe",
+      "hint": "Użyj strzałek lub przeciągnij, aby zagłosować",
+      "arrowLeft": "Pass (Strzałka w Lewo)",
+      "arrowRight": "Smash (Strzałka w Prawo)",
+      "arrowUp": "Statystyki (Strzałka w Górę)",
+      "arrowDown": "Super Smash (Strzałka w Dół)",
+      "keyR": "Reset (Klawisz R)"
+    },
+    "tiers": {
+      "godTier": "Boski Poziom",
+      "fatalAttraction": "Zguba z Miłości",
+      "friendzone": "Strefa Przyjaźni",
+      "eldritchVoid": "Kosmiczna Otchłań"
+    },
+    "statsDetail": {
+      "chaosRating": "Wskaźnik Chaosu",
+      "dangerLevel": "Poziom Zagrożenia",
+      "archetype": "Archetyp",
+      "compatibilityScore": "Wynik Zgodności",
+      "communitySmashRate": "Wskaźnik Smash Społeczności",
+      "totalVotes": "Liczba Głosów",
+      "traits": "Cechy Zgodności",
+      "smashCount": "Smashe",
+      "passCount": "Passy",
+      "superSmashCount": "Super Smashe",
+      "rank": "Pozycja",
+      "quote": "Cytat"
+    },
+    "filters": {
+      "all": "Wszystko",
+      "allRoles": "Wszystkie Role",
+      "survivors": "Ocalali",
+      "killers": "Zabójcy",
+      "allGenders": "Wszystkie Płcie",
+      "female": "Kobiety",
+      "femaleOnly": "Tylko Kobiety",
+      "male": "Mężczyźni",
+      "maleOnly": "Tylko Mężczyźni",
+      "monsters": "Potwory i Przedwieczni"
+    },
+    "modals": {
+      "statsTitle": "Teczka Kandydata",
+      "leaderboardTitle": "Galeria Sław",
+      "leaderboardSubtitle": "Oficjalne statystyki głosowania społeczności dla wszystkich Zabójców i Ocalałych",
+      "personaTitle": "Archetyp Romansu we Mgle",
+      "personaSubtitle": "Twój raport zgodności psychologicznej na podstawie oddanych głosów",
+      "resetConfirmTitle": "Zresetować wszystkie głosy?",
+      "resetConfirmDesc": "Spowoduje to cofnięcie wszystkich Twoich głosów w tej sesji i ponowne przetasowanie talii.",
+      "confirm": "Potwierdź",
+      "cancel": "Anuluj",
+      "close": "Zamknij"
+    },
+    "notifications": {
+      "voteRecorded": "Głos zapisany!",
+      "deckReset": "Talia została zresetowana.",
+      "rateLimit": "Zbyt szybkie głosowanie! Zwolnij tempo.",
+      "errorLoading": "Nie udało się załadować listy kandydatów.",
+      "errorVoting": "Nie udało się zapisać głosu."
+    },
+    "empty": {
+      "title": "Talia Ukończona!",
+      "subtitle": "Oceniłeś już wszystkich dostępnych kandydatów w tym zestawie.",
+      "resetAction": "Zresetuj i Głosuj Ponownie",
+      "viewLeaderboard": "Zobacz Tabelę Wyników",
+      "switchRoster": "Wybierz Inny Zestaw"
+    }
   }
 }

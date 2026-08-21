@@ -23,10 +23,16 @@ class HistoryService:
     def __init__(self, ownership_service: Optional[OwnershipService] = None):
         self.ownership_service = ownership_service or OwnershipService()
 
-    def _owned_names(self, user_id: int) -> List[str]:
-        return get_owned_killer_names_by_release(user_id, self.ownership_service)
+    def _freeze_pool(self, run: HistoryRun) -> List[str]:
+        names = get_owned_killer_names_by_release(run.user_id, self.ownership_service)
+        run.owned_killers_json = json.dumps(names)
+        return names
 
-    def _augment(self, run: HistoryRun, owned_names: List[str]) -> Dict[str, Any]:
+    def _augment(self, run: HistoryRun) -> Dict[str, Any]:
+        owned_names = json.loads(run.owned_killers_json or "[]")
+        if not owned_names:
+            owned_names = self._freeze_pool(run)
+            db.session.commit()
         rows = build_rows(owned_names)
 
         if run.status == "in_progress" and rows and run.current_row_index >= len(rows):
@@ -54,9 +60,8 @@ class HistoryService:
         run = db.session.scalars(
             select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
         ).first()
-        owned_names = self._owned_names(user_id)
         if run:
-            return self._augment(run, owned_names)
+            return self._augment(run)
 
         general = get_general_killer_perk_names()
         run = HistoryRun(
@@ -73,9 +78,10 @@ class HistoryService:
             checkpoint_completed_killers_json="[]",
             checkpoint_unlocked_perk_names_json=json.dumps(general),
         )
+        self._freeze_pool(run)
         db.session.add(run)
         db.session.commit()
-        return self._augment(run, owned_names)
+        return self._augment(run)
 
     def reset_run(self, user_id: int, mode: str) -> Dict[str, Any]:
         run = db.session.scalars(
@@ -101,7 +107,7 @@ class HistoryService:
         if run.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
 
-        owned_names = self._owned_names(user_id)
+        owned_names = json.loads(run.owned_killers_json or "[]")
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
         if killer_id not in current_row:
@@ -131,6 +137,7 @@ class HistoryService:
                 completed = []
                 if run.current_row_index >= len(rows):
                     run.status = "completed"
+                    self._freeze_pool(run)
                 if run.mode == "medium":
                     run.checkpoint_row_index = run.current_row_index
                     run.checkpoint_total_killers_beaten = run.total_killers_beaten
@@ -152,6 +159,7 @@ class HistoryService:
                 run.checkpoint_total_killers_beaten = 0
                 run.checkpoint_completed_killers_json = "[]"
                 run.checkpoint_unlocked_perk_names_json = json.dumps(general)
+                self._freeze_pool(run)
 
         streak_after = run.total_killers_beaten
         run.completed_killers_json = json.dumps(completed)
@@ -167,7 +175,7 @@ class HistoryService:
         ))
         db.session.commit()
 
-        data = self._augment(run, owned_names)
+        data = self._augment(run)
         data["newly_unlocked_perks"] = newly_unlocked
         data["row_cleared"] = row_cleared
         return data

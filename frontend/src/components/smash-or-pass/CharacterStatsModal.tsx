@@ -3,33 +3,26 @@
 
 import React, { useMemo } from 'react';
 import {
-  X,
   Heart,
-  ThumbsDown,
   Flame,
-  Skull,
   Shield,
+  Skull,
   Sparkles,
-  AlertTriangle,
-  CheckCircle2,
   Quote,
+  CheckCircle2,
+  AlertTriangle,
+  X,
+  ThumbsDown,
 } from 'lucide-react';
-import { EntityItem, EntityMetadata } from '@/types/smashOrPass';
-import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
+import { EntityMetadata, EntityStatItem } from '@/types/smashOrPass';
 
-export interface CharacterStatsModalProps {
+interface CharacterStatsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  character: EntityItem | any | null;
-  stats?: {
-    smash_count?: number;
-    pass_count?: number;
-    total_votes?: number;
-    smash_rate?: number;
-    rank?: number;
-    [key: string]: any;
-  } | null;
+  character: any;
+  stats?: EntityStatItem;
   locale?: string;
   dict?: any;
 }
@@ -173,22 +166,41 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
   if (!isOpen || !rawCharacter) return null;
 
+  // Localized UI strings
+  const roleLabel = isSurvivor
+    ? dict?.smashOrPass?.filters?.survivors || (currentLoc === 'pl' ? 'Ocalały' : 'Survivor')
+    : dict?.smashOrPass?.filters?.killers || (currentLoc === 'pl' ? 'Zabójca' : 'Killer');
+
+  const communityConsensusLabel = currentLoc === 'pl' ? 'Ocena Społeczności' : 'Community Consensus';
+  const smashRateLabel = dict?.smashOrPass?.statsDetail?.communitySmashRate || (currentLoc === 'pl' ? 'Wskaźnik Smash' : 'Smash Rate');
+  const smashesLabel = dict?.smashOrPass?.statsDetail?.smashCount || (currentLoc === 'pl' ? 'Smashe' : 'Smashes');
+  const passesLabel = dict?.smashOrPass?.statsDetail?.passCount || (currentLoc === 'pl' ? 'Passy' : 'Passes');
+  const totalVotesLabel = dict?.smashOrPass?.statsDetail?.totalVotes || (currentLoc === 'pl' ? 'Liczba Głosów' : 'Total Votes');
+  const globalRankLabel = dict?.smashOrPass?.statsDetail?.rank || (currentLoc === 'pl' ? 'Pozycja w Rankingu' : 'Global Rank');
+  const loreQuoteLabel = dict?.smashOrPass?.loreLabels?.signatureQuote || (currentLoc === 'pl' ? 'Charakterystyczny Cytat' : 'Lore Quote');
+  const loreProfileLabel = currentLoc === 'pl' ? 'Profil i Osobowość Kandydata' : 'Candidate Lore & Personality';
+  const greenFlagsLabel = dict?.smashOrPass?.loreLabels?.greenFlag || (currentLoc === 'pl' ? 'Zielone Flagi' : 'Green Flags');
+  const redFlagsLabel = dict?.smashOrPass?.loreLabels?.redFlag || (currentLoc === 'pl' ? 'Czerwone Flagi' : 'Red Flags');
+  const turnOnLabel = currentLoc === 'pl' ? 'Na Plus:' : 'Turn On:';
+  const dealbreakerLabel = currentLoc === 'pl' ? 'Na Minus:' : 'Dealbreaker:';
+  const closeLabel = dict?.smashOrPass?.close || (currentLoc === 'pl' ? 'Zamknij' : 'Close');
+
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="stats-modal-title"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#09090b]/85 backdrop-blur-xl animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090b]/85 backdrop-blur-xl animate-in fade-in duration-200"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex flex-col w-full max-w-xl max-h-[92vh] overflow-hidden rounded-3xl border border-[#ff0055]/40 bg-[#09090b] shadow-2xl shadow-rose-950/40 text-zinc-100"
+        className="relative w-full max-w-xl max-h-[90vh] overflow-hidden rounded-3xl border border-pink-500/30 bg-[#09090b] shadow-2xl flex flex-col text-zinc-100 font-mono"
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-zinc-800 p-4 sm:p-5 bg-gradient-to-r from-[#09090b] via-zinc-900 to-rose-950/30 shrink-0">
+        {/* Header Ribbon */}
+        <div className="flex items-center justify-between border-b border-zinc-800 p-4 sm:px-6 bg-zinc-950/80 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="relative h-12 w-12 rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 shrink-0">
+            <div className="relative h-12 w-12 rounded-2xl overflow-hidden border border-pink-500/40 shrink-0 bg-black">
               <img
                 src={avatarSrc}
                 alt={name}
@@ -201,20 +213,20 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 id="stats-modal-title" className="text-base sm:text-lg font-black font-mono tracking-tight text-white">
+                <h2 id="stats-modal-title" className="text-base sm:text-lg font-black tracking-tight text-white">
                   {name}
                 </h2>
                 <span
-                  className={`text-[9px] font-black uppercase font-mono px-2 py-0.5 rounded border ${
+                  className={`text-[9px] font-black uppercase px-2 py-0.5 rounded border ${
                     isSurvivor
                       ? 'bg-[#00f5d4]/10 text-[#00f5d4] border-[#00f5d4]/30'
                       : 'bg-[#ff0055]/10 text-[#ff0055] border-[#ff0055]/30'
                   }`}
                 >
-                  {role}
+                  {roleLabel}
                 </span>
               </div>
-              <p className="text-xs text-zinc-400 font-mono italic line-clamp-1">{title}</p>
+              <p className="text-xs text-zinc-400 italic line-clamp-1">{title}</p>
             </div>
           </div>
 
@@ -237,31 +249,31 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
                 {tierInfo.icon}
               </div>
               <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-zinc-400 block">
-                  Community Consensus
+                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 block">
+                  {communityConsensusLabel}
                 </span>
-                <span className={`text-sm font-black font-mono ${tierInfo.color}`}>
+                <span className={`text-sm font-black ${tierInfo.color}`}>
                   {tierInfo.tier}
                 </span>
               </div>
             </div>
 
             <div className="text-right">
-              <span className="text-[10px] font-mono text-zinc-400 block">Smash Rate</span>
-              <span className="text-xl font-black font-mono text-[#ff0055] flex items-center gap-1 justify-end">
+              <span className="text-[10px] text-zinc-400 block">{smashRateLabel}</span>
+              <span className="text-xl font-black text-[#ff0055] flex items-center gap-1 justify-end">
                 <Heart className="h-4 w-4 fill-[#ff0055]" /> {smashRate}%
               </span>
             </div>
           </div>
 
           {/* 2. Vote Breakdown Progress Bar */}
-          <div className="space-y-1.5 p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800 font-mono">
+          <div className="space-y-1.5 p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800">
             <div className="flex justify-between text-xs font-bold">
               <span className="flex items-center gap-1 text-[#ff0055]">
-                <Heart className="h-3.5 w-3.5 fill-[#ff0055]" /> {smashCount.toLocaleString()} Smashes ({smashPct}%)
+                <Heart className="h-3.5 w-3.5 fill-[#ff0055]" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}%)
               </span>
               <span className="flex items-center gap-1 text-zinc-400">
-                <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} Passes ({passPct}%)
+                <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} {passesLabel} ({passPct}%)
               </span>
             </div>
             <div className="h-3 w-full bg-zinc-800 rounded-full overflow-hidden flex">
@@ -275,17 +287,17 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
               />
             </div>
             <div className="flex justify-between text-[10px] text-zinc-500 pt-1">
-              <span>Total Votes: {totalVotes.toLocaleString()}</span>
-              {stats?.rank && <span>Global Rank: #{stats.rank}</span>}
+              <span>{totalVotesLabel}: {totalVotes.toLocaleString()}</span>
+              {stats?.rank && <span>{globalRankLabel}: #{stats.rank}</span>}
             </div>
           </div>
 
           {/* 3. Lore Quote */}
           {quote && (
             <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800 space-y-1">
-              <div className="flex items-center gap-1 text-amber-400 text-[10px] font-mono uppercase font-bold">
+              <div className="flex items-center gap-1 text-amber-400 text-[10px] uppercase font-bold">
                 <Quote className="h-3.5 w-3.5" />
-                <span>Lore Quote</span>
+                <span>{loreQuoteLabel}</span>
               </div>
               <p className="text-xs text-amber-100/90 font-serif italic leading-relaxed">
                 {quote}
@@ -295,10 +307,10 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
           {/* 4. Bio & Lore Profile */}
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase font-mono tracking-wider text-zinc-400">
-              Candidate Lore &amp; Personality
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+              {loreProfileLabel}
             </span>
-            <p className="text-xs text-zinc-300 leading-relaxed bg-zinc-950/70 p-3 rounded-2xl border border-zinc-800">
+            <p className="text-xs text-zinc-300 leading-relaxed bg-zinc-950/70 p-3 rounded-2xl border border-zinc-800 font-sans">
               {bio}
             </p>
           </div>
@@ -306,10 +318,10 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           {/* 5. Green & Red Flags */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div className="space-y-1.5 bg-emerald-950/30 border border-emerald-500/20 p-3 rounded-2xl">
-              <span className="flex items-center gap-1.5 font-black text-emerald-400 font-mono text-[11px] uppercase">
-                <CheckCircle2 className="h-3.5 w-3.5" /> Green Flags
+              <span className="flex items-center gap-1.5 font-black text-emerald-400 text-[11px] uppercase">
+                <CheckCircle2 className="h-3.5 w-3.5" /> {greenFlagsLabel}
               </span>
-              <ul className="text-xs text-emerald-200/90 space-y-1 pl-4 list-disc">
+              <ul className="text-xs text-emerald-200/90 space-y-1 pl-4 list-disc font-sans">
                 {greenFlags.map((f: string, i: number) => (
                   <li key={i}>{f}</li>
                 ))}
@@ -317,10 +329,10 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
             </div>
 
             <div className="space-y-1.5 bg-rose-950/30 border border-rose-500/20 p-3 rounded-2xl">
-              <span className="flex items-center gap-1.5 font-black text-rose-400 font-mono text-[11px] uppercase">
-                <AlertTriangle className="h-3.5 w-3.5" /> Red Flags
+              <span className="flex items-center gap-1.5 font-black text-rose-400 text-[11px] uppercase">
+                <AlertTriangle className="h-3.5 w-3.5" /> {redFlagsLabel}
               </span>
-              <ul className="text-xs text-rose-200/90 space-y-1 pl-4 list-disc">
+              <ul className="text-xs text-rose-200/90 space-y-1 pl-4 list-disc font-sans">
                 {redFlags.map((f: string, i: number) => (
                   <li key={i}>{f}</li>
                 ))}
@@ -329,14 +341,14 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           </div>
 
           {/* 6. Turn On & Dealbreaker */}
-          <div className="grid grid-cols-2 gap-3 text-xs font-mono">
+          <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="bg-zinc-950/70 border border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
-              <span className="font-bold text-[#ff0055] uppercase text-[10px] block">Turn On:</span>
-              <p className="text-zinc-300 text-[11px] leading-tight">{turnOn}</p>
+              <span className="font-bold text-[#ff0055] uppercase text-[10px] block">{turnOnLabel}</span>
+              <p className="text-zinc-300 text-[11px] leading-tight font-sans">{turnOn}</p>
             </div>
             <div className="bg-zinc-950/70 border border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
-              <span className="font-bold text-[#ffd166] uppercase text-[10px] block">Dealbreaker:</span>
-              <p className="text-zinc-300 text-[11px] leading-tight">{dealbreaker}</p>
+              <span className="font-bold text-[#ffd166] uppercase text-[10px] block">{dealbreakerLabel}</span>
+              <p className="text-zinc-300 text-[11px] leading-tight font-sans">{dealbreaker}</p>
             </div>
           </div>
         </div>
@@ -346,9 +358,9 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-zinc-200 transition-colors cursor-pointer font-mono"
+            className="px-5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-zinc-200 transition-colors cursor-pointer"
           >
-            Close Dossier
+            {closeLabel}
           </button>
         </div>
       </div>

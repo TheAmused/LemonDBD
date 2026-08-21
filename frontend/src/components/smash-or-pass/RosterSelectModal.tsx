@@ -163,16 +163,31 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.png`;
   };
 
-  // 3. Pointer Drag Gestures (Grab and Pull / Swipe with continuous wrapping)
+  const lastMoveXRef = useRef<number>(0);
+  const lastMoveTimeRef = useRef<number>(0);
+  const velocityRef = useRef<number>(0);
+
+  // 3. Pointer Drag Gestures (Grab and Pull / Swipe with velocity fling momentum)
   const handlePointerDown = (e: React.PointerEvent) => {
     setIsDragging(true);
     dragStartXRef.current = e.clientX;
     dragStartCenterRef.current = centerIndex;
+    lastMoveXRef.current = e.clientX;
+    lastMoveTimeRef.current = Date.now();
+    velocityRef.current = 0;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging) return;
+    const now = Date.now();
+    const dt = Math.max(1, now - lastMoveTimeRef.current);
+    const dx = e.clientX - lastMoveXRef.current;
+
+    velocityRef.current = dx / dt; // pixels per ms
+    lastMoveXRef.current = e.clientX;
+    lastMoveTimeRef.current = now;
+
     const deltaX = e.clientX - dragStartXRef.current;
     // 170px drag = 1 card shift
     const offset = -deltaX / 170;
@@ -195,7 +210,17 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     } catch {
       // ignore
     }
-    setCenterIndex(Math.round(centerIndex));
+
+    // Fling momentum calculation
+    let momentumShift = 0;
+    if (Math.abs(velocityRef.current) > 0.4) {
+      momentumShift =
+        -Math.sign(velocityRef.current) *
+        Math.min(2, Math.round(Math.abs(velocityRef.current) * 1.5));
+    }
+
+    const targetCenter = Math.round(centerIndex + momentumShift);
+    setCenterIndex(targetCenter);
   };
 
   // 4. Symmetrical Circular 3D Cards Computation
@@ -336,9 +361,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       commitSelection();
                     }
                   }}
-                  className={`absolute w-[240px] sm:w-[300px] md:w-[350px] lg:w-[370px] h-[360px] sm:h-[450px] md:h-[500px] lg:h-[540px] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer transition-transform ${
-                    isDragging ? 'duration-75' : 'duration-350 ease-out'
-                  } ${
+                  className={`absolute w-[240px] sm:w-[300px] md:w-[350px] lg:w-[370px] h-[360px] sm:h-[450px] md:h-[500px] lg:h-[540px] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${
                     isCenter
                       ? 'border-2 sm:border-[3px] border-[#ff0055] shadow-[0_0_55px_rgba(255,0,85,0.75),inset_0_0_25px_rgba(255,0,85,0.3)]'
                       : 'border border-pink-500/20 shadow-[0_0_25px_rgba(0,0,0,0.85)]'
@@ -349,6 +372,11 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     filter: `brightness(${brightness})`,
                     zIndex,
                     transformStyle: 'preserve-3d',
+                    transition: isDragging
+                      ? 'none'
+                      : 'transform 440ms cubic-bezier(0.18, 0.89, 0.32, 1.12), opacity 440ms ease-out, filter 440ms ease-out',
+                    willChange: isDragging ? 'transform, opacity, filter' : 'auto',
+                    backfaceVisibility: 'hidden',
                   }}
                 >
                   {/* Hero Artwork Image */}

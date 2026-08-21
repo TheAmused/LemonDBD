@@ -282,15 +282,18 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         originY: origin?.y,
       }));
 
-      const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 600;
+      const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 800;
       let initialOffset = { x: 0, y: 0 };
       if (dragPhysics.x !== 0 || dragPhysics.y !== 0) {
         initialOffset = {
-          x: dragPhysics.x > 0 ? screenWidth * 1.15 : -screenWidth * 1.15,
-          y: dragPhysics.y * 1.2,
+          x: dragPhysics.x > 0 ? screenWidth * 1.25 : -screenWidth * 1.25,
+          y: dragPhysics.y * 1.1,
         };
       } else {
-        initialOffset = vote === 'smash' ? { x: screenWidth * 1.15, y: -20 } : { x: -screenWidth * 1.15, y: 20 };
+        initialOffset =
+          vote === 'smash'
+            ? { x: screenWidth * 1.25, y: -20 }
+            : { x: -screenWidth * 1.25, y: 20 };
       }
 
       setIsExiting(true);
@@ -298,10 +301,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       setExitOffset(initialOffset);
 
       if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
-      // Silky 550ms gesture curve
+      // Smooth 480ms synchronized exit curve
       exitTimeoutRef.current = setTimeout(() => {
         handleExitComplete();
-      }, 550);
+      }, 480);
 
       setVoteHistory((prev) => [
         ...prev,
@@ -720,11 +723,13 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             {thirdCharacter && (
               <div
                 key={`queue-3-${thirdCharacter.id || thirdCharacter.slug}`}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-500 ease-out"
+                className="absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-480 ease-out"
                 style={{
-                  transform: 'scale(0.86) translateY(30px)',
-                  opacity: 0.35,
+                  transform: isExiting ? 'scale(0.93) translateY(14px)' : 'scale(0.86) translateY(28px)',
+                  opacity: isExiting ? 0.85 : 0.35,
                   zIndex: 5,
+                  willChange: 'transform, opacity',
+                  transition: 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1)',
                 }}
               >
                 <CharacterCard
@@ -741,15 +746,19 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             {nextCharacter && (
               <div
                 key={`queue-2-${nextCharacter.id || nextCharacter.slug}`}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-500 ease-out"
+                className="absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-480 ease-out"
                 style={{
                   transform: dragPhysics.isDragging
-                    ? `scale(${0.93 + Math.min(0.07, Math.abs(dragPhysics.x) / 1200)}) translateY(${Math.max(0, 14 - Math.abs(dragPhysics.x) * 0.035)}px)`
+                    ? `scale(${0.93 + Math.min(0.07, Math.abs(dragPhysics.x) / 1000)}) translateY(${Math.max(0, 14 - Math.abs(dragPhysics.x) * 0.035)}px)`
                     : isExiting
                     ? 'scale(1) translateY(0px)'
                     : 'scale(0.93) translateY(14px)',
                   opacity: isExiting ? 1 : 0.85,
                   zIndex: 10,
+                  willChange: 'transform, opacity',
+                  transition: isExiting
+                    ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
+                    : 'transform 200ms ease-out, opacity 200ms ease-out',
                 }}
               >
                 <CharacterCard

@@ -108,8 +108,8 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
     setActiveOverlay(triggerType);
     setChromaticShift(true);
 
-    const shiftTimer = setTimeout(() => setChromaticShift(false), 380);
-    const overlayTimer = setTimeout(() => setActiveOverlay(null), 1000);
+    const shiftTimer = setTimeout(() => setChromaticShift(false), 240);
+    const overlayTimer = setTimeout(() => setActiveOverlay(null), 450);
 
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -506,15 +506,14 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
       {/* Screen Vignette Overlay: SMASH */}
       {activeOverlay === 'smash' && (
-        <div className="absolute inset-0 bg-radial from-[#ff0055]/25 via-[#2e0854]/15 to-transparent animate-out fade-out duration-700">
+        <div className="absolute inset-0 bg-radial from-[#ff0055]/20 via-[#2e0854]/10 to-transparent animate-out fade-out duration-400">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-2.5 animate-in zoom-in-50 fade-in duration-300">
+            <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-200">
               <div className="relative flex items-center justify-center">
-                <Heart className="h-28 w-28 text-[#ff0055] fill-[#ff0055] drop-shadow-[0_0_35px_rgba(255,0,85,0.9)] animate-pulse" />
-                <Skull className="absolute h-12 w-12 text-slate-950/80 drop-shadow" />
-                <Heart className="absolute inset-0 h-28 w-28 text-pink-300 fill-pink-300/40 animate-ping opacity-60" />
+                <Heart className="h-16 w-16 sm:h-20 sm:w-20 text-[#ff0055] fill-[#ff0055] drop-shadow-[0_0_30px_rgba(255,0,85,0.9)] animate-pulse" />
+                <Skull className="absolute h-8 w-8 sm:h-10 sm:w-10 text-slate-950/80 drop-shadow" />
               </div>
-              <span className="text-2xl sm:text-3xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-[#ff0055] to-red-400 drop-shadow-[0_0_20px_rgba(255,0,85,0.8)] font-mono">
+              <span className="text-xl sm:text-2xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-[#ff0055] to-red-400 drop-shadow-[0_0_20px_rgba(255,0,85,0.8)] font-mono">
                 {smashLabel}
               </span>
             </div>
@@ -524,14 +523,14 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
       {/* Screen Vignette Overlay: SUPER SMASH */}
       {activeOverlay === 'super_smash' && (
-        <div className="absolute inset-0 bg-radial from-[#ffd166]/30 via-[#ff0055]/20 to-[#09090b]/40 animate-out fade-out duration-900">
+        <div className="absolute inset-0 bg-radial from-[#ffd166]/25 via-[#ff0055]/15 to-[#09090b]/30 animate-out fade-out duration-450">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3 animate-in zoom-in-75 fade-in duration-300">
+            <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-200">
               <div className="relative flex items-center justify-center">
-                <Flame className="h-36 w-36 text-[#ffd166] fill-[#ffd166] drop-shadow-[0_0_45px_rgba(255,209,102,0.95)] animate-bounce" />
-                <Zap className="absolute h-16 w-16 text-[#ff0055] fill-[#ff0055] drop-shadow-[0_0_25px_rgba(255,0,85,0.9)] animate-pulse" />
+                <Flame className="h-20 w-20 sm:h-24 sm:w-24 text-[#ffd166] fill-[#ffd166] drop-shadow-[0_0_35px_rgba(255,209,102,0.95)] animate-bounce" />
+                <Zap className="absolute h-10 w-10 sm:h-12 sm:w-12 text-[#ff0055] fill-[#ff0055] drop-shadow-[0_0_20px_rgba(255,0,85,0.9)] animate-pulse" />
               </div>
-              <span className="text-3xl sm:text-4xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#ffd166] via-amber-200 to-[#ff0055] drop-shadow-[0_0_25px_rgba(255,209,102,0.9)] font-mono">
+              <span className="text-2xl sm:text-3xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#ffd166] via-amber-200 to-[#ff0055] drop-shadow-[0_0_25px_rgba(255,209,102,0.9)] font-mono">
                 {superSmashLabel}
               </span>
             </div>
@@ -541,10 +540,10 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
       {/* Screen Vignette Overlay: PASS */}
       {activeOverlay === 'pass' && (
-        <div className="absolute inset-0 bg-radial from-[#09090b]/60 via-[#1e293b]/30 to-transparent animate-out fade-out duration-600">
+        <div className="absolute inset-0 bg-radial from-[#00f5d4]/15 via-[#09090b]/40 to-transparent animate-out fade-out duration-350">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-2 animate-in zoom-in-50 fade-in duration-200 opacity-90">
-              <Skull className="h-20 w-20 text-[#00f5d4] drop-shadow-[0_0_25px_rgba(0,245,212,0.8)]" />
+            <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-150 opacity-90">
+              <Skull className="h-16 w-16 sm:h-20 sm:w-20 text-[#00f5d4] drop-shadow-[0_0_25px_rgba(0,245,212,0.8)]" />
               <span className="text-lg sm:text-xl font-black uppercase tracking-widest text-[#00f5d4] drop-shadow font-mono">
                 {passLabel}
               </span>

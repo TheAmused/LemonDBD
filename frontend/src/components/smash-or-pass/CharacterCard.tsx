@@ -265,9 +265,12 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   }, [isDragging, handleTouchMove, handleTouchEnd]);
 
   // Drag Direction & Color-shifting aura calculation
-  const isSwipingRight = dragOffset.x > 30 || exitType === 'smash';
-  const isSwipingLeft = dragOffset.x < -30 || exitType === 'pass';
-  const dragRotation = dragOffset.x * 0.08;
+  // Smooth Swipe Progress and Direction
+  const dragDistance = Math.abs(dragOffset.x);
+  const swipeProgress = Math.min(1, Math.max(0, dragDistance / 100));
+  const isSmashDrag = dragOffset.x > 15 || exitType === 'smash';
+  const isPassDrag = dragOffset.x < -15 || exitType === 'pass';
+  const dragRotation = dragOffset.x * 0.075;
 
   return (
     <>
@@ -281,15 +284,16 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         style={{
           transform: isTopCard
             ? `translate3d(${dragOffset.x}px, ${dragOffset.y}px, 0px) rotate(${
-                isDragging || isExiting ? dragRotation : tilt.y * 0.5
+                isDragging || isExiting ? dragRotation : tilt.y * 0.4
               }deg) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`
             : undefined,
           transition: isDragging
             ? 'none'
             : isExiting
-            ? 'transform 550ms cubic-bezier(0.16, 1, 0.3, 1), opacity 550ms ease-out'
-            : 'transform 320ms cubic-bezier(0.16, 1, 0.3, 1)',
+            ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
+            : 'transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1)',
           perspective: 1200,
+          willChange: isDragging || isExiting ? 'transform, opacity' : 'auto',
           opacity: isExiting ? 0 : 1,
         }}
         className={`relative select-none w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] ${
@@ -301,16 +305,31 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           <CardDisintegrationOverlay exitType={exitType} onComplete={onExitComplete} />
         )}
 
-        {/* SWIPE STAMP BADGES */}
-        {isSwipingRight && !isExiting && !isFlipped && (
-          <div className="pointer-events-none absolute top-8 left-8 z-40 transform -rotate-12 border-4 border-rose-500 bg-rose-950/90 p-3.5 sm:p-4 rounded-3xl shadow-2xl animate-in zoom-in-75 duration-150">
-            <Heart className="h-8 w-8 sm:h-10 sm:w-10 fill-rose-400 text-rose-400 animate-pulse" />
+        {/* DYNAMIC SMASH STAMP (Smoothly Fades & Scales with Drag) */}
+        {isTopCard && !isExiting && !isFlipped && (
+          <div
+            style={{
+              opacity: dragOffset.x > 15 ? Math.min(1, (dragOffset.x - 15) / 75) : 0,
+              transform: `scale(${0.75 + Math.min(0.35, Math.max(0, dragOffset.x) / 180)}) rotate(-12deg)`,
+              pointerEvents: 'none',
+            }}
+            className="absolute top-6 left-6 z-40 border-4 border-[#ff0055] bg-rose-950/90 p-3 sm:p-4 rounded-3xl shadow-[0_0_35px_rgba(255,0,85,0.8)] backdrop-blur-md transition-all duration-75"
+          >
+            <Heart className="h-8 w-8 sm:h-10 sm:w-10 fill-[#ff0055] text-[#ff0055] animate-pulse" />
           </div>
         )}
 
-        {isSwipingLeft && !isExiting && !isFlipped && (
-          <div className="pointer-events-none absolute top-8 right-8 z-40 transform rotate-12 border-4 border-slate-400 bg-slate-950/90 p-3.5 sm:p-4 rounded-3xl shadow-2xl animate-in zoom-in-75 duration-150">
-            <ThumbsDown className="h-8 w-8 sm:h-10 sm:w-10 text-slate-300" />
+        {/* DYNAMIC PASS STAMP (Smoothly Fades & Scales with Drag) */}
+        {isTopCard && !isExiting && !isFlipped && (
+          <div
+            style={{
+              opacity: dragOffset.x < -15 ? Math.min(1, (-dragOffset.x - 15) / 75) : 0,
+              transform: `scale(${0.75 + Math.min(0.35, Math.max(0, -dragOffset.x) / 180)}) rotate(12deg)`,
+              pointerEvents: 'none',
+            }}
+            className="absolute top-6 right-6 z-40 border-4 border-[#00f5d4] bg-slate-950/90 p-3 sm:p-4 rounded-3xl shadow-[0_0_35px_rgba(0,245,212,0.8)] backdrop-blur-md transition-all duration-75"
+          >
+            <ThumbsDown className="h-8 w-8 sm:h-10 sm:w-10 text-[#00f5d4]" />
           </div>
         )}
 
@@ -332,13 +351,18 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               WebkitBackfaceVisibility: 'hidden',
               pointerEvents: isFlipped ? 'none' : 'auto',
               visibility: isFlipped ? 'hidden' : 'visible',
+              boxShadow: isSmashDrag
+                ? `0 0 ${35 + swipeProgress * 35}px rgba(255, 0, 85, ${0.4 + swipeProgress * 0.5})`
+                : isPassDrag
+                ? `0 0 ${35 + swipeProgress * 35}px rgba(0, 245, 212, ${0.4 + swipeProgress * 0.5})`
+                : '0 0 35px rgba(0, 0, 0, 0.85)',
             }}
-            className={`absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 transition-all duration-300 shadow-2xl flex flex-col justify-between ${
-              isSwipingRight
-                ? 'border-[#ff0055] bg-rose-950/90 shadow-[0_0_55px_rgba(255,0,85,0.7)]'
-                : isSwipingLeft
-                ? 'border-slate-500 bg-slate-950 shadow-[0_0_55px_rgba(15,23,42,0.9)]'
-                : 'border-pink-500/40 bg-slate-950 shadow-[0_0_35px_rgba(0,0,0,0.85)]'
+            className={`absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 transition-colors duration-150 flex flex-col justify-between ${
+              isSmashDrag
+                ? 'border-[#ff0055] bg-rose-950/90'
+                : isPassDrag
+                ? 'border-[#00f5d4] bg-slate-950'
+                : 'border-pink-500/40 bg-slate-950'
             }`}
           >
             {/* Specular gloss reflection */}

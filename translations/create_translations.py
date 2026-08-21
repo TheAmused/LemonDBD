@@ -467,9 +467,11 @@ def load_locale_string_table(file_path: Path) -> Dict[str, str]:
 def resolve_text(
     field_obj: Any,
     locale_dict: Dict[str, str],
-    fallback: str = ""
+    fallback: str = "",
+    en_dict: Optional[Dict[str, str]] = None,
+    text_to_guid: Optional[Dict[str, str]] = None,
 ) -> str:
-    """Resolves localized string from field object containing Key / SourceString."""
+    """Resolves localized string from field object containing Key / SourceString with dynamic reverse fallback."""
     if not field_obj:
         return fallback
 
@@ -478,8 +480,29 @@ def resolve_text(
 
     if isinstance(field_obj, dict):
         key = field_obj.get("Key") or field_obj.get("key")
-        if key and key in locale_dict:
+        if key and key in locale_dict and locale_dict[key]:
             return locale_dict[key]
+
+        # Dynamic reverse text matching if key is missing or not in locale_dict
+        source_str = field_obj.get("SourceString") or field_obj.get("LocalizedString") or ""
+        if text_to_guid and source_str:
+            sk = simplify_name_key(source_str)
+            if sk in text_to_guid:
+                matched_guid = text_to_guid[sk]
+                if matched_guid in locale_dict and locale_dict[matched_guid]:
+                    return locale_dict[matched_guid]
+
+            # Try prefix matching
+            words = source_str.split()
+            if len(words) >= 4:
+                for length in [6, 5, 4, 3]:
+                    prefix = simplify_name_key(" ".join(words[:length]))
+                    if len(prefix) >= 12:
+                        for tk, matched_guid in text_to_guid.items():
+                            if prefix in tk:
+                                if matched_guid in locale_dict and locale_dict[matched_guid]:
+                                    return locale_dict[matched_guid]
+
         return field_obj.get("LocalizedString") or field_obj.get("SourceString") or fallback
 
     return fallback
@@ -691,7 +714,95 @@ SPECIAL_DESCRIPTIONS_OVERRIDE: Dict[str, Dict[str, str]] = {
 }
 
 
+ITEMS_MASTER_GUIDS: Dict[str, Tuple[str, str, str]] = {
+    # Firecrackers
+    "chinesefirecracker": ("16EF07C24D3272AF77AAE086C65B5362", "16EF07C24D3272AF77AAE086C65B5362", "Firecracker"),
+    "thirdyearpartystarter": ("A535F33146FE34C6270026913050240C", "A535F33146FE34C6270026913050240C", "Firecracker"),
+    "winterpartystarter": ("1AC4AF774C25C01AD31C6FBC07FC8E01", "F2438C154F0A4320F6D4088B599692BB", "Firecracker"),
+
+    # Flashlights
+    "flashlight": ("0B5410D64066D5E250CBDEBFE7DC7A6F", "FF61568341FFD3D1900239B736E526B3", "Flashlight"),
+    "sportflashlight": ("A3EB9DFE402FDF983D90BAA8B7E2CE84", "A3EB9DFE402FDF983D90BAA8B7E2CE84", "Flashlight"),
+    "utilityflashlight": ("0FC05EC5473F968097A803ADF11079AF", "0FC05EC5473F968097A803ADF11079AF", "Flashlight"),
+    "anniversaryflashlight": ("527638604D6760809948A8A89A897033", "A9B8C6E542009041B58A298D407D40ED", "Flashlight"),
+    "banquetflashlight": ("B79F756748AC8146E3CE069FD45230EE", "B79F756748AC8146E3CE069FD45230EE", "Flashlight"),
+    "masqueradeflashlight": ("A668DB744EECA90CAAA9E08FE93BA69C", "87816CA146FBC13AB05FEAA6C55997FE", "Flashlight"),
+    "willowisp": ("33F10B984A9BC0248688E5A9C1B3BE28", "8CDBD5A54841B70061E0CE82A3B9B047", "Flashlight"),
+
+    # Fog Vials
+    "apprenticesfogvial": ("7B16C9214023CD8E7CEDB2BF53CF0340", "7B16C9214023CD8E7CEDB2BF53CF0340", "Fog Vial"),
+    "artisansfogvial": ("C2090A504A0859868E862389576F20A2", "DA0BBDBC4871CA40C3A0928935908E6D", "Fog Vial"),
+    "vigosfogvial": ("928B32A94CC5EFDB88D1D98B4D8AF293", "E7523D2844C22153E13715897EE387A8", "Fog Vial"),
+
+    # Keys
+    "brokenkey": ("156551904F16120342AAFE8CB29B1B9B", "7F120EDA45CD2BB4C14CE3817EE0C77F", "Key"),
+    "dullkey": ("8938A6574BEF3FAA8C1806B64AC26B34", "29AD9AF64A107E6AE8C8C4B8765BC106", "Key"),
+    "skeletonkey": ("4C8ADC134429F45FE47256B81F131CE1", "BC1D48774A9BFC01101D4CA5D1D2C8A7", "Key"),
+
+    # Maps
+    "crypticmap": ("2D6CDBC9490140ED52D6C78F833CB48E", "078D8D9F46C319C3815155866F6909CC", "Map"),
+    "scribbledmap": ("58C1C70040DE419FDD97339E24DA3D6D", "E203FFF34B5709FAED9132B11CB35FC5", "Map"),
+    "annotatedmap": ("02CF652B41901AC403273DA7C33A7512", "8D0A018A445145A495C325A69F7063E3", "Map"),
+    "bloodsensemap": ("278618094217179C9F015C9A178BE653", "E3FD9F4D4546420E0C3B38820504DCE0", "Map"),
+
+    # Med-Kits
+    "campingaidkit": ("B6C91DF2484E85B22CE32EA522BC146B", "6951DC284BD56F737590D1BA514E0A2B", "Med-Kit"),
+    "firstaidkit": ("3F5F48EC4A47553FB86B5EB93A9164FF", "5B62868349D2ECE9628EF58F2D39391E", "Med-Kit"),
+    "emergencymedkit": ("8EDC8C80474BE9663CF92CADEDC0FE31", "76CBE38442556C4843319CBB0D530C61", "Med-Kit"),
+    "rangermedkit": ("CE8B97AB4A592E811DBAB18E92A66C52", "86D918D8446DE6B525A628AACF68C004", "Med-Kit"),
+    "allhallowsevelunchbox": ("027011554DA9FBBAE0B2879206F911FE", "027011554DA9FBBAE0B2879206F911FE", "Med-Kit"),
+    "anniversarymedkit": ("1113EC1C461087E197761290B8D280A3", "D35A421041984C0A520CE7BEE303DED9", "Med-Kit"),
+    "banquetmedkit": ("F451E11B41770A62341899AE3218CED8", "F451E11B41770A62341899AE3218CED8", "Med-Kit"),
+    "masquerademedkit": ("5CC3F51640EFEE4128FE88919B7EE742", "A0CA35064F3906BADFAA2EB304F16C96", "Med-Kit"),
+
+    # Toolboxes
+    "wornouttools": ("1D608EED4227F7FCFB48CCACD22458CB", "1909D8A7472ABAE80AE672A48446185B", "Toolbox"),
+    "toolbox": ("0E4E28A3432C6B2AA03C6DA387EEAA87", "FEE27EF644F0E274818D228E6AB9CA22", "Toolbox"),
+    "commodioustoolbox": ("C4B36BB94BFCF4E69A988C8861B3CBAF", "07EDC1F94E8F72D8B04313B607C750D2", "Toolbox"),
+    "mechanicstoolbox": ("30BEC6CD45E85C97C477D58F2E397F38", "058E8AB443E4147320F3909F167400A5", "Toolbox"),
+    "alexstoolbox": ("0C174EDC4CCA0BF88EBD0C9DA71705AA", "1A2A23064982CC6113EFF9B68D252175", "Toolbox"),
+    "engineerstoolbox": ("AB320174429B7F1C2B2077BFAFAAA284", "BC73528E415A5B8A023A80BD84B56F3C", "Toolbox"),
+    "anniversarytoolbox": ("3099EE854EBF0AF30926E3AD02431DDE", "6696CE854DF06CE9C73CA484043C35BB", "Toolbox"),
+    "banquettoolbox": ("880162984F34202C94C0D9BCDA915EF8", "880162984F34202C94C0D9BCDA915EF8", "Toolbox"),
+    "festivetoolbox": ("3B70C0A24CFC2558AC7EC385B871CF25", "3F62E9AA4FA098991D699783B1B64DEB", "Toolbox"),
+    "masqueradetoolbox": ("79E0B50D4CB7A56F6E7AAA8E6FF10C55", "995601FD496CCA65D358DABD73767F43", "Toolbox"),
+
+    # Special / In-Trial Items
+    "antidote": ("445CEAEC453E5927BDC373B924B41A32", "3B2AC27D45C07E8E96717FA4D5192943", "Special"),
+    "bloodcan": ("3D746750440BC4F601F54689D68F380A", "5259E4FE412F91A13172C1AEF0F098B0", "Special"),
+    "candelabra": ("0271CC53474BF83632ACCE8AD3FBA020", "70F2C9D24085F87F56D5E4B96FF3F414", "Special"),
+    "emp": ("6477510741B695E3BC29D1A6204E578F", "4E2D928A490A5EC64013A4973159911D", "Special"),
+    "eyeofvecna": ("6CC3B71A49EA36D3934F40820E5F7171", "485A2C454DE2DC6B1DBD25BACA3D565A", "Special"),
+    "firstaidspray": ("184B79C5435AF684DC1F5D9E6D49CF07", "2E78A67042D006B31231DF91A900625F", "Special"),
+    "flashgrenade": ("450D58B1416B87B417331C90FD102CBE", "26E2F8364C702A1DA0822CA3BA533E58", "Special"),
+    "fogcrystal": ("A946893649566B4BC7C67DBC1BCB07EA", "E00322574C25A4E1FA6C64819DF9DC5C", "Special"),
+    "fragilemirror": ("056F923347345E31F71719ABD8D08D98", "C377D2584368941DC85D3A95C2A328EE", "Special"),
+    "glowingfungus": ("81B47220495BCE824F805A80C654C370", "83019D484EE18C1F9A71148A87D3F03E", "Special"),
+    "handofvecna": ("505CBDA547BDD07DBC3F038127F7ED52", "6CC3B71A49EA36D3934F40820E5F7171", "Special"),
+    "keycard": ("71EDD4534E84CC5A72A0619D25C64418", "24DE997242C68F8A6BA641B43C6C1B00", "Special"),
+    "lamentconfiguration": ("8387F4AC409641BC410654B08D8C76AA", "2E8901DE4F5294D8B9EA5F8233F7233D", "Special"),
+    "lantern": ("0271CC53474BF83632ACCE8AD3FBA020", "A77DB6274D81E9DA2AB5409938689CC5", "Special"),
+    "pocketmirror": ("056F923347345E31F71719ABD8D08D98", "C377D2584368941DC85D3A95C2A328EE", "Special"),
+    "remoteflameturret": ("1A8AE0D24048AC9754D80D9EAE36EBBE", "3A17F51140307A8D60F7B6810EE26E27", "Special"),
+    "searcherspendant": ("8F55711746B357F0F3BA0FB3026DE9F7", "SearchersPendant_Description", "Special"),
+    "vhstape": ("12B0FC7D4E7D3D334C649EA70DED3365", "97A389F24AEB551136913EA7972BA6EA", "Special"),
+    "vaccine": ("36D7B89C4201E76C5B2C59B86847CB74", "837DDEA04BBB3FAF6E9F0DA62BAA13C6", "Special"),
+    "voidcrystal": ("4A198078440ECA6F19401CAC97F2B32C", "00F6061241E35D9703FA6A810DEF6C01", "Special"),
+}
+
+SPECIAL_ITEM_DESCRIPTIONS: Dict[str, Dict[str, str]] = {
+    "Searcher's Pendant": {
+        "en": "An artifact from another place, where dark forces rule. Can be retrieved from chests in the trial.",
+        "pl": "Artefakt z innego wymiaru, gdzie rządzą mroczne siły. Można go zdobyć ze skrzyń w próbie.",
+        "de": "Ein Artefakt von einem anderen Ort, an dem dunkle Mächte herrschen. Kann aus Kisten in der Prüfung geborgen werden.",
+        "es": "Un artefacto de otro lugar donde gobiernan fuerzas oscuras. Se puede obtener de los cofres en la partida.",
+        "ja": "闇の勢力が支配する異界の遺物。試練内のチェストから回収できる。"
+    }
+}
+
+
 def discover_available_locales(translations_dir: Path) -> List[str]:
+
 
     """Finds all available locale JSON files (e.g. en.json, pl.json, fr.json) in the folder."""
     locales = []
@@ -745,6 +856,14 @@ def build_squashed_translations_bundle(
             logger.warning(f"Locale file {loc_file.name} not found; skipping {loc}.")
 
     available_locales = [loc for loc in locales if loc in locale_tables]
+    en_dict = locale_tables.get("en", {})
+
+    # Build reverse lookup by English text to automatically find GUIDs for un-keyed items / addons
+    text_to_guid: Dict[str, str] = {}
+    for k, v in en_dict.items():
+        sk = simplify_name_key(v)
+        if sk and sk not in text_to_guid:
+            text_to_guid[sk] = k
 
     characters_out: Dict[str, Any] = {}
     perks_out: Dict[str, Any] = {}
@@ -764,7 +883,7 @@ def build_squashed_translations_bundle(
             char_lore_field = char_block.get("BackStory") or char_block.get("Biography") or {}
             char_power_block = section_data.get("Power", {})
 
-            canonical_name = resolve_text(char_name_field, locale_tables.get("en", {}), fallback=root_key)
+            canonical_name = resolve_text(char_name_field, en_dict, fallback=root_key, en_dict=en_dict, text_to_guid=text_to_guid)
             if not canonical_name or canonical_name.startswith("SURVIVOR_") or canonical_name.startswith("KILLER_"):
                 # Handle special case where SourceString was internal token
                 loc_string = char_name_field.get("LocalizedString") if isinstance(char_name_field, dict) else None
@@ -772,15 +891,15 @@ def build_squashed_translations_bundle(
 
             char_chapter = section_data.get("Chapter") or section_data.get("ChapterName") or "Base Game"
             if isinstance(char_chapter, dict):
-                char_chapter = resolve_text(char_chapter, locale_tables.get("en", {}), fallback="Base Game")
+                char_chapter = resolve_text(char_chapter, en_dict, fallback="Base Game", en_dict=en_dict, text_to_guid=text_to_guid)
 
             char_translations: Dict[str, Dict[str, str]] = {}
             for loc in available_locales:
                 l_dict = locale_tables[loc]
-                l_name = resolve_text(char_name_field, l_dict, fallback=canonical_name)
-                l_lore = resolve_text(char_lore_field, l_dict, fallback="")
-                p_name = resolve_text(char_power_block.get("DisplayName"), l_dict, fallback="")
-                p_desc = resolve_text(char_power_block.get("Description"), l_dict, fallback="")
+                l_name = resolve_text(char_name_field, l_dict, fallback=canonical_name, en_dict=en_dict, text_to_guid=text_to_guid)
+                l_lore = resolve_text(char_lore_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
+                p_name = resolve_text(char_power_block.get("DisplayName"), l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
+                p_desc = resolve_text(char_power_block.get("Description"), l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
 
                 # Resolve localized chapter name
                 loc_ch = char_chapter
@@ -819,15 +938,15 @@ def build_squashed_translations_bundle(
             for perk in section_data.get("Perks", []):
                 p_name_field = perk.get("DisplayName", {})
                 p_desc_field = perk.get("Description", {})
-                canon_perk_name = resolve_text(p_name_field, locale_tables.get("en", {}), fallback=perk.get("Id", ""))
+                canon_perk_name = resolve_text(p_name_field, en_dict, fallback=perk.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
                 if not canon_perk_name:
                     continue
 
                 perk_translations: Dict[str, Dict[str, str]] = {}
                 for loc in available_locales:
                     l_dict = locale_tables[loc]
-                    l_pname = resolve_text(p_name_field, l_dict, fallback=canon_perk_name)
-                    l_pdesc = resolve_text(p_desc_field, l_dict, fallback="")
+                    l_pname = resolve_text(p_name_field, l_dict, fallback=canon_perk_name, en_dict=en_dict, text_to_guid=text_to_guid)
+                    l_pdesc = resolve_text(p_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
                     perk_translations[loc] = {
                         "name": l_pname,
                         "description": l_pdesc,
@@ -845,15 +964,15 @@ def build_squashed_translations_bundle(
             for addon in char_addons:
                 a_name_field = addon.get("DisplayName", {})
                 a_desc_field = addon.get("Description", {})
-                canon_addon_name = resolve_text(a_name_field, locale_tables.get("en", {}), fallback=addon.get("Id", ""))
+                canon_addon_name = resolve_text(a_name_field, en_dict, fallback=addon.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
                 if not canon_addon_name:
                     continue
 
                 addon_translations: Dict[str, Dict[str, str]] = {}
                 for loc in available_locales:
                     l_dict = locale_tables[loc]
-                    l_aname = resolve_text(a_name_field, l_dict, fallback=canon_addon_name)
-                    l_adesc = resolve_text(a_desc_field, l_dict, fallback="")
+                    l_aname = resolve_text(a_name_field, l_dict, fallback=canon_addon_name, en_dict=en_dict, text_to_guid=text_to_guid)
+                    l_adesc = resolve_text(a_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
                     addon_translations[loc] = {
                         "name": l_aname,
                         "description": l_adesc,
@@ -871,38 +990,43 @@ def build_squashed_translations_bundle(
             for item in section_data:
                 i_name_field = item.get("DisplayName", {})
                 i_desc_field = item.get("Description", {})
-                canon_item_name = resolve_text(i_name_field, locale_tables.get("en", {}), fallback=item.get("Id", ""))
+                canon_item_name = resolve_text(i_name_field, en_dict, fallback=item.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
                 if not canon_item_name:
                     continue
+
+                sk = simplify_name_key(canon_item_name)
+                mapping = ITEMS_MASTER_GUIDS.get(sk)
+
+                name_guid = None
+                desc_guid = None
+                item_cat = item.get("Category", "Survivor")
+                if mapping:
+                    name_guid, desc_guid, item_cat = mapping
 
                 item_translations: Dict[str, Dict[str, str]] = {}
                 for loc in available_locales:
                     l_dict = locale_tables[loc]
-                    l_iname = resolve_text(i_name_field, l_dict, fallback=canon_item_name)
-                    l_idesc = resolve_text(i_desc_field, l_dict, fallback="")
+                    
+                    # 1. Localized name
+                    l_iname = canon_item_name
+                    if name_guid and name_guid in l_dict and l_dict[name_guid]:
+                        l_iname = l_dict[name_guid]
+                    else:
+                        l_iname = resolve_text(i_name_field, l_dict, fallback=canon_item_name, en_dict=en_dict, text_to_guid=text_to_guid)
+
+                    # 2. Localized description
+                    l_idesc = ""
+                    if canon_item_name in SPECIAL_ITEM_DESCRIPTIONS:
+                        l_idesc = SPECIAL_ITEM_DESCRIPTIONS[canon_item_name].get(loc, SPECIAL_ITEM_DESCRIPTIONS[canon_item_name].get("en", ""))
+                    elif desc_guid and desc_guid in l_dict and l_dict[desc_guid]:
+                        l_idesc = l_dict[desc_guid]
+                    else:
+                        l_idesc = resolve_text(i_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
+
                     item_translations[loc] = {
                         "name": l_iname,
                         "description": l_idesc,
                     }
-
-                name_low = canon_item_name.lower().strip()
-                item_cat = item.get("Category", "")
-                if name_low in ["first aid spray", "vaccine", "emp", "remote flame turret", "pocket mirror", "lament configuration", "hand of vecna", "eye of vecna", "flash grenade", "candelabra", "antidote", "keycard", "vhs tape", "void crystal", "glowing fungus", "blood can", "fragile mirror", "searcher's pendant", "fog crystal"]:
-                    item_cat = "Special"
-                elif "med-kit" in name_low or "aid kit" in name_low or "lunchbox" in name_low:
-                    item_cat = "Med-Kit"
-                elif "toolbox" in name_low or "tools" in name_low:
-                    item_cat = "Toolbox"
-                elif "flashlight" in name_low or "wisp" in name_low:
-                    item_cat = "Flashlight"
-                elif "key" in name_low and "keycard" not in name_low:
-                    item_cat = "Key"
-                elif "map" in name_low:
-                    item_cat = "Map"
-                elif "firecracker" in name_low or "party starter" in name_low:
-                    item_cat = "Firecracker"
-                elif "fog vial" in name_low:
-                    item_cat = "Fog Vial"
 
                 items_out[canon_item_name] = {
                     "name": canon_item_name,
@@ -916,15 +1040,15 @@ def build_squashed_translations_bundle(
             for addon in section_data:
                 a_name_field = addon.get("DisplayName", {})
                 a_desc_field = addon.get("Description", {})
-                canon_addon_name = resolve_text(a_name_field, locale_tables.get("en", {}), fallback=addon.get("Id", ""))
+                canon_addon_name = resolve_text(a_name_field, en_dict, fallback=addon.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
                 if not canon_addon_name:
                     continue
 
                 addon_translations = {}
                 for loc in available_locales:
                     l_dict = locale_tables[loc]
-                    l_aname = resolve_text(a_name_field, l_dict, fallback=canon_addon_name)
-                    l_adesc = resolve_text(a_desc_field, l_dict, fallback="")
+                    l_aname = resolve_text(a_name_field, l_dict, fallback=canon_addon_name, en_dict=en_dict, text_to_guid=text_to_guid)
+                    l_adesc = resolve_text(a_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
                     addon_translations[loc] = {
                         "name": l_aname,
                         "description": l_adesc,
@@ -1031,15 +1155,15 @@ def build_squashed_translations_bundle(
             for perk in section_data:
                 p_name_field = perk.get("DisplayName", {})
                 p_desc_field = perk.get("Description", {})
-                canon_perk_name = resolve_text(p_name_field, locale_tables.get("en", {}), fallback=perk.get("Id", ""))
+                canon_perk_name = resolve_text(p_name_field, en_dict, fallback=perk.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
                 if not canon_perk_name:
                     continue
 
                 perk_translations = {}
                 for loc in available_locales:
                     l_dict = locale_tables[loc]
-                    l_pname = resolve_text(p_name_field, l_dict, fallback=canon_perk_name)
-                    l_pdesc = resolve_text(p_desc_field, l_dict, fallback="")
+                    l_pname = resolve_text(p_name_field, l_dict, fallback=canon_perk_name, en_dict=en_dict, text_to_guid=text_to_guid)
+                    l_pdesc = resolve_text(p_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
                     perk_translations[loc] = {
                         "name": l_pname,
                         "description": l_pdesc,

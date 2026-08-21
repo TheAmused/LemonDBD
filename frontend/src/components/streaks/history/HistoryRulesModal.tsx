@@ -69,6 +69,9 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400 italic">
               For the full experience try to play killers in order from the oldest to newest. 🙂
             </p>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              New killers you unlock mid-run won't join this History Streak until you reset it, lose all the way back to zero, or complete it — the roster is locked in for the run you're on. An in-progress run untouched for 90 days automatically counts as a loss.
+            </p>
           </div>
 
           <div>

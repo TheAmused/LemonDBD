@@ -198,6 +198,10 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               resetRun();
             }}
           />
+
+          <p className="mt-2 text-[11px] text-slate-500">
+            An in-progress run untouched for 90 days automatically counts as a loss.
+          </p>
         </div>
       )}
     </div>

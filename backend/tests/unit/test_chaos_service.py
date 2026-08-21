@@ -132,10 +132,9 @@ class TestHellDifficulty(ChaosTestCase):
         self.assertIn("icon_local_path", run["unlocked_perks_detail"][0])
 
     def test_loss_to_zero_refreezes_both_pools(self):
-        self.service.submit_result(self.user_id, self.run["id"], "loss", self.run["owned_killers"][0])
         seed_killer("Huntress")
-        refrozen = self.service.get_or_create_run(self.user_id, self.difficulty)
-        self.assertIn("Huntress", refrozen["owned_killers"])
+        after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss", self.run["owned_killers"][0])
+        self.assertIn("Huntress", after_loss["owned_killers"])
 
     def test_win_advances_streak_and_completes_killer(self):
         updated = self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")

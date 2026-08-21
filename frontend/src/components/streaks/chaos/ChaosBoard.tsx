@@ -45,6 +45,9 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const { pool: perkPool } = useKillerPerkPool();
   const { isAdmin } = useAuth();
 
+  const rosterKillers = run ? run.owned_killers : killers;
+  const rosterPerkPool = run ? run.unlocked_perks_detail : perkPool;
+
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
   const [celebrating, setCelebrating] = useState(false);
@@ -133,12 +136,12 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onOpenReset={() => setConfirmingReset(true)}
         />
 
-        {!isCompleted && killers.length > 0 && (
+        {!isCompleted && rosterKillers.length > 0 && (
           <ChaosProgressBar
             currentStreak={run?.current_streak || 0}
             lastCheckpointStreak={run?.last_checkpoint_streak || 0}
             checkpointInterval={run?.checkpoint_interval || 0}
-            totalKillers={killers.length}
+            totalKillers={rosterKillers.length}
           />
         )}
 
@@ -215,7 +218,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 }`}
               >
                 <KillerPickerGrid
-                  killers={killers}
+                  killers={rosterKillers}
                   completedKillers={run?.completed_killers || []}
                   selectedKillerId={acceptedKillerId ?? selectedKillerId}
                   onSelect={setSelectedKillerId}
@@ -254,7 +257,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         <ChaosPerkPoolModal
           isOpen={isPerkPoolOpen}
           onClose={() => setIsPerkPoolOpen(false)}
-          pool={perkPool}
+          pool={rosterPerkPool}
           usedPerkNames={run?.used_perks || []}
         />
         <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />

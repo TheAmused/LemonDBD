@@ -1,0 +1,2456 @@
+{
+    "roster": {
+        "slug": "gothic_eldritch",
+        "name_i18n_key": "smashOrPass.rosters.gothic_eldritch.name",
+        "description_i18n_key": "smashOrPass.rosters.gothic_eldritch.desc",
+        "cover_image_url": "/static/avatars/killers/the_dark_lord.png",
+        "theme_color": "#a855f7",
+        "category": "Eldritch",
+        "is_nsfw": false,
+        "is_active": true
+    },
+    "translations": {
+        "en": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Fog Canon",
+            "smashOrPass.rosters.canon.desc": "The complete 98-character roster of all official Killers and Survivors.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Island Romance",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendary Skins & Collabs",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Iconic legendary skins and crossover collabs from gaming history.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunk Fog 2077 Edition",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "High-tech neon augmented champions fighting in a dystopian fog.",
+            "smashOrPass.rosters.anime_manga.name": "Fog Anime / Manga Aesthetic",
+            "smashOrPass.rosters.anime_manga.desc": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Victorian & Gothic Eldritch Legends",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Island Romance",
+            "smashOrPass.rosters.hoy.desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
+            "smashOrPass.rosters.legendary.name": "Legendary Skins & Collabs",
+            "smashOrPass.rosters.legendary.desc": "Iconic legendary skins and crossover collabs from gaming history.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunk Fog 2077 Edition",
+            "smashOrPass.rosters.cyberpunk.desc": "High-tech neon augmented champions fighting in a dystopian fog.",
+            "smashOrPass.rosters.anime.name": "Fog Anime / Manga Aesthetic",
+            "smashOrPass.rosters.anime.desc": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
+            "smashOrPass.rosters.gothic.name": "Victorian & Gothic Eldritch Legends",
+            "smashOrPass.rosters.gothic.desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors."
+        },
+        "pl": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Kanon Mgły",
+            "smashOrPass.rosters.canon.desc": "Kompletny zestaw 98 oficjalnych postaci Zabójców i Ocalałych.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Romans na Wyspie",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropikalna edycja symulatora randkowego w plażowych strojach.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendarne Skórki i Kolaboracje",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Kultowe legendarne skórki i crossovery z historii gier wideo.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunkowa Mgła 2077",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle.",
+            "smashOrPass.rosters.anime_manga.name": "Estetyka Anime / Mangi w Mgle",
+            "smashOrPass.rosters.anime_manga.desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Romans na Wyspie",
+            "smashOrPass.rosters.hoy.desc": "Tropikalna edycja symulatora randkowego w plażowych strojach.",
+            "smashOrPass.rosters.legendary.name": "Legendarne Skórki i Kolaboracje",
+            "smashOrPass.rosters.legendary.desc": "Kultowe legendarne skórki i crossovery z historii gier wideo.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunkowa Mgła 2077",
+            "smashOrPass.rosters.cyberpunk.desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle.",
+            "smashOrPass.rosters.anime.name": "Estetyka Anime / Mangi w Mgle",
+            "smashOrPass.rosters.anime.desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły.",
+            "smashOrPass.rosters.gothic.name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+            "smashOrPass.rosters.gothic.desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych."
+        },
+        "es": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Canon de la Niebla",
+            "smashOrPass.rosters.canon.desc": "El elenco completo de 98 personajes de asesinos y supervivientes oficiales.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Romance en la Isla",
+            "smashOrPass.rosters.hooked_on_you.desc": "Edición simulador de citas en un paraíso tropical con trajes de playa.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Skins Legendarias y Colaboraciones",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Edición Niebla Cyberpunk 2077",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica.",
+            "smashOrPass.rosters.anime_manga.name": "Estética Anime y Manga de la Niebla",
+            "smashOrPass.rosters.anime_manga.desc": "Adaptaciones estilizadas en anime de tus personajes favoritos.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Leyendas Góticas y Primigenias Victorianas",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Romance en la Isla",
+            "smashOrPass.rosters.hoy.desc": "Edición simulador de citas en un paraíso tropical con trajes de playa.",
+            "smashOrPass.rosters.legendary.name": "Skins Legendarias y Colaboraciones",
+            "smashOrPass.rosters.legendary.desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos.",
+            "smashOrPass.rosters.cyberpunk.name": "Edición Niebla Cyberpunk 2077",
+            "smashOrPass.rosters.cyberpunk.desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica.",
+            "smashOrPass.rosters.anime.name": "Estética Anime y Manga de la Niebla",
+            "smashOrPass.rosters.anime.desc": "Adaptaciones estilizadas en anime de tus personajes favoritos.",
+            "smashOrPass.rosters.gothic.name": "Leyendas Góticas y Primigenias Victorianas",
+            "smashOrPass.rosters.gothic.desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios."
+        },
+        "de": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Nebel-Kanon",
+            "smashOrPass.rosters.canon.desc": "Die vollständige Liste aller 98 offiziellen Killer und Überlebenden.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Insel-Romanze",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendäre Skins & Kollaborationen",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Ikonische legendäre Skins und Crossover-Kollaborationen.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunk-Nebel 2077 Edition",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel.",
+            "smashOrPass.rosters.anime_manga.name": "Nebel Anime / Manga Ästhetik",
+            "smashOrPass.rosters.anime_manga.desc": "Stilisierte Anime-Adaptionen beliebter Charaktere.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Viktorianische & Gotische Eldritch-Legenden",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Insel-Romanze",
+            "smashOrPass.rosters.hoy.desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes.",
+            "smashOrPass.rosters.legendary.name": "Legendäre Skins & Kollaborationen",
+            "smashOrPass.rosters.legendary.desc": "Ikonische legendäre Skins und Crossover-Kollaborationen.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunk-Nebel 2077 Edition",
+            "smashOrPass.rosters.cyberpunk.desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel.",
+            "smashOrPass.rosters.anime.name": "Nebel Anime / Manga Ästhetik",
+            "smashOrPass.rosters.anime.desc": "Stilisierte Anime-Adaptionen beliebter Charaktere.",
+            "smashOrPass.rosters.gothic.name": "Viktorianische & Gotische Eldritch-Legenden",
+            "smashOrPass.rosters.gothic.desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror."
+        },
+        "ja": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: 霧の正史 (カノン)",
+            "smashOrPass.rosters.canon.desc": "公式の殺人鬼と生存者全98キャラクターの完全ロスター。",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: 狂気の島恋愛シミュレーション",
+            "smashOrPass.rosters.hooked_on_you.desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。",
+            "smashOrPass.rosters.legendary_cosplay.name": "レジェンダリースキン＆コラボ",
+            "smashOrPass.rosters.legendary_cosplay.desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。",
+            "smashOrPass.rosters.cyberpunk_2077.name": "サイバーパンク・フォグ 2077 エディション",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。",
+            "smashOrPass.rosters.anime_manga.name": "フォグ・アニメ / マンガ美学",
+            "smashOrPass.rosters.anime_manga.desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。",
+            "smashOrPass.rosters.gothic_eldritch.name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+            "smashOrPass.rosters.gothic_eldritch.desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: 狂気の島恋愛シミュレーション",
+            "smashOrPass.rosters.hoy.desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。",
+            "smashOrPass.rosters.legendary.name": "レジェンダリースキン＆コラボ",
+            "smashOrPass.rosters.legendary.desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。",
+            "smashOrPass.rosters.cyberpunk.name": "サイバーパンク・フォグ 2077 エディション",
+            "smashOrPass.rosters.cyberpunk.desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。",
+            "smashOrPass.rosters.anime.name": "フォグ・アニメ / マンガ美学",
+            "smashOrPass.rosters.anime.desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。",
+            "smashOrPass.rosters.gothic.name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+            "smashOrPass.rosters.gothic.desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。"
+        }
+    },
+    "entities": [
+        {
+            "slug": "gothic_dracula",
+            "name": "Dracula: Lord of Shadows",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/gothic_dracula.png",
+            "metadata": {
+                "title": "Victorian Sovereign",
+                "tagline": "Crimson velvet cape, grand castle ballrooms, and timeless aristocratic charm.",
+                "bio": "An ancient nobleman who commands wolves, bats, and flame. He will invite you to candlelit waltzes in moonlit castles for eternity.",
+                "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                "green_flags": [
+                    "Immortal romantic passion",
+                    "Majestic castle estate",
+                    "Finest vintage wines"
+                ],
+                "red_flags": [
+                    "Craves human blood",
+                    "Sunlight allergy"
+                ],
+                "greenFlags": [
+                    "Immortal romantic passion",
+                    "Majestic castle estate",
+                    "Finest vintage wines"
+                ],
+                "redFlags": [
+                    "Craves human blood",
+                    "Sunlight allergy"
+                ],
+                "turn_on": "Aristocratic elegance, dark classical music, and passionate loyalty",
+                "turnOn": "Aristocratic elegance, dark classical music, and passionate loyalty",
+                "dealbreaker": "Garlic and silver in the bedroom",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Dracula: Lord of Shadows in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Victorian Sovereign",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Victorian Sovereign",
+                "translations": {
+                    "en": {
+                        "title": "Victorian Sovereign",
+                        "tagline": "Crimson velvet cape, grand castle ballrooms, and timeless aristocratic charm.",
+                        "bio": "An ancient nobleman who commands wolves, bats, and flame. He will invite you to candlelit waltzes in moonlit castles for eternity.",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "Immortal romantic passion",
+                            "Majestic castle estate",
+                            "Finest vintage wines"
+                        ],
+                        "red_flags": [
+                            "Craves human blood",
+                            "Sunlight allergy"
+                        ],
+                        "turn_on": "Aristocratic elegance, dark classical music, and passionate loyalty",
+                        "dealbreaker": "Garlic and silver in the bedroom",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Dracula: Lord of Shadows in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Dracula: Lord of Shadows: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Dracula: Lord of Shadows to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Dracula: Lord of Shadows",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Dracula: Lord of Shadows we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Dracula: Lord of Shadows: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Dracula: Lord of Shadows es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Dracula: Lord of Shadows en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Dracula: Lord of Shadows: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Dracula: Lord of Shadows ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Dracula: Lord of Shadows in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Dracula: Lord of Shadows: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Dracula: Lord of Shadowsはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のDracula: Lord of Shadows – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Victorian Sovereign",
+                        "tagline": "Crimson velvet cape, grand castle ballrooms, and timeless aristocratic charm.",
+                        "bio": "An ancient nobleman who commands wolves, bats, and flame. He will invite you to candlelit waltzes in moonlit castles for eternity.",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "Immortal romantic passion",
+                            "Majestic castle estate",
+                            "Finest vintage wines"
+                        ],
+                        "red_flags": [
+                            "Craves human blood",
+                            "Sunlight allergy"
+                        ],
+                        "turn_on": "Aristocratic elegance, dark classical music, and passionate loyalty",
+                        "dealbreaker": "Garlic and silver in the bedroom",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Dracula: Lord of Shadows in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Dracula: Lord of Shadows: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Dracula: Lord of Shadows to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Dracula: Lord of Shadows we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Dracula: Lord of Shadows: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Dracula: Lord of Shadows es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Dracula: Lord of Shadows en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Dracula: Lord of Shadows: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Dracula: Lord of Shadows ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Dracula: Lord of Shadows in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Dracula: Lord of Shadows: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Dracula: Lord of Shadowsはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"What is a mortal heart, if not a flame longing for eternity?\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のDracula: Lord of Shadows – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "gothic_sable",
+            "name": "Sable: Victorian Mourner",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/gothic_sable.png",
+            "metadata": {
+                "title": "Gothic Cemetery Maiden",
+                "tagline": "Lace corsets, black roses, and Victorian poetry by midnight tombstones.",
+                "bio": "Melancholy, poetic, and utterly mesmerizing. She finds profound beauty in the macabre and will write you dark sonnets in cemetery crypts.",
+                "quote": "\"In darkness, we find the only love that never dies.\"",
+                "green_flags": [
+                    "Profound emotional depth",
+                    "Exquisite vintage gothic style",
+                    "Deeply honest"
+                ],
+                "red_flags": [
+                    "Prefers graveyard dates over dinner",
+                    "Sleeps in antique velvet coffins"
+                ],
+                "greenFlags": [
+                    "Profound emotional depth",
+                    "Exquisite vintage gothic style",
+                    "Deeply honest"
+                ],
+                "redFlags": [
+                    "Prefers graveyard dates over dinner",
+                    "Sleeps in antique velvet coffins"
+                ],
+                "turn_on": "Dark romantic poetry, black roses, and rainstorm walks",
+                "turnOn": "Dark romantic poetry, black roses, and rainstorm walks",
+                "dealbreaker": "Bright neon colors and shallow gossip",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Sable: Victorian Mourner in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Gothic Cemetery Maiden",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "Gothic Cemetery Maiden",
+                "translations": {
+                    "en": {
+                        "title": "Gothic Cemetery Maiden",
+                        "tagline": "Lace corsets, black roses, and Victorian poetry by midnight tombstones.",
+                        "bio": "Melancholy, poetic, and utterly mesmerizing. She finds profound beauty in the macabre and will write you dark sonnets in cemetery crypts.",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "Profound emotional depth",
+                            "Exquisite vintage gothic style",
+                            "Deeply honest"
+                        ],
+                        "red_flags": [
+                            "Prefers graveyard dates over dinner",
+                            "Sleeps in antique velvet coffins"
+                        ],
+                        "turn_on": "Dark romantic poetry, black roses, and rainstorm walks",
+                        "dealbreaker": "Bright neon colors and shallow gossip",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Sable: Victorian Mourner in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Sable: Victorian Mourner: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Sable: Victorian Mourner to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W wiktoriańskim mroku sekrety są cenniejsze niż złoto.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Sable: Victorian Mourner we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Sable: Victorian Mourner: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Sable: Victorian Mourner es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Sable: Victorian Mourner en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Sable: Victorian Mourner: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Sable: Victorian Mourner ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Sable: Victorian Mourner in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Sable: Victorian Mourner: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Sable: Victorian Mournerはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のSable: Victorian Mourner – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Gothic Cemetery Maiden",
+                        "tagline": "Lace corsets, black roses, and Victorian poetry by midnight tombstones.",
+                        "bio": "Melancholy, poetic, and utterly mesmerizing. She finds profound beauty in the macabre and will write you dark sonnets in cemetery crypts.",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "Profound emotional depth",
+                            "Exquisite vintage gothic style",
+                            "Deeply honest"
+                        ],
+                        "red_flags": [
+                            "Prefers graveyard dates over dinner",
+                            "Sleeps in antique velvet coffins"
+                        ],
+                        "turn_on": "Dark romantic poetry, black roses, and rainstorm walks",
+                        "dealbreaker": "Bright neon colors and shallow gossip",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Sable: Victorian Mourner in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Sable: Victorian Mourner: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Sable: Victorian Mourner to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Sable: Victorian Mourner we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Sable: Victorian Mourner: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Sable: Victorian Mourner es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Sable: Victorian Mourner en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Sable: Victorian Mourner: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Sable: Victorian Mourner ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Sable: Victorian Mourner in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Sable: Victorian Mourner: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Sable: Victorian Mournerはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"In darkness, we find the only love that never dies.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のSable: Victorian Mourner – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "bloodborne_huntress",
+            "name": "Huntress: Yharnam Hunter",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/bloodborne_huntress.png",
+            "metadata": {
+                "title": "Beast-Cleaving Huntress",
+                "tagline": "Tricorn hunter hat, heavy bone-cleaver, and stalking the nightmare moon.",
+                "bio": "Stalking the cursed foggy moors, she hunts beasts by blood moonlight and keeps her partner safe from eldritch monstrosities.",
+                "quote": "\"A hunter must hunt... but I will return to you.\"",
+                "green_flags": [
+                    "Unstoppable strength",
+                    "Fiercely affectionate",
+                    "Will fight literal gods for you"
+                ],
+                "red_flags": [
+                    "Bathes in beast blood",
+                    "Eldritch humming in the woods"
+                ],
+                "greenFlags": [
+                    "Unstoppable strength",
+                    "Fiercely affectionate",
+                    "Will fight literal gods for you"
+                ],
+                "redFlags": [
+                    "Bathes in beast blood",
+                    "Eldritch humming in the woods"
+                ],
+                "turn_on": "Fearless bravery and standing firm in the hunt",
+                "turnOn": "Fearless bravery and standing firm in the hunt",
+                "dealbreaker": "Succumbing to the beastly plague",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Huntress: Yharnam Hunter in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Beast-Cleaving Huntress",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Beast-Cleaving Huntress",
+                "translations": {
+                    "en": {
+                        "title": "Beast-Cleaving Huntress",
+                        "tagline": "Tricorn hunter hat, heavy bone-cleaver, and stalking the nightmare moon.",
+                        "bio": "Stalking the cursed foggy moors, she hunts beasts by blood moonlight and keeps her partner safe from eldritch monstrosities.",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "Unstoppable strength",
+                            "Fiercely affectionate",
+                            "Will fight literal gods for you"
+                        ],
+                        "red_flags": [
+                            "Bathes in beast blood",
+                            "Eldritch humming in the woods"
+                        ],
+                        "turn_on": "Fearless bravery and standing firm in the hunt",
+                        "dealbreaker": "Succumbing to the beastly plague",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Huntress: Yharnam Hunter in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Huntress: Yharnam Hunter: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Huntress: Yharnam Hunter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Krew bestii i krew ofiary smakują tak samo o północy.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Huntress: Yharnam Hunter we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Huntress: Yharnam Hunter: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Huntress: Yharnam Hunter es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Huntress: Yharnam Hunter en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Huntress: Yharnam Hunter: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Huntress: Yharnam Hunter ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Huntress: Yharnam Hunter in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Huntress: Yharnam Hunter: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Huntress: Yharnam Hunterはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のHuntress: Yharnam Hunter – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Beast-Cleaving Huntress",
+                        "tagline": "Tricorn hunter hat, heavy bone-cleaver, and stalking the nightmare moon.",
+                        "bio": "Stalking the cursed foggy moors, she hunts beasts by blood moonlight and keeps her partner safe from eldritch monstrosities.",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "Unstoppable strength",
+                            "Fiercely affectionate",
+                            "Will fight literal gods for you"
+                        ],
+                        "red_flags": [
+                            "Bathes in beast blood",
+                            "Eldritch humming in the woods"
+                        ],
+                        "turn_on": "Fearless bravery and standing firm in the hunt",
+                        "dealbreaker": "Succumbing to the beastly plague",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Huntress: Yharnam Hunter in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Huntress: Yharnam Hunter: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Huntress: Yharnam Hunter to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Huntress: Yharnam Hunter we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Huntress: Yharnam Hunter: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Huntress: Yharnam Hunter es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Huntress: Yharnam Hunter en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Huntress: Yharnam Hunter: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Huntress: Yharnam Hunter ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Huntress: Yharnam Hunter in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Huntress: Yharnam Hunter: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Huntress: Yharnam Hunterはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"A hunter must hunt... but I will return to you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のHuntress: Yharnam Hunter – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "dark_fantasy_mikaela",
+            "name": "Mikaela: Grimoire Sorceress",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/dark_fantasy_mikaela.png",
+            "metadata": {
+                "title": "Arcane Scholar",
+                "tagline": "Dark grimoire, blood seal blessings, Gothic witch allure.",
+                "bio": "Deciphering forbidden grimoires by the bonfire light to shield her allies from ancient nightmare deities.",
+                "quote": "\"The ancient seals will keep us safe tonight.\"",
+                "green_flags": [
+                    "Deep occult knowledge",
+                    "Protective ward totems",
+                    "Hauntingly beautiful incantations"
+                ],
+                "red_flags": [
+                    "Summons dark entities during arguments",
+                    "Candle wax all over the floor"
+                ],
+                "greenFlags": [
+                    "Deep occult knowledge",
+                    "Protective ward totems",
+                    "Hauntingly beautiful incantations"
+                ],
+                "redFlags": [
+                    "Summons dark entities during arguments",
+                    "Candle wax all over the floor"
+                ],
+                "turn_on": "Ancient manuscripts, dark tea, and midnight readings",
+                "turnOn": "Ancient manuscripts, dark tea, and midnight readings",
+                "dealbreaker": "Burning historic books",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Mikaela: Grimoire Sorceress in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Arcane Scholar",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "Arcane Scholar",
+                "translations": {
+                    "en": {
+                        "title": "Arcane Scholar",
+                        "tagline": "Dark grimoire, blood seal blessings, Gothic witch allure.",
+                        "bio": "Deciphering forbidden grimoires by the bonfire light to shield her allies from ancient nightmare deities.",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "Deep occult knowledge",
+                            "Protective ward totems",
+                            "Hauntingly beautiful incantations"
+                        ],
+                        "red_flags": [
+                            "Summons dark entities during arguments",
+                            "Candle wax all over the floor"
+                        ],
+                        "turn_on": "Ancient manuscripts, dark tea, and midnight readings",
+                        "dealbreaker": "Burning historic books",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Mikaela: Grimoire Sorceress in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Mikaela: Grimoire Sorceress: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Mikaela: Grimoire Sorceress to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Mikaela: Grimoire Sorceress",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Mikaela: Grimoire Sorceress we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Mikaela: Grimoire Sorceress: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Mikaela: Grimoire Sorceress es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Mikaela: Grimoire Sorceress en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Mikaela: Grimoire Sorceress: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Mikaela: Grimoire Sorceress ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Mikaela: Grimoire Sorceress in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Mikaela: Grimoire Sorceress: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Mikaela: Grimoire Sorceressはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のMikaela: Grimoire Sorceress – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Arcane Scholar",
+                        "tagline": "Dark grimoire, blood seal blessings, Gothic witch allure.",
+                        "bio": "Deciphering forbidden grimoires by the bonfire light to shield her allies from ancient nightmare deities.",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "Deep occult knowledge",
+                            "Protective ward totems",
+                            "Hauntingly beautiful incantations"
+                        ],
+                        "red_flags": [
+                            "Summons dark entities during arguments",
+                            "Candle wax all over the floor"
+                        ],
+                        "turn_on": "Ancient manuscripts, dark tea, and midnight readings",
+                        "dealbreaker": "Burning historic books",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Mikaela: Grimoire Sorceress in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Mikaela: Grimoire Sorceress: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Mikaela: Grimoire Sorceress to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Mikaela: Grimoire Sorceress we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Mikaela: Grimoire Sorceress: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Mikaela: Grimoire Sorceress es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Mikaela: Grimoire Sorceress en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Mikaela: Grimoire Sorceress: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Mikaela: Grimoire Sorceress ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Mikaela: Grimoire Sorceress in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Mikaela: Grimoire Sorceress: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Mikaela: Grimoire Sorceressはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"The ancient seals will keep us safe tonight.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のMikaela: Grimoire Sorceress – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "eldritch_nurse",
+            "name": "Sally: Cosmic Void Maiden",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/eldritch_nurse.png",
+            "metadata": {
+                "title": "Star-Spawn Spectre",
+                "tagline": "Constellation shroud, void blink, cosmic lullabies.",
+                "bio": "A ghostly cosmic being who glides between the stars, weaving the fabric of the universe into gentle melodies.",
+                "quote": "\"We are but stardust in the infinite void.\"",
+                "green_flags": [
+                    "Transcends space and time",
+                    "Ethereal graceful movements",
+                    "Soothes existential dread"
+                ],
+                "red_flags": [
+                    "Occasional cosmic madness",
+                    "Floating through solid matter unexpectedly"
+                ],
+                "greenFlags": [
+                    "Transcends space and time",
+                    "Ethereal graceful movements",
+                    "Soothes existential dread"
+                ],
+                "redFlags": [
+                    "Occasional cosmic madness",
+                    "Floating through solid matter unexpectedly"
+                ],
+                "turn_on": "Astronomy, cosmic infinity, and stargazing",
+                "turnOn": "Astronomy, cosmic infinity, and stargazing",
+                "dealbreaker": "Earthbound narrow-mindedness",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Sally: Cosmic Void Maiden in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Star-Spawn Spectre",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Star-Spawn Spectre",
+                "translations": {
+                    "en": {
+                        "title": "Star-Spawn Spectre",
+                        "tagline": "Constellation shroud, void blink, cosmic lullabies.",
+                        "bio": "A ghostly cosmic being who glides between the stars, weaving the fabric of the universe into gentle melodies.",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "Transcends space and time",
+                            "Ethereal graceful movements",
+                            "Soothes existential dread"
+                        ],
+                        "red_flags": [
+                            "Occasional cosmic madness",
+                            "Floating through solid matter unexpectedly"
+                        ],
+                        "turn_on": "Astronomy, cosmic infinity, and stargazing",
+                        "dealbreaker": "Earthbound narrow-mindedness",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Sally: Cosmic Void Maiden in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Sally: Cosmic Void Maiden: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Sally: Cosmic Void Maiden to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Oddech z kosmicznej próżni przynosi ostateczne ukojenie.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Sally: Cosmic Void Maiden we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Sally: Cosmic Void Maiden: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Sally: Cosmic Void Maiden es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Sally: Cosmic Void Maiden en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Sally: Cosmic Void Maiden: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Sally: Cosmic Void Maiden ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Sally: Cosmic Void Maiden in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Sally: Cosmic Void Maiden: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Sally: Cosmic Void Maidenはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のSally: Cosmic Void Maiden – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Star-Spawn Spectre",
+                        "tagline": "Constellation shroud, void blink, cosmic lullabies.",
+                        "bio": "A ghostly cosmic being who glides between the stars, weaving the fabric of the universe into gentle melodies.",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "Transcends space and time",
+                            "Ethereal graceful movements",
+                            "Soothes existential dread"
+                        ],
+                        "red_flags": [
+                            "Occasional cosmic madness",
+                            "Floating through solid matter unexpectedly"
+                        ],
+                        "turn_on": "Astronomy, cosmic infinity, and stargazing",
+                        "dealbreaker": "Earthbound narrow-mindedness",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Sally: Cosmic Void Maiden in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Sally: Cosmic Void Maiden: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Sally: Cosmic Void Maiden to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Sally: Cosmic Void Maiden we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Sally: Cosmic Void Maiden: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Sally: Cosmic Void Maiden es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Sally: Cosmic Void Maiden en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Sally: Cosmic Void Maiden: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Sally: Cosmic Void Maiden ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Sally: Cosmic Void Maiden in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Sally: Cosmic Void Maiden: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Sally: Cosmic Void Maidenはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"We are but stardust in the infinite void.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のSally: Cosmic Void Maiden – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "plague_priestess",
+            "name": "Adiris: Dynasty High Priestess",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/plague_priestess.png",
+            "metadata": {
+                "title": "Babylonian Sovereign",
+                "tagline": "Golden headdress, swinging censer, ancient sacred devotion.",
+                "bio": "A majestic high priestess dedicated to protecting her people through eternal ritual prayers and sacred incense.",
+                "quote": "\"May the gods look upon our devotion with mercy.\"",
+                "green_flags": [
+                    "Unshakeable spiritual devotion",
+                    "Regal Babylonian elegance",
+                    "Exquisite gold jewelry"
+                ],
+                "red_flags": [
+                    "Censer smoke fills the whole room",
+                    "Vomiting green vile on heretics"
+                ],
+                "greenFlags": [
+                    "Unshakeable spiritual devotion",
+                    "Regal Babylonian elegance",
+                    "Exquisite gold jewelry"
+                ],
+                "redFlags": [
+                    "Censer smoke fills the whole room",
+                    "Vomiting green vile on heretics"
+                ],
+                "turn_on": "Piety, devotion, and sacred hymns",
+                "turnOn": "Piety, devotion, and sacred hymns",
+                "dealbreaker": "Desecrating sacred altars",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Adiris: Dynasty High Priestess in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Babylonian Sovereign",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Babylonian Sovereign",
+                "translations": {
+                    "en": {
+                        "title": "Babylonian Sovereign",
+                        "tagline": "Golden headdress, swinging censer, ancient sacred devotion.",
+                        "bio": "A majestic high priestess dedicated to protecting her people through eternal ritual prayers and sacred incense.",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "Unshakeable spiritual devotion",
+                            "Regal Babylonian elegance",
+                            "Exquisite gold jewelry"
+                        ],
+                        "red_flags": [
+                            "Censer smoke fills the whole room",
+                            "Vomiting green vile on heretics"
+                        ],
+                        "turn_on": "Piety, devotion, and sacred hymns",
+                        "dealbreaker": "Desecrating sacred altars",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Adiris: Dynasty High Priestess in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Adiris: Dynasty High Priestess: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Adiris: Dynasty High Priestess to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Pradawna świątynia pamięta bogów, o których świat zapomniał.”",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Adiris: Dynasty High Priestess we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Adiris: Dynasty High Priestess: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Adiris: Dynasty High Priestess es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Adiris: Dynasty High Priestess en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Adiris: Dynasty High Priestess: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Adiris: Dynasty High Priestess ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Adiris: Dynasty High Priestess in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Adiris: Dynasty High Priestess: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Adiris: Dynasty High Priestessはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のAdiris: Dynasty High Priestess – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Babylonian Sovereign",
+                        "tagline": "Golden headdress, swinging censer, ancient sacred devotion.",
+                        "bio": "A majestic high priestess dedicated to protecting her people through eternal ritual prayers and sacred incense.",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "Unshakeable spiritual devotion",
+                            "Regal Babylonian elegance",
+                            "Exquisite gold jewelry"
+                        ],
+                        "red_flags": [
+                            "Censer smoke fills the whole room",
+                            "Vomiting green vile on heretics"
+                        ],
+                        "turn_on": "Piety, devotion, and sacred hymns",
+                        "dealbreaker": "Desecrating sacred altars",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Adiris: Dynasty High Priestess in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Adiris: Dynasty High Priestess: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Adiris: Dynasty High Priestess to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Adiris: Dynasty High Priestess we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Adiris: Dynasty High Priestess: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Adiris: Dynasty High Priestess es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Adiris: Dynasty High Priestess en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Adiris: Dynasty High Priestess: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Adiris: Dynasty High Priestess ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Adiris: Dynasty High Priestess in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Adiris: Dynasty High Priestess: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Adiris: Dynasty High Priestessはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"May the gods look upon our devotion with mercy.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のAdiris: Dynasty High Priestess – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "raven_artist",
+            "name": "Carmina: Crow Queen",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/raven_artist.png",
+            "metadata": {
+                "title": "Gothic Surrealist Painter",
+                "tagline": "Feather dress, ink-stained hands, flight of dire crows.",
+                "bio": "A brilliant gothic artist whose paintings manifest into reality. She expresses profound grief through soaring crows and ink portraits.",
+                "quote": "\"In black ink, my heart writes to you.\"",
+                "green_flags": [
+                    "Profoundly artistic and emotional",
+                    "Crows deliver handwritten love letters",
+                    "Exquisite aesthetic sense"
+                ],
+                "red_flags": [
+                    "Ink splatters on all furniture",
+                    "Speaks in crow caws when emotional"
+                ],
+                "greenFlags": [
+                    "Profoundly artistic and emotional",
+                    "Crows deliver handwritten love letters",
+                    "Exquisite aesthetic sense"
+                ],
+                "redFlags": [
+                    "Ink splatters on all furniture",
+                    "Speaks in crow caws when emotional"
+                ],
+                "turn_on": "Poetry, surrealism, and tragic romance",
+                "turnOn": "Poetry, surrealism, and tragic romance",
+                "dealbreaker": "Harming birds and destroying art",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Carmina: Crow Queen in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Gothic Surrealist Painter",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Gothic Surrealist Painter",
+                "translations": {
+                    "en": {
+                        "title": "Gothic Surrealist Painter",
+                        "tagline": "Feather dress, ink-stained hands, flight of dire crows.",
+                        "bio": "A brilliant gothic artist whose paintings manifest into reality. She expresses profound grief through soaring crows and ink portraits.",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "Profoundly artistic and emotional",
+                            "Crows deliver handwritten love letters",
+                            "Exquisite aesthetic sense"
+                        ],
+                        "red_flags": [
+                            "Ink splatters on all furniture",
+                            "Speaks in crow caws when emotional"
+                        ],
+                        "turn_on": "Poetry, surrealism, and tragic romance",
+                        "dealbreaker": "Harming birds and destroying art",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Carmina: Crow Queen in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Carmina: Crow Queen: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Carmina: Crow Queen to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Carmina: Crow Queen",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Carmina: Crow Queen we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Carmina: Crow Queen: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Carmina: Crow Queen es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Carmina: Crow Queen en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Carmina: Crow Queen: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Carmina: Crow Queen ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Carmina: Crow Queen in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Carmina: Crow Queen: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Carmina: Crow Queenはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のCarmina: Crow Queen – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Gothic Surrealist Painter",
+                        "tagline": "Feather dress, ink-stained hands, flight of dire crows.",
+                        "bio": "A brilliant gothic artist whose paintings manifest into reality. She expresses profound grief through soaring crows and ink portraits.",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "Profoundly artistic and emotional",
+                            "Crows deliver handwritten love letters",
+                            "Exquisite aesthetic sense"
+                        ],
+                        "red_flags": [
+                            "Ink splatters on all furniture",
+                            "Speaks in crow caws when emotional"
+                        ],
+                        "turn_on": "Poetry, surrealism, and tragic romance",
+                        "dealbreaker": "Harming birds and destroying art",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Carmina: Crow Queen in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Carmina: Crow Queen: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Carmina: Crow Queen to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Carmina: Crow Queen we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Carmina: Crow Queen: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Carmina: Crow Queen es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Carmina: Crow Queen en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Carmina: Crow Queen: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Carmina: Crow Queen ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Carmina: Crow Queen in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Carmina: Crow Queen: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Carmina: Crow Queenはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"In black ink, my heart writes to you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のCarmina: Crow Queen – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "occult_vittorio",
+            "name": "Vittorio: Runemaster",
+            "role": "Survivor",
+            "gender": "male",
+            "media_url": "/static/avatars/survivors/occult_vittorio.png",
+            "metadata": {
+                "title": "Centuries-Old Scholar",
+                "tagline": "Glowing blue runes, medieval parchment, profound ancient wisdom.",
+                "bio": "Having wandered the Fog for centuries, Vittorio holds secrets of ancient kingdoms and will tell you stories of forgotten empires.",
+                "quote": "\"Knowledge is the true light against the dark.\"",
+                "green_flags": [
+                    "Immense historical wisdom",
+                    "Calm and composed in any storm",
+                    "Potential Energy generator master"
+                ],
+                "red_flags": [
+                    "Uses medieval slang",
+                    "Takes 2 hours to explain a simple history fact"
+                ],
+                "greenFlags": [
+                    "Immense historical wisdom",
+                    "Calm and composed in any storm",
+                    "Potential Energy generator master"
+                ],
+                "redFlags": [
+                    "Uses medieval slang",
+                    "Takes 2 hours to explain a simple history fact"
+                ],
+                "turn_on": "Historical philosophy and ancient glyphs",
+                "turnOn": "Historical philosophy and ancient glyphs",
+                "dealbreaker": "Short attention spans",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Vittorio: Runemaster in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Centuries-Old Scholar",
+                    "Survivor",
+                    "male"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "Centuries-Old Scholar",
+                "translations": {
+                    "en": {
+                        "title": "Centuries-Old Scholar",
+                        "tagline": "Glowing blue runes, medieval parchment, profound ancient wisdom.",
+                        "bio": "Having wandered the Fog for centuries, Vittorio holds secrets of ancient kingdoms and will tell you stories of forgotten empires.",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "Immense historical wisdom",
+                            "Calm and composed in any storm",
+                            "Potential Energy generator master"
+                        ],
+                        "red_flags": [
+                            "Uses medieval slang",
+                            "Takes 2 hours to explain a simple history fact"
+                        ],
+                        "turn_on": "Historical philosophy and ancient glyphs",
+                        "dealbreaker": "Short attention spans",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Vittorio: Runemaster in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Vittorio: Runemaster: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Vittorio: Runemaster to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Vittorio: Runemaster",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Vittorio: Runemaster we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Vittorio: Runemaster: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Vittorio: Runemaster es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Vittorio: Runemaster en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Vittorio: Runemaster: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Vittorio: Runemaster ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Vittorio: Runemaster in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Vittorio: Runemaster: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Vittorio: Runemasterはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のVittorio: Runemaster – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Centuries-Old Scholar",
+                        "tagline": "Glowing blue runes, medieval parchment, profound ancient wisdom.",
+                        "bio": "Having wandered the Fog for centuries, Vittorio holds secrets of ancient kingdoms and will tell you stories of forgotten empires.",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "Immense historical wisdom",
+                            "Calm and composed in any storm",
+                            "Potential Energy generator master"
+                        ],
+                        "red_flags": [
+                            "Uses medieval slang",
+                            "Takes 2 hours to explain a simple history fact"
+                        ],
+                        "turn_on": "Historical philosophy and ancient glyphs",
+                        "dealbreaker": "Short attention spans",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Vittorio: Runemaster in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Vittorio: Runemaster: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Vittorio: Runemaster to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Vittorio: Runemaster we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Vittorio: Runemaster: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Vittorio: Runemaster es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Vittorio: Runemaster en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Vittorio: Runemaster: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Vittorio: Runemaster ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Vittorio: Runemaster in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Vittorio: Runemaster: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Vittorio: Runemasterはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Knowledge is the true light against the dark.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のVittorio: Runemaster – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "phantom_wraith",
+            "name": "Philip: Barrow Wight",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/phantom_wraith.png",
+            "metadata": {
+                "title": "Gothic Bell Mourner",
+                "tagline": "Spectral tattered cloak, wailing bell, graveyard mist.",
+                "bio": "A melancholic spirit who chimes his ancient bell across misty Victorian graveyards, searching for warmth.",
+                "quote": "\"The mist conceals my tears.\"",
+                "green_flags": [
+                    "Gentle soul",
+                    "Never makes loud unannounced noises",
+                    "Comfortable in the quiet mist"
+                ],
+                "red_flags": [
+                    "Vanishes without saying goodbye",
+                    "Lingers in cemeteries"
+                ],
+                "greenFlags": [
+                    "Gentle soul",
+                    "Never makes loud unannounced noises",
+                    "Comfortable in the quiet mist"
+                ],
+                "redFlags": [
+                    "Vanishes without saying goodbye",
+                    "Lingers in cemeteries"
+                ],
+                "turn_on": "Soft chimes, shared silence, and rain",
+                "turnOn": "Soft chimes, shared silence, and rain",
+                "dealbreaker": "Loud screeching noises",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Philip: Barrow Wight in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Gothic Bell Mourner",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Gothic Bell Mourner",
+                "translations": {
+                    "en": {
+                        "title": "Gothic Bell Mourner",
+                        "tagline": "Spectral tattered cloak, wailing bell, graveyard mist.",
+                        "bio": "A melancholic spirit who chimes his ancient bell across misty Victorian graveyards, searching for warmth.",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "Gentle soul",
+                            "Never makes loud unannounced noises",
+                            "Comfortable in the quiet mist"
+                        ],
+                        "red_flags": [
+                            "Vanishes without saying goodbye",
+                            "Lingers in cemeteries"
+                        ],
+                        "turn_on": "Soft chimes, shared silence, and rain",
+                        "dealbreaker": "Loud screeching noises",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Philip: Barrow Wight in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Philip: Barrow Wight: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Philip: Barrow Wight to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Philip: Barrow Wight",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Philip: Barrow Wight we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Philip: Barrow Wight: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Philip: Barrow Wight es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Philip: Barrow Wight en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Philip: Barrow Wight: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Philip: Barrow Wight ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Philip: Barrow Wight in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Philip: Barrow Wight: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Philip: Barrow Wightはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のPhilip: Barrow Wight – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Gothic Bell Mourner",
+                        "tagline": "Spectral tattered cloak, wailing bell, graveyard mist.",
+                        "bio": "A melancholic spirit who chimes his ancient bell across misty Victorian graveyards, searching for warmth.",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "Gentle soul",
+                            "Never makes loud unannounced noises",
+                            "Comfortable in the quiet mist"
+                        ],
+                        "red_flags": [
+                            "Vanishes without saying goodbye",
+                            "Lingers in cemeteries"
+                        ],
+                        "turn_on": "Soft chimes, shared silence, and rain",
+                        "dealbreaker": "Loud screeching noises",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Philip: Barrow Wight in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Philip: Barrow Wight: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Philip: Barrow Wight to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Philip: Barrow Wight we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Philip: Barrow Wight: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Philip: Barrow Wight es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Philip: Barrow Wight en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Philip: Barrow Wight: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Philip: Barrow Wight ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Philip: Barrow Wight in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Philip: Barrow Wight: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Philip: Barrow Wightはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"The mist conceals my tears.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のPhilip: Barrow Wight – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "abyssal_dredge",
+            "name": "The Dredge: Eldritch Void",
+            "role": "Killer",
+            "gender": "monster_other",
+            "media_url": "/static/avatars/killers/abyssal_dredge.png",
+            "metadata": {
+                "title": "Amalgamation of Nightfall",
+                "tagline": "Nightfall shroud, thousands of whispering hands, cosmic darkness.",
+                "bio": "The manifestation of collective dread and dark thoughts. Inside the darkness is a being that just wants to envelop you in eternal embrace.",
+                "quote": "*Whispers of the nightfall...*",
+                "green_flags": [
+                    "Turns out all the lights for cozy sleep",
+                    "Locker teleportation master",
+                    "Never leaves you alone"
+                ],
+                "red_flags": [
+                    "Made of a thousand screaming souls",
+                    "Teleports out of your bedroom closet"
+                ],
+                "greenFlags": [
+                    "Turns out all the lights for cozy sleep",
+                    "Locker teleportation master",
+                    "Never leaves you alone"
+                ],
+                "redFlags": [
+                    "Made of a thousand screaming souls",
+                    "Teleports out of your bedroom closet"
+                ],
+                "turn_on": "Deep existential philosophy and total darkness",
+                "turnOn": "Deep existential philosophy and total darkness",
+                "dealbreaker": "Bright floodlights and cheerful pop music",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Dredge: Eldritch Void in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "Amalgamation of Nightfall",
+                    "Killer",
+                    "monster_other"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "Amalgamation of Nightfall",
+                "translations": {
+                    "en": {
+                        "title": "Amalgamation of Nightfall",
+                        "tagline": "Nightfall shroud, thousands of whispering hands, cosmic darkness.",
+                        "bio": "The manifestation of collective dread and dark thoughts. Inside the darkness is a being that just wants to envelop you in eternal embrace.",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "Turns out all the lights for cozy sleep",
+                            "Locker teleportation master",
+                            "Never leaves you alone"
+                        ],
+                        "red_flags": [
+                            "Made of a thousand screaming souls",
+                            "Teleports out of your bedroom closet"
+                        ],
+                        "turn_on": "Deep existential philosophy and total darkness",
+                        "dealbreaker": "Bright floodlights and cheerful pop music",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Dredge: Eldritch Void in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Dredge: Eldritch Void: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Dredge: Eldritch Void to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Dredge: Eldritch Void",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Dredge: Eldritch Void we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Dredge: Eldritch Void: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Dredge: Eldritch Void es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Dredge: Eldritch Void en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Dredge: Eldritch Void: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Dredge: Eldritch Void ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Dredge: Eldritch Void in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Dredge: Eldritch Void: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Dredge: Eldritch Voidはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Dredge: Eldritch Void – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "Amalgamation of Nightfall",
+                        "tagline": "Nightfall shroud, thousands of whispering hands, cosmic darkness.",
+                        "bio": "The manifestation of collective dread and dark thoughts. Inside the darkness is a being that just wants to envelop you in eternal embrace.",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "Turns out all the lights for cozy sleep",
+                            "Locker teleportation master",
+                            "Never leaves you alone"
+                        ],
+                        "red_flags": [
+                            "Made of a thousand screaming souls",
+                            "Teleports out of your bedroom closet"
+                        ],
+                        "turn_on": "Deep existential philosophy and total darkness",
+                        "dealbreaker": "Bright floodlights and cheerful pop music",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Dredge: Eldritch Void in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Dredge: Eldritch Void: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Dredge: Eldritch Void to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Dredge: Eldritch Void we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Dredge: Eldritch Void: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Dredge: Eldritch Void es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Dredge: Eldritch Void en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Dredge: Eldritch Void: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Dredge: Eldritch Void ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Dredge: Eldritch Void in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Dredge: Eldritch Void: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Dredge: Eldritch Voidはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "*Whispers of the nightfall...*",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Dredge: Eldritch Void – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        }
+    ]
+}

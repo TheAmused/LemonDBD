@@ -1,0 +1,2920 @@
+{
+    "roster": {
+        "slug": "legendary_cosplay",
+        "name_i18n_key": "smashOrPass.rosters.legendary_cosplay.name",
+        "description_i18n_key": "smashOrPass.rosters.legendary_cosplay.desc",
+        "cover_image_url": "/static/avatars/killers/baba_yaga.png",
+        "theme_color": "#ffd166",
+        "category": "Collabs",
+        "is_nsfw": false,
+        "is_active": true
+    },
+    "translations": {
+        "en": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Fog Canon",
+            "smashOrPass.rosters.canon.desc": "The complete 98-character roster of all official Killers and Survivors.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Island Romance",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendary Skins & Collabs",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Iconic legendary skins and crossover collabs from gaming history.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunk Fog 2077 Edition",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "High-tech neon augmented champions fighting in a dystopian fog.",
+            "smashOrPass.rosters.anime_manga.name": "Fog Anime / Manga Aesthetic",
+            "smashOrPass.rosters.anime_manga.desc": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Victorian & Gothic Eldritch Legends",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Island Romance",
+            "smashOrPass.rosters.hoy.desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
+            "smashOrPass.rosters.legendary.name": "Legendary Skins & Collabs",
+            "smashOrPass.rosters.legendary.desc": "Iconic legendary skins and crossover collabs from gaming history.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunk Fog 2077 Edition",
+            "smashOrPass.rosters.cyberpunk.desc": "High-tech neon augmented champions fighting in a dystopian fog.",
+            "smashOrPass.rosters.anime.name": "Fog Anime / Manga Aesthetic",
+            "smashOrPass.rosters.anime.desc": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
+            "smashOrPass.rosters.gothic.name": "Victorian & Gothic Eldritch Legends",
+            "smashOrPass.rosters.gothic.desc": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors."
+        },
+        "pl": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Kanon Mgły",
+            "smashOrPass.rosters.canon.desc": "Kompletny zestaw 98 oficjalnych postaci Zabójców i Ocalałych.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Romans na Wyspie",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropikalna edycja symulatora randkowego w plażowych strojach.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendarne Skórki i Kolaboracje",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Kultowe legendarne skórki i crossovery z historii gier wideo.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunkowa Mgła 2077",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle.",
+            "smashOrPass.rosters.anime_manga.name": "Estetyka Anime / Mangi w Mgle",
+            "smashOrPass.rosters.anime_manga.desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Romans na Wyspie",
+            "smashOrPass.rosters.hoy.desc": "Tropikalna edycja symulatora randkowego w plażowych strojach.",
+            "smashOrPass.rosters.legendary.name": "Legendarne Skórki i Kolaboracje",
+            "smashOrPass.rosters.legendary.desc": "Kultowe legendarne skórki i crossovery z historii gier wideo.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunkowa Mgła 2077",
+            "smashOrPass.rosters.cyberpunk.desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle.",
+            "smashOrPass.rosters.anime.name": "Estetyka Anime / Mangi w Mgle",
+            "smashOrPass.rosters.anime.desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły.",
+            "smashOrPass.rosters.gothic.name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
+            "smashOrPass.rosters.gothic.desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych."
+        },
+        "es": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Canon de la Niebla",
+            "smashOrPass.rosters.canon.desc": "El elenco completo de 98 personajes de asesinos y supervivientes oficiales.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Romance en la Isla",
+            "smashOrPass.rosters.hooked_on_you.desc": "Edición simulador de citas en un paraíso tropical con trajes de playa.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Skins Legendarias y Colaboraciones",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Edición Niebla Cyberpunk 2077",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica.",
+            "smashOrPass.rosters.anime_manga.name": "Estética Anime y Manga de la Niebla",
+            "smashOrPass.rosters.anime_manga.desc": "Adaptaciones estilizadas en anime de tus personajes favoritos.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Leyendas Góticas y Primigenias Victorianas",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Romance en la Isla",
+            "smashOrPass.rosters.hoy.desc": "Edición simulador de citas en un paraíso tropical con trajes de playa.",
+            "smashOrPass.rosters.legendary.name": "Skins Legendarias y Colaboraciones",
+            "smashOrPass.rosters.legendary.desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos.",
+            "smashOrPass.rosters.cyberpunk.name": "Edición Niebla Cyberpunk 2077",
+            "smashOrPass.rosters.cyberpunk.desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica.",
+            "smashOrPass.rosters.anime.name": "Estética Anime y Manga de la Niebla",
+            "smashOrPass.rosters.anime.desc": "Adaptaciones estilizadas en anime de tus personajes favoritos.",
+            "smashOrPass.rosters.gothic.name": "Leyendas Góticas y Primigenias Victorianas",
+            "smashOrPass.rosters.gothic.desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios."
+        },
+        "de": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: Nebel-Kanon",
+            "smashOrPass.rosters.canon.desc": "Die vollständige Liste aller 98 offiziellen Killer und Überlebenden.",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: Insel-Romanze",
+            "smashOrPass.rosters.hooked_on_you.desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes.",
+            "smashOrPass.rosters.legendary_cosplay.name": "Legendäre Skins & Kollaborationen",
+            "smashOrPass.rosters.legendary_cosplay.desc": "Ikonische legendäre Skins und Crossover-Kollaborationen.",
+            "smashOrPass.rosters.cyberpunk_2077.name": "Cyberpunk-Nebel 2077 Edition",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel.",
+            "smashOrPass.rosters.anime_manga.name": "Nebel Anime / Manga Ästhetik",
+            "smashOrPass.rosters.anime_manga.desc": "Stilisierte Anime-Adaptionen beliebter Charaktere.",
+            "smashOrPass.rosters.gothic_eldritch.name": "Viktorianische & Gotische Eldritch-Legenden",
+            "smashOrPass.rosters.gothic_eldritch.desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror.",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: Insel-Romanze",
+            "smashOrPass.rosters.hoy.desc": "Tropische Dating-Sim-Edition mit Strand-Outfits und sonnigen Vibes.",
+            "smashOrPass.rosters.legendary.name": "Legendäre Skins & Kollaborationen",
+            "smashOrPass.rosters.legendary.desc": "Ikonische legendäre Skins und Crossover-Kollaborationen.",
+            "smashOrPass.rosters.cyberpunk.name": "Cyberpunk-Nebel 2077 Edition",
+            "smashOrPass.rosters.cyberpunk.desc": "High-Tech Neon-Champions im Kampf durch den dystopischen Nebel.",
+            "smashOrPass.rosters.anime.name": "Nebel Anime / Manga Ästhetik",
+            "smashOrPass.rosters.anime.desc": "Stilisierte Anime-Adaptionen beliebter Charaktere.",
+            "smashOrPass.rosters.gothic.name": "Viktorianische & Gotische Eldritch-Legenden",
+            "smashOrPass.rosters.gothic.desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror."
+        },
+        "ja": {
+            "smashOrPass.rosters.canon.name": "Dead by Daylight: 霧の正史 (カノン)",
+            "smashOrPass.rosters.canon.desc": "公式の殺人鬼と生存者全98キャラクターの完全ロスター。",
+            "smashOrPass.rosters.hooked_on_you.name": "Hooked on You: 狂気の島恋愛シミュレーション",
+            "smashOrPass.rosters.hooked_on_you.desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。",
+            "smashOrPass.rosters.legendary_cosplay.name": "レジェンダリースキン＆コラボ",
+            "smashOrPass.rosters.legendary_cosplay.desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。",
+            "smashOrPass.rosters.cyberpunk_2077.name": "サイバーパンク・フォグ 2077 エディション",
+            "smashOrPass.rosters.cyberpunk_2077.desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。",
+            "smashOrPass.rosters.anime_manga.name": "フォグ・アニメ / マンガ美学",
+            "smashOrPass.rosters.anime_manga.desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。",
+            "smashOrPass.rosters.gothic_eldritch.name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+            "smashOrPass.rosters.gothic_eldritch.desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。",
+            "smashOrPass.rosters.hoy.name": "Hooked on You: 狂気の島恋愛シミュレーション",
+            "smashOrPass.rosters.hoy.desc": "水着と南国の雰囲気漂うトロピカルデートシミュレーション版。",
+            "smashOrPass.rosters.legendary.name": "レジェンダリースキン＆コラボ",
+            "smashOrPass.rosters.legendary.desc": "ゲーム史に輝く象徴的なレジェンダリースキンとクロスオーバーコラボ。",
+            "smashOrPass.rosters.cyberpunk.name": "サイバーパンク・フォグ 2077 エディション",
+            "smashOrPass.rosters.cyberpunk.desc": "ディストピアの霧で戦うハイテク・ネオン強化チャンピオンたち。",
+            "smashOrPass.rosters.anime.name": "フォグ・アニメ / マンガ美学",
+            "smashOrPass.rosters.anime.desc": "大好きなフォグキャラクターたちのスタイリッシュなアニメ版スタイル。",
+            "smashOrPass.rosters.gothic.name": "ヴィクトリアン＆ゴシック・エルドリッチ伝説",
+            "smashOrPass.rosters.gothic.desc": "ダークファンタジー、ブラッドボーン風美学、ヴィクトリア朝の異形ホラー。"
+        }
+    },
+    "entities": [
+        {
+            "slug": "william_birkin",
+            "name": "William Birkin",
+            "role": "Killer",
+            "gender": "monster_other",
+            "media_url": "/static/avatars/killers/william_birkin.png",
+            "metadata": {
+                "title": "The G-Virus Colossus",
+                "tagline": "Massive shoulder eye, unstoppable bio-hazard strength.",
+                "bio": "Driven by scientific ambition and mutated by the G-Virus, Birkin is looking for someone who appreciates complex viral genetics and pipe-swinging workouts.",
+                "quote": "\"G-Virus... is perfection... like you.\"",
+                "green_flags": [
+                    "Endless physical stamina",
+                    "Giant shoulder eye is always watching over you",
+                    "Brilliant scientific mind"
+                ],
+                "red_flags": [
+                    "Mutates when angry",
+                    "Stalks underground sewer labs"
+                ],
+                "greenFlags": [
+                    "Endless physical stamina",
+                    "Giant shoulder eye is always watching over you",
+                    "Brilliant scientific mind"
+                ],
+                "redFlags": [
+                    "Mutates when angry",
+                    "Stalks underground sewer labs"
+                ],
+                "turn_on": "Bio-tech research and genetic compatibility",
+                "turnOn": "Bio-tech research and genetic compatibility",
+                "dealbreaker": "Vaccine distribution and lab inspections",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: William Birkin in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The G-Virus Colossus",
+                    "Killer",
+                    "monster_other"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The G-Virus Colossus",
+                "translations": {
+                    "en": {
+                        "title": "The G-Virus Colossus",
+                        "tagline": "Massive shoulder eye, unstoppable bio-hazard strength.",
+                        "bio": "Driven by scientific ambition and mutated by the G-Virus, Birkin is looking for someone who appreciates complex viral genetics and pipe-swinging workouts.",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "Endless physical stamina",
+                            "Giant shoulder eye is always watching over you",
+                            "Brilliant scientific mind"
+                        ],
+                        "red_flags": [
+                            "Mutates when angry",
+                            "Stalks underground sewer labs"
+                        ],
+                        "turn_on": "Bio-tech research and genetic compatibility",
+                        "dealbreaker": "Vaccine distribution and lab inspections",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: William Birkin in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "William Birkin: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "William Birkin to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – William Birkin",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: William Birkin we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "William Birkin: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "William Birkin es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: William Birkin en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "William Birkin: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "William Birkin ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: William Birkin in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "William Birkin: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "William Birkinはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のWilliam Birkin – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The G-Virus Colossus",
+                        "tagline": "Massive shoulder eye, unstoppable bio-hazard strength.",
+                        "bio": "Driven by scientific ambition and mutated by the G-Virus, Birkin is looking for someone who appreciates complex viral genetics and pipe-swinging workouts.",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "Endless physical stamina",
+                            "Giant shoulder eye is always watching over you",
+                            "Brilliant scientific mind"
+                        ],
+                        "red_flags": [
+                            "Mutates when angry",
+                            "Stalks underground sewer labs"
+                        ],
+                        "turn_on": "Bio-tech research and genetic compatibility",
+                        "dealbreaker": "Vaccine distribution and lab inspections",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: William Birkin in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "William Birkin: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "William Birkin to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: William Birkin we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "William Birkin: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "William Birkin es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: William Birkin en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "William Birkin: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "William Birkin ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: William Birkin in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "William Birkin: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "William Birkinはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"G-Virus... is perfection... like you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のWilliam Birkin – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "hunk",
+            "name": "HUNK (Grim Reaper)",
+            "role": "Killer",
+            "gender": "male",
+            "media_url": "/static/avatars/killers/hunk.png",
+            "metadata": {
+                "title": "The Unstoppable Operative",
+                "tagline": "Gas mask, tactical armor, and never leaves an extraction point.",
+                "bio": "Cold, calculated, and completely mission-focused. He will secure your perimeter, extract you from any danger, and never miss an anniversary mission deadline.",
+                "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                "green_flags": [
+                    "100% mission survival rate",
+                    "Disciplined and calm under pressure",
+                    "Tactical protection"
+                ],
+                "red_flags": [
+                    "Never takes off the gas mask",
+                    "Prioritizes extraction over small talk"
+                ],
+                "greenFlags": [
+                    "100% mission survival rate",
+                    "Disciplined and calm under pressure",
+                    "Tactical protection"
+                ],
+                "redFlags": [
+                    "Never takes off the gas mask",
+                    "Prioritizes extraction over small talk"
+                ],
+                "turn_on": "Precision, efficiency, and surviving against all odds",
+                "turnOn": "Precision, efficiency, and surviving against all odds",
+                "dealbreaker": "Missing the extraction helicopter window",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: HUNK (Grim Reaper) in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Unstoppable Operative",
+                    "Killer",
+                    "male"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Unstoppable Operative",
+                "translations": {
+                    "en": {
+                        "title": "The Unstoppable Operative",
+                        "tagline": "Gas mask, tactical armor, and never leaves an extraction point.",
+                        "bio": "Cold, calculated, and completely mission-focused. He will secure your perimeter, extract you from any danger, and never miss an anniversary mission deadline.",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "100% mission survival rate",
+                            "Disciplined and calm under pressure",
+                            "Tactical protection"
+                        ],
+                        "red_flags": [
+                            "Never takes off the gas mask",
+                            "Prioritizes extraction over small talk"
+                        ],
+                        "turn_on": "Precision, efficiency, and surviving against all odds",
+                        "dealbreaker": "Missing the extraction helicopter window",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: HUNK (Grim Reaper) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "HUNK (Grim Reaper): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "HUNK (Grim Reaper) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – HUNK (Grim Reaper)",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: HUNK (Grim Reaper) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "HUNK (Grim Reaper): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "HUNK (Grim Reaper) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: HUNK (Grim Reaper) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "HUNK (Grim Reaper): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "HUNK (Grim Reaper) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: HUNK (Grim Reaper) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "HUNK (Grim Reaper): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "HUNK (Grim Reaper)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のHUNK (Grim Reaper) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Unstoppable Operative",
+                        "tagline": "Gas mask, tactical armor, and never leaves an extraction point.",
+                        "bio": "Cold, calculated, and completely mission-focused. He will secure your perimeter, extract you from any danger, and never miss an anniversary mission deadline.",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "100% mission survival rate",
+                            "Disciplined and calm under pressure",
+                            "Tactical protection"
+                        ],
+                        "red_flags": [
+                            "Never takes off the gas mask",
+                            "Prioritizes extraction over small talk"
+                        ],
+                        "turn_on": "Precision, efficiency, and surviving against all odds",
+                        "dealbreaker": "Missing the extraction helicopter window",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: HUNK (Grim Reaper) in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "HUNK (Grim Reaper): Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "HUNK (Grim Reaper) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: HUNK (Grim Reaper) we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "HUNK (Grim Reaper): Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "HUNK (Grim Reaper) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: HUNK (Grim Reaper) en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "HUNK (Grim Reaper): Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "HUNK (Grim Reaper) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: HUNK (Grim Reaper) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "HUNK (Grim Reaper): 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "HUNK (Grim Reaper)はエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"This is the Grim Reaper. Extraction coordinates confirmed.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のHUNK (Grim Reaper) – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "james_sunderland",
+            "name": "James Sunderland",
+            "role": "Survivor",
+            "gender": "male",
+            "media_url": "/static/avatars/survivors/james_sunderland.png",
+            "metadata": {
+                "title": "The Silent Hill Wanderer",
+                "tagline": "Green military jacket, searching for letters from lost love.",
+                "bio": "A somber and introspective soul carrying deep emotional weight. He is searching for redemption and genuine affection amidst the foggy streets.",
+                "quote": "\"Could you really be here waiting for me?\"",
+                "green_flags": [
+                    "Deep emotional devotion",
+                    "Will cross dimensions to find you",
+                    "Comfortable with heavy conversations"
+                ],
+                "red_flags": [
+                    "Carries unsettling pillows",
+                    "Attracted to foggy nightmare towns"
+                ],
+                "greenFlags": [
+                    "Deep emotional devotion",
+                    "Will cross dimensions to find you",
+                    "Comfortable with heavy conversations"
+                ],
+                "redFlags": [
+                    "Carries unsettling pillows",
+                    "Attracted to foggy nightmare towns"
+                ],
+                "turn_on": "Handwritten letters, nostalgia, and quiet diner coffee",
+                "turnOn": "Handwritten letters, nostalgia, and quiet diner coffee",
+                "dealbreaker": "Hidden secrets and deception",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: James Sunderland in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Silent Hill Wanderer",
+                    "Survivor",
+                    "male"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "The Silent Hill Wanderer",
+                "translations": {
+                    "en": {
+                        "title": "The Silent Hill Wanderer",
+                        "tagline": "Green military jacket, searching for letters from lost love.",
+                        "bio": "A somber and introspective soul carrying deep emotional weight. He is searching for redemption and genuine affection amidst the foggy streets.",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "Deep emotional devotion",
+                            "Will cross dimensions to find you",
+                            "Comfortable with heavy conversations"
+                        ],
+                        "red_flags": [
+                            "Carries unsettling pillows",
+                            "Attracted to foggy nightmare towns"
+                        ],
+                        "turn_on": "Handwritten letters, nostalgia, and quiet diner coffee",
+                        "dealbreaker": "Hidden secrets and deception",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: James Sunderland in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "James Sunderland: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "James Sunderland to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – James Sunderland",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: James Sunderland we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "James Sunderland: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "James Sunderland es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: James Sunderland en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "James Sunderland: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "James Sunderland ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: James Sunderland in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "James Sunderland: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "James Sunderlandはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のJames Sunderland – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Silent Hill Wanderer",
+                        "tagline": "Green military jacket, searching for letters from lost love.",
+                        "bio": "A somber and introspective soul carrying deep emotional weight. He is searching for redemption and genuine affection amidst the foggy streets.",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "Deep emotional devotion",
+                            "Will cross dimensions to find you",
+                            "Comfortable with heavy conversations"
+                        ],
+                        "red_flags": [
+                            "Carries unsettling pillows",
+                            "Attracted to foggy nightmare towns"
+                        ],
+                        "turn_on": "Handwritten letters, nostalgia, and quiet diner coffee",
+                        "dealbreaker": "Hidden secrets and deception",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: James Sunderland in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "James Sunderland: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "James Sunderland to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: James Sunderland we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "James Sunderland: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "James Sunderland es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: James Sunderland en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "James Sunderland: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "James Sunderland ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: James Sunderland in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "James Sunderland: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "James Sunderlandはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Could you really be here waiting for me?\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のJames Sunderland – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "maria",
+            "name": "Maria",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/maria.png",
+            "metadata": {
+                "title": "The Seductive Enigma",
+                "tagline": "Leopard print, butterfly tattoo, and alluring charm.",
+                "bio": "Playful, alluring, and unapologetically confident. She knows how to keep you captivated with witty banter and captivating smiles in the darkest corridors.",
+                "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                "green_flags": [
+                    "Magnetic charismatic presence",
+                    "Bold fashion statements",
+                    "Never a dull moment"
+                ],
+                "red_flags": [
+                    "Might be a manifestation of your subconscious desires",
+                    "Mood shifts rapidly"
+                ],
+                "greenFlags": [
+                    "Magnetic charismatic presence",
+                    "Bold fashion statements",
+                    "Never a dull moment"
+                ],
+                "redFlags": [
+                    "Might be a manifestation of your subconscious desires",
+                    "Mood shifts rapidly"
+                ],
+                "turn_on": "Romantic devotion, mystery, and confident compliments",
+                "turnOn": "Romantic devotion, mystery, and confident compliments",
+                "dealbreaker": "Being boring and comparing her to your ex",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Maria in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Seductive Enigma",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "The Seductive Enigma",
+                "translations": {
+                    "en": {
+                        "title": "The Seductive Enigma",
+                        "tagline": "Leopard print, butterfly tattoo, and alluring charm.",
+                        "bio": "Playful, alluring, and unapologetically confident. She knows how to keep you captivated with witty banter and captivating smiles in the darkest corridors.",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "Magnetic charismatic presence",
+                            "Bold fashion statements",
+                            "Never a dull moment"
+                        ],
+                        "red_flags": [
+                            "Might be a manifestation of your subconscious desires",
+                            "Mood shifts rapidly"
+                        ],
+                        "turn_on": "Romantic devotion, mystery, and confident compliments",
+                        "dealbreaker": "Being boring and comparing her to your ex",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Maria in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Maria: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Maria to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Maria",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Maria we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Maria: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Maria es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Maria en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Maria: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Maria ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Maria in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Maria: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Mariaはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のMaria – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Seductive Enigma",
+                        "tagline": "Leopard print, butterfly tattoo, and alluring charm.",
+                        "bio": "Playful, alluring, and unapologetically confident. She knows how to keep you captivated with witty banter and captivating smiles in the darkest corridors.",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "Magnetic charismatic presence",
+                            "Bold fashion statements",
+                            "Never a dull moment"
+                        ],
+                        "red_flags": [
+                            "Might be a manifestation of your subconscious desires",
+                            "Mood shifts rapidly"
+                        ],
+                        "turn_on": "Romantic devotion, mystery, and confident compliments",
+                        "dealbreaker": "Being boring and comparing her to your ex",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Maria in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Maria: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Maria to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Maria we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Maria: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Maria es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Maria en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Maria: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Maria ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Maria in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Maria: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Mariaはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"See? I’m real. Don’t you want to hold me?\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のMaria – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "cybil_bennett",
+            "name": "Cybil Bennett",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/cybil_bennett.png",
+            "metadata": {
+                "title": "The Brave Patrol Officer",
+                "tagline": "Motorcycle boots, service revolver, and fierce protective instincts.",
+                "bio": "A tough Brahms police officer who won’t back down from anything. She will ride her motorcycle through blizzards and fog to make sure you get home safe.",
+                "quote": "\"Stay close to me and keep your head down.\"",
+                "green_flags": [
+                    "Fierce protector",
+                    "Great motorcycle road trips",
+                    "Always has your back"
+                ],
+                "red_flags": [
+                    "Workaholic patrol schedule",
+                    "Suspicious of unusual tea mixtures"
+                ],
+                "greenFlags": [
+                    "Fierce protector",
+                    "Great motorcycle road trips",
+                    "Always has your back"
+                ],
+                "redFlags": [
+                    "Workaholic patrol schedule",
+                    "Suspicious of unusual tea mixtures"
+                ],
+                "turn_on": "Courage, honesty, and late-night highway rides",
+                "turnOn": "Courage, honesty, and late-night highway rides",
+                "dealbreaker": "Breaking local traffic safety regulations",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Cybil Bennett in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Brave Patrol Officer",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "The Brave Patrol Officer",
+                "translations": {
+                    "en": {
+                        "title": "The Brave Patrol Officer",
+                        "tagline": "Motorcycle boots, service revolver, and fierce protective instincts.",
+                        "bio": "A tough Brahms police officer who won’t back down from anything. She will ride her motorcycle through blizzards and fog to make sure you get home safe.",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "Fierce protector",
+                            "Great motorcycle road trips",
+                            "Always has your back"
+                        ],
+                        "red_flags": [
+                            "Workaholic patrol schedule",
+                            "Suspicious of unusual tea mixtures"
+                        ],
+                        "turn_on": "Courage, honesty, and late-night highway rides",
+                        "dealbreaker": "Breaking local traffic safety regulations",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Cybil Bennett in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Cybil Bennett: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Cybil Bennett to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Cybil Bennett",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Cybil Bennett we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Cybil Bennett: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Cybil Bennett es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Cybil Bennett en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Cybil Bennett: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Cybil Bennett ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Cybil Bennett in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Cybil Bennett: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Cybil Bennettはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のCybil Bennett – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Brave Patrol Officer",
+                        "tagline": "Motorcycle boots, service revolver, and fierce protective instincts.",
+                        "bio": "A tough Brahms police officer who won’t back down from anything. She will ride her motorcycle through blizzards and fog to make sure you get home safe.",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "Fierce protector",
+                            "Great motorcycle road trips",
+                            "Always has your back"
+                        ],
+                        "red_flags": [
+                            "Workaholic patrol schedule",
+                            "Suspicious of unusual tea mixtures"
+                        ],
+                        "turn_on": "Courage, honesty, and late-night highway rides",
+                        "dealbreaker": "Breaking local traffic safety regulations",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Cybil Bennett in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Cybil Bennett: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Cybil Bennett to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Cybil Bennett we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Cybil Bennett: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Cybil Bennett es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Cybil Bennett en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Cybil Bennett: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Cybil Bennett ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Cybil Bennett in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Cybil Bennett: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Cybil Bennettはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Stay close to me and keep your head down.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のCybil Bennett – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "lisa_garland",
+            "name": "Lisa Garland",
+            "role": "Survivor",
+            "gender": "female",
+            "media_url": "/static/avatars/survivors/lisa_garland.png",
+            "metadata": {
+                "title": "The Compassionate Nurse",
+                "tagline": "Alchemilla hospital uniform, warm bedside manner, and a heart of gold.",
+                "bio": "Gentle and deeply caring, Lisa will nurse any wound and provide a calming presence when the world feels terrifying. She just wants someone to sit with her in the quiet ward.",
+                "quote": "\"Please don’t leave me alone in the dark.\"",
+                "green_flags": [
+                    "Endless tenderness",
+                    "Expert medical care",
+                    "Warm listening ear"
+                ],
+                "red_flags": [
+                    "Cannot leave the hospital grounds",
+                    "Occasionally bleeds from forehead"
+                ],
+                "greenFlags": [
+                    "Endless tenderness",
+                    "Expert medical care",
+                    "Warm listening ear"
+                ],
+                "redFlags": [
+                    "Cannot leave the hospital grounds",
+                    "Occasionally bleeds from forehead"
+                ],
+                "turn_on": "Sincere companionship, gentle touch, and soothing tea",
+                "turnOn": "Sincere companionship, gentle touch, and soothing tea",
+                "dealbreaker": "Cold indifference to suffering",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Lisa Garland in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Compassionate Nurse",
+                    "Survivor",
+                    "female"
+                ],
+                "chaos_score": 50,
+                "danger_level": "Low",
+                "archetype": "The Compassionate Nurse",
+                "translations": {
+                    "en": {
+                        "title": "The Compassionate Nurse",
+                        "tagline": "Alchemilla hospital uniform, warm bedside manner, and a heart of gold.",
+                        "bio": "Gentle and deeply caring, Lisa will nurse any wound and provide a calming presence when the world feels terrifying. She just wants someone to sit with her in the quiet ward.",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "Endless tenderness",
+                            "Expert medical care",
+                            "Warm listening ear"
+                        ],
+                        "red_flags": [
+                            "Cannot leave the hospital grounds",
+                            "Occasionally bleeds from forehead"
+                        ],
+                        "turn_on": "Sincere companionship, gentle touch, and soothing tea",
+                        "dealbreaker": "Cold indifference to suffering",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Lisa Garland in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Lisa Garland: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Lisa Garland to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Lisa Garland",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Lisa Garland we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Lisa Garland: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Lisa Garland es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Lisa Garland en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Lisa Garland: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Lisa Garland ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Lisa Garland in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Lisa Garland: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Lisa Garlandはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のLisa Garland – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Compassionate Nurse",
+                        "tagline": "Alchemilla hospital uniform, warm bedside manner, and a heart of gold.",
+                        "bio": "Gentle and deeply caring, Lisa will nurse any wound and provide a calming presence when the world feels terrifying. She just wants someone to sit with her in the quiet ward.",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "Endless tenderness",
+                            "Expert medical care",
+                            "Warm listening ear"
+                        ],
+                        "red_flags": [
+                            "Cannot leave the hospital grounds",
+                            "Occasionally bleeds from forehead"
+                        ],
+                        "turn_on": "Sincere companionship, gentle touch, and soothing tea",
+                        "dealbreaker": "Cold indifference to suffering",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Lisa Garland in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Lisa Garland: Ocalały we Mgle",
+                        "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+                        "bio": "Lisa Garland to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Lojalność wobec sojuszników"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Lisa Garland we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Lisa Garland: Superviviente en la Niebla",
+                        "tagline": "Buscando escapar de las garras de la Niebla.",
+                        "bio": "Lisa Garland es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Lealtad en momentos críticos"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Lisa Garland en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Lisa Garland: Überlebender im Nebel",
+                        "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+                        "bio": "Lisa Garland ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Treue in brenzligen Situationen"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Lisa Garland in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Lisa Garland: 霧のサバイバー",
+                        "tagline": "霧の試練からの脱出を目指す。",
+                        "bio": "Lisa Garlandはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Please don’t leave me alone in the dark.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "窮地での頼もしさ"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のLisa Garland – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "naughty_bear",
+            "name": "Naughty Bear",
+            "role": "Killer",
+            "gender": "monster_other",
+            "media_url": "/static/avatars/killers/naughty_bear.png",
+            "metadata": {
+                "title": "The Vengeful Teddy",
+                "tagline": "Plush fur, party hat, and loves throwing chaotic celebrations.",
+                "bio": "He was not invited to the party, so he crashed it in style! Underneath all the stuffing is a teddy bear who just wants a best friend to attend his tea parties.",
+                "quote": "\"Nobody ignores Naughty's invitation!\"",
+                "green_flags": [
+                    "Free hugs for life",
+                    "Exciting party games",
+                    "Never sheds fur"
+                ],
+                "red_flags": [
+                    "Extreme grudge holder",
+                    "Aggressive party invitations"
+                ],
+                "greenFlags": [
+                    "Free hugs for life",
+                    "Exciting party games",
+                    "Never sheds fur"
+                ],
+                "redFlags": [
+                    "Extreme grudge holder",
+                    "Aggressive party invitations"
+                ],
+                "turn_on": "Party invitations, cupcakes, and matching plushies",
+                "turnOn": "Party invitations, cupcakes, and matching plushies",
+                "dealbreaker": "Forgetting to RSVP to his birthday party",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Naughty Bear in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Vengeful Teddy",
+                    "Killer",
+                    "monster_other"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Vengeful Teddy",
+                "translations": {
+                    "en": {
+                        "title": "The Vengeful Teddy",
+                        "tagline": "Plush fur, party hat, and loves throwing chaotic celebrations.",
+                        "bio": "He was not invited to the party, so he crashed it in style! Underneath all the stuffing is a teddy bear who just wants a best friend to attend his tea parties.",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "Free hugs for life",
+                            "Exciting party games",
+                            "Never sheds fur"
+                        ],
+                        "red_flags": [
+                            "Extreme grudge holder",
+                            "Aggressive party invitations"
+                        ],
+                        "turn_on": "Party invitations, cupcakes, and matching plushies",
+                        "dealbreaker": "Forgetting to RSVP to his birthday party",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Naughty Bear in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Naughty Bear: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Naughty Bear to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Naughty Bear",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Naughty Bear we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Naughty Bear: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Naughty Bear es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Naughty Bear en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Naughty Bear: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Naughty Bear ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Naughty Bear in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Naughty Bear: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Naughty Bearはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のNaughty Bear – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Vengeful Teddy",
+                        "tagline": "Plush fur, party hat, and loves throwing chaotic celebrations.",
+                        "bio": "He was not invited to the party, so he crashed it in style! Underneath all the stuffing is a teddy bear who just wants a best friend to attend his tea parties.",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "Free hugs for life",
+                            "Exciting party games",
+                            "Never sheds fur"
+                        ],
+                        "red_flags": [
+                            "Extreme grudge holder",
+                            "Aggressive party invitations"
+                        ],
+                        "turn_on": "Party invitations, cupcakes, and matching plushies",
+                        "dealbreaker": "Forgetting to RSVP to his birthday party",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Naughty Bear in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Naughty Bear: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Naughty Bear to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Naughty Bear we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Naughty Bear: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Naughty Bear es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Naughty Bear en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Naughty Bear: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Naughty Bear ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Naughty Bear in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Naughty Bear: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Naughty Bearはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Nobody ignores Naughty's invitation!\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のNaughty Bear – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "baba_yaga",
+            "name": "Baba Yaga",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/baba_yaga.png",
+            "metadata": {
+                "title": "The Slavic Witch",
+                "tagline": "Hut on chicken legs, ancient herbal cauldrons, and folklore wisdom.",
+                "bio": "An ancient sorceress who flies in a mortar and pestle. She will brew you enchanted longevity potions and cook hearty wild mushroom stews.",
+                "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                "green_flags": [
+                    "Rich folklore stories by the hearth",
+                    "Ancient magical protection",
+                    "Unforgettable homemade stews"
+                ],
+                "red_flags": [
+                    "Her house has literal chicken legs and wanders off",
+                    "Picky culinary tastes"
+                ],
+                "greenFlags": [
+                    "Rich folklore stories by the hearth",
+                    "Ancient magical protection",
+                    "Unforgettable homemade stews"
+                ],
+                "redFlags": [
+                    "Her house has literal chicken legs and wanders off",
+                    "Picky culinary tastes"
+                ],
+                "turn_on": "Clever riddles, magical herbs, and ancient wisdom",
+                "turnOn": "Clever riddles, magical herbs, and ancient wisdom",
+                "dealbreaker": "Lying to an elder witch",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Baba Yaga in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Slavic Witch",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Slavic Witch",
+                "translations": {
+                    "en": {
+                        "title": "The Slavic Witch",
+                        "tagline": "Hut on chicken legs, ancient herbal cauldrons, and folklore wisdom.",
+                        "bio": "An ancient sorceress who flies in a mortar and pestle. She will brew you enchanted longevity potions and cook hearty wild mushroom stews.",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "Rich folklore stories by the hearth",
+                            "Ancient magical protection",
+                            "Unforgettable homemade stews"
+                        ],
+                        "red_flags": [
+                            "Her house has literal chicken legs and wanders off",
+                            "Picky culinary tastes"
+                        ],
+                        "turn_on": "Clever riddles, magical herbs, and ancient wisdom",
+                        "dealbreaker": "Lying to an elder witch",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Baba Yaga in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Baba Yaga: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Baba Yaga to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Baba Yaga",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Baba Yaga we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Baba Yaga: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Baba Yaga es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Baba Yaga en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Baba Yaga: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Baba Yaga ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Baba Yaga in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Baba Yaga: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Baba Yagaはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のBaba Yaga – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Slavic Witch",
+                        "tagline": "Hut on chicken legs, ancient herbal cauldrons, and folklore wisdom.",
+                        "bio": "An ancient sorceress who flies in a mortar and pestle. She will brew you enchanted longevity potions and cook hearty wild mushroom stews.",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "Rich folklore stories by the hearth",
+                            "Ancient magical protection",
+                            "Unforgettable homemade stews"
+                        ],
+                        "red_flags": [
+                            "Her house has literal chicken legs and wanders off",
+                            "Picky culinary tastes"
+                        ],
+                        "turn_on": "Clever riddles, magical herbs, and ancient wisdom",
+                        "dealbreaker": "Lying to an elder witch",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Baba Yaga in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Baba Yaga: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Baba Yaga to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Baba Yaga we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Baba Yaga: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Baba Yaga es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Baba Yaga en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Baba Yaga: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Baba Yaga ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Baba Yaga in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Baba Yaga: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Baba Yagaはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"Solve my riddle, and my hearth is yours.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のBaba Yaga – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "the_look_see",
+            "name": "The Look-See",
+            "role": "Killer",
+            "gender": "monster_other",
+            "media_url": "/static/avatars/killers/the_look_see.png",
+            "metadata": {
+                "title": "The Crypt TV Spectre",
+                "tagline": "Tailored suit, wide toothy grin, and helps you let go of grief.",
+                "bio": "Dapper and sharply dressed, the Look-See teaches people to release the burdens of their past. He will take you on elegant night walks through the rain.",
+                "quote": "\"If you can't release it, I will take a piece of you.\"",
+                "green_flags": [
+                    "Exceptionally well-dressed in tailored suits",
+                    "Always smiling",
+                    "Helps you declutter emotional baggage"
+                ],
+                "red_flags": [
+                    "Takes things if you cannot release them",
+                    "Never blinks"
+                ],
+                "greenFlags": [
+                    "Exceptionally well-dressed in tailored suits",
+                    "Always smiling",
+                    "Helps you declutter emotional baggage"
+                ],
+                "redFlags": [
+                    "Takes things if you cannot release them",
+                    "Never blinks"
+                ],
+                "turn_on": "Emotional maturity, moving forward in life, and fine tailoring",
+                "turnOn": "Emotional maturity, moving forward in life, and fine tailoring",
+                "dealbreaker": "Clinging to unhealthy past attachments",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Look-See in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Crypt TV Spectre",
+                    "Killer",
+                    "monster_other"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Crypt TV Spectre",
+                "translations": {
+                    "en": {
+                        "title": "The Crypt TV Spectre",
+                        "tagline": "Tailored suit, wide toothy grin, and helps you let go of grief.",
+                        "bio": "Dapper and sharply dressed, the Look-See teaches people to release the burdens of their past. He will take you on elegant night walks through the rain.",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "Exceptionally well-dressed in tailored suits",
+                            "Always smiling",
+                            "Helps you declutter emotional baggage"
+                        ],
+                        "red_flags": [
+                            "Takes things if you cannot release them",
+                            "Never blinks"
+                        ],
+                        "turn_on": "Emotional maturity, moving forward in life, and fine tailoring",
+                        "dealbreaker": "Clinging to unhealthy past attachments",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Look-See in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Look-See: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Look-See to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Look-See",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Look-See we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Look-See: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Look-See es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Look-See en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Look-See: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Look-See ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Look-See in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Look-See: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Look-Seeはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Look-See – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Crypt TV Spectre",
+                        "tagline": "Tailored suit, wide toothy grin, and helps you let go of grief.",
+                        "bio": "Dapper and sharply dressed, the Look-See teaches people to release the burdens of their past. He will take you on elegant night walks through the rain.",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "Exceptionally well-dressed in tailored suits",
+                            "Always smiling",
+                            "Helps you declutter emotional baggage"
+                        ],
+                        "red_flags": [
+                            "Takes things if you cannot release them",
+                            "Never blinks"
+                        ],
+                        "turn_on": "Emotional maturity, moving forward in life, and fine tailoring",
+                        "dealbreaker": "Clinging to unhealthy past attachments",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Look-See in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Look-See: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Look-See to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Look-See we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Look-See: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Look-See es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Look-See en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Look-See: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Look-See ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Look-See in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Look-See: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Look-Seeはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"If you can't release it, I will take a piece of you.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Look-See – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "minotaur",
+            "name": "The Minotaur",
+            "role": "Killer",
+            "gender": "monster_other",
+            "media_url": "/static/avatars/killers/minotaur.png",
+            "metadata": {
+                "title": "The Labyrinth Champion",
+                "tagline": "Towering horns, ancient bronze armor, and unstoppable labyrinth guide.",
+                "bio": "He knows every corner of the maze and will navigate you through any difficult trial in life. Built like a fortress, he will protect your heart with ancient power.",
+                "quote": "\"I will guide you through the darkest maze.\"",
+                "green_flags": [
+                    "Never gets lost in IKEA or mazes",
+                    "Imposing physical presence",
+                    "Loyal ancient warrior"
+                ],
+                "red_flags": [
+                    "Charges through walls when angry",
+                    "Requires huge amounts of food"
+                ],
+                "greenFlags": [
+                    "Never gets lost in IKEA or mazes",
+                    "Imposing physical presence",
+                    "Loyal ancient warrior"
+                ],
+                "redFlags": [
+                    "Charges through walls when angry",
+                    "Requires huge amounts of food"
+                ],
+                "turn_on": "Labyrinth puzzles, strength, and honoring ancient codes",
+                "turnOn": "Labyrinth puzzles, strength, and honoring ancient codes",
+                "dealbreaker": "Leaving red thread clues in his maze",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: The Minotaur in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Labyrinth Champion",
+                    "Killer",
+                    "monster_other"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Labyrinth Champion",
+                "translations": {
+                    "en": {
+                        "title": "The Labyrinth Champion",
+                        "tagline": "Towering horns, ancient bronze armor, and unstoppable labyrinth guide.",
+                        "bio": "He knows every corner of the maze and will navigate you through any difficult trial in life. Built like a fortress, he will protect your heart with ancient power.",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "Never gets lost in IKEA or mazes",
+                            "Imposing physical presence",
+                            "Loyal ancient warrior"
+                        ],
+                        "red_flags": [
+                            "Charges through walls when angry",
+                            "Requires huge amounts of food"
+                        ],
+                        "turn_on": "Labyrinth puzzles, strength, and honoring ancient codes",
+                        "dealbreaker": "Leaving red thread clues in his maze",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Minotaur in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Minotaur: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Minotaur to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Minotaur",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Minotaur we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Minotaur: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Minotaur es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Minotaur en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Minotaur: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Minotaur ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Minotaur in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Minotaur: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Minotaurはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Minotaur – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Labyrinth Champion",
+                        "tagline": "Towering horns, ancient bronze armor, and unstoppable labyrinth guide.",
+                        "bio": "He knows every corner of the maze and will navigate you through any difficult trial in life. Built like a fortress, he will protect your heart with ancient power.",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "Never gets lost in IKEA or mazes",
+                            "Imposing physical presence",
+                            "Loyal ancient warrior"
+                        ],
+                        "red_flags": [
+                            "Charges through walls when angry",
+                            "Requires huge amounts of food"
+                        ],
+                        "turn_on": "Labyrinth puzzles, strength, and honoring ancient codes",
+                        "dealbreaker": "Leaving red thread clues in his maze",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: The Minotaur in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "The Minotaur: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "The Minotaur to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: The Minotaur we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "The Minotaur: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "The Minotaur es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: The Minotaur en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "The Minotaur: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "The Minotaur ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: The Minotaur in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "The Minotaur: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "The Minotaurはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"I will guide you through the darkest maze.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のThe Minotaur – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "tiffany_valentine",
+            "name": "Tiffany Valentine",
+            "role": "Killer",
+            "gender": "female",
+            "media_url": "/static/avatars/killers/tiffany_valentine.png",
+            "metadata": {
+                "title": "The Blonde Doll of Mayhem",
+                "tagline": "Leather jacket, bridal veil, and loves candlelit crime sprees.",
+                "bio": "Glamorous, passionate, and hopelessly romantic. She believes in true love that lasts beyond mortality, and she will bake you Swedish meatballs while rocking out to 80s glam rock.",
+                "quote": "\"You're the only one I want to kill with forever.\"",
+                "green_flags": [
+                    "Ride-or-die romantic partner",
+                    "Great cook",
+                    "Flawless rock-and-roll style"
+                ],
+                "red_flags": [
+                    "Possessed doll anatomy",
+                    "Enjoys arson on romantic dates"
+                ],
+                "greenFlags": [
+                    "Ride-or-die romantic partner",
+                    "Great cook",
+                    "Flawless rock-and-roll style"
+                ],
+                "redFlags": [
+                    "Possessed doll anatomy",
+                    "Enjoys arson on romantic dates"
+                ],
+                "turn_on": "Leather jackets, devotion, and a wicked sense of humor",
+                "turnOn": "Leather jackets, devotion, and a wicked sense of humor",
+                "dealbreaker": "Cheating on her or disrespecting Swedish meatballs",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Tiffany Valentine in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Blonde Doll of Mayhem",
+                    "Killer",
+                    "female"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Blonde Doll of Mayhem",
+                "translations": {
+                    "en": {
+                        "title": "The Blonde Doll of Mayhem",
+                        "tagline": "Leather jacket, bridal veil, and loves candlelit crime sprees.",
+                        "bio": "Glamorous, passionate, and hopelessly romantic. She believes in true love that lasts beyond mortality, and she will bake you Swedish meatballs while rocking out to 80s glam rock.",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "Ride-or-die romantic partner",
+                            "Great cook",
+                            "Flawless rock-and-roll style"
+                        ],
+                        "red_flags": [
+                            "Possessed doll anatomy",
+                            "Enjoys arson on romantic dates"
+                        ],
+                        "turn_on": "Leather jackets, devotion, and a wicked sense of humor",
+                        "dealbreaker": "Cheating on her or disrespecting Swedish meatballs",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Tiffany Valentine in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Tiffany Valentine: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Tiffany Valentine to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Tiffany Valentine",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Tiffany Valentine we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Tiffany Valentine: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Tiffany Valentine es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Tiffany Valentine en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Tiffany Valentine: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Tiffany Valentine ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Tiffany Valentine in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Tiffany Valentine: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Tiffany Valentineはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のTiffany Valentine – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Blonde Doll of Mayhem",
+                        "tagline": "Leather jacket, bridal veil, and loves candlelit crime sprees.",
+                        "bio": "Glamorous, passionate, and hopelessly romantic. She believes in true love that lasts beyond mortality, and she will bake you Swedish meatballs while rocking out to 80s glam rock.",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "Ride-or-die romantic partner",
+                            "Great cook",
+                            "Flawless rock-and-roll style"
+                        ],
+                        "red_flags": [
+                            "Possessed doll anatomy",
+                            "Enjoys arson on romantic dates"
+                        ],
+                        "turn_on": "Leather jackets, devotion, and a wicked sense of humor",
+                        "dealbreaker": "Cheating on her or disrespecting Swedish meatballs",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Tiffany Valentine in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Tiffany Valentine: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Tiffany Valentine to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Tiffany Valentine we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Tiffany Valentine: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Tiffany Valentine es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Tiffany Valentine en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Tiffany Valentine: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Tiffany Valentine ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Tiffany Valentine in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Tiffany Valentine: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Tiffany Valentineはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "\"You're the only one I want to kill with forever.\"",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のTiffany Valentine – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        },
+        {
+            "slug": "chatterer",
+            "name": "Chatterer Cenobite",
+            "role": "Killer",
+            "gender": "monster_other",
+            "media_url": "/static/avatars/killers/chatterer.png",
+            "metadata": {
+                "title": "The Rhythmic Cenobite",
+                "tagline": "Chattering teeth, leather vestments, and cosmic sensations.",
+                "bio": "A member of the Order of the Gash who communicates through percussive teeth chattering. He experiences sensations on planes ordinary mortals could never fathom.",
+                "quote": "*Click-clack-click-clack...*",
+                "green_flags": [
+                    "Never complains out loud",
+                    "High tolerance for pain and cold",
+                    "Master of the puzzle box"
+                ],
+                "red_flags": [
+                    "Constant rhythmic teeth clicking",
+                    "Hook-based home decor"
+                ],
+                "greenFlags": [
+                    "Never complains out loud",
+                    "High tolerance for pain and cold",
+                    "Master of the puzzle box"
+                ],
+                "redFlags": [
+                    "Constant rhythmic teeth clicking",
+                    "Hook-based home decor"
+                ],
+                "turn_on": "Solving the Lament Configuration and profound sensory experiences",
+                "turnOn": "Solving the Lament Configuration and profound sensory experiences",
+                "dealbreaker": "Muffled conversations and earplugs",
+                "dating_vibe": "High-stakes Fog romance",
+                "datingVibe": "High-stakes Fog romance",
+                "meme": "Meme: Chatterer Cenobite in the trials - always bringing chaos and unhinged energy to the campfire.",
+                "chapter": "",
+                "compatibility_tags": [
+                    "The Rhythmic Cenobite",
+                    "Killer",
+                    "monster_other"
+                ],
+                "chaos_score": 75,
+                "danger_level": "High",
+                "archetype": "The Rhythmic Cenobite",
+                "translations": {
+                    "en": {
+                        "title": "The Rhythmic Cenobite",
+                        "tagline": "Chattering teeth, leather vestments, and cosmic sensations.",
+                        "bio": "A member of the Order of the Gash who communicates through percussive teeth chattering. He experiences sensations on planes ordinary mortals could never fathom.",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "Never complains out loud",
+                            "High tolerance for pain and cold",
+                            "Master of the puzzle box"
+                        ],
+                        "red_flags": [
+                            "Constant rhythmic teeth clicking",
+                            "Hook-based home decor"
+                        ],
+                        "turn_on": "Solving the Lament Configuration and profound sensory experiences",
+                        "dealbreaker": "Muffled conversations and earplugs",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Chatterer Cenobite in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Chatterer Cenobite: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Chatterer Cenobite to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Chatterer Cenobite",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Chatterer Cenobite we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Chatterer Cenobite: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Chatterer Cenobite es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Chatterer Cenobite en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Chatterer Cenobite: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Chatterer Cenobite ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Chatterer Cenobite in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Chatterer Cenobite: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Chatterer Cenobiteはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のChatterer Cenobite – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                },
+                "i18n": {
+                    "en": {
+                        "title": "The Rhythmic Cenobite",
+                        "tagline": "Chattering teeth, leather vestments, and cosmic sensations.",
+                        "bio": "A member of the Order of the Gash who communicates through percussive teeth chattering. He experiences sensations on planes ordinary mortals could never fathom.",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "Never complains out loud",
+                            "High tolerance for pain and cold",
+                            "Master of the puzzle box"
+                        ],
+                        "red_flags": [
+                            "Constant rhythmic teeth clicking",
+                            "Hook-based home decor"
+                        ],
+                        "turn_on": "Solving the Lament Configuration and profound sensory experiences",
+                        "dealbreaker": "Muffled conversations and earplugs",
+                        "dating_vibe": "High-stakes Fog romance",
+                        "meme": "Meme: Chatterer Cenobite in the trials - always bringing chaos and unhinged energy to the campfire."
+                    },
+                    "pl": {
+                        "title": "Chatterer Cenobite: Zabójca we Mgle",
+                        "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+                        "bio": "Chatterer Cenobite to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "Niezłomna determinacja w próbie",
+                            "Zabójcza skuteczność"
+                        ],
+                        "red_flags": [
+                            "Nieprzewidywalność we mgle",
+                            "Skupienie na własnych celach"
+                        ],
+                        "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+                        "dealbreaker": "Zdrada i brak szacunku",
+                        "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+                        "meme": "Meme: Chatterer Cenobite we Mgle – 100% adrenaliny i zero litości przy generatorach."
+                    },
+                    "es": {
+                        "title": "Chatterer Cenobite: Asesino en la Niebla",
+                        "tagline": "Acechando presas en el reino del Ente.",
+                        "bio": "Chatterer Cenobite es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "Determinación inquebrantable",
+                            "Eficacia letal"
+                        ],
+                        "red_flags": [
+                            "Impredecible en la niebla",
+                            "Obsesión con los objetivos"
+                        ],
+                        "turn_on": "Valentía y elegancia bajo presión",
+                        "dealbreaker": "La traición y la cobardía",
+                        "dating_vibe": "Romance intenso y peligroso en la Niebla",
+                        "meme": "Meme: Chatterer Cenobite en la partida – pura adrenalina y caos en los motores."
+                    },
+                    "de": {
+                        "title": "Chatterer Cenobite: Killer im Nebel",
+                        "tagline": "Auf der Jagd im Reich des Wesens.",
+                        "bio": "Chatterer Cenobite ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "Unbeugsame Entschlossenheit",
+                            "Tödliche Präzision"
+                        ],
+                        "red_flags": [
+                            "Unberechenbar im Nebel",
+                            "Fokus auf eigene Ziele"
+                        ],
+                        "turn_on": "Mut und Standhaftigkeit unter Druck",
+                        "dealbreaker": "Verrat und Feigheit",
+                        "dating_vibe": "Spannende, düstere Romanze im Nebel",
+                        "meme": "Meme: Chatterer Cenobite in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer."
+                    },
+                    "ja": {
+                        "title": "Chatterer Cenobite: 霧のキラー",
+                        "tagline": "エンティティの領域で獲物を狩る。",
+                        "bio": "Chatterer Cenobiteはエンティティの試練において際立った存在感を放つキャラクターです。",
+                        "quote": "*Click-clack-click-clack...*",
+                        "green_flags": [
+                            "試練での高い集中力",
+                            "圧倒的な攻撃力"
+                        ],
+                        "red_flags": [
+                            "霧の中での予測不能さ",
+                            "単独行動しがち"
+                        ],
+                        "turn_on": "極限状態での勇気と冷静さ",
+                        "dealbreaker": "裏切りと逃走",
+                        "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+                        "meme": "ミーム: 試練のChatterer Cenobite – 発電機とチェイスで常に戦場をかき乱す。"
+                    }
+                }
+            }
+        }
+    ]
+}

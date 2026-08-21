@@ -396,15 +396,13 @@ test('SmashOrPass: Multi-Locale i18n Key Synchronization', async (t) => {
   });
 });
 
-test('SmashOrPass: Visual FX, Tactile Keycaps & Chaos Metrics Modules', async (t) => {
-  await t.test('TactileKeycaps and ChaosMetricsDisplay modules can be imported and are valid functions', async () => {
+test('SmashOrPass: Visual FX and Tactile Keycaps Modules', async (t) => {
+  await t.test('TactileKeycaps, SmashAnimations, and CardDisintegrationOverlay modules can be imported and are valid functions', async () => {
     const { TactileKeycaps } = await import('../../components/smash-or-pass/TactileKeycaps');
-    const { ChaosMetricsDisplay } = await import('../../components/smash-or-pass/ChaosMetricsDisplay');
     const { SmashAnimations } = await import('../../components/smash-or-pass/SmashAnimations');
     const { CardDisintegrationOverlay } = await import('../../components/smash-or-pass/CardDisintegrationOverlay');
 
     assert.strictEqual(typeof TactileKeycaps, 'function', 'TactileKeycaps must be a function component');
-    assert.strictEqual(typeof ChaosMetricsDisplay, 'function', 'ChaosMetricsDisplay must be a function component');
     assert.strictEqual(typeof SmashAnimations, 'function', 'SmashAnimations must be a function component');
     assert.strictEqual(typeof CardDisintegrationOverlay, 'function', 'CardDisintegrationOverlay must be a function component');
   });

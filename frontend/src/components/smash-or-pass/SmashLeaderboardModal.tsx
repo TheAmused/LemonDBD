@@ -5,6 +5,7 @@ import React, { useState, useMemo } from 'react';
 import {
   Trophy,
   Heart,
+  ThumbsDown,
   Skull,
   Shield,
   Search,
@@ -12,15 +13,11 @@ import {
   X,
   Flame,
   Sparkles,
-  Zap,
-  Activity,
   Layers,
   Info,
-  Filter,
 } from 'lucide-react';
 import { CharacterRosterItem } from './characterRoster';
 import { getLocalizedCharacterRoster } from './rosterTranslations';
-import { DangerLevelType } from './ChaosMetricsDisplay';
 import { EntityMetadata, TierClassification } from '@/types/smashOrPass';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -38,10 +35,8 @@ export interface LeaderboardItem {
   metadata?: EntityMetadata;
   smash_count: number;
   pass_count: number;
-  super_smash_count?: number;
   total_votes: number;
   smash_rate: number;
-  chaos_rating?: number;
   tier?: TierClassification | string;
   rank?: number;
   [key: string]: any;
@@ -51,7 +46,7 @@ export interface SmashLeaderboardModalProps {
   isOpen: boolean;
   onClose: () => void;
   items: LeaderboardItem[];
-  userSmashes?: Array<{ slug: string; vote: 'smash' | 'pass' | 'super_smash'; timestamp: number }>;
+  userSmashes?: Array<{ slug: string; vote: 'smash' | 'pass'; timestamp: number }>;
   onSelectCharacter?: (character: CharacterRosterItem | any) => void;
   editionName?: string;
   isAuthenticated?: boolean;
@@ -76,7 +71,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const [roleFilter, setRoleFilter] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'monster_other'>('all');
   const [tierFilter, setTierFilter] = useState<'all' | TierKey>('all');
-  const [sortBy, setSortBy] = useState<'smash_rate' | 'total_votes' | 'smash_count' | 'chaos_rating'>('smash_rate');
+  const [sortBy, setSortBy] = useState<'smash_rate' | 'total_votes' | 'smash_count'>('smash_rate');
   const [viewMode, setViewMode] = useState<'flat' | 'grouped'>('flat');
 
   const backendBase = getBackendBaseUrl();
@@ -84,23 +79,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const userVotedSet = useMemo(() => {
     return new Set(userSmashes.map((s) => s.slug));
   }, [userSmashes]);
-
-  // Helper to compute chaos score
-  const computeChaos = (item: LeaderboardItem): number => {
-    if (item.chaos_rating !== undefined && item.chaos_rating !== null) return Number(item.chaos_rating);
-    if (item.metadata?.chaos_score !== undefined) return Number(item.metadata.chaos_score);
-    const slugStr = item.slug || item.character_slug || item.name || item.character_name || 'dbd';
-    let hash = 0;
-    for (let i = 0; i < slugStr.length; i++) {
-      hash = (hash << 5) - hash + slugStr.charCodeAt(i);
-      hash |= 0;
-    }
-    const absHash = Math.abs(hash);
-    const isKiller = item.role === 'Killer';
-    const isMonster = item.gender === 'monster_other';
-    if (isKiller) return isMonster ? 88 + (absHash % 12) : 68 + (absHash % 25);
-    return 20 + (absHash % 42);
-  };
 
   // Helper to derive tier classification
   const getItemTierKey = (smashRate: number): TierKey => {
@@ -179,12 +157,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           return b.smash_rate - a.smash_rate;
         }
         if (sortBy === 'smash_count') {
-          const aSmashes = a.smash_count + (a.super_smash_count || 0);
-          const bSmashes = b.smash_count + (b.super_smash_count || 0);
-          return bSmashes - aSmashes;
-        }
-        if (sortBy === 'chaos_rating') {
-          return computeChaos(b) - computeChaos(a);
+          return b.smash_count - a.smash_count;
         }
         return 0;
       });
@@ -235,7 +208,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     const hasUserSmashed = userVotedSet.has(itemSlug);
     const tierKey = getItemTierKey(item.smash_rate);
     const tier = tierMetadata[tierKey];
-    const itemChaos = computeChaos(item);
 
     const avatarSrc =
       item.media_url ||
@@ -318,7 +290,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           </div>
         </div>
 
-        {/* Smash Rate + Votes + Chaos */}
+        {/* Smash Rate + Votes */}
         <div className="flex items-center gap-4 text-right shrink-0">
           <div>
             <div className="flex items-center gap-1 justify-end font-black font-mono text-sm text-[#ff0055]">
@@ -331,16 +303,11 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           </div>
 
           <div className="hidden sm:block text-right font-mono text-[10px]">
-            <span className="text-[#00f5d4] font-bold">
-              {item.smash_count + (item.super_smash_count || 0)} smash
+            <span className="text-[#ff0055] font-bold">
+              {item.smash_count} smash
             </span>
             <br />
             <span className="text-zinc-500">{item.pass_count} pass</span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-1 px-2 py-1 rounded-xl bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-[#ffd166]">
-            <Activity className="h-3 w-3" />
-            <span>{itemChaos}%</span>
           </div>
         </div>
       </div>
@@ -547,7 +514,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               <option value="smash_rate">Smash Rate (%)</option>
               <option value="total_votes">Total Votes</option>
               <option value="smash_count">Most Smashes</option>
-              <option value="chaos_rating">Chaos Rating</option>
             </select>
           </div>
         </div>

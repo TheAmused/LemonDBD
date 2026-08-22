@@ -9,7 +9,6 @@ import { HistoryMode } from '@/types/historyStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
 import { ResetConfirmModal } from '../ResetConfirmModal';
 import { useHistoryRun } from './useHistoryRun';
-import { useOwnedKillers } from '../chaos/useOwnedKillers';
 import { useKillerPerkPool } from '../chaos/useKillerPerkPool';
 import { KillerPickerGrid } from '../chaos/KillerPickerGrid';
 import { HistoryHeader } from './HistoryHeader';
@@ -30,7 +29,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
   const { run, stats, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
-  const { loading: loadingKillers } = useOwnedKillers();
   const { pool: perkPool } = useKillerPerkPool();
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
@@ -145,7 +143,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               selectedKillerId={acceptedKillerId ?? selectedKillerId}
               onSelect={setSelectedKillerId}
               disabled={busy || Boolean(acceptedKillerId)}
-              loading={loading || loadingKillers}
+              loading={loading}
               center
             />
 

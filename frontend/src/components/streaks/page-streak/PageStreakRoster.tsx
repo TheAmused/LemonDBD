@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { fetchRoster } from '@/services/pageStreakApi';
 import { RosterEntry } from '@/types/pageStreak';
 import { KillerRosterGrid } from './KillerRosterGrid';
-import { usePerkArtwork } from './usePerkArtwork';
 import { useAuth } from '@/context/AuthContext';
 
 interface PageStreakRosterProps {
@@ -17,7 +16,6 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
   const [roster, setRoster] = useState<RosterEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { avatarByKiller } = usePerkArtwork();
 
   const load = useCallback(async () => {
     if (!token) return;
@@ -56,7 +54,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
       {loading ? (
         <p className="py-10 text-center text-xs text-slate-500">Loading roster…</p>
       ) : (
-        <KillerRosterGrid locale={locale} roster={roster} avatarByKiller={avatarByKiller} />
+        <KillerRosterGrid locale={locale} roster={roster} />
       )}
     </div>
   );

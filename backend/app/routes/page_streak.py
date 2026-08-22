@@ -95,6 +95,15 @@ def submit_result():
     return jsonify({"run": run}), 200
 
 
+@page_streak_bp.route("/stats", methods=["GET"])
+@login_required
+def get_stats():
+    """Aggregate match stats across every killer's Page Streak run."""
+    service = get_page_streak_service()
+    stats = service.get_stats(g.current_user.id)
+    return jsonify({"stats": stats}), 200
+
+
 @page_streak_bp.route("/run/reset", methods=["POST"])
 @login_required
 def reset_run():

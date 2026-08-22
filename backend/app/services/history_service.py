@@ -12,7 +12,8 @@ from app.services.history.roster import (
     build_rows,
     get_general_killer_perk_names,
     get_killer_teachable_perk_names,
-    get_owned_killer_names_by_release,
+    get_owned_killer_ids_by_release,
+    resolve_killer_names_by_ids,
 )
 from app.services.ownership_service import OwnershipService
 
@@ -24,9 +25,9 @@ class HistoryService:
         self.ownership_service = ownership_service or OwnershipService()
 
     def _freeze_pool(self, run: HistoryRun) -> List[str]:
-        names = get_owned_killer_names_by_release(run.user_id, self.ownership_service)
-        run.owned_killers_json = json.dumps(names)
-        return names
+        ids = get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
+        run.owned_killers_json = json.dumps(ids)
+        return resolve_killer_names_by_ids(ids)
 
     def _resolve_loss(self, run: HistoryRun):
         """Computes and applies the state a loss resets History progress to:
@@ -63,10 +64,12 @@ class HistoryService:
         return completed, unlocked
 
     def _augment(self, run: HistoryRun) -> Dict[str, Any]:
-        owned_names = json.loads(run.owned_killers_json or "[]")
-        if not owned_names:
+        owned_ids = json.loads(run.owned_killers_json or "[]")
+        if not owned_ids:
             owned_names = self._freeze_pool(run)
             db.session.commit()
+        else:
+            owned_names = resolve_killer_names_by_ids(owned_ids)
         rows = build_rows(owned_names)
 
         if run.status == "in_progress" and rows and run.current_row_index >= len(rows):
@@ -84,6 +87,7 @@ class HistoryService:
                 db.session.commit()
 
         data = run.to_dict()
+        data["owned_killers"] = owned_names
         data["current_row_killers"] = current_row
         data["row_size"] = ROW_SIZE
         data["total_rows"] = len(rows)
@@ -141,7 +145,7 @@ class HistoryService:
         if run.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
 
-        owned_names = json.loads(run.owned_killers_json or "[]")
+        owned_names = resolve_killer_names_by_ids(json.loads(run.owned_killers_json or "[]"))
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
         if killer_id not in current_row:

@@ -61,7 +61,7 @@ class GauntletRun(Base):
                 self.checkpoint_characters_json or "[]"
             ),
             "current_loadout": json.loads(self.current_loadout_json or "{}"),
-            "owned_characters": json.loads(self.owned_characters_json or "[]"),
+            "owned_character_ids": json.loads(self.owned_characters_json or "[]"),
             "created_at": self.created_at.isoformat()
             if self.created_at
             else None,

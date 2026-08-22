@@ -29,6 +29,31 @@ def get_owned_character_names(user_id: int, role: str, ownership_service: Owners
     return [c["name"] for c in owned if c["is_owned"]]
 
 
+def get_owned_character_ids(user_id: int, role: str, ownership_service: OwnershipService) -> List[int]:
+    """Same filtering as get_owned_character_names, but keyed by the
+    character's stable id -- a later rename won't drop it from an
+    already-frozen run's pool the way a name-keyed snapshot would."""
+    db_role = "Killer" if role == "killer" else "Survivor"
+    owned = ownership_service.get_user_characters(user_id, role=db_role)
+    limit = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
+    owned = [
+        c for c in owned
+        if c.get("release_number") is None or c["release_number"] <= limit
+    ]
+    return [c["id"] for c in owned if c["is_owned"]]
+
+
+def resolve_character_names_by_ids(ids: List[int]) -> List[str]:
+    """Turns a frozen character id list back into current names, in the
+    same order as ids. Unknown ids (a character deleted outright) are
+    silently dropped."""
+    if not ids:
+        return []
+    rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
+    by_id = {c.id: c.name for c in rows}
+    return [by_id[i] for i in ids if i in by_id]
+
+
 def get_character_teachable_perks(character_name: str) -> List[Dict[str, Any]]:
     """The target's own teachable perks, shown as the suggested first-slot picks."""
     perks = db.session.scalars(

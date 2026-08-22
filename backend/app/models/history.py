@@ -50,7 +50,7 @@ class HistoryRun(Base):
             "best_killers_beaten": self.best_killers_beaten,
             "completed_killers": json.loads(self.completed_killers_json or "[]"),
             "unlocked_perk_names": json.loads(self.unlocked_perk_names_json or "[]"),
-            "owned_killers": json.loads(self.owned_killers_json or "[]"),
+            "owned_killer_ids": json.loads(self.owned_killers_json or "[]"),
             "checkpoint_row_index": self.checkpoint_row_index,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,

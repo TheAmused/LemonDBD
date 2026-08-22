@@ -46,7 +46,16 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const { pool: perkPool } = useKillerPerkPool();
   const { isAdmin } = useAuth();
 
-  const rosterKillers = run ? run.owned_killers : killers;
+  // The frozen run only carries plain names in backend (alphabetical) order,
+  // so reorder them using the release order already established by the
+  // live-ownership fetch above instead of showing them alphabetically.
+  const rosterKillers = React.useMemo(() => {
+    if (!run) return killers;
+    const releaseOrder = new Map(killers.map((name, i) => [name, i]));
+    return [...run.owned_killers].sort(
+      (a, b) => (releaseOrder.get(a) ?? Infinity) - (releaseOrder.get(b) ?? Infinity)
+    );
+  }, [run, killers]);
   // The frozen run only ever needs to carry *which* perk names are in the
   // pool (run.unlocked_perks) -- resolving those to full display objects
   // (icon, description) client-side against the already-fetched perk

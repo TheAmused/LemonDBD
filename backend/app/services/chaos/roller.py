@@ -13,26 +13,26 @@ from app.services.ownership_service import OwnershipService
 def get_owned_killer_names(user_id: int, ownership_service: OwnershipService) -> List[str]:
     """Every killer the user owns. Unlike Gauntlet Original, no roster cap."""
     owned = ownership_service.get_user_characters(user_id, role="Killer")
-    return [c["name"] for c in owned if c["is_owned"]]
+    return [c["name"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
 
 
 def get_owned_killer_ids(user_id: int, ownership_service: OwnershipService) -> List[int]:
     """Same as get_owned_killer_names, but keyed by the killer's stable id --
     a later rename won't drop it from an already-frozen run's pool."""
     owned = ownership_service.get_user_characters(user_id, role="Killer")
-    return [c["id"] for c in owned if c["is_owned"]]
+    return [c["id"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
 
 
 def get_unlocked_killer_perks(user_id: int, ownership_service: OwnershipService) -> List[Dict[str, Any]]:
     """Every unlocked perk in the Killer category, teachables of any killer plus general perks."""
     perks = ownership_service.get_user_perks(user_id, category="Killer")
-    return [p for p in perks if p["is_unlocked"]]
+    return [p for p in perks if p["is_unlocked"] and not p.get("is_disabled")]
 
 
 def get_unlocked_killer_perk_ids(user_id: int, ownership_service: OwnershipService) -> List[int]:
     """Same as get_unlocked_killer_perks, but keyed by the perk's stable id."""
     perks = ownership_service.get_user_perks(user_id, category="Killer")
-    return [p["perk_id"] for p in perks if p["is_unlocked"]]
+    return [p["perk_id"] for p in perks if p["is_unlocked"] and not p.get("is_disabled")]
 
 
 def resolve_perks_by_names(names: List[str]) -> List[Dict[str, Any]]:

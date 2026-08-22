@@ -11,6 +11,7 @@ from app.models import (
     UserCharacterOwnership,
     UserPerkOwnership,
 )
+from app.services.streak_stats import fetch_challenge_completion_counts
 from app.services.user.avatar import (
     get_avatar_storage_directory,
     remove_stale_avatar_file,
@@ -136,6 +137,7 @@ def fetch_admin_metrics() -> Dict[str, Any]:
         "survivors_count": survivors_count,
         "killers_count": killers_count,
         "total_perks": total_perks,
+        "challenge_completions": fetch_challenge_completion_counts(),
     }
 
 

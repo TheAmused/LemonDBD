@@ -16,6 +16,7 @@ from app.services.history.roster import (
     get_owned_killer_ids_by_release,
     resolve_killer_names_by_ids,
 )
+from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.ownership_service import OwnershipService
 
 logger = logging.getLogger(__name__)
@@ -102,6 +103,8 @@ class HistoryService:
         if run:
             return self._augment(run)
 
+        assert_challenge_mode_enabled("history")
+
         general = get_general_killer_perk_names()
         run = HistoryRun(
             user_id=user_id,
@@ -123,6 +126,7 @@ class HistoryService:
         return self._augment(run)
 
     def reset_run(self, user_id: int, mode: str) -> Dict[str, Any]:
+        assert_challenge_mode_enabled("history")
         run = db.session.scalars(
             select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
         ).first()
@@ -133,6 +137,7 @@ class HistoryService:
         return self.get_or_create_run(user_id, mode)
 
     def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> Dict[str, Any]:
+        assert_challenge_mode_enabled("history")
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
         if not killer_id:

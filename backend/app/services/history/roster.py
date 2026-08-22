@@ -23,7 +23,10 @@ def _release_key(character: Dict[str, Any]):
 
 
 def get_owned_killer_names_by_release(user_id: int, ownership_service: OwnershipService) -> List[str]:
-    owned = [c for c in ownership_service.get_user_characters(user_id, role="Killer") if c["is_owned"]]
+    owned = [
+        c for c in ownership_service.get_user_characters(user_id, role="Killer")
+        if c["is_owned"] and not c.get("is_disabled")
+    ]
     owned.sort(key=_release_key)
     return [c["name"] for c in owned]
 
@@ -33,7 +36,10 @@ def get_owned_killer_ids_by_release(user_id: int, ownership_service: OwnershipSe
     but keyed by the killer's stable id -- a later rename won't drop it
     from an already-frozen run's pool, and resolving the ids back to
     names preserves this same release order (see resolve_killer_names_by_ids)."""
-    owned = [c for c in ownership_service.get_user_characters(user_id, role="Killer") if c["is_owned"]]
+    owned = [
+        c for c in ownership_service.get_user_characters(user_id, role="Killer")
+        if c["is_owned"] and not c.get("is_disabled")
+    ]
     owned.sort(key=_release_key)
     return [c["id"] for c in owned]
 
@@ -53,6 +59,7 @@ def get_general_killer_perk_names() -> List[str]:
     stmt = select(Perk.name).where(
         Perk.category == "Killer",
         (Perk.character_id.is_(None)) | (Perk.is_generic_counterpart.is_(True)),
+        Perk.is_disabled.is_(False),
     )
     return list(db.session.scalars(stmt).all())
 
@@ -64,6 +71,6 @@ def get_killer_teachable_perk_names(killer_name: str) -> List[str]:
     if not character:
         return []
     stmt = select(Perk.name).where(
-        Perk.character_id == character.id, Perk.is_teachable.is_(True)
+        Perk.character_id == character.id, Perk.is_teachable.is_(True), Perk.is_disabled.is_(False)
     )
     return list(db.session.scalars(stmt).all())

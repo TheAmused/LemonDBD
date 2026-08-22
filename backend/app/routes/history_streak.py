@@ -29,7 +29,10 @@ def get_run():
     if not mode:
         return jsonify({"error": "Query parameter 'mode' must be one of medium, hell"}), 400
     service = get_history_service()
-    run = service.get_or_create_run(g.current_user.id, mode)
+    try:
+        run = service.get_or_create_run(g.current_user.id, mode)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     return jsonify({"run": run}), 200
 
 

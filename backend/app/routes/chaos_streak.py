@@ -30,7 +30,10 @@ def get_run():
     if not difficulty:
         return jsonify({"error": "Query parameter 'difficulty' must be one of easy, medium, hell"}), 400
     service = get_chaos_service()
-    run = service.get_or_create_run(g.current_user.id, difficulty)
+    try:
+        run = service.get_or_create_run(g.current_user.id, difficulty)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     return jsonify({"run": run}), 200
 
 

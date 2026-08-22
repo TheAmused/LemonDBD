@@ -2,6 +2,7 @@
 import logging
 from typing import Any, Dict, List, Optional
 
+from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak import (
     BUILD_SIZE,
@@ -59,15 +60,18 @@ class PageStreakService:
         return self._with_artwork(user_id, fetch_run(user_id, killer))
 
     def start_run(self, user_id: int, killer: str) -> Optional[Dict[str, Any]]:
+        assert_challenge_mode_enabled("page_streak")
         return self._with_artwork(user_id, create_new_run(user_id, killer, self.get_killers, self.build_pages))
 
     def expected_build_size(self, page_perks: List[str]) -> int:
         return min(BUILD_SIZE, len(page_perks))
 
     def submit_result(self, user_id: int, killer: str, page: int, perks: List[str], result: str) -> Optional[Dict[str, Any]]:
+        assert_challenge_mode_enabled("page_streak")
         return self._with_artwork(user_id, record_match_result(user_id, killer, page, perks, result))
 
     def reset_run(self, user_id: int, killer: str) -> Optional[Dict[str, Any]]:
+        assert_challenge_mode_enabled("page_streak")
         return self._with_artwork(user_id, reset_active_run(user_id, killer, self.build_pages))
 
     def get_stats(self, user_id: int) -> Dict[str, Any]:

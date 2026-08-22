@@ -29,7 +29,10 @@ def get_run():
     if not role:
         return jsonify({"error": "Query parameter 'role' must be 'survivor' or 'killer'"}), 400
     service = get_gauntlet_service()
-    run = service.get_or_create_run(g.current_user.id, role)
+    try:
+        run = service.get_or_create_run(g.current_user.id, role)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     return jsonify({"run": run}), 200
 
 

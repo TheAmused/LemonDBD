@@ -7,16 +7,10 @@ import { Perk } from '@/types/gauntletStreak';
 import { AddonRarity } from '@/types/chaosStreak';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { useSlotReels, ReelDirection, REEL_SPIN_MS } from './useSlotReels';
-
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 
 const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
-
-const perkIconFor = (perk: Perk) => {
-  const cleanPath = (perk.icon_local_path || '').replace(/^\/?(static\/)?/, '');
-  return cleanPath ? `${backendBase}/static/${cleanPath}` : perk.icon_url;
-};
 
 const PerkImg: React.FC<{ perk: Perk | null; className: string }> = ({ perk, className }) => {
   const [failed, setFailed] = useState(false);

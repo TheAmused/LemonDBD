@@ -6,34 +6,12 @@ import {
   ChaosStatsResponse,
   Difficulty,
 } from '../types/chaosStreak';
+import { createStreakApiClient } from './streakApiClient';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-const API_BASE = `${BASE_URL}/api/v1/chaos-streak`;
-
-async function handleResponse<T>(response: Response): Promise<T> {
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-  }
-  return response.json();
-}
-
-function authHeaders(token: string): HeadersInit {
-  return { Authorization: `Bearer ${token}` };
-}
-
-function postJson<T>(token: string, path: string, body: unknown): Promise<T> {
-  return fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...authHeaders(token) },
-    body: JSON.stringify(body),
-  }).then(handleResponse<T>);
-}
+const { getJson, postJson } = createStreakApiClient('chaos-streak');
 
 export async function fetchChaosRun(token: string, difficulty: Difficulty): Promise<ChaosRun> {
-  const data = await fetch(`${API_BASE}/run?difficulty=${difficulty}`, {
-    headers: authHeaders(token),
-  }).then(handleResponse<ChaosRunResponse>);
+  const data = await getJson<ChaosRunResponse>(token, `/run?difficulty=${difficulty}`);
   return data.run;
 }
 
@@ -62,8 +40,6 @@ export async function resetChaosRun(token: string, difficulty: Difficulty): Prom
 }
 
 export async function fetchChaosStats(token: string, difficulty: Difficulty): Promise<ChaosStats> {
-  const data = await fetch(`${API_BASE}/stats?difficulty=${difficulty}`, {
-    headers: authHeaders(token),
-  }).then(handleResponse<ChaosStatsResponse>);
+  const data = await getJson<ChaosStatsResponse>(token, `/stats?difficulty=${difficulty}`);
   return data.stats;
 }

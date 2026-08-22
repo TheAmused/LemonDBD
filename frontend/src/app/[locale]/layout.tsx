@@ -35,9 +35,15 @@ export default async function RootLayout({
     i18n.locales.includes(rawLocale as Locale) ? rawLocale : i18n.defaultLocale
   ) as Locale;
 
+  const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+  const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL;
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
+        {umamiWebsiteId && umamiUrl && (
+          <script defer src={`${umamiUrl}/script.js`} data-website-id={umamiWebsiteId} />
+        )}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
             {children}

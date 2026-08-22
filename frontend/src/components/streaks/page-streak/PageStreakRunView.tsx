@@ -8,11 +8,12 @@ import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
 import { BuildBar } from './BuildBar';
-import { RunHistory } from './RunHistory';
 import { StartRunPanel } from './StartRunPanel';
-import { usePerkArtwork } from './usePerkArtwork';
+import { PageStreakRulesModal } from './PageStreakRulesModal';
+import { PageStreakStatsDrawer } from './PageStreakStatsDrawer';
 import { Confetti } from '../Confetti';
 import { ResetConfirmModal } from '../ResetConfirmModal';
+import { staticUrl } from '@/utils/staticUrl';
 
 interface PageStreakRunViewProps {
   locale: string;
@@ -27,12 +28,19 @@ const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 );
 
 export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
-  const { run, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
-  const { iconByPerk, avatarByKiller } = usePerkArtwork();
+  const { run, stats, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
+  const iconByPerk = React.useMemo(() => {
+    const entries = Object.entries(run?.perk_icons ?? {});
+    return Object.fromEntries(
+      entries.map(([name, path]) => [name, staticUrl(path)]).filter(([, url]) => url)
+    ) as Record<string, string>;
+  }, [run?.perk_icons]);
   const [selected, setSelected] = useState<string[]>([]);
   const [showNextPage, setShowNextPage] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
+  const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [lastWasLoss, setLastWasLoss] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
 
@@ -97,8 +105,10 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
         <div className="mt-5">
           <RunHeader
             run={run}
-            avatarSrc={avatarByKiller[run.killer]}
+            avatarSrc={staticUrl(run.killer_avatar)}
             onOpenReset={() => setConfirmingReset(true)}
+            onOpenRules={() => setIsRulesOpen(true)}
+            onOpenStats={() => setIsStatsOpen(true)}
           />
 
           {run.status === 'completed' ? (
@@ -134,7 +144,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   </button>
                 </div>
               )}
-              <SectionLabel>Page {run.current_page} — pick {buildSize} perks</SectionLabel>
+              <SectionLabel>Page {run.current_page}, pick {buildSize} perks</SectionLabel>
               <PerkPageGrid
                 key={`${run.attempt}-${run.current_page}`}
                 perks={currentPagePerks}
@@ -166,7 +176,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                         showNextPage ? 'rotate-90' : ''
                       }`}
                     />
-                    <span>Next up — page {run.current_page + 1}</span>
+                    <span>Next up, page {run.current_page + 1}</span>
                     <span className="h-px flex-1 bg-slate-800" />
                   </button>
                   {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
@@ -185,9 +195,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             </>
           )}
 
-          <SectionLabel>History</SectionLabel>
-          <RunHistory history={run.history} iconByPerk={iconByPerk} />
-
           <ResetConfirmModal
             open={confirmingReset}
             busy={busy}
@@ -199,9 +206,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             }}
           />
 
-          <p className="mt-2 text-[11px] text-slate-500">
-            An in-progress run untouched for 90 days automatically counts as a loss.
-          </p>
+          <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
+          <PageStreakStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
         </div>
       )}
     </div>

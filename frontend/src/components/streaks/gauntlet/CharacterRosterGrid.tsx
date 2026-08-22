@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
 import { Check, User, Skull, ShieldCheck } from 'lucide-react';
+import { avatarUrlForCharacter } from '@/utils/staticUrl';
 
 export interface CharacterRosterGridProps {
   role: Role;
@@ -24,7 +25,6 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   loading = false,
 }) => {
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   const handleImageError = (charName: string) => {
     setImageErrors((prev) => ({ ...prev, [charName]: true }));
@@ -39,17 +39,8 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   const isActiveTarget = (charName: string) =>
     !!activeCharacterId && activeCharacterId.toLowerCase().trim() === charName.toLowerCase().trim();
 
-  const getAvatarUrl = (char: OwnedCharacterItem) => {
-    const subDir = role === 'survivor' ? 'survivors' : 'killers';
-    const sanitized = char.name
-      .toLowerCase()
-      .trim()
-      .replace(/[\s\-/]+/g, '_')
-      .replace(/[\\/*?:"<>|]/g, '')
-      .replace(/_+/g, '_')
-      .replace(/^_+|_+$/g, '');
-    return `${backendBase}/static/avatars/${subDir}/${sanitized}.png`;
-  };
+  const getAvatarUrl = (char: OwnedCharacterItem) =>
+    avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers');
 
   const completedCount = characters.filter((c) => isCompleted(c.name)).length;
 

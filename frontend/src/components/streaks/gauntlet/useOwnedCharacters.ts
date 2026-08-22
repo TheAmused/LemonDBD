@@ -5,13 +5,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { Role } from '@/types/gauntletStreak';
 import { useAuth } from '@/context/AuthContext';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
+import { backendBase } from '@/utils/staticUrl';
 
 export interface OwnedCharacterItem {
   name: string;
   avatar_local_path?: string;
 }
-
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 /**
  * Original mode caps its roster at the source challenge's cutoff. `rosterLimit`

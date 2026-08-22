@@ -1,9 +1,10 @@
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Role } from '@/types/gauntletStreak';
-import { X, BookOpen, AlertTriangle, Flame, Trophy, Lock } from 'lucide-react';
+import { BookOpen, AlertTriangle, Flame, Trophy, Lock } from 'lucide-react';
+import { RulesModalShell } from '../RulesModalShell';
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;
@@ -48,191 +49,148 @@ const SURVIVOR_CLARIFICATIONS: { label: string; text: React.ReactNode }[] = [
 ];
 
 export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, onClose, role }) => {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
-  if (!isOpen) return null;
-
   const tiers = role === 'killer' ? KILLER_TIERS : SURVIVOR_TIERS;
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto cursor-pointer"
+    <RulesModalShell
+      isOpen={isOpen}
+      onClose={onClose}
+      icon={BookOpen}
+      title={`The ${role} Gauntlet Rules`}
+      subtitle="Progressive challenge rules, tier restrictions, & exception guidelines"
+      iconClassName="bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
+      footerButtonClassName="bg-amber-500 hover:bg-amber-400 !text-slate-950 shadow-amber-500/20"
     >
-      <div
-        className="relative w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto cursor-default"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 dark:text-amber-400">
-              <BookOpen className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight capitalize">
-                The {role} Gauntlet Rules
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Progressive challenge rules, tier restrictions, & exception guidelines
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="p-6 overflow-y-auto space-y-6 text-sm text-slate-700 dark:text-slate-300">
-          <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
-            <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-              <Trophy className="w-4 h-4" />
-              Gauntlet Concept
-            </h3>
-            <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              Beat every {role} you own, one trial at a time. The longer your streak runs, the fewer perks
-              you get to bring, until the final tier has you winning bare.
+      <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
+        <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+          <Trophy className="w-4 h-4" />
+          Gauntlet Concept
+        </h3>
+        <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          Beat every {role} you own, one trial at a time. The longer your streak runs, the fewer perks
+          you get to bring, until the final tier has you winning bare.
+        </p>
+        {role === 'killer' && (
+          <>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              You only ever run <strong>your own teachable perks</strong>, never anyone else&apos;s. You
+              start with all 3, and lose one at every tier. Once you are below 3, you choose which ones
+              to keep.
             </p>
-            {role === 'killer' && (
-              <>
-                <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                  You only ever run <strong>your own teachable perks</strong>, never anyone else&apos;s. You
-                  start with all 3, and lose one at every tier. Once you are below 3, you choose which ones
-                  to keep.
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              A trial only counts as won on <strong>3 kills or more</strong>. Anything less is a loss.
+            </p>
+          </>
+        )}
+        {role === 'survivor' && (
+          <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            A trial only counts as won if you <strong>escape</strong>, through the exit gates or the
+            hatch. Anything else is a loss.
+          </p>
+        )}
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          {role === 'killer'
+            ? 'The roster stops at the 43 killers, up through The Slasher.'
+            : 'The roster stops at the 52 survivors, up through Kwon Tae-young.'}
+        </p>
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          Every 10 wins banks a <strong>checkpoint</strong>. Lose after that and you only fall back to
+          your last checkpoint, not all the way to zero, though every {role} cleared since then goes
+          back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress
+          you keep happen on the very same win.
+        </p>
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here.
+        </p>
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          The roster is locked in for the run you're on. New characters you unlock mid-run won't join until you reset, lose back to zero, or complete it.
+        </p>
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          An in-progress run untouched for 90 days automatically counts as a loss.
+        </p>
+      </div>
+
+      <div>
+        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+          <Flame className="w-4 h-4 text-amber-500" />
+          Progressive Tier Restrictions
+        </h3>
+        <div className="grid grid-cols-1 gap-2.5">
+          {tiers.map((tier) => (
+            <div
+              key={tier.level}
+              className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-3 shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
+                  Tier {tier.level}: {tier.name}
+                </span>
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  ({tier.streakRange})
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+                <p className="text-xs text-slate-500 dark:text-slate-400 hidden lg:block max-w-xs truncate">
+                  {tier.description}
                 </p>
-                <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                  A trial only counts as won on <strong>3 kills or more</strong>. Anything less is a loss.
-                </p>
-              </>
-            )}
-            {role === 'survivor' && (
-              <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                A trial only counts as won if you <strong>escape</strong>, through the exit gates or the
-                hatch. Anything else is a loss.
-              </p>
-            )}
-            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-              {role === 'killer'
-                ? 'The roster stops at the 43 killers, up through The Slasher.'
-                : 'The roster stops at the 52 survivors, up through Kwon Tae-young.'}
-            </p>
-            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              Every 10 wins banks a <strong>checkpoint</strong>. Lose after that and you only fall back to
-              your last checkpoint, not all the way to zero, though every {role} cleared since then goes
-              back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress
-              you keep happen on the very same win.
-            </p>
-            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-              The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here.
-            </p>
-            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              The roster is locked in for the run you're on. New characters you unlock mid-run won't join until you reset, lose back to zero, or complete it.
-            </p>
-            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              An in-progress run untouched for 90 days automatically counts as a loss.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Flame className="w-4 h-4 text-amber-500" />
-              Progressive Tier Restrictions
-            </h3>
-            <div className="grid grid-cols-1 gap-2.5">
-              {tiers.map((tier) => (
-                <div
-                  key={tier.level}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-3 shadow-sm"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
-                      Tier {tier.level}: {tier.name}
-                    </span>
-                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                      ({tier.streakRange})
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-                    <p className="text-xs text-slate-500 dark:text-slate-400 hidden lg:block max-w-xs truncate">
-                      {tier.description}
-                    </p>
-                    <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-300 text-xs bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20 whitespace-nowrap">
-                      <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                      <span>
-                        {tier.perkLimit === 0 ? '0 Perks (Perkless)' : `${tier.perkLimit} Perk${tier.perkLimit > 1 ? 's' : ''} Allowed`}
-                      </span>
-                    </div>
-                  </div>
+                <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-300 text-xs bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20 whitespace-nowrap">
+                  <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+                  <span>
+                    {tier.perkLimit === 0 ? '0 Perks (Perkless)' : `${tier.perkLimit} Perk${tier.perkLimit > 1 ? 's' : ''} Allowed`}
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {role === 'killer' ? (
-            <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
-              <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-                Exceptions & Clarifications
-              </h3>
-              <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                {KILLER_EXCEPTIONS.map((item) => (
-                  <li key={item.label}>
-                    <strong>{item.label}:</strong> {item.text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : (
-            <>
-              <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
-                <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-                  Exceptions
-                </h3>
-                <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {SURVIVOR_EXCEPTIONS.map((item) => (
-                    <li key={item.label}>
-                      <strong>{item.label}:</strong> {item.text}
-                    </li>
-                  ))}
-                </ul>
               </div>
-
-              <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 space-y-3 shadow-sm">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-                  Clarifications
-                </h3>
-                <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {SURVIVOR_CLARIFICATIONS.map((item) => (
-                    <li key={item.label}>
-                      <strong>{item.label}:</strong> {item.text}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </>
-          )}
-        </div>
-
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 flex justify-end">
-          <button
-            onClick={onClose}
-            className="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition-all cursor-pointer shadow-md shadow-amber-500/20"
-          >
-            Got It, Let's Play!
-          </button>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+
+      {role === 'killer' ? (
+        <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
+          <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+            Exceptions & Clarifications
+          </h3>
+          <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            {KILLER_EXCEPTIONS.map((item) => (
+              <li key={item.label}>
+                <strong>{item.label}:</strong> {item.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <>
+          <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
+            <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+              Exceptions
+            </h3>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              {SURVIVOR_EXCEPTIONS.map((item) => (
+                <li key={item.label}>
+                  <strong>{item.label}:</strong> {item.text}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 space-y-3 shadow-sm">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+              Clarifications
+            </h3>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              {SURVIVOR_CLARIFICATIONS.map((item) => (
+                <li key={item.label}>
+                  <strong>{item.label}:</strong> {item.text}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+    </RulesModalShell>
   );
 };

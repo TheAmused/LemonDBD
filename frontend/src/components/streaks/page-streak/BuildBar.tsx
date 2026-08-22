@@ -21,14 +21,14 @@ export const BuildBar: React.FC<BuildBarProps> = ({ selected, size, confirmed, o
       {slots.map((name, index) => (
         <div
           key={index}
-          className={`flex h-14 min-w-[130px] flex-1 items-center gap-2 rounded-lg px-3 text-xs transition-colors ${
+          className={`flex h-16 min-w-[145px] flex-1 items-center gap-2.5 rounded-lg px-3 text-xs transition-colors ${
             name
               ? 'border border-orange-500/50 bg-orange-500/10 font-semibold text-slate-900 dark:text-slate-100'
               : 'border border-dashed border-slate-300 dark:border-slate-700 font-mono text-slate-400 dark:text-slate-600'
           }`}
         >
           {name && (
-            <span className="grid h-9 w-9 flex-none place-items-center bg-orange-400/60" style={{ clipPath: DIAMOND }}>
+            <span className="grid h-11 w-11 flex-none place-items-center bg-orange-400/60" style={{ clipPath: DIAMOND }}>
               <span
                 className="grid h-[82%] w-[82%] place-items-center bg-gradient-to-br from-amber-900/80 to-slate-950"
                 style={{ clipPath: DIAMOND }}

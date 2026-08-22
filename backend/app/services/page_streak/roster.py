@@ -42,6 +42,12 @@ def get_owned_killers_ordered(user_id: int, perk_service: PerkService, ownership
     return sorted(owned_names, key=sort_key)
 
 
+def get_killer_avatar_map(user_id: int, ownership_service: OwnershipService) -> Dict[str, str]:
+    """Name -> avatar_local_path for the user's owned killers."""
+    owned = ownership_service.get_user_characters(user_id, role="Killer")
+    return {c["name"]: c["avatar_local_path"] for c in owned if c["is_owned"] and c.get("avatar_local_path")}
+
+
 def build_roster_summary(
     user_id: int,
     perk_service: PerkService,
@@ -56,10 +62,12 @@ def build_roster_summary(
         select(PageStreakRun).where(PageStreakRun.user_id == user_id)
     ).all()
     runs = {r.killer: r for r in runs_db}
+    avatar_map = get_killer_avatar_map(user_id, ownership_service)
     roster: List[Dict[str, Any]] = []
 
     for killer in get_owned_killers_ordered(user_id, perk_service, ownership_service):
         r = runs.get(killer)
+        avatar_local_path = avatar_map.get(killer)
         if r is None:
             roster.append({
                 "killer": killer,
@@ -68,6 +76,7 @@ def build_roster_summary(
                 "current_page": 0,
                 "best_page": 0,
                 "page_count": page_count,
+                "avatar_local_path": avatar_local_path,
             })
         else:
             roster.append({
@@ -77,6 +86,7 @@ def build_roster_summary(
                 "current_page": r.current_page,
                 "best_page": r.best_page,
                 "page_count": len(json.loads(r.pages_json or "[]")),
+                "avatar_local_path": avatar_local_path,
             })
     return roster
 

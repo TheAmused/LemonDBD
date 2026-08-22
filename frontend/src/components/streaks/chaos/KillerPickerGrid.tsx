@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { Check, Skull } from 'lucide-react';
+import { avatarUrlForCharacter } from '@/utils/staticUrl';
 
 export interface KillerPickerGridProps {
   killers: string[];
@@ -14,18 +15,7 @@ export interface KillerPickerGridProps {
   center?: boolean;
 }
 
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
-export const avatarUrlFor = (name: string) => {
-  const sanitized = name
-    .toLowerCase()
-    .trim()
-    .replace(/[\s\-/]+/g, '_')
-    .replace(/[\\/*?:"<>|]/g, '')
-    .replace(/_+/g, '_')
-    .replace(/^_+|_+$/g, '');
-  return `${backendBase}/static/avatars/killers/${sanitized}.png`;
-};
+export const avatarUrlFor = (name: string) => avatarUrlForCharacter(name, 'killers');
 
 const KillerTile: React.FC<{
   name: string;

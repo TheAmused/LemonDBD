@@ -4,8 +4,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Perk } from '@/types/gauntletStreak';
 import { useAuth } from '@/context/AuthContext';
-
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+import { backendBase } from '@/utils/staticUrl';
 
 export function useKillerPerkPool() {
   const { token, user } = useAuth();

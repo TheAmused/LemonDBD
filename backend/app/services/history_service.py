@@ -3,10 +3,11 @@ import json
 import logging
 from typing import Any, Dict, List, Optional
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 
 from app.core.extensions import db
 from app.models import HistoryMatchLog, HistoryRun
+from app.services.history import fetch_history_user_stats
 from app.services.history.roster import (
     ROW_SIZE,
     build_rows,
@@ -232,29 +233,4 @@ class HistoryService:
         db.session.commit()
 
     def get_stats(self, user_id: int, mode: str) -> Dict[str, Any]:
-        run_ids = db.session.scalars(
-            select(HistoryRun.id).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
-        ).all()
-        if not run_ids:
-            return {"total_matches": 0, "wins": 0, "losses": 0, "win_rate": 0.0, "recent_logs": []}
-
-        total = db.session.scalar(
-            select(func.count(HistoryMatchLog.id)).where(HistoryMatchLog.run_id.in_(run_ids))
-        ) or 0
-        wins = db.session.scalar(
-            select(func.count(HistoryMatchLog.id)).where(
-                HistoryMatchLog.run_id.in_(run_ids), HistoryMatchLog.result == "win"
-            )
-        ) or 0
-        win_rate = round((wins / total * 100), 1) if total > 0 else 0.0
-        recent = db.session.scalars(
-            select(HistoryMatchLog).where(HistoryMatchLog.run_id.in_(run_ids))
-            .order_by(HistoryMatchLog.id.desc()).limit(10)
-        ).all()
-        return {
-            "total_matches": total,
-            "wins": wins,
-            "losses": total - wins,
-            "win_rate": win_rate,
-            "recent_logs": [log.to_dict() for log in recent],
-        }
+        return fetch_history_user_stats(user_id, mode)

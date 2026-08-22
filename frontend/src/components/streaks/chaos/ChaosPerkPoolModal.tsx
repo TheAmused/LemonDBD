@@ -4,13 +4,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { X, Layers, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
-
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
-const perkIconFor = (perk: Perk) => {
-  const cleanPath = (perk.icon_local_path || '').replace(/^\/?(static\/)?/, '');
-  return cleanPath ? `${backendBase}/static/${cleanPath}` : perk.icon_url;
-};
+import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 
 const PerkTile: React.FC<{ perk: Perk }> = ({ perk }) => {
   const [failed, setFailed] = useState(false);

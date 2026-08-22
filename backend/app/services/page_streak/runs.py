@@ -44,6 +44,7 @@ def fetch_run(user_id: int, killer: str) -> Optional[Dict[str, Any]]:
             "perks": json.loads(log.perks_json or "[]"),
             "result": log.result,
             "timestamp": to_utc_iso(log.timestamp),
+            "triggered_by": log.triggered_by,
         }
         for log in sorted_logs
     ]

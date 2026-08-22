@@ -5,11 +5,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Check, Skull } from 'lucide-react';
 import { RosterEntry } from '@/types/pageStreak';
+import { staticUrl } from '@/utils/staticUrl';
 
 interface KillerRosterGridProps {
   locale: string;
   roster: RosterEntry[];
-  avatarByKiller?: Record<string, string>;
 }
 
 const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = ({ name, src, done }) => {
@@ -31,7 +31,7 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
   );
 };
 
-export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, roster, avatarByKiller = {} }) => {
+export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, roster }) => {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
       {roster.map((entry) => {
@@ -56,7 +56,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
                 <Check className="h-3 w-3" strokeWidth={3} />
               </span>
             )}
-            <KillerPortrait name={entry.killer} src={avatarByKiller[entry.killer]} done={done} />
+            <KillerPortrait name={entry.killer} src={staticUrl(entry.avatar_local_path)} done={done} />
             <div className="text-center text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{entry.killer}</div>
             {active && (
               <div className="h-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">

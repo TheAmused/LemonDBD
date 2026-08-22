@@ -15,21 +15,10 @@ import {
   Lock,
   HelpCircle,
 } from 'lucide-react';
+import { avatarUrlForCharacter, perkIconUrl } from '@/utils/staticUrl';
 
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-
-export const avatarUrlFor = (name: string, role: Role) => {
-  if (!name) return null;
-  const subDir = role === 'survivor' ? 'survivors' : 'killers';
-  const sanitized = name
-    .toLowerCase()
-    .trim()
-    .replace(/[\s\-/]+/g, '_')
-    .replace(/[\\/*?:"<>|]/g, '')
-    .replace(/_+/g, '_')
-    .replace(/^_+|_+$/g, '');
-  return `${backendBase}/static/avatars/${subDir}/${sanitized}.png`;
-};
+export const avatarUrlFor = (name: string, role: Role) =>
+  name ? avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers') : null;
 
 const KILLER_SEND_OFFS = [
   'Good luck out there.',
@@ -53,10 +42,7 @@ const SURVIVOR_SEND_OFFS = [
   'Earn it.',
 ];
 
-const perkIconFor = (perk: Perk) => {
-  const cleanPath = (perk.icon_local_path || '').replace(/^\/?(static\/)?/, '');
-  return cleanPath ? `${backendBase}/static/${cleanPath}` : perk.icon_url;
-};
+const perkIconFor = (perk: Perk) => perkIconUrl(perk);
 
 export interface ActiveTargetStageProps {
   run: GauntletRun | null;

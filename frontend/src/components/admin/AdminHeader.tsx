@@ -2,7 +2,7 @@
 // frontend/src/components/admin/AdminHeader.tsx
 
 import React from 'react';
-import { Crown, Database, RefreshCw, Download, Upload } from 'lucide-react';
+import { Crown, Database, RefreshCw, Download, Upload, LineChart } from 'lucide-react';
 
 interface AdminHeaderProps {
   isSyncing: boolean;
@@ -88,6 +88,19 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
           <span className="hidden sm:inline">Refresh</span>
         </button>
+
+        {process.env.NEXT_PUBLIC_UMAMI_URL && (
+          <a
+            href={process.env.NEXT_PUBLIC_UMAMI_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Open the Umami analytics dashboard (page views, feature usage)"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
+          >
+            <LineChart className="h-3.5 w-3.5 text-cyan-400" />
+            <span className="hidden md:inline">Analytics</span>
+          </a>
+        )}
       </div>
     </div>
   );

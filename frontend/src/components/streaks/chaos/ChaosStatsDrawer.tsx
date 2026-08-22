@@ -3,7 +3,7 @@
 
 import React, { useEffect } from 'react';
 import { ChaosStats } from '@/types/chaosStreak';
-import { X, BarChart2, CheckCircle2, XCircle, Trophy, Flame, Percent, Activity } from 'lucide-react';
+import { X, BarChart2, CheckCircle2, XCircle, Trophy, Flame, Percent, Activity, Clock } from 'lucide-react';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 
 export interface ChaosStatsDrawerProps {
@@ -123,18 +123,27 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
                           {isWin ? <CheckCircle2 className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
                         </div>
                         <div>
-                          <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer_id}</div>
-                          <div className="flex items-center gap-1 mt-1">
-                            {log.addon_rarities.map((rarity, i) => (
-                              <img
-                                key={i}
-                                src={ADDON_RARITY_ICONS[rarity]}
-                                alt={rarity}
-                                title={rarity}
-                                className="h-3.5 w-3.5 rounded object-cover border border-black/10 dark:border-white/10"
-                              />
-                            ))}
-                          </div>
+                          {log.triggered_by === 'inactivity' ? (
+                            <div className="flex items-center gap-1 text-sm font-bold text-slate-500 dark:text-slate-400">
+                              <Clock className="w-3.5 h-3.5" />
+                              Auto-loss, run was inactive
+                            </div>
+                          ) : (
+                            <>
+                              <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer_id}</div>
+                              <div className="flex items-center gap-1 mt-1">
+                                {log.addon_rarities.map((rarity, i) => (
+                                  <img
+                                    key={i}
+                                    src={ADDON_RARITY_ICONS[rarity]}
+                                    alt={rarity}
+                                    title={rarity}
+                                    className="h-3.5 w-3.5 rounded object-cover border border-black/10 dark:border-white/10"
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
 

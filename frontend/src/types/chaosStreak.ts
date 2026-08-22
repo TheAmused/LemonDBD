@@ -39,6 +39,7 @@ export interface ChaosMatchLog {
   streak_before: number;
   streak_after: number;
   timestamp?: string;
+  triggered_by: 'player' | 'inactivity';
 }
 
 export interface ChaosStats {

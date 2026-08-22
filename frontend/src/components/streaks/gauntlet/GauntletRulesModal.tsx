@@ -134,7 +134,10 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
               The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here.
             </p>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              New characters you unlock mid-run won't join this Gauntlet until you reset it, lose all the way back to zero, or complete it — the roster is locked in for the run you're on. An in-progress run untouched for 90 days automatically counts as a loss.
+              The roster is locked in for the run you're on. New characters you unlock mid-run won't join until you reset, lose back to zero, or complete it.
+            </p>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              An in-progress run untouched for 90 days automatically counts as a loss.
             </p>
           </div>
 

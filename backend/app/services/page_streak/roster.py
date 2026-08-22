@@ -30,7 +30,7 @@ def get_character_release_numbers(perk_service: PerkService) -> Dict[str, int]:
 def get_owned_killers_ordered(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> List[str]:
     """Retrieve owned killer names sorted by release sequence."""
     owned_characters = ownership_service.get_user_characters(user_id, role="Killer")
-    owned_names = {c["name"] for c in owned_characters if c["is_owned"]}
+    owned_names = {c["name"] for c in owned_characters if c["is_owned"] and not c.get("is_disabled")}
     release_numbers = get_character_release_numbers(perk_service)
 
     def sort_key(name: str):

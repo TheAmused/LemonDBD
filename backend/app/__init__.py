@@ -93,6 +93,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     from app.routes.chaos_streak import chaos_streak_bp
     from app.routes.history_streak import history_streak_bp
     from app.routes.bug_reports import bug_reports_bp
+    from app.routes.admin_control import admin_control_bp
 
     from app.routes.others.draft import draft_bp
     from app.routes.others.quests import quests_bp
@@ -120,6 +121,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app.register_blueprint(guesser_bp)
     flask_app.register_blueprint(smash_or_pass_bp)
     flask_app.register_blueprint(bug_reports_bp)
+    flask_app.register_blueprint(admin_control_bp)
 
 
 

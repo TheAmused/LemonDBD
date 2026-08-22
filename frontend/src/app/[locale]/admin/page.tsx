@@ -12,6 +12,9 @@ import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
 import { AdminUserTable } from '@/components/admin/AdminUserTable';
 import { AdminCreateUserModal } from '@/components/admin/AdminCreateUserModal';
 import { AdminBugReportsWorkbench } from '@/components/admin/AdminBugReportsWorkbench';
+import { AdminChallengeControl } from '@/components/admin/AdminChallengeControl';
+import { AdminChallengeStats } from '@/components/admin/AdminChallengeStats';
+import { AdminAuditLogView } from '@/components/admin/AdminAuditLogView';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
@@ -22,7 +25,7 @@ import {
   BugReportStats,
   ActionMessage,
 } from '@/types/admin';
-import { Users, Bug } from 'lucide-react';
+import { Users, Bug, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
 
 export default function AdminPanelPage() {
   const params = useParams();
@@ -32,7 +35,7 @@ export default function AdminPanelPage() {
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
   const [dict, setDict] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'users' | 'bugs'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit'>('users');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
 
@@ -169,9 +172,9 @@ export default function AdminPanelPage() {
 
   useEffect(() => {
     if (isAuthenticated && isAdmin) {
-      if (activeTab === 'users') {
+      if (activeTab === 'users' || activeTab === 'challenge_stats') {
         fetchAdminData();
-      } else {
+      } else if (activeTab === 'bugs') {
         fetchBugReports();
       }
     }
@@ -467,6 +470,45 @@ export default function AdminPanelPage() {
               <Bug className="h-4 w-4" />
               <span>Bug Reports ({bugStats?.pending ?? 0} Pending)</span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('challenges')}
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === 'challenges'
+                  ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <ShieldAlert className="h-4 w-4" />
+              <span>Challenge Control</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('challenge_stats')}
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === 'challenge_stats'
+                  ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span>Challenge Stats</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('audit')}
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === 'audit'
+                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <ScrollText className="h-4 w-4" />
+              <span>Audit Log</span>
+            </button>
           </div>
 
           {activeTab === 'users' ? (
@@ -495,6 +537,12 @@ export default function AdminPanelPage() {
                 onDeleteUser={handleDeleteUser}
               />
             </div>
+          ) : activeTab === 'challenges' ? (
+            <AdminChallengeControl onActionMessage={setActionMessage} />
+          ) : activeTab === 'challenge_stats' ? (
+            <AdminChallengeStats stats={stats} />
+          ) : activeTab === 'audit' ? (
+            <AdminAuditLogView />
           ) : (
             <AdminBugReportsWorkbench
               bugReports={bugReports}

@@ -6,6 +6,7 @@ This ensures SQLAlchemy registers all tables and relationships upon package impo
 """
 
 from app.models.base import utcnow
+from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.character import Character, Killer, Survivor
 from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.history import HistoryMatchLog, HistoryRun
@@ -85,5 +86,7 @@ __all__ = [
     "User",
     "UserCharacterOwnership",
     "UserPerkOwnership",
+    "ChallengeModeSetting",
+    "AdminAuditLog",
 ]
 

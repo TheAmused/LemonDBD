@@ -26,7 +26,7 @@ def get_owned_character_names(user_id: int, role: str, ownership_service: Owners
         c for c in owned
         if c.get("release_number") is None or c["release_number"] <= limit
     ]
-    return [c["name"] for c in owned if c["is_owned"]]
+    return [c["name"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
 
 
 def get_owned_character_ids(user_id: int, role: str, ownership_service: OwnershipService) -> List[int]:
@@ -40,7 +40,7 @@ def get_owned_character_ids(user_id: int, role: str, ownership_service: Ownershi
         c for c in owned
         if c.get("release_number") is None or c["release_number"] <= limit
     ]
-    return [c["id"] for c in owned if c["is_owned"]]
+    return [c["id"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
 
 
 def resolve_character_names_by_ids(ids: List[int]) -> List[str]:
@@ -59,7 +59,7 @@ def get_character_teachable_perks(character_name: str) -> List[Dict[str, Any]]:
     perks = db.session.scalars(
         select(Perk)
         .join(Character, Perk.character_id == Character.id)
-        .where(Character.name == character_name, Perk.is_teachable.is_(True))
+        .where(Character.name == character_name, Perk.is_teachable.is_(True), Perk.is_disabled.is_(False))
         .order_by(Perk.name.asc())
     ).all()
     return [p.to_dict() for p in perks]

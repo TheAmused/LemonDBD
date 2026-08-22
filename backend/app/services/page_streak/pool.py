@@ -40,7 +40,7 @@ def fetch_all_killer_perks(perk_service: PerkService) -> List[Dict[str, Any]]:
 def get_user_killer_pool(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> List[Dict[str, Any]]:
     """Return killer perks unlocked by the specific user."""
     owned_perks = ownership_service.get_user_perks(user_id, category="Killer")
-    unlocked_names = {p["name"] for p in owned_perks if p["is_unlocked"]}
+    unlocked_names = {p["name"] for p in owned_perks if p["is_unlocked"] and not p.get("is_disabled")}
     perks = [p for p in fetch_all_killer_perks(perk_service) if p["name"] in unlocked_names]
     return sorted(perks, key=lambda p: p["name"])
 

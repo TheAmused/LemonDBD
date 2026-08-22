@@ -18,6 +18,7 @@ from app.services.chaos import (
     resolve_perk_names_by_ids,
     resolve_perks_by_ids,
 )
+from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.ownership_service import OwnershipService
 
 logger = logging.getLogger(__name__)
@@ -94,6 +95,8 @@ class ChaosService:
             data["checkpoint_interval"] = checkpoint_interval(difficulty)
             return data
 
+        assert_challenge_mode_enabled("chaos")
+
         new_run = ChaosRun(
             user_id=user_id,
             difficulty=difficulty,
@@ -132,6 +135,7 @@ class ChaosService:
         return data
 
     def reset_run(self, user_id: int, difficulty: str) -> Dict[str, Any]:
+        assert_challenge_mode_enabled("chaos")
         r = db.session.scalars(
             select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
         ).first()
@@ -142,6 +146,7 @@ class ChaosService:
         return self.get_or_create_run(user_id, difficulty)
 
     def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> Dict[str, Any]:
+        assert_challenge_mode_enabled("chaos")
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
         if not killer_id:

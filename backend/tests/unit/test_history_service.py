@@ -130,6 +130,27 @@ class TestSubmitResultWithinARow(HistoryTestCase):
         self.assertEqual(len(logs), 1)
         self.assertEqual(logs[0].row_index, 0)
 
+    def test_apply_inactivity_loss_writes_a_flagged_match_log(self):
+        self.service.apply_inactivity_loss(self.run["id"])
+        log = db.session.scalars(
+            select(HistoryMatchLog).where(HistoryMatchLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.result, "loss")
+        self.assertEqual(log.triggered_by, "inactivity")
+
+    def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self):
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        self.assertEqual(final["status"], "completed")
+
+        before_count = db.session.query(HistoryMatchLog).count()
+        self.service.apply_inactivity_loss(self.run["id"])
+        self.assertEqual(db.session.query(HistoryMatchLog).count(), before_count)
+
+        reloaded = self.service.get_or_create_run(self.user_id, "hell")
+        self.assertEqual(reloaded["status"], "completed")
+
 
 class TestHellModeLoss(HistoryTestCase):
     def setUp(self):
@@ -229,6 +250,93 @@ class TestGetStats(HistoryTestCase):
         stats = self.service.get_stats(self.user_id, "hell")
         self.assertEqual(stats["total_matches"], 1)
         self.assertEqual(stats["wins"], 1)
+
+
+class TestFrozenKillerRoster(HistoryTestCase):
+    def setUp(self):
+        super().setUp()
+        seed_general_perk("Whispers")
+        for i, name in enumerate(["The Trapper", "The Wraith", "The Hillbilly"], start=1):
+            seed_killer(name, release_number=i)
+        self.user_id = self.register_user("frozenplayer")
+
+    def test_new_killer_mid_run_does_not_reshuffle_the_active_row(self):
+        before = self.service.get_or_create_run(self.user_id, "hell")
+        row_before = before["current_row_killers"]
+        seed_killer("Some New Killer", release_number=99)
+        after = self.service.get_or_create_run(self.user_id, "hell")
+        self.assertEqual(after["current_row_killers"], row_before)
+
+    def test_hell_loss_refreezes_the_roster(self):
+        run = self.service.get_or_create_run(self.user_id, "hell")
+        seed_killer("Some New Killer", release_number=99)
+        refrozen = self.service.submit_result(
+            self.user_id, run["id"], "loss", run["current_row_killers"][0]
+        )
+        self.assertIn("Some New Killer", refrozen["owned_killers"])
+
+    def test_medium_loss_before_any_checkpoint_refreezes_the_roster(self):
+        # Fresh medium-mode run, no checkpoint banked yet (checkpoint_row_index == 0
+        # and checkpoint_total_killers_beaten == 0), so a loss here falls back to
+        # zero -- a genuine reset, same as hell mode -- and must refreeze.
+        run = self.service.get_or_create_run(self.user_id, "medium")
+        seed_killer("Some New Killer", release_number=99)
+        after_loss = self.service.submit_result(
+            self.user_id, run["id"], "loss", run["current_row_killers"][0]
+        )
+        self.assertIn("Some New Killer", after_loss["owned_killers"])
+
+    def test_medium_apply_inactivity_loss_before_any_checkpoint_refreezes_the_roster(self):
+        # Same as test_medium_loss_before_any_checkpoint_refreezes_the_roster above,
+        # but via the inactivity path instead of a real submit_result loss.
+        run = self.service.get_or_create_run(self.user_id, "medium")
+        seed_killer("Some New Killer", release_number=99)
+        self.service.apply_inactivity_loss(run["id"])
+        reloaded = self.service.get_or_create_run(self.user_id, "medium")
+        self.assertIn("Some New Killer", reloaded["owned_killers"])
+
+
+class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
+    def setUp(self):
+        super().setUp()
+        seed_general_perk("Whispers")
+        for i, name in enumerate([f"Killer {n}" for n in range(10)], start=1):
+            seed_killer(name, release_number=i)
+        self.user_id = self.register_user("mediumfreezeplayer")
+
+    def test_medium_checkpoint_loss_does_not_refreeze(self):
+        # Win the whole first row to bank a medium-mode checkpoint (with only the
+        # original 10 killers frozen), then seed a new killer, then lose in the
+        # second row -- since a checkpoint was already banked, the loss falls back
+        # to that checkpoint (not to zero) and must NOT refreeze, so the snapshot
+        # should stay exactly what it was at row start.
+        run = self.service.get_or_create_run(self.user_id, "medium")
+        for name in ["Killer 0", "Killer 1", "Killer 2", "Killer 3", "Killer 4"]:
+            cleared = self.service.submit_result(self.user_id, run["id"], "win", name)
+        self.assertTrue(cleared["row_cleared"])
+        snapshot_before = cleared["owned_killers"]
+        self.assertNotIn("Some New Killer", snapshot_before)
+
+        seed_killer("Some New Killer", release_number=99)
+        after_loss = self.service.submit_result(self.user_id, run["id"], "loss", "Killer 5")
+        self.assertEqual(after_loss["owned_killers"], snapshot_before)
+        self.assertNotIn("Some New Killer", after_loss["owned_killers"])
+
+    def test_medium_apply_inactivity_loss_after_checkpoint_does_not_refreeze(self):
+        # Same as test_medium_checkpoint_loss_does_not_refreeze above, but via
+        # the inactivity path instead of a real submit_result loss.
+        run = self.service.get_or_create_run(self.user_id, "medium")
+        for name in ["Killer 0", "Killer 1", "Killer 2", "Killer 3", "Killer 4"]:
+            cleared = self.service.submit_result(self.user_id, run["id"], "win", name)
+        self.assertTrue(cleared["row_cleared"])
+        snapshot_before = cleared["owned_killers"]
+        self.assertNotIn("Some New Killer", snapshot_before)
+
+        seed_killer("Some New Killer", release_number=99)
+        self.service.apply_inactivity_loss(run["id"])
+        reloaded = self.service.get_or_create_run(self.user_id, "medium")
+        self.assertEqual(reloaded["owned_killers"], snapshot_before)
+        self.assertNotIn("Some New Killer", reloaded["owned_killers"])
 
 
 class TestOwnershipShrinksMidRun(HistoryTestCase):

@@ -14,6 +14,7 @@ export interface HistoryRun {
   unlocked_perk_names: string[];
   checkpoint_row_index: number;
   current_row_killers: string[];
+  owned_killers: string[];
   row_size: number;
   total_rows: number;
   total_owned_killers: number;
@@ -32,6 +33,7 @@ export interface HistoryMatchLog {
   streak_before: number;
   streak_after: number;
   timestamp?: string;
+  triggered_by: 'player' | 'inactivity';
 }
 
 export interface HistoryStats {

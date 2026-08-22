@@ -29,6 +29,8 @@ class ChaosRun(Base):
     checkpoint_used_perks_json: Mapped[str] = mapped_column(Text, default="[]")
     current_perks_json: Mapped[str] = mapped_column(Text, default="[]")
     current_addon_rarities_json: Mapped[str] = mapped_column(Text, default="[]")
+    owned_killers_json: Mapped[str] = mapped_column(Text, default="[]")
+    unlocked_perks_json: Mapped[str] = mapped_column(Text, default="[]")
     perks_revealed: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(
@@ -60,6 +62,8 @@ class ChaosRun(Base):
             "current_perks": json.loads(self.current_perks_json or "[]"),
             "current_addon_rarities_json": self.current_addon_rarities_json,
             "current_addon_rarities": json.loads(self.current_addon_rarities_json or "[]"),
+            "owned_killer_ids": json.loads(self.owned_killers_json or "[]"),
+            "unlocked_perk_ids": json.loads(self.unlocked_perks_json or "[]"),
             "perks_revealed": self.perks_revealed,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
@@ -80,6 +84,7 @@ class ChaosMatchLog(Base):
     streak_before: Mapped[int] = mapped_column(Integer)
     streak_after: Mapped[int] = mapped_column(Integer)
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    triggered_by: Mapped[str] = mapped_column(String(20), default="player")
 
     run: Mapped["ChaosRun"] = relationship(back_populates="match_logs")
 
@@ -96,4 +101,5 @@ class ChaosMatchLog(Base):
             "streak_before": self.streak_before,
             "streak_after": self.streak_after,
             "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "triggered_by": self.triggered_by,
         }

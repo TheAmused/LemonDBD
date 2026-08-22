@@ -12,7 +12,8 @@ from app.services.history.roster import (
     build_rows,
     get_general_killer_perk_names,
     get_killer_teachable_perk_names,
-    get_owned_killer_names_by_release,
+    get_owned_killer_ids_by_release,
+    resolve_killer_names_by_ids,
 )
 from app.services.ownership_service import OwnershipService
 
@@ -23,10 +24,52 @@ class HistoryService:
     def __init__(self, ownership_service: Optional[OwnershipService] = None):
         self.ownership_service = ownership_service or OwnershipService()
 
-    def _owned_names(self, user_id: int) -> List[str]:
-        return get_owned_killer_names_by_release(user_id, self.ownership_service)
+    def _freeze_pool(self, run: HistoryRun) -> List[str]:
+        ids = get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
+        run.owned_killers_json = json.dumps(ids)
+        return resolve_killer_names_by_ids(ids)
 
-    def _augment(self, run: HistoryRun, owned_names: List[str]) -> Dict[str, Any]:
+    def _resolve_loss(self, run: HistoryRun):
+        """Computes and applies the state a loss resets History progress to:
+        medium-mode checkpoint fallback, or a full reset to row 0 (hell mode,
+        or medium with no checkpoint banked yet -- the checkpoint fields
+        still sit at their creation-time zero defaults in that case, so the
+        medium branch below naturally restores to zero too). Mutates run's
+        row/checkpoint fields in place, refreezes the roster when the
+        resulting state is genuinely zero progress (Task 4's rule), and
+        returns (completed, unlocked) for the caller to persist. Shared by
+        submit_result's real-match loss branch and apply_inactivity_loss's
+        synthetic one, since this exact computation caused the same
+        medium-checkpoint-zero-detection bug twice before being unified
+        here."""
+        if run.mode == "medium":
+            run.current_row_index = run.checkpoint_row_index
+            run.total_killers_beaten = run.checkpoint_total_killers_beaten
+            completed = json.loads(run.checkpoint_completed_killers_json or "[]")
+            unlocked = json.loads(run.checkpoint_unlocked_perk_names_json or "[]")
+        else:
+            general = get_general_killer_perk_names()
+            run.current_row_index = 0
+            run.total_killers_beaten = 0
+            completed = []
+            unlocked = general
+            run.checkpoint_row_index = 0
+            run.checkpoint_total_killers_beaten = 0
+            run.checkpoint_completed_killers_json = "[]"
+            run.checkpoint_unlocked_perk_names_json = json.dumps(general)
+
+        if run.current_row_index == 0 and run.total_killers_beaten == 0:
+            self._freeze_pool(run)
+
+        return completed, unlocked
+
+    def _augment(self, run: HistoryRun) -> Dict[str, Any]:
+        owned_ids = json.loads(run.owned_killers_json or "[]")
+        if not owned_ids:
+            owned_names = self._freeze_pool(run)
+            db.session.commit()
+        else:
+            owned_names = resolve_killer_names_by_ids(owned_ids)
         rows = build_rows(owned_names)
 
         if run.status == "in_progress" and rows and run.current_row_index >= len(rows):
@@ -44,6 +87,7 @@ class HistoryService:
                 db.session.commit()
 
         data = run.to_dict()
+        data["owned_killers"] = owned_names
         data["current_row_killers"] = current_row
         data["row_size"] = ROW_SIZE
         data["total_rows"] = len(rows)
@@ -54,9 +98,8 @@ class HistoryService:
         run = db.session.scalars(
             select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
         ).first()
-        owned_names = self._owned_names(user_id)
         if run:
-            return self._augment(run, owned_names)
+            return self._augment(run)
 
         general = get_general_killer_perk_names()
         run = HistoryRun(
@@ -73,9 +116,10 @@ class HistoryService:
             checkpoint_completed_killers_json="[]",
             checkpoint_unlocked_perk_names_json=json.dumps(general),
         )
+        self._freeze_pool(run)
         db.session.add(run)
         db.session.commit()
-        return self._augment(run, owned_names)
+        return self._augment(run)
 
     def reset_run(self, user_id: int, mode: str) -> Dict[str, Any]:
         run = db.session.scalars(
@@ -101,7 +145,7 @@ class HistoryService:
         if run.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
 
-        owned_names = self._owned_names(user_id)
+        owned_names = resolve_killer_names_by_ids(json.loads(run.owned_killers_json or "[]"))
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
         if killer_id not in current_row:
@@ -131,27 +175,14 @@ class HistoryService:
                 completed = []
                 if run.current_row_index >= len(rows):
                     run.status = "completed"
+                    self._freeze_pool(run)
                 if run.mode == "medium":
                     run.checkpoint_row_index = run.current_row_index
                     run.checkpoint_total_killers_beaten = run.total_killers_beaten
                     run.checkpoint_completed_killers_json = "[]"
                     run.checkpoint_unlocked_perk_names_json = json.dumps(unlocked)
         else:
-            if run.mode == "medium":
-                run.current_row_index = run.checkpoint_row_index
-                run.total_killers_beaten = run.checkpoint_total_killers_beaten
-                completed = json.loads(run.checkpoint_completed_killers_json or "[]")
-                unlocked = json.loads(run.checkpoint_unlocked_perk_names_json or "[]")
-            else:
-                general = get_general_killer_perk_names()
-                run.current_row_index = 0
-                run.total_killers_beaten = 0
-                completed = []
-                unlocked = general
-                run.checkpoint_row_index = 0
-                run.checkpoint_total_killers_beaten = 0
-                run.checkpoint_completed_killers_json = "[]"
-                run.checkpoint_unlocked_perk_names_json = json.dumps(general)
+            completed, unlocked = self._resolve_loss(run)
 
         streak_after = run.total_killers_beaten
         run.completed_killers_json = json.dumps(completed)
@@ -167,10 +198,38 @@ class HistoryService:
         ))
         db.session.commit()
 
-        data = self._augment(run, owned_names)
+        data = self._augment(run)
         data["newly_unlocked_perks"] = newly_unlocked
         data["row_cleared"] = row_cleared
         return data
+
+    def apply_inactivity_loss(self, run_id: int) -> None:
+        """Applies the same state transition submit_result's loss branch
+        would, without a killer_id. Used only by the inactivity cleanup job
+        (Task 11). A no-op if the run doesn't exist or is already completed."""
+        run = db.session.scalars(select(HistoryRun).where(HistoryRun.id == run_id)).first()
+        if not run or run.status == "completed":
+            return
+
+        streak_before = run.total_killers_beaten
+        row_index_for_log = run.current_row_index
+
+        completed, unlocked = self._resolve_loss(run)
+
+        streak_after = run.total_killers_beaten
+        run.completed_killers_json = json.dumps(completed)
+        run.unlocked_perk_names_json = json.dumps(unlocked)
+
+        db.session.add(HistoryMatchLog(
+            run_id=run_id,
+            killer_id="",
+            result="loss",
+            row_index=row_index_for_log,
+            streak_before=streak_before,
+            streak_after=streak_after,
+            triggered_by="inactivity",
+        ))
+        db.session.commit()
 
     def get_stats(self, user_id: int, mode: str) -> Dict[str, Any]:
         run_ids = db.session.scalars(

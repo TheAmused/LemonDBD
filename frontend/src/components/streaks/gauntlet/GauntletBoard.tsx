@@ -9,7 +9,8 @@ import { Role } from '@/types/gauntletStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
 import { ResetConfirmModal } from '../ResetConfirmModal';
 import { useGauntletRun } from './useGauntletRun';
-import { useOwnedCharacters } from './useOwnedCharacters';
+import { useOwnedCharacters, OwnedCharacterItem } from './useOwnedCharacters';
+import { sortByReleaseNumber } from '@/utils/characterUtils';
 import { GauntletHeader } from './GauntletHeader';
 import { ActiveTargetStage } from './ActiveTargetStage';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
@@ -43,6 +44,17 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
     dismissCheckpointCelebration,
   } = useGauntletRun(role);
   const { characters, loading: loadingRoster } = useOwnedCharacters(role, run?.tier_info?.roster_limit);
+  // The frozen run only carries plain names (no release_number), so reorder
+  // them using the release order already established by the live-ownership
+  // fetch above instead of falling back to the backend's alphabetical order.
+  const frozenCharacters: OwnedCharacterItem[] = React.useMemo(() => {
+    const owned = run?.owned_characters ?? [];
+    const releaseOrder = new Map(characters.map((c, i) => [c.name, i]));
+    return sortByReleaseNumber(
+      owned.map((name) => ({ name, release_number: releaseOrder.get(name) ?? Infinity }))
+    );
+  }, [run?.owned_characters, characters]);
+  const rosterCharacters = run ? frozenCharacters : characters;
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
@@ -132,7 +144,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           <ActiveTargetStage
             run={run}
             role={role}
-            characters={characters}
+            characters={rosterCharacters}
             loading={loading || busy}
             onWin={() => submitResult('win')}
             onLoss={() => submitResult('loss')}
@@ -145,7 +157,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
 
         <CharacterRosterGrid
           role={role}
-          characters={characters}
+          characters={rosterCharacters}
           completedCharacters={run?.completed_characters || []}
           checkpointCharacters={run?.checkpoint_characters || []}
           activeCharacterId={isCompleted ? undefined : shownTarget ?? undefined}

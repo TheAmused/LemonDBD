@@ -11,9 +11,10 @@ from app.services.gauntlet import (
     CHECKPOINT_INTERVAL,
     fetch_gauntlet_user_stats,
     get_character_teachable_perks,
-    get_owned_character_names,
+    get_owned_character_ids,
     get_tier_info,
     pick_initial_target,
+    resolve_character_names_by_ids,
     roll_gauntlet_target,
 )
 from app.services.ownership_service import OwnershipService
@@ -30,6 +31,15 @@ class GauntletService:
     def get_tier_info(self, streak: int, role: str) -> Dict[str, Any]:
         return get_tier_info(streak, role)
 
+    def _freeze_pool(self, r: GauntletRun) -> list:
+        ids = get_owned_character_ids(r.user_id, r.role, self.ownership_service)
+        r.owned_characters_json = json.dumps(ids)
+        return ids
+
+    def _with_owned_characters(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        data["owned_characters"] = resolve_character_names_by_ids(data["owned_character_ids"])
+        return data
+
     def get_or_create_run(self, user_id: int, role: str) -> Dict[str, Any]:
         run = db.session.scalars(
             select(GauntletRun).where(
@@ -39,7 +49,10 @@ class GauntletService:
         ).first()
 
         if run:
-            data = run.to_dict()
+            if not json.loads(run.owned_characters_json or "[]"):
+                self._freeze_pool(run)
+                db.session.commit()
+            data = self._with_owned_characters(run.to_dict())
             data["tier_info"] = self.get_tier_info(data["current_streak"], role)
             return data
 
@@ -63,10 +76,11 @@ class GauntletService:
             checkpoint_characters_json="[]",
             current_loadout_json=json.dumps(initial_loadout),
         )
+        self._freeze_pool(new_run)
         db.session.add(new_run)
         db.session.commit()
 
-        data = new_run.to_dict()
+        data = self._with_owned_characters(new_run.to_dict())
         data["tier_info"] = tier_info
         return data
 
@@ -75,11 +89,10 @@ class GauntletService:
         completed = run.get("completed_characters", [])
 
         target_char, loadout, tier_info = roll_gauntlet_target(
-            user_id=user_id,
             role=role,
             current_streak=run["current_streak"],
             completed_characters=completed,
-            ownership_service=self.ownership_service,
+            owned_characters=run["owned_characters"],
             target_character=target_character,
         )
 
@@ -88,7 +101,7 @@ class GauntletService:
         r.current_loadout_json = json.dumps(loadout)
         db.session.commit()
 
-        data = r.to_dict()
+        data = self._with_owned_characters(r.to_dict())
         data["tier_info"] = tier_info
         return data
 
@@ -100,7 +113,7 @@ class GauntletService:
             raise ValueError("Run not found")
         r.target_revealed = True
         db.session.commit()
-        data = r.to_dict()
+        data = self._with_owned_characters(r.to_dict())
         data["tier_info"] = self.get_tier_info(data["current_streak"], r.role)
         return data
 
@@ -115,7 +128,7 @@ class GauntletService:
         db.session.commit()
         return self.get_or_create_run(user_id, role)
 
-    def submit_result(self, user_id: int, run_id: int, result: str) -> Dict[str, Any]:
+    def submit_result(self, user_id: int, run_id: int, result: str, triggered_by: str = "player") -> Dict[str, Any]:
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
 
@@ -147,9 +160,13 @@ class GauntletService:
             if CHECKPOINT_INTERVAL > 0 and streak_after % CHECKPOINT_INTERVAL == 0:
                 last_checkpoint = streak_after
                 checkpoint_chars = list(completed)
-            # The gauntlet is won once every owned character has been cleared.
-            owned = get_owned_character_names(user_id, r.role, self.ownership_service)
-            if owned and all(name in completed for name in owned):
+            # The gauntlet is won once every character frozen into this
+            # run's pool has been cleared. completed_characters_json stays
+            # name-keyed (existing convention), so resolve the frozen id
+            # pool to current names before comparing.
+            owned_ids = json.loads(r.owned_characters_json or "[]")
+            owned_names = resolve_character_names_by_ids(owned_ids)
+            if owned_names and all(name in completed for name in owned_names):
                 r.status = "completed"
         else:
             streak_after = last_checkpoint if CHECKPOINT_INTERVAL > 0 else 0
@@ -162,12 +179,18 @@ class GauntletService:
         r.completed_characters_json = json.dumps(completed)
         r.checkpoint_characters_json = json.dumps(checkpoint_chars)
 
+        if result == "win" and r.status == "completed":
+            self._freeze_pool(r)
+        elif result == "loss" and streak_after == 0:
+            self._freeze_pool(r)
+
         db.session.add(
             GauntletMatchLog(
                 run_id=run_id,
                 role=r.role,
                 character_id=char_id,
                 result=result,
+                triggered_by=triggered_by,
                 perks_json=perks_json,
                 streak_before=current_streak,
                 streak_after=streak_after,
@@ -175,7 +198,7 @@ class GauntletService:
         )
         db.session.commit()
 
-        data = r.to_dict()
+        data = self._with_owned_characters(r.to_dict())
         data["tier_info"] = self.get_tier_info(streak_after, r.role)
         return data
 

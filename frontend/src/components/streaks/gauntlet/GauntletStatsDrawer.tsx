@@ -3,7 +3,7 @@
 
 import React, { useEffect } from 'react';
 import { GauntletStats, MatchLog } from '@/types/gauntletStreak';
-import { X, BarChart2, CheckCircle2, XCircle, Trophy, Flame, Percent, Activity } from 'lucide-react';
+import { X, BarChart2, CheckCircle2, XCircle, Trophy, Flame, Percent, Activity, Clock } from 'lucide-react';
 
 export interface GauntletStatsDrawerProps {
   isOpen: boolean;
@@ -124,6 +124,12 @@ export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen
                           <div className="text-sm font-bold text-slate-900 dark:text-white">
                             {log.character_id}
                           </div>
+                          {log.triggered_by === 'inactivity' && (
+                            <div className="flex items-center gap-1 mt-1 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                              <Clock className="w-3 h-3" />
+                              Auto-loss, run was inactive
+                            </div>
+                          )}
                         </div>
                       </div>
 

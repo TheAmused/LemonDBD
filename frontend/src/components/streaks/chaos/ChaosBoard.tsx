@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
+import { Perk } from '@/types/gauntletStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
 import { ResetConfirmModal } from '../ResetConfirmModal';
 import { useChaosRun } from './useChaosRun';
@@ -44,6 +45,33 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const { killers, loading: loadingKillers } = useOwnedKillers();
   const { pool: perkPool } = useKillerPerkPool();
   const { isAdmin } = useAuth();
+
+  // The frozen run only carries plain names in backend (alphabetical) order,
+  // so reorder them using the release order already established by the
+  // live-ownership fetch above instead of showing them alphabetically.
+  const rosterKillers = React.useMemo(() => {
+    if (!run) return killers;
+    const releaseOrder = new Map(killers.map((name, i) => [name, i]));
+    return [...run.owned_killers].sort(
+      (a, b) => (releaseOrder.get(a) ?? Infinity) - (releaseOrder.get(b) ?? Infinity)
+    );
+  }, [run, killers]);
+  // The frozen run only ever needs to carry *which* perk names are in the
+  // pool (run.unlocked_perks) -- resolving those to full display objects
+  // (icon, description) client-side against the already-fetched perk
+  // catalog avoids re-sending every pool perk's full payload from the
+  // backend on every single run mutation (get_or_create_run/reveal/
+  // submit_result), which used to add ~450KB to each of those responses.
+  const perkPoolByName = React.useMemo(
+    () => new Map(perkPool.map((p) => [p.name, p] as const)),
+    [perkPool]
+  );
+  const rosterPerkPool: Perk[] = React.useMemo(() => {
+    if (!run) return perkPool;
+    return run.unlocked_perks
+      .map((name) => perkPoolByName.get(name))
+      .filter((p): p is Perk => Boolean(p));
+  }, [run, perkPool, perkPoolByName]);
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
@@ -133,12 +161,12 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onOpenReset={() => setConfirmingReset(true)}
         />
 
-        {!isCompleted && killers.length > 0 && (
+        {!isCompleted && rosterKillers.length > 0 && (
           <ChaosProgressBar
             currentStreak={run?.current_streak || 0}
             lastCheckpointStreak={run?.last_checkpoint_streak || 0}
             checkpointInterval={run?.checkpoint_interval || 0}
-            totalKillers={killers.length}
+            totalKillers={rosterKillers.length}
           />
         )}
 
@@ -215,7 +243,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 }`}
               >
                 <KillerPickerGrid
-                  killers={killers}
+                  killers={rosterKillers}
                   completedKillers={run?.completed_killers || []}
                   selectedKillerId={acceptedKillerId ?? selectedKillerId}
                   onSelect={setSelectedKillerId}
@@ -254,7 +282,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         <ChaosPerkPoolModal
           isOpen={isPerkPoolOpen}
           onClose={() => setIsPerkPoolOpen(false)}
-          pool={perkPool}
+          pool={rosterPerkPool}
           usedPerkNames={run?.used_perks || []}
         />
         <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />

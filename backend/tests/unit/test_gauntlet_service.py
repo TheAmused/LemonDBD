@@ -4,7 +4,7 @@ from sqlalchemy import select
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import Character, Perk
+from app.models import Character, GauntletMatchLog, GauntletRun, Perk
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names
@@ -260,6 +260,65 @@ class TestGauntletResults(GauntletTestCase):
         other_user_id = self.register_user("intruder")
         with self.assertRaises(ValueError):
             self.service.submit_result(other_user_id, self.run["id"], "win")
+
+    def test_new_character_mid_run_is_not_immediately_rollable(self):
+        huntress = seed_killer("Huntress")
+        for _ in range(20):
+            run = self.service.roll(self.user_id, "killer")
+            self.assertNotEqual(run["current_character_id"], "Huntress")
+
+    def test_completion_check_ignores_a_character_owned_mid_run(self):
+        seed_killer("Huntress")
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        # get_or_create_run above only re-reads; the pool was frozen to
+        # {Nurse, Trapper} back in setUp's initial get_or_create_run call.
+        for _ in range(2):
+            run = self.service.submit_result(self.user_id, run["id"], "win")
+            if run["status"] != "completed":
+                run = self.service.roll(self.user_id, "killer")
+        self.assertEqual(run["status"], "completed")
+
+    def test_loss_to_zero_refreezes_the_pool(self):
+        seed_killer("Huntress")
+        after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        self.assertIn("Huntress", after_loss["owned_characters"])
+
+    def test_completing_the_run_refreezes_the_pool(self):
+        run = self.run
+        self.service.submit_result(self.user_id, run["id"], "win")
+        run = self.service.roll(self.user_id, "killer")
+        seed_killer("Huntress")
+        run = self.service.submit_result(self.user_id, run["id"], "win")
+        self.assertEqual(run["status"], "completed")
+        self.assertIn("Huntress", run["owned_characters"])
+
+    def test_submit_result_records_triggered_by_player_by_default(self):
+        updated = self.service.submit_result(self.user_id, self.run["id"], "win")
+        log = db.session.scalars(
+            select(GauntletMatchLog).where(GauntletMatchLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.triggered_by, "player")
+
+    def test_submit_result_records_triggered_by_inactivity_when_passed(self):
+        self.service.submit_result(self.user_id, self.run["id"], "loss", triggered_by="inactivity")
+        log = db.session.scalars(
+            select(GauntletMatchLog).where(GauntletMatchLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.triggered_by, "inactivity")
+
+
+class TestGauntletLazyFreeze(GauntletTestCase):
+    def test_existing_run_with_empty_snapshot_freezes_on_read(self):
+        seed_killer("Nurse")
+        seed_killer("Trapper")
+        user_id = self.register_user("lazyfreezeuser")
+        run = self.service.get_or_create_run(user_id, "killer")
+        r = db.session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
+        r.owned_characters_json = "[]"
+        db.session.commit()
+
+        reloaded = self.service.get_or_create_run(user_id, "killer")
+        self.assertEqual(sorted(reloaded["owned_characters"]), ["Nurse", "Trapper"])
 
 
 class TestGauntletCharacterPerks(GauntletTestCase):

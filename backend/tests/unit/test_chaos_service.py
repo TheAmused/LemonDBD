@@ -1,9 +1,11 @@
 # backend/tests/unit/test_chaos_service.py
 import unittest
+from sqlalchemy import select
+
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import Character, Perk, User
+from app.models import ChaosMatchLog, Character, Perk, User
 from app.services.chaos_service import ChaosService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
@@ -20,6 +22,14 @@ def seed_killer(name, perk_count=3):
         ))
     db.session.commit()
     return character
+
+
+def seed_new_perk(name, character_name="The Trapper"):
+    character = db.session.scalars(select(Character).where(Character.name == character_name)).first()
+    perk = Perk(name=name, character_id=character.id, is_teachable=True, category="Killer")
+    db.session.add(perk)
+    db.session.commit()
+    return perk
 
 
 class ChaosTestCase(unittest.TestCase):
@@ -88,6 +98,16 @@ class TestReveal(ChaosTestCase):
         with self.assertRaises(ValueError):
             self.service.reveal(self.user_id, 999999)
 
+    def test_reveal_carries_the_frozen_perk_pool_names(self):
+        # reveal() must return the same frozen unlocked_perks name list as
+        # get_or_create_run -- the frontend resolves those names to full
+        # display objects (icon, description) client-side against its own
+        # already-fetched perk catalog, so reveal() only needs to carry the
+        # name list, not a re-resolved full-object copy of the whole pool.
+        run = self.service.get_or_create_run(self.user_id, "hell")
+        revealed = self.service.reveal(self.user_id, run["id"])
+        self.assertEqual(sorted(revealed["unlocked_perks"]), sorted(run["unlocked_perks"]))
+
 
 class TestHellDifficulty(ChaosTestCase):
     def setUp(self):
@@ -95,7 +115,28 @@ class TestHellDifficulty(ChaosTestCase):
         seed_killer("The Trapper")
         seed_killer("The Wraith")
         self.user_id = self.register_user("hellplayer")
-        self.run = self.service.get_or_create_run(self.user_id, "hell")
+        self.difficulty = "hell"
+        self.run = self.service.get_or_create_run(self.user_id, self.difficulty)
+
+    def test_new_killer_mid_run_is_not_in_the_completion_check(self):
+        seed_killer("Huntress")
+        run = self.run
+        remaining = list(run["owned_killers"])
+        for killer in remaining:
+            run = self.service.submit_result(self.user_id, run["id"], "win", killer)
+        self.assertEqual(run["status"], "completed")
+
+    def test_new_perk_mid_run_is_not_drawn(self):
+        run = self.service.submit_result(self.user_id, self.run["id"], "win", self.run["owned_killers"][0])
+        unlocked_names_before = set(run["unlocked_perks"])
+        seed_new_perk("Brand New Perk")
+        drawn_names = {p["name"] for p in run["current_perks"]}
+        self.assertFalse(drawn_names - unlocked_names_before)
+
+    def test_loss_to_zero_refreezes_both_pools(self):
+        seed_killer("Huntress")
+        after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss", self.run["owned_killers"][0])
+        self.assertIn("Huntress", after_loss["owned_killers"])
 
     def test_win_advances_streak_and_completes_killer(self):
         updated = self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
@@ -120,6 +161,28 @@ class TestHellDifficulty(ChaosTestCase):
         run = self.service.get_or_create_run(self.user_id, "hell")
         with self.assertRaises(ValueError):
             self.service.submit_result(self.user_id, run["id"], "win", "The Trapper")
+
+    def test_apply_inactivity_loss_resets_to_zero_with_no_checkpoint(self):
+        self.service.apply_inactivity_loss(self.run["id"])
+        reloaded = self.service.get_or_create_run(self.user_id, self.difficulty)
+        self.assertEqual(reloaded["current_streak"], 0)
+
+    def test_apply_inactivity_loss_writes_a_flagged_match_log(self):
+        self.service.apply_inactivity_loss(self.run["id"])
+        log = db.session.scalars(
+            select(ChaosMatchLog).where(ChaosMatchLog.run_id == self.run["id"])
+        ).first()
+        self.assertEqual(log.result, "loss")
+        self.assertEqual(log.triggered_by, "inactivity")
+
+    def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self):
+        run = self.run
+        for killer in run["owned_killers"]:
+            run = self.service.submit_result(self.user_id, run["id"], "win", killer)
+        self.assertEqual(run["status"], "completed")
+        before_count = db.session.query(ChaosMatchLog).count()
+        self.service.apply_inactivity_loss(run["id"])
+        self.assertEqual(db.session.query(ChaosMatchLog).count(), before_count)
 
 
 class TestEasyCheckpoint(ChaosTestCase):

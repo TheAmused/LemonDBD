@@ -4,8 +4,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
-
-const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+import { backendBase } from '@/utils/staticUrl';
 
 export function useOwnedKillers() {
   const { token, user } = useAuth();

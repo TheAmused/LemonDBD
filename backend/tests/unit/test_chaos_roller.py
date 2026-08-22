@@ -1,12 +1,16 @@
 # backend/tests/unit/test_chaos_roller.py
 import unittest
+from app import create_app
+from app.core.config import TestingConfig
+from app.core.extensions import db
+from app.models import Character, Perk
 from app.services.chaos.constants import (
     ADDON_RARITY_POOL,
     CHAOS_CHECKPOINT_INTERVAL,
     DIFFICULTIES,
     checkpoint_interval,
 )
-from app.services.chaos.roller import draw_addon_rarities, draw_chaos_perks
+from app.services.chaos.roller import draw_addon_rarities, draw_chaos_perks, resolve_perks_by_names
 
 
 class TestChaosConstants(unittest.TestCase):
@@ -91,6 +95,44 @@ class TestDrawChaosPerks(unittest.TestCase):
         drawn, updated_used = draw_chaos_perks([], [])
         self.assertEqual(drawn, [])
         self.assertEqual(updated_used, [])
+
+
+class TestResolvePerksByNames(unittest.TestCase):
+    def setUp(self):
+        self.app = create_app(TestingConfig)
+        self.ctx = self.app.app_context()
+        self.ctx.push()
+        db.create_all()
+        character = Character(name="The Trapper", role="Killer")
+        db.session.add(character)
+        db.session.flush()
+        db.session.add(Perk(name="Brutal Strength", character_id=character.id, is_teachable=True, category="Killer"))
+        db.session.add(Perk(name="Unnerving Presence", character_id=None, is_teachable=False, category="Killer"))
+        db.session.add(Perk(name="Iron Will", character_id=None, is_teachable=False, category="Survivor"))
+        db.session.commit()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.ctx.pop()
+
+    def test_resolves_names_to_full_objects_in_order(self):
+        result = resolve_perks_by_names(["Unnerving Presence", "Brutal Strength"])
+        self.assertEqual([p["name"] for p in result], ["Unnerving Presence", "Brutal Strength"])
+        self.assertIn("icon_local_path", result[0])
+
+    def test_filters_by_killer_category(self):
+        # "Iron Will" is a Survivor perk -- resolving it through the killer
+        # perk pool lookup must not return it even if the name is passed in.
+        result = resolve_perks_by_names(["Iron Will"])
+        self.assertEqual(result, [])
+
+    def test_unknown_name_is_silently_dropped(self):
+        result = resolve_perks_by_names(["Brutal Strength", "Does Not Exist"])
+        self.assertEqual([p["name"] for p in result], ["Brutal Strength"])
+
+    def test_empty_input_returns_empty_list(self):
+        self.assertEqual(resolve_perks_by_names([]), [])
 
 
 if __name__ == "__main__":

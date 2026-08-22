@@ -28,6 +28,27 @@ def get_owned_killer_names_by_release(user_id: int, ownership_service: Ownership
     return [c["name"] for c in owned]
 
 
+def get_owned_killer_ids_by_release(user_id: int, ownership_service: OwnershipService) -> List[int]:
+    """Same release-order filtering as get_owned_killer_names_by_release,
+    but keyed by the killer's stable id -- a later rename won't drop it
+    from an already-frozen run's pool, and resolving the ids back to
+    names preserves this same release order (see resolve_killer_names_by_ids)."""
+    owned = [c for c in ownership_service.get_user_characters(user_id, role="Killer") if c["is_owned"]]
+    owned.sort(key=_release_key)
+    return [c["id"] for c in owned]
+
+
+def resolve_killer_names_by_ids(ids: List[int]) -> List[str]:
+    """Turns a frozen killer id list back into current names, in the same
+    order as ids (release order, if ids came from get_owned_killer_ids_by_release).
+    Unknown ids (a killer deleted outright) are dropped."""
+    if not ids:
+        return []
+    rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
+    by_id = {c.id: c.name for c in rows}
+    return [by_id[i] for i in ids if i in by_id]
+
+
 def get_general_killer_perk_names() -> List[str]:
     stmt = select(Perk.name).where(
         Perk.category == "Killer",

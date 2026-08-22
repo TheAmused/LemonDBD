@@ -29,6 +29,7 @@ class GauntletRun(Base):
     completed_characters_json: Mapped[str] = mapped_column(Text, default="[]")
     checkpoint_characters_json: Mapped[str] = mapped_column(Text, default="[]")
     current_loadout_json: Mapped[str] = mapped_column(Text, default="{}")
+    owned_characters_json: Mapped[str] = mapped_column(Text, default="[]")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=utcnow, onupdate=utcnow
@@ -60,6 +61,7 @@ class GauntletRun(Base):
                 self.checkpoint_characters_json or "[]"
             ),
             "current_loadout": json.loads(self.current_loadout_json or "{}"),
+            "owned_character_ids": json.loads(self.owned_characters_json or "[]"),
             "created_at": self.created_at.isoformat()
             if self.created_at
             else None,
@@ -83,6 +85,7 @@ class GauntletMatchLog(Base):
     streak_before: Mapped[int] = mapped_column(Integer)
     streak_after: Mapped[int] = mapped_column(Integer)
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    triggered_by: Mapped[str] = mapped_column(String(20), default="player")
 
     run: Mapped["GauntletRun"] = relationship(back_populates="match_logs")
 
@@ -100,5 +103,6 @@ class GauntletMatchLog(Base):
             "timestamp": self.timestamp.isoformat()
             if self.timestamp
             else None,
+            "triggered_by": self.triggered_by,
         }
 

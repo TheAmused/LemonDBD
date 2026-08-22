@@ -19,6 +19,8 @@ export interface ChaosRun {
   checkpoint_killers: string[];
   used_perks: string[];
   checkpoint_used_perks: string[];
+  owned_killers: string[];
+  unlocked_perks: string[];
   current_perks: Perk[];
   current_addon_rarities: AddonRarity[];
   perks_revealed: boolean;
@@ -37,6 +39,7 @@ export interface ChaosMatchLog {
   streak_before: number;
   streak_after: number;
   timestamp?: string;
+  triggered_by: 'player' | 'inactivity';
 }
 
 export interface ChaosStats {

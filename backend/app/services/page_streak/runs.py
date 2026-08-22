@@ -141,6 +141,30 @@ def record_match_result(
     return fetch_run(user_id, killer)
 
 
+def apply_inactivity_loss(run_id: int) -> None:
+    """Applies the same reset a real loss would (back to page 1, attempt
+    incremented), without a real perks/page submission. Used only by the
+    inactivity cleanup job (Task 11). A no-op if the run doesn't exist or
+    is already completed."""
+    r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run_id)).first()
+    if not r or r.status == "completed":
+        return
+
+    db.session.add(PageStreakPageLog(
+        run_id=r.id,
+        attempt=r.attempt,
+        page_number=r.current_page,
+        perks_json="[]",
+        result="loss",
+        triggered_by="inactivity",
+    ))
+
+    r.current_page = 1
+    r.attempt = r.attempt + 1
+
+    db.session.commit()
+
+
 def reset_active_run(
     user_id: int,
     killer: str,

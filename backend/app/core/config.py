@@ -64,6 +64,9 @@ class Config:
         str(Path(tempfile.gettempdir()) / "dbd_initial_scrape.lock"),
     )
 
+    # Streak Challenge Pool Cleanup
+    STREAK_INACTIVITY_PRUNE_DAYS = int(os.getenv("STREAK_INACTIVITY_PRUNE_DAYS", "90"))
+
 
 class TestingConfig(Config):
     TESTING = True

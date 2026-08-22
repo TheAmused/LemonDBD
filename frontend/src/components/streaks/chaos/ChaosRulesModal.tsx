@@ -79,6 +79,12 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
               Win with every killer you own on this difficulty and the run is complete.
             </p>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              The pool is locked in for the run you're on. New killers or perks you unlock mid-run won't join until you reset, lose back to zero, or complete it.
+            </p>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              An in-progress run untouched for 90 days automatically counts as a loss.
+            </p>
           </div>
 
           <div>

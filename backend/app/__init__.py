@@ -7,6 +7,7 @@ from pathlib import Path
 from flask import Flask, jsonify
 from flask_cors import CORS
 from sqlalchemy import text
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.core.config import Config
 from app.core.extensions import db, migrate
@@ -139,5 +140,22 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
             perk_service.reload_data()
         except Exception as e:
             logging.debug(f"PerkService reload_data notice: {e}")
+
+    if not flask_app.config.get("TESTING"):
+        def _run_inactivity_job():
+            with flask_app.app_context():
+                from app.services.streak_cleanup_service import apply_inactivity_losses
+                apply_inactivity_losses(flask_app.config["STREAK_INACTIVITY_PRUNE_DAYS"])
+
+        scheduler = BackgroundScheduler(daemon=True)
+        scheduler.add_job(
+            _run_inactivity_job,
+            trigger="cron",
+            hour=3,
+            minute=0,
+            id="apply_inactivity_streak_losses",
+            replace_existing=True,
+        )
+        scheduler.start()
 
     return flask_app

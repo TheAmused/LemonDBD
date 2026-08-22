@@ -3,7 +3,7 @@
 
 import React, { useEffect } from 'react';
 import { HistoryStats } from '@/types/historyStreak';
-import { X, BarChart2, CheckCircle2, XCircle, Rows3, Percent, Activity } from 'lucide-react';
+import { X, BarChart2, CheckCircle2, XCircle, Rows3, Percent, Activity, Clock } from 'lucide-react';
 
 export interface HistoryStatsDrawerProps {
   isOpen: boolean;
@@ -122,10 +122,19 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
                           {isWin ? <CheckCircle2 className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
                         </div>
                         <div>
-                          <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer_id}</div>
-                          <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-mono">
-                            Row {log.row_index + 1}
-                          </div>
+                          {log.triggered_by === 'inactivity' ? (
+                            <div className="flex items-center gap-1 text-sm font-bold text-slate-500 dark:text-slate-400">
+                              <Clock className="w-3.5 h-3.5" />
+                              Auto-loss, run was inactive
+                            </div>
+                          ) : (
+                            <>
+                              <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer_id}</div>
+                              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-mono">
+                                Row {log.row_index + 1}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
 

@@ -10,13 +10,14 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from curl_cffi import requests
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, g, jsonify, request
 from sqlalchemy import desc, func, or_, select
 
 from app.core.extensions import db
 from app.core.security import admin_required, get_current_user
 from app.models import BugReport, User
 from app.schemas.community import BugReportResponse
+from app.services.admin_control_service import log_admin_action
 
 logger = logging.getLogger(__name__)
 
@@ -315,6 +316,13 @@ def admin_update_bug_report(report_id: int):
 
     try:
         db.session.commit()
+        log_admin_action(
+            g.current_user.id,
+            action="bug_report_updated",
+            target_type="bug_report",
+            target_id=report_id,
+            details={"status": new_status} if new_status else None,
+        )
         return jsonify({
             "message": f"Bug report #{report_id} updated successfully.",
             "report": BugReportResponse.model_validate(report).model_dump()
@@ -336,6 +344,7 @@ def admin_delete_bug_report(report_id: int):
     try:
         db.session.delete(report)
         db.session.commit()
+        log_admin_action(g.current_user.id, action="bug_report_deleted", target_type="bug_report", target_id=report_id)
         return jsonify({"message": f"Bug report #{report_id} deleted."}), 200
     except Exception as e:
         db.session.rollback()

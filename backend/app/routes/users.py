@@ -21,6 +21,7 @@ from app.models import (
     UserPerkOwnership,
 )
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.services.admin_control_service import log_admin_action
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
 
@@ -114,6 +115,14 @@ def update_user_by_admin(user_id: int):
     if err:
         return jsonify({"error": err, "status": 400}), 400
 
+    log_admin_action(
+        g.current_user.id,
+        action="user_updated",
+        target_type="user",
+        target_id=user_id,
+        details={"role": validated_data.role, "is_active": validated_data.is_active},
+    )
+
     return jsonify({
         "status": "success",
         "message": "User updated successfully",
@@ -131,6 +140,8 @@ def delete_user_by_admin(user_id: int):
     success = user_service.admin_delete_user(user_id)
     if not success:
         return jsonify({"error": "User not found.", "status": 404}), 404
+
+    log_admin_action(g.current_user.id, action="user_deleted", target_type="user", target_id=user_id)
 
     return jsonify({"status": "success", "message": "User deleted successfully."}), 200
 

@@ -24,6 +24,8 @@ class Perk(Base):
     )
     is_teachable: Mapped[bool] = mapped_column(Boolean, default=True)
     category: Mapped[str] = mapped_column(String(20), default="Survivor")
+    is_disabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    disabled_reason: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     description: Mapped[str] = mapped_column(Text, default="")
     icon_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     icon_local_path: Mapped[Optional[str]] = mapped_column(
@@ -73,6 +75,8 @@ class Perk(Base):
             "icon_url": self.icon_url or "",
             "icon_local_path": self.icon_local_path or "",
             "translations": self.translations or {},
+            "is_disabled": self.is_disabled,
+            "disabled_reason": self.disabled_reason,
         }
 
 

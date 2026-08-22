@@ -41,6 +41,8 @@ class Character(Base):
     is_licensed: Mapped[Optional[bool]] = mapped_column(
         Boolean, default=False, nullable=True
     )
+    is_disabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    disabled_reason: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     release_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     release_date: Mapped[Optional[str]] = mapped_column(
         String(50), nullable=True
@@ -127,6 +129,8 @@ class Character(Base):
             "chapter_number": self.chapter_number or "",
             "dlc_type": self.dlc_type or "original_chapter",
             "is_licensed": bool(self.is_licensed),
+            "is_disabled": bool(self.is_disabled),
+            "disabled_reason": self.disabled_reason,
             "release_year": self.release_year or 2016,
             "release_date": self.release_date or "",
             "dlc_counterparts": counterparts,

@@ -17,6 +17,7 @@ from app.services.gauntlet import (
     resolve_character_names_by_ids,
     roll_gauntlet_target,
 )
+from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
 
@@ -55,6 +56,8 @@ class GauntletService:
             data = self._with_owned_characters(run.to_dict())
             data["tier_info"] = self.get_tier_info(data["current_streak"], role)
             return data
+
+        assert_challenge_mode_enabled("gauntlet")
 
         target_character = pick_initial_target(user_id, role, self.ownership_service)
         tier_info = self.get_tier_info(0, role)
@@ -118,6 +121,7 @@ class GauntletService:
         return data
 
     def reset_run(self, user_id: int, role: str) -> Dict[str, Any]:
+        assert_challenge_mode_enabled("gauntlet")
         r = db.session.scalars(
             select(GauntletRun).where(GauntletRun.user_id == user_id, GauntletRun.role == role)
         ).first()
@@ -131,6 +135,12 @@ class GauntletService:
     def submit_result(self, user_id: int, run_id: int, result: str, triggered_by: str = "player") -> Dict[str, Any]:
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
+        if triggered_by != "inactivity":
+            # Fail-safe: the kill switch applies to anything except the one
+            # known exempt caller (the inactivity cleanup job), rather than
+            # only to the one known "player" value -- a typo or a new
+            # triggered_by value added later stays guarded by default.
+            assert_challenge_mode_enabled("gauntlet")
 
         r = db.session.scalars(
             select(GauntletRun).where(

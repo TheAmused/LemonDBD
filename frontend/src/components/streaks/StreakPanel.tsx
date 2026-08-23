@@ -1,8 +1,9 @@
 // frontend/src/components/streaks/StreakPanel.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, type LucideIcon } from 'lucide-react';
+import { AlertTriangle, ArrowRight, type LucideIcon } from 'lucide-react';
 import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
+import { DisabledReasonModal } from '@/components/DisabledReasonModal';
 
 interface StreakPanelBaseProps {
   title: string;
@@ -12,6 +13,8 @@ interface StreakPanelBaseProps {
   accentBorder: string;
   color: PanelColor;
   image?: string;
+  disabled?: boolean;
+  disabledReason?: string | null;
 }
 
 type StreakPanelProps = StreakPanelBaseProps &
@@ -30,7 +33,10 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   href,
   onClick,
   comingSoon,
+  disabled,
+  disabledReason,
 }) => {
+  const [showDisabledModal, setShowDisabledModal] = useState(false);
   const hoverClasses = PANEL_HOVER_CLASSES[color];
   const body = (
     <>
@@ -55,7 +61,12 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
             <Icon className={`h-5 w-5 ${accent}`} />
           </div>
         )}
-        {comingSoon ? (
+        {disabled ? (
+          <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-950/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-400">
+            <AlertTriangle className="h-3 w-3" />
+            Disabled
+          </span>
+        ) : comingSoon ? (
           <span className="rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Coming soon
           </span>
@@ -64,7 +75,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         )}
       </div>
 
-      <h3 className={`relative mt-4 text-sm font-extrabold tracking-wide ${comingSoon ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
+      <h3 className={`relative mt-4 text-sm font-extrabold tracking-wide ${comingSoon || disabled ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
         {title}
       </h3>
       <p className="relative mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{description}</p>
@@ -72,6 +83,26 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   );
 
   const base = `relative flex h-full flex-col overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-all shadow-sm ${accentBorder}`;
+
+  if (disabled) {
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => setShowDisabledModal(true)}
+          className={`text-left cursor-pointer ${base} bg-slate-100/50 dark:bg-slate-900/30 opacity-70`}
+        >
+          {body}
+        </button>
+        <DisabledReasonModal
+          isOpen={showDisabledModal}
+          onClose={() => setShowDisabledModal(false)}
+          label={title}
+          reason={disabledReason}
+        />
+      </>
+    );
+  }
 
   if (comingSoon) {
     return <div className={`${base} bg-slate-100/50 dark:bg-slate-900/30 opacity-70`}>{body}</div>;

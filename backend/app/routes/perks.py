@@ -138,6 +138,15 @@ def get_character_detail(character_name: str):
     return jsonify({"data": detail}), 200
 
 
+@perks_bp.route("/api/v1/challenge-modes", methods=["GET"])
+def list_challenge_modes_public():
+    """Public read of each challenge mode's admin kill-switch state, so the
+    frontend can show a disabled badge and block entry before a user hits
+    the 400 that only fires when starting a brand-new run."""
+    from app.services.admin_control_service import get_challenge_mode_settings
+    return jsonify({"modes": get_challenge_mode_settings()}), 200
+
+
 @perks_bp.route("/api/v1/survivors", methods=["GET"])
 def list_survivors():
     lang = _extract_lang()

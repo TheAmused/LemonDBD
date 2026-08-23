@@ -4,6 +4,8 @@
 import React, { useState } from 'react';
 import { CharacterItem, PerkItem, getAssetUrl, renderFormattedDbdText } from '../types';
 import { Perk } from '@/types/perks';
+import { DisabledBadge } from '@/components/DisabledBadge';
+import { DisabledReasonModal } from '@/components/DisabledReasonModal';
 
 interface CharacterPerksSectionProps {
   perks: PerkItem[];
@@ -21,6 +23,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
   t,
 }) => {
   const [hoveredPerkIndex, setHoveredPerkIndex] = useState<number | null>(null);
+  const [disabledModalPerk, setDisabledModalPerk] = useState<PerkItem | null>(null);
 
   if (perks.length === 0) return null;
 
@@ -56,13 +59,19 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
               <img
                 src={iconSrc}
                 alt={perk.name}
-                className="h-full w-full object-contain filter drop-shadow-[0_0_14px_rgba(245,158,11,0.6)]"
+                className={`h-full w-full object-contain filter drop-shadow-[0_0_14px_rgba(245,158,11,0.6)] ${
+                  perk.is_disabled ? 'grayscale opacity-50' : ''
+                }`}
                 loading="lazy"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
             </button>
+
+            {perk.is_disabled && (
+              <DisabledBadge label={perk.name} onClick={() => setDisabledModalPerk(perk)} />
+            )}
 
             {hoveredPerkIndex === idx && (
               <div
@@ -88,6 +97,13 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
           </div>
         );
       })}
+
+      <DisabledReasonModal
+        isOpen={disabledModalPerk !== null}
+        onClose={() => setDisabledModalPerk(null)}
+        label={disabledModalPerk?.name || ''}
+        reason={disabledModalPerk?.disabled_reason}
+      />
     </div>
   );
 };

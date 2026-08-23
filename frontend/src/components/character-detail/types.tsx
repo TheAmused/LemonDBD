@@ -22,6 +22,8 @@ export interface CharacterItem {
   release_date?: string;
   dlc_counterparts?: string[];
   lore?: string;
+  is_disabled?: boolean;
+  disabled_reason?: string | null;
 }
 
 export interface PerkItem {
@@ -37,6 +39,8 @@ export interface PerkItem {
   icon_url?: string;
   icon_local_path?: string;
   is_teachable?: boolean;
+  is_disabled?: boolean;
+  disabled_reason?: string | null;
 }
 
 export interface AddonItem {

@@ -195,7 +195,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'smash-or-pass',
-      label: dict?.sidebar?.smashOrPass || '💋 Smash or Pass',
+      label: dict?.sidebar?.smashOrPass || 'Smash or Pass',
       icon: Heart,
       color: 'text-pink-400',
       activeBg:

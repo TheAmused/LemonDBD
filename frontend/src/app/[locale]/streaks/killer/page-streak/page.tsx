@@ -1,6 +1,7 @@
 // frontend/src/app/[locale]/streaks/killer/page-streak/page.tsx
 import React from 'react';
 import { PageStreakBoard } from '@/components/streaks/PageStreakBoard';
+import { ChallengeModeGate } from '@/components/streaks/ChallengeModeGate';
 
 export default async function PageStreakPage({
   params,
@@ -8,5 +9,9 @@ export default async function PageStreakPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return <PageStreakBoard locale={locale} />;
+  return (
+    <ChallengeModeGate mode="page_streak" locale={locale} role="killer">
+      <PageStreakBoard locale={locale} />
+    </ChallengeModeGate>
+  );
 }

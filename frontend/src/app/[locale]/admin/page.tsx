@@ -481,7 +481,7 @@ export default function AdminPanelPage() {
               }`}
             >
               <ShieldAlert className="h-4 w-4" />
-              <span>Challenge Control</span>
+              <span>Kill Switches</span>
             </button>
 
             <button

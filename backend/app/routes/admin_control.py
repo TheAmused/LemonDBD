@@ -95,7 +95,7 @@ def set_character_disabled(character_id: int):
     )
 
     return jsonify({
-        "message": f"{character.name} is now {'disabled' if is_disabled else 'enabled'} for challenges.",
+        "message": f"{character.name} is now {'disabled' if is_disabled else 'enabled'}.",
         "character": {
             "id": character.id,
             "name": character.name,
@@ -109,9 +109,8 @@ def set_character_disabled(character_id: int):
 @admin_required
 def list_perks_for_admin():
     """Lists perks with their disable state, for the admin kill-switch UI.
-    Defaults to Killer-category perks -- that's the only category that's
-    ever actually needed disabling in practice."""
-    category = request.args.get("category", "Killer").strip()
+    Defaults to every category -- a broken perk can ship on either side."""
+    category = request.args.get("category", "All").strip()
     search = request.args.get("search", "").strip().lower()
 
     stmt = select(Perk)
@@ -121,7 +120,10 @@ def list_perks_for_admin():
 
     perks = db.session.scalars(stmt).all()
     if search:
-        perks = [p for p in perks if search in p.name.lower()]
+        perks = [
+            p for p in perks
+            if search in p.name.lower() or (p.character and search in p.character.name.lower())
+        ]
 
     return jsonify({
         "count": len(perks),
@@ -172,7 +174,7 @@ def set_perk_disabled(perk_id: int):
     )
 
     return jsonify({
-        "message": f"{perk.name} is now {'disabled' if is_disabled else 'enabled'} for challenges.",
+        "message": f"{perk.name} is now {'disabled' if is_disabled else 'enabled'}.",
         "perk": {
             "id": perk.id,
             "name": perk.name,

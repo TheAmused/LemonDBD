@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { AuthModal } from '@/components/AuthModal';
+import { DisabledBadge } from '@/components/DisabledBadge';
+import { DisabledReasonModal } from '@/components/DisabledReasonModal';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import {
   CharacterItem,
@@ -107,6 +109,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
   const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<CharacterItem | null>(null);
+  const [disabledModalCharacter, setDisabledModalCharacter] = useState<CharacterItem | null>(null);
 
   const backendBase = getBackendBaseUrl();
 
@@ -459,6 +462,13 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   </span>
                 </div>
 
+                {char.is_disabled && !ownershipMode && (
+                  <DisabledBadge
+                    label={char.name}
+                    onClick={() => setDisabledModalCharacter(char)}
+                    position="top-2 left-2"
+                  />
+                )}
                 {ownershipMode && !isOwned && (
                   <div
                     className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/80 border border-amber-500/40 text-amber-400 backdrop-blur-md"
@@ -481,8 +491,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     src={avatarSrc}
                     alt={char.name}
                     className={`h-full w-full object-cover object-top transition-transform duration-500 ${
-                      ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-105'
-                    }`}
+                      char.is_disabled ? 'grayscale opacity-60' : ''
+                    } ${ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-105'}`}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
                         'https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/IconHelpLoading_players.png/revision/latest';
@@ -660,6 +670,13 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           Changes saved
         </div>
       )}
+
+      <DisabledReasonModal
+        isOpen={disabledModalCharacter !== null}
+        onClose={() => setDisabledModalCharacter(null)}
+        label={disabledModalCharacter?.name || ''}
+        reason={disabledModalCharacter?.disabled_reason}
+      />
 
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>

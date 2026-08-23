@@ -2,7 +2,7 @@
 // frontend/src/components/admin/AdminChallengeControl.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Ban, CheckCircle2, Power, Search, Skull, Sparkles } from 'lucide-react';
+import { Ban, CheckCircle2, Power, Search, Shield, Skull, Sparkles } from 'lucide-react';
 import {
   AdminCharacterRow,
   AdminPerkRow,
@@ -62,11 +62,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     try {
       const [charsRes, perksRes] = await Promise.all([
         fetch(
-          `${backendBase}/api/v1/admin/characters?role=Killer&search=${encodeURIComponent(searchTerm)}`,
+          `${backendBase}/api/v1/admin/characters?role=All&search=${encodeURIComponent(searchTerm)}`,
           { headers: authHeaders(token) }
         ),
         fetch(
-          `${backendBase}/api/v1/admin/perks?category=Killer&search=${encodeURIComponent(searchTerm)}`,
+          `${backendBase}/api/v1/admin/perks?category=All&search=${encodeURIComponent(searchTerm)}`,
           { headers: authHeaders(token) }
         ),
       ]);
@@ -123,7 +123,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
       if (res.ok) {
         onActionMessage({
           type: 'success',
-          text: `${character.name} is now ${nextDisabled ? 'disabled' : 'enabled'} for challenges.`,
+          text: `${character.name} is now ${nextDisabled ? 'disabled' : 'enabled'}.`,
         });
         await loadRoster(search);
       } else {
@@ -147,7 +147,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
       if (res.ok) {
         onActionMessage({
           type: 'success',
-          text: `${perk.name} is now ${nextDisabled ? 'disabled' : 'enabled'} for challenges.`,
+          text: `${perk.name} is now ${nextDisabled ? 'disabled' : 'enabled'}.`,
         });
         await loadRoster(search);
       } else {
@@ -245,7 +245,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 subTab === 'killers' ? 'bg-amber-500/10 text-amber-400' : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              <Skull className="h-3.5 w-3.5" /> Killers
+              <Skull className="h-3.5 w-3.5" /> Characters
             </button>
             <button
               type="button"
@@ -262,15 +262,15 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={subTab === 'killers' ? 'Search killers...' : 'Search perks...'}
+              placeholder={subTab === 'killers' ? 'Search characters...' : 'Search perks or owner...'}
               className="pl-7 pr-3 py-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-amber-500"
             />
           </div>
         </div>
         <p className="text-[11px] text-slate-500 mb-4">
-          Survivors are left out here on purpose, they're mostly cosmetic skins with perks and have never
-          needed disabling. Killers occasionally ship with a bugged power; perks occasionally ship broken
-          on their own.
+          Covers both roles: killers occasionally ship with a bugged power, and a survivor scraped from the
+          wiki ahead of their actual in-game release needs to stay hidden until launch. Perks occasionally
+          ship broken on their own too.
         </p>
 
         {loading ? (
@@ -289,16 +289,29 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
                 }`}
               >
-                <div className="h-10 w-10 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
+                <div className="relative h-10 w-10 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
                   {c.avatar_local_path ? (
                     <img
                       src={staticUrl(c.avatar_local_path)}
                       alt={c.name}
                       className={`h-full w-full object-cover ${c.is_disabled ? 'grayscale opacity-60' : ''}`}
                     />
+                  ) : c.role === 'Survivor' ? (
+                    <Shield className="h-4 w-4 text-slate-600" />
                   ) : (
                     <Skull className="h-4 w-4 text-slate-600" />
                   )}
+                  <span
+                    className={`absolute bottom-0 right-0 flex h-3.5 w-3.5 items-center justify-center rounded-tl-md ${
+                      c.role === 'Survivor' ? 'bg-emerald-500/80 text-emerald-950' : 'bg-rose-500/80 text-rose-950'
+                    }`}
+                  >
+                    {c.role === 'Survivor' ? (
+                      <Shield className="h-2 w-2" />
+                    ) : (
+                      <Skull className="h-2 w-2" />
+                    )}
+                  </span>
                 </div>
                 <span className="text-[10px] font-semibold text-slate-300 truncate w-full">{c.name}</span>
                 {c.is_disabled ? (

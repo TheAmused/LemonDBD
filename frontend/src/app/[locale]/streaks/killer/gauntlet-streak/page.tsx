@@ -1,6 +1,7 @@
 // frontend/src/app/[locale]/streaks/killer/gauntlet-streak/page.tsx
 import React from 'react';
 import { GauntletBoard } from '@/components/streaks/gauntlet/GauntletBoard';
+import { ChallengeModeGate } from '@/components/streaks/ChallengeModeGate';
 
 export default async function KillerGauntletStreakPage({
   params,
@@ -8,5 +9,9 @@ export default async function KillerGauntletStreakPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return <GauntletBoard locale={locale} role="killer" />;
+  return (
+    <ChallengeModeGate mode="gauntlet" locale={locale} role="killer">
+      <GauntletBoard locale={locale} role="killer" />
+    </ChallengeModeGate>
+  );
 }

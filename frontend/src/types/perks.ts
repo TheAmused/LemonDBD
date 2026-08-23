@@ -21,6 +21,8 @@ export interface Perk {
   icon_local_path: string;
   is_owned?: boolean;
   is_unlocked?: boolean;
+  is_disabled?: boolean;
+  disabled_reason?: string | null;
 }
 
 export interface CharacterItem {
@@ -30,6 +32,8 @@ export interface CharacterItem {
   category?: RoleCategory | string;
   avatar_local_path?: string;
   portrait_url?: string;
+  is_disabled?: boolean;
+  disabled_reason?: string | null;
 }
 
 export interface CharacterOption {

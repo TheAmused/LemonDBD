@@ -10,7 +10,7 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
-import { Shield, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 
 function LandingContent() {
   const params = useParams();
@@ -71,7 +71,7 @@ function LandingContent() {
               href={`/${locale}/perks`}
               className="inline-flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 px-7 py-3.5 text-sm font-black text-slate-950 shadow-xl shadow-amber-950/50 hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
-              <Shield className="h-4 w-4" />
+              <Sparkles className="h-4 w-4" />
               <span>{dict?.landing?.enterButton || 'Enter Perks Vault'}</span>
               <ArrowRight className="h-4 w-4" />
             </Link>

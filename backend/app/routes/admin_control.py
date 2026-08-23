@@ -2,7 +2,7 @@
 from typing import Optional
 
 from flask import Blueprint, g, jsonify, request
-from sqlalchemy import select
+from sqlalchemy import and_, case, select
 
 from app.core.extensions import db
 from app.core.security import admin_required
@@ -41,7 +41,17 @@ def list_characters_for_admin():
     stmt = select(Character)
     if role and role.lower() != "all":
         stmt = stmt.where(Character.role == role)
-    stmt = stmt.order_by(Character.name.asc())
+    # Same release-order convention as the public /api/v1/characters list
+    # (queries_character.fetch_characters), so admins see killers/survivors
+    # in the order players actually recognize them by, not A-Z.
+    stmt = stmt.order_by(
+        case(
+            (and_(Character.release_number.is_not(None), Character.release_number > 0), Character.release_number),
+            else_=9999,
+        ).asc(),
+        Character.id.asc(),
+        Character.name.asc(),
+    )
 
     characters = db.session.scalars(stmt).all()
     if search:

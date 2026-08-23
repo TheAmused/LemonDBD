@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams, useParams } from 'next/navigation';
 import {
   Flame,
-  Shield,
+  Sparkles,
   Dices,
   Menu,
   X,
@@ -16,7 +16,7 @@ import {
   Calculator,
   Wand2,
   Compass,
-  Repeat,
+  Swords,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
@@ -148,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'perks',
       label: dict?.filters?.perks || dict?.sidebar?.perks || 'Perks',
-      icon: Shield,
+      icon: Sparkles,
       color: 'text-red-500',
       activeBg:
         'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20',
@@ -169,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'streaks',
       label: dict?.sidebar?.challenges || 'Challenges',
-      icon: Repeat,
+      icon: Swords,
       color: 'text-orange-400',
       activeBg:
         'bg-orange-500/10 text-orange-400 border border-orange-500/20',
@@ -201,6 +201,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg:
         'bg-pink-500/10 text-pink-400 border border-pink-500/20',
       href: `/${currentLocale}/smash-or-pass`,
+    },
+    {
+      id: 'trophies',
+      label: dict?.sidebar?.trophies || 'Trophies',
+      icon: Trophy,
+      color: 'text-yellow-500',
+      activeBg:
+        'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20',
+      // No destination page yet -- renders as an inert "Soon" badge below.
+      href: undefined,
+      comingSoon: true,
     },
   ];
 
@@ -317,10 +328,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color={item.color}
               activeBg={item.activeBg}
               href={item.href}
-              isActive={checkIsActive(item.id, item.href)}
-              onClick={() => {
-                setMobileOpen(false);
-              }}
+              isActive={!item.comingSoon && checkIsActive(item.id, item.href)}
+              badge={item.comingSoon ? 'Soon' : undefined}
+              badgeColor="bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20"
+              onClick={
+                item.comingSoon
+                  ? undefined
+                  : () => {
+                      setMobileOpen(false);
+                    }
+              }
             />
           ))}
 

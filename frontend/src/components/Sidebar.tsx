@@ -79,6 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
   const [bugModalOpen, setBugModalOpen] = useState(false);
   const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
   const [othersOpen, setOthersOpen] = useState(false);
@@ -416,7 +417,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           user={user}
           isAuthenticated={isAuthenticated}
           isAdmin={isAdmin}
-          onOpenAuthModal={() => setAuthModalOpen(true)}
+          onOpenAuthModal={() => {
+            setAuthModalIntent('login');
+            setAuthModalOpen(true);
+          }}
+          onOpenVerifyModal={() => {
+            setAuthModalIntent('verify');
+            setAuthModalOpen(true);
+          }}
           onLogout={logout}
           onNavigateMobile={() => setMobileOpen(false)}
         />
@@ -526,6 +534,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
+        verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
       />
       <BugReportModal
         isOpen={bugModalOpen}

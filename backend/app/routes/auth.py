@@ -75,6 +75,66 @@ def login():
     }), 200
 
 
+@auth_bp.route("/verify-email", methods=["POST"])
+def verify_email():
+    data = request.get_json(silent=True) or {}
+    email = data.get("email")
+    code = data.get("code")
+    user, err = user_service.verify_email(email, code)
+    if err:
+        return jsonify({"status": "error", "message": err}), 400
+
+    return jsonify({
+        "status": "success",
+        "message": "Email verified successfully.",
+        "user": UserResponse.model_validate(user).model_dump(),
+    }), 200
+
+
+@auth_bp.route("/resend-verification", methods=["POST"])
+def resend_verification():
+    data = request.get_json(silent=True) or {}
+    email = data.get("email")
+    if not email:
+        return jsonify({"error": "Email is required.", "status": 400}), 400
+
+    ok, err = user_service.resend_verification(email)
+    if not ok:
+        return jsonify({"error": err, "status": 429}), 429
+
+    return jsonify({
+        "status": "success",
+        "message": "If that account exists and isn't verified yet, a new verification email has been sent.",
+    }), 200
+
+
+@auth_bp.route("/forgot-password", methods=["POST"])
+def forgot_password():
+    data = request.get_json(silent=True) or {}
+    email = data.get("email")
+    if not email:
+        return jsonify({"error": "Email is required.", "status": 400}), 400
+
+    user_service.request_password_reset(email)
+    return jsonify({
+        "status": "success",
+        "message": "If that email is registered, a password reset link has been sent.",
+    }), 200
+
+
+@auth_bp.route("/reset-password", methods=["POST"])
+def reset_password():
+    data = request.get_json(silent=True) or {}
+    token = data.get("token")
+    new_password = data.get("new_password")
+
+    user, err = user_service.reset_password(token, new_password)
+    if err:
+        return jsonify({"error": err, "status": 400}), 400
+
+    return jsonify({"status": "success", "message": "Password reset successfully."}), 200
+
+
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
     return jsonify({"status": "success", "message": "Logged out successfully"}), 200

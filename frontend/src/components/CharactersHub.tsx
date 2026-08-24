@@ -14,6 +14,7 @@ import {
   Flame,
   Lock,
   Check,
+  MailWarning,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { AuthModal } from '@/components/AuthModal';
@@ -100,6 +101,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [detailData, setDetailData] = useState<CharacterDetailData | null>(null);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
+  const [verificationNoticeOpen, setVerificationNoticeOpen] = useState<boolean>(false);
   const [ownershipMode, setOwnershipMode] = useState<boolean>(false);
   const [ownershipLoading, setOwnershipLoading] = useState<boolean>(false);
   const [ownershipSaving, setOwnershipSaving] = useState<boolean>(false);
@@ -153,7 +156,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       return;
     }
     if (!isAuthenticated || !token || !user) {
+      setAuthModalIntent('login');
       setIsAuthModalOpen(true);
+      return;
+    }
+    if (!user.is_verified) {
+      setVerificationNoticeOpen(true);
       return;
     }
 
@@ -671,6 +679,35 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         </div>
       )}
 
+      {/* Verification required notice */}
+      {verificationNoticeOpen && user && (
+        <div
+          role="status"
+          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-3 rounded-2xl bg-amber-600 px-5 py-3 text-xs font-bold text-white shadow-2xl shadow-amber-900/50 ring-2 ring-amber-400/50 animate-in fade-in slide-in-from-top-4 duration-300"
+        >
+          <MailWarning className="h-4 w-4 shrink-0" />
+          <span>Verify your email to manage your character collection.</span>
+          <button
+            type="button"
+            onClick={() => {
+              setVerificationNoticeOpen(false);
+              setAuthModalIntent('verify');
+              setIsAuthModalOpen(true);
+            }}
+            className="rounded-lg bg-white/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-white/30 transition-colors cursor-pointer"
+          >
+            Verify email
+          </button>
+          <button
+            type="button"
+            onClick={() => setVerificationNoticeOpen(false)}
+            className="text-[11px] font-black underline cursor-pointer"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       <DisabledReasonModal
         isOpen={disabledModalCharacter !== null}
         onClose={() => setDisabledModalCharacter(null)}
@@ -678,7 +715,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         reason={disabledModalCharacter?.disabled_reason}
       />
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
+      />
     </div>
   );
 };

@@ -30,6 +30,21 @@ class User(Base):
     is_active: Mapped[bool] = mapped_column(
         Boolean, default=True, nullable=False
     )
+    is_verified: Mapped[bool] = mapped_column(
+        Boolean, default=False, nullable=False
+    )
+    verification_code: Mapped[Optional[str]] = mapped_column(
+        String(6), nullable=True
+    )
+    verification_code_expires_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime, nullable=True
+    )
+    reset_token: Mapped[Optional[str]] = mapped_column(
+        String(255), unique=True, index=True, nullable=True
+    )
+    reset_token_expires_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime, nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=utcnow, onupdate=utcnow
@@ -53,6 +68,7 @@ class User(Base):
             "role": self.role,
             "avatar_url": self.avatar_url,
             "is_active": self.is_active,
+            "is_verified": self.is_verified,
             "created_at": self.created_at.isoformat()
             if self.created_at
             else None,

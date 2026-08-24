@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { LogIn, LogOut, Crown } from 'lucide-react';
+import { LogIn, LogOut, Crown, MailWarning } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 
 export interface SidebarUserSectionProps {
@@ -12,6 +12,7 @@ export interface SidebarUserSectionProps {
   isAuthenticated: boolean;
   isAdmin: boolean;
   onOpenAuthModal: () => void;
+  onOpenVerifyModal: () => void;
   onLogout: () => void;
   onNavigateMobile?: () => void;
 }
@@ -22,6 +23,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
   isAuthenticated,
   isAdmin,
   onOpenAuthModal,
+  onOpenVerifyModal,
   onLogout,
   onNavigateMobile,
 }) => {
@@ -46,8 +48,14 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
             >
               <UserAvatar user={user} size="sm" />
               <div className="truncate">
-                <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-                  {user.username}
+                <p className="flex items-center gap-1 text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                  <span className="truncate">{user.username}</span>
+                  {user.is_verified === false && (
+                    <MailWarning
+                      className="h-3 w-3 shrink-0 text-amber-500"
+                      aria-label="Email not verified"
+                    />
+                  )}
                 </p>
                 <span
                   className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${
@@ -82,6 +90,16 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               </button>
             </div>
           </div>
+
+          {user.is_verified === false && (
+            <button
+              type="button"
+              onClick={onOpenVerifyModal}
+              className="w-full text-left text-[10px] text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
+            >
+              Email not verified. Verify now
+            </button>
+          )}
         </div>
       )}
     </div>

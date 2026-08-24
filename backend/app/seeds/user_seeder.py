@@ -48,6 +48,7 @@ def seed_default_users() -> None:
                     role=udata["role"],
                     avatar_url=udata["avatar_url"],
                     is_active=True,
+                    is_verified=True,
                 )
                 db.session.add(new_user)
                 try:

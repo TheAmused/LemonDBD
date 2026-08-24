@@ -112,8 +112,8 @@ class UserService:
     def resend_verification(self, email: str) -> Tuple[bool, Optional[str]]:
         return resend_verification_email(email)
 
-    def request_password_reset(self, email: str) -> None:
-        request_password_reset(email)
+    def request_password_reset(self, email: str) -> Tuple[bool, Optional[str]]:
+        return request_password_reset(email)
 
     def reset_password(self, token: str, new_password: str) -> Tuple[Optional[User], Optional[str]]:
         return reset_password_with_token(token, new_password)

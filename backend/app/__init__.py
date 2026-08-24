@@ -10,7 +10,7 @@ from sqlalchemy import text
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.core.config import Config
-from app.core.extensions import db, migrate
+from app.core.extensions import db, migrate, mail
 import app.models  # noqa: F401
 
 
@@ -45,6 +45,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
 
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
+    mail.init_app(flask_app)
 
     def _init_db_safely():
         from app.services.db_service import DatabaseService

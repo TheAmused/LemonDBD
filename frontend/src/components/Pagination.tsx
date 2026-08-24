@@ -1,8 +1,8 @@
 'use client';
 // frontend/src/components/Pagination.tsx
 
-import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { PerkDictionary } from '@/types/perks';
 
 interface PaginationProps {
@@ -28,6 +28,21 @@ export const Pagination: React.FC<PaginationProps> = ({
   const endIdx = Math.min(page * limit, totalResults);
   const safeTotalPages = Math.max(1, totalPages || 1);
 
+  const [jumpValue, setJumpValue] = useState('');
+
+  useEffect(() => {
+    setJumpValue('');
+  }, [page]);
+
+  const handleJumpSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const target = Number(jumpValue);
+    if (Number.isInteger(target) && target >= 1 && target <= safeTotalPages) {
+      onPageChange(target);
+    }
+    setJumpValue('');
+  };
+
   return (
     <nav
       aria-label="Pagination Navigation"
@@ -42,7 +57,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         {dict?.pagination?.results || 'results'}
       </div>
 
-      <div className="flex items-center justify-between sm:justify-end gap-3">
+      <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3">
         <div className="flex items-center gap-2">
           <label htmlFor="limit-select" className="text-xs font-medium text-slate-400">
             {dict?.pagination?.perPage || 'Per page'}:
@@ -60,7 +75,16 @@ export const Pagination: React.FC<PaginationProps> = ({
           </select>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onPageChange(1)}
+            disabled={page <= 1}
+            aria-label="First Page"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed border border-slate-800"
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </button>
           <button
             type="button"
             onClick={() => onPageChange(page - 1)}
@@ -84,7 +108,34 @@ export const Pagination: React.FC<PaginationProps> = ({
           >
             <ChevronRight className="h-4 w-4" />
           </button>
+          <button
+            type="button"
+            onClick={() => onPageChange(safeTotalPages)}
+            disabled={page >= safeTotalPages}
+            aria-label="Last Page"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed border border-slate-800"
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </button>
         </div>
+
+        {safeTotalPages > 7 && (
+          <form onSubmit={handleJumpSubmit} className="flex items-center gap-1.5">
+            <label htmlFor="jump-to-page" className="text-xs font-medium text-slate-400">
+              Go to:
+            </label>
+            <input
+              id="jump-to-page"
+              type="number"
+              min={1}
+              max={safeTotalPages}
+              value={jumpValue}
+              onChange={(e) => setJumpValue(e.target.value)}
+              placeholder={`${page}`}
+              className="w-9 [appearance:textfield] rounded-lg bg-slate-900 px-1.5 py-1 text-center text-xs font-semibold text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 border border-slate-800 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+            />
+          </form>
+        )}
       </div>
     </nav>
   );

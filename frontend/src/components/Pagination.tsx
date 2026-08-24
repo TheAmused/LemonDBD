@@ -1,8 +1,8 @@
 'use client';
 // frontend/src/components/Pagination.tsx
 
-import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { PerkDictionary } from '@/types/perks';
 
 interface PaginationProps {
@@ -13,6 +13,25 @@ interface PaginationProps {
   onPageChange: (newPage: number) => void;
   onLimitChange: (newLimit: number) => void;
   dict?: PerkDictionary;
+}
+
+type PageToken = number | 'ellipsis';
+
+function getPageTokens(current: number, total: number): PageToken[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const tokens: PageToken[] = [1];
+  const rangeStart = Math.max(2, current - 1);
+  const rangeEnd = Math.min(total - 1, current + 1);
+
+  if (rangeStart > 2) tokens.push('ellipsis');
+  for (let i = rangeStart; i <= rangeEnd; i++) tokens.push(i);
+  if (rangeEnd < total - 1) tokens.push('ellipsis');
+
+  tokens.push(total);
+  return tokens;
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -27,6 +46,18 @@ export const Pagination: React.FC<PaginationProps> = ({
   const startIdx = totalResults === 0 ? 0 : (page - 1) * limit + 1;
   const endIdx = Math.min(page * limit, totalResults);
   const safeTotalPages = Math.max(1, totalPages || 1);
+  const pageTokens = getPageTokens(page, safeTotalPages);
+
+  const [jumpValue, setJumpValue] = useState('');
+
+  const handleJumpSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const target = Number(jumpValue);
+    if (Number.isInteger(target) && target >= 1 && target <= safeTotalPages) {
+      onPageChange(target);
+    }
+    setJumpValue('');
+  };
 
   return (
     <nav
@@ -42,7 +73,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         {dict?.pagination?.results || 'results'}
       </div>
 
-      <div className="flex items-center justify-between sm:justify-end gap-3">
+      <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3">
         <div className="flex items-center gap-2">
           <label htmlFor="limit-select" className="text-xs font-medium text-slate-400">
             {dict?.pagination?.perPage || 'Per page'}:
@@ -60,7 +91,16 @@ export const Pagination: React.FC<PaginationProps> = ({
           </select>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onPageChange(1)}
+            disabled={page <= 1}
+            aria-label="First Page"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed border border-slate-800"
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </button>
           <button
             type="button"
             onClick={() => onPageChange(page - 1)}
@@ -71,9 +111,27 @@ export const Pagination: React.FC<PaginationProps> = ({
             <ChevronLeft className="h-4 w-4" />
           </button>
 
-          <span className="px-2 text-xs font-bold text-slate-200">
-            {page} / {safeTotalPages}
-          </span>
+          {pageTokens.map((token, idx) =>
+            token === 'ellipsis' ? (
+              <span key={`ellipsis-${idx}`} className="px-1 text-xs text-slate-500 select-none">
+                &hellip;
+              </span>
+            ) : (
+              <button
+                key={token}
+                type="button"
+                onClick={() => onPageChange(token)}
+                aria-current={token === page ? 'page' : undefined}
+                className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-1.5 text-xs font-bold transition-colors cursor-pointer border ${
+                  token === page
+                    ? 'bg-cyan-600 text-white border-cyan-500'
+                    : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border-slate-800'
+                }`}
+              >
+                {token}
+              </button>
+            )
+          )}
 
           <button
             type="button"
@@ -84,7 +142,34 @@ export const Pagination: React.FC<PaginationProps> = ({
           >
             <ChevronRight className="h-4 w-4" />
           </button>
+          <button
+            type="button"
+            onClick={() => onPageChange(safeTotalPages)}
+            disabled={page >= safeTotalPages}
+            aria-label="Last Page"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed border border-slate-800"
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </button>
         </div>
+
+        {safeTotalPages > 7 && (
+          <form onSubmit={handleJumpSubmit} className="flex items-center gap-1.5">
+            <label htmlFor="jump-to-page" className="text-xs font-medium text-slate-400">
+              Go to:
+            </label>
+            <input
+              id="jump-to-page"
+              type="number"
+              min={1}
+              max={safeTotalPages}
+              value={jumpValue}
+              onChange={(e) => setJumpValue(e.target.value)}
+              placeholder={`${page}`}
+              className="w-14 rounded-lg bg-slate-900 px-2 py-1 text-xs font-semibold text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 border border-slate-800"
+            />
+          </form>
+        )}
       </div>
     </nav>
   );

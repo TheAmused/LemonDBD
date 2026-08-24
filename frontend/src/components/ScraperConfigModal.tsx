@@ -20,6 +20,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { ConfirmModal } from '@/components/ConfirmModal';
 
 interface ScraperConfigModalProps {
   isOpen: boolean;
@@ -73,6 +74,7 @@ export function ScraperConfigModal({
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState<string | null>(null);
   const [importSummary, setImportSummary] = useState<Record<string, { created: number; updated: number }> | null>(null);
+  const [showReplaceConfirm, setShowReplaceConfirm] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Purge State
@@ -80,6 +82,7 @@ export function ScraperConfigModal({
   const [isPurging, setIsPurging] = useState<boolean>(false);
   const [purgeError, setPurgeError] = useState<string | null>(null);
   const [purgeSuccess, setPurgeSuccess] = useState<string | null>(null);
+  const [showPurgeConfirm, setShowPurgeConfirm] = useState<boolean>(false);
 
   const apiBase = getBackendBaseUrl();
 
@@ -191,21 +194,22 @@ export function ScraperConfigModal({
     }
   };
 
-  const handleExecuteImport = async () => {
+  const handleExecuteImport = () => {
     if (!importFile && !importJsonText) {
       setImportError('Please select a valid .json database backup file to import.');
       return;
     }
 
-    if (
-      importMode === 'replace' &&
-      !confirm(
-        'WARNING: You have selected "Wipe & Replace" mode. Existing data in target tables will be wiped and replaced with the backup. Are you sure you want to proceed?'
-      )
-    ) {
+    if (importMode === 'replace') {
+      setShowReplaceConfirm(true);
       return;
     }
 
+    runImport();
+  };
+
+  const runImport = async () => {
+    setShowReplaceConfirm(false);
     const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
     if (!token) {
       setImportError('Unauthorized: Administrator token missing.');
@@ -257,20 +261,17 @@ export function ScraperConfigModal({
   };
 
   // 3. Purge Action
-  const handleExecutePurge = async () => {
+  const handleExecutePurge = () => {
     if (purgeTargets.length === 0) {
       setPurgeError('Please select at least one table target to purge.');
       return;
     }
 
-    if (
-      !confirm(
-        `Are you sure you want to PURGE ${purgeTargets.length} table category(ies)? This action is permanent and cannot be undone.`
-      )
-    ) {
-      return;
-    }
+    setShowPurgeConfirm(true);
+  };
 
+  const runPurge = async () => {
+    setShowPurgeConfirm(false);
     const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
     if (!token) {
       setPurgeError('Unauthorized: Administrator token missing.');
@@ -313,6 +314,7 @@ export function ScraperConfigModal({
   };
 
   return (
+    <>
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       role="dialog"
@@ -709,5 +711,26 @@ export function ScraperConfigModal({
         )}
       </div>
     </div>
+
+    <ConfirmModal
+      open={showReplaceConfirm}
+      title="Wipe & Replace database?"
+      message='You have selected "Wipe & Replace" mode. Existing data in target tables will be wiped and replaced with the backup. Are you sure you want to proceed?'
+      confirmLabel="Wipe & Replace"
+      busy={isImporting}
+      onConfirm={runImport}
+      onCancel={() => setShowReplaceConfirm(false)}
+    />
+
+    <ConfirmModal
+      open={showPurgeConfirm}
+      title="Purge selected tables?"
+      message={`Are you sure you want to PURGE ${purgeTargets.length} table category(ies)? This action is permanent and cannot be undone.`}
+      confirmLabel="Purge"
+      busy={isPurging}
+      onConfirm={runPurge}
+      onCancel={() => setShowPurgeConfirm(false)}
+    />
+    </>
   );
 }

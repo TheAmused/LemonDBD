@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { Sidebar } from '@/components/Sidebar';
 import { ScraperConfigModal } from '@/components/ScraperConfigModal';
+import { ConfirmModal } from '@/components/ConfirmModal';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
 import { AdminUserTable } from '@/components/admin/AdminUserTable';
@@ -64,6 +65,10 @@ export default function AdminPanelPage() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string>('');
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
+  const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
+  const [isDeletingUser, setIsDeletingUser] = useState(false);
+  const [bugReportPendingDeletion, setBugReportPendingDeletion] = useState<number | null>(null);
+  const [isDeletingBugReport, setIsDeletingBugReport] = useState(false);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -276,13 +281,17 @@ export default function AdminPanelPage() {
     }
   };
 
-  const handleDeleteUser = async (targetUser: UserRow) => {
-    if (!confirm(`Are you sure you want to delete user "${targetUser.username}"? This cannot be undone.`)) {
-      return;
-    }
+  const handleDeleteUser = (targetUser: UserRow) => {
+    setUserPendingDeletion(targetUser);
+  };
+
+  const confirmDeleteUser = async () => {
+    const targetUser = userPendingDeletion;
+    if (!targetUser || isDeletingUser) return;
     const token = localStorage.getItem('lemondbd_token');
     if (!token) return;
 
+    setIsDeletingUser(true);
     try {
       const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
         method: 'DELETE',
@@ -295,6 +304,9 @@ export default function AdminPanelPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Network error.';
       setActionMessage({ type: 'error', text: msg });
+    } finally {
+      setIsDeletingUser(false);
+      setUserPendingDeletion(null);
     }
   };
 
@@ -364,11 +376,17 @@ export default function AdminPanelPage() {
     }
   };
 
-  const handleDeleteBugReport = async (reportId: number) => {
-    if (!confirm(`Are you sure you want to delete bug report #${reportId}?`)) return;
+  const handleDeleteBugReport = (reportId: number) => {
+    setBugReportPendingDeletion(reportId);
+  };
+
+  const confirmDeleteBugReport = async () => {
+    const reportId = bugReportPendingDeletion;
+    if (reportId === null || isDeletingBugReport) return;
     const token = localStorage.getItem('lemondbd_token');
     if (!token) return;
 
+    setIsDeletingBugReport(true);
     try {
       const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports/${reportId}`, {
         method: 'DELETE',
@@ -382,6 +400,9 @@ export default function AdminPanelPage() {
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to delete bug report.';
       setActionMessage({ type: 'error', text: msg });
+    } finally {
+      setIsDeletingBugReport(false);
+      setBugReportPendingDeletion(null);
     }
   };
 
@@ -589,6 +610,33 @@ export default function AdminPanelPage() {
           fetchAdminData();
           fetchBugReports();
         }}
+      />
+
+      <ConfirmModal
+        open={userPendingDeletion !== null}
+        title="Delete user?"
+        message={
+          <>
+            Are you sure you want to delete user{' '}
+            <strong className="font-bold text-white">{userPendingDeletion?.username}</strong>?
+            <br />
+            This cannot be undone.
+          </>
+        }
+        confirmLabel="Delete"
+        busy={isDeletingUser}
+        onConfirm={confirmDeleteUser}
+        onCancel={() => setUserPendingDeletion(null)}
+      />
+
+      <ConfirmModal
+        open={bugReportPendingDeletion !== null}
+        title="Delete bug report?"
+        message={`Are you sure you want to delete bug report #${bugReportPendingDeletion}?`}
+        confirmLabel="Delete"
+        busy={isDeletingBugReport}
+        onConfirm={confirmDeleteBugReport}
+        onCancel={() => setBugReportPendingDeletion(null)}
       />
     </div>
   );

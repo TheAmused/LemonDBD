@@ -1,8 +1,9 @@
-// frontend/src/components/streaks/ResetConfirmModal.tsx
 'use client';
+// frontend/src/components/streaks/ResetConfirmModal.tsx
 
-import React, { useEffect } from 'react';
-import { AlertTriangle, RotateCcw } from 'lucide-react';
+import React from 'react';
+import { RotateCcw } from 'lucide-react';
+import { ConfirmModal } from '@/components/ConfirmModal';
 
 export interface ResetConfirmModalProps {
   open: boolean;
@@ -18,52 +19,15 @@ export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({
   busy = false,
   onConfirm,
   onCancel,
-}) => {
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, onCancel]);
-
-  if (!open) return null;
-
-  return (
-    <div
-      onClick={onCancel}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md cursor-pointer"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border-2 border-rose-500/40 bg-gradient-to-b from-rose-500/10 via-slate-900 to-slate-950 p-8 text-center shadow-2xl shadow-rose-950/30 cursor-default"
-      >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-rose-400/60 bg-rose-500/15 text-rose-400">
-          <AlertTriangle className="h-8 w-8" />
-        </div>
-
-        <h2 className="text-xl font-black tracking-tight text-white">Reset this run?</h2>
-        <p className="mt-2 text-sm text-slate-300">{message}</p>
-
-        <div className="mt-6 flex items-center gap-3">
-          <button
-            onClick={onCancel}
-            disabled={busy}
-            className="flex-1 rounded-xl bg-slate-800 py-3 text-sm font-bold text-slate-200 transition-colors hover:bg-slate-700 disabled:opacity-50 cursor-pointer"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            disabled={busy}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 py-3 text-sm font-extrabold text-white shadow-lg shadow-rose-950/30 transition-colors hover:bg-rose-500 disabled:opacity-50 cursor-pointer"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Yes, wipe it
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+}) => (
+  <ConfirmModal
+    open={open}
+    title="Reset this run?"
+    message={message}
+    confirmLabel="Yes, wipe it"
+    confirmIcon={<RotateCcw className="h-4 w-4" />}
+    busy={busy}
+    onConfirm={onConfirm}
+    onCancel={onCancel}
+  />
+);

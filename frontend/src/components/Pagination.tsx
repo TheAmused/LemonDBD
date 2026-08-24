@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/Pagination.tsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { PerkDictionary } from '@/types/perks';
 
@@ -29,6 +29,10 @@ export const Pagination: React.FC<PaginationProps> = ({
   const safeTotalPages = Math.max(1, totalPages || 1);
 
   const [jumpValue, setJumpValue] = useState('');
+
+  useEffect(() => {
+    setJumpValue('');
+  }, [page]);
 
   const handleJumpSubmit = (e: React.FormEvent) => {
     e.preventDefault();

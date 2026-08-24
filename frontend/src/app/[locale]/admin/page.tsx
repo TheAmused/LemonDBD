@@ -66,7 +66,9 @@ export default function AdminPanelPage() {
   const [syncStatus, setSyncStatus] = useState<string>('');
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
   const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
+  const [isDeletingUser, setIsDeletingUser] = useState(false);
   const [bugReportPendingDeletion, setBugReportPendingDeletion] = useState<number | null>(null);
+  const [isDeletingBugReport, setIsDeletingBugReport] = useState(false);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -285,10 +287,11 @@ export default function AdminPanelPage() {
 
   const confirmDeleteUser = async () => {
     const targetUser = userPendingDeletion;
-    if (!targetUser) return;
+    if (!targetUser || isDeletingUser) return;
     const token = localStorage.getItem('lemondbd_token');
     if (!token) return;
 
+    setIsDeletingUser(true);
     try {
       const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
         method: 'DELETE',
@@ -302,6 +305,7 @@ export default function AdminPanelPage() {
       const msg = err instanceof Error ? err.message : 'Network error.';
       setActionMessage({ type: 'error', text: msg });
     } finally {
+      setIsDeletingUser(false);
       setUserPendingDeletion(null);
     }
   };
@@ -378,10 +382,11 @@ export default function AdminPanelPage() {
 
   const confirmDeleteBugReport = async () => {
     const reportId = bugReportPendingDeletion;
-    if (reportId === null) return;
+    if (reportId === null || isDeletingBugReport) return;
     const token = localStorage.getItem('lemondbd_token');
     if (!token) return;
 
+    setIsDeletingBugReport(true);
     try {
       const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports/${reportId}`, {
         method: 'DELETE',
@@ -396,6 +401,7 @@ export default function AdminPanelPage() {
       const msg = err instanceof Error ? err.message : 'Failed to delete bug report.';
       setActionMessage({ type: 'error', text: msg });
     } finally {
+      setIsDeletingBugReport(false);
       setBugReportPendingDeletion(null);
     }
   };
@@ -618,6 +624,7 @@ export default function AdminPanelPage() {
           </>
         }
         confirmLabel="Delete"
+        busy={isDeletingUser}
         onConfirm={confirmDeleteUser}
         onCancel={() => setUserPendingDeletion(null)}
       />
@@ -627,6 +634,7 @@ export default function AdminPanelPage() {
         title="Delete bug report?"
         message={`Are you sure you want to delete bug report #${bugReportPendingDeletion}?`}
         confirmLabel="Delete"
+        busy={isDeletingBugReport}
         onConfirm={confirmDeleteBugReport}
         onCancel={() => setBugReportPendingDeletion(null)}
       />

@@ -115,7 +115,10 @@ def forgot_password():
     if not email:
         return jsonify({"error": "Email is required.", "status": 400}), 400
 
-    user_service.request_password_reset(email)
+    ok, err = user_service.request_password_reset(email)
+    if not ok:
+        return jsonify({"error": err, "status": 429}), 429
+
     return jsonify({
         "status": "success",
         "message": "If that email is registered, a password reset link has been sent.",

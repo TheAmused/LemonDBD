@@ -39,6 +39,9 @@ class User(Base):
     verification_code_expires_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime, nullable=True
     )
+    verification_attempts: Mapped[int] = mapped_column(
+        Integer, default=0, nullable=False
+    )
     reset_token: Mapped[Optional[str]] = mapped_column(
         String(255), unique=True, index=True, nullable=True
     )

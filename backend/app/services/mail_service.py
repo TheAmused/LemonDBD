@@ -1,4 +1,5 @@
 # backend/app/services/mail_service.py
+import html
 import logging
 from pathlib import Path
 
@@ -17,9 +18,11 @@ _LOGO_PATH = Path(__file__).resolve().parent.parent / "static" / "email" / "logo
 
 def _greeting_name(user: User) -> str:
     """Render the greeting name, neutralizing Gmail's auto-link styling for email-shaped usernames."""
+    safe_username = html.escape(user.username)
     if "@" in user.username:
-        return f'<a href="mailto:{user.email}" style="color:#0f172a; text-decoration:none;">{user.username}</a>'
-    return user.username
+        safe_email = html.escape(user.email)
+        return f'<a href="mailto:{safe_email}" style="color:#0f172a; text-decoration:none;">{safe_username}</a>'
+    return safe_username
 
 
 def _attach_logo(message: Message) -> None:

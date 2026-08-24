@@ -609,7 +609,14 @@ export default function AdminPanelPage() {
       <ConfirmModal
         open={userPendingDeletion !== null}
         title="Delete user?"
-        message={`Are you sure you want to delete user "${userPendingDeletion?.username}"? This cannot be undone.`}
+        message={
+          <>
+            Are you sure you want to delete user{' '}
+            <strong className="font-bold text-white">{userPendingDeletion?.username}</strong>?
+            <br />
+            This cannot be undone.
+          </>
+        }
         confirmLabel="Delete"
         onConfirm={confirmDeleteUser}
         onCancel={() => setUserPendingDeletion(null)}

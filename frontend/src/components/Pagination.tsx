@@ -15,23 +15,19 @@ interface PaginationProps {
   dict?: PerkDictionary;
 }
 
-type PageToken = number | 'ellipsis';
+const VISIBLE_PAGE_COUNT = 5;
 
-function getPageTokens(current: number, total: number): PageToken[] {
-  if (total <= 7) {
+function getPageWindow(current: number, total: number): number[] {
+  if (total <= VISIBLE_PAGE_COUNT) {
     return Array.from({ length: total }, (_, i) => i + 1);
   }
 
-  const tokens: PageToken[] = [1];
-  const rangeStart = Math.max(2, current - 1);
-  const rangeEnd = Math.min(total - 1, current + 1);
+  const half = Math.floor(VISIBLE_PAGE_COUNT / 2);
+  let start = Math.max(1, current - half);
+  const end = Math.min(total, start + VISIBLE_PAGE_COUNT - 1);
+  start = Math.max(1, end - VISIBLE_PAGE_COUNT + 1);
 
-  if (rangeStart > 2) tokens.push('ellipsis');
-  for (let i = rangeStart; i <= rangeEnd; i++) tokens.push(i);
-  if (rangeEnd < total - 1) tokens.push('ellipsis');
-
-  tokens.push(total);
-  return tokens;
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -46,7 +42,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const startIdx = totalResults === 0 ? 0 : (page - 1) * limit + 1;
   const endIdx = Math.min(page * limit, totalResults);
   const safeTotalPages = Math.max(1, totalPages || 1);
-  const pageTokens = getPageTokens(page, safeTotalPages);
+  const pageWindow = getPageWindow(page, safeTotalPages);
 
   const [jumpValue, setJumpValue] = useState('');
 
@@ -111,27 +107,21 @@ export const Pagination: React.FC<PaginationProps> = ({
             <ChevronLeft className="h-4 w-4" />
           </button>
 
-          {pageTokens.map((token, idx) =>
-            token === 'ellipsis' ? (
-              <span key={`ellipsis-${idx}`} className="px-1 text-xs text-slate-500 select-none">
-                &hellip;
-              </span>
-            ) : (
-              <button
-                key={token}
-                type="button"
-                onClick={() => onPageChange(token)}
-                aria-current={token === page ? 'page' : undefined}
-                className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-1.5 text-xs font-bold transition-colors cursor-pointer border ${
-                  token === page
-                    ? 'bg-cyan-600 text-white border-cyan-500'
-                    : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border-slate-800'
-                }`}
-              >
-                {token}
-              </button>
-            )
-          )}
+          {pageWindow.map((pageNum) => (
+            <button
+              key={pageNum}
+              type="button"
+              onClick={() => onPageChange(pageNum)}
+              aria-current={pageNum === page ? 'page' : undefined}
+              className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-1.5 text-xs font-bold transition-colors cursor-pointer border ${
+                pageNum === page
+                  ? 'bg-cyan-600 text-white border-cyan-500'
+                  : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border-slate-800'
+              }`}
+            >
+              {pageNum}
+            </button>
+          ))}
 
           <button
             type="button"
@@ -166,7 +156,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               value={jumpValue}
               onChange={(e) => setJumpValue(e.target.value)}
               placeholder={`${page}`}
-              className="w-14 rounded-lg bg-slate-900 px-2 py-1 text-xs font-semibold text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 border border-slate-800"
+              className="w-9 [appearance:textfield] rounded-lg bg-slate-900 px-1.5 py-1 text-center text-xs font-semibold text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 border border-slate-800 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </form>
         )}

@@ -96,6 +96,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     }
   }, [roleParam]);
 
+  const handleTabChange = (tab: 'all' | RoleCategory) => {
+    setActiveTab(tab);
+    const query = tab === 'all' ? '' : `?role=${tab}`;
+    router.replace(`/${locale}/characters${query}`, { scroll: false });
+  };
+
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
   const [detailLoading, setDetailLoading] = useState<boolean>(false);
   const [detailData, setDetailData] = useState<CharacterDetailData | null>(null);
@@ -337,7 +343,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         >
           <button
             type="button"
-            onClick={() => setActiveTab('all')}
+            onClick={() => handleTabChange('all')}
             className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'all'
                 ? 'bg-red-600 text-white shadow-md'
@@ -348,7 +354,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('Survivor')}
+            onClick={() => handleTabChange('Survivor')}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'Survivor'
                 ? 'bg-emerald-600 text-white shadow-md'
@@ -360,7 +366,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('Killer')}
+            onClick={() => handleTabChange('Killer')}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'Killer'
                 ? 'bg-rose-600 text-white shadow-md'

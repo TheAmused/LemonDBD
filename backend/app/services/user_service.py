@@ -16,8 +16,12 @@ from app.services.user import (
     list_all_users_paginated,
     modify_user_profile,
     process_and_save_avatar,
+    request_password_reset,
+    resend_verification_email,
+    reset_password_with_token,
     retrieve_user_from_jwt,
     seed_default_admin_if_empty,
+    verify_email_code,
 )
 
 logger = logging.getLogger(__name__)
@@ -101,4 +105,16 @@ class UserService:
 
     def seed_default_admin_if_empty(self) -> None:
         seed_default_admin_if_empty()
+
+    def verify_email(self, email: str, code: str) -> Tuple[Optional[User], Optional[str]]:
+        return verify_email_code(email, code)
+
+    def resend_verification(self, email: str) -> Tuple[bool, Optional[str]]:
+        return resend_verification_email(email)
+
+    def request_password_reset(self, email: str) -> Tuple[bool, Optional[str]]:
+        return request_password_reset(email)
+
+    def reset_password(self, token: str, new_password: str) -> Tuple[Optional[User], Optional[str]]:
+        return reset_password_with_token(token, new_password)
 

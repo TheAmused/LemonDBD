@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/AuthModal.tsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import {
@@ -14,28 +14,55 @@ import {
   AlertCircle,
   ShieldAlert,
   Sparkles,
+  MailWarning,
 } from 'lucide-react';
+import { EmailVerificationForm } from '@/components/EmailVerificationForm';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialMode?: 'login' | 'register';
+  /** When set, the modal opens straight into the verification-code screen for this email, skipping login/register. */
+  verifyEmailFor?: string;
 }
+
+type AuthMode = 'login' | 'register' | 'forgot';
+type Notice =
+  | { type: 'verify-reminder'; email: string }
+  | { type: 'register-success'; email: string }
+  | { type: 'forgot-sent' };
 
 export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   initialMode = 'login',
+  verifyEmailFor,
 }) => {
-  const { login, register } = useAuth();
-  const [isLoginMode, setIsLoginMode] = useState<boolean>(initialMode === 'login');
+  const { login, register, forgotPassword } = useAuth();
+  const [mode, setMode] = useState<AuthMode>(initialMode);
+  const isLoginMode = mode === 'login';
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [notice, setNotice] = useState<Notice | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      setError(null);
+      setNotice(verifyEmailFor ? { type: 'verify-reminder', email: verifyEmailFor } : null);
+    }
+  }, [isOpen, initialMode, verifyEmailFor]);
 
   if (!isOpen) return null;
+
+  const switchMode = (next: AuthMode) => {
+    setMode(next);
+    setError(null);
+    setNotice(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,17 +70,28 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setLoading(true);
 
     try {
-      if (isLoginMode) {
+      if (mode === 'forgot') {
+        const res = await forgotPassword(email);
+        if (res.success) {
+          setNotice({ type: 'forgot-sent' });
+        } else {
+          setError(res.error || 'Failed to request password reset');
+        }
+      } else if (mode === 'login') {
         const res = await login(username, password);
         if (res.success) {
-          onClose();
+          if (res.user && !res.user.is_verified) {
+            setNotice({ type: 'verify-reminder', email: res.user.email });
+          } else {
+            onClose();
+          }
         } else {
           setError(res.error || 'Invalid credentials');
         }
       } else {
         const res = await register(username, email, password);
         if (res.success) {
-          onClose();
+          setNotice({ type: 'register-success', email: res.user?.email || email });
         } else {
           setError(res.error || 'Registration failed');
         }
@@ -67,7 +105,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   const handleFillDemo = (role: 'admin' | 'player') => {
-    setIsLoginMode(true);
+    switchMode('login');
     if (role === 'admin') {
       setUsername('lemon');
       setPassword('lemon');
@@ -75,7 +113,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setUsername('user');
       setPassword('user');
     }
-    setError(null);
   };
 
   return (
@@ -108,12 +145,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             id="auth-modal-title"
             className="text-xl font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono"
           >
-            {isLoginMode ? 'Sign In to LemonDBD' : 'Create LemonDBD Account'}
+            {notice?.type === 'verify-reminder' || notice?.type === 'register-success'
+              ? 'Verify Your Email'
+              : notice?.type === 'forgot-sent'
+                ? 'Reset Your Password'
+                : mode === 'login'
+                  ? 'Sign In to LemonDBD'
+                  : mode === 'register'
+                    ? 'Create LemonDBD Account'
+                    : 'Reset Your Password'}
           </h2>
           <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-            {isLoginMode
-              ? 'Access your owned characters, perk unlocks, and personal builds.'
-              : 'Join the community to track streaks, teachables, and game stats.'}
+            {notice?.type === 'verify-reminder' || notice?.type === 'register-success'
+              ? "Check your inbox for the code we sent you."
+              : notice?.type === 'forgot-sent'
+                ? "Enter your email and we'll send you a reset link."
+                : mode === 'login'
+                  ? 'Access your owned characters, perk unlocks, and personal builds.'
+                  : mode === 'register'
+                    ? 'Join the community to track streaks, teachables, and game stats.'
+                    : "Enter your email and we'll send you a reset link."}
           </p>
         </div>
 
@@ -127,131 +178,200 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-3.5">
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
-              Username or Email
-            </label>
-            <div className="relative">
-              <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input
-                type="text"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username or email"
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
-              />
-            </div>
+        {notice && (notice.type === 'verify-reminder' || notice.type === 'register-success') && (
+          <div className="mb-4 flex flex-col items-center gap-4 text-center animate-in fade-in duration-150">
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              {notice.type === 'verify-reminder' ? (
+                <>
+                  You&apos;re signed in, but <strong>{notice.email}</strong> isn&apos;t verified yet.
+                  Enter the code we emailed you below.
+                </>
+              ) : (
+                <>
+                  Account created! We sent a verification code to <strong>{notice.email}</strong>.
+                </>
+              )}
+            </p>
+            <EmailVerificationForm
+              email={notice.email}
+              onVerified={onClose}
+              submitLabel={notice.type === 'register-success' ? 'Verify & Continue' : 'Verify'}
+            />
           </div>
+        )}
 
-          {!isLoginMode && (
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="yourname@domain.com"
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
-                />
+        {notice && notice.type === 'forgot-sent' && (
+          <div
+            role="status"
+            className="mb-4 space-y-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-amber-800 dark:text-amber-300 animate-in fade-in duration-150 shadow-sm"
+          >
+            <div className="flex items-start gap-2.5">
+              <MailWarning className="h-4 w-4 shrink-0 mt-0.5" />
+              <span>If that email is registered, a password reset link is on its way.</span>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="block w-full rounded-lg bg-amber-500/20 py-1.5 text-[11px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 hover:bg-amber-500/30 transition-colors cursor-pointer"
+            >
+              Close
+            </button>
+          </div>
+        )}
+
+        {!notice && (
+          <form onSubmit={handleSubmit} className="space-y-3.5">
+            {mode !== 'forgot' && (
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+                  Username or Email
+                </label>
+                <div className="relative">
+                  <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter username or email"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
-              Password
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
-              />
+            {(mode === 'register' || mode === 'forgot') && (
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="yourname@domain.com"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
+                  />
+                </div>
+              </div>
+            )}
+
+            {mode !== 'forgot' && (
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
+                  />
+                </div>
+              </div>
+            )}
+
+            {mode === 'login' && (
+              <div className="text-right -mt-1.5">
+                <button
+                  type="button"
+                  onClick={() => switchMode('forgot')}
+                  className="text-[11px] text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
+                >
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-red-600 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-amber-900/30 hover:from-amber-500 hover:to-red-500 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50 transition-all cursor-pointer"
+            >
+              {loading ? (
+                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : mode === 'login' ? (
+                <>
+                  <LogIn className="h-4 w-4" />
+                  <span>Sign In</span>
+                </>
+              ) : mode === 'register' ? (
+                <>
+                  <UserPlus className="h-4 w-4" />
+                  <span>Create Account</span>
+                </>
+              ) : (
+                <>
+                  <Mail className="h-4 w-4" />
+                  <span>Send Reset Link</span>
+                </>
+              )}
+            </button>
+          </form>
+        )}
+
+        {!notice && mode !== 'forgot' && (
+          <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800/80">
+            <p className="text-[10px] uppercase font-bold text-slate-500 mb-2 text-center tracking-wider">
+              Quick Demo Accounts
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => handleFillDemo('admin')}
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-red-500/20 bg-red-50 dark:bg-red-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+              >
+                <ShieldAlert className="h-3 w-3 text-red-500 dark:text-red-400" />
+                <span>Admin (lemon)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleFillDemo('player')}
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-50 dark:bg-amber-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+              >
+                <Sparkles className="h-3 w-3 text-amber-600 dark:text-amber-400" />
+                <span>User (user)</span>
+              </button>
             </div>
           </div>
+        )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-red-600 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-amber-900/30 hover:from-amber-500 hover:to-red-500 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50 transition-all cursor-pointer"
-          >
-            {loading ? (
-              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            ) : isLoginMode ? (
-              <>
-                <LogIn className="h-4 w-4" />
-                <span>Sign In</span>
-              </>
-            ) : (
-              <>
-                <UserPlus className="h-4 w-4" />
-                <span>Create Account</span>
-              </>
-            )}
-          </button>
-        </form>
-
-        <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800/80">
-          <p className="text-[10px] uppercase font-bold text-slate-500 mb-2 text-center tracking-wider">
-            Quick Demo Accounts
-          </p>
-          <div className="grid grid-cols-2 gap-2">
+        {!notice && (
+          <div className="mt-4 text-center">
             <button
               type="button"
-              onClick={() => handleFillDemo('admin')}
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-red-500/20 bg-red-50 dark:bg-red-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+              onClick={() => switchMode(mode === 'register' ? 'login' : mode === 'forgot' ? 'login' : 'register')}
+              className="text-xs text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
-              <ShieldAlert className="h-3 w-3 text-red-500 dark:text-red-400" />
-              <span>Admin (lemon)</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFillDemo('player')}
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-50 dark:bg-amber-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
-            >
-              <Sparkles className="h-3 w-3 text-amber-600 dark:text-amber-400" />
-              <span>User (user)</span>
+              {mode === 'forgot' ? (
+                <span className="font-bold text-amber-600 dark:text-amber-400 underline">
+                  Back to Sign In
+                </span>
+              ) : mode === 'register' ? (
+                <>
+                  Already have an account?{' '}
+                  <span className="font-bold text-amber-600 dark:text-amber-400 underline">
+                    Sign In
+                  </span>
+                </>
+              ) : (
+                <>
+                  Don&apos;t have an account?{' '}
+                  <span className="font-bold text-amber-600 dark:text-amber-400 underline">
+                    Register
+                  </span>
+                </>
+              )}
             </button>
           </div>
-        </div>
-
-        <div className="mt-4 text-center">
-          <button
-            type="button"
-            onClick={() => {
-              setIsLoginMode(!isLoginMode);
-              setError(null);
-            }}
-            className="text-xs text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
-          >
-            {isLoginMode ? (
-              <>
-                Don&apos;t have an account?{' '}
-                <span className="font-bold text-amber-600 dark:text-amber-400 underline">
-                  Register
-                </span>
-              </>
-            ) : (
-              <>
-                Already have an account?{' '}
-                <span className="font-bold text-amber-600 dark:text-amber-400 underline">
-                  Sign In
-                </span>
-              </>
-            )}
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );

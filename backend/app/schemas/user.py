@@ -10,6 +10,7 @@ class UserBase(BaseModel):
     role: str = Field(default="user", max_length=20)
     avatar_url: str = Field(default="default_avatar", max_length=255)
     is_active: bool = True
+    is_verified: bool = False
 
 
 class UserCreate(BaseModel):

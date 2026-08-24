@@ -10,6 +10,7 @@ export interface UserProfile {
   role: 'user' | 'admin';
   avatar_url?: string;
   is_active: boolean;
+  is_verified: boolean;
   created_at?: string;
 }
 
@@ -38,9 +39,13 @@ interface AuthContextType {
   isAdmin: boolean;
   isLoading: boolean;
   ownership: OwnershipSummary | null;
-  login: (usernameOrEmail: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (usernameOrEmail: string, password: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
   logout: () => void;
+  resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
+  verifyEmail: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
+  forgotPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (token: string, newPassword: string) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
   updateCharacterOwnership: (characterId: number, isOwned: boolean) => Promise<boolean>;
   bulkUpdateCharacterOwnership: (updates: Array<{ character_id: number; is_owned: boolean }>) => Promise<boolean>;
@@ -111,7 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
       localStorage.setItem('lemondbd_token', data.token);
-      return { success: true };
+      return { success: true, user: data.user as UserProfile };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error occurred.' };
     }
@@ -132,6 +137,74 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
       localStorage.setItem('lemondbd_token', data.token);
+      return { success: true, user: data.user as UserProfile };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error occurred.' };
+    }
+  };
+
+  const resendVerification = async (email: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/auth/resend-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { success: false, error: data.error || 'Failed to resend verification email.' };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error occurred.' };
+    }
+  };
+
+  const verifyEmail = async (email: string, code: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/auth/verify-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { success: false, error: data.message || 'Invalid verification code.' };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error occurred.' };
+    }
+  };
+
+  const forgotPassword = async (email: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { success: false, error: data.error || 'Failed to request password reset.' };
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error occurred.' };
+    }
+  };
+
+  const resetPassword = async (token: string, newPassword: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/auth/reset-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, new_password: newPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { success: false, error: data.error || 'Failed to reset password.' };
+      }
       return { success: true };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error occurred.' };
@@ -265,6 +338,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
+        resendVerification,
+        verifyEmail,
+        forgotPassword,
+        resetPassword,
         refreshUser,
         updateCharacterOwnership,
         bulkUpdateCharacterOwnership,

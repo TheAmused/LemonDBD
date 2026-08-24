@@ -91,6 +91,9 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 
-backend/app/static/
+backend/app/static/avatars/
+backend/app/static/icons/
+backend/app/static/maps/
+backend/app/static/uploads/
 translations/*
 !translations/create_translations.py

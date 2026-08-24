@@ -3,6 +3,7 @@ Flask-SQLAlchemy>=3.1.1
 SQLAlchemy>=2.0.38
 psycopg[binary]>=3.2.5
 Flask-Migrate>=4.1.0
+Flask-Mail>=0.10.0
 flask-cors>=5.0.1
 gunicorn>=23.0.0
 curl_cffi>=0.7.4

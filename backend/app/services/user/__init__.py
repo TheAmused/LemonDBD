@@ -9,7 +9,11 @@ from app.services.user.admin import (
 from app.services.user.auth import (
     authenticate_user_credentials,
     create_user_account,
+    request_password_reset,
+    resend_verification_email,
+    reset_password_with_token,
     retrieve_user_from_jwt,
+    verify_email_code,
 )
 from app.services.user.avatar import (
     ALLOWED_EXTENSIONS,
@@ -34,6 +38,10 @@ __all__ = [
     "create_user_account",
     "authenticate_user_credentials",
     "retrieve_user_from_jwt",
+    "verify_email_code",
+    "resend_verification_email",
+    "request_password_reset",
+    "reset_password_with_token",
     "fetch_user_by_id",
     "modify_user_profile",
     "list_all_users_paginated",

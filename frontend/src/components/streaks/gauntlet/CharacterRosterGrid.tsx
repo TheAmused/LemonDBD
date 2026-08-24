@@ -104,7 +104,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                   </div>
                 )}
 
-                {active && (
+                {active && !completed && (
                   <div className="absolute -top-2 -left-2 bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-full text-[9px] font-black z-10 uppercase tracking-tighter shadow-sm">
                     Target
                   </div>

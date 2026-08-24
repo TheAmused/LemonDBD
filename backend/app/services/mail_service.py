@@ -15,13 +15,6 @@ _LOGO_CID = "lemondbd-logo"
 _LOGO_PATH = Path(__file__).resolve().parent.parent / "static" / "email" / "logo.png"
 
 
-def _mail_is_configured() -> bool:
-    """Whether real SMTP credentials are present, vs. an unconfigured local checkout."""
-    return bool(
-        current_app.config.get("MAIL_USERNAME") and current_app.config.get("MAIL_PASSWORD")
-    )
-
-
 def _greeting_name(user: User) -> str:
     """Render the greeting name, neutralizing Gmail's auto-link styling for email-shaped usernames."""
     if "@" in user.username:
@@ -92,12 +85,6 @@ def _email_shell(preheader: str, body_html: str) -> str:
 
 def send_verification_email(user: User) -> None:
     """Best-effort send of the email verification code. Never raises."""
-    if not _mail_is_configured():
-        logger.info(
-            f"MAIL_USERNAME/MAIL_PASSWORD not set - verification code for '{user.email}': {user.verification_code}"
-        )
-        return
-
     code_boxes = "".join(
         f"""<td style="width:38px; height:46px; border:1px solid #e2e8f0; border-radius:8px; text-align:center; vertical-align:middle; font-family:'Courier New', monospace; font-size:20px; font-weight:700; color:#0f172a;">{digit}</td>"""
         + ('<td style="width:6px;"></td>' if i < len(user.verification_code or "") - 1 else "")
@@ -138,12 +125,6 @@ def send_password_reset_email(user: User) -> None:
     """Best-effort send of the password reset link. Never raises."""
     frontend_url = current_app.config.get("FRONTEND_URL", "http://localhost:3000")
     link = f"{frontend_url}/en/reset-password?token={user.reset_token}"
-
-    if not _mail_is_configured():
-        logger.info(
-            f"MAIL_USERNAME/MAIL_PASSWORD not set - password reset link for '{user.email}': {link}"
-        )
-        return
 
     body_html = f"""\
 <p style="margin:0 0 4px; font-size:14px; color:#0f172a;">Hi {_greeting_name(user)},</p>

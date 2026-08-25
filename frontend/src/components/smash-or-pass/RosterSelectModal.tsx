@@ -37,7 +37,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
   locale = 'en',
   dict,
 }) => {
-  const [centerIndex, setCenterIndex] = useState<number>(0);
+  const [visualIndex, setVisualIndex] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeSelectedSlug, setActiveSelectedSlug] = useState<string>(selectedRosterSlug);
 
@@ -45,6 +45,10 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
   const dragStartXRef = useRef<number>(0);
   const dragStartCenterRef = useRef<number>(0);
   const lastTickIndexRef = useRef<number>(0);
+
+  const visualIndexRef = useRef<number>(0);
+  const targetIndexRef = useRef<number>(0);
+  const animFrameRef = useRef<number | null>(null);
 
   const N = rosters.length;
 
@@ -55,6 +59,48 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       return ((Math.round(idx) % N) + N) % N;
     },
     [N]
+  );
+
+  // Smooth RAF Animation Controller for continuous 60fps 3D carousel transitions
+  const animateTo = useCallback(
+    (target: number, duration = 420) => {
+      targetIndexRef.current = target;
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+
+      const startVal = visualIndexRef.current;
+      const endVal = target;
+      const startTime = performance.now();
+
+      // Smooth cubic-bezier(0.2, 0.9, 0.2, 1) ease-out curve
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        const eased = easeOutCubic(progress);
+        const current = startVal + (endVal - startVal) * eased;
+
+        visualIndexRef.current = current;
+        setVisualIndex(current);
+
+        const currentRounded = normalizeIndex(current);
+        if (currentRounded !== lastTickIndexRef.current) {
+          lastTickIndexRef.current = currentRounded;
+          SmashSounds.playHoverTick();
+        }
+
+        if (progress < 1) {
+          animFrameRef.current = requestAnimationFrame(step);
+        } else {
+          visualIndexRef.current = endVal;
+          setVisualIndex(endVal);
+          animFrameRef.current = null;
+        }
+      };
+
+      animFrameRef.current = requestAnimationFrame(step);
+    },
+    [normalizeIndex]
   );
 
   // 1. Initialize centerIndex on modal open from localStorage or selectedRosterSlug
@@ -69,11 +115,21 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     const foundIdx = rosters.findIndex((r) => r.slug === savedSlug);
     const initialIdx = foundIdx !== -1 ? foundIdx : 0;
 
-    setCenterIndex(initialIdx);
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    visualIndexRef.current = initialIdx;
+    targetIndexRef.current = initialIdx;
+    setVisualIndex(initialIdx);
     setIsDragging(false);
     setActiveSelectedSlug(savedSlug);
     lastTickIndexRef.current = initialIdx;
   }, [isOpen, N, rosters, selectedRosterSlug]);
+
+  // Clean up RAF on unmount
+  useEffect(() => {
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, []);
 
   // Helper: Commit selection of whatever card is currently in the middle
   const commitSelection = useCallback(
@@ -85,7 +141,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       const targetIdx =
         indexToChoose !== undefined
           ? normalizeIndex(indexToChoose)
-          : normalizeIndex(centerIndex);
+          : normalizeIndex(targetIndexRef.current);
 
       const chosenRoster = rosters[targetIdx];
       if (chosenRoster) {
@@ -98,33 +154,35 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       }
       onClose();
     },
-    [N, centerIndex, normalizeIndex, rosters, onSelectRoster, onClose]
+    [N, normalizeIndex, rosters, onSelectRoster, onClose]
   );
 
-  // Helper: Step previous/next roster card
-  const stepPrev = useCallback((e?: React.MouseEvent | React.PointerEvent) => {
-    if (e) {
-      e.stopPropagation();
-      e.preventDefault();
-    }
-    setCenterIndex((prev) => {
-      const next = Math.round(prev) - 1;
+  // Helper: Step previous/next roster card with smooth animation
+  const stepPrev = useCallback(
+    (e?: React.MouseEvent | React.PointerEvent) => {
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      const newTarget = Math.round(targetIndexRef.current) - 1;
       SmashSounds.playHoverTick();
-      return next;
-    });
-  }, []);
+      animateTo(newTarget, 420);
+    },
+    [animateTo]
+  );
 
-  const stepNext = useCallback((e?: React.MouseEvent | React.PointerEvent) => {
-    if (e) {
-      e.stopPropagation();
-      e.preventDefault();
-    }
-    setCenterIndex((prev) => {
-      const next = Math.round(prev) + 1;
+  const stepNext = useCallback(
+    (e?: React.MouseEvent | React.PointerEvent) => {
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      const newTarget = Math.round(targetIndexRef.current) + 1;
       SmashSounds.playHoverTick();
-      return next;
-    });
-  }, []);
+      animateTo(newTarget, 420);
+    },
+    [animateTo]
+  );
 
   // 2. Keyboard navigation (Arrow keys to spin continuously, Enter to confirm, Escape to choose middle card and leave)
   useEffect(() => {
@@ -142,7 +200,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
         commitSelection();
       } else if (e.key === 'Escape') {
         e.preventDefault();
-        // Whatever card is in the middle gets chosen upon leaving
         commitSelection();
       }
     };
@@ -190,9 +247,11 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     if ((e.target as HTMLElement).closest('button')) {
       return;
     }
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+
     setIsDragging(true);
     dragStartXRef.current = e.clientX;
-    dragStartCenterRef.current = centerIndex;
+    dragStartCenterRef.current = visualIndexRef.current;
     lastMoveXRef.current = e.clientX;
     lastMoveTimeRef.current = Date.now();
     velocityRef.current = 0;
@@ -216,11 +275,13 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     const deltaX = e.clientX - dragStartXRef.current;
     // 170px drag = 1 card shift
     const offset = -deltaX / 170;
-    const newCenter = dragStartCenterRef.current + offset;
+    const newVisual = dragStartCenterRef.current + offset;
 
-    setCenterIndex(newCenter);
+    visualIndexRef.current = newVisual;
+    targetIndexRef.current = newVisual;
+    setVisualIndex(newVisual);
 
-    const roundedIdx = normalizeIndex(newCenter);
+    const roundedIdx = normalizeIndex(newVisual);
     if (roundedIdx !== lastTickIndexRef.current) {
       lastTickIndexRef.current = roundedIdx;
       SmashSounds.playHoverTick();
@@ -238,43 +299,36 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
     // Fling momentum calculation
     let momentumShift = 0;
-    if (Math.abs(velocityRef.current) > 0.4) {
+    if (Math.abs(velocityRef.current) > 0.35) {
       momentumShift =
         -Math.sign(velocityRef.current) *
         Math.min(2, Math.round(Math.abs(velocityRef.current) * 1.5));
     }
 
-    const targetCenter = Math.round(centerIndex + momentumShift);
-    setCenterIndex(targetCenter);
+    const targetCenter = Math.round(visualIndexRef.current + momentumShift);
+    animateTo(targetCenter, 420);
   };
 
-  // 4. Symmetrical Circular 3D Cards Computation
-  // Generates equal number of cards on left and right: offsets [-3, -2, -1, 0, 1, 2, 3]
+  // 4. Symmetrical Circular 3D Cards Computation with STABLE KEYS
+  // Every roster maintains its exact identity in the 3D ring and glides smoothly
   const visibleCards = useMemo(() => {
     if (N === 0) return [];
 
-    // Offsets to render around the center point: ensures equal left and right cards
-    const offsets = [-3, -2, -1, 0, 1, 2, 3];
-    const baseCenter = Math.floor(centerIndex);
-    const fractionalShift = centerIndex - baseCenter;
-
-    return offsets
-      .map((k) => {
-        const rosterIdx = ((baseCenter + k) % N + N) % N;
-        const roster = rosters[rosterIdx];
-        const visualOffset = k - fractionalShift;
+    return rosters
+      .map((roster, i) => {
+        // Calculate shortest signed angular difference in modulo N space [-N/2, N/2]
+        let diff = ((i - visualIndex) % N + N * 1.5) % N - (N / 2);
         return {
           roster,
-          rosterIdx,
-          keyId: `${roster.slug}_${k}`,
-          visualOffset,
-          k,
+          rosterIdx: i,
+          keyId: roster.slug, // STABLE KEY: DOM node persists across smooth animation
+          visualOffset: diff,
         };
       })
       .sort((a, b) => Math.abs(b.visualOffset) - Math.abs(a.visualOffset)); // Outer cards rendered first, center card rendered on top
-  }, [N, centerIndex, rosters]);
+  }, [N, visualIndex, rosters]);
 
-  const activeRosterInCenter = N > 0 ? rosters[normalizeIndex(centerIndex)] : null;
+  const activeRosterInCenter = N > 0 ? rosters[normalizeIndex(targetIndexRef.current)] : null;
 
   if (!isOpen) return null;
 
@@ -382,7 +436,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     if (!isCenter) {
-                      setCenterIndex((prev) => prev + k);
+                      animateTo(Math.round(targetIndexRef.current + visualOffset), 420);
                       SmashSounds.playHoverTick();
                     } else {
                       commitSelection();
@@ -401,7 +455,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     transformStyle: 'preserve-3d',
                     transition: isDragging
                       ? 'none'
-                      : 'transform 440ms cubic-bezier(0.18, 0.89, 0.32, 1.12), opacity 440ms ease-out, filter 440ms ease-out',
+                      : 'box-shadow 250ms ease-out, border-color 250ms ease-out',
                     willChange: isDragging ? 'transform, opacity, filter' : 'auto',
                     backfaceVisibility: 'hidden',
                   }}

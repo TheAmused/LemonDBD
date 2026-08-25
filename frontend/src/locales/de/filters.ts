@@ -15,5 +15,16 @@ export default {
   "desc": "Absteigend (Z-A)",
   "clear": "Filter zurücksetzen",
   "generatorTab": "Perk-Zufallsgenerator",
-  "perks": "Perks"
+  "perks": "Perks",
+  "allPerks": "Alle Perks",
+  "generalOnly": "Nur allgemeine",
+  "everyPerk": "Jeder Perk",
+  "ownedOnly": "Nur im Besitz",
+  "filterByCharacter": "Nach Charakter filtern...",
+  "generalPerksOnly": "Nur allgemeine Perks",
+  "sortByName": "Perk-Name",
+  "sortByCharacter": "Charakter",
+  "sortByRole": "Rolle",
+  "orderAsc": "Aufsteigend (A-Z)",
+  "orderDesc": "Absteigend (Z-A)"
 };

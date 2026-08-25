@@ -3,5 +3,7 @@ export default {
   "of": "of",
   "results": "perks",
   "perPage": "Per page",
-  "page": "Page"
+  "page": "Page",
+  "previous": "Previous Page",
+  "next": "Next Page"
 };

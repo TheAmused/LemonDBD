@@ -1,7 +1,10 @@
 export default {
   "close": "Zamknij",
-  "character": "Przypisana Postać",
+  "character": "Powiązana Postać",
   "role": "Rola",
-  "copySlug": "Kopiuj ID",
-  "slugCopied": "Skopiowano do Schowka!"
+  "copySlug": "Kopiuj Identyfikator",
+  "slugCopied": "Skopiowano do Schowka!",
+  "perkDescription": "Opis Perka",
+  "generalPerk": "Perk Ogólny",
+  "alias": "Alias"
 };

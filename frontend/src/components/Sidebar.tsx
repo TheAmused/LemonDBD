@@ -317,7 +317,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Navigation */}
         <nav aria-label="Main Navigation" className="mt-5 space-y-1">
           <p className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
-            Navigation
+            {dict?.sidebar?.navigation || 'Navigation'}
           </p>
 
           {mainNavItems.map((item) => (
@@ -330,7 +330,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               activeBg={item.activeBg}
               href={item.href}
               isActive={!item.comingSoon && checkIsActive(item.id, item.href)}
-              badge={item.comingSoon ? 'Soon' : undefined}
+              badge={item.comingSoon ? (dict?.sidebar?.soon || 'Soon') : undefined}
               badgeColor="bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20"
               onClick={
                 item.comingSoon
@@ -357,9 +357,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <div className="flex items-center gap-3">
                   <Folder className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
                   <span className="flex items-center gap-1.5">
-                    <span>Others</span>
+                    <span>{dict?.sidebar?.others || 'Others'}</span>
                     <span className="rounded bg-amber-500/10 px-1 py-0.2 text-[9px] font-extrabold text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                      ADMIN
+                      {dict?.sidebar?.admin || 'ADMIN'}
                     </span>
                   </span>
                 </div>
@@ -414,6 +414,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* User Account / Login */}
         <SidebarUserSection
           currentLocale={currentLocale}
+          dict={dict}
           user={user}
           isAuthenticated={isAuthenticated}
           isAdmin={isAdmin}
@@ -433,6 +434,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Language, Theme, Bug Report & Buy Coffee */}
       <SidebarBottomControls
         currentLocale={currentLocale}
+        dict={dict}
         onOpenBugModal={() => {
           setBugModalOpen(true);
           setMobileOpen(false);
@@ -461,13 +463,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={toggleSidebar}
           title={
             isCollapsed
-              ? 'Expand Navigation Sidebar'
-              : 'Collapse Navigation Sidebar'
+              ? (dict?.sidebar?.expandSidebar || 'Expand Navigation Sidebar')
+              : (dict?.sidebar?.collapseSidebar || 'Collapse Navigation Sidebar')
           }
           aria-label={
             isCollapsed
-              ? 'Expand Navigation Sidebar'
-              : 'Collapse Navigation Sidebar'
+              ? (dict?.sidebar?.expandSidebar || 'Expand Navigation Sidebar')
+              : (dict?.sidebar?.collapseSidebar || 'Collapse Navigation Sidebar')
           }
           className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-slate-200 bg-white/95 text-slate-700 shadow-md hover:bg-slate-100 hover:w-7 hover:text-cyan-600 dark:border-slate-700/80 dark:bg-slate-900/95 dark:text-cyan-400 dark:shadow-2xl dark:shadow-slate-950/90 dark:hover:bg-slate-800 dark:hover:text-cyan-300 active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
         >

@@ -15,5 +15,16 @@ export default {
   "desc": "Descending (Z-A)",
   "clear": "Reset Filters",
   "generatorTab": "Perk Randomizer",
-  "perks": "Perks"
+  "perks": "Perks",
+  "allPerks": "All Perks",
+  "generalOnly": "General Only",
+  "everyPerk": "Every Perk",
+  "ownedOnly": "Owned Only",
+  "filterByCharacter": "Filter by character...",
+  "generalPerksOnly": "General Perks Only",
+  "sortByName": "Perk Name",
+  "sortByCharacter": "Character",
+  "sortByRole": "Role",
+  "orderAsc": "Ascending (A-Z)",
+  "orderDesc": "Descending (Z-A)"
 };

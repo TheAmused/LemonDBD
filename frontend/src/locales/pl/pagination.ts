@@ -1,7 +1,9 @@
 export default {
-  "showing": "Pokazuje",
+  "showing": "Wyświetlanie",
   "of": "z",
-  "results": "umiejętności",
+  "results": "perków",
   "perPage": "Na stronę",
-  "page": "Strona"
+  "page": "Strona",
+  "previous": "Poprzednia Strona",
+  "next": "Następna Strona"
 };

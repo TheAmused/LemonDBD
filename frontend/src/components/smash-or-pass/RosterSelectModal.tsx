@@ -405,7 +405,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             className="relative w-full h-full flex items-center justify-center"
             style={{ transformStyle: 'preserve-3d' }}
           >
-            {visibleCards.map(({ roster: r, keyId, visualOffset, k }) => {
+            {visibleCards.map(({ roster: r, keyId, visualOffset }) => {
               const absOffset = Math.abs(visualOffset);
               const isCenter = absOffset < 0.5;
               const isCurrentlyActive = r.slug === activeSelectedSlug;

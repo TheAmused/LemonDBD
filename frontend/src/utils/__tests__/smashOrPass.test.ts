@@ -270,3 +270,50 @@ test('SmashOrPass: Sound Effects & Web Audio Synthesizer', async (t) => {
     SmashSounds.stopBgm();
   });
 });
+
+test('SmashOrPass: Roster Carousel Navigation & Normalization', async (t) => {
+  const normalizeIndex = (idx: number, N: number): number => {
+    if (N === 0) return 0;
+    return ((Math.round(idx) % N) + N) % N;
+  };
+
+  const stepPrev = (current: number): number => Math.round(current) - 1;
+  const stepNext = (current: number): number => Math.round(current) + 1;
+
+  await t.test('steps left and right accurately with wrap-around normalization', () => {
+    const N = 6;
+    let center = 0;
+
+    // Step Left from 0 -> -1 -> normalized to 5
+    center = stepPrev(center);
+    assert.strictEqual(center, -1);
+    assert.strictEqual(normalizeIndex(center, N), 5);
+
+    // Step Left again -> -2 -> normalized to 4
+    center = stepPrev(center);
+    assert.strictEqual(center, -2);
+    assert.strictEqual(normalizeIndex(center, N), 4);
+
+    // Step Right -> -1 -> normalized to 5
+    center = stepNext(center);
+    assert.strictEqual(center, -1);
+    assert.strictEqual(normalizeIndex(center, N), 5);
+
+    // Step Right -> 0 -> normalized to 0
+    center = stepNext(center);
+    assert.strictEqual(center, 0);
+    assert.strictEqual(normalizeIndex(center, N), 0);
+
+    // Step Right -> 1 -> normalized to 1
+    center = stepNext(center);
+    assert.strictEqual(center, 1);
+    assert.strictEqual(normalizeIndex(center, N), 1);
+  });
+
+  await t.test('rounds fractional drag positions before stepping', () => {
+    assert.strictEqual(stepPrev(1.4), 0);
+    assert.strictEqual(stepNext(1.4), 2);
+    assert.strictEqual(stepPrev(-0.8), -2);
+    assert.strictEqual(stepNext(-0.8), 0);
+  });
+});

@@ -316,4 +316,23 @@ test('SmashOrPass: Roster Carousel Navigation & Normalization', async (t) => {
     assert.strictEqual(stepPrev(-0.8), -2);
     assert.strictEqual(stepNext(-0.8), 0);
   });
+
+  await t.test('calculates continuous shortest signed angular differences in 3D modulo ring', () => {
+    const N = 6;
+    const calcDiff = (i: number, visualIndex: number) => {
+      return ((i - visualIndex) % N + N * 1.5) % N - (N / 2);
+    };
+
+    // When visualIndex is 0:
+    assert.strictEqual(calcDiff(0, 0), 0);
+    assert.strictEqual(calcDiff(1, 0), 1);
+    assert.strictEqual(calcDiff(2, 0), 2);
+    assert.strictEqual(calcDiff(5, 0), -1);
+    assert.strictEqual(calcDiff(4, 0), -2);
+
+    // When visualIndex is continuously interpolating 0.5:
+    assert.strictEqual(calcDiff(0, 0.5), -0.5);
+    assert.strictEqual(calcDiff(1, 0.5), 0.5);
+    assert.strictEqual(calcDiff(5, 0.5), -1.5);
+  });
 });

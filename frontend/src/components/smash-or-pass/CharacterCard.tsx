@@ -270,7 +270,14 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const swipeProgress = Math.min(1, Math.max(0, dragDistance / 100));
   const isSmashDrag = dragOffset.x > 15 || exitType === 'smash';
   const isPassDrag = dragOffset.x < -15 || exitType === 'pass';
-  const dragRotation = dragOffset.x * 0.075;
+  const dragRotation = Math.min(28, Math.max(-28, dragOffset.x * 0.075));
+  const cardScale = isExiting
+    ? exitType === 'smash'
+      ? 1.05
+      : 0.88
+    : isDragging
+    ? 1.02
+    : 1;
 
   return (
     <>
@@ -285,13 +292,13 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           transform: isTopCard
             ? `translate3d(${dragOffset.x}px, ${dragOffset.y}px, 0px) rotate(${
                 isDragging || isExiting ? dragRotation : tilt.y * 0.4
-              }deg) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`
+              }deg) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${cardScale})`
             : undefined,
           transition: isDragging
             ? 'none'
             : isExiting
             ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
-            : 'transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+            : 'transform 380ms cubic-bezier(0.175, 0.885, 0.32, 1.275)',
           perspective: 1200,
           willChange: isDragging || isExiting ? 'transform, opacity' : 'auto',
           opacity: isExiting ? 0 : 1,

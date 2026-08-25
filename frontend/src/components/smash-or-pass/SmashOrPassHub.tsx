@@ -719,17 +719,32 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           </div>
         ) : currentCharacter ? (
           <div className="relative flex flex-col items-center justify-center pointer-events-auto min-h-[460px] sm:min-h-[520px]">
-            {/* CARD 3 IN QUEUE (DEPTH 2) */}
+            {/* CARD 3 IN QUEUE (DEPTH 2 - SMOOTH ENTER & ELEVATION) */}
             {thirdCharacter && (
               <div
                 key={`queue-3-${thirdCharacter.id || thirdCharacter.slug}`}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-480 ease-out"
+                className="absolute inset-0 flex items-center justify-center pointer-events-none anim-card-queue-enter"
                 style={{
-                  transform: isExiting ? 'scale(0.93) translateY(14px)' : 'scale(0.86) translateY(28px)',
-                  opacity: isExiting ? 0.85 : 0.35,
+                  transform: dragPhysics.isDragging
+                    ? `scale(${0.86 + Math.min(0.07, Math.abs(dragPhysics.x) / 1200)}) translateY(${Math.max(14, 28 - Math.abs(dragPhysics.x) * 0.025)}px)`
+                    : isExiting
+                    ? 'scale(0.93) translateY(14px)'
+                    : 'scale(0.86) translateY(28px)',
+                  opacity: dragPhysics.isDragging
+                    ? 0.45 + Math.min(0.35, Math.abs(dragPhysics.x) / 1000)
+                    : isExiting
+                    ? 0.85
+                    : 0.45,
+                  filter: dragPhysics.isDragging
+                    ? `brightness(${0.75 + Math.min(0.15, Math.abs(dragPhysics.x) / 1000)})`
+                    : isExiting
+                    ? 'brightness(0.9)'
+                    : 'brightness(0.75)',
                   zIndex: 5,
-                  willChange: 'transform, opacity',
-                  transition: 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1)',
+                  willChange: 'transform, opacity, filter',
+                  transition: isExiting
+                    ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1), filter 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
+                    : 'transform 240ms ease-out, opacity 240ms ease-out, filter 240ms ease-out',
                 }}
               >
                 <CharacterCard
@@ -742,23 +757,32 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               </div>
             )}
 
-            {/* CARD 2 IN QUEUE (DEPTH 1 - INTERACTIVE PROMOTION) */}
+            {/* CARD 2 IN QUEUE (DEPTH 1 - DYNAMIC PROMOTION) */}
             {nextCharacter && (
               <div
                 key={`queue-2-${nextCharacter.id || nextCharacter.slug}`}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-480 ease-out"
+                className="absolute inset-0 flex items-center justify-center pointer-events-none"
                 style={{
                   transform: dragPhysics.isDragging
-                    ? `scale(${0.93 + Math.min(0.07, Math.abs(dragPhysics.x) / 1000)}) translateY(${Math.max(0, 14 - Math.abs(dragPhysics.x) * 0.035)}px)`
+                    ? `scale(${0.93 + Math.min(0.07, Math.abs(dragPhysics.x) / 900)}) translateY(${Math.max(0, 14 - Math.abs(dragPhysics.x) * 0.035)}px)`
                     : isExiting
                     ? 'scale(1) translateY(0px)'
                     : 'scale(0.93) translateY(14px)',
-                  opacity: isExiting ? 1 : 0.85,
+                  opacity: dragPhysics.isDragging
+                    ? 0.85 + Math.min(0.15, Math.abs(dragPhysics.x) / 900)
+                    : isExiting
+                    ? 1
+                    : 0.85,
+                  filter: dragPhysics.isDragging
+                    ? `brightness(${0.9 + Math.min(0.1, Math.abs(dragPhysics.x) / 900)})`
+                    : isExiting
+                    ? 'brightness(1)'
+                    : 'brightness(0.9)',
                   zIndex: 10,
-                  willChange: 'transform, opacity',
+                  willChange: 'transform, opacity, filter',
                   transition: isExiting
-                    ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
-                    : 'transform 200ms ease-out, opacity 200ms ease-out',
+                    ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1), filter 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
+                    : 'transform 200ms ease-out, opacity 200ms ease-out, filter 200ms ease-out',
                 }}
               >
                 <CharacterCard

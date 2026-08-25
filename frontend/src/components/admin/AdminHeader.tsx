@@ -21,6 +21,13 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   onTriggerSync,
   onRefreshData,
 }) => {
+  const pgAdminUrl =
+    (process.env.NEXT_PUBLIC_PGADMIN_URL && process.env.NEXT_PUBLIC_PGADMIN_URL.trim() !== '')
+      ? process.env.NEXT_PUBLIC_PGADMIN_URL
+      : typeof window !== 'undefined'
+      ? `http://${window.location.hostname}:5050`
+      : 'http://localhost:5050';
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6 w-full">
       <div className="flex items-center gap-3.5">
@@ -59,7 +66,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         </button>
 
         <a
-          href={process.env.NEXT_PUBLIC_PGADMIN_URL || 'https://localhost:5050'}
+          href={pgAdminUrl}
           target="_blank"
           rel="noopener noreferrer"
           title="Open pgAdmin Web Management (PostgreSQL DB Manager)"

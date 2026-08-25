@@ -86,8 +86,8 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
       - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
-    expose:
-      - "80"
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
     depends_on:
       db:
         condition: service_healthy
@@ -102,7 +102,7 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost}
         NEXT_PUBLIC_UMAMI_URL: ${NEXT_PUBLIC_UMAMI_URL:-}
         NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
-        NEXT_PUBLIC_PGADMIN_URL: ${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
+        NEXT_PUBLIC_PGADMIN_URL: ${NEXT_PUBLIC_PGADMIN_URL:-http://localhost:5050}
     container_name: dbd_frontend
     restart: unless-stopped
     expose:
@@ -111,7 +111,7 @@ services:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://localhost}
       - NEXT_PUBLIC_UMAMI_WEBSITE_ID=${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
       - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL:-}
-      - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
+      - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-http://localhost:5050}
     depends_on:
       backend:
         condition: service_healthy
@@ -128,15 +128,12 @@ services:
       - "80:80"
       - "443:443"
       - "${UMAMI_PORT:-8117}:8117"
-      - "${PGADMIN_PORT:-5050}:5050"
     depends_on:
       backend:
         condition: service_healthy
       frontend:
         condition: service_started
       umami:
-        condition: service_started
-      pgadmin:
         condition: service_started
     networks:
       - dbd_network

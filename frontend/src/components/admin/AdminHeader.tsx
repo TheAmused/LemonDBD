@@ -25,8 +25,8 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
     (process.env.NEXT_PUBLIC_PGADMIN_URL && process.env.NEXT_PUBLIC_PGADMIN_URL.trim() !== '')
       ? process.env.NEXT_PUBLIC_PGADMIN_URL
       : typeof window !== 'undefined'
-      ? `http://${window.location.hostname}:5050`
-      : 'http://localhost:5050';
+      ? `${window.location.protocol}//${window.location.hostname}:5050`
+      : 'https://localhost:5050';
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6 w-full">

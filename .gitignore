@@ -96,4 +96,6 @@ backend/app/static/icons/
 backend/app/static/maps/
 backend/app/static/uploads/
 translations/*
-!translations/create_translations.py
+!translations/create_translations.py
+
+scratch/*

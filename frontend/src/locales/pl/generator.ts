@@ -1,0 +1,22 @@
+export default {
+  "title": "Losownik Perkó́w",
+  "subtitle": "Losuj zestawy perków na podstawie stron ekwipunku w grze [Strona/Slot].",
+  "modeInstant": "Szybki Los",
+  "modeWheel": "Koło Fortuny",
+  "configTitle": "Ustawienia Ekwipunku i Koła",
+  "totalPages": "Liczba Stron",
+  "perksPerPage": "Perków na Stronę",
+  "lastPagePerks": "Perków na Ostatniej Stronie",
+  "spinDuration": "Czas Czas Losowania (sek)",
+  "resetDefaults": "Przywróć Domyślne",
+  "rollButton": "Wylosuj Pełny Zestaw",
+  "spinWheels": "Zakręć dla Perku #{slot}",
+  "spinning": "Losowanie...",
+  "pageWheelTitle": "Koło Stron",
+  "perkWheelTitle": "Koło Perków",
+  "selectedPage": "Wybrana Strona: {page}",
+  "slotBadge": "Strona {page} / Slot {slot}",
+  "noRepeat": "Bez Powtórzeń",
+  "drawnBadge": "Wylosowane: {drawn} / {total}",
+  "resetDrawn": "Resetuj Użyte Perki"
+};

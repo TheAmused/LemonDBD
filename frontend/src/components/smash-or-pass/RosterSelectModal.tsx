@@ -101,6 +101,31 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     [N, centerIndex, normalizeIndex, rosters, onSelectRoster, onClose]
   );
 
+  // Helper: Step previous/next roster card
+  const stepPrev = useCallback((e?: React.MouseEvent | React.PointerEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    setCenterIndex((prev) => {
+      const next = Math.round(prev) - 1;
+      SmashSounds.playHoverTick();
+      return next;
+    });
+  }, []);
+
+  const stepNext = useCallback((e?: React.MouseEvent | React.PointerEvent) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    setCenterIndex((prev) => {
+      const next = Math.round(prev) + 1;
+      SmashSounds.playHoverTick();
+      return next;
+    });
+  }, []);
+
   // 2. Keyboard navigation (Arrow keys to spin continuously, Enter to confirm, Escape to choose middle card and leave)
   useEffect(() => {
     if (!isOpen) return;
@@ -108,18 +133,10 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        setCenterIndex((prev) => {
-          const next = prev - 1;
-          SmashSounds.playHoverTick();
-          return next;
-        });
+        stepPrev();
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
-        setCenterIndex((prev) => {
-          const next = prev + 1;
-          SmashSounds.playHoverTick();
-          return next;
-        });
+        stepNext();
       } else if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         commitSelection();
@@ -132,7 +149,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, commitSelection]);
+  }, [isOpen, commitSelection, stepPrev, stepNext]);
 
   // Helper: Display names
   const getRosterDisplayName = useCallback(
@@ -169,13 +186,21 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
   // 3. Pointer Drag Gestures (Grab and Pull / Swipe with velocity fling momentum)
   const handlePointerDown = (e: React.PointerEvent) => {
+    // If pointer down is on any button (chevrons, close), do not start drag or capture pointer
+    if ((e.target as HTMLElement).closest('button')) {
+      return;
+    }
     setIsDragging(true);
     dragStartXRef.current = e.clientX;
     dragStartCenterRef.current = centerIndex;
     lastMoveXRef.current = e.clientX;
     lastMoveTimeRef.current = Date.now();
     velocityRef.current = 0;
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -296,12 +321,13 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           {/* Navigation Chevron Left */}
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setCenterIndex((prev) => prev - 1);
-              SmashSounds.playHoverTick();
-            }}
-            className="absolute left-2 sm:left-4 md:left-8 z-40 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-black/75 border border-pink-500/40 text-white shadow-[0_0_25px_rgba(255,0,85,0.35)] hover:bg-[#ff0055] hover:border-pink-300 hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            aria-label="Previous Roster"
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onClick={stepPrev}
+            className="absolute left-2 sm:left-4 md:left-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-black/80 border border-pink-500/40 text-white shadow-[0_0_25px_rgba(255,0,85,0.4)] hover:bg-[#ff0055] hover:border-pink-300 hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none"
           >
             <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7 stroke-[2.5]" />
           </button>
@@ -309,12 +335,13 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           {/* Navigation Chevron Right */}
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setCenterIndex((prev) => prev + 1);
-              SmashSounds.playHoverTick();
-            }}
-            className="absolute right-2 sm:right-4 md:right-8 z-40 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-black/75 border border-pink-500/40 text-white shadow-[0_0_25px_rgba(255,0,85,0.35)] hover:bg-[#ff0055] hover:border-pink-300 hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            aria-label="Next Roster"
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onClick={stepNext}
+            className="absolute right-2 sm:right-4 md:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-black/80 border border-pink-500/40 text-white shadow-[0_0_25px_rgba(255,0,85,0.4)] hover:bg-[#ff0055] hover:border-pink-300 hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none"
           >
             <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7 stroke-[2.5]" />
           </button>

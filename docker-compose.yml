@@ -73,6 +73,27 @@ services:
     networks:
       - dbd_network
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: dbd_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@lemondbd.local}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    expose:
+      - "80"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dbd_network
+
   frontend:
     build:
       context: ./frontend
@@ -81,6 +102,7 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost}
         NEXT_PUBLIC_UMAMI_URL: ${NEXT_PUBLIC_UMAMI_URL:-}
         NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
+        NEXT_PUBLIC_PGADMIN_URL: ${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
     container_name: dbd_frontend
     restart: unless-stopped
     expose:
@@ -89,6 +111,7 @@ services:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://localhost}
       - NEXT_PUBLIC_UMAMI_WEBSITE_ID=${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
       - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL:-}
+      - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
     depends_on:
       backend:
         condition: service_healthy
@@ -105,6 +128,7 @@ services:
       - "80:80"
       - "443:443"
       - "${UMAMI_PORT:-8117}:8117"
+      - "${PGADMIN_PORT:-5050}:5050"
     depends_on:
       backend:
         condition: service_healthy
@@ -112,11 +136,15 @@ services:
         condition: service_started
       umami:
         condition: service_started
+      pgadmin:
+        condition: service_started
     networks:
       - dbd_network
 
 volumes:
   postgres_data:
+    driver: local
+  pgadmin_data:
     driver: local
   backend_data:
     driver: local

@@ -338,18 +338,31 @@ export function ScraperConfigModal({
         </button>
 
         {/* Modal Header */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-600/10 dark:bg-red-600/20 border border-red-500/30 text-red-600 dark:text-red-400 shadow-sm">
-            <Database className="h-5 w-5" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-600/10 dark:bg-red-600/20 border border-red-500/30 text-red-600 dark:text-red-400 shadow-sm">
+              <Database className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 id="db-modal-title" className="text-lg font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
+                Database Backup &amp; Snapshots
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Export complete JSON snapshots, restore backups, or manage PostgreSQL via pgAdmin
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 id="db-modal-title" className="text-lg font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
-              Database Manager &amp; Backup
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Export complete JSON snapshots, restore backups, or purge specific tables
-            </p>
-          </div>
+
+          <a
+            href={process.env.NEXT_PUBLIC_PGADMIN_URL || 'https://localhost:5050'}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Open pgAdmin Web Management Interface"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:text-white hover:border-indigo-400 text-xs font-bold transition-all"
+          >
+            <Database className="h-3.5 w-3.5 text-indigo-400" />
+            <span>Launch pgAdmin</span>
+          </a>
         </div>
 
         {/* Tabs Bar */}

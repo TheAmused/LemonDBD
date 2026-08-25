@@ -58,15 +58,16 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <span className="hidden md:inline">Import</span>
         </button>
 
-        <button
-          type="button"
-          onClick={() => onOpenDbMaintenance('purge')}
-          title="Database Maintenance & Table Purge Controls"
-          className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm flex-1 sm:flex-initial"
+        <a
+          href={process.env.NEXT_PUBLIC_PGADMIN_URL || 'https://localhost:5050'}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Open pgAdmin Web Management (PostgreSQL DB Manager)"
+          className="flex items-center justify-center gap-2 rounded-xl border border-indigo-500/40 bg-indigo-950/40 hover:bg-indigo-900/60 px-3.5 py-2 text-xs font-bold text-indigo-300 hover:text-white hover:border-indigo-400 transition-all cursor-pointer shadow-sm flex-1 sm:flex-initial"
         >
-          <Database className="h-3.5 w-3.5 text-slate-400" />
-          <span>DB Manager</span>
-        </button>
+          <Database className="h-3.5 w-3.5 text-indigo-400" />
+          <span>pgAdmin (DB)</span>
+        </a>
 
         <button
           type="button"

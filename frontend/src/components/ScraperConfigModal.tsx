@@ -358,8 +358,8 @@ export function ScraperConfigModal({
               (process.env.NEXT_PUBLIC_PGADMIN_URL && process.env.NEXT_PUBLIC_PGADMIN_URL.trim() !== '')
                 ? process.env.NEXT_PUBLIC_PGADMIN_URL
                 : typeof window !== 'undefined'
-                ? `http://${window.location.hostname}:5050`
-                : 'http://localhost:5050'
+                ? `${window.location.protocol}//${window.location.hostname}:5050`
+                : 'https://localhost:5050'
             }
             target="_blank"
             rel="noopener noreferrer"

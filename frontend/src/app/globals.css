@@ -302,6 +302,21 @@ strong {
   }
 }
 
+@keyframes cardEntryReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(36px);
+  }
+  100% {
+    opacity: 0.45;
+    transform: scale(0.86) translateY(28px);
+  }
+}
+
+.anim-card-queue-enter {
+  animation: cardEntryReveal 480ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
 @keyframes neonCockpitPulse {
   0%, 100% {
     box-shadow: 0 0 25px rgba(255, 0, 85, 0.08), 0 20px 50px rgba(0, 0, 0, 0.85);
@@ -314,7 +329,7 @@ strong {
 }
 
 .anim-lore-enter {
-  animation: lorePodEnter 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: lorePodEnter 480ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
 }
 
 .anim-watermark-enter {

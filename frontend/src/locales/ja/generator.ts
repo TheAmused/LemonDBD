@@ -1,0 +1,22 @@
+export default {
+  "title": "パーク構成ジェネレーター",
+  "subtitle": "ゲーム内インベントリの座標 [ページ/スロット] に基づいてランダム選出します。",
+  "modeInstant": "即時抽選",
+  "modeWheel": "ルーレット",
+  "configTitle": "インベントリ＆ルーレット設定",
+  "totalPages": "総ページ数",
+  "perksPerPage": "ページあたりのパーク数",
+  "lastPagePerks": "最終ページのパーク数",
+  "spinDuration": "回転時間（秒）",
+  "resetDefaults": "初期設定に戻す",
+  "rollButton": "新しい構成を抽選",
+  "spinWheels": "スロット #{slot} を回す",
+  "spinning": "回転中...",
+  "pageWheelTitle": "ページルーレット",
+  "perkWheelTitle": "パークルーレット",
+  "selectedPage": "選択ページ: {page}",
+  "slotBadge": "ページ {page} / スロット {slot}",
+  "noRepeat": "重複なし",
+  "drawnBadge": "使用済: {drawn} / {total}",
+  "resetDrawn": "使用済パークをリセット"
+};

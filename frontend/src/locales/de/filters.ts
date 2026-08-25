@@ -1,0 +1,19 @@
+export default {
+  "searchPlaceholder": "Nach Perk-Name oder Beschreibung suchen...",
+  "category": "Rolle",
+  "allCategories": "Alle Rollen",
+  "survivor": "Überlebende",
+  "killer": "Killer",
+  "character": "Charakter",
+  "allCharacters": "Alle Charaktere",
+  "sortBy": "Sortieren nach",
+  "sortName": "Perk-Name",
+  "sortCharacter": "Charakter",
+  "sortCategory": "Rolle",
+  "order": "Reihenfolge",
+  "asc": "Aufsteigend (A-Z)",
+  "desc": "Absteigend (Z-A)",
+  "clear": "Filter zurücksetzen",
+  "generatorTab": "Perk-Zufallsgenerator",
+  "perks": "Perks"
+};

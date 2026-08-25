@@ -15,9 +15,9 @@ import {
 } from '../../services/clientSpeechModel';
 import { VoiceEngineInfoModal } from '../../components/maps/VoiceEngineInfoModal';
 import { VoiceCommandBanner } from '../../components/maps/VoiceCommandBanner';
-import enDict from '../../locales/en.json';
-import esDict from '../../locales/es.json';
-import plDict from '../../locales/pl.json';
+import enDict from '../../locales/en';
+import esDict from '../../locales/es';
+import plDict from '../../locales/pl';
 
 test('Browser compatibility and engine recommendation logic', () => {
   // In Node test environment, window/SpeechRecognition is undefined

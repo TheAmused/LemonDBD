@@ -1,0 +1,22 @@
+export default {
+  "title": "Perk Loadout Generator",
+  "subtitle": "Roll random perks based on in-game inventory coordinates [Page/Slot].",
+  "modeInstant": "Instant Roll",
+  "modeWheel": "Wheel of Fortune",
+  "configTitle": "Inventory & Wheel Settings",
+  "totalPages": "Total Pages",
+  "perksPerPage": "Perks per Page",
+  "lastPagePerks": "Last Page Perks",
+  "spinDuration": "Spin Duration (sec)",
+  "resetDefaults": "Reset to Defaults",
+  "rollButton": "Roll New Loadout",
+  "spinWheels": "Spin Wheel for Slot #{slot}",
+  "spinning": "Spinning Wheel...",
+  "pageWheelTitle": "Page Wheel",
+  "perkWheelTitle": "Perk Wheel",
+  "selectedPage": "Selected Page: {page}",
+  "slotBadge": "Page {page} / Slot {slot}",
+  "noRepeat": "No-Repeat Perks",
+  "drawnBadge": "Drawn: {drawn} / {total}",
+  "resetDrawn": "Reset Used Perks"
+};

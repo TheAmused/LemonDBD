@@ -1,0 +1,22 @@
+export default {
+  "title": "Perk-Loadout-Generator",
+  "subtitle": "Zufällige Perks basierend auf deinen Inventar-Koordinaten [Seite/Slot] generieren.",
+  "modeInstant": "Sofortiger Wurf",
+  "modeWheel": "Glücksrad",
+  "configTitle": "Inventar- & Radeinstellungen",
+  "totalPages": "Gesamtseiten",
+  "perksPerPage": "Perks pro Seite",
+  "lastPagePerks": "Perks auf letzter Seite",
+  "spinDuration": "Drehdauer (Sek.)",
+  "resetDefaults": "Auf Standard zurücksetzen",
+  "rollButton": "Neues Loadout würfeln",
+  "spinWheels": "Rad für Slot #{slot} drehen",
+  "spinning": "Rad dreht sich...",
+  "pageWheelTitle": "Seiten-Rad",
+  "perkWheelTitle": "Perk-Rad",
+  "selectedPage": "Ausgewählte Seite: {page}",
+  "slotBadge": "Seite {page} / Slot {slot}",
+  "noRepeat": "Keine Wiederholungen",
+  "drawnBadge": "Gezogen: {drawn} / {total}",
+  "resetDrawn": "Benutzte Perks zurücksetzen"
+};

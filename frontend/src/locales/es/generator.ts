@@ -1,0 +1,22 @@
+export default {
+  "title": "Generador de Builds",
+  "subtitle": "Genera perks aleatorios según la distribución del inventario [Página/Slot].",
+  "modeInstant": "Generación Rápida",
+  "modeWheel": "Rueda de la Fortuna",
+  "configTitle": "Ajustes de Inventario y Rueda",
+  "totalPages": "Páginas Totales",
+  "perksPerPage": "Perks por Página",
+  "lastPagePerks": "Perks en Última Página",
+  "spinDuration": "Duración del Giro (seg)",
+  "resetDefaults": "Restablecer por Defecto",
+  "rollButton": "Generar Build Completa",
+  "spinWheels": "Girar para Perk #{slot}",
+  "spinning": "Girando...",
+  "pageWheelTitle": "Rueda de Páginas",
+  "perkWheelTitle": "Rueda de Perks",
+  "selectedPage": "Página Seleccionada: {page}",
+  "slotBadge": "Página {page} / Slot {slot}",
+  "noRepeat": "Sin Repetición",
+  "drawnBadge": "Usados: {drawn} / {total}",
+  "resetDrawn": "Reiniciar Perks Usados"
+};

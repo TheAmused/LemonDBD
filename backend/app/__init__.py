@@ -60,6 +60,15 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
             pass
 
         if is_pg:
+            # Ensure umami database exists for analytics
+            try:
+                with db.engine.connect().execution_options(isolation_level="AUTOCOMMIT") as raw_conn:
+                    exists = raw_conn.execute(text("SELECT 1 FROM pg_database WHERE datname = 'umami';")).scalar()
+                    if not exists:
+                        raw_conn.execute(text("CREATE DATABASE umami;"))
+            except Exception:
+                pass
+
             # Non-blocking PostgreSQL advisory lock: worker 1 runs init, workers 2-4 skip immediately without blocking
             with db.engine.connect() as conn:
                 acquired = conn.execute(text("SELECT pg_try_advisory_lock(8882026);")).scalar()

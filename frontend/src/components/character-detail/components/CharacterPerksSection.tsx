@@ -2,10 +2,11 @@
 // frontend/src/components/character-detail/components/CharacterPerksSection.tsx
 
 import React, { useState } from 'react';
-import { CharacterItem, PerkItem, getAssetUrl, renderFormattedDbdText } from '../types';
+import { CharacterItem, PerkItem, getAssetUrl } from '../types';
 import { Perk } from '@/types/perks';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { DisabledReasonModal } from '@/components/DisabledReasonModal';
+import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
 
 interface CharacterPerksSectionProps {
   perks: PerkItem[];
@@ -22,7 +23,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
   onSelectPerk,
   t,
 }) => {
-  const [hoveredPerkIndex, setHoveredPerkIndex] = useState<number | null>(null);
+  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
   const [disabledModalPerk, setDisabledModalPerk] = useState<PerkItem | null>(null);
 
   if (perks.length === 0) return null;
@@ -36,8 +37,17 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
           <div
             key={`${perk.name}-${idx}`}
             className="relative"
-            onMouseEnter={() => setHoveredPerkIndex(idx)}
-            onMouseLeave={() => setHoveredPerkIndex(null)}
+            onMouseEnter={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              setActiveHover({
+                item: perk,
+                rect,
+                badge: `${perk.category} Perk`,
+                category: `${character.name || perk.character} Perk`,
+                accentColor: 'text-amber-400',
+              });
+            }}
+            onMouseLeave={() => setActiveHover(null)}
           >
             <button
               type="button"
@@ -72,31 +82,18 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
             {perk.is_disabled && (
               <DisabledBadge label={perk.name} onClick={() => setDisabledModalPerk(perk)} />
             )}
-
-            {hoveredPerkIndex === idx && (
-              <div
-                role="tooltip"
-                className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-50 w-80 sm:w-[440px] md:w-[480px] max-w-[92vw] p-4 rounded-2xl bg-slate-950/95 border border-amber-500/40 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150"
-              >
-                <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-800">
-                  <h4 className="text-sm font-black text-amber-400 truncate font-mono">
-                    {perk.name}
-                  </h4>
-                  <span className="text-[10px] font-bold text-rose-400 shrink-0 uppercase tracking-wider">
-                    {perk.category} Perk
-                  </span>
-                </div>
-                <div className="space-y-1 text-xs sm:text-sm max-h-96 sm:max-h-[460px] overflow-y-auto pr-1 leading-relaxed text-slate-200">
-                  {renderFormattedDbdText(perk.description, true)}
-                </div>
-                <span className="block text-[10px] font-mono text-amber-500 mt-2.5 text-right font-bold">
-                  {t.clickToInspect || 'Click to inspect full perk values'} &rarr;
-                </span>
-              </div>
-            )}
           </div>
         );
       })}
+
+      {/* Unified Hover Modal */}
+      <UnifiedHoverModal
+        activeHover={activeHover}
+        placement="auto"
+        t={t}
+        isPerk={true}
+        actionPrompt={t.clickToInspectPerk || t.clickToInspect || 'Click to inspect full perk values'}
+      />
 
       <DisabledReasonModal
         isOpen={disabledModalPerk !== null}

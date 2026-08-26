@@ -126,8 +126,9 @@ def normalize_text(s: str) -> str:
     s = s.replace("carburettor", "carburetor")
     s = s.replace("mouldy", "moldy")
     s = s.replace("randomised", "randomized")
-    s = s.replace("moulted", "molded")
-    s = s.replace("moulded", "molded")
+    s = s.replace("moulted", "molted")
+    s = s.replace("moulded", "molted")
+    s = s.replace("molded", "molted")
     s = s.replace("fibres", "fibers")
     s = s.replace("judgement", "judgment")
     s = s.replace("vermilion", "vermillion")
@@ -146,6 +147,24 @@ def normalize_text(s: str) -> str:
     s = s.replace("straps", "strap")
     s = s.replace("gloves", "glove")
     s = s.replace("deja vu", "dejavu")
+    s = s.replace("moulted", "molted")
+    s = s.replace("trapper bag", "trappersack")
+    s = s.replace("trapper sack", "trappersack")
+    s = s.replace("naped elektromagnetyczny", "emp")
+    s = s.replace("napedelektromagnetyczny", "emp")
+    s = s.replace("urzadzenie emp", "emp")
+    s = s.replace("urzadzenieemp", "emp")
+    s = s.replace("chinskie petardy", "chinskiepetardy")
+    s = s.replace("chinese firecrackers", "chinesefirecracker")
+    s = s.replace("flash grenade", "flashgrenade")
+    s = s.replace("flashbang", "flashgrenade")
+    s = s.replace("candelabra", "kandelabr")
+    s = s.replace("fog crystal", "krysztalmgly")
+    s = s.replace("krysztal pustki", "krysztalmgly")
+    s = s.replace("krysztal mgly", "krysztalmgly")
+    s = s.replace("void crystal", "krysztalmgly")
+    s = s.replace("hand of vecna", "rekavecny")
+    s = s.replace("eye of vecna", "okovecny")
     return re.sub(r"[^a-z0-9]", "", s)
 
 
@@ -313,7 +332,7 @@ class LocalizationIndex:
                         t = v.get("translations", {}).get(lang, {})
                         res_name = (t.get("name") or "").strip()
                         res_desc = (t.get("description") or t.get("lore") or "").strip()
-                        if res_name and (lang == "ja" or normalize_text(res_name) != norm_name or len(res_name) <= 3):
+                        if res_name and (lang == "ja" or lang == "en" or normalize_text(res_name) != norm_name or len(res_name) <= 3):
                             return res_name, res_desc
 
         # Strategy 2: Look up via DBDCharacters database tables (exact GUID Keys)
@@ -386,10 +405,22 @@ def is_translation_incomplete(
         "ovomorph", "janjirashand"
     }
 
-    norm_l = normalize_text(name_l)
-    norm_en = normalize_text(en_name)
-    if norm_l == norm_en and len(norm_en) > 3:
-        if norm_en in OFFICIAL_LOANWORDS:
+    # Check for legacy wiki strings that indicate untranslated English text
+    if "THIS ITEM CAN NO LONGER BE OBTAINED" in desc_l:
+        return True
+    if desc_l.startswith("Craftable\nLimited Item") or desc_l.startswith("Limited Item\n"):
+        return True
+
+    en_desc = (translations.get("en", {}).get("description") or "").strip()
+    if en_desc and desc_l == en_desc and len(desc_l) > 20:
+        return True
+
+    raw_l = re.sub(r"[^a-z0-9]", "", unicodedata.normalize("NFKD", name_l).encode("ASCII", "ignore").decode("utf-8").lower())
+    raw_en = re.sub(r"[^a-z0-9]", "", unicodedata.normalize("NFKD", en_name).encode("ASCII", "ignore").decode("utf-8").lower())
+    if raw_l == raw_en and len(raw_en) > 3:
+        if raw_en in OFFICIAL_LOANWORDS:
+            return False
+        if en_desc and desc_l != en_desc and len(desc_l) > 15:
             return False
         return True
     return False

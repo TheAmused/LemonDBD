@@ -33,10 +33,6 @@ class ChaosService:
         r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
 
     def _freeze_pools_if_needed(self, r: ChaosRun) -> None:
-        # Zero streak means the run hasn't genuinely started yet, regardless
-        # of whatever these fields already hold -- a run created before the
-        # pool moved to a real freeze point can carry a stale non-empty
-        # snapshot from creation time.
         force = r.current_streak == 0
         if force or not json.loads(r.owned_killers_json or "[]"):
             r.owned_killers_json = json.dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
@@ -250,6 +246,8 @@ class ChaosService:
         r = db.session.scalars(select(ChaosRun).where(ChaosRun.id == run_id)).first()
         if not r or r.status == "completed":
             return
+
+        self._freeze_pools_if_needed(r)
 
         current_streak = r.current_streak
         (

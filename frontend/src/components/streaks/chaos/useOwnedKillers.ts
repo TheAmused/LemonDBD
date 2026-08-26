@@ -9,10 +9,6 @@ import { backendBase } from '@/utils/staticUrl';
 export function useOwnedKillers() {
   const { token, user } = useAuth();
   const [killers, setKillers] = useState<string[]>([]);
-  // Release order for every killer, not just currently-owned ones -- a
-  // killer frozen into a run's pool and later locked still needs its real
-  // chronological slot instead of falling back to "unknown" (sorted last)
-  // once it drops out of the owned-only list above.
   const [releaseOrder, setReleaseOrder] = useState<Map<string, number>>(new Map());
   const [loading, setLoading] = useState<boolean>(true);
 

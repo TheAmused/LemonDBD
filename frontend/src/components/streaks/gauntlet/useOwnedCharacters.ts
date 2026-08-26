@@ -22,10 +22,6 @@ export interface OwnedCharacterItem {
 export function useOwnedCharacters(role: Role, rosterLimit?: number) {
   const { token, user } = useAuth();
   const [characters, setCharacters] = useState<OwnedCharacterItem[]>([]);
-  // Release order for every character of this role, not just currently-owned
-  // ones -- a character frozen into a run's pool and later locked still needs
-  // its real chronological slot instead of falling back to "unknown" (sorted
-  // last) once it drops out of the owned-only list above.
   const [releaseOrder, setReleaseOrder] = useState<Map<string, number>>(new Map());
   const [loading, setLoading] = useState<boolean>(true);
 

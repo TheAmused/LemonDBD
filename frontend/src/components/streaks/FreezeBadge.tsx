@@ -9,12 +9,6 @@ export interface FreezeBadgeProps {
   frozen: boolean;
 }
 
-/**
- * Tile matching the header's Streak/Best stats, shown only once a run's
- * pool has locked in for the attempt. The explainer bubble is portaled to
- * document.body (like UnifiedHoverModal) so it always paints above the rest
- * of the header instead of fighting a local stacking context.
- */
 export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen }) => {
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

@@ -9,9 +9,15 @@ from app.models import PageStreakPageLog, PageStreakRun, utcnow
 from app.services.page_streak.helpers import BUILD_SIZE, to_utc_iso
 
 
-def run_to_dict(r: PageStreakRun, history: List[Dict[str, Any]]) -> Dict[str, Any]:
+def run_to_dict(
+    r: PageStreakRun,
+    history: List[Dict[str, Any]],
+    build_pages_fn: Optional[Callable[[int], List[List[str]]]] = None,
+) -> Dict[str, Any]:
     """Serialize a PageStreakRun entity along with its match history."""
     pages = json.loads(r.pages_json or "[]")
+    if not pages and build_pages_fn is not None:
+        pages = build_pages_fn(r.user_id)
     return {
         "id": r.id,
         "killer": r.killer,
@@ -26,7 +32,11 @@ def run_to_dict(r: PageStreakRun, history: List[Dict[str, Any]]) -> Dict[str, An
     }
 
 
-def fetch_run(user_id: int, killer: str) -> Optional[Dict[str, Any]]:
+def fetch_run(
+    user_id: int,
+    killer: str,
+    build_pages_fn: Optional[Callable[[int], List[List[str]]]] = None,
+) -> Optional[Dict[str, Any]]:
     """Retrieve run state and sorted page logs for a given user and killer."""
     r = db.session.scalars(
         select(PageStreakRun)
@@ -48,7 +58,7 @@ def fetch_run(user_id: int, killer: str) -> Optional[Dict[str, Any]]:
         }
         for log in sorted_logs
     ]
-    return run_to_dict(r, history)
+    return run_to_dict(r, history, build_pages_fn)
 
 
 def create_new_run(
@@ -67,6 +77,8 @@ def create_new_run(
     if not pages:
         raise ValueError("No perks available — the pool is empty")
 
+    # pages_json stays at its "[]" default -- the pool is shown live until
+    # the first real match submission freezes it for the attempt.
     run = PageStreakRun(
         user_id=user_id,
         killer=killer,
@@ -74,11 +86,10 @@ def create_new_run(
         attempt=1,
         current_page=1,
         best_page=0,
-        pages_json=json.dumps(pages),
     )
     db.session.add(run)
     db.session.commit()
-    return fetch_run(user_id, killer)
+    return fetch_run(user_id, killer, build_pages_fn)
 
 
 def validate_match_submission(run: Dict[str, Any], page: int, perks: List[str], result: str) -> None:
@@ -110,15 +121,20 @@ def record_match_result(
     page: int,
     perks: List[str],
     result: str,
+    build_pages_fn: Optional[Callable[[int], List[List[str]]]] = None,
 ) -> Optional[Dict[str, Any]]:
     """Record match logs and update page progression or failure resets."""
-    run = fetch_run(user_id, killer)
+    run = fetch_run(user_id, killer, build_pages_fn)
     if run is None:
         raise ValueError(f"No run in progress for {killer}")
 
     validate_match_submission(run, page, perks, result)
 
     r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
+    if not json.loads(r.pages_json or "[]"):
+        # First real submission for this attempt -- freeze exactly the pages
+        # the player just built against, rather than re-deriving live later.
+        r.pages_json = json.dumps(run["pages"])
     log = PageStreakPageLog(
         run_id=r.id,
         attempt=r.attempt,
@@ -137,9 +153,12 @@ def record_match_result(
     else:
         r.current_page = 1
         r.attempt = r.attempt + 1
+        # Back to page 1 with nothing banked this attempt -- go live again
+        # until the next real submission re-freezes it.
+        r.pages_json = "[]"
 
     db.session.commit()
-    return fetch_run(user_id, killer)
+    return fetch_run(user_id, killer, build_pages_fn)
 
 
 def apply_inactivity_loss(run_id: int) -> None:
@@ -162,6 +181,7 @@ def apply_inactivity_loss(run_id: int) -> None:
 
     r.current_page = 1
     r.attempt = r.attempt + 1
+    r.pages_json = "[]"
 
     db.session.commit()
 
@@ -171,22 +191,21 @@ def reset_active_run(
     killer: str,
     build_pages_fn: Callable[[int], List[List[str]]],
 ) -> Optional[Dict[str, Any]]:
-    """Reset run progress to Page 1 and update perk page snapshots."""
-    run = fetch_run(user_id, killer)
+    """Reset run progress to Page 1, going live again until the next real submission."""
+    run = fetch_run(user_id, killer, build_pages_fn)
     if run is None:
         raise ValueError(f"No run to reset for {killer}")
 
-    pages = build_pages_fn(user_id)
-    if not pages:
+    if not build_pages_fn(user_id):
         raise ValueError("No perks available — the pool is empty")
 
     r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
     r.status = "in_progress"
     r.current_page = 1
     r.attempt = r.attempt + 1
-    r.pages_json = json.dumps(pages)
+    r.pages_json = "[]"
     r.snapshot_at = utcnow()
     db.session.commit()
 
-    return fetch_run(user_id, killer)
+    return fetch_run(user_id, killer, build_pages_fn)
 

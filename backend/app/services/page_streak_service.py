@@ -57,7 +57,7 @@ class PageStreakService:
         return data
 
     def get_run(self, user_id: int, killer: str) -> Optional[Dict[str, Any]]:
-        return self._with_artwork(user_id, fetch_run(user_id, killer))
+        return self._with_artwork(user_id, fetch_run(user_id, killer, self.build_pages))
 
     def start_run(self, user_id: int, killer: str) -> Optional[Dict[str, Any]]:
         assert_challenge_mode_enabled("page_streak")
@@ -68,7 +68,7 @@ class PageStreakService:
 
     def submit_result(self, user_id: int, killer: str, page: int, perks: List[str], result: str) -> Optional[Dict[str, Any]]:
         assert_challenge_mode_enabled("page_streak")
-        return self._with_artwork(user_id, record_match_result(user_id, killer, page, perks, result))
+        return self._with_artwork(user_id, record_match_result(user_id, killer, page, perks, result, self.build_pages))
 
     def reset_run(self, user_id: int, killer: str) -> Optional[Dict[str, Any]]:
         assert_challenge_mode_enabled("page_streak")

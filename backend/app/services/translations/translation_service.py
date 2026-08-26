@@ -40,8 +40,14 @@ def simplify_lookup_key(s: str) -> str:
     s = s.replace("carburettor", "carburetor")
     s = s.replace("mouldy", "moldy")
     s = s.replace("randomised", "randomized")
-    s = s.replace("moulted", "molded")
-    s = s.replace("moulded", "molded")
+    s = s.replace("moulted", "molted")
+    s = s.replace("moulded", "molted")
+    s = s.replace("molded", "molted")
+    s = s.replace("dowsing", "dousing")
+    s = s.replace("i.d.", "id")
+    s = s.replace("’", "'")
+    s = s.replace("“", '"')
+    s = s.replace("”", '"')
     s = s.replace("fibres", "fibers")
     s = s.replace("judgement", "judgment")
     s = s.replace("vermilion", "vermillion")
@@ -60,6 +66,23 @@ def simplify_lookup_key(s: str) -> str:
     s = s.replace("straps", "strap")
     s = s.replace("gloves", "glove")
     s = s.replace("deja vu", "dejavu")
+    s = s.replace("trapper bag", "trappersack")
+    s = s.replace("trapper sack", "trappersack")
+    s = s.replace("naped elektromagnetyczny", "emp")
+    s = s.replace("napedelektromagnetyczny", "emp")
+    s = s.replace("urzadzenie emp", "emp")
+    s = s.replace("urzadzenieemp", "emp")
+    s = s.replace("chinskie petardy", "chinskiepetardy")
+    s = s.replace("chinese firecrackers", "chinesefirecracker")
+    s = s.replace("flash grenade", "flashgrenade")
+    s = s.replace("flashbang", "flashgrenade")
+    s = s.replace("candelabra", "kandelabr")
+    s = s.replace("fog crystal", "krysztalmgly")
+    s = s.replace("krysztal pustki", "krysztalmgly")
+    s = s.replace("krysztal mgly", "krysztalmgly")
+    s = s.replace("void crystal", "krysztalmgly")
+    s = s.replace("hand of vecna", "rekavecny")
+    s = s.replace("eye of vecna", "okovecny")
     return re.sub(r"[^a-z0-9]", "", s)
 
 
@@ -260,7 +283,26 @@ class TranslationService:
 
         # 5. Sync Offerings
         from app.models.equipment import Offering
-        db_offerings = db.session.scalars(select(Offering)).all()
+        db_offerings = list(db.session.scalars(select(Offering)).all())
+
+        # Deduplicate offerings in database if multiple variants exist (e.g. Moldy vs Mouldy, I.D. vs ID, curly quotes)
+        seen_keys = {}
+        for o in list(db_offerings):
+            key = simplify_lookup_key(o.name)
+            if key in seen_keys:
+                primary = seen_keys[key]
+                if not primary.icon_local_path and o.icon_local_path:
+                    primary.icon_local_path = o.icon_local_path
+                if not primary.icon_url and o.icon_url:
+                    primary.icon_url = o.icon_url
+                if o.translations and not primary.translations:
+                    primary.translations = o.translations
+                db.session.delete(o)
+                db_offerings.remove(o)
+            else:
+                seen_keys[key] = o
+        db.session.flush()
+
         offering_exact_map = {o.name.strip().lower(): o for o in db_offerings}
         offering_map = {simplify_lookup_key(o.name): o for o in db_offerings}
         offerings_data = data.get("offerings", {})
@@ -280,6 +322,8 @@ class TranslationService:
                 db.session.add(matched)
                 offering_map[simplify_lookup_key(o_name)] = matched
             else:
+                if o_val.get("name") and matched.name != o_val.get("name"):
+                    matched.name = o_val.get("name")
                 if o_val.get("category"):
                     matched.category = o_val.get("category")
                 if o_val.get("role"):

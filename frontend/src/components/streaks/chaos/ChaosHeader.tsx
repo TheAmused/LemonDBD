@@ -4,6 +4,7 @@
 import React from 'react';
 import { Difficulty } from '@/types/chaosStreak';
 import { Coins, Flame, Trophy, Shield, Skull, BarChart2, BookOpen, Layers, RotateCcw } from 'lucide-react';
+import { FreezeBadge } from '../FreezeBadge';
 
 const DIFFICULTY_ICON: Record<Difficulty, React.ElementType> = {
   easy: Coins,
@@ -16,6 +17,7 @@ export interface ChaosHeaderProps {
   currentStreak: number;
   bestStreak: number;
   lastCheckpointStreak: number;
+  poolFrozen?: boolean;
   onOpenStats: () => void;
   onOpenRules: () => void;
   onOpenPerkPool: () => void;
@@ -27,6 +29,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
   currentStreak,
   bestStreak,
   lastCheckpointStreak,
+  poolFrozen = false,
   onOpenStats,
   onOpenRules,
   onOpenPerkPool,
@@ -50,6 +53,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
+          <FreezeBadge frozen={poolFrozen} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-violet-500/30 text-violet-600 dark:text-violet-400 shadow-sm">
             <Flame className="w-5 h-5 text-violet-500 fill-violet-500/20 animate-pulse" />
             <div className="flex flex-col">

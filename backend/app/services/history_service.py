@@ -31,6 +31,12 @@ class HistoryService:
         run.owned_killers_json = json.dumps(ids)
         return resolve_killer_names_by_ids(ids)
 
+    def _is_unfrozen(self, run: HistoryRun) -> bool:
+        """True while the run hasn't genuinely started (row 0, nothing beaten) or its pool was never frozen."""
+        if run.current_row_index == 0 and run.total_killers_beaten == 0:
+            return True
+        return not json.loads(run.owned_killers_json or "[]")
+
     def _resolve_loss(self, run: HistoryRun):
         """Computes and applies the state a loss resets History progress to:
         medium-mode checkpoint fallback, or a full reset to row 0 (hell mode,
@@ -66,11 +72,12 @@ class HistoryService:
         return completed, unlocked
 
     def _augment(self, run: HistoryRun) -> Dict[str, Any]:
-        owned_ids = json.loads(run.owned_killers_json or "[]")
-        if not owned_ids:
-            owned_names = self._freeze_pool(run)
-            db.session.commit()
+        if self._is_unfrozen(run):
+            owned_names = resolve_killer_names_by_ids(
+                get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
+            )
         else:
+            owned_ids = json.loads(run.owned_killers_json or "[]")
             owned_names = resolve_killer_names_by_ids(owned_ids)
         rows = build_rows(owned_names)
 
@@ -94,6 +101,7 @@ class HistoryService:
         data["row_size"] = ROW_SIZE
         data["total_rows"] = len(rows)
         data["total_owned_killers"] = len(owned_names)
+        data["pool_frozen"] = not self._is_unfrozen(run)
         return data
 
     def get_or_create_run(self, user_id: int, mode: str) -> Dict[str, Any]:
@@ -120,7 +128,6 @@ class HistoryService:
             checkpoint_completed_killers_json="[]",
             checkpoint_unlocked_perk_names_json=json.dumps(general),
         )
-        self._freeze_pool(run)
         db.session.add(run)
         db.session.commit()
         return self._augment(run)
@@ -151,6 +158,8 @@ class HistoryService:
         if run.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
 
+        if self._is_unfrozen(run):
+            self._freeze_pool(run)
         owned_names = resolve_killer_names_by_ids(json.loads(run.owned_killers_json or "[]"))
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []

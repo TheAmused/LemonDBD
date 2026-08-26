@@ -43,17 +43,13 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
     justBankedCheckpoint,
     dismissCheckpointCelebration,
   } = useGauntletRun(role);
-  const { characters, loading: loadingRoster } = useOwnedCharacters(role, run?.tier_info?.roster_limit);
-  // The frozen run only carries plain names (no release_number), so reorder
-  // them using the release order already established by the live-ownership
-  // fetch above instead of falling back to the backend's alphabetical order.
+  const { characters, loading: loadingRoster, releaseOrder } = useOwnedCharacters(role, run?.tier_info?.roster_limit);
   const frozenCharacters: OwnedCharacterItem[] = React.useMemo(() => {
     const owned = run?.owned_characters ?? [];
-    const releaseOrder = new Map(characters.map((c, i) => [c.name, i]));
     return sortByReleaseNumber(
       owned.map((name) => ({ name, release_number: releaseOrder.get(name) ?? Infinity }))
     );
-  }, [run?.owned_characters, characters]);
+  }, [run?.owned_characters, releaseOrder]);
   const rosterCharacters = run ? frozenCharacters : characters;
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -115,6 +111,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
           lastCheckpointStreak={run?.last_checkpoint_streak || 0}
+          poolFrozen={run?.pool_frozen}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}

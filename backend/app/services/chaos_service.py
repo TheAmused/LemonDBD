@@ -32,9 +32,23 @@ class ChaosService:
         r.owned_killers_json = json.dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
         r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
 
+    def _freeze_pools_if_needed(self, r: ChaosRun) -> None:
+        force = r.current_streak == 0
+        if force or not json.loads(r.owned_killers_json or "[]"):
+            r.owned_killers_json = json.dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
+        if force or not json.loads(r.unlocked_perks_json or "[]"):
+            r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
+
     def _with_resolved_pool(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        data["owned_killers"] = resolve_killer_names_by_ids(data["owned_killer_ids"])
-        data["unlocked_perks"] = resolve_perk_names_by_ids(data["unlocked_perk_ids"])
+        killer_ids = data["owned_killer_ids"]
+        perk_ids = data["unlocked_perk_ids"]
+        data["pool_frozen"] = bool(killer_ids) and bool(perk_ids)
+        if not killer_ids:
+            killer_ids = get_owned_killer_ids(data["user_id"], self.ownership_service)
+        if not perk_ids:
+            perk_ids = get_unlocked_killer_perk_ids(data["user_id"], self.ownership_service)
+        data["owned_killers"] = resolve_killer_names_by_ids(killer_ids)
+        data["unlocked_perks"] = resolve_perk_names_by_ids(perk_ids)
         return data
 
     def _draw_build(self, unlocked_perks, used_perk_names):
@@ -88,9 +102,6 @@ class ChaosService:
             select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
         ).first()
         if run:
-            if not json.loads(run.owned_killers_json or "[]") or not json.loads(run.unlocked_perks_json or "[]"):
-                self._freeze_pools(run)
-                db.session.commit()
             data = self._with_resolved_pool(run.to_dict())
             data["checkpoint_interval"] = checkpoint_interval(difficulty)
             return data
@@ -109,8 +120,8 @@ class ChaosService:
             checkpoint_used_perks_json="[]",
             perks_revealed=False,
         )
-        self._freeze_pools(new_run)
-        unlocked_detail = resolve_perks_by_ids(json.loads(new_run.unlocked_perks_json))
+        live_unlocked_ids = get_unlocked_killer_perk_ids(user_id, self.ownership_service)
+        unlocked_detail = resolve_perks_by_ids(live_unlocked_ids)
         perks, used_perks, addon_rarities = self._draw_build(unlocked_detail, [])
         new_run.used_perks_json = json.dumps(used_perks)
         new_run.current_perks_json = json.dumps(perks)
@@ -128,6 +139,7 @@ class ChaosService:
         ).first()
         if not r:
             raise ValueError("Run not found")
+        self._freeze_pools_if_needed(r)
         r.perks_revealed = True
         db.session.commit()
         data = self._with_resolved_pool(r.to_dict())
@@ -159,6 +171,8 @@ class ChaosService:
             raise ValueError("Run not found")
         if r.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
+
+        self._freeze_pools_if_needed(r)
 
         current_streak = r.current_streak
         best_streak = r.best_streak
@@ -232,6 +246,8 @@ class ChaosService:
         r = db.session.scalars(select(ChaosRun).where(ChaosRun.id == run_id)).first()
         if not r or r.status == "completed":
             return
+
+        self._freeze_pools_if_needed(r)
 
         current_streak = r.current_streak
         (

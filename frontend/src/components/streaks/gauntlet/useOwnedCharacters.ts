@@ -22,6 +22,7 @@ export interface OwnedCharacterItem {
 export function useOwnedCharacters(role: Role, rosterLimit?: number) {
   const { token, user } = useAuth();
   const [characters, setCharacters] = useState<OwnedCharacterItem[]>([]);
+  const [releaseOrder, setReleaseOrder] = useState<Map<string, number>>(new Map());
   const [loading, setLoading] = useState<boolean>(true);
 
   const load = useCallback(async () => {
@@ -34,7 +35,11 @@ export function useOwnedCharacters(role: Role, rosterLimit?: number) {
       });
       if (res.ok) {
         const data = await res.json();
-        let owned = (data.data || []).filter((c: any) => c.is_owned);
+        const all = data.data || [];
+        const sortedAll = sortByReleaseNumber(all);
+        setReleaseOrder(new Map(sortedAll.map((c: any, i: number) => [c.name, i])));
+
+        let owned = all.filter((c: any) => c.is_owned);
         if (rosterLimit != null) {
           owned = owned.filter((c: any) => c.release_number == null || c.release_number <= rosterLimit);
         }
@@ -51,5 +56,5 @@ export function useOwnedCharacters(role: Role, rosterLimit?: number) {
     load();
   }, [load]);
 
-  return { characters, loading, reload: load };
+  return { characters, loading, releaseOrder, reload: load };
 }

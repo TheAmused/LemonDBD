@@ -98,6 +98,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           totalKillersBeaten={run?.total_killers_beaten || 0}
           bestKillersBeaten={run?.best_killers_beaten || 0}
           checkpointRowIndex={run?.checkpoint_row_index || 0}
+          poolFrozen={run?.pool_frozen}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}

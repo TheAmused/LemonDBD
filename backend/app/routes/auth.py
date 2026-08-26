@@ -36,7 +36,8 @@ def register():
     if err:
         return jsonify({"error": err, "status": 400}), 400
 
-    # 3. Generate token & get ownership summary
+    # 3. Lock paid-DLC killers by default, then generate token & ownership summary
+    ownership_service.seed_default_ownership_for_new_user(user.id)
     token = user_service.generate_auth_token(user)
     summary = ownership_service.get_user_ownership_summary(user.id)
 

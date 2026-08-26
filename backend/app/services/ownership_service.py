@@ -10,6 +10,7 @@ from app.services.ownership import (
     fetch_user_perks,
     mutate_character_ownership,
     mutate_perk_ownership,
+    seed_default_character_ownership,
 )
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,9 @@ class OwnershipService:
 
     def set_character_ownership(self, user_id: int, character_id: int, is_owned: bool) -> Dict[str, Any]:
         return mutate_character_ownership(user_id, character_id, is_owned)
+
+    def seed_default_ownership_for_new_user(self, user_id: int) -> int:
+        return seed_default_character_ownership(user_id)
 
     def bulk_set_character_ownership(self, user_id: int, updates: List[Dict[str, Any]]) -> Dict[str, Any]:
         return bulk_mutate_character_ownership(user_id, updates, self.get_user_ownership_summary)

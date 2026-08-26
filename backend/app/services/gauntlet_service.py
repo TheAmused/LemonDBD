@@ -38,7 +38,12 @@ class GauntletService:
         return ids
 
     def _with_owned_characters(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        data["owned_characters"] = resolve_character_names_by_ids(data["owned_character_ids"])
+        ids = data["owned_character_ids"]
+        if not ids:
+            # Pool isn't frozen yet (run hasn't had its first target revealed) --
+            # show the live pool instead of an empty roster.
+            ids = get_owned_character_ids(data["user_id"], data["role"], self.ownership_service)
+        data["owned_characters"] = resolve_character_names_by_ids(ids)
         return data
 
     def get_or_create_run(self, user_id: int, role: str) -> Dict[str, Any]:
@@ -50,9 +55,6 @@ class GauntletService:
         ).first()
 
         if run:
-            if not json.loads(run.owned_characters_json or "[]"):
-                self._freeze_pool(run)
-                db.session.commit()
             data = self._with_owned_characters(run.to_dict())
             data["tier_info"] = self.get_tier_info(data["current_streak"], role)
             return data
@@ -79,7 +81,6 @@ class GauntletService:
             checkpoint_characters_json="[]",
             current_loadout_json=json.dumps(initial_loadout),
         )
-        self._freeze_pool(new_run)
         db.session.add(new_run)
         db.session.commit()
 
@@ -114,6 +115,8 @@ class GauntletService:
         ).first()
         if not r:
             raise ValueError("Run not found")
+        if not json.loads(r.owned_characters_json or "[]"):
+            self._freeze_pool(r)
         r.target_revealed = True
         db.session.commit()
         data = self._with_owned_characters(r.to_dict())

@@ -88,7 +88,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-3">
         {sortedAddons.map((item, idx) => {
           const iconSrc = getAssetUrl(backendBase, item.icon_local_path, item.icon_url);
           const rarityStyle = getRarityTileStyle(item.rarity);
@@ -102,7 +102,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
               }}
               onMouseLeave={() => setActiveHover(null)}
               onClick={() => onSelectEquipment(item)}
-              className={`group relative flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-xl border-2 ${rarityStyle.bg} p-1.5 transition-all duration-200 hover:scale-110 hover:z-20 cursor-pointer shadow-md`}
+              className={`relative group rounded-3xl border-2 p-2.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 shadow-lg ${rarityStyle.bg}`}
             >
               <img
                 src={iconSrc}

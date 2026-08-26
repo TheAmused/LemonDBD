@@ -44,10 +44,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
     dismissCheckpointCelebration,
   } = useGauntletRun(role);
   const { characters, loading: loadingRoster, releaseOrder } = useOwnedCharacters(role, run?.tier_info?.roster_limit);
-  // The frozen run only carries plain names (no release_number), so reorder
-  // them using the role's full release order -- not just the live-owned
-  // list, which drops a character the moment it's locked and would push it
-  // to the end instead of its real chronological slot.
   const frozenCharacters: OwnedCharacterItem[] = React.useMemo(() => {
     const owned = run?.owned_characters ?? [];
     return sortByReleaseNumber(

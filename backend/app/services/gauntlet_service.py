@@ -38,13 +38,7 @@ class GauntletService:
         return ids
 
     def _is_unfrozen(self, current_streak: int, owned_character_ids: list) -> bool:
-        """True while the run hasn't genuinely started yet (zero streak),
-        regardless of whatever owned_characters_json already holds -- a run
-        created before the pool moved to a real freeze point can carry a
-        stale non-empty snapshot from creation time. Used only to decide
-        whether to (re)write a fresh freeze -- reading always trusts
-        whatever's already stored once non-empty, so a locked character
-        doesn't flicker out mid-round before the next real freeze point."""
+        """True while the run hasn't genuinely started (zero streak) or its pool was never frozen; write-path only."""
         if current_streak == 0:
             return True
         return not owned_character_ids

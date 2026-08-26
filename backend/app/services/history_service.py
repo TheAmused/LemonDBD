@@ -32,10 +32,7 @@ class HistoryService:
         return resolve_killer_names_by_ids(ids)
 
     def _is_unfrozen(self, run: HistoryRun) -> bool:
-        """True while the run hasn't genuinely started yet -- row 0, nothing
-        beaten -- regardless of whatever owned_killers_json already holds
-        (a run created before the pool moved to a real freeze point can carry
-        a stale non-empty snapshot from creation time)."""
+        """True while the run hasn't genuinely started (row 0, nothing beaten) or its pool was never frozen."""
         if run.current_row_index == 0 and run.total_killers_beaten == 0:
             return True
         return not json.loads(run.owned_killers_json or "[]")

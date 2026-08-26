@@ -79,8 +79,6 @@ def create_new_run(
     if not pages:
         raise ValueError("No perks available — the pool is empty")
 
-    # pages_json stays at its "[]" default -- the pool is shown live until
-    # the first real match submission freezes it for the attempt.
     run = PageStreakRun(
         user_id=user_id,
         killer=killer,
@@ -134,8 +132,6 @@ def record_match_result(
 
     r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
     if not json.loads(r.pages_json or "[]"):
-        # First real submission for this attempt -- freeze exactly the pages
-        # the player just built against, rather than re-deriving live later.
         r.pages_json = json.dumps(run["pages"])
     log = PageStreakPageLog(
         run_id=r.id,
@@ -155,8 +151,6 @@ def record_match_result(
     else:
         r.current_page = 1
         r.attempt = r.attempt + 1
-        # Back to page 1 with nothing banked this attempt -- go live again
-        # until the next real submission re-freezes it.
         r.pages_json = "[]"
 
     db.session.commit()

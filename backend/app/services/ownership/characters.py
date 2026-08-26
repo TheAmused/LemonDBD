@@ -5,24 +5,7 @@ from sqlalchemy import func, select
 from app.core.extensions import db
 from app.models import Character, UserCharacterOwnership
 
-# Character IDs granted to every new account: the base-game/free-to-play
-# roster (5 killers, 7 survivors). IDs come from the canonical seed
-# (app/seeds/rosters/canon.json), which inserts in a fixed order, so they're
-# stable across a fresh deploy; everyone else starts locked.
-FREE_CHARACTER_IDS = {
-    55,  # The Trapper
-    56,  # The Wraith
-    57,  # The Hillbilly
-    58,  # The Nurse
-    62,  # The Huntress
-    1,   # Dwight Fairfield
-    2,   # Meg Thomas
-    3,   # Claudette Morel
-    4,   # Jake Park
-    5,   # Nea Karlsson
-    8,   # Bill Overbeck
-    10,  # David King
-}
+FREE_CHARACTER_IDS = {55, 56, 57, 58, 62, 1, 2, 3, 4, 5, 8, 10}
 
 
 def fetch_user_characters(user_id: Optional[int] = None, role: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -180,14 +163,7 @@ def bulk_mutate_character_ownership(
 
 
 def seed_default_character_ownership(user_id: int) -> int:
-    """Lock every character except the free starter roster for a new account.
-
-    Characters default to owned when no ownership row exists, so a brand new
-    user otherwise starts with the entire roster unlocked. This runs once at
-    registration to explicitly lock everything outside FREE_CHARACTER_IDS,
-    reusing the existing bulk ownership mutation so teachable perks are
-    cascade-locked the same way an admin disabling a character would.
-    """
+    """Lock every character except FREE_CHARACTER_IDS for a new account (characters default to owned otherwise)."""
     locked_ids = db.session.scalars(
         select(Character.id).where(Character.id.notin_(FREE_CHARACTER_IDS))
     ).all()

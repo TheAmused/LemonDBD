@@ -2,7 +2,7 @@
 // frontend/src/components/admin/AdminChallengeControl.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Ban, CheckCircle2, Power, Search, Shield, Skull, Sparkles } from 'lucide-react';
+import { CheckCircle2, Power, Search, Shield, Skull, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,
   AdminPerkRow,
@@ -36,6 +36,7 @@ type PendingAction =
 export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ onActionMessage }) => {
   const [modes, setModes] = useState<ChallengeModeSetting[]>([]);
   const [subTab, setSubTab] = useState<'killers' | 'perks'>('killers');
+  const [roleFilter, setRoleFilter] = useState<'Survivor' | 'Killer'>('Survivor');
   const [characters, setCharacters] = useState<AdminCharacterRow[]>([]);
   const [perks, setPerks] = useState<AdminPerkRow[]>([]);
   const [search, setSearch] = useState('');
@@ -55,18 +56,18 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     }
   }, []);
 
-  const loadRoster = useCallback(async (searchTerm: string) => {
+  const loadRoster = useCallback(async (searchTerm: string, role: 'Survivor' | 'Killer') => {
     const token = getToken();
     if (!token) return;
     setLoading(true);
     try {
       const [charsRes, perksRes] = await Promise.all([
         fetch(
-          `${backendBase}/api/v1/admin/characters?role=All&search=${encodeURIComponent(searchTerm)}`,
+          `${backendBase}/api/v1/admin/characters?role=${role}&search=${encodeURIComponent(searchTerm)}`,
           { headers: authHeaders(token) }
         ),
         fetch(
-          `${backendBase}/api/v1/admin/perks?category=All&search=${encodeURIComponent(searchTerm)}`,
+          `${backendBase}/api/v1/admin/perks?category=${role}&search=${encodeURIComponent(searchTerm)}`,
           { headers: authHeaders(token) }
         ),
       ]);
@@ -86,9 +87,9 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
 
   // Debounced so typing a search term doesn't fire a request per keystroke.
   useEffect(() => {
-    const timer = setTimeout(() => loadRoster(search), 300);
+    const timer = setTimeout(() => loadRoster(search, roleFilter), 300);
     return () => clearTimeout(timer);
-  }, [search, loadRoster]);
+  }, [search, roleFilter, loadRoster]);
 
   const applyModeToggle = async (mode: ChallengeMode, isEnabled: boolean, reason: string | null) => {
     const token = getToken();
@@ -125,7 +126,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           type: 'success',
           text: `${character.name} is now ${nextDisabled ? 'disabled' : 'enabled'}.`,
         });
-        await loadRoster(search);
+        await loadRoster(search, roleFilter);
       } else {
         const err = await res.json().catch(() => ({}));
         onActionMessage({ type: 'error', text: err.error || 'Failed to update character.' });
@@ -149,7 +150,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           type: 'success',
           text: `${perk.name} is now ${nextDisabled ? 'disabled' : 'enabled'}.`,
         });
-        await loadRoster(search);
+        await loadRoster(search, roleFilter);
       } else {
         const err = await res.json().catch(() => ({}));
         onActionMessage({ type: 'error', text: err.error || 'Failed to update perk.' });
@@ -257,6 +258,26 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               <Sparkles className="h-3.5 w-3.5" /> Perks
             </button>
           </div>
+          <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 p-1">
+            <button
+              type="button"
+              onClick={() => setRoleFilter('Survivor')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
+                roleFilter === 'Survivor' ? 'bg-emerald-500/10 text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              <Shield className="h-3.5 w-3.5" /> Survivor
+            </button>
+            <button
+              type="button"
+              onClick={() => setRoleFilter('Killer')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
+                roleFilter === 'Killer' ? 'bg-rose-500/10 text-rose-400' : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              <Skull className="h-3.5 w-3.5" /> Killer
+            </button>
+          </div>
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
             <input
@@ -273,23 +294,25 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           ship broken on their own too.
         </p>
 
-        {loading ? (
+        {characters.length === 0 && perks.length === 0 && loading ? (
           <p className="text-xs text-slate-500 py-6 text-center">Loading...</p>
-        ) : subTab === 'killers' ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+        ) : (
+        <div className={`transition-opacity duration-150 ${loading ? 'opacity-50' : ''}`}>
+          {subTab === 'killers' ? (
+          <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
             {characters.map((c) => (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => requestCharacterToggle(c)}
-                title={c.disabled_reason || undefined}
-                className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border cursor-pointer transition-colors text-center ${
+                title={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
+                className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
                   c.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
                     : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
                 }`}
               >
-                <div className="relative h-10 w-10 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
+                <div className="h-full w-full flex items-center justify-center bg-slate-900">
                   {c.avatar_local_path ? (
                     <img
                       src={staticUrl(c.avatar_local_path)}
@@ -297,50 +320,43 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                       className={`h-full w-full object-cover ${c.is_disabled ? 'grayscale opacity-60' : ''}`}
                     />
                   ) : c.role === 'Survivor' ? (
-                    <Shield className="h-4 w-4 text-slate-600" />
+                    <Shield className="h-6 w-6 text-slate-600" />
                   ) : (
-                    <Skull className="h-4 w-4 text-slate-600" />
+                    <Skull className="h-6 w-6 text-slate-600" />
                   )}
-                  <span
-                    className={`absolute bottom-0 right-0 flex h-3.5 w-3.5 items-center justify-center rounded-tl-md ${
-                      c.role === 'Survivor' ? 'bg-emerald-500/80 text-emerald-950' : 'bg-rose-500/80 text-rose-950'
-                    }`}
-                  >
-                    {c.role === 'Survivor' ? (
-                      <Shield className="h-2 w-2" />
-                    ) : (
-                      <Skull className="h-2 w-2" />
-                    )}
-                  </span>
                 </div>
-                <span className="text-[10px] font-semibold text-slate-300 truncate w-full">{c.name}</span>
-                {c.is_disabled ? (
-                  <span className="text-[9px] font-black uppercase text-rose-400 flex items-center gap-0.5">
-                    <Ban className="h-2.5 w-2.5" /> Disabled
-                  </span>
-                ) : (
-                  <span className="text-[9px] font-black uppercase text-emerald-500/70 flex items-center gap-0.5">
-                    <CheckCircle2 className="h-2.5 w-2.5" /> Active
-                  </span>
-                )}
+                <span
+                  className={`absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-md ${
+                    c.role === 'Survivor' ? 'bg-emerald-500/80 text-emerald-950' : 'bg-rose-500/80 text-rose-950'
+                  }`}
+                >
+                  {c.role === 'Survivor' ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
+                </span>
+                <span
+                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
+                    c.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
+                  }`}
+                >
+                  {c.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                </span>
               </button>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+          <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
             {perks.map((p) => (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => requestPerkToggle(p)}
-                title={p.disabled_reason || undefined}
-                className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border cursor-pointer transition-colors text-center ${
+                title={p.disabled_reason ? `${p.name} (${p.character}) — ${p.disabled_reason}` : `${p.name} (${p.character})`}
+                className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
                   p.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
                     : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
                 }`}
               >
-                <div className="h-10 w-10 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
+                <div className="h-full w-full flex items-center justify-center bg-slate-900 p-1.5">
                   {p.icon_local_path ? (
                     <img
                       src={staticUrl(p.icon_local_path)}
@@ -348,23 +364,21 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                       className={`h-full w-full object-contain ${p.is_disabled ? 'grayscale opacity-60' : ''}`}
                     />
                   ) : (
-                    <Sparkles className="h-4 w-4 text-slate-600" />
+                    <Sparkles className="h-6 w-6 text-slate-600" />
                   )}
                 </div>
-                <span className="text-[10px] font-semibold text-slate-300 truncate w-full">{p.name}</span>
-                <span className="text-[9px] text-slate-600 truncate w-full">{p.character}</span>
-                {p.is_disabled ? (
-                  <span className="text-[9px] font-black uppercase text-rose-400 flex items-center gap-0.5">
-                    <Ban className="h-2.5 w-2.5" /> Disabled
-                  </span>
-                ) : (
-                  <span className="text-[9px] font-black uppercase text-emerald-500/70 flex items-center gap-0.5">
-                    <CheckCircle2 className="h-2.5 w-2.5" /> Active
-                  </span>
-                )}
+                <span
+                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
+                    p.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
+                  }`}
+                >
+                  {p.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                </span>
               </button>
             ))}
           </div>
+        )}
+        </div>
         )}
       </div>
 

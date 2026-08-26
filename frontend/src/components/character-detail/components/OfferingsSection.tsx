@@ -1,5 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState, useMemo } from 'react';
 import {
   Search,
   Gift,
@@ -17,8 +16,8 @@ import {
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank,
-  renderFormattedDbdText,
 } from '../types';
+import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
 
 interface OfferingsSectionProps {
   offerings?: OfferingItem[];
@@ -35,12 +34,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   onSelectOffering,
   t,
 }) => {
-  const [mounted, setMounted] = useState(false);
   const isKiller = role === 'Killer';
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const categories = useMemo(() => {
     if (isKiller) {
@@ -71,10 +65,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [rarityFilter, setRarityFilter] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<'rarity_desc' | 'rarity_asc' | 'name_asc'>('rarity_asc');
-  const [activeHover, setActiveHover] = useState<{
-    item: OfferingItem;
-    rect: DOMRect;
-  } | null>(null);
+  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
   const activeCategoryConfig =
     categories.find((c) => c.key === selectedCategory) || categories[0];
@@ -359,54 +350,8 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         )}
       </div>
 
-      {/* Portal Hover Tooltip */}
-      {activeHover && mounted && typeof document !== 'undefined' && createPortal((() => {
-        const tooltipWidth = 320;
-        const left = Math.max(
-          16,
-          Math.min(
-            window.innerWidth - tooltipWidth - 16,
-            activeHover.rect.left + activeHover.rect.width / 2 - tooltipWidth / 2
-          )
-        );
-        const top = activeHover.rect.bottom + 10;
-        const rarityStyle = getRarityTileStyle(activeHover.item.rarity);
-
-        return (
-          <div
-            style={{
-              position: 'fixed',
-              top: `${Math.min(top, window.innerHeight - 200)}px`,
-              left: `${left}px`,
-              width: `${tooltipWidth}px`,
-              zIndex: 99999,
-            }}
-            className="p-3.5 rounded-2xl bg-slate-950/95 border border-slate-800 text-slate-100 shadow-2xl backdrop-blur-md pointer-events-none animate-in fade-in zoom-in-95 duration-150 space-y-2"
-          >
-            <div className="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
-              <span className="font-bold text-sm text-slate-100 font-mono leading-tight">
-                {activeHover.item.name}
-              </span>
-              <span
-                className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full border ${rarityStyle.badge}`}
-              >
-                {activeHover.item.rarity || 'Common'}
-              </span>
-            </div>
-
-            {activeHover.item.description && (
-              <div className="text-xs text-slate-300 leading-relaxed font-sans max-h-48 overflow-y-auto">
-                {renderFormattedDbdText(activeHover.item.description)}
-              </div>
-            )}
-
-            <div className="pt-1 border-t border-slate-800/60 text-[10px] font-mono text-slate-400 flex items-center justify-between">
-              <span>{activeHover.item.category || 'Offering'}</span>
-              <span className="text-amber-400 font-bold">{t.clickToInspect || 'Click to view'}</span>
-            </div>
-          </div>
-        );
-      })(), document.body)}
+      {/* Unified Hover Modal */}
+      <UnifiedHoverModal activeHover={activeHover} placement="above" t={t} />
     </section>
   );
 };

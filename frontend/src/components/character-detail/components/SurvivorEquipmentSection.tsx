@@ -1,5 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState, useMemo } from 'react';
 import {
   Package,
   Search,
@@ -19,9 +18,8 @@ import {
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank,
-  getLocalizedRarity,
-  renderFormattedDbdText,
 } from '../types';
+import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
 
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
@@ -114,19 +112,10 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   onSelectEquipment,
   t,
 }) => {
-  const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<SurvivorCategoryKey>('medkit');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [rarityFilter, setRarityFilter] = useState<string>('all');
-  const [activeHover, setActiveHover] = useState<{
-    item: AddonItem | EquipmentItem;
-    rect: DOMRect;
-    accentColor: string;
-  } | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
   const activeCategoryConfig = useMemo(() => {
     return CATEGORIES.find((c) => c.key === selectedCategory) || CATEGORIES[0];
@@ -380,39 +369,8 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
         </div>
       </div>
 
-      {/* Clamped Portal Tooltip */}
-      {activeHover && mounted && typeof document !== 'undefined' && createPortal((() => {
-        const tooltipWidth = Math.min(440, typeof window !== 'undefined' ? window.innerWidth - 32 : 440);
-        const left = Math.max(
-          16,
-          Math.min(window.innerWidth - tooltipWidth - 16, activeHover.rect.left + activeHover.rect.width / 2 - tooltipWidth / 2)
-        );
-        const top = activeHover.rect.bottom + 10;
-        const rarityStyle = getRarityTileStyle(activeHover.item.rarity);
-        const localizedRarity = getLocalizedRarity(activeHover.item.rarity, t);
-
-        return (
-          <div
-            style={{ position: 'fixed', left: `${left}px`, top: `${top}px`, width: `${tooltipWidth}px` }}
-            className="z-[99999] p-4 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150"
-          >
-            <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-800">
-              <h4 className="text-sm font-black text-white truncate font-mono">{activeHover.item.name}</h4>
-              {localizedRarity && (
-                <span className={`text-[10px] font-bold uppercase font-mono ${rarityStyle.text}`}>
-                  {localizedRarity}
-                </span>
-              )}
-            </div>
-            <div className="space-y-1 text-xs sm:text-sm max-h-96 sm:max-h-[420px] overflow-y-auto leading-relaxed text-slate-200">
-              {renderFormattedDbdText(activeHover.item.description || '', true)}
-            </div>
-            <span className={`block text-[10px] font-mono mt-2.5 text-right font-bold ${activeHover.accentColor}`}>
-              {t.clickToInspect || 'Click to inspect full mechanics'} &rarr;
-            </span>
-          </div>
-        );
-      })(), document.body)}
+      {/* Unified Hover Modal */}
+      <UnifiedHoverModal activeHover={activeHover} placement="above" t={t} />
     </section>
   );
 };

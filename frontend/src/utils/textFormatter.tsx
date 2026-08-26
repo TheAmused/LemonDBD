@@ -622,7 +622,11 @@ export function renderFormattedDbdText(
     .replace(/&amp;/g, '&')
     .replace(/&nbsp;/g, ' ')
     .replace(/\u00a0/g, ' ')
-    .replace(/<span\s+class=["']FlavorText["']>(.*?)<\/span>/gis, '\n"$1"\n')
+    .replace(/<span\s+class=["']FlavorText["']>(.*?)<\/span>/gis, (_, p1) => {
+      const trimmed = (p1 || '').trim();
+      if (/^[„"“'«\u201c]/.test(trimmed)) return `\n${trimmed}\n`;
+      return `\n"${trimmed}"\n`;
+    })
     .replace(/<span\s+class=["']ReminderText["']>(.*?)<\/span>/gis, '\n$1\n')
     .replace(/<span\s+class=["']Highlight\d*["']>(.*?)<\/span>/gis, '$1')
     .replace(/<\/?[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*(?:\s+[^>]*)*>/gi, (tag) => {
@@ -651,12 +655,12 @@ export function renderFormattedDbdText(
   const elements: React.ReactNode[] = [];
 
   lines.forEach((line, lineIdx) => {
-    const stripped = line.replace(/^[\*\s_]+/, '').replace(/[\*\s_]+$/, '');
+    let stripped = line.replace(/^[\*\s_]+/, '').replace(/[\*\s_]+$/, '');
 
     // Flavor quotes format - supports English, Polish, German, Spanish, Japanese with varied punctuation/dashes
     const isQuote =
       (stripped.startsWith('"') && stripped.endsWith('"')) ||
-      (stripped.startsWith('„') && (stripped.endsWith('”') || stripped.endsWith('"'))) ||
+      (stripped.startsWith('„') && (stripped.endsWith('”') || stripped.endsWith('"') || stripped.endsWith('”.') || stripped.endsWith('".'))) ||
       (stripped.startsWith('\u201c') && stripped.endsWith('\u201d')) ||
       /^[„"“'«].+?[”"“'»]\.?\s*([-\u2013\u2014–—]\s*.+)?$/s.test(stripped) ||
       (/^[„"“]/.test(stripped) &&
@@ -671,6 +675,14 @@ export function renderFormattedDbdText(
           stripped.includes('". -')));
 
     if (isQuote) {
+      let cleanQuote = stripped;
+      // Strip redundant outer quote layer if double quoted (e.g. "„..."." or ""..."")
+      if (cleanQuote.startsWith('"') && cleanQuote.endsWith('"') && cleanQuote.length > 2) {
+        const inner = cleanQuote.slice(1, -1).trim();
+        if (/^[„"“'«\u201c]/.test(inner)) {
+          cleanQuote = inner;
+        }
+      }
       elements.push(
         <div
           key={`q-${lineIdx}`}
@@ -678,7 +690,7 @@ export function renderFormattedDbdText(
             isCompact ? 'my-1.5 text-[11px]' : 'my-3 text-xs sm:text-sm'
           }`}
         >
-          {stripped}
+          {cleanQuote}
         </div>
       );
       return;

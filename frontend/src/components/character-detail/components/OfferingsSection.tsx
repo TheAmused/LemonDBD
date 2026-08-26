@@ -1,5 +1,5 @@
-// frontend/src/components/character-detail/components/OfferingsSection.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Search,
   Gift,
@@ -35,7 +35,12 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   onSelectOffering,
   t,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const isKiller = role === 'Killer';
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const categories = useMemo(() => {
     if (isKiller) {
@@ -89,83 +94,84 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         const matchesRarity =
           rarityFilter === 'all' || offRarity.includes(rarityFilter.toLowerCase());
 
-        let matchesCat = false;
-        const nameLower = off.name.toLowerCase();
-        const rawLower = (off.raw_name || '').toLowerCase();
-        const descLower = (off.description || '').toLowerCase();
+        const raw = (off.raw_name || off.name || '').trim();
+        const rawLower = raw.toLowerCase();
+        const nameLower = (off.name || '').toLowerCase();
         const catLower = (off.category || '').toLowerCase();
-        const text = `${nameLower} ${rawLower} ${descLower} ${catLower}`;
+        const rarityLower = (off.rarity || '').toLowerCase();
 
-        const isEventOffering =
-          offRarity === 'event' ||
+        let itemCategory = 'map';
+
+        // 1. Memento Mori (EXACT name check)
+        if (
+          rawLower.includes('memento mori') ||
+          nameLower.includes('memento mori') ||
+          raw === 'Cypress Memento Mori' ||
+          raw === 'Ivory Memento Mori' ||
+          raw === 'Ebony Memento Mori'
+        ) {
+          itemCategory = 'mori';
+        }
+        // 2. Special / Event Offerings (Anniversary cakes, event foods, seasonal envelopes)
+        else if (
+          rarityLower === 'event' ||
           catLower === 'special' ||
-          text.includes('dousing') ||
-          text.includes('dowsing') ||
-          text.includes('flan') ||
-          text.includes('cobbler') ||
-          text.includes('terrormisu') ||
-          text.includes('torte') ||
-          text.includes('scream pie') ||
-          text.includes('gateau') ||
-          text.includes('sacrificial cake') ||
-          text.includes('pustula') ||
-          text.includes('cursed seed') ||
-          text.includes('bbq invitation') ||
-          text.includes('red envelope') ||
-          text.includes('bloodshot eye');
-
-        if (selectedCategory === 'special') {
-          matchesCat = isEventOffering;
-        } else if (selectedCategory === 'mori') {
-          matchesCat = text.includes('mori') || text.includes('cypress') || text.includes('ivory') || text.includes('ebony');
-        } else if (selectedCategory === 'bloodpoint') {
-          matchesCat =
-            !isEventOffering &&
-            (text.includes('streamers') ||
-              text.includes('cake') ||
-              text.includes('pudding') ||
-              text.includes('envelope') ||
-              text.includes('wreath') ||
-              text.includes('sachet') ||
-              text.includes('blossom') ||
-              text.includes('laurel') ||
-              text.includes('amaranth') ||
-              text.includes('hollow shell') ||
-              text.includes('bloodpoint') ||
-              text.includes('punkty krwi') ||
-              text.includes('blutpunkte'));
-        } else if (selectedCategory === 'map') {
-          matchesCat =
-            text.includes('realm') ||
-            text.includes('chance of being sent to') ||
-            text.includes('plate') ||
-            text.includes('license') ||
-            text.includes('badge') ||
-            text.includes('whistle') ||
-            text.includes('glass') ||
-            text.includes('eye') ||
-            text.includes('stew') ||
-            text.includes('drawing') ||
-            text.includes('crow') ||
-            text.includes('charred') ||
-            text.includes('beef') ||
-            text.includes('heart') ||
-            text.includes('branch') ||
-            text.includes('photograph') ||
-            text.includes('gramophone') ||
-            text.includes('królestwo');
-        } else if (selectedCategory === 'shroud') {
-          matchesCat = text.includes('shroud') || text.includes('całun');
-        } else if (selectedCategory === 'ward') {
-          matchesCat = text.includes('ward') || text.includes('protection') || text.includes('ochron');
-        } else if (selectedCategory === 'luck') {
-          matchesCat = text.includes('chalk') || text.includes('jar') || text.includes('lip') || text.includes('luck') || text.includes('szczęśc');
-        } else if (selectedCategory === 'blueprint') {
-          matchesCat = text.includes('blueprint') || text.includes('hatch') || text.includes('basement') || text.includes('plan');
-        } else if (selectedCategory === 'chest') {
-          matchesCat = text.includes('coin') || text.includes('reagent') || text.includes('vial') || text.includes('fog') || text.includes('chest') || text.includes('mgł') || text.includes('skrzyn');
+          [
+            'gateau', 'flan', 'cobbler', 'terrormisu', 'sacrificial cake', 'torte', 'scream pie',
+            'pustula', 'cursed seed', 'bbq invitation', 'red envelope', 'bloodshot eye', 'dowsing', 'dousing'
+          ].some((k) => rawLower.includes(k) || nameLower.includes(k))
+        ) {
+          itemCategory = 'special';
+        }
+        // 3. Wards (Preservation / Protection)
+        else if (
+          raw === 'Black Ward' ||
+          raw === 'White Ward' ||
+          raw === 'Sacrificial Ward' ||
+          (rawLower.endsWith('ward') && !rawLower.endsWith('reward')) ||
+          (nameLower.endsWith('ward') && !nameLower.endsWith('reward')) ||
+          nameLower.includes('ochron')
+        ) {
+          itemCategory = 'ward';
+        }
+        // 4. Shrouds (Spawn modifiers)
+        else if (rawLower.includes('shroud') || nameLower.includes('całun') || nameLower.includes('schleier')) {
+          itemCategory = 'shroud';
+        }
+        // 5. Blueprints (Hatch & Basement placements)
+        else if (rawLower.includes('blueprint') || nameLower.includes('plan') || nameLower.includes('blaupause')) {
+          itemCategory = 'blueprint';
+        }
+        // 6. Luck Charms (Chalk pouches, salt pouches, statuettes, salty lips)
+        else if (
+          ['chalk', 'salt', 'salty lips', 'statuette'].some((k) => rawLower.includes(k)) ||
+          nameLower.includes('kreda') ||
+          nameLower.includes('sól') ||
+          nameLower.includes('szczęśc')
+        ) {
+          itemCategory = 'luck';
+        }
+        // 7. Bloodpoints (Wreaths, blossoms, sachets, cakes, puddings, envelopes, streamers)
+        else if (
+          ['streamers', 'escape! cake', 'pudding', 'envelope', 'wreath', 'blossom',
+           'sachet', 'shell', 'laurel', 'amaranth', 'sweet william'].some((k) => rawLower.includes(k)) ||
+          ['serpentyn', 'ciasto ucieczki', 'budyń', 'koperta', 'wieniec', 'kwiat', 'saszetka', 'skorupa', 'szarłat', 'goździk', 'laurowiec'].some((k) => nameLower.includes(k))
+        ) {
+          itemCategory = 'bloodpoint';
+        }
+        // 8. Chests, Fog Reagents & Oaks (Chest spawns, fog density, hook distance)
+        else if (
+          ['coin', 'reagent', 'oak', 'vial'].some((k) => rawLower.includes(k)) ||
+          ['moneta', 'odczynnik', 'dąb', 'flakon'].some((k) => nameLower.includes(k))
+        ) {
+          itemCategory = 'chest';
+        }
+        // 9. Maps / Realm Offerings
+        else {
+          itemCategory = 'map';
         }
 
+        const matchesCat = itemCategory === selectedCategory;
         return matchesSearch && matchesRarity && matchesCat;
       })
       .sort((a, b) => {
@@ -335,7 +341,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                     setActiveHover({ item: offering, rect });
                   }}
                   onMouseLeave={() => setActiveHover(null)}
-                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                   aria-label={`Inspect offering: ${offering.name}`}
                 >
                   <img
@@ -353,8 +359,8 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         )}
       </div>
 
-      {/* Hover Tooltip */}
-      {activeHover && typeof window !== 'undefined' && (() => {
+      {/* Portal Hover Tooltip */}
+      {activeHover && mounted && typeof document !== 'undefined' && createPortal((() => {
         const tooltipWidth = 320;
         const left = Math.max(
           16,
@@ -373,7 +379,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
               top: `${Math.min(top, window.innerHeight - 200)}px`,
               left: `${left}px`,
               width: `${tooltipWidth}px`,
-              zIndex: 9999,
+              zIndex: 99999,
             }}
             className="p-3.5 rounded-2xl bg-slate-950/95 border border-slate-800 text-slate-100 shadow-2xl backdrop-blur-md pointer-events-none animate-in fade-in zoom-in-95 duration-150 space-y-2"
           >
@@ -400,7 +406,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             </div>
           </div>
         );
-      })()}
+      })(), document.body)}
     </section>
   );
 };

@@ -82,5 +82,13 @@ export default {
   "categoryBlueprint": "設計図",
   "categoryChest": "チェストと霧",
   "searchOfferings": "オファリングを検索...",
-  "noMatchingOfferings": "条件に一致するオファリングはありません。"
+  "noMatchingOfferings": "条件に一致するオファリングはありません。",
+  "clickToInspect": "クリックして詳細な効果を確認",
+  "rarityCommon": "コモン",
+  "rarityUncommon": "アンコモン",
+  "rarityRare": "レア",
+  "rarityVeryRare": "ベリーレア",
+  "rarityUltraRare": "ウルトラレア",
+  "rarityEvent": "イベント",
+  "raritySpecial": "スペシャル"
 };

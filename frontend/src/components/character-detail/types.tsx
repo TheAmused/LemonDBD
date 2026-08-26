@@ -249,6 +249,19 @@ export function getRarityTileStyle(rarity?: string): RarityTileStyle {
   };
 }
 
+export function getLocalizedRarity(rarity?: string, t?: Record<string, string>): string {
+  if (!rarity) return '';
+  const r = rarity.toLowerCase().trim();
+  if (r === 'common') return t?.rarityCommon || 'Common';
+  if (r === 'uncommon') return t?.rarityUncommon || 'Uncommon';
+  if (r === 'rare') return t?.rarityRare || 'Rare';
+  if (r === 'very rare' || r === 'veryrare') return t?.rarityVeryRare || 'Very Rare';
+  if (r === 'ultra rare' || r === 'ultrarare' || r === 'iridescent') return t?.rarityUltraRare || 'Ultra Rare';
+  if (r === 'event') return t?.rarityEvent || 'Event';
+  if (r === 'special') return t?.raritySpecial || 'Special';
+  return rarity;
+}
+
 export {
   DBD_KEYWORDS,
   ACTION_KEYWORDS,
@@ -257,4 +270,5 @@ export {
   parseLineTokens,
   renderFormattedDbdText,
 } from '@/utils/textFormatter';
+
 

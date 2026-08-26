@@ -991,35 +991,96 @@ class WikiGGScraperDriver:
                         local_path = f"icons/items/{sanitized}.png"
 
                         name_low = item_name.lower().strip()
-                        special_items = [
-                            "first aid spray", "vaccine", "emp", "remote flame turret", "pocket mirror",
-                            "lament configuration", "hand of vecna", "eye of vecna", "flash grenade",
-                            "candelabra", "antidote", "keycard", "vhs tape", "void crystal",
-                            "glowing fungus", "blood can", "fragile mirror", "searcher's pendant", "fog crystal"
-                        ]
-                        if name_low in special_items or "spray" in name_low or "vaccine" in name_low or "turret" in name_low:
-                            item_category = "Special"
+                        is_event = (
+                            rarity.lower() == "event"
+                            or any(
+                                k in name_low
+                                for k in [
+                                    "anniversary",
+                                    "banquet",
+                                    "masquerade",
+                                    "lunchbox",
+                                    "will o' wisp",
+                                    "party starter",
+                                    "chinese firecracker",
+                                    "festive toolbox",
+                                ]
+                            )
+                        )
+                        is_fog_vial = "fog vial" in name_low
+                        is_trial = (
+                            name_low
+                            in [
+                                "first aid spray",
+                                "vaccine",
+                                "emp",
+                                "remote flame turret",
+                                "pocket mirror",
+                                "lament configuration",
+                                "hand of vecna",
+                                "eye of vecna",
+                                "flash grenade",
+                                "candelabra",
+                                "antidote",
+                                "keycard",
+                                "vhs tape",
+                                "void crystal",
+                                "glowing fungus",
+                                "blood can",
+                                "fragile mirror",
+                                "searcher's pendant",
+                                "fog crystal",
+                            ]
+                            or any(
+                                k in name_low
+                                for k in [
+                                    "spray",
+                                    "vaccine",
+                                    "turret",
+                                    "lament",
+                                    "vecna",
+                                    "keycard",
+                                    "candelabra",
+                                    "lantern",
+                                    "vhs tape",
+                                    "blood can",
+                                    "crystal",
+                                    "mirror",
+                                    "fungus",
+                                    "pendant",
+                                    "antidote",
+                                    "emp",
+                                ]
+                            )
+                        )
+
+                        if is_event:
+                            item_category = "Event"
                             item_role = "Survivor"
-                        elif "med-kit" in name_low or "aid kit" in name_low or "lunchbox" in name_low:
+                            rarity = "Event"
+                        elif is_fog_vial:
+                            item_category = "Fog Vial"
+                            item_role = "Survivor"
+                        elif is_trial:
+                            item_category = "Trial Artifact"
+                            item_role = "Survivor"
+                        elif "med-kit" in name_low or "aid kit" in name_low:
                             item_category = "Med-Kit"
                             item_role = "Survivor"
                         elif "toolbox" in name_low or "tools" in name_low:
                             item_category = "Toolbox"
                             item_role = "Survivor"
-                        elif "flashlight" in name_low or "wisp" in name_low:
+                        elif "flashlight" in name_low:
                             item_category = "Flashlight"
                             item_role = "Survivor"
-                        elif "key" in name_low and "keycard" not in name_low:
+                        elif "key" in name_low:
                             item_category = "Key"
                             item_role = "Survivor"
                         elif "map" in name_low:
                             item_category = "Map"
                             item_role = "Survivor"
-                        elif "firecracker" in name_low or "party starter" in name_low:
+                        elif "firecracker" in name_low:
                             item_category = "Firecracker"
-                            item_role = "Survivor"
-                        elif "fog vial" in name_low:
-                            item_category = "Fog Vial"
                             item_role = "Survivor"
                         else:
                             item_category = current_category
@@ -1028,8 +1089,8 @@ class WikiGGScraperDriver:
                         items.append(
                             ItemData(
                                 name=item_name,
-                                category=current_category,
-                                role=current_category,
+                                category=item_category,
+                                role=item_role,
                                 description=description,
                                 icon_url=icon_url,
                                 icon_local_path=local_path,

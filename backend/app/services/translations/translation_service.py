@@ -48,6 +48,10 @@ def simplify_lookup_key(s: str) -> str:
     s = s.replace("fastening tools", "fast tools")
     s = s.replace("makeup", "make up")
     s = s.replace("make-up", "make up")
+    s = s.replace("favour", "favor")
+    s = s.replace("colour", "color")
+    s = s.replace("armour", "armor")
+    s = s.replace("camaraderie", "kinship")
     return re.sub(r"[^a-z0-9]", "", s)
 
 
@@ -156,10 +160,11 @@ class TranslationService:
                 matched.translations = curr
 
         # 2. Sync Perks
+        perk_exact_map = {p.name.strip().lower(): p for p in db_perks}
         perk_map = {simplify_lookup_key(p.name): p for p in db_perks}
         for p_name, p_val in perks_data.items():
             trans = p_val.get("translations", {})
-            matched = perk_map.get(simplify_lookup_key(p_name))
+            matched = perk_exact_map.get(p_name.strip().lower()) or perk_map.get(simplify_lookup_key(p_name))
             if matched and trans:
                 curr = dict(matched.translations or {})
                 for l in target_locales:
@@ -168,10 +173,11 @@ class TranslationService:
                 matched.translations = curr
 
         # 3. Sync Items
+        item_exact_map = {i.name.strip().lower(): i for i in db_items}
         item_map = {simplify_lookup_key(i.name): i for i in db_items}
         for i_name, i_val in items_data.items():
             trans = i_val.get("translations", {})
-            matched = item_map.get(simplify_lookup_key(i_name))
+            matched = item_exact_map.get(i_name.strip().lower()) or item_map.get(simplify_lookup_key(i_name))
             if not matched:
                 matched = Item(
                     name=i_val.get("name", i_name),
@@ -182,11 +188,14 @@ class TranslationService:
                 )
                 db.session.add(matched)
                 item_map[simplify_lookup_key(i_name)] = matched
+                item_exact_map[i_name.strip().lower()] = matched
             else:
                 if i_val.get("category"):
                     matched.category = i_val.get("category")
                 if i_val.get("role"):
                     matched.role = i_val.get("role")
+                if i_val.get("rarity"):
+                    matched.rarity = i_val.get("rarity")
                 if i_val.get("translations", {}).get("en", {}).get("description"):
                     matched.description = i_val.get("translations", {}).get("en", {}).get("description")
                 if trans:
@@ -197,25 +206,41 @@ class TranslationService:
                     matched.translations = curr
 
         # 4. Sync Addons
+        addon_exact_map = {a.name.strip().lower(): a for a in db_addons}
+        addon_target_map = {(a.name.strip().lower(), (a.associated_target or "").strip().lower()): a for a in db_addons}
+        addon_clean_target_map = {(re.sub(r"\s*\([^)]+\)", "", a.name).strip().lower(), (a.associated_target or "").strip().lower()): a for a in db_addons}
         addon_map = {simplify_lookup_key(a.name): a for a in db_addons}
+
         for a_name, a_val in addons_data.items():
             trans = a_val.get("translations", {})
-            matched = addon_map.get(simplify_lookup_key(a_name))
+            target = (a_val.get("associated_target") or "").strip().lower()
+            a_low = a_name.strip().lower()
+
+            matched = (
+                addon_target_map.get((a_low, target))
+                or addon_clean_target_map.get((a_low, target))
+                or addon_exact_map.get(a_low)
+                or addon_map.get(simplify_lookup_key(a_name))
+            )
             if not matched:
                 matched = Addon(
                     name=a_val.get("name", a_name),
                     associated_target=a_val.get("associated_target", ""),
                     category=a_val.get("category", "Killer"),
+                    rarity=a_val.get("rarity", "Common"),
                     description=a_val.get("translations", {}).get("en", {}).get("description", ""),
                     translations=a_val.get("translations", {}),
                 )
                 db.session.add(matched)
                 addon_map[simplify_lookup_key(a_name)] = matched
+                addon_exact_map[a_low] = matched
             else:
                 if a_val.get("associated_target"):
                     matched.associated_target = a_val.get("associated_target")
                 if a_val.get("category"):
                     matched.category = a_val.get("category")
+                if a_val.get("rarity"):
+                    matched.rarity = a_val.get("rarity")
                 if a_val.get("translations", {}).get("en", {}).get("description"):
                     matched.description = a_val.get("translations", {}).get("en", {}).get("description")
                 if trans:
@@ -228,10 +253,11 @@ class TranslationService:
         # 5. Sync Offerings
         from app.models.equipment import Offering
         db_offerings = db.session.scalars(select(Offering)).all()
+        offering_exact_map = {o.name.strip().lower(): o for o in db_offerings}
         offering_map = {simplify_lookup_key(o.name): o for o in db_offerings}
         offerings_data = data.get("offerings", {})
         for o_name, o_val in offerings_data.items():
-            matched = offering_map.get(simplify_lookup_key(o_name))
+            matched = offering_exact_map.get(o_name.strip().lower()) or offering_map.get(simplify_lookup_key(o_name))
             if not matched:
                 matched = Offering(
                     name=o_val.get("name", o_name),

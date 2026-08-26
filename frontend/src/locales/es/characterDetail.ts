@@ -82,5 +82,13 @@ export default {
   "categoryBlueprint": "Planos",
   "categoryChest": "Cofres y Niebla",
   "searchOfferings": "Filtrar ofrendas...",
-  "noMatchingOfferings": "No hay ofrendas que coincidan con los filtros."
+  "noMatchingOfferings": "No se encontraron ofrendas que coincidan con los filtros.",
+  "clickToInspect": "Haz clic para ver las mecánicas completas",
+  "rarityCommon": "Común",
+  "rarityUncommon": "Poco común",
+  "rarityRare": "Rara",
+  "rarityVeryRare": "Muy rara",
+  "rarityUltraRare": "Ultra rara",
+  "rarityEvent": "Evento",
+  "raritySpecial": "Especial"
 };

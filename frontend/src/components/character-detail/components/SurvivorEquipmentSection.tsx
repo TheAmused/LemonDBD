@@ -1,5 +1,5 @@
-// frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Package,
   Search,
@@ -11,6 +11,7 @@ import {
   Map as MapIcon,
   Bomb,
   Sparkles,
+  Cloud,
 } from 'lucide-react';
 import {
   AddonItem,
@@ -18,6 +19,7 @@ import {
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank,
+  getLocalizedRarity,
   renderFormattedDbdText,
 } from '../types';
 
@@ -35,7 +37,8 @@ type SurvivorCategoryKey =
   | 'flashlight'
   | 'key'
   | 'map'
-  | 'firecracker'
+  | 'fog_vial'
+  | 'event'
   | 'trial_exclusive';
 
 function getCanonicalString(it: EquipmentItem | AddonItem): string {
@@ -47,184 +50,60 @@ function getCanonicalString(it: EquipmentItem | AddonItem): string {
   return `${raw} ${name} ${target} ${category} ${desc}`;
 }
 
-function checkIsMedKit(target: string, raw: string, name: string): boolean {
-  const combined = `${raw} ${name}`.toLowerCase();
-  if (combined.includes('spray') || target.includes('spray') || combined.includes('serum') || target.includes('serum')) {
-    return false;
-  }
-  if (target.includes('med-kit') || target.includes('medkit') || (target.includes('aid') && !target.includes('spray'))) return true;
-  return (
-    combined.includes('med-kit') ||
-    combined.includes('medkit') ||
-    combined.includes('first aid kit') ||
-    combined.includes('aid kit') ||
-    combined.includes('camping aid') ||
-    combined.includes('lunchbox') ||
-    combined.includes('emergency med') ||
-    combined.includes('ranger med') ||
-    combined.includes('syringe') ||
-    combined.includes('styptic') ||
-    combined.includes('dressing') ||
-    combined.includes('bandage') ||
-    combined.includes('suture') ||
-    combined.includes('sponge') ||
-    combined.includes('gauze') ||
-    combined.includes('needle') ||
-    combined.includes('scissor') ||
-    combined.includes('gel') ||
-    combined.includes('apteczka') ||
-    combined.includes('sanitäter') ||
-    combined.includes('botiquín') ||
-    combined.includes('救急箱')
-  );
+function getSurvivorItemCategory(it: EquipmentItem): SurvivorCategoryKey {
+  const cat = (it.category || '').toLowerCase();
+  const rarity = (it.rarity || '').toLowerCase();
+  const name = (it.raw_name || it.name || '').toLowerCase();
+
+  if (cat === 'event' || rarity === 'event') return 'event';
+  if (cat === 'fog vial' || cat === 'fog_vial' || cat.includes('fog') || cat.includes('vial')) return 'fog_vial';
+  if (cat === 'trial artifact' || cat === 'trial_exclusive' || cat === 'special' || cat.includes('trial') || cat.includes('artifact')) return 'trial_exclusive';
+  if (cat === 'med-kit' || cat === 'medkit' || cat.includes('med') || cat.includes('aid')) return 'medkit';
+  if (cat === 'toolbox' || cat.includes('tool')) return 'toolbox';
+  if (cat === 'flashlight' || cat.includes('flash') || cat.includes('torch')) return 'flashlight';
+  if (cat === 'key') return 'key';
+  if (cat === 'map') return 'map';
+  if (cat === 'firecracker' || cat.includes('firecracker') || cat.includes('party')) return 'event';
+
+  // Fallback on name heuristics if category wasn't populated
+  if (rarity === 'event' || ['anniversary', 'banquet', 'masquerade', 'lunchbox', 'will o', 'firecracker', 'party'].some((k) => name.includes(k))) return 'event';
+  if (['medkit', 'aid'].some((k) => name.includes(k))) return 'medkit';
+  if (['toolbox', 'tool'].some((k) => name.includes(k))) return 'toolbox';
+  if (['flashlight', 'torch'].some((k) => name.includes(k))) return 'flashlight';
+  if (name.includes('key')) return 'key';
+  if (name.includes('map')) return 'map';
+
+  return 'trial_exclusive';
 }
 
-function checkIsToolbox(target: string, raw: string, name: string): boolean {
-  if (target.includes('toolbox') || target.includes('tools')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('toolbox') ||
-    combined.includes('tool') ||
-    combined.includes('mechanic') ||
-    combined.includes('commodious') ||
-    combined.includes('engineer') ||
-    combined.includes('alex') ||
-    combined.includes('wire') ||
-    combined.includes('socket') ||
-    combined.includes('swivel') ||
-    combined.includes('spring') ||
-    combined.includes('spool') ||
-    combined.includes('brand new part') ||
-    combined.includes('protective grip') ||
-    combined.includes('hacksaw') ||
-    combined.includes('clamp') ||
-    combined.includes('rag') ||
-    combined.includes('skrzynka') ||
-    combined.includes('werkzeugkasten') ||
-    combined.includes('caja de herramientas') ||
-    combined.includes('boîte à outils') ||
-    combined.includes('工具箱')
-  );
+function getSurvivorAddonCategory(it: AddonItem): SurvivorCategoryKey {
+  const target = (it.associated_target || '').toLowerCase();
+  const cat = (it.category || '').toLowerCase();
+  const rarity = (it.rarity || '').toLowerCase();
+  const name = (it.raw_name || it.name || '').toLowerCase();
+
+  if (rarity === 'event' || target === 'event' || cat === 'event') return 'event';
+  if (target === 'fog vials' || target.includes('fog') || target.includes('vial')) return 'fog_vial';
+  if (target === 'med-kits' || target.includes('med') || target.includes('aid')) return 'medkit';
+  if (target === 'toolboxes' || target.includes('tool')) return 'toolbox';
+  if (target === 'flashlights' || target.includes('flash') || target.includes('torch')) return 'flashlight';
+  if (target === 'keys' || target.includes('key')) return 'key';
+  if (target === 'maps' || target.includes('map')) return 'map';
+
+  // Fallback on name heuristics if target wasn't populated
+  if (rarity === 'event' || name.includes('serum') || name.includes('broken bulb')) return 'event';
+
+  return 'trial_exclusive';
 }
 
-function checkIsFlashlight(target: string, raw: string, name: string): boolean {
-  if (target.includes('flashlight') || target.includes('torch')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('flashlight') ||
-    combined.includes('torch') ||
-    combined.includes('sport flashlight') ||
-    combined.includes('utility flashlight') ||
-    combined.includes('wisp') ||
-    combined.includes('battery') ||
-    combined.includes('lens') ||
-    combined.includes('bulb') ||
-    combined.includes('filament') ||
-    combined.includes('reflector') ||
-    combined.includes('focus') ||
-    combined.includes('sapphire') ||
-    combined.includes('rubee') ||
-    combined.includes('ruby') ||
-    combined.includes('latarka') ||
-    combined.includes('taschenlampe') ||
-    combined.includes('linterna') ||
-    combined.includes('lampe torche') ||
-    combined.includes('懐中電灯')
-  );
-}
-
-function checkIsKey(target: string, raw: string, name: string): boolean {
-  if (target.includes('key')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('key') ||
-    combined.includes('skeleton key') ||
-    combined.includes('dull key') ||
-    combined.includes('broken key') ||
-    combined.includes('amber') ||
-    combined.includes('token') ||
-    combined.includes('bead') ||
-    combined.includes('pearl') ||
-    combined.includes('ring') ||
-    combined.includes('klucz') ||
-    combined.includes('schlüssel') ||
-    combined.includes('llave') ||
-    combined.includes('clé') ||
-    combined.includes('カギ') ||
-    combined.includes('鍵')
-  );
-}
-
-function checkIsMap(target: string, raw: string, name: string): boolean {
-  if (target.includes('map')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('map') ||
-    combined.includes('rainbow map') ||
-    combined.includes('cord') ||
-    combined.includes('rope') ||
-    combined.includes('stamp') ||
-    combined.includes('glass bead') ||
-    combined.includes('retardant') ||
-    combined.includes('silk') ||
-    combined.includes('mapa') ||
-    combined.includes('karte') ||
-    combined.includes('carte') ||
-    combined.includes('mappa') ||
-    combined.includes('マップ') ||
-    combined.includes('地図')
-  );
-}
-
-function checkIsFirecracker(target: string, raw: string, name: string): boolean {
-  if (target.includes('firecracker') || target.includes('firework')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('firecracker') ||
-    combined.includes('party starter') ||
-    combined.includes('flashbang') ||
-    combined.includes('firework') ||
-    combined.includes('chinese firecracker') ||
-    combined.includes('winter party') ||
-    combined.includes('third year') ||
-    combined.includes('petard') ||
-    combined.includes('feuerwerk') ||
-    combined.includes('petardo') ||
-    combined.includes('爆竹')
-  );
-}
-
-function checkIsTrialExclusive(raw: string, name: string, target: string): boolean {
-  const combined = `${raw} ${name} ${target}`.toLowerCase();
-  return (
-    combined.includes('vecna') ||
-    combined.includes('lament') ||
-    combined.includes('turret') ||
-    combined.includes('emp') ||
-    combined.includes('spray') ||
-    combined.includes('vaccine') ||
-    combined.includes('vhs') ||
-    combined.includes('flash grenade') ||
-    combined.includes('antidote') ||
-    combined.includes('candelabra') ||
-    combined.includes('lantern') ||
-    combined.includes('keycard') ||
-    combined.includes('mirror') ||
-    combined.includes('pendant') ||
-    combined.includes('blood can') ||
-    combined.includes('fungus') ||
-    combined.includes('crystal') ||
-    combined.includes('serum')
-  );
-}
-
-const CATEGORIES = [
+const CATEGORIES: { key: SurvivorCategoryKey; label: string; icon: any; desc: string }[] = [
   { key: 'medkit', label: 'Med-Kits', icon: Heart, desc: 'Healing & Syringes' },
   { key: 'toolbox', label: 'Toolboxes', icon: Wrench, desc: 'Repairs & Sabotage' },
   { key: 'flashlight', label: 'Flashlights', icon: Flashlight, desc: 'Blinding & Saves' },
   { key: 'key', label: 'Keys', icon: Key, desc: 'Auras & Hatch' },
   { key: 'map', label: 'Maps', icon: MapIcon, desc: 'Objectives & Totems' },
-  { key: 'firecracker', label: 'Firecrackers', icon: Bomb, desc: 'Fireworks & Party Starters' },
+  { key: 'fog_vial', label: 'Fog Vials', icon: Cloud, desc: 'Mist & Concealment' },
+  { key: 'event', label: 'Event Items & Add-ons', icon: Sparkles, desc: 'Limited Time & Anniversary Items' },
   { key: 'trial_exclusive', label: 'Trial Artifacts', icon: ShieldAlert, desc: 'In-Trial Counter Items' },
 ];
 
@@ -235,6 +114,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   onSelectEquipment,
   t,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<SurvivorCategoryKey>('medkit');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [rarityFilter, setRarityFilter] = useState<string>('all');
@@ -243,6 +123,10 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
     rect: DOMRect;
     accentColor: string;
   } | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const activeCategoryConfig = useMemo(() => {
     return CATEGORIES.find((c) => c.key === selectedCategory) || CATEGORIES[0];
@@ -258,7 +142,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       const name = (it.name || '').toLowerCase();
       const raw = (it.raw_name || '').toLowerCase();
       const desc = (it.description || '').toLowerCase();
-      const target = ((it as { associated_target?: string }).associated_target || '').toLowerCase();
 
       const matchesSearch =
         !query ||
@@ -274,25 +157,11 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
       if (!matchesRarity) return false;
 
-      if (selectedCategory === 'medkit') return checkIsMedKit(target, raw, name);
-      if (selectedCategory === 'toolbox') return checkIsToolbox(target, raw, name);
-      if (selectedCategory === 'flashlight') return checkIsFlashlight(target, raw, name);
-      if (selectedCategory === 'key') return checkIsKey(target, raw, name);
-      if (selectedCategory === 'map') return checkIsMap(target, raw, name);
-      if (selectedCategory === 'firecracker') return checkIsFirecracker(target, raw, name);
-      if (selectedCategory === 'trial_exclusive') {
-        if (isAddon) {
-          return (
-            target.includes('special') ||
-            name.includes('serum') ||
-            raw.includes('serum') ||
-            checkIsTrialExclusive(raw, name, target)
-          );
-        }
-        return checkIsTrialExclusive(raw, name, target);
-      }
+      const itemCategory = isAddon
+        ? getSurvivorAddonCategory(it as AddonItem)
+        : getSurvivorItemCategory(it as EquipmentItem);
 
-      return true;
+      return itemCategory === selectedCategory;
     };
 
     const sortByRarity = (a: EquipmentItem | AddonItem, b: EquipmentItem | AddonItem) => {
@@ -420,7 +289,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         setActiveHover({ item, rect, accentColor: 'text-emerald-400' });
                       }}
                       onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-emerald-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       aria-label={`Inspect item: ${item.name}`}
                     >
                       <img
@@ -491,7 +360,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         setActiveHover({ item, rect, accentColor: 'text-amber-400' });
                       }}
                       onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       aria-label={`Inspect addon: ${item.name}`}
                     >
                       <img
@@ -511,14 +380,16 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
         </div>
       </div>
 
-      {activeHover && typeof window !== 'undefined' && (() => {
-        const tooltipWidth = 320;
+      {/* Clamped Portal Tooltip */}
+      {activeHover && mounted && typeof document !== 'undefined' && createPortal((() => {
+        const tooltipWidth = Math.min(440, typeof window !== 'undefined' ? window.innerWidth - 32 : 440);
         const left = Math.max(
           16,
           Math.min(window.innerWidth - tooltipWidth - 16, activeHover.rect.left + activeHover.rect.width / 2 - tooltipWidth / 2)
         );
         const top = activeHover.rect.bottom + 10;
         const rarityStyle = getRarityTileStyle(activeHover.item.rarity);
+        const localizedRarity = getLocalizedRarity(activeHover.item.rarity, t);
 
         return (
           <div
@@ -527,13 +398,13 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           >
             <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-800">
               <h4 className="text-sm font-black text-white truncate font-mono">{activeHover.item.name}</h4>
-              {activeHover.item.rarity && (
+              {localizedRarity && (
                 <span className={`text-[10px] font-bold uppercase font-mono ${rarityStyle.text}`}>
-                  {activeHover.item.rarity}
+                  {localizedRarity}
                 </span>
               )}
             </div>
-            <div className="space-y-1 text-xs max-h-48 overflow-y-auto leading-relaxed text-slate-200">
+            <div className="space-y-1 text-xs sm:text-sm max-h-96 sm:max-h-[420px] overflow-y-auto leading-relaxed text-slate-200">
               {renderFormattedDbdText(activeHover.item.description || '', true)}
             </div>
             <span className={`block text-[10px] font-mono mt-2.5 text-right font-bold ${activeHover.accentColor}`}>
@@ -541,7 +412,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             </span>
           </div>
         );
-      })()}
+      })(), document.body)}
     </section>
   );
 };

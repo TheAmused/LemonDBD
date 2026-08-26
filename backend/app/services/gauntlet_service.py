@@ -154,6 +154,9 @@ class GauntletService:
         if r.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
 
+        if not json.loads(r.owned_characters_json or "[]"):
+            self._freeze_pool(r)
+
         current_streak = r.current_streak
         best_streak = r.best_streak
         last_checkpoint = r.last_checkpoint_streak

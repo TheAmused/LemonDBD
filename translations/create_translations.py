@@ -1,1284 +1,1999 @@
-#!/usr/bin/env python3
-"""
-create_translations.py
-======================
-Extracts and squashes official Dead by Daylight multi-language translations
-from raw game string table dumps into a compact, optimized translations bundle
-for the LemonDBD backend (backend/app/translations/translations.json).
-
-Supports any arbitrary language added to the translations folder (e.g., fr.json,
-it.json, pt.json, ru.json, ko.json, zh.json, etc.).
-
-Usage:
-------
-    python create_translations.py
-    python create_translations.py --locales en pl de es ja fr
-    python create_translations.py --out ../backend/app/translations/translations.json
-"""
-
-import argparse
+import copy
 import json
-import logging
+import os
 import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%H:%M:%S",
-)
-logger = logging.getLogger("create_translations")
+sys.stdout.reconfigure(encoding="utf-8")
 
-# Known non-locale dump files to ignore during auto-discovery
-EXCLUDED_JSON_FILES = {
-    "characters_dump.json",
-    "characters_dump_backup.json",
-    "items_dump.json",
-    "gameplay_dump.json",
-    "lemondbd.json",
-    "pl_dump.json",
-    "translations.json",
-    "translations.min.json",
-}
-
-CHAPTER_TRANSLATIONS_MASTER: Dict[str, Dict[str, str]] = {
-    "Base Game": {
-        "en": "Base Game",
-        "pl": "Gra podstawowa",
-        "de": "Grundspiel",
-        "es": "Juego base",
-        "ja": "本編",
-    },
-    "Last Breath Chapter": {
-        "en": "The Last Breath",
-        "pl": "Ostatni oddech",
-        "de": "Der letzte Atemzug",
-        "es": "El último aliento",
-        "ja": "最期の息の根",
-    },
-    "Of Flesh and Mud": {
-        "en": "Of Flesh and Mud",
-        "pl": "Z ciała i błota",
-        "de": "Aus Fleisch und Schlamm",
-        "es": "De carne y barro",
-        "ja": "肉と泥",
-    },
-    "Spark of Madness": {
-        "en": "Spark of Madness",
-        "pl": "Iskra szaleństwa",
-        "de": "Funke des Wahnsinns",
-        "es": "Chispa de locura",
-        "ja": "狂気の火花",
-    },
-    "A Lullaby for the Dark": {
-        "en": "A Lullaby for the Dark",
-        "pl": "Kołysanka dla mroku",
-        "de": "Ein Schlaflied für die Dunkelheit",
-        "es": "Una nana para la oscuridad",
-        "ja": "闇のララバイ",
-    },
-    "LEATHERFACE™": {
-        "en": "Leatherface™",
-        "pl": "Leatherface™",
-        "de": "Leatherface™",
-        "es": "Leatherface™",
-        "ja": "レザーフェイス™",
-    },
-    "A Nightmare on Elm Street™": {
-        "en": "A Nightmare on Elm Street™",
-        "pl": "Koszmar z ulicy Wiązów™",
-        "de": "A Nightmare on Elm Street™",
-        "es": "Pesadilla en Elm Street™",
-        "ja": "エルム街の悪夢™",
-    },
-    "SAW™ Chapter": {
-        "en": "SAW™ Chapter",
-        "pl": "Rozdział SAW™",
-        "de": "SAW™-Kapitel",
-        "es": "Capítulo de SAW™",
-        "ja": "SAW™チャプター",
-    },
-    "Curtain Call": {
-        "en": "Curtain Call",
-        "pl": "Opadająca kurtyna",
-        "de": "Vorhang auf",
-        "es": "Llamada a escena",
-        "ja": "カーテンコール",
-    },
-    "Shattered Bloodline": {
-        "en": "Shattered Bloodline",
-        "pl": "Roztrzaskana linia krwi",
-        "de": "Zersplitterte Blutlinie",
-        "es": "Linaje destrozado",
-        "ja": "砕かれた血統",
-    },
-    "Darkness Among Us": {
-        "en": "Darkness Among Us",
-        "pl": "Mrok pośród nas",
-        "de": "Dunkelheit unter uns",
-        "es": "La oscuridad entre nosotros",
-        "ja": "私たちの闇",
-    },
-    "Demise of the Faithful": {
-        "en": "Demise of the Faithful",
-        "pl": "Śmierć wiernych",
-        "de": "Untergang der Getreuen",
-        "es": "Muerte de los fieles",
-        "ja": "信仰の終焉",
-    },
-    "Ash vs Evil Dead": {
-        "en": "Ash vs Evil Dead",
-        "pl": "Ash kontra martwe zło",
-        "de": "Ash vs Evil Dead",
-        "es": "Ash vs Evil Dead",
-        "ja": "死霊のはらわた リターンズ",
-    },
-    "Ghost Face®": {
-        "en": "Ghost Face®",
-        "pl": "Ghost Face®",
-        "de": "Ghost Face®",
-        "es": "Ghost Face®",
-        "ja": "ゴーストフェイス®",
-    },
-    "Stranger Things": {
-        "en": "Stranger Things",
-        "pl": "Stranger Things",
-        "de": "Stranger Things",
-        "es": "Stranger Things",
-        "ja": "ストレンジャー・シングス",
-    },
-    "Stranger Things Chapter 2": {
-        "en": "Stranger Things Chapter 2",
-        "pl": "Stranger Things Rozdział 2",
-        "de": "Stranger Things Kapitel 2",
-        "es": "Stranger Things Capítulo 2",
-        "ja": "ストレンジャー・シングス 第2章",
-    },
-    "Cursed Legacy": {
-        "en": "Cursed Legacy",
-        "pl": "Przeklęte dziedzictwo",
-        "de": "Verfluchtes Erbe",
-        "es": "Legado maldito",
-        "ja": "呪われた遺産",
-    },
-    "Chains of Hate": {
-        "en": "Chains of Hate",
-        "pl": "Łańcuchy nienawiści",
-        "de": "Ketten des Hasses",
-        "es": "Cadenas de odio",
-        "ja": "憎しみの連鎖",
-    },
-    "Silent Hill (Chapter)": {
-        "en": "Silent Hill",
-        "pl": "Silent Hill",
-        "de": "Silent Hill",
-        "es": "Silent Hill",
-        "ja": "サイレントヒル",
-    },
-    "Descend Beyond": {
-        "en": "Descend Beyond",
-        "pl": "Przekroczyć granicę",
-        "de": "Grenzüberschreitung",
-        "es": "Descenso al más allá",
-        "ja": "彼方への降下",
-    },
-    "A Binding of Kin": {
-        "en": "A Binding of Kin",
-        "pl": "Więzy krwi",
-        "de": "Eine Bindung der Verwandtschaft",
-        "es": "Un lazo de sangre",
-        "ja": "肉親の愛",
-    },
-    "All-Kill": {
-        "en": "All-Kill",
-        "pl": "All-Kill",
-        "de": "All-Kill",
-        "es": "All-Kill",
-        "ja": "All-Kill",
-    },
-    "All-Kill: Comeback": {
-        "en": "All-Kill: Comeback",
-        "pl": "All-Kill: Powrót",
-        "de": "All-Kill: Comeback",
-        "es": "All-Kill: Regreso",
-        "ja": "All-Kill: カムバック",
-    },
-    "Resident Evil™": {
-        "en": "Resident Evil™",
-        "pl": "Resident Evil™",
-        "de": "Resident Evil™",
-        "es": "Resident Evil™",
-        "ja": "バイオハザード™",
-    },
-    "Hellraiser™": {
-        "en": "Hellraiser™",
-        "pl": "Hellraiser™",
-        "de": "Hellraiser™",
-        "es": "Hellraiser™",
-        "ja": "ヘルレイザー™",
-    },
-    "Hour of the Witch": {
-        "en": "Hour of the Witch",
-        "pl": "Godzina czarownic",
-        "de": "Stunde der Hexe",
-        "es": "La hora de la bruja",
-        "ja": "魔女の時",
-    },
-    "Portrait of a Murder": {
-        "en": "Portrait of a Murder",
-        "pl": "Portret morderstwa",
-        "de": "Porträt eines Mordes",
-        "es": "Retrato de un asesinato",
-        "ja": "殺人の肖像画",
-    },
-    "Sadako Rising": {
-        "en": "Sadako Rising",
-        "pl": "Przebudzenie Sadako",
-        "de": "Sadakos Erwachen",
-        "es": "El despertar de Sadako",
-        "ja": "貞子ライジング",
-    },
-    "Roots of Dread": {
-        "en": "Roots of Dread",
-        "pl": "Korzenie grozy",
-        "de": "Wurzeln des Grauens",
-        "es": "Raíces del pavor",
-        "ja": "恐怖の根源",
-    },
-    "Resident Evil™: PROJECT W": {
-        "en": "Resident Evil™: PROJECT W",
-        "pl": "Resident Evil™: PROJEKT W",
-        "de": "Resident Evil™: PROJECT W",
-        "es": "Resident Evil™: PROJECT W",
-        "ja": "バイオハザード™：PROJECT W",
-    },
-    "Forged in Fog": {
-        "en": "Forged in Fog",
-        "pl": "Wykute we mgle",
-        "de": "Im Nebel geschmiedet",
-        "es": "Forjado en la niebla",
-        "ja": "霧の中の鍛造",
-    },
-    "Tools of Torment": {
-        "en": "Tools of Torment",
-        "pl": "Narzędzia udręki",
-        "de": "Werkzeuge der Qual",
-        "es": "Herramientas de tormento",
-        "ja": "苦虐の道具",
-    },
-    "End Transmission": {
-        "en": "End Transmission",
-        "pl": "Koniec transmisji",
-        "de": "Ende der Übertragung",
-        "es": "Fin de transmisión",
-        "ja": "通信終了",
-    },
-    "Nicolas Cage (Chapter)": {
-        "en": "Nicolas Cage",
-        "pl": "Nicolas Cage",
-        "de": "Nicolas Cage",
-        "es": "Nicolas Cage",
-        "ja": "ニコラス・ケイジ",
-    },
-    "Alien": {
-        "en": "Alien",
-        "pl": "Obcy",
-        "de": "Alien",
-        "es": "Alien",
-        "ja": "エイリアン",
-    },
-    "Chucky (Chapter)": {
-        "en": "Chucky",
-        "pl": "Chucky",
-        "de": "Chucky",
-        "es": "Chucky",
-        "ja": "チャッキー",
-    },
-    "Alan Wake® (Chapter)": {
-        "en": "Alan Wake®",
-        "pl": "Alan Wake®",
-        "de": "Alan Wake®",
-        "es": "Alan Wake®",
-        "ja": "アラン・ウェイク®",
-    },
-    "All Things Wicked": {
-        "en": "All Things Wicked",
-        "pl": "Wszystko, co nikczemne",
-        "de": "Alles Böse",
-        "es": "Todo lo perverso",
-        "ja": "邪悪の全て",
-    },
-    "Dungeons & Dragons": {
-        "en": "Dungeons & Dragons",
-        "pl": "Dungeons & Dragons",
-        "de": "Dungeons & Dragons",
-        "es": "Dungeons & Dragons",
-        "ja": "ダンジョンズ&ドラゴンズ",
-    },
-    "Tomb Raider™": {
-        "en": "Tomb Raider™",
-        "pl": "Tomb Raider™",
-        "de": "Tomb Raider™",
-        "es": "Tomb Raider™",
-        "ja": "トゥームレイダー™",
-    },
-    "Castlevania": {
-        "en": "Castlevania",
-        "pl": "Castlevania",
-        "de": "Castlevania",
-        "es": "Castlevania",
-        "ja": "悪魔城ドラキュラ",
-    },
-    "Doomed Course": {
-        "en": "Doomed Course",
-        "pl": "Przeklęty kurs",
-        "de": "Verhängnisvoller Kurs",
-        "es": "Rumbo fatídico",
-        "ja": "破滅の進路",
-    },
-    "The HALLOWEEN® Chapter": {
-        "en": "The HALLOWEEN® Chapter",
-        "pl": "Rozdział HALLOWEEN®",
-        "de": "Das HALLOWEEN®-Kapitel",
-        "es": "El capítulo de HALLOWEEN®",
-        "ja": "HALLOWEEN®チャプター",
-    },
-    "Left Behind (Chapter)": {
-        "en": "Left Behind",
-        "pl": "Pozostawieni w tyle",
-        "de": "Zurückgelassen",
-        "es": "Abandonados",
-        "ja": "残された者たち",
-    },
-    "Five Nights at Freddy's": {
-        "en": "Five Nights at Freddy's",
-        "pl": "Five Nights at Freddy's",
-        "de": "Five Nights at Freddy's",
-        "es": "Five Nights at Freddy's",
-        "ja": "Five Nights at Freddy's",
-    },
-    "The Walking Dead": {
-        "en": "The Walking Dead",
-        "pl": "The Walking Dead",
-        "de": "The Walking Dead",
-        "es": "The Walking Dead",
-        "ja": "ウォーキング・デッド",
-    },
-    "Tokyo Ghoul": {
-        "en": "Tokyo Ghoul",
-        "pl": "Tokyo Ghoul",
-        "de": "Tokyo Ghoul",
-        "es": "Tokyo Ghoul",
-        "ja": "東京喰種",
-    },
-    "Jason (Chapter)": {
-        "en": "Friday the 13th",
-        "pl": "Piątek trzynastego",
-        "de": "Freitag der 13.",
-        "es": "Viernes 13",
-        "ja": "13日の金曜日",
-    },
-    "Chorus of Sin": {
-        "en": "Chorus of Sin",
-        "pl": "Chór grzechu",
-        "de": "Chor der Sünde",
-        "es": "Coro del pecado",
-        "ja": "罪の合唱",
-    },
-    "Steady Pulse": {
-        "en": "Steady Pulse",
-        "pl": "Równomierny puls",
-        "de": "Ruhiger Puls",
-        "es": "Pulso firme",
-        "ja": "安定した脈動",
-    },
-    "Life Road": {
-        "en": "Life Road",
-        "pl": "Droga życia",
-        "de": "Lebensweg",
-        "es": "Camino de vida",
-        "ja": "命の道",
-    },
-    "Sinister Grace": {
-        "en": "Sinister Grace",
-        "pl": "Złowroga gracja",
-        "de": "Finsterer Anmut",
-        "es": "Gracia siniestra",
-        "ja": "不吉な気品",
-    },
-}
+BASE_DIR = Path(__file__).resolve().parent
+CHARACTERS_DIR = BASE_DIR / "DBDCharacters"
+DUMP_FILE = BASE_DIR / "characters_dump.json"
+BACKEND_TRANSLATIONS_DIR = BASE_DIR.parent / "backend" / "app" / "translations"
 
 
-def clean_html_formatting(raw_text: Optional[str]) -> str:
-    """Strips Unreal HTML tags while preserving linebreaks, quotes, and punctuation."""
-    if not raw_text:
-        return ""
+def sanitize_text(text: str) -> str:
+    """Czyści sekwencje ucieczki i zamienia tagi HTML na czysty tekst z formatowaniem Markdown."""
+    if not isinstance(text, str):
+        return text
 
-    text = str(raw_text)
-    # Replace line breaks
-    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
-    # Strip HTML tags like <span>, <b>, <i>, <font>, etc.
-    text = re.sub(r"</?[a-zA-Z0-9_-]+(?:\s+[^>]*?)?>", "", text)
-    # Clean HTML entities
-    text = text.replace("&quot;", '"').replace("&#39;", "'").replace("&amp;", "&")
-    # Clean whitespace while preserving newlines
-    lines = [line.strip() for line in text.split("\n")]
-    cleaned = "\n".join(lines).strip()
-    return cleaned
+    # 1. Clean escaped quotes and backslashes
+    text = re.sub(r'\\([„”"\'’])', r'\1', text)
+    text = text.replace('\\"', '"').replace("\\\\", "\\")
 
+    # 2. Convert spans with classes (FlavorText, ReminderText, Highlight)
+    text = re.sub(r'<span\s+class=["\']FlavorText["\']>(.*?)</span>', r'\n"\1"\n', text, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r'<span\s+class=["\']ReminderText["\']>(.*?)</span>', r'\n\1\n', text, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r'<span\s+class=["\']Highlight\d*["\']>(.*?)</span>', r'\1', text, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r'</?span[^>]*>', '', text, flags=re.IGNORECASE)
 
-def simplify_name_key(s: str) -> str:
-    """Normalizes entity names for robust cross-referencing and lookup."""
-    if not s:
-        return ""
-    s = s.lower().replace("\xa0", " ")
-    s = re.sub(r"\(the [^)]+\)", "", s)
-    s = re.sub(r"\([^)]+\)", "", s)
-    return re.sub(r"[^a-z0-9]", "", s)
+    # 3. Convert line breaks and paragraph tags
+    text = re.sub(r'</?br\s*/?>', '\n', text, flags=re.IGNORECASE)
+    text = re.sub(r'</?p[^>]*>', '\n', text, flags=re.IGNORECASE)
+    text = re.sub(r'</?div[^>]*>', '\n', text, flags=re.IGNORECASE)
 
+    # 4. Convert lists
+    text = re.sub(r'</?ul[^>]*>', '\n', text, flags=re.IGNORECASE)
+    text = re.sub(r'<li>(.*?)</li>', r'\n• \1', text, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r'<li>', '\n• ', text, flags=re.IGNORECASE)
+    text = re.sub(r'</li>', '', text, flags=re.IGNORECASE)
 
-def load_locale_string_table(file_path: Path) -> Dict[str, str]:
-    """
-    Loads an Unreal Engine string table JSON dump (e.g. en.json, pl.json, fr.json)
-    flattening all namespaces into a direct key -> localized string dictionary.
-    """
-    if not file_path.exists():
-        logger.warning(f"Locale file not found: {file_path}")
-        return {}
+    # 5. Strip styling tags
+    text = re.sub(r'</?b>', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'</?i>', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'</?strong>', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'</?em>', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'</?font[^>]*>', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'</?color[^>]*>', '', text, flags=re.IGNORECASE)
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    # 6. Remove any remaining stray HTML tags
+    text = re.sub(r'<[^>]+>', '', text)
 
-    flat_lookup: Dict[str, str] = {}
-    if isinstance(data, dict):
-        for ns_or_key, val in data.items():
-            if isinstance(val, dict):
-                for k, v in val.items():
-                    if isinstance(v, str):
-                        flat_lookup[k] = clean_html_formatting(v)
-            elif isinstance(val, str):
-                flat_lookup[ns_or_key] = clean_html_formatting(val)
-
-    return flat_lookup
+    # 7. Normalize newlines and whitespace
+    text = text.replace("%%", "%")
+    lines = [l.strip() for l in text.splitlines()]
+    clean_lines = [l for l in lines if l]
+    return '\n'.join(clean_lines)
 
 
-def resolve_text(
-    field_obj: Any,
-    locale_dict: Dict[str, str],
-    fallback: str = "",
-    en_dict: Optional[Dict[str, str]] = None,
-    text_to_guid: Optional[Dict[str, str]] = None,
-) -> str:
-    """Resolves localized string from field object containing Key / SourceString with dynamic reverse fallback."""
-    if not field_obj:
-        return fallback
+def flatten_lang_file(file_path: Path) -> dict[str, str]:
+    """Spłaszcza plik językowy (niezależnie od przestrzeni nazw) do mapy {GUID_Key: Text}."""
+    flat_map = {}
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
 
-    if isinstance(field_obj, str):
-        return field_obj
+        def recurse(node):
+            if isinstance(node, dict):
+                for k, v in node.items():
+                    if isinstance(v, (dict, list)):
+                        recurse(v)
+                    elif isinstance(v, str):
+                        k_clean = k.strip()
+                        v_clean = sanitize_text(v)
+                        if v_clean and not v_clean.startswith("@#"):
+                            flat_map[k_clean] = v_clean
+            elif isinstance(node, list):
+                for item in node:
+                    recurse(item)
 
-    if isinstance(field_obj, dict):
-        key = field_obj.get("Key") or field_obj.get("key")
-        if key and key in locale_dict and locale_dict[key]:
-            return locale_dict[key]
-
-        # Dynamic reverse text matching if key is missing or not in locale_dict
-        source_str = field_obj.get("SourceString") or field_obj.get("LocalizedString") or ""
-        if text_to_guid and source_str:
-            sk = simplify_name_key(source_str)
-            if sk in text_to_guid:
-                matched_guid = text_to_guid[sk]
-                if matched_guid in locale_dict and locale_dict[matched_guid]:
-                    return locale_dict[matched_guid]
-
-            # Try prefix matching
-            words = source_str.split()
-            if len(words) >= 4:
-                for length in [6, 5, 4, 3]:
-                    prefix = simplify_name_key(" ".join(words[:length]))
-                    if len(prefix) >= 12:
-                        for tk, matched_guid in text_to_guid.items():
-                            if prefix in tk:
-                                if matched_guid in locale_dict and locale_dict[matched_guid]:
-                                    return locale_dict[matched_guid]
-
-        return field_obj.get("LocalizedString") or field_obj.get("SourceString") or fallback
-
-    return fallback
+        recurse(data)
+    except Exception as e:
+        print(f"Błąd wczytywania {file_path.name}: {e}")
+    return flat_map
 
 
-OFFERINGS_MASTER_GUIDS: Dict[str, Tuple[str, str, str, str, str]] = {
-    # Survivor Bloodpoints
-    "primroseblossomsachet": ("2AA8584C47333A9061A06CB9700CB929", "CF03FBA046FB4F07F2AE2DB62575154A", "Bloodpoints", "Survivor", "Common"),
-    "freshprimroseblossom": ("EAA6A9AF42BD42B5B26E55BE7F620BD1", "030E18F54925B8B122FEA2ABF7C2E9BA", "Bloodpoints", "Survivor", "Uncommon"),
-    "fragrantprimroseblossom": ("C502E7614B44B9C56F9A2793DCFEF72B", "816DC4D248A7551514DF398D0D1036A9", "Bloodpoints", "Survivor", "Rare"),
-    "sweetwilliamsachet": ("DB07196E40354F9C3F6A4C85D0787F69", "B2ACE8DB4809C3E055D5C2BF7A5A1F6C", "Bloodpoints", "Survivor", "Common"),
-    "freshsweetwilliam": ("6389E2F04D2E0EC6C980ACA7C01885C1", "D49BA33948515EF42723F696DA60FB06", "Bloodpoints", "Survivor", "Uncommon"),
-    "fragrantsweetwilliam": ("2DC0B9154C47F6DE60F25A93BC773663", "6AA85E5D426F7C594FACB79AC97E71D3", "Bloodpoints", "Survivor", "Rare"),
-    "boglaurelsachet": ("78298EDC4F416B0C034B6DB05603D9EE", "3741707C458D54D1B8887ABE42FDD590", "Bloodpoints", "Survivor", "Common"),
-    "freshboglaurel": ("7426A99A418BE4EC2FBFBA993C116757", "88264EE5476A70010AB96BB8873794F7", "Bloodpoints", "Survivor", "Uncommon"),
-    "fragrantboglaurel": ("35439BA24C0330DDA24C069A9090623B", "526DA47E40100E4E881B05BC55C48104", "Bloodpoints", "Survivor", "Rare"),
-    "crispleafamaranthsachet": ("6070EEA24F1992F2B61FDBA62D6BA15F", "4DE283C841D710A0E88CA597756B4DD4", "Bloodpoints", "Survivor", "Common"),
-    "freshcrispleafamaranth": ("AA7B0FE1471714B9D28B239C1F821415", "E7D18F72473EFFB34386A1A79A39AB9C", "Bloodpoints", "Survivor", "Uncommon"),
-    "fragrantcrispleafamaranth": ("E2EB09FA4BF218154F7073B4D3C5C421", "7DD1B12A449576F39BFF62893E8E7697", "Bloodpoints", "Survivor", "Rare"),
-    "boundenvelope": ("0207460841B023DD93452DA491489270", "24096C2640D508AC697899B8587D61E9", "Bloodpoints", "Survivor", "Rare"),
+def build_source_to_guid_index() -> dict[str, str]:
+    """Skanuje wszystkie pliki DB i zrzuty, mapując SourceString na unikalny GUID Key."""
+    source_to_guid = {}
 
-    # Killer Bloodpoints
-    "tanagerwreath": ("CB666E044F74FE9FFC62CA8CB76FEE26", "1B15086D4431A4469271F4AEFC805409", "Bloodpoints", "Killer", "Common"),
-    "devouttanagerwreath": ("CE3607E84304ADB62DD191B2ED1B0333", "C4C2E3834B6A0CC3556FB3936276CB51", "Bloodpoints", "Killer", "Uncommon"),
-    "ardenttanagerwreath": ("A6BCAED042477507E0AD21957A8E4651", "207A58A241CDEAF7CD6E1691D3D1878D", "Bloodpoints", "Killer", "Rare"),
-    "ravenwreath": ("9B47195F45B15030016B12BE65CA2B3B", "13E7B4E44B624543DB3D4E95A8E88723", "Bloodpoints", "Killer", "Common"),
-    "devoutravenwreath": ("0BCDC03848E1D94CFCE45E99DAA1A6C2", "B8CF810B4D33046D18B04685B78E2F15", "Bloodpoints", "Killer", "Uncommon"),
-    "ardentravenwreath": ("E68B8D4E41484C98628E35A5E5B5E63B", "CC110D5C41423FFBB48A0DA1F107C9CC", "Bloodpoints", "Killer", "Rare"),
-    "spottedowlwreath": ("D9BFE8C349C54D14532B039A72A4EBF8", "2F79941C46C3E2E80FC7479F13A40A7D", "Bloodpoints", "Killer", "Common"),
-    "devoutspottedowlwreath": ("5E62AFCA4074F96C11494589255E04A7", "CD6CC4FA4627FEB450CBB4AEEF76CC05", "Bloodpoints", "Killer", "Uncommon"),
-    "ardentspottedowlwreath": ("47DB469C45BFF089FF4FE6BEBD580B40", "B7ECE091488CAA08821991AC8E3219D3", "Bloodpoints", "Killer", "Rare"),
-    "shrikewreath": ("996A514144372F2BFB4A09950F85A202", "648F1711471A92F0008668949736A0D2", "Bloodpoints", "Killer", "Common"),
-    "devoutshrikewreath": ("35476D92404ED30FB47700B0BC44D0F8", "8E3497E349323CE066B3AB8F55210E7C", "Bloodpoints", "Killer", "Uncommon"),
-    "ardentshrikewreath": ("F8507E7841F90940562D55B9781EE602", "1B0F0E4C4FC296D9827A95A9FC0362D2", "Bloodpoints", "Killer", "Rare"),
-    "survivorpudding": ("F1CC07EB4706EEFD6AD5179B728B1975", "CB3AB28D4C4A7BD11DE78F8FF4BA9580", "Bloodpoints", "Killer", "Uncommon"),
+    def extract_pairs(node):
+        if isinstance(node, dict):
+            key = node.get("Key")
+            src = node.get("SourceString")
+            if (
+                key
+                and src
+                and isinstance(key, str)
+                and isinstance(src, str)
+                and len(key.strip()) >= 16
+            ):
+                source_to_guid[src.strip().upper()] = key.strip()
+            for v in node.values():
+                extract_pairs(v)
+        elif isinstance(node, list):
+            for item in node:
+                extract_pairs(item)
 
-    # Shared Bloodpoints
-    "escapecake": ("2121D13849B39E2F4AF9AA9FCDA0840F", "D9444D2E4CB7EF5076545B8ACA67A57C", "Bloodpoints", "Survivor", "Uncommon"),
-    "hollowshell": ("D3FF6E434BFEB13AFC079488FBBBAE3B", "9A8684224E53DAF9F96898B9996EC629", "Bloodpoints", "All", "Uncommon"),
-    "sealedenvelope": ("D9D0A8FC467914D928E7CBAEF70EC128", "57E01ADC44533E75D2EEFBBE7182E528", "Bloodpoints", "All", "Common"),
-    "bloodypartystreamers": ("A3BCE0CC41B602F09B6A92B7E1CDCB78", "C3D9B2D543D23D2BD4A4209131FAFBA3", "Bloodpoints", "All", "Rare"),
+    # 1. Skanowanie bazy characters_dump
+    for df in BASE_DIR.glob("*dump*.json"):
+        try:
+            with open(df, "r", encoding="utf-8") as f:
+                extract_pairs(json.load(f))
+        except Exception:
+            pass
 
-    # Moris
-    "cypressmementomori": ("B6282AE54C542BC0E1C9DCB5D5C6C685", "41EAF03248385311B0C4BFBAF9A3BC8B", "Memento Mori", "Killer", "Uncommon"),
-    "ivorymementomori": ("887588C046DF46ED104CE6B999CC3B7F", "E11B32044C7EA29BA558778C2652B095", "Memento Mori", "Killer", "Rare"),
-    "ebonymementomori": ("B9E9CFD0487C0D0A8D9F29A440D9BA1E", "EF8E49094B623EE7B87CECB5855DB9D3", "Memento Mori", "Killer", "Ultra Rare"),
+    # 2. Skanowanie folderu DBDCharacters
+    if CHARACTERS_DIR.exists():
+        for jf in CHARACTERS_DIR.rglob("*.json"):
+            try:
+                with open(jf, "r", encoding="utf-8") as f:
+                    extract_pairs(json.load(f))
+            except Exception:
+                pass
 
-    # Wards
-    "whiteward": ("2696459C4431CF10268CB0912E4B7133", "B86AFE7C4060E12A29D8708DDED7A3DF", "Ward", "Survivor", "Very Rare"),
-    "blackward": ("CAA2C2B14013AB0580DEE79297BBB0FD", "A3D1BA1C4C15F9B9ECC4C9A2B6029DB1", "Ward", "Killer", "Very Rare"),
-    "sacrificialward": ("4FBFF0774D4DFDE9E4AF698EBDE51F5B", "CC19E52B44BBF91376E1A5A91224ACE3", "Ward", "All", "Very Rare"),
+    return source_to_guid
 
-    # Luck
-    "chalkpouch": ("10BD2E7E4CFDC5B543D3C9BE9F0D9041", "E90E95AF4CF14EBEB81C4BA6253FFFC7", "Luck", "Survivor", "Common"),
-    "creamchalkpouch": ("E97F107E442F9FA73F1C4EB7532A554A", "E3FDC08745E67CF21D1EEBA9844C701B", "Luck", "Survivor", "Uncommon"),
-    "ivorychalkpouch": ("7369B2314F23D69805906E923C4258FB", "E376E6F843F8B383AC2C5CB6E2070D10", "Luck", "Survivor", "Rare"),
-    "saltpouch": ("D8EF56E745DF3E98EF4CF7AE6FEA775C", "BDC34EE248D93444458C9698AC745CD7", "Luck", "Survivor", "Rare"),
-    "blacksaltstatuette": ("B73A41FE42D05423B29C0EB70E83D04C", "CC8E21014CDDE86408DE05A6110825F7", "Luck", "Survivor", "Very Rare"),
-    "vigosjarofsaltylips": ("6F37DFCA482F6627BD864193F164C877", "9F8BC0A74AE7529BA2E7599026419999", "Luck", "Survivor", "Very Rare"),
 
-    # Shrouds
-    "shroudofunion": ("786F3AE14F442C446CA452BEA4660893", "20473BE642878D32D157F3B5F6C6CC04", "Shroud", "Survivor", "Common"),
-    "vigosshroud": ("F3DFCFBD4A5408D121B66D92EDFDE218", "607DF1154C4F00E880B44BA5B4DE345D", "Shroud", "Survivor", "Rare"),
-    "shroudofseparation": ("B89BAE9D47EDD52B7BD5839C29F81822", "637E4D8249BE19E4A96DAFB613EC44B7", "Shroud", "Killer", "Rare"),
-    "shroudofbinding": ("D37C82C748BA0C05F255DBBA1BCEBD40", "01FFAC0E42C063717208BE893F7D5230", "Shroud", "Survivor", "Very Rare"),
-    "shroudofvanishing": ("0A00192A4947E993D6ACDCBF03F173DC", "C9DAD9F44F2AAC027B65AAA77FC6ED41", "Shroud", "All", "Rare"),
+def load_all_tunables(characters_dir: Path) -> dict[str, str]:
+    """Wczytuje wszystkie pliki *Tunable*.json oraz bazy DB, grupuje poziomy 1/2/3 i normalizuje klucze."""
+    tunables_map = {}
+    tiered_keys = {}
 
-    # Blueprints
-    "bloodiedblueprint": ("608711E840D5505C558F498A92AC0B57", "6E22561942C646829B7665ADB716DB79", "Map Modifications", "Survivor", "Common"),
-    "tornblueprint": ("8D4DFCC3451A2DE757134DB609C63CD6", "B0470AB344AD685EE026EC833B2FAAB1", "Map Modifications", "Survivor", "Common"),
-    "annotatedblueprint": ("66C4181B436D2184B489569EE35A6D6C", "3994FB744A727CE3564486A8329E88DA", "Map Modifications", "All", "Uncommon"),
-    "vigosblueprint": ("F848EE634A1B02B516DB7491AE3F0854", "D566415B4C268481498B99AE13E531DE", "Map Modifications", "All", "Uncommon"),
+    if characters_dir.exists():
+        for json_path in characters_dir.rglob("*.json"):
+            if "tunable" in json_path.name.lower() or "db" in json_path.name.lower():
+                try:
+                    with open(json_path, "r", encoding="utf-8") as f:
+                        content = json.load(f)
 
-    # Map / Fog / Hooks
-    "mouldyoak": ("3579450341F2B14258ACAF943922756E", "38096AE54FE36FE0607994966AECA6CC", "Map Modifications", "Killer", "Common"),
-    "moldyoak": ("3579450341F2B14258ACAF943922756E", "38096AE54FE36FE0607994966AECA6CC", "Map Modifications", "Killer", "Common"),
-    "rottenoak": ("C372993845B25C6789D42588147EBC05", "4B692EF94276A8CEF60EDDAEBA2A16AC", "Map Modifications", "Killer", "Uncommon"),
-    "petrifiedoak": ("83C88607412E832049DEB59EECE4FFCD", "02BFBEFB4FF9CC68940C5C88DE088EF3", "Map Modifications", "Survivor", "Very Rare"),
-    "putridoak": ("6AC0E0E14F44F953DC5F0DB76DCC4468", "E90E95AF4CF14EBEB81C4BA6253FFFC7", "Map Modifications", "Killer", "Very Rare"),
-    "clearreagent": ("BE6BD9F14A577C6873EDBE9F3968C222", "65284D534DDFCCD36E62C69EDABFE08E", "Map Modifications", "All", "Common"),
-    "faintreagent": ("61E1BD594B4E1F1FB21B21A0F9BC0C75", "963986AA483E6A65586A3881D116F3F0", "Map Modifications", "All", "Common"),
-    "hazyreagent": ("F3DFCFBD4A5408D121B66D92EDFDE218", "85274FDB4D2EFE7043D02699289BD837", "Map Modifications", "All", "Uncommon"),
-    "murkyreagent": ("9F8BC0A74AE7529BA2E7599026419999", "432AC59A4B7646E00038E491874FE417", "Map Modifications", "All", "Very Rare"),
-    "tarnishedcoin": ("FDCB951B40AF8D2CE55F6A97491C7B2F", "D129DADA4D7B20AFA7A78488C280769B", "Map Modifications", "Survivor", "Uncommon"),
-    "shinycoin": ("DE19CDDE47BC22FDB51B4C93574A1CA8", "16B5F4BF45C5AC7FE0A027878B3062EC", "Map Modifications", "Survivor", "Very Rare"),
-    "scratchedcoin": ("9E84BDFA4AE25E4CD8E1DC9845BC3DE3", "D129DADA4D7B20AFA7A78488C280769B", "Map Modifications", "Killer", "Uncommon"),
-    "cutcoin": ("65A683644E206385B5F37F8F7E41C7F0", "649EBE674EEECF5AE2B487A8DF334A6F", "Map Modifications", "Killer", "Very Rare"),
+                    rows = {}
+                    if isinstance(content, list) and content:
+                        rows = content[0].get("Rows", {})
+                    elif isinstance(content, dict):
+                        rows = content.get("Rows", {})
 
-    # Realms
-    "azarovskey": ("05A206A44A1E659A1D1FF8842E9BF3F5", "242A50784042AED7D39113925B5DDC0C", "Realm", "All", "Rare"),
-    "grandmascookbook": ("72DFDE394982635B6DFFB4873155DFBA", "AE43EB3243C31F27A4464F885F4F16EF", "Realm", "All", "Rare"),
-    "heartlocket": ("BC17FB14459C51D219C17590C28A8116", "14B10897496D515BA4CE7FB9D935C61D", "Realm", "All", "Rare"),
-    "charredweddingphotograph": ("390B75804ACDECD40772719B5349BA08", "710F53D5443D60C7E1875CBDA1616461", "Realm", "All", "Rare"),
-    "beeftallowmixture": ("C3F8B3914561066EAFE83FA2DF251D5A", "CE91505943697BA38B08DBBA2C92BC00", "Realm", "All", "Rare"),
-    "airlockdoors": ("965DB0EB4D67735BC4F21087F0833B95", "FF827E5546D5CCF15163DEACA1BE118C", "Realm", "All", "Rare"),
-    "alienflora": ("42D932FA4F93BEEAEB4BC49463567D59", "3F43EF9A497D1A25C09566B1973DEDE0", "Realm", "All", "Rare"),
-    "crowseye": ("FEE8586047AE56655EE241B7203E79DF", "E3937F7841B8CEE6D93E1E98ECADE72C", "Realm", "All", "Rare"),
-    "jigsawpiece": ("1CD6BAA34CEBA676766023A139785BC9", "264A24DD4E2AB6EF09070F9EE688FA34", "Realm", "All", "Rare"),
-    "shatteredbottle": ("61E1BD594B4E1F1FB21B21A0F9BC0C75", "710F53D5443D60C7E1875CBDA1616461", "Realm", "All", "Rare"),
-    "stroderealtykey": ("3457D890479F637CD165979C6FE98BCE", "998373DC430E7077D06EE4897F6A00C6", "Realm", "All", "Rare"),
-    "hawkinsnationallaboratoryid": ("AA1187424FF448BCBBCE748A541525C2", "EAAF21C34307A4D59DDAF492D9C94101", "Realm", "All", "Rare"),
-    "shatteredglasses": ("C98E56B6488A0DF16A34A999B0B7FF12", "64C7AF2645252C155D4613B81E371FA1", "Realm", "All", "Rare"),
-    "macmillansphalanxbone": ("890BC6FD462B28966E04A7B8E6FDF477", "4AB56DCE422056A4AEEFB2BC989D0F9C", "Realm", "All", "Rare"),
-    "damagedphoto": ("B0C688564FEFA669527D56B136279E43", "FC597AD845E04CA3CBD53E9C8DFC4D1C", "Realm", "All", "Rare"),
-    "rpdbadge": ("72A590CD461A0BD85FEBD2931D4577FB", "1BCD755540F19F3D9F0FFBB32AC21126", "Realm", "All", "Rare"),
-    "thelastmask": ("A6E5568F4DF5B3A7F7C770923058D4B0", "802969944AECEED4A5D810ABC5D99A2B", "Realm", "All", "Rare"),
-    "marysletter": ("2F8AC6EE476C5BD8EF41A88307DAF6C4", "446D817E41D87DCCE3E33BAEB0CECC25", "Realm", "All", "Rare"),
-    "thepiedpiper": ("EAE90DF945BE28E3166885BCB350567C", "B081888D424E2E886F804696C8DFC57D", "Realm", "All", "Rare"),
-    "ichorousloam": ("3E58D4794BCFEE126DCEB28489BF3DCE", "E5F7F73C490DB746A7F7F0958C86F3C2", "Realm", "All", "Rare"),
-    "yamaokafamilycrest": ("FA6DBBC3405786CDEBC2D49DF798B750", "52A847E94E0A1EF0EE104787284974CC", "Realm", "All", "Rare"),
+                    for k, v in rows.items():
+                        k_clean = k.strip()
+                        val_str = ""
 
-    # Special / Event Offerings
-    "arcanedousingrod": ("74A1B8C047C4328E44C5C088D6F2C240", "C12F53EB4E8FDBBDBF6AC7B25E3C7B9D_DESC", "Special", "All", "Event"),
-    "arcanedowsingrod": ("74A1B8C047C4328E44C5C088D6F2C240", "C12F53EB4E8FDBBDBF6AC7B25E3C7B9D_DESC", "Special", "All", "Event"),
-    "cursedseed": ("44301C71420C2156AF8BAFA429A26A4A", "A032F89342750C36B76013A98B3289C7", "Special", "All", "Event"),
-    "pustulapetals": ("6EEBFF664C5632CD7A48C8B763C4D81D", "A0328B7D4F84CD1A7E3E439E8D89AC87", "Special", "All", "Event"),
-    "redenvelope": ("3DAEB8274B3FD53BD4638782AE34533F", "9EDC662F49B653D0E59BA8A247E6CEC7", "Special", "All", "Event"),
-    "bloodshoteye": ("4847E24C4BD901C46E27299DA9F0042D", "95A92A3B40602CC788CE5185E7F558B1", "Special", "All", "Event"),
-    "bbqinvitation": ("732E164344F571AC014D8B936CA50785", "E7049EC5456FC8CD6C2230A9B0767EFF", "Special", "All", "Event"),
-    "gruesomegateau": ("67156DE04CFEF3EF7A5D20A6E881D299", "08ECAD1A4B7096AB6990B8841FFEC226", "Special", "All", "Event"),
-    "ghastlygateau": ("622E64644EC974DE4D4ECF937DDFBE53", "0D2A6DB345764968BA8BD58439C1E54B", "Special", "All", "Event"),
-    "sacrificialcake": ("5032F1A74152FA1ED5BAEBBA227A597E", "B8C460824C3D9E82842460A97EE81768", "Special", "All", "Event"),
-    "frightfulflan": ("D87E4DC14886E2073998D0819CAEB65C", "FrightfulFlan_Description", "Special", "All", "Event"),
-    "terrormisu": ("E20B8C854291B6B20235C1935629F0DA", "Terrormisu_Description", "Special", "All", "Event"),
-    "screechcobbler": ("9331C07C4E19557C32AC63B66D606E2A", "ScreechCobbler_Description", "Special", "All", "Event"),
-    "toothytorte": ("65D4F9734182963172E4459C66B96D74", "ToothyTorte_Description", "Special", "All", "Event"),
-    "screampie": ("755C4BCB4BA84920E3E1A699313BF503", "CoconutScreamPie_Description", "Special", "All", "Event"),
-    "coconutscreampie": ("755C4BCB4BA84920E3E1A699313BF503", "CoconutScreamPie_Description", "Special", "All", "Event"),
-}
+                        if "ValuesByLevel" in v and isinstance(v["ValuesByLevel"], list):
+                            levels = v["ValuesByLevel"][:3]
+                            formatted = [
+                                str(int(x) if isinstance(x, (int, float)) and x == int(x) else x)
+                                for x in levels
+                            ]
+                            val_str = "/".join(formatted)
+                        elif "Value" in v:
+                            val = v["Value"]
+                            val_str = str(int(val) if isinstance(val, (int, float)) and val == int(val) else val)
 
-SPECIAL_DESCRIPTIONS_OVERRIDE: Dict[str, Dict[str, str]] = {
-    "Frightful Flan": {
-        "en": "It may be a masquerade ball, but there is no masking the foul odour of this quivering yellow mass. Consuming it, however, fills you with vigour.\nGrants +106 % bonus Bloodpoints in all Scoring Categories to all Players.\nCalls upon The Entity for Crown Pillar reveal effects.\n\"Happy Anniversary! We made you this cake/pie/pudding/unspeakable horror.\" — The Dead by Daylight Team",
-        "pl": "Może to i bal maskowy, ale nic nie zamaskuje ohydnego zapachu tej drżącej, żółtej masy. Jej spożycie dodaje jednak wigoru.\nZapewnia wszystkim graczom +106% dodatkowych Punktów Krwi we wszystkich kategoriach.\nWzywa Byt do ujawnienia Filaru Korony w odległości 8 metrów.\n„Wszystkiego najlepszego z okazji rocznicy! Zrobiliśmy dla was ten tort/placek/pudding/niewypowiedziany koszmar”. — Zespół Dead by Daylight",
-        "de": "Es mag ein Maskenball sein, aber der faulige Geruch dieser zitternden gelben Masse lässt sich nicht verbergen. Der Verzehr verleiht jedoch neue Kraft.\nGewährt allen Spielern +106 % Bonus-Blutpunkte in allen Kategorien.\nRuft den Entitus an, um die Aura der Kronsäule zu enthüllen.\n„Alles Gute zum Jubiläum! Wir haben diesen Kuchen/Pudding/unsäglichen Schrecken für dich gebacken.“ — Das Dead by Daylight-Team",
-        "es": "Puede que sea un baile de máscaras, pero no hay máscara que oculte el hedor nauseabundo de esta masa temblorosa. Sin embargo, consumirla te llena de vigor.\nOtorga un +106 % de puntos de sangre adicionales en todas las categorías a todos los jugadores.\nInvoca al Ente para revelar los pilares de corona.\n\"¡Feliz aniversario! Os hemos preparado esta tarta/pastel/púdin/horror indescriptible.\" — El equipo de Dead by Daylight",
-        "ja": "仮面舞踏会とはいえ、この震える黄色い塊の悪臭は隠せない。しかし口にすれば活力が湧いてくる。\n全プレイヤーが全カテゴリーで+106%のボーナスブラッドポイントを獲得する。\nエンティティに祈りを捧げ、クラウンの柱のオーラを表示する。\n「記念日おめでとう！ケーキ/パイ/プリン/名状しがたい恐怖を作りました」 — Dead by Daylight 開発チーム"
-    },
-    "Terrormisu": {
-        "en": "A celebratory dessert to be eaten during the masquerade. Each layer is more horrifying than the last.\nGrants +107 % bonus Bloodpoints in all Categories to all Players.\nReveals the Aura of Masquerade Pillars within 32 metres.\n\"Thanks for celebrating our Anniversary! Don't ask why it's so spongy.\" — The Dead by Daylight Team",
-        "pl": "Świąteczny deser do zjedzenia podczas maskarady. Każda warstwa jest bardziej przerażająca od poprzedniej.\nZapewnia wszystkim graczom +107% dodatkowych Punktów Krwi we wszystkich kategoriach.\nUjawnia aurę Filaru Maskarady w promieniu 32 metrów.\n„Dziękujemy za świętowanie naszej rocznicy! Nie pytajcie, dlaczego jest tak gąbczasty”. — Zespół Dead by Daylight",
-        "de": "Ein festliches Dessert für die Maskerade. Jede Schicht ist noch schrecklicher als die vorherige.\nGewährt allen Spielern +107 % Bonus-Blutpunkte in allen Kategorien.\nEnthüllt die Aura der Maskeradesäulen im Umkreis von 32 Metern.\n„Danke, dass du unser Jubiläum mit uns feierst! Frag nicht, warum es so schwammig ist.“ — Das Dead by Daylight-Team",
-        "es": "Un postre festivo para disfrutar durante la mascarada. Cada capa es más terrorífica que la anterior.\nOtorga un +107 % de puntos de sangre adicionales en todas las categorías a todos los jugadores.\nRevela el aura de los pilares de la mascarada en un radio de 32 metros.\n\"¡Gracias por celebrar nuestro aniversario! No preguntes por qué es tan esponjoso.\" — El equipo de Dead by Daylight",
-        "ja": "仮面舞踏会で食べるお祝いのデザート。どの層も前の層より恐ろしい。\n全プレイヤーが全カテゴリーで+107%のボーナスブラッドポイントを獲得する。\n32メートル以内の仮面舞踏会の柱のオーラを視覚化する。\n「周年を祝ってくれてありがとう！なぜこんなにスポンジ状なのかは聞かないで」 — Dead by Daylight 開発チーム"
-    },
-    "Screech Cobbler": {
-        "en": "If you listen really closely, you can almost hear it screaming for more ice cream.\nGrants +108 % bonus Bloodpoints in all Categories to all Players.\nIncreases Aura-reveal distance of Masquerade Pillars by +8 metres and adds +1 Chest in the Trial.\n\"Happy anniversary! Hope this comfort food isn't too... discomforting.\" — The Dead by Daylight Team",
-        "pl": "Jeśli wsłuchasz się naprawdę uważnie, niemal usłyszysz, jak krzyczy o więcej lodów.\nZapewnia wszystkim graczom +108% dodatkowych Punktów Krwi we wszystkich kategoriach.\nZwiększa zasięg ujawniania aury Filaru Maskarady o +8 metrów i dodaje +1 Skrzynię w Próbie.\n„Wszystkiego najlepszego z okazji rocznicy! Mamy nadzieję, że to danie nie jest zbyt... niepokojące”. — Zespół Dead by Daylight",
-        "de": "Wenn man ganz genau hinhört, kann man es förmlich nach mehr Eiscreme schreien hören.\nGewährt allen Spielern +108 % Bonus-Blutpunkte in allen Kategorien.\nErhöht die Aurareichweite der Maskeradesäulen um +8 Meter und platziert +1 zusätzliche Kiste.\n„Alles Gute zum Jubiläum! Hoffentlich ist dieses Seelentröster-Essen nicht zu... unheimlich.“ — Das Dead by Daylight-Team",
-        "es": "Si escuchas con atención, casi puedes oírlo gritar pidiendo más helado.\nOtorga un +108 % de puntos de sangre adicionales en todas las categorías a todos los jugadores.\nAumenta la distancia de revelación del aura de los pilares de la mascarada en +8 metros y añade +1 cofre en la partida.\n\"¡Feliz aniversario! Esperamos que esta comida reconfortante no sea demasiado... inquietante.\" — El equipo de Dead by Daylight",
-        "ja": "耳を澄ますと、もっとアイスクリームをくれと叫んでいるのが聞こえるようだ。\n全プレイヤーが全カテゴリーで+108%のボーナスブラッドポイントを獲得する。\n仮面舞踏会の柱のオーラ表示距離が+8メートル増加し、試練内のチェストが+1個増加する。\n「周年おめでとう！このソウルフードがあまり...不快でないことを祈ります」 — Dead by Daylight 開発チーム"
-    },
-    "Toothy Torte": {
-        "en": "\"Puts the icing in sacrificing.\"\nGrants +110 % bonus Bloodpoints in all Scoring Categories to all Players.\nReveals the Aura of Banquet Table within 16 metres. Killer starts with max Poison charges; Survivor starts with a Morsel.\n\"Chew fast, or it'll chew you right back. Thanks for celebrating with us!\" — The Dead by Daylight Team",
-        "pl": "„Dodaje wisienkę na torcie poświęcenia”.\nZapewnia wszystkim graczom +110% dodatkowych Punktów Krwi we wszystkich kategoriach.\nUjawnia aurę Stołu Bankietowego w promieniu 16 metrów. Zabójca zaczyna z maksymalną liczbą ładunków Trucizny; Ocalały zaczyna z Kąskiem.\n„Gryź szybko, albo ono ugryzie ciebie. Dziękujemy za wspólne świętowanie!” — Zespół Dead by Daylight",
-        "de": "„Macht das Opfern zu einem zuckersüßen Erlebnis.“\nGewährt allen Spielern +110 % Bonus-Blutpunkte in allen Kategorien.\nEnthüllt die Aura der Festtafel im Umkreis von 16 Metern. Killer starten mit vollen Giftladungen; Überlebende mit einem Bissen.\n„Schnell kauen, sonst kaut es dich! Danke fürs Feiern mit uns!“ — Das Dead by Daylight-Team",
-        "es": "\"Pone la guinda al sacrificio.\"\nOtorga un +110 % de puntos de sangre adicionales en todas las categorías a todos los jugadores.\nRevela el aura de la mesa de banquete en un radio de 16 metros. El asesino comienza con cargas máximas de veneno; el superviviente comienza con un bocado.\n\"Mastica rápido o te morderá a ti. ¡Gracias por celebrar con nosotros!\" — El equipo de Dead by Daylight",
-        "ja": "「犠牲の仕上げにアイシングを」\n全プレイヤーが全カテゴリーで+110%のボーナスブラッドポイントを獲得する。\n16メートル以内の晩餐会のテーブルのオーラを視覚化する。キラーは毒チャージ最大で開始し、生存者は一口分所持して開始する。\n「早く噛まないと噛み返されるぞ。一緒にお祝いしてくれてありがとう！」 — Dead by Daylight 開発チーム"
-    },
-    "Coconut Scream Pie": {
-        "en": "\"A metallic taste overpowers the coconut.\"\nGrants +109 % bonus Bloodpoints in all Scoring Categories to all Players.\nReveals the Aura of Invitation Pillar within 16 metres.\n\"The secret ingredient is love... wait, no, that's blood. Happy Anniversary!\" — The Dead by Daylight Team",
-        "pl": "„Metaliczny posmak dominuje nad kokosem”.\nZapewnia wszystkim graczom +109% dodatkowych Punktów Krwi we wszystkich kategoriach.\nUjawnia aurę Filaru Zaproszenia w promieniu 16 metrów.\n„Sekretnym składnikiem jest miłość... czekaj, nie, to krew. Wszystkiego najlepszego z okazji rocznicy!” — Zespół Dead by Daylight",
-        "de": "„Ein metallischer Geschmack überdeckt die Kokosnuss.“\nGewährt allen Spielern +109 % Bonus-Blutpunkte in allen Kategorien.\nEnthüllt die Aura der Einladungssäule im Umkreis von 16 Metern.\n„Die geheime Zutat ist Liebe... Moment, nein, es ist Blut. Alles Gute zum Jubiläum!“ — Das Dead by Daylight-Team",
-        "es": "\"Un sabor metálico eclipsa al coco.\"\nOtorga un +109 % de puntos de sangre adicionales en todas las categorías a todos los jugadores.\nRevela el aura del pilar de invitación en un radio de 16 metros.\n\"El ingrediente secreto es el amor... espera, no, es sangre. ¡Feliz aniversario!\" — El equipo de Dead by Daylight",
-        "ja": "「金属の味がココナッツを圧倒している」\n全プレイヤーが全カテゴリーで+109%のボーナスブラッドポイントを獲得する。\n16メートル以内の招待の柱のオーラを視覚化する。\n「隠し味は愛...待って、違う、血だ。記念日おめでとう！」 — Dead by Daylight 開発チーム"
-    },
-    "Gruesome Gateau": {
-        "en": "A baked treat commemorating the 3rd Anniversary of Dead by Daylight.\nGrants +103 % bonus Bloodpoints in all Categories to all Players.\n\"Happy 3rd Anniversary!\"",
-        "pl": "Pieczony przysmak upamiętniający 3. rocznicę Dead by Daylight.\nZapewnia wszystkim graczom +103% dodatkowych Punktów Krwi we wszystkich kategoriach.\n„Szczęśliwej 3. rocznicy!”",
-        "de": "Ein gebackenes Vergnügen zum 3. Jubiläum von Dead by Daylight.\nGewährt allen Spielern +103 % Bonus-Blutpunkte in allen Kategorien.\n„Alles Gute zum 3. Jubiläum!“",
-        "es": "Un dulce horneado que conmemora el 3.er aniversario de Dead by Daylight.\nOtorga un +103 % de puntos de sangre adicionales en todas las categorías a todos los jugadores.\n\"¡Feliz 3.er aniversario!\"",
-        "ja": "Dead by Daylightの3周年を記念した焼き菓子。\n全プレイヤーが全カテゴリーで+103%のボーナスブラッドポイントを獲得する。\n「3周年おめでとう！」"
-    },
-    "Ghastly Gateau": {
-        "en": "A horrifying confectionery commemorating the 4th Anniversary of Dead by Daylight.\nGrants +104 % bonus Bloodpoints in all Categories to all Players.\n\"Happy 4th Anniversary!\"",
-        "pl": "Przerażający wyrób cukierniczy upamiętniający 4. rocznicę Dead by Daylight.\nZapewnia wszystkim graczom +104% dodatkowych Punktów Krwi we wszystkich kategoriach.\n„Szczęśliwej 4. rocznicy!”",
-        "de": "Ein schauriges Gebäck zum 4. Jubiläum von Dead by Daylight.\nGewährt allen Spielern +104 % Bonus-Blutpunkte in allen Kategorien.\n„Alles Gute zum 4. Jubiläum!“",
-        "es": "Un dulce espeluznante que conmemora el 4.º aniversario de Dead by Daylight.\nOtorga un +104 % de puntos de sangre adicionales en todas las categorías a todos los jugadores.\n\"¡Feliz 4.º aniversario!\"",
-        "ja": "Dead by Daylightの4周年を記念した恐ろしい菓子。\n全プレイヤーが全カテゴリーで+104%のボーナスブラッドポイントを獲得する。\n「4周年おめでとう！」"
-    },
-    "Sacrificial Cake": {
-        "en": "A moist, bloody cake commemorating the 5th Anniversary of Dead by Daylight.\nGrants +105 % bonus Bloodpoints in all Categories to all Players.\n\"Happy 5th Anniversary!\"",
-        "pl": "Wilgotne, krwawe ciasto upamiętniające 5. rocznicę Dead by Daylight.\nZapewnia wszystkim graczom +105% dodatkowych Punktów Krwi we wszystkich kategoriach.\n„Szczęśliwej 5. rocznicy!”",
-        "de": "Ein saftiger, blutiger Kuchen zum 5. Jubiläum von Dead by Daylight.\nGewährt allen Spielern +105 % Bonus-Blutpunkte in allen Kategorien.\n„Alles Gute zum 5. Jubiläum!“",
-        "es": "Un pastel sangriento que conmemora el 5.º aniversario de Dead by Daylight.\nOtorga un +105 % de puntos de sangre adicionales en todas las categorías a todos los jugadores.\n\"¡Feliz 5.º aniversario!\"",
-        "ja": "Dead by Daylightの5周年を記念した血塗れのケーキ。\n全プレイヤーが全カテゴリーで+105%のボーナスブラッドポイントを獲得する。\n「5周年おめでとう！」"
-    },
-    "Cursed Seed": {
-        "en": "A corrupt seed planted during The Midnight Grove event.\nCalls upon The Entity to spawn extra event generators and hooks, granting bonus Bloodpoints.",
-        "pl": "Skażone nasiono zasadzone podczas wydarzenia Północny Gaj.\nWzywa Byt do utworzenia dodatkowych generatorów i haków wydarzenia, przyznając dodatkowe Punkty Krwi.",
-        "de": "Ein verdorbener Samen, der während des Events „Der Mitternachtshain“ gepflanzt wurde.\nRuft den Entitus an, um zusätzliche Event-Generatoren und Haken zu spawnen, und gewährt Bonus-Blutpunkte.",
-        "es": "Una semilla corrupta plantada durante el evento La arboleda de medianoche.\nInvoca al Ente para generar generadores y ganchos de evento adicionales, otorgando puntos de sangre adicionales.",
-        "ja": "ミッドナイト・グローブイベント中に植えられた穢れた種。\nエンティティに祈りを捧げ、追加のイベント発電機とフックを生成し、ボーナスブラッドポイントを獲得する。"
-    },
-    "Pustula Petals": {
-        "en": "Fragile petals harvested from the Pustula flower during The Eternal Blight.\nCalls upon The Entity to spawn extra event hooks and generators, granting huge Bloodpoint multipliers.",
-        "pl": "Kruche płatki zebrane z kwiatu Pustuły podczas Wiecznego Zarazy.\nWzywa Byt do utworzenia dodatkowych haków i generatorów wydarzenia, przyznając ogromne mnożniki Punktów Krwi.",
-        "de": "Zarte Blütenblätter der Pustelblume während der Ewigen Fäule.\nRuft den Entitus an, um zusätzliche Event-Haken und Generatoren zu spawnen, was enorme Blutpunkt-Multiplikatoren gewährt.",
-        "es": "Pétalos frágiles recolectados de la flor de pústula durante La plaga eterna.\nInvoca al Ente para generar ganchos y generadores de evento adicionales, otorgando grandes multiplicadores de puntos de sangre.",
-        "ja": "常しえの胴枯れ中に採取された胴枯れ病の花の儚い花弁。\nエンティティに祈りを捧げ、追加のイベントフックと発電機を生成し、莫大なブラッドポイント倍率を獲得する。"
-    },
-    "BBQ Invitation": {
-        "en": "An invitation to the Scorching Summer BBQ event.\nCalls upon The Entity to spawn extra event Margarita machines and Grill hooks, granting bonus Bloodpoints.",
-        "pl": "Zaproszenie na wydarzenie Upalne Letnie BBQ.\nWzywa Byt do utworzenia dodatkowych maszyn Margarity i haków do grilla, przyznając dodatkowe Punkty Krwi.",
-        "de": "Eine Einladung zum Sengenden Sommer-BBQ-Event.\nRuft den Entitus an, um zusätzliche Margarita-Maschinen und Grill-Haken zu spawnen, was Bonus-Blutpunkte gewährt.",
-        "es": "Una invitación al evento Barbacoa del verano abrasador.\nInvoca al Ente para generar máquinas de margaritas y ganchos de barbacoa adicionales, otorgando puntos de sangre adicionales.",
-        "ja": "灼熱のサマーバーベキューイベントへの招待状。\nエンティティに祈りを捧げ、追加のマルガリータマシンとグリル型フックを生成し、ボーナスブラッドポイントを獲得する。"
+                        if val_str:
+                            norm_key = k_clean.lower().replace("tunable.", "").replace("_", ".")
+                            norm_key_nozero = re.sub(r"([sk])0+([0-9]+)", r"\1\2", norm_key)
+
+                            # Check if tiered key e.g. S53P01_HasteValue1 / S53P01_HasteValue2
+                            m = re.match(r"^(.*?)[_.]?([123])$", norm_key)
+                            if m:
+                                base_key = m.group(1).rstrip("._")
+                                lvl = int(m.group(2))
+                                tiered_keys.setdefault(base_key, {})[lvl] = val_str
+                                base_nozero = re.sub(r"([sk])0+([0-9]+)", r"\1\2", base_key)
+                                tiered_keys.setdefault(base_nozero, {})[lvl] = val_str
+                            else:
+                                for k_alias in [norm_key, norm_key_nozero]:
+                                    tunables_map[k_alias] = val_str
+                                    tunables_map[k_alias.replace(".", "_")] = val_str
+                                    tunables_map[re.sub(r"[^a-z0-9]", "", k_alias)] = val_str
+                except Exception:
+                    continue
+
+    # Merge tiered keys (e.g. 1/2/3 -> val1/val2/val3)
+    for base_key, levels in tiered_keys.items():
+        if len(levels) >= 2:
+            combined = "/".join([levels[i] for i in sorted(levels.keys())])
+            tunables_map[base_key] = combined
+            tunables_map[base_key.replace(".", "_")] = combined
+            tunables_map[re.sub(r"[^a-z0-9]", "", base_key)] = combined
+
+    # Dynamic loader for S054 (Aurora), K044 (The Judgment), and all character PerkTunablesDB.json files
+    for char_dir in characters_dir.iterdir():
+        if not char_dir.is_dir():
+            continue
+        pt_file = char_dir / "PerkTunablesDB.json"
+        if not pt_file.exists():
+            continue
+        try:
+            with open(pt_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            rows = data[0].get("Rows", {}) if isinstance(data, list) and data else {}
+            # S054 dynamic resolution from actual game file
+            if "S054P01_HealingProgressGained1" in rows:
+                heal_prog = "/".join([str(int(rows[f"S054P01_HealingProgressGained{i}"]["Value"] * 100)) for i in [1, 2, 3] if f"S054P01_HealingProgressGained{i}" in rows])
+                tunables_map["s054p01.healprogress"] = heal_prog
+                tunables_map["s54p01.healprogress"] = heal_prog
+                tunables_map["s054p01.tokensgained"] = "1"
+                tunables_map["s54p01.tokensgained"] = "1"
+            if "S054P02_SurvivorAuraRevealDuration" in rows:
+                dur = str(int(rows["S054P02_SurvivorAuraRevealDuration"]["Value"]))
+                tunables_map["s054p02.survivorauraduration"] = dur
+                tunables_map["s54p02.survivorauraduration"] = dur
+            if "S054P02_OtherSurvivorsAuraRevealDuration1" in rows:
+                o_dur = "/".join([str(int(rows[f"S054P02_OtherSurvivorsAuraRevealDuration{i}"]["Value"])) for i in [1, 2, 3] if f"S054P02_OtherSurvivorsAuraRevealDuration{i}" in rows])
+                tunables_map["s054p02.othersurvivorauraduration"] = o_dur
+                tunables_map["s54p02.othersurvivorauraduration"] = o_dur
+            if "S054P03_RegressionSlowingSpeed" in rows:
+                regr = str(int(rows["S054P03_RegressionSlowingSpeed"]["Value"] * 100))
+                tunables_map["s054p03.regressionmodifier"] = regr
+                tunables_map["s54p03.regressionmodifier"] = regr
+            if "S054P03_RepairSpeedBonus1" in rows:
+                rep = "/".join([str(int(rows[f"S054P03_RepairSpeedBonus{i}"]["Value"] * 100)) for i in [1, 2, 3] if f"S054P03_RepairSpeedBonus{i}" in rows])
+                tunables_map["s054p03.repairspeedmodifier"] = rep
+                tunables_map["s54p03.repairspeedmodifier"] = rep
+
+            # K044 dynamic resolution from actual game file
+            if "K044P01_ObsessionAuraRevealCheckInterval" in rows:
+                t_val = str(int(rows["K044P01_ObsessionAuraRevealCheckInterval"]["Value"]))
+                tunables_map["k044p01.timer"] = t_val
+                tunables_map["k44p01.timer"] = t_val
+            if "K044P01_ObsessionAuraRevealMinDistance1" in rows:
+                d_val = str(int(rows["K044P01_ObsessionAuraRevealMinDistance1"]["Value"] / 100))
+                tunables_map["k044p01.distance"] = d_val
+                tunables_map["k44p01.distance"] = d_val
+            if "K044P01_ObsessionAuraRevealDuration1" in rows:
+                dur_list = []
+                for i in [1, 2, 3]:
+                    if f"K044P01_ObsessionAuraRevealDuration{i}" in rows:
+                        v = rows[f"K044P01_ObsessionAuraRevealDuration{i}"]["Value"]
+                        dur_list.append(str(int(v)) if v == int(v) else str(v))
+                dur_str = "/".join(dur_list)
+                tunables_map["k044p01.auraduration"] = dur_str
+                tunables_map["k44p01.auraduration"] = dur_str
+            if "K044P02_AlertRange" in rows:
+                ar_val = str(int(rows["K044P02_AlertRange"]["Value"] / 100))
+                tunables_map["k044p02.hasterange"] = ar_val
+                tunables_map["k44p02.hasterange"] = ar_val
+            if "K044P02_HasteCapValue1" in rows:
+                cap = "/".join([str(int(rows[f"K044P02_HasteCapValue{i}"]["Value"] * 100)) for i in [1, 2, 3] if f"K044P02_HasteCapValue{i}" in rows])
+                tunables_map["k044p02.hastecap"] = cap
+                tunables_map["k44p02.hastecap"] = cap
+            if "K044P03_RegressionModifierMultiplier" in rows:
+                rm_val = str(int(rows["K044P03_RegressionModifierMultiplier"]["Value"]))
+                tunables_map["k044p03.fasterregression"] = rm_val
+                tunables_map["k44p03.fasterregression"] = rm_val
+        except Exception:
+            continue
+
+    # Supplemental dictionary of any non-Unreal row mappings (e.g. Trapper, General, etc.)
+    NAMED_TUNABLES_DICT = {
+        # --- K01 Trapper ---
+        "k01p01.skillcheckoddsincrease": "6/8/10",
+        "k01p01.successzonesizepenalty": "40/50/60",
+        "k01p02.actionspeed": "10/15/20",
+        "k01p03.haste": "6/12/18",
+        "k01p03.terrorradiusincreasesize": "6/8/12",
+
+        # --- Other Killers ---
+        "k04p03.aurarevealdistance": "28",
+        "k06p01.tokenslostonhit": "2",
+        "k06p02.obsessionactionspeedbonus": "33/40/47",
+        "k06p03.chargegainedcooldown": "120",
+        "k06p03.tokenslostonaction": "1",
+        "k06p03.haste": "5",
+        "k09p01.distancethreshold": "16",
+        "k09p01.triggertime": "90/60/30",
+        "k09p01.hinderedduration": "30",
+        "k09p01.hindered": "5/10/15",
+        "k09p02.mindistancefromhook": "32",
+        "k09p02.aurarevealduration": "15",
+        "k09p03.itemsrevealdistance": "32",
+        "k11p01.aurarevealdistance": "36/40/44",
+        "k16p01.cooldown": "60",
+        "k17p01.affecteddistance": "32",
+        "k17p01.regression": "8",
+        "k17p03.lingerduration": "4/5/6",
+        "k23p03.gateblockdurationpertoken": "6/8/10",
+        "k25p01.generatorblockduration": "30",
+        "k25p02.totemaurarevealdistance": "16",
+        "k25p02.totemblockduration": "90",
+        "k25p03.mangledhemorrhageduration": "20/25/30",
+        "k25p03.actionspeeddebuff": "10/13/16",
+        "k26p01.finalgeneratorblockduration": "20/25/30",
+        "k26p01.aurarevealduration": "6",
+        "k26p02.generatorregression": "9/12/15",
+        "k26p03.maxtokens": "4",
+        "k31p02.range": "16",
+        "k31p02.revealduration": "4/5/6",
+        "k35p03.cooldown": "40/35/30",
+        "k38p01.cooldown": "60/50/40",
+        "k39p02.bonuspertoken": "2/3/4",
+        "k43p01.distancetosurvivors": "16",
+        "k43p01.uniquesurvivorstohook": "4",
+        "k43p01.hinderedvalue": "3/4/5",
+        "k43p02.starttrialundetectableduration": "30",
+        "k43p03.tokensmaximum": "3",
+        "k43p03.tokensgained": "1",
+        "k43p03.cooldown": "60/50/40",
+        "k43p03.hastevalue": "6/8/10",
+
+        # --- Other Survivors ---
+        "s05p01.fallstaggerreduction": "75",
+        "s05p01.fallgruntreduction": "100",
+        "s08p03.recoverextraspeed": "35/40/45",
+        "s12p03.maxtokens": "3",
+        "s12p03.bonusprogress": "1/1.5/2",
+        "s12p03.tokensspent": "1",
+        "s13p03.hookaurablockrange": "48/56/64",
+        "s14p03.progressionbonuspertoken": "1",
+        "s14p03.tokensperskillcheck": "1",
+        "s15p03.hiddenduration": "6/8/10",
+        "s16p03.exhaustedduration": "60/50/40",
+        "s17p03.aurarevealdistance": "24",
+        "s17p03.tokensneeded": "3",
+        "s18p01.haste": "7",
+        "s18p01.hasteduration": "6/8/10",
+        "s18p01.stealthduration": "6/8/10",
+        "s18p01.aurarevealduration": "6/8/10",
+        "s18p02.pausetimer": "26/30/34",
+        "s18p02.pausedistance": "16",
+        "s18p03.requiredhealthstate": "1",
+        "s18p03.durationofheal": "20",
+        "s24p01.chestsearchspeedbonus": "40/60/80",
+        "s24p01.maxrummagesperchest": "1",
+        "s25p01.bonuspertoken": "4/5/6",
+        "s26p01.stackablecleansespeed": "8/9/10",
+        "s26p01.aurarevealduration": "4",
+        "s29p02.aurarevealduration": "6/8/10",
+        "s29p02.tokensspentpermiss": "1",
+        "s35p03.lingerduration": "20/25/30",
+        "s37p03.rummages": "1",
+        "s38p02.extraaurarevealduration": "6/7/8",
+        "s38p02.cooldown": "60",
+        "s38p03.hasteduration": "4/5/6",
+        "s42p02.highrollbonus": "15",
+        "s42p02.effectduration": "15",
+        "s42p02.cooldown": "110/100/90",
+        "s43p03.genchargesremoved": "60/50/40",
+        "s49p01.maxtokens": "3",
+        "s49p01.healingspeedincrease": "30/40/50",
+        "s49p02.cooldown": "60/50/40",
+        "s51p02.aurarevealduration": "3/4/5",
+        "s52p01.maxtokens": "3",
+        "s52p01.tokenspergenerator": "1",
+        "s52p01.actionspeedbuff": "6/8/10",
+        "s52p02.effectduration": "10/12/14",
+        "s52p03.palletwindowauracount": "1/2/3",
+        "s52p03.actionspeedbuff": "20/25/30",
+        "s52p03.cooldown": "60/50/40",
+        "s53p01.hastevalue": "10/12.5/15",
+        "s53p01.cooldownduration": "60",
+        "s53p01.palletblockduration": "60",
+        "s53p01.hasteduration": "3",
+        "s53p02.totemblesscleanserequirement": "1",
+        "s53p02.permanenthealingvalue": "12/14/16",
+        "s53p02.permanentchargesonhealing": "12/14/16",
+        "s53p03.traillifetime": "10",
+        "s53p03.trailactorlifetime": "10",
+        "s53p03.statuslinger": "3/4/5",
+        "s53p03.elusivelingerduration": "3/4/5",
+
+        # --- General Survivor Perks ---
+        "sg_small_game.tokenspertotem": "1",
+        "sg_small_game.maxtokens": "5",
+        "sg_small_game.perkeffectdistance": "8/10/12",
+        "sg_small_game.detectionconeangle": "45",
+        "sg_small_game.coneanglereduction": "5",
+        "sg_small_game.cooldown": "14/12/10",
+        "sg_kindred.aurarevealdistance": "8/12/16",
+        "sg_slippery_meat.extraattempts": "3",
+        "sg_slippery_meat.hookescapechance": "2/3/4",
+        "sg_well_make_it.healingspeedincrease": "100",
+        "sg_well_make_it.duration": "30/60/90",
+        "sg_deja_vu.generatorsshown": "3",
+        "sg_deja_vu.repairspeed": "4/5/6",
+        "sg_premonition.perkeffectdistance": "36",
+        "sg_premonition.activationangle": "45",
+        "sg_premonition.cooldown": "60/45/30",
+        "sg_dark_sense.aurarevealdistance": "24",
+        "sg_dark_sense.aurarevealduration": "5/7/10",
+        "sg_lightweight.scratchmarkstimereduction": "3/4/5",
+        "sg_no_one_left_behind.actionspeed": "30/40/50",
+        "sg_no_one_left_behind.increasedhaste": "7",
+        "sg_plunderers_instinct.chestaurarevealdistance": "16/24/32",
+        "sg_plunderers_instinct.modifychestrarity": "Slightly/Moderately/Considerably",
+        "sg_resilience.actionspeed": "3/6/9",
+        "sg_hope.haste": "5/6/7",
+        "sg_spine_chill.range": "36",
+        "sg_spine_chill.actionspeed": "2/4/6",
+        "sg_this_is_not_happening.greatzonesizebonus": "10/20/30",
+
+        # --- General Killer Perks ---
+        "kg_no_one_escapes_death.haste": "2/3/4",
+        "kg_no_one_escapes_death.aurarevealstartrange": "4",
+        "kg_no_one_escapes_death.aurarevealendrange": "24",
+        "kg_no_one_escapes_death.aurasizeincreasedelay": "30",
+        "kg_bitter_murmur.aurarevealrange": "16",
+        "kg_bitter_murmur.aurarevealduration": "5",
+        "kg_bitter_murmur.aurarevealendgameduration": "5/7/10",
+        "kg_deerstalker.revealduration": "10/12/14",
+        "kg_deerstalker.revealtimeintervals": "30",
+        "kg_distressing.terrorradiusincreasesize": "22/24/26",
+        "kg_hex_thrill_of_the_hunt.tokenspertotem": "1",
+        "kg_hex_thrill_of_the_hunt.actionspeedreductionpertoken": "8/9/10",
+        "kg_insidious.timetoactivate": "4/3/2",
+        "kg_iron_grasp.wigglestrengthreduction": "75",
+        "kg_iron_grasp.wiggletimeincrease": "4/8/12",
+        "kg_monstrous_shrine.range": "24",
+        "kg_monstrous_shrine.fasterprogress": "10/15/20",
+        "kg_sloppy_butcher.duration": "60/75/90",
+        "kg_sloppy_butcher.hemmorhageboost": "25",
+        "kg_spies_from_the_shadows.notificationrange": "20/28/36",
+        "kg_spies_from_the_shadows.cooldown": "5",
+        "kg_unrelenting.attackmisscooldownreduction": "20/25/30",
+        "kg_whispers.rangetosurvivors": "48/40/32",
     }
+
+    for mk, mv in NAMED_TUNABLES_DICT.items():
+        tunables_map[mk] = mv
+        tunables_map[mk.replace(".", "_")] = mv
+        tunables_map[re.sub(r"[^a-z0-9]", "", mk)] = mv
+
+    return tunables_map
+
+
+def build_keyword_dictionaries(
+    dump_data: dict,
+    target_lang_map: dict[str, str],
+    en_lang_map: dict[str, str],
+    source_to_guid: dict[str, str],
+) -> tuple[dict[str, str], dict[str, str]]:
+    """
+    Dynamicznie wyszukuje i mapuje wszystkie słowa kluczowe ({Keyword.X}) oraz
+    ich odpowiedniki językowe z en.json i target_lang.json BEZ ŻADNEGO HARDCODOWANIA.
+    """
+    target_keywords = {}
+    en_keywords = {}
+
+    all_tokens: Set[str] = set()
+
+    # Skanowanie całego dump_data oraz plików językowych
+    def scan_tokens(node):
+        if isinstance(node, dict):
+            for v in node.values():
+                scan_tokens(v)
+        elif isinstance(node, list):
+            for item in node:
+                scan_tokens(item)
+        elif isinstance(node, str):
+            for m in re.finditer(r"\{Keyword\.([a-zA-Z0-9_]+)\}", node, re.IGNORECASE):
+                all_tokens.add(m.group(1).strip())
+
+    scan_tokens(dump_data)
+    for v in en_lang_map.values():
+        if isinstance(v, str):
+            for m in re.finditer(r"\{Keyword\.([a-zA-Z0-9_]+)\}", v, re.IGNORECASE):
+                all_tokens.add(m.group(1).strip())
+    for v in target_lang_map.values():
+        if isinstance(v, str):
+            for m in re.finditer(r"\{Keyword\.([a-zA-Z0-9_]+)\}", v, re.IGNORECASE):
+                all_tokens.add(m.group(1).strip())
+
+    # Dla każdego tokena dynamicznie odnajdź GUID w pliku en.json
+    for raw_token in all_tokens:
+        spaced_token = re.sub(r"([a-z])([A-Z])", r"\1 \2", raw_token).strip()
+        candidates = [
+            raw_token.lower(),
+            spaced_token.lower(),
+            raw_token.upper(),
+            f"KEYWORD_{raw_token.upper()}_NAME",
+            f"KEYWORDS_{raw_token.upper()}_NAME",
+            f"KEYWORD_{spaced_token.upper().replace(' ', '_')}_NAME",
+        ]
+
+        found_guid = None
+
+        # A. Sprawdzenie w source_to_guid
+        for cand in candidates:
+            if cand in source_to_guid:
+                found_guid = source_to_guid[cand]
+                break
+
+        # B. Sprawdzenie bezpośrednio po tekście angielskim w en_lang_map
+        if not found_guid:
+            for guid, en_text in en_lang_map.items():
+                en_clean = en_text.strip().lower()
+                if en_clean == raw_token.lower() or en_clean == spaced_token.lower():
+                    found_guid = guid
+                    break
+
+        if found_guid:
+            en_val = en_lang_map.get(found_guid)
+            target_val = target_lang_map.get(found_guid)
+
+            if en_val:
+                en_keywords[raw_token.upper()] = en_val
+                en_keywords[spaced_token.upper()] = en_val
+            if target_val:
+                target_keywords[raw_token.upper()] = target_val
+                target_keywords[spaced_token.upper()] = target_val
+        else:
+            en_keywords[raw_token.upper()] = spaced_token
+            target_keywords[raw_token.upper()] = spaced_token
+
+    return target_keywords, en_keywords
+
+
+INPUT_ACTION_TRANSLATIONS = {
+    "en": {
+        "ACTIVATABLEBUTTON1": "Active Ability Button 1",
+        "ACTIVATABLEBUTTON2": "Active Ability Button 2",
+        "POWER": "Power Button",
+        "SECONDARYPOWER": "Secondary Power Button",
+        "ACTIONSURVIVOR": "Action Button",
+        "USEITEM": "Use Item Button",
+        "PICKUP": "Pick Up Button",
+        "PICKUPITEM": "Pick Up Button",
+        "ATTACK": "Attack Button",
+    },
+    "pl": {
+        "ACTIVATABLEBUTTON1": "przycisk zdolności aktywnej 1",
+        "ACTIVATABLEBUTTON2": "przycisk zdolności aktywnej 2",
+        "POWER": "przycisk mocy",
+        "SECONDARYPOWER": "przycisk mocy dodatkowej",
+        "ACTIONSURVIVOR": "przycisk akcji",
+        "USEITEM": "przycisk użycia przedmiotu",
+        "PICKUP": "przycisk podniesienia",
+        "PICKUPITEM": "przycisk podniesienia",
+        "ATTACK": "przycisk ataku",
+    },
+    "de": {
+        "ACTIVATABLEBUTTON1": "Fähigkeits-Taste 1",
+        "ACTIVATABLEBUTTON2": "Fähigkeits-Taste 2",
+        "POWER": "Krafttaste",
+        "SECONDARYPOWER": "Sekundärkrafttaste",
+        "ACTIONSURVIVOR": "Aktionstaste",
+        "USEITEM": "Gegenstand-Taste",
+        "PICKUP": "Aufhebentaste",
+        "PICKUPITEM": "Aufhebentaste",
+        "ATTACK": "Angriffstaste",
+    },
+    "es": {
+        "ACTIVATABLEBUTTON1": "botón de la habilidad activa 1",
+        "ACTIVATABLEBUTTON2": "botón de la habilidad activa 2",
+        "POWER": "botón de poder",
+        "SECONDARYPOWER": "botón de poder secundario",
+        "ACTIONSURVIVOR": "botón de acción",
+        "USEITEM": "botón de usar objeto",
+        "PICKUP": "botón de recoger",
+        "PICKUPITEM": "botón de recoger",
+        "ATTACK": "botón de ataque",
+    },
+    "ja": {
+        "ACTIVATABLEBUTTON1": "アビリティボタン1",
+        "ACTIVATABLEBUTTON2": "アビリティボタン2",
+        "POWER": "能力ボタン",
+        "SECONDARYPOWER": "第2能力ボタン",
+        "ACTIONSURVIVOR": "アクションボタン",
+        "USEITEM": "アイテム使用ボタン",
+        "PICKUP": "拾うボタン",
+        "PICKUPITEM": "拾うボタン",
+        "ATTACK": "攻撃ボタン",
+    },
 }
 
 
-ITEMS_MASTER_GUIDS: Dict[str, Tuple[str, str, str]] = {
-    # Firecrackers
-    "chinesefirecracker": ("16EF07C24D3272AF77AAE086C65B5362", "16EF07C24D3272AF77AAE086C65B5362", "Firecracker"),
-    "thirdyearpartystarter": ("A535F33146FE34C6270026913050240C", "A535F33146FE34C6270026913050240C", "Firecracker"),
-    "winterpartystarter": ("1AC4AF774C25C01AD31C6FBC07FC8E01", "F2438C154F0A4320F6D4088B599692BB", "Firecracker"),
+def build_perk_level_tunables_map(char_dir: Path) -> dict[str, list[str]]:
+    """Indeksuje wartości tierów PerkLevelTunables ze wszystkich plików PerkDB.json."""
+    pt_map = {}
+    for p in char_dir.glob("**/PerkDB.json"):
+        try:
+            with open(p, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            perk_rows = []
+            for row in data:
+                for k, v in row.get("Rows", {}).items():
+                    perk_rows.append((k, v))
 
+            for idx, (k, v) in enumerate(perk_rows):
+                levels = v.get("PerkLevelTunables", [])
+                if levels:
+                    num_params = max(len(l.get("Tunables", [])) for l in levels)
+                    param_values = []
+                    for p_idx in range(num_params):
+                        vals = []
+                        for l in levels:
+                            t_list = l.get("Tunables", [])
+                            if p_idx < len(t_list):
+                                raw_val = str(t_list[p_idx]).strip()
+                                try:
+                                    f_val = float(raw_val)
+                                    if f_val == int(f_val):
+                                        vals.append(str(int(f_val)))
+                                    else:
+                                        vals.append(str(f_val))
+                                except ValueError:
+                                    vals.append(raw_val)
+                            else:
+                                vals.append("")
+                        if len(set(vals)) == 1:
+                            param_values.append(vals[0])
+                        else:
+                            param_values.append("/".join(vals))
+
+                    clean_k = k.replace("PERK_", "").replace("Perk_", "").replace("_", "")
+                    cid = p.parent.name.upper()
+                    cid_nozero = re.sub(r"([SK])0+([0-9]+)", r"\1\2", cid)
+                    perk_code = f"{cid}P0{idx+1}"
+                    perk_code_nozero = f"{cid_nozero}P0{idx+1}"
+
+                    for k_form in [
+                        k,
+                        k.upper(),
+                        clean_k,
+                        clean_k.upper(),
+                        re.sub(r"[^a-zA-Z0-9]", "", k).upper(),
+                        perk_code,
+                        perk_code.upper(),
+                        perk_code_nozero,
+                        perk_code_nozero.upper(),
+                    ]:
+                        pt_map[k_form] = param_values
+        except Exception:
+            pass
+    return pt_map
+
+
+def substitute_all_tokens(
+    text: str,
+    tunables: dict[str, str],
+    target_keywords: dict[str, str],
+    en_keywords: dict[str, str],
+    lang_code: str = "en",
+    pos_tunables: Optional[List[str]] = None,
+) -> str:
+    """Podmienia tokeny {0}, {1}, {Keyword.X}, {Input.X}, literały <b>EnglishKeyword</b> oraz zmienne tunables."""
+    if not text or not isinstance(text, str):
+        return text
+
+    # 1. Podmiana pozycyjnych tunables {0}, {1}, {2}, {3}
+    if pos_tunables:
+        for idx, val in enumerate(pos_tunables):
+            text = text.replace(f"{{{idx}}}", val)
+            text = text.replace(f"{{{{{idx}}}}}", val)
+
+    # 2. Podmiana {Keyword.Nazwa} na zlokalizowany termin
+    def kw_replace(match):
+        kw_tag = match.group(1).strip().upper()
+        word = target_keywords.get(
+            kw_tag, en_keywords.get(kw_tag, match.group(1))
+        )
+        return f"<b>{word}</b>"
+
+    text = re.sub(
+        r"\{Keyword\.([a-zA-Z0-9_]+)\}", kw_replace, text, flags=re.IGNORECASE
+    )
+
+    # 3. Podmiana literałów <b>EnglishKeyword</b> na zlokalizowany termin (np. <b>Haste</b> -> <b>Pośpiech</b>)
+    for tag, en_word in en_keywords.items():
+        if tag in target_keywords:
+            target_word = target_keywords[tag]
+            if en_word and target_word and en_word.lower() != target_word.lower():
+                pattern = re.compile(
+                    rf"<b>\s*{re.escape(en_word)}\s*</b>", re.IGNORECASE
+                )
+                text = pattern.sub(f"<b>{target_word}</b>", text)
+
+    # 4. Podmiana akcji sterowania {Input.X}
+    def input_replace(match):
+        tok = match.group(1).strip().upper()
+        lang_inputs = INPUT_ACTION_TRANSLATIONS.get(
+            lang_code.lower(), INPUT_ACTION_TRANSLATIONS["en"]
+        )
+        return lang_inputs.get(tok, match.group(0))
+
+    text = re.sub(
+        r"\{Input\.([a-zA-Z0-9_]+)\}", input_replace, text, flags=re.IGNORECASE
+    )
+
+    # 5. Podmiana procentowych tunables: {Tunable.X%} lub {Tunable.X}% lub {X%} lub {X}%
+    def format_pct_val(val_str: str) -> str:
+        if "/" in val_str:
+            parts = val_str.split("/")
+            pct_parts = []
+            for p in parts:
+                try:
+                    f_p = float(p)
+                    if f_p <= 1.0:
+                        f_p *= 100
+                    pct_parts.append(str(int(f_p) if f_p == int(f_p) else f_p))
+                except ValueError:
+                    pct_parts.append(p)
+            return f"{'/'.join(pct_parts)}%"
+        else:
+            try:
+                f_val = float(val_str)
+                if f_val <= 1.0:
+                    f_val *= 100
+                return f"{int(f_val) if f_val == int(f_val) else f_val}%"
+            except ValueError:
+                return f"{val_str}%"
+
+    def tunable_pct_replace(match):
+        raw_token = match.group(1).strip()
+        norm_token = raw_token.lower().replace("tunable.", "").replace("_", ".")
+        alphanumeric_token = re.sub(r"[^a-z0-9]", "", norm_token)
+
+        val = tunables.get(
+            norm_token,
+            tunables.get(
+                norm_token.replace(".", "_"),
+                tunables.get(alphanumeric_token, f"{{{raw_token}}}"),
+            ),
+        )
+
+        if val != f"{{{raw_token}}}":
+            return format_pct_val(val)
+        return f"{{{raw_token}}}%"
+
+    text = re.sub(
+        r"\{((?:Tunable\.)?[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)+)\%\}",
+        tunable_pct_replace,
+        text,
+    )
+    text = re.sub(
+        r"\{((?:Tunable\.)?[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)+)\}[\s\u00a0]*\%",
+        tunable_pct_replace,
+        text,
+    )
+
+    # 6. Podmiana standardowych tunables: {Tunable.X} lub {X.Y}
+    def tunable_replace(match):
+        raw_token = match.group(1).strip()
+        norm_token = raw_token.lower().replace("tunable.", "").replace("_", ".")
+        alphanumeric_token = re.sub(r"[^a-z0-9]", "", norm_token)
+
+        return tunables.get(
+            norm_token,
+            tunables.get(
+                norm_token.replace(".", "_"),
+                tunables.get(alphanumeric_token, f"{{{raw_token}}}"),
+            ),
+        )
+
+    text = re.sub(
+        r"\{((?:Tunable\.)?[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)+)\}",
+        tunable_replace,
+        text,
+    )
+
+    # 7. Fallback: Jeśli jakiekolwiek tokeny {Tunable...} pozostały i mamy pos_tunables
+    if pos_tunables:
+        remaining_toks = []
+        for m in re.finditer(r"\{((?:Tunable\.)?[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)+)\%?\}", text):
+            tok_str = m.group(0)
+            if tok_str not in remaining_toks:
+                remaining_toks.append(tok_str)
+
+        for idx, tok_str in enumerate(remaining_toks):
+            if idx < len(pos_tunables):
+                val = pos_tunables[idx]
+                text = text.replace(tok_str, val)
+            elif len(pos_tunables) == 1:
+                text = text.replace(tok_str, pos_tunables[0])
+
+    return sanitize_text(text)
+
+
+def query_translation(
+    node: dict,
+    trans_map: dict[str, str],
+    source_to_guid: dict[str, str],
+    candidates: Optional[List[str]] = None,
+    trans_map_upper: Optional[dict[str, str]] = None,
+    is_name: bool = False,
+) -> Optional[str]:
+    """Wyszukuje przetłumaczony tekst po Key GUID, SourceString lub predefiniowanych kandydatach."""
+    if not isinstance(node, dict):
+        return None
+
+    def valid_res(v: str) -> bool:
+        if not v or v.startswith("@#"):
+            return False
+        if is_name and (len(v) > 80 or "\n" in v):
+            return False
+        return True
+
+    # A. Bezpośrednio po Key (GUID)
+    key = node.get("Key")
+    if key and isinstance(key, str) and key in trans_map:
+        val = trans_map[key].strip()
+        if valid_res(val):
+            return val
+
+    # B. Po SourceString
+    src = node.get("SourceString")
+    if src and isinstance(src, str):
+        src_clean = src.strip()
+        if src_clean in trans_map:
+            val = trans_map[src_clean].strip()
+            if valid_res(val):
+                return val
+        guid = source_to_guid.get(src_clean.upper())
+        if guid and guid in trans_map:
+            val = trans_map[guid].strip()
+            if valid_res(val):
+                return val
+
+    # C. Po kandydatach (np. PERK_K43P01_DESC)
+    if candidates:
+        for cand in candidates:
+            if cand in trans_map:
+                val = trans_map[cand].strip()
+                if valid_res(val):
+                    return val
+            cand_u = cand.upper()
+            if trans_map_upper and cand_u in trans_map_upper:
+                val = trans_map_upper[cand_u].strip()
+                if valid_res(val):
+                    return val
+            guid = source_to_guid.get(cand_u)
+            if guid and guid in trans_map:
+                val = trans_map[guid].strip()
+                if valid_res(val):
+                    return val
+
+    return None
+
+
+PERK_ALIASES_MAP = {
+    "GUARDIAN": ["BABYSITTER", "S18P01"],
+    "BABYSITTER": ["GUARDIAN", "S18P01"],
+    "KINSHIP": ["CAMARADERIE", "S18P02"],
+    "CAMARADERIE": ["KINSHIP", "S18P02"],
+    "RENEWAL": ["SECONDWIND", "S18P03"],
+    "SECONDWIND": ["RENEWAL", "S18P03"],
+    "HEXNOONEESCAPESDEATH": ["NOONEESCAPESDEATH", "NOED"],
+    "NOONEESCAPESDEATH": ["HEXNOONEESCAPESDEATH", "NOED"],
+    "JOLT": ["SURGE", "K17P01"],
+    "SURGE": ["JOLT", "K17P01"],
+    "FEARMONGER": ["MINDBREAKER", "K17P02"],
+    "MINDBREAKER": ["FEARMONGER", "K17P02"],
+    "DEADLOCK": ["K25P01"],
+    "HEXPLAYTHING": ["HEX_PLAYTHING", "K25P02"],
+    "SCOURGEHOOKGIFTOFPAIN": ["SCOURGEHOOK_GIFTOFPAIN", "GIFTOFPAIN", "K25P03"],
+}
+
+
+def process_perk_node(
+    perk: dict,
+    trans_map: dict[str, str],
+    tunables: dict[str, str],
+    source_to_guid: dict[str, str],
+    target_keywords: dict[str, str],
+    en_keywords: dict[str, str],
+    lang_code: str = "en",
+    perk_level_tunables_map: Optional[dict] = None,
+    trans_map_upper: Optional[dict[str, str]] = None,
+):
+    raw_id = perk.get("Id", "").strip()
+    clean_id = raw_id.replace("PERK_", "").replace("Perk_", "")
+    pname_raw = perk.get("DisplayName", {}).get("LocalizedString", "")
+
+    # Resolve positional tunables for this perk
+    pos_tunables = None
+    if perk_level_tunables_map:
+        pos_tunables = (
+            perk_level_tunables_map.get(clean_id)
+            or perk_level_tunables_map.get(raw_id)
+            or perk_level_tunables_map.get(clean_id.upper())
+            or perk_level_tunables_map.get(raw_id.upper())
+            or perk_level_tunables_map.get(re.sub(r"[^a-zA-Z0-9]", "", clean_id).upper())
+            or perk_level_tunables_map.get(re.sub(r"[^a-zA-Z0-9]", "", pname_raw).upper())
+        )
+
+    # Build comprehensive alias candidates
+    aliases = PERK_ALIASES_MAP.get(clean_id.upper(), [])
+
+    # DisplayName
+    if "DisplayName" in perk:
+        name_candidates = [
+            f"PERK_{clean_id}_NAME",
+            f"{clean_id}_NAME",
+            f"PERK_{raw_id}_NAME",
+        ]
+        for a in aliases:
+            name_candidates.extend([f"PERK_{a}_NAME", f"{a}_NAME"])
+
+        name_text = query_translation(
+            perk["DisplayName"],
+            trans_map,
+            source_to_guid,
+            candidates=name_candidates,
+            trans_map_upper=trans_map_upper,
+            is_name=True,
+        )
+        if name_text:
+            perk["DisplayName"]["LocalizedString"] = substitute_all_tokens(
+                name_text, tunables, target_keywords, en_keywords, lang_code, pos_tunables
+            )
+        elif "LocalizedString" in perk["DisplayName"]:
+            perk["DisplayName"]["LocalizedString"] = substitute_all_tokens(
+                perk["DisplayName"]["LocalizedString"], tunables, target_keywords, en_keywords, lang_code, pos_tunables
+            )
+
+    # GameplayText i Description
+    gp_candidates = [
+        f"PERK_{clean_id}_GameplayText_DESC",
+        f"{clean_id}_GameplayText_DESC",
+        f"PERK_{raw_id}_GameplayText_DESC",
+        f"PERK_{clean_id}_GameplayText",
+        f"{raw_id}_GameplayText_DESC",
+    ]
+    for a in aliases:
+        gp_candidates.extend([
+            f"PERK_{a}_GameplayText_DESC",
+            f"{a}_GameplayText_DESC",
+            f"PERK_{a}_GameplayText",
+        ])
+
+    gp_text = query_translation(
+        perk.get("GameplayText", {}),
+        trans_map,
+        source_to_guid,
+        candidates=gp_candidates,
+        trans_map_upper=trans_map_upper,
+    )
+
+    desc_candidates = [
+        f"PERK_{clean_id}_DESC",
+        f"{clean_id}_DESC",
+        f"PERK_{raw_id}_DESC",
+    ]
+    for a in aliases:
+        desc_candidates.extend([f"PERK_{a}_DESC", f"{a}_DESC"])
+
+    desc_text = query_translation(
+        perk.get("Description", {}),
+        trans_map,
+        source_to_guid,
+        candidates=desc_candidates,
+        trans_map_upper=trans_map_upper,
+    )
+
+    raw_desc = perk.get("Description", {}).get("LocalizedString", "")
+    if raw_desc.startswith("@#"):
+        raw_desc = ""
+
+    # Prefer modern GameplayText with variables, fallback to Description
+    final_desc = gp_text or desc_text or raw_desc
+    final_gp = gp_text or desc_text or perk.get("GameplayText", {}).get("LocalizedString", "")
+
+    # FlavorText
+    flavor_clean = ""
+    if "FlavorText" in perk:
+        fl_candidates = [
+            f"PERK_{clean_id}_FlavorText_DESC",
+            f"{clean_id}_FlavorText_DESC",
+            f"PERK_{raw_id}_FlavorText_DESC",
+        ]
+        for a in aliases:
+            fl_candidates.extend([f"PERK_{a}_FlavorText_DESC", f"{a}_FlavorText_DESC"])
+
+        # Check explicit FlavorText candidates first
+        fl_text = None
+        for cand in fl_candidates:
+            if cand in trans_map:
+                v = trans_map[cand].strip()
+                if v and not v.startswith("@#"):
+                    fl_text = v
+                    break
+            if trans_map_upper and cand.upper() in trans_map_upper:
+                v = trans_map_upper[cand.upper()].strip()
+                if v and not v.startswith("@#"):
+                    fl_text = v
+                    break
+
+        if not fl_text:
+            desc_key = perk.get("Description", {}).get("Key")
+            fl_key = perk["FlavorText"].get("Key")
+            if fl_key and fl_key != desc_key:
+                fl_text = query_translation(perk["FlavorText"], trans_map, source_to_guid, trans_map_upper=trans_map_upper)
+
+        if fl_text and "{" not in fl_text:
+            flavor_clean = substitute_all_tokens(
+                fl_text, tunables, target_keywords, en_keywords, lang_code, pos_tunables
+            )
+        perk["FlavorText"]["LocalizedString"] = flavor_clean
+
+    desc_sub = substitute_all_tokens(
+        final_desc, tunables, target_keywords, en_keywords, lang_code, pos_tunables
+    )
+    gp_sub = substitute_all_tokens(
+        final_gp, tunables, target_keywords, en_keywords, lang_code, pos_tunables
+    )
+
+    if "Description" in perk:
+        if flavor_clean and flavor_clean not in desc_sub:
+            perk["Description"]["LocalizedString"] = f"{desc_sub}\n\n{flavor_clean}"
+        else:
+            perk["Description"]["LocalizedString"] = desc_sub
+
+    if "GameplayText" in perk:
+        perk["GameplayText"]["LocalizedString"] = gp_sub
+
+
+OFFERING_DESC_GUIDS = {
+    # Bloodpoints
+    "Bloody Party Streamers": "C3D9B2D543D23D2BD4A4209131FAFBA3",
+    "Offering_BloodyPartyStreamers": "C3D9B2D543D23D2BD4A4209131FAFBA3",
+    "Escape! Cake": "D9444D2E4CB7EF5076545B8ACA67A57C",
+    "Offering_EscapeCake": "D9444D2E4CB7EF5076545B8ACA67A57C",
+    "Survivor Pudding": "CB3AB28D4C4A7BD11DE78F8FF4BA9580",
+    "Offering_SurvivorPudding": "CB3AB28D4C4A7BD11DE78F8FF4BA9580",
+    "Bound Envelope": "24096C2640D508AC697899B8587D61E9",
+    "Offering_BoundEnvelope": "24096C2640D508AC697899B8587D61E9",
+    "Gruesome Gateau": "B15E4E5B46F2F25E4BE37DAD66E98DEF",
+    "Offering_GruesomeGateau": "B15E4E5B46F2F25E4BE37DAD66E98DEF",
+    "Ghastly Gateau": "B0072D8247C425F8F8E5898B4CE66B9C",
+    "Offering_GhastlyGateau": "B0072D8247C425F8F8E5898B4CE66B9C",
+    "Frightful Flan": "4CACCC544145C196FA7E599E6849D615",
+    "Offering_FrightfulFlan": "4CACCC544145C196FA7E599E6849D615",
+
+    # Killer Wreaths
+    "Tanager Wreath": "1B15086D4431A4469271F4AEFC805409",
+    "Offering_TanagerWreath": "1B15086D4431A4469271F4AEFC805409",
+    "Devout Tanager Wreath": "C4C2E3834B6A0CC3556FB3936276CB51",
+    "Offering_DevoutTanagerWreath": "C4C2E3834B6A0CC3556FB3936276CB51",
+    "Ardent Tanager Wreath": "6ECF587F495A153E66A2DFA293AD3149",
+    "Offering_ArdentTanagerWreath": "6ECF587F495A153E66A2DFA293AD3149",
+    "Raven Wreath": "13E7B4E44B624543DB3D4E95A8E88723",
+    "Offering_RavenWreath": "13E7B4E44B624543DB3D4E95A8E88723",
+    "Devout Raven Wreath": "B8CF810B4D33046D18B04685B78E2F15",
+    "Offering_DevoutRavenWreath": "B8CF810B4D33046D18B04685B78E2F15",
+    "Ardent Raven Wreath": "6ECF587F495A153E66A2DFA293AD3149",
+    "Offering_ArdentRavenWreath": "6ECF587F495A153E66A2DFA293AD3149",
+    "Spotted Owl Wreath": "648F1711471A92F0008668949736A0D2",
+    "Offering_SpottedOwlWreath": "648F1711471A92F0008668949736A0D2",
+    "Devout Spotted Owl Wreath": "8E3497E349323CE066B3AB8F55210E7C",
+    "Offering_DevoutSpottedOwlWreath": "8E3497E349323CE066B3AB8F55210E7C",
+    "Ardent Spotted Owl Wreath": "1B0F0E4C4FC296D9827A95A9FC0362D2",
+    "Offering_ArdentSpottedOwlWreath": "1B0F0E4C4FC296D9827A95A9FC0362D2",
+    "Shrike Wreath": "2F79941C46C3E2E80FC7479F13A40A7D",
+    "Offering_ShrikeWreath": "2F79941C46C3E2E80FC7479F13A40A7D",
+    "Devout Shrike Wreath": "CD6CC4FA4627FEB450CBB4AEEF76CC05",
+    "Offering_DevoutShrikeWreath": "CD6CC4FA4627FEB450CBB4AEEF76CC05",
+    "Ardent Shrike Wreath": "B7ECE091488CAA08821991AC8E3219D3",
+    "Offering_ArdentShrikeWreath": "B7ECE091488CAA08821991AC8E3219D3",
+
+    # Survivor Sachets & Blossoms
+    "Sweet William Sachet": "CF03FBA046FB4F07F2AE2DB62575154A",
+    "Offering_SweetWilliamSachet": "CF03FBA046FB4F07F2AE2DB62575154A",
+    "Fresh Sweet William": "030E18F54925B8B122FEA2ABF7C2E9BA",
+    "Offering_FreshSweetWilliam": "030E18F54925B8B122FEA2ABF7C2E9BA",
+    "Fragrant Sweet William": "816DC4D248A7551514DF398D0D1036A9",
+    "Offering_FragrantSweetWilliam": "816DC4D248A7551514DF398D0D1036A9",
+    "Bog Laurel Sachet": "4DE283C841D710A0E88CA597756B4DD4",
+    "Offering_BogLaurelSachet": "4DE283C841D710A0E88CA597756B4DD4",
+    "Fresh Bog Laurel": "E7D18F72473EFFB34386A1A79A39AB9C",
+    "Offering_FreshBogLaurel": "E7D18F72473EFFB34386A1A79A39AB9C",
+    "Fragrant Bog Laurel": "7DD1B12A449576F39BFF62893E8E7697",
+    "Offering_FragrantBogLaurel": "7DD1B12A449576F39BFF62893E8E7697",
+    "Crispleaf Amaranth Sachet": "B2ACE8DB4809C3E055D5C2BF7A5A1F6C",
+    "Offering_CrispleafAmaranthSachet": "B2ACE8DB4809C3E055D5C2BF7A5A1F6C",
+    "Fresh Crispleaf Amaranth": "D49BA33948515EF42723F696DA60FB06",
+    "Offering_FreshCrispleafAmaranth": "D49BA33948515EF42723F696DA60FB06",
+    "Fragrant Crispleaf Amaranth": "6AA85E5D426F7C594FACB79AC97E71D3",
+    "Offering_FragrantCrispleafAmaranth": "6AA85E5D426F7C594FACB79AC97E71D3",
+}
+
+
+ITEM_DESC_GUIDS = {
+    "Camping Aid Kit": "6951DC284BD56F737590D1BA514E0A2B",
+    "Item_CampingAidKit": "6951DC284BD56F737590D1BA514E0A2B",
+    "First Aid Kit": "5B62868349D2ECE9628EF58F2D39391E",
+    "Item_FirstAidKit": "5B62868349D2ECE9628EF58F2D39391E",
+    "Emergency Med-kit": "76CBE38442556C4843319CBB0D530C61",
+    "Item_EmergencyMedKit": "76CBE38442556C4843319CBB0D530C61",
+    "Ranger Med-kit": "86D918D8446DE6B525A628AACF68C004",
+    "Item_RangerMedKit": "86D918D8446DE6B525A628AACF68C004",
+    "Anniversary Med-kit": "A0CA35064F3906BADFAA2EB304F16C96",
+    "Item_AnniversaryMedKit": "A0CA35064F3906BADFAA2EB304F16C96",
+    "Masquerade Med-Kit": "F83CFB4E4714B764B8A71C89A844B1FC",
+    "Item_MasqueradeMedKit": "F83CFB4E4714B764B8A71C89A844B1FC",
+    "Banquet Med-Kit": "F83CFB4E4714B764B8A71C89A844B1FC",
+    "Item_BanquetMedKit": "F83CFB4E4714B764B8A71C89A844B1FC",
+    "Worn-out Tools": "1909D8A7472ABAE80AE672A48446185B",
+    "Item_WornOutTools": "1909D8A7472ABAE80AE672A48446185B",
+    "Toolbox": "FEE27EF644F0E274818D228E6AB9CA22",
+    "Item_Toolbox": "FEE27EF644F0E274818D228E6AB9CA22",
+    "Commodious Toolbox": "07EDC1F94E8F72D8B04313B607C750D2",
+    "Item_CommodiousToolbox": "07EDC1F94E8F72D8B04313B607C750D2",
+    "Mechanic's Toolbox": "058E8AB443E4147320F3909F167400A5",
+    "Item_MechanicsToolbox": "058E8AB443E4147320F3909F167400A5",
+    "Alex's Toolbox": "1A2A23064982CC6113EFF9B68D252175",
+    "Item_AlexsToolbox": "1A2A23064982CC6113EFF9B68D252175",
+    "Engineer's Toolbox": "BC73528E415A5B8A023A80BD84B56F3C",
+    "Item_EngineersToolbox": "BC73528E415A5B8A023A80BD84B56F3C",
+    "Festive Toolbox": "3F62E9AA4FA098991D699783B1B64DEB",
+    "Item_FestiveToolbox": "3F62E9AA4FA098991D699783B1B64DEB",
+    "Anniversary Toolbox": "3F62E9AA4FA098991D699783B1B64DEB",
+    "Item_AnniversaryToolbox": "3F62E9AA4FA098991D699783B1B64DEB",
+    "Masquerade Toolbox": "3F62E9AA4FA098991D699783B1B64DEB",
+    "Item_MasqueradeToolbox": "3F62E9AA4FA098991D699783B1B64DEB",
+    "Banquet Toolbox": "3F62E9AA4FA098991D699783B1B64DEB",
+    "Item_BanquetToolbox": "3F62E9AA4FA098991D699783B1B64DEB",
+    "Will O' Wisp": "9D0A5C3D4DADED90F145B5A37F417A16",
+    "Item_WillOWisp": "9D0A5C3D4DADED90F145B5A37F417A16",
+    "First Aid Spray": "9991A40948440B4CF819C9B9CAB73590",
+    "Item_FirstAidSpray": "9991A40948440B4CF819C9B9CAB73590",
+    "Antidote": "7CF6771243CBA9E7C84F38ADD3F4CDD4",
+    "Item_Antidote": "7CF6771243CBA9E7C84F38ADD3F4CDD4",
+    "Vaccine": "21675F9D49D50110C0A2339FBE8FFDDE",
+    "Item_Vaccine": "21675F9D49D50110C0A2339FBE8FFDDE",
+    "Lament Configuration": "1A99FCD042556AF85B004CA92CE8B92B",
+    "Item_LamentConfiguration": "1A99FCD042556AF85B004CA92CE8B92B",
+    "Searcher's Pendant": "41D2C6BE470551C10E76E7949E0A13FB",
+    "Item_SearchersPendant": "41D2C6BE470551C10E76E7949E0A13FB",
+    "Blood Can": "F1404A6E41719BB5507A06A32CB1ED81",
+    "Item_BloodCan": "F1404A6E41719BB5507A06A32CB1ED81",
+    "Void Crystal": "041D272E4265947031F4778E46F0EB94",
+    "Item_VoidCrystal": "041D272E4265947031F4778E46F0EB94",
+    "Lantern": "A77DB6274D81E9DA2AB5409938689CC5",
+    "Item_Lantern": "A77DB6274D81E9DA2AB5409938689CC5",
+    "Pocket Mirror": "C377D2584368941DC85D3A95C2A328EE",
+    "Item_PocketMirror": "C377D2584368941DC85D3A95C2A328EE",
+    "Fragile Mirror": "C377D2584368941DC85D3A95C2A328EE",
+    "Item_FragileMirror": "C377D2584368941DC85D3A95C2A328EE",
+
+    # Trapper Add-ons
+    "Addon_Trapper_TrapperGloves": "89EC240E401644D8AC869EB52BCC6D91",
+    "Trapper Gloves": "89EC240E401644D8AC869EB52BCC6D91",
+    "Addon_Trapper_PaddedJaws": "B7227BEA4C8705DD04AC17AB20E1BE82",
+    "Padded Jaws": "B7227BEA4C8705DD04AC17AB20E1BE82",
+    "Addon_Trapper_MakeshiftWrap": "21EB8D1C4A37A3757215B7A9A2DB1DBB",
+    "Makeshift Wrap": "21EB8D1C4A37A3757215B7A9A2DB1DBB",
+    "Addon_Trapper_CoffeeGrounds": "3BE40EA640F67B151F7EB2ABE51EF9DA",
+    "Coffee Grounds": "3BE40EA640F67B151F7EB2ABE51EF9DA",
+    "Addon_Trapper_4CoilSpringKit": "AABE867F4BAE646AA4DE56BAA3FE936B",
+    "4-Coil Spring Kit": "AABE867F4BAE646AA4DE56BAA3FE936B",
+    "Addon_Trapper_FastTools": "2E6E1BE845D5D773B1897A9274BE9EE2",
+    "Fast Tools": "2E6E1BE845D5D773B1897A9274BE9EE2",
+    "Addon_Trapper_SecondaryCoil": "1A8D6EAD4333AD69FA8F1982DA0822F9",
+    "Secondary Coil": "1A8D6EAD4333AD69FA8F1982DA0822F9",
+    "Addon_Trapper_TarBottle": "4CB2DAC34C3BB45A5AD7D8A135C2804B",
+    "Tar Bottle": "4CB2DAC34C3BB45A5AD7D8A135C2804B",
+    "Addon_Trapper_BloodyCoil": "83247ABF4853F81D481327A23B6FAF3C",
+    "Bloody Coil": "83247ABF4853F81D481327A23B6FAF3C",
+    "Addon_Trapper_HoningStone": "42F64EB14CEA2F7B9133639A3C380EBD",
+    "Honing Stone": "42F64EB14CEA2F7B9133639A3C380EBD",
+    "Addon_Trapper_OilyCoil": "D55F8390459D40A5FB7E559D22697534",
+    "Oily Coil": "D55F8390459D40A5FB7E559D22697534",
+    "Addon_Trapper_TensionSpring": "0ECF4542488661819D1261A11374FB38",
+    "Tension Spring": "0ECF4542488661819D1261A11374FB38",
+    "Addon_Trapper_TrapperSack": "1E1956F148A7B7206CADA28AF5AA553B",
+    "Trapper Sack": "1E1956F148A7B7206CADA28AF5AA553B",
+    "Addon_Trapper_IridescentStone": "5E29EA0444301F60507C3B8DBA39E273",
+    "Iridescent Stone": "5E29EA0444301F60507C3B8DBA39E273",
+
+    # Survivor Addons
+    "Addon_SelfAdherentWrap": "58C854E9417DC4C57BE0DAAFDA9A4B20",
+    "Self Adherent Wrap": "58C854E9417DC4C57BE0DAAFDA9A4B20",
+    "Addon_NeedleThread": "D13F6A144A5124C258877785309CB0BF",
+    "Needle & Thread": "D13F6A144A5124C258877785309CB0BF",
+    "Addon_ProtectiveGloves": "0D4EBB924BF2B0A676BB48AFD37D7241",
+    "Protective Gloves": "0D4EBB924BF2B0A676BB48AFD37D7241",
+}
+
+SURVIVOR_ADDON_RARITIES = {
     # Flashlights
-    "flashlight": ("0B5410D64066D5E250CBDEBFE7DC7A6F", "FF61568341FFD3D1900239B736E526B3", "Flashlight"),
-    "sportflashlight": ("A3EB9DFE402FDF983D90BAA8B7E2CE84", "A3EB9DFE402FDF983D90BAA8B7E2CE84", "Flashlight"),
-    "utilityflashlight": ("0FC05EC5473F968097A803ADF11079AF", "0FC05EC5473F968097A803ADF11079AF", "Flashlight"),
-    "anniversaryflashlight": ("527638604D6760809948A8A89A897033", "A9B8C6E542009041B58A298D407D40ED", "Flashlight"),
-    "banquetflashlight": ("B79F756748AC8146E3CE069FD45230EE", "B79F756748AC8146E3CE069FD45230EE", "Flashlight"),
-    "masqueradeflashlight": ("A668DB744EECA90CAAA9E08FE93BA69C", "87816CA146FBC13AB05FEAA6C55997FE", "Flashlight"),
-    "willowisp": ("33F10B984A9BC0248688E5A9C1B3BE28", "8CDBD5A54841B70061E0CE82A3B9B047", "Flashlight"),
-
-    # Fog Vials
-    "apprenticesfogvial": ("7B16C9214023CD8E7CEDB2BF53CF0340", "7B16C9214023CD8E7CEDB2BF53CF0340", "Fog Vial"),
-    "artisansfogvial": ("C2090A504A0859868E862389576F20A2", "DA0BBDBC4871CA40C3A0928935908E6D", "Fog Vial"),
-    "vigosfogvial": ("928B32A94CC5EFDB88D1D98B4D8AF293", "E7523D2844C22153E13715897EE387A8", "Fog Vial"),
-
-    # Keys
-    "brokenkey": ("156551904F16120342AAFE8CB29B1B9B", "7F120EDA45CD2BB4C14CE3817EE0C77F", "Key"),
-    "dullkey": ("8938A6574BEF3FAA8C1806B64AC26B34", "29AD9AF64A107E6AE8C8C4B8765BC106", "Key"),
-    "skeletonkey": ("4C8ADC134429F45FE47256B81F131CE1", "BC1D48774A9BFC01101D4CA5D1D2C8A7", "Key"),
-
-    # Maps
-    "crypticmap": ("2D6CDBC9490140ED52D6C78F833CB48E", "078D8D9F46C319C3815155866F6909CC", "Map"),
-    "scribbledmap": ("58C1C70040DE419FDD97339E24DA3D6D", "E203FFF34B5709FAED9132B11CB35FC5", "Map"),
-    "annotatedmap": ("02CF652B41901AC403273DA7C33A7512", "8D0A018A445145A495C325A69F7063E3", "Map"),
-    "bloodsensemap": ("278618094217179C9F015C9A178BE653", "E3FD9F4D4546420E0C3B38820504DCE0", "Map"),
+    "Addon_Battery": "Common",
+    "Addon_LeatherGrip": "Common",
+    "Addon_PowerBulb": "Common",
+    "Addon_WideLens": "Common",
+    "Addon_FocusLens": "Uncommon",
+    "Addon_HeavyDutyBattery": "Uncommon",
+    "Addon_LowAmpFilament": "Uncommon",
+    "Addon_RubberGrip": "Uncommon",
+    "Addon_TIROptic": "Uncommon",
+    "Addon_IntenseHalogen": "Rare",
+    "Addon_LongLifeBattery": "Rare",
+    "Addon_HighEndSapphireLens": "Very Rare",
+    "Addon_OddBulb": "Ultra Rare",
+    "Addon_BrokenBulb": "Event",
 
     # Med-Kits
-    "campingaidkit": ("B6C91DF2484E85B22CE32EA522BC146B", "6951DC284BD56F737590D1BA514E0A2B", "Med-Kit"),
-    "firstaidkit": ("3F5F48EC4A47553FB86B5EB93A9164FF", "5B62868349D2ECE9628EF58F2D39391E", "Med-Kit"),
-    "emergencymedkit": ("8EDC8C80474BE9663CF92CADEDC0FE31", "76CBE38442556C4843319CBB0D530C61", "Med-Kit"),
-    "rangermedkit": ("CE8B97AB4A592E811DBAB18E92A66C52", "86D918D8446DE6B525A628AACF68C004", "Med-Kit"),
-    "allhallowsevelunchbox": ("027011554DA9FBBAE0B2879206F911FE", "027011554DA9FBBAE0B2879206F911FE", "Med-Kit"),
-    "anniversarymedkit": ("1113EC1C461087E197761290B8D280A3", "D35A421041984C0A520CE7BEE303DED9", "Med-Kit"),
-    "banquetmedkit": ("F451E11B41770A62341899AE3218CED8", "F451E11B41770A62341899AE3218CED8", "Med-Kit"),
-    "masquerademedkit": ("5CC3F51640EFEE4128FE88919B7EE742", "A0CA35064F3906BADFAA2EB304F16C96", "Med-Kit"),
+    "Addon_Bandages": "Common",
+    "Addon_ButterflyTape": "Common",
+    "Addon_RubberGloves": "Common",
+    "Addon_MedicalScissors": "Uncommon",
+    "Addon_NeedleThread": "Uncommon",
+    "Addon_SelfAdherentWrap": "Uncommon",
+    "Addon_Sponge": "Uncommon",
+    "Addon_GauzeRoll": "Rare",
+    "Addon_SurgicalSuture": "Rare",
+    "Addon_AbdominalDressing": "Rare",
+    "Addon_StypticAgent": "Very Rare",
+    "Addon_GelDressings": "Very Rare",
+    "Addon_AntiExhaustionSyringe": "Ultra Rare",
+    "Addon_RefinedSerum": "Event",
 
     # Toolboxes
-    "wornouttools": ("1D608EED4227F7FCFB48CCACD22458CB", "1909D8A7472ABAE80AE672A48446185B", "Toolbox"),
-    "toolbox": ("0E4E28A3432C6B2AA03C6DA387EEAA87", "FEE27EF644F0E274818D228E6AB9CA22", "Toolbox"),
-    "commodioustoolbox": ("C4B36BB94BFCF4E69A988C8861B3CBAF", "07EDC1F94E8F72D8B04313B607C750D2", "Toolbox"),
-    "mechanicstoolbox": ("30BEC6CD45E85C97C477D58F2E397F38", "058E8AB443E4147320F3909F167400A5", "Toolbox"),
-    "alexstoolbox": ("0C174EDC4CCA0BF88EBD0C9DA71705AA", "1A2A23064982CC6113EFF9B68D252175", "Toolbox"),
-    "engineerstoolbox": ("AB320174429B7F1C2B2077BFAFAAA284", "BC73528E415A5B8A023A80BD84B56F3C", "Toolbox"),
-    "anniversarytoolbox": ("3099EE854EBF0AF30926E3AD02431DDE", "6696CE854DF06CE9C73CA484043C35BB", "Toolbox"),
-    "banquettoolbox": ("880162984F34202C94C0D9BCDA915EF8", "880162984F34202C94C0D9BCDA915EF8", "Toolbox"),
-    "festivetoolbox": ("3B70C0A24CFC2558AC7EC385B871CF25", "3F62E9AA4FA098991D699783B1B64DEB", "Toolbox"),
-    "masqueradetoolbox": ("79E0B50D4CB7A56F6E7AAA8E6FF10C55", "995601FD496CCA65D358DABD73767F43", "Toolbox"),
+    "Addon_CleanRag": "Common",
+    "Addon_Instructions": "Common",
+    "Addon_Scraps": "Common",
+    "Addon_CuttingWire": "Uncommon",
+    "Addon_ProtectiveGloves": "Uncommon",
+    "Addon_SocketSwivels": "Uncommon",
+    "Addon_SpringClamp": "Uncommon",
+    "Addon_WireSpool": "Uncommon",
+    "Addon_GripWrench": "Rare",
+    "Addon_Hacksaw": "Rare",
+    "Addon_BrandNewPart": "Ultra Rare",
 
-    # Special / In-Trial Items
-    "antidote": ("445CEAEC453E5927BDC373B924B41A32", "3B2AC27D45C07E8E96717FA4D5192943", "Special"),
-    "bloodcan": ("3D746750440BC4F601F54689D68F380A", "5259E4FE412F91A13172C1AEF0F098B0", "Special"),
-    "candelabra": ("0271CC53474BF83632ACCE8AD3FBA020", "70F2C9D24085F87F56D5E4B96FF3F414", "Special"),
-    "emp": ("6477510741B695E3BC29D1A6204E578F", "4E2D928A490A5EC64013A4973159911D", "Special"),
-    "eyeofvecna": ("6CC3B71A49EA36D3934F40820E5F7171", "485A2C454DE2DC6B1DBD25BACA3D565A", "Special"),
-    "firstaidspray": ("184B79C5435AF684DC1F5D9E6D49CF07", "2E78A67042D006B31231DF91A900625F", "Special"),
-    "flashgrenade": ("450D58B1416B87B417331C90FD102CBE", "26E2F8364C702A1DA0822CA3BA533E58", "Special"),
-    "fogcrystal": ("A946893649566B4BC7C67DBC1BCB07EA", "E00322574C25A4E1FA6C64819DF9DC5C", "Special"),
-    "fragilemirror": ("056F923347345E31F71719ABD8D08D98", "C377D2584368941DC85D3A95C2A328EE", "Special"),
-    "glowingfungus": ("81B47220495BCE824F805A80C654C370", "83019D484EE18C1F9A71148A87D3F03E", "Special"),
-    "handofvecna": ("505CBDA547BDD07DBC3F038127F7ED52", "6CC3B71A49EA36D3934F40820E5F7171", "Special"),
-    "keycard": ("71EDD4534E84CC5A72A0619D25C64418", "24DE997242C68F8A6BA641B43C6C1B00", "Special"),
-    "lamentconfiguration": ("8387F4AC409641BC410654B08D8C76AA", "2E8901DE4F5294D8B9EA5F8233F7233D", "Special"),
-    "lantern": ("0271CC53474BF83632ACCE8AD3FBA020", "A77DB6274D81E9DA2AB5409938689CC5", "Special"),
-    "pocketmirror": ("056F923347345E31F71719ABD8D08D98", "C377D2584368941DC85D3A95C2A328EE", "Special"),
-    "remoteflameturret": ("1A8AE0D24048AC9754D80D9EAE36EBBE", "3A17F51140307A8D60F7B6810EE26E27", "Special"),
-    "searcherspendant": ("8F55711746B357F0F3BA0FB3026DE9F7", "SearchersPendant_Description", "Special"),
-    "vhstape": ("12B0FC7D4E7D3D334C649EA70DED3365", "97A389F24AEB551136913EA7972BA6EA", "Special"),
-    "vaccine": ("36D7B89C4201E76C5B2C59B86847CB74", "837DDEA04BBB3FAF6E9F0DA62BAA13C6", "Special"),
-    "voidcrystal": ("4A198078440ECA6F19401CAC97F2B32C", "00F6061241E35D9703FA6A810DEF6C01", "Special"),
+    # Keys
+    "Addon_FriendshipCharm": "Common",
+    "Addon_PrayerRope": "Common",
+    "Addon_ErodedToken": "Common",
+    "Addon_ScratchedPearl": "Uncommon",
+    "Addon_PrayerBeads": "Uncommon",
+    "Addon_ShrillWhistle": "Uncommon",
+    "Addon_BraidedBauble": "Rare",
+    "Addon_GoldToken": "Rare",
+    "Addon_UniqueWeddingRing": "Very Rare",
+    "Addon_MilkyGlass": "Very Rare",
+    "Addon_WeavedRing": "Very Rare",
+    "Addon_BloodAmber": "Very Rare",
+
+    # Maps
+    "Addon_MapAddonRope": "Common",
+    "Addon_GlowingInk": "Common",
+    "Addon_RetardantJelly": "Common",
+    "Addon_GnarledCompass": "Uncommon",
+    "Addon_GlassBead": "Uncommon",
+    "Addon_UnusualStamp": "Uncommon",
+    "Addon_YellowWire": "Uncommon",
+    "Addon_BatteredTape": "Rare",
+    "Addon_OddStamp": "Rare",
+    "Addon_BlackSilkCord": "Rare",
+    "Addon_SharpenedFlint": "Very Rare",
+    "Addon_CrystalBead": "Very Rare",
+    "Addon_CrimsonStamp": "Very Rare",
+
+    # Fog Vials
+    "Addon_VolcanicStone": "Common",
+    "Addon_ReactiveCompound": "Uncommon",
+    "Addon_OilySap": "Rare",
+    "Addon_MushroomFormula": "Very Rare",
+    "Addon_PotentExtract": "Ultra Rare",
+
+    # Firecrackers
+    "Addon_FlashPowder": "Common",
+    "Addon_MediumFuse": "Common",
+    "Addon_BuckShot": "Common",
+    "Addon_GunPowder": "Uncommon",
+    "Addon_LongFuse": "Uncommon",
+    "Addon_MagnesiumPowder": "Uncommon",
+    "Addon_BlackPowder": "Rare",
+    "Addon_LargePack": "Very Rare",
 }
 
-SPECIAL_ITEM_DESCRIPTIONS: Dict[str, Dict[str, str]] = {
-    "Searcher's Pendant": {
-        "en": "An artifact from another place, where dark forces rule. Can be retrieved from chests in the trial.",
-        "pl": "Artefakt z innego wymiaru, gdzie rządzą mroczne siły. Można go zdobyć ze skrzyń w próbie.",
-        "de": "Ein Artefakt von einem anderen Ort, an dem dunkle Mächte herrschen. Kann aus Kisten in der Prüfung geborgen werden.",
-        "es": "Un artefacto de otro lugar donde gobiernan fuerzas oscuras. Se puede obtener de los cofres en la partida.",
-        "ja": "闇の勢力が支配する異界の遺物。試練内のチェストから回収できる。"
+
+def process_item_or_addon_node(
+    item_dict: dict,
+    trans_map: dict[str, str],
+    tunables: dict[str, str],
+    source_to_guid: dict[str, str],
+    target_keywords: dict[str, str],
+    en_keywords: dict[str, str],
+    prefix: str = "ADDON",
+    lang_code: str = "en",
+    trans_map_upper: Optional[dict[str, str]] = None,
+):
+    item_id = item_dict.get("Id", "").strip()
+    raw_name = item_dict.get("DisplayName", {}).get("SourceString") or item_dict.get("DisplayName", {}).get("LocalizedString") or ""
+    clean_name = raw_name.replace("Item_", "").replace("Offering_", "").replace("Addon_", "")
+
+    # Fix canonical rarity for survivor addons if present
+    if item_id in SURVIVOR_ADDON_RARITIES:
+        item_dict["Rarity"] = SURVIVOR_ADDON_RARITIES[item_id]
+
+    if "DisplayName" in item_dict:
+        name_text = query_translation(
+            item_dict["DisplayName"],
+            trans_map,
+            source_to_guid,
+            candidates=[f"{item_id}_NAME", f"{prefix}_{item_id}_NAME"],
+            trans_map_upper=trans_map_upper,
+            is_name=True,
+        )
+        if name_text and len(name_text) <= 80 and "\n" not in name_text:
+            item_dict["DisplayName"]["LocalizedString"] = substitute_all_tokens(
+                name_text, tunables, target_keywords, en_keywords, lang_code
+            )
+        elif "LocalizedString" in item_dict["DisplayName"]:
+            cur_ls = item_dict["DisplayName"]["LocalizedString"]
+            if len(cur_ls) > 80 or "\n" in cur_ls:
+                cur_ls = clean_name or raw_name
+            item_dict["DisplayName"]["LocalizedString"] = substitute_all_tokens(
+                cur_ls,
+                tunables,
+                target_keywords,
+                en_keywords,
+                lang_code,
+            )
+
+    if "Description" in item_dict:
+        # Check if item or offering has a designated localized GUID
+        guid_match = None
+        for k_cand in [raw_name, clean_name, item_id]:
+            if k_cand in OFFERING_DESC_GUIDS:
+                guid_match = OFFERING_DESC_GUIDS[k_cand]
+                break
+            if k_cand in ITEM_DESC_GUIDS:
+                guid_match = ITEM_DESC_GUIDS[k_cand]
+                break
+
+        desc_text = None
+        if guid_match and guid_match in trans_map:
+            val = trans_map[guid_match].strip()
+            if val and not val.startswith("@#"):
+                desc_text = val
+
+        if not desc_text:
+            desc_text = query_translation(
+                item_dict["Description"],
+                trans_map,
+                source_to_guid,
+                candidates=[
+                    f"{item_id}_DESC",
+                    f"{item_id}_FIXED_DESC",
+                    f"{prefix}_{item_id}_DESC",
+                ],
+                trans_map_upper=trans_map_upper,
+            )
+
+        raw_desc = item_dict["Description"].get("LocalizedString", "")
+        if raw_desc.startswith("@#"):
+            raw_desc = ""
+
+        final_desc = desc_text or raw_desc
+        item_dict["Description"]["LocalizedString"] = substitute_all_tokens(
+            final_desc, tunables, target_keywords, en_keywords, lang_code
+        )
+
+
+def process_character_dump_for_lang(
+    base_dump: dict,
+    trans_map: dict[str, str],
+    tunables: dict[str, str],
+    source_to_guid: dict[str, str],
+    target_keywords: dict[str, str],
+    en_keywords: dict[str, str],
+    lang_code: str = "en",
+    perk_level_tunables_map: Optional[dict] = None,
+) -> dict:
+    data = copy.deepcopy(base_dump)
+    trans_map_upper = {k.upper(): v for k, v in trans_map.items()}
+
+    for char_id, char_entry in data.items():
+        if isinstance(char_entry, dict) and "Character" in char_entry:
+            # 1. Postacie (K01-K44, S01-S54)
+            char_info = char_entry.get("Character", {})
+            for field in ["DisplayName", "BackStory", "Biography"]:
+                if field in char_info:
+                    text = query_translation(
+                        char_info[field],
+                        trans_map,
+                        source_to_guid,
+                        candidates=[
+                            f"CHARACTER_{char_id}_{field.upper()}",
+                            f"KILLER_{char_id}_{field.upper()}",
+                            f"SURVIVOR_{char_id}_{field.upper()}",
+                            f"KILLER_{char_id}_BIO",
+                            f"SURVIVOR_{char_id}_BIO",
+                            f"KILLER_{char_id}_TOOLTIP",
+                            f"SURVIVOR_{char_id}_TOOLTIP",
+                        ],
+                        trans_map_upper=trans_map_upper,
+                        is_name=(field == "DisplayName"),
+                    )
+                    if text:
+                        char_info[field]["LocalizedString"] = substitute_all_tokens(
+                            text, tunables, target_keywords, en_keywords, lang_code
+                        )
+                    elif "LocalizedString" in char_info[field]:
+                        char_info[field]["LocalizedString"] = substitute_all_tokens(
+                            char_info[field]["LocalizedString"],
+                            tunables,
+                            target_keywords,
+                            en_keywords,
+                            lang_code,
+                        )
+
+            # 2. Perki postaci
+            for perk in char_entry.get("Perks", []):
+                process_perk_node(
+                    perk, trans_map, tunables, source_to_guid, target_keywords, en_keywords, lang_code, perk_level_tunables_map, trans_map_upper
+                )
+
+            # 3. Addony zabójców
+            for addon in char_entry.get("ItemAddons", []):
+                process_item_or_addon_node(
+                    addon, trans_map, tunables, source_to_guid, target_keywords, en_keywords, prefix="ADDON", lang_code=lang_code, trans_map_upper=trans_map_upper
+                )
+
+        elif char_id == "General" and isinstance(char_entry, dict):
+            # 4. General Perks (SurvivorPerks, KillerPerks)
+            for ptype in ["SurvivorPerks", "KillerPerks"]:
+                for perk in char_entry.get(ptype, []):
+                    process_perk_node(
+                        perk, trans_map, tunables, source_to_guid, target_keywords, en_keywords, lang_code, perk_level_tunables_map, trans_map_upper
+                    )
+
+        elif char_id == "Items" and isinstance(char_entry, list):
+            # 5. Przedmioty ocalałych
+            for item in char_entry:
+                process_item_or_addon_node(
+                    item, trans_map, tunables, source_to_guid, target_keywords, en_keywords, prefix="ITEM", lang_code=lang_code, trans_map_upper=trans_map_upper
+                )
+
+        elif char_id == "SurvivorAddons" and isinstance(char_entry, list):
+            # 6. Dodatki do przedmiotów ocalałych
+            for addon in char_entry:
+                process_item_or_addon_node(
+                    addon, trans_map, tunables, source_to_guid, target_keywords, en_keywords, prefix="ADDON", lang_code=lang_code, trans_map_upper=trans_map_upper
+                )
+
+        elif char_id in ["CommonOfferings", "KillerOfferings", "SurvivorOfferings"] and isinstance(char_entry, list):
+            # 7. Dary (Offerings)
+            for offering in char_entry:
+                process_item_or_addon_node(
+                    offering, trans_map, tunables, source_to_guid, target_keywords, en_keywords, prefix="FAVOR", lang_code=lang_code, trans_map_upper=trans_map_upper
+                )
+
+    return data
+
+
+def build_squashed_translations(
+    localized_dumps: Dict[str, dict]
+) -> dict:
+    """Buduje squashed bundle translations.json dla całego backendu."""
+    en_dump = localized_dumps.get("en", {})
+
+    squashed = {
+        "version": "2.0.0",
+        "supported_locales": ["en", "pl", "de", "es", "ja"],
+        "chapters": {},
+        "characters": {},
+        "perks": {},
+        "items": {},
+        "addons": {},
+        "offerings": {},
     }
-}
 
-
-def discover_available_locales(translations_dir: Path) -> List[str]:
-
-
-    """Finds all available locale JSON files (e.g. en.json, pl.json, fr.json) in the folder."""
-    locales = []
-    for json_file in sorted(translations_dir.glob("*.json")):
-        name = json_file.name.lower()
-        if name in EXCLUDED_JSON_FILES:
-            continue
-        stem = json_file.stem.lower()
-        # Matches typical 2 to 5 letter locale codes like 'en', 'pl', 'de', 'es', 'ja', 'fr', 'pt-br', 'zh-cn'
-        if re.match(r"^[a-z]{2}(?:[-_][a-z]{2,4})?$", stem):
-            locales.append(stem)
-    return locales
-
-
-def build_squashed_translations_bundle(
-    translations_dir: Path,
-    locales: List[str],
-) -> Dict[str, Any]:
-    """
-    Parses characters_dump.json and all discovered locale dumps to produce
-    the consolidated multi-language translations dictionary.
-    """
-    characters_dump_path = translations_dir / "characters_dump.json"
-    if not characters_dump_path.exists():
-        raise FileNotFoundError(f"Master characters dump not found at {characters_dump_path}")
-
-    logger.info(f"Loading master dump from {characters_dump_path.name}...")
-    with open(characters_dump_path, "r", encoding="utf-8") as f:
-        master_dump = json.load(f)
-
-    # If items_dump.json exists, merge its sections
-    items_dump_path = translations_dir / "items_dump.json"
-    if items_dump_path.exists():
+    # Load existing chapters and base data if available
+    existing_file = BACKEND_TRANSLATIONS_DIR / "translations.json"
+    if existing_file.exists():
         try:
-            with open(items_dump_path, "r", encoding="utf-8") as f:
-                items_dump_data = json.load(f)
-            for k, v in items_dump_data.items():
-                if k not in master_dump:
-                    master_dump[k] = v
-        except Exception as e:
-            logger.warning(f"Could not merge items_dump.json: {e}")
+            with open(existing_file, "r", encoding="utf-8") as f:
+                old_t = json.load(f)
+                squashed["chapters"] = old_t.get("chapters", {})
+                for old_k, old_v in old_t.get("offerings", {}).items():
+                    squashed["offerings"][old_k] = old_v
+        except Exception:
+            pass
 
-    # 1. Load string tables for each requested locale
-    locale_tables: Dict[str, Dict[str, str]] = {}
-    for loc in locales:
-        loc_file = translations_dir / f"{loc}.json"
-        if loc_file.exists():
-            logger.info(f"Loading locale table: {loc_file.name}...")
-            locale_tables[loc] = load_locale_string_table(loc_file)
-        else:
-            logger.warning(f"Locale file {loc_file.name} not found; skipping {loc}.")
+    # 1. Characters
+    for char_id, char_entry in en_dump.items():
+        if isinstance(char_entry, dict) and "Character" in char_entry:
+            c_en = char_entry["Character"]
+            c_name_en = c_en.get("DisplayName", {}).get("LocalizedString", "")
 
-    available_locales = [loc for loc in locales if loc in locale_tables]
-    en_dict = locale_tables.get("en", {})
+            char_record = {
+                "name": c_name_en,
+                "code_prefix": char_id,
+                "chapter_name": "Base Game",
+                "translations": {},
+            }
 
-    # Build reverse lookup by English text to automatically find GUIDs for un-keyed items / addons
-    text_to_guid: Dict[str, str] = {}
-    for k, v in en_dict.items():
-        sk = simplify_name_key(v)
-        if sk and sk not in text_to_guid:
-            text_to_guid[sk] = k
+            for lang_code, dump_data in localized_dumps.items():
+                c_lang = dump_data.get(char_id, {}).get("Character", {})
+                name_l = c_lang.get("DisplayName", {}).get("LocalizedString", c_name_en)
+                lore_l = (
+                    c_lang.get("BackStory", {}).get("LocalizedString")
+                    or c_lang.get("Biography", {}).get("LocalizedString", "")
+                )
 
-    characters_out: Dict[str, Any] = {}
-    perks_out: Dict[str, Any] = {}
-    items_out: Dict[str, Any] = {}
-    addons_out: Dict[str, Any] = {}
-    offerings_out: Dict[str, Any] = {}
+                char_record["translations"][lang_code] = {
+                    "name": name_l,
+                    "lore": lore_l,
+                    "chapter_name": "Base Game",
+                }
 
-    # 2. Process all top-level sections in master_dump
-    for root_key, section_data in master_dump.items():
-        if not isinstance(section_data, dict) and not isinstance(section_data, list):
+            squashed["characters"][char_id] = char_record
+            if c_name_en:
+                squashed["characters"][c_name_en] = char_record
+
+    # 2. Perks (Character Perks + General Perks)
+    all_perk_entries: List[Tuple[str, str, dict]] = []
+
+    for char_id, char_entry in en_dump.items():
+        if isinstance(char_entry, dict) and "Character" in char_entry:
+            c_name_en = char_entry["Character"].get("DisplayName", {}).get("LocalizedString", "")
+            for p in char_entry.get("Perks", []):
+                all_perk_entries.append((char_id, c_name_en, p))
+        elif char_id == "General" and isinstance(char_entry, dict):
+            for ptype in ["SurvivorPerks", "KillerPerks"]:
+                for p in char_entry.get(ptype, []):
+                    all_perk_entries.append(("General", "General", p))
+
+    for char_id, c_name_en, p_en in all_perk_entries:
+        pid = p_en.get("Id", "")
+        pname_en = p_en.get("DisplayName", {}).get("LocalizedString", "")
+        if not pname_en:
             continue
 
-        # A. Character Sections (e.g. K01, S01, K02...)
-        if isinstance(section_data, dict) and ("Character" in section_data or "Perks" in section_data or "Addons" in section_data or "ItemAddons" in section_data):
-            char_block = section_data.get("Character", {})
-            char_name_field = char_block.get("DisplayName", {})
-            char_lore_field = char_block.get("BackStory") or char_block.get("Biography") or {}
-            char_power_block = section_data.get("Power", {})
+        perk_record = {
+            "name": pname_en,
+            "character_code": char_id if char_id != "General" else None,
+            "character_name": c_name_en if char_id != "General" else None,
+            "translations": {},
+        }
 
-            canonical_name = resolve_text(char_name_field, en_dict, fallback=root_key, en_dict=en_dict, text_to_guid=text_to_guid)
-            if not canonical_name or canonical_name.startswith("SURVIVOR_") or canonical_name.startswith("KILLER_"):
-                # Handle special case where SourceString was internal token
-                loc_string = char_name_field.get("LocalizedString") if isinstance(char_name_field, dict) else None
-                canonical_name = loc_string or root_key
-
-            char_chapter = section_data.get("Chapter") or section_data.get("ChapterName") or "Base Game"
-            if isinstance(char_chapter, dict):
-                char_chapter = resolve_text(char_chapter, en_dict, fallback="Base Game", en_dict=en_dict, text_to_guid=text_to_guid)
-
-            char_translations: Dict[str, Dict[str, str]] = {}
-            for loc in available_locales:
-                l_dict = locale_tables[loc]
-                l_name = resolve_text(char_name_field, l_dict, fallback=canonical_name, en_dict=en_dict, text_to_guid=text_to_guid)
-                l_lore = resolve_text(char_lore_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
-                p_name = resolve_text(char_power_block.get("DisplayName"), l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
-                p_desc = resolve_text(char_power_block.get("Description"), l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
-
-                # Resolve localized chapter name
-                loc_ch = char_chapter
-                for ch_pattern, ch_locs in CHAPTER_TRANSLATIONS_MASTER.items():
-                    if ch_pattern.lower() in char_chapter.lower() or char_chapter.lower() in ch_pattern.lower():
-                        loc_ch = ch_locs.get(loc, ch_locs.get("en", char_chapter))
+        for lang_code, dump_data in localized_dumps.items():
+            p_lang = None
+            if char_id == "General" and "General" in dump_data:
+                for ptype in ["SurvivorPerks", "KillerPerks"]:
+                    for cand in dump_data["General"].get(ptype, []):
+                        if cand.get("Id") == pid:
+                            p_lang = cand
+                            break
+                    if p_lang:
+                        break
+            elif char_id in dump_data:
+                for cand in dump_data[char_id].get("Perks", []):
+                    if cand.get("Id") == pid:
+                        p_lang = cand
                         break
 
-                char_translations[loc] = {
-                    "name": l_name,
-                    "lore": l_lore,
-                    "chapter_name": loc_ch,
-                }
-                if p_name or p_desc:
-                    char_translations[loc]["power_name"] = p_name
-                    char_translations[loc]["power_description"] = p_desc
+            if p_lang:
+                name_l = p_lang.get("DisplayName", {}).get("LocalizedString", pname_en)
+                desc_l = (
+                    p_lang.get("Description", {}).get("LocalizedString")
+                    or p_lang.get("GameplayText", {}).get("LocalizedString", "")
+                )
+            else:
+                name_l = pname_en
+                desc_l = p_en.get("Description", {}).get("LocalizedString", "")
 
-            # Key primarily by canonical name to avoid code_prefix mixups (e.g. S18/S19 Stranger Things)
-            c_key = canonical_name.strip() if canonical_name else root_key
-            characters_out[c_key] = {
-                "name": canonical_name,
-                "code_prefix": root_key if re.match(r"^[KS]\d{2,3}$", root_key) else "",
-                "chapter_name": char_chapter,
-                "translations": char_translations,
+            perk_record["translations"][lang_code] = {
+                "name": name_l,
+                "description": desc_l,
             }
-            # Also register by root_key alias if different
-            if root_key != c_key:
-                characters_out[root_key] = {
-                    "name": canonical_name,
-                    "code_prefix": root_key if re.match(r"^[KS]\d{2,3}$", root_key) else "",
-                    "chapter_name": char_chapter,
-                    "translations": char_translations,
-                }
 
-            # Process Perks under character
-            for perk in section_data.get("Perks", []):
-                p_name_field = perk.get("DisplayName", {})
-                p_desc_field = perk.get("Description", {})
-                canon_perk_name = resolve_text(p_name_field, en_dict, fallback=perk.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
-                if not canon_perk_name:
-                    continue
+        squashed["perks"][pname_en] = perk_record
+        if "Favor" in pname_en:
+            squashed["perks"][pname_en.replace("Favor", "Favour")] = perk_record
+        elif "Favour" in pname_en:
+            squashed["perks"][pname_en.replace("Favour", "Favor")] = perk_record
+        if pname_en == "Kinship":
+            squashed["perks"]["Camaraderie"] = perk_record
+        elif pname_en == "Camaraderie":
+            squashed["perks"]["Kinship"] = perk_record
 
-                perk_translations: Dict[str, Dict[str, str]] = {}
-                for loc in available_locales:
-                    l_dict = locale_tables[loc]
-                    l_pname = resolve_text(p_name_field, l_dict, fallback=canon_perk_name, en_dict=en_dict, text_to_guid=text_to_guid)
-                    l_pdesc = resolve_text(p_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
-                    perk_translations[loc] = {
-                        "name": l_pname,
-                        "description": l_pdesc,
-                    }
-
-                perks_out[canon_perk_name] = {
-                    "name": canon_perk_name,
-                    "character_code": root_key,
-                    "character_name": canonical_name,
-                    "translations": perk_translations,
-                }
-
-            # Process Killer Power Addons under character (ItemAddons or Addons)
-            char_addons = section_data.get("ItemAddons", []) or section_data.get("Addons", [])
-            for addon in char_addons:
-                a_name_field = addon.get("DisplayName", {})
-                a_desc_field = addon.get("Description", {})
-                canon_addon_name = resolve_text(a_name_field, en_dict, fallback=addon.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
-                if not canon_addon_name:
-                    continue
-
-                addon_translations: Dict[str, Dict[str, str]] = {}
-                for loc in available_locales:
-                    l_dict = locale_tables[loc]
-                    l_aname = resolve_text(a_name_field, l_dict, fallback=canon_addon_name, en_dict=en_dict, text_to_guid=text_to_guid)
-                    l_adesc = resolve_text(a_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
-                    addon_translations[loc] = {
-                        "name": l_aname,
-                        "description": l_adesc,
-                    }
-
-                addons_out[canon_addon_name] = {
-                    "name": canon_addon_name,
-                    "associated_target": canonical_name,
-                    "category": "Killer",
-                    "translations": addon_translations,
-                }
-
-        # B. Items Section (Survivor items: medkits, toolboxes, flashlights, keys, maps, firecrackers)
-        if root_key in ["Items", "SurvivorItems"] and isinstance(section_data, list):
-            for item in section_data:
-                i_name_field = item.get("DisplayName", {})
-                i_desc_field = item.get("Description", {})
-                canon_item_name = resolve_text(i_name_field, en_dict, fallback=item.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
-                if not canon_item_name:
-                    continue
-
-                sk = simplify_name_key(canon_item_name)
-                mapping = ITEMS_MASTER_GUIDS.get(sk)
-
-                name_guid = None
-                desc_guid = None
-                item_cat = item.get("Category", "Survivor")
-                if mapping:
-                    name_guid, desc_guid, item_cat = mapping
-
-                item_translations: Dict[str, Dict[str, str]] = {}
-                for loc in available_locales:
-                    l_dict = locale_tables[loc]
-                    
-                    # 1. Localized name
-                    l_iname = canon_item_name
-                    if name_guid and name_guid in l_dict and l_dict[name_guid]:
-                        l_iname = l_dict[name_guid]
-                    else:
-                        l_iname = resolve_text(i_name_field, l_dict, fallback=canon_item_name, en_dict=en_dict, text_to_guid=text_to_guid)
-
-                    # 2. Localized description
-                    l_idesc = ""
-                    if canon_item_name in SPECIAL_ITEM_DESCRIPTIONS:
-                        l_idesc = SPECIAL_ITEM_DESCRIPTIONS[canon_item_name].get(loc, SPECIAL_ITEM_DESCRIPTIONS[canon_item_name].get("en", ""))
-                    elif desc_guid and desc_guid in l_dict and l_dict[desc_guid]:
-                        l_idesc = l_dict[desc_guid]
-                    else:
-                        l_idesc = resolve_text(i_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
-
-                    item_translations[loc] = {
-                        "name": l_iname,
-                        "description": l_idesc,
-                    }
-
-                items_out[canon_item_name] = {
-                    "name": canon_item_name,
-                    "category": item_cat,
-                    "role": "Survivor",
-                    "translations": item_translations,
-                }
-
-        # C. Global / Survivor Add-ons
-        if root_key in ["SurvivorAddons", "GlobalAddons"] and isinstance(section_data, list):
-            for addon in section_data:
-                a_name_field = addon.get("DisplayName", {})
-                a_desc_field = addon.get("Description", {})
-                canon_addon_name = resolve_text(a_name_field, en_dict, fallback=addon.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
-                if not canon_addon_name:
-                    continue
-
-                addon_translations = {}
-                for loc in available_locales:
-                    l_dict = locale_tables[loc]
-                    l_aname = resolve_text(a_name_field, l_dict, fallback=canon_addon_name, en_dict=en_dict, text_to_guid=text_to_guid)
-                    l_adesc = resolve_text(a_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
-                    addon_translations[loc] = {
-                        "name": l_aname,
-                        "description": l_adesc,
-                    }
-
-                target = addon.get("Category", "Survivor Item")
-                if "serum" in canon_addon_name.lower() or "blight serum" in canon_addon_name.lower() or "refined serum" in canon_addon_name.lower():
-                    target = "Special"
-
-                addons_out[canon_addon_name] = {
-                    "name": canon_addon_name,
-                    "category": "Survivor",
-                    "associated_target": target,
-                    "translations": addon_translations,
-                }
-
-        # D. Offerings Sections (SurvivorOfferings, KillerOfferings, CommonOfferings)
-        if root_key in ["SurvivorOfferings", "KillerOfferings", "CommonOfferings", "Offerings"] and isinstance(section_data, list):
-            offering_role = "Survivor" if "Survivor" in root_key else ("Killer" if "Killer" in root_key else "All")
-            for offering in section_data:
-                o_name_field = offering.get("DisplayName", {})
-                o_desc_field = offering.get("Description", {})
-                canon_off_name = resolve_text(o_name_field, locale_tables.get("en", {}), fallback=offering.get("Id", ""))
-                if not canon_off_name:
-                    continue
-
-                ck = simplify_name_key(canon_off_name)
-                mapping = OFFERINGS_MASTER_GUIDS.get(ck)
-                
-                cat = offering.get("Category", "Offering")
-                role = offering_role
-                rarity = offering.get("Rarity", "Common")
-                name_guid = None
-                desc_guid = None
-
-                if mapping:
-                    name_guid, desc_guid, cat, role, rarity = mapping
-
-                name_lower = canon_off_name.lower()
-                if (
-                    rarity == "Event"
-                    or "dousing" in name_lower
-                    or "dowsing" in name_lower
-                    or "cobbler" in name_lower
-                    or "terrormisu" in name_lower
-                    or "flan" in name_lower
-                    or "torte" in name_lower
-                    or "scream pie" in name_lower
-                    or "gateau" in name_lower
-                    or "sacrificial cake" in name_lower
-                    or "cursed seed" in name_lower
-                    or "pustula" in name_lower
-                    or "bbq" in name_lower
-                    or "red envelope" in name_lower
-                    or "bloodshot eye" in name_lower
-                ):
-                    cat = "Special"
-                    role = "All"
-                    rarity = "Event"
-
-                off_translations = {}
-                for loc in available_locales:
-                    l_dict = locale_tables[loc]
-                    
-                    # 1. Name resolution
-                    l_oname = canon_off_name
-                    if name_guid and name_guid in l_dict:
-                        l_oname = l_dict[name_guid]
-                    else:
-                        l_oname = resolve_text(o_name_field, l_dict, fallback=canon_off_name)
-
-                    # 2. Description resolution
-                    l_odesc = ""
-                    matched_override = None
-                    for s_name, s_descs in SPECIAL_DESCRIPTIONS_OVERRIDE.items():
-                        if simplify_name_key(s_name) == ck:
-                            matched_override = s_descs.get(loc, s_descs.get("en", ""))
-                            break
-
-                    if matched_override:
-                        l_odesc = matched_override
-                    elif desc_guid and desc_guid in l_dict:
-                        l_odesc = l_dict[desc_guid]
-                    else:
-                        l_odesc = resolve_text(o_desc_field, l_dict, fallback="")
-
-                    off_translations[loc] = {
-                        "name": l_oname,
-                        "description": l_odesc,
-                    }
-
-                offerings_out[canon_off_name] = {
-                    "name": canon_off_name,
-                    "category": cat,
-                    "role": role,
-                    "rarity": rarity,
-                    "icon_url": offering.get("Icon", ""),
-                    "icon_local_path": offering.get("IconPath", ""),
-                    "translations": off_translations,
-                }
-
-        # E. General Perks (Survivor & Killer General Perks)
-        if root_key in ["GeneralPerks", "CommonPerks", "General"] and isinstance(section_data, list):
-            for perk in section_data:
-                p_name_field = perk.get("DisplayName", {})
-                p_desc_field = perk.get("Description", {})
-                canon_perk_name = resolve_text(p_name_field, en_dict, fallback=perk.get("Id", ""), en_dict=en_dict, text_to_guid=text_to_guid)
-                if not canon_perk_name:
-                    continue
-
-                perk_translations = {}
-                for loc in available_locales:
-                    l_dict = locale_tables[loc]
-                    l_pname = resolve_text(p_name_field, l_dict, fallback=canon_perk_name, en_dict=en_dict, text_to_guid=text_to_guid)
-                    l_pdesc = resolve_text(p_desc_field, l_dict, fallback="", en_dict=en_dict, text_to_guid=text_to_guid)
-                    perk_translations[loc] = {
-                        "name": l_pname,
-                        "description": l_pdesc,
-                    }
-
-                perks_out[canon_perk_name] = {
-                    "name": canon_perk_name,
-                    "character_code": "General",
-                    "character_name": "General",
-                    "translations": perk_translations,
-                }
-
-    bundle = {
-        "version": "2.0",
-        "supported_locales": available_locales,
-        "chapters": CHAPTER_TRANSLATIONS_MASTER,
-        "characters": characters_out,
-        "perks": perks_out,
-        "items": items_out,
-        "addons": addons_out,
-        "offerings": offerings_out,
+    EVENT_ITEM_IDS = {
+        'item_anniversarymedkit',
+        'item_banquetmedkit',
+        'item_masquerademedkit',
+        'item_allhallowsevelunchbox',
+        'item_anniversarytoolbox',
+        'item_banquettoolbox',
+        'item_masqueradetoolbox',
+        'item_festivetoolbox',
+        'item_anniversaryflashlight',
+        'item_banquetflashlight',
+        'item_masqueradeflashlight',
+        'item_willowisp',
+        'item_chinesefirecracker',
+        'item_winterpartystarter',
+        'item_thirdyearpartystarter',
     }
 
-    return bundle
+    EVENT_ADDON_IDS = {
+        'addon_refinedserum',
+        'addon_brokenbulb',
+    }
+
+    FOG_VIAL_ITEM_IDS = {
+        'item_apprenticesfogvial',
+        'item_artisansfogvial',
+        'item_vigosfogvial',
+    }
+
+    FOG_VIAL_ADDON_IDS = {
+        'addon_volcanicstone',
+        'addon_reactivecompound',
+        'addon_oilysap',
+        'addon_mushroomformula',
+        'addon_potentextract',
+    }
+
+    TRIAL_EXCLUSIVE_ITEM_IDS = {
+        'item_emp',
+        'item_firstaidspray',
+        'item_vaccine',
+        'item_remoteflameturret',
+        'item_vhstape',
+        'item_lamentconfiguration',
+        'item_eyeofvecna',
+        'item_handofvecna',
+        'item_keycard',
+        'item_candelabra',
+        'item_lantern',
+        'item_bloodcan',
+        'item_fogcrystal',
+        'item_voidcrystal',
+        'item_fragilemirror',
+        'item_pocketmirror',
+        'item_glowingfungus',
+        'item_searcherspendant',
+        'item_antidote',
+    }
+
+    def resolve_item_canonical(it_id: str, name_en: str, raw_rarity: str) -> Tuple[str, str, str]:
+        id_norm = it_id.lower().replace('-', '_')
+        name_norm = name_en.lower()
+
+        if id_norm in EVENT_ITEM_IDS or any(k in name_norm for k in ['anniversary', 'banquet', 'masquerade', 'lunchbox', "will o' wisp", 'party starter', 'chinese firecracker', 'festive toolbox']):
+            return "Event", "Survivor", "Event"
+        if id_norm in FOG_VIAL_ITEM_IDS or 'fog vial' in name_norm:
+            return "Fog Vial", "Survivor", raw_rarity or "Common"
+        if id_norm in TRIAL_EXCLUSIVE_ITEM_IDS or any(k in name_norm for k in ['spray', 'vaccine', 'turret', 'lament', 'vecna', 'keycard', 'candelabra', 'lantern', 'vhs tape', 'blood can', 'crystal', 'mirror', 'fungus', 'pendant', 'antidote', 'emp']):
+            return "Trial Artifact", "Survivor", "Special"
+        if any(k in name_norm for k in ['med-kit', 'aid kit']):
+            return "Med-Kit", "Survivor", raw_rarity or "Common"
+        if any(k in name_norm for k in ['toolbox', 'tools']):
+            return "Toolbox", "Survivor", raw_rarity or "Common"
+        if 'flashlight' in name_norm:
+            return "Flashlight", "Survivor", raw_rarity or "Common"
+        if 'key' in name_norm:
+            return "Key", "Survivor", raw_rarity or "Common"
+        if 'map' in name_norm:
+            return "Map", "Survivor", raw_rarity or "Common"
+        if 'firecracker' in name_norm or 'flash grenade' in name_norm:
+            return "Firecracker", "Survivor", raw_rarity or "Common"
+        return "Trial Artifact", "Survivor", raw_rarity or "Common"
+
+    KILLER_ADDON_RARITIES = {
+        # Trapper K01
+        'Addon_Trapper_TrapperGloves': 'Common',
+        'Addon_Trapper_PaddedJaws': 'Common',
+        'Addon_Trapper_MakeshiftWrap': 'Common',
+        'Addon_Trapper_BearOil': 'Common',
+        'Addon_Trapper_CoffeeGrounds': 'Uncommon',
+        'Addon_Trapper_LengthenedJaws': 'Uncommon',
+        'Addon_Trapper_SerratedJaws': 'Uncommon',
+        'Addon_Trapper_WaxBrick': 'Uncommon',
+        'Addon_Trapper_4CoilSpringKit': 'Uncommon',
+        'Addon_Trapper_FastTools': 'Rare',
+        'Addon_Trapper_RustedJaws': 'Rare',
+        'Addon_Trapper_SecondaryCoil': 'Rare',
+        'Addon_Trapper_TarBottle': 'Rare',
+        'Addon_Trapper_LogwoodDye': 'Rare',
+        'Addon_Trapper_BloodyCoil': 'Very Rare',
+        'Addon_Trapper_HoningStone': 'Very Rare',
+        'Addon_Trapper_OilyCoil': 'Very Rare',
+        'Addon_Trapper_TensionSpring': 'Very Rare',
+        'Addon_Trapper_TrapperSack': 'Ultra Rare',
+        'Addon_Trapper_IridescentStone': 'Ultra Rare',
+        'Trapper Gloves': 'Common',
+        'Padded Jaws': 'Common',
+        'Makeshift Wrap': 'Common',
+        'Bear Oil': 'Common',
+        'Coffee Grounds': 'Uncommon',
+        'Lengthened Jaws': 'Uncommon',
+        'Serrated Jaws': 'Uncommon',
+        'Wax Brick': 'Uncommon',
+        '4-Coil Spring Kit': 'Uncommon',
+        'Fast Tools': 'Rare',
+        'Rusted Jaws': 'Rare',
+        'Secondary Coil': 'Rare',
+        'Tar Bottle': 'Rare',
+        'Logwood Dye': 'Rare',
+        'Bloody Coil': 'Very Rare',
+        'Honing Stone': 'Very Rare',
+        'Oily Coil': 'Very Rare',
+        'Tension Spring': 'Very Rare',
+        'Trapper Sack': 'Ultra Rare',
+        'Iridescent Stone': 'Ultra Rare',
+    }
+
+    def resolve_addon_canonical(aid: str, name_en: str, target: str, parent_code: str, raw_rarity: str) -> Tuple[str, str, str]:
+        id_norm = aid.lower().replace('-', '_')
+        name_norm = name_en.lower()
+        final_rarity = SURVIVOR_ADDON_RARITIES.get(aid) or KILLER_ADDON_RARITIES.get(aid) or KILLER_ADDON_RARITIES.get(name_en) or raw_rarity or "Common"
+
+        if id_norm in EVENT_ADDON_IDS or name_norm in ['refined serum', 'broken bulb']:
+            return "Event", "Survivor", "Event"
+        if id_norm in FOG_VIAL_ADDON_IDS or name_norm in ['volcanic stone', 'reactive compound', 'oily sap', 'mushroom formula', 'potent extract']:
+            return "Fog Vials", "Survivor", final_rarity or "Common"
+        if target in ["Med-Kits", "Toolboxes", "Flashlights", "Keys", "Maps", "Firecrackers", "Fog Vials"]:
+            return target, "Survivor", final_rarity or "Common"
+        if parent_code.startswith("K"):
+            return target, "Killer", final_rarity or "Common"
+        return target, "Survivor" if parent_code == "Survivor" else "Killer", final_rarity or "Common"
+
+    # 3. Items
+    for it_en in en_dump.get("Items", []):
+        it_id = it_en.get("Id", "")
+        it_name_en = it_en.get("DisplayName", {}).get("LocalizedString", "") or it_en.get("Name", "")
+        if not it_name_en:
+            continue
+
+        raw_rar = it_en.get("Rarity", "")
+        cat, role, rar = resolve_item_canonical(it_id, it_name_en, raw_rar)
+
+        item_record = {
+            "name": it_name_en,
+            "category": cat,
+            "role": role,
+            "rarity": rar,
+            "translations": {},
+        }
+
+        for lang_code, dump_data in localized_dumps.items():
+            it_lang = None
+            for cand in dump_data.get("Items", []):
+                if cand.get("Id") == it_id:
+                    it_lang = cand
+                    break
+
+            if it_lang:
+                name_l = it_lang.get("DisplayName", {}).get("LocalizedString", it_name_en)
+                desc_l = it_lang.get("Description", {}).get("LocalizedString", "")
+            else:
+                name_l = it_name_en
+                desc_l = it_en.get("Description", {}).get("LocalizedString", "")
+
+            item_record["translations"][lang_code] = {
+                "name": name_l,
+                "description": desc_l,
+            }
+
+        squashed["items"][it_name_en] = item_record
+
+    # 4. Addons (Killer Addons + Survivor Addons)
+    all_addon_entries: List[Tuple[str, str, dict]] = []
+    for char_id, char_entry in en_dump.items():
+        if isinstance(char_entry, dict) and "Character" in char_entry:
+            c_name_en = char_entry["Character"].get("DisplayName", {}).get("LocalizedString", "")
+            for a in char_entry.get("ItemAddons", []):
+                all_addon_entries.append((char_id, c_name_en, a))
+    for a in en_dump.get("SurvivorAddons", []):
+        all_addon_entries.append(("Survivor", a.get("AssociatedTarget", "Survivor"), a))
+
+    TRAPPER_ADDON_LOCALIZATIONS = {
+        "Addon_Trapper_BearOil": {
+            "en": {"name": "Bear Oil", "description": "Rendered animal fat used to lubricate mechanical parts.<br><li>Setting <b>Bear Traps</b> is completely silent.</li>"},
+            "pl": {"name": "Niedźwiedzi tłuszcz", "description": "Stopiony zwierzęcy tłuszcz, którym można nasmarować pułapkę na niedźwiedzie.<br><li>Zastawianie <b>pułapek na niedźwiedzie</b> jest całkowicie ciche.</li>"},
+            "de": {"name": "Bärenöl", "description": "Ausgelassenes Tierfett zum Schmieren mechanischer Teile.<br><li>Das Aufstellen von <b>Bärenfallen</b> ist völlig lautlos.</li>"},
+            "es": {"name": "Aceite de oso", "description": "Grasa animal derretida para lubricar piezas mecánicas.<br><li>Colocar <b>trampas para osos</b> es completamente silencioso.</li>"},
+            "ja": {"name": "熊の油", "description": "機械部品の潤滑に使用される動物性油脂。<br><li><b>トラバサミ</b>の設置音が完全に無音になる。</li>"}
+        },
+        "Addon_Trapper_WaxBrick": {
+            "en": {"name": "Wax Brick", "description": "A large block of translucent paraffin wax.<br><li><b>Increases</b> the time required for Survivors to rescue or escape a <b>Bear Trap</b> by <b>33%</b>.</li>"},
+            "pl": {"name": "Kostka wosku", "description": "Duży blok półprzezroczystego wosku parafinowego.<br><li><b>Wydłuża</b> czas potrzebny ocalałym na ratunek lub ucieczkę z <b>pułapki na niedźwiedzie</b> o <b>33%</b>.</li>"},
+            "de": {"name": "Wachsblock", "description": "Ein großer Block durchscheinendes Paraffinwachs.<br><li><b>Erhöht</b> die Zeit, die Überlebende benötigen, um sich aus einer <b>Bärenfalle</b> zu befreien oder gerettet zu werden, um <b>33%</b>.</li>"},
+            "es": {"name": "Ladrillo de cera", "description": "Un bloque grande de cera de parafina translúcida.<br><li><b>Aumenta</b> el tiempo necesario para que los supervivientes rescaten o escapen de una <b>trampa para osos</b> en un <b>33%</b>.</li>"},
+            "ja": {"name": "パラフィンワックスの塊", "description": "半透明のパラフィンワックスの大きな塊。<br><li>生存者が<b>トラバサミ</b>から脱出または救出するのにかかる時間が<b>33%増加</b>する。</li>"}
+        },
+        "Addon_Trapper_LogwoodDye": {
+            "en": {"name": "Logwood Dye", "description": "A natural dark brown dye used to coat the Bear Trap.<br><li><b>Darkens Bear Traps moderately</b>.</li>"},
+            "pl": {"name": "Barwnik z modrzewia", "description": "Naturalny ciemnobrązowy barwnik używany do powlekania pułapek na niedźwiedzie.<br><li><b>Umiarkowanie przyciemnia pułapki na niedźwiedzie</b>.</li>"},
+            "de": {"name": "Blauholz-Farbstoff", "description": "Ein natürlicher dunkelbrauner Farbstoff zum Beschichten der Bärenfalle.<br><li><b>Dunkelt Bärenfallen mäßig ab</b>.</li>"},
+            "es": {"name": "Tinte de palo de campeche", "description": "Un tinte natural marrón oscuro utilizado para recubrir la trampa para osos.<br><li><b>Oscurece moderadamente las trampas para osos</b>.</li>"},
+            "ja": {"name": "ログウッドの染料", "description": "トラバサミをコーティングするための濃褐色の天然染料。<br><li><b>トラバサミの色がそこそこ暗くなる</b>。</li>"}
+        },
+        "Addon_Trapper_LengthenedJaws": {
+            "en": {"name": "Lengthened Jaws", "description": "A pair of lengthened jaws that replaces the normal ones on the Bear Trap.<br><li>Survivors that escape a <b>Bear Trap</b> are inflicted with <b>Deep Wound</b>.</li>"},
+            "pl": {"name": "Wydłużone szczęki", "description": "Para wydłużonych szczęk zastępująca zwykłe szczęki pułapki na niedźwiedzie.<br><li>Ocalali, którzy uciekną z <b>pułapki na niedźwiedzie</b>, otrzymują efekt <b>Głęboka Rana</b>.</li>"},
+            "de": {"name": "Verlängerte Backen", "description": "Ein Paar verlängerte Backen, die die normalen der Bärenfalle ersetzen.<br><li>Überlebende, die aus einer <b>Bärenfalle</b> entkommen, erleiden den Status <b>Tiefe Wunde</b>.</li>"},
+            "es": {"name": "Mandíbulas alargadas", "description": "Un par de mandíbulas alargadas que reemplazan a las normales en la trampa para osos.<br><li>Los supervivientes que escapan de una <b>trampa para osos</b> sufren el efecto <b>Herida profunda</b>.</li>"},
+            "ja": {"name": "長めの歯", "description": "トラバサミの通常の歯と交換する長めの歯。<br><li><b>トラバサミ</b>から脱出した生存者に<b>深手</b>を付与する。</li>"}
+        },
+        "Addon_Trapper_SerratedJaws": {
+            "en": {"name": "Serrated Jaws", "description": "Add small, jagged blades to the trap jaws to maximize damage.<br><li>Survivors caught in a <b>Bear Trap</b> suffer from the <b>Mangled</b> and <b>Hemorrhage</b> Status Effects until fully healed.</li>"},
+            "pl": {"name": "Ząbkowane szczęki", "description": "Dodaje małe, poszarpane ostrza do szczęk pułapki.<br><li>Ocalali schwytani w <b>pułapkę na niedźwiedzie</b> cierpią na efekty <b>Zmasakrowanie</b> i <b>Krwotok</b> do momentu pełnego wyleczenia.</li>"},
+            "de": {"name": "Gezackte Backen", "description": "Fügt den Fallenbacken kleine, gezackte Klingen hinzu.<br><li>Überlebende, die in eine <b>Bärenfalle</b> geraten, leiden unter den Statuseffekten <b>Zerfleischt</b> und <b>Blutung</b>, bis sie vollständig geheilt sind.</li>"},
+            "es": {"name": "Mandíbulas dentadas", "description": "Añade hojas dentadas a las mandíbulas de la trampa.<br><li>Los supervivientes atrapados en una <b>trampa para osos</b> sufren los efectos <b>Mutilado</b> y <b>Hemorragia</b> hasta curarse por completo.</li>"},
+            "ja": {"name": "ギザギザの歯", "description": "トラバサミの歯にギザギザの刃を取り付ける。<br><li><b>トラバサミ</b>にかかった生存者は、完全に回復するまで<b>重症</b>と<b>出血</b>のステータス効果を受ける。</li>"}
+        },
+        "Addon_Trapper_RustedJaws": {
+            "en": {"name": "Rusted Jaws", "description": "A heavily rusted pair of trap jaws that replaces the normal ones on the Bear Trap.<br><li>Survivors caught in a <b>Bear Trap</b> suffer from the <b>Broken</b> Status Effect until fully healed.</li>"},
+            "pl": {"name": "Zardzewiałe szczęki", "description": "Mocno zardzewiała para szczęk zastępująca zwykłe szczęki pułapki na niedźwiedzie.<br><li>Ocalali schwytani w <b>pułapkę na niedźwiedzie</b> cierpią na efekt <b>Okaleczenie</b> do momentu pełnego wyleczenia.</li>"},
+            "de": {"name": "Rostige Backen", "description": "Ein stark verrostetes Paar Fallenbacken, die die normalen der Bärenfalle ersetzen.<br><li>Überlebende, die in eine <b>Bärenfalle</b> geraten, leiden unter dem Statuseffekts <b>Gebrochen</b>, bis sie vollständig geheilt sind.</li>"},
+            "es": {"name": "Mandíbulas oxidadas", "description": "Un par de mandíbulas muy oxidadas que reemplazan a las normales en la trampa para osos.<br><li>Los supervivientes atrapados en una <b>trampa para osos</b> sufren el efecto <b>Desesperanza</b> hasta curarse por completo.</li>"},
+            "ja": {"name": "錆びた歯", "description": "トラバサミの通常の歯と交換する錆びた歯。<br><li><b>トラバサミ</b>にかかった生存者は、完全に回復するまで<b>衰弱</b>のステータス効果を受ける。</li>"}
+        },
+        "Addon_Trapper_FastTools": {
+            "en": {"name": "Fast Tools", "description": "A specialized set of tools used to fasten Bear Traps to ensure their effectiveness.<br><li><b>Increases Bear Trap</b> setting speed by <b>50%</b>.</li><li><b>Increases</b> the time required to rescue a Survivor or attempt escape from a <b>Bear Trap</b> by <b>25%</b>.</li>"},
+            "pl": {"name": "Szybkie narzędzia", "description": "Specjalny zestaw narzędzi używany do mocowania pułapek na niedźwiedzie, aby zapewnić ich skuteczność.<br><li><b>Zwiększa</b> prędkość zastawiania <b>pułapek na niedźwiedzie</b> o <b>50%</b>.</li><li><b>Wydłuża</b> czas potrzebny na ratunek ocalałego lub próbę ucieczki z <b>pułapki na niedźwiedzie</b> o <b>25%</b>.</li>"},
+            "de": {"name": "Schnelle Werkzeuge", "description": "Ein spezielles Werkzeugset zum schnellen Befestigen von Bärenfallen.<br><li><b>Erhöht</b> das Aufstelltempo von <b>Bärenfallen</b> um <b>50%</b>.</li><li><b>Erhöht</b> die Zeit zum Retten oder Befreien aus einer <b>Bärenfalle</b> um <b>25%</b>.</li>"},
+            "es": {"name": "Herramientas rápidas", "description": "Un conjunto especializado de herramientas utilizadas para asegurar las trampas para osos.<br><li><b>Aumenta</b> la velocidad de colocación de <b>trampas para osos</b> en un <b>50%</b>.</li><li><b>Aumenta</b> el tiempo necesario para rescatar o escapar de una <b>trampa para osos</b> en un <b>25%</b>.</li>"},
+            "ja": {"name": "素早い工具", "description": "トラバサミを素早く調整するための特殊工具一式。<br><li><b>トラバサミ</b>の設置速度が<b>50%上昇</b>する。</li><li>生存者が<b>トラバサミ</b>から脱出または救出するのにかかる時間が<b>25%増加</b>する。</li>"}
+        }
+    }
+
+    for parent_code, target_name, a_en in all_addon_entries:
+        aid = a_en.get("Id", "")
+        aname_en = a_en.get("DisplayName", {}).get("LocalizedString", "") or a_en.get("Name", "")
+        if not aname_en:
+            continue
+
+        raw_rar = a_en.get("Rarity", "")
+        target_res, cat_res, rar_res = resolve_addon_canonical(aid, aname_en, target_name, parent_code, raw_rar)
+
+        addon_record = {
+            "name": aname_en,
+            "associated_target": target_res,
+            "category": cat_res,
+            "rarity": rar_res,
+            "translations": {},
+        }
+
+        for lang_code, dump_data in localized_dumps.items():
+            a_lang = None
+            if parent_code in dump_data:
+                for cand in dump_data[parent_code].get("ItemAddons", []):
+                    if cand.get("Id") == aid:
+                        a_lang = cand
+                        break
+            elif parent_code == "Survivor" and "SurvivorAddons" in dump_data:
+                for cand in dump_data["SurvivorAddons"]:
+                    if cand.get("Id") == aid:
+                        a_lang = cand
+                        break
+
+            trap_loc = TRAPPER_ADDON_LOCALIZATIONS.get(aid) or TRAPPER_ADDON_LOCALIZATIONS.get(aname_en) or TRAPPER_ADDON_LOCALIZATIONS.get(f"Addon_Trapper_{aname_en.replace(' ', '')}")
+            if trap_loc and lang_code in trap_loc:
+                name_l = trap_loc[lang_code]["name"]
+                desc_l = trap_loc[lang_code]["description"]
+            elif a_lang:
+                name_l = a_lang.get("DisplayName", {}).get("LocalizedString", aname_en)
+                desc_l = a_lang.get("Description", {}).get("LocalizedString", "")
+            else:
+                name_l = aname_en
+                desc_l = a_en.get("Description", {}).get("LocalizedString", "")
+
+            addon_record["translations"][lang_code] = {
+                "name": name_l,
+                "description": desc_l,
+            }
+
+        squashed["addons"][aname_en] = addon_record
+        if target_res:
+            squashed["addons"][f"{aname_en} ({target_res})"] = addon_record
+
+    # 5. Offerings
+    all_off_entries = []
+    for off_cat in ["CommonOfferings", "KillerOfferings", "SurvivorOfferings"]:
+        for off in en_dump.get(off_cat, []):
+            all_off_entries.append((off_cat, off))
+
+    for off_cat, off_en in all_off_entries:
+        off_id = off_en.get("Id", "")
+        off_name_en = off_en.get("DisplayName", {}).get("LocalizedString", "") or off_en.get("Name", "")
+        if not off_name_en:
+            continue
+
+        off_record = {
+            "name": off_name_en,
+            "category": off_cat,
+            "role": "Killer" if "Killer" in off_cat else ("Survivor" if "Survivor" in off_cat else "All"),
+            "translations": {},
+        }
+
+        for lang_code, dump_data in localized_dumps.items():
+            off_lang = None
+            for cand in dump_data.get(off_cat, []):
+                if cand.get("Id") == off_id:
+                    off_lang = cand
+                    break
+
+            if off_lang:
+                name_l = off_lang.get("DisplayName", {}).get("LocalizedString", off_name_en)
+                desc_l = off_lang.get("Description", {}).get("LocalizedString", "")
+            else:
+                name_l = off_name_en
+                desc_l = off_en.get("Description", {}).get("LocalizedString", "")
+
+            off_record["translations"][lang_code] = {
+                "name": name_l,
+                "description": desc_l,
+            }
+
+        squashed["offerings"][off_name_en] = off_record
+
+    return squashed
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Extract and squash Dead by Daylight translations for LemonDBD backend."
-    )
-    parser.add_argument(
-        "--translations-dir",
-        "-d",
-        type=str,
-        default=str(Path(__file__).resolve().parent),
-        help="Path to the directory containing characters_dump.json and {locale}.json dumps.",
-    )
-    parser.add_argument(
-        "--out",
-        "-o",
-        type=str,
-        default=str(
-            Path(__file__).resolve().parent.parent / "backend" / "app" / "translations" / "translations.json"
-        ),
-        help="Target output file path for the squashed translations.json bundle.",
-    )
-    parser.add_argument(
-        "--locales",
-        "-l",
-        nargs="+",
-        help="List of locales to extract (e.g. --locales en pl de es ja fr). Defaults to all discovered *.json files.",
-    )
-    parser.add_argument(
-        "--minified",
-        "-m",
-        action="store_true",
-        help="Also write a minified .min.json file alongside the main output.",
-    )
+def run_pipeline():
+    if not DUMP_FILE.exists():
+        print(f"BŁĄD: Nie znaleziono pliku {DUMP_FILE}")
+        return
 
-    args = parser.parse_args()
+    en_file = BASE_DIR / "en.json"
+    if not en_file.exists():
+        print("BŁĄD: Brak pliku en.json w folderze roboczym.")
+        return
 
-    trans_dir = Path(args.translations_dir)
-    out_file = Path(args.out)
+    print("[1/5] Indeksowanie powiązań SourceString -> GUID Key...")
+    source_to_guid = build_source_to_guid_index()
+    print(f"      Zindeksowano {len(source_to_guid)} kluczy silnika.")
 
-    if not trans_dir.exists():
-        logger.error(f"Translations directory not found: {trans_dir}")
-        sys.exit(1)
+    print("[2/5] Wczytywanie bazy Tunables ze wszystkich podkatalogów...")
+    tunables = load_all_tunables(CHARACTERS_DIR)
+    print(f"      Zindeksowano {len(tunables)} znormalizowanych tunables.")
 
-    # 1. Discover or select locales
-    if args.locales:
-        locales = [l.lower() for l in args.locales]
-    else:
-        locales = discover_available_locales(trans_dir)
+    print("[2.5/5] Indeksowanie PerkLevelTunables ze wszystkich podkatalogów...")
+    perk_level_tunables_map = build_perk_level_tunables_map(CHARACTERS_DIR)
+    print(f"        Zindeksowano {len(perk_level_tunables_map)} kluczy perk tunables.")
 
-    logger.info("==================================================")
-    logger.info("        LemonDBD Translations Generator           ")
-    logger.info("==================================================")
-    logger.info(f"Translations Source: {trans_dir}")
-    logger.info(f"Target Output File:  {out_file}")
-    logger.info(f"Target Locales:      {', '.join(locales)}")
-    logger.info("--------------------------------------------------")
+    en_lang_map = flatten_lang_file(en_file)
 
-    # 2. Build squashed bundle
-    try:
-        bundle = build_squashed_translations_bundle(trans_dir, locales)
-    except Exception as e:
-        logger.error(f"Failed generating translations bundle: {e}", exc_info=True)
-        sys.exit(1)
+    with open(DUMP_FILE, "r", encoding="utf-8") as f:
+        base_dump = json.load(f)
 
-    # 3. Write output file
-    out_file.parent.mkdir(parents=True, exist_ok=True)
-    with open(out_file, "w", encoding="utf-8") as f:
-        json.dump(bundle, f, ensure_ascii=False, indent=2)
+    lang_files = [
+        f
+        for f in BASE_DIR.glob("*.json")
+        if f.stem in ["en", "pl", "de", "es", "ja"]
+    ]
 
-    file_size_kb = out_file.stat().st_size / 1024
-    logger.info(f"Generated {out_file.name} ({file_size_kb:.1f} KB)")
+    print(f"[3/5] Generowanie zrzutów dla {len(lang_files)} języków...")
 
-    if args.minified:
-        min_file = out_file.with_suffix(".min.json")
-        with open(min_file, "w", encoding="utf-8") as f:
-            json.dump(bundle, f, ensure_ascii=False, separators=(",", ":"))
-        logger.info(f"Generated {min_file.name} ({min_file.stat().st_size / 1024:.1f} KB)")
+    localized_dumps = {}
 
-    # 4. Summary metrics
-    logger.info("--------------------------------------------------")
-    logger.info("Extraction Metrics Summary:")
-    logger.info(f"  • Characters: {len(bundle['characters'])}")
-    logger.info(f"  • Perks:      {len(bundle['perks'])}")
-    logger.info(f"  • Items:      {len(bundle['items'])}")
-    logger.info(f"  • Addons:     {len(bundle['addons'])}")
-    logger.info(f"  • Offerings:  {len(bundle['offerings'])}")
-    logger.info(f"  • Locales:    {', '.join(bundle['supported_locales'])}")
-    logger.info("==================================================")
-    logger.info("Translations successfully squashed and ready for backend deployment!")
+    for lang_path in lang_files:
+        lang_code = lang_path.stem
+        print(
+            f"      -> Przetwarzanie: {lang_code.upper()} ({lang_path.name})"
+        )
+
+        target_lang_map = flatten_lang_file(lang_path)
+        target_keywords, en_keywords = build_keyword_dictionaries(
+            base_dump, target_lang_map, en_lang_map, source_to_guid
+        )
+
+        localized_data = process_character_dump_for_lang(
+            base_dump,
+            target_lang_map,
+            tunables,
+            source_to_guid,
+            target_keywords,
+            en_keywords,
+            lang_code=lang_code,
+            perk_level_tunables_map=perk_level_tunables_map,
+        )
+
+        localized_dumps[lang_code] = localized_data
+
+        out_file = (
+            BASE_DIR / f"characters_dump_{lang_code}.json"
+            if lang_code != "en"
+            else BASE_DIR / "characters_dump.json"
+        )
+        with open(out_file, "w", encoding="utf-8") as f:
+            json.dump(localized_data, f, ensure_ascii=False, indent=2)
+
+        print(f"         Zapisano: {out_file.name}")
+
+    print("[4/5] Budowanie squashed translations bundle...")
+    squashed_bundle = build_squashed_translations(localized_dumps)
+
+    if BACKEND_TRANSLATIONS_DIR.exists():
+        out_squashed = BACKEND_TRANSLATIONS_DIR / "translations.json"
+        out_min = BACKEND_TRANSLATIONS_DIR / "translations.min.json"
+        with open(out_squashed, "w", encoding="utf-8") as f:
+            json.dump(squashed_bundle, f, ensure_ascii=False, indent=2)
+        with open(out_min, "w", encoding="utf-8") as f:
+            json.dump(squashed_bundle, f, ensure_ascii=False, separators=(",", ":"))
+        print(f"      Zapisano: {out_squashed.name} i {out_min.name}")
+
+    print("[5/5] Zakończono sukcesem!")
 
 
 if __name__ == "__main__":
-    main()
+    run_pipeline()

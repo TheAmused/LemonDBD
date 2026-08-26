@@ -2,6 +2,7 @@
 import json
 import logging
 import re
+import unicodedata
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -22,8 +23,12 @@ def simplify_lookup_key(s: str) -> str:
     if not s:
         return ""
     s = s.lower().replace("\xa0", " ")
+    # Unicode NFKD normalization to strip accents (e.g. Déjà Vu -> Deja Vu)
+    s = unicodedata.normalize("NFKD", s).encode("ASCII", "ignore").decode("utf-8")
     s = re.sub(r"\(the [^)]+\)", "", s)
     s = re.sub(r"\([^)]+\)", "", s)
+    s = s.replace("issue", " ")
+    s = s.replace("volume", " ")
     s = s.replace("sulphuric", "sulfuric")
     s = s.replace("pinkie", "pinky")
     s = s.replace("jewellery", "jewelry")
@@ -49,9 +54,12 @@ def simplify_lookup_key(s: str) -> str:
     s = s.replace("makeup", "make up")
     s = s.replace("make-up", "make up")
     s = s.replace("favour", "favor")
-    s = s.replace("colour", "color")
     s = s.replace("armour", "armor")
     s = s.replace("camaraderie", "kinship")
+    s = s.replace("thorns", "thorn")
+    s = s.replace("straps", "strap")
+    s = s.replace("gloves", "glove")
+    s = s.replace("deja vu", "dejavu")
     return re.sub(r"[^a-z0-9]", "", s)
 
 
@@ -328,6 +336,18 @@ class TranslationService:
             if addon.name.strip().lower() not in CANONICAL_FOG_VIAL_ADDONS:
                 logger.info(f"Removing stray Fog Vial addon: {addon.name!r}")
                 db.session.delete(addon)
+
+        # 6c. Clean up mobile-only offerings (not part of PC Dead by Daylight)
+        MOBILE_OFFERING_NAMES = {
+            "milk tea", "burdock tea", "black tea", "lotus leaf tea",
+            "blank postcard", "crumpled postcard", "stamped postcard", "lovers' postcard",
+            "wooden chalice", "ceramic chalice", "copper chalice", "bloodstone chalice",
+            "clay doll", "thorn doll", "bone doll", "flesh doll",
+        }
+        for off in db.session.scalars(select(Offering)).all():
+            if (off.name or "").strip().lower() in MOBILE_OFFERING_NAMES:
+                logger.info(f"Removing mobile-only offering: {off.name!r}")
+                db.session.delete(off)
         # ── end cleanup ────────────────────────────────────────────────────────
 
         db.session.commit()

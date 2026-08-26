@@ -11229,7 +11229,7 @@
           "description": "En un radio de 24/28/32 metros de ti:\n• Ves las auras de palés.\n• Ves las auras de muros destruibles.\n• Ves las auras de ventanas.\n\n\"Apunta a la fama y dispara sin dudar. / La fe y la familia debes valorar. / Crea oportunidades para cumplir tus sueños\". (\"Oportunidades\", de Kate Denson)"
         },
         "ja": {
-          "name": "ウィンドウズ・オブ・\nオポチュニティ",
+          "name": "Windows of Opportunity",
           "description": "自分の24/28/32メートル以内にある：\n• パレットのオーラが視える。\n• 破壊可能な壁のオーラが視える。\n• 窓のオーラが視える。\n\n「元気に飛び起き、一生懸命働いて道を切り開こう。狙いをすまし引き金を引き、名を挙げよう。信頼と家族の価値を知り、決して不満は言わないで、チャンスという名の窓を開け放つのよ」- ケイト・デンソン作曲「ウィンドウズ・オブ・オポチュニティ」"
         },
         "pl": {
@@ -15800,6 +15800,33 @@
           "description": "Na początku próby 4 losowe haki zmieniają się w haki plagi.\nZa każdym razem, gdy ocalały jest zdjęty z haku plagi:\n• Otrzymuje efekt Krwotok na 20/25/30 s.\n• Otrzymuje efekt Zmasakrowany na 20/25/30 s.\n• Gdy są leczeni, do czas otrzymania obrażeń, leczą i naprawiają 10/13/16% wolniej.\n\n„Rozerwę twoją duszę na strzępy.” – Pinhead"
         }
       }
+    },
+    "Shattered Hope": {
+      "name": "Shattered Hope",
+      "character_code": null,
+      "character_name": null,
+      "translations": {
+        "de": {
+          "name": "Zerschlagene Hoffnung",
+          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
+        },
+        "en": {
+          "name": "Shattered Hope",
+          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
+        },
+        "es": {
+          "name": "Esperanza destruida",
+          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
+        },
+        "ja": {
+          "name": "打ち砕かれた希望",
+          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
+        },
+        "pl": {
+          "name": "Utracona Nadzieja",
+          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
+        }
+      }
     }
   },
   "items": {
@@ -17126,7 +17153,7 @@
       "rarity": "Special",
       "translations": {
         "de": {
-          "name": "Glowing Fungus",
+          "name": "Leuchtpilz",
           "description": "Limited Item\nSpawns in the environment when facing The\nKrasue\n:\nWhen spawned, takes\n5 seconds\nto grow and become interactable.\nCan be picked up by Survivors.\nReveals its\nAura\nto all Survivors afflicted with\nLeeched\nwithin\n128 metres\n.\nPress the\nUse Item button\nto eat the mushroom:\nTakes\n3 seconds\nto complete.\nLimits movement to walking.\nReduces\nthe Walking speed to\n70.8%\nof its default value.\nThis effect lingers for\n0.5 seconds\n.\nAfter eating a\nGlowing Fungus\n, Survivors benefit from the following effect:\nDepletes the\nLeeched Meter\nat a rate of\n-5%/s\n.\nThis effect ends after being hit.\nDropping a\nGlowing Fungus\non the ground causes it to decay within\n5 seconds\nunless a Survivor is within\n2.5 metres\nof its location.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "en": {
@@ -17134,15 +17161,15 @@
           "description": "Limited Item\nSpawns in the environment when facing The\nKrasue\n:\nWhen spawned, takes\n5 seconds\nto grow and become interactable.\nCan be picked up by Survivors.\nReveals its\nAura\nto all Survivors afflicted with\nLeeched\nwithin\n128 metres\n.\nPress the\nUse Item button\nto eat the mushroom:\nTakes\n3 seconds\nto complete.\nLimits movement to walking.\nReduces\nthe Walking speed to\n70.8%\nof its default value.\nThis effect lingers for\n0.5 seconds\n.\nAfter eating a\nGlowing Fungus\n, Survivors benefit from the following effect:\nDepletes the\nLeeched Meter\nat a rate of\n-5%/s\n.\nThis effect ends after being hit.\nDropping a\nGlowing Fungus\non the ground causes it to decay within\n5 seconds\nunless a Survivor is within\n2.5 metres\nof its location.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "es": {
-          "name": "Glowing Fungus",
+          "name": "Hongo brillante",
           "description": "Limited Item\nSpawns in the environment when facing The\nKrasue\n:\nWhen spawned, takes\n5 seconds\nto grow and become interactable.\nCan be picked up by Survivors.\nReveals its\nAura\nto all Survivors afflicted with\nLeeched\nwithin\n128 metres\n.\nPress the\nUse Item button\nto eat the mushroom:\nTakes\n3 seconds\nto complete.\nLimits movement to walking.\nReduces\nthe Walking speed to\n70.8%\nof its default value.\nThis effect lingers for\n0.5 seconds\n.\nAfter eating a\nGlowing Fungus\n, Survivors benefit from the following effect:\nDepletes the\nLeeched Meter\nat a rate of\n-5%/s\n.\nThis effect ends after being hit.\nDropping a\nGlowing Fungus\non the ground causes it to decay within\n5 seconds\nunless a Survivor is within\n2.5 metres\nof its location.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "ja": {
-          "name": "Glowing Fungus",
+          "name": "光るキノコ",
           "description": "Limited Item\nSpawns in the environment when facing The\nKrasue\n:\nWhen spawned, takes\n5 seconds\nto grow and become interactable.\nCan be picked up by Survivors.\nReveals its\nAura\nto all Survivors afflicted with\nLeeched\nwithin\n128 metres\n.\nPress the\nUse Item button\nto eat the mushroom:\nTakes\n3 seconds\nto complete.\nLimits movement to walking.\nReduces\nthe Walking speed to\n70.8%\nof its default value.\nThis effect lingers for\n0.5 seconds\n.\nAfter eating a\nGlowing Fungus\n, Survivors benefit from the following effect:\nDepletes the\nLeeched Meter\nat a rate of\n-5%/s\n.\nThis effect ends after being hit.\nDropping a\nGlowing Fungus\non the ground causes it to decay within\n5 seconds\nunless a Survivor is within\n2.5 metres\nof its location.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "pl": {
-          "name": "Glowing Fungus",
+          "name": "Świecący Grzyb",
           "description": "Limited Item\nSpawns in the environment when facing The\nKrasue\n:\nWhen spawned, takes\n5 seconds\nto grow and become interactable.\nCan be picked up by Survivors.\nReveals its\nAura\nto all Survivors afflicted with\nLeeched\nwithin\n128 metres\n.\nPress the\nUse Item button\nto eat the mushroom:\nTakes\n3 seconds\nto complete.\nLimits movement to walking.\nReduces\nthe Walking speed to\n70.8%\nof its default value.\nThis effect lingers for\n0.5 seconds\n.\nAfter eating a\nGlowing Fungus\n, Survivors benefit from the following effect:\nDepletes the\nLeeched Meter\nat a rate of\n-5%/s\n.\nThis effect ends after being hit.\nDropping a\nGlowing Fungus\non the ground causes it to decay within\n5 seconds\nunless a Survivor is within\n2.5 metres\nof its location.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         }
       }
@@ -17294,7 +17321,7 @@
       "rarity": "Special",
       "translations": {
         "de": {
-          "name": "Remote Flame Turret",
+          "name": "Ferngesteuertes Flammengeschütz",
           "description": "Limited Item\nA flamethrower turret that Survivors can retrieve from\nControl Stations\nand placed in the environment.\nTracks the presence of\nThe\nXenomorph\nwithin\n41 metres\nof its location.\nThis ability is briefly disabled whenever\nThe Xenomorph\nexits the Tunnels.\nGrants immunity from Detection by\nThe Xenomorph\nwhen it is inside the Tunnels while carrying the\nTurret\n.\nSurvivors suffer from a\n-35%\nHindered\nStatus Effect\n, and the\nExhausted\nand\nIncapacitated\nStatus Effects\n, while carrying the\nTurret\n.\nThe\nAuras\nof Survivors carrying a\nTurret\nare revealed to all other Survivors.\nShoots flames at a\nCrawler Mode\nThe Xenomorph\nwhen within\n10 metres\nand established\nLine of Sight\n.\nThis slows\nThe Xenomorph\nand knocks it out of\nCrawler Mode\nafter filling the Power gauge.\nOverheats after doing so or when firing consecutively for\n4 seconds\n.\nOverheated\nTurrets\ncan be repaired and reactivated by Survivors.\nMultiple\nTurrets\nfiring simultaneously do not stack their damage output.\nDropping a\nTurret\non the ground instead of deploying it destroys it after\n30 seconds\n, unless at least one Survivor remains within\n6 metres\nof where it was dropped.\nCan be destroyed by an attack from\nThe Xenomorph\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "en": {
@@ -17302,15 +17329,15 @@
           "description": "Limited Item\nA flamethrower turret that Survivors can retrieve from\nControl Stations\nand placed in the environment.\nTracks the presence of\nThe\nXenomorph\nwithin\n41 metres\nof its location.\nThis ability is briefly disabled whenever\nThe Xenomorph\nexits the Tunnels.\nGrants immunity from Detection by\nThe Xenomorph\nwhen it is inside the Tunnels while carrying the\nTurret\n.\nSurvivors suffer from a\n-35%\nHindered\nStatus Effect\n, and the\nExhausted\nand\nIncapacitated\nStatus Effects\n, while carrying the\nTurret\n.\nThe\nAuras\nof Survivors carrying a\nTurret\nare revealed to all other Survivors.\nShoots flames at a\nCrawler Mode\nThe Xenomorph\nwhen within\n10 metres\nand established\nLine of Sight\n.\nThis slows\nThe Xenomorph\nand knocks it out of\nCrawler Mode\nafter filling the Power gauge.\nOverheats after doing so or when firing consecutively for\n4 seconds\n.\nOverheated\nTurrets\ncan be repaired and reactivated by Survivors.\nMultiple\nTurrets\nfiring simultaneously do not stack their damage output.\nDropping a\nTurret\non the ground instead of deploying it destroys it after\n30 seconds\n, unless at least one Survivor remains within\n6 metres\nof where it was dropped.\nCan be destroyed by an attack from\nThe Xenomorph\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "es": {
-          "name": "Remote Flame Turret",
+          "name": "Torreta lanzallamas a distancia",
           "description": "Limited Item\nA flamethrower turret that Survivors can retrieve from\nControl Stations\nand placed in the environment.\nTracks the presence of\nThe\nXenomorph\nwithin\n41 metres\nof its location.\nThis ability is briefly disabled whenever\nThe Xenomorph\nexits the Tunnels.\nGrants immunity from Detection by\nThe Xenomorph\nwhen it is inside the Tunnels while carrying the\nTurret\n.\nSurvivors suffer from a\n-35%\nHindered\nStatus Effect\n, and the\nExhausted\nand\nIncapacitated\nStatus Effects\n, while carrying the\nTurret\n.\nThe\nAuras\nof Survivors carrying a\nTurret\nare revealed to all other Survivors.\nShoots flames at a\nCrawler Mode\nThe Xenomorph\nwhen within\n10 metres\nand established\nLine of Sight\n.\nThis slows\nThe Xenomorph\nand knocks it out of\nCrawler Mode\nafter filling the Power gauge.\nOverheats after doing so or when firing consecutively for\n4 seconds\n.\nOverheated\nTurrets\ncan be repaired and reactivated by Survivors.\nMultiple\nTurrets\nfiring simultaneously do not stack their damage output.\nDropping a\nTurret\non the ground instead of deploying it destroys it after\n30 seconds\n, unless at least one Survivor remains within\n6 metres\nof where it was dropped.\nCan be destroyed by an attack from\nThe Xenomorph\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "ja": {
-          "name": "Remote Flame Turret",
+          "name": "遠隔火炎タレット",
           "description": "Limited Item\nA flamethrower turret that Survivors can retrieve from\nControl Stations\nand placed in the environment.\nTracks the presence of\nThe\nXenomorph\nwithin\n41 metres\nof its location.\nThis ability is briefly disabled whenever\nThe Xenomorph\nexits the Tunnels.\nGrants immunity from Detection by\nThe Xenomorph\nwhen it is inside the Tunnels while carrying the\nTurret\n.\nSurvivors suffer from a\n-35%\nHindered\nStatus Effect\n, and the\nExhausted\nand\nIncapacitated\nStatus Effects\n, while carrying the\nTurret\n.\nThe\nAuras\nof Survivors carrying a\nTurret\nare revealed to all other Survivors.\nShoots flames at a\nCrawler Mode\nThe Xenomorph\nwhen within\n10 metres\nand established\nLine of Sight\n.\nThis slows\nThe Xenomorph\nand knocks it out of\nCrawler Mode\nafter filling the Power gauge.\nOverheats after doing so or when firing consecutively for\n4 seconds\n.\nOverheated\nTurrets\ncan be repaired and reactivated by Survivors.\nMultiple\nTurrets\nfiring simultaneously do not stack their damage output.\nDropping a\nTurret\non the ground instead of deploying it destroys it after\n30 seconds\n, unless at least one Survivor remains within\n6 metres\nof where it was dropped.\nCan be destroyed by an attack from\nThe Xenomorph\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "pl": {
-          "name": "Remote Flame Turret",
+          "name": "Zdalna wieżyczka ogniowa",
           "description": "Limited Item\nA flamethrower turret that Survivors can retrieve from\nControl Stations\nand placed in the environment.\nTracks the presence of\nThe\nXenomorph\nwithin\n41 metres\nof its location.\nThis ability is briefly disabled whenever\nThe Xenomorph\nexits the Tunnels.\nGrants immunity from Detection by\nThe Xenomorph\nwhen it is inside the Tunnels while carrying the\nTurret\n.\nSurvivors suffer from a\n-35%\nHindered\nStatus Effect\n, and the\nExhausted\nand\nIncapacitated\nStatus Effects\n, while carrying the\nTurret\n.\nThe\nAuras\nof Survivors carrying a\nTurret\nare revealed to all other Survivors.\nShoots flames at a\nCrawler Mode\nThe Xenomorph\nwhen within\n10 metres\nand established\nLine of Sight\n.\nThis slows\nThe Xenomorph\nand knocks it out of\nCrawler Mode\nafter filling the Power gauge.\nOverheats after doing so or when firing consecutively for\n4 seconds\n.\nOverheated\nTurrets\ncan be repaired and reactivated by Survivors.\nMultiple\nTurrets\nfiring simultaneously do not stack their damage output.\nDropping a\nTurret\non the ground instead of deploying it destroys it after\n30 seconds\n, unless at least one Survivor remains within\n6 metres\nof where it was dropped.\nCan be destroyed by an attack from\nThe Xenomorph\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         }
       }
@@ -17322,7 +17349,7 @@
       "rarity": "Special",
       "translations": {
         "de": {
-          "name": "Searcher's Pendant",
+          "name": "Anhänger des Suchers",
           "description": "Ein Artefakt von einem fremden Ort, an dem der Nachthimmel Antworten gab.\nDer Anhänger des Suchers funktioniert wie eine Taschenlampe. Jedes Mal, wenn ein Überlebender ins Exil kommt, erhält er den Anhänger des Suchers in einem temporären dritten Gegenstandsplatz. Halte [M2?] gedrückt, um verbannte Seelen anzuvisieren. Nach 0,5 Sek. wird die Seele absorbiert. Nach dem Absorbieren erhältst du eine 1-sekündige Immunität gegen Saat der Strafe. Maximale Reichweite: 10 m. Für jede gesammelte Seele (bevor alle Generatoren fertiggestellt wurden) erhält der Überlebende Blutpunkte und zusätzlich 0,5 Sek. für die folgenden Effekte, wenn er aus dem Exil gerettet wurde: Kondition, 10 % Eile, Schlüpfrig. Seelen, die gesammelt werden, nachdem alle Generatoren fertiggestellt wurden, gewähren keinen zusätzlichen Schutz nach einer Rettung."
         },
         "en": {
@@ -17330,15 +17357,15 @@
           "description": "An artifact from another place, where the night sky held answers.\n• Use Item button: Collect Exiled Souls.\n• For each Exiled Soul collected (up to 10), gives an extra 0.5 seconds of Endurance, Haste, and Elusive when Liberated from Exile.\n• Exiled Souls do not provide additional bonuses once all Generators are completed.\nLimited items are consumed by The Entity at the trial's end."
         },
         "es": {
-          "name": "Searcher's Pendant",
+          "name": "Colgante de Buscador",
           "description": "Un artefacto procedente de otro lugar, donde el cielo nocturno guardaba respuestas.\n• Botón «Usar objeto»: Recoge almas exiliadas.\n• Por cada alma exiliada recogida (hasta 10), obtienes 0,5 segundos adicionales de Resistencia, Celeridad y Esquiva al liberarte del exilio.\n• Las almas exiliadas no proporcionan bonificaciones adicionales una vez completados todos los generadores.\nLos objetos limitados son consumidos por La Entidad al final de la partida.anchar."
         },
         "ja": {
-          "name": "Searcher's Pendant",
+          "name": "探求者のペンダント",
           "description": "夜空に答えが隠されていた領域から来た遺物。\n• アイテム使用ボタン：追いやられた魂を回収する。\n• 追放から解放された直後の我慢、迅速、忍びの持続時間が、回収した魂1個につき（10個まで）0.5秒増加する。\n• 発電機の修理がすべて完了すると、追いやられた魂は追加の保護を付与しなくなる。\n限定アイテムは儀式終了時にエンティティに捧げられる。"
         },
         "pl": {
-          "name": "Searcher's Pendant",
+          "name": "Wisiorek poszukiwacza",
           "description": "Artefakt z innego miejsca, w którym nocne niebo skrywało odpowiedzi.\n• Użyj przycisku przedmiotu: Zbieraj Wygnane Dusze.\n• Za każdą zebraną Wygnaną Duszę (do 10) daje dodatkowe 0.5 s następujących efektów: Wytrzymałość, Pośpiech i Nieuchwytność po uratowaniu z Wygnania.\n• Wygnane Dusze nie dają dodatkowych bonusów, gdy wszystkie generatory są ukończone.\nOgraniczone ilości przedmiotów są zużywane Bytem w końcu próby."
         }
       }
@@ -17350,7 +17377,7 @@
       "rarity": "Special",
       "translations": {
         "de": {
-          "name": "VHS Tape",
+          "name": "Videokassette",
           "description": "Limited Item\nThe\nCursed Tape\ncan be retrieved from a\nTV\nlocated in the environment and must be reinserted into a specific one:\nInserting the\nCursed Tape\nreduces\nCondemned\nby\n-3 Stacks\n.\nThis spreads\nThe Onryō's\nmessage and temporarily turns the\nTV\noff.\nThe specific\nTV\nis highlighted in\nyellow\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "en": {
@@ -17358,15 +17385,15 @@
           "description": "Limited Item\nThe\nCursed Tape\ncan be retrieved from a\nTV\nlocated in the environment and must be reinserted into a specific one:\nInserting the\nCursed Tape\nreduces\nCondemned\nby\n-3 Stacks\n.\nThis spreads\nThe Onryō's\nmessage and temporarily turns the\nTV\noff.\nThe specific\nTV\nis highlighted in\nyellow\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "es": {
-          "name": "VHS Tape",
+          "name": "Cinta de vídeo",
           "description": "Limited Item\nThe\nCursed Tape\ncan be retrieved from a\nTV\nlocated in the environment and must be reinserted into a specific one:\nInserting the\nCursed Tape\nreduces\nCondemned\nby\n-3 Stacks\n.\nThis spreads\nThe Onryō's\nmessage and temporarily turns the\nTV\noff.\nThe specific\nTV\nis highlighted in\nyellow\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "ja": {
-          "name": "VHS Tape",
+          "name": "ビデオテープ",
           "description": "Limited Item\nThe\nCursed Tape\ncan be retrieved from a\nTV\nlocated in the environment and must be reinserted into a specific one:\nInserting the\nCursed Tape\nreduces\nCondemned\nby\n-3 Stacks\n.\nThis spreads\nThe Onryō's\nmessage and temporarily turns the\nTV\noff.\nThe specific\nTV\nis highlighted in\nyellow\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         },
         "pl": {
-          "name": "VHS Tape",
+          "name": "Kaseta VHS",
           "description": "Limited Item\nThe\nCursed Tape\ncan be retrieved from a\nTV\nlocated in the environment and must be reinserted into a specific one:\nInserting the\nCursed Tape\nreduces\nCondemned\nby\n-3 Stacks\n.\nThis spreads\nThe Onryō's\nmessage and temporarily turns the\nTV\noff.\nThe specific\nTV\nis highlighted in\nyellow\n.\nLimited Items\nare consumed on use.\nThey cannot be brought back to the Campfire after a Trial and are removed by The\nEntity\nupon exiting the Trial."
         }
       }
@@ -51064,7 +51091,7 @@
       "rarity": "Common",
       "translations": {
         "de": {
-          "name": "Hochleistungs-\nscheinwerfer",
+          "name": "High-Power Floodlight",
           "description": "Ein plötzliches aufstrahlendes, gleißendes Licht lässt jeden, der so dumm war, sich zu nähern, orientierungslos zurück.\n• Überlebende mit einer Klammerfalle leiden unter dem Statuseffekt Erblindung. Dieser Effekt hält an, bis die Klammerfalle entfernt wurde.\nBei Erblindung können Überlebende keine Auren sehen."
         },
         "en": {
@@ -51092,7 +51119,7 @@
       "rarity": "Common",
       "translations": {
         "de": {
-          "name": "Hochleistungs-\nscheinwerfer",
+          "name": "High-Power Floodlight",
           "description": "Ein plötzliches aufstrahlendes, gleißendes Licht lässt jeden, der so dumm war, sich zu nähern, orientierungslos zurück.\n• Überlebende mit einer Klammerfalle leiden unter dem Statuseffekt Erblindung. Dieser Effekt hält an, bis die Klammerfalle entfernt wurde.\nBei Erblindung können Überlebende keine Auren sehen."
         },
         "en": {
@@ -69452,6 +69479,230 @@
           "description": "Jedna kropla wystarczy, aby zmienić konsystencję tego dziwnego eliksiru.\n• Zwiększa gęstość chmury mgły o 100%.\n• Zmniejsza czas trwania chmury o 50%.\n• Zmniejsza rozmiary chmury mgły o 25%."
         }
       }
+    },
+    "Crimson Stamp": {
+      "name": "Crimson Stamp",
+      "associated_target": "Survivor",
+      "category": "Survivor",
+      "rarity": "EItemRarity::Rare",
+      "translations": {
+        "de": {
+          "name": "Karmesinstempel",
+          "description": "Als damit in der Nähe der Karte Funken erzeugt wurden, erschienen neue Siegel an unerwarteten Orten.\nBei Verwendung der Karte werden alle Totems innerhalb der Reichweite enthüllt."
+        },
+        "en": {
+          "name": "Crimson Stamp",
+          "description": "When sparked near the map, new sigils appeared in unexpected locations.\nWhen using the map, all totems within range are revealed."
+        },
+        "es": {
+          "name": "Sello carmesí",
+          "description": "Al encenderlo cerca del mapa, aparecieron sellos nuevos en ubicaciones inesperadas.\nAl utilizar el mapa, todos los tótems dentro de su alcance se revelan."
+        },
+        "ja": {
+          "name": "深紅の刻印",
+          "description": "マップの近くで光らせると、予期せぬ場所に新たな印が現れた。\nマップを使用中、範囲内のトーテムがすべて視える。"
+        },
+        "pl": {
+          "name": "Szkarłatna pieczęć",
+          "description": "Gdy zaiskrzyło w pobliżu mapy, nowe oznaczenia pojawiły się w nieoczekiwanych miejscach.\nPodczas korzystania z mapy, wszystkie totemy w zasięgu są ujawniane."
+        }
+      }
+    },
+    "Crimson Stamp (Survivor)": {
+      "name": "Crimson Stamp",
+      "associated_target": "Survivor",
+      "category": "Survivor",
+      "rarity": "EItemRarity::Rare",
+      "translations": {
+        "de": {
+          "name": "Karmesinstempel",
+          "description": "Als damit in der Nähe der Karte Funken erzeugt wurden, erschienen neue Siegel an unerwarteten Orten.\nBei Verwendung der Karte werden alle Totems innerhalb der Reichweite enthüllt."
+        },
+        "en": {
+          "name": "Crimson Stamp",
+          "description": "When sparked near the map, new sigils appeared in unexpected locations.\nWhen using the map, all totems within range are revealed."
+        },
+        "es": {
+          "name": "Sello carmesí",
+          "description": "Al encenderlo cerca del mapa, aparecieron sellos nuevos en ubicaciones inesperadas.\nAl utilizar el mapa, todos los tótems dentro de su alcance se revelan."
+        },
+        "ja": {
+          "name": "深紅の刻印",
+          "description": "マップの近くで光らせると、予期せぬ場所に新たな印が現れた。\nマップを使用中、範囲内のトーテムがすべて視える。"
+        },
+        "pl": {
+          "name": "Szkarłatna pieczęć",
+          "description": "Gdy zaiskrzyło w pobliżu mapy, nowe oznaczenia pojawiły się w nieoczekiwanych miejscach.\nPodczas korzystania z mapy, wszystkie totemy w zasięgu są ujawniane."
+        }
+      }
+    },
+    "Rubber Gloves": {
+      "name": "Rubber Gloves",
+      "associated_target": "Survivor",
+      "category": "Survivor",
+      "rarity": "EItemRarity::Common",
+      "translations": {
+        "de": {
+          "name": "Gummihandschuhe",
+          "description": "Ein Holzstempel mit einer schraffierten Gummi-Unterseite zum Kennzeichnen von Dokumenten. Es ist unbekannt, wofür oder von wem dieser Stempel ursprünglich benutzt wurde. Kann mit einer Karte genutzt werden.\n• Erhöht die Reichweite der Kartenaufspürung um 8 Meter."
+        },
+        "en": {
+          "name": "Rubber Gloves",
+          "description": "A wooden stamp with a crosshatched rubber pad used to mark documents. It is unclear as to how or by whom this stamp was originally used. Can be used with a Map.\n• Increases the range of the Map tracking ability by 8 meters."
+        },
+        "es": {
+          "name": "Guantes de Goma",
+          "description": "Un sello de madera con una almohadilla de goma de líneas entrecruzadas. Sirve para marcar documentos. No se sabe quién ni para qué se utilizaba este sello originalmente. Puede usarse con un mapa.\n• Aumenta el alcance de la capacidad de búsqueda del mapa en 8 metros."
+        },
+        "ja": {
+          "name": "ゴム製手袋",
+          "description": "ゴム版がついた木製の判子。誰が何のために使用していたかは定かでない。マップと併用可。\n• マップの記憶範囲が8メートル増加する"
+        },
+        "pl": {
+          "name": "Gumowe Rękawiczki",
+          "description": "Drewniana pieczęć z gumowym spodem służąca do oznaczania dokumentów. Nie wiadomo, kto był jej pierwotnym właścicielem ani do czego ją stosował. Można używać razem z mapą.\n• Zwiększa zasięg oznaczania punktów z mapy o 8 metrów."
+        }
+      }
+    },
+    "Rubber Gloves (Survivor)": {
+      "name": "Rubber Gloves",
+      "associated_target": "Survivor",
+      "category": "Survivor",
+      "rarity": "EItemRarity::Common",
+      "translations": {
+        "de": {
+          "name": "Gummihandschuhe",
+          "description": "Ein Holzstempel mit einer schraffierten Gummi-Unterseite zum Kennzeichnen von Dokumenten. Es ist unbekannt, wofür oder von wem dieser Stempel ursprünglich benutzt wurde. Kann mit einer Karte genutzt werden.\n• Erhöht die Reichweite der Kartenaufspürung um 8 Meter."
+        },
+        "en": {
+          "name": "Rubber Gloves",
+          "description": "A wooden stamp with a crosshatched rubber pad used to mark documents. It is unclear as to how or by whom this stamp was originally used. Can be used with a Map.\n• Increases the range of the Map tracking ability by 8 meters."
+        },
+        "es": {
+          "name": "Guantes de Goma",
+          "description": "Un sello de madera con una almohadilla de goma de líneas entrecruzadas. Sirve para marcar documentos. No se sabe quién ni para qué se utilizaba este sello originalmente. Puede usarse con un mapa.\n• Aumenta el alcance de la capacidad de búsqueda del mapa en 8 metros."
+        },
+        "ja": {
+          "name": "ゴム製手袋",
+          "description": "ゴム版がついた木製の判子。誰が何のために使用していたかは定かでない。マップと併用可。\n• マップの記憶範囲が8メートル増加する"
+        },
+        "pl": {
+          "name": "Gumowe Rękawiczki",
+          "description": "Drewniana pieczęć z gumowym spodem służąca do oznaczania dokumentów. Nie wiadomo, kto był jej pierwotnym właścicielem ani do czego ją stosował. Można używać razem z mapą.\n• Zwiększa zasięg oznaczania punktów z mapy o 8 metrów."
+        }
+      }
+    },
+    "Protective Gloves": {
+      "name": "Protective Gloves",
+      "associated_target": "Survivor",
+      "category": "Survivor",
+      "rarity": "EItemRarity::Common",
+      "translations": {
+        "de": {
+          "name": "Schutzhandschuhe",
+          "description": "Ein einfaches Schneidwerkzeug aus einem gezackten Metalldraht und zwei hölzernen Griffen.\n• Erhöht die Sabotagegeschwindigkeit der Werkzeugkiste um 20 %."
+        },
+        "en": {
+          "name": "Protective Gloves",
+          "description": "A rudimentary cutting tool made from a jagged metal wire and two wooden handles.\n• Increases the Toolbox's sabotage speed by 20%."
+        },
+        "es": {
+          "name": "Guantes protectores",
+          "description": "Una rudimentaria herramienta de dos mangos hecha para cortar con alambres dentados.\n• Aumenta la velocidad de sabotaje con la caja de herramientas un 20 %."
+        },
+        "ja": {
+          "name": "保護手袋",
+          "description": "基本の切断用道具。木製の取っ手と刃がついた鉄線でできている。\n• 工具箱の破壊工作の速度が20%上昇する"
+        },
+        "pl": {
+          "name": "Rękawice Ochronne",
+          "description": "Podstawowe narzędzie tnące wykonane z metalowych drutów i dwóch drewnianych uchwytów.\n• Przyspiesza sabotowanie za pomocą skrzynki z narzędziami o 20%."
+        }
+      }
+    },
+    "Protective Gloves (Survivor)": {
+      "name": "Protective Gloves",
+      "associated_target": "Survivor",
+      "category": "Survivor",
+      "rarity": "EItemRarity::Common",
+      "translations": {
+        "de": {
+          "name": "Schutzhandschuhe",
+          "description": "Ein einfaches Schneidwerkzeug aus einem gezackten Metalldraht und zwei hölzernen Griffen.\n• Erhöht die Sabotagegeschwindigkeit der Werkzeugkiste um 20 %."
+        },
+        "en": {
+          "name": "Protective Gloves",
+          "description": "A rudimentary cutting tool made from a jagged metal wire and two wooden handles.\n• Increases the Toolbox's sabotage speed by 20%."
+        },
+        "es": {
+          "name": "Guantes protectores",
+          "description": "Una rudimentaria herramienta de dos mangos hecha para cortar con alambres dentados.\n• Aumenta la velocidad de sabotaje con la caja de herramientas un 20 %."
+        },
+        "ja": {
+          "name": "保護手袋",
+          "description": "基本の切断用道具。木製の取っ手と刃がついた鉄線でできている。\n• 工具箱の破壊工作の速度が20%上昇する"
+        },
+        "pl": {
+          "name": "Rękawice Ochronne",
+          "description": "Podstawowe narzędzie tnące wykonane z metalowych drutów i dwóch drewnianych uchwytów.\n• Przyspiesza sabotowanie za pomocą skrzynki z narzędziami o 20%."
+        }
+      }
+    },
+    "Blight Serum": {
+      "name": "Blight Serum",
+      "associated_target": "Survivor",
+      "category": "Survivor",
+      "rarity": "EItemRarity::SpecialEvent",
+      "translations": {
+        "de": {
+          "name": "Fäuleserum",
+          "description": "Eine tote Krähe, die auf groteske Weise durch das Fäuleserum mutiert ist.\n• Erhöht die Geschwindigkeit beim Stürmen um 3 % für jeden folgenden Sturm."
+        },
+        "en": {
+          "name": "Blight Serum",
+          "description": "A dead crow that has been grotesquely mutated by blight serum.\n• Increases speed while Rushing by 3% for each consecutive Rush."
+        },
+        "es": {
+          "name": "Suero del Deterioro",
+          "description": "Un cuervo muerto que ha mutado de forma grotesca debido al suero del Deterioro.\n• Aumenta la velocidad de Acometida un 3 % por cada Acometida consecutiva."
+        },
+        "ja": {
+          "name": "ブライトの血清",
+          "description": "破滅の血清によりグロテスクな変異を遂げて死んだカラス。\n• 突進を連続するたびに突進中の速度が3%上昇する"
+        },
+        "pl": {
+          "name": "Serum Zarazy",
+          "description": "Martwy kruk, groteskowo zmutowany przez serum zarazy.\n• Zwiększa prędkość podczas Pędu o 3% za każdy kolejny Pęd."
+        }
+      }
+    },
+    "Blight Serum (Survivor)": {
+      "name": "Blight Serum",
+      "associated_target": "Survivor",
+      "category": "Survivor",
+      "rarity": "EItemRarity::SpecialEvent",
+      "translations": {
+        "de": {
+          "name": "Fäuleserum",
+          "description": "Eine tote Krähe, die auf groteske Weise durch das Fäuleserum mutiert ist.\n• Erhöht die Geschwindigkeit beim Stürmen um 3 % für jeden folgenden Sturm."
+        },
+        "en": {
+          "name": "Blight Serum",
+          "description": "A dead crow that has been grotesquely mutated by blight serum.\n• Increases speed while Rushing by 3% for each consecutive Rush."
+        },
+        "es": {
+          "name": "Suero del Deterioro",
+          "description": "Un cuervo muerto que ha mutado de forma grotesca debido al suero del Deterioro.\n• Aumenta la velocidad de Acometida un 3 % por cada Acometida consecutiva."
+        },
+        "ja": {
+          "name": "ブライトの血清",
+          "description": "破滅の血清によりグロテスクな変異を遂げて死んだカラス。\n• 突進を連続するたびに突進中の速度が3%上昇する"
+        },
+        "pl": {
+          "name": "Serum Zarazy",
+          "description": "Martwy kruk, groteskowo zmutowany przez serum zarazy.\n• Zwiększa prędkość podczas Pędu o 3% za każdy kolejny Pęd."
+        }
+      }
     }
   },
   "offerings": {
@@ -72044,438 +72295,6 @@
         "pl": {
           "name": "Strażnik ofiarny",
           "description": "Wzywa Byt, aby odrzucił wszystkie dary, które zmieniają szansę na odesłanie do określonego wymiaru.\nMoże zostać anulowane tylko w wypadku, kiedy zostaną złożone cztery identyczne dary.\n\"„Ślepi, poddajemy się twej woli i błagamy o przewodnictwo”.\""
-        }
-      }
-    },
-    "Black Tea": {
-      "name": "Black Tea",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Black Tea",
-          "description": "A cup of strongly-flavoured tea. Grants 10 % bonus Character Experience."
-        },
-        "en": {
-          "name": "Black Tea",
-          "description": "A cup of strongly-flavoured tea. Grants 10 % bonus Character Experience."
-        },
-        "es": {
-          "name": "Black Tea",
-          "description": "A cup of strongly-flavoured tea. Grants 10 % bonus Character Experience."
-        },
-        "ja": {
-          "name": "Black Tea",
-          "description": "A cup of strongly-flavoured tea. Grants 10 % bonus Character Experience."
-        },
-        "pl": {
-          "name": "Black Tea",
-          "description": "A cup of strongly-flavoured tea. Grants 10 % bonus Character Experience."
-        }
-      }
-    },
-    "Milk Tea": {
-      "name": "Milk Tea",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Milk Tea",
-          "description": "A cup of tea with a cloud of white milk. Grants 25 % bonus Character Experience."
-        },
-        "en": {
-          "name": "Milk Tea",
-          "description": "A cup of tea with a cloud of white milk. Grants 25 % bonus Character Experience."
-        },
-        "es": {
-          "name": "Milk Tea",
-          "description": "A cup of tea with a cloud of white milk. Grants 25 % bonus Character Experience."
-        },
-        "ja": {
-          "name": "Milk Tea",
-          "description": "A cup of tea with a cloud of white milk. Grants 25 % bonus Character Experience."
-        },
-        "pl": {
-          "name": "Milk Tea",
-          "description": "A cup of tea with a cloud of white milk. Grants 25 % bonus Character Experience."
-        }
-      }
-    },
-    "Burdock Tea": {
-      "name": "Burdock Tea",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Burdock Tea",
-          "description": "A cup of honey-coloured tea. Grants 50 % bonus Character Experience."
-        },
-        "en": {
-          "name": "Burdock Tea",
-          "description": "A cup of honey-coloured tea. Grants 50 % bonus Character Experience."
-        },
-        "es": {
-          "name": "Burdock Tea",
-          "description": "A cup of honey-coloured tea. Grants 50 % bonus Character Experience."
-        },
-        "ja": {
-          "name": "Burdock Tea",
-          "description": "A cup of honey-coloured tea. Grants 50 % bonus Character Experience."
-        },
-        "pl": {
-          "name": "Burdock Tea",
-          "description": "A cup of honey-coloured tea. Grants 50 % bonus Character Experience."
-        }
-      }
-    },
-    "Lotus Leaf Tea": {
-      "name": "Lotus Leaf Tea",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Lotus Leaf Tea",
-          "description": "A cup of tea brewed from dried lotus leaves. Grants 100 % bonus Character Experience."
-        },
-        "en": {
-          "name": "Lotus Leaf Tea",
-          "description": "A cup of tea brewed from dried lotus leaves. Grants 100 % bonus Character Experience."
-        },
-        "es": {
-          "name": "Lotus Leaf Tea",
-          "description": "A cup of tea brewed from dried lotus leaves. Grants 100 % bonus Character Experience."
-        },
-        "ja": {
-          "name": "Lotus Leaf Tea",
-          "description": "A cup of tea brewed from dried lotus leaves. Grants 100 % bonus Character Experience."
-        },
-        "pl": {
-          "name": "Lotus Leaf Tea",
-          "description": "A cup of tea brewed from dried lotus leaves. Grants 100 % bonus Character Experience."
-        }
-      }
-    },
-    "Blank Postcard": {
-      "name": "Blank Postcard",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Blank Postcard",
-          "description": "A photo of a lighthouse overlooking stormy seas. Grants 10 % bonus Character Experience."
-        },
-        "en": {
-          "name": "Blank Postcard",
-          "description": "A photo of a lighthouse overlooking stormy seas. Grants 10 % bonus Character Experience."
-        },
-        "es": {
-          "name": "Blank Postcard",
-          "description": "A photo of a lighthouse overlooking stormy seas. Grants 10 % bonus Character Experience."
-        },
-        "ja": {
-          "name": "Blank Postcard",
-          "description": "A photo of a lighthouse overlooking stormy seas. Grants 10 % bonus Character Experience."
-        },
-        "pl": {
-          "name": "Blank Postcard",
-          "description": "A photo of a lighthouse overlooking stormy seas. Grants 10 % bonus Character Experience."
-        }
-      }
-    },
-    "Crumpled Postcard": {
-      "name": "Crumpled Postcard",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Crumpled Postcard",
-          "description": "A photo of a sunset on a desert canyon. Grants 25 % bonus Character Experience."
-        },
-        "en": {
-          "name": "Crumpled Postcard",
-          "description": "A photo of a sunset on a desert canyon. Grants 25 % bonus Character Experience."
-        },
-        "es": {
-          "name": "Crumpled Postcard",
-          "description": "A photo of a sunset on a desert canyon. Grants 25 % bonus Character Experience."
-        },
-        "ja": {
-          "name": "Crumpled Postcard",
-          "description": "A photo of a sunset on a desert canyon. Grants 25 % bonus Character Experience."
-        },
-        "pl": {
-          "name": "Crumpled Postcard",
-          "description": "A photo of a sunset on a desert canyon. Grants 25 % bonus Character Experience."
-        }
-      }
-    },
-    "Stamped Postcard": {
-      "name": "Stamped Postcard",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Stamped Postcard",
-          "description": "A photo of autumn trees in the afternoon. Grants 50 % bonus Character Experience."
-        },
-        "en": {
-          "name": "Stamped Postcard",
-          "description": "A photo of autumn trees in the afternoon. Grants 50 % bonus Character Experience."
-        },
-        "es": {
-          "name": "Stamped Postcard",
-          "description": "A photo of autumn trees in the afternoon. Grants 50 % bonus Character Experience."
-        },
-        "ja": {
-          "name": "Stamped Postcard",
-          "description": "A photo of autumn trees in the afternoon. Grants 50 % bonus Character Experience."
-        },
-        "pl": {
-          "name": "Stamped Postcard",
-          "description": "A photo of autumn trees in the afternoon. Grants 50 % bonus Character Experience."
-        }
-      }
-    },
-    "Lovers' Postcard": {
-      "name": "Lovers' Postcard",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Lovers' Postcard",
-          "description": "A photo of an old Ferris wheel. Grants 100 % bonus Character Experience."
-        },
-        "en": {
-          "name": "Lovers' Postcard",
-          "description": "A photo of an old Ferris wheel. Grants 100 % bonus Character Experience."
-        },
-        "es": {
-          "name": "Lovers' Postcard",
-          "description": "A photo of an old Ferris wheel. Grants 100 % bonus Character Experience."
-        },
-        "ja": {
-          "name": "Lovers' Postcard",
-          "description": "A photo of an old Ferris wheel. Grants 100 % bonus Character Experience."
-        },
-        "pl": {
-          "name": "Lovers' Postcard",
-          "description": "A photo of an old Ferris wheel. Grants 100 % bonus Character Experience."
-        }
-      }
-    },
-    "Wooden Chalice": {
-      "name": "Wooden Chalice",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Wooden Chalice",
-          "description": "A wooden cup, cracked and splintered. Grants 10 % bonus Bloodpoints."
-        },
-        "en": {
-          "name": "Wooden Chalice",
-          "description": "A wooden cup, cracked and splintered. Grants 10 % bonus Bloodpoints."
-        },
-        "es": {
-          "name": "Wooden Chalice",
-          "description": "A wooden cup, cracked and splintered. Grants 10 % bonus Bloodpoints."
-        },
-        "ja": {
-          "name": "Wooden Chalice",
-          "description": "A wooden cup, cracked and splintered. Grants 10 % bonus Bloodpoints."
-        },
-        "pl": {
-          "name": "Wooden Chalice",
-          "description": "A wooden cup, cracked and splintered. Grants 10 % bonus Bloodpoints."
-        }
-      }
-    },
-    "Ceramic Chalice": {
-      "name": "Ceramic Chalice",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Ceramic Chalice",
-          "description": "A ceramic cup, chipped along its rim. Grants 25 % bonus Bloodpoints."
-        },
-        "en": {
-          "name": "Ceramic Chalice",
-          "description": "A ceramic cup, chipped along its rim. Grants 25 % bonus Bloodpoints."
-        },
-        "es": {
-          "name": "Ceramic Chalice",
-          "description": "A ceramic cup, chipped along its rim. Grants 25 % bonus Bloodpoints."
-        },
-        "ja": {
-          "name": "Ceramic Chalice",
-          "description": "A ceramic cup, chipped along its rim. Grants 25 % bonus Bloodpoints."
-        },
-        "pl": {
-          "name": "Ceramic Chalice",
-          "description": "A ceramic cup, chipped along its rim. Grants 25 % bonus Bloodpoints."
-        }
-      }
-    },
-    "Copper Chalice": {
-      "name": "Copper Chalice",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Copper Chalice",
-          "description": "A copper cup, tarnished over time. Grants 50 % bonus Bloodpoints."
-        },
-        "en": {
-          "name": "Copper Chalice",
-          "description": "A copper cup, tarnished over time. Grants 50 % bonus Bloodpoints."
-        },
-        "es": {
-          "name": "Copper Chalice",
-          "description": "A copper cup, tarnished over time. Grants 50 % bonus Bloodpoints."
-        },
-        "ja": {
-          "name": "Copper Chalice",
-          "description": "A copper cup, tarnished over time. Grants 50 % bonus Bloodpoints."
-        },
-        "pl": {
-          "name": "Copper Chalice",
-          "description": "A copper cup, tarnished over time. Grants 50 % bonus Bloodpoints."
-        }
-      }
-    },
-    "Bloodstone Chalice": {
-      "name": "Bloodstone Chalice",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Bloodstone Chalice",
-          "description": "A bloodstone cup, smooth and polished. Grants 100 % bonus Bloodpoints."
-        },
-        "en": {
-          "name": "Bloodstone Chalice",
-          "description": "A bloodstone cup, smooth and polished. Grants 100 % bonus Bloodpoints."
-        },
-        "es": {
-          "name": "Bloodstone Chalice",
-          "description": "A bloodstone cup, smooth and polished. Grants 100 % bonus Bloodpoints."
-        },
-        "ja": {
-          "name": "Bloodstone Chalice",
-          "description": "A bloodstone cup, smooth and polished. Grants 100 % bonus Bloodpoints."
-        },
-        "pl": {
-          "name": "Bloodstone Chalice",
-          "description": "A bloodstone cup, smooth and polished. Grants 100 % bonus Bloodpoints."
-        }
-      }
-    },
-    "Clay Doll": {
-      "name": "Clay Doll",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Clay Doll",
-          "description": "A doll sculpted with wet clay. Grants 10 % bonus Bloodpoints."
-        },
-        "en": {
-          "name": "Clay Doll",
-          "description": "A doll sculpted with wet clay. Grants 10 % bonus Bloodpoints."
-        },
-        "es": {
-          "name": "Clay Doll",
-          "description": "A doll sculpted with wet clay. Grants 10 % bonus Bloodpoints."
-        },
-        "ja": {
-          "name": "Clay Doll",
-          "description": "A doll sculpted with wet clay. Grants 10 % bonus Bloodpoints."
-        },
-        "pl": {
-          "name": "Clay Doll",
-          "description": "A doll sculpted with wet clay. Grants 10 % bonus Bloodpoints."
-        }
-      }
-    },
-    "Thorn Doll": {
-      "name": "Thorn Doll",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Thorn Doll",
-          "description": "A doll made of thorny twigs. Grants 25 % bonus Bloodpoints."
-        },
-        "en": {
-          "name": "Thorn Doll",
-          "description": "A doll made of thorny twigs. Grants 25 % bonus Bloodpoints."
-        },
-        "es": {
-          "name": "Thorn Doll",
-          "description": "A doll made of thorny twigs. Grants 25 % bonus Bloodpoints."
-        },
-        "ja": {
-          "name": "Thorn Doll",
-          "description": "A doll made of thorny twigs. Grants 25 % bonus Bloodpoints."
-        },
-        "pl": {
-          "name": "Thorn Doll",
-          "description": "A doll made of thorny twigs. Grants 25 % bonus Bloodpoints."
-        }
-      }
-    },
-    "Bone Doll": {
-      "name": "Bone Doll",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Bone Doll",
-          "description": "A doll made of carved bone. Grants 50 % bonus Bloodpoints."
-        },
-        "en": {
-          "name": "Bone Doll",
-          "description": "A doll made of carved bone. Grants 50 % bonus Bloodpoints."
-        },
-        "es": {
-          "name": "Bone Doll",
-          "description": "A doll made of carved bone. Grants 50 % bonus Bloodpoints."
-        },
-        "ja": {
-          "name": "Bone Doll",
-          "description": "A doll made of carved bone. Grants 50 % bonus Bloodpoints."
-        },
-        "pl": {
-          "name": "Bone Doll",
-          "description": "A doll made of carved bone. Grants 50 % bonus Bloodpoints."
-        }
-      }
-    },
-    "Flesh Doll": {
-      "name": "Flesh Doll",
-      "category": "CommonOfferings",
-      "role": "All",
-      "translations": {
-        "de": {
-          "name": "Flesh Doll",
-          "description": "A doll made from a patchwork of human skin. Grants 100 % bonus Bloodpoints."
-        },
-        "en": {
-          "name": "Flesh Doll",
-          "description": "A doll made from a patchwork of human skin. Grants 100 % bonus Bloodpoints."
-        },
-        "es": {
-          "name": "Flesh Doll",
-          "description": "A doll made from a patchwork of human skin. Grants 100 % bonus Bloodpoints."
-        },
-        "ja": {
-          "name": "Flesh Doll",
-          "description": "A doll made from a patchwork of human skin. Grants 100 % bonus Bloodpoints."
-        },
-        "pl": {
-          "name": "Flesh Doll",
-          "description": "A doll made from a patchwork of human skin. Grants 100 % bonus Bloodpoints."
         }
       }
     }

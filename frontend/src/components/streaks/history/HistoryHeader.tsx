@@ -4,6 +4,7 @@
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';
 import { Flame, Trophy, Shield, Skull, BookOpen, BarChart2, RotateCcw } from 'lucide-react';
+import { FreezeBadge } from '../FreezeBadge';
 
 const MODE_ICON: Record<HistoryMode, React.ElementType> = {
   medium: Shield,
@@ -15,6 +16,7 @@ export interface HistoryHeaderProps {
   totalKillersBeaten: number;
   bestKillersBeaten: number;
   checkpointRowIndex: number;
+  poolFrozen?: boolean;
   onOpenRules: () => void;
   onOpenStats: () => void;
   onOpenReset: () => void;
@@ -25,6 +27,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   totalKillersBeaten,
   bestKillersBeaten,
   checkpointRowIndex,
+  poolFrozen = false,
   onOpenRules,
   onOpenStats,
   onOpenReset,
@@ -52,6 +55,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
+          <FreezeBadge frozen={poolFrozen} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-400/30 text-slate-600 dark:text-slate-300 shadow-sm">
             <Flame className="w-5 h-5 text-slate-500 fill-slate-500/20" />
             <div className="flex flex-col">

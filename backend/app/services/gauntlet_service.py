@@ -37,8 +37,18 @@ class GauntletService:
         r.owned_characters_json = json.dumps(ids)
         return ids
 
+    def _is_unfrozen(self, current_streak: int, owned_character_ids: list) -> bool:
+        """True while the run hasn't genuinely started (zero streak) or its pool was never frozen; write-path only."""
+        if current_streak == 0:
+            return True
+        return not owned_character_ids
+
     def _with_owned_characters(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        data["owned_characters"] = resolve_character_names_by_ids(data["owned_character_ids"])
+        ids = data["owned_character_ids"]
+        data["pool_frozen"] = bool(ids)
+        if not ids:
+            ids = get_owned_character_ids(data["user_id"], data["role"], self.ownership_service)
+        data["owned_characters"] = resolve_character_names_by_ids(ids)
         return data
 
     def get_or_create_run(self, user_id: int, role: str) -> Dict[str, Any]:
@@ -50,9 +60,6 @@ class GauntletService:
         ).first()
 
         if run:
-            if not json.loads(run.owned_characters_json or "[]"):
-                self._freeze_pool(run)
-                db.session.commit()
             data = self._with_owned_characters(run.to_dict())
             data["tier_info"] = self.get_tier_info(data["current_streak"], role)
             return data
@@ -79,7 +86,6 @@ class GauntletService:
             checkpoint_characters_json="[]",
             current_loadout_json=json.dumps(initial_loadout),
         )
-        self._freeze_pool(new_run)
         db.session.add(new_run)
         db.session.commit()
 
@@ -114,6 +120,8 @@ class GauntletService:
         ).first()
         if not r:
             raise ValueError("Run not found")
+        if self._is_unfrozen(r.current_streak, json.loads(r.owned_characters_json or "[]")):
+            self._freeze_pool(r)
         r.target_revealed = True
         db.session.commit()
         data = self._with_owned_characters(r.to_dict())
@@ -152,6 +160,9 @@ class GauntletService:
             raise ValueError("Run not found")
         if r.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
+
+        if self._is_unfrozen(r.current_streak, json.loads(r.owned_characters_json or "[]")):
+            self._freeze_pool(r)
 
         current_streak = r.current_streak
         best_streak = r.best_streak

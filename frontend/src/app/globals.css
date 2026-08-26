@@ -204,6 +204,15 @@ strong {
   animation: gnLandGlow 900ms ease-out both;
 }
 
+.freeze-badge-in {
+  animation: freezeBadgeIn 480ms cubic-bezier(.22, 1.4, .36, 1) both;
+}
+
+@keyframes freezeBadgeIn {
+  from { opacity: 0; transform: scale(.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 @keyframes chaosLeverPull {
   0% { transform: rotate(0deg); }
   35% { transform: rotate(32deg); }
@@ -394,6 +403,7 @@ strong {
   .gn-land-frame,
   .gn-land-glow,
   .gn-name-in,
+  .freeze-badge-in,
   .anim-lore-enter,
   .anim-watermark-enter,
   .cockpit-neon-pulse {

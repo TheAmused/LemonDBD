@@ -37,6 +37,18 @@ class GauntletService:
         r.owned_characters_json = json.dumps(ids)
         return ids
 
+    def _is_unfrozen(self, current_streak: int, owned_character_ids: list) -> bool:
+        """True while the run hasn't genuinely started yet (zero streak),
+        regardless of whatever owned_characters_json already holds -- a run
+        created before the pool moved to a real freeze point can carry a
+        stale non-empty snapshot from creation time. Used only to decide
+        whether to (re)write a fresh freeze -- reading always trusts
+        whatever's already stored once non-empty, so a locked character
+        doesn't flicker out mid-round before the next real freeze point."""
+        if current_streak == 0:
+            return True
+        return not owned_character_ids
+
     def _with_owned_characters(self, data: Dict[str, Any]) -> Dict[str, Any]:
         ids = data["owned_character_ids"]
         if not ids:
@@ -113,7 +125,7 @@ class GauntletService:
         ).first()
         if not r:
             raise ValueError("Run not found")
-        if not json.loads(r.owned_characters_json or "[]"):
+        if self._is_unfrozen(r.current_streak, json.loads(r.owned_characters_json or "[]")):
             self._freeze_pool(r)
         r.target_revealed = True
         db.session.commit()
@@ -154,7 +166,7 @@ class GauntletService:
         if r.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
 
-        if not json.loads(r.owned_characters_json or "[]"):
+        if self._is_unfrozen(r.current_streak, json.loads(r.owned_characters_json or "[]")):
             self._freeze_pool(r)
 
         current_streak = r.current_streak

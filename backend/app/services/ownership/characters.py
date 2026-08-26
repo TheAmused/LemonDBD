@@ -5,15 +5,23 @@ from sqlalchemy import func, select
 from app.core.extensions import db
 from app.models import Character, UserCharacterOwnership
 
-# Killers included with the base game / free to play, per Dead by Daylight's
-# actual roster. Everyone else ships as a paid DLC killer, so new accounts
-# start with them locked instead of the previous "everything unlocked" default.
-FREE_KILLER_NAMES = {
-    "The Trapper",
-    "The Wraith",
-    "The Hillbilly",
-    "The Nurse",
-    "The Huntress",
+# Character IDs granted to every new account: the base-game/free-to-play
+# roster (5 killers, 7 survivors). IDs come from the canonical seed
+# (app/seeds/rosters/canon.json), which inserts in a fixed order, so they're
+# stable across a fresh deploy; everyone else starts locked.
+FREE_CHARACTER_IDS = {
+    55,  # The Trapper
+    56,  # The Wraith
+    57,  # The Hillbilly
+    58,  # The Nurse
+    62,  # The Huntress
+    1,   # Dwight Fairfield
+    2,   # Meg Thomas
+    3,   # Claudette Morel
+    4,   # Jake Park
+    5,   # Nea Karlsson
+    8,   # Bill Overbeck
+    10,  # David King
 }
 
 
@@ -172,23 +180,21 @@ def bulk_mutate_character_ownership(
 
 
 def seed_default_character_ownership(user_id: int) -> int:
-    """Lock every paid-DLC killer for a freshly registered account.
+    """Lock every character except the free starter roster for a new account.
 
     Characters default to owned when no ownership row exists, so a brand new
     user otherwise starts with the entire roster unlocked. This runs once at
-    registration to explicitly lock non-free killers (and cascades to their
-    teachable perks via mutate_character_ownership), leaving survivors and
-    the free killers untouched.
+    registration to explicitly lock everything outside FREE_CHARACTER_IDS,
+    reusing the existing bulk ownership mutation so teachable perks are
+    cascade-locked the same way an admin disabling a character would.
     """
-    paid_killer_ids = db.session.scalars(
-        select(Character.id).where(
-            func.lower(Character.role) == "killer",
-            Character.name.notin_(FREE_KILLER_NAMES),
-        )
+    locked_ids = db.session.scalars(
+        select(Character.id).where(Character.id.notin_(FREE_CHARACTER_IDS))
     ).all()
+    if not locked_ids:
+        return 0
 
-    for character_id in paid_killer_ids:
-        mutate_character_ownership(user_id, character_id, False)
-
-    return len(paid_killer_ids)
+    updates = [{"character_id": cid, "is_owned": False} for cid in locked_ids]
+    bulk_mutate_character_ownership(user_id, updates, lambda _uid: {})
+    return len(locked_ids)
 

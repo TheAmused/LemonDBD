@@ -125,4 +125,24 @@ test('textFormatter: renderFormattedDbdText handles plain text, quotes, and bull
 
   const eventNotice = renderFormattedDbdText('THIS ITEM IS NO LONGER AVAILABLE IN THE BLOODWEB');
   assert.ok(eventNotice);
+
+  const htmlList = renderFormattedDbdText(
+    'Effects:<ul><li>Zyskujesz <b>10/12.5/15%</b> efektu <b>Pośpiech</b> przez 3 s.</li><li>Paleta jest zablokowana przez 60 s.</li></ul><br><br>Czas odnawiania: 60 s.'
+  );
+  assert.ok(htmlList);
+
+  const inputToken = renderFormattedDbdText(
+    'Użyj {Input.ActivatableButton2}, aby aktywować moc.'
+  );
+  assert.ok(inputToken);
+
+  const naturalButtons = renderFormattedDbdText(
+    'While next to a Dropped Pallet, use Active Ability Button 1 for 5/4/3s to reset it.\n\n“I’ll hit you with everything I’ve got. Then I’ll do it again.” -Yui Kimura'
+  );
+  assert.ok(naturalButtons);
+
+  const polishButtons = renderFormattedDbdText(
+    'Będąc obok przewróconej palety, użyj przycisk zdolności aktywnej 1 przez 5/4/3 s aby ją zresetować.\n\n„Zaatakuję cię wszystkim, co mam. Później zrobię to jeszcze raz”. – Yui Kimura'
+  );
+  assert.ok(polishButtons);
 });

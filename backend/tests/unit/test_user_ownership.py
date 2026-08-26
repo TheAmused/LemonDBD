@@ -21,7 +21,7 @@ class TestUserAndOwnership(unittest.TestCase):
             # Seed test killer and survivor
             trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
             if not trapper:
-                trapper = Character(name="The Trapper", role="Killer", release_number=1)
+                trapper = Character(name="The Trapper", wiki_slug="The_Trapper", role="Killer", release_number=1)
                 db.session.add(trapper)
                 db.session.flush()
 
@@ -35,7 +35,7 @@ class TestUserAndOwnership(unittest.TestCase):
 
             dwight = db.session.scalars(select(Character).where(Character.name == "Dwight Fairfield")).first()
             if not dwight:
-                dwight = Character(name="Dwight Fairfield", role="Survivor", release_number=1)
+                dwight = Character(name="Dwight Fairfield", wiki_slug="Dwight_Fairfield", role="Survivor", release_number=1)
                 db.session.add(dwight)
                 db.session.flush()
 
@@ -221,11 +221,12 @@ class TestUserAndOwnership(unittest.TestCase):
         self.assertEqual(me_res.status_code, 200)
         self.assertEqual(me_res.get_json()["user"]["username"], "apicheck")
 
-        # Check get characters -> default all owned
+        # Check get characters -> free characters are owned by default
         chars_res = self.client.get(f"/api/v1/users/{user_id}/characters", headers=headers)
         self.assertEqual(chars_res.status_code, 200)
         chars_data = chars_res.get_json()["data"]
-        self.assertTrue(all(c["is_owned"] for c in chars_data))
+        trapper_char = next(c for c in chars_data if c["name"] == "The Trapper")
+        self.assertTrue(trapper_char["is_owned"])
 
         # Lock character via API -> cascades to lock its perks
         with self.app.app_context():

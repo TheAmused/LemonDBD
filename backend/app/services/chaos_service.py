@@ -36,8 +36,6 @@ class ChaosService:
         killer_ids = data["owned_killer_ids"]
         perk_ids = data["unlocked_perk_ids"]
         if not killer_ids:
-            # Pool isn't frozen yet (run hasn't had its perks revealed) --
-            # show the live pool instead of an empty one.
             killer_ids = get_owned_killer_ids(data["user_id"], self.ownership_service)
         if not perk_ids:
             perk_ids = get_unlocked_killer_perk_ids(data["user_id"], self.ownership_service)

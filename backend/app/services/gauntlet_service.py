@@ -40,8 +40,6 @@ class GauntletService:
     def _with_owned_characters(self, data: Dict[str, Any]) -> Dict[str, Any]:
         ids = data["owned_character_ids"]
         if not ids:
-            # Pool isn't frozen yet (run hasn't had its first target revealed) --
-            # show the live pool instead of an empty roster.
             ids = get_owned_character_ids(data["user_id"], data["role"], self.ownership_service)
         data["owned_characters"] = resolve_character_names_by_ids(ids)
         return data

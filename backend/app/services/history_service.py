@@ -70,8 +70,6 @@ class HistoryService:
         if owned_ids:
             owned_names = resolve_killer_names_by_ids(owned_ids)
         else:
-            # Pool isn't frozen yet (run hasn't had its first result submitted) --
-            # show the live pool instead of an empty roster.
             owned_names = resolve_killer_names_by_ids(
                 get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
             )

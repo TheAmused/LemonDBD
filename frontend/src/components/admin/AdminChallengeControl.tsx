@@ -294,9 +294,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           ship broken on their own too.
         </p>
 
-        {loading ? (
+        {characters.length === 0 && perks.length === 0 && loading ? (
           <p className="text-xs text-slate-500 py-6 text-center">Loading...</p>
-        ) : subTab === 'killers' ? (
+        ) : (
+        <div className={`transition-opacity duration-150 ${loading ? 'opacity-50' : ''}`}>
+          {subTab === 'killers' ? (
           <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
             {characters.map((c) => (
               <button
@@ -375,6 +377,8 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               </button>
             ))}
           </div>
+        )}
+        </div>
         )}
       </div>
 

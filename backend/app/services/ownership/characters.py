@@ -5,6 +5,17 @@ from sqlalchemy import func, select
 from app.core.extensions import db
 from app.models import Character, UserCharacterOwnership
 
+# Killers included with the base game / free to play, per Dead by Daylight's
+# actual roster. Everyone else ships as a paid DLC killer, so new accounts
+# start with them locked instead of the previous "everything unlocked" default.
+FREE_KILLER_NAMES = {
+    "The Trapper",
+    "The Wraith",
+    "The Hillbilly",
+    "The Nurse",
+    "The Huntress",
+}
+
 
 def fetch_user_characters(user_id: Optional[int] = None, role: Optional[str] = None) -> List[Dict[str, Any]]:
     """Retrieve all characters annotated with the user's ownership flag."""
@@ -158,4 +169,26 @@ def bulk_mutate_character_ownership(
         "auto_locked_perks_count": auto_locked_perks_count,
         "summary": summary_fn(user_id),
     }
+
+
+def seed_default_character_ownership(user_id: int) -> int:
+    """Lock every paid-DLC killer for a freshly registered account.
+
+    Characters default to owned when no ownership row exists, so a brand new
+    user otherwise starts with the entire roster unlocked. This runs once at
+    registration to explicitly lock non-free killers (and cascades to their
+    teachable perks via mutate_character_ownership), leaving survivors and
+    the free killers untouched.
+    """
+    paid_killer_ids = db.session.scalars(
+        select(Character.id).where(
+            func.lower(Character.role) == "killer",
+            Character.name.notin_(FREE_KILLER_NAMES),
+        )
+    ).all()
+
+    for character_id in paid_killer_ids:
+        mutate_character_ownership(user_id, character_id, False)
+
+    return len(paid_killer_ids)
 

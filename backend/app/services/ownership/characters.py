@@ -1,11 +1,15 @@
 # backend/app/services/ownership/characters.py
 from typing import Any, Callable, Dict, List, Optional
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
 from app.models import Character, UserCharacterOwnership
 
-FREE_CHARACTER_IDS = {55, 56, 57, 58, 62, 1, 2, 3, 4, 5, 8, 10}
+FREE_CHARACTER_SLUGS = {
+    "The_Trapper", "The_Wraith", "The_Hillbilly", "The_Nurse", "The_Huntress",
+    "Dwight_Fairfield", "Meg_Thomas", "Claudette_Morel", "Jake_Park",
+    "Nea_Karlsson", "Bill_Overbeck", "David_King",
+}
 
 
 def fetch_user_characters(user_id: Optional[int] = None, role: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -163,9 +167,14 @@ def bulk_mutate_character_ownership(
 
 
 def seed_default_character_ownership(user_id: int) -> int:
-    """Lock every character except FREE_CHARACTER_IDS for a new account (characters default to owned otherwise)."""
+    """Lock every character except FREE_CHARACTER_SLUGS for a new account (characters default to owned otherwise)."""
     locked_ids = db.session.scalars(
-        select(Character.id).where(Character.id.notin_(FREE_CHARACTER_IDS))
+        select(Character.id).where(
+            or_(
+                Character.wiki_slug.is_(None),
+                Character.wiki_slug.notin_(FREE_CHARACTER_SLUGS),
+            )
+        )
     ).all()
     if not locked_ids:
         return 0

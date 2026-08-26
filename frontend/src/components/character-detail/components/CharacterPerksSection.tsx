@@ -76,7 +76,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
             {hoveredPerkIndex === idx && (
               <div
                 role="tooltip"
-                className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-50 w-72 sm:w-96 p-4 rounded-2xl bg-slate-950/95 border border-amber-500/40 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150"
+                className="absolute left-1/2 -translate-x-1/2 top-full mt-3 z-50 w-80 sm:w-[440px] md:w-[480px] max-w-[92vw] p-4 rounded-2xl bg-slate-950/95 border border-amber-500/40 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150"
               >
                 <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-800">
                   <h4 className="text-sm font-black text-amber-400 truncate font-mono">
@@ -86,7 +86,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                     {perk.category} Perk
                   </span>
                 </div>
-                <div className="space-y-1 text-xs max-h-56 overflow-y-auto pr-1">
+                <div className="space-y-1 text-xs sm:text-sm max-h-96 sm:max-h-[460px] overflow-y-auto pr-1 leading-relaxed text-slate-200">
                   {renderFormattedDbdText(perk.description, true)}
                 </div>
                 <span className="block text-[10px] font-mono text-amber-500 mt-2.5 text-right font-bold">

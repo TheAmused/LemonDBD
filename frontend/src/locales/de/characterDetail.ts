@@ -82,5 +82,13 @@ export default {
   "categoryBlueprint": "Baupläne",
   "categoryChest": "Kisten & Nebel",
   "searchOfferings": "Opfergaben filtern...",
-  "noMatchingOfferings": "Keine passenden Opfergaben gefunden."
+  "noMatchingOfferings": "Keine passenden Opfergaben gefunden.",
+  "clickToInspect": "Klicken, um die vollständige Mechanik anzuzeigen",
+  "rarityCommon": "Gewöhnlich",
+  "rarityUncommon": "Ungewöhnlich",
+  "rarityRare": "Selten",
+  "rarityVeryRare": "Sehr selten",
+  "rarityUltraRare": "Ultraselten",
+  "rarityEvent": "Event",
+  "raritySpecial": "Spezial"
 };

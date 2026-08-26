@@ -82,5 +82,13 @@ export default {
   "categoryBlueprint": "Plany",
   "categoryChest": "Skrzynie i Mgła",
   "searchOfferings": "Filtruj dary...",
-  "noMatchingOfferings": "Brak darów spełniających podane filtry."
+  "noMatchingOfferings": "Brak darów spełniających podane filtry.",
+  "clickToInspect": "Kliknij, aby sprawdzić pełną mechanikę",
+  "rarityCommon": "Pospolity",
+  "rarityUncommon": "Niepospolity",
+  "rarityRare": "Rzadki",
+  "rarityVeryRare": "Bardzo rzadki",
+  "rarityUltraRare": "Ultra rzadki",
+  "rarityEvent": "Wydarzenie",
+  "raritySpecial": "Specjalny"
 };

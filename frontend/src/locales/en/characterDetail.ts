@@ -82,5 +82,13 @@ export default {
   "categoryBlueprint": "Blueprints",
   "categoryChest": "Chests & Fog",
   "searchOfferings": "Filter offerings...",
-  "noMatchingOfferings": "No offerings match the active filters."
+  "noMatchingOfferings": "No offerings match the active filters.",
+  "clickToInspect": "Click to inspect full mechanics",
+  "rarityCommon": "Common",
+  "rarityUncommon": "Uncommon",
+  "rarityRare": "Rare",
+  "rarityVeryRare": "Very Rare",
+  "rarityUltraRare": "Ultra Rare",
+  "rarityEvent": "Event",
+  "raritySpecial": "Special"
 };

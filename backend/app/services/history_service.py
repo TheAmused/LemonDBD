@@ -67,11 +67,14 @@ class HistoryService:
 
     def _augment(self, run: HistoryRun) -> Dict[str, Any]:
         owned_ids = json.loads(run.owned_killers_json or "[]")
-        if not owned_ids:
-            owned_names = self._freeze_pool(run)
-            db.session.commit()
-        else:
+        if owned_ids:
             owned_names = resolve_killer_names_by_ids(owned_ids)
+        else:
+            # Pool isn't frozen yet (run hasn't had its first result submitted) --
+            # show the live pool instead of an empty roster.
+            owned_names = resolve_killer_names_by_ids(
+                get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
+            )
         rows = build_rows(owned_names)
 
         if run.status == "in_progress" and rows and run.current_row_index >= len(rows):
@@ -120,7 +123,6 @@ class HistoryService:
             checkpoint_completed_killers_json="[]",
             checkpoint_unlocked_perk_names_json=json.dumps(general),
         )
-        self._freeze_pool(run)
         db.session.add(run)
         db.session.commit()
         return self._augment(run)
@@ -151,6 +153,8 @@ class HistoryService:
         if run.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
 
+        if not json.loads(run.owned_killers_json or "[]"):
+            self._freeze_pool(run)
         owned_names = resolve_killer_names_by_ids(json.loads(run.owned_killers_json or "[]"))
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []

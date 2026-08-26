@@ -16,6 +16,7 @@ def run_to_dict(
 ) -> Dict[str, Any]:
     """Serialize a PageStreakRun entity along with its match history."""
     pages = json.loads(r.pages_json or "[]")
+    pool_frozen = bool(pages)
     if not pages and build_pages_fn is not None:
         pages = build_pages_fn(r.user_id)
     return {
@@ -27,6 +28,7 @@ def run_to_dict(
         "best_page": r.best_page,
         "pages": pages,
         "page_count": len(pages),
+        "pool_frozen": pool_frozen,
         "snapshot_at": to_utc_iso(r.snapshot_at),
         "history": history,
     }

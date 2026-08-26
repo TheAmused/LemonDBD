@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { RotateCcw, Skull, Flame, Trophy, BookOpen, BarChart2 } from 'lucide-react';
 import { PageStreakRun } from '@/types/pageStreak';
+import { FreezeBadge } from '../FreezeBadge';
 
 interface RunHeaderProps {
   run: PageStreakRun;
@@ -37,11 +38,14 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenRese
           <h2 className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100">{run.killer}</h2>
           <div className="mt-1 flex flex-wrap gap-4 font-mono text-[11px] text-slate-500">
             <span>attempt <b className="text-slate-800 dark:text-slate-200">{run.attempt}</b></span>
-            <span>layout frozen <b className="text-slate-800 dark:text-slate-200">{new Date(run.snapshot_at).toLocaleDateString()}</b></span>
+            {run.pool_frozen && (
+              <span>layout frozen <b className="text-slate-800 dark:text-slate-200">{new Date(run.snapshot_at).toLocaleDateString()}</b></span>
+            )}
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
+          <FreezeBadge frozen={run.pool_frozen} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-orange-500/30 text-orange-600 dark:text-orange-400 shadow-sm">
             <Flame className="w-5 h-5 text-orange-500 fill-orange-500/20" />
             <div className="flex flex-col">

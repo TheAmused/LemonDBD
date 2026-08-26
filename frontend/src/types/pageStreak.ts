@@ -29,6 +29,7 @@ export interface PageStreakRun {
   best_page: number;
   pages: string[][];
   page_count: number;
+  pool_frozen: boolean;
   snapshot_at: string;
   history: HistoryEntry[];
   perk_icons: Record<string, string>;

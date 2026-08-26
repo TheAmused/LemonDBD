@@ -46,6 +46,7 @@ class ChaosService:
     def _with_resolved_pool(self, data: Dict[str, Any]) -> Dict[str, Any]:
         killer_ids = data["owned_killer_ids"]
         perk_ids = data["unlocked_perk_ids"]
+        data["pool_frozen"] = bool(killer_ids) and bool(perk_ids)
         if not killer_ids:
             killer_ids = get_owned_killer_ids(data["user_id"], self.ownership_service)
         if not perk_ids:

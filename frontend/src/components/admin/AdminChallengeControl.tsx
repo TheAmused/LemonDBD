@@ -2,7 +2,7 @@
 // frontend/src/components/admin/AdminChallengeControl.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Ban, CheckCircle2, Power, Search, Shield, Skull, Sparkles } from 'lucide-react';
+import { CheckCircle2, Power, Search, Shield, Skull, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,
   AdminPerkRow,
@@ -276,20 +276,20 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         {loading ? (
           <p className="text-xs text-slate-500 py-6 text-center">Loading...</p>
         ) : subTab === 'killers' ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
             {characters.map((c) => (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => requestCharacterToggle(c)}
-                title={c.disabled_reason || undefined}
-                className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border cursor-pointer transition-colors text-center ${
+                title={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
+                className={`relative flex items-center justify-center p-1 rounded-xl border cursor-pointer transition-colors ${
                   c.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
                     : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
                 }`}
               >
-                <div className="relative h-10 w-10 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
+                <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
                   {c.avatar_local_path ? (
                     <img
                       src={staticUrl(c.avatar_local_path)}
@@ -313,34 +313,31 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     )}
                   </span>
                 </div>
-                <span className="text-[10px] font-semibold text-slate-300 truncate w-full">{c.name}</span>
-                {c.is_disabled ? (
-                  <span className="text-[9px] font-black uppercase text-rose-400 flex items-center gap-0.5">
-                    <Ban className="h-2.5 w-2.5" /> Disabled
-                  </span>
-                ) : (
-                  <span className="text-[9px] font-black uppercase text-emerald-500/70 flex items-center gap-0.5">
-                    <CheckCircle2 className="h-2.5 w-2.5" /> Active
-                  </span>
-                )}
+                <span
+                  className={`absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
+                    c.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
+                  }`}
+                >
+                  {c.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                </span>
               </button>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
             {perks.map((p) => (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => requestPerkToggle(p)}
-                title={p.disabled_reason || undefined}
-                className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border cursor-pointer transition-colors text-center ${
+                title={p.disabled_reason ? `${p.name} (${p.character}) — ${p.disabled_reason}` : `${p.name} (${p.character})`}
+                className={`relative flex items-center justify-center p-1 rounded-xl border cursor-pointer transition-colors ${
                   p.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
                     : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
                 }`}
               >
-                <div className="h-10 w-10 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
+                <div className="h-12 w-12 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
                   {p.icon_local_path ? (
                     <img
                       src={staticUrl(p.icon_local_path)}
@@ -351,17 +348,13 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     <Sparkles className="h-4 w-4 text-slate-600" />
                   )}
                 </div>
-                <span className="text-[10px] font-semibold text-slate-300 truncate w-full">{p.name}</span>
-                <span className="text-[9px] text-slate-600 truncate w-full">{p.character}</span>
-                {p.is_disabled ? (
-                  <span className="text-[9px] font-black uppercase text-rose-400 flex items-center gap-0.5">
-                    <Ban className="h-2.5 w-2.5" /> Disabled
-                  </span>
-                ) : (
-                  <span className="text-[9px] font-black uppercase text-emerald-500/70 flex items-center gap-0.5">
-                    <CheckCircle2 className="h-2.5 w-2.5" /> Active
-                  </span>
-                )}
+                <span
+                  className={`absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
+                    p.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
+                  }`}
+                >
+                  {p.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                </span>
               </button>
             ))}
           </div>

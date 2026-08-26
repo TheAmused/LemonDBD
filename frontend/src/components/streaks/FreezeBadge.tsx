@@ -28,12 +28,9 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen }) => {
       ref={ref}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="freeze-badge-in flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-sky-500/30 text-sky-600 dark:text-sky-400 shadow-sm"
+      className="freeze-badge-in flex items-center justify-center px-3.5 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-sky-500/30 text-sky-600 dark:text-sky-400 shadow-sm"
     >
-      <Snowflake className="w-5 h-5 text-sky-500 dark:text-sky-400" />
-      <span className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
-        Frozen
-      </span>
+      <Snowflake className="w-6 h-6 text-sky-500 dark:text-sky-400" />
 
       {hovered &&
         rect &&

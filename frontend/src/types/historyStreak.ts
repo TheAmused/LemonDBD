@@ -18,6 +18,7 @@ export interface HistoryRun {
   row_size: number;
   total_rows: number;
   total_owned_killers: number;
+  pool_frozen: boolean;
   newly_unlocked_perks?: string[];
   row_cleared?: boolean;
   created_at?: string;

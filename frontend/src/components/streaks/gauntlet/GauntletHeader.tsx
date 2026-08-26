@@ -4,12 +4,14 @@
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';
 import { Flame, Trophy, Shield, User, Skull, BarChart2, BookOpen, RotateCcw } from 'lucide-react';
+import { FreezeBadge } from '../FreezeBadge';
 
 export interface GauntletHeaderProps {
   role: Role;
   currentStreak: number;
   bestStreak: number;
   lastCheckpointStreak: number;
+  poolFrozen?: boolean;
   onOpenStats: () => void;
   onOpenRules: () => void;
   onOpenReset: () => void;
@@ -20,6 +22,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
   currentStreak,
   bestStreak,
   lastCheckpointStreak,
+  poolFrozen = false,
   onOpenStats,
   onOpenRules,
   onOpenReset,
@@ -44,6 +47,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
+          <FreezeBadge frozen={poolFrozen} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-amber-500/30 text-amber-600 dark:text-amber-400 shadow-sm">
             <Flame className="w-5 h-5 text-amber-500 fill-amber-500/20 animate-pulse" />
             <div className="flex flex-col">

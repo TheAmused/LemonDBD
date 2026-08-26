@@ -104,6 +104,7 @@ class HistoryService:
         data["row_size"] = ROW_SIZE
         data["total_rows"] = len(rows)
         data["total_owned_killers"] = len(owned_names)
+        data["pool_frozen"] = not self._is_unfrozen(run)
         return data
 
     def get_or_create_run(self, user_id: int, mode: str) -> Dict[str, Any]:

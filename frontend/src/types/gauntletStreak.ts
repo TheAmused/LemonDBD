@@ -41,6 +41,7 @@ export interface GauntletRun {
   completed_characters: string[];
   checkpoint_characters: string[];
   owned_characters: string[];
+  pool_frozen: boolean;
   tier_info: TierInfo;
   created_at?: string;
   updated_at?: string;

@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "tsx --test src/utils/__tests__/*.test.ts"
+    "test": "tsx --test src/__tests__/unit/*.test.ts src/__tests__/live/*.test.ts",
+    "test:unit": "tsx --test src/__tests__/unit/*.test.ts",
+    "test:live": "tsx --test src/__tests__/live/*.test.ts",
+    "test:workflows": "tsx --test src/__tests__/live/*.test.ts"
   },
   "dependencies": {
     "@tsparticles/engine": "^4.3.2",

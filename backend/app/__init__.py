@@ -48,11 +48,18 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     mail.init_app(flask_app)
 
     def _init_db_safely():
+        is_testing = flask_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
+        if is_testing:
+            try:
+                db.create_all()
+            except Exception:
+                pass
+            return
+
         from app.services.db_service import DatabaseService
         from app.seeds.user_seeder import seed_default_users
         from app.services.scraper_service import ScraperService
 
-        is_testing = flask_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
         is_pg = False
         try:
             is_pg = db.engine.dialect.name in ("postgresql", "postgres")

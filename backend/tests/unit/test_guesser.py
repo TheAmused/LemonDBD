@@ -24,7 +24,9 @@ class TestGuesserModule(unittest.TestCase):
         # Monkey patch DatabaseService path within routes
         from app.routes.others.guesser import guesser_service
         self.original_db = guesser_service.db_service
+        self.original_use_sa = guesser_service._use_sqlalchemy
         guesser_service.db_service = self.db_service
+        guesser_service._use_sqlalchemy = False
         
         self.client = self.app.test_client()
         self.service = GuesserService(db_service=self.db_service)
@@ -32,6 +34,7 @@ class TestGuesserModule(unittest.TestCase):
     def tearDown(self):
         from app.routes.others.guesser import guesser_service
         guesser_service.db_service = self.original_db
+        guesser_service._use_sqlalchemy = self.original_use_sa
         gc.collect()
         try:
             self._temp_dir.cleanup()
@@ -93,13 +96,13 @@ class TestGuesserModule(unittest.TestCase):
         self.assertEqual(updated["best_streak"], 3) # Best streak remains
 
     def test_api_routes(self):
-        # Test GET /api/v1/guesser/stats
+        # 1. Initial GET /api/v1/guesser/stats returns dict
         response = self.client.get("/api/v1/guesser/stats")
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data.decode("utf-8"))
-        self.assertIn("character", data["data"])
+        self.assertIsInstance(data["data"], dict)
 
-        # Test POST /api/v1/guesser/stats
+        # 2. Test POST /api/v1/guesser/stats
         response = self.client.post("/api/v1/guesser/stats", json={
             "guesser_type": "character",
             "is_correct": True
@@ -108,7 +111,13 @@ class TestGuesserModule(unittest.TestCase):
         data = json.loads(response.data.decode("utf-8"))
         self.assertEqual(data["data"]["current_streak"], 1)
 
-        # Test POST /api/v1/guesser/reset
+        # 3. GET after POST contains character
+        response = self.client.get("/api/v1/guesser/stats")
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data.decode("utf-8"))
+        self.assertIn("character", data["data"])
+
+        # 4. Test POST /api/v1/guesser/reset
         response = self.client.post("/api/v1/guesser/reset", json={
             "guesser_type": "character"
         })

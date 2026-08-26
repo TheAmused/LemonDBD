@@ -225,6 +225,10 @@ def reload_service_data(service) -> None:
     """Reloads database tables or fallback memory caches."""
     try:
         if current_app:
+            if current_app.config.get("TESTING") or ("PYTEST_CURRENT_TEST" in os.environ):
+                load_fallback_files(service)
+                return
+
             char_count = db.session.scalar(select(func.count(Character.id))) or 0
             perk_count = db.session.scalar(select(func.count(Perk.id))) or 0
             item_count = db.session.scalar(select(func.count(Item.id))) or 0

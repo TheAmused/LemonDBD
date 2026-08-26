@@ -276,20 +276,20 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         {loading ? (
           <p className="text-xs text-slate-500 py-6 text-center">Loading...</p>
         ) : subTab === 'killers' ? (
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+          <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
             {characters.map((c) => (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => requestCharacterToggle(c)}
                 title={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
-                className={`relative flex items-center justify-center p-1 rounded-xl border cursor-pointer transition-colors ${
+                className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
                   c.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
                     : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
                 }`}
               >
-                <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
+                <div className="h-full w-full flex items-center justify-center bg-slate-900">
                   {c.avatar_local_path ? (
                     <img
                       src={staticUrl(c.avatar_local_path)}
@@ -297,24 +297,20 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                       className={`h-full w-full object-cover ${c.is_disabled ? 'grayscale opacity-60' : ''}`}
                     />
                   ) : c.role === 'Survivor' ? (
-                    <Shield className="h-4 w-4 text-slate-600" />
+                    <Shield className="h-6 w-6 text-slate-600" />
                   ) : (
-                    <Skull className="h-4 w-4 text-slate-600" />
+                    <Skull className="h-6 w-6 text-slate-600" />
                   )}
-                  <span
-                    className={`absolute bottom-0 right-0 flex h-3.5 w-3.5 items-center justify-center rounded-tl-md ${
-                      c.role === 'Survivor' ? 'bg-emerald-500/80 text-emerald-950' : 'bg-rose-500/80 text-rose-950'
-                    }`}
-                  >
-                    {c.role === 'Survivor' ? (
-                      <Shield className="h-2 w-2" />
-                    ) : (
-                      <Skull className="h-2 w-2" />
-                    )}
-                  </span>
                 </div>
                 <span
-                  className={`absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
+                  className={`absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-md ${
+                    c.role === 'Survivor' ? 'bg-emerald-500/80 text-emerald-950' : 'bg-rose-500/80 text-rose-950'
+                  }`}
+                >
+                  {c.role === 'Survivor' ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
+                </span>
+                <span
+                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
                     c.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
                   }`}
                 >
@@ -324,20 +320,20 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2.5 max-h-[420px] overflow-y-auto pr-1">
+          <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
             {perks.map((p) => (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => requestPerkToggle(p)}
                 title={p.disabled_reason ? `${p.name} (${p.character}) — ${p.disabled_reason}` : `${p.name} (${p.character})`}
-                className={`relative flex items-center justify-center p-1 rounded-xl border cursor-pointer transition-colors ${
+                className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
                   p.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
                     : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
                 }`}
               >
-                <div className="h-12 w-12 rounded-lg overflow-hidden bg-slate-900 flex items-center justify-center">
+                <div className="h-full w-full flex items-center justify-center bg-slate-900 p-1.5">
                   {p.icon_local_path ? (
                     <img
                       src={staticUrl(p.icon_local_path)}
@@ -345,11 +341,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                       className={`h-full w-full object-contain ${p.is_disabled ? 'grayscale opacity-60' : ''}`}
                     />
                   ) : (
-                    <Sparkles className="h-4 w-4 text-slate-600" />
+                    <Sparkles className="h-6 w-6 text-slate-600" />
                   )}
                 </div>
                 <span
-                  className={`absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
+                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
                     p.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
                   }`}
                 >

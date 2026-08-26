@@ -36,6 +36,7 @@ type PendingAction =
 export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ onActionMessage }) => {
   const [modes, setModes] = useState<ChallengeModeSetting[]>([]);
   const [subTab, setSubTab] = useState<'killers' | 'perks'>('killers');
+  const [roleFilter, setRoleFilter] = useState<'Survivor' | 'Killer'>('Survivor');
   const [characters, setCharacters] = useState<AdminCharacterRow[]>([]);
   const [perks, setPerks] = useState<AdminPerkRow[]>([]);
   const [search, setSearch] = useState('');
@@ -55,18 +56,18 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     }
   }, []);
 
-  const loadRoster = useCallback(async (searchTerm: string) => {
+  const loadRoster = useCallback(async (searchTerm: string, role: 'Survivor' | 'Killer') => {
     const token = getToken();
     if (!token) return;
     setLoading(true);
     try {
       const [charsRes, perksRes] = await Promise.all([
         fetch(
-          `${backendBase}/api/v1/admin/characters?role=All&search=${encodeURIComponent(searchTerm)}`,
+          `${backendBase}/api/v1/admin/characters?role=${role}&search=${encodeURIComponent(searchTerm)}`,
           { headers: authHeaders(token) }
         ),
         fetch(
-          `${backendBase}/api/v1/admin/perks?category=All&search=${encodeURIComponent(searchTerm)}`,
+          `${backendBase}/api/v1/admin/perks?category=${role}&search=${encodeURIComponent(searchTerm)}`,
           { headers: authHeaders(token) }
         ),
       ]);
@@ -86,9 +87,9 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
 
   // Debounced so typing a search term doesn't fire a request per keystroke.
   useEffect(() => {
-    const timer = setTimeout(() => loadRoster(search), 300);
+    const timer = setTimeout(() => loadRoster(search, roleFilter), 300);
     return () => clearTimeout(timer);
-  }, [search, loadRoster]);
+  }, [search, roleFilter, loadRoster]);
 
   const applyModeToggle = async (mode: ChallengeMode, isEnabled: boolean, reason: string | null) => {
     const token = getToken();
@@ -125,7 +126,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           type: 'success',
           text: `${character.name} is now ${nextDisabled ? 'disabled' : 'enabled'}.`,
         });
-        await loadRoster(search);
+        await loadRoster(search, roleFilter);
       } else {
         const err = await res.json().catch(() => ({}));
         onActionMessage({ type: 'error', text: err.error || 'Failed to update character.' });
@@ -149,7 +150,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           type: 'success',
           text: `${perk.name} is now ${nextDisabled ? 'disabled' : 'enabled'}.`,
         });
-        await loadRoster(search);
+        await loadRoster(search, roleFilter);
       } else {
         const err = await res.json().catch(() => ({}));
         onActionMessage({ type: 'error', text: err.error || 'Failed to update perk.' });
@@ -255,6 +256,26 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               }`}
             >
               <Sparkles className="h-3.5 w-3.5" /> Perks
+            </button>
+          </div>
+          <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 p-1">
+            <button
+              type="button"
+              onClick={() => setRoleFilter('Survivor')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
+                roleFilter === 'Survivor' ? 'bg-emerald-500/10 text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              <Shield className="h-3.5 w-3.5" /> Survivor
+            </button>
+            <button
+              type="button"
+              onClick={() => setRoleFilter('Killer')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
+                roleFilter === 'Killer' ? 'bg-rose-500/10 text-rose-400' : 'text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              <Skull className="h-3.5 w-3.5" /> Killer
             </button>
           </div>
           <div className="relative">

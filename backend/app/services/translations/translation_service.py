@@ -292,6 +292,44 @@ class TranslationService:
                             curr[l] = trans[l]
                     matched.translations = curr
 
+        # ── Post-sync cleanup ──────────────────────────────────────────────────
+        # These run on every container start, so anyone recreating the Docker
+        # environment gets clean data without manual intervention.
+
+        # 6a. Delete decommissioned addons (text left over from old scraper runs)
+        DECOM_PHRASES = [
+            "THIS ADD-ON WAS DECOMMISSIONED",
+            "THIS ADD-ON IS UNUSED",
+            "THIS ITEM IS NO LONGER AVAILABLE",
+        ]
+        for addon in db.session.scalars(select(Addon)).all():
+            desc = addon.description or ""
+            name = addon.name or ""
+            if any(p in desc.upper() for p in DECOM_PHRASES) or "(Decommissioned)" in name:
+                db.session.delete(addon)
+        for item in db.session.scalars(select(Item)).all():
+            desc = item.description or ""
+            name = item.name or ""
+            if any(p in desc.upper() for p in DECOM_PHRASES) or "(Decommissioned)" in name:
+                db.session.delete(item)
+
+        # 6b. Fog Vials category must contain ONLY the 5 canonical addons.
+        # Any other addon that somehow got associated_target='Fog Vials' is garbage.
+        CANONICAL_FOG_VIAL_ADDONS = {
+            "volcanic stone",
+            "reactive compound",
+            "oily sap",
+            "mushroom formula",
+            "potent extract",
+        }
+        for addon in db.session.scalars(
+            select(Addon).where(Addon.associated_target.ilike("Fog Vial%"))
+        ).all():
+            if addon.name.strip().lower() not in CANONICAL_FOG_VIAL_ADDONS:
+                logger.info(f"Removing stray Fog Vial addon: {addon.name!r}")
+                db.session.delete(addon)
+        # ── end cleanup ────────────────────────────────────────────────────────
+
         db.session.commit()
 
         stats = {
@@ -304,6 +342,7 @@ class TranslationService:
         }
         logger.info(f"Successfully synced squashed translations: {stats}")
         return stats
+
 
     def export_squashed_json(self, target_path: Optional[Path] = None) -> Path:
         """Exports currently loaded DB translations to squashed JSON."""

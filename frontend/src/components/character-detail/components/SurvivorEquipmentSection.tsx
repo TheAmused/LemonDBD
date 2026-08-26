@@ -289,7 +289,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         setActiveHover({ item, rect, accentColor: 'text-emerald-400' });
                       }}
                       onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-emerald-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      className={`relative group rounded-xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-emerald-500 h-12 w-12 sm:h-14 sm:w-14 shrink-0 ${rarityStyle.bg}`}
                       aria-label={`Inspect item: ${item.name}`}
                     >
                       <img
@@ -360,7 +360,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         setActiveHover({ item, rect, accentColor: 'text-amber-400' });
                       }}
                       onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      className={`relative group rounded-xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-500 h-12 w-12 sm:h-14 sm:w-14 shrink-0 ${rarityStyle.bg}`}
                       aria-label={`Inspect addon: ${item.name}`}
                     >
                       <img

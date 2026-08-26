@@ -534,11 +534,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   <h3 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-1">
                     {char.name}
                   </h3>
-                  {char.real_name && char.real_name !== char.name && (
-                    <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 line-clamp-1">
-                      {char.real_name}
-                    </p>
-                  )}
                   {ownershipMode && !isOwned && (
                     <button
                       type="button"

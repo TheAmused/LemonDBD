@@ -70,6 +70,8 @@ def create_user_by_admin():
     if err:
         return jsonify({"error": err, "status": 400}), 400
 
+    ownership_service.seed_default_ownership_for_new_user(user.id)
+
     return jsonify({
         "status": "success",
         "message": "User created successfully by admin",

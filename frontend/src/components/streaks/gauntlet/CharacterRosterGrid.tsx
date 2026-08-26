@@ -67,7 +67,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 animate-pulse">
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4 animate-pulse">
           {Array.from({ length: 16 }).map((_, i) => (
             <div key={i} className="aspect-square rounded-2xl bg-slate-200 dark:bg-slate-800" />
           ))}
@@ -77,7 +77,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
           You don't own any {role} characters yet. Head to the Characters tab to mark what you own.
         </div>
       ) : (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4">
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3 sm:gap-4">
           {characters.map((char) => {
             const completed = isCompleted(char.name);
             const active = isActiveTarget(char.name);

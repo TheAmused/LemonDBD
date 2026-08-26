@@ -32,6 +32,12 @@ class ChaosService:
         r.owned_killers_json = json.dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
         r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
 
+    def _freeze_pools_if_needed(self, r: ChaosRun) -> None:
+        if not json.loads(r.owned_killers_json or "[]"):
+            r.owned_killers_json = json.dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
+        if not json.loads(r.unlocked_perks_json or "[]"):
+            r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
+
     def _with_resolved_pool(self, data: Dict[str, Any]) -> Dict[str, Any]:
         killer_ids = data["owned_killer_ids"]
         perk_ids = data["unlocked_perk_ids"]
@@ -131,8 +137,7 @@ class ChaosService:
         ).first()
         if not r:
             raise ValueError("Run not found")
-        if not json.loads(r.owned_killers_json or "[]") or not json.loads(r.unlocked_perks_json or "[]"):
-            self._freeze_pools(r)
+        self._freeze_pools_if_needed(r)
         r.perks_revealed = True
         db.session.commit()
         data = self._with_resolved_pool(r.to_dict())
@@ -164,6 +169,8 @@ class ChaosService:
             raise ValueError("Run not found")
         if r.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
+
+        self._freeze_pools_if_needed(r)
 
         current_streak = r.current_streak
         best_streak = r.best_streak

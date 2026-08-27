@@ -11,7 +11,6 @@ export interface GauntletModeModalProps {
   onClose: () => void;
   onSelectOriginal: () => void;
   role: 'killer' | 'survivor';
-  /** The mode currently in effect, e.g. when reopened mid-run to switch. */
   currentMode?: 'original' | 'lemon';
   dict?: any;
 }

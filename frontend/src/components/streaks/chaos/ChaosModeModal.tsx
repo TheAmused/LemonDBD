@@ -11,7 +11,6 @@ export interface ChaosModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectDifficulty: (difficulty: Difficulty) => void;
-  /** The difficulty currently in effect, e.g. when reopened mid-run to switch. */
   currentDifficulty?: Difficulty;
   dict?: any;
 }

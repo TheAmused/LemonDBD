@@ -9,12 +9,9 @@ export interface ChallengeIntroTile {
   label: string;
   description: string;
   icon: LucideIcon;
-  /** Themed artwork for this tile; falls back to `icon` when absent. */
   image?: string;
-  /** Tailwind border/background/hover classes for the tile button. */
   accentClassName: string;
   disabled?: boolean;
-  /** Short badge shown on a disabled tile, e.g. "Coming soon." */
   disabledBadge?: string;
 }
 
@@ -22,30 +19,18 @@ export interface ChallengeIntroModalShellProps {
   isOpen: boolean;
   onClose: () => void;
   icon: LucideIcon;
-  /** Tailwind classes for the header icon chip, e.g. "bg-violet-500/10 border-violet-500/20 text-violet-600 dark:text-violet-400". */
   iconClassName: string;
   title: string;
-  /** Short, 2 to 4 sentence description of the challenge concept. */
   intro: string;
   rulesLabel: string;
   onOpenRules: () => void;
   tiles: ChallengeIntroTile[];
   onSelectTile: (value: string) => void;
-  /** Tailwind grid-cols classes for the tile row, e.g. "sm:grid-cols-3". */
   tileGridClassName: string;
-  /** Suppress this shell's own Escape handler, e.g. while a child rules modal is open on top of it. */
   escapeDisabled?: boolean;
-  /** The tile's `value` currently in effect, e.g. when reopened from a running challenge to switch. Highlighted with a ring and a "Current" badge. */
   selectedValue?: string;
 }
 
-/**
- * Shared chrome for every streak mode's intro + difficulty picker screen
- * (Gauntlet/Chaos/History/Page Streak): backdrop, header, a short concept
- * paragraph with a link to the full rules, and a row of mode/difficulty
- * tiles. Each mode only supplies its own copy, tile data, and colors,
- * instead of re-declaring this same backdrop/header/tile markup four times.
- */
 export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> = ({
   isOpen,
   onClose,

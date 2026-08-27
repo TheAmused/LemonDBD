@@ -130,6 +130,8 @@ services:
       - "443:443"
       - "${UMAMI_PORT:-8117}:8117"
       - "${PGADMIN_PORT:-5050}:5050"
+    volumes:
+      - nginx_logs:/var/log/nginx
     depends_on:
       backend:
         condition: service_healthy
@@ -142,6 +144,20 @@ services:
     networks:
       - dbd_network
 
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: dbd_crowdsec
+    restart: unless-stopped
+    environment:
+      COLLECTIONS: "crowdsecurity/nginx crowdsecurity/http-cve crowdsecurity/base-http-scenarios"
+      GID: "1000"
+    volumes:
+      - ./docker/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - crowdsec_data:/var/lib/crowdsec/data
+      - nginx_logs:/var/log/nginx:ro
+    networks:
+      - dbd_network
+
 volumes:
   postgres_data:
     driver: local
@@ -150,6 +166,10 @@ volumes:
   backend_data:
     driver: local
   backend_static:
+    driver: local
+  nginx_logs:
+    driver: local
+  crowdsec_data:
     driver: local
 
 networks:

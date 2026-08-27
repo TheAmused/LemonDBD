@@ -110,15 +110,24 @@ def test_altcha_challenge_cache_control_headers(client):
     assert 'must-revalidate' in cache_control
 
 
-def test_rate_limit_429_format(app, client):
+def test_rate_limit_429_format():
+    from app import create_app
+    from app.core.config import TestingConfig
+
+    class RateLimitConfig(TestingConfig):
+        RATELIMIT_ENABLED = True
+
+    rate_app = create_app(RateLimitConfig)
+    rate_client = rate_app.test_client()
+
     # Test rate limiter triggering 429 response structure
     # Use forgot-password route which has a 5 per minute limit
     ip_headers = {'X-Real-IP': '192.0.2.42'}
     for i in range(5):
-        client.post('/api/v1/auth/forgot-password', json={'email': f'test{i}@test.com'}, headers=ip_headers)
+        rate_client.post('/api/v1/auth/forgot-password', json={'email': f'test{i}@test.com'}, headers=ip_headers)
 
     # 6th request must trigger rate limit 429
-    resp = client.post('/api/v1/auth/forgot-password', json={'email': 'test6@test.com'}, headers=ip_headers)
+    resp = rate_client.post('/api/v1/auth/forgot-password', json={'email': 'test6@test.com'}, headers=ip_headers)
     assert resp.status_code == 429
     data = resp.get_json()
     assert data['error'] == 'Too Many Requests'

@@ -84,3 +84,4 @@ class TestingConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     INITIAL_SCRAPE_ENABLED = False
+    RATELIMIT_ENABLED = False

@@ -100,6 +100,24 @@ export default {
   "reportedBy": "Reportado por",
   "noEmailProvided": "Sin correo proporcionado",
   "description": "Descripción",
-  "devFeedbackLabel": "Respuesta del desarrollador (Visible al usuario)"
+  "devFeedbackLabel": "Respuesta del desarrollador (Visible al usuario)",
+  "totalActionsLabel": "acciones en total",
+  "pageLabel": "Página",
+  "ofLabel": "de",
+  "attachmentsLabel": "Archivos adjuntos",
+  "roleSurvivor": "Superviviente",
+  "roleKiller": "Asesino",
+  "bugPoolNotice": "Cubre ambos roles: los asesinos a veces salen con un poder bugeado, y un superviviente extraído de la wiki antes de su lanzamiento real debe permanecer oculto hasta el estreno. Las ventajas también pueden salir rotas por su cuenta.",
+  "completionsLabel": "finalizaciones",
+  "middotSeparator": "·",
+  "usersLabel": "usuarios",
+  "uniqueUsersLabel": "usuarios únicos",
+  "activeLabel": "Activos:",
+  "survAbbrev": "Sup. /",
+  "closeSymbol": "×",
+  "userDirectoryLabel": "Directorio de usuarios",
+  "bugReportsLabel": "Reportes de errores",
+  "confirmDeleteUserPrefix": "¿Seguro que quieres eliminar al usuario",
+  "cannotBeUndone": "Esta acción no se puede deshacer."
 };
 

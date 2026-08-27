@@ -100,6 +100,24 @@ export default {
   "reportedBy": "Zgłoszone przez",
   "noEmailProvided": "Brak adresu email",
   "description": "Opis",
-  "devFeedbackLabel": "Odpowiedź dewelopera (widoczna dla zgłaszającego)"
+  "devFeedbackLabel": "Odpowiedź dewelopera (widoczna dla zgłaszającego)",
+  "totalActionsLabel": "akcji łącznie",
+  "pageLabel": "Strona",
+  "ofLabel": "z",
+  "attachmentsLabel": "Załączniki",
+  "roleSurvivor": "Ocalały",
+  "roleKiller": "Zabójca",
+  "bugPoolNotice": "Dotyczy obu ról: zabójcy czasem trafiają do gry z zabugowaną mocą, a ocalały zebrany z wiki przed oficjalną premierą musi pozostać ukryty do startu. Perki również czasem trafiają do gry zepsute.",
+  "completionsLabel": "ukończeń",
+  "middotSeparator": "·",
+  "usersLabel": "użytkowników",
+  "uniqueUsersLabel": "unikalnych użytkowników",
+  "activeLabel": "Aktywni:",
+  "survAbbrev": "Oc. /",
+  "closeSymbol": "×",
+  "userDirectoryLabel": "Katalog użytkowników",
+  "bugReportsLabel": "Zgłoszenia błędów",
+  "confirmDeleteUserPrefix": "Czy na pewno chcesz usunąć użytkownika",
+  "cannotBeUndone": "Tej operacji nie można cofnąć."
 };
 

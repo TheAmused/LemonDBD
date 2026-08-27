@@ -71,7 +71,7 @@ export const AdminAuditLogView: React.FC<{ dict?: any }> = ({ dict }) => {
           <ScrollText className="h-4 w-4 text-cyan-400" />
           {dict?.admin?.auditLog || 'Admin Activity Log'}
         </h3>
-        <span className="text-[11px] text-slate-500">{total} total actions</span>
+        <span className="text-[11px] text-slate-500">{total} {dict?.admin?.totalActionsLabel || 'total actions'}</span>
       </div>
 
       {loading ? (
@@ -126,7 +126,7 @@ export const AdminAuditLogView: React.FC<{ dict?: any }> = ({ dict }) => {
             <ChevronLeft className="h-3.5 w-3.5" />
           </button>
           <span className="text-[11px] text-slate-500 font-mono">
-            Page {page} of {totalPages}
+            {dict?.admin?.pageLabel || 'Page'} {page} {dict?.admin?.ofLabel || 'of'} {totalPages}
           </span>
           <button
             type="button"

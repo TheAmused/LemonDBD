@@ -270,7 +270,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 roleFilter === 'Survivor' ? 'bg-emerald-500/10 text-emerald-400' : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              <Shield className="h-3.5 w-3.5" /> Survivor
+              <Shield className="h-3.5 w-3.5" /> {dict?.admin?.roleSurvivor || 'Survivor'}
             </button>
             <button
               type="button"
@@ -279,7 +279,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 roleFilter === 'Killer' ? 'bg-rose-500/10 text-rose-400' : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              <Skull className="h-3.5 w-3.5" /> Killer
+              <Skull className="h-3.5 w-3.5" /> {dict?.admin?.roleKiller || 'Killer'}
             </button>
           </div>
           <div className="relative">
@@ -293,9 +293,8 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           </div>
         </div>
         <p className="text-[11px] text-slate-500 mb-4">
-          Covers both roles: killers occasionally ship with a bugged power, and a survivor scraped from the
-          wiki ahead of their actual in-game release needs to stay hidden until launch. Perks occasionally
-          ship broken on their own too.
+          {dict?.admin?.bugPoolNotice ||
+            "Covers both roles: killers occasionally ship with a bugged power, and a survivor scraped from the wiki ahead of their actual in-game release needs to stay hidden until launch. Perks occasionally ship broken on their own too."}
         </p>
 
         {characters.length === 0 && perks.length === 0 && loading ? (

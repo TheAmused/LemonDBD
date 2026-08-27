@@ -461,7 +461,7 @@ export default function AdminPanelPage() {
                 onClick={() => setActionMessage(null)}
                 className="text-slate-400 hover:text-slate-200 text-sm leading-none ml-3 cursor-pointer"
               >
-                &times;
+                {dict?.admin?.closeSymbol || '×'}
               </button>
             </div>
           )}
@@ -478,7 +478,7 @@ export default function AdminPanelPage() {
               }`}
             >
               <Users className="h-4 w-4" />
-              <span>User Directory ({totalUsers})</span>
+              <span>{dict?.admin?.userDirectoryLabel || 'User Directory'} ({totalUsers})</span>
             </button>
 
             <button
@@ -491,7 +491,7 @@ export default function AdminPanelPage() {
               }`}
             >
               <Bug className="h-4 w-4" />
-              <span>Bug Reports ({bugStats?.pending ?? 0} Pending)</span>
+              <span>{dict?.admin?.bugReportsLabel || 'Bug Reports'} ({bugStats?.pending ?? 0} {dict?.admin?.pending || 'Pending'})</span>
             </button>
 
             <button
@@ -623,10 +623,10 @@ export default function AdminPanelPage() {
         title={dict?.admin?.deleteUserTitle || 'Delete user?'}
         message={
           <>
-            Are you sure you want to delete user{' '}
+            {dict?.admin?.confirmDeleteUserPrefix || 'Are you sure you want to delete user'}{' '}
             <strong className="font-bold text-white">{userPendingDeletion?.username}</strong>?
             <br />
-            This cannot be undone.
+            {dict?.admin?.cannotBeUndone || 'This cannot be undone.'}
           </>
         }
         confirmLabel="Delete"

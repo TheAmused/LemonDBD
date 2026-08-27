@@ -100,6 +100,24 @@ export default {
   "reportedBy": "報告者:",
   "noEmailProvided": "メールアドレス未登録",
   "description": "説明",
-  "devFeedbackLabel": "開発者フィードバック / 返答メモ（報告者に公開）"
+  "devFeedbackLabel": "開発者フィードバック / 返答メモ（報告者に公開）",
+  "totalActionsLabel": "件のアクション",
+  "pageLabel": "ページ",
+  "ofLabel": "/",
+  "attachmentsLabel": "添付ファイル",
+  "roleSurvivor": "サバイバー",
+  "roleKiller": "キラー",
+  "bugPoolNotice": "両方のロールに対応：キラーの能力に不具合があるまま実装されることや、実際のリリース前にwikiから収集されたサバイバーを発売まで非公開にしておく必要がある場合があります。パークも単体で不具合を抱えたまま実装されることがあります。",
+  "completionsLabel": "回クリア",
+  "middotSeparator": "·",
+  "usersLabel": "人のユーザー",
+  "uniqueUsersLabel": "人のユニークユーザー",
+  "activeLabel": "アクティブ:",
+  "survAbbrev": "サバ /",
+  "closeSymbol": "×",
+  "userDirectoryLabel": "ユーザー一覧",
+  "bugReportsLabel": "バグ報告",
+  "confirmDeleteUserPrefix": "本当にこのユーザーを削除しますか：",
+  "cannotBeUndone": "この操作は取り消せません。"
 };
 

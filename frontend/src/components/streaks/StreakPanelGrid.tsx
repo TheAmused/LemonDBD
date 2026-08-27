@@ -146,6 +146,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
         isOpen={isModeModalOpen}
         onClose={() => setIsModeModalOpen(false)}
         onSelectOriginal={() => router.push(`/${locale}/streaks/${role}/gauntlet-streak`)}
+        role={role as 'killer' | 'survivor'}
       />
 
       <ChaosModeModal

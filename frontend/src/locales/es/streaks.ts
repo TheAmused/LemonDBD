@@ -145,6 +145,27 @@ export default {
   "killersCleared": "asesinos superados",
   "streakLabel": "Racha:",
   "streakArrow": "→",
-  "middotSeparator": "·"
+  "middotSeparator": "·",
+  "bulletSeparator": "•",
+  "tierLabel": "Nivel",
+  "noPerksThisTrial": "Sin perks en esta partida.",
+  "goesInBare": "entra sin perks.",
+  "slotLabel": "Ranura",
+  "lockedSuffix": "bloqueada",
+  "ruleSuffix": "regla",
+  "ownPerkOf": "Perk propio:",
+  "slotOneOfThese": "Ranura 1: uno de estos",
+  "ownPerksOf": "Perks propios:",
+  "nextUpLabel": "Siguiente:",
+  "backToLabel": "Volver a",
+  "streaksSuffix": "rachas",
+  "youWonThe": "Ganaste el",
+  "gauntletSuffix": "Gauntlet.",
+  "gauntletOriginalDescription": "El Gauntlet clásico y original: una guía de equipo basada en los perks propios de cada personaje, con niveles crecientes.",
+  "beatEveryPrefix": "Vence a cada",
+  "gauntletConceptBody": "que tengas, una partida a la vez. Cuanto más larga sea tu racha, menos perks podrás llevar, hasta que en el nivel final ganes sin ninguno.",
+  "neverAnyoneElseNote": ", nunca los de otro personaje. Empiezas con los 3, y pierdes uno en cada nivel. Cuando bajes de 3, eliges cuáles conservar.",
+  "checkpointFallbackNote": ". Si pierdes después de eso, solo retrocedes a tu último punto de control, no hasta cero, aunque cada",
+  "checkpointPoolNote": "superado desde entonces vuelve al grupo. Los puntos de control y los niveles avanzan juntos, así que el perk que pierdes y el progreso que conservas ocurren en la misma victoria."
 };
 

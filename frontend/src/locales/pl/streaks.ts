@@ -145,6 +145,27 @@ export default {
   "killersCleared": "zabójców pokonanych",
   "streakLabel": "Seria:",
   "streakArrow": "→",
-  "middotSeparator": "·"
+  "middotSeparator": "·",
+  "bulletSeparator": "•",
+  "tierLabel": "Poziom",
+  "noPerksThisTrial": "Brak perków w tej próbie.",
+  "goesInBare": "wchodzi bez perków.",
+  "slotLabel": "Slot",
+  "lockedSuffix": "zablokowany",
+  "ruleSuffix": "zasada",
+  "ownPerkOf": "Własny perk:",
+  "slotOneOfThese": "Slot 1: jeden z tych",
+  "ownPerksOf": "Własne perki:",
+  "nextUpLabel": "Następnie:",
+  "backToLabel": "Wróć do",
+  "streaksSuffix": "serii",
+  "youWonThe": "Wygrałeś",
+  "gauntletSuffix": "Gauntlet.",
+  "gauntletOriginalDescription": "Klasyczny, oryginalny Gauntlet: przewodnik po buildzie zbudowany z własnych perków każdej postaci, z rosnącymi poziomami.",
+  "beatEveryPrefix": "Pokonaj każdego",
+  "gauntletConceptBody": "które posiadasz, jedna próba na raz. Im dłuższa twoja seria, tym mniej perków możesz zabrać, aż na ostatnim poziomie wygrywasz bez żadnego.",
+  "neverAnyoneElseNote": ", nigdy cudze. Zaczynasz ze wszystkimi 3, i tracisz jeden na każdym poziomie. Gdy zejdziesz poniżej 3, sam wybierasz, które zachować.",
+  "checkpointFallbackNote": ". Jeśli przegrasz po tym, cofasz się tylko do ostatniego punktu kontrolnego, nie do zera, chociaż każdy",
+  "checkpointPoolNote": "pokonany od tego momentu wraca do puli. Punkty kontrolne i poziomy zmieniają się razem, więc utracony perk i zachowany postęp następują przy tym samym zwycięstwie."
 };
 

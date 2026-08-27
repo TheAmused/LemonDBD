@@ -315,7 +315,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   {role === 'survivor' ? (dict?.filters?.survivor || 'Survivor') : (dict?.filters?.killer || 'Killer')}
                 </strong>
               </span>
-              <span>•</span>
+              <span>{dict?.streaks?.bulletSeparator || '•'}</span>
               <span>
                 {dict?.stats?.streak || 'Streak'}:{' '}
                 <strong className="text-amber-600 dark:text-amber-400 font-mono">{run.current_streak}</strong>
@@ -329,7 +329,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           <Lock className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
           <div>
             <div className="text-[10px] uppercase font-black text-amber-600 dark:text-amber-400 tracking-wider">
-              Tier {tierInfo.tier_level}: {tierInfo.name}
+              {dict?.streaks?.tierLabel || 'Tier'} {tierInfo.tier_level}: {tierInfo.name}
             </div>
             <div className="text-xs font-bold text-slate-900 dark:text-white">
               {perkLimit === 0 ? '0 Perks (Perkless Trial)' : `${perkLimit} Perk${perkLimit > 1 ? 's' : ''} Allowed`}
@@ -351,7 +351,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
         {charactersPerksOnly && perkLimit === 0 && (
           <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
-            No perks this trial. {targetName} goes in bare.
+            {dict?.streaks?.noPerksThisTrial || 'No perks this trial.'} {targetName}{' '}
+            {dict?.streaks?.goesInBare || 'goes in bare.'}
           </p>
         )}
 
@@ -368,10 +369,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Slot {idx + 1} locked
+                      {dict?.streaks?.slotLabel || 'Slot'} {idx + 1} {dict?.streaks?.lockedSuffix || 'locked'}
                     </h4>
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                      Tier {tierInfo.tier_level} rule
+                      {dict?.streaks?.tierLabel || 'Tier'} {tierInfo.tier_level} {dict?.streaks?.ruleSuffix || 'rule'}
                     </p>
                   </div>
                 </div>
@@ -397,10 +398,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   </div>
                   <div className="overflow-hidden">
                     <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
-                      Slot {idx + 1}
+                      {dict?.streaks?.slotLabel || 'Slot'} {idx + 1}
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                      {targetName}&apos;s own perk
+                      {dict?.streaks?.ownPerkOf || 'Own perk:'} {targetName}
                     </p>
                   </div>
                 </div>
@@ -415,10 +416,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 >
                   <div>
                     <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
-                      Slot 1: one of these
+                      {dict?.streaks?.slotOneOfThese || 'Slot 1: one of these'}
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                      {targetName}&apos;s own perks
+                      {dict?.streaks?.ownPerksOf || 'Own perks:'} {targetName}
                     </p>
                   </div>
                   {charPerks.length > 0 ? (

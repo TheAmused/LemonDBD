@@ -145,6 +145,27 @@ export default {
   "killersCleared": "killers cleared",
   "streakLabel": "Streak:",
   "streakArrow": "→",
-  "middotSeparator": "·"
+  "middotSeparator": "·",
+  "bulletSeparator": "•",
+  "tierLabel": "Tier",
+  "noPerksThisTrial": "No perks this trial.",
+  "goesInBare": "goes in bare.",
+  "slotLabel": "Slot",
+  "lockedSuffix": "locked",
+  "ruleSuffix": "rule",
+  "ownPerkOf": "Own perk:",
+  "slotOneOfThese": "Slot 1: one of these",
+  "ownPerksOf": "Own perks:",
+  "nextUpLabel": "Next up:",
+  "backToLabel": "Back to",
+  "streaksSuffix": "streaks",
+  "youWonThe": "You won the",
+  "gauntletSuffix": "Gauntlet.",
+  "gauntletOriginalDescription": "The classic Gauntlet: a build guide drawn from each character's own perks, escalating tiers.",
+  "beatEveryPrefix": "Beat every",
+  "gauntletConceptBody": "you own, one trial at a time. The longer your streak runs, the fewer perks you get to bring, until the final tier has you winning bare.",
+  "neverAnyoneElseNote": ", never anyone else's. You start with all 3, and lose one at every tier. Once you are below 3, you choose which ones to keep.",
+  "checkpointFallbackNote": ". Lose after that and you only fall back to your last checkpoint, not all the way to zero, though every",
+  "checkpointPoolNote": "cleared since then goes back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress you keep happen on the very same win."
 };
 

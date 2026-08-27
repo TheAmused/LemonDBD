@@ -68,15 +68,16 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
           {dict?.streaks?.gauntletConcept || 'Gauntlet Concept'}
         </h3>
         <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          Beat every {role} you own, one trial at a time. The longer your streak runs, the fewer perks
-          you get to bring, until the final tier has you winning bare.
+          {dict?.streaks?.beatEveryPrefix || 'Beat every'} {role}{' '}
+          {dict?.streaks?.gauntletConceptBody ||
+            'you own, one trial at a time. The longer your streak runs, the fewer perks you get to bring, until the final tier has you winning bare.'}
         </p>
         {role === 'killer' && (
           <>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              {dict?.streaks?.youOnlyEverRun || 'You only ever run'} <strong>{dict?.streaks?.yourOwnTeachablePerks || 'your own teachable perks'}</strong>, never anyone else&apos;s. You
-              start with all 3, and lose one at every tier. Once you are below 3, you choose which ones
-              to keep.
+              {dict?.streaks?.youOnlyEverRun || 'You only ever run'} <strong>{dict?.streaks?.yourOwnTeachablePerks || 'your own teachable perks'}</strong>
+              {dict?.streaks?.neverAnyoneElseNote ||
+                ", never anyone else's. You start with all 3, and lose one at every tier. Once you are below 3, you choose which ones to keep."}
             </p>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
               {dict?.streaks?.trialOnlyCountsWinOn || 'A trial only counts as won on'} <strong>{dict?.streaks?.threeKillsOrMore || '3 kills or more'}</strong>. {dict?.streaks?.anythingLessLoss || 'Anything less is a loss.'}
@@ -94,10 +95,12 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             : 'The roster stops at the 52 survivors, up through Kwon Tae-young.'}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {dict?.streaks?.every10WinsBanks || 'Every 10 wins banks a'} <strong>{dict?.streaks?.checkpoint || 'checkpoint'}</strong>. Lose after that and you only fall back to
-          your last checkpoint, not all the way to zero, though every {role} cleared since then goes
-          back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress
-          you keep happen on the very same win.
+          {dict?.streaks?.every10WinsBanks || 'Every 10 wins banks a'} <strong>{dict?.streaks?.checkpoint || 'checkpoint'}</strong>
+          {dict?.streaks?.checkpointFallbackNote ||
+            '. Lose after that and you only fall back to your last checkpoint, not all the way to zero, though every'}{' '}
+          {role}{' '}
+          {dict?.streaks?.checkpointPoolNote ||
+            'cleared since then goes back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress you keep happen on the very same win.'}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
           {dict?.streaks?.pickTheseInGame || 'The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here.'}
@@ -123,7 +126,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             >
               <div className="flex items-center gap-3">
                 <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
-                  Tier {tier.level}: {tier.name}
+                  {dict?.streaks?.tierLabel || 'Tier'} {tier.level}: {tier.name}
                 </span>
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
                   ({tier.streakRange})

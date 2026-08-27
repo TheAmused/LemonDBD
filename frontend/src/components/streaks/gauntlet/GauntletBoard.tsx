@@ -97,7 +97,9 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict
         className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-orange-500 dark:text-slate-400 dark:hover:text-orange-400 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        <span className="capitalize">Back to {role} streaks</span>
+        <span className="capitalize">
+          {dict?.streaks?.backToLabel || 'Back to'} {role} {dict?.streaks?.streaksSuffix || 'streaks'}
+        </span>
       </Link>
 
       <div className="mt-4">
@@ -127,7 +129,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict
               {dict?.streaks?.gauntletComplete || 'Gauntlet complete!'}
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              You won the {role} Gauntlet.
+              {dict?.streaks?.youWonThe || 'You won the'} {role} {dict?.streaks?.gauntletSuffix || 'Gauntlet.'}
             </p>
             <button
               onClick={reset}

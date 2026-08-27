@@ -176,11 +176,28 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
         except Exception as e:
             logging.debug(f"PerkService reload_data notice: {e}")
 
-    if not flask_app.config.get("TESTING"):
+    if not flask_app.config.get("TESTING") and flask_app.config.get("SCHEDULER_ENABLED", True):
         def _run_inactivity_job():
             with flask_app.app_context():
+                from app.core.extensions import db
                 from app.services.streak_cleanup_service import apply_inactivity_losses
-                apply_inactivity_losses(flask_app.config["STREAK_INACTIVITY_PRUNE_DAYS"])
+
+                is_pg = False
+                try:
+                    is_pg = db.engine.dialect.name in ("postgresql", "postgres")
+                except Exception:
+                    pass
+
+                if is_pg:
+                    with db.engine.connect() as conn:
+                        acquired = conn.execute(text("SELECT pg_try_advisory_lock(8882027);")).scalar()
+                        if acquired:
+                            try:
+                                apply_inactivity_losses(flask_app.config["STREAK_INACTIVITY_PRUNE_DAYS"])
+                            finally:
+                                conn.execute(text("SELECT pg_advisory_unlock(8882027);"))
+                else:
+                    apply_inactivity_losses(flask_app.config["STREAK_INACTIVITY_PRUNE_DAYS"])
 
         scheduler = BackgroundScheduler(daemon=True)
         scheduler.add_job(

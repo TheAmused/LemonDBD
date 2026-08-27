@@ -315,19 +315,19 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl">
-
-              Explore Dead by Daylight Survivors &amp; Killers. View character details, unique teachable perks, power add-ons, and equipment.
+              {dict?.characterDetail?.hubSubtitle ||
+                'Explore Dead by Daylight Survivors & Killers. View character details, unique teachable perks, power add-ons, and equipment.'}
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold">
               <Shield className="h-4 w-4" />
-              <span>{survivorCount} Survivors</span>
+              <span>{survivorCount} {dict?.filters?.survivor || 'Survivors'}</span>
             </div>
             <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-400 text-xs font-bold">
               <Skull className="h-4 w-4" />
-              <span>{killerCount} Killers</span>
+              <span>{killerCount} {dict?.filters?.killer || 'Killers'}</span>
             </div>
           </div>
         </div>
@@ -351,7 +351,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
-            All ({characters.length})
+            {dict?.filters?.all || 'All'} ({characters.length})
           </button>
           <button
             type="button"
@@ -363,7 +363,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             }`}
           >
             <Shield className="h-3.5 w-3.5" />
-            Survivors ({survivorCount})
+            {dict?.filters?.survivor || 'Survivors'} ({survivorCount})
           </button>
           <button
             type="button"
@@ -375,7 +375,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             }`}
           >
             <Skull className="h-3.5 w-3.5" />
-            Killers ({killerCount})
+            {dict?.filters?.killer || 'Killers'} ({killerCount})
           </button>
         </div>
 
@@ -547,7 +547,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       }}
                       className="mt-1 w-full rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px] font-bold text-amber-400 hover:bg-amber-500/20 transition-colors"
                     >
-                      Perks {perkStats.total > 0 ? `(${perkStats.unlocked}/${perkStats.total})` : ''}
+                      {dict?.filters?.perks || 'Perks'} {perkStats.total > 0 ? `(${perkStats.unlocked}/${perkStats.total})` : ''}
                     </button>
                   )}
                 </div>
@@ -575,7 +575,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           >
             <div className="flex items-center justify-between border-b border-slate-800 p-5">
               <h3 id="perks-popup-title" className="text-base font-bold text-slate-100">
-                {perksPopupCharacter.name} Perks
+                {perksPopupCharacter.name} {dict?.filters?.perks || 'Perks'}
               </h3>
               <button
                 type="button"

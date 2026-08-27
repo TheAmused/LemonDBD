@@ -133,6 +133,16 @@ export default {
   "togglePerkOwnershipHelp": "パークをクリックして所持状態を切り替えます。",
   "changesSaved": "変更を保存しました",
   "dismiss": "閉じる",
-  "noTeachablePerksForCharacter": "このキャラクターの固有パークはありません。"
+  "noTeachablePerksForCharacter": "このキャラクターの固有パークはありません。",
+  "bulletSeparator": "•",
+  "emDashSeparator": "—",
+  "quoteOpen": "「",
+  "quoteClose": "」",
+  "compatibleTarget": "適合対象:",
+  "distance45m": "45m",
+  "distance32m": "32m",
+  "distance8m": "8m",
+  "approxSymbol": "~",
+  "secondsUnit": "s"
 };
 

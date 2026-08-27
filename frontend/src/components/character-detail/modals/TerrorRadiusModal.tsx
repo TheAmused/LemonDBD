@@ -44,7 +44,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
             </div>
             <div>
               <span className="text-[11px] font-mono font-black uppercase tracking-wider text-rose-400">
-                {character.name} &bull; {t.acousticRange || 'Acoustic Range'}
+                {character.name} {t.bulletSeparator || '•'} {t.acousticRange || 'Acoustic Range'}
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
                 {t.terrorRadiusVisualizer || 'Terror Radius Visualizer'}
@@ -65,7 +65,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
           <div className="relative flex flex-col items-center justify-center p-6 rounded-3xl bg-slate-950 border border-rose-500/20 overflow-hidden">
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border border-dashed border-purple-500/30 flex items-start justify-center pt-1">
-                <span className="text-[9px] font-mono text-purple-400/80">45m ({t.lullaby || 'Lullaby'})</span>
+                <span className="text-[9px] font-mono text-purple-400/80">{t.distance45m || '45m'} ({t.lullaby || 'Lullaby'})</span>
               </div>
 
               <div
@@ -75,7 +75,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
                     : 'border-slate-700'
                 } flex items-start justify-center pt-1`}
               >
-                <span className="text-[9px] font-mono font-bold text-rose-400">32m ({t.audible || 'Audible'})</span>
+                <span className="text-[9px] font-mono font-bold text-rose-400">{t.distance32m || '32m'} ({t.audible || 'Audible'})</span>
               </div>
 
               <div
@@ -93,7 +93,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
               </div>
 
               <div className="absolute inset-28 rounded-full border-2 border-red-500 bg-red-600/20 flex items-center justify-center">
-                <span className="text-[9px] font-mono font-black text-red-300">8m ({t.chase || 'Chase'})</span>
+                <span className="text-[9px] font-mono font-black text-red-300">{t.distance8m || '8m'} ({t.chase || 'Chase'})</span>
               </div>
 
               <div className="h-4 w-4 rounded-full bg-red-500 shadow-lg shadow-red-500/50 z-10" />
@@ -165,7 +165,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
               <span>
                 {t.straightGapClose || 'Straight Gap Close'}:{' '}
                 <strong className="text-amber-400">
-                  ~{(killerTRMeters / 4.6).toFixed(1)}s {t.straightLine || 'straight line'}
+                  {t.approxSymbol || '~'}{(killerTRMeters / 4.6).toFixed(1)}{t.secondsUnit || 's'} {t.straightLine || 'straight line'}
                 </strong>
               </span>
             </div>

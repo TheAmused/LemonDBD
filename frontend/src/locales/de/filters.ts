@@ -1,6 +1,7 @@
 export default {
   "searchPlaceholder": "Nach Perk-Name oder Beschreibung suchen...",
   "category": "Kategorie",
+  "all": "Alle",
   "allCategories": "Alle Rollen",
   "survivor": "Überlebende",
   "killer": "Killer",

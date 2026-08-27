@@ -1,6 +1,7 @@
 export default {
   "searchPlaceholder": "Szukaj według nazwy lub opisu perka...",
   "category": "Kategoria",
+  "all": "Wszystkie",
   "allCategories": "Wszystkie role",
   "survivor": "Ocalali",
   "killer": "Zabójcy",

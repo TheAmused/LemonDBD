@@ -57,7 +57,8 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
               {dict?.streaks?.original || 'Original'}
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400">
-              The classic Gauntlet: a build guide drawn from each character's own perks, escalating tiers.
+              {dict?.streaks?.gauntletOriginalDescription ||
+                "The classic Gauntlet: a build guide drawn from each character's own perks, escalating tiers."}
             </span>
           </button>
 

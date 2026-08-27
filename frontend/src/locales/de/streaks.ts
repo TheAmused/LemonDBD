@@ -145,6 +145,27 @@ export default {
   "killersCleared": "Killer besiegt",
   "streakLabel": "Serie:",
   "streakArrow": "→",
-  "middotSeparator": "·"
+  "middotSeparator": "·",
+  "bulletSeparator": "•",
+  "tierLabel": "Stufe",
+  "noPerksThisTrial": "Keine Perks in dieser Runde.",
+  "goesInBare": "tritt ohne Perks an.",
+  "slotLabel": "Slot",
+  "lockedSuffix": "gesperrt",
+  "ruleSuffix": "Regel",
+  "ownPerkOf": "Eigener Perk:",
+  "slotOneOfThese": "Slot 1: einer von diesen",
+  "ownPerksOf": "Eigene Perks:",
+  "nextUpLabel": "Als Nächstes:",
+  "backToLabel": "Zurück zu",
+  "streaksSuffix": "Streaks",
+  "youWonThe": "Du hast den",
+  "gauntletSuffix": "Gauntlet gewonnen.",
+  "gauntletOriginalDescription": "Der klassische, ursprüngliche Gauntlet: ein Build-Leitfaden aus den eigenen Perks jedes Charakters, mit steigenden Stufen.",
+  "beatEveryPrefix": "Besiege jeden",
+  "gauntletConceptBody": "den du besitzt, einen Trial nach dem anderen. Je länger deine Serie läuft, desto weniger Perks darfst du mitbringen, bis du in der letzten Stufe perklos gewinnen musst.",
+  "neverAnyoneElseNote": ", niemals die eines anderen. Du startest mit allen 3 und verlierst bei jeder Stufe einen. Sobald du unter 3 bist, wählst du selbst, welche du behältst.",
+  "checkpointFallbackNote": ". Verlierst du danach, fällst du nur auf deinen letzten Checkpoint zurück, nicht ganz auf null, auch wenn jeder",
+  "checkpointPoolNote": "seit dem Checkpoint besiegte Charakter wieder in den Pool zurückkehrt. Checkpoints und Stufen greifen zusammen, sodass der Perk, den du verlierst, und der Fortschritt, den du behältst, beim selben Sieg passieren."
 };
 

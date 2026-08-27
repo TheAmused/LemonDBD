@@ -41,13 +41,15 @@ export const CheckpointModal: React.FC<CheckpointModalProps> = ({ checkpoint, ro
           <PartyPopper className="h-3.5 w-3.5" />
           {dict?.streaks?.checkpointBanked || 'Checkpoint banked'}
         </div>
-        <h2 className="mt-2 text-3xl font-black tracking-tight text-white">{checkpoint} wins</h2>
+        <h2 className="mt-2 text-3xl font-black tracking-tight text-white">
+          {checkpoint} {dict?.streaks?.winsSuffix || 'wins'}
+        </h2>
         <p className="mt-2 text-sm text-slate-300">
           {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'} <strong className="text-amber-300">{checkpoint}</strong>{dict?.streaks?.notToZero || ', not to zero.'}
         </p>
         {nextTier && (
           <p className="mt-4 text-xs text-slate-400">
-            Next up: <strong className="text-slate-200">{nextTier.name}</strong>
+            {dict?.streaks?.nextUpLabel || 'Next up:'} <strong className="text-slate-200">{nextTier.name}</strong>
             {nextTier.perk_limit > 0
               ? `, ${nextTier.perk_limit} perk${nextTier.perk_limit > 1 ? 's' : ''} allowed`
               : ', no perks allowed'}

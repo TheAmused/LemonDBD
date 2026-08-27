@@ -104,4 +104,48 @@ describe('ALTCHA Proof-of-Work Engine', () => {
     const solution = await solveAltchaPoW(challenge, 100);
     assert.strictEqual(solution, null);
   });
+
+  it('solveAltchaPoW cancels computation when AbortSignal is already aborted', async () => {
+    const controller = new AbortController();
+    controller.abort();
+
+    const salt = 'aborted_salt';
+    const secretNum = 50;
+    const targetHash = crypto.createHash('sha256').update(`${salt}${secretNum}`).digest('hex');
+
+    const challenge: AltchaChallenge = {
+      algorithm: 'SHA-256',
+      challenge: targetHash,
+      salt: salt,
+      maxnumber: 1000,
+      signature: 'test_sig_abort',
+      expires: Date.now() + 60000,
+    };
+
+    const solution = await solveAltchaPoW(challenge, 100, controller.signal);
+    assert.strictEqual(solution, null);
+  });
+
+  it('solveAltchaPoW aborts mid-computation on signal trigger', async () => {
+    const controller = new AbortController();
+
+    const salt = 'mid_aborted_salt';
+    const secretNum = 4000;
+    const targetHash = crypto.createHash('sha256').update(`${salt}${secretNum}`).digest('hex');
+
+    const challenge: AltchaChallenge = {
+      algorithm: 'SHA-256',
+      challenge: targetHash,
+      salt: salt,
+      maxnumber: 5000,
+      signature: 'test_sig_mid_abort',
+      expires: Date.now() + 60000,
+    };
+
+    // Trigger abort shortly after start
+    setTimeout(() => controller.abort(), 20);
+
+    const solution = await solveAltchaPoW(challenge, 200, controller.signal);
+    assert.strictEqual(solution, null);
+  });
 });

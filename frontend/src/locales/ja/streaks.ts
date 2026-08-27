@@ -177,5 +177,15 @@ export default {
   "rowClearedPrefix": "行クリア！行",
   "rowUnlockedSuffix": "を解放しました。",
   "mediumModeDesc": "チェックポイントはクリアした行ごとに保存されます。敗北してもゼロにはならず、その行の最初に戻るだけです。",
-  "killersColonLabel": "キラー："
+  "killersColonLabel": "キラー：",
+  "percentSign": "%",
+  "killersYouOwn": "所持キラー",
+  "allPagesClearedPrefix": "全",
+  "pagesClearedOnSuffix": "ページクリア、使用キラー：",
+  "pageLabel": "ページ",
+  "pickCountSeparator": "、選択",
+  "nextUpPagePrefix": "次はページ",
+  "attemptLabel": "試行",
+  "readyForPrefix": "準備はいい？",
+  "pagesOnSuffix": "ページ、相手は"
 };

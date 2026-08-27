@@ -178,6 +178,16 @@ export default {
   "rowClearedPrefix": "Row cleared! Row",
   "rowUnlockedSuffix": "unlocked.",
   "mediumModeDesc": "Checkpoints save each row you clear. A loss falls back to the row's start, not to zero.",
-  "killersColonLabel": "Killers:"
+  "killersColonLabel": "Killers:",
+  "percentSign": "%",
+  "killersYouOwn": "killers you own",
+  "allPagesClearedPrefix": "All",
+  "pagesClearedOnSuffix": "pages cleared on",
+  "pageLabel": "Page",
+  "pickCountSeparator": ", pick",
+  "nextUpPagePrefix": "Next up, page",
+  "attemptLabel": "Attempt",
+  "readyForPrefix": "Ready for",
+  "pagesOnSuffix": "pages on"
 };
 

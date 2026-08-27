@@ -178,6 +178,16 @@ export default {
   "rowClearedPrefix": "Reihe abgeschlossen! Reihe",
   "rowUnlockedSuffix": "freigeschaltet.",
   "mediumModeDesc": "Checkpoints speichern jede Reihe, die du abschließt. Eine Niederlage fällt nur auf den Beginn der Reihe zurück, nicht auf null.",
-  "killersColonLabel": "Killer:"
+  "killersColonLabel": "Killer:",
+  "percentSign": "%",
+  "killersYouOwn": "eigene Killer",
+  "allPagesClearedPrefix": "Alle",
+  "pagesClearedOnSuffix": "Seiten geschafft mit",
+  "pageLabel": "Seite",
+  "pickCountSeparator": ", wähle",
+  "nextUpPagePrefix": "Als Nächstes, Seite",
+  "attemptLabel": "Versuch",
+  "readyForPrefix": "Bereit für",
+  "pagesOnSuffix": "Seiten mit"
 };
 

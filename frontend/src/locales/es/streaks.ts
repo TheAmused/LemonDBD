@@ -178,6 +178,16 @@ export default {
   "rowClearedPrefix": "¡Fila superada! Fila",
   "rowUnlockedSuffix": "desbloqueada.",
   "mediumModeDesc": "Los puntos de control guardan cada fila que superas. Una derrota te hace retroceder al inicio de la fila, no a cero.",
-  "killersColonLabel": "Asesinos:"
+  "killersColonLabel": "Asesinos:",
+  "percentSign": "%",
+  "killersYouOwn": "asesinos que posees",
+  "allPagesClearedPrefix": "Todas",
+  "pagesClearedOnSuffix": "páginas superadas con",
+  "pageLabel": "Página",
+  "pickCountSeparator": ", elige",
+  "nextUpPagePrefix": "A continuación, página",
+  "attemptLabel": "Intento",
+  "readyForPrefix": "¿Listo para",
+  "pagesOnSuffix": "páginas con"
 };
 

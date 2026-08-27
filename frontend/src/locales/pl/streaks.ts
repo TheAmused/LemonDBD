@@ -178,6 +178,16 @@ export default {
   "rowClearedPrefix": "Wiersz ukończony! Wiersz",
   "rowUnlockedSuffix": "odblokowany.",
   "mediumModeDesc": "Punkty kontrolne zapisują każdy ukończony wiersz. Porażka cofa Cię tylko do początku wiersza, a nie do zera.",
-  "killersColonLabel": "Zabójcy:"
+  "killersColonLabel": "Zabójcy:",
+  "percentSign": "%",
+  "killersYouOwn": "posiadanych zabójców",
+  "allPagesClearedPrefix": "Wszystkie",
+  "pagesClearedOnSuffix": "stron ukończonych z",
+  "pageLabel": "Strona",
+  "pickCountSeparator": ", wybierz",
+  "nextUpPagePrefix": "Następnie, strona",
+  "attemptLabel": "Podejście",
+  "readyForPrefix": "Gotowy na",
+  "pagesOnSuffix": "stron z"
 };
 

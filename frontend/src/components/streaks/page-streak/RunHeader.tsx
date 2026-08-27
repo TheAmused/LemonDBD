@@ -112,7 +112,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenRese
           <span>
             {run.status === 'completed' ? 'All pages cleared' : `Page ${run.current_page} of ${run.page_count}`}
           </span>
-          <span className="tabular-nums font-semibold">{pct}%</span>
+          <span className="tabular-nums font-semibold">{pct}{dict?.streaks?.percentSign || '%'}</span>
         </div>
         <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
           <div

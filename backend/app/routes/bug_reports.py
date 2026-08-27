@@ -14,6 +14,7 @@ from flask import Blueprint, current_app, g, jsonify, request
 from sqlalchemy import desc, func, or_, select
 
 from app.core.extensions import db
+from app.core.limiter import limiter, validate_honeypot
 from app.core.security import admin_required, get_current_user
 from app.models import BugReport, User
 from app.schemas.community import BugReportResponse
@@ -133,10 +134,15 @@ def _dispatch_discord_webhook(report_dict: Dict[str, Any], webhook_url: Optional
 # ==========================================
 
 @bug_reports_bp.route("/bug-reports", methods=["POST"])
+@limiter.limit("15 per minute")
 def submit_bug_report():
     """Submits a new bug report from authenticated users or guest players."""
-    user = get_current_user()
     data = request.get_json(silent=True) or {}
+
+    if not validate_honeypot(data):
+        return jsonify({"error": "Spam detected.", "status": 400}), 400
+
+    user = get_current_user()
 
     title = data.get("title", "").strip()
     message = data.get("message", "").strip()

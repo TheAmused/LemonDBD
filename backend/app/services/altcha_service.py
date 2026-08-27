@@ -35,6 +35,9 @@ class AltchaService:
         if not secret_key:
             raise ValueError("secret_key is required to create an ALTCHA challenge")
 
+        if max_number <= 0:
+            raise ValueError("max_number must be positive")
+
         salt = secrets.token_hex(12)
         secret_number = secrets.randbelow(max_number + 1)
         challenge = hashlib.sha256(f"{salt}{secret_number}".encode("utf-8")).hexdigest()
@@ -62,7 +65,7 @@ class AltchaService:
         Validates an ALTCHA solution payload.
 
         Validates:
-        1. Payload has all required fields (algorithm, challenge, number, salt, signature, expires).
+        1. Payload has all required fields (algorithm, challenge, number, salt, signature, expires, maxnumber).
         2. algorithm == "SHA-256".
         3. time.time() <= expires.
         4. HMAC-SHA256 signature matches expected signature.
@@ -77,9 +80,13 @@ class AltchaService:
         if not isinstance(payload, dict):
             return False, "Invalid ALTCHA payload: must be a JSON object."
 
-        required_fields = ["algorithm", "challenge", "number", "salt", "signature", "expires"]
+        required_fields = ["algorithm", "challenge", "number", "salt", "signature", "expires", "maxnumber"]
         for field in required_fields:
             if field not in payload or payload[field] is None:
+                if field == "maxnumber" and "max_number" in payload and payload["max_number"] is not None:
+                    continue
+                if payload.get("algorithm") and payload.get("algorithm") != "SHA-256":
+                    return False, f"Unsupported algorithm: '{payload.get('algorithm')}'. Only SHA-256 is supported."
                 return False, f"Missing required field: {field}"
 
         if payload.get("algorithm") != "SHA-256":

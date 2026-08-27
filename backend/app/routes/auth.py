@@ -4,6 +4,7 @@ import os
 from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
 from pydantic import ValidationError
 
+from app.core.limiter import limiter, validate_honeypot
 from app.core.security import get_current_user, login_required
 from app.schemas.user import UserCreate, UserResponse
 from app.services.altcha_service import AltchaService
@@ -18,9 +19,14 @@ ownership_service = OwnershipService()
 
 
 @auth_bp.route("/register", methods=["POST"])
+@limiter.limit("10 per minute")
 def register():
     payload = request.get_json(silent=True) or {}
-    
+
+    # Honeypot verification
+    if not validate_honeypot(payload):
+        return jsonify({"error": "Spam detected.", "status": 400}), 400
+
     # 1. Validate payload structure using Pydantic
     try:
         validated_data = UserCreate.model_validate(payload)
@@ -53,6 +59,7 @@ def register():
 
 
 @auth_bp.route("/login", methods=["POST"])
+@limiter.limit("10 per minute")
 def login():
     data = request.get_json(silent=True) or {}
     username_or_email = data.get("username") or data.get("email") or data.get("username_or_email")
@@ -111,6 +118,7 @@ def resend_verification():
 
 
 @auth_bp.route("/forgot-password", methods=["POST"])
+@limiter.limit("5 per minute")
 def forgot_password():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
@@ -128,6 +136,7 @@ def forgot_password():
 
 
 @auth_bp.route("/reset-password", methods=["POST"])
+@limiter.limit("5 per minute")
 def reset_password():
     data = request.get_json(silent=True) or {}
     token = data.get("token")
@@ -248,9 +257,11 @@ def get_avatar_file(filename):
     mimetype = "image/webp" if clean_filename.lower().endswith(".webp") else None
     return send_from_directory(target_dir, clean_filename, mimetype=mimetype, max_age=86400 * 30)
 
+
 @auth_bp.route("/altcha-challenge", methods=["GET"])
 def get_altcha_challenge():
     secret_key = current_app.config.get("SECRET_KEY", "lemon-dev-secret-key")
     challenge = AltchaService.create_challenge(secret_key=secret_key)
-    return jsonify(challenge), 200
-
+    resp = make_response(jsonify(challenge), 200)
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    return resp

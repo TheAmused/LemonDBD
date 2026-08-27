@@ -20,21 +20,21 @@ const TILES: ChallengeIntroTile[] = [
     label: 'Easy',
     description: 'A checkpoint banks every 5 wins.',
     icon: Coins,
-    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10',
+    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
   },
   {
     value: 'medium',
     label: 'Medium',
     description: 'A checkpoint banks every 10 wins.',
     icon: Flame,
-    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10',
+    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
   },
   {
     value: 'hell',
     label: 'Hell',
     description: 'No checkpoints. One loss resets everything.',
     icon: Skull,
-    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10',
+    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
   },
 ];
 

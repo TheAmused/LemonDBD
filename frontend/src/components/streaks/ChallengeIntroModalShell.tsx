@@ -127,11 +127,6 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 )}
                 <span className="font-bold text-slate-900 dark:text-white">{tile.label}</span>
                 <span className="text-xs text-slate-500 dark:text-slate-400">{tile.description}</span>
-                {tile.disabled && tile.disabledBadge && (
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                    {tile.disabledBadge}
-                  </span>
-                )}
               </>
             );
 

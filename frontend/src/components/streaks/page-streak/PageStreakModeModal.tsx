@@ -22,7 +22,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
       label: dict?.streaks?.normal || 'Normal',
       description: 'Every perk page counts. No difficulty options yet.',
       icon: BookOpen,
-      accentClassName: 'border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/10',
+      accentClassName: 'border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/10 text-orange-400',
     },
   ];
 

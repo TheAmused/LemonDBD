@@ -29,7 +29,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       label: dict?.streaks?.original || 'Original',
       description: 'Classic, original Gauntlet rules. A checkpoint banks every 10 wins.',
       icon: Swords,
-      accentClassName: 'border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10',
+      accentClassName: 'border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 text-amber-500',
     },
     {
       value: 'lemon',

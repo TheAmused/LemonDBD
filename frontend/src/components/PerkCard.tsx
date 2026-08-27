@@ -56,7 +56,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
 
   if (viewMode === 'list') {
     return (
-      <div key="list" className="relative group flex w-full items-center">
+      <div key={viewMode} className="relative group flex w-full items-center">
         <button
           type="button"
           onClick={() => onSelect(perk)}
@@ -134,7 +134,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
   }
 
   return (
-    <div key="grid" className="relative group flex items-center justify-center p-2 sm:p-3 w-full">
+    <div key={viewMode} className="relative group flex items-center justify-center p-2 sm:p-3 w-full">
       <button
         type="button"
         onClick={() => onSelect(perk)}

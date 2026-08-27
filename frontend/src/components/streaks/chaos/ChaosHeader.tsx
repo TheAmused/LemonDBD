@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Difficulty } from '@/types/chaosStreak';
-import { Coins, Flame, Trophy, Shield, Skull, BarChart2, BookOpen, Layers, RotateCcw } from 'lucide-react';
+import { Coins, Flame, Trophy, Shield, Skull, BarChart2, BookOpen, Layers, RotateCcw, Gauge } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 
 const DIFFICULTY_ICON: Record<Difficulty, React.ElementType> = {
@@ -22,6 +22,7 @@ export interface ChaosHeaderProps {
   onOpenRules: () => void;
   onOpenPerkPool: () => void;
   onOpenReset: () => void;
+  onChangeDifficulty: () => void;
   dict?: any;
 }
 
@@ -35,6 +36,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
   onOpenRules,
   onOpenPerkPool,
   onOpenReset,
+  onChangeDifficulty,
   dict,
 }) => {
   const DifficultyIcon = DIFFICULTY_ICON[difficulty] ?? Skull;
@@ -95,10 +97,10 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           <button
             onClick={onOpenRules}
             className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-violet-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-violet-400 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
-            title={dict?.streaks?.rules || 'Chaos Rules'}
+            title={dict?.streaks?.rules || 'Rules'}
           >
             <BookOpen className="w-4 h-4 text-violet-500 dark:text-violet-400" />
-            <span className="hidden sm:inline">{dict?.streaks?.rules || 'Chaos Rules'}</span>
+            <span className="hidden sm:inline">{dict?.streaks?.rules || 'Rules'}</span>
           </button>
 
           <button
@@ -108,6 +110,15 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           >
             <Layers className="w-4 h-4 text-violet-500 dark:text-violet-400" />
             <span className="hidden sm:inline">{dict?.streaks?.perkPool || 'Perk Pool'}</span>
+          </button>
+
+          <button
+            onClick={onChangeDifficulty}
+            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-violet-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-violet-400 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
+            title={dict?.streaks?.changeDifficulty || 'Change Difficulty'}
+          >
+            <Gauge className="w-4 h-4 text-violet-500 dark:text-violet-400" />
+            <span className="hidden sm:inline">{dict?.streaks?.changeDifficulty || 'Change Difficulty'}</span>
           </button>
 
           <button

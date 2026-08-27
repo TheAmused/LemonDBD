@@ -39,11 +39,15 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
             className="relative"
             onMouseEnter={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
+              const isSurvivor = perk.category === 'Survivor';
+              const localizedBadge = isSurvivor
+                ? t.survivorPerk || 'Survivor Perk'
+                : t.killerPerk || 'Killer Perk';
               setActiveHover({
                 item: perk,
                 rect,
-                badge: `${perk.category} Perk`,
-                category: `${character.name || perk.character} Perk`,
+                badge: localizedBadge,
+                category: character.name || perk.character || localizedBadge,
                 accentColor: 'text-amber-400',
               });
             }}

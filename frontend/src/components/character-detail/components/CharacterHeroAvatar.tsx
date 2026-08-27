@@ -59,7 +59,9 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           <span className="text-xs font-black text-white uppercase tracking-wider">
             {t.view3DModel || 'View 3D Model / Full Render'}
           </span>
-          <span className="text-[10px] text-slate-300 mt-1">Interactive Viewer</span>
+          <span className="text-[10px] text-slate-300 mt-1">
+            {t.interactiveViewer || 'Interactive Viewer'}
+          </span>
         </div>
 
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent pointer-events-none" />

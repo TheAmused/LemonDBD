@@ -22,6 +22,10 @@ const expectedNamespaces = [
   'characterDetail',
   'sidebar',
   'smashOrPass',
+  'user',
+  'swf',
+  'draft',
+  'streaks',
 ] as const;
 
 test('i18n Config: supported locales list', () => {
@@ -116,3 +120,134 @@ test('Smash or Pass locale coverage: all roster categories and tiers present in 
     assert.ok(sop.compatibilityScore, `compatibilityScore must exist in ${loc}`);
   }
 });
+
+test('Modal and Hover i18n coverage: all inspection and role keys present in all locales', () => {
+  const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
+  const expectedModalKeys = [
+    'close',
+    'character',
+    'role',
+    'copySlug',
+    'slugCopied',
+    'perkDescription',
+    'generalPerk',
+    'alias',
+    'clickToInspectPerk',
+    'clickToInspect',
+    'killerPerk',
+    'survivorPerk',
+    'unownedPerk',
+    'equipment',
+    'clickOutsideToClose',
+  ] as const;
+
+  for (const loc of allLocales) {
+    const modalDict = localeDicts[loc].modal;
+    assert.ok(modalDict, `modal must exist in ${loc}`);
+    for (const key of expectedModalKeys) {
+      assert.ok(key in modalDict, `Key "${key}" must exist in ${loc}.modal`);
+      assert.strictEqual(typeof (modalDict as any)[key], 'string');
+      assert.ok((modalDict as any)[key].length > 0);
+    }
+  }
+});
+
+test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () => {
+  const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
+  const expectedSidebarKeys = [
+    'bugReportModalTitle',
+    'bugReportModalSubtitle',
+    'bugCategoryPerks',
+    'bugCategoryCharacters',
+    'bugCategoryMaps',
+    'bugCategoryChallenges',
+    'bugCategoryDraftSwf',
+    'bugCategoryUiTranslations',
+    'bugCategoryOther',
+    'bugTitleLabel',
+    'bugTitlePlaceholder',
+    'bugCategoryLabel',
+    'bugDescriptionLabel',
+    'bugDescriptionPlaceholder',
+    'bugGuestEmailLabel',
+    'bugGuestEmailPlaceholder',
+    'bugLoggedInAs',
+    'bugScreenshotsLabel',
+    'bugUploadImage',
+    'bugSecurityVerification',
+    'bugSubmitButton',
+    'bugSubmitting',
+    'bugSuccessMessage',
+    'bugErrorMessage',
+    'bugCloseButton',
+    'bugAltchaVerifying',
+    'bugAltchaVerified',
+    'coffeeTitle',
+    'coffeeSubtitle',
+    'coffeeFuelNotice',
+    'coffeeDonationMessage',
+    'coffeeBuyMeCoffeeTagline',
+    'coffeeKofiTagline',
+    'coffeePatreonTagline',
+    'coffeeVisit',
+    'coffeeFooterNotice',
+    'coffeeClose',
+  ] as const;
+
+  for (const loc of allLocales) {
+    const sidebarDict = localeDicts[loc].sidebar;
+    assert.ok(sidebarDict, `sidebar must exist in ${loc}`);
+    for (const key of expectedSidebarKeys) {
+      assert.ok(key in sidebarDict, `Key "${key}" must exist in ${loc}.sidebar`);
+      assert.strictEqual(typeof (sidebarDict as any)[key], 'string');
+      assert.ok((sidebarDict as any)[key].length > 0);
+    }
+  }
+});
+
+test('Character Detail combat, terror radius, codex and sort options i18n coverage across all locales', () => {
+  const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
+  const expectedDetailKeys = [
+    'combatAttributes',
+    'clickTerrorRadiusVisualizer',
+    'clickOutsideToClose',
+    'acousticRange',
+    'entityArchives',
+    'codex',
+    'enteredTheFog',
+    'currentBaseTerrorRadius',
+    'lullaby',
+    'audible',
+    'chase',
+    'killerBase',
+    'survivorSprint',
+    'straightGapClose',
+    'straightLine',
+    'sortRarityLowToHigh',
+    'sortRarityHighToLow',
+    'sortNameAsc',
+    'clickOfferingForDetails',
+    'clickAddonForDetails',
+    'clickItemForDetails',
+    'clickToInspectPerk',
+    'killerPerk',
+    'survivorPerk',
+    'unownedPerk',
+    'immediateChaseDesc',
+    'dangerZoneDesc',
+    'approachingDesc',
+    'audibleRangeDesc',
+    'generalPerk',
+    'alias',
+  ] as const;
+
+  for (const loc of allLocales) {
+    const detailDict = localeDicts[loc].characterDetail;
+    assert.ok(detailDict, `characterDetail must exist in ${loc}`);
+    for (const key of expectedDetailKeys) {
+      assert.ok(key in detailDict, `Key "${key}" must exist in ${loc}.characterDetail`);
+      assert.strictEqual(typeof (detailDict as any)[key], 'string');
+      assert.ok((detailDict as any)[key].length > 0);
+    }
+  }
+});

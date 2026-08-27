@@ -48,6 +48,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
   canvasHandlers,
   onLaunchFullscreen,
   onPopoutImage,
+  dict,
 }) => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState<boolean>(false);
 
@@ -83,7 +84,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
         <div className="flex items-center gap-1.5 shrink-0">
           <div
             role="group"
-            aria-label="Map Provider Toggle"
+            aria-label={dict?.maps?.providerToggleAria || 'Map Provider Toggle'}
             className="flex items-center rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 p-0.5"
             data-testid="mobile-map-source-toggle"
           >
@@ -91,7 +92,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               type="button"
               onClick={() => onSourceChange('hens333')}
               aria-pressed={activeSource === 'hens333'}
-              title="Hens333 (12-Clock)"
+              title={dict?.maps?.clockCalloutScheme ? `Hens333 (${dict?.maps?.clockCalloutScheme})` : 'Hens333 (12-Clock)'}
               className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer min-h-[30px] min-w-[30px] flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500 ${
                 activeSource === 'hens333'
                   ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black shadow-sm'
@@ -105,7 +106,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               type="button"
               onClick={() => onSourceChange('samoelcolt')}
               aria-pressed={activeSource === 'samoelcolt'}
-              title="SamoelColt (Isometric)"
+              title={dict?.maps?.isometricScheme ? `SamoelColt (${dict?.maps?.isometricScheme})` : 'SamoelColt (Isometric)'}
               className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer min-h-[30px] min-w-[30px] flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 ${
                 activeSource === 'samoelcolt'
                   ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black shadow-sm'
@@ -119,7 +120,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               type="button"
               onClick={() => onSourceChange('all')}
               aria-pressed={activeSource === 'all'}
-              title="All Sources"
+              title={dict?.maps?.allSources || 'All Sources'}
               className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer min-h-[30px] min-w-[30px] flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-slate-500 ${
                 activeSource === 'all'
                   ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white font-black shadow-sm'
@@ -135,10 +136,10 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
             <button
               type="button"
               onClick={onLaunchFullscreen}
-              aria-label="Launch Fullscreen Engine"
+              aria-label={dict?.maps?.launchFullscreenEngine || 'Launch Fullscreen Engine'}
               className="flex h-8 w-8 items-center justify-center rounded-xl border border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/20 transition-all cursor-pointer min-h-[30px] min-w-[30px] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
               data-testid="mobile-map-fullscreen-btn"
-              title="Launch Fullscreen Engine"
+              title={dict?.maps?.launchFullscreenEngine || 'Launch Fullscreen Engine'}
             >
               <Maximize2 className="h-3.5 w-3.5" />
             </button>
@@ -151,6 +152,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
         activeMapName={activeMap?.name || ''}
         onSelectVariant={onSelectVariant}
         className="m-2 mb-0 shrink-0"
+        dict={dict}
       />
 
       <div className="relative flex-1 w-full min-h-0 overflow-hidden flex items-center justify-center bg-slate-900/10 dark:bg-slate-950/80">
@@ -161,6 +163,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
           transformStyle={transformStyle}
           isDragging={isDragging}
           className="h-full w-full rounded-none border-0 max-h-none"
+          dict={dict}
           {...canvasHandlers}
         />
 
@@ -182,6 +185,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
             }
             showPresets={false}
             layoutMode="compact"
+            dict={dict}
           />
         </div>
       </div>
@@ -222,7 +226,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
           <div
             role="dialog"
             aria-modal="true"
-            aria-label="Map Directory and Legends"
+            aria-label={dict?.maps?.directoryAndLegendsAria || 'Map Directory and Legends'}
             className="absolute bottom-0 inset-x-0 z-50 h-[80vh] max-h-[85vh] flex flex-col bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700/80 rounded-t-3xl shadow-2xl backdrop-blur-2xl"
             data-testid="mobile-bottom-sheet-content"
           >
@@ -239,8 +243,8 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
                 <input
                   type="text"
-                  placeholder="Search map or realm..."
-                  aria-label="Search map or realm"
+                  placeholder={dict?.maps?.searchPlaceholder || 'Search map or realm...'}
+                  aria-label={dict?.maps?.searchAria || 'Search map or realm'}
                   value={search}
                   onChange={(e) => onSearchChange(e.target.value)}
                   className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 pl-9 pr-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-cyan-500 focus:outline-none min-h-[38px] shadow-inner"
@@ -250,7 +254,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               <button
                 type="button"
                 onClick={() => setIsBottomSheetOpen(false)}
-                aria-label="Close Bottom Sheet"
+                aria-label={dict?.maps?.closeBottomSheetAria || 'Close Bottom Sheet'}
                 className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-300 dark:hover:text-white transition-colors min-h-[38px] min-w-[38px] flex items-center justify-center cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
                 data-testid="mobile-bottom-sheet-close"
               >
@@ -260,7 +264,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
 
             <div
               role="group"
-              aria-label="Realm Pills"
+              aria-label={dict?.maps?.realmPillsAria || 'Realm Pills'}
               className="flex items-center gap-1.5 overflow-x-auto p-3 border-b border-slate-200 dark:border-slate-800 scrollbar-thin shrink-0"
             >
               <button
@@ -273,7 +277,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                 }`}
                 data-testid="mobile-map-realm-pill-all"
               >
-                All ({maps.length})
+                {dict?.maps?.all || 'All'} ({maps.length})
               </button>
               {uniqueRealms.map((r) => {
                 const count = groupedMaps[r]?.length || 0;
@@ -313,6 +317,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                   searchQuery={search}
                   selectedRealm={selectedRealm}
                   showFilters={false}
+                  dict={dict}
                 />
               </div>
 
@@ -327,6 +332,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                   realmName={activeMap?.realm}
                   isOpen={true}
                   collapsible={false}
+                  dict={dict}
                 />
               </div>
             </div>

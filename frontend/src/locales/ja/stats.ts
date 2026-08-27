@@ -8,5 +8,7 @@ export default {
   "totalXpClaimed": "獲得XP合計",
   "completed": "完了",
   "streak": "ストリーク",
-  "win": "撃破"
+  "win": "撃破",
+  "vaultTotal": "保管庫の合計",
+  "ownedPerks": "所持パーク"
 };

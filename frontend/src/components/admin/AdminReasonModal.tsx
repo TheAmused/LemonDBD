@@ -9,6 +9,7 @@ export interface AdminReasonModalProps {
   title: string;
   subtitle?: string;
   confirmLabel?: string;
+  dict?: any;
   onCancel: () => void;
   onConfirm: (reason: string) => void;
 }
@@ -24,6 +25,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
   title,
   subtitle,
   confirmLabel = 'Disable',
+  dict,
   onCancel,
   onConfirm,
 }) => {
@@ -81,7 +83,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
             rows={3}
             maxLength={255}
             autoFocus
-            placeholder="e.g. power is bugged, temporarily disabled while we fix it"
+            placeholder={dict?.admin?.reasonPlaceholder || 'e.g. power is bugged, temporarily disabled while we fix it'}
             className="w-full rounded-xl bg-slate-950/60 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-600 p-3 focus:outline-none focus:ring-1 focus:ring-rose-500 resize-none"
           />
           <p className="text-right text-[10px] text-slate-600">{reason.length}/255</p>

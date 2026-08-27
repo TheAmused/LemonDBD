@@ -70,6 +70,7 @@ export interface AdminCharacterRow {
   name: string;
   role: string;
   avatar_local_path?: string | null;
+  avatar_portrait_path?: string | null;
   is_disabled: boolean;
   disabled_reason?: string | null;
 }

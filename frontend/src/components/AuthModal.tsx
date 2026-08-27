@@ -26,6 +26,7 @@ interface AuthModalProps {
   initialMode?: 'login' | 'register';
   /** When set, the modal opens straight into the verification-code screen for this email, skipping login/register. */
   verifyEmailFor?: string;
+  dict?: any;
 }
 
 type AuthMode = 'login' | 'register' | 'forgot';
@@ -39,6 +40,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   initialMode = 'login',
   verifyEmailFor,
+  dict,
 }) => {
   const { login, register, forgotPassword } = useAuth();
   const {
@@ -152,7 +154,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           type="button"
           onClick={onClose}
           className="absolute right-4 top-4 rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
-          aria-label="Close auth dialog"
+          aria-label={dict?.modal?.close || 'Close auth dialog'}
         >
           <X className="h-5 w-5" />
         </button>
@@ -227,14 +229,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           >
             <div className="flex items-start gap-2.5">
               <MailWarning className="h-4 w-4 shrink-0 mt-0.5" />
-              <span>If that email is registered, a password reset link is on its way.</span>
+              <span>{dict?.user?.forgotSentNotice || 'If that email is registered, a password reset link is on its way.'}</span>
             </div>
             <button
               type="button"
               onClick={onClose}
               className="block w-full rounded-lg bg-amber-500/20 py-1.5 text-[11px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-300 hover:bg-amber-500/30 transition-colors cursor-pointer"
             >
-              Close
+              {dict?.modal?.close || 'Close'}
             </button>
           </div>
         )}
@@ -253,7 +255,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter username or email"
+                    placeholder={dict?.user?.usernameOrEmailPlaceholder || 'Enter username or email'}
                     className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
                   />
                 </div>
@@ -272,7 +274,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="yourname@domain.com"
+                    placeholder={dict?.user?.emailPlaceholder || 'yourname@domain.com'}
                     className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 py-2.5 pl-10 pr-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-sm"
                   />
                 </div>
@@ -329,17 +331,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               ) : mode === 'login' ? (
                 <>
                   <LogIn className="h-4 w-4" />
-                  <span>Sign In</span>
+                  <span>{dict?.user?.signIn || 'Sign In'}</span>
                 </>
               ) : mode === 'register' ? (
                 <>
                   <UserPlus className="h-4 w-4" />
-                  <span>Create Account</span>
+                  <span>{dict?.user?.createAccount || 'Create Account'}</span>
                 </>
               ) : (
                 <>
                   <Mail className="h-4 w-4" />
-                  <span>Send Reset Link</span>
+                  <span>{dict?.user?.sendResetLink || 'Send Reset Link'}</span>
                 </>
               )}
             </button>
@@ -358,7 +360,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 className="flex items-center justify-center gap-1.5 rounded-lg border border-red-500/20 bg-red-50 dark:bg-red-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
               >
                 <ShieldAlert className="h-3 w-3 text-red-500 dark:text-red-400" />
-                <span>Admin (lemon)</span>
+                <span>{dict?.user?.adminDemo || 'Admin (lemon)'}</span>
               </button>
               <button
                 type="button"
@@ -366,7 +368,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 className="flex items-center justify-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-50 dark:bg-amber-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
               >
                 <Sparkles className="h-3 w-3 text-amber-600 dark:text-amber-400" />
-                <span>User (user)</span>
+                <span>{dict?.user?.userDemo || 'User (user)'}</span>
               </button>
             </div>
           </div>

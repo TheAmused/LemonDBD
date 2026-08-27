@@ -12,6 +12,10 @@ export interface AltchaWidgetProps {
   honeypotProps: React.InputHTMLAttributes<HTMLInputElement>;
   showIndicator?: boolean;
   className?: string;
+  verifyingText?: string;
+  verifiedText?: string;
+  failedText?: string;
+  retryLabel?: string;
 }
 
 export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
@@ -22,6 +26,10 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
   honeypotProps,
   showIndicator = false,
   className = '',
+  verifyingText = 'Verifying security challenge...',
+  verifiedText = 'Security challenge passed',
+  failedText = 'Security challenge failed',
+  retryLabel = 'Retry',
 }) => {
   return (
     <div className={className}>
@@ -37,25 +45,25 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
           {isVerifying ? (
             <>
               <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400 shrink-0" />
-              <span>Verifying secure session...</span>
+              <span>{verifyingText}</span>
             </>
           ) : isVerified ? (
             <>
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span className="text-emerald-400">Security check passed</span>
+              <span className="text-emerald-400">{verifiedText}</span>
             </>
           ) : error ? (
             <>
               <ShieldAlert className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-              <span className="text-rose-400">Security check failed</span>
+              <span className="text-rose-400">{failedText}</span>
               {onRetry && (
                 <button
                   type="button"
                   onClick={onRetry}
-                  aria-label="Retry security verification"
+                  aria-label={retryLabel}
                   className="ml-auto underline text-amber-400 hover:text-amber-300 text-xs cursor-pointer focus:outline-none"
                 >
-                  Retry
+                  {retryLabel}
                 </button>
               )}
             </>

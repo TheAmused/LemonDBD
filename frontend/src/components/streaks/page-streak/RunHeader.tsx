@@ -12,9 +12,10 @@ interface RunHeaderProps {
   onOpenReset: () => void;
   onOpenRules: () => void;
   onOpenStats: () => void;
+  dict?: any;
 }
 
-export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenReset, onOpenRules, onOpenStats }) => {
+export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenReset, onOpenRules, onOpenStats, dict }) => {
   const [imgError, setImgError] = useState(false);
   const cleared = run.status === 'completed' ? run.page_count : run.current_page - 1;
   const pct = run.page_count > 0 ? Math.round((cleared / run.page_count) * 100) : 0;
@@ -37,20 +38,28 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenRese
         <div className="min-w-0 flex-1">
           <h2 className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100">{run.killer}</h2>
           <div className="mt-1 flex flex-wrap gap-4 font-mono text-[11px] text-slate-500">
-            <span>attempt <b className="text-slate-800 dark:text-slate-200">{run.attempt}</b></span>
+            <span>
+              {dict?.streaks?.attempt || 'attempt'}{' '}
+              <b className="text-slate-800 dark:text-slate-200">{run.attempt}</b>
+            </span>
             {run.pool_frozen && (
-              <span>layout frozen <b className="text-slate-800 dark:text-slate-200">{new Date(run.snapshot_at).toLocaleDateString()}</b></span>
+              <span>
+                {dict?.streaks?.layoutFrozen || 'layout frozen'}{' '}
+                <b className="text-slate-800 dark:text-slate-200">
+                  {new Date(run.snapshot_at).toLocaleDateString()}
+                </b>
+              </span>
             )}
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          <FreezeBadge frozen={run.pool_frozen} />
+          <FreezeBadge frozen={run.pool_frozen} dict={dict} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-orange-500/30 text-orange-600 dark:text-orange-400 shadow-sm">
             <Flame className="w-5 h-5 text-orange-500 fill-orange-500/20" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Current
+                {dict?.stats?.current || 'Current'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {cleared}
@@ -62,7 +71,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenRese
             <Trophy className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Best
+                {dict?.stats?.best || 'Best'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {run.best_page}
@@ -73,16 +82,16 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenRese
           <button
             onClick={onOpenRules}
             className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-orange-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-orange-400 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
-            title="View Page Streak Rules"
+            title={dict?.streaks?.rules || 'Rules'}
           >
             <BookOpen className="w-4 h-4 text-orange-500 dark:text-orange-400" />
-            <span className="hidden sm:inline">Rules</span>
+            <span className="hidden sm:inline">{dict?.streaks?.rules || 'Rules'}</span>
           </button>
 
           <button
             onClick={onOpenStats}
             className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
-            title="View Page Streak Statistics"
+            title={dict?.streaks?.stats || 'Statistics'}
           >
             <BarChart2 className="w-5 h-5" />
           </button>
@@ -91,7 +100,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenRese
             type="button"
             onClick={onOpenReset}
             className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/60 dark:text-slate-200 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
-            title="Reset this streak"
+            title={dict?.streaks?.resetRun || 'Reset this streak'}
           >
             <RotateCcw className="w-5 h-5" />
           </button>

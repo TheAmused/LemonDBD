@@ -703,12 +703,12 @@ export default function GuesserPage() {
                 {soundEnabled ? (
                   <>
                     <Volume2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                    <span>Sound On</span>
+                    <span>{dict.guesser?.soundOn || 'Sound On'}</span>
                   </>
                 ) : (
                   <>
                     <VolumeX className="h-4 w-4 text-rose-600 dark:text-rose-400" />
-                    <span>Sound Off</span>
+                    <span>{dict.guesser?.soundOff || 'Sound Off'}</span>
                   </>
                 )}
               </button>
@@ -748,7 +748,9 @@ export default function GuesserPage() {
           {loadingData ? (
             <div className="h-64 flex flex-col items-center justify-center gap-3">
               <RefreshCw className="h-8 w-8 text-violet-500 animate-spin" />
-              <p className="text-sm font-semibold text-slate-400">Loading game files...</p>
+              <p className="text-sm font-semibold text-slate-400">
+                {dict.guesser?.loading || 'Loading game files...'}
+              </p>
             </div>
           ) : activeMode === 'dashboard' ? (
             
@@ -769,7 +771,7 @@ export default function GuesserPage() {
                     </span>
                     <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-950/80 px-2.5 py-1 rounded-xl">
                       <Trophy className="h-3.5 w-3.5 text-amber-500" />
-                      <span>Best: <strong className="text-slate-900 dark:text-white">{stats['character']?.best_streak || 0}</strong></span>
+                      <span>{dict.guesser?.best || 'Best:'} <strong className="text-slate-900 dark:text-white">{stats['character']?.best_streak || 0}</strong></span>
                     </div>
                   </div>
                   <div>
@@ -785,13 +787,17 @@ export default function GuesserPage() {
                 <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 relative z-10">
                   <div className="flex gap-4">
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Accuracy</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.accuracy || 'Accuracy'}
+                      </p>
                       <p className="font-extrabold text-slate-900 dark:text-white text-sm font-mono mt-0.5">
                         {getAccuracy(stats['character'])}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Streak</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.streak || 'Streak'}
+                      </p>
                       <p className="font-extrabold text-amber-500 text-sm font-mono mt-0.5">
                         {stats['character']?.current_streak || 0}
                       </p>
@@ -804,7 +810,7 @@ export default function GuesserPage() {
                         onClick={(e) => resetStreak('character', e)}
                         className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-bold text-rose-600 dark:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                       >
-                        Reset
+                        {dict.guesser?.reset || 'Reset'}
                       </button>
                     )}
                     <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-500 transition-all shadow-md group-hover:scale-105 active:scale-95 cursor-pointer">
@@ -830,7 +836,7 @@ export default function GuesserPage() {
                     </span>
                     <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-950/80 px-2.5 py-1 rounded-xl">
                       <Trophy className="h-3.5 w-3.5 text-amber-500" />
-                      <span>Best: <strong className="text-slate-900 dark:text-white">{stats['perk_description']?.best_streak || 0}</strong></span>
+                      <span>{dict.guesser?.best || 'Best:'} <strong className="text-slate-900 dark:text-white">{stats['perk_description']?.best_streak || 0}</strong></span>
                     </div>
                   </div>
                   <div>
@@ -846,13 +852,17 @@ export default function GuesserPage() {
                 <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 relative z-10">
                   <div className="flex gap-4">
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Accuracy</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.accuracy || 'Accuracy'}
+                      </p>
                       <p className="font-extrabold text-slate-900 dark:text-white text-sm font-mono mt-0.5">
                         {getAccuracy(stats['perk_description'])}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Streak</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.streak || 'Streak'}
+                      </p>
                       <p className="font-extrabold text-amber-500 text-sm font-mono mt-0.5">
                         {stats['perk_description']?.current_streak || 0}
                       </p>
@@ -865,7 +875,7 @@ export default function GuesserPage() {
                         onClick={(e) => resetStreak('perk_description', e)}
                         className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-bold text-rose-600 dark:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                       >
-                        Reset
+                        {dict.guesser?.reset || 'Reset'}
                       </button>
                     )}
                     <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-500 transition-all shadow-md group-hover:scale-105 active:scale-95 cursor-pointer">
@@ -891,7 +901,7 @@ export default function GuesserPage() {
                     </span>
                     <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-950/80 px-2.5 py-1 rounded-xl">
                       <Trophy className="h-3.5 w-3.5 text-amber-500" />
-                      <span>Best: <strong className="text-slate-900 dark:text-white">{stats['perk_name_to_icon']?.best_streak || 0}</strong></span>
+                      <span>{dict.guesser?.best || 'Best:'} <strong className="text-slate-900 dark:text-white">{stats['perk_name_to_icon']?.best_streak || 0}</strong></span>
                     </div>
                   </div>
                   <div>
@@ -907,13 +917,17 @@ export default function GuesserPage() {
                 <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 relative z-10">
                   <div className="flex gap-4">
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Accuracy</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.accuracy || 'Accuracy'}
+                      </p>
                       <p className="font-extrabold text-slate-900 dark:text-white text-sm font-mono mt-0.5">
                         {getAccuracy(stats['perk_name_to_icon'])}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Streak</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.streak || 'Streak'}
+                      </p>
                       <p className="font-extrabold text-amber-500 text-sm font-mono mt-0.5">
                         {stats['perk_name_to_icon']?.current_streak || 0}
                       </p>
@@ -926,7 +940,7 @@ export default function GuesserPage() {
                         onClick={(e) => resetStreak('perk_name_to_icon', e)}
                         className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-bold text-rose-600 dark:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                       >
-                        Reset
+                        {dict.guesser?.reset || 'Reset'}
                       </button>
                     )}
                     <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-500 transition-all shadow-md group-hover:scale-105 active:scale-95 cursor-pointer">
@@ -952,7 +966,7 @@ export default function GuesserPage() {
                     </span>
                     <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-950/80 px-2.5 py-1 rounded-xl">
                       <Trophy className="h-3.5 w-3.5 text-amber-500" />
-                      <span>Best: <strong className="text-slate-900 dark:text-white">{stats['perk_icon_to_name']?.best_streak || 0}</strong></span>
+                      <span>{dict.guesser?.best || 'Best:'} <strong className="text-slate-900 dark:text-white">{stats['perk_icon_to_name']?.best_streak || 0}</strong></span>
                     </div>
                   </div>
                   <div>
@@ -968,13 +982,17 @@ export default function GuesserPage() {
                 <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 relative z-10">
                   <div className="flex gap-4">
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Accuracy</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.accuracy || 'Accuracy'}
+                      </p>
                       <p className="font-extrabold text-slate-900 dark:text-white text-sm font-mono mt-0.5">
                         {getAccuracy(stats['perk_icon_to_name'])}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Streak</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.streak || 'Streak'}
+                      </p>
                       <p className="font-extrabold text-amber-500 text-sm font-mono mt-0.5">
                         {stats['perk_icon_to_name']?.current_streak || 0}
                       </p>
@@ -987,7 +1005,7 @@ export default function GuesserPage() {
                         onClick={(e) => resetStreak('perk_icon_to_name', e)}
                         className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-bold text-rose-600 dark:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                       >
-                        Reset
+                        {dict.guesser?.reset || 'Reset'}
                       </button>
                     )}
                     <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-500 transition-all shadow-md group-hover:scale-105 active:scale-95 cursor-pointer">
@@ -1013,7 +1031,7 @@ export default function GuesserPage() {
                     </span>
                     <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-950/80 px-2.5 py-1 rounded-xl">
                       <Trophy className="h-3.5 w-3.5 text-amber-500" />
-                      <span>Best: <strong className="text-slate-900 dark:text-white">{stats['memes']?.best_streak || 0}</strong></span>
+                      <span>{dict.guesser?.best || 'Best:'} <strong className="text-slate-900 dark:text-white">{stats['memes']?.best_streak || 0}</strong></span>
                     </div>
                   </div>
                   <div>
@@ -1029,13 +1047,17 @@ export default function GuesserPage() {
                 <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 relative z-10">
                   <div className="flex gap-4">
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Accuracy</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.accuracy || 'Accuracy'}
+                      </p>
                       <p className="font-extrabold text-slate-900 dark:text-white text-sm font-mono mt-0.5">
                         {getAccuracy(stats['memes'])}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">Streak</p>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider">
+                        {dict.guesser?.streak || 'Streak'}
+                      </p>
                       <p className="font-extrabold text-amber-500 text-sm font-mono mt-0.5">
                         {stats['memes']?.current_streak || 0}
                       </p>
@@ -1048,7 +1070,7 @@ export default function GuesserPage() {
                         onClick={(e) => resetStreak('memes', e)}
                         className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-bold text-rose-600 dark:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                       >
-                        Reset
+                        {dict.guesser?.reset || 'Reset'}
                       </button>
                     )}
                     <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-violet-600 text-white font-bold hover:bg-violet-500 transition-all shadow-md group-hover:scale-105 active:scale-95 cursor-pointer">
@@ -1071,7 +1093,7 @@ export default function GuesserPage() {
                         Realms & Seeds
                       </span>
                       <span className="px-2 py-0.5 rounded bg-violet-600/10 text-[9px] font-bold text-violet-400 border border-violet-500/20">
-                        WIP
+                        {dict.guesser?.wip || 'WIP'}
                       </span>
                     </div>
                     <h2 className="text-base font-black text-slate-400 group-hover:text-slate-300 transition-colors uppercase tracking-wider font-mono flex items-center gap-2 mt-2">
@@ -1086,7 +1108,7 @@ export default function GuesserPage() {
                   <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-end">
                     <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-500 text-xs font-bold transition-all shadow-md group-hover:text-slate-300">
                       <Lock className="h-3 w-3" />
-                      <span>WIP</span>
+                      <span>{dict.guesser?.wip || 'WIP'}</span>
                     </button>
                   </div>
                 </div>
@@ -1147,14 +1169,13 @@ export default function GuesserPage() {
 
                 {currentQuestion && (
                   <div className="flex justify-center py-2">
-                    
-                    {activeMode === 'character' && currentQuestion.targetCharacter && (
+                                      {activeMode === 'character' && currentQuestion.targetCharacter && (
                       <div className="flex flex-col items-center gap-3 animate-in fade-in zoom-in-95 duration-200">
                         <div className="relative h-20 w-20 sm:h-24 sm:w-24 rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-950 flex items-center justify-center shadow-sm dark:shadow-lg">
                           {currentQuestion.type === 'avatar_to_name' ? (
                             <img
                               src={getAvatarUrl(currentQuestion.targetCharacter)}
-                              alt="Character avatar hint"
+                              alt={dict.guesser?.charAvatarHint || 'Character avatar hint'}
                               className="h-full w-full object-cover"
                               onError={(e) => {
                                 (e.target as any).style.display = 'none';
@@ -1196,7 +1217,7 @@ export default function GuesserPage() {
                             return (
                               <span
                                 key={idx}
-                                title="Redacted (High Streak)"
+                                title={dict.guesser?.redacted || 'Redacted (High Streak)'}
                                 className="bg-red-500/20 text-transparent select-none rounded px-0.5 border-b border-red-500/30 dark:bg-red-950/80 font-mono tracking-tight cursor-help mx-0.5"
                               >
                                 {'█'.repeat(Math.max(3, item.word.length))}
@@ -1206,7 +1227,7 @@ export default function GuesserPage() {
                             return (
                               <span
                                 key={idx}
-                                title="Blurred (Medium Streak)"
+                                title={dict.guesser?.blurred || 'Blurred (Medium Streak)'}
                                 className="blur-[3px] opacity-75 select-none text-slate-400 dark:text-slate-500 bg-slate-200 dark:bg-slate-850 rounded px-0.5 cursor-help mx-0.5 font-mono"
                               >
                                 {item.word}
@@ -1222,7 +1243,7 @@ export default function GuesserPage() {
                         <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-950 flex items-center justify-center overflow-hidden shadow-sm dark:shadow-lg dark:shadow-violet-950/30 relative">
                           <img
                             src={getPerkIconUrl(currentQuestion.targetPerk)}
-                            alt="Distorted perk icon hint"
+                            alt={dict.guesser?.distortedPerkIcon || 'Distorted perk icon hint'}
                             className="object-contain transition-transform"
                             style={{
                               transform: `rotate(${currentQuestion.difficultyEffects.rotate}deg) scale(${currentQuestion.difficultyEffects.scale}) translate(${currentQuestion.difficultyEffects.offsetX}px, ${currentQuestion.difficultyEffects.offsetY}px)`,
@@ -1298,7 +1319,7 @@ export default function GuesserPage() {
                             <div className="h-12 w-12 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-center overflow-hidden shadow-inner">
                               <img
                                 src={getPerkIconUrl(perkOpt)}
-                                alt="Perk Icon Choice"
+                                alt={dict.guesser?.perkIconChoice || 'Perk Icon Choice'}
                                 className="object-contain"
                                 style={{
                                   transform: currentQuestion.difficultyEffects
@@ -1400,8 +1421,8 @@ export default function GuesserPage() {
               </div>
               
               <div className="flex justify-between items-center text-xs text-slate-500 px-2 font-mono">
-                <span>Esc: Return</span>
-                <span>Space: Continue</span>
+                <span>{dict.guesser?.escReturn || 'Esc: Return'}</span>
+                <span>{dict.guesser?.spaceContinue || 'Space: Continue'}</span>
               </div>
 
             </div>

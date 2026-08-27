@@ -47,7 +47,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4 w-full">
-      <nav aria-label="Breadcrumb Navigation" className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
+      <nav aria-label={t.breadcrumbs || 'Breadcrumb Navigation'} className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
         <Link
           href={`/${currentLocale}/characters?role=${roleParam}`}
           className="flex items-center gap-1.5 text-slate-400 hover:text-slate-100 transition-colors"

@@ -9,9 +9,10 @@ import { useAuth } from '@/context/AuthContext';
 
 interface PageStreakRosterProps {
   locale: string;
+  dict?: any;
 }
 
-export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) => {
+export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale, dict }) => {
   const { token } = useAuth();
   const [roster, setRoster] = useState<RosterEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,12 +48,16 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale }) =>
       {error && (
         <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-rose-500/30 bg-rose-500/[0.07] px-4 py-3 text-xs text-rose-300">
           <span>{error}</span>
-          <button onClick={load} className="font-bold underline">Retry</button>
+          <button onClick={load} className="font-bold underline cursor-pointer">
+            {dict?.streaks?.retry || 'Retry'}
+          </button>
         </div>
       )}
 
       {loading ? (
-        <p className="py-10 text-center text-xs text-slate-500">Loading roster…</p>
+        <p className="py-10 text-center text-xs text-slate-500">
+          {dict?.streaks?.loadingRoster || 'Loading roster…'}
+        </p>
       ) : (
         <KillerRosterGrid locale={locale} roster={roster} />
       )}

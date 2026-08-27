@@ -8,15 +8,16 @@ import { RulesModalShell } from '../RulesModalShell';
 export interface PageStreakRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  dict?: any;
 }
 
-export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOpen, onClose }) => (
+export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOpen, onClose, dict }) => (
   <RulesModalShell
     isOpen={isOpen}
     onClose={onClose}
     icon={BookOpen}
-    title="Page Streak Rules"
-    subtitle="How pages, builds, and the perk pool work"
+    title={dict?.streaks?.pageStreakRulesTitle || 'Page Streak Rules'}
+    subtitle={dict?.streaks?.pageStreakRulesSubtitle || 'How pages, builds, and the perk pool work'}
     iconClassName="bg-orange-500/10 border-orange-500/20 text-orange-600 dark:text-orange-400"
     footerButtonClassName="bg-orange-600 hover:bg-orange-500"
   >

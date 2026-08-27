@@ -89,7 +89,7 @@ export default function CustomPerksPage() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <Suspense fallback={<div className="p-8 text-center text-slate-400 font-mono">Loading Perk Studio...</div>}>
+        <Suspense fallback={<div className="p-8 text-center text-slate-400 font-mono">{dict?.characterDetail?.loading || 'Loading...'}</div>}>
           <CustomPerkStudio dict={dict} currentLocale={locale} />
         </Suspense>
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />

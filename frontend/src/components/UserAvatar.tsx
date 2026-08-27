@@ -16,6 +16,8 @@ interface UserAvatarProps {
   showAdminBadge?: boolean;
   borderClassName?: string;
   previewUrl?: string | null;
+  adminTitle?: string;
+  adminAriaLabel?: string;
 }
 
 const SIZE_MAP = {
@@ -64,6 +66,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   showAdminBadge = false,
   borderClassName,
   previewUrl,
+  adminTitle = 'System Administrator',
+  adminAriaLabel = 'System Administrator Badge',
 }) => {
   const [imgError, setImgError] = useState(false);
   const sizeConfig = SIZE_MAP[size] || SIZE_MAP.md;
@@ -125,8 +129,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       {showAdminBadge && user?.role === 'admin' && (
         <span
           className={`absolute flex items-center justify-center rounded-full bg-red-600 text-white shadow-md border border-red-400 ${sizeConfig.badge}`}
-          title="Administrator"
-          aria-label="Administrator badge"
+          title={adminTitle}
+          aria-label={adminAriaLabel}
         >
           <Crown className={sizeConfig.badgeIcon} />
         </span>

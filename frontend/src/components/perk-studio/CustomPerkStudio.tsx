@@ -274,7 +274,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-bold text-red-600 dark:text-red-400">
               <Wand2 className="h-3.5 w-3.5 animate-pulse" />
-              <span>Studio & Concept Lab</span>
+              <span>{dict?.customPerkStudio?.conceptLab || 'Studio & Concept Lab'}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono">
               Custom Perk Creator Studio
@@ -295,7 +295,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               }`}
             >
               <Wand2 className="h-4 w-4" />
-              <span>Perk Designer</span>
+              <span>{dict?.customPerkStudio?.designer || 'Perk Designer'}</span>
             </button>
             <button
               onClick={() => setActiveTab('gallery')}
@@ -328,9 +328,11 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <Sliders className="h-5 w-5 text-red-500" />
-                <span>Configure Perk Concept</span>
+                <span>{dict?.customPerkStudio?.configureConcept || 'Configure Perk Concept'}</span>
               </h2>
-              <span className="text-xs text-slate-500 font-mono">* Required fields</span>
+              <span className="text-xs text-slate-500 font-mono">
+                {dict?.customPerkStudio?.requiredFields || '* Required fields'}
+              </span>
             </div>
 
             {formError && (
@@ -349,7 +351,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Hex: Shadow Veil, Adrenaline Overdrive..."
+                  placeholder={dict?.customPerkStudio?.titlePlaceholder || 'e.g. Hex: Shadow Veil, Adrenaline Overdrive...'}
                   className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   required
                 />
@@ -372,7 +374,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       }`}
                     >
                       <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                      <span>Survivor</span>
+                      <span>{dict?.generator?.survivor || 'Survivor'}</span>
                     </button>
                     <button
                       type="button"
@@ -384,7 +386,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       }`}
                     >
                       <Skull className="h-4 w-4 text-rose-600 dark:text-rose-400" />
-                      <span>Killer</span>
+                      <span>{dict?.generator?.killer || 'Killer'}</span>
                     </button>
                   </div>
                 </div>
@@ -397,7 +399,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                     type="text"
                     value={characterName}
                     onChange={(e) => setCharacterName(e.target.value)}
-                    placeholder="e.g. Meg Thomas, The Trapper, Teachable..."
+                    placeholder={dict?.customPerkStudio?.characterPlaceholder || 'e.g. Meg Thomas, The Trapper, Teachable...'}
                     className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   />
                 </div>
@@ -463,7 +465,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   type="text"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  placeholder="e.g. EntityArchitect"
+                  placeholder={dict?.customPerkStudio?.authorPlaceholder || 'e.g. EntityArchitect'}
                   className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                 />
               </div>
@@ -502,7 +504,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
-                  placeholder="Write perk mechanics... Use **bold** for key status terms."
+                  placeholder={dict?.customPerkStudio?.descPlaceholder || 'Write perk mechanics... Use **bold** for key status terms.'}
                   className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-3.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   required
                 />
@@ -602,7 +604,9 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       <User className="h-3.5 w-3.5 text-slate-500" />
                       <span>{author || 'Community'}</span>
                     </span>
-                    <span className="font-mono text-[10px] text-slate-500">LemonDBD Concept</span>
+                    <span className="font-mono text-[10px] text-slate-500">
+                      {dict?.customPerkStudio?.conceptTag || 'LemonDBD Concept'}
+                    </span>
                   </div>
                 </div>
               );
@@ -624,7 +628,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search concepts by title, mechanic, character..."
+                  placeholder={dict?.customPerkStudio?.searchPlaceholder || 'Search concepts by title, mechanic, character...'}
                   className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 pl-10 pr-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 />
               </div>
@@ -653,10 +657,10 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   onChange={(e) => setFilterRarity(e.target.value)}
                   className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 >
-                  <option value="all" className="dark:bg-slate-900">All Rarities</option>
-                  <option value="Iridescent" className="dark:bg-slate-900">Iridescent</option>
-                  <option value="Very Rare" className="dark:bg-slate-900">Very Rare</option>
-                  <option value="Uncommon" className="dark:bg-slate-900">Uncommon</option>
+                  <option value="all" className="dark:bg-slate-900">{dict?.filters?.allRarities || 'All Rarities'}</option>
+                  <option value="Iridescent" className="dark:bg-slate-900">{dict?.filters?.rarityIridescent || 'Iridescent'}</option>
+                  <option value="Very Rare" className="dark:bg-slate-900">{dict?.filters?.rarityVeryRare || 'Very Rare'}</option>
+                  <option value="Uncommon" className="dark:bg-slate-900">{dict?.filters?.rarityUncommon || 'Uncommon'}</option>
                 </select>
               </div>
 
@@ -667,8 +671,8 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   onChange={(e) => setSortBy(e.target.value)}
                   className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 >
-                  <option value="newest" className="dark:bg-slate-900">Newest First</option>
-                  <option value="upvotes" className="dark:bg-slate-900">Most Upvoted</option>
+                  <option value="newest" className="dark:bg-slate-900">{dict?.filters?.newestFirst || 'Newest First'}</option>
+                  <option value="upvotes" className="dark:bg-slate-900">{dict?.filters?.mostUpvoted || 'Most Upvoted'}</option>
                 </select>
               </div>
             </div>
@@ -682,7 +686,9 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
           ) : customPerks.length === 0 ? (
             <div className="bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3">
               <Sparkles className="h-8 w-8 text-slate-400 dark:text-slate-600 mx-auto" />
-              <h3 className="text-base font-bold text-slate-800 dark:text-slate-300">No Custom Perks Found</h3>
+              <h3 className="text-base font-bold text-slate-800 dark:text-slate-300">
+                {dict?.empty?.title || 'No Custom Perks Found'}
+              </h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
                 No perk concepts match your current filter settings. Try clearing filters or create a new concept!
               </p>
@@ -691,7 +697,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-500 transition-colors cursor-pointer shadow-md shadow-red-900/20"
               >
                 <Plus className="h-4 w-4" />
-                <span>Create New Concept</span>
+                <span>{dict?.customPerkStudio?.createNew || 'Create New Concept'}</span>
               </button>
             </div>
           ) : (

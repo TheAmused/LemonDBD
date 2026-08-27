@@ -11,6 +11,7 @@ export interface ResetConfirmModalProps {
   busy?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  dict?: any;
 }
 
 export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({
@@ -19,12 +20,13 @@ export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({
   busy = false,
   onConfirm,
   onCancel,
+  dict,
 }) => (
   <ConfirmModal
     open={open}
-    title="Reset this run?"
+    title={dict?.streaks?.resetRunTitle || 'Reset this run?'}
     message={message}
-    confirmLabel="Yes, wipe it"
+    confirmLabel={dict?.generator?.resetAllLabel || 'Yes, wipe it'}
     confirmIcon={<RotateCcw className="h-4 w-4" />}
     busy={busy}
     onConfirm={onConfirm}

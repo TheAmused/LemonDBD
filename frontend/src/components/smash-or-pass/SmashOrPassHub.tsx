@@ -829,11 +829,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             {/* Session Stats Summary */}
             <div className="grid grid-cols-2 gap-3 py-2 font-mono">
               <div className="bg-zinc-950/80 p-4 rounded-2xl border border-zinc-800">
-                <span className="text-xs text-rose-400 font-bold uppercase">Smash</span>
+                <span className="text-xs text-rose-400 font-bold uppercase">{dict?.smashOrPass?.smash || 'Smash'}</span>
                 <p className="text-2xl font-black text-zinc-100">{sessionSmashes}</p>
               </div>
               <div className="bg-zinc-950/80 p-4 rounded-2xl border border-zinc-800">
-                <span className="text-xs text-zinc-400 font-bold uppercase">Pass</span>
+                <span className="text-xs text-zinc-400 font-bold uppercase">{dict?.smashOrPass?.pass || 'Pass'}</span>
                 <p className="text-2xl font-black text-zinc-100">{sessionPasses}</p>
               </div>
             </div>

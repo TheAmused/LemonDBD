@@ -10,15 +10,17 @@ export interface ChaosStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: ChaosStats | null;
+  dict?: any;
 }
 
-export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats }) => (
+export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (
   <StreakStatsDrawer<ChaosMatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    title="Chaos Streak"
+    title={dict?.streaks?.chaosStreak || 'Chaos Streak'}
     accent="violet"
     stats={stats}
+    dict={dict}
     renderLabel={(log) => (
       <>
         <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer_id}</div>

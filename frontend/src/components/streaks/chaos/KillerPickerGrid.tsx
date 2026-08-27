@@ -67,6 +67,17 @@ const KillerTile: React.FC<{
   );
 };
 
+export interface KillerPickerGridProps {
+  killers: string[];
+  completedKillers: string[];
+  selectedKillerId: string | null;
+  onSelect: (killerId: string) => void;
+  disabled?: boolean;
+  loading?: boolean;
+  center?: boolean;
+  dict?: any;
+}
+
 export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
   killers,
   completedKillers,
@@ -75,9 +86,14 @@ export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
   disabled = false,
   loading = false,
   center = false,
+  dict,
 }) => {
   if (loading) {
-    return <p className="text-xs text-slate-500 dark:text-slate-400">Loading your killers...</p>;
+    return (
+      <p className="text-xs text-slate-500 dark:text-slate-400">
+        {dict?.streaks?.loadingKillers || 'Loading your killers...'}
+      </p>
+    );
   }
 
   const tiles = killers.map((name) => (

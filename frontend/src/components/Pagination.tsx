@@ -45,7 +45,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <nav
-      aria-label="Pagination Navigation"
+      aria-label={dict?.pagination?.navAriaLabel || 'Pagination Navigation'}
       className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4 w-full"
     >
       <div className="text-xs font-medium text-slate-400" aria-live="polite">
@@ -80,7 +80,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             type="button"
             onClick={() => onPageChange(1)}
             disabled={page <= 1}
-            aria-label="First Page"
+            aria-label={dict?.pagination?.firstPage || 'First Page'}
             className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed border border-slate-800"
           >
             <ChevronsLeft className="h-4 w-4" />
@@ -112,7 +112,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             type="button"
             onClick={() => onPageChange(safeTotalPages)}
             disabled={page >= safeTotalPages}
-            aria-label="Last Page"
+            aria-label={dict?.pagination?.lastPage || 'Last Page'}
             className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-slate-300 hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed border border-slate-800"
           >
             <ChevronsRight className="h-4 w-4" />
@@ -122,7 +122,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         {safeTotalPages > 7 && (
           <form onSubmit={handleJumpSubmit} className="flex items-center gap-1.5">
             <label htmlFor="jump-to-page" className="text-xs font-medium text-slate-400">
-              Go to:
+              {dict?.pagination?.goTo || 'Go to'}:
             </label>
             <input
               id="jump-to-page"

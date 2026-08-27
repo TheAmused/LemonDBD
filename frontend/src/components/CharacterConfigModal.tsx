@@ -130,7 +130,7 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
             type="button"
             onClick={handleSaveAndClose}
             className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
-            aria-label="Close and auto-save"
+            aria-label={dict?.modal?.close || 'Close and auto-save'}
           >
             <X className="h-5 w-5" />
           </button>
@@ -175,7 +175,7 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
                 className="flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors cursor-pointer shadow-sm"
               >
                 <CheckCheck className="h-3.5 w-3.5" />
-                <span>Select All</span>
+                <span>{dict?.filters?.allCharacters || 'Select All'}</span>
               </button>
 
               <button
@@ -184,7 +184,7 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
                 className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 px-3 py-1.5 text-xs font-bold text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors cursor-pointer shadow-sm"
               >
                 <XSquare className="h-3.5 w-3.5" />
-                <span>Deselect All</span>
+                <span>{dict?.filters?.clear || 'Deselect All'}</span>
               </button>
             </div>
           </div>
@@ -201,7 +201,7 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
             <button
               type="button"
               onClick={() => toggleCharacter('General')}
-              title="General / Universal Perks"
+              title={dict?.filters?.generalPerksOnly || 'General / Universal Perks'}
               className={`group relative flex flex-col items-center justify-center p-2 rounded-2xl border-2 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                 isGeneralSelected
                   ? 'border-amber-500 bg-amber-50 dark:bg-amber-500/15 shadow-amber-500/20 scale-105'

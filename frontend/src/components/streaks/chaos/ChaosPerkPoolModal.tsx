@@ -35,6 +35,7 @@ export interface ChaosPerkPoolModalProps {
   onClose: () => void;
   pool: Perk[];
   usedPerkNames: string[];
+  dict?: any;
 }
 
 export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
@@ -42,6 +43,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
   onClose,
   pool,
   usedPerkNames,
+  dict,
 }) => {
   useEffect(() => {
     if (!isOpen) return;
@@ -76,7 +78,9 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
               <Layers className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Perk Pool</h2>
+              <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
+                {dict?.streaks?.perkPool || 'Perk Pool'}
+              </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {used.length} used &middot; {remaining.length} left this cycle
               </p>

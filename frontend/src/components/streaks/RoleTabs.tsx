@@ -8,41 +8,42 @@ import { Shield, Skull, Puzzle } from 'lucide-react';
 
 interface RoleTabsProps {
   locale: string;
+  dict?: any;
 }
 
-const TABS = [
-  {
-    id: 'survivor',
-    label: 'Survivor',
-    icon: Shield,
-    active: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/40 shadow-sm',
-    hover: 'hover:border-emerald-500/50 hover:text-emerald-700 dark:hover:text-emerald-400',
-    ring: 'focus:ring-emerald-500',
-  },
-  {
-    id: 'killer',
-    label: 'Killer',
-    icon: Skull,
-    active: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/40 shadow-sm',
-    hover: 'hover:border-rose-500/50 hover:text-rose-700 dark:hover:text-rose-400',
-    ring: 'focus:ring-rose-500',
-  },
-  {
-    id: 'challenge',
-    label: 'Survivor/Killer',
-    icon: Puzzle,
-    active: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/40 shadow-sm',
-    hover: 'hover:border-cyan-500/50 hover:text-cyan-700 dark:hover:text-cyan-400',
-    ring: 'focus:ring-cyan-500',
-  },
-];
-
-export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
+export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
   const pathname = usePathname();
 
+  const tabs = [
+    {
+      id: 'survivor',
+      label: dict?.filters?.survivor || 'Survivor',
+      icon: Shield,
+      active: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/40 shadow-sm',
+      hover: 'hover:border-emerald-500/50 hover:text-emerald-700 dark:hover:text-emerald-400',
+      ring: 'focus:ring-emerald-500',
+    },
+    {
+      id: 'killer',
+      label: dict?.filters?.killer || 'Killer',
+      icon: Skull,
+      active: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/40 shadow-sm',
+      hover: 'hover:border-rose-500/50 hover:text-rose-700 dark:hover:text-rose-400',
+      ring: 'focus:ring-rose-500',
+    },
+    {
+      id: 'challenge',
+      label: `${dict?.filters?.survivor || 'Survivor'}/${dict?.filters?.killer || 'Killer'}`,
+      icon: Puzzle,
+      active: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/40 shadow-sm',
+      hover: 'hover:border-cyan-500/50 hover:text-cyan-700 dark:hover:text-cyan-400',
+      ring: 'focus:ring-cyan-500',
+    },
+  ];
+
   return (
-    <nav aria-label="Streak Role Tabs" className="flex items-center gap-2">
-      {TABS.map((tab) => {
+    <nav aria-label={dict?.streaks?.streakRoleTabs || 'Streak Role Tabs'} className="flex items-center gap-2">
+      {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = pathname?.startsWith(`/${locale}/streaks/${tab.id}`) ?? false;
 

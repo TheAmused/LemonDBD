@@ -637,10 +637,10 @@ export const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
               onClick={onResetWheels}
               disabled={isSpinning}
               className="flex items-center gap-2 px-6 py-5 rounded-2xl bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/80 text-rose-700 dark:text-rose-300 font-extrabold text-xs border border-rose-300 dark:border-rose-500/40 shadow-sm transition-all active:scale-95 cursor-pointer disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
-              title="Reset wheel, clear active loadout slots, and reset slot focus"
+              title={dict?.generator?.resetAllLabel || 'Reset wheel, clear active loadout slots, and reset slot focus'}
             >
               <RotateCcw className="h-4.5 w-4.5" />
-              <span>Reset Wheel & Slots</span>
+              <span>{dict?.generator?.resetAllLabel || 'Reset Wheel & Slots'}</span>
             </button>
           )}
         </div>

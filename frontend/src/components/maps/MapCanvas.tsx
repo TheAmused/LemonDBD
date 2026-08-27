@@ -28,6 +28,8 @@ export interface MapCanvasProps {
   onTouchCancel?: (e: React.TouchEvent<HTMLDivElement>) => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
   children?: React.ReactNode;
+  dict?: any;
+  panHint?: string;
 }
 
 export const MapCanvas: React.FC<MapCanvasProps> = ({
@@ -50,6 +52,8 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
   onTouchCancel,
   onError,
   children,
+  dict,
+  panHint,
 }) => {
   const [imageError, setImageError] = useState<boolean>(false);
 
@@ -136,7 +140,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
           data-testid="map-canvas-pan-hint"
         >
           <Move className="h-3 w-3 text-amber-500" />
-          <span>Drag to pan • Scroll to zoom</span>
+          <span>{panHint || dict?.maps?.dragPanScrollZoom || 'Drag to pan • Scroll to zoom'}</span>
         </div>
       )}
 

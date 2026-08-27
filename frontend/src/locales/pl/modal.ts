@@ -6,5 +6,16 @@ export default {
   "slugCopied": "Skopiowano do Schowka!",
   "perkDescription": "Opis Perka",
   "generalPerk": "Perk Ogólny",
-  "alias": "Alias"
+  "alias": "Alias",
+  "clickToInspectPerk": "Kliknij, aby zbadać perk",
+  "clickToInspect": "Kliknij, aby sprawdzić pełną mechanikę",
+  "killerPerk": "Perk Zabójcy",
+  "survivorPerk": "Perk Ocalałego",
+  "unownedPerk": "Nieposiadany perk",
+  "equipment": "Wyposażenie",
+  "clickOutsideToClose": "Esc lub kliknij poza oknem, aby zamknąć",
+  "temporarilyDisabled": "Tymczasowo wyłączone",
+  "whyDisabled": "Dlaczego {item} jest wyłączone?",
+  "wasDisabledTemporarily": "{item} zostało tymczasowo wyłączone.",
+  "reasonLabel": "Powód"
 };

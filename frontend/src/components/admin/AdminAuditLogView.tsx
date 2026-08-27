@@ -20,7 +20,7 @@ const ACTION_COLORS: Record<string, string> = {
   user_deleted: 'text-rose-400',
 };
 
-export const AdminAuditLogView: React.FC = () => {
+export const AdminAuditLogView: React.FC<{ dict?: any }> = ({ dict }) => {
   const [logs, setLogs] = useState<AdminAuditLogEntry[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -69,25 +69,25 @@ export const AdminAuditLogView: React.FC = () => {
       <div className="flex items-center justify-between mb-4">
         <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-300">
           <ScrollText className="h-4 w-4 text-cyan-400" />
-          Admin Activity Log
+          {dict?.admin?.auditLog || 'Admin Activity Log'}
         </h3>
         <span className="text-[11px] text-slate-500">{total} total actions</span>
       </div>
 
       {loading ? (
-        <p className="text-xs text-slate-500 py-8 text-center">Loading audit log...</p>
+        <p className="text-xs text-slate-500 py-8 text-center">{dict?.admin?.loadingAuditLog || 'Loading audit log...'}</p>
       ) : logs.length === 0 ? (
-        <p className="text-xs text-slate-500 py-8 text-center">No admin actions logged yet.</p>
+        <p className="text-xs text-slate-500 py-8 text-center">{dict?.admin?.noAuditLogs || 'No admin actions logged yet.'}</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
               <tr className="text-left font-mono uppercase tracking-wider text-slate-500 border-b border-slate-800">
-                <th className="py-2 pr-3 font-semibold">Admin</th>
-                <th className="py-2 pr-3 font-semibold">Action</th>
-                <th className="py-2 pr-3 font-semibold">Target</th>
-                <th className="py-2 pr-3 font-semibold">Reason</th>
-                <th className="py-2 font-semibold text-right">When</th>
+                <th className="py-2 pr-3 font-semibold">{dict?.admin?.thAdmin || 'Admin'}</th>
+                <th className="py-2 pr-3 font-semibold">{dict?.admin?.thAction || 'Action'}</th>
+                <th className="py-2 pr-3 font-semibold">{dict?.admin?.thTarget || 'Target'}</th>
+                <th className="py-2 pr-3 font-semibold">{dict?.admin?.thReason || 'Reason'}</th>
+                <th className="py-2 font-semibold text-right">{dict?.admin?.thWhen || 'When'}</th>
               </tr>
             </thead>
             <tbody>

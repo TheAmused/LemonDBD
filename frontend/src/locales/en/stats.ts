@@ -4,5 +4,11 @@ export default {
   "characters": "Characters",
   "survivors": "Survivors",
   "killers": "Killers",
-  "ratio": "Role Distribution"
+  "ratio": "Role Distribution",
+  "totalXpClaimed": "Total XP Claimed",
+  "completed": "Completed",
+  "streak": "Streak",
+  "win": "beaten",
+  "vaultTotal": "Vault Total",
+  "ownedPerks": "Owned Perks"
 };

@@ -288,7 +288,9 @@ function PerksContent() {
                   <div className="flex items-center gap-2.5 rounded-2xl bg-slate-950/80 px-4 py-2.5 shadow-inner border border-slate-800">
                     <Flame className="h-4 w-4 text-cyan-400" />
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-slate-500">Vault Total</span>
+                      <span className="text-[10px] font-bold uppercase text-slate-500">
+                        {dict?.stats?.vaultTotal || 'Vault Total'}
+                      </span>
                       <span className="text-xs font-black text-slate-100">{totalVaultPerks}</span>
                     </div>
                   </div>
@@ -296,7 +298,9 @@ function PerksContent() {
                   <div className="flex items-center gap-2.5 rounded-2xl bg-emerald-950/30 px-4 py-2.5 shadow-inner border border-emerald-500/20">
                     <Shield className="h-4 w-4 text-emerald-400" />
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-emerald-400/80">Survivor</span>
+                      <span className="text-[10px] font-bold uppercase text-emerald-400/80">
+                        {dict?.generator?.survivor || 'Survivor'}
+                      </span>
                       <span className="text-xs font-black text-emerald-300">{survivorCount}</span>
                     </div>
                   </div>
@@ -304,7 +308,9 @@ function PerksContent() {
                   <div className="flex items-center gap-2.5 rounded-2xl bg-rose-950/30 px-4 py-2.5 shadow-inner border border-rose-500/20">
                     <Skull className="h-4 w-4 text-rose-400" />
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-rose-400/80">Killer</span>
+                      <span className="text-[10px] font-bold uppercase text-rose-400/80">
+                        {dict?.generator?.killer || 'Killer'}
+                      </span>
                       <span className="text-xs font-black text-rose-300">{killerCount}</span>
                     </div>
                   </div>
@@ -313,7 +319,9 @@ function PerksContent() {
                     <div className="flex items-center gap-2.5 rounded-2xl bg-cyan-950/30 px-4 py-2.5 shadow-inner border border-cyan-500/20">
                       <CheckCircle2 className="h-4 w-4 text-cyan-400" />
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-bold uppercase text-cyan-400/80">Owned Perks</span>
+                        <span className="text-[10px] font-bold uppercase text-cyan-400/80">
+                          {dict?.stats?.ownedPerks || 'Owned Perks'}
+                        </span>
                         <span className="text-xs font-black text-cyan-300">{ownedPerksCount}</span>
                       </div>
                     </div>
@@ -369,7 +377,7 @@ function PerksContent() {
             {loading ? (
               <div
                 aria-busy="true"
-                aria-label="Loading perks"
+                aria-label={dict?.characterDetail?.loading || 'Loading perks'}
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-10 justify-items-center w-full py-12"
               >
                 {Array.from({ length: 15 }).map((_, i) => (
@@ -401,7 +409,7 @@ function PerksContent() {
                 </button>
               </section>
             ) : (
-              <section aria-label="Perks Grid" className="w-full">
+              <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="w-full">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 lg:gap-8 justify-items-center w-full py-6">
                   {perks.map((perk, idx) => (
                     <PerkCard

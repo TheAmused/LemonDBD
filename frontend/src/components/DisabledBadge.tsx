@@ -10,19 +10,25 @@ interface DisabledBadgeProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   /** Tailwind position classes, e.g. "top-2 left-2". Defaults to top-right. */
   position?: string;
+  ariaLabel?: string;
 }
 
 /** Corner badge marking a perk/killer as admin-disabled. Click opens a modal
  * with the reason (owned by the parent) -- deliberately never grayscaled
  * along with the disabled artwork it sits on. */
-export const DisabledBadge: React.FC<DisabledBadgeProps> = ({ label, onClick, position = 'top-1 right-1' }) => (
+export const DisabledBadge: React.FC<DisabledBadgeProps> = ({
+  label,
+  onClick,
+  position = 'top-1 right-1',
+  ariaLabel,
+}) => (
   <button
     type="button"
     onClick={(e) => {
       e.stopPropagation();
       onClick(e);
     }}
-    aria-label={`Why is ${label} disabled?`}
+    aria-label={ariaLabel || `Why is ${label} disabled?`}
     className={`absolute ${position} z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/90 shadow-md border border-amber-500/50 cursor-pointer hover:bg-slate-900 transition-colors`}
   >
     <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />

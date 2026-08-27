@@ -112,7 +112,9 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500 border border-orange-500/20">
                 <Swords className="h-4 w-4" />
               </span>
-              <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">Challenges</h1>
+              <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">
+                {dict?.sidebar?.challenges || 'Challenges'}
+              </h1>
             </header>
 
             <div className="mb-6">
@@ -122,7 +124,9 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
         )}
 
         {authLoading ? (
-          <p className="py-10 text-center text-xs text-slate-500">Loading…</p>
+          <p className="py-10 text-center text-xs text-slate-500">
+            {dict?.streaks?.loadingStreak || 'Loading…'}
+          </p>
         ) : isAuthenticated && user?.is_verified ? (
           children
         ) : isAuthenticated ? (

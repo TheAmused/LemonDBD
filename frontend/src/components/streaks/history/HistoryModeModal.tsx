@@ -9,6 +9,7 @@ export interface HistoryModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectMode: (mode: HistoryMode) => void;
+  dict?: any;
 }
 
 const TILES: { mode: HistoryMode; label: string; desc: string; icon: React.ElementType }[] = [
@@ -16,7 +17,7 @@ const TILES: { mode: HistoryMode; label: string; desc: string; icon: React.Eleme
   { mode: 'hell', label: 'Hell', desc: 'No checkpoints. One loss resets everything.', icon: Skull },
 ];
 
-export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({ isOpen, onClose, onSelectMode }) => {
+export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({ isOpen, onClose, onSelectMode, dict }) => {
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -38,7 +39,9 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({ isOpen, onCl
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-black text-slate-900 dark:text-white">Choose a mode</h2>
+          <h2 className="text-xl font-black text-slate-900 dark:text-white">
+            {dict?.streaks?.chooseMode || 'Choose a mode'}
+          </h2>
           <button
             onClick={onClose}
             className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"

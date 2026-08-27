@@ -2,10 +2,13 @@
 // frontend/src/components/sidebar/BugReportModal.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useParams, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAltcha } from '@/hooks/useAltcha';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
+import { getDictionary } from '@/i18n/get-dictionary';
+import { i18n, type Locale } from '@/i18n/config';
 import {
   Bug,
   X,
@@ -23,9 +26,11 @@ import {
 export interface BugReportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  dict?: any;
+  t?: Record<string, string>;
 }
 
-const BUG_CATEGORIES = [
+const DEFAULT_BUG_CATEGORIES = [
   'Perks & Teachable Data',
   'Characters & Killer Powers',
   'Map Explorer & Callouts',
@@ -38,8 +43,39 @@ const BUG_CATEGORIES = [
 export const BugReportModal: React.FC<BugReportModalProps> = ({
   isOpen,
   onClose,
+  dict: propDict,
+  t: propT,
 }) => {
   const { user, isAuthenticated } = useAuth();
+  const params = useParams();
+  const pathname = usePathname() || '';
+
+  const routeLocale = (params?.locale as string) || pathname.split('/')[1];
+  const currentLocale = (
+    i18n.locales.includes(routeLocale as Locale) ? routeLocale : i18n.defaultLocale
+  ) as Locale;
+
+  const [loadedDict, setLoadedDict] = useState<any>(null);
+
+  useEffect(() => {
+    if (!propDict && !propT) {
+      getDictionary(currentLocale).then(setLoadedDict);
+    }
+  }, [currentLocale, propDict, propT]);
+
+  const t: Record<string, string> =
+    propT || propDict?.sidebar || loadedDict?.sidebar || {};
+
+  const bugCategories = [
+    { key: 'Perks & Teachable Data', label: t.bugCategoryPerks || 'Perks & Teachable Data' },
+    { key: 'Characters & Killer Powers', label: t.bugCategoryCharacters || 'Characters & Killer Powers' },
+    { key: 'Map Explorer & Callouts', label: t.bugCategoryMaps || 'Map Explorer & Callouts' },
+    { key: 'Perk Randomizer & Challenges', label: t.bugCategoryChallenges || 'Perk Randomizer & Challenges' },
+    { key: 'Draft Room & SWF Planner', label: t.bugCategoryDraftSwf || 'Draft Room & SWF Planner' },
+    { key: 'UI, Design & Translations', label: t.bugCategoryUiTranslations || 'UI, Design & Translations' },
+    { key: 'Other Gameplay Glitch', label: t.bugCategoryOther || 'Other Gameplay Glitch' },
+  ];
+
   const {
     altchaPayload,
     isVerifying: isAltchaVerifying,
@@ -53,7 +89,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState(BUG_CATEGORIES[0]);
+  const [category, setCategory] = useState(DEFAULT_BUG_CATEGORIES[0]);
   const [message, setMessage] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -69,7 +105,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
       const timer = setTimeout(() => {
         setIsRendered(false);
         setTitle('');
-        setCategory(BUG_CATEGORIES[0]);
+        setCategory(DEFAULT_BUG_CATEGORIES[0]);
         setMessage('');
         setGuestEmail('');
         setImages([]);
@@ -131,15 +167,15 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
     setErrorMsg(null);
 
     if (!title.trim()) {
-      setErrorMsg('Please provide a descriptive title.');
+      setErrorMsg(t.bugTitlePlaceholder || 'Please provide a descriptive title.');
       return;
     }
     if (!message.trim()) {
-      setErrorMsg('Please describe the bug or issue in detail.');
+      setErrorMsg(t.bugDescriptionPlaceholder || 'Please describe the bug or issue in detail.');
       return;
     }
     if (!isAuthenticated && !guestEmail.trim()) {
-      setErrorMsg('Please enter your email so we can follow up with you.');
+      setErrorMsg(t.bugGuestEmailLabel || 'Please enter your email so we can follow up with you.');
       return;
     }
 
@@ -187,13 +223,13 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
       }
 
       if (!res.ok) {
-        setErrorMsg(data.error || `Server returned error (${res.status}).`);
+        setErrorMsg(data.error || t.bugErrorMessage || `Server returned error (${res.status}).`);
       } else {
         setIsSuccess(true);
       }
     } catch (err: unknown) {
       const msg =
-        err instanceof Error ? err.message : 'Network error occurred.';
+        err instanceof Error ? err.message : t.bugErrorMessage || 'Network error occurred.';
       setErrorMsg(msg);
     } finally {
       setIsSubmitting(false);
@@ -229,8 +265,9 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
       `}</style>
 
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+        className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto transition-opacity duration-300 ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="bug-modal-title"
@@ -257,7 +294,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            aria-label="Close modal"
+            aria-label={t.bugCloseButton || 'Close'}
             className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-rose-950/40 hover:text-rose-400 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
@@ -270,11 +307,8 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
               </div>
               <div className="space-y-1.5">
                 <h3 className="text-xl font-black tracking-wide font-mono text-slate-100">
-                  Bug Report Dispatched
+                  {t.bugSuccessMessage || 'Bug report submitted successfully! Thank you for helping improve LemonDBD.'}
                 </h3>
-                <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                  The Entity has relayed your report to the developer Discord server. You can track updates under your Profile subtab!
-                </p>
               </div>
               <div className="pt-3">
                 <button
@@ -282,7 +316,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   onClick={onClose}
                   className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-emerald-950/50 transition-all cursor-pointer"
                 >
-                  Close & Return
+                  {t.bugCloseButton || 'Close'}
                 </button>
               </div>
             </div>
@@ -301,11 +335,11 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     id="bug-modal-title"
                     className="text-lg font-black tracking-wider font-mono text-slate-100 flex items-center gap-2"
                   >
-                    <span>Report a Glitch or Bug</span>
+                    <span>{t.bugReportModalTitle || 'Report an Issue / Bug'}</span>
                     <Flame className="h-4 w-4 text-rose-500" />
                   </h2>
                   <p className="text-xs text-slate-400">
-                    Transmits directly to developer Discord webhook
+                    {t.bugReportModalSubtitle || 'Help improve LemonDBD with bug reports or feedback'}
                   </p>
                 </div>
               </div>
@@ -326,7 +360,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                       </div>
                       <div>
                         <p className="font-bold text-slate-200">
-                          Reporting as {user.username}
+                          {t.bugLoggedInAs || 'Logged in as'} {user.username}
                         </p>
                         <p className="text-[10px] text-slate-500">
                           {user.email}
@@ -342,14 +376,14 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
                       <Mail className="h-3.5 w-3.5 text-amber-500" />
-                      Your Email Address <span className="text-rose-500">*</span>
+                      {t.bugGuestEmailLabel || 'Email (Optional, for resolution updates)'} <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="email"
                       required
                       value={guestEmail}
                       onChange={(e) => setGuestEmail(e.target.value)}
-                      placeholder="e.g. player@domain.com"
+                      placeholder={t.bugGuestEmailPlaceholder || 'you@example.com'}
                       className="w-full rounded-xl border border-slate-800 bg-slate-900/80 px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 transition-all shadow-inner"
                     />
                   </div>
@@ -358,30 +392,30 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-2">
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                      Issue Title <span className="text-rose-500">*</span>
+                      {t.bugTitleLabel || 'Issue Title'} <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="text"
                       required
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="e.g. Adrenaline stats incorrect"
+                      placeholder={t.bugTitlePlaceholder || 'e.g., Perk description typo, wrong power cooldown...'}
                       className="w-full rounded-xl border border-slate-800 bg-slate-900/80 px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 transition-all shadow-inner"
                     />
                   </div>
 
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                      Category
+                      {t.bugCategoryLabel || 'Category'}
                     </label>
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
                       className="w-full rounded-xl border border-slate-800 bg-slate-900/80 px-3 py-2.5 text-xs text-slate-200 focus:border-rose-500 focus:outline-none transition-all cursor-pointer shadow-inner"
                     >
-                      {BUG_CATEGORIES.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
+                      {bugCategories.map((cat) => (
+                        <option key={cat.key} value={cat.key}>
+                          {cat.label}
                         </option>
                       ))}
                     </select>
@@ -390,7 +424,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
 
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                    Detailed Description & Steps{' '}
+                    {t.bugDescriptionLabel || 'Detailed Description'}{' '}
                     <span className="text-rose-500">*</span>
                   </label>
                   <textarea
@@ -398,7 +432,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Describe what happened and how to trigger it..."
+                    placeholder={t.bugDescriptionPlaceholder || 'Describe the bug, steps to reproduce, or expected behavior...'}
                     className="w-full rounded-xl border border-slate-800 bg-slate-900/80 p-3.5 text-xs text-slate-100 placeholder-slate-500 focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 transition-all shadow-inner resize-y"
                   />
                 </div>
@@ -407,10 +441,10 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                       <ImageIcon className="h-3.5 w-3.5 text-rose-500" />
-                      Screenshots / Evidence (Max 3)
+                      {t.bugScreenshotsLabel || 'Attach Screenshots (Max 3, 2MB each)'}
                     </label>
                     <span className="text-[10px] text-slate-500">
-                      {images.length}/3 attached
+                      {images.length}/3
                     </span>
                   </div>
 
@@ -442,7 +476,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                         className="flex h-16 w-28 flex-col items-center justify-center rounded-xl border border-dashed border-slate-700 bg-slate-900/50 hover:bg-rose-950/20 hover:border-rose-500/50 text-slate-400 hover:text-rose-400 transition-all cursor-pointer text-[10px]"
                       >
                         <Upload className="h-4 w-4 mb-0.5" />
-                        <span>Attach Photo</span>
+                        <span>{t.bugUploadImage || 'Upload Image'}</span>
                       </button>
                     )}
 
@@ -473,7 +507,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     disabled={isSubmitting}
                     className="px-4 py-2 rounded-xl border border-slate-800 bg-slate-900 text-xs font-semibold text-slate-300 hover:bg-slate-800 transition-colors cursor-pointer"
                   >
-                    Cancel
+                    {t.bugCloseButton || 'Close'}
                   </button>
 
                   <button
@@ -484,12 +518,12 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     {isSubmitting ? (
                       <>
                         <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                        <span>Transmitting...</span>
+                        <span>{t.bugSubmitting || 'Submitting...'}</span>
                       </>
                     ) : (
                       <>
                         <Send className="h-3.5 w-3.5" />
-                        <span>Transmit to Discord</span>
+                        <span>{t.bugSubmitButton || 'Submit Bug Report'}</span>
                       </>
                     )}
                   </button>

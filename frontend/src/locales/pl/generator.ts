@@ -39,5 +39,9 @@ export default {
   "spinOrRollPrompt": "Zakręć kołem lub kliknij losuj, aby dobrać perk",
   "cursedBlindness": "Przeklęta Ślepota",
   "clickToReveal": "Kliknij, aby odsłonić",
-  "rollCompleteLoadout": "Losuj pełny zestaw 4 perków"
+  "rollCompleteLoadout": "Losuj pełny zestaw 4 perków",
+  "selectRole": "Wybierz Rolę",
+  "generatorMode": "Tryb Generatora",
+  "resetAllTooltip": "Zresetuj koła, sloty zestawu i pamięć",
+  "clearSlotTooltip": "Wyczyść slot"
 };

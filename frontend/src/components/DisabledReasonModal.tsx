@@ -9,12 +9,26 @@ interface DisabledReasonModalProps {
   onClose: () => void;
   label: string;
   reason?: string | null;
+  dict?: any;
+  t?: Record<string, string>;
 }
 
 /** Shared modal shown when clicking a disabled-badge or a disabled challenge
  * panel: explains what's disabled and, if the admin gave one, why. */
-export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({ isOpen, onClose, label, reason }) => {
+export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({
+  isOpen,
+  onClose,
+  label,
+  reason,
+  dict,
+  t: propT,
+}) => {
   if (!isOpen) return null;
+
+  const t: Record<string, string> = propT || dict?.modal || {};
+
+  const wasDisabledTemplate = t.wasDisabledTemporarily || '{item} was disabled temporarily.';
+  const wasDisabledText = wasDisabledTemplate.replace('{item}', label);
 
   return (
     <div
@@ -33,22 +47,24 @@ export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({ isOpen
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-400">
             <AlertTriangle className="h-5 w-5" />
           </div>
-          <h2 className="text-sm font-black text-slate-100">Temporarily disabled</h2>
+          <h2 className="text-sm font-black text-slate-100">
+            {t.temporarilyDisabled || 'Temporarily disabled'}
+          </h2>
           <button
             type="button"
             onClick={onClose}
             className="ml-auto p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
-            aria-label="Close"
+            aria-label={t.close || 'Close'}
           >
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="p-5 text-sm text-slate-300">
           <p>
-            {label} was disabled temporarily.
+            {wasDisabledText}
             {reason && (
               <>
-                {' '}Reason: <span className="font-semibold text-slate-100">{reason}</span>
+                {' '}{t.reasonLabel || 'Reason'}: <span className="font-semibold text-slate-100">{reason}</span>
               </>
             )}
           </p>

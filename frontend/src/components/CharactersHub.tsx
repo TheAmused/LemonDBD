@@ -333,12 +333,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       </header>
 
       <section
-        aria-label="Character Filter Navigation"
+        aria-label={dict?.characterDetail?.characterOverview || 'Character Filter Navigation'}
         className="flex flex-col sm:flex-row gap-4 justify-between items-center"
       >
         <div
           role="group"
-          aria-label="Filter characters by role"
+          aria-label={dict?.filters?.category || 'Filter characters by role'}
           className="flex items-center p-1 bg-slate-100/90 border border-slate-200 dark:bg-slate-900/90 dark:border-slate-800 rounded-2xl w-full sm:w-auto shadow-inner"
         >
           <button
@@ -398,8 +398,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
-            placeholder="Search by name..."
-            aria-label="Search characters"
+            placeholder={dict?.filters?.filterByCharacter || 'Search by name...'}
+            aria-label={dict?.filters?.filterByCharacter || 'Search characters'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 rounded-2xl border border-slate-200 bg-slate-100/90 text-xs font-semibold text-slate-900 placeholder-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
@@ -408,7 +408,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              aria-label="Clear search query"
+              aria-label={dict?.filters?.clearSearch || 'Clear search query'}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
               <X className="h-3.5 w-3.5" />
@@ -420,7 +420,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       {loading ? (
         <div
           aria-busy="true"
-          aria-label="Loading character list"
+          aria-label={dict?.characterDetail?.loading || 'Loading character list'}
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
         >
           {Array.from({ length: 12 }).map((_, i) => (
@@ -433,14 +433,16 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       ) : filteredCharacters.length === 0 ? (
         <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center bg-white/60 dark:bg-transparent">
           <User className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-300">No Characters Found</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-300">
+            {dict?.empty?.title || 'No Characters Found'}
+          </h2>
           <p className="mt-1 text-xs text-slate-500">
             No characters match your current filter or search query.
           </p>
         </div>
       ) : (
         <section
-          aria-label="Characters Roster Grid"
+          aria-label={dict?.characterDetail?.characterOverview || 'Characters Roster Grid'}
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
         >
           {filteredCharacters.map((char, idx) => {
@@ -486,7 +488,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 {ownershipMode && !isOwned && (
                   <div
                     className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/80 border border-amber-500/40 text-amber-400 backdrop-blur-md"
-                    title="Character Locked"
+                    title={dict?.modal?.unownedPerk || 'Character Locked'}
                   >
                     <Lock className="h-3.5 w-3.5" />
                   </div>
@@ -494,7 +496,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 {ownershipMode && isOwned && (
                   <div
                     className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 backdrop-blur-md"
-                    title="Character Owned"
+                    title={dict?.filters?.ownedOnly || 'Character Owned'}
                   >
                     <Check className="h-3.5 w-3.5" />
                   </div>
@@ -577,7 +579,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 type="button"
                 onClick={() => setPerksPopupCharacter(null)}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
-                aria-label="Close perks popup"
+                aria-label={dict?.modal?.close || 'Close perks popup'}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -687,7 +689,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-3 rounded-2xl bg-amber-600 px-5 py-3 text-xs font-bold text-white shadow-2xl shadow-amber-900/50 ring-2 ring-amber-400/50 animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <MailWarning className="h-4 w-4 shrink-0" />
-          <span>Verify your email to manage your character collection.</span>
+          <span>{dict?.user?.verifyEmailRequired || 'Verify your email to manage your character collection.'}</span>
           <button
             type="button"
             onClick={() => {

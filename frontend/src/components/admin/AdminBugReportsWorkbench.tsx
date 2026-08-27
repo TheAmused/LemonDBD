@@ -60,6 +60,7 @@ interface AdminBugReportsWorkbenchProps {
   onNoteChange: (id: number, text: string) => void;
   onUpdateBug: (id: number, newStatus?: string) => void;
   onDeleteBug: (id: number) => void;
+  dict?: any;
 }
 
 export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> = ({
@@ -79,6 +80,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
   onNoteChange,
   onUpdateBug,
   onDeleteBug,
+  dict,
 }) => {
   const selectedBug = bugReports.find((r) => r.id === selectedBugId) || null;
 
@@ -162,7 +164,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 type="text"
                 value={bugSearch}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder="Search tickets / reporter..."
+                placeholder={dict?.admin?.searchTicketsPlaceholder || 'Search tickets / reporter...'}
                 className="w-full rounded-xl border border-slate-700 bg-slate-950/80 py-1.5 pl-9 pr-3 text-xs text-slate-100 placeholder-slate-500 focus:border-rose-500 focus:outline-none shadow-inner"
               />
             </div>
@@ -170,18 +172,18 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1 text-[11px] font-bold text-slate-400">
                 <Filter className="h-3 w-3" />
-                <span>Filter:</span>
+                <span>{dict?.admin?.filterLabel || 'Filter:'}</span>
               </div>
               <select
                 value={bugStatusFilter}
                 onChange={(e) => onStatusFilterChange(e.target.value)}
                 className="rounded-lg border border-slate-700 bg-slate-950/80 py-1 px-2.5 text-xs text-slate-200 focus:border-rose-500 focus:outline-none cursor-pointer [&>option]:bg-slate-900 [&>option]:text-slate-100"
               >
-                <option value="all">All Statuses</option>
-                <option value="pending">Pending Review</option>
-                <option value="in_progress">In Progress</option>
-                <option value="resolved">Resolved</option>
-                <option value="rejected">Rejected / Closed</option>
+                <option value="all">{dict?.admin?.statusAll || 'All Statuses'}</option>
+                <option value="pending">{dict?.admin?.statusPending || 'Pending Review'}</option>
+                <option value="in_progress">{dict?.admin?.statusInProgress || 'In Progress'}</option>
+                <option value="resolved">{dict?.admin?.statusResolved || 'Resolved'}</option>
+                <option value="rejected">{dict?.admin?.statusRejected || 'Rejected / Closed'}</option>
               </select>
             </div>
           </div>
@@ -311,16 +313,16 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     onChange={(e) => onUpdateBug(selectedBug.id, e.target.value)}
                     className="rounded-xl px-3 py-1.5 text-xs font-black uppercase tracking-wider border border-slate-700 bg-slate-950 text-slate-100 focus:border-rose-500 focus:outline-none cursor-pointer shadow-sm [&>option]:bg-slate-900 [&>option]:text-slate-100"
                   >
-                    <option value="pending">Pending Review</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="resolved">Resolved</option>
-                    <option value="rejected">Rejected / Closed</option>
+                    <option value="pending">{dict?.admin?.statusPending || 'Pending Review'}</option>
+                    <option value="in_progress">{dict?.admin?.statusInProgress || 'In Progress'}</option>
+                    <option value="resolved">{dict?.admin?.statusResolved || 'Resolved'}</option>
+                    <option value="rejected">{dict?.admin?.statusRejected || 'Rejected / Closed'}</option>
                   </select>
 
                   <button
                     type="button"
                     onClick={() => onDeleteBug(selectedBug.id)}
-                    title="Delete Ticket"
+                    title={dict?.admin?.deleteBugReportTitle || 'Delete Ticket'}
                     className="p-2 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-950/40 transition-colors cursor-pointer"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -376,7 +378,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     type="text"
                     value={editingNotes[selectedBug.id] ?? ''}
                     onChange={(e) => onNoteChange(selectedBug.id, e.target.value)}
-                    placeholder="e.g. Fixed in patch v8.1 or investigating live logs..."
+                    placeholder={dict?.admin?.reasonPlaceholder || 'e.g. Fixed in patch v8.1 or investigating live logs...'}
                     className="flex-1 rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none shadow-inner"
                   />
                   <button
@@ -385,7 +387,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 px-4 py-2 text-xs font-bold shadow-md shadow-amber-950/30 transition-all cursor-pointer font-sans"
                   >
                     <Save className="h-3.5 w-3.5" />
-                    <span>Save Note</span>
+                    <span>{dict?.user?.saveChanges || 'Save Note'}</span>
                   </button>
                 </div>
               </div>
@@ -393,7 +395,9 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           ) : (
             <div className="rounded-3xl border border-dashed border-slate-800 p-12 text-center text-slate-500">
               <Eye className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-xs font-medium">Select a ticket from the left to view details</p>
+              <p className="text-xs font-medium">
+                {dict?.user?.noReportsSubtitle || 'Select a ticket from the left to view details'}
+              </p>
             </div>
           )}
         </div>

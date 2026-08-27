@@ -176,7 +176,9 @@ export default function QuestsPage() {
                 <div className="flex items-center gap-2.5 rounded-2xl border border-amber-500/30 bg-amber-50 dark:bg-amber-950/30 px-4 py-2.5 shadow-sm">
                   <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400 animate-pulse" />
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase text-amber-700 dark:text-amber-500/80">Total XP</span>
+                    <span className="text-[10px] font-bold uppercase text-amber-700 dark:text-amber-500/80">
+                      {dict?.stats?.totalXpEarned || 'Total XP'}
+                    </span>
                     <span className="text-xs font-black text-amber-700 dark:text-amber-300 font-mono">+{totalXpEarned} XP</span>
                   </div>
                 </div>
@@ -184,7 +186,9 @@ export default function QuestsPage() {
                 <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-2.5 shadow-sm">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-500/80">Completed</span>
+                    <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-500/80">
+                      {dict?.stats?.completed || 'Completed'}
+                    </span>
                     <span className="text-xs font-black text-emerald-700 dark:text-emerald-300 font-mono">
                       {totalQuestsCompleted} / {quests.length}
                     </span>
@@ -250,7 +254,9 @@ export default function QuestsPage() {
           ) : filteredQuests.length === 0 ? (
             <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800/80 bg-white/40 dark:bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm">
               <Scroll className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
-              <h3 className="text-lg font-extrabold text-slate-800 dark:text-slate-200">No Quests Found</h3>
+              <h3 className="text-lg font-extrabold text-slate-800 dark:text-slate-200">
+                {dict?.empty?.title || 'No Quests Found'}
+              </h3>
               <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
                 No quests available in this category right now. Check back soon for new trial objectives!
               </p>
@@ -290,7 +296,7 @@ export default function QuestsPage() {
                       {/* Progress Bar */}
                       <div className="space-y-1.5 max-w-xl">
                         <div className="flex justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 font-mono">
-                          <span>Objective Progress</span>
+                          <span>{dict?.stats?.questProgress || 'Objective Progress'}</span>
                           <span>
                             {quest.progress} / {quest.goal} ({pct}%)
                           </span>
@@ -322,7 +328,7 @@ export default function QuestsPage() {
                       {quest.is_completed ? (
                         <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl">
                           <CheckCircle2 className="h-4 w-4" />
-                          <span>Claimed</span>
+                          <span>{dict?.stats?.claimed || 'Claimed'}</span>
                         </div>
                       ) : (
                         <button

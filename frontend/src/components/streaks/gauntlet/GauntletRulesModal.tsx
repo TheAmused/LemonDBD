@@ -9,7 +9,8 @@ import { RulesModalShell } from '../RulesModalShell';
 export interface GauntletRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  role: Role;
+  role: 'killer' | 'survivor';
+  dict?: any;
 }
 
 const SURVIVOR_TIERS = [
@@ -48,7 +49,7 @@ const SURVIVOR_CLARIFICATIONS: { label: string; text: React.ReactNode }[] = [
   { label: 'Killer disconnects', text: 'if they rage quit after a generator is done, it counts as an escape. If they left from a bug or server issue, it does not count. No reroll, replay the same character.' },
 ];
 
-export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, onClose, role }) => {
+export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, onClose, role, dict }) => {
   const tiers = role === 'killer' ? KILLER_TIERS : SURVIVOR_TIERS;
 
   return (
@@ -73,18 +74,18 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
         {role === 'killer' && (
           <>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              You only ever run <strong>your own teachable perks</strong>, never anyone else&apos;s. You
+              You only ever run <strong>{dict?.streaks?.yourOwnTeachablePerks || 'your own teachable perks'}</strong>, never anyone else&apos;s. You
               start with all 3, and lose one at every tier. Once you are below 3, you choose which ones
               to keep.
             </p>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              A trial only counts as won on <strong>3 kills or more</strong>. Anything less is a loss.
+              A trial only counts as won on <strong>{dict?.streaks?.threeKillsOrMore || '3 kills or more'}</strong>. Anything less is a loss.
             </p>
           </>
         )}
         {role === 'survivor' && (
           <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-            A trial only counts as won if you <strong>escape</strong>, through the exit gates or the
+            A trial only counts as won if you <strong>{dict?.streaks?.escape || 'escape'}</strong>, through the exit gates or the
             hatch. Anything else is a loss.
           </p>
         )}
@@ -94,7 +95,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             : 'The roster stops at the 52 survivors, up through Kwon Tae-young.'}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          Every 10 wins banks a <strong>checkpoint</strong>. Lose after that and you only fall back to
+          Every 10 wins banks a <strong>{dict?.streaks?.checkpoint || 'checkpoint'}</strong>. Lose after that and you only fall back to
           your last checkpoint, not all the way to zero, though every {role} cleared since then goes
           back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress
           you keep happen on the very same win.

@@ -350,7 +350,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           type="button"
           onClick={() => commitSelection()}
           className="absolute top-4 right-4 sm:top-6 sm:right-6 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-zinc-900/90 border border-zinc-700/70 text-zinc-400 hover:text-white hover:border-pink-500 hover:bg-pink-950/50 hover:shadow-[0_0_20px_rgba(255,0,85,0.4)] transition-all cursor-pointer z-50"
-          aria-label="Close and choose middle roster"
+          aria-label={dict?.modal?.close || 'Close and choose middle roster'}
         >
           <X className="h-5 w-5 sm:h-6 sm:w-6" />
         </button>
@@ -375,7 +375,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           {/* Navigation Chevron Left */}
           <button
             type="button"
-            aria-label="Previous Roster"
+            aria-label={dict?.pagination?.previous || 'Previous Roster'}
             onPointerDown={(e) => e.stopPropagation()}
             onPointerUp={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
@@ -389,7 +389,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           {/* Navigation Chevron Right */}
           <button
             type="button"
-            aria-label="Next Roster"
+            aria-label={dict?.pagination?.next || 'Next Roster'}
             onPointerDown={(e) => e.stopPropagation()}
             onPointerUp={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}

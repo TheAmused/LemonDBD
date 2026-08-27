@@ -22,9 +22,11 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
       <div className="flex items-center justify-between text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">
         <span className="flex items-center gap-1.5 text-rose-400">
           <Activity className="h-3.5 w-3.5" />
-          Combat Attributes & Threat Scale
+          {t.combatAttributes || 'Combat Attributes & Threat Scale'}
         </span>
-        <span className="text-[10px] text-slate-500">Click Terror Radius for visualizer</span>
+        <span className="text-[10px] text-slate-500">
+          {t.clickTerrorRadiusVisualizer || 'Click Terror Radius for visualizer'}
+        </span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

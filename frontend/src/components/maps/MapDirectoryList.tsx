@@ -20,6 +20,7 @@ export interface MapDirectoryListProps {
   backendBase?: string;
   className?: string;
   showFilters?: boolean;
+  dict?: any;
 }
 
 export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
@@ -35,6 +36,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
   backendBase = getBackendBaseUrl(),
   className = '',
   showFilters = false,
+  dict,
 }) => {
   const flatMaps = useMemo(() => {
     const realms = Object.keys(groupedMaps || {});
@@ -65,8 +67,8 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
               <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <input
                 type="text"
-                placeholder="Search map or realm..."
-                aria-label="Search map or realm"
+                placeholder={dict?.maps?.searchPlaceholder || 'Search map or realm...'}
+                aria-label={dict?.maps?.searchAria || 'Search map or realm'}
                 value={searchQuery || ''}
                 onChange={(e) => onSearchChange(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 pl-10 pr-4 py-2 text-xs font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none min-h-[40px] shadow-inner"
@@ -115,7 +117,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
       {loading ? (
         <div
           aria-busy="true"
-          aria-label="Loading map directory"
+          aria-label={dict?.maps?.loadingDirectory || 'Loading map directory'}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           data-testid="map-directory-loading"
         >
@@ -135,7 +137,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
             className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3 animate-spin"
             style={{ animationDuration: '20s' }}
           />
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">No Maps Found</h3>
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">{dict?.maps?.noMapsFound || 'No Maps Found'}</h3>
           <p className="mt-1 text-xs text-slate-500">
             Try adjusting your search query or selected realm filter.
           </p>
@@ -213,7 +215,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                         onPopoutImage(imgSrc, m.name);
                       }}
                       className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/80 text-slate-300 hover:text-amber-400 backdrop-blur-md transition-colors cursor-pointer min-h-[36px] min-w-[36px] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
-                      title="Popout Map Image in New Window"
+                      title={dict?.maps?.popoutAria || 'Popout Map Image in New Window'}
                       aria-label={`Popout ${m.name} map in a new window`}
                       data-testid={`map-popout-btn-${m.id}`}
                     >
@@ -231,12 +233,12 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                     {isSamoel ? (
                       <>
                         <Layers className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
-                        <span>Isometric Scheme (Steam Guide)</span>
+                        <span>{dict?.maps?.isometricScheme || 'Isometric Scheme (Steam Guide)'}</span>
                       </>
                     ) : (
                       <>
                         <Clock className="h-3.5 w-3.5 text-amber-500" />
-                        <span>12-Clock Callout Map System</span>
+                        <span>{dict?.maps?.clockCalloutScheme || '12-Clock Callout Map System'}</span>
                       </>
                     )}
                   </div>

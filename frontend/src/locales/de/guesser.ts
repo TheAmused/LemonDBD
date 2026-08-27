@@ -26,6 +26,18 @@ export default {
   "modeMapDesc": "Teste deine Kenntnisse über Reiche und Kacheln.",
   "modeMemesTitle": "DBD Meme-Ratespiel",
   "modeMemesDesc": "Errate Witze und Namen aus beliebten Dead by Daylight Memes.",
-  "reset": "Serie zurücksetzen",
-  "streakResetSuccess": "Serie erfolgreich zurückgesetzt"
+  "reset": "Streak Zurücksetzen",
+  "streakResetSuccess": "Streak erfolgreich zurückgesetzt",
+  "soundOn": "Ton Ein",
+  "soundOff": "Ton Aus",
+  "best": "Bester:",
+  "streak": "Streak",
+  "wip": "In Arbeit",
+  "charAvatarHint": "Charakter-Avatar Hinweis",
+  "redacted": "Geschwärzt (Hoher Streak)",
+  "blurred": "Verschwommen (Mittlerer Streak)",
+  "distortedPerkIcon": "Verzerrtes Perk-Symbol Hinweis",
+  "perkIconChoice": "Perk-Symbol Auswahl",
+  "escReturn": "Esc: Zurück",
+  "spaceContinue": "Leertaste: Weiter"
 };

@@ -201,12 +201,12 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value="all">{t.allRarities || 'All Rarities'}</option>
-            <option value="Common">Common</option>
-            <option value="Uncommon">Uncommon</option>
-            <option value="Rare">Rare</option>
-            <option value="Very Rare">Very Rare</option>
-            <option value="Ultra Rare">Ultra Rare</option>
-            <option value="Event">Event</option>
+            <option value="Common">{t.rarityCommon || 'Common'}</option>
+            <option value="Uncommon">{t.rarityUncommon || 'Uncommon'}</option>
+            <option value="Rare">{t.rarityRare || 'Rare'}</option>
+            <option value="Very Rare">{t.rarityVeryRare || 'Very Rare'}</option>
+            <option value="Ultra Rare">{t.rarityUltraRare || 'Ultra Rare'}</option>
+            <option value="Event">{t.rarityEvent || 'Event'}</option>
           </select>
         </div>
       </div>
@@ -246,14 +246,16 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                 <Package className="h-4 w-4" />
-                {activeCategoryConfig.label} &bull; Items ({categorizedData.displayedItems.length})
+                {activeCategoryConfig.label} &bull; {t.items || 'Items'} ({categorizedData.displayedItems.length})
               </h3>
-              <span className="text-[10px] font-mono text-slate-400">Click item for details</span>
+              <span className="text-[10px] font-mono text-slate-400">
+                {t.clickItemForDetails || 'Click item for details'}
+              </span>
             </div>
 
             {categorizedData.displayedItems.length === 0 ? (
               <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-500 text-xs italic">
-                No items found in this category matching your filter.
+                {t.noItemsFound || 'No items found in this category matching your filter.'}
               </div>
             ) : (
               <div className="flex flex-wrap items-center justify-center gap-3 p-1">
@@ -301,11 +303,13 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" />
                 {selectedCategory === 'trial_exclusive'
-                  ? 'Artifact Mechanics'
-                  : `Compatible Add-ons (${categorizedData.displayedAddons.length})`}
+                  ? t.artifactMechanics || 'Artifact Mechanics'
+                  : `${t.compatibleAddons || 'Compatible Add-ons'} (${categorizedData.displayedAddons.length})`}
               </h3>
               <span className="text-[10px] font-mono text-slate-400">
-                {selectedCategory === 'trial_exclusive' ? 'Special Trial Rules' : 'Attach up to 2 per item'}
+                {selectedCategory === 'trial_exclusive'
+                  ? t.specialTrialRules || 'Special Trial Rules'
+                  : t.attachAddonsPrompt || 'Attach up to 2 per item'}
               </span>
             </div>
 
@@ -313,18 +317,18 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               <div className="flex-1 flex flex-col justify-center p-4 rounded-2xl bg-amber-950/20 border border-amber-500/30 text-xs space-y-3">
                 <div className="flex items-center gap-2 text-amber-400 font-mono font-black text-sm">
                   <ShieldAlert className="h-5 w-5 shrink-0" />
-                  <span>In-Trial Killer Counters & Artifacts</span>
+                  <span>{t.inTrialArtifactsHeading || 'In-Trial Killer Counters & Artifacts'}</span>
                 </div>
                 <p className="text-slate-300 leading-relaxed">
-                  These unique artifacts (such as <em>Hand & Eye of Vecna</em>, <em>Lament Configuration</em>, <em>Remote Flame Turrets</em>, <em>EMPs</em>, <em>First Aid Sprays</em>, and <em>Vaccines</em>) cannot be equipped in the pre-game lobby.
+                  {t.trialArtifactsDesc1 || 'These unique artifacts (such as Hand & Eye of Vecna, Lament Configuration, Remote Flame Turrets, EMPs, First Aid Sprays, and Vaccines) cannot be equipped in the pre-game lobby.'}
                 </p>
                 <p className="text-slate-400 leading-relaxed">
-                  They are spawned inside the Trial grounds to interact directly with specific Killers&apos; powers and counteract their special abilities.
+                  {t.trialArtifactsDesc2 || "They are spawned inside the Trial grounds to interact directly with specific Killers' powers and counteract their special abilities."}
                 </p>
               </div>
             ) : categorizedData.displayedAddons.length === 0 ? (
               <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-500 text-xs italic">
-                No compatible add-ons found for this item type.
+                {t.noCompatibleAddons || 'No compatible add-ons found for this item type.'}
               </div>
             ) : (
               <div className="flex flex-wrap items-center justify-center gap-2.5 p-1">
@@ -370,7 +374,12 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       </div>
 
       {/* Unified Hover Modal */}
-      <UnifiedHoverModal activeHover={activeHover} placement="above" t={t} />
+      <UnifiedHoverModal
+        activeHover={activeHover}
+        placement="above"
+        t={t}
+        actionPrompt={t.clickItemForDetails || t.clickToInspect || 'Click item for details'}
+      />
     </section>
   );
 };

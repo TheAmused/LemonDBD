@@ -18,34 +18,40 @@ interface UserBugReportsListProps {
   reports: UserBugReport[];
   loading: boolean;
   onOpenReportModal: () => void;
+  dict?: any;
+  t?: Record<string, string>;
 }
 
 export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
   reports,
   loading,
   onOpenReportModal,
+  dict,
+  t: propT,
 }) => {
+  const t: Record<string, string> = propT || dict?.user || {};
+
   const getStatusBadge = (status: UserBugReport['status']) => {
     switch (status) {
       case 'in_progress':
         return (
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-amber-400">
             <Clock className="h-3 w-3 animate-spin" />
-            <span>In Progress</span>
+            <span>{t.statusInProgress || 'In Progress'}</span>
           </span>
         );
       case 'resolved':
         return (
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-400">
             <CheckCircle className="h-3 w-3" />
-            <span>Resolved</span>
+            <span>{t.statusResolved || 'Resolved'}</span>
           </span>
         );
       case 'rejected':
         return (
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-500/30 bg-slate-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400">
             <XCircle className="h-3 w-3" />
-            <span>Closed</span>
+            <span>{t.statusClosed || 'Closed'}</span>
           </span>
         );
       case 'pending':
@@ -53,7 +59,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         return (
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-rose-400">
             <HelpCircle className="h-3 w-3" />
-            <span>Pending</span>
+            <span>{t.statusPending || 'Pending'}</span>
           </span>
         );
     }
@@ -65,10 +71,10 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         <div>
           <h2 className="text-base sm:text-lg font-black tracking-wider text-slate-100 font-mono flex items-center gap-2">
             <Bug className="h-5 w-5 text-rose-500" />
-            <span>Your Submitted Bug Reports</span>
+            <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Track investigation status, feedback, and fixes for your tickets.
+            {t.bugReportsSubtitle || 'Track investigation status, feedback, and fixes for your tickets.'}
           </p>
         </div>
 
@@ -78,22 +84,25 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
           className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-rose-950/40 transition-all cursor-pointer w-full sm:w-auto"
         >
           <Plus className="h-4 w-4" />
-          <span>Report New Bug</span>
+          <span>{t.reportNewBug || 'Report New Bug'}</span>
         </button>
       </div>
 
       {loading ? (
         <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-12 text-center text-xs text-slate-400 font-mono">
-          Loading your reported tickets...
+          {t.loadingReports || 'Loading your reported tickets...'}
         </div>
       ) : reports.length === 0 ? (
         <div className="rounded-3xl border-2 border-dashed border-slate-800 bg-slate-900/40 p-8 sm:p-12 text-center space-y-3">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-500">
             <Bug className="h-6 w-6" />
           </div>
-          <h3 className="text-base font-black text-slate-200">No Bug Reports Submitted</h3>
+          <h3 className="text-base font-black text-slate-200">
+            {t.noReportsTitle || 'No Bug Reports Submitted'}
+          </h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto">
-            You have not reported any glitches yet. If you spot incorrect perk numbers or map callout issues, report them!
+            {t.noReportsSubtitle ||
+              'You have not reported any glitches yet. If you spot incorrect perk numbers or map callout issues, report them!'}
           </p>
           <button
             type="button"
@@ -101,7 +110,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             className="inline-flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-xs font-bold text-rose-400 hover:bg-rose-500/20 transition-colors cursor-pointer"
           >
             <Plus className="h-3.5 w-3.5" />
-            <span>Submit a Bug Report</span>
+            <span>{t.submitBugReport || 'Submit a Bug Report'}</span>
           </button>
         </div>
       ) : (
@@ -123,7 +132,10 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                     <span className="rounded bg-slate-800 px-2 py-0.5 font-bold">
                       {report.category}
                     </span>
-                    <span>Reported on {new Date(report.created_at).toLocaleDateString()}</span>
+                    <span>
+                      {t.reportedOn || 'Reported on'}{' '}
+                      {new Date(report.created_at).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
 
@@ -138,7 +150,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 <div className="space-y-1.5 pt-1">
                   <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1">
                     <ImageIcon className="h-3 w-3 text-rose-500" />
-                    Attachments ({report.images.length})
+                    {t.attachments || 'Attachments'} ({report.images.length})
                   </span>
                   <div className="flex flex-wrap items-center gap-2">
                     {report.images.map((imgUrl, i) => (
@@ -149,7 +161,11 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                         rel="noopener noreferrer"
                         className="relative h-16 w-16 rounded-xl border border-slate-800 bg-slate-950 overflow-hidden shadow-sm hover:opacity-90 transition-opacity"
                       >
-                        <img src={imgUrl} alt="Screenshot attachment" className="h-full w-full object-cover" />
+                        <img
+                          src={imgUrl}
+                          alt={`${t.attachments || 'Attachment'} ${i + 1}`}
+                          className="h-full w-full object-cover"
+                        />
                       </a>
                     ))}
                   </div>
@@ -160,7 +176,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 <div className="mt-3 rounded-2xl border border-amber-500/30 bg-amber-950/20 p-4 space-y-1.5">
                   <div className="flex items-center gap-2 text-amber-400 text-xs font-bold">
                     <Crown className="h-4 w-4" />
-                    <span>Developer Response</span>
+                    <span>{t.devResponse || 'Developer Response'}</span>
                   </div>
                   <p className="text-xs text-slate-300 italic">
                     &quot;{report.admin_notes}&quot;
@@ -174,4 +190,3 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
     </div>
   );
 };
-

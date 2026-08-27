@@ -39,5 +39,9 @@ export default {
   "spinOrRollPrompt": "Gira la rueda o haz clic en generar para obtener tu perk",
   "cursedBlindness": "Ceguera Maldita",
   "clickToReveal": "Haz clic para revelar",
-  "rollCompleteLoadout": "Generar combinación de 4 perks"
+  "rollCompleteLoadout": "Generar combinación de 4 perks",
+  "selectRole": "Seleccionar Rol",
+  "generatorMode": "Modo Generador",
+  "resetAllTooltip": "Restablecer ruedas, ranuras y memoria",
+  "clearSlotTooltip": "Limpiar ranura"
 };

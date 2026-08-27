@@ -239,7 +239,9 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
       <div className="flex h-96 items-center justify-center text-slate-400">
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-rose-500 border-t-transparent" />
-          <span className="font-semibold text-sm">Loading Killer Stat Calculator...</span>
+          <span className="font-semibold text-sm">
+            {dict?.characterDetail?.loading || 'Loading Killer Stat Calculator...'}
+          </span>
         </div>
       </div>
     );
@@ -420,7 +422,9 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                     {/* Dynamic Perk Controls when selected */}
                     {isSelected && pid === 'monitor_and_abuse' && (
                       <div className="ml-7 flex items-center gap-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
-                        <span className="text-slate-600 dark:text-slate-400 text-[11px]">Chase Status:</span>
+                        <span className="text-slate-600 dark:text-slate-400 text-[11px]">
+                          {dict?.killerCalculator?.chaseStatus || 'Chase Status:'}
+                        </span>
                         <button
                           onClick={() => setPerkOptions({ ...perkOptions, in_chase: !perkOptions.in_chase })}
                           className={`px-2.5 py-1 rounded-md text-[11px] font-extrabold transition-all cursor-pointer ${
@@ -436,7 +440,9 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
 
                     {isSelected && pid === 'agitation' && (
                       <div className="ml-7 flex items-center gap-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
-                        <span className="text-slate-600 dark:text-slate-400 text-[11px]">Carrying Survivor:</span>
+                        <span className="text-slate-600 dark:text-slate-400 text-[11px]">
+                          {dict?.killerCalculator?.carryingSurvivor || 'Carrying Survivor:'}
+                        </span>
                         <button
                           onClick={() =>
                             setPerkOptions({ ...perkOptions, carrying_survivor: !perkOptions.carrying_survivor })
@@ -454,7 +460,9 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
 
                     {isSelected && pid === 'furtive_chase' && (
                       <div className="ml-7 flex items-center gap-3 p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
-                        <span className="text-slate-600 dark:text-slate-400 text-[11px]">Tokens (-4m each):</span>
+                        <span className="text-slate-600 dark:text-slate-400 text-[11px]">
+                          {dict?.killerCalculator?.tokens || 'Tokens (-4m each):'}
+                        </span>
                         <div className="flex items-center gap-1.5">
                           {[0, 1, 2, 3, 4].map((t) => (
                             <button
@@ -507,19 +515,25 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
             {/* Radar Legend */}
             <div className="mt-4 grid grid-cols-3 gap-2 text-[11px] font-bold text-center">
               <div className="rounded-lg bg-slate-50 dark:bg-slate-950 p-2 border border-slate-200 dark:border-slate-800 shadow-sm">
-                <span className="text-slate-500 dark:text-slate-400 block text-[10px]">BASE TERROR RADIUS</span>
+                <span className="text-slate-500 dark:text-slate-400 block text-[10px]">
+                  {dict?.characterDetail?.terrorRadius || 'BASE TERROR RADIUS'}
+                </span>
                 <span className="text-rose-600 dark:text-rose-400 font-mono">{calculationResult?.terror_radius?.base || 0}m</span>
               </div>
 
               <div className="rounded-lg bg-rose-50 dark:bg-slate-950 p-2 border border-rose-500/30 bg-rose-500/5 shadow-sm">
-                <span className="text-rose-700 dark:text-rose-300 block text-[10px]">MODIFIED TERROR RADIUS</span>
+                <span className="text-rose-700 dark:text-rose-300 block text-[10px]">
+                  {dict?.characterDetail?.acousticRange || 'MODIFIED TERROR RADIUS'}
+                </span>
                 <span className="text-rose-600 dark:text-rose-500 font-mono text-xs">
                   {calculationResult?.terror_radius?.modified || 0}m
                 </span>
               </div>
 
               <div className="rounded-lg bg-slate-50 dark:bg-slate-950 p-2 border border-slate-200 dark:border-slate-800 shadow-sm">
-                <span className="text-amber-700 dark:text-amber-400/80 block text-[10px]">LULLABY RADIUS</span>
+                <span className="text-amber-700 dark:text-amber-400/80 block text-[10px]">
+                  {dict?.characterDetail?.lullabyRadius || 'LULLABY RADIUS'}
+                </span>
                 <span className="text-amber-700 dark:text-amber-400 font-mono">{calculationResult?.lullaby?.base || 0}m</span>
               </div>
             </div>
@@ -572,7 +586,9 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-500 italic">No power stats modified.</p>
+              <p className="text-xs text-slate-500 italic">
+                {dict?.empty?.description || 'No power stats modified.'}
+              </p>
             )}
 
             {/* TR Breakdown Summary */}

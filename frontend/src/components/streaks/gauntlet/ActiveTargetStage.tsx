@@ -57,6 +57,7 @@ export interface ActiveTargetStageProps {
   /** The target the reel has actually finished landing on, lifted so the roster grid can share it. */
   shownTarget: string | null;
   onShownTargetChange: (name: string | null) => void;
+  dict?: any;
 }
 
 /**
@@ -130,6 +131,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   holdReel = false,
   shownTarget,
   onShownTargetChange,
+  dict,
 }) => {
   const [avatarError, setAvatarError] = useState(false);
 
@@ -199,7 +201,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         <div className="animate-spin text-amber-500 mx-auto w-8 h-8 mb-3 flex items-center justify-center">
           <RefreshCw className="w-8 h-8" />
         </div>
-        <p className="text-slate-400 text-sm">Loading active gauntlet stage...</p>
+        <p className="text-slate-400 text-sm">
+          {dict?.streaks?.loadingStreak || 'Loading active gauntlet stage...'}
+        </p>
       </div>
     );
   }
@@ -236,7 +240,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </>
         ) : (
           <>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8">Ready for the Gauntlet?</h2>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8">
+              {dict?.streaks?.readyForGauntlet || 'Ready for the Gauntlet?'}
+            </h2>
             <button
               onClick={() => {
                 setRevealing(true);
@@ -303,9 +309,17 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               {targetName}
             </h2>
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center justify-center sm:justify-start gap-2">
-              <span>Role: <strong className="text-slate-700 dark:text-slate-200 capitalize">{role}</strong></span>
+              <span>
+                {dict?.characterDetail?.role || 'Role'}:{' '}
+                <strong className="text-slate-700 dark:text-slate-200 capitalize">
+                  {role === 'survivor' ? (dict?.filters?.survivor || 'Survivor') : (dict?.filters?.killer || 'Killer')}
+                </strong>
+              </span>
               <span>•</span>
-              <span>Streak: <strong className="text-amber-600 dark:text-amber-400 font-mono">{run.current_streak}</strong></span>
+              <span>
+                {dict?.stats?.streak || 'Streak'}:{' '}
+                <strong className="text-amber-600 dark:text-amber-400 font-mono">{run.current_streak}</strong>
+              </span>
             </div>
           </div>
         </div>
@@ -433,9 +447,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
-                    Slot {idx + 1}
+                    {dict?.swf?.slot || 'Slot'} {idx + 1}
                   </h4>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Any perk you like</p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                    {dict?.streaks?.anyPerkYouLike || 'Any perk you like'}
+                  </p>
                 </div>
               </div>
             );
@@ -452,7 +468,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             className="w-full sm:w-auto flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
           >
             <CheckCircle className="w-5 h-5 text-emerald-100" />
-            <span>WIN MATCH</span>
+            <span>{dict?.streaks?.winMatch || 'WIN MATCH'}</span>
           </button>
 
           <button
@@ -461,7 +477,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             className="w-full sm:w-auto flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 active:bg-rose-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-rose-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
           >
             <XCircle className="w-5 h-5 text-rose-100" />
-            <span>LOSE MATCH</span>
+            <span>{dict?.streaks?.loseMatch || 'LOSE MATCH'}</span>
           </button>
         </div>
       </div>

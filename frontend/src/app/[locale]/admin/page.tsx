@@ -502,7 +502,7 @@ export default function AdminPanelPage() {
               }`}
             >
               <ShieldAlert className="h-4 w-4" />
-              <span>Kill Switches</span>
+              <span>{dict?.admin?.killSwitches || 'Kill Switches'}</span>
             </button>
 
             <button
@@ -515,7 +515,7 @@ export default function AdminPanelPage() {
               }`}
             >
               <BarChart3 className="h-4 w-4" />
-              <span>Challenge Stats</span>
+              <span>{dict?.admin?.challengeStats || 'Challenge Stats'}</span>
             </button>
 
             <button
@@ -528,13 +528,13 @@ export default function AdminPanelPage() {
               }`}
             >
               <ScrollText className="h-4 w-4" />
-              <span>Audit Log</span>
+              <span>{dict?.admin?.auditLog || 'Audit Log'}</span>
             </button>
           </div>
 
           {activeTab === 'users' ? (
             <div className="space-y-6">
-              <AdminStatsGrid stats={stats} />
+              <AdminStatsGrid stats={stats} dict={dict} />
               <AdminUserTable
                 users={users}
                 totalUsers={totalUsers}
@@ -543,6 +543,7 @@ export default function AdminPanelPage() {
                 roleFilter={roleFilter}
                 loading={loadingData}
                 currentUserId={user?.id}
+                dict={dict}
                 onSearchChange={(val) => {
                   setSearch(val);
                   setPage(1);
@@ -559,11 +560,11 @@ export default function AdminPanelPage() {
               />
             </div>
           ) : activeTab === 'challenges' ? (
-            <AdminChallengeControl onActionMessage={setActionMessage} />
+            <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
           ) : activeTab === 'challenge_stats' ? (
             <AdminChallengeStats stats={stats} />
           ) : activeTab === 'audit' ? (
-            <AdminAuditLogView />
+            <AdminAuditLogView dict={dict} />
           ) : (
             <AdminBugReportsWorkbench
               bugReports={bugReports}
@@ -575,6 +576,7 @@ export default function AdminPanelPage() {
               selectedBugId={selectedBugId}
               editingNotes={editingNotes}
               loading={loadingBugs}
+              dict={dict}
               onSearchChange={(val) => {
                 setBugSearch(val);
                 setBugPage(1);
@@ -599,6 +601,7 @@ export default function AdminPanelPage() {
         isOpen={isCreateUserOpen}
         onClose={() => setIsCreateUserOpen(false)}
         onSubmit={handleCreateUser}
+        dict={dict}
       />
 
       <ScraperConfigModal
@@ -606,6 +609,7 @@ export default function AdminPanelPage() {
         isOpen={isConfigOpen}
         initialTab={modalTab}
         onClose={() => setIsConfigOpen(false)}
+        dict={dict}
         onPurgeSuccess={() => {
           fetchAdminData();
           fetchBugReports();
@@ -614,7 +618,7 @@ export default function AdminPanelPage() {
 
       <ConfirmModal
         open={userPendingDeletion !== null}
-        title="Delete user?"
+        title={dict?.admin?.deleteUserTitle || 'Delete user?'}
         message={
           <>
             Are you sure you want to delete user{' '}
@@ -631,7 +635,7 @@ export default function AdminPanelPage() {
 
       <ConfirmModal
         open={bugReportPendingDeletion !== null}
-        title="Delete bug report?"
+        title={dict?.admin?.deleteBugReportTitle || 'Delete bug report?'}
         message={`Are you sure you want to delete bug report #${bugReportPendingDeletion}?`}
         confirmLabel="Delete"
         busy={isDeletingBugReport}

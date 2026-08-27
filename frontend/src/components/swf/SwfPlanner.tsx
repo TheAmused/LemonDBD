@@ -14,7 +14,6 @@ import {
   Plus,
   X,
   Search,
-  Flame,
   ShieldAlert,
   Sparkles,
   RefreshCw,
@@ -57,35 +56,41 @@ const DEFAULT_SURVIVORS: SurvivorBuild[] = [
   { id: 4, name: 'Survivor 4', role: 'Unhooker', perks: ['Borrowed Time', 'Deliverance', 'Reassurance', 'Kindred'] },
 ];
 
-const ROLE_CONFIG: Record<SquadRole, { icon: React.ElementType; color: string; bg: string; desc: string }> = {
-  'Chaser': {
-    icon: Swords,
-    color: 'text-amber-600 dark:text-amber-400',
-    bg: 'bg-amber-500/10 border-amber-500/20 text-amber-800 dark:text-amber-400',
-    desc: 'Leads chases, drops pallets, and draws killer aggression.',
-  },
-  'Gen Rusher': {
-    icon: Zap,
-    color: 'text-cyan-600 dark:text-cyan-400',
-    bg: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-800 dark:text-cyan-400',
-    desc: 'Focuses on repairing generators rapidly with speed perks.',
-  },
-  'Medic': {
-    icon: HeartPulse,
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bg: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-800 dark:text-emerald-400',
-    desc: 'Keeps team healthy and resets injuries swiftly.',
-  },
-  'Unhooker': {
-    icon: Anchor,
-    color: 'text-rose-600 dark:text-rose-400',
-    bg: 'bg-rose-500/10 border-rose-500/20 text-rose-800 dark:text-rose-400',
-    desc: 'Specializes in safe unhooks and endgame rescues.',
-  },
-};
-
 export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
+  const t: Record<string, string> = dict?.swf || {};
+  const tModal: Record<string, string> = dict?.modal || {};
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+  const roleConfig: Record<SquadRole, { icon: React.ElementType; label: string; color: string; bg: string; desc: string }> = {
+    'Chaser': {
+      icon: Swords,
+      label: t.roleChaser || 'Chaser',
+      color: 'text-amber-600 dark:text-amber-400',
+      bg: 'bg-amber-500/10 border-amber-500/20 text-amber-800 dark:text-amber-400',
+      desc: t.roleChaserDesc || 'Leads chases, drops pallets, and draws killer aggression.',
+    },
+    'Gen Rusher': {
+      icon: Zap,
+      label: t.roleGenRusher || 'Gen Rusher',
+      color: 'text-cyan-600 dark:text-cyan-400',
+      bg: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-800 dark:text-cyan-400',
+      desc: t.roleGenRusherDesc || 'Focuses on repairing generators rapidly with speed perks.',
+    },
+    'Medic': {
+      icon: HeartPulse,
+      label: t.roleMedic || 'Medic',
+      color: 'text-emerald-600 dark:text-emerald-400',
+      bg: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-800 dark:text-emerald-400',
+      desc: t.roleMedicDesc || 'Keeps team healthy and resets injuries swiftly.',
+    },
+    'Unhooker': {
+      icon: Anchor,
+      label: t.roleUnhooker || 'Unhooker',
+      color: 'text-rose-600 dark:text-rose-400',
+      bg: 'bg-rose-500/10 border-rose-500/20 text-rose-800 dark:text-rose-400',
+      desc: t.roleUnhookerDesc || 'Specializes in safe unhooks and endgame rescues.',
+    },
+  };
 
   const [survivors, setSurvivors] = useState<SurvivorBuild[]>(DEFAULT_SURVIVORS);
   const [allPerks, setAllPerks] = useState<PerkItem[]>([]);
@@ -99,28 +104,27 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
   // Perk Selector Modal state
   const [activeSlot, setActiveSlot] = useState<{ survivorId: number; perkIndex: number } | null>(null);
   const [perkSearch, setPerkSearch] = useState<string>('');
-
-  // Share Toast state
   const [copiedToast, setCopiedToast] = useState<boolean>(false);
 
-  // Load Perks from backend
+  // Fetch all perks
   useEffect(() => {
     async function loadPerks() {
       try {
         setLoadingPerks(true);
-        const res = await fetch(`${backendBase}/api/v1/perks?category=Survivor&limit=500`);
+        const res = await fetch(`${backendBase}/api/v1/perks?limit=1000`);
         if (res.ok) {
           const data = await res.json();
-          const list: PerkItem[] = data.data || [];
-          setAllPerks(list);
-          const map: Record<string, PerkItem> = {};
-          list.forEach((p) => {
-            map[p.name.toLowerCase()] = p;
+          const survivorOnly = (data.data || []).filter((p: PerkItem) => p.category === 'Survivor');
+          setAllPerks(survivorOnly);
+
+          const mapping: Record<string, PerkItem> = {};
+          survivorOnly.forEach((p: PerkItem) => {
+            mapping[p.name.toLowerCase()] = p;
           });
-          setPerkMap(map);
+          setPerkMap(mapping);
         }
-      } catch (e) {
-        console.error('Failed to load perks for SWF planner:', e);
+      } catch (err) {
+        console.error('Failed to load perks for SWF Planner:', err);
       } finally {
         setLoadingPerks(false);
       }
@@ -128,42 +132,15 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
     loadPerks();
   }, [backendBase]);
 
-  // Load state from URL param if available
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const loadoutParam = urlParams.get('loadout');
-      if (loadoutParam) {
-        try {
-          const decoded = JSON.parse(decodeURIComponent(atob(loadoutParam)));
-          if (Array.isArray(decoded) && decoded.length === 4) {
-            setSurvivors(decoded);
-          }
-        } catch (e) {
-          console.error('Failed to parse loadout parameter:', e);
-        }
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!activeSlot) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setActiveSlot(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeSlot]);
-
-  // Analyze Synergy for a survivor
+  // Analyze Synergy for a given survivor
   const analyzeSurvivorSynergy = useCallback(
     async (survivorId: number, perks: (string | null)[]) => {
-      const activePerks = perks.filter((p): p is string => Boolean(p && p.trim()));
-      if (activePerks.length === 0) {
+      const activePerks = perks.filter(Boolean) as string[];
+      if (activePerks.length < 2) {
         setSynergies((prev) => ({
           ...prev,
           [survivorId]: {
-            score: 0,
+            score: activePerks.length === 1 ? 25 : 0,
             positive_synergies: [],
             anti_synergies: [],
             tactical_badges: [],
@@ -174,17 +151,27 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
 
       setLoadingSynergy((prev) => ({ ...prev, [survivorId]: true }));
       try {
-        const res = await fetch(`${backendBase}/api/v1/synergy/analyze`, {
+        const res = await fetch(`${backendBase}/api/v1/perks/synergy`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ perks: activePerks, role: 'survivor' }),
+          body: JSON.stringify({ perks: activePerks }),
         });
+
         if (res.ok) {
           const data = await res.json();
-          setSynergies((prev) => ({ ...prev, [survivorId]: data }));
+          setSynergies((prev) => ({
+            ...prev,
+            [survivorId]: {
+              score: data.score ?? 50,
+              positive_synergies: data.positive_synergies || [],
+              anti_synergies: data.anti_synergies || [],
+              tactical_badges: data.tactical_badges || [],
+              details: data.details,
+            },
+          }));
         }
-      } catch (e) {
-        console.error(`Synergy calculation error for survivor ${survivorId}:`, e);
+      } catch (err) {
+        console.error('Failed to analyze survivor synergy:', err);
       } finally {
         setLoadingSynergy((prev) => ({ ...prev, [survivorId]: false }));
       }
@@ -192,112 +179,150 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
     [backendBase]
   );
 
-  // Trigger synergy analysis whenever survivor perks change
+  // Initial Synergy calculation on mount
   useEffect(() => {
-    survivors.forEach((survivor) => {
-      analyzeSurvivorSynergy(survivor.id, survivor.perks);
+    survivors.forEach((s) => {
+      analyzeSurvivorSynergy(s.id, s.perks);
     });
-  }, [survivors, analyzeSurvivorSynergy]);
+  }, [analyzeSurvivorSynergy]);
 
-  // Redundancy detector across all 4 survivors
-  const redundancyList = useMemo(() => {
-    const perkCount: Record<string, number[]> = {};
-    survivors.forEach((survivor) => {
-      survivor.perks.forEach((p) => {
-        if (p && p.trim()) {
-          const norm = p.trim();
-          if (!perkCount[norm]) perkCount[norm] = [];
-          perkCount[norm].push(survivor.id);
+  // Decode Squad configuration from URL hash or query params if present
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const searchParams = new URLSearchParams(window.location.search);
+    const squadParam = searchParams.get('squad');
+
+    if (squadParam) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(squadParam))));
+        if (Array.isArray(decoded) && decoded.length === 4) {
+          setSurvivors(decoded);
+          decoded.forEach((s: SurvivorBuild) => {
+            analyzeSurvivorSynergy(s.id, s.perks);
+          });
         }
-      });
-    });
-
-    const duplicates: { perk: string; survivors: number[] }[] = [];
-    Object.entries(perkCount).forEach(([perk, sIds]) => {
-      if (sIds.length > 1) {
-        duplicates.push({ perk, survivors: sIds });
+      } catch (e) {
+        console.warn('Failed to parse squad URL parameter', e);
       }
-    });
-    return duplicates;
-  }, [survivors]);
+    }
+  }, [analyzeSurvivorSynergy]);
 
-  // Handler to assign perk
+  // Share Squad Loadout Link generator
+  const handleShareLink = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const serialized = btoa(unescape(encodeURIComponent(JSON.stringify(survivors))));
+      const url = new URL(window.location.href);
+      url.searchParams.set('squad', serialized);
+      navigator.clipboard.writeText(url.toString());
+      setCopiedToast(true);
+      setTimeout(() => setCopiedToast(false), 3500);
+    } catch (e) {
+      console.error('Failed to encode squad link:', e);
+    }
+  };
+
+  // Change Role
+  const handleRoleChange = (survivorId: number, newRole: SquadRole) => {
+    setSurvivors((prev) =>
+      prev.map((s) => (s.id === survivorId ? { ...s, role: newRole } : s))
+    );
+  };
+
+  // Select Perk from modal
   const handleSelectPerk = (perkName: string) => {
     if (!activeSlot) return;
     const { survivorId, perkIndex } = activeSlot;
 
-    setSurvivors((prev) =>
-      prev.map((s) => {
+    setSurvivors((prev) => {
+      const updated = prev.map((s) => {
         if (s.id === survivorId) {
           const newPerks = [...s.perks];
           newPerks[perkIndex] = perkName;
+          analyzeSurvivorSynergy(s.id, newPerks);
           return { ...s, perks: newPerks };
         }
         return s;
-      })
-    );
+      });
+      return updated;
+    });
+
     setActiveSlot(null);
+    setPerkSearch('');
   };
 
-  // Handler to clear perk
+  // Clear Perk from slot
   const handleClearPerk = (survivorId: number, perkIndex: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    setSurvivors((prev) =>
-      prev.map((s) => {
+    setSurvivors((prev) => {
+      const updated = prev.map((s) => {
         if (s.id === survivorId) {
           const newPerks = [...s.perks];
           newPerks[perkIndex] = null;
+          analyzeSurvivorSynergy(s.id, newPerks);
           return { ...s, perks: newPerks };
         }
         return s;
-      })
-    );
+      });
+      return updated;
+    });
   };
 
-  // Handler to update role for survivor
-  const handleRoleChange = (survivorId: number, role: SquadRole) => {
-    setSurvivors((prev) =>
-      prev.map((s) => (s.id === survivorId ? { ...s, role } : s))
-    );
-  };
+  // Redundancy Analysis: detect duplicate perks across all 4 players
+  const redundancyList = useMemo(() => {
+    const counts: Record<string, number[]> = {};
+    survivors.forEach((s) => {
+      s.perks.forEach((p) => {
+        if (p) {
+          const lower = p.toLowerCase();
+          if (!counts[lower]) counts[lower] = [];
+          counts[lower].push(s.id);
+        }
+      });
+    });
 
-  // Share team loadout link
-  const handleShareLink = () => {
-    if (typeof window === 'undefined') return;
-    try {
-      const serialized = btoa(encodeURIComponent(JSON.stringify(survivors)));
-      const shareUrl = `${window.location.origin}${window.location.pathname}?loadout=${serialized}`;
-      navigator.clipboard.writeText(shareUrl);
-      setCopiedToast(true);
-      setTimeout(() => setCopiedToast(false), 3500);
-    } catch (e) {
-      console.error('Failed to copy share link:', e);
-    }
-  };
+    return Object.entries(counts)
+      .filter(([_, survivorIds]) => survivorIds.length > 1)
+      .map(([perkLower, survivorIds]) => {
+        const perkOriginal = perkMap[perkLower]?.name || perkLower;
+        return {
+          perk: perkOriginal,
+          survivors: survivorIds,
+        };
+      });
+  }, [survivors, perkMap]);
 
-  // Filter perks for modal search
+  // Filtered perks for search in modal
   const filteredPerks = useMemo(() => {
     if (!perkSearch.trim()) return allPerks;
-    return allPerks.filter((p) =>
-      p.name.toLowerCase().includes(perkSearch.toLowerCase())
+    const q = perkSearch.toLowerCase();
+    return allPerks.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        (p.character && p.character.toLowerCase().includes(q)) ||
+        (p.description && p.description.toLowerCase().includes(q))
     );
   }, [allPerks, perkSearch]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-7xl mx-auto pb-16">
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-gradient-to-r from-emerald-50 via-slate-100 to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/80 p-6 sm:p-8 shadow-sm dark:shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-950 p-6 sm:p-8 backdrop-blur-2xl shadow-2xl">
+        <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 h-48 w-48 rounded-full bg-teal-500/10 blur-2xl pointer-events-none" />
+
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 rounded-xl bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
               <Users className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              <span>SWF Squad Team Engine</span>
+              <span>{t.engineBadge || 'SWF Squad Team Engine'}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono tracking-tight">
-              4-Player Team Loadout Planner
+              {t.pageTitle || '4-Player Team Loadout Planner'}
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-              Coordinate survivor roles, eliminate perk redundancy, and maximize team synergy for Survive With Friends squads.
+              {t.pageSubtitle ||
+                'Coordinate survivor roles, eliminate perk redundancy, and maximize team synergy for Survive With Friends squads.'}
             </p>
           </div>
 
@@ -306,7 +331,7 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
             className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-3 text-xs font-extrabold text-white shadow-lg shadow-emerald-900/30 hover:from-emerald-500 hover:to-teal-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all cursor-pointer shrink-0"
           >
             <Share2 className="h-4 w-4" />
-            <span>Share Squad Loadout</span>
+            <span>{t.shareLoadout || 'Share Squad Loadout'}</span>
           </button>
         </div>
       </div>
@@ -315,7 +340,9 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
       {copiedToast && (
         <div className="flex items-center gap-3 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 p-4 text-sm font-bold text-emerald-700 dark:text-emerald-400 animate-in fade-in slide-in-from-top-3">
           <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          <span>Squad Loadout URL copied to clipboard! Share it with your teammates.</span>
+          <span>
+            {t.copiedToast || 'Squad Loadout URL copied to clipboard! Share it with your teammates.'}
+          </span>
         </div>
       )}
 
@@ -325,11 +352,16 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-amber-500" />
             <h2 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
-              Team Perk Redundancy Detector
+              {t.redundancyDetector || 'Team Perk Redundancy Detector'}
             </h2>
           </div>
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-            {redundancyList.length === 0 ? 'Optimal' : `${redundancyList.length} Redundant Perk(s)`}
+            {redundancyList.length === 0
+              ? t.optimal || 'Optimal'
+              : (t.redundantPerksCount || '{count} Redundant Perk(s)').replace(
+                  '{count}',
+                  String(redundancyList.length)
+                )}
           </span>
         </div>
 
@@ -337,7 +369,10 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-semibold text-amber-700 dark:text-amber-400 mb-2">
               <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500 dark:text-amber-400" />
-              <span>Duplicate perks detected! Stacking identical perks across teammates may decrease overall team versatility.</span>
+              <span>
+                {t.duplicateWarning ||
+                  'Duplicate perks detected! Stacking identical perks across teammates may decrease overall team versatility.'}
+              </span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {redundancyList.map((item, idx) => (
@@ -347,7 +382,10 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                 >
                   <span className="font-bold text-amber-700 dark:text-amber-400">{item.perk}</span>
                   <span className="text-[11px] bg-amber-100 dark:bg-amber-950/60 px-2 py-0.5 rounded-lg border border-amber-500/30">
-                    Equipped by: {item.survivors.map((sId) => `Survivor ${sId}`).join(', ')}
+                    {t.equippedBy || 'Equipped by'}:{' '}
+                    {item.survivors
+                      .map((sId) => `${t.survivor || 'Survivor'} ${sId}`)
+                      .join(', ')}
                   </span>
                 </div>
               ))}
@@ -356,7 +394,9 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
         ) : (
           <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-xs font-bold text-emerald-700 dark:text-emerald-400 shadow-sm">
             <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-            <span>Zero Team Redundancy: All 16 team perk slots are unique!</span>
+            <span>
+              {t.zeroRedundancy || 'Zero Team Redundancy: All 16 team perk slots are unique!'}
+            </span>
           </div>
         )}
       </div>
@@ -364,7 +404,7 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
       {/* 4 Survivor Loadout Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {survivors.map((survivor) => {
-          const roleConf = ROLE_CONFIG[survivor.role];
+          const roleConf = roleConfig[survivor.role];
           const RoleIcon = roleConf.icon;
           const syn = synergies[survivor.id];
           const isAnalyzing = loadingSynergy[survivor.id];
@@ -383,9 +423,11 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                     </div>
                     <div>
                       <h3 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 font-mono">
-                        {survivor.name}
+                        {`${t.survivor || 'Survivor'} ${survivor.id}`}
                       </h3>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">4 Perk Loadout</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        {t.perkLoadout || '4 Perk Loadout'}
+                      </p>
                     </div>
                   </div>
 
@@ -397,10 +439,18 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                       onChange={(e) => handleRoleChange(survivor.id, e.target.value as SquadRole)}
                       className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-bold text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-sm"
                     >
-                      <option value="Chaser" className="dark:bg-slate-900">Chaser</option>
-                      <option value="Gen Rusher" className="dark:bg-slate-900">Gen Rusher</option>
-                      <option value="Medic" className="dark:bg-slate-900">Medic</option>
-                      <option value="Unhooker" className="dark:bg-slate-900">Unhooker</option>
+                      <option value="Chaser" className="dark:bg-slate-900">
+                        {roleConfig['Chaser'].label}
+                      </option>
+                      <option value="Gen Rusher" className="dark:bg-slate-900">
+                        {roleConfig['Gen Rusher'].label}
+                      </option>
+                      <option value="Medic" className="dark:bg-slate-900">
+                        {roleConfig['Medic'].label}
+                      </option>
+                      <option value="Unhooker" className="dark:bg-slate-900">
+                        {roleConfig['Unhooker'].label}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -446,14 +496,15 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                         ) : (
                           <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs font-semibold">
                             <Plus className="h-4 w-4" />
-                            <span>Slot {slotIdx + 1}</span>
+                            <span>{`${t.slot || 'Slot'} ${slotIdx + 1}`}</span>
                           </div>
                         )}
 
                         {perkName && (
                           <button
                             onClick={(e) => handleClearPerk(survivor.id, slotIdx, e)}
-                            title="Remove Perk"
+                            title={t.removePerk || 'Remove Perk'}
+                            aria-label={t.removePerk || 'Remove Perk'}
                             className="absolute right-2 top-2 hidden group-hover:flex h-5 w-5 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-500 hover:text-white transition-colors cursor-pointer"
                           >
                             <X className="h-3 w-3" />
@@ -470,17 +521,25 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <Sparkles className="h-4 w-4 text-emerald-600 dark:text-emerald-400 animate-pulse" />
-                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">Synergy Rating</span>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono">
+                      {t.synergyRating || 'Synergy Rating'}
+                    </span>
                   </div>
                   {isAnalyzing ? (
                     <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
                       <RefreshCw className="h-3 w-3 animate-spin text-emerald-500 dark:text-emerald-400" />
-                      <span>Analyzing...</span>
+                      <span>{t.analyzing || 'Analyzing...'}</span>
                     </div>
                   ) : (
-                    <span className={`text-sm font-black font-mono ${
-                      (syn?.score || 0) >= 75 ? 'text-emerald-700 dark:text-emerald-400' : (syn?.score || 0) >= 50 ? 'text-amber-700 dark:text-amber-400' : 'text-rose-700 dark:text-rose-400'
-                    }`}>
+                    <span
+                      className={`text-sm font-black font-mono ${
+                        (syn?.score || 0) >= 75
+                          ? 'text-emerald-700 dark:text-emerald-400'
+                          : (syn?.score || 0) >= 50
+                          ? 'text-amber-700 dark:text-amber-400'
+                          : 'text-rose-700 dark:text-rose-400'
+                      }`}
+                    >
                       {syn?.score ?? 0}%
                     </span>
                   )}
@@ -518,8 +577,13 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                 {syn?.positive_synergies && syn.positive_synergies.length > 0 && (
                   <div className="space-y-1.5 pt-1">
                     {syn.positive_synergies.map((ps, idx) => (
-                      <div key={idx} className="text-[11px] text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 p-2 rounded-xl border border-emerald-500/20">
-                        <span className="font-bold text-emerald-700 dark:text-emerald-400">Synergy ({ps.perks.join(' + ')}): </span>
+                      <div
+                        key={idx}
+                        className="text-[11px] text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 p-2 rounded-xl border border-emerald-500/20"
+                      >
+                        <span className="font-bold text-emerald-700 dark:text-emerald-400">
+                          {t.synergyLabel || 'Synergy'} ({ps.perks.join(' + ')}):{' '}
+                        </span>
                         <span>{ps.description}</span>
                       </div>
                     ))}
@@ -530,10 +594,15 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                 {syn?.anti_synergies && syn.anti_synergies.length > 0 && (
                   <div className="space-y-1.5 pt-1">
                     {syn.anti_synergies.map((as, idx) => (
-                      <div key={idx} className="text-[11px] text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/40 p-2 rounded-xl border border-rose-500/20 flex items-start gap-1.5">
+                      <div
+                        key={idx}
+                        className="text-[11px] text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/40 p-2 rounded-xl border border-rose-500/20 flex items-start gap-1.5"
+                      >
                         <AlertTriangle className="h-3.5 w-3.5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
                         <div>
-                          <span className="font-bold text-rose-700 dark:text-rose-400">Conflict ({as.perks.join(' + ')}): </span>
+                          <span className="font-bold text-rose-700 dark:text-rose-400">
+                            {t.conflictLabel || 'Conflict'} ({as.perks.join(' + ')}):{' '}
+                          </span>
                           <span>{as.description}</span>
                         </div>
                       </div>
@@ -560,12 +629,17 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <div>
                 <h3 className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                  Select Perk for Survivor {activeSlot.survivorId} (Slot {activeSlot.perkIndex + 1})
+                  {(t.selectPerkTitle || 'Select Perk for Survivor {id} (Slot {slot})')
+                    .replace('{id}', String(activeSlot.survivorId))
+                    .replace('{slot}', String(activeSlot.perkIndex + 1))}
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Choose from Survivor perk vault</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {t.choosePerkVault || 'Choose from Survivor perk vault'}
+                </p>
               </div>
               <button
                 onClick={() => setActiveSlot(null)}
+                aria-label={tModal.close || 'Close'}
                 className="rounded-xl p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 <X className="h-5 w-5" />
@@ -577,7 +651,7 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
               <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
               <input
                 type="text"
-                placeholder="Search survivor perks..."
+                placeholder={t.searchPlaceholder || 'Search survivor perks...'}
                 value={perkSearch}
                 onChange={(e) => setPerkSearch(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 pl-10 pr-4 py-2.5 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
@@ -588,11 +662,11 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
             <div className="flex-1 overflow-y-auto pr-1 grid grid-cols-1 sm:grid-cols-2 gap-3 min-h-[300px]">
               {loadingPerks ? (
                 <div className="col-span-full flex items-center justify-center text-slate-500 dark:text-slate-400 text-xs py-12">
-                  Loading survivor perks...
+                  {t.loadingPerks || 'Loading survivor perks...'}
                 </div>
               ) : filteredPerks.length === 0 ? (
                 <div className="col-span-full text-center text-slate-500 dark:text-slate-400 text-xs py-12">
-                  No matching perks found.
+                  {t.noPerksFound || 'No matching perks found.'}
                 </div>
               ) : (
                 filteredPerks.map((perk, idx) => (
@@ -617,7 +691,7 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                         {perk.name}
                       </h4>
                       <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                        {perk.character ? perk.character : 'General Perk'}
+                        {perk.character ? perk.character : (dict?.characterDetail?.generalPerk || 'General Perk')}
                       </p>
                     </div>
                   </div>

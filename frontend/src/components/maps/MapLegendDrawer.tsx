@@ -24,6 +24,7 @@ export interface MapLegendDrawerProps {
   title?: string;
   mapName?: string;
   realmName?: string;
+  dict?: any;
 }
 
 const GENERIC_PLACEHOLDERS: ReadonlySet<string> = new Set([
@@ -38,8 +39,11 @@ const GENERIC_PLACEHOLDERS: ReadonlySet<string> = new Set([
   'main building',
   'top spawn',
   'bottom spawn',
+  'killer shack',
   'left tile',
   'right tile',
+  'center zone',
+  'center',
 ]);
 
 const isGenericOrMissing = (val?: string): boolean => {
@@ -57,6 +61,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
   title,
   mapName,
   realmName,
+  dict,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState<boolean>(true);
 
@@ -129,7 +134,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
 
   return (
     <section
-      aria-label="Map Sector Legend"
+      aria-label={dict?.maps?.sectorLegendAria || 'Map Sector Legend'}
       className={`rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm dark:shadow-xl backdrop-blur-md overflow-hidden transition-all duration-300 ${className}`}
       data-testid="map-legend-drawer"
     >

@@ -1,12 +1,12 @@
 export default {
   "searchPlaceholder": "Nach Perk-Name oder Beschreibung suchen...",
-  "category": "Rolle",
+  "category": "Kategorie",
   "allCategories": "Alle Rollen",
   "survivor": "Überlebende",
   "killer": "Killer",
   "character": "Charakter",
   "allCharacters": "Alle Charaktere",
-  "sortBy": "Sortieren nach",
+  "sortBy": "Sortierfelder",
   "sortName": "Perk-Name",
   "sortCharacter": "Charakter",
   "sortCategory": "Rolle",
@@ -34,7 +34,6 @@ export default {
   "gridView": "Rasteransicht",
   "listView": "Listenansicht",
   "resetAllFilters": "Charakterfilter zurücksetzen",
-  "sortBy": "Sortierfelder",
   "sortOrder": "Sortierrichtung",
   "sortFields": "Sortierfelder",
   "sortOrderLabel": "Sortierrichtung"

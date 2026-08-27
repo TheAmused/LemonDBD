@@ -9,9 +9,10 @@ interface StartRunPanelProps {
   killer: string;
   busy: boolean;
   onStart: () => void;
+  dict?: any;
 }
 
-export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onStart }) => {
+export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onStart, dict }) => {
   const { token } = useAuth();
   const [poolSize, setPoolSize] = useState<number | null>(null);
   const [pageCount, setPageCount] = useState<number | null>(null);
@@ -47,9 +48,9 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
         is frozen for the whole attempt.
       </p>
       <div className="flex flex-wrap justify-center gap-5 font-mono text-[11px] text-slate-500">
-        <span>perks <b className="text-slate-800 dark:text-slate-200 tabular-nums">{poolSize ?? '—'}</b></span>
-        <span>pages <b className="text-slate-800 dark:text-slate-200 tabular-nums">{pageCount ?? '—'}</b></span>
-        <span>last page <b className="text-slate-800 dark:text-slate-200 tabular-nums">{lastPageSize ?? '—'}</b> perks</span>
+        <span>{dict?.streaks?.perksCount || 'perks'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{poolSize ?? '—'}</b></span>
+        <span>{dict?.streaks?.pagesCount || 'pages'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{pageCount ?? '—'}</b></span>
+        <span>{dict?.streaks?.lastPage || 'last page'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{lastPageSize ?? '—'}</b> {dict?.streaks?.perksCount || 'perks'}</span>
       </div>
       <button
         type="button"
@@ -57,7 +58,7 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
         disabled={busy}
         className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2.5 text-xs font-extrabold text-white disabled:opacity-60 shadow-sm cursor-pointer"
       >
-        {busy ? 'Starting…' : 'Start streak'}
+        {busy ? (dict?.streaks?.starting || 'Starting…') : (dict?.streaks?.startStreak || 'Start streak')}
       </button>
     </div>
   );

@@ -301,7 +301,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             href={`/${currentLocale}`}
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-xl"
-            aria-label="LemonDBD Home"
+            aria-label={dict?.sidebar?.homeAria || 'LemonDBD Home'}
           >
             <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500/20 via-red-950/20 to-slate-100 dark:to-slate-900 border border-amber-500/30 text-slate-900 dark:text-white shadow-md group-hover:scale-105 transition-transform p-1.5">
               <LemonIcon className="h-7 w-7" />
@@ -315,7 +315,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Navigation */}
-        <nav aria-label="Main Navigation" className="mt-5 space-y-1">
+        <nav aria-label={dict?.sidebar?.navAria || 'Main Navigation'} className="mt-5 space-y-1">
           <p className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
             {dict?.sidebar?.navigation || 'Navigation'}
           </p>
@@ -451,7 +451,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       {/* Desktop Sidebar */}
       <aside
-        aria-label="Sidebar Navigation"
+        aria-label={dict?.sidebar?.navAria || 'Sidebar Navigation'}
         className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-transform duration-300 ${
           isCollapsed ? '-translate-x-full' : 'translate-x-0'
         }`}
@@ -486,7 +486,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <Link
           href={`/${currentLocale}`}
           className="flex items-center gap-2.5"
-          aria-label="LemonDBD Home"
+          aria-label={dict?.sidebar?.homeAria || 'LemonDBD Home'}
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 border border-amber-500/30 text-white p-1">
             <LemonIcon className="h-6 w-6" />
@@ -500,7 +500,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           type="button"
           onClick={() => setMobileOpen(true)}
           aria-expanded={mobileOpen}
-          aria-label="Open Navigation Drawer"
+          aria-label={dict?.sidebar?.openDrawer || 'Open Navigation Drawer'}
           className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900 transition-colors cursor-pointer"
         >
           <Menu className="h-5 w-5" />
@@ -522,7 +522,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
-              aria-label="Close Navigation Drawer"
+              aria-label={dict?.sidebar?.closeDrawer || 'Close Navigation Drawer'}
               className="absolute right-3 top-3 rounded-full p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors"
             >
               <X className="h-5 w-5" />
@@ -541,10 +541,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <BugReportModal
         isOpen={bugModalOpen}
         onClose={() => setBugModalOpen(false)}
+        dict={dict}
       />
       <BuyCoffeeModal
         isOpen={coffeeModalOpen}
         onClose={() => setCoffeeModalOpen(false)}
+        dict={dict}
       />
     </>
   );

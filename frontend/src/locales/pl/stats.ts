@@ -4,5 +4,11 @@ export default {
   "characters": "Postacie",
   "survivors": "Ocalali",
   "killers": "Zabójcy",
-  "ratio": "Stosunek Ról"
+  "ratio": "Stosunek Ról",
+  "totalXpClaimed": "Łączne XP Zdobyte",
+  "completed": "Ukończono",
+  "streak": "Seria",
+  "win": "pokonano",
+  "vaultTotal": "Wszystkie perki",
+  "ownedPerks": "Posiadane perki"
 };

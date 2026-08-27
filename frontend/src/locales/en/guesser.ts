@@ -27,5 +27,17 @@ export default {
   "modeMemesTitle": "DBD Meme Guesser",
   "modeMemesDesc": "Guess the jokes and names from popular Dead by Daylight community memes.",
   "reset": "Reset Streak",
-  "streakResetSuccess": "Streak reset successfully"
+  "streakResetSuccess": "Streak reset successfully",
+  "soundOn": "Sound On",
+  "soundOff": "Sound Off",
+  "best": "Best:",
+  "streak": "Streak",
+  "wip": "WIP",
+  "charAvatarHint": "Character avatar hint",
+  "redacted": "Redacted (High Streak)",
+  "blurred": "Blurred (Medium Streak)",
+  "distortedPerkIcon": "Distorted perk icon hint",
+  "perkIconChoice": "Perk Icon Choice",
+  "escReturn": "Esc: Return",
+  "spaceContinue": "Space: Continue"
 };

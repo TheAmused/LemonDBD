@@ -77,38 +77,42 @@ def parse_header_target(header_text: str) -> Tuple[Optional[Path], Optional[Tupl
     Extracts target filepath and optional line replacement range (start_line, end_line) (1-indexed).
     Supported formats:
       - `path/to/file.tsx:10-25`
-      - `path/to/file.tsx (lines 10-25)`
-      - `path/to/file.tsx (line 10)`
-      - `path/to/file.tsx`
+      - `path/to/file.tsx` (lines 10-25)
+      - `path/to/file.tsx:10`
+      - path/to/file.tsx:10-25
     """
-    header_text = clean_text(header_text)
+    header_text = clean_text(header_text).strip()
+    header_text = re.sub(r'^#+\s*', '', header_text).strip()
+    
     line_range: Optional[Tuple[int, int]] = None
 
-    # Check for line range pattern e.g. (lines 10-20), (line 15), :10-20, :15
-    range_match = re.search(r'(?:[:\s\(]+(?:lines?|l)?\s*(\d+)(?:\s*[-–—:]\s*(\d+))?\s*\)?)$', header_text, re.IGNORECASE)
+    # Step 1: Normalize cases where line range is inside backticks like `file.ts:49-55` -> `file.ts`:49-55
+    header_text = re.sub(r'`([^`:]+):(\d+(?:[-–—:]\d+)?)`', r'`\1`:\2', header_text)
+
+    # Step 2: Match line range suffix at the end
+    range_match = re.search(r'[:\s\(]+(?:lines?\vert{}l)?\s*(\d+)(?:\s*[-–—:]\s*(\d+))?\s*\)?\s*$', header_text, re.IGNORECASE)
     if range_match:
         start_l = int(range_match.group(1))
         end_l = int(range_match.group(2)) if range_match.group(2) else start_l
         line_range = (start_l, end_l)
-        # Strip the range part from header text to parse the path cleanly
         header_text = header_text[:range_match.start()].strip()
 
-    # 1. Look inside parentheses: (path/to/file.ext)
+    # Step 3: Match path in parentheses: (path/to/file.ext)
     match = re.search(r'\(([^)\s]+\.[a-zA-Z0-9]+)\)', header_text)
     if match:
         return resolve_project_path(match.group(1)), line_range
 
-    # 2. Look inside backticks: `path/to/file.ext`
+    # Step 4: Match path in backticks: `path/to/file.ext`
     match = re.search(r'`([^`\s]+\.[a-zA-Z0-9]+)`', header_text)
     if match:
         return resolve_project_path(match.group(1)), line_range
 
-    # 3. Look for standalone tokens with valid extensions
+    # Step 5: Match standalone valid tokens
     tokens = re.findall(r'[a-zA-Z0-9_\-/\\\[\]@\.]+\.[a-zA-Z0-9]+', header_text)
     for token in tokens:
-        ext = token.split(".")[-1].lower()
+        clean_token = token.strip("`()'\"#:")
+        ext = clean_token.split(".")[-1].lower()
         if ext in VALID_EXTENSIONS:
-            clean_token = token.strip("`()'\"#")
             return resolve_project_path(clean_token), line_range
 
     return None, None

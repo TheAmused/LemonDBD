@@ -11,6 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.core.config import Config
 from app.core.extensions import db, migrate, mail
+from app.core.limiter import limiter
 import app.models  # noqa: F401
 
 
@@ -46,6 +47,19 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
     mail.init_app(flask_app)
+    limiter.init_app(flask_app)
+
+    @flask_app.errorhandler(429)
+    def ratelimit_handler(e):
+        retry_after = getattr(e, "description", None) or getattr(e, "retry_after", None)
+        if not retry_after and hasattr(e, "get_headers"):
+            headers = dict(e.get_headers())
+            retry_after = headers.get("Retry-After")
+        return jsonify({
+            "error": "Too Many Requests",
+            "message": "Rate limit exceeded. Please wait a moment before trying again.",
+            "retry_after": str(retry_after) if retry_after is not None else None,
+        }), 429
 
     def _init_db_safely():
         is_testing = flask_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)

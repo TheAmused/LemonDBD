@@ -114,7 +114,8 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
               {dict?.streaks?.historyStreakComplete || 'History Streak complete!'}
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 capitalize">
-              You beat every row on {mode} mode.
+              {dict?.streaks?.youBeatEveryRowOn || 'You beat every row on'} {mode}{' '}
+              {dict?.streaks?.modeSuffix || 'mode.'}
             </p>
             <button
               onClick={reset}
@@ -133,8 +134,11 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
               </h3>
               {run && (
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-                  Row {run.current_row_index + 1} of {run.total_rows} &middot; killer{' '}
-                  {run.total_killers_beaten + 1} of {run.total_owned_killers}
+                  {dict?.streaks?.rowLabel || 'Row'} {run.current_row_index + 1}{' '}
+                  {dict?.streaks?.ofLabel || 'of'} {run.total_rows}{' '}
+                  {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.killerLabel || 'killer'}{' '}
+                  {run.total_killers_beaten + 1} {dict?.streaks?.ofLabel || 'of'}{' '}
+                  {run.total_owned_killers}
                 </p>
               )}
             </div>
@@ -183,6 +187,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
                 killers={run.owned_killers}
                 rowSize={run.row_size}
                 currentRowIndex={run.current_row_index}
+                dict={dict}
               />
             )}
           </div>
@@ -207,7 +212,11 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
           perks={perkModal?.perks ?? []}
           onClose={() => setPerkModal(null)}
         />
-        <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} />
+        <HistoryRowClearedBanner
+          rowNumber={rowClearedNumber}
+          onClose={() => setRowClearedNumber(null)}
+          dict={dict}
+        />
       </div>
     </div>
   );

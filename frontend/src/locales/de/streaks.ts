@@ -166,6 +166,18 @@ export default {
   "gauntletConceptBody": "den du besitzt, einen Trial nach dem anderen. Je länger deine Serie läuft, desto weniger Perks darfst du mitbringen, bis du in der letzten Stufe perklos gewinnen musst.",
   "neverAnyoneElseNote": ", niemals die eines anderen. Du startest mit allen 3 und verlierst bei jeder Stufe einen. Sobald du unter 3 bist, wählst du selbst, welche du behältst.",
   "checkpointFallbackNote": ". Verlierst du danach, fällst du nur auf deinen letzten Checkpoint zurück, nicht ganz auf null, auch wenn jeder",
-  "checkpointPoolNote": "seit dem Checkpoint besiegte Charakter wieder in den Pool zurückkehrt. Checkpoints und Stufen greifen zusammen, sodass der Perk, den du verlierst, und der Fortschritt, den du behältst, beim selben Sieg passieren."
+  "checkpointPoolNote": "seit dem Checkpoint besiegte Charakter wieder in den Pool zurückkehrt. Checkpoints und Stufen greifen zusammen, sodass der Perk, den du verlierst, und der Fortschritt, den du behältst, beim selben Sieg passieren.",
+  "youBeatEveryRowOn": "Du hast jede Reihe besiegt im Modus",
+  "rowLabel": "Reihe",
+  "ofLabel": "von",
+  "killerLabel": "Killer",
+  "nextRowPreviewLabel": "Vorschau der nächsten Reihe",
+  "unlockedSuffix": "freigeschaltet",
+  "availableLabel": "Verfügbar",
+  "lockedLabel": "Gesperrt",
+  "rowClearedPrefix": "Reihe abgeschlossen! Reihe",
+  "rowUnlockedSuffix": "freigeschaltet.",
+  "mediumModeDesc": "Checkpoints speichern jede Reihe, die du abschließt. Eine Niederlage fällt nur auf den Beginn der Reihe zurück, nicht auf null.",
+  "killersColonLabel": "Killer:"
 };
 

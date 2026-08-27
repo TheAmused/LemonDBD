@@ -166,6 +166,18 @@ export default {
   "gauntletConceptBody": "you own, one trial at a time. The longer your streak runs, the fewer perks you get to bring, until the final tier has you winning bare.",
   "neverAnyoneElseNote": ", never anyone else's. You start with all 3, and lose one at every tier. Once you are below 3, you choose which ones to keep.",
   "checkpointFallbackNote": ". Lose after that and you only fall back to your last checkpoint, not all the way to zero, though every",
-  "checkpointPoolNote": "cleared since then goes back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress you keep happen on the very same win."
+  "checkpointPoolNote": "cleared since then goes back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress you keep happen on the very same win.",
+  "youBeatEveryRowOn": "You beat every row on",
+  "rowLabel": "Row",
+  "ofLabel": "of",
+  "killerLabel": "killer",
+  "nextRowPreviewLabel": "Next row preview",
+  "unlockedSuffix": "unlocked",
+  "availableLabel": "Available",
+  "lockedLabel": "Locked",
+  "rowClearedPrefix": "Row cleared! Row",
+  "rowUnlockedSuffix": "unlocked.",
+  "mediumModeDesc": "Checkpoints save each row you clear. A loss falls back to the row's start, not to zero.",
+  "killersColonLabel": "Killers:"
 };
 

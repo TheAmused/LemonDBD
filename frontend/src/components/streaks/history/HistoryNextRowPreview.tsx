@@ -9,6 +9,7 @@ export interface HistoryNextRowPreviewProps {
   killers: string[];
   rowSize: number;
   currentRowIndex: number;
+  dict?: any;
 }
 
 const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
@@ -37,6 +38,7 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
   killers,
   rowSize,
   currentRowIndex,
+  dict,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const nextRowStart = (currentRowIndex + 1) * rowSize;
@@ -51,7 +53,8 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
         className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
       >
         <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-          Next row preview &middot; Row {currentRowIndex + 2}
+          {dict?.streaks?.nextRowPreviewLabel || 'Next row preview'}{' '}
+          {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.rowLabel || 'Row'} {currentRowIndex + 2}
         </span>
         <ChevronDown
           className={`h-4 w-4 text-slate-400 transition-transform ${expanded ? 'rotate-180' : ''}`}

@@ -103,14 +103,16 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
             {dict?.streaks?.perkPool || 'Perk pool'}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            {unlocked.length} unlocked &middot; {locked.length} locked
+            {unlocked.length} {dict?.streaks?.unlockedSuffix || 'unlocked'}{' '}
+            {dict?.streaks?.middotSeparator || '·'} {locked.length}{' '}
+            {dict?.streaks?.lockedSuffix || 'locked'}
           </p>
         </div>
       </div>
 
       <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
         <CheckCircle2 className="w-3.5 h-3.5" />
-        Available ({unlocked.length})
+        {dict?.streaks?.availableLabel || 'Available'} ({unlocked.length})
       </div>
       {unlocked.length === 0 ? (
         <p className="text-xs text-slate-400 dark:text-slate-500 mb-5">
@@ -126,7 +128,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
 
       <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
         <Lock className="w-3.5 h-3.5" />
-        Locked ({locked.length})
+        {dict?.streaks?.lockedLabel || 'Locked'} ({locked.length})
       </div>
       {locked.length === 0 ? (
         <p className="text-xs text-slate-400 dark:text-slate-500">

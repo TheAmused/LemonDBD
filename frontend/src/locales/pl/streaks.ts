@@ -166,6 +166,18 @@ export default {
   "gauntletConceptBody": "które posiadasz, jedna próba na raz. Im dłuższa twoja seria, tym mniej perków możesz zabrać, aż na ostatnim poziomie wygrywasz bez żadnego.",
   "neverAnyoneElseNote": ", nigdy cudze. Zaczynasz ze wszystkimi 3, i tracisz jeden na każdym poziomie. Gdy zejdziesz poniżej 3, sam wybierasz, które zachować.",
   "checkpointFallbackNote": ". Jeśli przegrasz po tym, cofasz się tylko do ostatniego punktu kontrolnego, nie do zera, chociaż każdy",
-  "checkpointPoolNote": "pokonany od tego momentu wraca do puli. Punkty kontrolne i poziomy zmieniają się razem, więc utracony perk i zachowany postęp następują przy tym samym zwycięstwie."
+  "checkpointPoolNote": "pokonany od tego momentu wraca do puli. Punkty kontrolne i poziomy zmieniają się razem, więc utracony perk i zachowany postęp następują przy tym samym zwycięstwie.",
+  "youBeatEveryRowOn": "Pokonałeś każdy wiersz w trybie",
+  "rowLabel": "Wiersz",
+  "ofLabel": "z",
+  "killerLabel": "zabójca",
+  "nextRowPreviewLabel": "Podgląd następnego wiersza",
+  "unlockedSuffix": "odblokowany",
+  "availableLabel": "Dostępne",
+  "lockedLabel": "Zablokowane",
+  "rowClearedPrefix": "Wiersz ukończony! Wiersz",
+  "rowUnlockedSuffix": "odblokowany.",
+  "mediumModeDesc": "Punkty kontrolne zapisują każdy ukończony wiersz. Porażka cofa Cię tylko do początku wiersza, a nie do zera.",
+  "killersColonLabel": "Zabójcy:"
 };
 

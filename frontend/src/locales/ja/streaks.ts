@@ -165,5 +165,17 @@ export default {
   "gauntletConceptBody": "を1体ずつ倒していきます。ストリークが伸びるほど持ち込めるパークは減っていき、最終ティアではパークなしで勝利する必要があります。",
   "neverAnyoneElseNote": "。他のキャラクターのパークは使いません。最初は3つ全て持っており、ティアが上がるごとに1つ失います。3つを下回ったら、残すパークは自分で選べます。",
   "checkpointFallbackNote": "。その後に負けても、ゼロまでではなく直前のチェックポイントまで戻るだけです。ただし、それ以降に倒した",
-  "checkpointPoolNote": "キャラクターは再びプールに戻ります。チェックポイントとティアは同時に進むため、失うパークと維持する進捗は同じ勝利のタイミングで起こります。"
+  "checkpointPoolNote": "キャラクターは再びプールに戻ります。チェックポイントとティアは同時に進むため、失うパークと維持する進捗は同じ勝利のタイミングで起こります。",
+  "youBeatEveryRowOn": "全ての行をクリア！モード：",
+  "rowLabel": "行",
+  "ofLabel": "/",
+  "killerLabel": "キラー",
+  "nextRowPreviewLabel": "次の行のプレビュー",
+  "unlockedSuffix": "解放済み",
+  "availableLabel": "利用可能",
+  "lockedLabel": "ロック中",
+  "rowClearedPrefix": "行クリア！行",
+  "rowUnlockedSuffix": "を解放しました。",
+  "mediumModeDesc": "チェックポイントはクリアした行ごとに保存されます。敗北してもゼロにはならず、その行の最初に戻るだけです。",
+  "killersColonLabel": "キラー："
 };

@@ -100,6 +100,24 @@ export default {
   "reportedBy": "Gemeldet von",
   "noEmailProvided": "Keine E-Mail angegeben",
   "description": "Beschreibung",
-  "devFeedbackLabel": "Entwickler-Feedback / Antwort (für Einsender sichtbar)"
+  "devFeedbackLabel": "Entwickler-Feedback / Antwort (für Einsender sichtbar)",
+  "totalActionsLabel": "Aktionen insgesamt",
+  "pageLabel": "Seite",
+  "ofLabel": "von",
+  "attachmentsLabel": "Anhänge",
+  "roleSurvivor": "Überlebender",
+  "roleKiller": "Killer",
+  "bugPoolNotice": "Gilt für beide Rollen: Killer erscheinen gelegentlich mit einer verbuggten Fähigkeit, und ein aus dem Wiki gescrapter Überlebender vor dem eigentlichen Release muss bis zum Launch verborgen bleiben. Auch Talente können gelegentlich fehlerhaft erscheinen.",
+  "completionsLabel": "Abschlüsse",
+  "middotSeparator": "·",
+  "usersLabel": "Nutzer",
+  "uniqueUsersLabel": "eindeutige Nutzer",
+  "activeLabel": "Aktiv:",
+  "survAbbrev": "Übl. /",
+  "closeSymbol": "×",
+  "userDirectoryLabel": "Benutzerverzeichnis",
+  "bugReportsLabel": "Fehlerberichte",
+  "confirmDeleteUserPrefix": "Bist du sicher, dass du diesen Benutzer löschen möchtest:",
+  "cannotBeUndone": "Dies kann nicht rückgängig gemacht werden."
 };
 

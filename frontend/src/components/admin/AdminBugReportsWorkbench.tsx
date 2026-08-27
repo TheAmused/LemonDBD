@@ -262,7 +262,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           {totalBugReports > 20 && (
             <div className="flex items-center justify-between pt-3 border-t border-slate-800 text-xs">
               <span className="text-slate-400 text-[11px]">
-                Page {bugPage} of {Math.ceil(totalBugReports / 20)}
+                {dict?.admin?.pageLabel || 'Page'} {bugPage} {dict?.admin?.ofLabel || 'of'} {Math.ceil(totalBugReports / 20)}
               </span>
               <div className="flex items-center gap-1.5">
                 <button
@@ -350,7 +350,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                     <ImageIcon className="h-3.5 w-3.5" />
-                    Attachments ({selectedBug.images.length})
+                    {dict?.admin?.attachmentsLabel || 'Attachments'} ({selectedBug.images.length})
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {selectedBug.images.map((imgUrl, i) => (

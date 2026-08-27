@@ -100,6 +100,24 @@ export default {
   "reportedBy": "Reported by",
   "noEmailProvided": "No email provided",
   "description": "Description",
-  "devFeedbackLabel": "Developer Feedback / Response Note (Visible to Submitter)"
+  "devFeedbackLabel": "Developer Feedback / Response Note (Visible to Submitter)",
+  "totalActionsLabel": "total actions",
+  "pageLabel": "Page",
+  "ofLabel": "of",
+  "attachmentsLabel": "Attachments",
+  "roleSurvivor": "Survivor",
+  "roleKiller": "Killer",
+  "bugPoolNotice": "Covers both roles: killers occasionally ship with a bugged power, and a survivor scraped from the wiki ahead of their actual in-game release needs to stay hidden until launch. Perks occasionally ship broken on their own too.",
+  "completionsLabel": "completions",
+  "middotSeparator": "·",
+  "usersLabel": "users",
+  "uniqueUsersLabel": "unique users",
+  "activeLabel": "Active:",
+  "survAbbrev": "Surv /",
+  "closeSymbol": "×",
+  "userDirectoryLabel": "User Directory",
+  "bugReportsLabel": "Bug Reports",
+  "confirmDeleteUserPrefix": "Are you sure you want to delete user",
+  "cannotBeUndone": "This cannot be undone."
 };
 

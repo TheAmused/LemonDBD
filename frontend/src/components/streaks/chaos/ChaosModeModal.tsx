@@ -11,6 +11,8 @@ export interface ChaosModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectDifficulty: (difficulty: Difficulty) => void;
+  /** The difficulty currently in effect, e.g. when reopened mid-run to switch. */
+  currentDifficulty?: Difficulty;
   dict?: any;
 }
 
@@ -38,7 +40,13 @@ const TILES: ChallengeIntroTile[] = [
   },
 ];
 
-export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({ isOpen, onClose, onSelectDifficulty, dict }) => {
+export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
+  isOpen,
+  onClose,
+  onSelectDifficulty,
+  currentDifficulty,
+  dict,
+}) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
 
   return (
@@ -56,6 +64,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({ isOpen, onClose,
         onSelectTile={(value) => onSelectDifficulty(value as Difficulty)}
         tileGridClassName="sm:grid-cols-3"
         escapeDisabled={isRulesOpen}
+        selectedValue={currentDifficulty}
       />
 
       <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

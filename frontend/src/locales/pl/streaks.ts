@@ -8,6 +8,8 @@ export default {
   "resetRun": "Resetuj podejście",
   "resetRunTitle": "Zresetować to podejście?",
   "chooseDifficulty": "Wybierz poziom trudności",
+  "changeDifficulty": "Change Difficulty",
+  "changeMode": "Change Mode",
   "chooseMode": "Wybierz tryb",
   "chooseGauntletMode": "Wybierz tryb Gauntleta",
   "runProgress": "Postęp podejścia",

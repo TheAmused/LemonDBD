@@ -11,6 +11,8 @@ export interface HistoryModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectMode: (mode: HistoryMode) => void;
+  /** The mode currently in effect, e.g. when reopened mid-run to switch. */
+  currentMode?: HistoryMode;
   dict?: any;
 }
 
@@ -31,7 +33,13 @@ const TILES: ChallengeIntroTile[] = [
   },
 ];
 
-export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({ isOpen, onClose, onSelectMode, dict }) => {
+export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
+  isOpen,
+  onClose,
+  onSelectMode,
+  currentMode,
+  dict,
+}) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
 
   return (
@@ -49,6 +57,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({ isOpen, onCl
         onSelectTile={(value) => onSelectMode(value as HistoryMode)}
         tileGridClassName="sm:grid-cols-2"
         escapeDisabled={isRulesOpen}
+        selectedValue={currentMode}
       />
 
       <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

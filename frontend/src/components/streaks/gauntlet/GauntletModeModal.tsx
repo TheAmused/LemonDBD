@@ -11,6 +11,8 @@ export interface GauntletModeModalProps {
   onClose: () => void;
   onSelectOriginal: () => void;
   role: 'killer' | 'survivor';
+  /** The mode currently in effect, e.g. when reopened mid-run to switch. */
+  currentMode?: 'original' | 'lemon';
   dict?: any;
 }
 
@@ -19,6 +21,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
   onClose,
   onSelectOriginal,
   role,
+  currentMode,
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -59,6 +62,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         }}
         tileGridClassName="sm:grid-cols-2"
         escapeDisabled={isRulesOpen}
+        selectedValue={currentMode}
       />
 
       <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />

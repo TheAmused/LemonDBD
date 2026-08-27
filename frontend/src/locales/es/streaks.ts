@@ -8,6 +8,8 @@ export default {
   "resetRun": "Reiniciar Racha",
   "resetRunTitle": "¿Reiniciar esta racha?",
   "chooseDifficulty": "Elige una dificultad",
+  "changeDifficulty": "Change Difficulty",
+  "changeMode": "Change Mode",
   "chooseMode": "Elige un modo",
   "chooseGauntletMode": "Elige un modo de Gauntlet",
   "runProgress": "Progreso de la racha",

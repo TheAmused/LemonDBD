@@ -1,5 +1,6 @@
 # backend/app/core/limiter.py
 import logging
+import os
 from typing import Any, Dict, Optional, Sequence
 from flask import request
 from flask_limiter import Limiter
@@ -11,9 +12,14 @@ logger = logging.getLogger(__name__)
 def get_client_ip() -> str:
     """
     Retrieves the client's real IP address.
-    Checks X-Forwarded-For header first (first comma-separated IP),
-    falling back to Flask-Limiter's get_remote_address.
+    Checks X-Real-IP header first (which Nginx sets directly from $remote_addr and cannot be client-spoofed),
+    then falls back to X-Forwarded-For (first comma-separated IP),
+    and finally Flask-Limiter's get_remote_address.
     """
+    real_ip = request.headers.get("X-Real-IP")
+    if real_ip and real_ip.strip():
+        return real_ip.strip()
+
     forwarded = request.headers.getlist("X-Forwarded-For")
     if forwarded:
         for entry in forwarded:
@@ -29,7 +35,7 @@ def validate_honeypot(
 ) -> bool:
     """
     Validates honeypot fields.
-    Returns False if any field in field_names is present in data with a non-empty string,
+    Returns False if any field in field_names is present in data with a non-empty string or boolean True,
     True otherwise.
     """
     if not isinstance(data, dict):
@@ -37,9 +43,12 @@ def validate_honeypot(
 
     for field in field_names:
         val = data.get(field)
-        if isinstance(val, str) and val.strip():
+        if isinstance(val, str):
+            if val.strip():
+                return False
+        elif val is True:
             return False
-        elif val is not None and not isinstance(val, (str, bool)) and val:
+        elif val is not None and not isinstance(val, bool) and val:
             return False
     return True
 
@@ -47,6 +56,6 @@ def validate_honeypot(
 limiter = Limiter(
     key_func=get_client_ip,
     default_limits=[],
-    storage_uri="memory://",
+    storage_uri=os.getenv("RATELIMIT_STORAGE_URI", "memory://"),
     strategy="fixed-window",
 )

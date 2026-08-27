@@ -29,6 +29,7 @@ export default {
   "matchSummary": "Podsumowanie meczu i historia wyników",
   "temporarilyDisabled": "To wyzwanie zostało tymczasowo wyłączone.",
   "pageStreak": "Page streak",
+  "normal": "Normal",
   "loadingKillers": "Ładowanie zabójców...",
   "retry": "Ponów",
   "loadingRoster": "Ładowanie listy postaci…",

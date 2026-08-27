@@ -29,6 +29,7 @@ export default {
   "matchSummary": "Match summary and historical performance",
   "temporarilyDisabled": "This challenge was disabled temporarily.",
   "pageStreak": "Page streak",
+  "normal": "Normal",
   "loadingKillers": "Loading your killers...",
   "retry": "Retry",
   "loadingRoster": "Loading roster…",

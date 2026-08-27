@@ -29,6 +29,7 @@ export default {
   "matchSummary": "マッチ概要と過去の成績",
   "temporarilyDisabled": "このチャレンジは一時的に無効化されています。",
   "pageStreak": "Page streak",
+  "normal": "Normal",
   "loadingKillers": "キラーを読み込み中...",
   "retry": "再試行",
   "loadingRoster": "名簿を読み込み中…",

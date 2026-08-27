@@ -29,6 +29,7 @@ export default {
   "matchSummary": "Resumen de partidas y rendimiento histórico",
   "temporarilyDisabled": "Este desafío fue desactivado temporalmente.",
   "pageStreak": "Page streak",
+  "normal": "Normal",
   "loadingKillers": "Cargando asesinos...",
   "retry": "Reintentar",
   "loadingRoster": "Cargando lista…",

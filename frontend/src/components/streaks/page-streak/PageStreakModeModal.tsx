@@ -20,7 +20,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
     {
       value: 'normal',
       label: dict?.streaks?.normal || 'Normal',
-      description: 'Every perk page counts. No difficulty options yet.',
+      description: 'Every perk page counts.',
       icon: BookOpen,
       accentClassName: 'border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/10 text-orange-400',
     },
@@ -39,7 +39,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
         onOpenRules={() => setIsRulesOpen(true)}
         tiles={tiles}
         onSelectTile={() => onStart()}
-        tileGridClassName="sm:grid-cols-1 max-w-xs mx-auto sm:mx-0"
+        tileGridClassName="sm:grid-cols-1 max-w-xs mx-auto"
         escapeDisabled={isRulesOpen}
       />
 

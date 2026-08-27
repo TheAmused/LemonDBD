@@ -20,14 +20,14 @@ const TILES: ChallengeIntroTile[] = [
     label: 'Medium',
     description: 'A checkpoint banks every row you clear.',
     icon: Shield,
-    accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10',
+    accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
   },
   {
     value: 'hell',
     label: 'Hell',
     description: 'No checkpoints. One loss resets everything.',
     icon: Skull,
-    accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10',
+    accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
   },
 ];
 

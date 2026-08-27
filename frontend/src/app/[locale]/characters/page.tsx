@@ -28,8 +28,10 @@ export default function CharactersPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Characters & Teachables';
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => {
+      setDict(d);
+      document.title = (d?.app as any)?.charactersPageTitle || 'LemonDBD - Characters & Teachables';
+    });
   }, [locale]);
 
   useEffect(() => {

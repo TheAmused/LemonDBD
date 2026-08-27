@@ -123,5 +123,12 @@ export default {
   "generalPerk": "General Perk",
   "alias": "Alias",
   "interactiveViewer": "Interactive Viewer",
-  "breadcrumbs": "Breadcrumb Navigation"
+  "breadcrumbs": "Breadcrumb Navigation",
+  "highRes3dModelView": "High-Res 3D Model View",
+  "interactive3dMeshEngineWip": "Interactive 3D Mesh Engine (WIP)",
+  "configRosterDesc": "Click character avatar buttons to toggle them in your Perk Randomizer pool.",
+  "hubSubtitle": "Explore Dead by Daylight Survivors & Killers. View character details, unique teachable perks, power add-ons, and equipment.",
+  "hubNoMatchingCharacters": "No characters match your current filter or search query.",
+  "togglePerkOwnershipHelp": "Click a perk to toggle whether you own it.",
+  "changesSaved": "Changes saved"
 };

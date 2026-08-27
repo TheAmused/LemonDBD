@@ -166,7 +166,10 @@ export default function GuesserPage() {
 
   // Load Translations
   useEffect(() => {
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => {
+      setDict(d);
+      document.title = d?.app?.guesserPageTitle || 'LemonDBD - Minigames & Guesser';
+    });
   }, [locale]);
 
   // Fetch Characters, Perks & Streaks Stats
@@ -206,7 +209,6 @@ export default function GuesserPage() {
   }, [backendBase]);
 
   useEffect(() => {
-    document.title = 'LemonDBD - Minigames & Guesser';
     loadStatsAndData();
   }, [loadStatsAndData]);
 

@@ -1,5 +1,26 @@
 export default {
   "title": "LemonDBD",
   "syncWiki": "Synchronizuj z Wiki",
-  "syncing": "Pobieranie..."
+  "syncing": "Pobieranie...",
+  "perksVaultTitle": "Skarbiec i Kodeks Umiejętności",
+  "perksVaultSubtitle": "Kompletny katalog umiejętności Ocalałych i Zabójców, ogólnych perków oraz ich aliasów.",
+  "perksVaultPageTitle": "LemonDBD - Skarbiec Umiejętności Dead by Daylight",
+  "perkRandomizerPageTitle": "LemonDBD - Losownik Umiejętności",
+  "loadingPerks": "Ładowanie Skarbca Umiejętności...",
+  "resetFilters": "Zresetuj filtry",
+  "adminPageTitle": "LemonDBD - Centrum Zarządzania Administratora",
+  "buildsPageTitle": "LemonDBD - Kompilacje Społeczności",
+  "guesserPageTitle": "LemonDBD - Minigry i Zgadywanka",
+  "charactersPageTitle": "LemonDBD - Postacie i Umiejętności",
+  "customPerksPageTitle": "LemonDBD - Kreator Własnych Umiejętności",
+  "draftPageTitle": "LemonDBD - Tryb Draftu",
+  "killerCalculatorPageTitle": "LemonDBD - Kalkulator Zabójcy",
+  "mapsPageTitle": "LemonDBD - Taktyczny Eksplorator Map",
+  "questsPageTitle": "LemonDBD - Zadania i Próby",
+  "resetPasswordPageTitle": "LemonDBD - Reset Hasła",
+  "smashOrPassPageTitle": "LemonDBD - Smash or Pass | Romans w Dead by Daylight",
+  "streaksPageTitle": "LemonDBD - Wyzwania",
+  "swfPageTitle": "LemonDBD - Planer Drużyny SWF",
+  "userPageTitle": "LemonDBD - Profil Użytkownika",
+  "homePageTitle": "LemonDBD - Towarzysz Dead by Daylight"
 };

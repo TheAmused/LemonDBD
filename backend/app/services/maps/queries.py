@@ -47,10 +47,18 @@ def fetch_maps(
                     return [r.to_dict() for r in rows]
         except Exception as e:
             logger.debug(f"SQLAlchemy get_maps fallback: {e}")
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
 
     conn = db_service.get_connection()
     seed_maps_if_empty(conn, db_service)
     cursor = conn.cursor()
+
+    # Check available columns in fallback SQLite
+    cursor.execute("PRAGMA table_info(map_realms);")
+    cols = {row[1] for row in cursor.fetchall()}
 
     query = "SELECT * FROM map_realms WHERE 1=1"
     params = []
@@ -58,7 +66,7 @@ def fetch_maps(
     if realm and realm != "All":
         query += " AND LOWER(realm) = LOWER(?)"
         params.append(realm)
-    if source and source != "all":
+    if source and source != "all" and "source" in cols:
         query += " AND LOWER(source) = LOWER(?)"
         params.append(source)
     if search:
@@ -76,8 +84,8 @@ def fetch_maps(
             "id": r["map_id"],
             "name": r["name"],
             "realm": r["realm"],
-            "source": r.get("source") if hasattr(r, "keys") and "source" in r.keys() else "hens333",
-            "source_label": r.get("source_label") if hasattr(r, "keys") and "source_label" in r.keys() else "Hens333 12-Clock Callouts",
+            "source": r["source"] if "source" in r.keys() else "hens333",
+            "source_label": r["source_label"] if "source_label" in r.keys() else "Hens333 12-Clock Callouts",
             "layout_type": r["layout_type"],
             "jungle_gyms_count": r["jungle_gyms_count"],
             "totem_spawns_count": r["totem_spawns_count"],
@@ -123,6 +131,10 @@ def fetch_map_by_id(
                     return d
         except Exception as e:
             logger.debug(f"SQLAlchemy get_map_by_id fallback: {e}")
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
 
     conn = db_service.get_connection()
     seed_maps_if_empty(conn, db_service)
@@ -141,8 +153,8 @@ def fetch_map_by_id(
             "id": realm_row["map_id"],
             "name": realm_row["name"],
             "realm": realm_row["realm"],
-            "source": realm_row.get("source") if hasattr(realm_row, "keys") and "source" in realm_row.keys() else "hens333",
-            "source_label": realm_row.get("source_label") if hasattr(realm_row, "keys") and "source_label" in realm_row.keys() else "Hens333 12-Clock Callouts",
+            "source": realm_row["source"] if "source" in realm_row.keys() else "hens333",
+            "source_label": realm_row["source_label"] if "source_label" in realm_row.keys() else "Hens333 12-Clock Callouts",
             "layout_type": realm_row["layout_type"],
             "jungle_gyms_count": realm_row["jungle_gyms_count"],
             "totem_spawns_count": realm_row["totem_spawns_count"],

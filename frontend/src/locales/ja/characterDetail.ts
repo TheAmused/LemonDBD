@@ -123,5 +123,12 @@ export default {
   "generalPerk": "共通パーク",
   "alias": "別名",
   "interactiveViewer": "インタラクティブビューア",
-  "breadcrumbs": "パンくずナビゲーション"
+  "breadcrumbs": "パンくずナビゲーション",
+  "highRes3dModelView": "高解像度3Dモデル表示",
+  "interactive3dMeshEngineWip": "インタラクティブ3Dメッシュエンジン（開発中）",
+  "configRosterDesc": "キャラクターアイコンをクリックしてパークランダマイザーの抽選プールを切り替えます。",
+  "hubSubtitle": "Dead by Daylightのサバイバーとキラーを探索。キャラクター詳細、固有パーク、能力アドオン、装備を確認できます。",
+  "hubNoMatchingCharacters": "現在のフィルターまたは検索条件に一致するキャラクターはいません。",
+  "togglePerkOwnershipHelp": "パークをクリックして所持状態を切り替えます。",
+  "changesSaved": "変更を保存しました"
 };

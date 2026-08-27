@@ -46,6 +46,13 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
         supports_credentials=True,
     )
 
+    db_uri = str(flask_app.config.get("SQLALCHEMY_DATABASE_URI", ""))
+    if "sqlite" in db_uri.lower():
+        engine_opts = dict(flask_app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
+        for key in ["pool_size", "max_overflow", "pool_timeout"]:
+            engine_opts.pop(key, None)
+        flask_app.config["SQLALCHEMY_ENGINE_OPTIONS"] = engine_opts
+
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
     mail.init_app(flask_app)
@@ -62,6 +69,18 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
             "message": "Rate limit exceeded. Please wait a moment before trying again.",
             "retry_after": str(retry_after) if retry_after is not None else None,
         }), 429
+
+    @flask_app.teardown_appcontext
+    def shutdown_session(exception=None):
+        if exception:
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
+        try:
+            db.session.remove()
+        except Exception:
+            pass
 
     def _init_db_safely():
         is_testing = flask_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
@@ -99,6 +118,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
                     try:
                         DatabaseService().init_db()
                         seed_default_users()
+                        ScraperService().seed_canonical_characters()
                         from app.seeds.smash_roster_seeder import seed_smash_rosters
                         seed_smash_rosters()
                     finally:
@@ -106,6 +126,7 @@ def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
         else:
             DatabaseService().init_db()
             seed_default_users()
+            ScraperService().seed_canonical_characters()
             from app.seeds.smash_roster_seeder import seed_smash_rosters
             seed_smash_rosters()
 

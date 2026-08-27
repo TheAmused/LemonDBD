@@ -1,5 +1,26 @@
 export default {
   "title": "LemonDBD",
   "syncWiki": "Sync Wiki Data",
-  "syncing": "Syncing Data..."
+  "syncing": "Syncing Data...",
+  "perksVaultTitle": "Perks Vault & Codex",
+  "perksVaultSubtitle": "Complete catalog of Dead by Daylight Survivor and Killer teachables, general perks, and aliases.",
+  "perksVaultPageTitle": "LemonDBD - Dead by Daylight Perks Vault",
+  "perkRandomizerPageTitle": "LemonDBD - Perk Randomizer",
+  "loadingPerks": "Loading Perks Vault...",
+  "resetFilters": "Reset Filters",
+  "adminPageTitle": "LemonDBD - Admin Control Center",
+  "buildsPageTitle": "LemonDBD - Community Builds",
+  "guesserPageTitle": "LemonDBD - Minigames & Guesser",
+  "charactersPageTitle": "LemonDBD - Characters & Teachables",
+  "customPerksPageTitle": "LemonDBD - Custom Perk Studio",
+  "draftPageTitle": "LemonDBD - Draft Mode",
+  "killerCalculatorPageTitle": "LemonDBD - Killer Calculator",
+  "mapsPageTitle": "LemonDBD - Tactical Map Command Explorer",
+  "questsPageTitle": "LemonDBD - Quests & Trials",
+  "resetPasswordPageTitle": "LemonDBD - Reset Password",
+  "smashOrPassPageTitle": "LemonDBD - Smash or Pass | Dead by Daylight Romance",
+  "streaksPageTitle": "LemonDBD - Challenges",
+  "swfPageTitle": "LemonDBD - SWF Team Planner",
+  "userPageTitle": "LemonDBD - User Profile",
+  "homePageTitle": "LemonDBD - Dead by Daylight Companion"
 };

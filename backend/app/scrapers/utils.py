@@ -68,6 +68,20 @@ def clean_description_text(text: str) -> str:
     cleaned = re.sub(r"(\d+)\s+(%)", r"\1\2", cleaned)
     cleaned = re.sub(r"(\d+)\s+(s|m)\b(?!\w)", r"\1\2", cleaned)
 
+    # Strip wiki deprecation / decommissioning banners
+    cleaned = re.sub(
+        r"THIS\s+(?:ADD-ON|ADDON|ITEM|UNLOCKABLE|OFFERING)\s+(?:IS\s+NO\s+LONGER\s+AVAILABLE|WAS\s+DECOMMISSIONED)\s*(?:\([^)]*\))?",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(
+        r"STOCKPILES\s+MAY\s+STILL\s+BE\s+USED\s+IN\s+TRIALS",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+
     cleaned = re.sub(
         r"This description is based on the changes announced for or featured in the upcoming Patch\s*[\d.]*",
         "",

@@ -123,5 +123,12 @@ export default {
   "generalPerk": "Habilidad General",
   "alias": "Alias",
   "interactiveViewer": "Visor Interactivo",
-  "breadcrumbs": "Navegación de Rutas"
+  "breadcrumbs": "Navegación de Rutas",
+  "highRes3dModelView": "Vista de Modelo 3D en Alta Resolución",
+  "interactive3dMeshEngineWip": "Motor de Mallas 3D Interactivo (En desarrollo)",
+  "configRosterDesc": "Haz clic en los avatares de personajes para activarlos o desactivarlos en el generador aleatorio de habilidades.",
+  "hubSubtitle": "Explora los Supervivientes y Asesinos de Dead by Daylight. Consulta detalles de personajes, habilidades enseñables únicas, accesorios y equipamiento.",
+  "hubNoMatchingCharacters": "Ningún personaje coincide con tu filtro o consulta de búsqueda actual.",
+  "togglePerkOwnershipHelp": "Haz clic en una habilidad para alternar si la posees.",
+  "changesSaved": "Cambios guardados"
 };

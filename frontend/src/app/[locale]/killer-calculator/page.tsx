@@ -27,8 +27,10 @@ export default function KillerCalculatorPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Killer Calculator';
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => {
+      setDict(d);
+      document.title = d?.app?.killerCalculatorPageTitle || 'LemonDBD - Killer Calculator';
+    });
   }, [locale]);
 
   useEffect(() => {

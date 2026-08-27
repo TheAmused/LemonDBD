@@ -19,6 +19,7 @@ from app.scrapers.constants import KNOWN_KILLER_POWER_ALIASES
 from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, OfferingData, PerkData
 from app.scrapers.utils import (
     clean_description_text,
+    extract_cell_markdown_text,
     extract_high_res_url,
     extract_slug_from_href,
     normalize_name_key,
@@ -1112,7 +1113,7 @@ class WikiGGScraperDriver:
         dynamic_power_to_killer: Dict[str, str] = {}
         if characters:
             for c in characters:
-                if c.category == "Killer":
+                if c.category == "Killer" or getattr(c, "role", "") == "Killer":
                     dynamic_power_to_killer[normalize_name_key(c.name)] = c.name
                     dynamic_power_to_killer[normalize_name_key(c.name.replace("The ", ""))] = c.name
                     if c.real_name:
@@ -1124,14 +1125,6 @@ class WikiGGScraperDriver:
                     if c.power and c.power.name:
                         p_norm = normalize_name_key(c.power.name)
                         dynamic_power_to_killer[p_norm] = c.name
-                        if p_norm.endswith("s"):
-                            dynamic_power_to_killer[p_norm[:-1]] = c.name
-                        else:
-                            dynamic_power_to_killer[p_norm + "s"] = c.name
-                        if p_norm.startswith("the "):
-                            dynamic_power_to_killer[p_norm[4:]] = c.name
-                        else:
-                            dynamic_power_to_killer["the " + p_norm] = c.name
 
         for k, v in KNOWN_KILLER_POWER_ALIASES.items():
             if k not in dynamic_power_to_killer:
@@ -1140,13 +1133,7 @@ class WikiGGScraperDriver:
         for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
             if element.name in ["h1", "h2", "h3", "h4"]:
                 headline = element.find(class_=re.compile(r"mw-headline"))
-                if headline:
-                    raw_header = headline.get_text(strip=True)
-                else:
-                    for edit_tag in element.find_all(class_=re.compile(r"mw-editsection|editsection")):
-                        edit_tag.decompose()
-                    raw_header = element.get_text().strip()
-
+                raw_header = headline.get_text(strip=True) if headline else element.get_text(strip=True)
                 cleaned_header = re.sub(r"\[\s*edit\s*\]", "", raw_header, flags=re.IGNORECASE).strip()
                 current_section = cleaned_header.lower()
 
@@ -1175,21 +1162,18 @@ class WikiGGScraperDriver:
                     continue
 
                 intro_target = None
-                p_prev = element.previous_sibling
+                p_prev = element.find_previous_sibling()
                 while p_prev and getattr(p_prev, "name", None) not in ["h1", "h2", "h3", "h4", "table"]:
-                    if getattr(p_prev, "name", None) == "p":
-                        txt = p_prev.get_text()
-                        m = re.search(r"is the Power of (?:The\s+)?([^.]+)", txt, re.IGNORECASE)
-                        if m:
-                            candidate_killer = m.group(1).strip()
-                            norm_cand = normalize_name_key(candidate_killer)
-                            matched_k = dynamic_power_to_killer.get(norm_cand)
-                            if not matched_k:
-                                matched_k = dynamic_power_to_killer.get("the " + norm_cand)
-                            if matched_k:
-                                intro_target = matched_k
-                                break
-                    p_prev = p_prev.previous_sibling
+                    txt = p_prev.get_text()
+                    m = re.search(r"is the Power of (?:The\s+)?([^.]+)", txt, re.IGNORECASE)
+                    if m:
+                        candidate_killer = m.group(1).strip()
+                        norm_cand = normalize_name_key(candidate_killer)
+                        matched_k = dynamic_power_to_killer.get(norm_cand) or dynamic_power_to_killer.get("the " + norm_cand)
+                        if matched_k:
+                            intro_target = matched_k
+                            break
+                    p_prev = p_prev.find_previous_sibling()
 
                 table_target = intro_target or current_target
 
@@ -1211,9 +1195,9 @@ class WikiGGScraperDriver:
 
                         description = ""
                         if len(cells) >= 4:
-                            description = clean_description_text(cells[3].get_text(separator="\n", strip=True))
+                            description = extract_cell_markdown_text(cells[3])
                         elif len(cells) == 3:
-                            description = clean_description_text(cells[2].get_text(separator="\n", strip=True))
+                            description = extract_cell_markdown_text(cells[2])
 
                         rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
 
@@ -1277,6 +1261,97 @@ class WikiGGScraperDriver:
                 )
             )
 
+        return addons
+
+    def scrape_addons_from_character_page(self, char: CharacterData) -> List[AddonData]:
+        """Scrape killer-specific addons from the killer's dedicated page on wiki.gg if omitted from main table."""
+        candidate_slugs = []
+        if char.wiki_slug:
+            candidate_slugs.append(char.wiki_slug)
+        if char.name:
+            candidate_slugs.append(char.name.replace(" ", "_"))
+        if char.real_name:
+            candidate_slugs.append(char.real_name.replace(" ", "_"))
+        if "slasher" in char.name.lower():
+            candidate_slugs.append("Jason_Voorhees")
+        if "judgment" in char.name.lower():
+            candidate_slugs.append("The_Judgment")
+
+        html_content = ""
+        for s in candidate_slugs:
+            try:
+                content = self.fetch_page_html(s)
+                if content and "add-on" in content.lower():
+                    html_content = content
+                    break
+            except Exception:
+                continue
+
+        if not html_content:
+            return []
+
+        soup = BeautifulSoup(html_content, "html.parser")
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+        addons: List[AddonData] = []
+        target = char.name
+        current_section = ""
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                current_section = element.get_text().strip().lower()
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                if "add-on" in current_section or "addon" in current_section:
+                    rows = element.find_all("tr")[1:]
+                    row_count = len(rows)
+                    for row_idx, row in enumerate(rows):
+                        cells = row.find_all(["td", "th"])
+                        if len(cells) < 2:
+                            continue
+                        try:
+                            img_tag = cells[0].find("img")
+                            icon_url = extract_high_res_url(img_tag, self.BASE_DOMAIN)
+                            name_cell = cells[1]
+                            name_link = name_cell.find("a")
+                            addon_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                            if not addon_name:
+                                continue
+
+                            description = ""
+                            if len(cells) >= 4:
+                                description = extract_cell_markdown_text(cells[3])
+                            elif len(cells) == 3:
+                                description = extract_cell_markdown_text(cells[2])
+
+                            rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
+                            if rarity == "Common" and row_count == 20:
+                                if row_idx < 4:
+                                    rarity = "Common"
+                                elif row_idx < 9:
+                                    rarity = "Uncommon"
+                                elif row_idx < 14:
+                                    rarity = "Rare"
+                                elif row_idx < 18:
+                                    rarity = "Very Rare"
+                                else:
+                                    rarity = "Ultra Rare"
+
+                            display_name = f"{addon_name} ({target})"
+                            sanitized = sanitize_filename(display_name)
+                            local_path = f"icons/addons/{sanitized}.png"
+
+                            addons.append(
+                                AddonData(
+                                    name=display_name,
+                                    associated_target=target,
+                                    category="Killer",
+                                    description=description,
+                                    icon_url=icon_url,
+                                    icon_local_path=local_path,
+                                    rarity=rarity,
+                                )
+                            )
+                        except Exception:
+                            continue
         return addons
 
 
@@ -1541,6 +1616,21 @@ class WikiGGScraperDriver:
             logger.info("Fetching Add-ons...")
             html_addons = self.fetch_page_html("Add-ons")
             addons = self.parse_wiki_addons(html_addons, characters)
+
+            # Check for killers whose addons are hosted on dedicated character pages
+            known_covered_killers = {
+                normalize_name_key(a.associated_target) for a in addons if a.associated_target
+            }
+            if characters:
+                for c in characters:
+                    if getattr(c, "category", "") == "Killer" or getattr(c, "role", "") == "Killer":
+                        c_norm = normalize_name_key(c.name)
+                        c_norm_no_the = normalize_name_key(c.name.replace("The ", ""))
+                        if c_norm not in known_covered_killers and c_norm_no_the not in known_covered_killers:
+                            char_addons = self.scrape_addons_from_character_page(c)
+                            if char_addons:
+                                logger.info(f"Enriched {len(char_addons)} add-ons from dedicated page for {c.name}")
+                                addons.extend(char_addons)
         except Exception as e:
             logger.warning(f"Failed to scrape wiki.gg addons: {e}")
             addons = []

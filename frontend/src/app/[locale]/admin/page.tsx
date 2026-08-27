@@ -73,8 +73,10 @@ export default function AdminPanelPage() {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Admin Control Center';
-    getDictionary(currentLocale).then(setDict);
+    getDictionary(currentLocale).then((d) => {
+      setDict(d);
+      document.title = d?.app?.adminPageTitle || 'LemonDBD - Admin Control Center';
+    });
   }, [currentLocale]);
 
   useEffect(() => {

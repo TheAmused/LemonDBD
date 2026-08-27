@@ -2,6 +2,7 @@
 import re
 import sys
 from pathlib import Path
+from typing import Optional, Tuple
 
 VALID_EXTENSIONS = {
     "py", "js", "ts", "jsx", "tsx", "json", "yaml", "yml",
@@ -37,15 +38,15 @@ COMMENT_STYLES = {
 
 
 def clean_text(text: str) -> str:
-    """Replaces non-breaking spaces (\xa0) and normalizes whitespace."""
+    """Replaces non-breaking spaces and normalizes line endings."""
     return text.replace('\xa0', ' ').replace('\r\n', '\n')
 
 
 def resolve_project_path(raw_path_str: str) -> Path:
-    """Smartly resolves relative paths based on project structure (backend/frontend)."""
+    """Resolves relative paths based on project structure (backend/frontend)."""
     raw_path_str = raw_path_str.strip().replace("\\", "/")
 
-    # 1. Do not touch if already explicitly prefixed with backend/ or frontend/
+    # 1. Direct match if already prefixed with backend/ or frontend/
     if raw_path_str.startswith("backend/") or raw_path_str.startswith("frontend/"):
         return Path(raw_path_str)
 
@@ -71,28 +72,46 @@ def resolve_project_path(raw_path_str: str) -> Path:
     return Path(raw_path_str)
 
 
-def extract_filepath_from_header(header_text: str) -> Path | None:
+def parse_header_target(header_text: str) -> Tuple[Optional[Path], Optional[Tuple[int, int]]]:
+    """
+    Extracts target filepath and optional line replacement range (start_line, end_line) (1-indexed).
+    Supported formats:
+      - `path/to/file.tsx:10-25`
+      - `path/to/file.tsx (lines 10-25)`
+      - `path/to/file.tsx (line 10)`
+      - `path/to/file.tsx`
+    """
     header_text = clean_text(header_text)
+    line_range: Optional[Tuple[int, int]] = None
+
+    # Check for line range pattern e.g. (lines 10-20), (line 15), :10-20, :15
+    range_match = re.search(r'(?:[:\s\(]+(?:lines?|l)?\s*(\d+)(?:\s*[-–—:]\s*(\d+))?\s*\)?)$', header_text, re.IGNORECASE)
+    if range_match:
+        start_l = int(range_match.group(1))
+        end_l = int(range_match.group(2)) if range_match.group(2) else start_l
+        line_range = (start_l, end_l)
+        # Strip the range part from header text to parse the path cleanly
+        header_text = header_text[:range_match.start()].strip()
 
     # 1. Look inside parentheses: (path/to/file.ext)
     match = re.search(r'\(([^)\s]+\.[a-zA-Z0-9]+)\)', header_text)
     if match:
-        return resolve_project_path(match.group(1))
+        return resolve_project_path(match.group(1)), line_range
 
     # 2. Look inside backticks: `path/to/file.ext`
     match = re.search(r'`([^`\s]+\.[a-zA-Z0-9]+)`', header_text)
     if match:
-        return resolve_project_path(match.group(1))
+        return resolve_project_path(match.group(1)), line_range
 
-    # 3. Look for standalone paths with valid extensions (supports Next.js dynamic brackets [locale])
+    # 3. Look for standalone tokens with valid extensions
     tokens = re.findall(r'[a-zA-Z0-9_\-/\\\[\]@\.]+\.[a-zA-Z0-9]+', header_text)
     for token in tokens:
         ext = token.split(".")[-1].lower()
         if ext in VALID_EXTENSIONS:
             clean_token = token.strip("`()'\"#")
-            return resolve_project_path(clean_token)
+            return resolve_project_path(clean_token), line_range
 
-    return None
+    return None, None
 
 
 def add_dynamic_path_comment(file_path: Path, code_lines: list[str]) -> str:
@@ -100,19 +119,16 @@ def add_dynamic_path_comment(file_path: Path, code_lines: list[str]) -> str:
     rel_path_str = str(file_path).replace("\\", "/")
     ext = file_path.suffix.lower()
 
-    # JSON does not support comments natively; return code as-is
     if ext == ".json" or ext not in COMMENT_STYLES:
         return "\n".join(code_lines) + "\n"
 
     comment_template = COMMENT_STYLES[ext]
     path_comment = comment_template.format(rel_path_str)
 
-    # Prevent duplicate path headers if already present in first few lines
     header_check_block = "\n".join(code_lines[:5])
     if rel_path_str in header_check_block:
         return "\n".join(code_lines) + "\n"
 
-    # Determine insertion point (preserve shebangs, encoding, or 'use client' / 'use server')
     insert_idx = 0
     while insert_idx < len(code_lines):
         line_clean = code_lines[insert_idx].strip().strip(";'\"")
@@ -130,7 +146,29 @@ def add_dynamic_path_comment(file_path: Path, code_lines: list[str]) -> str:
     return "\n".join(lines_copy) + "\n"
 
 
-def parse_and_create_ascii_trees(content: str):
+def apply_line_edit(file_path: Path, new_lines: list[str], line_range: Tuple[int, int]) -> bool:
+    """Replaces lines in start_line..end_line (1-indexed inclusive) with new_lines."""
+    if not file_path.exists():
+        print(f"❌ Error: Cannot apply partial edit. Target file does not exist: {file_path.resolve()}")
+        return False
+
+    existing_content = file_path.read_text(encoding="utf-8")
+    lines = existing_content.splitlines()
+
+    start_line, end_line = line_range
+    start_idx = max(0, start_line - 1)
+    end_idx = min(len(lines), end_line)
+
+    updated_lines = lines[:start_idx] + new_lines + lines[end_idx:]
+    result_content = "\n".join(updated_lines)
+    if existing_content.endswith("\n"):
+        result_content += "\n"
+
+    file_path.write_text(result_content, encoding="utf-8")
+    return True
+
+
+def parse_and_create_ascii_trees(content: str) -> int:
     tree_lines = content.splitlines()
     i = 0
     created_items = 0
@@ -195,21 +233,25 @@ def process_ai_output(content: str):
     parse_and_create_ascii_trees(content)
 
     print("\n" + "=" * 70)
-    print("STEP 2: Extracting and writing code blocks...")
+    print("STEP 2: Extracting code blocks & applying edits...")
     print("=" * 70)
     lines = content.splitlines()
     written_count = 0
+    edited_count = 0
 
-    current_filepath = None
+    current_filepath: Optional[Path] = None
+    current_range: Optional[Tuple[int, int]] = None
     in_code_block = False
-    code_lines = []
+    code_lines: list[str] = []
 
     for line_num, line in enumerate(lines, 1):
         if line.startswith("#") and not in_code_block:
-            detected_path = extract_filepath_from_header(line)
+            detected_path, detected_range = parse_header_target(line)
             if detected_path:
                 current_filepath = detected_path
-                print(f"[LINE {line_num:03d}] 🎯 HEADER MATCH  -> Target: '{current_filepath}' | Absolute: '{current_filepath.resolve()}'")
+                current_range = detected_range
+                range_info = f" [Lines {detected_range[0]}-{detected_range[1]}]" if detected_range else " [FULL FILE]"
+                print(f"[LINE {line_num:03d}] 🎯 HEADER MATCH  -> Target: '{current_filepath}'{range_info}")
             else:
                 print(f"[LINE {line_num:03d}] ⚠️ HEADER IGNORED -> '{line}'")
 
@@ -221,20 +263,27 @@ def process_ai_output(content: str):
                 in_code_block = False
                 if current_filepath:
                     current_filepath.parent.mkdir(parents=True, exist_ok=True)
-                    code_to_write = add_dynamic_path_comment(current_filepath, code_lines)
 
-                    with open(current_filepath, "w", encoding="utf-8") as f:
-                        f.write(code_to_write)
+                    if current_range:
+                        success = apply_line_edit(current_filepath, code_lines, current_range)
+                        if success:
+                            print(f"[LINE {line_num:03d}] ✏️ LINES EDITED  -> {current_filepath.resolve()} (Lines {current_range[0]}-{current_range[1]})\n")
+                            edited_count += 1
+                    else:
+                        code_to_write = add_dynamic_path_comment(current_filepath, code_lines)
+                        with open(current_filepath, "w", encoding="utf-8") as f:
+                            f.write(code_to_write)
+                        print(f"[LINE {line_num:03d}] ✅ FULL FILE SAVED -> {current_filepath.resolve()} ({len(code_lines)} lines)\n")
+                        written_count += 1
 
-                    print(f"[LINE {line_num:03d}] ✅ FILE WRITTEN   -> {current_filepath.resolve()} ({len(code_lines)} lines)\n")
-                    written_count += 1
                     current_filepath = None
+                    current_range = None
 
         elif in_code_block:
             code_lines.append(line)
 
     print("=" * 70)
-    print(f"SUMMARY: Successfully wrote {written_count} file(s).")
+    print(f"SUMMARY: Wrote {written_count} full file(s), applied {edited_count} targeted line edit(s).")
     print("=" * 70 + "\n")
 
 

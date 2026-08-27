@@ -64,6 +64,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
         tileGridClassName="sm:grid-cols-3"
         escapeDisabled={isRulesOpen}
         selectedValue={currentDifficulty}
+        currentLabel={dict?.streaks?.current || 'Current'}
       />
 
       <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

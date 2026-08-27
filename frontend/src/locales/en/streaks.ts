@@ -10,6 +10,7 @@ export default {
   "chooseDifficulty": "Choose a difficulty",
   "changeDifficulty": "Change Difficulty",
   "changeMode": "Change Mode",
+  "current": "Current",
   "chooseMode": "Choose a mode",
   "chooseGauntletMode": "Choose a Gauntlet Mode",
   "runProgress": "Run progress",

@@ -132,5 +132,17 @@ export default {
   "verifyEmail": "メールアドレスを確認",
   "loginToTrack": "チャレンジを記録するにはログインしてください",
   "loginToTrackDesc": "チャレンジは所持しているキラーやパークを使用するため、最初に本人確認が必要です。",
-  "logIn": "ログイン"
+  "logIn": "ログイン",
+  "youWonOn": "勝利！モード：",
+  "modeSuffix": "。",
+  "devSkipWinLabel": "DEV：勝利画面へスキップ",
+  "winsSuffix": "勝",
+  "usedLabel": "使用済み",
+  "leftThisCycle": "今サイクルの残り",
+  "usedTab": "使用済み",
+  "remainingTab": "残り",
+  "killersCleared": "体撃破",
+  "streakLabel": "ストリーク：",
+  "streakArrow": "→",
+  "middotSeparator": "·"
 };

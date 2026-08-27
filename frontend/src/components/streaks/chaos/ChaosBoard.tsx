@@ -177,7 +177,8 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {
               {dict?.streaks?.chaosStreak ? `${dict.streaks.chaosStreak} complete!` : 'Chaos Streak complete!'}
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              You won on <span className="capitalize">{difficulty}</span> mode.
+              {dict?.streaks?.youWonOn || 'You won on'} <span className="capitalize">{difficulty}</span>{' '}
+              {dict?.streaks?.modeSuffix || 'mode.'}
             </p>
             <button
               onClick={reset}
@@ -261,7 +262,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {
               className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
               <Trophy className="h-3.5 w-3.5" />
-              DEV: Skip to win screen
+              {dict?.streaks?.devSkipWinLabel || 'DEV: Skip to win screen'}
             </button>
           </div>
         )}

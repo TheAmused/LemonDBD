@@ -133,6 +133,18 @@ export default {
   "verifyEmail": "Zweryfikuj email",
   "loginToTrack": "Zaloguj się, aby śledzić wyzwania",
   "loginToTrackDesc": "Wyzwania korzystają z Twoich postaci i odblokowanych perków.",
-  "logIn": "Zaloguj się"
+  "logIn": "Zaloguj się",
+  "youWonOn": "Wygrałeś w trybie",
+  "modeSuffix": ".",
+  "devSkipWinLabel": "DEV: Przejdź do ekranu zwycięstwa",
+  "winsSuffix": "wygranych",
+  "usedLabel": "użytych",
+  "leftThisCycle": "pozostało w tym cyklu",
+  "usedTab": "Użyte",
+  "remainingTab": "Pozostałe",
+  "killersCleared": "zabójców pokonanych",
+  "streakLabel": "Seria:",
+  "streakArrow": "→",
+  "middotSeparator": "·"
 };
 

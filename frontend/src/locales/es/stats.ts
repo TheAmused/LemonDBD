@@ -4,5 +4,9 @@ export default {
   "characters": "Personajes",
   "survivors": "Supervivientes",
   "killers": "Asesinos",
-  "ratio": "Distribución"
+  "ratio": "Distribución",
+  "totalXpClaimed": "XP Total Reclamado",
+  "completed": "Completado",
+  "streak": "Racha",
+  "win": "derrotado"
 };

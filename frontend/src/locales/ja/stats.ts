@@ -4,5 +4,9 @@ export default {
   "characters": "キャラクター",
   "survivors": "サバイバー",
   "killers": "キラー",
-  "ratio": "ロール比率"
+  "ratio": "ロール比率",
+  "totalXpClaimed": "獲得XP合計",
+  "completed": "完了",
+  "streak": "ストリーク",
+  "win": "撃破"
 };

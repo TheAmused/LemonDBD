@@ -26,5 +26,16 @@ export default {
   "sortByCharacter": "キャラクター",
   "sortByRole": "役割",
   "orderAsc": "昇順 (A-Z)",
-  "orderDesc": "降順 (Z-A)"
+  "orderDesc": "降順 (Z-A)",
+  "filtersTitle": "パークフィルター",
+  "ownershipFilter": "所有別フィルター",
+  "clearSearch": "検索をクリア",
+  "viewMode": "表示モード切替",
+  "gridView": "グリッド表示",
+  "listView": "リスト表示",
+  "resetAllFilters": "キャラクターフィルターをリセット",
+  "sortBy": "ソートフィールド",
+  "sortOrder": "ソート方向",
+  "sortFields": "ソートフィールド",
+  "sortOrderLabel": "ソート方向"
 };

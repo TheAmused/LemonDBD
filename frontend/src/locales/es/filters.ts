@@ -26,5 +26,16 @@ export default {
   "sortByCharacter": "Personaje",
   "sortByRole": "Rol",
   "orderAsc": "Ascendente (A-Z)",
-  "orderDesc": "Descendente (Z-A)"
+  "orderDesc": "Descendente (Z-A)",
+  "filtersTitle": "Filtros de Perks",
+  "ownershipFilter": "Filtrar por Propiedad",
+  "clearSearch": "Limpiar búsqueda",
+  "viewMode": "Alternar Vista",
+  "gridView": "Vista de Cuadrícula",
+  "listView": "Vista de Lista",
+  "resetAllFilters": "Restablecer filtro de personaje",
+  "sortBy": "Campos de Ordenación",
+  "sortOrder": "Dirección de Ordenación",
+  "sortFields": "Campos de Ordenación",
+  "sortOrderLabel": "Dirección de Ordenación"
 };

@@ -4,5 +4,9 @@ export default {
   "characters": "Charaktere",
   "survivors": "Überlebende",
   "killers": "Killer",
-  "ratio": "Rollenverteilung"
+  "ratio": "Rollenverteilung",
+  "totalXpClaimed": "Gesamt XP Eingelöst",
+  "completed": "Abgeschlossen",
+  "streak": "Streak",
+  "win": "besiegt"
 };

@@ -410,7 +410,13 @@ function PerksContent() {
               </section>
             ) : (
               <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="w-full">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 lg:gap-8 justify-items-center w-full py-6">
+                <div
+                  className={
+                    viewMode === 'list'
+                      ? 'flex flex-col gap-2 sm:gap-3 w-full py-6'
+                      : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 lg:gap-8 justify-items-center w-full py-6'
+                  }
+                >
                   {perks.map((perk, idx) => (
                     <PerkCard
                       key={`${perk.name}-${idx}`}

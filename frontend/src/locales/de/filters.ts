@@ -26,5 +26,16 @@ export default {
   "sortByCharacter": "Charakter",
   "sortByRole": "Rolle",
   "orderAsc": "Aufsteigend (A-Z)",
-  "orderDesc": "Absteigend (Z-A)"
+  "orderDesc": "Absteigend (Z-A)",
+  "filtersTitle": "Perk-Filter",
+  "ownershipFilter": "Nach Besitz filtern",
+  "clearSearch": "Suche leeren",
+  "viewMode": "Ansicht wechseln",
+  "gridView": "Rasteransicht",
+  "listView": "Listenansicht",
+  "resetAllFilters": "Charakterfilter zurücksetzen",
+  "sortBy": "Sortierfelder",
+  "sortOrder": "Sortierrichtung",
+  "sortFields": "Sortierfelder",
+  "sortOrderLabel": "Sortierrichtung"
 };

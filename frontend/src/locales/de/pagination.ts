@@ -5,5 +5,9 @@ export default {
   "perPage": "Pro Seite",
   "page": "Seite",
   "previous": "Vorherige Seite",
-  "next": "Nächste Seite"
+  "next": "Nächste Seite",
+  "firstPage": "Erste Seite",
+  "lastPage": "Letzte Seite",
+  "goTo": "Gehe zu",
+  "navAriaLabel": "Seitennavigation"
 };

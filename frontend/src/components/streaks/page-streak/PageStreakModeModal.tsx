@@ -20,7 +20,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
     {
       value: 'normal',
       label: dict?.streaks?.normal || 'Normal',
-      description: 'Every perk page counts.',
+      description: dict?.streaks?.pageStreakNormalDesc || 'Every perk page counts.',
       icon: BookOpen,
       accentClassName: 'border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/10 text-orange-400',
     },
@@ -34,8 +34,11 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
         icon={BookOpen}
         iconClassName="bg-orange-500/10 border-orange-500/20 text-orange-600 dark:text-orange-400"
         title={dict?.streaks?.pageStreak || 'Page streak'}
-        intro="Pick a killer and build the strongest loadout you can from their current perk page. Win to move to the next page, lose and start over from page 1."
-        rulesLabel={dict?.streaks?.rules || 'Page Streak Rules'}
+        intro={
+          dict?.streaks?.pageStreakIntro ||
+          'Pick a killer and build the strongest loadout you can from their current perk page. Win to move to the next page, lose and start over from page 1.'
+        }
+        rulesLabel={dict?.streaks?.rules || 'Rules'}
         onOpenRules={() => setIsRulesOpen(true)}
         tiles={tiles}
         onSelectTile={() => onStart()}

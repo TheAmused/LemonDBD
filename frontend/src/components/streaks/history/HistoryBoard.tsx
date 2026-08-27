@@ -21,13 +21,14 @@ import { HistoryRulesModal } from './HistoryRulesModal';
 import { HistoryModeModal } from './HistoryModeModal';
 import { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
+import { useStreaksDict } from '@/context/StreaksDictContext';
 
 interface HistoryBoardProps {
   locale: string;
-  dict?: any;
 }
 
-export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
+export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
+  const dict = useStreaksDict();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

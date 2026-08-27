@@ -12,6 +12,7 @@ import { PageStreakModeModal } from './page-streak/PageStreakModeModal';
 import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
+import { useStreaksDict } from '@/context/StreaksDictContext';
 import {
   getSavedChaosDifficulty,
   saveChaosDifficulty,
@@ -38,6 +39,7 @@ interface StreakPanelGridProps {
 
 export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }) => {
   const router = useRouter();
+  const dict = useStreaksDict();
   const panels =
     role === 'killer' ? KILLER_STREAK_PANELS : role === 'challenge' ? CHALLENGE_STREAK_PANELS : SURVIVOR_STREAK_PANELS;
   const [isModeModalOpen, setIsModeModalOpen] = useState(false);
@@ -205,6 +207,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
         }}
         role={role as 'killer' | 'survivor'}
+        dict={dict}
       />
 
       <ChaosModeModal
@@ -214,6 +217,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           saveChaosDifficulty(difficulty);
           router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${difficulty}`);
         }}
+        dict={dict}
       />
 
       <HistoryModeModal
@@ -223,6 +227,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           saveHistoryMode(mode);
           router.push(`/${locale}/streaks/${role}/history-streak?mode=${mode}`);
         }}
+        dict={dict}
       />
 
       <PageStreakModeModal
@@ -232,6 +237,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           markPageStreakIntroSeen();
           router.push(`/${locale}/streaks/${role}/page-streak`);
         }}
+        dict={dict}
       />
     </div>
   );

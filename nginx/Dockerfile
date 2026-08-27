@@ -11,8 +11,10 @@ RUN mkdir -p /etc/nginx/certs && \
     -out /etc/nginx/certs/localhost.crt \
     -subj "/CN=localhost/O=LemonDBD/C=US"
 
-# Ensure /var/log/nginx directory exists and has appropriate permissions
+# Ensure real log files exist in /var/log/nginx (replacing alpine base stdout/stderr symlinks)
 RUN mkdir -p /var/log/nginx && \
+    rm -f /var/log/nginx/access.log /var/log/nginx/error.log && \
+    touch /var/log/nginx/access.log /var/log/nginx/error.log && \
     chown -R nginx:nginx /var/log/nginx && \
     chmod -R 755 /var/log/nginx
 

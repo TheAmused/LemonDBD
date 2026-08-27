@@ -133,6 +133,16 @@ export default {
   "togglePerkOwnershipHelp": "Haz clic en una ventaja para alternar si la posees.",
   "changesSaved": "Cambios guardados",
   "dismiss": "Descartar",
-  "noTeachablePerksForCharacter": "No hay ventajas enseñables para este personaje."
+  "noTeachablePerksForCharacter": "No hay ventajas enseñables para este personaje.",
+  "bulletSeparator": "•",
+  "emDashSeparator": "—",
+  "quoteOpen": "\"",
+  "quoteClose": "\"",
+  "compatibleTarget": "Objetivo compatible:",
+  "distance45m": "45m",
+  "distance32m": "32m",
+  "distance8m": "8m",
+  "approxSymbol": "~",
+  "secondsUnit": "s"
 };
 

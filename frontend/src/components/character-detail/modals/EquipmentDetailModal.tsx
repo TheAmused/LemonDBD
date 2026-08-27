@@ -68,7 +68,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
         <div className="p-6 overflow-y-auto space-y-4 text-sm leading-relaxed font-sans text-slate-300">
           {item.associated_target && (
             <div className="text-xs font-mono font-bold text-slate-400">
-              Compatible Target: <span className="text-slate-200">{item.associated_target}</span>
+              {t.compatibleTarget || 'Compatible Target:'} <span className="text-slate-200">{item.associated_target}</span>
             </div>
           )}
           <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2 text-sm">

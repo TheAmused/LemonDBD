@@ -63,7 +63,7 @@ export default function CharactersPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-        Loading Characters Hub...
+        {((dict as any)?.app?.loadingCharactersHub) || 'Loading Characters Hub...'}
       </div>
     );
   }

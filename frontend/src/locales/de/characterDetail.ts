@@ -133,6 +133,16 @@ export default {
   "togglePerkOwnershipHelp": "Klicke auf ein Talent, um den Besitzstatus umzuschalten.",
   "changesSaved": "Änderungen gespeichert",
   "dismiss": "Verwerfen",
-  "noTeachablePerksForCharacter": "Keine lehrbaren Talente für diesen Charakter."
+  "noTeachablePerksForCharacter": "Keine lehrbaren Talente für diesen Charakter.",
+  "bulletSeparator": "•",
+  "emDashSeparator": "—",
+  "quoteOpen": "„",
+  "quoteClose": "\"",
+  "compatibleTarget": "Kompatibles Ziel:",
+  "distance45m": "45m",
+  "distance32m": "32m",
+  "distance8m": "8m",
+  "approxSymbol": "~",
+  "secondsUnit": "s"
 };
 

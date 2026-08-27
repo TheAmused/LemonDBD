@@ -1,6 +1,7 @@
 export default {
   "searchPlaceholder": "パーク名または効果説明で検索...",
   "category": "カテゴリー",
+  "all": "すべて",
   "allCategories": "すべての役割",
   "survivor": "サバイバー",
   "killer": "キラー",

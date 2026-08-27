@@ -1,6 +1,7 @@
 export default {
   "searchPlaceholder": "Search by perk title or description...",
   "category": "Category",
+  "all": "All",
   "allCategories": "All Roles",
   "survivor": "Survivors",
   "killer": "Killers",

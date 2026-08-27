@@ -133,6 +133,16 @@ export default {
   "togglePerkOwnershipHelp": "Kliknij perk, aby przełączyć status posiadania.",
   "changesSaved": "Zmiany zostały zapisane",
   "dismiss": "Zamknij",
-  "noTeachablePerksForCharacter": "Brak zbywalnych perków dla tej postaci."
+  "noTeachablePerksForCharacter": "Brak zbywalnych perków dla tej postaci.",
+  "bulletSeparator": "•",
+  "emDashSeparator": "—",
+  "quoteOpen": "„",
+  "quoteClose": "”",
+  "compatibleTarget": "Kompatybilny cel:",
+  "distance45m": "45m",
+  "distance32m": "32m",
+  "distance8m": "8m",
+  "approxSymbol": "~",
+  "secondsUnit": "s"
 };
 

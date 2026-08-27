@@ -133,6 +133,16 @@ export default {
   "togglePerkOwnershipHelp": "Click a perk to toggle whether you own it.",
   "changesSaved": "Changes saved",
   "dismiss": "Dismiss",
-  "noTeachablePerksForCharacter": "No teachable perks for this character."
+  "noTeachablePerksForCharacter": "No teachable perks for this character.",
+  "bulletSeparator": "•",
+  "emDashSeparator": "—",
+  "quoteOpen": "\"",
+  "quoteClose": "\"",
+  "compatibleTarget": "Compatible Target:",
+  "distance45m": "45m",
+  "distance32m": "32m",
+  "distance8m": "8m",
+  "approxSymbol": "~",
+  "secondsUnit": "s"
 };
 

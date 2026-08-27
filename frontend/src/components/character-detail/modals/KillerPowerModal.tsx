@@ -62,7 +62,7 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
             </div>
             <div>
               <span className="text-[11px] font-mono font-black uppercase tracking-wider text-rose-400">
-                {character.name} &bull; {t.killerPower || 'Killer Power'}
+                {character.name} {t.bulletSeparator || '•'} {t.killerPower || 'Killer Power'}
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono mt-0.5">
                 {killerPower.name}

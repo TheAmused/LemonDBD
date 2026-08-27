@@ -246,7 +246,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                 <Package className="h-4 w-4" />
-                {activeCategoryConfig.label} &bull; {t.items || 'Items'} ({categorizedData.displayedItems.length})
+                {activeCategoryConfig.label} {t.bulletSeparator || '•'} {t.items || 'Items'} ({categorizedData.displayedItems.length})
               </h3>
               <span className="text-[10px] font-mono text-slate-400">
                 {t.clickItemForDetails || 'Click item for details'}

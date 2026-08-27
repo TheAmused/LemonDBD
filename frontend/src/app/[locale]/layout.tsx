@@ -1,6 +1,6 @@
-// frontend/src/app/[locale]/layout.tsx
 import React from 'react';
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { i18n, type Locale } from '@/i18n/config';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
@@ -42,7 +42,11 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body>
         {umamiWebsiteId && umamiUrl && (
-          <script defer src={`${umamiUrl}/script.js`} data-website-id={umamiWebsiteId} />
+          <Script
+            strategy="afterInteractive"
+            src={`${umamiUrl}/script.js`}
+            data-website-id={umamiWebsiteId}
+          />
         )}
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>

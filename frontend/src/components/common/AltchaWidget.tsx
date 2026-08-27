@@ -30,7 +30,10 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
 
       {/* Dynamic visual indicator shown when requested, verifying, or on error */}
       {(showIndicator || error || isVerifying) && (
-        <div className="flex items-center gap-2 text-xs py-1 px-2.5 rounded-md bg-slate-800/40 border border-slate-700/50 text-slate-300">
+        <div
+          role="status"
+          className="flex items-center gap-2 text-xs py-1 px-2.5 rounded-md bg-slate-800/40 border border-slate-700/50 text-slate-300"
+        >
           {isVerifying ? (
             <>
               <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400 shrink-0" />
@@ -49,6 +52,7 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
                 <button
                   type="button"
                   onClick={onRetry}
+                  aria-label="Retry security verification"
                   className="ml-auto underline text-amber-400 hover:text-amber-300 text-xs cursor-pointer focus:outline-none"
                 >
                   Retry

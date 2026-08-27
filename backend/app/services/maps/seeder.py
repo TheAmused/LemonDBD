@@ -19,13 +19,15 @@ def seed_maps_if_empty(conn: sqlite3.Connection, db_service: Any) -> None:
         for m in SAMPLE_MAPS:
             cursor.execute(
                 """
-                INSERT INTO map_realms (map_id, name, realm, layout_type, jungle_gyms_count, totem_spawns_count, pallet_density, shack_has_basement, description, image_url)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO map_realms (map_id, name, realm, source, source_label, layout_type, jungle_gyms_count, totem_spawns_count, pallet_density, shack_has_basement, description, image_url)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     m["id"],
                     m["name"],
                     m["realm"],
+                    m.get("source", "hens333"),
+                    m.get("source_label", "Hens333 12-Clock Callouts"),
                     m.get("layout_type", ""),
                     m.get("jungle_gyms_count", 4),
                     m.get("totem_spawns_count", 5),

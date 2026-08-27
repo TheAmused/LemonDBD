@@ -123,5 +123,12 @@ export default {
   "generalPerk": "Perk Ogólny",
   "alias": "Alias",
   "interactiveViewer": "Interaktywna Przeglądarka",
-  "breadcrumbs": "Nawigacja Okruszkowa"
+  "breadcrumbs": "Nawigacja Okruszkowa",
+  "highRes3dModelView": "Widok modelu 3D wysokiej rozdzielczości",
+  "interactive3dMeshEngineWip": "Interaktywny silnik siatek 3D (WIP)",
+  "configRosterDesc": "Klikaj awatary postaci, aby włączać je lub wyłączać w puli losowania perków.",
+  "hubSubtitle": "Przeglądaj Ocalałych i Zabójców w Dead by Daylight. Sprawdzaj szczegóły postaci, unikalne perki, dodatki do mocy oraz wyposażenie.",
+  "hubNoMatchingCharacters": "Żadna postać nie pasuje do wybranego filtra lub wyszukiwania.",
+  "togglePerkOwnershipHelp": "Kliknij perk, aby przełączyć jego stan posiadania.",
+  "changesSaved": "Zmiany zapisane"
 };

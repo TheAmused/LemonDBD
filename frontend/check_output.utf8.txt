@@ -1,0 +1,435 @@
+﻿
+≡ƒöì Scanning 169 .tsx files for hardcoded strings in C:\Users\bezie\Desktop\proje\LemonDBD\frontend\src...
+
+≡ƒôä [1m[33msrc/app/[locale]/admin/page.tsx[0m (1 issues):
+   Line [36m76:5[0m [document-title] [31m"document.title = "LemonDBD - Admin Control Center""[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/builds/page.tsx[0m (2 issues):
+   Line [36m30:5[0m [document-title] [31m"document.title = "LemonDBD - Community Builds""[0m
+   Line [36m68:9[0m [jsx-text] [31m"Loading..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/characters/guesser/page.tsx[0m (14 issues):
+   Line [36m209:5[0m [document-title] [31m"document.title = "LemonDBD - Minigames & Guesser""[0m
+   Line [36m655:9[0m [jsx-text] [31m"Loading..."[0m
+   Line [36m770:23[0m [jsx-text] [31m"Identity Mode"[0m
+   Line [36m835:23[0m [jsx-text] [31m"Redacted Mode"[0m
+   Line [36m900:23[0m [jsx-text] [31m"Visual Choice"[0m
+   Line [36m965:23[0m [jsx-text] [31m"Distortion Mode"[0m
+   Line [36m1030:23[0m [jsx-text] [31m"Community Jokes"[0m
+   Line [36m1093:25[0m [jsx-text] [31m"Realms & Seeds"[0m
+   Line [36m1136:17[0m [jsx-text] [31m"The entity is currently reconstructing mapping protocols for seeds, jungle gym vaults, loops, and totem spawning tiles. This module will allow players to guess spawn locations and structures in real-time. Check back later!"[0m
+   Line [36m1147:17[0m [jsx-text] [31m"Return to Dashboard"[0m
+   Line [36m1203:27[0m [jsx-text] [31m"Meme Mode"[0m
+   Line [36m1262:31[0m [jsx-text] [31m"Grayscale"[0m
+   Line [36m1272:31[0m [jsx-text] [31m"Cropped Zoom"[0m
+   Line [36m1415:25[0m [jsx-text] [31m"Space"[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/characters/page.tsx[0m (2 issues):
+   Line [36m31:5[0m [document-title] [31m"document.title = "LemonDBD - Characters & Teachables""[0m
+   Line [36m64:9[0m [jsx-text] [31m"Loading Characters Hub..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/custom-perks/page.tsx[0m (2 issues):
+   Line [36m30:5[0m [document-title] [31m"document.title = "LemonDBD - Custom Perk Studio""[0m
+   Line [36m68:9[0m [jsx-text] [31m"Loading..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/draft/page.tsx[0m (2 issues):
+   Line [36m37:5[0m [document-title] [31m"document.title = "LemonDBD - Draft Mode""[0m
+   Line [36m75:9[0m [jsx-text] [31m"Loading..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/killer-calculator/page.tsx[0m (2 issues):
+   Line [36m30:5[0m [document-title] [31m"document.title = "LemonDBD - Killer Calculator""[0m
+   Line [36m68:9[0m [jsx-text] [31m"Loading..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/maps/page.tsx[0m (3 issues):
+   Line [36m55:5[0m [document-title] [31m"document.title = "LemonDBD - Tactical Map Command Explorer""[0m
+   Line [36m95:9[0m [jsx-text] [31m"Initializing Tactical Map Command..."[0m
+   Line [36m161:11[0m [jsx-text] [31m"Loading Tactical Maps..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/page.tsx[0m (1 issues):
+   Line [36m92:11[0m [jsx-text] [31m"Loading LemonDBD..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/perks/page.tsx[0m (1 issues):
+   Line [36m465:11[0m [jsx-text] [31m"Loading..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/quests/page.tsx[0m (8 issues):
+   Line [36m43:5[0m [document-title] [31m"document.title = "LemonDBD - Quests & Trials""[0m
+   Line [36m111:9[0m [jsx-text] [31m"Loading Quests..."[0m
+   Line [36m162:23[0m [jsx-text] [31m"Trial Quests & Milestones"[0m
+   Line [36m165:23[0m [jsx-text] [31m"XP System"[0m
+   Line [36m169:21[0m [jsx-text] [31m"Complete daily and weekly trials to earn XP, level up your status, and unlock achievements."[0m
+   Line [36m231:13[0m [jsx-text] [31m"Daily Quests"[0m
+   Line [36m242:13[0m [jsx-text] [31m"Weekly Quests"[0m
+   Line [36m261:17[0m [jsx-text] [31m"No quests available in this category right now. Check back soon for new trial objectives!"[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/reset-password/page.tsx[0m (1 issues):
+   Line [36m36:5[0m [document-title] [31m"document.title = "LemonDBD - Reset Password""[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/smash-or-pass/page.tsx[0m (2 issues):
+   Line [36m32:5[0m [document-title] [31m"document.title = "LemonDBD - Smash or Pass | Dead by Daylight Romance""[0m
+   Line [36m65:9[0m [jsx-text] [31m"Loading Smash or Pass..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/streaks/layout.tsx[0m (7 issues):
+   Line [36m36:5[0m [document-title] [31m"document.title = "LemonDBD - Challenges""[0m
+   Line [36m85:9[0m [jsx-text] [31m"Loading..."[0m
+   Line [36m138:15[0m [jsx-text] [31m"Verify your email to track challenges"[0m
+   Line [36m147:15[0m [jsx-text] [31m"Verify email"[0m
+   Line [36m156:15[0m [jsx-text] [31m"Log in to track your challenges"[0m
+   Line [36m159:15[0m [jsx-text] [31m"Challenges use the killers and perks you own, so we need to know who you are first."[0m
+   Line [36m168:15[0m [jsx-text] [31m"Log in"[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/swf/page.tsx[0m (2 issues):
+   Line [36m30:5[0m [document-title] [31m"document.title = "LemonDBD - SWF Team Planner""[0m
+   Line [36m68:9[0m [jsx-text] [31m"Loading SWF Planner..."[0m
+
+≡ƒôä [1m[33msrc/app/[locale]/user/page.tsx[0m (6 issues):
+   Line [36m55:5[0m [document-title] [31m"document.title = "LemonDBD - User Profile""[0m
+   Line [36m191:13[0m [jsx-text] [31m"Authentication Required"[0m
+   Line [36m194:13[0m [jsx-text] [31m"Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges."[0m
+   Line [36m209:15[0m [jsx-text] [31m"Return to Home"[0m
+   Line [36m339:19[0m [jsx-text] [31m"Active Player & LemonDBD Community Member"[0m
+   Line [36m402:21[0m [jsx-text] [31m"Quick Shortcuts"[0m
+
+≡ƒôä [1m[33msrc/components/admin/AdminBugReportsWorkbench.tsx[0m (9 issues):
+   Line [36m100:48[0m [jsx-text] [31m"Pending"[0m
+   Line [36m116:43[0m [jsx-text] [31m"In Progress"[0m
+   Line [36m132:49[0m [jsx-text] [31m"Resolved"[0m
+   Line [36m148:41[0m [jsx-text] [31m"Total Tickets"[0m
+   Line [36m194:17[0m [jsx-text] [31m"Loading tickets..."[0m
+   Line [36m198:17[0m [jsx-text] [31m"No bug reports found."[0m
+   Line [36m305:21[0m [jsx-text] [31m"Reported by"[0m
+   Line [36m335:19[0m [jsx-text] [31m"Description"[0m
+   Line [36m374:19[0m [jsx-text] [31m"Developer Feedback / Response Note (Visible to Submitter)"[0m
+
+≡ƒôä [1m[33msrc/components/admin/AdminChallengeControl.tsx[0m (3 issues):
+   Line [36m205:11[0m [jsx-text] [31m"Challenge Mode Kill Switches"[0m
+   Line [36m250:49[0m [jsx-text] [31m"Characters"[0m
+   Line [36m259:52[0m [jsx-text] [31m"Perks"[0m
+
+≡ƒôä [1m[33msrc/components/admin/AdminChallengeStats.tsx[0m (1 issues):
+   Line [36m74:17[0m [jsx-text] [31m"Page Streak has one run per killer, so completions aren't broken down further here."[0m
+
+≡ƒôä [1m[33msrc/components/admin/AdminCreateUserModal.tsx[0m (7 issues):
+   Line [36m69:15[0m [jsx-text] [31m"Create New User"[0m
+   Line [36m72:15[0m [jsx-text] [31m"Add a new account directly to the database"[0m
+   Line [36m80:15[0m [jsx-text] [31m"Username"[0m
+   Line [36m94:15[0m [jsx-text] [31m"Email Address"[0m
+   Line [36m108:15[0m [jsx-text] [31m"Password"[0m
+   Line [36m122:15[0m [jsx-text] [31m"Role Privilege"[0m
+   Line [36m141:15[0m [jsx-text] [31m"Cancel"[0m
+
+≡ƒôä [1m[33msrc/components/admin/AdminHeader.tsx[0m (2 issues):
+   Line [36m41:13[0m [jsx-text] [31m"Admin Control Center"[0m
+   Line [36m44:13[0m [jsx-text] [31m"User directory, JSON database export/import, and scraper orchestration."[0m
+
+≡ƒôä [1m[33msrc/components/admin/AdminReasonModal.tsx[0m (2 issues):
+   Line [36m78:13[0m [jsx-text] [31m"Reason (shown to players)"[0m
+   Line [36m97:13[0m [jsx-text] [31m"Cancel"[0m
+
+≡ƒôä [1m[33msrc/components/AuthModal.tsx[0m (8 issues):
+   Line [36m213:19[0m [jsx-text] [31m"Account created! We sent a verification code to"[0m
+   Line [36m249:19[0m [jsx-text] [31m"Username or Email"[0m
+   Line [36m268:19[0m [jsx-text] [31m"Email Address"[0m
+   Line [36m287:19[0m [jsx-text] [31m"Password"[0m
+   Line [36m354:15[0m [jsx-text] [31m"Quick Demo Accounts"[0m
+   Line [36m386:19[0m [jsx-text] [31m"Back to Sign In"[0m
+   Line [36m392:21[0m [jsx-text] [31m"Sign In"[0m
+   Line [36m399:21[0m [jsx-text] [31m"Register"[0m
+
+≡ƒôä [1m[33msrc/components/builds/BuildVault.tsx[0m (5 issues):
+   Line [36m247:17[0m [jsx-text] [31m"LemonDBD Meta Vault"[0m
+   Line [36m251:15[0m [jsx-text] [31m"Community Build Vault & Otzdarva Meta Integration"[0m
+   Line [36m254:15[0m [jsx-text] [31m"Explore battle-tested Meta loadouts, Otzdarva recommended builds, and top community strategies. Create, upvote, and share your custom perk combinations."[0m
+   Line [36m341:13[0m [jsx-text] [31m"Try adjusting your search criteria or submit a new custom loadout!"[0m
+   Line [36m656:19[0m [jsx-text] [31m"Cancel"[0m
+
+≡ƒôä [1m[33msrc/components/ChaosWheelModal.tsx[0m (4 issues):
+   Line [36m226:15[0m [jsx-text] [31m"Chaos Wheel of Curses"[0m
+   Line [36m229:15[0m [jsx-text] [31m"Spin to apply a single trial Curse or Buff to your 4 perk loadout."[0m
+   Line [36m280:17[0m [jsx-text] [31m"Active"[0m
+   Line [36m292:13[0m [jsx-text] [31m"Done"[0m
+
+≡ƒôä [1m[33msrc/components/character-detail/modals/Model3DModal.tsx[0m (2 issues):
+   Line [36m45:17[0m [jsx-text] [31m"High-Res 3D Model View"[0m
+   Line [36m71:15[0m [jsx-text] [31m"Interactive 3D Mesh Engine (WIP)"[0m
+
+≡ƒôä [1m[33msrc/components/CharacterConfigModal.tsx[0m (2 issues):
+   Line [36m153:17[0m [jsx-text] [31m"Click character avatar buttons to toggle them in your Perk Randomizer pool."[0m
+   Line [36m215:17[0m [jsx-text] [31m"General"[0m
+
+≡ƒôä [1m[33msrc/components/CharactersHub.tsx[0m (8 issues):
+   Line [36m314:17[0m [jsx-text] [31m"Characters Hub"[0m
+   Line [36m440:13[0m [jsx-text] [31m"No characters match your current filter or search query."[0m
+   Line [36m588:15[0m [jsx-text] [31m"Click a perk to toggle whether you own it."[0m
+   Line [36m630:19[0m [jsx-text] [31m"No teachable perks for this character."[0m
+   Line [36m660:15[0m [jsx-text] [31m"Cancel"[0m
+   Line [36m681:11[0m [jsx-text] [31m"Changes saved"[0m
+   Line [36m702:13[0m [jsx-text] [31m"Verify email"[0m
+   Line [36m709:13[0m [jsx-text] [31m"Dismiss"[0m
+
+≡ƒôä [1m[33msrc/components/draft/DraftRoom.tsx[0m (1 issues):
+   Line [36m322:19[0m [jsx-text] [31m"Next Phase ΓåÆ"[0m
+
+≡ƒôä [1m[33msrc/components/killer/KillerCalculator.tsx[0m (9 issues):
+   Line [36m278:54[0m [jsx-text] [31m"Phase 3 Feature"[0m
+   Line [36m283:15[0m [jsx-text] [31m"Killer Add-on Stat Calculator & TR Radar"[0m
+   Line [36m286:15[0m [jsx-text] [31m"Select a Killer, pair 2 Add-ons to calculate exact stat deltas (windup time, charge speed, power cooldowns), and toggle Terror Radius perks to view live 2D Radar circle dynamics."[0m
+   Line [36m298:78[0m [jsx-text] [31m"Select Killer"[0m
+   Line [36m339:80[0m [jsx-text] [31m"Select 2 Add-ons"[0m
+   Line [36m389:88[0m [jsx-text] [31m"TR Modifier Perks"[0m
+   Line [36m496:75[0m [jsx-text] [31m"Interactive 2D Terror Radius Radar"[0m
+   Line [36m545:87[0m [jsx-text] [31m"Live Power Stat Deltas"[0m
+   Line [36m598:19[0m [jsx-text] [31m"Terror Radius Modifier Breakdown"[0m
+
+≡ƒôä [1m[33msrc/components/maps/FullscreenMapEngine.tsx[0m (1 issues):
+   Line [36m351:15[0m [jsx-text] [31m"LemonDBD Tactical Engine v2.0"[0m
+
+≡ƒôä [1m[33msrc/components/maps/layouts/DesktopMapLayout.tsx[0m (1 issues):
+   Line [36m115:17[0m [jsx-text] [31m"Map Directory"[0m
+
+≡ƒôä [1m[33msrc/components/maps/layouts/MobileMapLayout.tsx[0m (1 issues):
+   Line [36m306:19[0m [jsx-text] [31m"Map Directory"[0m
+
+≡ƒôä [1m[33msrc/components/maps/MapControls.tsx[0m (1 issues):
+   Line [36m101:13[0m [jsx-text] [31m"Fit"[0m
+
+≡ƒôä [1m[33msrc/components/maps/MapDirectoryList.tsx[0m (1 issues):
+   Line [36m142:13[0m [jsx-text] [31m"Try adjusting your search query or selected realm filter."[0m
+
+≡ƒôä [1m[33msrc/components/maps/MapLegendDrawer.tsx[0m (1 issues):
+   Line [36m221:21[0m [jsx-text] [31m"Center Landmark / Objective"[0m
+
+≡ƒôä [1m[33msrc/components/maps/TileInspectorDrawer.tsx[0m (7 issues):
+   Line [36m198:15[0m [jsx-text] [31m"Pallet Safety Assessment"[0m
+   Line [36m219:131[0m [jsx-text] [31m"Requires running straight at window with at least 2.5m momentum."[0m
+   Line [36m221:134[0m [jsx-text] [31m"Triggers on angled approach. High risk of killer hit!"[0m
+   Line [36m229:13[0m [jsx-text] [31m"Survivor Looping Pathing Tips"[0m
+   Line [36m234:17[0m [jsx-text] [31m"Hug high walls tightly to minimize loop distance. Watch killer red stain over low obstacles and keep camera focused behind you while pathing."[0m
+   Line [36m243:13[0m [jsx-text] [31m"Killer Mindgame Counterplay"[0m
+   Line [36m248:17[0m [jsx-text] [31m"Killers will attempt to hide red stain by moonwalking backward around high walls or faking window vault angles to force premature pallet drops."[0m
+
+≡ƒôä [1m[33msrc/components/maps/VoiceCommandBanner.tsx[0m (2 issues):
+   Line [36m877:15[0m [jsx-text] [31m"Hens333 (12-Clock)"[0m
+   Line [36m890:15[0m [jsx-text] [31m"SamoelColt (Isometric)"[0m
+
+≡ƒôä [1m[33msrc/components/maps/VoiceEngineInfoModal.tsx[0m (3 issues):
+   Line [36m109:13[0m [jsx-attribute] [31m"aria-label="Close""[0m
+   Line [36m121:15[0m [jsx-text] [31m"Detected Browser"[0m
+   Line [36m131:15[0m [jsx-text] [31m"Active Recognition Engine"[0m
+
+≡ƒôä [1m[33msrc/components/perk-studio/CustomPerkStudio.tsx[0m (17 issues):
+   Line [36m280:15[0m [jsx-text] [31m"Custom Perk Creator Studio"[0m
+   Line [36m283:15[0m [jsx-text] [31m"Design original Dead by Daylight perk concepts with a live interactive diamond card preview, or explore and upvote community-created perks."[0m
+   Line [36m348:19[0m [jsx-text] [31m"Perk Title *"[0m
+   Line [36m364:21[0m [jsx-text] [31m"Role *"[0m
+   Line [36m396:21[0m [jsx-text] [31m"Character / Teachable"[0m
+   Line [36m411:19[0m [jsx-text] [31m"Rarity *"[0m
+   Line [36m434:19[0m [jsx-text] [31m"Icon Preset *"[0m
+   Line [36m462:19[0m [jsx-text] [31m"Creator / Author Name"[0m
+   Line [36m477:21[0m [jsx-text] [31m"Perk Description (Markdown Supported) *"[0m
+   Line [36m485:23[0m [jsx-text] [31m"+**Exhausted**"[0m
+   Line [36m492:23[0m [jsx-text] [31m"+**Hindered**"[0m
+   Line [36m499:23[0m [jsx-text] [31m"+**Aura**"[0m
+   Line [36m530:17[0m [jsx-text] [31m"Live Card Preview"[0m
+   Line [36m533:17[0m [jsx-text] [31m"REAL-TIME"[0m
+   Line [36m596:25[0m [jsx-text] [31m"Perk description will render live here..."[0m
+   Line [36m684:15[0m [jsx-text] [31m"Loading perk concepts..."[0m
+   Line [36m693:17[0m [jsx-text] [31m"No perk concepts match your current filter settings. Try clearing filters or create a new concept!"[0m
+
+≡ƒôä [1m[33msrc/components/QuestsModal.tsx[0m (5 issues):
+   Line [36m120:19[0m [jsx-text] [31m"XP System"[0m
+   Line [36m188:13[0m [jsx-text] [31m"Daily Quests"[0m
+   Line [36m200:13[0m [jsx-text] [31m"Weekly Quests"[0m
+   Line [36m213:15[0m [jsx-text] [31m"No quests found in this category."[0m
+   Line [36m315:13[0m [jsx-text] [31m"Close"[0m
+
+≡ƒôä [1m[33msrc/components/ScraperConfigModal.tsx[0m (11 issues):
+   Line [36m353:17[0m [jsx-text] [31m"Export complete JSON snapshots, restore backups, or manage PostgreSQL via pgAdmin"[0m
+   Line [36m439:17[0m [jsx-text] [31m"Select Entities to Include in JSON Backup"[0m
+   Line [36m486:17[0m [jsx-text] [31m"Cancel"[0m
+   Line [36m551:119[0m [jsx-text] [31m"backup file"[0m
+   Line [36m561:17[0m [jsx-text] [31m"Choose Import Strategy"[0m
+   Line [36m576:23[0m [jsx-text] [31m"Upserts entities by name/slug without deleting existing data"[0m
+   Line [36m593:23[0m [jsx-text] [31m"Clears target tables first, then restores uploaded records"[0m
+   Line [36m604:19[0m [jsx-text] [31m"Import Results Breakdown"[0m
+   Line [36m626:17[0m [jsx-text] [31m"Close"[0m
+   Line [36m667:17[0m [jsx-text] [31m"Select Target Tables to Wipe"[0m
+   Line [36m714:17[0m [jsx-text] [31m"Close"[0m
+
+≡ƒôä [1m[33msrc/components/sidebar/BugReportModal.tsx[0m (1 issues):
+   Line [36m372:23[0m [jsx-text] [31m"Verified"[0m
+
+≡ƒôä [1m[33msrc/components/Sidebar.tsx[0m (2 issues):
+   Line [36m311:17[0m [jsx-text] [31m"LemonDBD"[0m
+   Line [36m495:13[0m [jsx-text] [31m"LemonDBD"[0m
+
+≡ƒôä [1m[33msrc/components/smash-or-pass/CharacterCard.tsx[0m (2 issues):
+   Line [36m451:17[0m [jsx-attribute] [31m"title="Pass""[0m
+   Line [36m467:17[0m [jsx-attribute] [31m"title="Smash""[0m
+
+≡ƒôä [1m[33msrc/components/smash-or-pass/CharacterStatsModal.tsx[0m (1 issues):
+   Line [36m236:13[0m [jsx-attribute] [31m"aria-label="Close""[0m
+
+≡ƒôä [1m[33msrc/components/smash-or-pass/SmashLeaderboardModal.tsx[0m (1 issues):
+   Line [36m379:13[0m [jsx-attribute] [31m"aria-label="Close""[0m
+
+≡ƒôä [1m[33msrc/components/streaks/chaos/ChaosBoard.tsx[0m (8 issues):
+   Line [36m177:15[0m [jsx-text] [31m"Chaos Streak complete!"[0m
+   Line [36m180:15[0m [jsx-text] [31m"You won on"[0m
+   Line [36m180:75[0m [jsx-text] [31m"mode."[0m
+   Line [36m188:15[0m [jsx-text] [31m"Start a new run"[0m
+   Line [36m206:17[0m [jsx-text] [31m"Pick your killer"[0m
+   Line [36m216:21[0m [jsx-text] [31m"ACCEPT PICK"[0m
+   Line [36m226:21[0m [jsx-text] [31m"WIN MATCH"[0m
+   Line [36m233:21[0m [jsx-text] [31m"LOSE MATCH"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/chaos/ChaosCheckpointModal.tsx[0m (4 issues):
+   Line [36m39:11[0m [jsx-text] [31m"Checkpoint banked"[0m
+   Line [36m43:11[0m [jsx-text] [31m"Lose from here and you fall back to"[0m
+   Line [36m43:104[0m [jsx-text] [31m", not to zero."[0m
+   Line [36m51:11[0m [jsx-text] [31m"Keep going"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/chaos/ChaosHeader.tsx[0m (4 issues):
+   Line [36m53:62[0m [jsx-text] [31m"Chaos Streak"[0m
+   Line [36m63:17[0m [jsx-text] [31m"Current"[0m
+   Line [36m75:17[0m [jsx-text] [31m"Best"[0m
+   Line [36m87:17[0m [jsx-text] [31m"Checkpoint"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/chaos/ChaosRulesModal.tsx[0m (14 issues):
+   Line [36m33:9[0m [jsx-text] [31m"Chaos Concept"[0m
+   Line [36m36:9[0m [jsx-text] [31m"Pull the lever to draw 4 random perks from every unlocked killer perk you own, plus 2 addon rarity requirements. Nothing repeats until the whole pool has been drawn once. Then you pick which of your remaining killers plays the round, accept the pick, and play the trial with that build as your guide."[0m
+   Line [36m42:115[0m [jsx-text] [31m"Anything less is a loss."[0m
+   Line [36m45:9[0m [jsx-text] [31m"You must play the killer with addons matching the 2 drawn rarities."[0m
+   Line [36m48:9[0m [jsx-text] [31m"Win with every killer you own on this difficulty and the run is complete."[0m
+   Line [36m51:9[0m [jsx-text] [31m"The pool is locked in for the run you're on. New killers or perks you unlock mid-run won't join until you reset, lose back to zero, or complete it."[0m
+   Line [36m54:9[0m [jsx-text] [31m"An in-progress run untouched for 90 days automatically counts as a loss."[0m
+   Line [36m61:9[0m [jsx-text] [31m"Difficulty & Checkpoints"[0m
+   Line [36m77:9[0m [jsx-text] [31m"Losing after a checkpoint only falls back to that checkpoint, not to zero, though every killer cleared since then goes back into the pool."[0m
+   Line [36m85:9[0m [jsx-text] [31m"Exceptions & Clarifications"[0m
+   Line [36m89:80[0m [jsx-text] [31m"someone left while the lobby was loading and the match never started. No reroll, replay the same build."[0m
+   Line [36m93:67[0m [jsx-text] [31m"obvious cheaters void the match. No reroll, replay the same build."[0m
+   Line [36m96:94[0m [jsx-text] [31m"not a loss. No reroll, replay the same build."[0m
+   Line [36m99:72[0m [jsx-text] [31m"play whatever lobby you get, no matter the items."[0m
+
+≡ƒôä [1m[33msrc/components/streaks/gauntlet/ActiveTargetStage.tsx[0m (6 issues):
+   Line [36m257:15[0m [jsx-text] [31m"START GAME"[0m
+   Line [36m300:15[0m [jsx-text] [31m"TARGET"[0m
+   Line [36m306:15[0m [jsx-text] [31m"Active Gauntlet Target"[0m
+   Line [36m346:13[0m [jsx-text] [31m"Your build for this match"[0m
+   Line [36m349:13[0m [jsx-text] [31m"Pick these in-game. Nothing to confirm here."[0m
+   Line [36m433:23[0m [jsx-text] [31m"No teachable perks on record for this character."[0m
+
+≡ƒôä [1m[33msrc/components/streaks/gauntlet/CharacterRosterGrid.tsx[0m (3 issues):
+   Line [36m57:56[0m [jsx-text] [31m"Roster Progress"[0m
+   Line [36m60:13[0m [jsx-text] [31m"Complete matches with each owned character to master the roster."[0m
+   Line [36m109:21[0m [jsx-text] [31m"Target"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/gauntlet/CheckpointModal.tsx[0m (4 issues):
+   Line [36m42:11[0m [jsx-text] [31m"Checkpoint banked"[0m
+   Line [36m46:11[0m [jsx-text] [31m"Lose from here and you fall back to"[0m
+   Line [36m46:103[0m [jsx-text] [31m", not to zero."[0m
+   Line [36m64:11[0m [jsx-text] [31m"Keep going"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/gauntlet/GauntletBoard.tsx[0m (2 issues):
+   Line [36m126:15[0m [jsx-text] [31m"Gauntlet complete!"[0m
+   Line [36m137:15[0m [jsx-text] [31m"Start a new run"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/gauntlet/GauntletHeader.tsx[0m (4 issues):
+   Line [36m47:56[0m [jsx-text] [31m"Gauntlet"[0m
+   Line [36m57:17[0m [jsx-text] [31m"Current"[0m
+   Line [36m69:17[0m [jsx-text] [31m"Best"[0m
+   Line [36m81:17[0m [jsx-text] [31m"Checkpoint"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/gauntlet/GauntletRulesModal.tsx[0m (14 issues):
+   Line [36m68:11[0m [jsx-text] [31m"Gauntlet Concept"[0m
+   Line [36m77:15[0m [jsx-text] [31m"You only ever run"[0m
+   Line [36m82:15[0m [jsx-text] [31m"A trial only counts as won on"[0m
+   Line [36m82:116[0m [jsx-text] [31m". Anything less is a loss."[0m
+   Line [36m88:13[0m [jsx-text] [31m"A trial only counts as won if you"[0m
+   Line [36m88:99[0m [jsx-text] [31m", through the exit gates or the hatch. Anything else is a loss."[0m
+   Line [36m98:11[0m [jsx-text] [31m"Every 10 wins banks a"[0m
+   Line [36m104:11[0m [jsx-text] [31m"The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here."[0m
+   Line [36m107:11[0m [jsx-text] [31m"The roster is locked in for the run you're on. New characters you unlock mid-run won't join until you reset, lose back to zero, or complete it."[0m
+   Line [36m110:11[0m [jsx-text] [31m"An in-progress run untouched for 90 days automatically counts as a loss."[0m
+   Line [36m117:11[0m [jsx-text] [31m"Progressive Tier Restrictions"[0m
+   Line [36m154:13[0m [jsx-text] [31m"Exceptions & Clarifications"[0m
+   Line [36m169:15[0m [jsx-text] [31m"Exceptions"[0m
+   Line [36m183:15[0m [jsx-text] [31m"Clarifications"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/gauntlet/GauntletStatsDrawer.tsx[0m (1 issues):
+   Line [36m19:5[0m [jsx-attribute] [31m"title="Gauntlet""[0m
+
+≡ƒôä [1m[33msrc/components/streaks/history/HistoryBoard.tsx[0m (6 issues):
+   Line [36m114:15[0m [jsx-text] [31m"History Streak complete!"[0m
+   Line [36m125:15[0m [jsx-text] [31m"Start a new run"[0m
+   Line [36m132:17[0m [jsx-text] [31m"Pick your killer"[0m
+   Line [36m159:19[0m [jsx-text] [31m"ACCEPT PICK"[0m
+   Line [36m168:21[0m [jsx-text] [31m"WIN MATCH"[0m
+   Line [36m175:21[0m [jsx-text] [31m"LOSE MATCH"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/history/HistoryHeader.tsx[0m (4 issues):
+   Line [36m54:15[0m [jsx-text] [31m"History Streak"[0m
+   Line [36m65:17[0m [jsx-text] [31m"Killers beaten"[0m
+   Line [36m77:17[0m [jsx-text] [31m"Best"[0m
+   Line [36m89:17[0m [jsx-text] [31m"Checkpoint row"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/history/HistoryPerkPoolPanel.tsx[0m (1 issues):
+   Line [36m103:13[0m [jsx-text] [31m"Perk pool"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/history/HistoryRulesModal.tsx[0m (10 issues):
+   Line [36m27:9[0m [jsx-text] [31m"Concept"[0m
+   Line [36m30:9[0m [jsx-text] [31m"Your owned killers, sorted by release order, are grouped into rows of 5. Only the current row is playable. Beat every killer in it to unlock the next."[0m
+   Line [36m34:9[0m [jsx-text] [31m"You start with every General perk unlocked. Beating a killer adds their own teachable perks to your pool. Addons and builds play no role here, pick a killer and play."[0m
+   Line [36m38:9[0m [jsx-text] [31m"For the full experience try to play killers in order from the oldest to newest. ≡ƒÖé"[0m
+   Line [36m41:9[0m [jsx-text] [31m"The roster is locked in for the run you're on. New killers you unlock mid-run won't join until you reset, lose back to zero, or complete it."[0m
+   Line [36m44:9[0m [jsx-text] [31m"An in-progress run untouched for 90 days automatically counts as a loss."[0m
+   Line [36m51:9[0m [jsx-text] [31m"Modes"[0m
+   Line [36m56:13[0m [jsx-text] [31m"Medium"[0m
+   Line [36m65:13[0m [jsx-text] [31m"Hell"[0m
+   Line [36m68:13[0m [jsx-text] [31m"No checkpoints. One loss resets the whole run, every row and every unlocked perk."[0m
+
+≡ƒôä [1m[33msrc/components/streaks/page-streak/PageStreakRulesModal.tsx[0m (10 issues):
+   Line [36m27:9[0m [jsx-text] [31m"Concept"[0m
+   Line [36m30:9[0m [jsx-text] [31m"Pick a killer. Every perk that killer's teachables have unlocked for you gets split into pages. Build the strongest loadout you can from the current page, then report whether the match was a win or a loss."[0m
+   Line [36m35:9[0m [jsx-text] [31m"A win advances you to the next page. A loss sends you back to page 1 and starts a new attempt, current page included, though your page history is kept."[0m
+   Line [36m39:9[0m [jsx-text] [31m"The page layout is locked in when you start the run. New perks you unlock mid-run won't reshuffle it until you reset."[0m
+   Line [36m43:9[0m [jsx-text] [31m"An in-progress run untouched for 90 days automatically counts as a loss."[0m
+   Line [36m50:9[0m [jsx-text] [31m"Progress"[0m
+   Line [36m55:13[0m [jsx-text] [31m"Current"[0m
+   Line [36m58:13[0m [jsx-text] [31m"Pages cleared so far on this attempt. Drops back to 0 on a loss."[0m
+   Line [36m63:13[0m [jsx-text] [31m"Best"[0m
+   Line [36m66:13[0m [jsx-text] [31m"The furthest page you've ever reached on this killer, across every attempt."[0m
+
+≡ƒôä [1m[33msrc/components/streaks/page-streak/StartRunPanel.tsx[0m (1 issues):
+   Line [36m47:9[0m [jsx-text] [31m"You start on page 1. A win moves you to the next page, a loss sends you back to the beginning. The page layout is frozen for the whole attempt."[0m
+
+≡ƒôä [1m[33msrc/components/streaks/StreakPanel.tsx[0m (2 issues):
+   Line [36m67:13[0m [jsx-text] [31m"Disabled"[0m
+   Line [36m71:13[0m [jsx-text] [31m"Coming soon"[0m
+
+≡ƒôä [1m[33msrc/components/streaks/StreakStatsDrawer.tsx[0m (7 issues):
+   Line [36m126:19[0m [jsx-text] [31m"Win Rate"[0m
+   Line [36m140:17[0m [jsx-text] [31m"Matches"[0m
+   Line [36m148:60[0m [jsx-text] [31m"Wins"[0m
+   Line [36m154:55[0m [jsx-text] [31m"Losses"[0m
+   Line [36m164:15[0m [jsx-text] [31m"Recent Match History"[0m
+   Line [36m169:17[0m [jsx-text] [31m"No matches logged yet. Complete your first match!"[0m
+   Line [36m194:31[0m [jsx-text] [31m"Auto-loss, run was inactive"[0m
+
+≡ƒôä [1m[33msrc/components/swf/SwfPlanner.tsx[0m (2 issues):
+   Line [36m489:33[0m [jsx-text] [31m"DBD"[0m
+   Line [36m686:25[0m [jsx-text] [31m"DBD"[0m
+
+≡ƒôä [1m[33msrc/components/user/UserMetricsGrid.tsx[0m (3 issues):
+   Line [36m52:17[0m [jsx-text] [31m"Survivors"[0m
+   Line [36m80:17[0m [jsx-text] [31m"Killers"[0m
+   Line [36m108:17[0m [jsx-text] [31m"Teachable Perks"[0m
+
+≡ƒôä [1m[33msrc/components/user/UserProfileForm.tsx[0m (1 issues):
+   Line [36m106:13[0m [jsx-text] [31m"Email Address"[0m
+
+≡ƒôä [1m[33msrc/utils/textFormatter.tsx[0m (1 issues):
+   Line [36m706:13[0m [jsx-text] [31m"Notice"[0m
+
+----------------------------------------------------
+ΓÜá∩╕Å  [31mFound 289 hardcoded strings across 70 files.[0m
+

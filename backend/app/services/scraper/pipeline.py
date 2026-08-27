@@ -20,29 +20,16 @@ logger = logging.getLogger(__name__)
 
 
 def seed_canonical_characters_initial(wikigg_driver: WikiGGScraperDriver) -> None:
-    """Startup check that seeds initial character data if characters table is empty."""
+    """Startup check that seeds initial game data directly into PostgreSQL if characters table is empty."""
     try:
         existing = db.session.scalars(select(Character)).first()
         if existing:
             return
 
-        chars_file = Path(__file__).resolve().parent.parent.parent.parent / "data" / "characters.json"
-        if chars_file.exists():
-            logger.info("Initializing character table from local seed data/characters.json...")
-            from app.services.perk_service import PerkService
-            perk_service = PerkService()
-            perk_service.reload_data()
-            return
-
-        logger.info("Initializing character table from wiki.gg...")
-        chars = wikigg_driver.scrape_characters_dynamically()
-        sync_all_to_database(characters=chars, perks=[], items=[], addons=[], maps=[])
-
-        try:
-            from app.seeds.smash_roster_seeder import seed_smash_rosters
-            seed_smash_rosters()
-        except Exception as seed_err:
-            logger.warning(f"Could not auto-seed Smash or Pass: {seed_err}")
+        logger.info("Initializing full PostgreSQL database and downloading assets from wiki.gg...")
+        from app.services.scraper_service import ScraperService
+        scraper = ScraperService()
+        scraper.run_sync_pipeline(download_assets=True)
     except Exception as e:
         logger.warning(f"Could not auto-seed characters on startup: {e}")
 

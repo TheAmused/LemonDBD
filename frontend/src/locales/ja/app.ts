@@ -1,5 +1,26 @@
 export default {
   "title": "LemonDBD",
   "syncWiki": "Wikiデータを同期",
-  "syncing": "同期中..."
+  "syncing": "同期中...",
+  "perksVaultTitle": "パーク保管庫＆コーデックス",
+  "perksVaultSubtitle": "サバイバーとキラーの固有パーク、共通パーク、別名の完全カタログ。",
+  "perksVaultPageTitle": "LemonDBD - Dead by Daylight パーク保管庫",
+  "perkRandomizerPageTitle": "LemonDBD - パークランダマイザー",
+  "loadingPerks": "パーク保管庫を読み込み中...",
+  "resetFilters": "フィルターをリセット",
+  "adminPageTitle": "LemonDBD - 管理者コントロールセンター",
+  "buildsPageTitle": "LemonDBD - コミュニティビルド",
+  "guesserPageTitle": "LemonDBD - ミニゲーム＆当てゲーム",
+  "charactersPageTitle": "LemonDBD - キャラクター＆固有パーク",
+  "customPerksPageTitle": "LemonDBD - カスタムパークスタジオ",
+  "draftPageTitle": "LemonDBD - ドラフトモード",
+  "killerCalculatorPageTitle": "LemonDBD - キラー計算機",
+  "mapsPageTitle": "LemonDBD - タクティカルマップ探索",
+  "questsPageTitle": "LemonDBD - クエスト＆試練",
+  "resetPasswordPageTitle": "LemonDBD - パスワード再設定",
+  "smashOrPassPageTitle": "LemonDBD - Smash or Pass | Dead by Daylight ロマンス",
+  "streaksPageTitle": "LemonDBD - チャレンジ",
+  "swfPageTitle": "LemonDBD - SWFチームプランナー",
+  "userPageTitle": "LemonDBD - ユーザープロフィール",
+  "homePageTitle": "LemonDBD - Dead by Daylight コンパニオン"
 };

@@ -1,4 +1,3 @@
-// frontend/scripts/check-hardcoded-strings.ts
 import fs from 'fs';
 import path from 'path';
 
@@ -6,7 +5,7 @@ interface Issue {
   file: string;
   line: number;
   column: number;
-  type: 'jsx-text' | 'jsx-attribute';
+  type: 'jsx-text' | 'jsx-attribute' | 'document-title';
   text: string;
   context: string;
 }
@@ -19,10 +18,11 @@ const IGNORE_PATTERNS = [
   /\.spec\.tsx?$/,
   /types\.ts$/,
   /constants\.ts$/,
+  /\/locales\//,
 ];
 
 // Translatable JSX attributes
-const TRANSLATABLE_ATTRS = [
+const TRANSLATABLE_ATTRS = new Set([
   'placeholder',
   'title',
   'aria-label',
@@ -32,7 +32,29 @@ const TRANSLATABLE_ATTRS = [
   'buttonText',
   'description',
   'label',
-];
+]);
+
+const CODE_OR_TECHNICAL_WORDS = new Set([
+  'Promise',
+  'ReactNode',
+  'JSX.Element',
+  'MouseEvent',
+  'KeyboardEvent',
+  'TouchEvent',
+  'ChangeEvent',
+  'FormEvent',
+  'undefined',
+  'null',
+  'true',
+  'false',
+  'Math.PI',
+  'React',
+  'FC',
+  'Survivor',
+  'Killer',
+  'All',
+  'None',
+]);
 
 function shouldScanFile(filePath: string): boolean {
   if (!filePath.endsWith('.tsx')) return false;
@@ -59,7 +81,7 @@ function getAllTsxFiles(dir: string): string[] {
 function isTranslatableString(text: string): boolean {
   const trimmed = text.trim();
   if (!trimmed || trimmed.length <= 1) return false;
-  // Ignore purely numbers/symbols
+  // Ignore pure numbers/symbols
   if (/^[\d\s.,/#!$%\^&\*;:{}=\-_`~()><|@\+\?\\]+$/.test(trimmed)) return false;
   // Ignore CSS / Tailwind classes
   if (/^(?:flex|grid|p-|m-|px-|py-|text-|bg-|border-|h-|w-|gap-|rounded|relative|absolute|fixed|inset|z-|transition|hover:|focus:)/.test(trimmed)) {
@@ -69,9 +91,10 @@ function isTranslatableString(text: string): boolean {
   if (/^(?:https?:\/\/|\/|#|mailto:|tel:)/.test(trimmed)) return false;
   if (/^#[0-9a-fA-F]{3,8}$/.test(trimmed)) return false;
   if (/^&[a-zA-Z]+;$/.test(trimmed)) return false;
-  // Ignore standard placeholders / keys
-  if (/^\{[a-zA-Z0-9_.]+\}$/.test(trimmed)) return false;
-  // Must contain letters
+  // Ignore technical / code words
+  if (CODE_OR_TECHNICAL_WORDS.has(trimmed)) return false;
+  if (/^\{.*\}$/.test(trimmed)) return false;
+  // Must contain letter
   if (!/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF\u0400-\u04FF\u3040-\u30FF\u4E00-\u9FAF]/.test(trimmed)) {
     return false;
   }
@@ -80,105 +103,144 @@ function isTranslatableString(text: string): boolean {
 
 function scanFileContent(filePath: string, rootDir: string): Issue[] {
   const code = fs.readFileSync(filePath, 'utf-8');
-  const lines = code.split('\n');
   const issues: Issue[] = [];
   const relPath = path.relative(rootDir, filePath).replace(/\\/g, '/');
 
-  let inMultiLineComment = false;
+  const lines = code.split('\n');
 
+  // Line-by-line helper for line/col calculation
+  const lineOffsets: number[] = [0];
   for (let i = 0; i < lines.length; i++) {
-    const rawLine = lines[i];
-    const trimmed = rawLine.trim();
+    lineOffsets.push(lineOffsets[i] + lines[i].length + 1);
+  }
 
-    // Comment handling
-    if (inMultiLineComment) {
-      if (trimmed.includes('*/')) {
-        inMultiLineComment = false;
-      }
-      continue;
-    }
-    if (trimmed.startsWith('/*')) {
-      if (!trimmed.includes('*/')) inMultiLineComment = true;
-      continue;
-    }
-    if (
-      trimmed.startsWith('//') ||
-      trimmed.startsWith('*') ||
-      trimmed.startsWith('import ') ||
-      trimmed.startsWith('export type ') ||
-      trimmed.startsWith('export interface ') ||
-      trimmed.startsWith('interface ') ||
-      trimmed.startsWith('type ')
-    ) {
-      continue;
-    }
-
-    // 1. Check for translatable attributes: attr="Hardcoded text"
-    for (const attr of TRANSLATABLE_ATTRS) {
-      const attrRegex = new RegExp(`\\b${attr}=["']([^"']+)["']`, 'gi');
-      let match: RegExpExecArray | null;
-      while ((match = attrRegex.exec(rawLine)) !== null) {
-        const val = match[1];
-        if (
-          isTranslatableString(val) &&
-          !val.startsWith('{') &&
-          !val.startsWith('http') &&
-          !val.includes('${') &&
-          !/^[a-z0-9-_]+$/i.test(val) // ignore single token identifiers
-        ) {
-          issues.push({
-            file: relPath,
-            line: i + 1,
-            column: match.index + 1,
-            type: 'jsx-attribute',
-            text: `${attr}="${val}"`,
-            context: trimmed,
-          });
+  function getLineAndCol(pos: number): { line: number; column: number } {
+    let low = 0;
+    let high = lineOffsets.length - 1;
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      if (lineOffsets[mid] <= pos) {
+        if (mid === lineOffsets.length - 1 || lineOffsets[mid + 1] > pos) {
+          return { line: mid + 1, column: pos - lineOffsets[mid] + 1 };
         }
+        low = mid + 1;
+      } else {
+        high = mid - 1;
       }
     }
+    return { line: 1, column: 1 };
+  }
 
-    // 2. Check for raw JSX text between > and <
-    // Only check lines that look like JSX elements and not TypeScript generics
-    if (/<[A-Za-z][^>]*>/.test(rawLine) || /<\/[A-Za-z]/.test(rawLine)) {
-      const jsxTextRegex = />([^<>{}\n]+)</g;
-      let textMatch: RegExpExecArray | null;
-      while ((textMatch = jsxTextRegex.exec(rawLine)) !== null) {
-        const textVal = textMatch[1].trim();
-        // Ignore single words that are technical or types like Promise
-        if (
-          isTranslatableString(textVal) &&
-          !textVal.startsWith('&') &&
-          !textVal.endsWith('&') &&
-          !textVal.includes('=>') &&
-          textVal !== 'Promise' &&
-          textVal !== 'ReactNode'
-        ) {
-          issues.push({
-            file: relPath,
-            line: i + 1,
-            column: textMatch.index + 1,
-            type: 'jsx-text',
-            text: textVal,
-            context: trimmed,
-          });
-        }
-      }
+  // 1. Scan for document.title = "..."
+  const docTitleRegex = /document\.title\s*=\s*["']([^"']+)["']/g;
+  let docMatch: RegExpExecArray | null;
+  while ((docMatch = docTitleRegex.exec(code)) !== null) {
+    const val = docMatch[1].trim();
+    if (isTranslatableString(val)) {
+      const pos = getLineAndCol(docMatch.index);
+      issues.push({
+        file: relPath,
+        line: pos.line,
+        column: pos.column,
+        type: 'document-title',
+        text: `document.title = "${val}"`,
+        context: lines[pos.line - 1]?.trim() || val,
+      });
     }
+  }
 
-    // 3. Check for raw option text: <option value="...">Some Text</option>
-    const optionRegex = /<option[^>]*>([^<]+)<\/option>/g;
-    let optMatch: RegExpExecArray | null;
-    while ((optMatch = optionRegex.exec(rawLine)) !== null) {
-      const optVal = optMatch[1].trim();
-      if (isTranslatableString(optVal) && !optVal.startsWith('{')) {
+  // 2. Scan JSX tags and translatable attributes
+  const attrRegex = /\b(placeholder|title|aria-label|alt|actionPrompt|tagline|buttonText|description|label)=["']([^"']+)["']/g;
+  let attrMatch: RegExpExecArray | null;
+  while ((attrMatch = attrRegex.exec(code)) !== null) {
+    const attrName = attrMatch[1];
+    const val = attrMatch[2].trim();
+    if (isTranslatableString(val)) {
+      const pos = getLineAndCol(attrMatch.index);
+      issues.push({
+        file: relPath,
+        line: pos.line,
+        column: pos.column,
+        type: 'jsx-attribute',
+        text: `${attrName}="${val}"`,
+        context: lines[pos.line - 1]?.trim() || val,
+      });
+    }
+  }
+
+  // 3. Scan JSX text across single and multiline elements
+  // Matches raw text between JSX tag ends `>` and JSX tag begins `<`
+  // Ensure the tag before ends with `>` and tag after begins with `<[A-Za-z/]`
+  const jsxTextRegex = />\s*([^<{}]+?)\s*</g;
+  let textMatch: RegExpExecArray | null;
+  while ((textMatch = jsxTextRegex.exec(code)) !== null) {
+    const raw = textMatch[1];
+    const textVal = raw.trim().replace(/\s+/g, ' ');
+    if (isTranslatableString(textVal)) {
+      // Ignore text containing JavaScript/TypeScript operators or statements
+      if (
+        textVal.includes('=>') ||
+        textVal.includes(';') ||
+        textVal.includes('===') ||
+        textVal.includes('!==') ||
+        textVal.includes('&&') ||
+        textVal.includes('||') ||
+        textVal.includes('?') ||
+        textVal.includes(':') ||
+        textVal.includes('useState') ||
+        textVal.includes('useRef') ||
+        textVal.includes('useEffect') ||
+        textVal.includes('useCallback') ||
+        textVal.includes('useMemo') ||
+        textVal.includes('Record<') ||
+        textVal.includes('Promise<') ||
+        textVal.includes('Array<') ||
+        textVal.includes('Map<') ||
+        textVal.startsWith('const ') ||
+        textVal.startsWith('let ') ||
+        textVal.startsWith('var ') ||
+        textVal.startsWith('return ') ||
+        textVal.startsWith('import ') ||
+        textVal.startsWith('export ') ||
+        textVal.startsWith('type ') ||
+        textVal.startsWith('interface ')
+      ) {
+        continue;
+      }
+
+      // Check context before and after
+      const preIdx = textMatch.index;
+      const preSlice = code.slice(Math.max(0, preIdx - 50), preIdx + 1);
+      const postIdx = textMatch.index + textMatch[0].length;
+      const postSlice = code.slice(postIdx - 1, Math.min(code.length, postIdx + 50));
+
+      // Must be adjacent to JSX opening/closing tags
+      if (!/<[a-zA-Z0-9_\-.:]+|<\/[a-zA-Z0-9_\-.:]+|<>/i.test(postSlice)) {
+        continue;
+      }
+      if (!/>|\/>/.test(preSlice)) {
+        continue;
+      }
+
+      const offsetInMatch = textMatch[0].indexOf(raw.trim());
+      const pos = getLineAndCol(textMatch.index + Math.max(1, offsetInMatch));
+      const lineContent = lines[pos.line - 1]?.trim() || '';
+
+      if (
+        !lineContent.startsWith('import ') &&
+        !lineContent.startsWith('export ') &&
+        !lineContent.startsWith('type ') &&
+        !lineContent.startsWith('interface ') &&
+        !lineContent.startsWith('//') &&
+        !lineContent.startsWith('/*')
+      ) {
         issues.push({
           file: relPath,
-          line: i + 1,
-          column: optMatch.index + 1,
+          line: pos.line,
+          column: pos.column,
           type: 'jsx-text',
-          text: optVal,
-          context: trimmed,
+          text: textVal,
+          context: lineContent,
         });
       }
     }

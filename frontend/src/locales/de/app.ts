@@ -1,5 +1,26 @@
 export default {
   "title": "LemonDBD",
-  "syncWiki": "Wiki-Daten Synchronisieren",
-  "syncing": "Synchronisiere..."
+  "syncWiki": "Wiki-Daten synchronisieren",
+  "syncing": "Synchronisiere Daten...",
+  "perksVaultTitle": "Perk-Tresor & Kodex",
+  "perksVaultSubtitle": "Vollständiger Katalog von Überlebenden- und Killer-Lehrperks, allgemeinen Perks und Aliasnamen.",
+  "perksVaultPageTitle": "LemonDBD - Dead by Daylight Perk-Tresor",
+  "perkRandomizerPageTitle": "LemonDBD - Perk-Zufallsgenerator",
+  "loadingPerks": "Lade Perk-Tresor...",
+  "resetFilters": "Filter zurücksetzen",
+  "adminPageTitle": "LemonDBD - Admin-Kontrollzentrum",
+  "buildsPageTitle": "LemonDBD - Community-Builds",
+  "guesserPageTitle": "LemonDBD - Minispiele & Ratespiel",
+  "charactersPageTitle": "LemonDBD - Charaktere & Lehrperks",
+  "customPerksPageTitle": "LemonDBD - Eigenes Perk-Studio",
+  "draftPageTitle": "LemonDBD - Draft-Modus",
+  "killerCalculatorPageTitle": "LemonDBD - Killer-Rechner",
+  "mapsPageTitle": "LemonDBD - Taktischer Karten-Explorer",
+  "questsPageTitle": "LemonDBD - Quests & Prüfungen",
+  "resetPasswordPageTitle": "LemonDBD - Passwort zurücksetzen",
+  "smashOrPassPageTitle": "LemonDBD - Smash or Pass | Dead by Daylight Romantik",
+  "streaksPageTitle": "LemonDBD - Herausforderungen",
+  "swfPageTitle": "LemonDBD - SWF-Teamplaner",
+  "userPageTitle": "LemonDBD - Benutzerprofil",
+  "homePageTitle": "LemonDBD - Dead by Daylight Begleiter"
 };

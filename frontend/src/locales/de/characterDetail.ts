@@ -123,5 +123,12 @@ export default {
   "generalPerk": "Allgemeiner Perk",
   "alias": "Alias",
   "interactiveViewer": "Interaktiver Betrachter",
-  "breadcrumbs": "Brotkrümelnavigation"
+  "breadcrumbs": "Brotkrümelnavigation",
+  "highRes3dModelView": "Hochauflösende 3D-Modellansicht",
+  "interactive3dMeshEngineWip": "Interaktive 3D-Mesh-Engine (WIP)",
+  "configRosterDesc": "Klicke auf Charakter-Avatare, um sie für den Perk-Zufallsgenerator ein- oder auszuschließen.",
+  "hubSubtitle": "Entdecke Dead by Daylight Überlebende & Killer. Sieh dir Charakterdetails, einzigartige lehrbare Perks, Kraft-Zusätze und Ausrüstung an.",
+  "hubNoMatchingCharacters": "Keine Charaktere entsprechen deinen aktuellen Filtern oder deiner Suchanfrage.",
+  "togglePerkOwnershipHelp": "Klicke auf einen Perk, um den Besitzstatus umzuschalten.",
+  "changesSaved": "Änderungen gespeichert"
 };

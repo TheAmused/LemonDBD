@@ -210,10 +210,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </>
               ) : (
                 <>
-                  Account created! We sent a verification code to <strong>{notice.email}</strong>.
+                  {(dict?.user?.accountCreatedVerificationSent || 'Account created! We sent a verification code to {email}.').replace('{email}', notice.email)}
                 </>
               )}
             </p>
+
             <EmailVerificationForm
               email={notice.email}
               onVerified={onClose}
@@ -246,10 +247,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {mode !== 'forgot' && (
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
-                  Username or Email
+                  {dict?.user?.usernameOrEmailLabel || 'Username or Email'}
                 </label>
                 <div className="relative">
                   <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+
                   <input
                     type="text"
                     required
@@ -265,10 +267,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {(mode === 'register' || mode === 'forgot') && (
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
-                  Email Address
+                  {dict?.user?.emailLabel || dict?.admin?.thEmail || 'Email Address'}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+
                   <input
                     type="email"
                     required
@@ -284,10 +287,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {mode !== 'forgot' && (
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">
-                  Password
+                  {dict?.user?.passwordLabel || dict?.admin?.thPassword || 'Password'}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+
                   <input
                     type="password"
                     required
@@ -351,10 +355,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {!notice && mode !== 'forgot' && (
           <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800/80">
             <p className="text-[10px] uppercase font-bold text-slate-500 mb-2 text-center tracking-wider">
-              Quick Demo Accounts
+              {dict?.user?.quickDemoAccounts || 'Quick Demo Accounts'}
             </p>
             <div className="grid grid-cols-2 gap-2">
               <button
+
                 type="button"
                 onClick={() => handleFillDemo('admin')}
                 className="flex items-center justify-center gap-1.5 rounded-lg border border-red-500/20 bg-red-50 dark:bg-red-950/20 px-2.5 py-1.5 text-[11px] font-semibold text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
@@ -383,23 +388,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             >
               {mode === 'forgot' ? (
                 <span className="font-bold text-amber-600 dark:text-amber-400 underline">
-                  Back to Sign In
+                  {dict?.user?.backToSignIn || 'Back to Sign In'}
                 </span>
               ) : mode === 'register' ? (
                 <>
-                  Already have an account?{' '}
+                  {dict?.user?.alreadyHaveAccount || 'Already have an account?'}{' '}
                   <span className="font-bold text-amber-600 dark:text-amber-400 underline">
-                    Sign In
+                    {dict?.user?.signIn || 'Sign In'}
                   </span>
                 </>
               ) : (
                 <>
-                  Don&apos;t have an account?{' '}
+                  {dict?.user?.dontHaveAccount || "Don't have an account?"}{' '}
                   <span className="font-bold text-amber-600 dark:text-amber-400 underline">
-                    Register
+                    {dict?.user?.register || 'Register'}
                   </span>
                 </>
               )}
+
             </button>
           </div>
         )}

@@ -347,13 +347,14 @@ export function ScraperConfigModal({
             </div>
             <div>
               <h2 id="db-modal-title" className="text-lg font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
-                Database Backup &amp; Snapshots
+                {dict?.admin?.dbBackupSnapshots || 'Database Backup & Snapshots'}
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Export complete JSON snapshots, restore backups, or manage PostgreSQL via pgAdmin
+                {dict?.admin?.dbBackupSnapshotsSubtitle || 'Export complete JSON snapshots, restore backups, or manage PostgreSQL via pgAdmin'}
               </p>
             </div>
           </div>
+
 
           <a
             href={
@@ -436,10 +437,11 @@ export function ScraperConfigModal({
 
             <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Select Entities to Include in JSON Backup
+                {dict?.admin?.selectBackupEntities || 'Select Entities to Include in JSON Backup'}
               </span>
               <button
                 type="button"
+
                 onClick={toggleAllExport}
                 className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
               >
@@ -483,10 +485,11 @@ export function ScraperConfigModal({
                 disabled={isExporting}
                 className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
-                Cancel
+                {dict?.admin?.cancel || 'Cancel'}
               </button>
 
               <button
+
                 type="button"
                 onClick={handleExecuteExport}
                 disabled={isExporting || exportTargets.length === 0}
@@ -548,20 +551,22 @@ export function ScraperConfigModal({
               ) : (
                 <div>
                   <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Click or drag &amp; drop a LemonDBD <span className="text-emerald-500 font-mono">{'.json'}</span> backup file
+                    {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a LemonDBD'} <span className="text-emerald-500 font-mono">{'.json'}</span> {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
                   </p>
                   <p className="text-[10px] text-slate-400 mt-1">{dict?.admin?.jsonFormatNotice || 'Accepts full or partial JSON database exports'}</p>
                 </div>
+
               )}
             </div>
 
             {/* Import Mode Options */}
             <div className="space-y-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Choose Import Strategy
+                {dict?.admin?.chooseImportStrategy || 'Choose Import Strategy'}
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div
+
                   onClick={() => setImportMode('merge')}
                   className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
                     importMode === 'merge'
@@ -573,10 +578,11 @@ export function ScraperConfigModal({
                   <div>
                     <p className="text-xs font-bold">{dict?.admin?.mergeUpdate || 'Merge & Update (Safe)'}</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                      Upserts entities by name/slug without deleting existing data
+                      {dict?.admin?.mergeUpdateDesc || 'Upserts entities by name/slug without deleting existing data'}
                     </p>
                   </div>
                 </div>
+
 
                 <div
                   onClick={() => setImportMode('replace')}
@@ -590,10 +596,11 @@ export function ScraperConfigModal({
                   <div>
                     <p className="text-xs font-bold">{dict?.admin?.wipeReplace || 'Wipe & Replace (Clean)'}</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                      Clears target tables first, then restores uploaded records
+                      {dict?.admin?.wipeReplaceDesc || 'Clears target tables first, then restores uploaded records'}
                     </p>
                   </div>
                 </div>
+
               </div>
             </div>
 
@@ -601,10 +608,11 @@ export function ScraperConfigModal({
             {importSummary && (
               <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 p-3 max-h-36 overflow-y-auto space-y-1.5">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  Import Results Breakdown
+                  {dict?.admin?.importResultsBreakdown || 'Import Results Breakdown'}
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs">
                   {Object.entries(importSummary).map(([key, counts]) => (
+
                     <div key={key} className="rounded-lg bg-white dark:bg-slate-900 p-1.5 border border-slate-200 dark:border-slate-800">
                       <p className="text-[10px] font-bold text-slate-400 capitalize">{key}</p>
                       <p className="text-xs font-bold text-emerald-500">
@@ -623,10 +631,11 @@ export function ScraperConfigModal({
                 disabled={isImporting}
                 className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
-                Close
+                {dict?.admin?.close || 'Close'}
               </button>
 
               <button
+
                 type="button"
                 onClick={handleExecuteImport}
                 disabled={isImporting || !importFile}
@@ -664,10 +673,11 @@ export function ScraperConfigModal({
 
             <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Select Target Tables to Wipe
+                {dict?.admin?.selectTablesToWipe || 'Select Target Tables to Wipe'}
               </span>
               <button
                 type="button"
+
                 onClick={toggleAllPurge}
                 className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
               >
@@ -711,10 +721,11 @@ export function ScraperConfigModal({
                 disabled={isPurging}
                 className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               >
-                Close
+                {dict?.admin?.close || 'Close'}
               </button>
 
               <button
+
                 type="button"
                 onClick={handleExecutePurge}
                 disabled={isPurging || purgeTargets.length === 0}

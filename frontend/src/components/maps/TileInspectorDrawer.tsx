@@ -195,7 +195,7 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
           <div className="space-y-2">
             <h4 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-              Pallet Safety Assessment
+              {dict?.maps?.palletSafetyAssessment || 'Pallet Safety Assessment'}
             </h4>
             {renderPalletSafetyBadge(palletSafety)}
           </div>
@@ -216,9 +216,9 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
               </div>
             )}
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-              ⚡ <strong className="text-indigo-800 dark:text-indigo-200">{dict?.maps?.fastVault || 'Fast Vault (0.5s):'}</strong> Requires running straight at window with at least 2.5m momentum.
+              ⚡ <strong className="text-indigo-800 dark:text-indigo-200">{dict?.maps?.fastVault || 'Fast Vault (0.5s):'}</strong> {dict?.maps?.fastVaultMomentumNote || 'Requires running straight at window with at least 2.5m momentum.'}
               <br />
-              🏃 <strong className="text-slate-500 dark:text-slate-400">{dict?.maps?.mediumVault || 'Medium Vault (0.9s):'}</strong> Triggers on angled approach. High risk of killer hit!
+              🏃 <strong className="text-slate-500 dark:text-slate-400">{dict?.maps?.mediumVault || 'Medium Vault (0.9s):'}</strong> {dict?.maps?.mediumVaultAngledNote || 'Triggers on angled approach. High risk of killer hit!'}
             </p>
           </div>
         )}
@@ -226,28 +226,20 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
         <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border border-emerald-500/30 rounded-2xl space-y-2 shadow-sm">
           <h4 className="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
             <Footprints className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
-            Survivor Looping Pathing Tips
+            {dict?.maps?.survivorLoopingTipsTitle || 'Survivor Looping Pathing Tips'}
           </h4>
           <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-            {loopingTips || (
-              <>
-                Hug high walls tightly to minimize loop distance. Watch killer red stain over low obstacles and keep camera focused behind you while pathing.
-              </>
-            )}
+            {loopingTips || dict?.maps?.survivorLoopingTipsDefault || 'Hug high walls tightly to minimize loop distance. Watch killer red stain over low obstacles and keep camera focused behind you while pathing.'}
           </p>
         </div>
 
         <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border border-red-500/30 rounded-2xl space-y-2 shadow-sm">
           <h4 className="text-xs font-bold text-red-700 dark:text-red-400 uppercase tracking-wider flex items-center gap-1.5">
             <Flame className="w-4 h-4 text-red-500 animate-pulse" />
-            Killer Mindgame Counterplay
+            {dict?.maps?.killerMindgameCounterTitle || 'Killer Mindgame Counterplay'}
           </h4>
           <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-            {mindgameCounter || (
-              <>
-                Killers will attempt to hide red stain by moonwalking backward around high walls or faking window vault angles to force premature pallet drops.
-              </>
-            )}
+            {mindgameCounter || dict?.maps?.killerMindgameCounterDefault || 'Killers will attempt to hide red stain by moonwalking backward around high walls or faking window vault angles to force premature pallet drops.'}
           </p>
         </div>
 

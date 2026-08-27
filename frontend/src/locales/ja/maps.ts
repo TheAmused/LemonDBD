@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/maps.ts
 export default {
   "searchPlaceholder": "マップまたは領域を検索...",
   "searchAria": "マップまたは領域を検索",
@@ -73,5 +74,25 @@ export default {
   "callouts": "コールアウト",
   "chromeEdgeSafari": "Chrome • Edge • Safari",
   "universalPrivateInBrowser": "全ブラウザ対応 • プライベート • ブラウザ内完結",
-  "preloadModel": "モデルを事前ロード"
+  "preloadModel": "モデルを事前ロード",
+  "pageTitle": "LemonDBD - 戦術マップコマンドエクスプローラー",
+  "initializingTacticalMap": "タクティカルマップコマンドを初期化中...",
+  "loadingTacticalMaps": "タクティカルマップを読み込み中...",
+  "tacticalEngineVersion": "LemonDBD タクティカルエンジン v2.0",
+  "mapDirectory": "マップディレクトリ",
+  "fit": "フィット",
+  "noMapsAdjustFilter": "検索クエリまたは選択した領域フィルターを調整してください。",
+  "centerLandmarkObjective": "中央ランドマーク / 目標",
+  "palletSafetyAssessment": "パレット安全性評価",
+  "fastVaultMomentumNote": "窓に向かって少なくとも2.5mの助走をつけてまっすぐ走る必要があります。",
+  "mediumVaultAngledNote": "斜めからの進入時に発生。キラーの攻撃を受けるリスクが高くなります！",
+  "survivorLoopingTipsTitle": "サバイバーループのコツ",
+  "survivorLoopingTipsDefault": "ループ距離を最小限にするため高い壁にタイトに沿って走りましょう。低い障害物越しのキラーのステインに注意し、カメラを後方に向けながら移動してください。",
+  "killerMindgameCounterTitle": "キラーの読み合い対策",
+  "killerMindgameCounterDefault": "キラーは高い壁の周りで後ろ歩き（ムーンウォーク）してステインを隠したり、窓越えフェイントで早期パレット倒しを誘発しようとします。",
+  "sourceHensClock": "Hens333 (12時クロック)",
+  "sourceSamoelIsometric": "SamoelColt (等角図)",
+  "detectedBrowser": "検出されたブラウザ",
+  "activeRecognitionEngine": "アクティブ認識エンジン"
 };
+

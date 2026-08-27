@@ -277,13 +277,12 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               <span>{dict?.customPerkStudio?.conceptLab || 'Studio & Concept Lab'}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono">
-              Custom Perk Creator Studio
+              {dict?.app?.customPerksPageTitle || 'Custom Perk Creator Studio'}
             </h1>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
-              Design original Dead by Daylight perk concepts with a live interactive diamond card preview, or explore and upvote community-created perks.
+              {dict?.customPerkStudio?.subtitle || 'Design original Dead by Daylight perk concepts with a live interactive diamond card preview, or explore and upvote community-created perks.'}
             </p>
           </div>
-
           {/* Tab Switcher */}
           <div className="flex items-center bg-white/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shrink-0 shadow-sm">
             <button
@@ -345,7 +344,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               {/* Perk Name */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                  Perk Title *
+                  {dict?.builds?.buildTitle || 'Perk Title *'}
                 </label>
                 <input
                   type="text"
@@ -361,7 +360,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                    Role *
+                    {dict?.builds?.role || 'Role *'}
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -390,10 +389,9 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                     </button>
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                    Character / Teachable
+                    {dict?.modal?.character || 'Character / Teachable'}
                   </label>
                   <input
                     type="text"
@@ -408,7 +406,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               {/* Rarity */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                  Rarity *
+                  {dict?.characterDetail?.raritySpecial || 'Rarity *'}
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {RARITY_OPTIONS.map((r) => (
@@ -431,7 +429,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               {/* Icon Preset Picker */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                  Icon Preset *
+                  {dict?.guesser?.perkIconChoice || 'Icon Preset *'}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {ICON_PRESETS.map((preset) => {
@@ -459,7 +457,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               {/* Author */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                  Creator / Author Name
+                  {dict?.builds?.authorName || 'Creator / Author Name'}
                 </label>
                 <input
                   type="text"
@@ -474,7 +472,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    Perk Description (Markdown Supported) *
+                    {dict?.modal?.perkDescription || 'Perk Description (Markdown Supported) *'}
                   </label>
                   <div className="flex gap-1.5 text-[10px] font-mono">
                     <button
@@ -527,13 +525,12 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             <div className="flex items-center justify-between px-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4 text-red-500" />
-                Live Card Preview
+                {dict?.characterDetail?.interactiveViewer || 'Live Card Preview'}
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold border border-emerald-500/30 animate-pulse">
                 REAL-TIME
               </span>
             </div>
-
             {/* DBD Styled Custom Perk Card */}
             {(() => {
               const rConfig = getRarityConfig(rarity);
@@ -593,7 +590,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       renderMarkdown(description)
                     ) : (
                       <p className="text-xs text-slate-400 italic text-center">
-                        Perk description will render live here...
+                        {dict?.modal?.perkDescription || 'Perk description will render live here...'}
                       </p>
                     )}
                   </div>
@@ -681,7 +678,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
           {/* Cards Grid */}
           {loadingGallery ? (
             <div className="py-16 text-center text-slate-500 dark:text-slate-400 animate-pulse font-mono text-xs">
-              Loading perk concepts...
+              {dict?.app?.loadingPerks || 'Loading perk concepts...'}
             </div>
           ) : customPerks.length === 0 ? (
             <div className="bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3">
@@ -690,7 +687,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 {dict?.empty?.title || 'No Custom Perks Found'}
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                No perk concepts match your current filter settings. Try clearing filters or create a new concept!
+                {dict?.empty?.subtitle || 'No perk concepts match your current filter settings. Try clearing filters or create a new concept!'}
               </p>
               <button
                 onClick={() => setActiveTab('designer')}

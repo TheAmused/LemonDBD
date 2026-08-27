@@ -139,7 +139,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
           />
           <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">{dict?.maps?.noMapsFound || 'No Maps Found'}</h3>
           <p className="mt-1 text-xs text-slate-500">
-            Try adjusting your search query or selected realm filter.
+            {dict?.maps?.noMapsAdjustFilter || 'Try adjusting your search query or selected realm filter.'}
           </p>
         </div>
       ) : (

@@ -112,7 +112,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                 <Compass className="h-4 w-4" />
               </div>
               <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 font-mono truncate">
-                Map Directory
+                {dict?.maps?.mapDirectory || 'Map Directory'}
               </h3>
               <span className="rounded-full bg-slate-200 dark:bg-slate-800 px-2 py-0.5 text-[10px] font-bold text-slate-600 dark:text-slate-400 font-mono">
                 {maps.length}

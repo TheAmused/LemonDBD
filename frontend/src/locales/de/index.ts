@@ -1,3 +1,4 @@
+// frontend/src/locales/de/index.ts
 import type { Dictionary } from '../types';
 import app from './app';
 import landing from './landing';
@@ -20,6 +21,7 @@ import streaks from './streaks';
 import builds from './builds';
 import admin from './admin';
 import maps from './maps';
+import quests from './quests';
 
 const de: Dictionary = {
   app,
@@ -43,6 +45,8 @@ const de: Dictionary = {
   builds,
   admin,
   maps,
+  quests,
 };
 
 export default de;
+

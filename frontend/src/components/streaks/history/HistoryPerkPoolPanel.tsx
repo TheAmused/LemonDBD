@@ -100,7 +100,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
         </div>
         <div>
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-            Perk pool
+            {dict?.streaks?.perkPool || 'Perk pool'}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {unlocked.length} unlocked &middot; {locked.length} locked

@@ -1,4 +1,3 @@
-// frontend/src/components/streaks/gauntlet/CharacterRosterGrid.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -14,6 +13,7 @@ export interface CharacterRosterGridProps {
   checkpointCharacters?: string[];
   activeCharacterId?: string;
   loading?: boolean;
+  dict?: any;
 }
 
 export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
@@ -23,6 +23,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   checkpointCharacters = [],
   activeCharacterId,
   loading = false,
+  dict,
 }) => {
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
@@ -43,6 +44,12 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
     avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers');
 
   const completedCount = characters.filter((c) => isCompleted(c.name)).length;
+  const roleLabel = role === 'survivor'
+    ? (dict?.streaks?.survivor || dict?.generator?.survivor || 'Survivor')
+    : (dict?.streaks?.killer || dict?.generator?.killer || 'Killer');
+
+  const completedText = dict?.stats?.completed || dict?.smashOrPass?.completed || 'Completed';
+  const activeTargetText = dict?.streaks?.activeGauntletTarget || dict?.streaks?.target || 'Active Target';
 
   return (
     <div className="w-full bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
@@ -54,15 +61,14 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             ) : (
               <Skull className="w-5 h-5 text-red-500" />
             )}
-            <span className="capitalize">{role}</span> Roster Progress
+            <span>{roleLabel}</span> {dict?.streaks?.rosterProgress || 'Roster Progress'}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Complete matches with each owned character to master the roster.
+            {dict?.streaks?.rosterProgressDesc || 'Complete matches with each owned character to master the roster.'}
           </p>
         </div>
-
         <div className="px-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-sm">
-          Completed: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{completedCount}</span> / {characters.length}
+          {completedText}: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{completedCount}</span> / {characters.length}
         </div>
       </div>
 
@@ -74,7 +80,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
         </div>
       ) : characters.length === 0 ? (
         <div className="py-12 text-center text-slate-500 dark:text-slate-400 text-sm">
-          You don't own any {role} characters yet. Head to the Characters tab to mark what you own.
+          {dict?.streaks?.noOwnedCharacters || `You don't own any ${role} characters yet. Head to the Characters tab to mark what you own.`}
         </div>
       ) : (
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4">
@@ -92,24 +98,24 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
               cardBorder = 'border-amber-500 animate-pulse shadow-lg shadow-amber-500/20 border-2 bg-amber-500/10 dark:bg-amber-950/20';
             }
 
+            const statusSuffix = completed ? ` (${completedText})` : active ? ` (${activeTargetText})` : '';
+
             return (
               <div
                 key={char.name}
                 className={`relative group rounded-xl border p-2 flex flex-col items-center justify-between transition-all duration-200 ${cardBorder}`}
-                title={`${char.name}${completed ? ' (Completed)' : active ? ' (Active Target)' : ''}`}
+                title={`${char.name}${statusSuffix}`}
               >
                 {completed && (
                   <div className="absolute -top-2 -right-2 bg-emerald-500 text-white dark:text-slate-950 p-1 rounded-full shadow-md z-10">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                 )}
-
                 {active && !completed && (
                   <div className="absolute -top-2 -left-2 bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-full text-[9px] font-black z-10 uppercase tracking-tighter shadow-sm">
-                    Target
+                    {dict?.streaks?.target || 'Target'}
                   </div>
                 )}
-
                 {checkpoint && !completed && !active && (
                   <div className="absolute -top-2 -right-2 bg-indigo-500 text-white p-1 rounded-full shadow-md z-10">
                     <ShieldCheck className="w-3 h-3" />
@@ -121,9 +127,8 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                     <img
                       src={avatarUrl}
                       alt={char.name}
-                      className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${
-                        completed ? 'brightness-105' : !active ? 'opacity-90' : ''
-                      }`}
+                      className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${completed ? 'brightness-105' : !active ? 'opacity-90' : ''
+                        }`}
                       onError={() => handleImageError(char.name)}
                     />
                   ) : (

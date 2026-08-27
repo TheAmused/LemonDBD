@@ -218,7 +218,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
                       isSamoel ? 'text-emerald-700 dark:text-emerald-400' : 'text-amber-700 dark:text-amber-500'
                     }`}
                   >
-                    Center Landmark / Objective
+                    {dict?.maps?.centerLandmarkObjective || 'Center Landmark / Objective'}
                   </span>
                   <div className="text-xs md:text-sm font-extrabold text-slate-900 dark:text-slate-100 truncate">
                     {centerVal}

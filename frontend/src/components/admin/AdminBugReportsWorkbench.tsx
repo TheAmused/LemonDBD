@@ -97,10 +97,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="text-xs font-bold uppercase text-rose-400 flex items-center gap-1.5">
-            <HelpCircle className="h-4 w-4" /> Pending
+            <HelpCircle className="h-4 w-4" /> {dict?.admin?.pending || 'Pending'}
           </span>
           <p className="text-xl sm:text-2xl font-black text-rose-400 font-mono mt-1">
             {bugStats?.pending ?? 0}
+
           </p>
         </div>
 
@@ -113,10 +114,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="text-xs font-bold uppercase text-amber-400 flex items-center gap-1.5">
-            <Clock className="h-4 w-4" /> In Progress
+            <Clock className="h-4 w-4" /> {dict?.admin?.inProgress || 'In Progress'}
           </span>
           <p className="text-xl sm:text-2xl font-black text-amber-400 font-mono mt-1">
             {bugStats?.in_progress ?? 0}
+
           </p>
         </div>
 
@@ -129,10 +131,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="text-xs font-bold uppercase text-emerald-400 flex items-center gap-1.5">
-            <CheckCircle className="h-4 w-4" /> Resolved
+            <CheckCircle className="h-4 w-4" /> {dict?.admin?.resolved || 'Resolved'}
           </span>
           <p className="text-xl sm:text-2xl font-black text-emerald-400 font-mono mt-1">
             {bugStats?.resolved ?? 0}
+
           </p>
         </div>
 
@@ -145,10 +148,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="text-xs font-bold uppercase text-slate-400 flex items-center gap-1.5">
-            <Bug className="h-4 w-4" /> Total Tickets
+            <Bug className="h-4 w-4" /> {dict?.admin?.totalTickets || 'Total Tickets'}
           </span>
           <p className="text-xl sm:text-2xl font-black text-slate-200 font-mono mt-1">
             {bugStats?.total ?? 0}
+
           </p>
         </div>
       </div>
@@ -191,14 +195,15 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
             {loading ? (
               <div className="py-12 text-center text-xs text-slate-500 font-mono">
-                Loading tickets...
+                {dict?.admin?.loadingTickets || 'Loading tickets...'}
               </div>
             ) : bugReports.length === 0 ? (
               <div className="py-12 text-center text-xs text-slate-500 font-mono">
-                No bug reports found.
+                {dict?.admin?.noBugReports || 'No bug reports found.'}
               </div>
             ) : (
               bugReports.map((report) => {
+
                 const isSelected = selectedBugId === report.id;
                 const cfg = STATUS_CONFIG[report.status] || STATUS_CONFIG.pending;
 
@@ -302,10 +307,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     {selectedBug.title}
                   </h3>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Reported by <strong className="text-slate-200">{selectedBug.reporter_name}</strong>{' '}
-                    ({selectedBug.reporter_email || 'No email provided'})
+                    {dict?.admin?.reportedBy || 'Reported by'} <strong className="text-slate-200">{selectedBug.reporter_name}</strong>{' '}
+                    ({selectedBug.reporter_email || dict?.admin?.noEmailProvided || 'No email provided'})
                   </p>
                 </div>
+
 
                 <div className="flex items-center gap-2 self-start sm:self-auto">
                   <select
@@ -332,10 +338,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
 
               <div className="space-y-2">
                 <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                  Description
+                  {dict?.admin?.description || 'Description'}
                 </label>
                 <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-xs text-slate-200 leading-relaxed whitespace-pre-wrap min-h-[100px]">
                   {selectedBug.message}
+
                 </div>
               </div>
 
@@ -371,10 +378,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               <div className="space-y-2 pt-2 border-t border-slate-800">
                 <label className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                   <MessageSquare className="h-3.5 w-3.5 text-amber-400" />
-                  Developer Feedback / Response Note (Visible to Submitter)
+                  {dict?.admin?.devFeedbackLabel || 'Developer Feedback / Response Note (Visible to Submitter)'}
                 </label>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
                   <input
+
                     type="text"
                     value={editingNotes[selectedBug.id] ?? ''}
                     onChange={(e) => onNoteChange(selectedBug.id, e.target.value)}

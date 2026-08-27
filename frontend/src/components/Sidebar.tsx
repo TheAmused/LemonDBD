@@ -308,10 +308,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             <div>
               <span className="font-black text-base tracking-wider text-slate-900 dark:text-slate-100 font-mono">
-                LemonDBD
+                {dict?.app?.title || 'LemonDBD'}
               </span>
             </div>
           </Link>
+
         </div>
 
         {/* Navigation */}
@@ -492,7 +493,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <LemonIcon className="h-6 w-6" />
           </div>
           <span className="font-extrabold text-sm tracking-wider font-mono text-slate-900 dark:text-slate-100">
-            LemonDBD
+            {dict?.app?.title || 'LemonDBD'}
           </span>
         </Link>
 

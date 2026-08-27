@@ -1,748 +1,606 @@
-### Solution Overview
-
-The error `Uncaught ReferenceError: Cannot access 's' before initialization` in minified production bundles occurs due to the **Temporal Dead Zone (TDZ)** in JavaScript.
-
-In `frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx`, the `categorizedData` hook called `filterItem` and `matchesCategory` inside a `useMemo` array filter:
-
-1. `filterItem` or `matchesCategory` was originally defined using `const` or inside the hook, causing the bundler's minified closure to reference variable `s` before it is declared.
-2. In `SurvivorDetailView.tsx` and `CharacterSubpageView.tsx`, `detailData` sub-arrays (`items`, `addons`, `offerings`) might default to `undefined` before resolving, causing `.filter()` in `useMemo` to fail on execution.
-
-
-
-To fix this:
-
-* All filtering and category helper logic in `SurvivorEquipmentSection.tsx` are hoisted as pure standalone functions outside the React component scope.
-* Default fallback arrays (`items = []`, `addons = []`) and safe optional chaining guards are applied across all survivor sub-components.
-
-
-
----
-
-#### 1. `frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx`
-
+### src/components/streaks/chaos/ChaosCheckpointModal.tsx
 ```tsx
-import React, { useState, useMemo } from 'react';
-import {
-  Package,
-  Search,
-  ShieldAlert,
-  Heart,
-  Wrench,
-  Flashlight,
-  Key,
-  Map as MapIcon,
-  Bomb,
-  Sparkles,
-} from 'lucide-react';
-import {
-  AddonItem,
-  EquipmentItem,
-  getAssetUrl,
-  getRarityTileStyle,
-  getRarityRank,
-  renderFormattedDbdText,
-} from '../types';
+// frontend/src/components/streaks/chaos/ChaosCheckpointModal.tsx
+'use client';
 
-interface SurvivorEquipmentSectionProps {
-  items?: EquipmentItem[];
-  addons?: (AddonItem | EquipmentItem)[];
-  backendBase: string;
-  onSelectEquipment: (item: AddonItem | EquipmentItem) => void;
-  t: Record<string, string>;
+import React, { useEffect } from 'react';
+import { ShieldCheck, PartyPopper } from 'lucide-react';
+
+export interface ChaosCheckpointModalProps {
+  checkpoint: number | null;
+  onClose: () => void;
+  dict?: any;
 }
 
-type SurvivorCategoryKey =
-  | 'medkit'
-  | 'toolbox'
-  | 'flashlight'
-  | 'key'
-  | 'map'
-  | 'firecracker'
-  | 'trial_exclusive';
-
-function getCanonicalString(it: EquipmentItem | AddonItem): string {
-  const raw = (it.raw_name || '').toLowerCase();
-  const name = (it.name || '').toLowerCase();
-  const target = ((it as { associated_target?: string }).associated_target || '').toLowerCase();
-  const category = (it.category || '').toLowerCase();
-  const desc = (it.description || '').toLowerCase();
-  return `${raw} ${name} ${target} ${category} ${desc}`;
-}
-
-function checkIsMedKit(target: string, raw: string, name: string): boolean {
-  if (target.includes('med-kit') || target.includes('medkit') || target.includes('aid')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('med-kit') ||
-    combined.includes('medkit') ||
-    combined.includes('first aid') ||
-    combined.includes('aid kit') ||
-    combined.includes('lunchbox') ||
-    combined.includes('camping') ||
-    combined.includes('emergency') ||
-    combined.includes('ranger') ||
-    combined.includes('syringe') ||
-    combined.includes('styptic') ||
-    combined.includes('dressing') ||
-    combined.includes('bandage') ||
-    combined.includes('suture') ||
-    combined.includes('sponge') ||
-    combined.includes('gauze') ||
-    combined.includes('needle') ||
-    combined.includes('scissor') ||
-    combined.includes('gel') ||
-    combined.includes('serum') ||
-    combined.includes('apteczka') ||
-    combined.includes('sanitäter') ||
-    combined.includes('botiquín') ||
-    combined.includes('救急箱')
-  );
-}
-
-function checkIsToolbox(target: string, raw: string, name: string): boolean {
-  if (target.includes('toolbox') || target.includes('tools')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('toolbox') ||
-    combined.includes('tool') ||
-    combined.includes('mechanic') ||
-    combined.includes('commodious') ||
-    combined.includes('engineer') ||
-    combined.includes('alex') ||
-    combined.includes('wire') ||
-    combined.includes('socket') ||
-    combined.includes('swivel') ||
-    combined.includes('spring') ||
-    combined.includes('spool') ||
-    combined.includes('brand new part') ||
-    combined.includes('protective grip') ||
-    combined.includes('hacksaw') ||
-    combined.includes('clamp') ||
-    combined.includes('rag') ||
-    combined.includes('skrzynka') ||
-    combined.includes('werkzeugkasten') ||
-    combined.includes('caja de herramientas') ||
-    combined.includes('boîte à outils') ||
-    combined.includes('工具箱')
-  );
-}
-
-function checkIsFlashlight(target: string, raw: string, name: string): boolean {
-  if (target.includes('flashlight') || target.includes('torch')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('flashlight') ||
-    combined.includes('torch') ||
-    combined.includes('sport flashlight') ||
-    combined.includes('utility flashlight') ||
-    combined.includes('wisp') ||
-    combined.includes('battery') ||
-    combined.includes('lens') ||
-    combined.includes('bulb') ||
-    combined.includes('filament') ||
-    combined.includes('reflector') ||
-    combined.includes('focus') ||
-    combined.includes('sapphire') ||
-    combined.includes('rubee') ||
-    combined.includes('ruby') ||
-    combined.includes('latarka') ||
-    combined.includes('taschenlampe') ||
-    combined.includes('linterna') ||
-    combined.includes('lampe torche') ||
-    combined.includes('懐中電灯')
-  );
-}
-
-function checkIsKey(target: string, raw: string, name: string): boolean {
-  if (target.includes('key')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('key') ||
-    combined.includes('skeleton key') ||
-    combined.includes('dull key') ||
-    combined.includes('broken key') ||
-    combined.includes('amber') ||
-    combined.includes('token') ||
-    combined.includes('bead') ||
-    combined.includes('pearl') ||
-    combined.includes('ring') ||
-    combined.includes('klucz') ||
-    combined.includes('schlüssel') ||
-    combined.includes('llave') ||
-    combined.includes('clé') ||
-    combined.includes('カギ') ||
-    combined.includes('鍵')
-  );
-}
-
-function checkIsMap(target: string, raw: string, name: string): boolean {
-  if (target.includes('map')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('map') ||
-    combined.includes('rainbow map') ||
-    combined.includes('cord') ||
-    combined.includes('rope') ||
-    combined.includes('stamp') ||
-    combined.includes('glass bead') ||
-    combined.includes('retardant') ||
-    combined.includes('silk') ||
-    combined.includes('mapa') ||
-    combined.includes('karte') ||
-    combined.includes('carte') ||
-    combined.includes('mappa') ||
-    combined.includes('マップ') ||
-    combined.includes('地図')
-  );
-}
-
-function checkIsFirecracker(target: string, raw: string, name: string): boolean {
-  if (target.includes('firecracker') || target.includes('firework')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('firecracker') ||
-    combined.includes('party starter') ||
-    combined.includes('flashbang') ||
-    combined.includes('firework') ||
-    combined.includes('chinese firecracker') ||
-    combined.includes('winter party') ||
-    combined.includes('third year') ||
-    combined.includes('petard') ||
-    combined.includes('feuerwerk') ||
-    combined.includes('petardo') ||
-    combined.includes('爆竹')
-  );
-}
-
-function checkIsTrialExclusive(raw: string, name: string, target: string): boolean {
-  const combined = `${raw} ${name} ${target}`.toLowerCase();
-  return (
-    combined.includes('vecna') ||
-    combined.includes('lament') ||
-    combined.includes('turret') ||
-    combined.includes('emp') ||
-    combined.includes('spray') ||
-    combined.includes('vaccine') ||
-    combined.includes('vhs') ||
-    combined.includes('flash grenade') ||
-    combined.includes('antidote') ||
-    combined.includes('candelabra') ||
-    combined.includes('lantern') ||
-    combined.includes('keycard') ||
-    combined.includes('mirror') ||
-    combined.includes('pendant') ||
-    combined.includes('blood can') ||
-    combined.includes('fungus') ||
-    combined.includes('crystal')
-  );
-}
-
-const CATEGORIES = [
-  { key: 'medkit', label: 'Med-Kits', icon: Heart, desc: 'Healing & Syringes' },
-  { key: 'toolbox', label: 'Toolboxes', icon: Wrench, desc: 'Repairs & Sabotage' },
-  { key: 'flashlight', label: 'Flashlights', icon: Flashlight, desc: 'Blinding & Saves' },
-  { key: 'key', label: 'Keys', icon: Key, desc: 'Auras & Hatch' },
-  { key: 'map', label: 'Maps', icon: MapIcon, desc: 'Objectives & Totems' },
-  { key: 'firecracker', label: 'Firecrackers', icon: Bomb, desc: 'Fireworks & Party Starters' },
-  { key: 'trial_exclusive', label: 'Trial Artifacts', icon: ShieldAlert, desc: 'In-Trial Counter Items' },
-];
-
-export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> = ({
-  items = [],
-  addons = [],
-  backendBase,
-  onSelectEquipment,
-  t,
-}) => {
-  const [selectedCategory, setSelectedCategory] = useState<SurvivorCategoryKey>('medkit');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [rarityFilter, setRarityFilter] = useState<string>('all');
-  const [activeHover, setActiveHover] = useState<{
-    item: AddonItem | EquipmentItem;
-    rect: DOMRect;
-    accentColor: string;
-  } | null>(null);
-
-  const activeCategoryConfig = useMemo(() => {
-    return CATEGORIES.find((c) => c.key === selectedCategory) || CATEGORIES[0];
-  }, [selectedCategory]);
-
-  const categorizedData = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
-
-    const safeItems = Array.isArray(items) ? items : [];
-    const safeAddons = Array.isArray(addons) ? addons : [];
-
-    const isMatch = (it: EquipmentItem | AddonItem, isAddon: boolean): boolean => {
-      const name = (it.name || '').toLowerCase();
-      const raw = (it.raw_name || '').toLowerCase();
-      const desc = (it.description || '').toLowerCase();
-      const target = ((it as { associated_target?: string }).associated_target || '').toLowerCase();
-
-      const matchesSearch =
-        !query ||
-        name.includes(query) ||
-        raw.includes(query) ||
-        desc.includes(query);
-
-      if (!matchesSearch) return false;
-
-      const itemRarity = (it.rarity || '').toLowerCase();
-      const matchesRarity =
-        rarityFilter === 'all' || itemRarity.includes(rarityFilter.toLowerCase());
-
-      if (!matchesRarity) return false;
-
-      if (selectedCategory === 'medkit') return checkIsMedKit(target, raw, name);
-      if (selectedCategory === 'toolbox') return checkIsToolbox(target, raw, name);
-      if (selectedCategory === 'flashlight') return checkIsFlashlight(target, raw, name);
-      if (selectedCategory === 'key') return checkIsKey(target, raw, name);
-      if (selectedCategory === 'map') return checkIsMap(target, raw, name);
-      if (selectedCategory === 'firecracker') return checkIsFirecracker(target, raw, name);
-      if (selectedCategory === 'trial_exclusive') return !isAddon && checkIsTrialExclusive(raw, name, target);
-
-      return true;
+export const ChaosCheckpointModal: React.FC<ChaosCheckpointModalProps> = ({ checkpoint, onClose, dict }) => {
+  useEffect(() => {
+    if (checkpoint == null) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
     };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [checkpoint, onClose]);
 
-    const sortByRarity = (a: EquipmentItem | AddonItem, b: EquipmentItem | AddonItem) => {
-      const rankA = getRarityRank(a.rarity);
-      const rankB = getRarityRank(b.rarity);
-      if (rankA !== rankB) return rankA - rankB;
-      return (a.name || '').localeCompare(b.name || '');
-    };
-
-    return {
-      displayedItems: safeItems.filter((it) => isMatch(it, false)).sort(sortByRarity),
-      displayedAddons: safeAddons.filter((ad) => isMatch(ad, true)).sort(sortByRarity),
-    };
-  }, [items, addons, selectedCategory, searchQuery, rarityFilter]);
+  if (checkpoint == null) return null;
 
   return (
-    <section className="space-y-4 w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-            <Package className="h-4 w-4" />
-          </span>
-          <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
-              {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
-            </h2>
-            <p className="text-xs text-slate-400">
-              {t.equipmentDescSurvivor || 'Select an item category to explore items and their compatible add-on attachments.'}
-            </p>
-          </div>
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-sm rounded-2xl border-2 border-violet-400 bg-gradient-to-b from-violet-500/15 via-slate-900 to-slate-950 p-8 text-center shadow-2xl shadow-violet-500/20 cursor-default"
+      >
+        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-violet-400 bg-violet-500/15 text-violet-400">
+          <ShieldCheck className="h-10 w-10" />
         </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-full sm:w-48">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
-            <input
-              type="text"
-              placeholder={t.searchEquipment || 'Filter name...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-inner"
-            />
-          </div>
-
-          <select
-            value={rarityFilter}
-            onChange={(e) => setRarityFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
-          >
-            <option value="all">{t.allRarities || 'All Rarities'}</option>
-            <option value="Common">Common</option>
-            <option value="Uncommon">Uncommon</option>
-            <option value="Rare">Rare</option>
-            <option value="Very Rare">Very Rare</option>
-            <option value="Ultra Rare">Ultra Rare</option>
-            <option value="Event">Event</option>
-          </select>
+        <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-violet-400">
+          <PartyPopper className="h-3.5 w-3.5" />
+          {dict?.streaks?.checkpointBanked || 'Checkpoint banked'}
         </div>
+        <h2 className="mt-2 text-3xl font-black tracking-tight text-white">{checkpoint} wins</h2>
+        <p className="mt-2 text-sm text-slate-300">
+          {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'} <strong className="text-violet-300">{checkpoint}</strong>{dict?.streaks?.notToZero || ', not to zero.'}
+        </p>
+        <button
+          onClick={onClose}
+          className="mt-6 w-full rounded-xl bg-violet-500 py-3 text-sm font-extrabold text-slate-950 shadow-lg shadow-violet-500/20 transition-all hover:bg-violet-400 cursor-pointer"
+        >
+          {dict?.streaks?.keepGoing || 'Keep going'}
+        </button>
       </div>
-
-      <div className="flex flex-col md:flex-row gap-4 items-stretch">
-        <div className="flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-slate-950/60 border border-slate-800 shrink-0 overflow-x-auto md:overflow-x-visible">
-          {CATEGORIES.map((cat) => {
-            const Icon = cat.icon;
-            const isSelected = selectedCategory === cat.key;
-            return (
-              <button
-                type="button"
-                key={cat.key}
-                onClick={() => setSelectedCategory(cat.key as SurvivorCategoryKey)}
-                className={`relative h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
-                  isSelected
-                    ? 'bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 shadow-lg shadow-emerald-950/60 scale-105'
-                    : 'bg-slate-900/60 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-                }`}
-                title={`${cat.label} - ${cat.desc}`}
-                aria-label={cat.label}
-              >
-                <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                <span className="text-[9px] font-mono font-bold truncate max-w-[48px] mt-0.5">
-                  {cat.label.split(' ')[0]}
-                </span>
-                {isSelected && (
-                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-950" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="flex flex-col p-4 rounded-3xl bg-slate-950/40 border border-slate-800 shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                <Package className="h-4 w-4" />
-                {activeCategoryConfig.label} &bull; Items ({categorizedData.displayedItems.length})
-              </h3>
-              <span className="text-[10px] font-mono text-slate-400">Click item for details</span>
-            </div>
-
-            {categorizedData.displayedItems.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-500 text-xs italic">
-                No items found in this category matching your filter.
-              </div>
-            ) : (
-              <div className="flex flex-wrap items-center justify-center gap-3 p-1">
-                {categorizedData.displayedItems.map((item, idx) => {
-                  const id = `item-${item.name}-${idx}`;
-                  const rarityStyle = getRarityTileStyle(item.rarity);
-
-                  return (
-                    <div
-                      key={id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => onSelectEquipment(item)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          onSelectEquipment(item);
-                        }
-                      }}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item, rect, accentColor: 'text-emerald-400' });
-                      }}
-                      onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                      aria-label={`Inspect item: ${item.name}`}
-                    >
-                      <img
-                        src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                        alt={item.name}
-                        className="h-full w-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          <div className="flex flex-col p-4 rounded-3xl bg-slate-950/40 border border-slate-800 shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                <Sparkles className="h-4 w-4" />
-                {selectedCategory === 'trial_exclusive'
-                  ? 'Artifact Mechanics'
-                  : `Compatible Add-ons (${categorizedData.displayedAddons.length})`}
-              </h3>
-              <span className="text-[10px] font-mono text-slate-400">
-                {selectedCategory === 'trial_exclusive' ? 'Special Trial Rules' : 'Attach up to 2 per item'}
-              </span>
-            </div>
-
-            {selectedCategory === 'trial_exclusive' ? (
-              <div className="flex-1 flex flex-col justify-center p-4 rounded-2xl bg-amber-950/20 border border-amber-500/30 text-xs space-y-3">
-                <div className="flex items-center gap-2 text-amber-400 font-mono font-black text-sm">
-                  <ShieldAlert className="h-5 w-5 shrink-0" />
-                  <span>In-Trial Killer Counters & Artifacts</span>
-                </div>
-                <p className="text-slate-300 leading-relaxed">
-                  These unique artifacts (such as <em>Hand & Eye of Vecna</em>, <em>Lament Configuration</em>, <em>Remote Flame Turrets</em>, <em>EMPs</em>, <em>First Aid Sprays</em>, and <em>Vaccines</em>) cannot be equipped in the pre-game lobby.
-                </p>
-                <p className="text-slate-400 leading-relaxed">
-                  They are spawned inside the Trial grounds to interact directly with specific Killers&apos; powers and counteract their special abilities.
-                </p>
-              </div>
-            ) : categorizedData.displayedAddons.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-500 text-xs italic">
-                No compatible add-ons found for this item type.
-              </div>
-            ) : (
-              <div className="flex flex-wrap items-center justify-center gap-2.5 p-1">
-                {categorizedData.displayedAddons.map((item, idx) => {
-                  const id = `addon-${item.name}-${idx}`;
-                  const rarityStyle = getRarityTileStyle(item.rarity);
-
-                  return (
-                    <div
-                      key={id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => onSelectEquipment(item)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          onSelectEquipment(item);
-                        }
-                      }}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item, rect, accentColor: 'text-amber-400' });
-                      }}
-                      onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                      aria-label={`Inspect addon: ${item.name}`}
-                    >
-                      <img
-                        src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                        alt={item.name}
-                        className="h-full w-full object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {activeHover && typeof window !== 'undefined' && (() => {
-        const tooltipWidth = 320;
-        const left = Math.max(
-          16,
-          Math.min(window.innerWidth - tooltipWidth - 16, activeHover.rect.left + activeHover.rect.width / 2 - tooltipWidth / 2)
-        );
-        const top = activeHover.rect.bottom + 10;
-        const rarityStyle = getRarityTileStyle(activeHover.item.rarity);
-
-        return (
-          <div
-            style={{ position: 'fixed', left: `${left}px`, top: `${top}px`, width: `${tooltipWidth}px` }}
-            className="z-[99999] p-4 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150"
-          >
-            <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-800">
-              <h4 className="text-sm font-black text-white truncate font-mono">{activeHover.item.name}</h4>
-              {activeHover.item.rarity && (
-                <span className={`text-[10px] font-bold uppercase font-mono ${rarityStyle.text}`}>
-                  {activeHover.item.rarity}
-                </span>
-              )}
-            </div>
-            <div className="space-y-1 text-xs max-h-48 overflow-y-auto leading-relaxed text-slate-200">
-              {renderFormattedDbdText(activeHover.item.description || '', true)}
-            </div>
-            <span className={`block text-[10px] font-mono mt-2.5 text-right font-bold ${activeHover.accentColor}`}>
-              {t.clickToInspect || 'Click to inspect full mechanics'} &rarr;
-            </span>
-          </div>
-        );
-      })()}
-    </section>
+    </div>
   );
 };
-
 ```
 
----
-
-#### 2. `frontend/src/components/character-detail/SurvivorDetailView.tsx`
-
+### src/components/user/UserMetricsGrid.tsx
 ```tsx
 'use client';
-// frontend/src/components/character-detail/SurvivorDetailView.tsx
+// frontend/src/components/user/UserMetricsGrid.tsx
 
-import React, { useState } from 'react';
-import { BookOpen, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
-import {
-  CharacterViewBaseProps,
-  AddonItem,
-  EquipmentItem,
-  OfferingItem,
-  formatLocalizedReleaseDate,
-} from './types';
-import { CharacterBreadcrumbs } from './components/CharacterBreadcrumbs';
-import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
-import { CharacterPerksSection } from './components/CharacterPerksSection';
-import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection';
-import { OfferingsSection } from './components/OfferingsSection';
-import { LoreModal } from './modals/LoreModal';
-import { Model3DModal } from './modals/Model3DModal';
-import { EquipmentDetailModal } from './modals/EquipmentDetailModal';
-import { PerkModal } from '@/components/PerkModal';
-import { Perk, PerkDictionary } from '@/types/perks';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
+import React from 'react';
+import { Shield, Skull, Sparkles } from 'lucide-react';
 
-export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
-  currentLocale,
-  dict,
-  detailData,
-  allCharacters = [],
-}) => {
-  const backendBase = getBackendBaseUrl();
-  const rawDict = (dict || {}) as Record<string, Record<string, string>>;
-  const t: Record<string, string> = rawDict.characterDetail || rawDict.characters || {};
+interface MetricItem {
+  owned: number;
+  total: number;
+  percentage: number;
+}
 
-  const character = detailData?.character || { name: '', category: 'Survivor' };
-  const perks = Array.isArray(detailData?.perks) ? detailData.perks : [];
-  const addons = Array.isArray(detailData?.addons) ? detailData.addons : [];
-  const items = Array.isArray(detailData?.items) ? detailData.items : [];
-  const offerings = Array.isArray(detailData?.offerings) ? detailData.offerings : [];
+interface OwnershipData {
+  survivors?: MetricItem;
+  killers?: MetricItem;
+  perks?: {
+    unlocked: number;
+    total: number;
+    percentage: number;
+  };
+}
 
-  const [isLoreModalOpen, setIsLoreModalOpen] = useState<boolean>(false);
-  const [isModelModalOpen, setIsModelModalOpen] = useState<boolean>(false);
-  const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | OfferingItem | null>(null);
-  const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
+interface UserMetricsGridProps {
+  ownership?: OwnershipData | null;
+  dict?: any;
+}
 
-  const chapterName = character.chapter_name || t.baseGame || 'Base Game';
-  const releaseDate = formatLocalizedReleaseDate(
-    character.release_date || String(character.release_year || '2016'),
-    currentLocale
-  );
-  const rawLoreText = character.lore || t.noLoreFound || "No lore records discovered in the Entity's Archives yet.";
+export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dict }) => {
+  const survPercent = ownership?.survivors?.percentage ?? 0;
+  const killerPercent = ownership?.killers?.percentage ?? 0;
+  const perkPercent = ownership?.perks?.percentage ?? 0;
+
+  const survOwned = ownership?.survivors?.owned ?? 0;
+  const survTotal = ownership?.survivors?.total ?? 54;
+
+  const killerOwned = ownership?.killers?.owned ?? 0;
+  const killerTotal = ownership?.killers?.total ?? 44;
+
+  const perkUnlocked = ownership?.perks?.unlocked ?? 0;
+  const perkTotal = ownership?.perks?.total ?? 321;
 
   return (
-    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={`${character.name} Details`}>
-      <CharacterBreadcrumbs
-        currentLocale={currentLocale}
-        character={character}
-        roleLabel={t.roleSurvivor || 'Survivor'}
-        isSurvivor={true}
-        allCharacters={allCharacters}
-        t={t}
-      />
-
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <CharacterHeroAvatar
-          character={character}
-          isSurvivor={true}
-          roleLabel={t.roleSurvivor || 'Survivor'}
-          backendBase={backendBase}
-          onOpenModelModal={() => setIsModelModalOpen(true)}
-          t={t}
-        />
-
-        <div className="lg:col-span-8 space-y-5">
-          <header className="flex flex-wrap items-center justify-between gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5 w-full">
+      {/* Survivors Metric Card */}
+      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-lg space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+              <Shield className="h-5 w-5" />
+            </div>
             <div>
-              <span className="text-xs font-mono font-bold tracking-wider text-emerald-400 uppercase">
-                {t.roleSurvivor || 'Survivor'}{' '}
-                {character.is_licensed
-                  ? `• ${t.dlcLicensed || 'Licensed'}`
-                  : `• ${t.dlcOriginal || 'Original'}`}
-              </span>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-100 font-mono tracking-tight">
-                {character.name}
-              </h1>
-              {character.real_name && character.real_name !== character.name && (
-                <p className="text-xs sm:text-sm font-semibold text-slate-400 mt-0.5">
-                  {t.realName || 'Full Name'}:{' '}
-                  <span className="text-slate-200">{character.real_name}</span>
-                </p>
-              )}
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                {dict?.stats?.survivors || 'Survivors'}
+              </h3>
+              <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
+                {survOwned} / {survTotal}
+              </p>
             </div>
-
-            <div className="flex flex-wrap items-center gap-2.5">
-              <button
-                type="button"
-                onClick={() => setIsLoreModalOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
-              >
-                <BookOpen className="h-4 w-4" />
-                <span>{t.viewLore || 'Lore & Bio'}</span>
-              </button>
-
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 select-none">
-                <Bookmark className="h-3.5 w-3.5 shrink-0" />
-                {chapterName}
-              </span>
-
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-400 select-none">
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
-                {releaseDate}
-              </span>
-
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-400 select-none">
-                <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
-                {character.is_licensed
-                  ? t.licensedFranchise || t.dlcLicensed || 'Licensed Franchise'
-                  : t.originalChapter || t.dlcOriginal || 'Dead by Daylight Original'}
-              </span>
-            </div>
-          </header>
-
-          <CharacterPerksSection
-            perks={perks}
-            character={character}
-            backendBase={backendBase}
-            onSelectPerk={(p) => setSelectedPerk(p as unknown as Perk)}
-            t={t}
+          </div>
+          <span className="text-xs font-black text-cyan-400 font-mono">
+            {survPercent}%
+          </span>
+        </div>
+        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
+          <div
+            className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-500"
+            style={{ width: `${survPercent}%` }}
           />
         </div>
-      </section>
+      </div>
 
-      <SurvivorEquipmentSection
-        items={items}
-        addons={addons}
-        backendBase={backendBase}
-        onSelectEquipment={(item) => setSelectedEquipment(item)}
-        t={t}
-      />
+      {/* Killers Metric Card */}
+      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-lg space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/10 border border-red-500/20 text-rose-400">
+              <Skull className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                {dict?.stats?.killers || 'Killers'}
+              </h3>
+              <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
+                {killerOwned} / {killerTotal}
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-black text-rose-400 font-mono">
+            {killerPercent}%
+          </span>
+        </div>
+        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
+          <div
+            className="h-full bg-gradient-to-r from-red-500 to-amber-500 transition-all duration-500"
+            style={{ width: `${killerPercent}%` }}
+          />
+        </div>
+      </div>
 
-      <OfferingsSection
-        offerings={offerings}
-        role="Survivor"
-        backendBase={backendBase}
-        onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
-        t={t}
-      />
-
-      <LoreModal
-        isOpen={isLoreModalOpen}
-        onClose={() => setIsLoreModalOpen(false)}
-        character={character}
-        rawLoreText={rawLoreText}
-        t={t}
-      />
-
-      <Model3DModal
-        isOpen={isModelModalOpen}
-        onClose={() => setIsModelModalOpen(false)}
-        character={character}
-        isSurvivor={true}
-        backendBase={backendBase}
-        t={t}
-      />
-
-      <EquipmentDetailModal
-        item={selectedEquipment}
-        onClose={() => setSelectedEquipment(null)}
-        backendBase={backendBase}
-        t={t}
-      />
-
-      {selectedPerk && (
-        <PerkModal
-          perk={selectedPerk}
-          onClose={() => setSelectedPerk(null)}
-          dict={dict as PerkDictionary}
-        />
-      )}
-    </article>
+      {/* Teachable Perks Metric Card */}
+      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-lg space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                {dict?.characterDetail?.teachablePerks || 'Teachable Perks'}
+              </h3>
+              <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
+                {perkUnlocked} / {perkTotal}
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-black text-amber-400 font-mono">
+            {perkPercent}%
+          </span>
+        </div>
+        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
+          <div
+            className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 transition-all duration-500"
+            style={{ width: `${perkPercent}%` }}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
+```
 
+### src/components/streaks/StreakPanel.tsx
+```tsx
+// frontend/src/components/streaks/StreakPanel.tsx
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { AlertTriangle, ArrowRight, type LucideIcon } from 'lucide-react';
+import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
+import { DisabledReasonModal } from '@/components/DisabledReasonModal';
+
+interface StreakPanelBaseProps {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  accent: string;
+  accentBorder: string;
+  color: PanelColor;
+  image?: string;
+  disabled?: boolean;
+  disabledReason?: string | null;
+  dict?: any;
+}
+
+type StreakPanelProps = StreakPanelBaseProps &
+  ({ comingSoon: true; href?: never; onClick?: never } |
+   { comingSoon?: false; href: string; onClick?: never } |
+   { comingSoon?: false; href?: never; onClick: () => void });
+
+export const StreakPanel: React.FC<StreakPanelProps> = ({
+  title,
+  description,
+  icon: Icon,
+  accent,
+  accentBorder,
+  color,
+  image,
+  href,
+  onClick,
+  comingSoon,
+  disabled,
+  disabledReason,
+  dict,
+}) => {
+  const [showDisabledModal, setShowDisabledModal] = useState(false);
+  const hoverClasses = PANEL_HOVER_CLASSES[color];
+  const body = (
+    <>
+      {image && (
+        <img
+          src={image}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-5 -bottom-5 h-40 w-40 rounded-2xl object-cover opacity-[0.18] dark:opacity-[0.35] [mask-image:radial-gradient(circle_at_bottom_right,black,transparent_85%)]"
+        />
+      )}
+
+      <div className="relative flex items-start justify-between gap-3">
+        {image ? (
+          <img
+            src={image}
+            alt=""
+            className={`h-11 w-11 rounded-xl border ${accentBorder} object-cover shadow-sm`}
+          />
+        ) : (
+          <div className={`flex h-11 w-11 items-center justify-center rounded-xl border ${accentBorder} bg-slate-100 dark:bg-slate-900/60 shadow-sm`}>
+            <Icon className={`h-5 w-5 ${accent}`} />
+          </div>
+        )}
+        {disabled ? (
+          <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-950/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-400">
+            <AlertTriangle className="h-3 w-3" />
+            {dict?.streaks?.disabled || 'Disabled'}
+          </span>
+        ) : comingSoon ? (
+          <span className="rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            {dict?.streaks?.comingSoon || 'Coming soon.'}
+          </span>
+        ) : (
+          <ArrowRight className={`h-4 w-4 ${accent} transition-transform group-hover:translate-x-1`} />
+        )}
+      </div>
+
+      <h3 className={`relative mt-4 text-sm font-extrabold tracking-wide ${comingSoon || disabled ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
+        {title}
+      </h3>
+      <p className="relative mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{description}</p>
+    </>
+  );
+
+  const base = `relative flex h-full flex-col overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-all shadow-sm ${accentBorder}`;
+
+  if (disabled) {
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => setShowDisabledModal(true)}
+          className={`text-left cursor-pointer ${base} bg-slate-100/50 dark:bg-slate-900/30 opacity-70`}
+        >
+          {body}
+        </button>
+        <DisabledReasonModal
+          isOpen={showDisabledModal}
+          onClose={() => setShowDisabledModal(false)}
+          label={title}
+          reason={disabledReason}
+        />
+      </>
+    );
+  }
+
+  if (comingSoon) {
+    return <div className={`${base} bg-slate-100/50 dark:bg-slate-900/30 opacity-70`}>{body}</div>;
+  }
+
+  if (onClick) {
+    return (
+      <button
+        onClick={onClick}
+        className={`group text-left ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 hover:shadow-lg cursor-pointer ${hoverClasses}`}
+      >
+        {body}
+      </button>
+    );
+  }
+
+  return (
+    <Link
+      href={href!}
+      className={`group ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 hover:shadow-lg ${hoverClasses}`}
+    >
+      {body}
+    </Link>
+  );
+};
+```
+
+### src/components/streaks/gauntlet/GauntletBoard.tsx
+```tsx
+// frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
+import { Role } from '@/types/gauntletStreak';
+import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
+import { ResetConfirmModal } from '../ResetConfirmModal';
+import { useGauntletRun } from './useGauntletRun';
+import { useOwnedCharacters, OwnedCharacterItem } from './useOwnedCharacters';
+import { sortByReleaseNumber } from '@/utils/characterUtils';
+import { GauntletHeader } from './GauntletHeader';
+import { ActiveTargetStage } from './ActiveTargetStage';
+import { CharacterRosterGrid } from './CharacterRosterGrid';
+import { GauntletStatsDrawer } from './GauntletStatsDrawer';
+import { GauntletRulesModal } from './GauntletRulesModal';
+import { CheckpointModal } from './CheckpointModal';
+
+// Particle/Lottie code is heavy and only ever needed on this page, so it gets
+// its own chunk rather than riding along in every route that imports GauntletBoard.
+const GauntletFireBackground = dynamic(
+  () => import('./GauntletFireBackground').then((mod) => mod.GauntletFireBackground),
+  { ssr: false }
+);
+
+interface GauntletBoardProps {
+  locale: string;
+  role: Role;
+  dict?: any;
+}
+
+export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict }) => {
+  const {
+    run,
+    stats,
+    loading,
+    busy,
+    error,
+    submitResult,
+    reveal,
+    reset,
+    justBankedCheckpoint,
+    dismissCheckpointCelebration,
+  } = useGauntletRun(role);
+  const { characters, loading: loadingRoster, releaseOrder } = useOwnedCharacters(role, run?.tier_info?.roster_limit);
+  const frozenCharacters: OwnedCharacterItem[] = React.useMemo(() => {
+    const owned = run?.owned_characters ?? [];
+    return sortByReleaseNumber(
+      owned.map((name) => ({ name, release_number: releaseOrder.get(name) ?? Infinity }))
+    );
+  }, [run?.owned_characters, releaseOrder]);
+  const rosterCharacters = run ? frozenCharacters : characters;
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const [confirmingReset, setConfirmingReset] = useState(false);
+  // The target the reel has actually finished landing on, kept separate from
+  // run.current_character_id so the roster grid can't out-race the animation.
+  const [shownTarget, setShownTarget] = useState<string | null>(null);
+
+  // Fire once when the run flips to completed, not on every later render or reload.
+  const wasCompletedRef = useRef(false);
+  useEffect(() => {
+    const completed = run?.status === 'completed';
+    if (completed && !wasCompletedRef.current) {
+      setCelebrating(true);
+      wasCompletedRef.current = true;
+      const timer = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
+      return () => clearTimeout(timer);
+    }
+    if (!completed) {
+      wasCompletedRef.current = false;
+    }
+  }, [run?.status]);
+
+  // Rides along with the checkpoint modal. Kept for the same duration as the
+  // win celebration below so the burst finishes its fall instead of being
+  // unmounted mid-flight.
+  useEffect(() => {
+    if (justBankedCheckpoint == null) return;
+    setCelebrating(true);
+    const timer = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
+    return () => clearTimeout(timer);
+  }, [justBankedCheckpoint]);
+
+  const isCompleted = run?.status === 'completed';
+
+  return (
+    <div>
+      <GauntletFireBackground tierLevel={isCompleted ? 0 : run?.tier_info?.tier_level ?? 0} />
+      <Confetti active={celebrating} />
+
+      <Link
+        href={`/${locale}/streaks/${role}`}
+        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-orange-500 dark:text-slate-400 dark:hover:text-orange-400 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        <span className="capitalize">Back to {role} streaks</span>
+      </Link>
+
+      <div className="mt-4">
+        {error && (
+          <div className="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-sm flex items-center justify-between shadow-lg">
+            <span>{error}</span>
+          </div>
+        )}
+
+        <GauntletHeader
+          role={role}
+          currentStreak={run?.current_streak || 0}
+          bestStreak={run?.best_streak || 0}
+          lastCheckpointStreak={run?.last_checkpoint_streak || 0}
+          poolFrozen={run?.pool_frozen}
+          onOpenStats={() => setIsStatsOpen(true)}
+          onOpenRules={() => setIsRulesOpen(true)}
+          onOpenReset={() => setConfirmingReset(true)}
+        />
+
+        {isCompleted ? (
+          <div className="mb-8 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
+              <Trophy className="h-8 w-8" />
+            </div>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              {dict?.streaks?.gauntletComplete || 'Gauntlet complete!'}
+            </h2>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              You won the {role} Gauntlet.
+            </p>
+            <button
+              onClick={reset}
+              disabled={busy}
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
+            >
+              <RotateCcw className="h-4 w-4" />
+              {dict?.streaks?.startNewRun || 'Start a new run'}
+            </button>
+          </div>
+        ) : (
+          <ActiveTargetStage
+            run={run}
+            role={role}
+            characters={rosterCharacters}
+            loading={loading || busy}
+            onWin={() => submitResult('win')}
+            onLoss={() => submitResult('loss')}
+            onReveal={reveal}
+            holdReel={justBankedCheckpoint != null}
+            shownTarget={shownTarget}
+            onShownTargetChange={setShownTarget}
+          />
+        )}
+
+        <CharacterRosterGrid
+          role={role}
+          characters={rosterCharacters}
+          completedCharacters={run?.completed_characters || []}
+          checkpointCharacters={run?.checkpoint_characters || []}
+          activeCharacterId={isCompleted ? undefined : shownTarget ?? undefined}
+          loading={loadingRoster}
+          dict={dict}
+        />
+
+        <ResetConfirmModal
+          open={confirmingReset}
+          busy={busy}
+          message={`Streak, checkpoints and every cleared ${role} go back to zero. This cannot be undone.`}
+          onCancel={() => setConfirmingReset(false)}
+          onConfirm={() => {
+            setConfirmingReset(false);
+            reset();
+          }}
+        />
+
+        <GauntletStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />
+        <CheckpointModal
+          checkpoint={justBankedCheckpoint}
+          role={role}
+          nextTier={run?.tier_info || null}
+          onClose={dismissCheckpointCelebration}
+          dict={dict}
+        />
+      </div>
+    </div>
+  );
+};
+```
+
+### src/components/admin/AdminChallengeStats.tsx
+```tsx
+'use client';
+// frontend/src/components/admin/AdminChallengeStats.tsx
+
+import React from 'react';
+import { Trophy, Skull, Rows3, BookOpen } from 'lucide-react';
+import { AdminStats, ChallengeCompletionBreakdown } from '@/types/admin';
+
+const MODE_CARDS = [
+  { key: 'gauntlet', label: 'Gauntlet', icon: Trophy, color: 'text-amber-400', border: 'border-amber-500/20' },
+  { key: 'chaos', label: 'Chaos Streak', icon: Skull, color: 'text-violet-400', border: 'border-violet-500/20' },
+  { key: 'history', label: 'History Streak', icon: Rows3, color: 'text-slate-400', border: 'border-slate-700' },
+  { key: 'page_streak', label: 'Page Streak', icon: BookOpen, color: 'text-orange-400', border: 'border-orange-500/20' },
+] as const;
+
+const VARIANT_LABELS: Record<string, string> = {
+  survivor: 'Survivor',
+  killer: 'Killer',
+  easy: 'Easy',
+  medium: 'Medium',
+  hell: 'Hell',
+};
+
+interface AdminChallengeStatsProps {
+  stats: AdminStats | null;
+  dict?: any;
+}
+
+const VariantRow: React.FC<{ label: string; breakdown: { completed_runs: number; unique_users: number } }> = ({
+  label,
+  breakdown,
+}) => (
+  <div className="flex items-center justify-between text-xs px-3 py-2 rounded-lg bg-slate-950/50 border border-slate-800/80">
+    <span className="font-bold text-slate-300">{label}</span>
+    <span className="font-mono text-slate-400">
+      <span className="text-slate-100 font-black">{breakdown.completed_runs}</span> completions &middot;{' '}
+      {breakdown.unique_users} users
+    </span>
+  </div>
+);
+
+export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats, dict }) => {
+  const completions = stats?.challenge_completions;
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {MODE_CARDS.map(({ key, label, icon: Icon, color, border }) => {
+        const breakdown: ChallengeCompletionBreakdown | undefined = completions?.[key];
+        const variants = Object.entries(breakdown?.by_variant || {});
+
+        return (
+          <div key={key} className={`rounded-2xl border ${border} bg-slate-900/60 p-5 shadow-xl backdrop-blur-sm`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-200">
+                <Icon className={`h-4 w-4 ${color}`} />
+                {label}
+              </h3>
+              <div className="text-right">
+                <div className="text-2xl font-black text-slate-100 font-mono">
+                  {breakdown?.total.completed_runs ?? '-'}
+                </div>
+                <div className="text-[10px] text-slate-500">
+                  {breakdown?.total.unique_users ?? '-'} unique users
+                </div>
+              </div>
+            </div>
+
+            {variants.length > 0 ? (
+              <div className="space-y-1.5">
+                {variants.map(([variant, counts]) => (
+                  <VariantRow key={variant} label={VARIANT_LABELS[variant] || variant} breakdown={counts} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-[11px] text-slate-500">
+                {dict?.admin?.pageStreakCompletionsNotice || "Page Streak has one run per killer, so completions aren't broken down further here."}
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 ```

@@ -1,3 +1,4 @@
+// frontend/src/locales/en/streaks.ts
 export default {
   "streaksTitle": "Challenge & Streak Hub",
   "backToKillerStreaks": "Back to killer streaks",
@@ -127,5 +128,11 @@ export default {
   "losses": "Losses",
   "recentMatchHistory": "Recent Match History",
   "noMatchesLogged": "No matches logged yet. Complete your first match!",
-  "autoLossInactive": "Auto-loss, run was inactive"
+  "autoLossInactive": "Auto-loss, run was inactive",
+  "verifyEmailToTrack": "Verify your email to track challenges",
+  "verifyEmail": "Verify email",
+  "loginToTrack": "Log in to track your challenges",
+  "loginToTrackDesc": "Challenges use the killers and perks you own, so we need to know who you are first.",
+  "logIn": "Log in"
 };
+

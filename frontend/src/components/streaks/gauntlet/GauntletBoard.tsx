@@ -28,9 +28,10 @@ const GauntletFireBackground = dynamic(
 interface GauntletBoardProps {
   locale: string;
   role: Role;
+  dict?: any;
 }
 
-export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) => {
+export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict }) => {
   const {
     run,
     stats,
@@ -123,7 +124,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
               <Trophy className="h-8 w-8" />
             </div>
             <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              Gauntlet complete!
+              {dict?.streaks?.gauntletComplete || 'Gauntlet complete!'}
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
               You won the {role} Gauntlet.
@@ -134,7 +135,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
               className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
-              Start a new run
+              {dict?.streaks?.startNewRun || 'Start a new run'}
             </button>
           </div>
         ) : (
@@ -159,6 +160,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           checkpointCharacters={run?.checkpoint_characters || []}
           activeCharacterId={isCompleted ? undefined : shownTarget ?? undefined}
           loading={loadingRoster}
+          dict={dict}
         />
 
         <ResetConfirmModal
@@ -172,13 +174,14 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           }}
         />
 
-        <GauntletStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
-        <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} />
+        <GauntletStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />
         <CheckpointModal
           checkpoint={justBankedCheckpoint}
           role={role}
           nextTier={run?.tier_info || null}
           onClose={dismissCheckpointCelebration}
+          dict={dict}
         />
       </div>
     </div>

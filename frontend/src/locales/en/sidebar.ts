@@ -1,3 +1,4 @@
+// frontend/src/locales/en/sidebar.ts
 export default {
   "perks": "Perks",
   "challenges": "Challenges",
@@ -67,5 +68,7 @@ export default {
   "navAria": "Main Navigation",
   "openDrawer": "Open Navigation Drawer",
   "closeDrawer": "Close Navigation Drawer",
-  "claimed": "Claimed"
+  "claimed": "Claimed",
+  "verified": "Verified"
 };
+

@@ -874,7 +874,7 @@ export function VoiceCommandBanner({
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              Hens333 (12-Clock)
+              {dict?.maps?.sourceHensClock || 'Hens333 (12-Clock)'}
             </button>
 
             <button
@@ -887,7 +887,7 @@ export function VoiceCommandBanner({
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              SamoelColt (Isometric)
+              {dict?.maps?.sourceSamoelIsometric || 'SamoelColt (Isometric)'}
             </button>
 
             <button

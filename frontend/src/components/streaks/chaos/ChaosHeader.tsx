@@ -50,17 +50,16 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           />
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 justify-center sm:justify-start">
             <DifficultyIcon className="w-6 h-6 text-violet-500" />
-            <span className="capitalize">{difficulty}</span> Chaos Streak
+            <span className="capitalize">{difficulty}</span> {dict?.streaks?.chaosStreak || 'Chaos Streak'}
           </h1>
         </div>
-
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
           <FreezeBadge frozen={poolFrozen} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-violet-500/30 text-violet-600 dark:text-violet-400 shadow-sm">
             <Flame className="w-5 h-5 text-violet-500 fill-violet-500/20 animate-pulse" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Current
+                {dict?.streaks?.current || 'Current'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {currentStreak}
@@ -72,7 +71,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
             <Trophy className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Best
+                {dict?.streaks?.best || 'Best'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {bestStreak}
@@ -84,7 +83,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
             <Shield className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Checkpoint
+                {dict?.streaks?.checkpointHeader || 'Checkpoint'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {lastCheckpointStreak}

@@ -98,7 +98,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             className="px-2.5 py-1.5 min-h-[36px] rounded-lg text-[11px] font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/50 dark:hover:bg-slate-800 transition-all cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
             data-testid="map-controls-preset-fit"
           >
-            Fit
+            {dict?.maps?.fit || 'Fit'}
           </button>
           <button
             type="button"

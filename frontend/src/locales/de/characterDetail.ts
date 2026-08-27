@@ -143,6 +143,19 @@ export default {
   "distance32m": "32m",
   "distance8m": "8m",
   "approxSymbol": "~",
-  "secondsUnit": "s"
+  "secondsUnit": "s",
+  "configureRosterPrefix": "Konfigurieren",
+  "characterRosterSuffix": "Charakterliste",
+  "activeSelectionLabel": "Aktive Auswahl:",
+  "totalActiveCharactersLabel": "Aktive Charaktere insgesamt:",
+  "saveAndDone": "Speichern & Fertig",
+  "meterUnit": "m",
+  "phase3FeatureBadge": "Phase-3-Funktion",
+  "terrorRadiusPrefix": "TR:",
+  "outOfTwoSelectedSuffix": "/2 ausgewählt",
+  "baseTrPrefix": "Basis-TR:",
+  "modifiedPrefix": "Verändert:",
+  "communityGalleryPrefix": "Community-Galerie (",
+  "realTimeLabel": "ECHTZEIT"
 };
 

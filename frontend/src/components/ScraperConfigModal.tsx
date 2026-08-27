@@ -545,7 +545,7 @@ export function ScraperConfigModal({
                 <div>
                   <p className="text-xs font-bold text-slate-800 dark:text-slate-200">{importFile.name}</p>
                   <p className="text-[11px] text-emerald-500 font-semibold mt-0.5">
-                    {(importFile.size / 1024).toFixed(1)} KB — Ready to restore
+                    {(importFile.size / 1024).toFixed(1)} {dict?.admin?.kbReadySuffix || 'KB, ready to restore'}
                   </p>
                 </div>
               ) : (
@@ -616,7 +616,11 @@ export function ScraperConfigModal({
                     <div key={key} className="rounded-lg bg-white dark:bg-slate-900 p-1.5 border border-slate-200 dark:border-slate-800">
                       <p className="text-[10px] font-bold text-slate-400 capitalize">{key}</p>
                       <p className="text-xs font-bold text-emerald-500">
-                        +{counts.created} <span className="text-slate-400 font-normal">({counts.updated} updated)</span>
+                        {dict?.admin?.createdCountPrefix || '+'}
+                        {counts.created}{' '}
+                        <span className="text-slate-400 font-normal">
+                          ({counts.updated} {dict?.admin?.updatedCountSuffix || 'updated)'}
+                        </span>
                       </p>
                     </div>
                   ))}

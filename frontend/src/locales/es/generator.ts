@@ -47,6 +47,12 @@ export default {
   "clearSlotTooltip": "Limpiar ranura",
   "chaosWheelTitle": "Ruleta del Caos y Maldiciones",
   "chaosWheelDesc": "Gira para aplicar una maldición o mejora a tu build de 4 ventajas.",
-  "done": "Listo"
+  "done": "Listo",
+  "inventoryCoordinatesNote": "con coordenadas de inventario [Página / Ranura]",
+  "slotLabel": "Ranura #",
+  "coordOpenPage": "[P",
+  "coordSlot": "/S",
+  "coordClose": "]",
+  "emptyCoordinate": "[-/-]"
 };
 

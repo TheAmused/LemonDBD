@@ -123,7 +123,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
                 }`}
               >
                 {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
-                {perk.category} Perk
+                {isSurvivor ? dict?.modal?.survivorPerk || 'Survivor Perk' : dict?.modal?.killerPerk || 'Killer Perk'}
               </span>
 
               <div className="flex items-center gap-1.5 rounded-lg bg-slate-900/80 px-2.5 py-1 text-xs font-bold text-slate-200 border border-slate-800 shadow-sm">

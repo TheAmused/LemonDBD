@@ -419,7 +419,8 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800">
                   <div className="flex items-center gap-2.5">
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600/10 dark:bg-emerald-600/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 font-bold font-mono text-sm shadow-sm">
-                      P{survivor.id}
+                      {'P'}
+                      {survivor.id}
                     </div>
                     <div>
                       <h3 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 font-mono">
@@ -486,7 +487,7 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                               />
                             ) : (
                               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-bold text-xs">
-                                DBD
+                                {'DBD'}
                               </div>
                             )}
                             <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate pr-4">
@@ -540,7 +541,8 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                           : 'text-rose-700 dark:text-rose-400'
                       }`}
                     >
-                      {syn?.score ?? 0}%
+                      {syn?.score ?? 0}
+                      {'%'}
                     </span>
                   )}
                 </div>
@@ -567,7 +569,7 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                         key={idx}
                         className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-400"
                       >
-                        ⚡ {badge}
+                        {'⚡'} {badge}
                       </span>
                     ))}
                   </div>
@@ -683,7 +685,7 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                       />
                     ) : (
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-bold text-xs">
-                        DBD
+                        {'DBD'}
                       </div>
                     )}
                     <div className="overflow-hidden">

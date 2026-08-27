@@ -37,5 +37,6 @@ export default {
   "resetAllFilters": "Restablecer filtro de personaje",
   "sortOrder": "Dirección de Ordenación",
   "sortFields": "Campos de Ordenación",
-  "sortOrderLabel": "Dirección de Ordenación"
+  "sortOrderLabel": "Dirección de Ordenación",
+  "aliasLabel": "Alias:"
 };

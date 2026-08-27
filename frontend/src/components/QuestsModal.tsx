@@ -136,7 +136,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                 </span>
               </div>
               <span className="text-sm font-black font-mono text-amber-700 dark:text-amber-400">
-                +{totalXpEarned} XP
+                {dict?.quests?.xpPrefix || '+'}
+                {totalXpEarned} {dict?.quests?.xpSuffix || 'XP'}
               </span>
             </div>
 
@@ -174,7 +175,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
-            All Quests ({quests.length})
+            {dict?.quests?.allQuestsPrefix || 'All Quests ('}
+            {quests.length})
           </button>
           <button
             type="button"
@@ -251,7 +253,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                         <div className="flex justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-mono">
                           <span>{dict?.streaks?.runProgress || 'Progress'}</span>
                           <span>
-                            {quest.progress} / {quest.goal} ({pct}%)
+                            {quest.progress} / {quest.goal} ({pct}
+                            {dict?.quests?.percentCloseParen || '%)'}
                           </span>
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
@@ -272,7 +275,10 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                     <div className="flex sm:flex-col items-center justify-between sm:items-end gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200 dark:border-slate-800">
                       <div className="flex items-center gap-1 rounded-xl bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 text-xs font-black text-amber-700 dark:text-amber-400 shadow-sm">
                         <Zap className="h-3.5 w-3.5" />
-                        <span>+{quest.xp_reward} XP</span>
+                        <span>
+                          {dict?.quests?.xpPrefix || '+'}
+                          {quest.xp_reward} {dict?.quests?.xpSuffix || 'XP'}
+                        </span>
                       </div>
 
                       {quest.is_completed ? (

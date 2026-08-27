@@ -37,5 +37,6 @@ export default {
   "resetAllFilters": "Charakterfilter zurücksetzen",
   "sortOrder": "Sortierrichtung",
   "sortFields": "Sortierfelder",
-  "sortOrderLabel": "Sortierrichtung"
+  "sortOrderLabel": "Sortierrichtung",
+  "aliasLabel": "Alias:"
 };

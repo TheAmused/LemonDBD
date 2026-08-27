@@ -182,7 +182,10 @@ export default function QuestsPage() {
                     <span className="text-[10px] font-bold uppercase text-amber-700 dark:text-amber-500/80">
                       {dict?.stats?.totalXpEarned || 'Total XP'}
                     </span>
-                    <span className="text-xs font-black text-amber-700 dark:text-amber-300 font-mono">+{totalXpEarned} XP</span>
+                    <span className="text-xs font-black text-amber-700 dark:text-amber-300 font-mono">
+                      {dict?.quests?.xpPrefix || '+'}
+                      {totalXpEarned} {dict?.quests?.xpSuffix || 'XP'}
+                    </span>
                   </div>
                 </div>
 
@@ -220,7 +223,8 @@ export default function QuestsPage() {
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900/60'
             }`}
           >
-            All Quests ({quests.length})
+            {dict?.quests?.allQuestsPrefix || 'All Quests ('}
+            {quests.length})
           </button>
           <button
             onClick={() => setFilterCategory('daily')}
@@ -303,7 +307,8 @@ export default function QuestsPage() {
                         <div className="flex justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 font-mono">
                           <span>{dict?.stats?.questProgress || 'Objective Progress'}</span>
                           <span>
-                            {quest.progress} / {quest.goal} ({pct}%)
+                            {quest.progress} / {quest.goal} ({pct}
+                            {dict?.quests?.percentCloseParen || '%)'}
                           </span>
                         </div>
                         <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
@@ -326,7 +331,10 @@ export default function QuestsPage() {
                       {/* XP Badge */}
                       <div className="flex items-center gap-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 text-xs font-black text-amber-700 dark:text-amber-400 shadow-sm">
                         <Zap className="h-4 w-4" />
-                        <span>+{quest.xp_reward} XP</span>
+                        <span>
+                          {dict?.quests?.xpPrefix || '+'}
+                          {quest.xp_reward} {dict?.quests?.xpSuffix || 'XP'}
+                        </span>
                       </div>
 
                       {/* Claim Button */}

@@ -118,6 +118,9 @@ export default {
   "userDirectoryLabel": "User Directory",
   "bugReportsLabel": "Bug Reports",
   "confirmDeleteUserPrefix": "Are you sure you want to delete user",
-  "cannotBeUndone": "This cannot be undone."
+  "cannotBeUndone": "This cannot be undone.",
+  "kbReadySuffix": "KB, ready to restore",
+  "createdCountPrefix": "+",
+  "updatedCountSuffix": "updated)"
 };
 

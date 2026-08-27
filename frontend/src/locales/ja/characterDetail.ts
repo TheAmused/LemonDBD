@@ -143,6 +143,19 @@ export default {
   "distance32m": "32m",
   "distance8m": "8m",
   "approxSymbol": "~",
-  "secondsUnit": "s"
+  "secondsUnit": "s",
+  "configureRosterPrefix": "設定：",
+  "characterRosterSuffix": "キャラクター名簿",
+  "activeSelectionLabel": "現在の選択：",
+  "totalActiveCharactersLabel": "有効なキャラクター総数：",
+  "saveAndDone": "保存して完了",
+  "meterUnit": "m",
+  "phase3FeatureBadge": "フェーズ3機能",
+  "terrorRadiusPrefix": "TR：",
+  "outOfTwoSelectedSuffix": "/2 選択中",
+  "baseTrPrefix": "基本TR：",
+  "modifiedPrefix": "変更後：",
+  "communityGalleryPrefix": "コミュニティギャラリー（",
+  "realTimeLabel": "リアルタイム"
 };
 

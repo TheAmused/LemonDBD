@@ -305,7 +305,10 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               }`}
             >
               <Layers className="h-4 w-4" />
-              <span>Community Gallery ({customPerks.length})</span>
+              <span>
+                {dict?.characterDetail?.communityGalleryPrefix || 'Community Gallery ('}
+                {customPerks.length})
+              </span>
             </button>
           </div>
         </div>
@@ -480,21 +483,21 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       onClick={() => setDescription((prev) => prev + ' **Exhausted**')}
                       className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
-                      +**Exhausted**
+                      {'+**Exhausted**'}
                     </button>
                     <button
                       type="button"
                       onClick={() => setDescription((prev) => prev + ' **Hindered**')}
                       className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
-                      +**Hindered**
+                      {'+**Hindered**'}
                     </button>
                     <button
                       type="button"
                       onClick={() => setDescription((prev) => prev + ' **Aura**')}
                       className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
-                      +**Aura**
+                      {'+**Aura**'}
                     </button>
                   </div>
                 </div>
@@ -528,7 +531,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 {dict?.characterDetail?.interactiveViewer || 'Live Card Preview'}
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold border border-emerald-500/30 animate-pulse">
-                REAL-TIME
+                {dict?.characterDetail?.realTimeLabel || 'REAL-TIME'}
               </span>
             </div>
             {/* DBD Styled Custom Perk Card */}

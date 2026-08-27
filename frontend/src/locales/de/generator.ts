@@ -47,6 +47,12 @@ export default {
   "clearSlotTooltip": "Platz leeren",
   "chaosWheelTitle": "Chaos-Rad der Flüche",
   "chaosWheelDesc": "Drehe, um einen Fluch oder Buff auf dein 4-Talente-Build anzuwenden.",
-  "done": "Fertig"
+  "done": "Fertig",
+  "inventoryCoordinatesNote": "mit Inventarkoordinaten [Seite / Slot]",
+  "slotLabel": "Slot #",
+  "coordOpenPage": "[P",
+  "coordSlot": "/S",
+  "coordClose": "]",
+  "emptyCoordinate": "[-/-]"
 };
 

@@ -22,5 +22,7 @@ export default {
   "pickAction": "パークをPICK",
   "selectPerkToBan": "BANするパークを選択",
   "selectPerkToPick": "PICKするパークを選択",
-  "waitingForOpponent": "対戦相手のアクションを待機中..."
+  "waitingForOpponent": "対戦相手のアクションを待機中...",
+  "plusPrefix": "+",
+  "maxPerSideSuffix": "（各サイド最大3つ）"
 };

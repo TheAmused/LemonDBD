@@ -314,7 +314,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                         </span>
                         {item.alternate_name && (
                           <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold truncate">
-                            Alias: {item.alternate_name}
+                            {dict?.filters?.aliasLabel || 'Alias:'} {item.alternate_name}
                           </span>
                         )}
                       </div>

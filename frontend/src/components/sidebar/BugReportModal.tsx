@@ -376,7 +376,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
                       <Mail className="h-3.5 w-3.5 text-amber-500" />
-                      {t.bugGuestEmailLabel || 'Email (Optional, for resolution updates)'} <span className="text-rose-500">*</span>
+                      {t.bugGuestEmailLabel || 'Email (Optional, for resolution updates)'} <span className="text-rose-500">{'*'}</span>
                     </label>
                     <input
                       type="email"
@@ -392,7 +392,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-2">
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                      {t.bugTitleLabel || 'Issue Title'} <span className="text-rose-500">*</span>
+                      {t.bugTitleLabel || 'Issue Title'} <span className="text-rose-500">{'*'}</span>
                     </label>
                     <input
                       type="text"
@@ -425,7 +425,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
                     {t.bugDescriptionLabel || 'Detailed Description'}{' '}
-                    <span className="text-rose-500">*</span>
+                    <span className="text-rose-500">{'*'}</span>
                   </label>
                   <textarea
                     required

@@ -118,6 +118,9 @@ export default {
   "userDirectoryLabel": "Directorio de usuarios",
   "bugReportsLabel": "Reportes de errores",
   "confirmDeleteUserPrefix": "¿Seguro que quieres eliminar al usuario",
-  "cannotBeUndone": "Esta acción no se puede deshacer."
+  "cannotBeUndone": "Esta acción no se puede deshacer.",
+  "kbReadySuffix": "KB, listo para restaurar",
+  "createdCountPrefix": "+",
+  "updatedCountSuffix": "actualizados)"
 };
 

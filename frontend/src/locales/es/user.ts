@@ -52,6 +52,11 @@ export default {
   "backToSignIn": "Volver a Iniciar Sesión",
   "alreadyHaveAccount": "¿Ya tienes una cuenta?",
   "dontHaveAccount": "¿No tienes cuenta?",
-  "register": "Registrarse"
+  "register": "Registrarse",
+  "signedInButPrefix": "Has iniciado sesión, pero",
+  "notVerifiedYetNotice": "aún no está verificado. Introduce abajo el código que te enviamos por correo.",
+  "forgotPasswordLink": "¿Olvidaste tu contraseña?",
+  "quoteOpen": "\"",
+  "quoteClose": "\""
 };
 

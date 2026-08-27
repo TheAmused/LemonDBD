@@ -8,6 +8,10 @@ export default {
   "dailyQuests": "Misiones Diarias",
   "weeklyQuests": "Misiones Semanales",
   "noQuestsDesc": "No hay misiones disponibles en esta categoría ahora mismo. ¡Vuelve pronto!",
-  "noQuestsFound": "No se encontraron misiones en esta categoría."
+  "noQuestsFound": "No se encontraron misiones en esta categoría.",
+  "xpPrefix": "+",
+  "xpSuffix": "XP",
+  "allQuestsPrefix": "Todas las Misiones (",
+  "percentCloseParen": "%)"
 };
 

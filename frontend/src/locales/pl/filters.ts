@@ -27,5 +27,6 @@ export default {
   "sortByCharacter": "Postać",
   "sortByRole": "Rola",
   "orderAsc": "Rosnąco (A-Z)",
-  "orderDesc": "Malejąco (Z-A)"
+  "orderDesc": "Malejąco (Z-A)",
+  "aliasLabel": "Alias:"
 };

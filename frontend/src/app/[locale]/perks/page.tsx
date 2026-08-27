@@ -462,7 +462,7 @@ export default function PerksPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-          Loading...
+          {'Loading...'}
         </div>
       }
     >

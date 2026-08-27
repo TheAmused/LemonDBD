@@ -15,30 +15,6 @@ export interface ChaosModeModalProps {
   dict?: any;
 }
 
-const TILES: ChallengeIntroTile[] = [
-  {
-    value: 'easy',
-    label: 'Easy',
-    description: 'A checkpoint banks every 5 wins.',
-    icon: Coins,
-    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
-  },
-  {
-    value: 'medium',
-    label: 'Medium',
-    description: 'A checkpoint banks every 10 wins.',
-    icon: Flame,
-    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
-  },
-  {
-    value: 'hell',
-    label: 'Hell',
-    description: 'No checkpoints. One loss resets everything.',
-    icon: Skull,
-    accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
-  },
-];
-
 export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
   isOpen,
   onClose,
@@ -48,6 +24,30 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
 
+  const tiles: ChallengeIntroTile[] = [
+    {
+      value: 'easy',
+      label: dict?.streaks?.chaosEasyLabel || 'Easy',
+      description: dict?.streaks?.chaosEasyDesc || 'A checkpoint banks every 5 wins.',
+      icon: Coins,
+      accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+    },
+    {
+      value: 'medium',
+      label: dict?.streaks?.chaosMediumLabel || 'Medium',
+      description: dict?.streaks?.chaosMediumDesc || 'A checkpoint banks every 10 wins.',
+      icon: Flame,
+      accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+    },
+    {
+      value: 'hell',
+      label: dict?.streaks?.chaosHellLabel || 'Hell',
+      description: dict?.streaks?.chaosHellDesc || 'No checkpoints. One loss resets everything.',
+      icon: Skull,
+      accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+    },
+  ];
+
   return (
     <>
       <ChallengeIntroModalShell
@@ -56,10 +56,13 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
         icon={Flame}
         iconClassName="bg-violet-500/10 border-violet-500/20 text-violet-600 dark:text-violet-400"
         title={dict?.streaks?.chooseDifficulty || 'Choose a difficulty'}
-        intro="Pull the lever to draw 4 random perks and 2 addon rarities from your unlocked pool, then pick which owned killer plays the round. Win 3 kills or more to keep your streak alive."
-        rulesLabel={dict?.streaks?.rules || 'Chaos Rules'}
+        intro={
+          dict?.streaks?.chaosIntro ||
+          'Pull the lever to draw 4 random perks and 2 addon rarities from your unlocked pool, then pick which owned killer plays the round. Win 3 kills or more to keep your streak alive.'
+        }
+        rulesLabel={dict?.streaks?.rules || 'Rules'}
         onOpenRules={() => setIsRulesOpen(true)}
-        tiles={TILES}
+        tiles={tiles}
         onSelectTile={(value) => onSelectDifficulty(value as Difficulty)}
         tileGridClassName="sm:grid-cols-3"
         escapeDisabled={isRulesOpen}

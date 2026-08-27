@@ -23,13 +23,14 @@ import { ChaosPerkPoolModal } from './ChaosPerkPoolModal';
 import { ChaosModeModal } from './ChaosModeModal';
 import { useAuth } from '@/context/AuthContext';
 import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
+import { useStreaksDict } from '@/context/StreaksDictContext';
 
 interface ChaosBoardProps {
   locale: string;
-  dict?: any;
 }
 
-export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {
+export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
+  const dict = useStreaksDict();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

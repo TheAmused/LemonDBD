@@ -29,14 +29,15 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
     {
       value: 'original',
       label: dict?.streaks?.original || 'Original',
-      description: 'Classic, original Gauntlet rules. A checkpoint banks every 10 wins.',
+      description:
+        dict?.streaks?.gauntletOriginalDesc || 'Classic, original Gauntlet rules. A checkpoint banks every 10 wins.',
       icon: Swords,
       accentClassName: 'border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 text-amber-500',
     },
     {
       value: 'lemon',
       label: dict?.streaks?.lemonVersion || 'Lemon version',
-      description: 'A lightly modified, easier take on the Gauntlet.',
+      description: dict?.streaks?.gauntletLemonDesc || 'A lightly modified, easier take on the Gauntlet.',
       icon: Lock,
       accentClassName: 'border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/30',
       disabled: true,
@@ -52,8 +53,14 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         icon={Swords}
         iconClassName="bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
         title={dict?.streaks?.chooseGauntletMode || 'Choose a Gauntlet Mode'}
-        intro={`Face a random owned ${role} with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.`}
-        rulesLabel={dict?.streaks?.rules || 'Gauntlet Rules'}
+        intro={
+          role === 'killer'
+            ? dict?.streaks?.gauntletIntroKiller ||
+              'Face a random owned killer with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
+            : dict?.streaks?.gauntletIntroSurvivor ||
+              'Face a random owned survivor with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
+        }
+        rulesLabel={dict?.streaks?.rules || 'Rules'}
         onOpenRules={() => setIsRulesOpen(true)}
         tiles={tiles}
         onSelectTile={(value) => {

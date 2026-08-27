@@ -12,6 +12,7 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { useAuth } from '@/context/AuthContext';
+import { StreaksDictProvider } from '@/context/StreaksDictContext';
 
 export default function StreaksLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
@@ -128,7 +129,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
             {dict?.streaks?.loadingStreak || 'Loading…'}
           </p>
         ) : isAuthenticated && user?.is_verified ? (
-          children
+          <StreaksDictProvider dict={dict}>{children}</StreaksDictProvider>
         ) : isAuthenticated ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 px-6 py-20 text-center">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-amber-500/20 bg-slate-900/60">

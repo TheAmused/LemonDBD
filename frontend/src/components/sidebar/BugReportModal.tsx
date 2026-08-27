@@ -1,8 +1,11 @@
 'use client';
+// frontend/src/components/sidebar/BugReportModal.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
+import { useAltcha } from '@/hooks/useAltcha';
+import { AltchaWidget } from '@/components/common/AltchaWidget';
 import {
   Bug,
   X,
@@ -37,6 +40,16 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
   onClose,
 }) => {
   const { user, isAuthenticated } = useAuth();
+  const {
+    altchaPayload,
+    isVerifying: isAltchaVerifying,
+    isVerified: isAltchaVerified,
+    error: altchaError,
+    refreshChallenge,
+    honeypotValue,
+    honeypotProps,
+  } = useAltcha();
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [title, setTitle] = useState('');
@@ -152,6 +165,8 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
         reporter_name: user?.username || 'Guest Player',
         reporter_email: user?.email || guestEmail.trim(),
         images,
+        website_trap: honeypotValue,
+        altcha: altchaPayload,
       };
 
       const res = await fetch(`${backendBase}/api/v1/bug-reports`, {
@@ -441,6 +456,15 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     />
                   </div>
                 </div>
+
+                {/* ALTCHA PoW Security & Honeypot Trap */}
+                <AltchaWidget
+                  isVerifying={isAltchaVerifying}
+                  isVerified={isAltchaVerified}
+                  error={altchaError}
+                  onRetry={refreshChallenge}
+                  honeypotProps={honeypotProps}
+                />
 
                 <div className="flex items-center justify-end gap-3 pt-3 border-t border-rose-950/60">
                   <button

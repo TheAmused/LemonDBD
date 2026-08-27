@@ -96,14 +96,14 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
         </div>
 
         <div className="px-6 pb-5">
-          <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
+          <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm text-center">
             <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
               {intro}
             </p>
             <button
               type="button"
               onClick={onOpenRules}
-              className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
+              className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5" />
               {rulesLabel}
@@ -134,7 +134,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               return (
                 <div
                   key={tile.value}
-                  className="flex flex-col items-start gap-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/30 p-5 opacity-70"
+                  className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/30 p-5 text-center opacity-70"
                 >
                   <Lock className="w-6 h-6 text-slate-400" />
                   <span className="font-bold text-slate-500 dark:text-slate-400">{tile.label}</span>
@@ -152,7 +152,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               <button
                 key={tile.value}
                 onClick={() => onSelectTile(tile.value)}
-                className={`group flex flex-col items-start gap-2 rounded-2xl border p-5 text-left transition-colors cursor-pointer ${tile.accentClassName}`}
+                className={`group flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName}`}
               >
                 {content}
               </button>

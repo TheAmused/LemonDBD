@@ -29,6 +29,7 @@ export default {
   "matchSummary": "Match-Übersicht und historische Leistung",
   "temporarilyDisabled": "Diese Herausforderung wurde vorübergehend deaktiviert.",
   "pageStreak": "Page streak",
+  "normal": "Normal",
   "loadingKillers": "Killer werden geladen...",
   "retry": "Wiederholen",
   "loadingRoster": "Lade Roster…",

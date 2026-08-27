@@ -8,6 +8,7 @@ import { KILLER_STREAK_PANELS, SURVIVOR_STREAK_PANELS, CHALLENGE_STREAK_PANELS }
 import { GauntletModeModal } from './gauntlet/GauntletModeModal';
 import { ChaosModeModal } from './chaos/ChaosModeModal';
 import { HistoryModeModal } from './history/HistoryModeModal';
+import { PageStreakModeModal } from './page-streak/PageStreakModeModal';
 import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
@@ -32,6 +33,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const [isModeModalOpen, setIsModeModalOpen] = useState(false);
   const [isChaosModeModalOpen, setIsChaosModeModalOpen] = useState(false);
   const [isHistoryModeModalOpen, setIsHistoryModeModalOpen] = useState(false);
+  const [isPageStreakModeModalOpen, setIsPageStreakModeModalOpen] = useState(false);
   const [modeStatus, setModeStatus] = useState<ChallengeModeStatusMap>({});
 
   useEffect(() => {
@@ -127,6 +129,22 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           );
         }
 
+        if (panel.id === 'page-streak') {
+          return (
+            <StreakPanel
+              key={panel.id}
+              title={panel.title}
+              description={panel.description}
+              icon={panel.icon}
+              accent={panel.accent}
+              accentBorder={panel.accentBorder}
+              color={panel.color}
+              image={panel.image}
+              onClick={() => setIsPageStreakModeModalOpen(true)}
+            />
+          );
+        }
+
         return (
           <StreakPanel
             key={panel.id}
@@ -163,6 +181,12 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
         onSelectMode={(mode: HistoryMode) =>
           router.push(`/${locale}/streaks/${role}/history-streak?mode=${mode}`)
         }
+      />
+
+      <PageStreakModeModal
+        isOpen={isPageStreakModeModalOpen}
+        onClose={() => setIsPageStreakModeModalOpen(false)}
+        onStart={() => router.push(`/${locale}/streaks/${role}/page-streak`)}
       />
     </div>
   );

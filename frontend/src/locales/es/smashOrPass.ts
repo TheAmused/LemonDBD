@@ -181,15 +181,25 @@ export default {
     "howToPlay": "Cómo Jugar",
     "shuffle": "Barajar"
   },
+  "occultDossier": "EXPEDIENTE OCULTO",
+  "percentSign": "%",
+  "percentClose": "%)",
+  "pipeSeparator": "|",
+  "loadingRosterPrefix": "Cargando",
+  "loadingRosterSuffix": "desde la Base de Datos...",
   "howToPlayModal": {
     "title": "Cómo Jugar Smash or Pass",
     "swipeTitle": "Deslizar y Votar Cartas",
     "swipeDesc": "Desliza la carta a la Derecha para Smash 💋 o a la Izquierda para Pass ✖.",
+    "swipeIcon": "👆",
     "iconsTitle": "Iconos de Acción en la Carta",
     "iconsDesc": "Haz clic en Girar (icono superior izquierdo) para leer biografía, rasgos y memes. Haz clic en Zoom para ver el retrato en alta resolución.",
+    "iconsIcon": "🎯",
     "keycapsTitle": "Atajos de Teclado Táctiles",
+    "keycapsIcon": "⌨️",
     "atmosphereTitle": "Fondo Atmosférico y Música",
     "atmosphereDesc": "Pasa el ratón sobre los elementos flotantes del fondo para ver citas y rasgos con brillo. ¡Activa la música BGM (tecla B) para ambientación oscura!",
+    "atmosphereIcon": "🌌",
     "letsPlay": "¡Entendido, a Jugar!"
   },
   "personaArchetypes": {

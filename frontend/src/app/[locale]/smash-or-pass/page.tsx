@@ -17,7 +17,7 @@ export default function SmashOrPassPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Record<string, any> | null>(null);
+  const [dict, setDict] = useState<any>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -64,7 +64,7 @@ export default function SmashOrPassPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-        Loading Smash or Pass...
+        {dict?.app?.loadingSmashOrPass || 'Loading Smash or Pass...'}
       </div>
     );
   }

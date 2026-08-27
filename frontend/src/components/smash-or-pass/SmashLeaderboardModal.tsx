@@ -323,7 +323,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           <div>
             <div className="flex items-center gap-1 justify-end font-black font-mono text-sm text-[#ff0055]">
               <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
-              <span>{smashRate}%</span>
+              <span>{smashRate}{dict?.smashOrPass?.percentSign || '%'}</span>
             </div>
             <span className="text-[10px] font-mono text-zinc-400">
               {totalVotes.toLocaleString()} {votesWord}

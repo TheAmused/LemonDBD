@@ -181,15 +181,25 @@ export default {
     "howToPlay": "遊び方",
     "shuffle": "シャッフル"
   },
+  "occultDossier": "オカルト調査書",
+  "percentSign": "%",
+  "percentClose": "%)",
+  "pipeSeparator": "|",
+  "loadingRosterPrefix": "データベースから",
+  "loadingRosterSuffix": "を読み込み中...",
   "howToPlayModal": {
     "title": "Smash or Pass の遊び方",
     "swipeTitle": "カードのスワイプ＆投票",
     "swipeDesc": "カードを右にドラッグすると Smash 💋、左にドラッグすると Pass ✖ します。",
+    "swipeIcon": "👆",
     "iconsTitle": "カード上のアクションアイコン",
     "iconsDesc": "左上の回転アイコンをクリックするとプロフィールやミームを確認できます。拡大アイコンで高画質アートを表示します。",
+    "iconsIcon": "🎯",
     "keycapsTitle": "キーボードショートカット",
+    "keycapsIcon": "⌨️",
     "atmosphereTitle": "背景の演出とBGM",
     "atmosphereDesc": "背景のテキストにマウスを乗せると引用句が光ります。BGMボタン（Bキー）でダークなシンセ音楽を楽しめます！",
+    "atmosphereIcon": "🌌",
     "letsPlay": "了解、プレイ開始！"
   },
   "personaArchetypes": {

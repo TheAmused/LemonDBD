@@ -11,7 +11,6 @@ export interface HistoryModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectMode: (mode: HistoryMode) => void;
-  /** The mode currently in effect, e.g. when reopened mid-run to switch. */
   currentMode?: HistoryMode;
   dict?: any;
 }

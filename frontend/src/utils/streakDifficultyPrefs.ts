@@ -18,10 +18,7 @@ function safeGet(key: string): string | null {
 function safeSet(key: string, value: string) {
   try {
     localStorage.setItem(key, value);
-  } catch {
-    // Storage unavailable (private mode, quota, etc); the intro screen just
-    // shows again next time, which is a safe fallback.
-  }
+  } catch {}
 }
 
 export function getSavedChaosDifficulty(): Difficulty | null {

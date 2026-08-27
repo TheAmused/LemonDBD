@@ -6,6 +6,7 @@ from pydantic import ValidationError
 
 from app.core.security import get_current_user, login_required
 from app.schemas.user import UserCreate, UserResponse
+from app.services.altcha_service import AltchaService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
 
@@ -246,3 +247,10 @@ def get_avatar_file(filename):
 
     mimetype = "image/webp" if clean_filename.lower().endswith(".webp") else None
     return send_from_directory(target_dir, clean_filename, mimetype=mimetype, max_age=86400 * 30)
+
+@auth_bp.route("/altcha-challenge", methods=["GET"])
+def get_altcha_challenge():
+    secret_key = current_app.config.get("SECRET_KEY", "lemon-dev-secret-key")
+    challenge = AltchaService.create_challenge(secret_key=secret_key)
+    return jsonify(challenge), 200
+

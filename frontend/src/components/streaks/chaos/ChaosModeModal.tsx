@@ -55,6 +55,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({ isOpen, onClose,
         tiles={TILES}
         onSelectTile={(value) => onSelectDifficulty(value as Difficulty)}
         tileGridClassName="sm:grid-cols-3"
+        escapeDisabled={isRulesOpen}
       />
 
       <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

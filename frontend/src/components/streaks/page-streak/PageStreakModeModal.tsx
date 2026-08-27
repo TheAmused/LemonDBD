@@ -13,18 +13,18 @@ export interface PageStreakModeModalProps {
   dict?: any;
 }
 
-const TILES: ChallengeIntroTile[] = [
-  {
-    value: 'normal',
-    label: 'Normal',
-    description: 'Every perk page counts. No difficulty options yet.',
-    icon: BookOpen,
-    accentClassName: 'border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/10',
-  },
-];
-
 export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen, onClose, onStart, dict }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+
+  const tiles: ChallengeIntroTile[] = [
+    {
+      value: 'normal',
+      label: dict?.streaks?.normal || 'Normal',
+      description: 'Every perk page counts. No difficulty options yet.',
+      icon: BookOpen,
+      accentClassName: 'border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/10',
+    },
+  ];
 
   return (
     <>
@@ -37,9 +37,10 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
         intro="Pick a killer and build the strongest loadout you can from their current perk page. Win to move to the next page, lose and start over from page 1."
         rulesLabel={dict?.streaks?.rules || 'Page Streak Rules'}
         onOpenRules={() => setIsRulesOpen(true)}
-        tiles={TILES}
+        tiles={tiles}
         onSelectTile={() => onStart()}
         tileGridClassName="sm:grid-cols-1 max-w-xs mx-auto sm:mx-0"
+        escapeDisabled={isRulesOpen}
       />
 
       <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

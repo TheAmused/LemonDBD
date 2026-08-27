@@ -58,6 +58,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
           if (value === 'original') onSelectOriginal();
         }}
         tileGridClassName="sm:grid-cols-2"
+        escapeDisabled={isRulesOpen}
       />
 
       <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />

@@ -48,6 +48,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({ isOpen, onCl
         tiles={TILES}
         onSelectTile={(value) => onSelectMode(value as HistoryMode)}
         tileGridClassName="sm:grid-cols-2"
+        escapeDisabled={isRulesOpen}
       />
 
       <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

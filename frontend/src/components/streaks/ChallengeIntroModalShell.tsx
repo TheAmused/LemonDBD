@@ -33,6 +33,8 @@ export interface ChallengeIntroModalShellProps {
   onSelectTile: (value: string) => void;
   /** Tailwind grid-cols classes for the tile row, e.g. "sm:grid-cols-3". */
   tileGridClassName: string;
+  /** Suppress this shell's own Escape handler, e.g. while a child rules modal is open on top of it. */
+  escapeDisabled?: boolean;
 }
 
 /**
@@ -54,15 +56,16 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
   tiles,
   onSelectTile,
   tileGridClassName,
+  escapeDisabled,
 }) => {
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || escapeDisabled) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, escapeDisabled, onClose]);
 
   if (!isOpen) return null;
 

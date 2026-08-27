@@ -55,6 +55,10 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
+        "pool_size": int(os.getenv("DB_POOL_SIZE", "10")),
+        "max_overflow": int(os.getenv("DB_MAX_OVERFLOW", "20")),
+        "pool_recycle": int(os.getenv("DB_POOL_RECYCLE", "300")),
+        "pool_timeout": int(os.getenv("DB_POOL_TIMEOUT", "30")),
     }
 
     # Background Tasks & Initial Scrape
@@ -63,6 +67,9 @@ class Config:
         "SCRAPE_LOCK_FILE",
         str(Path(tempfile.gettempdir()) / "dbd_initial_scrape.lock"),
     )
+
+    # Background Scheduler
+    SCHEDULER_ENABLED = os.getenv("SCHEDULER_ENABLED", "true").lower() in ("true", "1", "yes")
 
     # Streak Challenge Pool Cleanup
     STREAK_INACTIVITY_PRUNE_DAYS = int(os.getenv("STREAK_INACTIVITY_PRUNE_DAYS", "90"))
@@ -83,5 +90,7 @@ class TestingConfig(Config):
     TESTING = True
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    SQLALCHEMY_ENGINE_OPTIONS = {}
     INITIAL_SCRAPE_ENABLED = False
     RATELIMIT_ENABLED = False
+    SCHEDULER_ENABLED = False

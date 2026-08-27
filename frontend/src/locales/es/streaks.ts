@@ -166,6 +166,18 @@ export default {
   "gauntletConceptBody": "que tengas, una partida a la vez. Cuanto más larga sea tu racha, menos perks podrás llevar, hasta que en el nivel final ganes sin ninguno.",
   "neverAnyoneElseNote": ", nunca los de otro personaje. Empiezas con los 3, y pierdes uno en cada nivel. Cuando bajes de 3, eliges cuáles conservar.",
   "checkpointFallbackNote": ". Si pierdes después de eso, solo retrocedes a tu último punto de control, no hasta cero, aunque cada",
-  "checkpointPoolNote": "superado desde entonces vuelve al grupo. Los puntos de control y los niveles avanzan juntos, así que el perk que pierdes y el progreso que conservas ocurren en la misma victoria."
+  "checkpointPoolNote": "superado desde entonces vuelve al grupo. Los puntos de control y los niveles avanzan juntos, así que el perk que pierdes y el progreso que conservas ocurren en la misma victoria.",
+  "youBeatEveryRowOn": "Superaste cada fila en modo",
+  "rowLabel": "Fila",
+  "ofLabel": "de",
+  "killerLabel": "asesino",
+  "nextRowPreviewLabel": "Vista previa de la siguiente fila",
+  "unlockedSuffix": "desbloqueada",
+  "availableLabel": "Disponibles",
+  "lockedLabel": "Bloqueadas",
+  "rowClearedPrefix": "¡Fila superada! Fila",
+  "rowUnlockedSuffix": "desbloqueada.",
+  "mediumModeDesc": "Los puntos de control guardan cada fila que superas. Una derrota te hace retroceder al inicio de la fila, no a cero.",
+  "killersColonLabel": "Asesinos:"
 };
 

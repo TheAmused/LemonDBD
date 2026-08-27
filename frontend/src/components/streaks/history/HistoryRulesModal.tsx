@@ -54,8 +54,8 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
             {dict?.streaks?.mediumMode || 'Medium'}
           </span>
           <p className="text-xs text-slate-600 dark:text-slate-300 sm:text-right sm:max-w-xs">
-            Checkpoints save each row you clear. A loss falls back to the row&apos;s start, not to
-            zero.
+            {dict?.streaks?.mediumModeDesc ||
+              "Checkpoints save each row you clear. A loss falls back to the row's start, not to zero."}
           </p>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-2 shadow-sm">

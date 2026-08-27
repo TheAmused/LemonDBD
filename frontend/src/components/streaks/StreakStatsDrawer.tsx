@@ -126,7 +126,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                   {dict?.streaks?.winRate || 'Win Rate'}
                 </span>
                 <div className="text-4xl font-extrabold text-slate-900 dark:text-white mt-1">
-                  {winRate.toFixed(1)}%
+                  {winRate.toFixed(1)}{dict?.streaks?.percentSign || '%'}
                 </div>
               </div>
               <div className={`relative w-16 h-16 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-900 border-4 ${accentClasses.ring} font-bold text-lg shadow-sm`}>

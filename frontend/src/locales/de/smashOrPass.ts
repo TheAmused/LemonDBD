@@ -181,15 +181,25 @@ export default {
     "howToPlay": "Spielanleitung",
     "shuffle": "Mischen"
   },
+  "occultDossier": "OKKULTES DOSSIER",
+  "percentSign": "%",
+  "percentClose": "%)",
+  "pipeSeparator": "|",
+  "loadingRosterPrefix": "Lade",
+  "loadingRosterSuffix": "aus der Datenbank...",
   "howToPlayModal": {
     "title": "So Spielt Man Smash or Pass",
     "swipeTitle": "Karten Wischen & Abstimmen",
     "swipeDesc": "Wische die Karte nach Rechts für Smash 💋 oder nach Links für Pass ✖.",
+    "swipeIcon": "👆",
     "iconsTitle": "Aktions-Icons auf der Karte",
     "iconsDesc": "Klicke auf Umdrehen (Icon oben links), um Biografie, Merkmale und Memes zu lesen. Klicke auf Zoom für hochauflösende Porträts.",
+    "iconsIcon": "🎯",
     "keycapsTitle": "Taktile Tastenkürzel",
+    "keycapsIcon": "⌨️",
     "atmosphereTitle": "Atmosphärischer Hintergrund & Musik",
     "atmosphereDesc": "Bewege die Maus über Hintergrundelemente, um Zitate und Lore mit Leuchteffekten zu sehen. Schalte Hintergrundmusik ein (Taste B)!",
+    "atmosphereIcon": "🌌",
     "letsPlay": "Verstanden, Los Geht's!"
   },
   "personaArchetypes": {

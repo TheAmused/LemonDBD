@@ -148,11 +148,15 @@ export default {
     "title": "Jak Grać w Smash or Pass",
     "swipeTitle": "Przesuwanie i Głosowanie Kartami",
     "swipeDesc": "Przeciągnij kartę w Prawo, aby dać Smash 💋 lub w Lewo, aby dać Pass ✖.",
+    "swipeIcon": "👆",
     "iconsTitle": "Ikony i Funkcje na Karcie",
     "iconsDesc": "Kliknij Obróć (ikona w lewym górnym rogu), aby przeczytać biografię, flagi i memy. Kliknij Powiększ dla grafiki w wysokiej rozdzielczości.",
+    "iconsIcon": "🎯",
     "keycapsTitle": "Dotykowe Skróty Klawiszowe",
+    "keycapsIcon": "⌨️",
     "atmosphereTitle": "Klimatyczne Tło i Muzyka",
     "atmosphereDesc": "Najedź kursorem na latające teksty w tle, aby odkrywać cytaty i cechy. Włącz BGM (klawisz B), aby cieszyć się mroczną, zmysłową muzyką syntezatorową!",
+    "atmosphereIcon": "🌌",
     "letsPlay": "Rozumiem, Gramy!"
   },
   "personaArchetypes": {
@@ -232,5 +236,11 @@ export default {
     "hallOfFame": "Galeria Sław",
     "howToPlay": "Jak Grać",
     "shuffle": "Przetasuj"
-  }
+  },
+  "occultDossier": "OKULTYSTYCZNA TECZKA",
+  "percentSign": "%",
+  "percentClose": "%)",
+  "pipeSeparator": "|",
+  "loadingRosterPrefix": "Wczytywanie",
+  "loadingRosterSuffix": "z bazy danych..."
 };

@@ -94,7 +94,7 @@ function MapsPageInner() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono text-xs">
-        Initializing Tactical Map Command...
+        {(dict as any)?.maps?.initializingTacticalMap || 'Initializing Tactical Map Command...'}
       </div>
     );
   }
@@ -159,7 +159,7 @@ export default function MapsPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono text-xs">
-          Loading Tactical Maps...
+          {'Loading Tactical Maps...'}
         </div>
       }
     >

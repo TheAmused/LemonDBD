@@ -241,7 +241,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
               </span>
             </div>
             <span className="text-[10px] font-mono font-bold text-slate-500">
-              {modelProgress.progress}%
+              {modelProgress.progress}{dict?.maps?.percentSign || '%'}
             </span>
           </div>
 

@@ -230,7 +230,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                 }`}
                 data-testid="desktop-map-realm-pill-all"
               >
-                All ({maps.length})
+                {dict?.maps?.all || 'All'} ({maps.length})
               </button>
               {uniqueRealms.map((r) => {
                 const count = groupedMaps[r]?.length || 0;

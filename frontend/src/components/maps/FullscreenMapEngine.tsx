@@ -245,7 +245,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 )}
               </div>
               <span className="text-xs text-amber-400/90 font-medium">
-                {activeMap.realm} • {activeMap.layout_type}
+                {activeMap.realm} {dict?.maps?.bulletSeparator || '•'} {activeMap.layout_type}
               </span>
             </div>
           )}
@@ -345,7 +345,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         >
           <div className="absolute inset-0 rounded-3xl border border-slate-700/40 p-4 pointer-events-none">
             <div className="absolute top-3 left-4 text-[10px] font-mono text-slate-600 uppercase tracking-wider">
-              [ {activeMap?.realm || 'REALM'} • FLOOR {currentFloor} • VARIANT {currentSeed.toUpperCase()} ]
+              {dict?.maps?.hudBracketOpen || '['} {activeMap?.realm || 'REALM'} {dict?.maps?.hudFloorLabel || '• FLOOR'} {currentFloor} {dict?.maps?.hudVariantLabel || '• VARIANT'} {currentSeed.toUpperCase()} {dict?.maps?.hudBracketClose || ']'}
             </div>
             <div className="absolute bottom-3 right-4 text-[10px] font-mono text-amber-500/60 uppercase">
               {dict?.maps?.tacticalEngineVersion || 'LemonDBD Tactical Engine v2.0'}
@@ -381,7 +381,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
 
                     {isPalletTile && showPallets && (
                       <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${getPalletRingClass(tile.pallet_safety_rating)}`}>
-                        🪵
+                        {dict?.maps?.palletEmoji || '🪵'}
                       </span>
                     )}
 
@@ -390,7 +390,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
 
                   {showCallouts && (
                     <div className="mt-1 text-[10px] font-mono text-slate-400 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800 text-center shadow whitespace-nowrap">
-                      📢 {tile.callout_label || tile.name}
+                      {dict?.maps?.calloutEmoji || '📢'} {tile.callout_label || tile.name}
                     </div>
                   )}
                 </div>
@@ -436,14 +436,14 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                   {isTotem && <Skull className="w-4 h-4" />}
                   {isGen && <Zap className="w-4 h-4" />}
                   {isExit && <DoorOpen className="w-4 h-4" />}
-                  {isHatch && <span className="text-sm">🕳️</span>}
-                  {isPallet && !isTotem && !isGen && <span className="text-sm">🪵</span>}
-                  {isWindow && !isPallet && !isTotem && !isGen && <span className="text-sm">🪟</span>}
+                  {isHatch && <span className="text-sm">{dict?.maps?.hatchEmoji || '🕳️'}</span>}
+                  {isPallet && !isTotem && !isGen && <span className="text-sm">{dict?.maps?.palletEmoji || '🪵'}</span>}
+                  {isWindow && !isPallet && !isTotem && !isGen && <span className="text-sm">{dict?.maps?.windowEmoji || '🪟'}</span>}
                 </div>
 
                 {showCallouts && obj.location_description && (
                   <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 hidden group-hover:block whitespace-nowrap bg-slate-950 text-white text-[10px] font-bold px-2 py-1 rounded-md border border-slate-700 shadow-2xl z-50">
-                    📢 {obj.location_description}
+                    {dict?.maps?.calloutEmoji || '📢'} {obj.location_description}
                   </div>
                 )}
               </div>
@@ -460,7 +460,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         >
           <div className="px-2 text-[10px] font-mono uppercase text-slate-500 font-bold flex items-center gap-1">
             <Layers className="w-3.5 h-3.5 text-amber-500" />
-            Layers:
+            {dict?.maps?.layersLabel || 'Layers:'}
           </div>
 
           <button
@@ -473,7 +473,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
             }`}
           >
-            <span>🪵 {dict?.maps?.pallets || 'Pallets'}</span>
+            <span>{dict?.maps?.palletEmoji || '🪵'} {dict?.maps?.pallets || 'Pallets'}</span>
           </button>
 
           <button
@@ -486,7 +486,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
             }`}
           >
-            <span>🪟 {dict?.maps?.windows || 'Windows'}</span>
+            <span>{dict?.maps?.windowEmoji || '🪟'} {dict?.maps?.windows || 'Windows'}</span>
           </button>
 
           <button
@@ -576,7 +576,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           </button>
 
           <span className="text-xs font-mono font-bold text-amber-400 px-2 min-w-[50px] text-center">
-            {Math.round(zoom * 100)}%
+            {Math.round(zoom * 100)}{dict?.maps?.percentSign || '%'}
           </span>
 
           <button

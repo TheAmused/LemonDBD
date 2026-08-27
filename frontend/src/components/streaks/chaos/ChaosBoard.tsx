@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
 import { Perk } from '@/types/gauntletStreak';
@@ -20,7 +20,9 @@ import { ChaosCheckpointModal } from './ChaosCheckpointModal';
 import { ChaosStatsDrawer } from './ChaosStatsDrawer';
 import { ChaosRulesModal } from './ChaosRulesModal';
 import { ChaosPerkPoolModal } from './ChaosPerkPoolModal';
+import { ChaosModeModal } from './ChaosModeModal';
 import { useAuth } from '@/context/AuthContext';
+import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
 
 interface ChaosBoardProps {
   locale: string;
@@ -29,6 +31,8 @@ interface ChaosBoardProps {
 
 export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const difficulty = (searchParams.get('difficulty') as Difficulty) || 'hell';
 
   const {
@@ -77,6 +81,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isPerkPoolOpen, setIsPerkPoolOpen] = useState(false);
+  const [isChangeDifficultyOpen, setIsChangeDifficultyOpen] = useState(false);
 
   const celebrationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const celebrate = () => {
@@ -157,6 +162,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenPerkPool={() => setIsPerkPoolOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
+          onChangeDifficulty={() => setIsChangeDifficultyOpen(true)}
         />
 
         {!isCompleted && rosterKillers.length > 0 && (
@@ -284,6 +290,17 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {
           usedPerkNames={run?.used_perks || []}
         />
         <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />
+        <ChaosModeModal
+          isOpen={isChangeDifficultyOpen}
+          onClose={() => setIsChangeDifficultyOpen(false)}
+          currentDifficulty={difficulty}
+          onSelectDifficulty={(newDifficulty) => {
+            saveChaosDifficulty(newDifficulty);
+            setIsChangeDifficultyOpen(false);
+            router.push(`${pathname}?difficulty=${newDifficulty}`);
+          }}
+          dict={dict}
+        />
       </div>
     </div>
   );

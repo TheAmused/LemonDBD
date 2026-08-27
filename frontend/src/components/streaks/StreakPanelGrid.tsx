@@ -12,6 +12,16 @@ import { PageStreakModeModal } from './page-streak/PageStreakModeModal';
 import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
+import {
+  getSavedChaosDifficulty,
+  saveChaosDifficulty,
+  getSavedHistoryMode,
+  saveHistoryMode,
+  getSavedGauntletMode,
+  saveGauntletMode,
+  hasSeenPageStreakIntro,
+  markPageStreakIntroSeen,
+} from '@/utils/streakDifficultyPrefs';
 
 /** Maps a panel's static id to its backend `ChallengeModeSetting.mode` key. */
 const PANEL_ID_TO_MODE: Record<string, string> = {
@@ -92,7 +102,14 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               accentBorder={panel.accentBorder}
               color={panel.color}
               image={panel.image}
-              onClick={() => setIsModeModalOpen(true)}
+              onClick={() => {
+                const saved = getSavedGauntletMode();
+                if (saved === 'original') {
+                  router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
+                } else {
+                  setIsModeModalOpen(true);
+                }
+              }}
             />
           );
         }
@@ -108,7 +125,14 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               accentBorder={panel.accentBorder}
               color={panel.color}
               image={panel.image}
-              onClick={() => setIsChaosModeModalOpen(true)}
+              onClick={() => {
+                const saved = getSavedChaosDifficulty();
+                if (saved) {
+                  router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${saved}`);
+                } else {
+                  setIsChaosModeModalOpen(true);
+                }
+              }}
             />
           );
         }
@@ -124,7 +148,14 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               accentBorder={panel.accentBorder}
               color={panel.color}
               image={panel.image}
-              onClick={() => setIsHistoryModeModalOpen(true)}
+              onClick={() => {
+                const saved = getSavedHistoryMode();
+                if (saved) {
+                  router.push(`/${locale}/streaks/${role}/history-streak?mode=${saved}`);
+                } else {
+                  setIsHistoryModeModalOpen(true);
+                }
+              }}
             />
           );
         }
@@ -140,7 +171,13 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               accentBorder={panel.accentBorder}
               color={panel.color}
               image={panel.image}
-              onClick={() => setIsPageStreakModeModalOpen(true)}
+              onClick={() => {
+                if (hasSeenPageStreakIntro()) {
+                  router.push(`/${locale}/streaks/${role}/page-streak`);
+                } else {
+                  setIsPageStreakModeModalOpen(true);
+                }
+              }}
             />
           );
         }
@@ -163,30 +200,38 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
       <GauntletModeModal
         isOpen={isModeModalOpen}
         onClose={() => setIsModeModalOpen(false)}
-        onSelectOriginal={() => router.push(`/${locale}/streaks/${role}/gauntlet-streak`)}
+        onSelectOriginal={() => {
+          saveGauntletMode('original');
+          router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
+        }}
         role={role as 'killer' | 'survivor'}
       />
 
       <ChaosModeModal
         isOpen={isChaosModeModalOpen}
         onClose={() => setIsChaosModeModalOpen(false)}
-        onSelectDifficulty={(difficulty: Difficulty) =>
-          router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${difficulty}`)
-        }
+        onSelectDifficulty={(difficulty: Difficulty) => {
+          saveChaosDifficulty(difficulty);
+          router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${difficulty}`);
+        }}
       />
 
       <HistoryModeModal
         isOpen={isHistoryModeModalOpen}
         onClose={() => setIsHistoryModeModalOpen(false)}
-        onSelectMode={(mode: HistoryMode) =>
-          router.push(`/${locale}/streaks/${role}/history-streak?mode=${mode}`)
-        }
+        onSelectMode={(mode: HistoryMode) => {
+          saveHistoryMode(mode);
+          router.push(`/${locale}/streaks/${role}/history-streak?mode=${mode}`);
+        }}
       />
 
       <PageStreakModeModal
         isOpen={isPageStreakModeModalOpen}
         onClose={() => setIsPageStreakModeModalOpen(false)}
-        onStart={() => router.push(`/${locale}/streaks/${role}/page-streak`)}
+        onStart={() => {
+          markPageStreakIntroSeen();
+          router.push(`/${locale}/streaks/${role}/page-streak`);
+        }}
       />
     </div>
   );

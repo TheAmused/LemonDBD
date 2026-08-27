@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';
-import { Flame, Trophy, Shield, Skull, BookOpen, BarChart2, RotateCcw } from 'lucide-react';
+import { Flame, Trophy, Shield, Skull, BookOpen, BarChart2, RotateCcw, Gauge } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 
 const MODE_ICON: Record<HistoryMode, React.ElementType> = {
@@ -20,6 +20,7 @@ export interface HistoryHeaderProps {
   onOpenRules: () => void;
   onOpenStats: () => void;
   onOpenReset: () => void;
+  onChangeMode: () => void;
   dict?: any;
 }
 
@@ -32,6 +33,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   onOpenRules,
   onOpenStats,
   onOpenReset,
+  onChangeMode,
   dict,
 }) => {
   const ModeIcon = MODE_ICON[mode] ?? Shield;
@@ -101,6 +103,15 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           >
             <BookOpen className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             <span className="hidden sm:inline">{dict?.streaks?.rules || 'History Rules'}</span>
+          </button>
+
+          <button
+            onClick={onChangeMode}
+            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
+            title={dict?.streaks?.changeMode || 'Change Mode'}
+          >
+            <Gauge className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+            <span className="hidden sm:inline">{dict?.streaks?.changeMode || 'Change Mode'}</span>
           </button>
 
           <button

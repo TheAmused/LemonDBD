@@ -35,6 +35,8 @@ export interface ChallengeIntroModalShellProps {
   tileGridClassName: string;
   /** Suppress this shell's own Escape handler, e.g. while a child rules modal is open on top of it. */
   escapeDisabled?: boolean;
+  /** The tile's `value` currently in effect, e.g. when reopened from a running challenge to switch. Highlighted with a ring and a "Current" badge. */
+  selectedValue?: string;
 }
 
 /**
@@ -57,6 +59,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
   onSelectTile,
   tileGridClassName,
   escapeDisabled,
+  selectedValue,
 }) => {
   useEffect(() => {
     if (!isOpen || escapeDisabled) return;
@@ -114,6 +117,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
         <div className={`grid grid-cols-1 gap-4 px-6 pb-6 ${tileGridClassName}`}>
           {tiles.map((tile) => {
             const TileIcon = tile.icon;
+            const isCurrent = tile.value === selectedValue;
             const content = (
               <>
                 {tile.image ? (
@@ -126,7 +130,12 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                   <TileIcon className="w-6 h-6" />
                 )}
                 <span className="font-bold text-slate-900 dark:text-white">{tile.label}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400">{tile.description}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 text-balance">{tile.description}</span>
+                {isCurrent && (
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-current">
+                    Current
+                  </span>
+                )}
               </>
             );
 
@@ -138,7 +147,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 >
                   <Lock className="w-6 h-6 text-slate-400" />
                   <span className="font-bold text-slate-500 dark:text-slate-400">{tile.label}</span>
-                  <span className="text-xs text-slate-400 dark:text-slate-500">{tile.description}</span>
+                  <span className="text-xs text-slate-400 dark:text-slate-500 text-balance">{tile.description}</span>
                   {tile.disabledBadge && (
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                       {tile.disabledBadge}
@@ -152,7 +161,9 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               <button
                 key={tile.value}
                 onClick={() => onSelectTile(tile.value)}
-                className={`group flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName}`}
+                className={`group flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
+                  isCurrent ? 'ring-2 ring-current ring-offset-2 ring-offset-white dark:ring-offset-slate-900' : ''
+                }`}
               >
                 {content}
               </button>

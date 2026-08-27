@@ -8,6 +8,8 @@ export default {
   "resetRun": "挑戦をリセット",
   "resetRunTitle": "この挑戦をリセットしますか？",
   "chooseDifficulty": "難易度を選択",
+  "changeDifficulty": "Change Difficulty",
+  "changeMode": "Change Mode",
   "chooseMode": "モードを選択",
   "chooseGauntletMode": "ガントレットモードを選択",
   "runProgress": "進行状況",

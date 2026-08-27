@@ -22,9 +22,10 @@ interface OwnershipData {
 
 interface UserMetricsGridProps {
   ownership?: OwnershipData | null;
+  dict?: any;
 }
 
-export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) => {
+export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dict }) => {
   const survPercent = ownership?.survivors?.percentage ?? 0;
   const killerPercent = ownership?.killers?.percentage ?? 0;
   const perkPercent = ownership?.perks?.percentage ?? 0;
@@ -49,7 +50,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
             <div>
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                Survivors
+                {dict?.stats?.survivors || 'Survivors'}
               </h3>
               <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
                 {survOwned} / {survTotal}
@@ -77,7 +78,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
             <div>
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                Killers
+                {dict?.stats?.killers || 'Killers'}
               </h3>
               <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
                 {killerOwned} / {killerTotal}
@@ -105,7 +106,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
             <div>
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                Teachable Perks
+                {dict?.characterDetail?.teachablePerks || 'Teachable Perks'}
               </h3>
               <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
                 {perkUnlocked} / {perkTotal}
@@ -126,4 +127,3 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
     </div>
   );
 };
-

@@ -52,9 +52,11 @@ function MapsPageInner() {
   const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
-    document.title = 'LemonDBD - Tactical Map Command Explorer';
     getDictionary(locale)
-      .then((d) => setDict(d as PerkDictionary))
+      .then((d) => {
+        setDict(d as PerkDictionary);
+        document.title = (d as PerkDictionary)?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer';
+      })
       .catch((err: unknown) => console.error('Failed to load maps dictionary:', err));
   }, [locale]);
 
@@ -112,9 +114,8 @@ function MapsPageInner() {
       />
 
       <main
-        className={`flex-1 w-full min-h-screen transition-all duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className={`flex-1 w-full min-h-screen transition-all duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+          }`}
       >
         <VoiceCommandBanner
           locale={locale}

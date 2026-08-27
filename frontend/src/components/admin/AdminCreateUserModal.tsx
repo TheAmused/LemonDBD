@@ -66,21 +66,23 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
           </div>
           <div>
             <h3 className="text-base font-black tracking-wider text-slate-100 font-mono">
-              Create New User
+              {dict?.admin?.createUserTitle || 'Create New User'}
             </h3>
             <p className="text-xs text-slate-400">
-              Add a new account directly to the database
+              {dict?.admin?.createUserSubtitle || 'Add a new account directly to the database'}
             </p>
           </div>
         </div>
 
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-              Username
+              {dict?.admin?.thUsername || 'Username'}
             </label>
             <input
               type="text"
+
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -91,10 +93,11 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
 
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-              Email Address
+              {dict?.admin?.thEmail || 'Email Address'}
             </label>
             <input
               type="email"
+
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -105,10 +108,11 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
 
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-              Password
+              {dict?.admin?.thPassword || 'Password'}
             </label>
             <input
               type="password"
+
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -119,10 +123,11 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
 
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-              Role Privilege
+              {dict?.admin?.rolePrivilege || 'Role Privilege'}
             </label>
             <select
               value={role}
+
               onChange={(e) => setRole(e.target.value as 'user' | 'admin')}
               className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 focus:border-amber-500 focus:outline-none shadow-inner cursor-pointer [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
@@ -138,10 +143,11 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               disabled={isSubmitting}
               className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer shadow-sm"
             >
-              Cancel
+              {dict?.admin?.cancel || 'Cancel'}
             </button>
             <button
               type="submit"
+
               disabled={isSubmitting}
               className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 px-4 py-2 text-xs font-black uppercase tracking-wider text-slate-950 shadow-lg shadow-amber-950/30 transition-all cursor-pointer disabled:opacity-50"
             >

@@ -448,7 +448,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                title="Pass"
+                title={dict?.smashOrPass?.pass || 'Pass'}
                 className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-slate-950/90 border-2 border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-400 hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer"
               >
                 <ThumbsDown className="h-6 w-6 sm:h-7 sm:w-7" />
@@ -464,7 +464,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                title="Smash"
+                title={dict?.smashOrPass?.smash || 'Smash'}
                 className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-600 to-[#ff0055] text-white hover:scale-110 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,0,85,0.6)] cursor-pointer"
               >
                 <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-white" />

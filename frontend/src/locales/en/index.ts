@@ -1,3 +1,4 @@
+// frontend/src/locales/en/index.ts
 import app from './app';
 import landing from './landing';
 import generator from './generator';
@@ -19,6 +20,7 @@ import streaks from './streaks';
 import builds from './builds';
 import admin from './admin';
 import maps from './maps';
+import quests from './quests';
 
 const en = {
   app,
@@ -42,6 +44,7 @@ const en = {
   builds,
   admin,
   maps,
+  quests,
 };
 
 export default en;

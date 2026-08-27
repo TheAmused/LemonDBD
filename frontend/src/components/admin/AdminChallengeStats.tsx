@@ -22,6 +22,7 @@ const VARIANT_LABELS: Record<string, string> = {
 
 interface AdminChallengeStatsProps {
   stats: AdminStats | null;
+  dict?: any;
 }
 
 const VariantRow: React.FC<{ label: string; breakdown: { completed_runs: number; unique_users: number } }> = ({
@@ -37,7 +38,7 @@ const VariantRow: React.FC<{ label: string; breakdown: { completed_runs: number;
   </div>
 );
 
-export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats }) => {
+export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats, dict }) => {
   const completions = stats?.challenge_completions;
 
   return (
@@ -71,7 +72,7 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats 
               </div>
             ) : (
               <p className="text-[11px] text-slate-500">
-                Page Streak has one run per killer, so completions aren't broken down further here.
+                {dict?.admin?.pageStreakCompletionsNotice || "Page Streak has one run per killer, so completions aren't broken down further here."}
               </p>
             )}
           </div>

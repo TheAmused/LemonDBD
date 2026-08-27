@@ -123,7 +123,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
             <div className="col-span-2 bg-gradient-to-br from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex items-center justify-between shadow-inner">
               <div>
                 <span className="text-xs uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">
-                  Win Rate
+                  {dict?.streaks?.winRate || 'Win Rate'}
                 </span>
                 <div className="text-4xl font-extrabold text-slate-900 dark:text-white mt-1">
                   {winRate.toFixed(1)}%
@@ -137,7 +137,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
             <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm">
               <div className="flex items-center gap-2 text-xs uppercase font-bold text-slate-500 dark:text-slate-400">
                 <Activity className="w-4 h-4 text-slate-600 dark:text-slate-300" />
-                Matches
+                {dict?.streaks?.matches || 'Matches'}
               </div>
               <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{totalMatches}</div>
             </div>
@@ -145,13 +145,13 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
             <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex justify-between items-center shadow-sm">
               <div>
                 <div className="text-xs uppercase font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Wins
+                  <CheckCircle2 className="w-3.5 h-3.5" /> {dict?.streaks?.wins || 'Wins'}
                 </div>
                 <div className="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-1">{wins}</div>
               </div>
               <div className="text-right">
                 <div className="text-xs uppercase font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1 justify-end">
-                  <XCircle className="w-3.5 h-3.5" /> Losses
+                  <XCircle className="w-3.5 h-3.5" /> {dict?.streaks?.losses || 'Losses'}
                 </div>
                 <div className="text-xl font-black text-rose-600 dark:text-rose-400 mt-1">{losses}</div>
               </div>
@@ -161,12 +161,12 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
           <div>
             <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4 flex items-center gap-2">
               <Trophy className={`w-4 h-4 ${accentClasses.trophy}`} />
-              Recent Match History
+              {dict?.streaks?.recentMatchHistory || 'Recent Match History'}
             </h3>
 
             {recentLogs.length === 0 ? (
               <div className="text-center py-8 text-slate-500 dark:text-slate-500 text-xs bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-200 dark:border-slate-800">
-                No matches logged yet. Complete your first match!
+                {dict?.streaks?.noMatchesLogged || 'No matches logged yet. Complete your first match!'}
               </div>
             ) : (
               <div className="space-y-2.5">
@@ -191,7 +191,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                           {log.triggered_by === 'inactivity' ? (
                             <div className="flex items-center gap-1 text-sm font-bold text-slate-500 dark:text-slate-400">
                               <Clock className="w-3.5 h-3.5" />
-                              Auto-loss, run was inactive
+                              {dict?.streaks?.autoLossInactive || 'Auto-loss, run was inactive'}
                             </div>
                           ) : (
                             renderLabel(log)

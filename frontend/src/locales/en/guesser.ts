@@ -1,3 +1,4 @@
+// frontend/src/locales/en/guesser.ts
 export default {
   "navLink": "Guesser",
   "title": "DBD Knowledge Guesser",
@@ -39,5 +40,18 @@ export default {
   "distortedPerkIcon": "Distorted perk icon hint",
   "perkIconChoice": "Perk Icon Choice",
   "escReturn": "Esc: Return",
-  "spaceContinue": "Space: Continue"
+  "spaceContinue": "Space: Continue",
+  "identityMode": "Identity Mode",
+  "redactedMode": "Redacted Mode",
+  "visualChoice": "Visual Choice",
+  "distortionMode": "Distortion Mode",
+  "communityJokes": "Community Jokes",
+  "realmsAndSeeds": "Realms & Seeds",
+  "mapGuesserWipDesc": "The entity is currently reconstructing mapping protocols for seeds, jungle gym vaults, loops, and totem spawning tiles. This module will allow players to guess spawn locations and structures in real-time. Check back later!",
+  "returnToDashboard": "Return to Dashboard",
+  "memeMode": "Meme Mode",
+  "grayscale": "Grayscale",
+  "croppedZoom": "Cropped Zoom",
+  "space": "Space"
 };
+

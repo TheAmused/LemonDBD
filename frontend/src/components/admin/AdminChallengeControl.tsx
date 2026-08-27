@@ -202,10 +202,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl backdrop-blur-sm">
         <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-300 mb-4">
           <Power className="h-4 w-4 text-rose-400" />
-          Challenge Mode Kill Switches
+          {dict?.admin?.challengeModeKillSwitches || 'Challenge Mode Kill Switches'}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {modes.map((setting) => (
+
             <div
               key={setting.mode}
               className={`rounded-xl border p-3.5 flex flex-col gap-2 ${
@@ -247,19 +248,21 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 subTab === 'killers' ? 'bg-amber-500/10 text-amber-400' : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              <Skull className="h-3.5 w-3.5" /> Characters
+              <Skull className="h-3.5 w-3.5" /> {dict?.admin?.characters || 'Characters'}
             </button>
             <button
               type="button"
+
               onClick={() => setSubTab('perks')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
                 subTab === 'perks' ? 'bg-amber-500/10 text-amber-400' : 'text-slate-500 hover:text-slate-300'
               }`}
             >
-              <Sparkles className="h-3.5 w-3.5" /> Perks
+              <Sparkles className="h-3.5 w-3.5" /> {dict?.admin?.perks || 'Perks'}
             </button>
           </div>
           <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 p-1">
+
             <button
               type="button"
               onClick={() => setRoleFilter('Survivor')}

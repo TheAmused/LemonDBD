@@ -29,8 +29,10 @@ export default function SmashOrPassPage() {
   const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
-    document.title = 'LemonDBD - Smash or Pass | Dead by Daylight Romance';
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => {
+      setDict(d);
+      document.title = (d?.app as any)?.smashOrPassPageTitle || 'LemonDBD - Smash or Pass | Dead by Daylight Romance';
+    });
   }, [locale]);
 
   useEffect(() => {

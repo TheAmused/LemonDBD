@@ -33,7 +33,7 @@ function ResetPasswordContent() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    document.title = 'LemonDBD - Reset Password';
+    document.title = dict?.app?.resetPasswordPageTitle || 'LemonDBD - Reset Password';
     getDictionary(locale).then(setDict);
   }, [locale]);
 

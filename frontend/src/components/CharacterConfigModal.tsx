@@ -150,10 +150,11 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
                 Configure {role} Character Roster
               </h2>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                Click character avatar buttons to toggle them in your Perk Randomizer pool.
+                {dict?.characterDetail?.configRosterDesc || 'Click character avatar buttons to toggle them in your Perk Randomizer pool.'}
               </p>
             </div>
           </div>
+
 
           <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
             <div className="relative flex-1 w-full">
@@ -212,10 +213,11 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
                 <Sparkles className="h-8 w-8 group-hover:scale-110 transition-transform" />
               </div>
               <span className="mt-1.5 text-[11px] font-extrabold text-amber-800 dark:text-amber-300 text-center truncate max-w-full">
-                General
+                {dict?.card?.general || dict?.filters?.generalOnly || 'General'}
               </span>
 
               <div
+
                 className={`absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border shadow-lg transition-transform ${
                   isGeneralSelected
                     ? 'border-amber-300 bg-amber-500 text-slate-950 font-bold scale-100'

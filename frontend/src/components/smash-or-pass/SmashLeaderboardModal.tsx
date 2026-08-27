@@ -376,7 +376,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={dict?.smashOrPass?.close || 'Close'}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />

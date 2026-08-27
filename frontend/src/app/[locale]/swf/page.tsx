@@ -27,7 +27,7 @@ export default function SwfPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - SWF Team Planner';
+    document.title = dict?.app?.swfPageTitle || 'LemonDBD - SWF Team Planner';
     getDictionary(locale).then(setDict);
   }, [locale]);
 
@@ -65,10 +65,11 @@ export default function SwfPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        Loading SWF Planner...
+        {dict?.app?.loadingSWFPlanner || 'Loading SWF Planner...'}
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">

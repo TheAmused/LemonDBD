@@ -1,3 +1,4 @@
+// frontend/src/locales/en/characterDetail.ts
 export default {
   "backToCharacters": "Back to Characters",
   "roleSurvivor": "Survivor",
@@ -130,5 +131,8 @@ export default {
   "hubSubtitle": "Explore Dead by Daylight Survivors & Killers. View character details, unique teachable perks, power add-ons, and equipment.",
   "hubNoMatchingCharacters": "No characters match your current filter or search query.",
   "togglePerkOwnershipHelp": "Click a perk to toggle whether you own it.",
-  "changesSaved": "Changes saved"
+  "changesSaved": "Changes saved",
+  "dismiss": "Dismiss",
+  "noTeachablePerksForCharacter": "No teachable perks for this character."
 };
+

@@ -117,10 +117,11 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                   {dict?.landing?.questsTitle || 'Trial Quests & Milestones'}
                 </h2>
                 <span className="rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">
-                  XP System
+                  {dict?.quests?.xpSystem || 'XP System'}
                 </span>
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+
                 {dict?.landing?.questsSubtitle || 'Complete daily and weekly trials to earn XP and level up your status.'}
               </p>
             </div>
@@ -185,10 +186,11 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             }`}
           >
             <Calendar className="h-3.5 w-3.5" />
-            Daily Quests
+            {dict?.quests?.dailyQuests || 'Daily Quests'}
           </button>
           <button
             type="button"
+
             onClick={() => setFilterCategory('weekly')}
             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
               filterCategory === 'weekly'
@@ -197,7 +199,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             }`}
           >
             <Flame className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
-            Weekly Quests
+            {dict?.quests?.weeklyQuests || 'Weekly Quests'}
           </button>
         </div>
 
@@ -210,10 +212,11 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             </div>
           ) : filteredQuests.length === 0 ? (
             <div className="py-8 text-center text-xs text-slate-500 dark:text-slate-400">
-              No quests found in this category.
+              {dict?.quests?.noQuestsFound || 'No quests found in this category.'}
             </div>
           ) : (
             filteredQuests.map((quest) => {
+
               const isReadyToClaim = quest.progress >= quest.goal && !quest.is_completed;
               const pct = Math.min(100, Math.round((quest.progress / quest.goal) * 100));
 
@@ -312,10 +315,11 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             onClick={onClose}
             className="px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
           >
-            Close
+            {dict?.modal?.close || 'Close'}
           </button>
         </div>
       </div>
+
     </div>
   );
 };

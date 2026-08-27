@@ -369,7 +369,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     </div>
                     <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                       <UserCheck className="h-3 w-3" />
-                      Verified
+                      {t.verified || 'Verified'}
                     </span>
                   </div>
                 ) : (

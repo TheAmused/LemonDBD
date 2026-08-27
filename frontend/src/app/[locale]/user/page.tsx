@@ -52,7 +52,7 @@ export default function UserProfilePage() {
   const [loadingReports, setLoadingReports] = useState(false);
 
   useEffect(() => {
-    document.title = 'LemonDBD - User Profile';
+    document.title = dict?.app?.userPageTitle || 'LemonDBD - User Profile';
     getDictionary(currentLocale).then(setDict);
   }, [currentLocale]);
 
@@ -188,13 +188,14 @@ export default function UserProfilePage() {
             <LemonIcon className="h-10 w-10 text-amber-400" />
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-wider font-mono text-slate-100">
-            Authentication Required
+            {dict?.user?.authRequiredTitle || 'Authentication Required'}
           </h1>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.
+            {dict?.user?.authRequiredDesc || 'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
           </p>
           <div className="flex flex-col gap-3 pt-2">
             <button
+
               type="button"
               onClick={() => setAuthModalOpen(true)}
               className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-red-600 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-amber-950/40 hover:from-amber-400 hover:to-red-500 transition-all cursor-pointer"
@@ -206,10 +207,11 @@ export default function UserProfilePage() {
               href={`/${currentLocale}`}
               className="text-xs text-slate-400 hover:text-amber-400 transition-colors py-1"
             >
-              Return to Home
+              {dict?.user?.returnToHome || 'Return to Home'}
             </Link>
           </div>
         </div>
+
         <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} dict={dict} />
       </div>
     );
@@ -336,10 +338,11 @@ export default function UserProfilePage() {
                 </div>
 
                 <p className="text-xs text-slate-400 pt-0.5">
-                  Active Player & LemonDBD Community Member
+                  {dict?.user?.activePlayerSubtitle || 'Active Player & LemonDBD Community Member'}
                 </p>
 
                 {user.role === 'admin' && (
+
                   <div className="pt-2">
                     <Link
                       href={`/${currentLocale}/admin`}
@@ -399,10 +402,11 @@ export default function UserProfilePage() {
 
                 <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-xl shadow-xl space-y-4 w-full">
                   <h2 className="text-base font-black uppercase tracking-wider text-slate-100 pb-2 border-b border-slate-800">
-                    Quick Shortcuts
+                    {dict?.user?.quickShortcuts || 'Quick Shortcuts'}
                   </h2>
 
                   <div className="space-y-2">
+
                     <Link
                       href={`/${currentLocale}/streaks`}
                       className="flex items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-xs font-bold text-slate-300 hover:border-orange-500/40 hover:bg-orange-500/10 hover:text-orange-400 transition-all group shadow-sm"

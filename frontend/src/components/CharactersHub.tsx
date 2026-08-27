@@ -311,10 +311,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 <Flame className="h-4 w-4" />
               </span>
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
-                Characters Hub
+                {dict?.characterDetail?.allCharacters || 'Characters Hub'}
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl">
+
               Explore Dead by Daylight Survivors &amp; Killers. View character details, unique teachable perks, power add-ons, and equipment.
             </p>
           </div>
@@ -437,10 +438,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             {dict?.empty?.title || 'No Characters Found'}
           </h2>
           <p className="mt-1 text-xs text-slate-500">
-            No characters match your current filter or search query.
+            {dict?.characterDetail?.hubNoMatchingCharacters || 'No characters match your current filter or search query.'}
           </p>
         </div>
       ) : (
+
         <section
           aria-label={dict?.characterDetail?.characterOverview || 'Characters Roster Grid'}
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
@@ -585,10 +587,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               </button>
             </div>
             <p className="px-5 pt-4 text-[11px] text-slate-500">
-              Click a perk to toggle whether you own it.
+              {dict?.characterDetail?.togglePerkOwnershipHelp || 'Click a perk to toggle whether you own it.'}
             </p>
             <div className="p-5 space-y-2">
               {allPerks
+
                 .filter((p) => p.character_id === perksPopupCharacter.id)
                 .map((perk) => {
                   const isUnlocked = perkUnlockDraft[perk.perk_id] ?? true;
@@ -627,10 +630,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 })}
               {allPerks.filter((p) => p.character_id === perksPopupCharacter.id).length === 0 && (
                 <p className="text-xs text-slate-500 italic">
-                  No teachable perks for this character.
+                  {dict?.characterDetail?.noTeachablePerksForCharacter || dict?.characterDetail?.noPerks || 'No teachable perks for this character.'}
                 </p>
               )}
             </div>
+
           </div>
         </div>
       )}
@@ -657,10 +661,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               disabled={ownershipSaving}
               className="px-5 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors disabled:opacity-60 cursor-pointer"
             >
-              Cancel
+              {dict?.admin?.cancel || dict?.modal?.close || 'Cancel'}
             </button>
             <button
               type="button"
+
               onClick={handleSaveOwnership}
               disabled={ownershipSaving}
               className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/30 hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
@@ -678,7 +683,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-extrabold text-white shadow-2xl shadow-emerald-900/50 ring-2 ring-emerald-400/50 animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <Check className="h-5 w-5" />
-          Changes saved
+          {dict?.characterDetail?.changesSaved || 'Changes saved'}
         </div>
       )}
 
@@ -699,17 +704,18 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             }}
             className="rounded-lg bg-white/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-white/30 transition-colors cursor-pointer"
           >
-            Verify email
+            {dict?.streaks?.verifyEmail || 'Verify email'}
           </button>
           <button
             type="button"
             onClick={() => setVerificationNoticeOpen(false)}
             className="text-[11px] font-black underline cursor-pointer"
           >
-            Dismiss
+            {dict?.characterDetail?.dismiss || dict?.modal?.close || 'Dismiss'}
           </button>
         </div>
       )}
+
 
       <DisabledReasonModal
         isOpen={disabledModalCharacter !== null}

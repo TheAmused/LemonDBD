@@ -348,7 +348,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               [ {activeMap?.realm || 'REALM'} • FLOOR {currentFloor} • VARIANT {currentSeed.toUpperCase()} ]
             </div>
             <div className="absolute bottom-3 right-4 text-[10px] font-mono text-amber-500/60 uppercase">
-              LemonDBD Tactical Engine v2.0
+              {dict?.maps?.tacticalEngineVersion || 'LemonDBD Tactical Engine v2.0'}
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-slate-800/40 rounded-full flex items-center justify-center opacity-30">
               <Compass className="w-16 h-16 text-slate-700" />

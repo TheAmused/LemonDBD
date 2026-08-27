@@ -280,10 +280,10 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono flex items-center gap-3">
               <Skull className="h-7 w-7 text-rose-500" />
-              Killer Add-on Stat Calculator & TR Radar
+              {dict?.app?.killerCalculatorPageTitle || 'Killer Add-on Stat Calculator & TR Radar'}
             </h1>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
-              Select a Killer, pair 2 Add-ons to calculate exact stat deltas (windup time, charge speed, power cooldowns), and toggle Terror Radius perks to view live 2D Radar circle dynamics.
+              {dict?.characterDetail?.terrorRadiusVisualizerDesc || 'Select a Killer, pair 2 Add-ons to calculate exact stat deltas (windup time, charge speed, power cooldowns), and toggle Terror Radius perks to view live 2D Radar circle dynamics.'}
             </p>
           </div>
         </div>
@@ -295,7 +295,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
         <div className="lg:col-span-5 space-y-4">
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl">
             <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2 mb-4">
-              <Skull className="h-4 w-4 text-rose-500 dark:text-rose-400" /> Select Killer
+              <Skull className="h-4 w-4 text-rose-500 dark:text-rose-400" /> {dict?.streaks?.pickYourKiller || 'Select Killer'}
             </h2>
 
             <div className="grid grid-cols-2 gap-2.5">
@@ -336,7 +336,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2">
-                <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400" /> Select 2 Add-ons
+                <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400" /> {dict?.characterDetail?.equipmentTitleKiller || 'Select 2 Add-ons'}
               </h2>
               <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full font-mono border border-slate-200 dark:border-slate-700">
                 {selectedAddonIds.length}/2 Selected
@@ -386,7 +386,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           {/* Terror Radius Perks & Options */}
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl">
             <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2 mb-4">
-              <ShieldAlert className="h-4 w-4 text-purple-500 dark:text-purple-400" /> TR Modifier Perks
+              <ShieldAlert className="h-4 w-4 text-purple-500 dark:text-purple-400" /> {dict?.characterDetail?.combatAttributes || 'TR Modifier Perks'}
             </h2>
 
             <div className="space-y-3">
@@ -493,7 +493,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2">
-                <Radio className="h-4 w-4 text-rose-500 animate-pulse" /> Interactive 2D Terror Radius Radar
+                <Radio className="h-4 w-4 text-rose-500 animate-pulse" /> {dict?.characterDetail?.terrorRadiusVisualizer || 'Interactive 2D Terror Radius Radar'}
               </h2>
               {calculationResult && (
                 <div className="flex items-center gap-3 text-xs font-mono">
@@ -542,7 +542,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           {/* Live Stat Delta Cards */}
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl space-y-4">
             <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2">
-              <Activity className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> Live Power Stat Deltas
+              <Activity className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> {dict?.characterDetail?.combatAttributes || 'Live Power Stat Deltas'}
             </h2>
 
             {calculationResult?.stat_deltas?.length > 0 ? (
@@ -595,7 +595,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
             {calculationResult?.terror_radius?.breakdown?.length > 0 && (
               <div className="mt-4 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2 shadow-inner">
                 <span className="text-[10px] font-extrabold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
-                  Terror Radius Modifier Breakdown
+                  {dict?.characterDetail?.terrorRadiusVisualizer || 'Terror Radius Modifier Breakdown'}
                 </span>
                 <div className="space-y-1 text-xs">
                   {calculationResult.terror_radius.breakdown.map((item: any, idx: number) => (

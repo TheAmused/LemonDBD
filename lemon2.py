@@ -2,7 +2,7 @@
 import re
 import sys
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 VALID_EXTENSIONS = {
     "py", "js", "ts", "jsx", "tsx", "json", "yaml", "yml",
@@ -83,13 +83,13 @@ def parse_header_target(header_text: str) -> Tuple[Optional[Path], Optional[Tupl
     """
     header_text = clean_text(header_text).strip()
     header_text = re.sub(r'^#+\s*', '', header_text).strip()
-    
+
     line_range: Optional[Tuple[int, int]] = None
 
     # Step 1: Normalize cases where line range is inside backticks like `file.ts:49-55` -> `file.ts`:49-55
     header_text = re.sub(r'`([^`:]+):(\d+(?:[-–—:]\d+)?)`', r'`\1`:\2', header_text)
 
-    # Step 2: Match line range suffix at the end
+    # Step 2: Match line range suffix at the end (fixed regex alternation)
     range_match = re.search(r'[:\s\(]+(?:lines?\vert{}l)?\s*(\d+)(?:\s*[-–—:]\s*(\d+))?\s*\)?\s*$', header_text, re.IGNORECASE)
     if range_match:
         start_l = int(range_match.group(1))
@@ -150,28 +150,6 @@ def add_dynamic_path_comment(file_path: Path, code_lines: list[str]) -> str:
     return "\n".join(lines_copy) + "\n"
 
 
-def apply_line_edit(file_path: Path, new_lines: list[str], line_range: Tuple[int, int]) -> bool:
-    """Replaces lines in start_line..end_line (1-indexed inclusive) with new_lines."""
-    if not file_path.exists():
-        print(f"❌ Error: Cannot apply partial edit. Target file does not exist: {file_path.resolve()}")
-        return False
-
-    existing_content = file_path.read_text(encoding="utf-8")
-    lines = existing_content.splitlines()
-
-    start_line, end_line = line_range
-    start_idx = max(0, start_line - 1)
-    end_idx = min(len(lines), end_line)
-
-    updated_lines = lines[:start_idx] + new_lines + lines[end_idx:]
-    result_content = "\n".join(updated_lines)
-    if existing_content.endswith("\n"):
-        result_content += "\n"
-
-    file_path.write_text(result_content, encoding="utf-8")
-    return True
-
-
 def parse_and_create_ascii_trees(content: str) -> int:
     tree_lines = content.splitlines()
     i = 0
@@ -228,6 +206,42 @@ def parse_and_create_ascii_trees(content: str) -> int:
     return created_items
 
 
+def apply_batched_line_edits(file_path: Path, edits: List[Tuple[Tuple[int, int], List[str]]]) -> int:
+    """Applies multiple line edits to a file in reverse line-number order to prevent index drift."""
+    if not file_path.exists():
+        print(f"❌ Error: Target file does not exist: {file_path.resolve()}")
+        return 0
+
+    existing_content = file_path.read_text(encoding="utf-8")
+    lines = existing_content.splitlines()
+
+    # Sort edits descending by start_line (bottom-to-top)
+    sorted_edits = sorted(edits, key=lambda x: x[0][0], reverse=True)
+
+    # Check for overlapping ranges
+    for i in range(len(sorted_edits) - 1):
+        curr_range = sorted_edits[i][0]
+        prev_range = sorted_edits[i + 1][0]
+        if prev_range[1] >= curr_range[0]:
+            print(f"⚠️ Warning: Overlapping line ranges detected in {file_path.name}: Lines {prev_range} and {curr_range}")
+
+    applied = 0
+    for (start_line, end_line), new_lines in sorted_edits:
+        start_idx = max(0, start_line - 1)
+        end_idx = min(len(lines), end_line)
+
+        lines[start_idx:end_idx] = new_lines
+        print(f"✏️ LINES EDITED -> {file_path.resolve()} (Lines {start_line}-{end_line})")
+        applied += 1
+
+    result_content = "\n".join(lines)
+    if existing_content.endswith("\n"):
+        result_content += "\n"
+
+    file_path.write_text(result_content, encoding="utf-8")
+    return applied
+
+
 def process_ai_output(content: str):
     content = clean_text(content)
 
@@ -237,11 +251,12 @@ def process_ai_output(content: str):
     parse_and_create_ascii_trees(content)
 
     print("\n" + "=" * 70)
-    print("STEP 2: Extracting code blocks & applying edits...")
+    print("STEP 2: Extracting code blocks & batching edits...")
     print("=" * 70)
+
     lines = content.splitlines()
-    written_count = 0
-    edited_count = 0
+    full_files: Dict[Path, List[str]] = {}
+    line_edits: Dict[Path, List[Tuple[Tuple[int, int], List[str]]]] = {}
 
     current_filepath: Optional[Path] = None
     current_range: Optional[Tuple[int, int]] = None
@@ -266,27 +281,37 @@ def process_ai_output(content: str):
             else:
                 in_code_block = False
                 if current_filepath:
-                    current_filepath.parent.mkdir(parents=True, exist_ok=True)
-
                     if current_range:
-                        success = apply_line_edit(current_filepath, code_lines, current_range)
-                        if success:
-                            print(f"[LINE {line_num:03d}] ✏️ LINES EDITED  -> {current_filepath.resolve()} (Lines {current_range[0]}-{current_range[1]})\n")
-                            edited_count += 1
+                        line_edits.setdefault(current_filepath, []).append((current_range, list(code_lines)))
                     else:
-                        code_to_write = add_dynamic_path_comment(current_filepath, code_lines)
-                        with open(current_filepath, "w", encoding="utf-8") as f:
-                            f.write(code_to_write)
-                        print(f"[LINE {line_num:03d}] ✅ FULL FILE SAVED -> {current_filepath.resolve()} ({len(code_lines)} lines)\n")
-                        written_count += 1
+                        full_files[current_filepath] = list(code_lines)
 
-                    current_filepath = None
-                    current_range = None
+                current_filepath = None
+                current_range = None
 
         elif in_code_block:
             code_lines.append(line)
 
+    print("\n" + "=" * 70)
+    print("STEP 3: Applying full files and batched edits...")
     print("=" * 70)
+
+    # 1. Full file replacements
+    written_count = 0
+    for path, code in full_files.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        code_to_write = add_dynamic_path_comment(path, code)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(code_to_write)
+        print(f"✅ FULL FILE SAVED -> {path.resolve()} ({len(code)} lines)")
+        written_count += 1
+
+    # 2. Batched partial line edits (applied bottom-to-top)
+    edited_count = 0
+    for path, edits in line_edits.items():
+        edited_count += apply_batched_line_edits(path, edits)
+
+    print("\n" + "=" * 70)
     print(f"SUMMARY: Wrote {written_count} full file(s), applied {edited_count} targeted line edit(s).")
     print("=" * 70 + "\n")
 

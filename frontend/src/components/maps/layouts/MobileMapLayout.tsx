@@ -303,7 +303,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
             <div className="flex-1 overflow-y-auto p-4 space-y-6 min-h-0">
               <div>
                 <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 font-mono">
-                  Map Directory
+                  {dict?.maps?.mapDirectory || 'Map Directory'}
                 </h3>
                 <MapDirectoryList
                   groupedMaps={groupedMaps}

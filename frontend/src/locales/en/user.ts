@@ -1,3 +1,4 @@
+// frontend/src/locales/en/user.ts
 export default {
   "profileTitle": "User Profile & Account",
   "profileSubtitle": "Manage your profile, tracked stats, character ownership, and bug reports.",
@@ -37,5 +38,20 @@ export default {
   "sendResetLink": "Send Reset Link",
   "adminDemo": "Admin (lemon)",
   "userDemo": "User (user)",
-  "verifyEmailRequired": "Verify your email to manage your character collection."
+  "verifyEmailRequired": "Verify your email to manage your character collection.",
+  "authRequiredTitle": "Authentication Required",
+  "authRequiredDesc": "Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.",
+  "returnToHome": "Return to Home",
+  "activePlayerSubtitle": "Active Player & LemonDBD Community Member",
+  "quickShortcuts": "Quick Shortcuts",
+  "accountCreatedVerificationSent": "Account created! We sent a verification code to {email}.",
+  "usernameOrEmailLabel": "Username or Email",
+  "emailLabel": "Email Address",
+  "passwordLabel": "Password",
+  "quickDemoAccounts": "Quick Demo Accounts",
+  "backToSignIn": "Back to Sign In",
+  "alreadyHaveAccount": "Already have an account?",
+  "dontHaveAccount": "Don't have an account?",
+  "register": "Register"
 };
+

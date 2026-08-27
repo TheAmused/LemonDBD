@@ -106,7 +106,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={dict?.modal?.close || 'Close'}
             className="rounded-full p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
@@ -118,7 +118,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 font-mono">
               <Laptop className="h-3.5 w-3.5 text-cyan-500" />
-              Detected Browser
+              {dict?.maps?.detectedBrowser || 'Detected Browser'}
             </span>
             <span className="rounded-full bg-slate-200/80 dark:bg-slate-800 px-2.5 py-0.5 text-xs font-bold text-slate-800 dark:text-slate-200 font-mono">
               {browserName}
@@ -128,7 +128,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
           <div className="flex items-center justify-between pt-1">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 font-mono">
               <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-              Active Recognition Engine
+              {dict?.maps?.activeRecognitionEngine || 'Active Recognition Engine'}
             </span>
             <span
               className={`rounded-full px-2.5 py-0.5 text-xs font-black font-mono border ${

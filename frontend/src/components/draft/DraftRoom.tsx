@@ -319,7 +319,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                   }
                   className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer shadow-sm"
                 >
-                  Next Phase →
+                  {dict?.guesser?.next || 'Next Phase →'}
                 </button>
               )}
             </div>

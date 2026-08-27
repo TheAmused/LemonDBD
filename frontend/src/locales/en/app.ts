@@ -1,3 +1,4 @@
+// frontend/src/locales/en/app.ts
 export default {
   "title": "LemonDBD",
   "syncWiki": "Sync Wiki Data",
@@ -22,5 +23,13 @@ export default {
   "streaksPageTitle": "LemonDBD - Challenges",
   "swfPageTitle": "LemonDBD - SWF Team Planner",
   "userPageTitle": "LemonDBD - User Profile",
-  "homePageTitle": "LemonDBD - Dead by Daylight Companion"
+  "homePageTitle": "LemonDBD - Dead by Daylight Companion",
+  "loading": "Loading...",
+  "loadingLemonDBD": "Loading LemonDBD...",
+  "loadingCharactersHub": "Loading Characters Hub...",
+  "loadingSmashOrPass": "Loading Smash or Pass...",
+  "loadingSWFPlanner": "Loading SWF Planner...",
+  "loadingQuests": "Loading Quests...",
+  "notice": "Notice"
 };
+

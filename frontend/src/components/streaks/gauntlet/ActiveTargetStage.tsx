@@ -254,7 +254,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               disabled={loading}
               className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-lg py-4 px-10 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
             >
-              START GAME
+              {dict?.streaks?.startGame || 'START GAME'}
             </button>
           </>
         )}
@@ -297,13 +297,13 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               )}
             </div>
             <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full whitespace-nowrap tracking-wider shadow-sm">
-              TARGET
+              {dict?.streaks?.target || 'TARGET'}
             </span>
           </div>
 
           <div>
             <div className="text-xs uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 mb-1">
-              Active Gauntlet Target
+              {dict?.streaks?.activeGauntletTarget || 'Active Gauntlet Target'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               {targetName}
@@ -343,13 +343,12 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-            Your build for this match
+            {dict?.streaks?.yourBuildForMatch || 'Your build for this match'}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Pick these in-game. Nothing to confirm here.
+            {dict?.streaks?.pickTheseInGame || 'Pick these in-game. Nothing to confirm here.'}
           </p>
         </div>
-
         {charactersPerksOnly && perkLimit === 0 && (
           <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
             No perks this trial. {targetName} goes in bare.
@@ -430,7 +429,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                     </div>
                   ) : (
                     <p className="text-xs text-slate-400 dark:text-slate-500 italic">
-                      No teachable perks on record for this character.
+                      {dict?.streaks?.noTeachablePerks || 'No teachable perks on record for this character.'}
                     </p>
                   )}
                 </div>

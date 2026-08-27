@@ -9,15 +9,17 @@ export interface PageStreakStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: PageStreakStats | null;
+  dict?: any;
 }
 
-export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats }) => (
+export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (
   <StreakStatsDrawer<PageStreakMatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    title="Page Streak"
+    title={dict?.streaks?.pageStreak || 'Page Streak'}
     accent="orange"
     stats={stats}
+    dict={dict}
     renderLabel={(log) => (
       <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer}</div>
     )}

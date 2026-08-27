@@ -96,7 +96,7 @@ export default function DraftPage() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <Suspense fallback={<div className="p-8 text-center text-slate-400">Loading Draft Room...</div>}>
+        <Suspense fallback={<div className="p-8 text-center text-slate-400">{dict?.draft?.loadingDraft || dict?.characterDetail?.loading || 'Loading...'}</div>}>
           <DraftContent locale={locale} dict={dict} />
         </Suspense>
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />

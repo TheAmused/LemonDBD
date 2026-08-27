@@ -11,6 +11,7 @@ interface AdminHeaderProps {
   onOpenDbMaintenance: (tab?: 'export' | 'import' | 'purge') => void;
   onTriggerSync: () => void;
   onRefreshData: () => void;
+  dict?: any;
 }
 
 export const AdminHeader: React.FC<AdminHeaderProps> = ({
@@ -20,6 +21,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   onOpenDbMaintenance,
   onTriggerSync,
   onRefreshData,
+  dict,
 }) => {
   const pgAdminUrl =
     (process.env.NEXT_PUBLIC_PGADMIN_URL && process.env.NEXT_PUBLIC_PGADMIN_URL.trim() !== '')
@@ -48,39 +50,39 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         <button
           type="button"
           onClick={() => onOpenDbMaintenance('export')}
-          title="Export Database JSON Backup"
+          title={dict?.admin?.exportBackupTitle || 'Export Database JSON Backup'}
           className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
         >
           <Download className="h-3.5 w-3.5 text-blue-400" />
-          <span className="hidden md:inline">Export</span>
+          <span className="hidden md:inline">{dict?.admin?.export || 'Export'}</span>
         </button>
 
         <button
           type="button"
           onClick={() => onOpenDbMaintenance('import')}
-          title="Restore Database JSON Backup"
+          title={dict?.admin?.importBackupTitle || 'Restore Database JSON Backup'}
           className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
         >
           <Upload className="h-3.5 w-3.5 text-emerald-400" />
-          <span className="hidden md:inline">Import</span>
+          <span className="hidden md:inline">{dict?.admin?.import || 'Import'}</span>
         </button>
 
         <a
           href={pgAdminUrl}
           target="_blank"
           rel="noopener noreferrer"
-          title="Open pgAdmin Web Management (PostgreSQL DB Manager)"
+          title={dict?.admin?.pgAdminTitle || 'Open pgAdmin Web Management (PostgreSQL DB Manager)'}
           className="flex items-center justify-center gap-2 rounded-xl border border-indigo-500/40 bg-indigo-950/40 hover:bg-indigo-900/60 px-3.5 py-2 text-xs font-bold text-indigo-300 hover:text-white hover:border-indigo-400 transition-all cursor-pointer shadow-sm flex-1 sm:flex-initial"
         >
           <Database className="h-3.5 w-3.5 text-indigo-400" />
-          <span>pgAdmin (DB)</span>
+          <span>{dict?.admin?.pgAdmin || 'pgAdmin (DB)'}</span>
         </a>
 
         <button
           type="button"
           onClick={onTriggerSync}
           disabled={isSyncing}
-          title="Execute Data Scraper and Database Seed"
+          title={dict?.admin?.runScraperTitle || 'Execute Data Scraper and Database Seed'}
           className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-red-950/30 transition-all cursor-pointer disabled:opacity-60 flex-1 sm:flex-initial"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
@@ -90,11 +92,11 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         <button
           type="button"
           onClick={onRefreshData}
-          title="Refresh metrics"
+          title={dict?.admin?.refreshTitle || 'Refresh metrics'}
           className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-          <span className="hidden sm:inline">Refresh</span>
+          <span className="hidden sm:inline">{dict?.admin?.refresh || 'Refresh'}</span>
         </button>
 
         {process.env.NEXT_PUBLIC_UMAMI_URL && (
@@ -102,11 +104,11 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             href={process.env.NEXT_PUBLIC_UMAMI_URL}
             target="_blank"
             rel="noopener noreferrer"
-            title="Open the Umami analytics dashboard (page views, feature usage)"
+            title={dict?.admin?.analyticsTitle || 'Open the Umami analytics dashboard (page views, feature usage)'}
             className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
           >
             <LineChart className="h-3.5 w-3.5 text-cyan-400" />
-            <span className="hidden md:inline">Analytics</span>
+            <span className="hidden md:inline">{dict?.admin?.analytics || 'Analytics'}</span>
           </a>
         )}
       </div>

@@ -9,6 +9,7 @@ export interface VariantSwitcherBarProps {
   activeMapName: string;
   onSelectVariant: (variantName: string) => void;
   className?: string;
+  dict?: any;
 }
 
 export const VariantSwitcherBar: React.FC<VariantSwitcherBarProps> = ({
@@ -16,6 +17,7 @@ export const VariantSwitcherBar: React.FC<VariantSwitcherBarProps> = ({
   activeMapName,
   onSelectVariant,
   className = '',
+  dict,
 }) => {
   if (!variants || variants.length <= 1) {
     return null;
@@ -31,13 +33,13 @@ export const VariantSwitcherBar: React.FC<VariantSwitcherBarProps> = ({
   return (
     <div
       role="group"
-      aria-label="Map Realm Variants"
+      aria-label={dict?.maps?.mapVariantsAria || 'Map Realm Variants'}
       className={`flex flex-wrap items-center gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 dark:bg-amber-950/20 p-2.5 backdrop-blur-sm shadow-sm ${className}`}
       data-testid="variant-switcher-bar"
     >
       <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 pl-1 pr-2 select-none">
         <Layers className="h-3.5 w-3.5" />
-        <span>Map Variants:</span>
+        <span>{dict?.maps?.mapVariants || 'Map Variants:'}</span>
       </div>
       <div className="flex flex-wrap items-center gap-1.5">
         {variants.map((v) => {

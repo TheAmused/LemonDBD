@@ -13,12 +13,14 @@ interface AdminCreateUserModalProps {
     password: string;
     role: 'user' | 'admin';
   }) => Promise<void>;
+  dict?: any;
 }
 
 export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  dict,
 }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -82,7 +84,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="e.g. killer_master"
+              placeholder={dict?.admin?.createUserUsernamePlaceholder || 'e.g. killer_master'}
               className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none shadow-inner"
             />
           </div>
@@ -96,7 +98,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. master@lemondbd.com"
+              placeholder={dict?.admin?.createUserEmailPlaceholder || 'e.g. master@lemondbd.com'}
               className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none shadow-inner"
             />
           </div>
@@ -110,7 +112,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Minimum 3 characters"
+              placeholder={dict?.admin?.createUserPasswordPlaceholder || 'Minimum 3 characters'}
               className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none shadow-inner"
             />
           </div>
@@ -124,8 +126,8 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               onChange={(e) => setRole(e.target.value as 'user' | 'admin')}
               className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2 px-3 text-xs text-slate-100 focus:border-amber-500 focus:outline-none shadow-inner cursor-pointer [&>option]:bg-slate-900 [&>option]:text-slate-100"
             >
-              <option value="user">Standard User (Player)</option>
-              <option value="admin">Administrator (Full Control)</option>
+              <option value="user">{dict?.admin?.roleStandard || 'Standard User (Player)'}</option>
+              <option value="admin">{dict?.admin?.roleAdministrator || 'Administrator (Full Control)'}</option>
             </select>
           </div>
 
@@ -148,7 +150,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               ) : (
                 <>
                   <UserPlus className="h-3.5 w-3.5" />
-                  <span>Create Account</span>
+                  <span>{dict?.admin?.createAccount || 'Create Account'}</span>
                 </>
               )}
             </button>

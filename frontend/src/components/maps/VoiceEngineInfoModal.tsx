@@ -15,6 +15,7 @@ import {
   Laptop,
   Flame,
   Volume2,
+  DownloadCloud,
 } from 'lucide-react';
 import type { VoiceEngineType, ModelProgressInfo } from '@/services/clientSpeechModel';
 
@@ -177,7 +178,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
 
             <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-slate-500 font-mono">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" />
-              <span>Chrome &bull; Edge &bull; Safari</span>
+              <span>{dict?.maps?.chromeEdgeSafari || 'Chrome • Edge • Safari'}</span>
             </div>
           </div>
 
@@ -209,7 +210,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
 
             <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 font-mono">
               <ShieldCheck className="h-3.5 w-3.5" />
-              <span>Universal &bull; Private &bull; In-Browser</span>
+              <span>{dict?.maps?.universalPrivateInBrowser || 'Universal • Private • In-Browser'}</span>
             </div>
           </div>
         </div>
@@ -226,27 +227,27 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
           </p>
         </div>
 
-        {/* Model Download & Storage Status */}
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4 space-y-3">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-extrabold uppercase tracking-wider text-slate-500 font-mono">
-              Local Model Status
-            </span>
-            <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
-              {modelProgress.status === 'ready'
-                ? t.statusReady || 'Ready in Browser Cache'
-                : modelProgress.status === 'downloading'
-                ? `${t.statusDownloading || 'Downloading'}: ${modelProgress.progress}%`
-                : 'Not Loaded'}
+        {/* Client Model Download Box */}
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <DownloadCloud className="h-4 w-4 text-emerald-500" />
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 font-mono">
+                {modelProgress.status === 'downloading'
+                  ? (t.downloadProgress || 'Downloading Model: {progress}%').replace('{progress}', String(modelProgress.progress))
+                  : modelProgress.status === 'ready'
+                  ? (t.statusReady || 'Model Ready in Memory')
+                  : 'AI Model Cache (~39MB)'}
+              </span>
+            </div>
+            <span className="text-[10px] font-mono font-bold text-slate-500">
+              {modelProgress.progress}%
             </span>
           </div>
 
-          {/* Progress Bar */}
-          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+          <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
             <div
-              style={{
-                width: `${modelProgress.status === 'ready' ? 100 : modelProgress.progress}%`,
-              }}
+              style={{ width: `${modelProgress.progress}%` }}
               className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300 rounded-full"
             />
           </div>
@@ -263,7 +264,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
                 className="flex items-center gap-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 transition-colors cursor-pointer font-mono"
               >
                 <RefreshCw className="h-3 w-3" />
-                <span>Preload Model</span>
+                <span>{dict?.maps?.preloadModel || 'Preload Model'}</span>
               </button>
             )}
           </div>

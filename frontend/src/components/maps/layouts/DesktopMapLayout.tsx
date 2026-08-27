@@ -60,6 +60,7 @@ export interface DesktopMapLayoutProps {
 
   onLaunchFullscreen?: () => void;
   onPopoutImage?: (url: string, title: string) => void;
+  dict?: any;
 }
 
 export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
@@ -88,6 +89,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
   canvasHandlers,
   onLaunchFullscreen,
   onPopoutImage,
+  dict,
 }) => {
   const [isLegendOpen, setIsLegendOpen] = useState<boolean>(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
@@ -144,8 +146,8 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                 <Search className="absolute left-3.5 top-2.5 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                 <input
                   type="text"
-                  placeholder="Search map or realm..."
-                  aria-label="Search map or realm"
+                  placeholder={dict?.maps?.searchPlaceholder || 'Search map or realm...'}
+                  aria-label={dict?.maps?.searchAria || 'Search map or realm'}
                   value={search}
                   onChange={(e) => onSearchChange(e.target.value)}
                   className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 pl-9 pr-8 py-1.5 text-xs font-semibold text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-cyan-500 focus:outline-none min-h-[36px] shadow-inner"
@@ -155,7 +157,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                   <button
                     type="button"
                     onClick={() => onSearchChange('')}
-                    aria-label="Clear search input"
+                    aria-label={dict?.maps?.clearSearchAria || 'Clear search input'}
                     className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                   >
                     <X className="h-3.5 w-3.5" />
@@ -165,7 +167,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
 
               <div
                 role="group"
-                aria-label="Map Provider Source"
+                aria-label={dict?.maps?.providerAria || 'Map Provider Source'}
                 className="flex w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 p-1"
               >
                 <button
@@ -180,7 +182,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                   data-testid="desktop-map-source-hens333"
                 >
                   <Clock className="h-3 w-3" />
-                  <span>Hens333</span>
+                  <span>{'Hens333'}</span>
                 </button>
                 <button
                   type="button"
@@ -194,7 +196,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                   data-testid="desktop-map-source-samoelcolt"
                 >
                   <Layers className="h-3 w-3" />
-                  <span>SamoelColt</span>
+                  <span>{'SamoelColt'}</span>
                 </button>
                 <button
                   type="button"
@@ -208,14 +210,14 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                   data-testid="desktop-map-source-all"
                 >
                   <Sparkles className="h-3 w-3" />
-                  <span>All</span>
+                  <span>{dict?.maps?.all || 'All'}</span>
                 </button>
               </div>
             </div>
 
             <div
               role="group"
-              aria-label="Realm Filters"
+              aria-label={dict?.maps?.realmFiltersAria || 'Realm Filters'}
               className="flex items-center gap-1.5 overflow-x-auto p-2.5 border-b border-slate-200 dark:border-slate-800/80 scrollbar-thin shrink-0 bg-slate-50/40 dark:bg-slate-950/20"
             >
               <button
@@ -298,26 +300,26 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
               <button
                 type="button"
                 onClick={onLaunchFullscreen}
-                aria-label="Launch 2D Interactive Engine"
+                aria-label={dict?.maps?.launch2DEngine || 'Launch 2D Interactive Engine'}
                 className="flex items-center gap-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-3 py-1.5 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/20 transition-all cursor-pointer min-h-[34px] shadow-sm active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
                 data-testid="desktop-map-fullscreen-btn"
-                title="Launch 2D Interactive Engine"
+                title={dict?.maps?.launch2DEngine || 'Launch 2D Interactive Engine'}
               >
                 <Maximize2 className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">2D Engine</span>
+                <span className="hidden sm:inline">{dict?.maps?.twoDEngine || '2D Engine'}</span>
               </button>
             )}
             {onPopoutImage && activeMap && (
               <button
                 type="button"
                 onClick={() => onPopoutImage(getMapImageSrc(activeMap), activeMap.name)}
-                aria-label="Popout Map Image in New Window"
+                aria-label={dict?.maps?.popoutAria || 'Popout Map Image in New Window'}
                 className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-all cursor-pointer min-h-[34px] shadow-sm active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
                 data-testid="desktop-map-popout-btn"
-                title="Popout Map Image in New Window"
+                title={dict?.maps?.popoutAria || 'Popout Map Image in New Window'}
               >
                 <ExternalLink className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Popout</span>
+                <span className="hidden sm:inline">{dict?.maps?.popout || 'Popout'}</span>
               </button>
             )}
           </div>
@@ -328,6 +330,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
           activeMapName={activeMap?.name || ''}
           onSelectVariant={onSelectVariant}
           className="m-3 mb-0 shrink-0"
+          dict={dict}
         />
 
         <div className="relative flex-1 w-full min-h-0 overflow-hidden flex items-center justify-center bg-slate-900/10 dark:bg-slate-950/80">
@@ -338,6 +341,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
             transformStyle={transformStyle}
             isDragging={isDragging}
             className="h-full w-full rounded-none border-0 max-h-none"
+            dict={dict}
             {...canvasHandlers}
           />
 
@@ -356,6 +360,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
               }
               showPresets={true}
               layoutMode="horizontal"
+              dict={dict}
             />
           </div>
         </div>
@@ -369,6 +374,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
           onToggle={() => setIsLegendOpen((prev) => !prev)}
           collapsible={true}
           className="border-t border-slate-200/90 dark:border-slate-800/80 rounded-none rounded-b-3xl shrink-0"
+          dict={dict}
         />
       </main>
     </div>

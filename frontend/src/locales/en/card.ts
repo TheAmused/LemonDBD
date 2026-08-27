@@ -1,4 +1,6 @@
 export default {
   "general": "General Perk",
-  "viewDetails": "Inspect Perk"
+  "viewDetails": "Inspect Perk",
+  "vaultTotal": "Vault Total",
+  "ownedPerks": "Owned Perks"
 };

@@ -54,6 +54,7 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   renderLabel: (log: TLog) => React.ReactNode;
   /** Secondary line under the label, e.g. "Streak: 3 -> 4" or "Attempt 2, Page 3". */
   renderMeta: (log: TLog) => React.ReactNode;
+  dict?: any;
 }
 
 /**
@@ -71,6 +72,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
   stats,
   renderLabel,
   renderMeta,
+  dict,
 }: StreakStatsDrawerProps<TLog>) {
   useEffect(() => {
     if (!isOpen) return;
@@ -101,12 +103,15 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
               <BarChart2 className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">{title} Statistics</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Match summary and historical performance</p>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">{title} {dict?.streaks?.stats || 'Statistics'}</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {dict?.streaks?.matchSummary || 'Match summary and historical performance'}
+              </p>
             </div>
           </div>
           <button
             onClick={onClose}
+            aria-label={dict?.modal?.close || 'Close'}
             className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />

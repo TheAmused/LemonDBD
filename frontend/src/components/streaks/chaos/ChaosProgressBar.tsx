@@ -8,6 +8,7 @@ export interface ChaosProgressBarProps {
   lastCheckpointStreak: number;
   checkpointInterval: number;
   totalKillers: number;
+  dict?: any;
 }
 
 export const ChaosProgressBar: React.FC<ChaosProgressBarProps> = ({
@@ -15,6 +16,7 @@ export const ChaosProgressBar: React.FC<ChaosProgressBarProps> = ({
   lastCheckpointStreak,
   checkpointInterval,
   totalKillers,
+  dict,
 }) => {
   if (totalKillers <= 0) return null;
 
@@ -31,7 +33,9 @@ export const ChaosProgressBar: React.FC<ChaosProgressBarProps> = ({
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-1.5 text-xs">
-        <span className="font-bold text-slate-700 dark:text-slate-300">Run progress</span>
+        <span className="font-bold text-slate-700 dark:text-slate-300">
+          {dict?.streaks?.runProgress || 'Run progress'}
+        </span>
         <span className="text-slate-500 dark:text-slate-400 font-mono">
           {currentStreak} / {totalKillers} killers cleared
         </span>

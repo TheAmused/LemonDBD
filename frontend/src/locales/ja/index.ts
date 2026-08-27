@@ -13,6 +13,13 @@ import voice from './voice';
 import characterDetail from './characterDetail';
 import sidebar from './sidebar';
 import smashOrPass from './smashOrPass';
+import user from './user';
+import swf from './swf';
+import draft from './draft';
+import streaks from './streaks';
+import builds from './builds';
+import admin from './admin';
+import maps from './maps';
 
 const ja: Dictionary = {
   app,
@@ -29,6 +36,13 @@ const ja: Dictionary = {
   characterDetail,
   sidebar,
   smashOrPass,
+  user,
+  swf,
+  draft,
+  streaks,
+  builds,
+  admin,
+  maps,
 };
 
 export default ja;

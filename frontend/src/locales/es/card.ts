@@ -1,4 +1,6 @@
 export default {
   "general": "Habilidad General",
-  "viewDetails": "Inspeccionar"
+  "viewDetails": "Inspeccionar",
+  "vaultTotal": "Total en Bóveda",
+  "ownedPerks": "Perks Desbloqueados"
 };

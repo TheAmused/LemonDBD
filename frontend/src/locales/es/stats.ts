@@ -8,5 +8,7 @@ export default {
   "totalXpClaimed": "XP Total Reclamado",
   "completed": "Completado",
   "streak": "Racha",
-  "win": "derrotado"
+  "win": "derrotado",
+  "vaultTotal": "Total en Bóveda",
+  "ownedPerks": "Perks Desbloqueados"
 };

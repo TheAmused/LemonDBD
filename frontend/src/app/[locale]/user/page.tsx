@@ -172,7 +172,9 @@ export default function UserProfilePage() {
       <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs">
         <div className="flex flex-col items-center gap-3">
           <LemonIcon className="h-10 w-10 animate-bounce" />
-          <p className="text-amber-400">Loading profile...</p>
+          <p className="text-amber-400">
+            {dict?.characterDetail?.loading || 'Loading profile...'}
+          </p>
         </div>
       </div>
     );
@@ -198,7 +200,7 @@ export default function UserProfilePage() {
               className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-red-600 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-amber-950/40 hover:from-amber-400 hover:to-red-500 transition-all cursor-pointer"
             >
               <User className="h-4 w-4" />
-              <span>Sign In / Register</span>
+              <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
             </button>
             <Link
               href={`/${currentLocale}`}
@@ -208,7 +210,7 @@ export default function UserProfilePage() {
             </Link>
           </div>
         </div>
-        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} dict={dict} />
       </div>
     );
   }
@@ -263,7 +265,7 @@ export default function UserProfilePage() {
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploadingAvatar}
-                    title="Upload Custom Avatar"
+                    title={dict?.user?.changeAvatar || 'Upload Custom Avatar'}
                     className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs cursor-pointer"
                   >
                     <Camera className="h-6 w-6 drop-shadow-md" />
@@ -278,18 +280,18 @@ export default function UserProfilePage() {
                     className="flex items-center gap-1 rounded-lg border border-slate-700 bg-slate-800/80 px-2.5 py-1 text-[10px] font-bold text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer shadow-xs"
                   >
                     <Upload className="h-3 w-3 text-amber-500" />
-                    <span>Change</span>
+                    <span>{dict?.user?.changeAvatar || 'Change'}</span>
                   </button>
                   {(hasCustomAvatar || optimisticPreview) && (
                     <button
                       type="button"
                       onClick={handleResetAvatar}
                       disabled={isUploadingAvatar}
-                      title="Reset to default icon"
+                      title={dict?.user?.removeAvatar || 'Reset to default icon'}
                       className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-950/40 px-2.5 py-1 text-[10px] font-bold text-rose-400 hover:bg-rose-900/60 transition-colors cursor-pointer shadow-xs"
                     >
                       <Trash2 className="h-3 w-3" />
-                      <span>Reset</span>
+                      <span>{dict?.user?.removeAvatar || 'Reset'}</span>
                     </button>
                   )}
                 </div>
@@ -344,7 +346,7 @@ export default function UserProfilePage() {
                       className="inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/30 bg-red-600/10 px-4 py-2.5 text-xs font-bold text-red-400 hover:bg-red-600/20 transition-colors shadow-lg w-full sm:w-auto"
                     >
                       <Crown className="h-4 w-4" />
-                      <span>Admin Control Center</span>
+                      <span>{dict?.sidebar?.adminPanel || 'Admin Control Center'}</span>
                       <ChevronRight className="h-3.5 w-3.5" />
                     </Link>
                   </div>
@@ -353,7 +355,7 @@ export default function UserProfilePage() {
             </div>
           </div>
 
-          {/* Subtabs Switcher */}
+              {/* Subtabs Switcher */}
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-800 pb-2">
             <button
               type="button"
@@ -365,7 +367,7 @@ export default function UserProfilePage() {
               }`}
             >
               <User className="h-4 w-4" />
-              <span>Overview & Settings</span>
+              <span>{dict?.user?.tabOverview || 'Overview & Settings'}</span>
             </button>
 
             <button
@@ -378,7 +380,7 @@ export default function UserProfilePage() {
               }`}
             >
               <Bug className="h-4 w-4" />
-              <span>My Bug Reports ({myReports.length})</span>
+              <span>{dict?.user?.tabBugReports || 'My Bug Reports'} ({myReports.length})</span>
             </button>
           </div>
 
@@ -391,6 +393,7 @@ export default function UserProfilePage() {
                   <UserProfileForm
                     initialEmail={user.email || ''}
                     onRefreshUser={refreshUser}
+                    dict={dict}
                   />
                 </div>
 
@@ -406,7 +409,7 @@ export default function UserProfilePage() {
                     >
                       <div className="flex items-center gap-2.5">
                         <Repeat className="h-4 w-4 text-orange-400" />
-                        <span>Challenges</span>
+                        <span>{dict?.sidebar?.streaks || 'Challenges'}</span>
                       </div>
                       <ChevronRight className="h-4 w-4 text-slate-600 group-hover:text-orange-400 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
@@ -417,7 +420,7 @@ export default function UserProfilePage() {
                     >
                       <div className="flex items-center gap-2.5">
                         <Dices className="h-4 w-4 text-amber-400" />
-                        <span>Perk Randomizer</span>
+                        <span>{dict?.sidebar?.generator || 'Perk Randomizer'}</span>
                       </div>
                       <ChevronRight className="h-4 w-4 text-slate-600 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
@@ -428,7 +431,7 @@ export default function UserProfilePage() {
                     >
                       <div className="flex items-center gap-2.5">
                         <Compass className="h-4 w-4 text-cyan-400" />
-                        <span>Map Explorer</span>
+                        <span>{dict?.sidebar?.maps || 'Map Explorer'}</span>
                       </div>
                       <ChevronRight className="h-4 w-4 text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
@@ -441,6 +444,7 @@ export default function UserProfilePage() {
               reports={myReports}
               loading={loadingReports}
               onOpenReportModal={() => setBugModalOpen(true)}
+              dict={dict}
             />
           )}
         </div>
@@ -452,6 +456,7 @@ export default function UserProfilePage() {
           setBugModalOpen(false);
           fetchMyReports();
         }}
+        dict={dict}
       />
     </div>
   );

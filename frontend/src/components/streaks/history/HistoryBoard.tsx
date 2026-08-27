@@ -22,9 +22,10 @@ import { Perk } from '@/types/gauntletStreak';
 
 interface HistoryBoardProps {
   locale: string;
+  dict?: any;
 }
 
-export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
+export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
   const searchParams = useSearchParams();
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
@@ -83,7 +84,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        <span>Back to killer streaks</span>
+        <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>
       </Link>
 
       <div className="mt-4">

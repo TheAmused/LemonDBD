@@ -28,6 +28,7 @@ interface FullscreenMapEngineProps {
   onClose: () => void;
   availableMaps?: MapRealm[];
   onSelectMapId?: (id: string) => void;
+  dict?: any;
 }
 
 export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
@@ -35,6 +36,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   onClose,
   availableMaps = [],
   onSelectMapId,
+  dict,
 }) => {
   const [currentMapId, setCurrentMapId] = useState<string>(mapId);
   const [activeMap, setActiveMap] = useState<MapRealm | null>(null);
@@ -209,7 +211,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="2D Fullscreen Map Engine"
+      aria-label={dict?.maps?.fullscreenEngineAria || '2D Fullscreen Map Engine'}
       className="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden select-none text-slate-100"
     >
       <header className="absolute top-0 inset-x-0 z-40 p-4 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent backdrop-blur-md flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/50">
@@ -220,7 +222,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 font-bold text-xs flex items-center gap-2 transition-all shadow-md cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
           >
             <X className="w-4 h-4 text-amber-500" />
-            <span>Close Engine</span>
+            <span>{dict?.modal?.close || 'Close Engine'}</span>
           </button>
 
           {activeMap && (
@@ -231,7 +233,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                   <select
                     value={activeMap.id}
                     onChange={(e) => handleSelectMap(e.target.value)}
-                    aria-label="Select Realm Map"
+                    aria-label={dict?.maps?.searchAria || 'Select Realm Map'}
                     className="bg-slate-900 border border-slate-800 text-amber-400 text-xs font-bold rounded-lg px-2 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
                   >
                     {availableMaps.map((m) => (
@@ -252,10 +254,10 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         <div className="flex items-center gap-3">
           <div
             role="group"
-            aria-label="Map Variant Selector"
+            aria-label={dict?.maps?.mapVariantSelectorAria || 'Map Variant Selector'}
             className="flex items-center bg-slate-900/90 border border-slate-800 p-1 rounded-xl shadow-inner"
           >
-            <span className="text-[10px] font-mono uppercase text-slate-500 px-2 font-bold">Variant:</span>
+            <span className="text-[10px] font-mono uppercase text-slate-500 px-2 font-bold">{dict?.maps?.variant || 'Variant:'}</span>
             {['seed_a', 'seed_b', 'seed_c'].map((seedKey, idx) => {
               const label = `Seed ${String.fromCharCode(65 + idx)}`;
               const isActive = currentSeed === seedKey;
@@ -279,10 +281,10 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
 
           <div
             role="group"
-            aria-label="Floor Selector"
+            aria-label={dict?.maps?.floorSelectorAria || 'Floor Selector'}
             className="flex items-center bg-slate-900/90 border border-slate-800 p-1 rounded-xl shadow-inner"
           >
-            <span className="text-[10px] font-mono uppercase text-slate-500 px-2 font-bold">Floor:</span>
+            <span className="text-[10px] font-mono uppercase text-slate-500 px-2 font-bold">{dict?.maps?.floor || 'Floor:'}</span>
             {[1, 2].map((fl) => {
               const isActive = currentFloor === fl;
               return (
@@ -297,7 +299,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  Floor {fl}
+                  {dict?.maps?.floor ? `${dict?.maps?.floor.replace(':', '')} ${fl}` : `Floor ${fl}`}
                 </button>
               );
             })}
@@ -321,7 +323,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       >
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:32px_32px]" />
         <div className="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
-
         {loading && (
           <div
             aria-live="polite"
@@ -329,7 +330,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           >
             <div className="flex flex-col items-center gap-3">
               <Compass className="w-10 h-10 text-amber-500 animate-spin" style={{ animationDuration: '3s' }} />
-              <span className="text-xs font-bold text-slate-300">Rendering Tactical Map Layout...</span>
+              <span className="text-xs font-bold text-slate-300">{dict?.maps?.renderingLayout || 'Rendering Tactical Map Layout...'}</span>
             </div>
           </div>
         )}
@@ -454,7 +455,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       <footer className="absolute bottom-6 inset-x-6 z-40 flex flex-col md:flex-row items-center justify-between gap-4 pointer-events-none">
         <div
           role="group"
-          aria-label="Map Layer Toggles"
+          aria-label={dict?.maps?.layerTogglesAria || 'Map Layer Toggles'}
           className="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-2 rounded-2xl backdrop-blur-xl shadow-2xl overflow-x-auto max-w-full"
         >
           <div className="px-2 text-[10px] font-mono uppercase text-slate-500 font-bold flex items-center gap-1">
@@ -472,7 +473,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
             }`}
           >
-            <span>🪵 Pallets</span>
+            <span>🪵 {dict?.maps?.pallets || 'Pallets'}</span>
           </button>
 
           <button
@@ -485,7 +486,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
             }`}
           >
-            <span>🪟 Windows</span>
+            <span>🪟 {dict?.maps?.windows || 'Windows'}</span>
           </button>
 
           <button
@@ -499,7 +500,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             }`}
           >
             <Skull className="w-3.5 h-3.5" />
-            <span>Totems</span>
+            <span>{dict?.maps?.totems || 'Totems'}</span>
           </button>
 
           <button
@@ -513,7 +514,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             }`}
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Gens</span>
+            <span>{dict?.maps?.gens || 'Gens'}</span>
           </button>
 
           <button
@@ -527,7 +528,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             }`}
           >
             <DoorOpen className="w-3.5 h-3.5" />
-            <span>Gates &amp; Hatch</span>
+            <span>{dict?.maps?.gatesHatch || 'Gates & Hatch'}</span>
           </button>
 
           <button
@@ -541,7 +542,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             }`}
           >
             <Shield className="w-3.5 h-3.5" />
-            <span>Tiles</span>
+            <span>{dict?.maps?.tiles || 'Tiles'}</span>
           </button>
 
           <button
@@ -555,21 +556,21 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Callouts</span>
+            <span>{dict?.maps?.callouts || 'Callouts'}</span>
           </button>
         </div>
 
         <div
           role="toolbar"
-          aria-label="Engine Zoom and Reset Controls"
+          aria-label={dict?.maps?.engineControlsAria || 'Engine Zoom and Reset Controls'}
           className="pointer-events-auto flex items-center gap-2 bg-slate-900/90 border border-slate-800 p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
         >
           <button
             type="button"
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.1))}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title="Zoom Out"
-            aria-label="Zoom Out"
+            title={dict?.maps?.zoomOut || 'Zoom Out'}
+            aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
           >
             <ZoomOut className="w-4 h-4" />
           </button>
@@ -582,8 +583,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             type="button"
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title="Zoom In"
-            aria-label="Zoom In"
+            title={dict?.maps?.zoomIn || 'Zoom In'}
+            aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
           >
             <ZoomIn className="w-4 h-4" />
           </button>
@@ -594,8 +595,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             type="button"
             onClick={handleResetView}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title="Reset Pan & Zoom"
-            aria-label="Reset Pan and Zoom"
+            title={dict?.maps?.resetPanZoom || 'Reset Pan & Zoom'}
+            aria-label={dict?.maps?.resetPanAndZoomAria || 'Reset Pan and Zoom'}
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -606,6 +607,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         selectedItem={selectedInspectorItem}
+        dict={dict}
       />
     </div>
   );

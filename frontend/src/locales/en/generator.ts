@@ -39,5 +39,9 @@ export default {
   "spinOrRollPrompt": "Spin the wheel or click roll to draw your perk",
   "cursedBlindness": "Cursed Blindness",
   "clickToReveal": "Click to Reveal",
-  "rollCompleteLoadout": "Roll 4-Perk Loadout"
+  "rollCompleteLoadout": "Roll 4-Perk Loadout",
+  "selectRole": "Select Role",
+  "generatorMode": "Generator Mode",
+  "resetAllTooltip": "Reset wheels, loadout slots, and memory",
+  "clearSlotTooltip": "Clear slot"
 };

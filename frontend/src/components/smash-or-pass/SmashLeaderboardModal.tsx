@@ -44,6 +44,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   locale = 'en',
   dict,
 }) => {
+  const t = dict?.smashOrPass || {};
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'monster_other'>('all');
@@ -475,7 +476,9 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         {/* Filter Pills Bar 2: Tier Pills & View Mode */}
         <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-zinc-800/80 bg-zinc-950/80 shrink-0 text-xs font-bold font-mono overflow-x-auto">
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-[10px] text-zinc-500 uppercase tracking-wider pl-1">Tier:</span>
+            <span className="text-[10px] text-zinc-500 uppercase tracking-wider pl-1">
+              {t.tierFilterLabel || 'Tier:'}
+            </span>
             <button
               type="button"
               onClick={() => setTierFilter('all')}

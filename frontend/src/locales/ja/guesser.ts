@@ -26,6 +26,18 @@ export default {
   "modeMapDesc": "マップ構造や生成パターンを当てます。",
   "modeMemesTitle": "DBDミーム推測",
   "modeMemesDesc": "コミュニティで有名なミームクイズに挑戦します。",
-  "reset": "連続記録をリセット",
-  "streakResetSuccess": "連続記録をリセットしました"
+  "reset": "ストリークをリセット",
+  "streakResetSuccess": "ストリークを正常にリセットしました",
+  "soundOn": "サウンド オン",
+  "soundOff": "サウンド オフ",
+  "best": "ベスト:",
+  "streak": "ストリーク",
+  "wip": "開発中",
+  "charAvatarHint": "キャラクターアバターのヒント",
+  "redacted": "黒塗り (高ストリーク)",
+  "blurred": "ぼかし (中ストリーク)",
+  "distortedPerkIcon": "歪んだパークアイコンのヒント",
+  "perkIconChoice": "パークアイコンの選択肢",
+  "escReturn": "Esc: 戻る",
+  "spaceContinue": "Space: 次へ"
 };

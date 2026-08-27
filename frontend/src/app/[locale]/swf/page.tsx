@@ -89,7 +89,7 @@ export default function SwfPage() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <Suspense fallback={<div className="p-8 text-center text-slate-400">Loading SWF Team Planner...</div>}>
+        <Suspense fallback={<div className="p-8 text-center text-slate-400">{dict?.swf?.loadingSwf || dict?.characterDetail?.loading || 'Loading...'}</div>}>
           <SwfPlanner dict={dict} />
         </Suspense>
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />

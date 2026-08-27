@@ -260,7 +260,7 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
             className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-red-900/30 hover:from-red-500 hover:to-red-600 transition-all cursor-pointer shrink-0"
           >
             <Plus className="h-4 w-4" />
-            <span>Submit Build</span>
+            <span>{dict?.builds?.submitBuild || 'Submit Build'}</span>
           </button>
         </div>
       </div>
@@ -296,20 +296,26 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by title, description, character, author, or perk..."
+              placeholder={dict?.builds?.searchPlaceholder || 'Search by title, description, character, author, or perk...'}
               className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 pl-10 pr-4 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 transition-colors shadow-sm"
             />
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Sort By:</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              {dict?.filters?.sortFields || 'Sort By:'}
+            </span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-200 focus:border-red-500 focus:outline-none cursor-pointer shadow-sm"
             >
-              <option value="upvotes" className="dark:bg-slate-900">🔥 Most Upvoted</option>
-              <option value="newest" className="dark:bg-slate-900">✨ Newest First</option>
+              <option value="upvotes" className="dark:bg-slate-900">
+                🔥 {dict?.filters?.mostUpvoted || 'Most Upvoted'}
+              </option>
+              <option value="newest" className="dark:bg-slate-900">
+                ✨ {dict?.filters?.newestFirst || 'Newest First'}
+              </option>
             </select>
           </div>
         </div>
@@ -328,7 +334,9 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
       ) : builds.length === 0 ? (
         <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center">
           <Flame className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">No Builds Found</h3>
+          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">
+            {dict?.empty?.title || 'No Builds Found'}
+          </h3>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             Try adjusting your search criteria or submit a new custom loadout!
           </p>
@@ -438,18 +446,20 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                     {/* Copy Build Button */}
                     <button
                       onClick={() => handleCopyBuild(build)}
-                      title="Copy loadout text"
+                      title={dict?.builds?.copyLoadout || 'Copy loadout text'}
                       className="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shadow-sm"
                     >
                       {copiedBuildId === build.id ? (
                         <>
                           <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                          <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Copied</span>
+                          <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
+                            {dict?.builds?.copied || 'Copied'}
+                          </span>
                         </>
                       ) : (
                         <>
                           <Copy className="h-3.5 w-3.5" />
-                          <span className="text-[11px]">Copy</span>
+                          <span className="text-[11px]">{dict?.builds?.copy || 'Copy'}</span>
                         </>
                       )}
                     </button>
@@ -457,11 +467,11 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                     {/* Share Modal Button */}
                     <button
                       onClick={() => setShareBuild(build)}
-                      title="Shareable Build Card & QR Code"
+                      title={dict?.builds?.shareCard || 'Shareable Build Card & QR Code'}
                       className="flex items-center gap-1 rounded-xl bg-red-600/10 border border-red-500/20 px-2.5 py-1.5 text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-600/20 transition-all cursor-pointer shadow-sm"
                     >
                       <Share2 className="h-3.5 w-3.5" />
-                      <span className="text-[11px]">Share</span>
+                      <span className="text-[11px]">{dict?.builds?.share || 'Share'}</span>
                     </button>
                   </div>
                 </div>
@@ -493,8 +503,12 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                 <Plus className="h-4 w-4" />
               </span>
               <div>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Submit Custom Build</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Share your custom loadout with the community</p>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                  {dict?.builds?.submitTitle || 'Submit Custom Build'}
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {dict?.builds?.submitSubtitle || 'Share your custom loadout with the community'}
+                </p>
               </div>
             </div>
 
@@ -506,11 +520,13 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
 
             <form onSubmit={handleSubmitBuild} className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Build Title *</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  {dict?.builds?.buildTitle || 'Build Title *'}
+                </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Enduring Spirit Nurse"
+                  placeholder={dict?.builds?.buildTitlePlaceholder || 'e.g. Enduring Spirit Nurse'}
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
@@ -518,10 +534,12 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Description</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  {dict?.builds?.description || 'Description'}
+                </label>
                 <textarea
                   rows={2}
-                  placeholder="Briefly explain the strategy or perk interactions..."
+                  placeholder={dict?.builds?.descriptionPlaceholder || 'Briefly explain the strategy or perk interactions...'}
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                   className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none resize-none"
@@ -530,39 +548,49 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Role *</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    {dict?.builds?.role || 'Role *'}
+                  </label>
                   <select
                     value={newRole}
                     onChange={(e) => setNewRole(e.target.value as 'survivor' | 'killer')}
                     className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-200 focus:border-red-500 focus:outline-none"
                   >
-                    <option value="survivor" className="dark:bg-slate-900">🛡️ Survivor</option>
-                    <option value="killer" className="dark:bg-slate-900">💀 Killer</option>
+                    <option value="survivor" className="dark:bg-slate-900">
+                      🛡️ {dict?.generator?.survivor || 'Survivor'}
+                    </option>
+                    <option value="killer" className="dark:bg-slate-900">
+                      💀 {dict?.generator?.killer || 'Killer'}
+                    </option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Category *</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    {dict?.builds?.category || 'Category *'}
+                  </label>
                   <select
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
                     className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-semibold text-slate-900 dark:text-slate-200 focus:border-red-500 focus:outline-none capitalize"
                   >
-                    <option value="meta" className="dark:bg-slate-900">Meta</option>
-                    <option value="otzdarva" className="dark:bg-slate-900">Otzdarva Recommended</option>
-                    <option value="meme" className="dark:bg-slate-900">Meme</option>
-                    <option value="stealth" className="dark:bg-slate-900">Stealth</option>
-                    <option value="chase" className="dark:bg-slate-900">Chase</option>
+                    <option value="meta" className="dark:bg-slate-900">{dict?.builds?.meta || 'Meta'}</option>
+                    <option value="otzdarva" className="dark:bg-slate-900">{dict?.builds?.otzdarva || 'Otzdarva Recommended'}</option>
+                    <option value="meme" className="dark:bg-slate-900">{dict?.builds?.meme || 'Meme'}</option>
+                    <option value="stealth" className="dark:bg-slate-900">{dict?.builds?.stealth || 'Stealth'}</option>
+                    <option value="chase" className="dark:bg-slate-900">{dict?.builds?.chase || 'Chase'}</option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Target Character</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    {dict?.builds?.targetCharacter || 'Target Character'}
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g. Huntress or Meg"
+                    placeholder={dict?.builds?.targetCharacterPlaceholder || 'e.g. Huntress or Meg'}
                     value={newCharacter}
                     onChange={(e) => setNewCharacter(e.target.value)}
                     className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
@@ -570,10 +598,12 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Author Name</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                    {dict?.builds?.authorName || 'Author Name'}
+                  </label>
                   <input
                     type="text"
-                    placeholder="Your username"
+                    placeholder={dict?.builds?.authorNamePlaceholder || 'Your username'}
                     value={newAuthor}
                     onChange={(e) => setNewAuthor(e.target.value)}
                     className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
@@ -582,32 +612,34 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Loadout Perks (4 Slots) *</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  {dict?.builds?.loadoutPerks || 'Loadout Perks (4 Slots) *'}
+                </label>
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="text"
-                    placeholder="Perk 1 (e.g. Sprint Burst)"
+                    placeholder={dict?.builds?.perk1Placeholder || 'Perk 1 (e.g. Sprint Burst)'}
                     value={newPerk1}
                     onChange={(e) => setNewPerk1(e.target.value)}
                     className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                   <input
                     type="text"
-                    placeholder="Perk 2 (e.g. Adrenaline)"
+                    placeholder={dict?.builds?.perk2Placeholder || 'Perk 2 (e.g. Adrenaline)'}
                     value={newPerk2}
                     onChange={(e) => setNewPerk2(e.target.value)}
                     className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                   <input
                     type="text"
-                    placeholder="Perk 3 (e.g. Resilience)"
+                    placeholder={dict?.builds?.perk3Placeholder || 'Perk 3 (e.g. Resilience)'}
                     value={newPerk3}
                     onChange={(e) => setNewPerk3(e.target.value)}
                     className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
                   />
                   <input
                     type="text"
-                    placeholder="Perk 4 (e.g. Windows of Opportunity)"
+                    placeholder={dict?.builds?.perk4Placeholder || 'Perk 4 (e.g. Windows of Opportunity)'}
                     value={newPerk4}
                     onChange={(e) => setNewPerk4(e.target.value)}
                     className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-1.5 text-xs font-medium text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-600 focus:border-red-500 focus:outline-none"
@@ -657,8 +689,12 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                 <Share2 className="h-4 w-4" />
               </span>
               <div>
-                <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">Share Build Card</h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Scan QR code or copy link to share</p>
+                <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+                  {dict?.builds?.shareModalTitle || 'Share Build Card'}
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {dict?.builds?.shareModalSubtitle || 'Scan QR code or copy link to share'}
+                </p>
               </div>
             </div>
 
@@ -705,7 +741,7 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
               <div className="shrink-0 bg-white p-1.5 rounded-xl border border-slate-200 dark:border-none shadow-sm">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(shareUrl)}`}
-                  alt="Build QR Code"
+                  alt={dict?.builds?.qrAlt || 'Build QR Code'}
                   className="h-24 w-24 object-contain"
                 />
               </div>
@@ -713,7 +749,7 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                   <QrCode className="h-3.5 w-3.5 text-red-500 dark:text-red-400" />
-                  <span>Scan with mobile device</span>
+                  <span>{dict?.builds?.scanMobile || 'Scan with mobile device'}</span>
                 </div>
 
                 <button
@@ -723,12 +759,14 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                   {copiedShareLink ? (
                     <>
                       <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span className="text-emerald-600 dark:text-emerald-400">Link Copied!</span>
+                      <span className="text-emerald-600 dark:text-emerald-400">
+                        {dict?.builds?.linkCopied || 'Link Copied!'}
+                      </span>
                     </>
                   ) : (
                     <>
                       <Copy className="h-3.5 w-3.5" />
-                      <span>Copy Share Link</span>
+                      <span>{dict?.builds?.copyShareLink || 'Copy Share Link'}</span>
                     </>
                   )}
                 </button>

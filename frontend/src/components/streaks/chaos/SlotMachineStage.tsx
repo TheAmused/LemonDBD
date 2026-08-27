@@ -138,6 +138,7 @@ export interface SlotMachineStageProps {
   onPullLever: () => void;
   loading?: boolean;
   locked?: boolean;
+  dict?: any;
 }
 
 export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
@@ -147,6 +148,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   onPullLever,
   loading = false,
   locked = false,
+  dict,
 }) => {
   const { spinToken, start, reportLanded } = useSlotReels(4);
   const [leverPulled, setLeverPulled] = useState(false);
@@ -224,7 +226,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                 <RarityBadge rarity={addonRarities[1]} visible={hasSpunThisBuild} />
               </div>
             ) : (
-              <p className="text-lg sm:text-xl font-black leading-tight text-violet-100">Pull the lever!</p>
+              <p className="text-lg sm:text-xl font-black leading-tight text-violet-100">
+                {dict?.streaks?.pullTheLever || 'Pull the lever!'}
+              </p>
             )}
           </div>
         </div>
@@ -236,22 +240,23 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         }`}
       >
         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-        <span>Loading...</span>
+        <span>{dict?.common?.loading || 'Loading...'}</span>
       </div>
     </div>
   );
 };
 
-const SlotLever: React.FC<{ pulled: boolean; disabled: boolean; onPull: () => void }> = ({
+const SlotLever: React.FC<{ pulled: boolean; disabled: boolean; onPull: () => void; label?: string }> = ({
   pulled,
   disabled,
   onPull,
+  label = 'Pull the lever',
 }) => (
   <button
     type="button"
     onClick={onPull}
     disabled={disabled}
-    aria-label="Pull the lever"
+    aria-label={label}
     className="group relative flex flex-col items-center pb-1 disabled:opacity-50 cursor-pointer"
   >
     <div

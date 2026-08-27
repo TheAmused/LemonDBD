@@ -26,6 +26,18 @@ export default {
   "modeMapDesc": "Pon a prueba tu conocimiento visual de reinos, semillas, estructuras y generadores.",
   "modeMemesTitle": "Adivino de Memes de DBD",
   "modeMemesDesc": "Adivina los chistes y nombres de los memes populares de la comunidad de DBD.",
-  "reset": "Reiniciar Racha",
-  "streakResetSuccess": "Racha reiniciada con éxito"
+  "reset": "Restablecer Racha",
+  "streakResetSuccess": "Racha restablecida con éxito",
+  "soundOn": "Sonido Activado",
+  "soundOff": "Sonido Desactivado",
+  "best": "Mejor:",
+  "streak": "Racha",
+  "wip": "En desarrollo",
+  "charAvatarHint": "Pista del avatar del personaje",
+  "redacted": "Censurado (Racha alta)",
+  "blurred": "Borroso (Racha media)",
+  "distortedPerkIcon": "Pista de icono de perk distorsionado",
+  "perkIconChoice": "Opción de icono de perk",
+  "escReturn": "Esc: Volver",
+  "spaceContinue": "Espacio: Continuar"
 };

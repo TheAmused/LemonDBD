@@ -7,12 +7,14 @@ export interface GauntletModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectOriginal: () => void;
+  dict?: any;
 }
 
 export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
   isOpen,
   onClose,
   onSelectOriginal,
+  dict,
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -34,7 +36,9 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-black text-slate-900 dark:text-white">Choose a Gauntlet Mode</h2>
+          <h2 className="text-xl font-black text-slate-900 dark:text-white">
+            {dict?.streaks?.chooseGauntletMode || 'Choose a Gauntlet Mode'}
+          </h2>
           <button
             onClick={onClose}
             className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
@@ -49,7 +53,9 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
             className="group flex flex-col items-start gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 p-5 text-left transition-colors cursor-pointer"
           >
             <Swords className="w-6 h-6 text-amber-500" />
-            <span className="font-bold text-slate-900 dark:text-white">Original</span>
+            <span className="font-bold text-slate-900 dark:text-white">
+              {dict?.streaks?.original || 'Original'}
+            </span>
             <span className="text-xs text-slate-500 dark:text-slate-400">
               The classic Gauntlet: a build guide drawn from each character's own perks, escalating tiers.
             </span>
@@ -57,8 +63,12 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
 
           <div className="flex flex-col items-start gap-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/30 p-5 opacity-70">
             <Lock className="w-6 h-6 text-slate-400" />
-            <span className="font-bold text-slate-500 dark:text-slate-400">Lemon version</span>
-            <span className="text-xs text-slate-400 dark:text-slate-500">Coming soon.</span>
+            <span className="font-bold text-slate-500 dark:text-slate-400">
+              {dict?.streaks?.lemonVersion || 'Lemon version'}
+            </span>
+            <span className="text-xs text-slate-400 dark:text-slate-500">
+              {dict?.streaks?.comingSoon || 'Coming soon.'}
+            </span>
           </div>
         </div>
       </div>

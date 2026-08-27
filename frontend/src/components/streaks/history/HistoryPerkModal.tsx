@@ -39,34 +39,28 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
           <img
             src={src}
             alt={perk.name}
-            className="w-full h-full object-contain p-1.5"
+            className="w-full h-full object-contain filter drop-shadow-md"
             onError={() => setFailed(true)}
           />
         ) : (
-          <Sparkles className="w-6 h-6 text-slate-400" />
+          <Sparkles className="w-5 h-5 text-emerald-400" />
         )}
       </div>
-      <span
-        className={`text-[11px] font-medium text-center leading-tight line-clamp-2 transition-colors duration-500 ${
-          isRevealed ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-500 dark:text-slate-500 opacity-60'
-        }`}
-        style={delay}
-      >
+      <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate w-full text-center">
         {perk.name}
       </span>
 
       {!isUnlocked && (
         <div
-          className={`absolute inset-0 flex items-center justify-center bg-slate-950/25 dark:bg-slate-950/45 transition-opacity ${
-            phase === 'breaking' ? 'opacity-0 duration-300' : ''
+          className={`absolute inset-0 bg-slate-950/60 flex items-center justify-center transition-opacity duration-300 ${
+            phase === 'breaking' ? 'opacity-0' : 'opacity-100'
           }`}
-          style={delay}
         >
           <div
-            className={`flex h-7 w-7 items-center justify-center rounded-full bg-slate-800/90 border border-slate-500/60 shadow-md ${
+            className={`p-1.5 rounded-full bg-slate-900 border border-slate-700 ${
               phase === 'shaking' ? 'history-lock-shake' : ''
-            } ${phase === 'breaking' ? 'history-lock-break' : ''}`}
-            style={phase === 'shaking' || phase === 'breaking' ? animationDelay : undefined}
+            }`}
+            style={animationDelay}
           >
             <Lock className="w-3.5 h-3.5 text-slate-300" />
           </div>
@@ -80,9 +74,10 @@ export interface HistoryPerkModalProps {
   killerName: string | null;
   perks: Perk[];
   onClose: () => void;
+  dict?: any;
 }
 
-export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose }) => {
+export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose, dict }) => {
   const [phase, setPhase] = useState<LockPhase>('locked');
 
   useEffect(() => {
@@ -116,11 +111,15 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
           <PartyPopper className="h-8 w-8" />
         </div>
 
-        <h2 className="text-xl font-black tracking-tight text-white">{killerName} beaten!</h2>
-        <p className="mt-1 text-xs text-slate-400 uppercase tracking-wider font-bold">Perks unlocked</p>
+        <h2 className="text-xl font-black tracking-tight text-white">{killerName} {dict?.stats?.win || 'beaten'}!</h2>
+        <p className="mt-1 text-xs text-slate-400 uppercase tracking-wider font-bold">
+          {dict?.streaks?.perksUnlocked || 'Perks unlocked'}
+        </p>
 
         {perks.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-300">No new perks this time.</p>
+          <p className="mt-4 text-sm text-slate-300">
+            {dict?.streaks?.noNewPerks || 'No new perks this time.'}
+          </p>
         ) : (
           <div className="mt-4 grid grid-cols-3 gap-2.5">
             {perks.map((perk, i) => (
@@ -133,7 +132,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
           onClick={onClose}
           className="mt-6 w-full rounded-xl bg-emerald-500 py-3 text-sm font-extrabold text-slate-950 shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-400 cursor-pointer"
         >
-          Keep going
+          {dict?.generator?.continueButton || 'Continue'}
         </button>
       </div>
     </div>

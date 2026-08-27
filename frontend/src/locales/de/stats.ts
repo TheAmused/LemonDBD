@@ -8,5 +8,7 @@ export default {
   "totalXpClaimed": "Gesamt XP Eingelöst",
   "completed": "Abgeschlossen",
   "streak": "Streak",
-  "win": "besiegt"
+  "win": "besiegt",
+  "vaultTotal": "Tresor Gesamt",
+  "ownedPerks": "Besessene Perks"
 };

@@ -89,7 +89,7 @@ export default function BuildsPage() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <Suspense fallback={<div className="p-8 text-center text-slate-400">Loading Build Vault...</div>}>
+        <Suspense fallback={<div className="p-8 text-center text-slate-400">{dict?.characterDetail?.loading || 'Loading...'}</div>}>
           <BuildVault dict={dict} currentLocale={locale} />
         </Suspense>
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />

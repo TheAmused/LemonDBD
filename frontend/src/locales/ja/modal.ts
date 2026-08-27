@@ -6,5 +6,16 @@ export default {
   "slugCopied": "クリップボードにコピーしました！",
   "perkDescription": "パーク説明",
   "generalPerk": "共通パーク",
-  "alias": "別名"
+  "alias": "別名",
+  "clickToInspectPerk": "クリックしてパークを確認",
+  "clickToInspect": "クリックして詳細な仕様を確認",
+  "killerPerk": "キラーパーク",
+  "survivorPerk": "サバイバーパーク",
+  "unownedPerk": "未所持のパーク",
+  "equipment": "装備",
+  "clickOutsideToClose": "Escキーまたは外側をクリックして閉じる",
+  "temporarilyDisabled": "一時的に無効化",
+  "whyDisabled": "なぜ {item} は無効化されているのですか？",
+  "wasDisabledTemporarily": "{item} は一時的に無効化されています。",
+  "reasonLabel": "理由"
 };

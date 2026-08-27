@@ -791,7 +791,7 @@ export function VoiceCommandBanner({
 
   return (
     <section
-      aria-label="Voice Map Navigation Engine"
+      aria-label={dict?.maps?.voiceEngineAria || 'Voice Map Navigation Engine'}
       className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-white/95 dark:bg-slate-900/90 p-4 sm:p-5 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-cyan-950/20 dark:shadow-cyan-950/40 transition-all duration-300 ${className}`}
     >
       <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl" />
@@ -858,7 +858,7 @@ export function VoiceCommandBanner({
         <div className="flex flex-wrap items-center gap-2">
           <div
             role="group"
-            aria-label="Map Provider Source"
+            aria-label={dict?.maps?.providerAria || 'Map Provider Source'}
             className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 p-0.5"
           >
             <span className="px-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
@@ -1148,7 +1148,7 @@ export function VoiceCommandBanner({
       {disambiguationVariants.length > 0 && (
         <div className="relative z-10 mt-2.5 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 text-xs font-black text-cyan-800 dark:text-cyan-300 font-mono">
-            <span>Variants:</span>
+            <span>{dict?.maps?.variants || 'Variants:'}</span>
           </div>
 
           <div className="flex flex-wrap gap-1.5">

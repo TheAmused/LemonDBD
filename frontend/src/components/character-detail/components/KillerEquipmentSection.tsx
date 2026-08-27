@@ -91,7 +91,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
                   item,
                   rect,
                   accentColor: 'text-rose-400',
-                  category: item.category || 'Killer Addon',
+                  category: item.category || t.killerPower || 'Killer Addon',
                 });
               }}
               onMouseLeave={() => setActiveHover(null)}
@@ -112,7 +112,12 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
       </div>
 
       {/* Unified Hover Modal */}
-      <UnifiedHoverModal activeHover={activeHover} placement="above" t={t} />
+      <UnifiedHoverModal
+        activeHover={activeHover}
+        placement="above"
+        t={t}
+        actionPrompt={t.clickAddonForDetails || t.clickToInspect || 'Click add-on for details'}
+      />
     </section>
   );
 };

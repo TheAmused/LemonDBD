@@ -155,10 +155,14 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
     item.category === 'Survivor' ||
     ('role' in item && typeof item.role === 'string' && item.role.toLowerCase() === 'survivor');
 
+  const perkBadgeText = isSurvivor
+    ? t.survivorPerk || 'Survivor Perk'
+    : t.killerPerk || 'Killer Perk';
+
   const badgeText =
     activeHover.badge ||
     (isPerkItem
-      ? `${item.category || 'Perk'}`
+      ? perkBadgeText
       : getLocalizedRarity(itemRarity, t) || itemRarity);
 
   const categoryText =
@@ -166,8 +170,8 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
     (isPerkItem
       ? isGeneric
         ? generalLabel
-        : charName || `${item.category || ''} Perk`
-      : item.category || 'Equipment');
+        : charName || perkBadgeText
+      : item.category || t.equipment || 'Equipment');
 
   const defaultAction =
     actionPrompt ||

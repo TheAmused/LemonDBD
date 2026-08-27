@@ -27,6 +27,7 @@ interface ScraperConfigModalProps {
   onClose: () => void;
   onPurgeSuccess?: () => void;
   initialTab?: 'export' | 'import' | 'purge';
+  dict?: any;
 }
 
 interface TargetItem {
@@ -57,6 +58,7 @@ export function ScraperConfigModal({
   onClose,
   onPurgeSuccess,
   initialTab = 'export',
+  dict,
 }: ScraperConfigModalProps) {
   const [activeTab, setActiveTab] = useState<'export' | 'import' | 'purge'>(initialTab);
 
@@ -332,7 +334,7 @@ export function ScraperConfigModal({
           type="button"
           onClick={() => !isExporting && !isImporting && !isPurging && onClose()}
           className="absolute right-4 top-4 rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
-          aria-label="Close database modal"
+          aria-label={dict?.admin?.closeDbModal || 'Close database modal'}
         >
           <X className="h-5 w-5" />
         </button>
@@ -363,11 +365,11 @@ export function ScraperConfigModal({
             }
             target="_blank"
             rel="noopener noreferrer"
-            title="Open pgAdmin Web Management Interface"
+            title={dict?.admin?.openPgAdmin || 'Open pgAdmin Web Management Interface'}
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:text-white hover:border-indigo-400 text-xs font-bold transition-all"
           >
             <Database className="h-3.5 w-3.5 text-indigo-400" />
-            <span>Launch pgAdmin</span>
+            <span>{dict?.admin?.launchPgAdmin || 'Launch pgAdmin'}</span>
           </a>
         </div>
 
@@ -383,7 +385,7 @@ export function ScraperConfigModal({
             }`}
           >
             <Download className="h-3.5 w-3.5 text-blue-500" />
-            <span>Export JSON</span>
+            <span>{dict?.admin?.exportJson || 'Export JSON'}</span>
           </button>
 
           <button
@@ -396,7 +398,7 @@ export function ScraperConfigModal({
             }`}
           >
             <Upload className="h-3.5 w-3.5 text-emerald-500" />
-            <span>Import JSON</span>
+            <span>{dict?.admin?.importJson || 'Import JSON'}</span>
           </button>
 
           <button
@@ -409,7 +411,7 @@ export function ScraperConfigModal({
             }`}
           >
             <Trash2 className="h-3.5 w-3.5 text-red-500" />
-            <span>Purge &amp; Reset</span>
+            <span>{dict?.admin?.purgeReset || 'Purge & Reset'}</span>
           </button>
         </div>
 
@@ -546,9 +548,9 @@ export function ScraperConfigModal({
               ) : (
                 <div>
                   <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    Click or drag &amp; drop a LemonDBD <span className="text-emerald-500 font-mono">.json</span> backup file
+                    Click or drag &amp; drop a LemonDBD <span className="text-emerald-500 font-mono">{'.json'}</span> backup file
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-1">Accepts full or partial JSON database exports</p>
+                  <p className="text-[10px] text-slate-400 mt-1">{dict?.admin?.jsonFormatNotice || 'Accepts full or partial JSON database exports'}</p>
                 </div>
               )}
             </div>
@@ -569,7 +571,7 @@ export function ScraperConfigModal({
                 >
                   <ShieldCheck className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-xs font-bold">Merge &amp; Update (Safe)</p>
+                    <p className="text-xs font-bold">{dict?.admin?.mergeUpdate || 'Merge & Update (Safe)'}</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">
                       Upserts entities by name/slug without deleting existing data
                     </p>
@@ -586,7 +588,7 @@ export function ScraperConfigModal({
                 >
                   <RotateCcw className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-xs font-bold">Wipe &amp; Replace (Clean)</p>
+                    <p className="text-xs font-bold">{dict?.admin?.wipeReplace || 'Wipe & Replace (Clean)'}</p>
                     <p className="text-[10px] text-slate-500 dark:text-slate-400">
                       Clears target tables first, then restores uploaded records
                     </p>
@@ -733,7 +735,7 @@ export function ScraperConfigModal({
 
     <ConfirmModal
       open={showReplaceConfirm}
-      title="Wipe & Replace database?"
+      title={dict?.admin?.wipeReplaceConfirm || 'Wipe & Replace database?'}
       message='You have selected "Wipe & Replace" mode. Existing data in target tables will be wiped and replaced with the backup. Are you sure you want to proceed?'
       confirmLabel="Wipe & Replace"
       busy={isImporting}
@@ -743,7 +745,7 @@ export function ScraperConfigModal({
 
     <ConfirmModal
       open={showPurgeConfirm}
-      title="Purge selected tables?"
+      title={dict?.admin?.purgeConfirm || 'Purge selected tables?'}
       message={`Are you sure you want to PURGE ${purgeTargets.length} table category(ies)? This action is permanent and cannot be undone.`}
       confirmLabel="Purge"
       busy={isPurging}

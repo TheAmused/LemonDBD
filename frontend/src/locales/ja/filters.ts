@@ -1,12 +1,12 @@
 export default {
   "searchPlaceholder": "パーク名または効果説明で検索...",
-  "category": "役割",
+  "category": "カテゴリー",
   "allCategories": "すべての役割",
   "survivor": "サバイバー",
   "killer": "キラー",
   "character": "キャラクター",
   "allCharacters": "すべてのキャラクター",
-  "sortBy": "並び替え",
+  "sortBy": "ソートフィールド",
   "sortName": "パーク名",
   "sortCharacter": "キャラクター",
   "sortCategory": "役割",
@@ -34,7 +34,6 @@ export default {
   "gridView": "グリッド表示",
   "listView": "リスト表示",
   "resetAllFilters": "キャラクターフィルターをリセット",
-  "sortBy": "ソートフィールド",
   "sortOrder": "ソート方向",
   "sortFields": "ソートフィールド",
   "sortOrderLabel": "ソート方向"

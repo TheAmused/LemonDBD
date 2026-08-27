@@ -8,15 +8,16 @@ import { RulesModalShell } from '../RulesModalShell';
 export interface HistoryRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  dict?: any;
 }
 
-export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, onClose }) => (
+export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, onClose, dict }) => (
   <RulesModalShell
     isOpen={isOpen}
     onClose={onClose}
     icon={BookOpen}
-    title="History Streak Rules"
-    subtitle="How the roadmap, rows, and perk pool work"
+    title={dict?.streaks?.historyRulesTitle || 'History Streak Rules'}
+    subtitle={dict?.streaks?.historyRulesSubtitle || 'How the roadmap, rows, and perk pool work'}
     iconClassName="bg-slate-500/10 border-slate-500/20 text-slate-600 dark:text-slate-400"
     footerButtonClassName="bg-slate-600 hover:bg-slate-500"
   >

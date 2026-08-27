@@ -1,6 +1,10 @@
 'use client';
+// frontend/src/components/sidebar/BuyCoffeeModal.tsx
 
 import React, { useEffect, useState } from 'react';
+import { useParams, usePathname } from 'next/navigation';
+import { getDictionary } from '@/i18n/get-dictionary';
+import { i18n, type Locale } from '@/i18n/config';
 import {
   Coffee,
   Heart,
@@ -14,13 +18,35 @@ import {
 export interface BuyCoffeeModalProps {
   isOpen: boolean;
   onClose: () => void;
+  dict?: any;
+  t?: Record<string, string>;
 }
 
 export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
   isOpen,
   onClose,
+  dict: propDict,
+  t: propT,
 }) => {
   const [isRendered, setIsRendered] = useState(false);
+  const params = useParams();
+  const pathname = usePathname() || '';
+
+  const routeLocale = (params?.locale as string) || pathname.split('/')[1];
+  const currentLocale = (
+    i18n.locales.includes(routeLocale as Locale) ? routeLocale : i18n.defaultLocale
+  ) as Locale;
+
+  const [loadedDict, setLoadedDict] = useState<any>(null);
+
+  useEffect(() => {
+    if (!propDict && !propT) {
+      getDictionary(currentLocale).then(setLoadedDict);
+    }
+  }, [currentLocale, propDict, propT]);
+
+  const t: Record<string, string> =
+    propT || propDict?.sidebar || loadedDict?.sidebar || {};
 
   const buyMeCoffeeUrl =
     process.env.NEXT_PUBLIC_BUY_ME_A_COFFEE_URL ||
@@ -31,6 +57,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
     process.env.NEXT_PUBLIC_PATREON_URL || 'https://patreon.com/lemondbd';
   const donationMessage =
     process.env.NEXT_PUBLIC_DONATION_MESSAGE ||
+    t.coffeeDonationMessage ||
     'Fuel the Entity with caffeine to keep LemonDBD database servers and live scrapers running 24/7!';
 
   useEffect(() => {
@@ -58,7 +85,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
     {
       name: 'Buy Me a Coffee',
       url: buyMeCoffeeUrl,
-      tagline: 'Quick 1-click coffee & support',
+      tagline: t.coffeeBuyMeCoffeeTagline || 'Quick 1-click coffee & support',
       accentColor:
         'border-amber-500/40 bg-amber-500/10 text-amber-400 hover:border-amber-400 hover:bg-amber-500/20',
       buttonBg:
@@ -68,7 +95,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
     {
       name: 'Ko-fi',
       url: kofiUrl,
-      tagline: '0% fee donations & one-time tips',
+      tagline: t.coffeeKofiTagline || '0% fee donations & one-time tips',
       accentColor:
         'border-cyan-500/40 bg-cyan-500/10 text-cyan-400 hover:border-cyan-400 hover:bg-cyan-500/20',
       buttonBg:
@@ -78,7 +105,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
     {
       name: 'Patreon Community',
       url: patreonUrl,
-      tagline: 'Monthly supporter perks & early features',
+      tagline: t.coffeePatreonTagline || 'Monthly supporter perks & early features',
       accentColor:
         'border-rose-500/40 bg-rose-500/10 text-rose-400 hover:border-rose-400 hover:bg-rose-500/20',
       buttonBg:
@@ -116,8 +143,9 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       `}</style>
 
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+        className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto transition-opacity duration-300 ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="buy-coffee-modal-title"
@@ -143,7 +171,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close modal"
+            aria-label={t.coffeeClose || 'Close'}
             className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
@@ -162,11 +190,11 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
                 id="buy-coffee-modal-title"
                 className="text-lg font-black tracking-wider font-mono text-slate-100 flex items-center gap-2"
               >
-                <span>Support LemonDBD</span>
+                <span>{t.coffeeTitle || 'Support LemonDBD'}</span>
                 <Flame className="h-4 w-4 text-amber-500" />
               </h2>
               <p className="text-xs text-slate-400">
-                Direct support from the player community
+                {t.coffeeSubtitle || 'Direct support from the player community'}
               </p>
             </div>
           </div>
@@ -174,7 +202,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
           <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent p-4 text-xs text-slate-300 leading-relaxed space-y-1">
             <div className="flex items-center gap-1.5 font-bold text-amber-400 mb-1">
               <Sparkles className="h-4 w-4" />
-              <span>Entity Fuel Notice</span>
+              <span>{t.coffeeFuelNotice || 'Entity Fuel Notice'}</span>
             </div>
             <p>{donationMessage}</p>
           </div>
@@ -208,7 +236,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
                     <span
                       className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
                     >
-                      <span>Visit</span>
+                      <span>{t.coffeeVisit || 'Visit'}</span>
                       <ExternalLink className="h-3 w-3" />
                     </span>
                     <ExternalLink className="sm:hidden h-4 w-4 text-slate-400 group-hover:text-amber-400 transition-colors" />
@@ -219,13 +247,13 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
           </div>
 
           <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
-            <span>Free forever & community powered</span>
+            <span>{t.coffeeFooterNotice || 'Free forever & community powered'}</span>
             <button
               type="button"
               onClick={onClose}
               className="hover:text-slate-300 transition-colors cursor-pointer"
             >
-              Close
+              {t.coffeeClose || 'Close'}
             </button>
           </div>
         </div>

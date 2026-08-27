@@ -96,32 +96,28 @@ export interface PerkDictionary {
     perPage?: string;
     previous?: string;
     next?: string;
-  };
-  filters?: {
-    searchPlaceholder?: string;
-    clear?: string;
-    survivor?: string;
-    killer?: string;
-    allPerks?: string;
-    generalOnly?: string;
-    everyPerk?: string;
-    ownedOnly?: string;
-    filterByCharacter?: string;
-    allCharacters?: string;
-    generalPerksOnly?: string;
-    sortByName?: string;
-    sortByCharacter?: string;
-    sortByRole?: string;
-    orderAsc?: string;
-    orderDesc?: string;
+    firstPage?: string;
+    lastPage?: string;
+    goTo?: string;
+    navAriaLabel?: string;
   };
   modal?: {
     close?: string;
+    character?: string;
+    role?: string;
     perkDescription?: string;
     slugCopied?: string;
     copySlug?: string;
     generalPerk?: string;
     alias?: string;
+    clickToInspectPerk?: string;
+    clickToInspect?: string;
+    killerPerk?: string;
+    survivorPerk?: string;
+    unownedPerk?: string;
+    equipment?: string;
+    clickOutsideToClose?: string;
+    [key: string]: string | undefined;
   };
   generator?: {
     titleSuffix?: string;
@@ -147,10 +143,74 @@ export interface PerkDictionary {
     cursedBlindness?: string;
     clickToReveal?: string;
     rollCompleteLoadout?: string;
+    selectRole?: string;
+    generatorMode?: string;
+    resetAllTooltip?: string;
+    clearSlotTooltip?: string;
   };
   empty?: {
     title?: string;
     subtitle?: string;
+    loading?: string;
+    [key: string]: string | undefined;
   };
-  [key: string]: unknown;
+  filters?: {
+    searchPlaceholder?: string;
+    clear?: string;
+    survivor?: string;
+    killer?: string;
+    allPerks?: string;
+    generalOnly?: string;
+    everyPerk?: string;
+    ownedOnly?: string;
+    filterByCharacter?: string;
+    allCharacters?: string;
+    generalPerksOnly?: string;
+    sortByName?: string;
+    sortByCharacter?: string;
+    sortByRole?: string;
+    orderAsc?: string;
+    orderDesc?: string;
+    filtersTitle?: string;
+    ownershipFilter?: string;
+    clearSearch?: string;
+    viewMode?: string;
+    gridView?: string;
+    listView?: string;
+    resetAllFilters?: string;
+    sortFields?: string;
+    sortOrderLabel?: string;
+    category?: string;
+    [key: string]: string | undefined;
+  };
+  stats?: {
+    vaultTotal?: string;
+    ownedPerks?: string;
+    [key: string]: string | undefined;
+  };
+  card?: {
+    vaultTotal?: string;
+    ownedPerks?: string;
+    [key: string]: string | undefined;
+  };
+  landing?: {
+    characterOverview?: string;
+    [key: string]: string | undefined;
+  };
+  user?: {
+    verifyEmailRequired?: string;
+    [key: string]: string | undefined;
+  };
+  maps?: {
+    voiceEngineAria?: string;
+    providerAria?: string;
+    variants?: string;
+    [key: string]: string | undefined;
+  };
+  characterDetail?: {
+    characterOverview?: string;
+    loading?: string;
+    [key: string]: string | undefined;
+  };
+  [key: string]: any;
 }

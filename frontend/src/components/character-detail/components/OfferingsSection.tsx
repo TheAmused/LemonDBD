@@ -227,23 +227,23 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
           >
             <option value="all">{t.allRarities || 'All Rarities'}</option>
-            <option value="Common">Common</option>
-            <option value="Uncommon">Uncommon</option>
-            <option value="Rare">Rare</option>
-            <option value="Very Rare">Very Rare</option>
-            <option value="Ultra Rare">Ultra Rare</option>
-            <option value="Event">Event</option>
+            <option value="Common">{t.rarityCommon || 'Common'}</option>
+            <option value="Uncommon">{t.rarityUncommon || 'Uncommon'}</option>
+            <option value="Rare">{t.rarityRare || 'Rare'}</option>
+            <option value="Very Rare">{t.rarityVeryRare || 'Very Rare'}</option>
+            <option value="Ultra Rare">{t.rarityUltraRare || 'Ultra Rare'}</option>
+            <option value="Event">{t.rarityEvent || 'Event'}</option>
           </select>
 
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as 'rarity_desc' | 'rarity_asc' | 'name_asc')}
             className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
-            aria-label="Order offerings"
+            aria-label={t.orderOfferings || 'Order offerings'}
           >
-            <option value="rarity_asc">Rarity: Low &rarr; High</option>
-            <option value="rarity_desc">Rarity: High &rarr; Low</option>
-            <option value="name_asc">Name: A &rarr; Z</option>
+            <option value="rarity_asc">{t.sortRarityLowToHigh || 'Rarity: Low → High'}</option>
+            <option value="rarity_desc">{t.sortRarityHighToLow || 'Rarity: High → Low'}</option>
+            <option value="name_asc">{t.sortNameAsc || 'Name: A → Z'}</option>
           </select>
         </div>
       </div>
@@ -254,7 +254,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         <div className="absolute -top-5 inset-x-0 flex justify-center z-10 px-2 pointer-events-none">
           <div
             role="tablist"
-            aria-label="Offering categories"
+            aria-label={t.offeringCategories || 'Offering categories'}
             className="flex flex-wrap items-center justify-center gap-1.5 p-1 rounded-2xl bg-slate-900 border border-slate-700 shadow-xl backdrop-blur-md pointer-events-auto max-w-full"
           >
             {categories.map((cat) => {
@@ -299,15 +299,17 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             }`}
           >
             <Gift className="h-4 w-4" />
-            {activeCategoryConfig.label} &bull; Offerings ({sortedAndFilteredOfferings.length})
+            {activeCategoryConfig.label} &bull; {t.offerings || 'Offerings'} ({sortedAndFilteredOfferings.length})
           </h3>
-          <span className="text-[10px] font-mono text-slate-400">Click offering for details</span>
+          <span className="text-[10px] font-mono text-slate-400">
+            {t.clickOfferingForDetails || 'Click offering for details'}
+          </span>
         </div>
 
         {/* Offerings Grid */}
         {sortedAndFilteredOfferings.length === 0 ? (
           <div className="flex items-center justify-center p-12 text-center text-slate-500 text-xs italic">
-            No offerings found in this category matching your active filter.
+            {t.noOfferingsFound || 'No offerings found in this category matching your active filter.'}
           </div>
         ) : (
           <div className="flex flex-wrap items-center justify-center gap-3.5 p-2">
@@ -351,8 +353,14 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       </div>
 
       {/* Unified Hover Modal */}
-      <UnifiedHoverModal activeHover={activeHover} placement="above" t={t} />
+      <UnifiedHoverModal
+        activeHover={activeHover}
+        placement="above"
+        t={t}
+        actionPrompt={t.clickOfferingForDetails || t.clickToInspect || 'Click offering for details'}
+      />
     </section>
   );
 };
+
 

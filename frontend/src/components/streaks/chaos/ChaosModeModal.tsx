@@ -9,6 +9,7 @@ export interface ChaosModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectDifficulty: (difficulty: Difficulty) => void;
+  dict?: any;
 }
 
 const TILES: { difficulty: Difficulty; label: string; desc: string; icon: React.ElementType }[] = [
@@ -17,7 +18,7 @@ const TILES: { difficulty: Difficulty; label: string; desc: string; icon: React.
   { difficulty: 'hell', label: 'Hell', desc: 'No checkpoints. One loss resets everything.', icon: Skull },
 ];
 
-export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({ isOpen, onClose, onSelectDifficulty }) => {
+export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({ isOpen, onClose, onSelectDifficulty, dict }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -38,7 +39,9 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({ isOpen, onClose,
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-black text-slate-900 dark:text-white">Choose a difficulty</h2>
+          <h2 className="text-xl font-black text-slate-900 dark:text-white">
+            {dict?.streaks?.chooseDifficulty || 'Choose a difficulty'}
+          </h2>
           <button
             onClick={onClose}
             className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"

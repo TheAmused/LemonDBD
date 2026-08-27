@@ -8,6 +8,7 @@ import { RulesModalShell } from '../RulesModalShell';
 export interface ChaosRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  dict?: any;
 }
 
 const DIFFICULTY_ROWS = [
@@ -16,13 +17,13 @@ const DIFFICULTY_ROWS = [
   { label: 'Hell', badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', text: 'No checkpoints. One loss resets everything.' },
 ];
 
-export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClose }) => (
+export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClose, dict }) => (
   <RulesModalShell
     isOpen={isOpen}
     onClose={onClose}
     icon={BookOpen}
-    title="Chaos Streak Rules"
-    subtitle="How the draw, the pick, and the checkpoints work"
+    title={dict?.streaks?.chaosRulesTitle || 'Chaos Streak Rules'}
+    subtitle={dict?.streaks?.chaosRulesSubtitle || 'How the draw, the pick, and the checkpoints work'}
     iconClassName="bg-violet-500/10 border-violet-500/20 text-violet-600 dark:text-violet-400"
     footerButtonClassName="bg-violet-600 hover:bg-violet-500 shadow-violet-500/20"
   >
@@ -38,7 +39,7 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
         build as your guide.
       </p>
       <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        <strong>A round only counts as won on 3 kills or more.</strong> Anything less is a loss.
+        <strong>{dict?.streaks?.threeKillsOrMoreWin || 'A round only counts as won on 3 kills or more.'}</strong> Anything less is a loss.
       </p>
       <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
         You must play the killer with addons matching the 2 drawn rarities.
@@ -85,17 +86,17 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
       </h3>
       <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
         <li>
-          <strong>Game cancelled:</strong> someone left while the lobby was loading and the match never
+          <strong>{dict?.streaks?.gameCancelled || 'Game cancelled:'}</strong> someone left while the lobby was loading and the match never
           started. No reroll, replay the same build.
         </li>
         <li>
-          <strong>Hackers:</strong> obvious cheaters void the match. No reroll, replay the same build.
+          <strong>{dict?.streaks?.hackers || 'Hackers:'}</strong> obvious cheaters void the match. No reroll, replay the same build.
         </li>
         <li>
-          <strong>Crash or server failure:</strong> not a loss. No reroll, replay the same build.
+          <strong>{dict?.streaks?.crashServerFailure || 'Crash or server failure:'}</strong> not a loss. No reroll, replay the same build.
         </li>
         <li>
-          <strong>No dodging:</strong> play whatever lobby you get, no matter the items.
+          <strong>{dict?.streaks?.noDodging || 'No dodging:'}</strong> play whatever lobby you get, no matter the items.
         </li>
       </ul>
     </div>

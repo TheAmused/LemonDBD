@@ -93,7 +93,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           !isOwned && (
             <div
               className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/90 shadow-md border border-slate-800"
-              title="Unowned perk"
+              title={dict?.modal?.unownedPerk || 'Unowned perk'}
             >
               <Lock className="h-3.5 w-3.5 text-slate-400" />
             </div>

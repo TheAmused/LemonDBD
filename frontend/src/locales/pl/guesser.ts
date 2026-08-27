@@ -26,6 +26,18 @@ export default {
   "modeMapDesc": "Sprawdź swoją wiedzę o krainach, strukturach, generatach i pętlach.",
   "modeMemesTitle": "Zgadywanka memów z DBD",
   "modeMemesDesc": "Zgadnij żarty i nazwy z popularnych memów społeczności Dead by Daylight.",
-  "reset": "Zresetuj serię",
-  "streakResetSuccess": "Seria zresetowana pomyślnie"
+  "reset": "Zresetuj Serię",
+  "streakResetSuccess": "Seria została zresetowana pomyślnie",
+  "soundOn": "Dźwięk Włączony",
+  "soundOff": "Dźwięk Wyłączony",
+  "best": "Najlepsza:",
+  "streak": "Seria",
+  "wip": "W budowie",
+  "charAvatarHint": "Podpowiedź awatara postaci",
+  "redacted": "Zaciemnione (Wysoka seria)",
+  "blurred": "Rozmyte (Średnia seria)",
+  "distortedPerkIcon": "Zniekształcona ikona perku",
+  "perkIconChoice": "Wybór ikony perku",
+  "escReturn": "Esc: Powrót",
+  "spaceContinue": "Spacja: Dalej"
 };

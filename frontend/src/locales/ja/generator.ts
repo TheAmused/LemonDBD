@@ -39,5 +39,9 @@ export default {
   "spinOrRollPrompt": "ルーレットを回すかロールをクリックしてパークを獲得",
   "cursedBlindness": "呪われた盲目",
   "clickToReveal": "クリックして開示",
-  "rollCompleteLoadout": "4パーク構成をロール"
+  "rollCompleteLoadout": "4パーク構成をロール",
+  "selectRole": "役割を選択",
+  "generatorMode": "ジェネレーターモード",
+  "resetAllTooltip": "ホイール・構成スロット・メモリをリセット",
+  "clearSlotTooltip": "スロットをクリア"
 };

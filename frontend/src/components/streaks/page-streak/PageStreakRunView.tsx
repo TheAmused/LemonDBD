@@ -18,6 +18,7 @@ import { staticUrl } from '@/utils/staticUrl';
 interface PageStreakRunViewProps {
   locale: string;
   killer: string;
+  dict?: any;
 }
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -27,7 +28,7 @@ const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   </div>
 );
 
-export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
+export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer, dict }) => {
   const { run, stats, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
   const iconByPerk = React.useMemo(() => {
     const entries = Object.entries(run?.perk_icons ?? {});
@@ -84,7 +85,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
         className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 transition-colors hover:text-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        <span>Back to killers</span>
+        <span>{dict?.streaks?.backToKillers || 'Back to killers'}</span>
       </Link>
 
       {error && (
@@ -93,7 +94,11 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
         </p>
       )}
 
-      {loading && <p className="py-10 text-center text-xs text-slate-500">Loading streak…</p>}
+      {loading && (
+        <p className="py-10 text-center text-xs text-slate-500">
+          {dict?.streaks?.loadingStreak || 'Loading streak…'}
+        </p>
+      )}
 
       {!loading && !run && (
         <div className="mt-5">
@@ -114,7 +119,9 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           {run.status === 'completed' ? (
             <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] px-5 py-6 text-center">
               <p className="text-sm font-extrabold text-emerald-400">All {run.page_count} pages cleared on {killer}</p>
-              <p className="mt-1 text-xs text-slate-400">Reset the run if you want to go through it again.</p>
+              <p className="mt-1 text-xs text-slate-400">
+                {dict?.streaks?.resetRunPrompt || 'Reset the run if you want to go through it again.'}
+              </p>
             </div>
           ) : (
             <>
@@ -129,7 +136,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     }}
                     className="flex-1 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-8 py-4 text-base font-extrabold tracking-wide text-emerald-400 transition-colors hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 motion-reduce:transition-none"
                   >
-                    Win
+                    {dict?.stats?.win || 'Win'}
                   </button>
                   <button
                     type="button"
@@ -140,7 +147,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     }}
                     className="flex-1 rounded-xl border border-rose-500/35 bg-rose-500/10 px-8 py-4 text-base font-extrabold tracking-wide text-rose-400 transition-colors hover:bg-rose-500/20 focus:outline-none focus:ring-2 focus:ring-rose-500 disabled:opacity-50 motion-reduce:transition-none"
                   >
-                    Loss
+                    {dict?.stats?.loss || 'Loss'}
                   </button>
                 </div>
               )}
@@ -154,7 +161,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 iconByPerk={iconByPerk}
               />
 
-              <SectionLabel>Your build</SectionLabel>
+              <SectionLabel>{dict?.streaks?.yourBuild || 'Your build'}</SectionLabel>
               <BuildBar
                 selected={selected}
                 size={buildSize}

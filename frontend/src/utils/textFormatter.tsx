@@ -636,9 +636,8 @@ export function renderFormattedDbdText(
       if (lower.startsWith('<li')) return '\n• ';
       if (lower.startsWith('</li')) return '';
       if (lower.startsWith('<p') || lower.startsWith('</p')) return '\n';
-      if (lower.startsWith('<div') || lower.startsWith('</div')) return '\n';
-      if (lower.startsWith('<b>') || lower.startsWith('</b>') || lower.startsWith('<strong>') || lower.startsWith('</strong>')) return tag;
-      if (lower.startsWith('<i>') || lower.startsWith('</i>') || lower.startsWith('<em>') || lower.startsWith('</em>')) return tag;
+      if (/^<\/?(b|strong)>/i.test(lower)) return tag;
+      if (/^<\/?(i|em)>/i.test(lower)) return tag;
       return '';
     })
     .replace(/\*""|\*"/g, '"')

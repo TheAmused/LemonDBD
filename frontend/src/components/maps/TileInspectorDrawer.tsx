@@ -11,12 +11,14 @@ interface TileInspectorDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   selectedItem: InspectorSelectedItem;
+  dict?: any;
 }
 
 export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
   isOpen,
   onClose,
   selectedItem,
+  dict,
 }) => {
   if (!isOpen || !selectedItem) return null;
 
@@ -76,7 +78,7 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
       if (hasPallet) {
         return (
           <div className="flex items-center gap-2 px-3 py-2 bg-amber-950/40 border border-amber-500/40 text-amber-300 rounded-xl text-xs font-bold">
-            <span>🪵 Standard Pallet Present</span>
+            <span>🪵 {dict?.maps?.palletPresent || 'Standard Pallet Present'}</span>
           </div>
         );
       }
@@ -92,8 +94,8 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
                 🟩
               </div>
               <div>
-                <div className="font-extrabold text-sm text-emerald-200">God Pallet</div>
-                <div className="text-[11px] text-emerald-400/80">Forces killer to break pallet. Safe 100% loop reset.</div>
+                <div className="font-extrabold text-sm text-emerald-200">{dict?.maps?.godPallet || 'God Pallet'}</div>
+                <div className="text-[11px] text-emerald-400/80">{dict?.maps?.godPalletDesc || 'Forces killer to break pallet. Safe 100% loop reset.'}</div>
               </div>
             </div>
           </div>
@@ -106,8 +108,8 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
                 🟦
               </div>
               <div>
-                <div className="font-extrabold text-sm text-blue-200">Safe Pallet</div>
-                <div className="text-[11px] text-blue-400/80">High safety margin. Difficult for killer to mindgame without breaking.</div>
+                <div className="font-extrabold text-sm text-blue-200">{dict?.maps?.safePallet || 'Safe Pallet'}</div>
+                <div className="text-[11px] text-blue-400/80">{dict?.maps?.safePalletDesc || 'High safety margin. Difficult for killer to mindgame without breaking.'}</div>
               </div>
             </div>
           </div>
@@ -120,8 +122,8 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
                 🟨
               </div>
               <div>
-                <div className="font-extrabold text-sm text-amber-200">Mindgameable Pallet</div>
-                <div className="text-[11px] text-amber-400/80">Medium safety. Watch out for red stain hiding and double-backs.</div>
+                <div className="font-extrabold text-sm text-amber-200">{dict?.maps?.mindgamePallet || 'Mindgameable Pallet'}</div>
+                <div className="text-[11px] text-amber-400/80">{dict?.maps?.mindgamePalletDesc || 'Medium safety. Watch out for red stain hiding and double-backs.'}</div>
               </div>
             </div>
           </div>
@@ -134,8 +136,8 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
                 🟥
               </div>
               <div>
-                <div className="font-extrabold text-sm text-rose-200">Death Trap / Unsafe Pallet</div>
-                <div className="text-[11px] text-rose-400/80">Low wall / short loop. Pre-drop &amp; stun, or abandon immediately!</div>
+                <div className="font-extrabold text-sm text-rose-200">{dict?.maps?.unsafePallet || 'Death Trap / Unsafe Pallet'}</div>
+                <div className="text-[11px] text-rose-400/80">{dict?.maps?.unsafePalletDesc || 'Low wall / short loop. Pre-drop & stun, or abandon immediately!'}</div>
               </div>
             </div>
           </div>
@@ -182,7 +184,7 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
           type="button"
           onClick={onClose}
           className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
-          aria-label="Close Inspector"
+          aria-label={dict?.maps?.closeInspectorAria || 'Close Inspector'}
         >
           <X className="w-5 h-5" />
         </button>
@@ -207,16 +209,16 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
             </h4>
             {vaultDirections && (
               <div className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                <span className="text-slate-500">Allowed Directions:</span>
+                <span className="text-slate-500">{dict?.maps?.allowedDirections || 'Allowed Directions:'}</span>
                 <span className="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950 border border-indigo-500/40 text-indigo-800 dark:text-indigo-300 rounded font-mono text-[11px]">
                   {vaultDirections}
                 </span>
               </div>
             )}
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-              ⚡ <strong className="text-indigo-800 dark:text-indigo-200">Fast Vault (0.5s):</strong> Requires running straight at window with at least 2.5m momentum.
+              ⚡ <strong className="text-indigo-800 dark:text-indigo-200">{dict?.maps?.fastVault || 'Fast Vault (0.5s):'}</strong> Requires running straight at window with at least 2.5m momentum.
               <br />
-              🏃 <strong className="text-slate-500 dark:text-slate-400">Medium Vault (0.9s):</strong> Triggers on angled approach. High risk of killer hit!
+              🏃 <strong className="text-slate-500 dark:text-slate-400">{dict?.maps?.mediumVault || 'Medium Vault (0.9s):'}</strong> Triggers on angled approach. High risk of killer hit!
             </p>
           </div>
         )}
@@ -251,14 +253,14 @@ export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({
 
         {locationDesc && (
           <div className="p-3 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between shadow-sm">
-            <span className="text-slate-500">Location Note:</span>
+            <span className="text-slate-500">{dict?.maps?.locationNote || 'Location Note:'}</span>
             <span className="text-slate-800 dark:text-slate-200 font-medium text-right">{locationDesc}</span>
           </div>
         )}
       </div>
 
       <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 text-center">
-        <span className="text-[11px] text-slate-500 font-mono">LemonDBD Interactive Realm Inspector</span>
+        <span className="text-[11px] text-slate-500 font-mono">{dict?.maps?.inspectorTitle || 'LemonDBD Interactive Realm Inspector'}</span>
       </div>
     </aside>
   );

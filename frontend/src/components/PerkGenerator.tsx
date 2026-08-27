@@ -431,7 +431,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             {/* Survivor / Killer Switch */}
             <div
               role="group"
-              aria-label="Select Role"
+              aria-label={dict?.generator?.selectRole || 'Select Role'}
               className="flex items-center rounded-2xl border border-slate-200 bg-slate-100/90 dark:border-slate-800 dark:bg-slate-950/90 p-1 shadow-inner"
             >
               <button
@@ -464,7 +464,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             {/* Gen Mode Switch */}
             <div
               role="group"
-              aria-label="Generator Mode"
+              aria-label={dict?.generator?.generatorMode || 'Generator Mode'}
               className="flex items-center rounded-2xl border border-slate-200 bg-slate-100/90 dark:border-slate-800 dark:bg-slate-950/90 p-1 shadow-inner"
             >
               <button
@@ -527,7 +527,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               type="button"
               onClick={handleResetAllLoadoutAndWheels}
               className="flex items-center gap-1.5 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-1.5 text-xs font-bold text-rose-700 dark:text-rose-300 hover:bg-rose-500/20 transition-all cursor-pointer"
-              title="Reset wheels, loadout slots, and memory"
+              title={dict?.generator?.resetAllTooltip || 'Reset wheels, loadout slots, and memory'}
             >
               <RotateCcw className="h-3.5 w-3.5" />
               <span>{dict?.generator?.resetAllLabel || 'Reset All'}</span>
@@ -666,7 +666,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                                 type="button"
                                 onClick={(e) => handleClearSlot(idx, e)}
                                 className="rounded-lg p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-500 transition-colors cursor-pointer"
-                                title="Clear slot"
+                                title={dict?.generator?.clearSlotTooltip || 'Clear slot'}
                                 aria-label={`Clear slot ${idx + 1}`}
                               >
                                 <Trash2 className="h-3.5 w-3.5" />

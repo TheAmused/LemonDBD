@@ -7,9 +7,10 @@ import { Snowflake } from 'lucide-react';
 
 export interface FreezeBadgeProps {
   frozen: boolean;
+  dict?: any;
 }
 
-export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen }) => {
+export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -40,8 +41,11 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen }) => {
             }}
             className="pointer-events-none rounded-xl border border-sky-500/30 bg-slate-950/95 px-3 py-2.5 text-[11px] leading-snug text-slate-200 shadow-2xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150"
           >
-            <span className="font-bold text-sky-400">Challenge started.</span>{' '}
-            Unlocking or locking perks/characters won&apos;t affect this run until a win, a loss back to 0, or a reset.
+            <span className="font-bold text-sky-400">
+              {dict?.streaks?.challengeStarted || 'Challenge started.'}
+            </span>{' '}
+            {dict?.streaks?.freezeNotice ||
+              "Unlocking or locking perks/characters won't affect this run until a win, a loss back to 0, or a reset."}
           </div>,
           document.body
         )}

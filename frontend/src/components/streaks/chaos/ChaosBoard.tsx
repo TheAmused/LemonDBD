@@ -24,9 +24,10 @@ import { useAuth } from '@/context/AuthContext';
 
 interface ChaosBoardProps {
   locale: string;
+  dict?: any;
 }
 
-export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
+export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {
   const searchParams = useSearchParams();
   const difficulty = (searchParams.get('difficulty') as Difficulty) || 'hell';
 
@@ -136,7 +137,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-violet-500 dark:text-slate-400 dark:hover:text-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        <span>Back to killer streaks</span>
+        <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>
       </Link>
 
       <div className="mt-4">
@@ -257,7 +258,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
             <button
               onClick={handleDevSkipToWin}
               disabled={busy || !killers.length}
-              title="Dev only: win with every remaining killer to reach the completion screen"
+              title={dict?.streaks?.devSkipWinTitle || 'Dev only: win with every remaining killer to reach the completion screen'}
               className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
               <Trophy className="h-3.5 w-3.5" />

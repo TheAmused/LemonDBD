@@ -22,6 +22,7 @@ const MODE_LABELS: Record<ChallengeMode, string> = {
 
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
+  dict?: any;
 }
 
 function authHeaders(token: string): HeadersInit {
@@ -33,7 +34,7 @@ type PendingAction =
   | { kind: 'character'; character: AdminCharacterRow }
   | { kind: 'perk'; perk: AdminPerkRow };
 
-export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ onActionMessage }) => {
+export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ onActionMessage, dict }) => {
   const [modes, setModes] = useState<ChallengeModeSetting[]>([]);
   const [subTab, setSubTab] = useState<'killers' | 'perks'>('killers');
   const [roleFilter, setRoleFilter] = useState<'Survivor' | 'Killer'>('Survivor');
@@ -295,7 +296,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         </p>
 
         {characters.length === 0 && perks.length === 0 && loading ? (
-          <p className="text-xs text-slate-500 py-6 text-center">Loading...</p>
+          <p className="text-xs text-slate-500 py-6 text-center">{dict?.admin?.loading || 'Loading...'}</p>
         ) : (
         <div className={`transition-opacity duration-150 ${loading ? 'opacity-50' : ''}`}>
           {subTab === 'killers' ? (
@@ -313,25 +314,16 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 }`}
               >
                 <div className="h-full w-full flex items-center justify-center bg-slate-900">
-                  {c.avatar_local_path ? (
+                  {c.avatar_portrait_path ? (
                     <img
-                      src={staticUrl(c.avatar_local_path)}
+                      src={staticUrl(c.avatar_portrait_path)}
                       alt={c.name}
                       className={`h-full w-full object-cover ${c.is_disabled ? 'grayscale opacity-60' : ''}`}
                     />
-                  ) : c.role === 'Survivor' ? (
-                    <Shield className="h-6 w-6 text-slate-600" />
                   ) : (
-                    <Skull className="h-6 w-6 text-slate-600" />
+                    <Skull className="h-8 w-8 text-slate-600" />
                   )}
                 </div>
-                <span
-                  className={`absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center rounded-md ${
-                    c.role === 'Survivor' ? 'bg-emerald-500/80 text-emerald-950' : 'bg-rose-500/80 text-rose-950'
-                  }`}
-                >
-                  {c.role === 'Survivor' ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
-                </span>
                 <span
                   className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
                     c.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
@@ -343,13 +335,13 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
+          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 max-h-[480px] overflow-y-auto pr-1">
             {perks.map((p) => (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => requestPerkToggle(p)}
-                title={p.disabled_reason ? `${p.name} (${p.character}) — ${p.disabled_reason}` : `${p.name} (${p.character})`}
+                title={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
                 className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
                   p.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
@@ -389,6 +381,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         confirmLabel="Disable"
         onCancel={() => setPendingAction(null)}
         onConfirm={confirmPendingAction}
+        dict={dict}
       />
     </div>
   );

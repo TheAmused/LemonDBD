@@ -39,5 +39,9 @@ export default {
   "spinOrRollPrompt": "Drehe das Rad oder klicke auf Würfeln",
   "cursedBlindness": "Verfluchte Blindheit",
   "clickToReveal": "Klicken zum Aufdecken",
-  "rollCompleteLoadout": "4-Perk-Loadout würfeln"
+  "rollCompleteLoadout": "4-Perk-Loadout würfeln",
+  "selectRole": "Rolle wählen",
+  "generatorMode": "Generator-Modus",
+  "resetAllTooltip": "Räder, Loadout-Slots und Speicher zurücksetzen",
+  "clearSlotTooltip": "Slot leeren"
 };

@@ -8,12 +8,18 @@ import { StatusFeedback } from '@/types/userProfile';
 interface UserProfileFormProps {
   initialEmail: string;
   onRefreshUser: () => Promise<void>;
+  dict?: any;
+  t?: Record<string, string>;
 }
 
 export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   initialEmail,
   onRefreshUser,
+  dict,
+  t: propT,
 }) => {
+  const t: Record<string, string> = propT || dict?.user || {};
+
   const [newEmail, setNewEmail] = useState(initialEmail);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -73,7 +79,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
       <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
         <Key className="h-5 w-5 text-amber-400" />
         <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-100">
-          Account Credentials & Settings
+          {t.profileTitle || 'Account Credentials & Settings'}
         </h2>
       </div>
 
@@ -111,11 +117,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              New Password (Optional)
+              {t.newPassword || 'New Password (Optional)'}
             </label>
             <input
               type="password"
-              placeholder="Leave blank to keep current"
+              placeholder={t.passwordPlaceholder || 'Leave blank to keep current'}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="w-full rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-inner"
@@ -124,11 +130,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Confirm New Password
+              {t.confirmPassword || 'Confirm New Password'}
             </label>
             <input
               type="password"
-              placeholder="Repeat new password"
+              placeholder={t.confirmPasswordPlaceholder || 'Repeat new password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-inner"
@@ -147,7 +153,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
             ) : (
               <>
                 <CheckCircle2 className="h-4 w-4" />
-                <span>Save Changes</span>
+                <span>{t.saveChanges || 'Save Changes'}</span>
               </>
             )}
           </button>
@@ -156,4 +162,3 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
     </div>
   );
 };
-

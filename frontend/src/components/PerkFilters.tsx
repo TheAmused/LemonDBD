@@ -153,7 +153,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
   return (
     <section
-      aria-label="Perk Filters"
+      aria-label={dict?.filters?.filtersTitle || 'Perk Filters'}
       className="relative z-30 mb-6 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-sm dark:shadow-xl dark:shadow-slate-950/40"
     >
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -161,7 +161,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           {/* Role Filter */}
           <div
             role="group"
-            aria-label="Filter by Role"
+            aria-label={dict?.filters?.sortByRole || 'Filter by Role'}
             className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
           >
             <button
@@ -194,7 +194,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           {/* Scope Filter */}
           <div
             role="group"
-            aria-label="Filter by Scope"
+            aria-label={dict?.filters?.allPerks || 'Filter by Scope'}
             className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
           >
             <button
@@ -227,7 +227,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           {/* Ownership Filter */}
           <div
             role="group"
-            aria-label="Filter by Ownership"
+            aria-label={dict?.filters?.ownershipFilter || 'Filter by Ownership'}
             className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
           >
             <button
@@ -283,7 +283,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                   setSearch('');
                   setIsPerkSuggestionsOpen(false);
                 }}
-                aria-label="Clear search text"
+                aria-label={dict?.filters?.clearSearch || 'Clear search text'}
                 className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
               >
                 <X className="h-3 w-3" />
@@ -330,13 +330,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
           <div
             role="group"
-            aria-label="View Mode Toggle"
+            aria-label={dict?.filters?.viewMode || 'View Mode Toggle'}
             className="flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/90 p-1 shrink-0"
           >
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              aria-label="Grid View"
+              aria-label={dict?.filters?.gridView || 'Grid View'}
               className={`rounded-xl p-2 transition-all cursor-pointer ${
                 viewMode === 'grid'
                   ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
@@ -348,7 +348,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             <button
               type="button"
               onClick={() => setViewMode('list')}
-              aria-label="List View"
+              aria-label={dict?.filters?.listView || 'List View'}
               className={`rounded-xl p-2 transition-all cursor-pointer ${
                 viewMode === 'list'
                   ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
@@ -361,27 +361,21 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         </div>
       </div>
 
-      {/* Second Row: Character Picker, Sort & Clear */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-800/60">
-        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-          <div ref={charDropdownRef} className="relative z-40 flex-1 sm:w-72">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between pt-2 border-t border-slate-100 dark:border-slate-800/60">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Character Search & Dropdown */}
+          <div ref={charDropdownRef} className="relative min-w-[200px] flex-1 sm:flex-none">
             <div className="relative">
-              <User className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
               <input
                 type="text"
                 value={charInput}
-                onFocus={() => setIsCharDropdownOpen(true)}
                 onChange={(e) => {
                   setCharInput(e.target.value);
                   setIsCharDropdownOpen(true);
                 }}
-                placeholder={
-                  dict?.filters?.filterByCharacter || 'Filter by character name...'
-                }
-                aria-label={
-                  dict?.filters?.filterByCharacter || 'Filter by character'
-                }
-                className="w-full rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 py-2 pl-9 pr-8 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none transition-colors"
+                onFocus={() => setIsCharDropdownOpen(true)}
+                placeholder={dict?.filters?.filterByCharacter || 'Filter by character...'}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950 px-4 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-inner"
               />
               {character !== 'all' ? (
                 <button
@@ -391,7 +385,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                     setCharInput('');
                     setIsCharDropdownOpen(false);
                   }}
-                  aria-label="Reset character filter"
+                  aria-label={dict?.filters?.resetAllFilters || 'Reset character filter'}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                 >
                   <X className="h-3 w-3" />
@@ -468,7 +462,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
           <div
             role="group"
-            aria-label="Sort Fields"
+            aria-label={dict?.filters?.sortFields || 'Sort Fields'}
             className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
           >
             <button
@@ -508,7 +502,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
           <div
             role="group"
-            aria-label="Sort Direction"
+            aria-label={dict?.filters?.sortOrderLabel || 'Sort Direction'}
             className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
           >
             <button

@@ -66,9 +66,10 @@ const LockedTile: React.FC<{ perk: Perk }> = ({ perk }) => {
 export interface HistoryPerkPoolPanelProps {
   pool: Perk[];
   unlockedPerkNames: string[];
+  dict?: any;
 }
 
-export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool, unlockedPerkNames }) => {
+export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool, unlockedPerkNames, dict }) => {
   const unlockedSet = useMemo(() => new Set(unlockedPerkNames), [unlockedPerkNames]);
   const unlocked = useMemo(() => pool.filter((p) => unlockedSet.has(p.name)), [pool, unlockedSet]);
   const locked = useMemo(() => pool.filter((p) => !unlockedSet.has(p.name)), [pool, unlockedSet]);
@@ -112,7 +113,9 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
         Available ({unlocked.length})
       </div>
       {unlocked.length === 0 ? (
-        <p className="text-xs text-slate-400 dark:text-slate-500 mb-5">No perks unlocked yet.</p>
+        <p className="text-xs text-slate-400 dark:text-slate-500 mb-5">
+          {dict?.streaks?.noPerksUnlockedYet || 'No perks unlocked yet.'}
+        </p>
       ) : (
         <div className="mb-5 grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {unlocked.map((perk) => (
@@ -126,7 +129,9 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
         Locked ({locked.length})
       </div>
       {locked.length === 0 ? (
-        <p className="text-xs text-slate-400 dark:text-slate-500">Every perk is unlocked.</p>
+        <p className="text-xs text-slate-400 dark:text-slate-500">
+          {dict?.streaks?.everyPerkUnlocked || 'Every perk is unlocked.'}
+        </p>
       ) : (
         <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {locked.map((perk) => (

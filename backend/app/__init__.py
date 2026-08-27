@@ -12,11 +12,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from app.core.config import Config
 from app.core.extensions import db, migrate, mail
 from app.core.limiter import limiter
+from app.core.json_provider import ORJSONProvider
 import app.models  # noqa: F401
 
 
 def create_app(config_class: Optional[Type[Config]] = None) -> Flask:
     flask_app = Flask(__name__)
+    flask_app.json = ORJSONProvider(flask_app)
 
     if config_class is None:
         flask_app.config.from_object(Config)

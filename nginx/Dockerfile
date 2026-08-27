@@ -11,6 +11,11 @@ RUN mkdir -p /etc/nginx/certs && \
     -out /etc/nginx/certs/localhost.crt \
     -subj "/CN=localhost/O=LemonDBD/C=US"
 
+# Ensure /var/log/nginx directory exists and has appropriate permissions
+RUN mkdir -p /var/log/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chmod -R 755 /var/log/nginx
+
 COPY default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80 443

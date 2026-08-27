@@ -38,7 +38,9 @@ export const ChaosCheckpointModal: React.FC<ChaosCheckpointModalProps> = ({ chec
           <PartyPopper className="h-3.5 w-3.5" />
           {dict?.streaks?.checkpointBanked || 'Checkpoint banked'}
         </div>
-        <h2 className="mt-2 text-3xl font-black tracking-tight text-white">{checkpoint} wins</h2>
+        <h2 className="mt-2 text-3xl font-black tracking-tight text-white">
+          {checkpoint} {dict?.streaks?.winsSuffix || 'wins'}
+        </h2>
         <p className="mt-2 text-sm text-slate-300">
           {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'} <strong className="text-violet-300">{checkpoint}</strong>{dict?.streaks?.notToZero || ', not to zero.'}
         </p>

@@ -82,7 +82,9 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
                 {dict?.streaks?.perkPool || 'Perk Pool'}
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                {used.length} used &middot; {remaining.length} left this cycle
+                {used.length} {dict?.streaks?.usedLabel || 'used'} {dict?.streaks?.middotSeparator || '·'}{' '}
+                {remaining.length}{' '}
+                {dict?.streaks?.leftThisCycle || 'left this cycle'}
               </p>
             </div>
           </div>
@@ -104,7 +106,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
             }`}
           >
             <CheckCircle2 className="w-3.5 h-3.5" />
-            Used ({used.length})
+            {dict?.streaks?.usedTab || 'Used'} ({used.length})
           </button>
           <button
             onClick={() => setTab('remaining')}
@@ -115,7 +117,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
             }`}
           >
             <Circle className="w-3.5 h-3.5" />
-            Remaining ({remaining.length})
+            {dict?.streaks?.remainingTab || 'Remaining'} ({remaining.length})
           </button>
         </div>
 

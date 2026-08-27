@@ -133,6 +133,18 @@ export default {
   "verifyEmail": "Verify email",
   "loginToTrack": "Log in to track your challenges",
   "loginToTrackDesc": "Challenges use the killers and perks you own, so we need to know who you are first.",
-  "logIn": "Log in"
+  "logIn": "Log in",
+  "youWonOn": "You won on",
+  "modeSuffix": "mode.",
+  "devSkipWinLabel": "DEV: Skip to win screen",
+  "winsSuffix": "wins",
+  "usedLabel": "used",
+  "leftThisCycle": "left this cycle",
+  "usedTab": "Used",
+  "remainingTab": "Remaining",
+  "killersCleared": "killers cleared",
+  "streakLabel": "Streak:",
+  "streakArrow": "→",
+  "middotSeparator": "·"
 };
 

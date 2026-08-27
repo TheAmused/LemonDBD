@@ -133,6 +133,18 @@ export default {
   "verifyEmail": "Verificar correo",
   "loginToTrack": "Inicia sesión para rastrear tus desafíos",
   "loginToTrackDesc": "Los desafíos utilizan los asesinos y ventajas que posees.",
-  "logIn": "Iniciar Sesión"
+  "logIn": "Iniciar Sesión",
+  "youWonOn": "Ganaste en modo",
+  "modeSuffix": ".",
+  "devSkipWinLabel": "DEV: Saltar a la pantalla de victoria",
+  "winsSuffix": "victorias",
+  "usedLabel": "usados",
+  "leftThisCycle": "restantes en este ciclo",
+  "usedTab": "Usados",
+  "remainingTab": "Restantes",
+  "killersCleared": "asesinos superados",
+  "streakLabel": "Racha:",
+  "streakArrow": "→",
+  "middotSeparator": "·"
 };
 

@@ -39,7 +39,8 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
     )}
     renderMeta={(log) => (
       <span>
-        Streak: {log.streak_before} &rarr; {log.streak_after}
+        {dict?.streaks?.streakLabel || 'Streak:'} {log.streak_before} {dict?.streaks?.streakArrow || '→'}{' '}
+        {log.streak_after}
       </span>
     )}
   />

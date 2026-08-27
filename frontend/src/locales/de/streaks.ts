@@ -133,6 +133,18 @@ export default {
   "verifyEmail": "E-Mail bestätigen",
   "loginToTrack": "Melde dich an, um Herausforderungen zu verfolgen",
   "loginToTrackDesc": "Herausforderungen basieren auf deinen eigenen Killern und Talenten.",
-  "logIn": "Anmelden"
+  "logIn": "Anmelden",
+  "youWonOn": "Gewonnen im Modus",
+  "modeSuffix": ".",
+  "devSkipWinLabel": "DEV: Zum Sieg-Bildschirm springen",
+  "winsSuffix": "Siege",
+  "usedLabel": "verwendet",
+  "leftThisCycle": "übrig in diesem Zyklus",
+  "usedTab": "Verwendet",
+  "remainingTab": "Verbleibend",
+  "killersCleared": "Killer besiegt",
+  "streakLabel": "Serie:",
+  "streakArrow": "→",
+  "middotSeparator": "·"
 };
 

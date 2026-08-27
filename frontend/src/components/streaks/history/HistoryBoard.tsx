@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
@@ -18,15 +18,20 @@ import { HistoryPerkModal } from './HistoryPerkModal';
 import { HistoryNextRowPreview } from './HistoryNextRowPreview';
 import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
 import { HistoryRulesModal } from './HistoryRulesModal';
+import { HistoryModeModal } from './HistoryModeModal';
 import { Perk } from '@/types/gauntletStreak';
+import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
+import { useStreaksDict } from '@/context/StreaksDictContext';
 
 interface HistoryBoardProps {
   locale: string;
-  dict?: any;
 }
 
-export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
+export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
+  const dict = useStreaksDict();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
   const { run, stats, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
@@ -40,6 +45,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [perkModal, setPerkModal] = useState<{ killerName: string; perks: Perk[] } | null>(null);
   const [rowClearedNumber, setRowClearedNumber] = useState<number | null>(null);
+  const [isChangeModeOpen, setIsChangeModeOpen] = useState(false);
 
   const isCompleted = run?.status === 'completed';
 
@@ -103,6 +109,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
+          onChangeMode={() => setIsChangeModeOpen(true)}
         />
 
         {isCompleted ? (
@@ -208,6 +215,17 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {
           onClose={() => setPerkModal(null)}
         />
         <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} />
+        <HistoryModeModal
+          isOpen={isChangeModeOpen}
+          onClose={() => setIsChangeModeOpen(false)}
+          currentMode={mode}
+          onSelectMode={(newMode) => {
+            saveHistoryMode(newMode);
+            setIsChangeModeOpen(false);
+            router.push(`${pathname}?mode=${newMode}`);
+          }}
+          dict={dict}
+        />
       </div>
     </div>
   );

@@ -22,5 +22,7 @@ export default {
   "pickAction": "Perk wählen",
   "selectPerkToBan": "Wähle einen Perk zum Bannen",
   "selectPerkToPick": "Wähle einen Perk zum Auswählen",
-  "waitingForOpponent": "Warte auf die Aktion des Gegners..."
+  "waitingForOpponent": "Warte auf die Aktion des Gegners...",
+  "plusPrefix": "+",
+  "maxPerSideSuffix": "(Max. 3 pro Seite)"
 };

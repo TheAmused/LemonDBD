@@ -22,5 +22,7 @@ export default {
   "pickAction": "Seleccionar Habilidad",
   "selectPerkToBan": "Selecciona una Habilidad para Bloquear",
   "selectPerkToPick": "Selecciona una Habilidad para Elegir",
-  "waitingForOpponent": "Esperando la acción del oponente..."
+  "waitingForOpponent": "Esperando la acción del oponente...",
+  "plusPrefix": "+",
+  "maxPerSideSuffix": "(Máx. 3 por lado)"
 };

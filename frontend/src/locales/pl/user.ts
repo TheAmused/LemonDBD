@@ -52,6 +52,11 @@ export default {
   "backToSignIn": "Powrót do logowania",
   "alreadyHaveAccount": "Masz już konto?",
   "dontHaveAccount": "Nie masz jeszcze konta?",
-  "register": "Zarejestruj się"
+  "register": "Zarejestruj się",
+  "signedInButPrefix": "Jesteś zalogowany, ale",
+  "notVerifiedYetNotice": "nie jest jeszcze zweryfikowany. Wpisz poniżej kod, który wysłaliśmy na e-mail.",
+  "forgotPasswordLink": "Nie pamiętasz hasła?",
+  "quoteOpen": "„",
+  "quoteClose": "”"
 };
 

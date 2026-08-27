@@ -205,8 +205,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <p className="text-xs text-slate-600 dark:text-slate-400">
               {notice.type === 'verify-reminder' ? (
                 <>
-                  You&apos;re signed in, but <strong>{notice.email}</strong> isn&apos;t verified yet.
-                  Enter the code we emailed you below.
+                  {dict?.user?.signedInButPrefix || "You're signed in, but"} <strong>{notice.email}</strong>{' '}
+                  {dict?.user?.notVerifiedYetNotice || "isn't verified yet. Enter the code we emailed you below."}
                 </>
               ) : (
                 <>
@@ -311,7 +311,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   onClick={() => switchMode('forgot')}
                   className="text-[11px] text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
                 >
-                  Forgot password?
+                  {dict?.user?.forgotPasswordLink || 'Forgot password?'}
                 </button>
               </div>
             )}

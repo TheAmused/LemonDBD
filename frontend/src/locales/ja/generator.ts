@@ -47,6 +47,12 @@ export default {
   "clearSlotTooltip": "スロットをクリア",
   "chaosWheelTitle": "カオスの呪いルーレット",
   "chaosWheelDesc": "ルーレットを回して4パーク構成に試練の呪いまたは強化を付与します。",
-  "done": "完了"
+  "done": "完了",
+  "inventoryCoordinatesNote": "インベントリ座標 [ページ / スロット] 付き",
+  "slotLabel": "スロット #",
+  "coordOpenPage": "[P",
+  "coordSlot": "/S",
+  "coordClose": "]",
+  "emptyCoordinate": "[-/-]"
 };
 

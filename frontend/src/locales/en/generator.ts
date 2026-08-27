@@ -47,6 +47,12 @@ export default {
   "clearSlotTooltip": "Clear slot",
   "chaosWheelTitle": "Chaos Wheel of Curses",
   "chaosWheelDesc": "Spin to apply a single trial Curse or Buff to your 4 perk loadout.",
-  "done": "Done"
+  "done": "Done",
+  "inventoryCoordinatesNote": "with inventory coordinates [Page / Slot]",
+  "slotLabel": "Slot #",
+  "coordOpenPage": "[P",
+  "coordSlot": "/S",
+  "coordClose": "]",
+  "emptyCoordinate": "[-/-]"
 };
 

@@ -8,6 +8,10 @@ export default {
   "dailyQuests": "Daily Quests",
   "weeklyQuests": "Weekly Quests",
   "noQuestsDesc": "No quests available in this category right now. Check back soon for new trial objectives!",
-  "noQuestsFound": "No quests found in this category."
+  "noQuestsFound": "No quests found in this category.",
+  "xpPrefix": "+",
+  "xpSuffix": "XP",
+  "allQuestsPrefix": "All Quests (",
+  "percentCloseParen": "%)"
 };
 

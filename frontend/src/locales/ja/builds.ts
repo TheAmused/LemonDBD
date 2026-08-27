@@ -33,5 +33,7 @@ export default {
   "meta": "環境メタ",
   "meme": "ネタ構成",
   "stealth": "隠密",
-  "chase": "チェイス"
+  "chase": "チェイス",
+  "byAuthorPrefix": "作成者：",
+  "targetCharacterLabel": "対象キャラクター："
 };

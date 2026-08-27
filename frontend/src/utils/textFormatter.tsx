@@ -594,6 +594,7 @@ export interface FormattedDbdTextOptions {
   isCompact?: boolean;
   highlightName?: string;
   className?: string;
+  noticeLabel?: string;
 }
 
 /**
@@ -612,7 +613,7 @@ export function renderFormattedDbdText(
       ? { isCompact: optionsOrCompact }
       : optionsOrCompact;
 
-  const { isCompact = false, highlightName = '' } = options;
+  const { isCompact = false, highlightName = '', noticeLabel = 'Notice' } = options;
   const tokenRegex = highlightName ? createDbdTokenRegex(highlightName) : TOKEN_REGEX;
 
   // 1. Normalize HTML tags, entities, and line breaks
@@ -703,7 +704,7 @@ export function renderFormattedDbdText(
           className="p-3 my-2 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs font-semibold text-amber-300 flex items-start gap-2.5 shadow-sm"
         >
           <span className="shrink-0 font-mono font-bold uppercase tracking-wider text-[10px] bg-amber-500/25 px-2 py-0.5 rounded-lg text-amber-300">
-            Notice
+            {noticeLabel}
           </span>
           <span className="leading-relaxed">{line}</span>
         </div>

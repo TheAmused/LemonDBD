@@ -118,6 +118,9 @@ export default {
   "userDirectoryLabel": "ユーザー一覧",
   "bugReportsLabel": "バグ報告",
   "confirmDeleteUserPrefix": "本当にこのユーザーを削除しますか：",
-  "cannotBeUndone": "この操作は取り消せません。"
+  "cannotBeUndone": "この操作は取り消せません。",
+  "kbReadySuffix": "KB、復元準備完了",
+  "createdCountPrefix": "+",
+  "updatedCountSuffix": "件更新)"
 };
 

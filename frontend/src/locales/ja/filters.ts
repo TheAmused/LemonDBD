@@ -37,5 +37,6 @@ export default {
   "resetAllFilters": "キャラクターフィルターをリセット",
   "sortOrder": "ソート方向",
   "sortFields": "ソートフィールド",
-  "sortOrderLabel": "ソート方向"
+  "sortOrderLabel": "ソート方向",
+  "aliasLabel": "別名："
 };

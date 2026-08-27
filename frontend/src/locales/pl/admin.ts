@@ -118,6 +118,9 @@ export default {
   "userDirectoryLabel": "Katalog użytkowników",
   "bugReportsLabel": "Zgłoszenia błędów",
   "confirmDeleteUserPrefix": "Czy na pewno chcesz usunąć użytkownika",
-  "cannotBeUndone": "Tej operacji nie można cofnąć."
+  "cannotBeUndone": "Tej operacji nie można cofnąć.",
+  "kbReadySuffix": "KB, gotowe do przywrócenia",
+  "createdCountPrefix": "+",
+  "updatedCountSuffix": "zaktualizowanych)"
 };
 

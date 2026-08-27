@@ -47,6 +47,12 @@ export default {
   "clearSlotTooltip": "Wyczyść slot",
   "chaosWheelTitle": "Koło Przekleństw Chaosu",
   "chaosWheelDesc": "Zakręć, aby nałożyć klątwę lub wzmocnienie na swój 4-perkowy zestaw.",
-  "done": "Gotowe"
+  "done": "Gotowe",
+  "inventoryCoordinatesNote": "ze współrzędnymi ekwipunku [Strona / Slot]",
+  "slotLabel": "Slot #",
+  "coordOpenPage": "[P",
+  "coordSlot": "/S",
+  "coordClose": "]",
+  "emptyCoordinate": "[-/-]"
 };
 

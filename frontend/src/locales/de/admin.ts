@@ -118,6 +118,9 @@ export default {
   "userDirectoryLabel": "Benutzerverzeichnis",
   "bugReportsLabel": "Fehlerberichte",
   "confirmDeleteUserPrefix": "Bist du sicher, dass du diesen Benutzer löschen möchtest:",
-  "cannotBeUndone": "Dies kann nicht rückgängig gemacht werden."
+  "cannotBeUndone": "Dies kann nicht rückgängig gemacht werden.",
+  "kbReadySuffix": "KB, bereit zur Wiederherstellung",
+  "createdCountPrefix": "+",
+  "updatedCountSuffix": "aktualisiert)"
 };
 

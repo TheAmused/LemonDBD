@@ -33,5 +33,7 @@ export default {
   "meta": "Meta",
   "meme": "Meme",
   "stealth": "Stealth",
-  "chase": "Pościg"
+  "chase": "Pościg",
+  "byAuthorPrefix": "od",
+  "targetCharacterLabel": "Docelowa postać:"
 };

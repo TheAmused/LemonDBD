@@ -333,7 +333,8 @@ export default function UserProfilePage() {
                   </span>
                   <span className="flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5 text-slate-500" />
-                    Joined {user.created_at ? new Date(user.created_at).toLocaleDateString() : '2026'}
+                    {dict?.user?.memberSince || 'Member since'}{' '}
+                    {user.created_at ? new Date(user.created_at).toLocaleDateString() : '2026'}
                   </span>
                 </div>
 

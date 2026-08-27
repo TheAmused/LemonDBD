@@ -8,6 +8,10 @@ export default {
   "dailyQuests": "デイリークエスト",
   "weeklyQuests": "ウィークリークエスト",
   "noQuestsDesc": "現在このカテゴリーで利用可能なクエストはありません。新しい試練の目標をお待ちください！",
-  "noQuestsFound": "このカテゴリーにクエストは見つかりませんでした。"
+  "noQuestsFound": "このカテゴリーにクエストは見つかりませんでした。",
+  "xpPrefix": "+",
+  "xpSuffix": "XP",
+  "allQuestsPrefix": "全クエスト (",
+  "percentCloseParen": "%)"
 };
 

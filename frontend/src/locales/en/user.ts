@@ -52,6 +52,11 @@ export default {
   "backToSignIn": "Back to Sign In",
   "alreadyHaveAccount": "Already have an account?",
   "dontHaveAccount": "Don't have an account?",
-  "register": "Register"
+  "register": "Register",
+  "signedInButPrefix": "You're signed in, but",
+  "notVerifiedYetNotice": "isn't verified yet. Enter the code we emailed you below.",
+  "forgotPasswordLink": "Forgot password?",
+  "quoteOpen": "\"",
+  "quoteClose": "\""
 };
 

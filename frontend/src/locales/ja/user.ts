@@ -52,6 +52,11 @@ export default {
   "backToSignIn": "サインインに戻る",
   "alreadyHaveAccount": "既にアカウントをお持ちですか？",
   "dontHaveAccount": "アカウントをお持ちでないですか？",
-  "register": "新規登録"
+  "register": "新規登録",
+  "signedInButPrefix": "サインイン済みですが、",
+  "notVerifiedYetNotice": "はまだ確認されていません。下記に送信したコードを入力してください。",
+  "forgotPasswordLink": "パスワードをお忘れですか?",
+  "quoteOpen": "「",
+  "quoteClose": "」"
 };
 

@@ -58,7 +58,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dic
             </div>
           </div>
           <span className="text-xs font-black text-cyan-400 font-mono">
-            {survPercent}%
+            {survPercent}{'%'}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
@@ -86,7 +86,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dic
             </div>
           </div>
           <span className="text-xs font-black text-rose-400 font-mono">
-            {killerPercent}%
+            {killerPercent}{'%'}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
@@ -114,7 +114,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dic
             </div>
           </div>
           <span className="text-xs font-black text-amber-400 font-mono">
-            {perkPercent}%
+            {perkPercent}{'%'}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">

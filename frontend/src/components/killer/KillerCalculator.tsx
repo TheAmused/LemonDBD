@@ -275,7 +275,8 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="rounded-full bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-600 dark:text-rose-400 border border-rose-500/20 flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5" /> Phase 3 Feature
+                <Sparkles className="h-3.5 w-3.5" />{' '}
+                {dict?.characterDetail?.phase3FeatureBadge || 'Phase 3 Feature'}
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono flex items-center gap-3">
@@ -323,7 +324,11 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                     <div className="min-w-0">
                       <div className="font-extrabold text-xs text-slate-900 dark:text-slate-100 truncate">{k.name}</div>
                       <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                        TR: {k.base_terror_radius}m {k.lullaby_radius > 0 ? `| Lullaby: ${k.lullaby_radius}m` : ''}
+                        {dict?.characterDetail?.terrorRadiusPrefix || 'TR:'} {k.base_terror_radius}
+                        {dict?.characterDetail?.meterUnit || 'm'}{' '}
+                        {k.lullaby_radius > 0
+                          ? `| Lullaby: ${k.lullaby_radius}${dict?.characterDetail?.meterUnit || 'm'}`
+                          : ''}
                       </div>
                     </div>
                   </button>
@@ -339,7 +344,8 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                 <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400" /> {dict?.characterDetail?.equipmentTitleKiller || 'Select 2 Add-ons'}
               </h2>
               <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full font-mono border border-slate-200 dark:border-slate-700">
-                {selectedAddonIds.length}/2 Selected
+                {selectedAddonIds.length}
+                {dict?.characterDetail?.outOfTwoSelectedSuffix || '/2 Selected'}
               </span>
             </div>
 
@@ -498,10 +504,18 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
               {calculationResult && (
                 <div className="flex items-center gap-3 text-xs font-mono">
                   <span className="text-slate-500 dark:text-slate-400">
-                    Base TR: <strong className="text-slate-800 dark:text-slate-200">{calculationResult.terror_radius.base}m</strong>
+                    {dict?.characterDetail?.baseTrPrefix || 'Base TR:'}{' '}
+                    <strong className="text-slate-800 dark:text-slate-200">
+                      {calculationResult.terror_radius.base}
+                      {dict?.characterDetail?.meterUnit || 'm'}
+                    </strong>
                   </span>
                   <span className="text-rose-600 dark:text-rose-400 font-extrabold">
-                    Modified: <strong>{calculationResult.terror_radius.modified}m</strong>
+                    {dict?.characterDetail?.modifiedPrefix || 'Modified:'}{' '}
+                    <strong>
+                      {calculationResult.terror_radius.modified}
+                      {dict?.characterDetail?.meterUnit || 'm'}
+                    </strong>
                   </span>
                 </div>
               )}
@@ -518,7 +532,10 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                 <span className="text-slate-500 dark:text-slate-400 block text-[10px]">
                   {dict?.characterDetail?.terrorRadius || 'BASE TERROR RADIUS'}
                 </span>
-                <span className="text-rose-600 dark:text-rose-400 font-mono">{calculationResult?.terror_radius?.base || 0}m</span>
+                <span className="text-rose-600 dark:text-rose-400 font-mono">
+                  {calculationResult?.terror_radius?.base || 0}
+                  {dict?.characterDetail?.meterUnit || 'm'}
+                </span>
               </div>
 
               <div className="rounded-lg bg-rose-50 dark:bg-slate-950 p-2 border border-rose-500/30 bg-rose-500/5 shadow-sm">
@@ -526,7 +543,8 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                   {dict?.characterDetail?.acousticRange || 'MODIFIED TERROR RADIUS'}
                 </span>
                 <span className="text-rose-600 dark:text-rose-500 font-mono text-xs">
-                  {calculationResult?.terror_radius?.modified || 0}m
+                  {calculationResult?.terror_radius?.modified || 0}
+                  {dict?.characterDetail?.meterUnit || 'm'}
                 </span>
               </div>
 
@@ -534,7 +552,10 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                 <span className="text-amber-700 dark:text-amber-400/80 block text-[10px]">
                   {dict?.characterDetail?.lullabyRadius || 'LULLABY RADIUS'}
                 </span>
-                <span className="text-amber-700 dark:text-amber-400 font-mono">{calculationResult?.lullaby?.base || 0}m</span>
+                <span className="text-amber-700 dark:text-amber-400 font-mono">
+                  {calculationResult?.lullaby?.base || 0}
+                  {dict?.characterDetail?.meterUnit || 'm'}
+                </span>
               </div>
             </div>
           </div>
@@ -602,7 +623,8 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                     <div key={idx} className="flex justify-between items-center text-slate-800 dark:text-slate-300">
                       <span>{item.source}</span>
                       <span className="font-mono font-bold">
-                        {item.value >= 0 ? `+${item.value}` : item.value}m
+                        {item.value >= 0 ? `+${item.value}` : item.value}
+                        {dict?.characterDetail?.meterUnit || 'm'}
                       </span>
                     </div>
                   ))}

@@ -4,6 +4,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
+import { useAltcha } from '@/hooks/useAltcha';
+import { AltchaWidget } from '@/components/common/AltchaWidget';
 import {
   X,
   Lock,
@@ -39,8 +41,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   verifyEmailFor,
 }) => {
   const { login, register, forgotPassword } = useAuth();
+  const {
+    altchaPayload,
+    isVerifying: isAltchaVerifying,
+    isVerified: isAltchaVerified,
+    error: altchaError,
+    refreshChallenge,
+    honeypotValue,
+    honeypotProps,
+  } = useAltcha();
+
   const [mode, setMode] = useState<AuthMode>(initialMode);
-  const isLoginMode = mode === 'login';
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -71,14 +82,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
     try {
       if (mode === 'forgot') {
-        const res = await forgotPassword(email);
+        const res = await forgotPassword(email, {
+          website_trap: honeypotValue,
+          altcha: altchaPayload,
+        });
         if (res.success) {
           setNotice({ type: 'forgot-sent' });
         } else {
           setError(res.error || 'Failed to request password reset');
         }
       } else if (mode === 'login') {
-        const res = await login(username, password);
+        const res = await login(username, password, {
+          website_trap: honeypotValue,
+          altcha: altchaPayload,
+        });
         if (res.success) {
           if (res.user && !res.user.is_verified) {
             setNotice({ type: 'verify-reminder', email: res.user.email });
@@ -89,7 +106,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           setError(res.error || 'Invalid credentials');
         }
       } else {
-        const res = await register(username, email, password);
+        const res = await register(username, email, password, {
+          website_trap: honeypotValue,
+          altcha: altchaPayload,
+        });
         if (res.success) {
           setNotice({ type: 'register-success', email: res.user?.email || email });
         } else {
@@ -289,6 +309,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </button>
               </div>
             )}
+
+            {/* ALTCHA PoW Security & Honeypot Trap */}
+            <AltchaWidget
+              isVerifying={isAltchaVerifying}
+              isVerified={isAltchaVerified}
+              error={altchaError}
+              onRetry={refreshChallenge}
+              honeypotProps={honeypotProps}
+            />
 
             <button
               type="submit"

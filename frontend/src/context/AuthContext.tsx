@@ -39,13 +39,13 @@ interface AuthContextType {
   isAdmin: boolean;
   isLoading: boolean;
   ownership: OwnershipSummary | null;
-  login: (usernameOrEmail: string, password: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
-  register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  login: (usernameOrEmail: string, password: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  register: (username: string, email: string, password: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
   logout: () => void;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
   verifyEmail: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
-  forgotPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
-  resetPassword: (token: string, newPassword: string) => Promise<{ success: boolean; error?: string }>;
+  forgotPassword: (email: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (token: string, newPassword: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
   updateCharacterOwnership: (characterId: number, isOwned: boolean) => Promise<boolean>;
   bulkUpdateCharacterOwnership: (updates: Array<{ character_id: number; is_owned: boolean }>) => Promise<boolean>;
@@ -101,12 +101,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [fetchCurrentUser]);
 
-  const login = async (usernameOrEmail: string, password: string) => {
+  const login = async (usernameOrEmail: string, password: string, extra?: Record<string, any>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username_or_email: usernameOrEmail, password }),
+        body: JSON.stringify({ username_or_email: usernameOrEmail, password, ...extra }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -122,12 +122,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (username: string, email: string, password: string, extra?: Record<string, any>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, ...extra }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -177,12 +177,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const forgotPassword = async (email: string) => {
+  const forgotPassword = async (email: string, extra?: Record<string, any>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, ...extra }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -194,12 +194,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const resetPassword = async (token: string, newPassword: string) => {
+  const resetPassword = async (token: string, newPassword: string, extra?: Record<string, any>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, new_password: newPassword }),
+        body: JSON.stringify({ token, new_password: newPassword, ...extra }),
       });
       const data = await res.json();
       if (!res.ok) {

@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { X, Lock, BookOpen, type LucideIcon } from 'lucide-react';
+import { X, BookOpen, type LucideIcon } from 'lucide-react';
 
 export interface ChallengeIntroTile {
   value: string;
@@ -29,6 +29,7 @@ export interface ChallengeIntroModalShellProps {
   tileGridClassName: string;
   escapeDisabled?: boolean;
   selectedValue?: string;
+  currentLabel: string;
 }
 
 export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> = ({
@@ -45,6 +46,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
   tileGridClassName,
   escapeDisabled,
   selectedValue,
+  currentLabel,
 }) => {
   useEffect(() => {
     if (!isOpen || escapeDisabled) return;
@@ -103,6 +105,14 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           {tiles.map((tile) => {
             const TileIcon = tile.icon;
             const isCurrent = tile.value === selectedValue;
+            const labelClassName = tile.disabled
+              ? 'font-bold text-slate-500 dark:text-slate-400'
+              : 'font-bold text-slate-900 dark:text-white';
+            const descriptionClassName = tile.disabled
+              ? 'text-xs text-slate-400 dark:text-slate-500 text-balance'
+              : 'text-xs text-slate-500 dark:text-slate-400 text-balance';
+            const badgeClassName = 'text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500';
+
             const content = (
               <>
                 {tile.image ? (
@@ -112,15 +122,12 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                     className="h-10 w-10 rounded-xl object-cover shadow-sm"
                   />
                 ) : (
-                  <TileIcon className="w-6 h-6" />
+                  <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-slate-400' : ''}`} />
                 )}
-                <span className="font-bold text-slate-900 dark:text-white">{tile.label}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 text-balance">{tile.description}</span>
-                {isCurrent && (
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-current">
-                    Current
-                  </span>
-                )}
+                <span className={labelClassName}>{tile.label}</span>
+                <span className={descriptionClassName}>{tile.description}</span>
+                {isCurrent && <span className={`${badgeClassName} text-current`}>{currentLabel}</span>}
+                {tile.disabledBadge && <span className={badgeClassName}>{tile.disabledBadge}</span>}
               </>
             );
 
@@ -130,14 +137,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                   key={tile.value}
                   className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/30 p-5 text-center opacity-70"
                 >
-                  <Lock className="w-6 h-6 text-slate-400" />
-                  <span className="font-bold text-slate-500 dark:text-slate-400">{tile.label}</span>
-                  <span className="text-xs text-slate-400 dark:text-slate-500 text-balance">{tile.description}</span>
-                  {tile.disabledBadge && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                      {tile.disabledBadge}
-                    </span>
-                  )}
+                  {content}
                 </div>
               );
             }

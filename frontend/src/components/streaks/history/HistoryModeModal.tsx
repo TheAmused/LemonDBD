@@ -57,6 +57,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
         tileGridClassName="sm:grid-cols-2"
         escapeDisabled={isRulesOpen}
         selectedValue={currentMode}
+        currentLabel={dict?.streaks?.current || 'Current'}
       />
 
       <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

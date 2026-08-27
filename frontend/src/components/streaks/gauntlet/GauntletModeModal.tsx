@@ -62,6 +62,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         tileGridClassName="sm:grid-cols-2"
         escapeDisabled={isRulesOpen}
         selectedValue={currentMode}
+        currentLabel={dict?.streaks?.current || 'Current'}
       />
 
       <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />

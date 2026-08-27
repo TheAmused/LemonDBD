@@ -103,7 +103,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               onClick={() => {
-                const saved = getSavedGauntletMode();
+                const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
                 if (saved === 'original') {
                   router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
                 } else {
@@ -201,7 +201,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
         isOpen={isModeModalOpen}
         onClose={() => setIsModeModalOpen(false)}
         onSelectOriginal={() => {
-          saveGauntletMode('original');
+          saveGauntletMode(role as 'killer' | 'survivor', 'original');
           router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
         }}
         role={role as 'killer' | 'survivor'}

@@ -4,7 +4,7 @@ import { HistoryMode } from '@/types/historyStreak';
 
 const CHAOS_DIFFICULTY_KEY = 'lemon_dbd_chaos_streak_difficulty_v1';
 const HISTORY_MODE_KEY = 'lemon_dbd_history_streak_mode_v1';
-const GAUNTLET_MODE_KEY = 'lemon_dbd_gauntlet_streak_mode_v1';
+const GAUNTLET_MODE_KEY_PREFIX = 'lemon_dbd_gauntlet_streak_mode_v1';
 const PAGE_STREAK_SEEN_KEY = 'lemon_dbd_page_streak_seen_v1';
 
 function safeGet(key: string): string | null {
@@ -40,14 +40,15 @@ export function saveHistoryMode(mode: HistoryMode) {
 }
 
 export type GauntletMode = 'original' | 'lemon';
+export type GauntletRole = 'killer' | 'survivor';
 
-export function getSavedGauntletMode(): GauntletMode | null {
-  const value = safeGet(GAUNTLET_MODE_KEY);
+export function getSavedGauntletMode(role: GauntletRole): GauntletMode | null {
+  const value = safeGet(`${GAUNTLET_MODE_KEY_PREFIX}_${role}`);
   return value === 'original' || value === 'lemon' ? value : null;
 }
 
-export function saveGauntletMode(mode: GauntletMode) {
-  safeSet(GAUNTLET_MODE_KEY, mode);
+export function saveGauntletMode(role: GauntletRole, mode: GauntletMode) {
+  safeSet(`${GAUNTLET_MODE_KEY_PREFIX}_${role}`, mode);
 }
 
 export function hasSeenPageStreakIntro(): boolean {

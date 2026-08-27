@@ -323,7 +323,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
 
               <div>
                 <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3 font-mono">
-                  Sector Callouts &amp; Clock System
+                  {dict?.maps?.sectorCalloutsClockSystem || 'Sector Callouts & Clock System'}
                 </h3>
                 <MapLegendDrawer
                   clockSystem={activeMap?.clock_system}

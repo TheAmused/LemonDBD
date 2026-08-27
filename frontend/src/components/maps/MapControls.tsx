@@ -59,7 +59,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 px-2 min-w-[48px] text-center"
         data-testid="map-controls-zoom-level"
       >
-        {Math.round(zoomLevel * 100)}%
+        {Math.round(zoomLevel * 100)}{dict?.maps?.percentSign || '%'}
       </span>
 
       <button
@@ -112,7 +112,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             }`}
             data-testid="map-controls-preset-100"
           >
-            100%
+            {dict?.maps?.zoomPreset100 || '100%'}
           </button>
           <button
             type="button"
@@ -126,7 +126,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             }`}
             data-testid="map-controls-preset-150"
           >
-            150%
+            {dict?.maps?.zoomPreset150 || '150%'}
           </button>
           <button
             type="button"
@@ -140,7 +140,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
             }`}
             data-testid="map-controls-preset-200"
           >
-            200%
+            {dict?.maps?.zoomPreset200 || '200%'}
           </button>
         </div>
       )}

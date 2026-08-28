@@ -99,3 +99,5 @@ translations/*
 !translations/create_translations.py
 
 scratch/*
+
+response.md

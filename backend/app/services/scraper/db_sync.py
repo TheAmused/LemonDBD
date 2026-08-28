@@ -1,10 +1,9 @@
 # backend/app/services/scraper/db_sync.py
-import json
 import logging
-from typing import Dict, List, Optional
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps
 from app.models import Addon, Character, Item, MapRealm, MapTile, Offering, Perk
 from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData
 from app.scrapers.utils import clean_description_text, normalize_name_key, sanitize_filename
@@ -12,7 +11,7 @@ from app.scrapers.utils import clean_description_text, normalize_name_key, sanit
 logger = logging.getLogger(__name__)
 
 
-def sync_characters_to_db(characters: List[CharacterData]) -> Dict[str, Character]:
+def sync_characters_to_db(characters: list[CharacterData]) -> dict[str, Character]:
     """Upsert canonical characters and return lookup dictionary."""
     existing_chars = {
         normalize_name_key(c.name): c
@@ -37,7 +36,7 @@ def sync_characters_to_db(characters: List[CharacterData]) -> Dict[str, Characte
         p_height = c.power.height if c.power else None
 
         cp_raw = getattr(c, "dlc_counterparts", None)
-        cp_str = json.dumps(cp_raw) if isinstance(cp_raw, list) else cp_raw
+        cp_str = safe_json_dumps(cp_raw, default_val="[]") if isinstance(cp_raw, list) else cp_raw
         trans = getattr(c, "translations", None) or {}
 
         if existing_char:
@@ -110,7 +109,7 @@ def sync_characters_to_db(characters: List[CharacterData]) -> Dict[str, Characte
     return existing_chars
 
 
-def sync_perks_to_db(perks: List[PerkData], char_lookup: Dict[str, int]) -> None:
+def sync_perks_to_db(perks: list[PerkData], char_lookup: dict[str, int]) -> None:
     """Upsert perks with automatic teachable character association."""
     if not perks:
         return
@@ -166,7 +165,7 @@ def sync_perks_to_db(perks: List[PerkData], char_lookup: Dict[str, int]) -> None
     db.session.commit()
 
 
-def sync_items_to_db(items: List[ItemData]) -> None:
+def sync_items_to_db(items: list[ItemData]) -> None:
     """Upsert survivor items and tools."""
     if not items:
         return
@@ -214,7 +213,7 @@ def sync_items_to_db(items: List[ItemData]) -> None:
     db.session.commit()
 
 
-def sync_addons_to_db(addons: List[AddonData]) -> None:
+def sync_addons_to_db(addons: list[AddonData]) -> None:
     """Upsert killer power addons and item addons."""
     if not addons:
         return
@@ -262,7 +261,7 @@ def sync_addons_to_db(addons: List[AddonData]) -> None:
     db.session.commit()
 
 
-def sync_maps_to_db(maps: List[MapData]) -> None:
+def sync_maps_to_db(maps: list[MapData]) -> None:
     """Upsert map realms and clock landmark tiles."""
     if not maps:
         return
@@ -341,7 +340,7 @@ def sync_maps_to_db(maps: List[MapData]) -> None:
     db.session.commit()
 
 
-def sync_offerings_to_db(offerings: List[OfferingData]) -> None:
+def sync_offerings_to_db(offerings: list[OfferingData]) -> None:
     """Upsert offering items and preserve valid entries."""
     if not offerings:
         return
@@ -389,13 +388,13 @@ def sync_offerings_to_db(offerings: List[OfferingData]) -> None:
 
 
 def sync_all_to_database(
-    characters: List[CharacterData],
-    perks: List[PerkData],
-    items: Optional[List[ItemData]] = None,
-    addons: Optional[List[AddonData]] = None,
-    maps: Optional[List[MapData]] = None,
-    offerings: Optional[List[OfferingData]] = None,
-) -> Dict[str, int]:
+    characters: list[CharacterData],
+    perks: list[PerkData],
+    items: list[ItemData] | None = None,
+    addons: list[AddonData] | None = None,
+    maps: list[MapData] | None = None,
+    offerings: list[OfferingData] | None = None,
+) -> dict[str, int]:
     """Execute complete database synchronization pipeline across all DBD entity domains."""
     items = items or []
     addons = addons or []
@@ -404,7 +403,7 @@ def sync_all_to_database(
 
     existing_chars = sync_characters_to_db(characters)
 
-    char_lookup: Dict[str, int] = {}
+    char_lookup: dict[str, int] = {}
     for c in existing_chars.values():
         char_lookup[normalize_name_key(c.name)] = c.id
         if c.real_name:
@@ -426,4 +425,3 @@ def sync_all_to_database(
         "maps_synced": len(maps),
         "offerings_synced": len(offerings),
     }
-

@@ -147,6 +147,12 @@ export interface PerkDictionary {
     generatorMode?: string;
     resetAllTooltip?: string;
     clearSlotTooltip?: string;
+    inventoryCoordinatesNote?: string;
+    slotLabel?: string;
+    coordOpenPage?: string;
+    coordSlot?: string;
+    coordClose?: string;
+    emptyCoordinate?: string;
   };
   empty?: {
     title?: string;

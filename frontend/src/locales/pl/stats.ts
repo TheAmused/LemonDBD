@@ -1,14 +1,22 @@
+// frontend/src/locales/pl/stats.ts
 export default {
-  "vaultStats": "Statystyki Bazy",
-  "totalPerks": "Wszystkie Perki",
+  "vaultStats": "Statystyki Skarbca",
+  "totalPerks": "Wszystkie Umiejętności",
   "characters": "Postacie",
   "survivors": "Ocalali",
   "killers": "Zabójcy",
-  "ratio": "Stosunek Ról",
-  "totalXpClaimed": "Łączne XP Zdobyte",
+  "ratio": "Rozkład Ról",
+  "totalXpClaimed": "Odebrane Punkty Doświadczenia (PD)",
   "completed": "Ukończono",
   "streak": "Seria",
-  "win": "pokonano",
-  "vaultTotal": "Wszystkie perki",
-  "ownedPerks": "Posiadane perki"
+  "win": "wygrana",
+  "vaultTotal": "Wszystkie w Skarbcu",
+  "ownedPerks": "Posiadane Umiejętności",
+  "totalXpEarned": "Wszystkie PD",
+  "questProgress": "Postęp Zadań",
+  "claimed": "Odebrane",
+  "active": "Aktywne",
+  "loss": "Przegrana",
+  "current": "Aktualna",
+  "best": "Najlepsza"
 };

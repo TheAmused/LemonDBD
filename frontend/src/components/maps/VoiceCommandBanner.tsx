@@ -836,7 +836,7 @@ export function VoiceCommandBanner({
           {modelProgress.status === 'downloading' && (
             <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300 animate-pulse font-mono">
               <RefreshCw className="h-2.5 w-2.5 animate-spin" />
-              <span>{modelProgress.progress}%</span>
+              <span>{modelProgress.progress}{dict?.maps?.percentSign || '%'}</span>
             </div>
           )}
 
@@ -862,7 +862,7 @@ export function VoiceCommandBanner({
             className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 p-0.5"
           >
             <span className="px-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
-              Source:
+              {dict?.maps?.sourceLabel || 'Source:'}
             </span>
             <button
               type="button"
@@ -874,7 +874,7 @@ export function VoiceCommandBanner({
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              Hens333 (12-Clock)
+              {dict?.maps?.sourceHensClock || 'Hens333 (12-Clock)'}
             </button>
 
             <button
@@ -887,7 +887,7 @@ export function VoiceCommandBanner({
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              SamoelColt (Isometric)
+              {dict?.maps?.sourceSamoelIsometric || 'SamoelColt (Isometric)'}
             </button>
 
             <button
@@ -900,7 +900,7 @@ export function VoiceCommandBanner({
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              All
+              {dict?.maps?.all || 'All'}
             </button>
           </div>
 
@@ -912,7 +912,7 @@ export function VoiceCommandBanner({
                 onClick={() => handleExecuteCommand(prompt.query)}
                 className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 hover:border-cyan-500/50 px-2 py-0.5 text-[10px] font-mono font-medium text-slate-600 dark:text-slate-300 transition active:scale-95 cursor-pointer shadow-xs"
               >
-                &ldquo;{prompt.label}&rdquo;
+                {dict?.maps?.openQuote || '“'}{prompt.label}{dict?.maps?.closeQuote || '”'}
               </button>
             ))}
           </div>
@@ -1065,7 +1065,7 @@ export function VoiceCommandBanner({
                 </div>
                 {liveTranscript && (
                   <span className="text-[10px] text-emerald-600/90 dark:text-emerald-400/90 font-mono truncate">
-                    Heard: &ldquo;{liveTranscript}&rdquo; {matchedResult.confidence ? `(${Math.round(matchedResult.confidence * 100)}% match)` : ''}
+                    {dict?.maps?.heardLabel || 'Heard:'} {dict?.maps?.openQuote || '“'}{liveTranscript}{dict?.maps?.closeQuote || '”'} {matchedResult.confidence ? `(${Math.round(matchedResult.confidence * 100)}% match)` : ''}
                   </span>
                 )}
               </div>
@@ -1104,7 +1104,7 @@ export function VoiceCommandBanner({
             {voiceStatus === 'idle' && (
               <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono">
                 <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1 py-0.2 text-[9px] font-mono text-cyan-600 dark:text-cyan-300 shadow-xs">
-                  V
+                  {dict?.maps?.keyV || 'V'}
                 </kbd>
                 <span className="truncate">
                   {locale === 'pl' ? 'Przytrzymaj [V] aby mówić (lub kliknij mikrofon)' : 'Hold [V] to talk (or click mic)'}
@@ -1181,7 +1181,7 @@ export function VoiceCommandBanner({
         hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
         modelProgress={modelProgress}
         onPreloadModel={() => initClientSpeechModel(locale)}
-        dict={dict}
+        dict={dict as any}
       />
     </section>
   );

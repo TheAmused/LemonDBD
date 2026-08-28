@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminReasonModal.tsx
 
 import React, { useEffect, useState } from 'react';
@@ -9,7 +10,7 @@ export interface AdminReasonModalProps {
   title: string;
   subtitle?: string;
   confirmLabel?: string;
-  dict?: any;
+  dict?: Dictionary;
   onCancel: () => void;
   onConfirm: (reason: string) => void;
 }
@@ -75,10 +76,11 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
 
         <div className="p-5 space-y-3">
           <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Reason (shown to players)
+            {dict?.admin?.reasonShownToPlayers || 'Reason (shown to players)'}
           </label>
           <textarea
             value={reason}
+
             onChange={(e) => setReason(e.target.value)}
             rows={3}
             maxLength={255}
@@ -94,10 +96,11 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
             onClick={onCancel}
             className="px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
           >
-            Cancel
+            {dict?.admin?.cancel || 'Cancel'}
           </button>
           <button
             onClick={() => onConfirm(reason.trim())}
+
             className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white transition-colors cursor-pointer shadow-md shadow-rose-500/20"
           >
             {confirmLabel}

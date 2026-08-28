@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapDirectoryList.tsx
 
 import React, { useMemo } from 'react';
@@ -20,7 +21,7 @@ export interface MapDirectoryListProps {
   backendBase?: string;
   className?: string;
   showFilters?: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
@@ -89,7 +90,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                 }`}
                 data-testid="realm-pill-all"
               >
-                All Realms ({Object.values(groupedMaps || {}).reduce((acc, curr) => acc + curr.length, 0)})
+                {dict?.maps?.allRealms || 'All Realms'} ({Object.values(groupedMaps || {}).reduce((acc, curr) => acc + curr.length, 0)})
               </button>
               {uniqueRealms.map((r) => {
                 const count = groupedMaps[r]?.length || 0;
@@ -139,7 +140,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
           />
           <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">{dict?.maps?.noMapsFound || 'No Maps Found'}</h3>
           <p className="mt-1 text-xs text-slate-500">
-            Try adjusting your search query or selected realm filter.
+            {dict?.maps?.noMapsAdjustFilter || 'Try adjusting your search query or selected realm filter.'}
           </p>
         </div>
       ) : (

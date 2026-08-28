@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/user/page.tsx
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -38,7 +39,7 @@ export default function UserProfilePage() {
   const { isCollapsed } = useSidebarState();
   const { user, isAuthenticated, isLoading, ownership, refreshUser } = useAuth();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<'overview' | 'bugs'>('overview');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bugModalOpen, setBugModalOpen] = useState(false);
@@ -52,7 +53,7 @@ export default function UserProfilePage() {
   const [loadingReports, setLoadingReports] = useState(false);
 
   useEffect(() => {
-    document.title = 'LemonDBD - User Profile';
+    document.title = dict?.app?.userPageTitle || 'LemonDBD - User Profile';
     getDictionary(currentLocale).then(setDict);
   }, [currentLocale]);
 
@@ -167,7 +168,7 @@ export default function UserProfilePage() {
     }
   };
 
-  if (isLoading) {
+  if (!dict || isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs">
         <div className="flex flex-col items-center gap-3">
@@ -188,13 +189,14 @@ export default function UserProfilePage() {
             <LemonIcon className="h-10 w-10 text-amber-400" />
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-wider font-mono text-slate-100">
-            Authentication Required
+            {dict?.user?.authRequiredTitle || 'Authentication Required'}
           </h1>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.
+            {dict?.user?.authRequiredDesc || 'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
           </p>
           <div className="flex flex-col gap-3 pt-2">
             <button
+
               type="button"
               onClick={() => setAuthModalOpen(true)}
               className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-red-600 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-amber-950/40 hover:from-amber-400 hover:to-red-500 transition-all cursor-pointer"
@@ -206,10 +208,11 @@ export default function UserProfilePage() {
               href={`/${currentLocale}`}
               className="text-xs text-slate-400 hover:text-amber-400 transition-colors py-1"
             >
-              Return to Home
+              {dict?.user?.returnToHome || 'Return to Home'}
             </Link>
           </div>
         </div>
+
         <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} dict={dict} />
       </div>
     );
@@ -331,15 +334,17 @@ export default function UserProfilePage() {
                   </span>
                   <span className="flex items-center gap-1.5">
                     <Calendar className="h-3.5 w-3.5 text-slate-500" />
-                    Joined {user.created_at ? new Date(user.created_at).toLocaleDateString() : '2026'}
+                    {dict?.user?.memberSince || 'Member since'}{' '}
+                    {user.created_at ? new Date(user.created_at).toLocaleDateString() : '2026'}
                   </span>
                 </div>
 
                 <p className="text-xs text-slate-400 pt-0.5">
-                  Active Player & LemonDBD Community Member
+                  {dict?.user?.activePlayerSubtitle || 'Active Player & LemonDBD Community Member'}
                 </p>
 
                 {user.role === 'admin' && (
+
                   <div className="pt-2">
                     <Link
                       href={`/${currentLocale}/admin`}
@@ -399,10 +404,11 @@ export default function UserProfilePage() {
 
                 <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-xl shadow-xl space-y-4 w-full">
                   <h2 className="text-base font-black uppercase tracking-wider text-slate-100 pb-2 border-b border-slate-800">
-                    Quick Shortcuts
+                    {dict?.user?.quickShortcuts || 'Quick Shortcuts'}
                   </h2>
 
                   <div className="space-y-2">
+
                     <Link
                       href={`/${currentLocale}/streaks`}
                       className="flex items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-xs font-bold text-slate-300 hover:border-orange-500/40 hover:bg-orange-500/10 hover:text-orange-400 transition-all group shadow-sm"

@@ -1,5 +1,6 @@
-// frontend/src/app/[locale]/quests/page.tsx
 'use client';
+// frontend/src/app/[locale]/quests/page.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -24,7 +25,7 @@ export default function QuestsPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [quests, setQuests] = useState<Quest[]>([]);
   const [filterCategory, setFilterCategory] = useState<'all' | 'daily' | 'weekly'>('all');
   const [loading, setLoading] = useState<boolean>(true);
@@ -40,10 +41,11 @@ export default function QuestsPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Quests & Trials';
+    document.title = dict?.quests?.pageTitle || dict?.app?.questsPageTitle || 'LemonDBD - Quests & Trials';
     getDictionary(locale).then(setDict);
     loadQuests();
   }, [locale]);
+
 
   useEffect(() => {
     async function loadVaultStats() {
@@ -108,10 +110,11 @@ export default function QuestsPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono">
-        Loading Quests...
+        {'Loading Quests...'}
       </div>
     );
   }
+
 
   const filteredQuests = quests.filter((q) => {
     if (filterCategory === 'daily') return q.category === 'daily';
@@ -159,17 +162,18 @@ export default function QuestsPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight sm:text-3xl">
-                      Trial Quests & Milestones
+                      {dict?.quests?.title || dict?.quests?.title || 'Trial Quests & Milestones'}
                     </h1>
                     <span className="rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">
-                      XP System
+                      {dict?.quests?.xpSystem || 'XP System'}
                     </span>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 max-w-xl">
-                    Complete daily and weekly trials to earn XP, level up your status, and unlock achievements.
+                    {dict?.quests?.subtitle || 'Complete daily and weekly trials to earn XP, level up your status, and unlock achievements.'}
                   </p>
                 </div>
               </div>
+
 
               {/* Dynamic XP Counter Badges */}
               <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
@@ -179,7 +183,10 @@ export default function QuestsPage() {
                     <span className="text-[10px] font-bold uppercase text-amber-700 dark:text-amber-500/80">
                       {dict?.stats?.totalXpEarned || 'Total XP'}
                     </span>
-                    <span className="text-xs font-black text-amber-700 dark:text-amber-300 font-mono">+{totalXpEarned} XP</span>
+                    <span className="text-xs font-black text-amber-700 dark:text-amber-300 font-mono">
+                      {dict?.quests?.xpPrefix || '+'}
+                      {totalXpEarned} {dict?.quests?.xpSuffix || 'XP'}
+                    </span>
                   </div>
                 </div>
 
@@ -217,7 +224,8 @@ export default function QuestsPage() {
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900/60'
             }`}
           >
-            All Quests ({quests.length})
+            {dict?.quests?.allQuestsPrefix || 'All Quests ('}
+            {quests.length})
           </button>
           <button
             onClick={() => setFilterCategory('daily')}
@@ -228,10 +236,11 @@ export default function QuestsPage() {
             }`}
           >
             <Calendar className="h-3.5 w-3.5" />
-            Daily Quests
+            {dict?.quests?.dailyQuests || 'Daily Quests'}
           </button>
           <button
             onClick={() => setFilterCategory('weekly')}
+
             className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
               filterCategory === 'weekly'
                 ? 'bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/40 shadow-sm'
@@ -239,7 +248,7 @@ export default function QuestsPage() {
             }`}
           >
             <Flame className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
-            Weekly Quests
+            {dict?.quests?.weeklyQuests || 'Weekly Quests'}
           </button>
         </div>
 
@@ -258,10 +267,11 @@ export default function QuestsPage() {
                 {dict?.empty?.title || 'No Quests Found'}
               </h3>
               <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
-                No quests available in this category right now. Check back soon for new trial objectives!
+                {dict?.quests?.noQuestsDesc || 'No quests available in this category right now. Check back soon for new trial objectives!'}
               </p>
             </div>
           ) : (
+
             filteredQuests.map((quest) => {
               const isReadyToClaim = quest.progress >= quest.goal && !quest.is_completed;
               const pct = Math.min(100, Math.round((quest.progress / quest.goal) * 100));
@@ -298,7 +308,8 @@ export default function QuestsPage() {
                         <div className="flex justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 font-mono">
                           <span>{dict?.stats?.questProgress || 'Objective Progress'}</span>
                           <span>
-                            {quest.progress} / {quest.goal} ({pct}%)
+                            {quest.progress} / {quest.goal} ({pct}
+                            {dict?.quests?.percentCloseParen || '%)'}
                           </span>
                         </div>
                         <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
@@ -321,7 +332,10 @@ export default function QuestsPage() {
                       {/* XP Badge */}
                       <div className="flex items-center gap-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 text-xs font-black text-amber-700 dark:text-amber-400 shadow-sm">
                         <Zap className="h-4 w-4" />
-                        <span>+{quest.xp_reward} XP</span>
+                        <span>
+                          {dict?.quests?.xpPrefix || '+'}
+                          {quest.xp_reward} {dict?.quests?.xpSuffix || 'XP'}
+                        </span>
                       </div>
 
                       {/* Claim Button */}

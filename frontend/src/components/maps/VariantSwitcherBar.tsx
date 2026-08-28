@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/VariantSwitcherBar.tsx
 
 import React from 'react';
@@ -9,7 +10,7 @@ export interface VariantSwitcherBarProps {
   activeMapName: string;
   onSelectVariant: (variantName: string) => void;
   className?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const VariantSwitcherBar: React.FC<VariantSwitcherBarProps> = ({

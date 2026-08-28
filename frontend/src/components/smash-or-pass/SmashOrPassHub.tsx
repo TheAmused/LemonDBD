@@ -1,5 +1,6 @@
-// frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
 'use client';
+// frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
@@ -53,7 +54,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 interface SmashOrPassHubProps {
-  dict?: any;
+  dict?: Dictionary;
   locale?: string;
 }
 
@@ -249,7 +250,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   const getRosterDisplayName = useCallback(
     (r: { slug: string; name?: string }) => {
-      const locName = dict?.smashOrPass?.rosters?.[r.slug]?.name;
+      const locName = (dict?.smashOrPass?.rosters as any)?.[r.slug]?.name;
       if (locName) return locName;
       if (r.slug === 'canon') return locale === 'pl' ? 'Dead by Daylight: Kanon Mgły' : 'Dead by Daylight: Fog Canon';
       if (r.slug === 'hooked_on_you') return locale === 'pl' ? 'Hooked on You: Romans na Wyspie' : 'Hooked on You: Island Romance';
@@ -435,7 +436,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const maleOnlyLabel = dict?.smashOrPass?.filters?.maleOnly || dict?.smashOrPass?.maleOnly || 'Male';
   const monstersLabel = dict?.smashOrPass?.filters?.monsters || dict?.smashOrPass?.monsters || 'Monsters & Eldritch';
   const leaderboardLabel = dict?.smashOrPass?.modals?.leaderboardTitle || dict?.smashOrPass?.leaderboard || 'Hall of Fame';
-  const hudLabels = dict?.smashOrPass?.hud || {};
+  const hudLabels: any = dict?.smashOrPass?.hud || {};
 
   return (
     <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-hidden">
@@ -479,7 +480,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   {title}
                 </h1>
                 <span className="text-[9px] font-mono font-bold tracking-widest text-pink-400/90 uppercase block">
-                  {activeRoster.category || 'DBD'} OCCULT DOSSIER
+                  {activeRoster.category || 'DBD'} {dict?.smashOrPass?.occultDossier || 'OCCULT DOSSIER'}
                 </span>
               </div>
             </div>
@@ -521,18 +522,18 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   {hudLabels.left || (locale === 'pl' ? 'pozostało' : 'left')}
                 </span>
               </span>
-              <span className="text-zinc-700">|</span>
+              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
               <span className="flex items-center gap-1 text-[#ff0055] font-black">
                 <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
                 <span>{sessionSmashes}</span>
               </span>
-              <span className="text-zinc-700">|</span>
+              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
               <span className="flex items-center gap-1 text-slate-400 font-black">
                 <ThumbsDown className="h-3.5 w-3.5 text-slate-400" />
                 <span>{sessionPasses}</span>
               </span>
-              <span className="text-zinc-700">|</span>
-              <span className="text-amber-300 font-black tracking-wide">{sessionSmashRate}%</span>
+              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
+              <span className="text-amber-300 font-black tracking-wide">{sessionSmashRate}{dict?.smashOrPass?.percentSign || '%'}</span>
             </div>
 
             {/* Micro Action Controls */}
@@ -715,7 +716,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         {loading ? (
           <div className="flex flex-col items-center gap-3 py-20 text-zinc-400 pointer-events-auto">
             <Heart className="h-10 w-10 text-rose-500 animate-ping" />
-            <span className="text-xs font-mono">Loading {activeRoster.name || selectedRosterSlug} from Database...</span>
+            <span className="text-xs font-mono">
+              {dict?.smashOrPass?.loadingRosterPrefix || 'Loading'} {activeRoster.name || selectedRosterSlug} {dict?.smashOrPass?.loadingRosterSuffix || 'from Database...'}
+            </span>
           </div>
         ) : currentCharacter ? (
           <div className="relative flex flex-col items-center justify-center pointer-events-auto min-h-[460px] sm:min-h-[520px]">
@@ -895,7 +898,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <div className="space-y-3.5 text-xs text-zinc-300 font-sans">
               {/* 1. Drag / Swipe */}
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800">
-                <span className="text-xl shrink-0">👆</span>
+                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.swipeIcon || '👆'}</span>
                 <div>
                   <span className="font-bold text-pink-300 block text-xs font-mono">
                     {dict?.smashOrPass?.howToPlayModal?.swipeTitle || 'Swipe or Drag Cards'}
@@ -908,7 +911,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
               {/* 2. On-card Tactile Buttons */}
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800">
-                <span className="text-xl shrink-0">🎯</span>
+                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.iconsIcon || '🎯'}</span>
                 <div>
                   <span className="font-bold text-pink-300 block text-xs font-mono">
                     {dict?.smashOrPass?.howToPlayModal?.iconsTitle || 'On-Card Action Icons'}
@@ -922,7 +925,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               {/* 3. Keyboard Keycaps Component INSIDE the Modal */}
               <div className="space-y-2 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl shrink-0">⌨️</span>
+                  <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.keycapsIcon || '⌨️'}</span>
                   <span className="font-bold text-pink-300 block text-xs font-mono">
                     {dict?.smashOrPass?.howToPlayModal?.keycapsTitle || 'Tactile Keyboard Keycaps'}
                   </span>
@@ -951,7 +954,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
               {/* 4. Background Lore & Atmosphere */}
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800">
-                <span className="text-xl shrink-0">🌌</span>
+                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.atmosphereIcon || '🌌'}</span>
                 <div>
                   <span className="font-bold text-pink-300 block text-xs font-mono">
                     {dict?.smashOrPass?.howToPlayModal?.atmosphereTitle || 'Atmospheric Background & Music'}

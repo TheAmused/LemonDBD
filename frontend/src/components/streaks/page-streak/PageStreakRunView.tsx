@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 'use client';
+// frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -18,7 +19,7 @@ import { staticUrl } from '@/utils/staticUrl';
 interface PageStreakRunViewProps {
   locale: string;
   killer: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -118,7 +119,9 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
 
           {run.status === 'completed' ? (
             <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] px-5 py-6 text-center">
-              <p className="text-sm font-extrabold text-emerald-400">All {run.page_count} pages cleared on {killer}</p>
+              <p className="text-sm font-extrabold text-emerald-400">
+                {dict?.streaks?.allPagesClearedPrefix || 'All'} {run.page_count} {dict?.streaks?.pagesClearedOnSuffix || 'pages cleared on'} {killer}
+              </p>
               <p className="mt-1 text-xs text-slate-400">
                 {dict?.streaks?.resetRunPrompt || 'Reset the run if you want to go through it again.'}
               </p>
@@ -151,7 +154,10 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   </button>
                 </div>
               )}
-              <SectionLabel>Page {run.current_page}, pick {buildSize} perks</SectionLabel>
+              <SectionLabel>
+                {dict?.streaks?.pageLabel || 'Page'} {run.current_page}
+                {dict?.streaks?.pickCountSeparator || ', pick'} {buildSize} {dict?.streaks?.perksCount || 'perks'}
+              </SectionLabel>
               <PerkPageGrid
                 key={`${run.attempt}-${run.current_page}`}
                 perks={currentPagePerks}
@@ -183,7 +189,9 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                         showNextPage ? 'rotate-90' : ''
                       }`}
                     />
-                    <span>Next up, page {run.current_page + 1}</span>
+                    <span>
+                      {dict?.streaks?.nextUpPagePrefix || 'Next up, page'} {run.current_page + 1}
+                    </span>
                     <span className="h-px flex-1 bg-slate-800" />
                   </button>
                   {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}

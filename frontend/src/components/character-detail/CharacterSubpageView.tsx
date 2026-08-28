@@ -12,7 +12,7 @@ export * from './KillerDetailView';
 
 interface CharacterSubpageViewProps {
   currentLocale: string;
-  dict: Record<string, Record<string, string>>;
+  dict?: any;
   detailData: CharacterDetailPayload;
   allCharacters?: CharacterItem[];
 }

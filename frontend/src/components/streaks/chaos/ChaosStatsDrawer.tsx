@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/chaos/ChaosStatsDrawer.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosStatsDrawer.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { ChaosStats, ChaosMatchLog } from '@/types/chaosStreak';
@@ -10,7 +11,7 @@ export interface ChaosStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: ChaosStats | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (
@@ -39,7 +40,8 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
     )}
     renderMeta={(log) => (
       <span>
-        Streak: {log.streak_before} &rarr; {log.streak_after}
+        {dict?.streaks?.streakLabel || 'Streak:'} {log.streak_before} {dict?.streaks?.streakArrow || '→'}{' '}
+        {log.streak_after}
       </span>
     )}
   />

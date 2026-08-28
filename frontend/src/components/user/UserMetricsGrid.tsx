@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserMetricsGrid.tsx
 
 import React from 'react';
@@ -22,9 +23,10 @@ interface OwnershipData {
 
 interface UserMetricsGridProps {
   ownership?: OwnershipData | null;
+  dict?: Dictionary;
 }
 
-export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) => {
+export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dict }) => {
   const survPercent = ownership?.survivors?.percentage ?? 0;
   const killerPercent = ownership?.killers?.percentage ?? 0;
   const perkPercent = ownership?.perks?.percentage ?? 0;
@@ -49,7 +51,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
             <div>
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                Survivors
+                {dict?.stats?.survivors || 'Survivors'}
               </h3>
               <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
                 {survOwned} / {survTotal}
@@ -57,7 +59,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
           </div>
           <span className="text-xs font-black text-cyan-400 font-mono">
-            {survPercent}%
+            {survPercent}{'%'}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
@@ -77,7 +79,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
             <div>
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                Killers
+                {dict?.stats?.killers || 'Killers'}
               </h3>
               <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
                 {killerOwned} / {killerTotal}
@@ -85,7 +87,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
           </div>
           <span className="text-xs font-black text-rose-400 font-mono">
-            {killerPercent}%
+            {killerPercent}{'%'}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
@@ -105,7 +107,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
             <div>
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                Teachable Perks
+                {dict?.characterDetail?.teachablePerks || 'Teachable Perks'}
               </h3>
               <p className="text-sm sm:text-base font-black text-slate-100 font-mono">
                 {perkUnlocked} / {perkTotal}
@@ -113,7 +115,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
             </div>
           </div>
           <span className="text-xs font-black text-amber-400 font-mono">
-            {perkPercent}%
+            {perkPercent}{'%'}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-950">
@@ -126,4 +128,3 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership }) =
     </div>
   );
 };
-

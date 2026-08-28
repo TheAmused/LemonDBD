@@ -1,5 +1,35 @@
+// frontend/src/locales/ja/app.ts
 export default {
   "title": "LemonDBD",
   "syncWiki": "Wikiデータを同期",
-  "syncing": "同期中..."
+  "syncing": "データを同期中...",
+  "perksVaultTitle": "パーク保管庫＆図鑑",
+  "perksVaultSubtitle": "Dead by Daylightのサバイバー・キラー固有パーク、共通パーク、別名（エイリアス）の完全カタログ。",
+  "perksVaultPageTitle": "LemonDBD - Dead by Daylight パーク保管庫",
+  "perkRandomizerPageTitle": "LemonDBD - パークランダマイザー",
+  "loadingPerks": "パーク保管庫を読み込み中...",
+  "resetFilters": "フィルターをリセット",
+  "adminPageTitle": "LemonDBD - 管理コントロールセンター",
+  "buildsPageTitle": "LemonDBD - コミュニティビルド構成",
+  "guesserPageTitle": "LemonDBD - ミニゲーム＆クイズ",
+  "charactersPageTitle": "LemonDBD - キャラクター＆固有パーク",
+  "customPerksPageTitle": "LemonDBD - カスタムパークスタジオ",
+  "draftPageTitle": "LemonDBD - ドラフトモード",
+  "killerCalculatorPageTitle": "LemonDBD - キラー計算機",
+  "mapsPageTitle": "LemonDBD - 戦術マップコマンドエクスプローラー",
+  "questsPageTitle": "LemonDBD - クエスト＆試練",
+  "resetPasswordPageTitle": "LemonDBD - パスワード再設定",
+  "smashOrPassPageTitle": "LemonDBD - スマッシュ・オア・パス | 霧のロマンス",
+  "streaksPageTitle": "LemonDBD - チャレンジ＆ストリーク",
+  "swfPageTitle": "LemonDBD - フルパ（SWF）チームプランナー",
+  "userPageTitle": "LemonDBD - ユーザープロフィール",
+  "homePageTitle": "LemonDBD - Dead by Daylight コンパニオン",
+  "loading": "読み込み中...",
+  "loadingLemonDBD": "LemonDBDを読み込み中...",
+  "loadingCharactersHub": "キャラクターハブを読み込み中...",
+  "loadingSmashOrPass": "スマッシュ・オア・パスを読み込み中...",
+  "loadingSWFPlanner": "SWFプランナーを読み込み中...",
+  "loadingQuests": "クエストを読み込み中...",
+  "notice": "お知らせ"
 };
+

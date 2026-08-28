@@ -15806,25 +15806,25 @@
       "character_code": null,
       "character_name": null,
       "translations": {
-        "de": {
-          "name": "Zerschlagene Hoffnung",
-          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
-        },
         "en": {
           "name": "Shattered Hope",
           "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
         },
+        "pl": {
+          "name": "Utracona nadzieja",
+          "description": "Nie tylko gasisz totemy, lecz całkowicie je niszczysz.\nIlekroć zgasisz totem łaski, zostaje on zniszczony.\nPo zniszczeniu totemu łaski aury wszystkich ocalałych w jego zasięgu działania zostają ci ujawnione na 6/7/8 s."
+        },
         "es": {
           "name": "Esperanza destruida",
-          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
+          "description": "No solo apagas los tótems, sino que los destruyes por completo.\nSiempre que apagues un tótem de bendición, se destruirá.\nTras destruir un tótem de bendición, se te revelará el aura de todos los supervivientes dentro de su radio de acción durante 6/7/8 segundos."
+        },
+        "de": {
+          "name": "Zerschlagene Hoffnung",
+          "description": "Du löschst Totems nicht nur, sondern zerstörst sie vollständig.\nWenn du ein Segnungstotem löschst, wird dieses Totem stattdessen zerstört.\nNachdem du ein Segnungstotem zerstört hast, werden dir die Auren aller Überlebenden innerhalb seines Wirkungsbereichs für 6/7/8 Sekunden angezeigt."
         },
         "ja": {
           "name": "打ち砕かれた希望",
-          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
-        },
-        "pl": {
-          "name": "Utracona Nadzieja",
-          "description": "You not only snuff out totems, but destroy them entirely.\nWhenever you snuff a Boon Totem, that Totem is destroyed instead.\nAfter destroying a Boon Totem, the Auras of all Survivors within its effect range are revealed to you for 6/7/8 seconds."
+          "description": "恵みのトーテムを消火するのではなく完全に破壊する。\n恵みのトーテムを消火すると、そのトーテムが破壊される。\n恵みのトーテムを破壊した後、その効果範囲内にいるすべての生存者のオーラが6/7/8秒間視えるようになる。"
         }
       }
     }
@@ -66630,25 +66630,25 @@
       "category": "Survivor",
       "rarity": "Common",
       "translations": {
-        "de": {
-          "name": "Batterie",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
-        },
         "en": {
           "name": "Battery",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
-        },
-        "es": {
-          "name": "Pila",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
-        },
-        "ja": {
-          "name": "電池",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
+          "description": "A standard battery of unknown brand.\n• Adds 2 seconds of use to the Flashlight.\n\n\"Another nearly empty battery.\""
         },
         "pl": {
           "name": "Bateria",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
+          "description": "Standardowa bateria nieznanej marki.\n• Wydłuża działanie latarki o 2 s.\n\n„Kolejna prawie wyczerpana bateria”."
+        },
+        "es": {
+          "name": "Pila",
+          "description": "Una pila estándar de marca desconocida.\n• Añade 2 segundos de uso a la linterna.\n\n\"Otra pila casi gastada\"."
+        },
+        "de": {
+          "name": "Batterie",
+          "description": "Eine Standardbatterie einer unbekannten Marke.\n• Fügt der Taschenlampe 2 Sekunden Nutzungsdauer hinzu.\n\n„Noch eine fast leere Batterie.“"
+        },
+        "ja": {
+          "name": "電池",
+          "description": "ノーブランドの標準的な乾電池。\n• 懐中電灯の使用可能時間が2秒増加する\n\n「また使いかけの電池だ」"
         }
       }
     },
@@ -66658,25 +66658,25 @@
       "category": "Survivor",
       "rarity": "Common",
       "translations": {
-        "de": {
-          "name": "Batterie",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
-        },
         "en": {
           "name": "Battery",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
-        },
-        "es": {
-          "name": "Pila",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
-        },
-        "ja": {
-          "name": "電池",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
+          "description": "A standard battery of unknown brand.\n• Adds 2 seconds of use to the Flashlight.\n\n\"Another nearly empty battery.\""
         },
         "pl": {
           "name": "Bateria",
-          "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\""
+          "description": "Standardowa bateria nieznanej marki.\n• Wydłuża działanie latarki o 2 s.\n\n„Kolejna prawie wyczerpana bateria”."
+        },
+        "es": {
+          "name": "Pila",
+          "description": "Una pila estándar de marca desconocida.\n• Añade 2 segundos de uso a la linterna.\n\n\"Otra pila casi gastada\"."
+        },
+        "de": {
+          "name": "Batterie",
+          "description": "Eine Standardbatterie einer unbekannten Marke.\n• Fügt der Taschenlampe 2 Sekunden Nutzungsdauer hinzu.\n\n„Noch eine fast leere Batterie.“"
+        },
+        "ja": {
+          "name": "電池",
+          "description": "ノーブランドの標準的な乾電池。\n• 懐中電灯の使用可能時間が2秒増加する\n\n「また使いかけの電池だ」"
         }
       }
     },
@@ -66910,25 +66910,25 @@
       "category": "Survivor",
       "rarity": "Uncommon",
       "translations": {
-        "de": {
-          "name": "Hochleistungsbatterie",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
-        },
         "en": {
           "name": "Heavy Duty Battery",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
+          "description": "A battery marked as \"industrial strength\".\n• Adds 4 seconds of use to the Flashlight.\n\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
+        },
+        "pl": {
+          "name": "Pojemna bateria",
+          "description": "Bateria z oznaczeniem „o podwyższonej trwałości”.\n• Wydłuża działanie latarki o 4 s.\n\n„Bateria, która według reklam ma działać przez 8 godzin, w Czarnej Mgle wystarcza na zaledwie parę sekund”."
         },
         "es": {
           "name": "Pila de gran autonomía",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
+          "description": "Una pila con la indicación \"fuerza industrial\".\n• Añade 4 segundos de uso a la linterna.\n\n\"Una pila anunciada como de 8 horas de duración dura solo un par de segundos en la niebla negra\"."
+        },
+        "de": {
+          "name": "Hochleistungsbatterie",
+          "description": "Eine Batterie mit der Aufschrift „Industriequalität“.\n• Fügt der Taschenlampe 4 Sekunden Nutzungsdauer hinzu.\n\n„Eine Batterie, die laut Werbung 8 Stunden halten soll, hält im Schwarzen Nebel nur ein paar Sekunden.“"
         },
         "ja": {
           "name": "大容量電池",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
-        },
-        "pl": {
-          "name": "Pojemna Bateria",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
+          "description": "「工業用強度」と書かれた電池。\n• 懐中電灯の使用可能時間が4秒増加する\n\n「広告では8時間持続すると謳われた電池も、黒い霧の中では2秒しか持たない」"
         }
       }
     },
@@ -66938,25 +66938,25 @@
       "category": "Survivor",
       "rarity": "Uncommon",
       "translations": {
-        "de": {
-          "name": "Hochleistungsbatterie",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
-        },
         "en": {
           "name": "Heavy Duty Battery",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
+          "description": "A battery marked as \"industrial strength\".\n• Adds 4 seconds of use to the Flashlight.\n\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
+        },
+        "pl": {
+          "name": "Pojemna bateria",
+          "description": "Bateria z oznaczeniem „o podwyższonej trwałości”.\n• Wydłuża działanie latarki o 4 s.\n\n„Bateria, która według reklam ma działać przez 8 godzin, w Czarnej Mgle wystarcza na zaledwie parę sekund”."
         },
         "es": {
           "name": "Pila de gran autonomía",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
+          "description": "Una pila con la indicación \"fuerza industrial\".\n• Añade 4 segundos de uso a la linterna.\n\n\"Una pila anunciada como de 8 horas de duración dura solo un par de segundos en la niebla negra\"."
+        },
+        "de": {
+          "name": "Hochleistungsbatterie",
+          "description": "Eine Batterie mit der Aufschrift „Industriequalität“.\n• Fügt der Taschenlampe 4 Sekunden Nutzungsdauer hinzu.\n\n„Eine Batterie, die laut Werbung 8 Stunden halten soll, hält im Schwarzen Nebel nur ein paar Sekunden.“"
         },
         "ja": {
           "name": "大容量電池",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
-        },
-        "pl": {
-          "name": "Pojemna Bateria",
-          "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\""
+          "description": "「工業用強度」と書かれた電池。\n• 懐中電灯の使用可能時間が4秒増加する\n\n「広告では8時間持続すると謳われた電池も、黒い霧の中では2秒しか持たない」"
         }
       }
     },
@@ -67358,25 +67358,25 @@
       "category": "Survivor",
       "rarity": "Event",
       "translations": {
-        "de": {
-          "name": "Defekte Glühbirne",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
-        },
         "en": {
           "name": "Broken Bulb",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
-        },
-        "es": {
-          "name": "Bombilla rota",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
-        },
-        "ja": {
-          "name": "壊れた電球",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
+          "description": "A damaged bulb that causes a spooky flickering effect.\n• Causes the Flashlight to flicker.\n• Increases the brightness of the Beam by +15%.\n• Increases the duration of a successful Blind by +30%.\n• Increases the spookiness.\n\nThe Broken Bulb is only available during Halloween Events."
         },
         "pl": {
           "name": "Uszkodzona żarówka",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
+          "description": "Uszkodzona żarówka wywołująca upiorny efekt migotania.\n• Sprawia, że latarka migocze.\n• Zwiększa jasność promienia o +15%.\n• Wydłuża czas trwania udanego oślepienia o +30%.\n• Zwiększa upiorność.\n\nUszkodzona żarówka jest dostępna tylko podczas wydarzeń halloweenowych."
+        },
+        "es": {
+          "name": "Bombilla rota",
+          "description": "Una bombilla dañada que causa un efecto de parpadeo espeluznante.\n• Hace que la linterna parpadee.\n• Aumenta el brillo del haz un +15%.\n• Aumenta la duración de una cegera exitosa un +30%.\n• Aumenta lo espeluznante.\n\nLa bombilla rota solo está disponible durante los eventos de Halloween."
+        },
+        "de": {
+          "name": "Zerbrochene Glühbirne",
+          "description": "Eine beschädigte Glühbirne, die einen gruseligen Flackereffekt erzeugt.\n• Lässt die Taschenlampe flackern.\n• Erhöht die Helligkeit des Lichtstrahls um +15%.\n• Erhöht die Dauer einer erfolgreichen Blendung um +30%.\n• Erhöht den Gruselfaktor.\n\nDie zerbrochene Glühbirne ist nur während Halloween-Events verfügbar."
+        },
+        "ja": {
+          "name": "壊れた電球",
+          "description": "不気味な明滅効果をもたらす破損した電球。\n• 懐中電灯が明滅するようになる。\n• 光の明るさが+15%増加する。\n• 目眩ましの持続時間が+30%増加する。\n• 不気味さが増加する。\n\n壊れた電球はハロウィンイベント期間中のみ利用可能です。"
         }
       }
     },
@@ -67386,25 +67386,25 @@
       "category": "Survivor",
       "rarity": "Event",
       "translations": {
-        "de": {
-          "name": "Defekte Glühbirne",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
-        },
         "en": {
           "name": "Broken Bulb",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
-        },
-        "es": {
-          "name": "Bombilla rota",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
-        },
-        "ja": {
-          "name": "壊れた電球",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
+          "description": "A damaged bulb that causes a spooky flickering effect.\n• Causes the Flashlight to flicker.\n• Increases the brightness of the Beam by +15%.\n• Increases the duration of a successful Blind by +30%.\n• Increases the spookiness.\n\nThe Broken Bulb is only available during Halloween Events."
         },
         "pl": {
           "name": "Uszkodzona żarówka",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n."
+          "description": "Uszkodzona żarówka wywołująca upiorny efekt migotania.\n• Sprawia, że latarka migocze.\n• Zwiększa jasność promienia o +15%.\n• Wydłuża czas trwania udanego oślepienia o +30%.\n• Zwiększa upiorność.\n\nUszkodzona żarówka jest dostępna tylko podczas wydarzeń halloweenowych."
+        },
+        "es": {
+          "name": "Bombilla rota",
+          "description": "Una bombilla dañada que causa un efecto de parpadeo espeluznante.\n• Hace que la linterna parpadee.\n• Aumenta el brillo del haz un +15%.\n• Aumenta la duración de una cegera exitosa un +30%.\n• Aumenta lo espeluznante.\n\nLa bombilla rota solo está disponible durante los eventos de Halloween."
+        },
+        "de": {
+          "name": "Zerbrochene Glühbirne",
+          "description": "Eine beschädigte Glühbirne, die einen gruseligen Flackereffekt erzeugt.\n• Lässt die Taschenlampe flackern.\n• Erhöht die Helligkeit des Lichtstrahls um +15%.\n• Erhöht die Dauer einer erfolgreichen Blendung um +30%.\n• Erhöht den Gruselfaktor.\n\nDie zerbrochene Glühbirne ist nur während Halloween-Events verfügbar."
+        },
+        "ja": {
+          "name": "壊れた電球",
+          "description": "不気味な明滅効果をもたらす破損した電球。\n• 懐中電灯が明滅するようになる。\n• 光の明るさが+15%増加する。\n• 目眩ましの持続時間が+30%増加する。\n• 不気味さが増加する。\n\n壊れた電球はハロウィンイベント期間中のみ利用可能です。"
         }
       }
     },
@@ -68590,25 +68590,25 @@
       "category": "Survivor",
       "rarity": "Event",
       "translations": {
-        "de": {
-          "name": "Veredeltes Serum",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
-        },
         "en": {
           "name": "Refined Serum",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
-        },
-        "es": {
-          "name": "Suero refinado",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
-        },
-        "ja": {
-          "name": "精製された血清",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
+          "description": "A refined version of the Putrid Serum that is mostly safe for human consumption. Mostly.\n• While healing yourself or another Survivor with the Med-Kit, press the Secondary Action button to trigger the following effect for 16 seconds:\n• Increases all Movement speeds by +5%.\n• Creates a Blight trail behind the affected Survivor.\n• Consumes the Med-Kit after triggering its effect.\n\nThe Refined Serum is only available during Halloween Events."
         },
         "pl": {
           "name": "Dopracowane serum",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
+          "description": "Dopracowana wersja zepsutego serum, która jest w większości bezpieczna do spożycia przez ludzi. Prawie w całości.\n• Podczas leczenia siebie lub innego ocalałego za pomocą apteczki naciśnij przycisk dodatkowej akcji, aby aktywować następujący efekt na 16 s:\n• Zwiększa wszystkie prędkości poruszania się o +5%.\n• Pozostawia za ocalałym ślad Zarazy.\n• Zużywa apteczkę po wywołaniu efektu.\n\nDopracowane serum jest dostępne tylko podczas wydarzeń halloweenowych."
+        },
+        "es": {
+          "name": "Suero refinado",
+          "description": "Una versión refinada del suero pútrido que es casi segura para el consumo humano. En su mayoría.\n• Mientras te curas a ti mismo o a otro superviviente con el botiquín, pulsa el botón de acción secundaria para activar el siguiente efecto durante 16 segundos:\n• Aumenta todas las velocidades de movimiento un +5%.\n• Crea un rastro de Deterioro detrás del superviviente afectado.\n• Consume el botiquín tras activar su efecto.\n\nEl suero refinado solo está disponible durante los eventos de Halloween."
+        },
+        "de": {
+          "name": "Veredeltes Serum",
+          "description": "Eine veredelte Version des fauligen Serums, die größtenteils für den menschlichen Verzehr sicher ist. Größtenteils.\n• Wenn du dich selbst oder einen anderen Überlebenden mit dem Sanitätskasten heilst, drücke die Taste für die Sekundäraktion, um für 16 Sekunden folgenden Effekt auszulösen:\n• Erhöht alle Bewegungsgeschwindigkeiten um +5%.\n• Erzeugt eine Fäulespur hinter dem betroffenen Überlebenden.\n• Verbraucht den Sanitätskasten nach Auslösung des Effekts.\n\nDas veredelte Serum ist nur während Halloween-Events verfügbar."
+        },
+        "ja": {
+          "name": "精製された血清",
+          "description": "人間が摂取してもほぼ安全なように精製された腐敗した血清。ほぼ安全。\n• 救急箱で自分または他の生存者を治療中、セカンダリアクションボタンを押すと16秒間以下の効果が発動する:\n• すべての移動速度が+5%上昇する。\n• 対象となった生存者の後ろにブライトの軌跡を残す。\n• 効果発動後に救急箱を消費する。\n\n精製された血清はハロウィンイベント期間中のみ利用可能です。"
         }
       }
     },
@@ -68618,25 +68618,25 @@
       "category": "Survivor",
       "rarity": "Event",
       "translations": {
-        "de": {
-          "name": "Veredeltes Serum",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
-        },
         "en": {
           "name": "Refined Serum",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
-        },
-        "es": {
-          "name": "Suero refinado",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
-        },
-        "ja": {
-          "name": "精製された血清",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
+          "description": "A refined version of the Putrid Serum that is mostly safe for human consumption. Mostly.\n• While healing yourself or another Survivor with the Med-Kit, press the Secondary Action button to trigger the following effect for 16 seconds:\n• Increases all Movement speeds by +5%.\n• Creates a Blight trail behind the affected Survivor.\n• Consumes the Med-Kit after triggering its effect.\n\nThe Refined Serum is only available during Halloween Events."
         },
         "pl": {
           "name": "Dopracowane serum",
-          "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n."
+          "description": "Dopracowana wersja zepsutego serum, która jest w większości bezpieczna do spożycia przez ludzi. Prawie w całości.\n• Podczas leczenia siebie lub innego ocalałego za pomocą apteczki naciśnij przycisk dodatkowej akcji, aby aktywować następujący efekt na 16 s:\n• Zwiększa wszystkie prędkości poruszania się o +5%.\n• Pozostawia za ocalałym ślad Zarazy.\n• Zużywa apteczkę po wywołaniu efektu.\n\nDopracowane serum jest dostępne tylko podczas wydarzeń halloweenowych."
+        },
+        "es": {
+          "name": "Suero refinado",
+          "description": "Una versión refinada del suero pútrido que es casi segura para el consumo humano. En su mayoría.\n• Mientras te curas a ti mismo o a otro superviviente con el botiquín, pulsa el botón de acción secundaria para activar el siguiente efecto durante 16 segundos:\n• Aumenta todas las velocidades de movimiento un +5%.\n• Crea un rastro de Deterioro detrás del superviviente afectado.\n• Consume el botiquín tras activar su efecto.\n\nEl suero refinado solo está disponible durante los eventos de Halloween."
+        },
+        "de": {
+          "name": "Veredeltes Serum",
+          "description": "Eine veredelte Version des fauligen Serums, die größtenteils für den menschlichen Verzehr sicher ist. Größtenteils.\n• Wenn du dich selbst oder einen anderen Überlebenden mit dem Sanitätskasten heilst, drücke die Taste für die Sekundäraktion, um für 16 Sekunden folgenden Effekt auszulösen:\n• Erhöht alle Bewegungsgeschwindigkeiten um +5%.\n• Erzeugt eine Fäulespur hinter dem betroffenen Überlebenden.\n• Verbraucht den Sanitätskasten nach Auslösung des Effekts.\n\nDas veredelte Serum ist nur während Halloween-Events verfügbar."
+        },
+        "ja": {
+          "name": "精製された血清",
+          "description": "人間が摂取してもほぼ安全なように精製された腐敗した血清。ほぼ安全。\n• 救急箱で自分または他の生存者を治療中、セカンダリアクションボタンを押すと16秒間以下の効果が発動する:\n• すべての移動速度が+5%上昇する。\n• 対象となった生存者の後ろにブライトの軌跡を残す。\n• 効果発動後に救急箱を消費する。\n\n精製された血清はハロウィンイベント期間中のみ利用可能です。"
         }
       }
     },
@@ -69654,25 +69654,25 @@
       "category": "Survivor",
       "rarity": "EItemRarity::SpecialEvent",
       "translations": {
-        "de": {
-          "name": "Fäuleserum",
-          "description": "Eine tote Krähe, die auf groteske Weise durch das Fäuleserum mutiert ist.\n• Erhöht die Geschwindigkeit beim Stürmen um 3 % für jeden folgenden Sturm."
-        },
         "en": {
           "name": "Blight Serum",
-          "description": "A dead crow that has been grotesquely mutated by blight serum.\n• Increases speed while Rushing by 3% for each consecutive Rush."
-        },
-        "es": {
-          "name": "Suero del Deterioro",
-          "description": "Un cuervo muerto que ha mutado de forma grotesca debido al suero del Deterioro.\n• Aumenta la velocidad de Acometida un 3 % por cada Acometida consecutiva."
-        },
-        "ja": {
-          "name": "ブライトの血清",
-          "description": "破滅の血清によりグロテスクな変異を遂げて死んだカラス。\n• 突進を連続するたびに突進中の速度が3%上昇する"
+          "description": "A dead crow that has been grotesquely mutated by blight serum.\n• Unlocks the ability to perform 1 Blight Rush by pressing the Power button after hooking a Survivor.\n• Increases speed while Rushing up to 9.2 m/s."
         },
         "pl": {
           "name": "Serum Zarazy",
-          "description": "Martwy kruk, groteskowo zmutowany przez serum zarazy.\n• Zwiększa prędkość podczas Pędu o 3% za każdy kolejny Pęd."
+          "description": "Martwy kruk, groteskowo zmutowany przez serum zarazy.\n• Odblokowuje możliwość wykonania 1 Pędu Zarazy poprzez naciśnięcie przycisku Mocy po zawieszeniu ocalałego na haku.\n• Zwiększa prędkość podczas Pędu do 9,2 m/s."
+        },
+        "es": {
+          "name": "Suero del Deterioro",
+          "description": "Un cuervo muerto que ha mutado de forma grotesca debido al suero del Deterioro.\n• Desbloquea la habilidad de realizar 1 Acometida del Deterioro pulsando el botón de Poder tras colgar a un superviviente en un gancho.\n• Aumenta la velocidad de Acometida hasta 9,2 m/s."
+        },
+        "de": {
+          "name": "Fäuleserum",
+          "description": "Eine tote Krähe, die auf groteske Weise durch das Fäuleserum mutiert ist.\n• Schaltet die Fähigkeit frei, 1 Fäulesturm auszuführen, indem nach dem Einhaken eines Überlebenden die Krafttaste gedrückt wird.\n• Erhöht die Geschwindigkeit beim Stürmen auf bis zu 9,2 m/s."
+        },
+        "ja": {
+          "name": "ブライトの血清",
+          "description": "死霊の血清によって奇怪に変異した死んだカラス。\n• 生存者をフックに吊るした後、能力ボタンを押して突進を1回行う能力を解放する。\n• 突進中の速度が最大9.2m/sまで上昇する。"
         }
       }
     },
@@ -69682,25 +69682,25 @@
       "category": "Survivor",
       "rarity": "EItemRarity::SpecialEvent",
       "translations": {
-        "de": {
-          "name": "Fäuleserum",
-          "description": "Eine tote Krähe, die auf groteske Weise durch das Fäuleserum mutiert ist.\n• Erhöht die Geschwindigkeit beim Stürmen um 3 % für jeden folgenden Sturm."
-        },
         "en": {
-          "name": "Blight Serum",
-          "description": "A dead crow that has been grotesquely mutated by blight serum.\n• Increases speed while Rushing by 3% for each consecutive Rush."
-        },
-        "es": {
-          "name": "Suero del Deterioro",
-          "description": "Un cuervo muerto que ha mutado de forma grotesca debido al suero del Deterioro.\n• Aumenta la velocidad de Acometida un 3 % por cada Acometida consecutiva."
-        },
-        "ja": {
-          "name": "ブライトの血清",
-          "description": "破滅の血清によりグロテスクな変異を遂げて死んだカラス。\n• 突進を連続するたびに突進中の速度が3%上昇する"
+          "name": "Refined Serum",
+          "description": "A refined version of the Putrid Serum that is mostly safe for human consumption. Mostly.\n• While healing yourself or another Survivor with the Med-Kit, press the Secondary Action button to trigger the following effect for 16 seconds:\n• Increases all Movement speeds by +5%.\n• Creates a Blight trail behind the affected Survivor.\n• Consumes the Med-Kit after triggering its effect.\n\nThe Refined Serum is only available during Halloween Events."
         },
         "pl": {
-          "name": "Serum Zarazy",
-          "description": "Martwy kruk, groteskowo zmutowany przez serum zarazy.\n• Zwiększa prędkość podczas Pędu o 3% za każdy kolejny Pęd."
+          "name": "Dopracowane serum",
+          "description": "Dopracowana wersja zepsutego serum, która jest w większości bezpieczna do spożycia przez ludzi. Prawie w całości.\n• Podczas leczenia siebie lub innego ocalałego za pomocą apteczki naciśnij przycisk dodatkowej akcji, aby aktywować następujący efekt na 16 s:\n• Zwiększa wszystkie prędkości poruszania się o +5%.\n• Pozostawia za ocalałym ślad Zarazy.\n• Zużywa apteczkę po wywołaniu efektu.\n\nDopracowane serum jest dostępne tylko podczas wydarzeń halloweenowych."
+        },
+        "es": {
+          "name": "Suero refinado",
+          "description": "Una versión refinada del suero pútrido que es casi segura para el consumo humano. En su mayoría.\n• Mientras te curas a ti mismo o a otro superviviente con el botiquín, pulsa el botón de acción secundaria para activar el siguiente efecto durante 16 segundos:\n• Aumenta todas las velocidades de movimiento un +5%.\n• Crea un rastro de Deterioro detrás del superviviente afectado.\n• Consume el botiquín tras activar su efecto.\n\nEl suero refinado solo está disponible durante los eventos de Halloween."
+        },
+        "de": {
+          "name": "Veredeltes Serum",
+          "description": "Eine veredelte Version des fauligen Serums, die größtenteils für den menschlichen Verzehr sicher ist. Größtenteils.\n• Wenn du dich selbst oder einen anderen Überlebenden mit dem Sanitätskasten heilst, drücke die Taste für die Sekundäraktion, um für 16 Sekunden folgenden Effekt auszulösen:\n• Erhöht alle Bewegungsgeschwindigkeiten um +5%.\n• Erzeugt eine Fäulespur hinter dem betroffenen Überlebenden.\n• Verbraucht den Sanitätskasten nach Auslösung des Effekts.\n\nDas veredelte Serum ist nur während Halloween-Events verfügbar."
+        },
+        "ja": {
+          "name": "精製された血清",
+          "description": "人間が摂取してもほぼ安全なように精製された腐敗した血清。ほぼ安全。\n• 救急箱で自分または他の生存者を治療中、セカンダリアクションボタンを押すと16秒間以下の効果が発動する:\n• すべての移動速度が+5%上昇する。\n• 対象となった生存者の後ろにブライトの軌跡を残す。\n• 効果発動後に救急箱を消費する。\n\n精製された血清はハロウィンイベント期間中のみ利用可能です。"
         }
       }
     }

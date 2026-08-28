@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/chaos/ChaosBoard.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosBoard.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -181,10 +182,11 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               <Trophy className="h-8 w-8" />
             </div>
             <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              Chaos Streak complete!
+              {dict?.streaks?.chaosStreak ? `${dict.streaks.chaosStreak} complete!` : 'Chaos Streak complete!'}
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              You won on <span className="capitalize">{difficulty}</span> mode.
+              {dict?.streaks?.youWonOn || 'You won on'} <span className="capitalize">{difficulty}</span>{' '}
+              {dict?.streaks?.modeSuffix || 'mode.'}
             </p>
             <button
               onClick={reset}
@@ -192,7 +194,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
-              Start a new run
+              {dict?.streaks?.startNewRun || 'Start a new run'}
             </button>
           </div>
         ) : (
@@ -207,10 +209,9 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 locked={Boolean(acceptedKillerId)}
               />
             </div>
-
             <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 shadow-sm">
               <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
-                Pick your killer
+                {dict?.streaks?.pickYourKiller || 'Pick your killer'}
               </h3>
 
               {!acceptedKillerId ? (
@@ -220,7 +221,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                     disabled={busy || !run?.perks_revealed || !selectedKillerId}
                     className="flex-1 max-w-xs bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
-                    ACCEPT PICK
+                    {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
                   </button>
                 </div>
               ) : (
@@ -230,14 +231,14 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                     disabled={busy}
                     className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
-                    WIN MATCH
+                    {dict?.streaks?.winMatch || 'WIN MATCH'}
                   </button>
                   <button
                     onClick={() => handleResult('loss')}
                     disabled={busy}
                     className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
-                    LOSE MATCH
+                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
                   </button>
                 </div>
               )}
@@ -269,7 +270,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
               <Trophy className="h-3.5 w-3.5" />
-              DEV: Skip to win screen
+              {dict?.streaks?.devSkipWinLabel || 'DEV: Skip to win screen'}
             </button>
           </div>
         )}

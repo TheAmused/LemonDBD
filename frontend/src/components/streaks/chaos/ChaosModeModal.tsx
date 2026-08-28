@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/chaos/ChaosModeModal.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosModeModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Coins, Flame, Skull } from 'lucide-react';
@@ -12,7 +13,7 @@ export interface ChaosModeModalProps {
   onClose: () => void;
   onSelectDifficulty: (difficulty: Difficulty) => void;
   currentDifficulty?: Difficulty;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({

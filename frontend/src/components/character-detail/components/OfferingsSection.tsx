@@ -299,7 +299,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             }`}
           >
             <Gift className="h-4 w-4" />
-            {activeCategoryConfig.label} &bull; {t.offerings || 'Offerings'} ({sortedAndFilteredOfferings.length})
+            {activeCategoryConfig.label} {t.bulletSeparator || '•'} {t.offerings || 'Offerings'} ({sortedAndFilteredOfferings.length})
           </h3>
           <span className="text-[10px] font-mono text-slate-400">
             {t.clickOfferingForDetails || 'Click offering for details'}

@@ -1,6 +1,7 @@
+// frontend/src/locales/de/card.ts
 export default {
-  "general": "Allgemeiner Perk",
-  "viewDetails": "Perk Inspizieren",
-  "vaultTotal": "Tresor Gesamt",
-  "ownedPerks": "Besessene Perks"
+  "general": "Allgemeines Talent",
+  "viewDetails": "Talent inspizieren",
+  "vaultTotal": "Tresor gesamt",
+  "ownedPerks": "Besessene Talente"
 };

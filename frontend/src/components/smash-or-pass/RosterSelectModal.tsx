@@ -1,5 +1,6 @@
-// frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 'use client';
+// frontend/src/components/smash-or-pass/RosterSelectModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Check, Flame, X } from 'lucide-react';
@@ -25,7 +26,7 @@ interface RosterSelectModalProps {
   selectedRosterSlug: string;
   onSelectRoster: (slug: string) => void;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
@@ -211,7 +212,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
   // Helper: Display names
   const getRosterDisplayName = useCallback(
     (r: RosterItem) => {
-      const locName = dict?.smashOrPass?.rosters?.[r.slug]?.name;
+      const locName = (dict?.smashOrPass?.rosters as any)?.[r.slug]?.name;
       if (locName) return locName;
       if (r.slug === 'canon') return locale === 'pl' ? 'Dead by Daylight: Kanon Mgły' : 'Dead by Daylight: Fog Canon';
       if (r.slug === 'hooked_on_you') return locale === 'pl' ? 'Hooked on You: Romans na Wyspie' : 'Hooked on You: Island Romance';

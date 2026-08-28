@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/chaos/KillerPickerGrid.tsx
 'use client';
+// frontend/src/components/streaks/chaos/KillerPickerGrid.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Check, Skull } from 'lucide-react';
@@ -75,7 +76,7 @@ export interface KillerPickerGridProps {
   disabled?: boolean;
   loading?: boolean;
   center?: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({

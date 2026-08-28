@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/FreezeBadge.tsx
 'use client';
+// frontend/src/components/streaks/FreezeBadge.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -7,7 +8,7 @@ import { Snowflake } from 'lucide-react';
 
 export interface FreezeBadgeProps {
   frozen: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {

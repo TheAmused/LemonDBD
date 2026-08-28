@@ -254,7 +254,7 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
             accentColor ? accentColor : 'text-amber-400'
           }`}
         >
-          {defaultAction} &rarr;
+          {defaultAction} {'→'}
         </span>
       </div>
     </div>,

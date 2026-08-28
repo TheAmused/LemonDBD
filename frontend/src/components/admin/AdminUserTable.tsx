@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminUserTable.tsx
 
 import React from 'react';
@@ -25,7 +26,7 @@ interface AdminUserTableProps {
   roleFilter: string;
   loading: boolean;
   currentUserId?: number;
-  dict?: any;
+  dict?: Dictionary;
   onSearchChange: (value: string) => void;
   onRoleFilterChange: (value: string) => void;
   onPageChange: (page: number) => void;

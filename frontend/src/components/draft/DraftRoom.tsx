@@ -1,5 +1,6 @@
-// frontend/src/components/draft/DraftRoom.tsx
 'use client';
+// frontend/src/components/draft/DraftRoom.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import {
@@ -17,7 +18,7 @@ import { Perk } from '@/components/PerkCard';
 
 interface DraftRoomProps {
   initialRoomCode?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) => {
@@ -244,7 +245,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                 disabled={loading}
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs font-bold shadow-md shadow-red-900/30 transition-all cursor-pointer"
               >
-                + {t.createRoom || 'Create Draft Room'}
+                {dict?.draft?.plusPrefix || '+'} {t.createRoom || 'Create Draft Room'}
               </button>
             </div>
           ) : (
@@ -319,7 +320,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                   }
                   className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer shadow-sm"
                 >
-                  Next Phase →
+                  {dict?.guesser?.next || 'Next Phase →'}
                 </button>
               )}
             </div>
@@ -369,7 +370,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
               <div className="flex items-center gap-2">
                 <Ban className="h-5 w-5 text-rose-500" />
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                  {t.bannedPerks || 'Banned Perks'} (Max 3 Per Side)
+                  {t.bannedPerks || 'Banned Perks'} {dict?.draft?.maxPerSideSuffix || '(Max 3 Per Side)'}
                 </h2>
               </div>
               {room.phase === 'bans' && userRole !== 'spectator' && (
@@ -383,7 +384,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                     disabled={room.banned_perks.length >= 6}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 hover:bg-emerald-500/20 dark:hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-sm"
                   >
-                    + {t.banAction || 'Ban'} ({dict?.filters?.survivor || 'Survivor'})
+                    {dict?.draft?.plusPrefix || '+'} {t.banAction || 'Ban'} ({dict?.filters?.survivor || 'Survivor'})
                   </button>
                   <button
                     onClick={() => {
@@ -394,7 +395,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                     disabled={room.banned_perks.length >= 6}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 dark:bg-rose-500/20 hover:bg-rose-500/20 dark:hover:bg-rose-500/30 text-rose-700 dark:text-rose-300 border border-rose-500/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-sm"
                   >
-                    + {t.banAction || 'Ban'} ({dict?.filters?.killer || 'Killer'})
+                    {dict?.draft?.plusPrefix || '+'} {t.banAction || 'Ban'} ({dict?.filters?.killer || 'Killer'})
                   </button>
                 </div>
               )}
@@ -441,7 +442,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                       disabled={room.picked_survivor_perks.length >= 4}
                       className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-950/40 transition-all cursor-pointer disabled:opacity-50"
                     >
-                      + {t.pickAction || 'Pick'} ({room.picked_survivor_perks.length}/4)
+                      {dict?.draft?.plusPrefix || '+'} {t.pickAction || 'Pick'} ({room.picked_survivor_perks.length}/4)
                     </button>
                   )}
               </div>
@@ -461,7 +462,8 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                       }`}
                     >
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-slate-600 dark:text-slate-400 shrink-0">
-                        S{slotIdx + 1}
+                        {'S'}
+                        {slotIdx + 1}
                       </div>
                       <div className="overflow-hidden">
                         <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
@@ -497,7 +499,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                       disabled={room.picked_killer_perks.length >= 4}
                       className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md shadow-rose-950/40 transition-all cursor-pointer disabled:opacity-50"
                     >
-                      + {t.pickAction || 'Pick'} ({room.picked_killer_perks.length}/4)
+                      {dict?.draft?.plusPrefix || '+'} {t.pickAction || 'Pick'} ({room.picked_killer_perks.length}/4)
                     </button>
                   )}
               </div>
@@ -517,7 +519,8 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                       }`}
                     >
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-slate-600 dark:text-slate-400 shrink-0">
-                        K{slotIdx + 1}
+                        {'K'}
+                        {slotIdx + 1}
                       </div>
                       <div className="overflow-hidden">
                         <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
@@ -584,7 +587,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
             <div className="max-h-[50vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2 pr-1">
               {availablePerks.length === 0 ? (
                 <div className="col-span-2 py-8 text-center text-xs text-slate-400 dark:text-slate-500 font-mono">
-                  {dict?.empty?.noMatchingPerks || 'No matching available perks.'}
+                  {dict?.draft?.noMatchingPerks || 'No matching available perks.'}
                 </div>
               ) : (
                 availablePerks.map((perk) => (

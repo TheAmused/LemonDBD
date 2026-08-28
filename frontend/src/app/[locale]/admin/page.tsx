@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/admin/page.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -35,7 +36,7 @@ export default function AdminPanelPage() {
   const { isCollapsed } = useSidebarState();
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [activeTab, setActiveTab] = useState<'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit'>('users');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
@@ -73,8 +74,10 @@ export default function AdminPanelPage() {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Admin Control Center';
-    getDictionary(currentLocale).then(setDict);
+    getDictionary(currentLocale).then((d) => {
+      setDict(d);
+      document.title = d?.app?.adminPageTitle || 'LemonDBD - Admin Control Center';
+    });
   }, [currentLocale]);
 
   useEffect(() => {
@@ -406,7 +409,7 @@ export default function AdminPanelPage() {
     }
   };
 
-  if (isLoading || !isAuthenticated || !isAdmin) {
+  if (!dict || isLoading || !isAuthenticated || !isAdmin) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs">
         <div className="flex flex-col items-center gap-3">
@@ -459,7 +462,7 @@ export default function AdminPanelPage() {
                 onClick={() => setActionMessage(null)}
                 className="text-slate-400 hover:text-slate-200 text-sm leading-none ml-3 cursor-pointer"
               >
-                &times;
+                {dict?.admin?.closeSymbol || '×'}
               </button>
             </div>
           )}
@@ -476,7 +479,7 @@ export default function AdminPanelPage() {
               }`}
             >
               <Users className="h-4 w-4" />
-              <span>User Directory ({totalUsers})</span>
+              <span>{dict?.admin?.userDirectoryLabel || 'User Directory'} ({totalUsers})</span>
             </button>
 
             <button
@@ -489,7 +492,7 @@ export default function AdminPanelPage() {
               }`}
             >
               <Bug className="h-4 w-4" />
-              <span>Bug Reports ({bugStats?.pending ?? 0} Pending)</span>
+              <span>{dict?.admin?.bugReportsLabel || 'Bug Reports'} ({bugStats?.pending ?? 0} {dict?.admin?.pending || 'Pending'})</span>
             </button>
 
             <button
@@ -621,10 +624,10 @@ export default function AdminPanelPage() {
         title={dict?.admin?.deleteUserTitle || 'Delete user?'}
         message={
           <>
-            Are you sure you want to delete user{' '}
+            {dict?.admin?.confirmDeleteUserPrefix || 'Are you sure you want to delete user'}{' '}
             <strong className="font-bold text-white">{userPendingDeletion?.username}</strong>?
             <br />
-            This cannot be undone.
+            {dict?.admin?.cannotBeUndone || 'This cannot be undone.'}
           </>
         }
         confirmLabel="Delete"

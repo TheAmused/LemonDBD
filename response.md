@@ -1,748 +1,1650 @@
-### Solution Overview
+### src/locales/ja/admin.ts
 
-The error `Uncaught ReferenceError: Cannot access 's' before initialization` in minified production bundles occurs due to the **Temporal Dead Zone (TDZ)** in JavaScript.
-
-In `frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx`, the `categorizedData` hook called `filterItem` and `matchesCategory` inside a `useMemo` array filter:
-
-1. `filterItem` or `matchesCategory` was originally defined using `const` or inside the hook, causing the bundler's minified closure to reference variable `s` before it is declared.
-2. In `SurvivorDetailView.tsx` and `CharacterSubpageView.tsx`, `detailData` sub-arrays (`items`, `addons`, `offerings`) might default to `undefined` before resolving, causing `.filter()` in `useMemo` to fail on execution.
-
-
-
-To fix this:
-
-* All filtering and category helper logic in `SurvivorEquipmentSection.tsx` are hoisted as pure standalone functions outside the React component scope.
-* Default fallback arrays (`items = []`, `addons = []`) and safe optional chaining guards are applied across all survivor sub-components.
-
-
-
----
-
-#### 1. `frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx`
-
-```tsx
-import React, { useState, useMemo } from 'react';
-import {
-  Package,
-  Search,
-  ShieldAlert,
-  Heart,
-  Wrench,
-  Flashlight,
-  Key,
-  Map as MapIcon,
-  Bomb,
-  Sparkles,
-} from 'lucide-react';
-import {
-  AddonItem,
-  EquipmentItem,
-  getAssetUrl,
-  getRarityTileStyle,
-  getRarityRank,
-  renderFormattedDbdText,
-} from '../types';
-
-interface SurvivorEquipmentSectionProps {
-  items?: EquipmentItem[];
-  addons?: (AddonItem | EquipmentItem)[];
-  backendBase: string;
-  onSelectEquipment: (item: AddonItem | EquipmentItem) => void;
-  t: Record<string, string>;
-}
-
-type SurvivorCategoryKey =
-  | 'medkit'
-  | 'toolbox'
-  | 'flashlight'
-  | 'key'
-  | 'map'
-  | 'firecracker'
-  | 'trial_exclusive';
-
-function getCanonicalString(it: EquipmentItem | AddonItem): string {
-  const raw = (it.raw_name || '').toLowerCase();
-  const name = (it.name || '').toLowerCase();
-  const target = ((it as { associated_target?: string }).associated_target || '').toLowerCase();
-  const category = (it.category || '').toLowerCase();
-  const desc = (it.description || '').toLowerCase();
-  return `${raw} ${name} ${target} ${category} ${desc}`;
-}
-
-function checkIsMedKit(target: string, raw: string, name: string): boolean {
-  if (target.includes('med-kit') || target.includes('medkit') || target.includes('aid')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('med-kit') ||
-    combined.includes('medkit') ||
-    combined.includes('first aid') ||
-    combined.includes('aid kit') ||
-    combined.includes('lunchbox') ||
-    combined.includes('camping') ||
-    combined.includes('emergency') ||
-    combined.includes('ranger') ||
-    combined.includes('syringe') ||
-    combined.includes('styptic') ||
-    combined.includes('dressing') ||
-    combined.includes('bandage') ||
-    combined.includes('suture') ||
-    combined.includes('sponge') ||
-    combined.includes('gauze') ||
-    combined.includes('needle') ||
-    combined.includes('scissor') ||
-    combined.includes('gel') ||
-    combined.includes('serum') ||
-    combined.includes('apteczka') ||
-    combined.includes('sanitäter') ||
-    combined.includes('botiquín') ||
-    combined.includes('救急箱')
-  );
-}
-
-function checkIsToolbox(target: string, raw: string, name: string): boolean {
-  if (target.includes('toolbox') || target.includes('tools')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('toolbox') ||
-    combined.includes('tool') ||
-    combined.includes('mechanic') ||
-    combined.includes('commodious') ||
-    combined.includes('engineer') ||
-    combined.includes('alex') ||
-    combined.includes('wire') ||
-    combined.includes('socket') ||
-    combined.includes('swivel') ||
-    combined.includes('spring') ||
-    combined.includes('spool') ||
-    combined.includes('brand new part') ||
-    combined.includes('protective grip') ||
-    combined.includes('hacksaw') ||
-    combined.includes('clamp') ||
-    combined.includes('rag') ||
-    combined.includes('skrzynka') ||
-    combined.includes('werkzeugkasten') ||
-    combined.includes('caja de herramientas') ||
-    combined.includes('boîte à outils') ||
-    combined.includes('工具箱')
-  );
-}
-
-function checkIsFlashlight(target: string, raw: string, name: string): boolean {
-  if (target.includes('flashlight') || target.includes('torch')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('flashlight') ||
-    combined.includes('torch') ||
-    combined.includes('sport flashlight') ||
-    combined.includes('utility flashlight') ||
-    combined.includes('wisp') ||
-    combined.includes('battery') ||
-    combined.includes('lens') ||
-    combined.includes('bulb') ||
-    combined.includes('filament') ||
-    combined.includes('reflector') ||
-    combined.includes('focus') ||
-    combined.includes('sapphire') ||
-    combined.includes('rubee') ||
-    combined.includes('ruby') ||
-    combined.includes('latarka') ||
-    combined.includes('taschenlampe') ||
-    combined.includes('linterna') ||
-    combined.includes('lampe torche') ||
-    combined.includes('懐中電灯')
-  );
-}
-
-function checkIsKey(target: string, raw: string, name: string): boolean {
-  if (target.includes('key')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('key') ||
-    combined.includes('skeleton key') ||
-    combined.includes('dull key') ||
-    combined.includes('broken key') ||
-    combined.includes('amber') ||
-    combined.includes('token') ||
-    combined.includes('bead') ||
-    combined.includes('pearl') ||
-    combined.includes('ring') ||
-    combined.includes('klucz') ||
-    combined.includes('schlüssel') ||
-    combined.includes('llave') ||
-    combined.includes('clé') ||
-    combined.includes('カギ') ||
-    combined.includes('鍵')
-  );
-}
-
-function checkIsMap(target: string, raw: string, name: string): boolean {
-  if (target.includes('map')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('map') ||
-    combined.includes('rainbow map') ||
-    combined.includes('cord') ||
-    combined.includes('rope') ||
-    combined.includes('stamp') ||
-    combined.includes('glass bead') ||
-    combined.includes('retardant') ||
-    combined.includes('silk') ||
-    combined.includes('mapa') ||
-    combined.includes('karte') ||
-    combined.includes('carte') ||
-    combined.includes('mappa') ||
-    combined.includes('マップ') ||
-    combined.includes('地図')
-  );
-}
-
-function checkIsFirecracker(target: string, raw: string, name: string): boolean {
-  if (target.includes('firecracker') || target.includes('firework')) return true;
-  const combined = `${raw} ${name}`.toLowerCase();
-  return (
-    combined.includes('firecracker') ||
-    combined.includes('party starter') ||
-    combined.includes('flashbang') ||
-    combined.includes('firework') ||
-    combined.includes('chinese firecracker') ||
-    combined.includes('winter party') ||
-    combined.includes('third year') ||
-    combined.includes('petard') ||
-    combined.includes('feuerwerk') ||
-    combined.includes('petardo') ||
-    combined.includes('爆竹')
-  );
-}
-
-function checkIsTrialExclusive(raw: string, name: string, target: string): boolean {
-  const combined = `${raw} ${name} ${target}`.toLowerCase();
-  return (
-    combined.includes('vecna') ||
-    combined.includes('lament') ||
-    combined.includes('turret') ||
-    combined.includes('emp') ||
-    combined.includes('spray') ||
-    combined.includes('vaccine') ||
-    combined.includes('vhs') ||
-    combined.includes('flash grenade') ||
-    combined.includes('antidote') ||
-    combined.includes('candelabra') ||
-    combined.includes('lantern') ||
-    combined.includes('keycard') ||
-    combined.includes('mirror') ||
-    combined.includes('pendant') ||
-    combined.includes('blood can') ||
-    combined.includes('fungus') ||
-    combined.includes('crystal')
-  );
-}
-
-const CATEGORIES = [
-  { key: 'medkit', label: 'Med-Kits', icon: Heart, desc: 'Healing & Syringes' },
-  { key: 'toolbox', label: 'Toolboxes', icon: Wrench, desc: 'Repairs & Sabotage' },
-  { key: 'flashlight', label: 'Flashlights', icon: Flashlight, desc: 'Blinding & Saves' },
-  { key: 'key', label: 'Keys', icon: Key, desc: 'Auras & Hatch' },
-  { key: 'map', label: 'Maps', icon: MapIcon, desc: 'Objectives & Totems' },
-  { key: 'firecracker', label: 'Firecrackers', icon: Bomb, desc: 'Fireworks & Party Starters' },
-  { key: 'trial_exclusive', label: 'Trial Artifacts', icon: ShieldAlert, desc: 'In-Trial Counter Items' },
-];
-
-export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> = ({
-  items = [],
-  addons = [],
-  backendBase,
-  onSelectEquipment,
-  t,
-}) => {
-  const [selectedCategory, setSelectedCategory] = useState<SurvivorCategoryKey>('medkit');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [rarityFilter, setRarityFilter] = useState<string>('all');
-  const [activeHover, setActiveHover] = useState<{
-    item: AddonItem | EquipmentItem;
-    rect: DOMRect;
-    accentColor: string;
-  } | null>(null);
-
-  const activeCategoryConfig = useMemo(() => {
-    return CATEGORIES.find((c) => c.key === selectedCategory) || CATEGORIES[0];
-  }, [selectedCategory]);
-
-  const categorizedData = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
-
-    const safeItems = Array.isArray(items) ? items : [];
-    const safeAddons = Array.isArray(addons) ? addons : [];
-
-    const isMatch = (it: EquipmentItem | AddonItem, isAddon: boolean): boolean => {
-      const name = (it.name || '').toLowerCase();
-      const raw = (it.raw_name || '').toLowerCase();
-      const desc = (it.description || '').toLowerCase();
-      const target = ((it as { associated_target?: string }).associated_target || '').toLowerCase();
-
-      const matchesSearch =
-        !query ||
-        name.includes(query) ||
-        raw.includes(query) ||
-        desc.includes(query);
-
-      if (!matchesSearch) return false;
-
-      const itemRarity = (it.rarity || '').toLowerCase();
-      const matchesRarity =
-        rarityFilter === 'all' || itemRarity.includes(rarityFilter.toLowerCase());
-
-      if (!matchesRarity) return false;
-
-      if (selectedCategory === 'medkit') return checkIsMedKit(target, raw, name);
-      if (selectedCategory === 'toolbox') return checkIsToolbox(target, raw, name);
-      if (selectedCategory === 'flashlight') return checkIsFlashlight(target, raw, name);
-      if (selectedCategory === 'key') return checkIsKey(target, raw, name);
-      if (selectedCategory === 'map') return checkIsMap(target, raw, name);
-      if (selectedCategory === 'firecracker') return checkIsFirecracker(target, raw, name);
-      if (selectedCategory === 'trial_exclusive') return !isAddon && checkIsTrialExclusive(raw, name, target);
-
-      return true;
-    };
-
-    const sortByRarity = (a: EquipmentItem | AddonItem, b: EquipmentItem | AddonItem) => {
-      const rankA = getRarityRank(a.rarity);
-      const rankB = getRarityRank(b.rarity);
-      if (rankA !== rankB) return rankA - rankB;
-      return (a.name || '').localeCompare(b.name || '');
-    };
-
-    return {
-      displayedItems: safeItems.filter((it) => isMatch(it, false)).sort(sortByRarity),
-      displayedAddons: safeAddons.filter((ad) => isMatch(ad, true)).sort(sortByRarity),
-    };
-  }, [items, addons, selectedCategory, searchQuery, rarityFilter]);
-
-  return (
-    <section className="space-y-4 w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-            <Package className="h-4 w-4" />
-          </span>
-          <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
-              {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
-            </h2>
-            <p className="text-xs text-slate-400">
-              {t.equipmentDescSurvivor || 'Select an item category to explore items and their compatible add-on attachments.'}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-full sm:w-48">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
-            <input
-              type="text"
-              placeholder={t.searchEquipment || 'Filter name...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-inner"
-            />
-          </div>
-
-          <select
-            value={rarityFilter}
-            onChange={(e) => setRarityFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
-          >
-            <option value="all">{t.allRarities || 'All Rarities'}</option>
-            <option value="Common">Common</option>
-            <option value="Uncommon">Uncommon</option>
-            <option value="Rare">Rare</option>
-            <option value="Very Rare">Very Rare</option>
-            <option value="Ultra Rare">Ultra Rare</option>
-            <option value="Event">Event</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-4 items-stretch">
-        <div className="flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-slate-950/60 border border-slate-800 shrink-0 overflow-x-auto md:overflow-x-visible">
-          {CATEGORIES.map((cat) => {
-            const Icon = cat.icon;
-            const isSelected = selectedCategory === cat.key;
-            return (
-              <button
-                type="button"
-                key={cat.key}
-                onClick={() => setSelectedCategory(cat.key as SurvivorCategoryKey)}
-                className={`relative h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
-                  isSelected
-                    ? 'bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 shadow-lg shadow-emerald-950/60 scale-105'
-                    : 'bg-slate-900/60 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-                }`}
-                title={`${cat.label} - ${cat.desc}`}
-                aria-label={cat.label}
-              >
-                <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                <span className="text-[9px] font-mono font-bold truncate max-w-[48px] mt-0.5">
-                  {cat.label.split(' ')[0]}
-                </span>
-                {isSelected && (
-                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-950" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="flex flex-col p-4 rounded-3xl bg-slate-950/40 border border-slate-800 shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                <Package className="h-4 w-4" />
-                {activeCategoryConfig.label} &bull; Items ({categorizedData.displayedItems.length})
-              </h3>
-              <span className="text-[10px] font-mono text-slate-400">Click item for details</span>
-            </div>
-
-            {categorizedData.displayedItems.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-500 text-xs italic">
-                No items found in this category matching your filter.
-              </div>
-            ) : (
-              <div className="flex flex-wrap items-center justify-center gap-3 p-1">
-                {categorizedData.displayedItems.map((item, idx) => {
-                  const id = `item-${item.name}-${idx}`;
-                  const rarityStyle = getRarityTileStyle(item.rarity);
-
-                  return (
-                    <div
-                      key={id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => onSelectEquipment(item)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          onSelectEquipment(item);
-                        }
-                      }}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item, rect, accentColor: 'text-emerald-400' });
-                      }}
-                      onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                      aria-label={`Inspect item: ${item.name}`}
-                    >
-                      <img
-                        src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                        alt={item.name}
-                        className="h-full w-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          <div className="flex flex-col p-4 rounded-3xl bg-slate-950/40 border border-slate-800 shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                <Sparkles className="h-4 w-4" />
-                {selectedCategory === 'trial_exclusive'
-                  ? 'Artifact Mechanics'
-                  : `Compatible Add-ons (${categorizedData.displayedAddons.length})`}
-              </h3>
-              <span className="text-[10px] font-mono text-slate-400">
-                {selectedCategory === 'trial_exclusive' ? 'Special Trial Rules' : 'Attach up to 2 per item'}
-              </span>
-            </div>
-
-            {selectedCategory === 'trial_exclusive' ? (
-              <div className="flex-1 flex flex-col justify-center p-4 rounded-2xl bg-amber-950/20 border border-amber-500/30 text-xs space-y-3">
-                <div className="flex items-center gap-2 text-amber-400 font-mono font-black text-sm">
-                  <ShieldAlert className="h-5 w-5 shrink-0" />
-                  <span>In-Trial Killer Counters & Artifacts</span>
-                </div>
-                <p className="text-slate-300 leading-relaxed">
-                  These unique artifacts (such as <em>Hand & Eye of Vecna</em>, <em>Lament Configuration</em>, <em>Remote Flame Turrets</em>, <em>EMPs</em>, <em>First Aid Sprays</em>, and <em>Vaccines</em>) cannot be equipped in the pre-game lobby.
-                </p>
-                <p className="text-slate-400 leading-relaxed">
-                  They are spawned inside the Trial grounds to interact directly with specific Killers&apos; powers and counteract their special abilities.
-                </p>
-              </div>
-            ) : categorizedData.displayedAddons.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-500 text-xs italic">
-                No compatible add-ons found for this item type.
-              </div>
-            ) : (
-              <div className="flex flex-wrap items-center justify-center gap-2.5 p-1">
-                {categorizedData.displayedAddons.map((item, idx) => {
-                  const id = `addon-${item.name}-${idx}`;
-                  const rarityStyle = getRarityTileStyle(item.rarity);
-
-                  return (
-                    <div
-                      key={id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => onSelectEquipment(item)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          onSelectEquipment(item);
-                        }
-                      }}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item, rect, accentColor: 'text-amber-400' });
-                      }}
-                      onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                      aria-label={`Inspect addon: ${item.name}`}
-                    >
-                      <img
-                        src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                        alt={item.name}
-                        className="h-full w-full object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {activeHover && typeof window !== 'undefined' && (() => {
-        const tooltipWidth = 320;
-        const left = Math.max(
-          16,
-          Math.min(window.innerWidth - tooltipWidth - 16, activeHover.rect.left + activeHover.rect.width / 2 - tooltipWidth / 2)
-        );
-        const top = activeHover.rect.bottom + 10;
-        const rarityStyle = getRarityTileStyle(activeHover.item.rarity);
-
-        return (
-          <div
-            style={{ position: 'fixed', left: `${left}px`, top: `${top}px`, width: `${tooltipWidth}px` }}
-            className="z-[99999] p-4 rounded-2xl bg-slate-950/95 border border-slate-700 shadow-2xl backdrop-blur-md text-left pointer-events-none animate-in fade-in zoom-in-95 duration-150"
-          >
-            <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-slate-800">
-              <h4 className="text-sm font-black text-white truncate font-mono">{activeHover.item.name}</h4>
-              {activeHover.item.rarity && (
-                <span className={`text-[10px] font-bold uppercase font-mono ${rarityStyle.text}`}>
-                  {activeHover.item.rarity}
-                </span>
-              )}
-            </div>
-            <div className="space-y-1 text-xs max-h-48 overflow-y-auto leading-relaxed text-slate-200">
-              {renderFormattedDbdText(activeHover.item.description || '', true)}
-            </div>
-            <span className={`block text-[10px] font-mono mt-2.5 text-right font-bold ${activeHover.accentColor}`}>
-              {t.clickToInspect || 'Click to inspect full mechanics'} &rarr;
-            </span>
-          </div>
-        );
-      })()}
-    </section>
-  );
+```ts
+export default {
+  "killSwitches": "キルスイッチ",
+  "challengeStats": "チャレンジ統計",
+  "auditLog": "監査ログ",
+  "deleteUserTitle": "ユーザーを削除しますか？",
+  "deleteBugReportTitle": "バグレポートを削除しますか？",
+  "loadingAuditLog": "監査ログを読み込み中...",
+  "noAuditLogs": "記録された管理者アクションはまだありません。",
+  "thAdmin": "管理者",
+  "thAction": "操作",
+  "thTarget": "対象",
+  "thReason": "理由",
+  "thWhen": "日時",
+  "searchTicketsPlaceholder": "チケット / 報告者を検索...",
+  "filterLabel": "フィルター:",
+  "statusAll": "すべてのステータス",
+  "statusPending": "確認待ち",
+  "statusInProgress": "対応中",
+  "statusResolved": "解決済み",
+  "statusRejected": "却下 / クローズ",
+  "createUserUsernamePlaceholder": "例: killer_master",
+  "createUserEmailPlaceholder": "例: master@lemondbd.com",
+  "createUserPasswordPlaceholder": "3文字以上",
+  "roleStandard": "一般ユーザー（プレイヤー）",
+  "roleAdministrator": "管理者（フルアクセス権限）",
+  "createAccount": "アカウント作成",
+  "exportBackupTitle": "データベースJSONバックアップのエクスポート",
+  "export": "エクスポート",
+  "importBackupTitle": "データベースJSONバックアップの復元",
+  "import": "インポート",
+  "pgAdminTitle": "pgAdmin Web管理画面を開く（PostgreSQL DBマネージャー）",
+  "pgAdmin": "pgAdmin (DB)",
+  "runScraperTitle": "データスクレイパーとDBシードの実行",
+  "refreshTitle": "メトリクスを更新",
+  "refresh": "更新",
+  "analyticsTitle": "Umamiアナリティクスダッシュボードを開く（PV・機能利用状況）",
+  "analytics": "アナリティクス",
+  "reasonPlaceholder": "例: 能力にバグが発生しているため、修正完了まで一時的に無効化",
+  "totalUsers": "総ユーザー数",
+  "admins": "管理者数",
+  "privilegedAccounts": "特権アカウント",
+  "characters": "キャラクター",
+  "perks": "パーク",
+  "databaseTeachables": "登録固有パーク",
+  "database": "データベース",
+  "online": "オンライン",
+  "relationalStore": "リレーショナルストア",
+  "searchUserPlaceholder": "ユーザー名 / メールアドレスを検索...",
+  "allRoles": "すべての権限",
+  "standardUsers": "一般ユーザー",
+  "createUser": "ユーザーを作成",
+  "thId": "ID",
+  "thUser": "ユーザー",
+  "thEmail": "メールアドレス",
+  "thRole": "権限",
+  "thOwnedChars": "所持キャラ数",
+  "thUnlockedPerks": "解放パーク数",
+  "thStatus": "ステータス",
+  "thActions": "操作",
+  "closeDbModal": "データベースモーダルを閉じる",
+  "openPgAdmin": "pgAdmin Web管理インターフェースを開く",
+  "launchPgAdmin": "pgAdminを起動",
+  "exportJson": "JSONエクスポート",
+  "importJson": "JSONインポート",
+  "purgeReset": "全消去＆リセット",
+  "jsonFormatNotice": "完全または部分的なJSONバックアップに対応",
+  "mergeUpdate": "統合＆更新（安全）",
+  "wipeReplace": "全消去＆置換（クリーン）",
+  "wipeReplaceConfirm": "データベースを全消去して置換しますか？",
+  "purgeConfirm": "選択したテーブルを消去しますか？",
+  "adminControlCenterSubtitle": "ユーザー名簿、JSONバックアップのエクスポート/インポート、スクレイパーの統括管理。",
+  "createUserTitle": "新規ユーザー作成",
+  "createUserSubtitle": "データベースに新しいアカウントを直接追加します",
+  "thUsername": "ユーザー名",
+  "thPassword": "パスワード",
+  "rolePrivilege": "アカウント権限",
+  "cancel": "キャンセル",
+  "reasonShownToPlayers": "理由（プレイヤーに表示）",
+  "challengeModeKillSwitches": "チャレンジモード・キルスイッチ",
+  "pageStreakCompletionsNotice": "ページストリークはキラーごとに1回のみの進行となるため、完了数の詳細内訳は表示されません。",
+  "dbBackupSnapshots": "データベースバックアップ＆スナップショット",
+  "dbBackupSnapshotsSubtitle": "完全なJSONスナップショットのエクスポート、バックアップの復元、またはpgAdminによるPostgreSQL管理",
+  "selectBackupEntities": "バックアップに含めるエンティティを選択",
+  "clickOrDragBackup": "LemonDBDの .json バックアップファイルをクリックまたはドラッグ＆ドロップ",
+  "clickOrDragBackupPrefix": "LemonDBDの",
+  "clickOrDragBackupSuffix": "バックアップファイルをクリックまたはドラッグ＆ドロップ",
+  "chooseImportStrategy": "インポート方式を選択",
+  "mergeUpdateDesc": "既存のデータを削除せず、名前/スラッグに基づいてレコードを上書き・追加します",
+  "wipeReplaceDesc": "対象テーブルを一度空にしてから、アップロードされたデータを完全に復元します",
+  "importResultsBreakdown": "インポート結果の内訳",
+  "selectTablesToWipe": "消去対象テーブルを選択",
+  "close": "閉じる",
+  "pending": "確認待ち",
+  "inProgress": "対応中",
+  "resolved": "解決済み",
+  "totalTickets": "総チケット数",
+  "loadingTickets": "チケットを読み込み中...",
+  "noBugReports": "バグレポートは見つかりませんでした。",
+  "reportedBy": "報告者:",
+  "noEmailProvided": "メールアドレス未登録",
+  "description": "説明",
+  "devFeedbackLabel": "開発者フィードバック / 回答メモ（報告者に公開）",
+  "totalActionsLabel": "件のアクション",
+  "pageLabel": "ページ",
+  "ofLabel": "/",
+  "attachmentsLabel": "添付ファイル",
+  "roleSurvivor": "サバイバー",
+  "roleKiller": "キラー",
+  "bugPoolNotice": "両陣営に対応: キラーの特殊能力にバグがある場合や、Wikiから先行取得された未実装サバイバーを正式リリースまで非表示にする場合に使用します。不具合のあるパーク単体の制限も可能です。",
+  "completionsLabel": "回完了",
+  "middotSeparator": "·",
+  "usersLabel": "ユーザー",
+  "uniqueUsersLabel": "ユニークユーザー",
+  "activeLabel": "有効:",
+  "survAbbrev": "サバ /",
+  "closeSymbol": "×",
+  "userDirectoryLabel": "ユーザー名簿",
+  "bugReportsLabel": "バグレポート",
+  "confirmDeleteUserPrefix": "本当にこのユーザーを削除しますか:",
+  "cannotBeUndone": "この操作は取り消せません。",
+  "kbReadySuffix": "KB（復元準備完了）",
+  "createdCountPrefix": "+",
+  "updatedCountSuffix": "件更新)",
+  "title": "ユーザーアカウント一覧",
+  "loading": "ユーザーを読み込み中...",
+  "noUsers": "該当するユーザーは見つかりませんでした。",
+  "you": "あなた",
+  "promote": "管理者に昇格",
+  "demote": "一般ユーザーに降格",
+  "disableAccount": "アカウントを無効化",
+  "enableAccount": "アカウントを有効化"
 };
 
 ```
 
----
+### src/locales/ja/app.ts
 
-#### 2. `frontend/src/components/character-detail/SurvivorDetailView.tsx`
+```ts
+export default {
+  "title": "LemonDBD",
+  "syncWiki": "Wikiデータを同期",
+  "syncing": "データを同期中...",
+  "perksVaultTitle": "パーク保管庫＆図鑑",
+  "perksVaultSubtitle": "Dead by Daylightのサバイバー・キラー固有パーク、共通パーク、別名（エイリアス）の完全カタログ。",
+  "perksVaultPageTitle": "LemonDBD - Dead by Daylight パーク保管庫",
+  "perkRandomizerPageTitle": "LemonDBD - パークランダマイザー",
+  "loadingPerks": "パーク保管庫を読み込み中...",
+  "resetFilters": "フィルターをリセット",
+  "adminPageTitle": "LemonDBD - 管理コントロールセンター",
+  "buildsPageTitle": "LemonDBD - コミュニティビルド構成",
+  "guesserPageTitle": "LemonDBD - ミニゲーム＆クイズ",
+  "charactersPageTitle": "LemonDBD - キャラクター＆固有パーク",
+  "customPerksPageTitle": "LemonDBD - カスタムパークスタジオ",
+  "draftPageTitle": "LemonDBD - ドラフトモード",
+  "killerCalculatorPageTitle": "LemonDBD - キラー計算機",
+  "mapsPageTitle": "LemonDBD - 戦術マップコマンドエクスプローラー",
+  "questsPageTitle": "LemonDBD - クエスト＆試練",
+  "resetPasswordPageTitle": "LemonDBD - パスワード再設定",
+  "smashOrPassPageTitle": "LemonDBD - スマッシュ・オア・パス | 霧のロマンス",
+  "streaksPageTitle": "LemonDBD - チャレンジ＆ストリーク",
+  "swfPageTitle": "LemonDBD - フルパ（SWF）チームプランナー",
+  "userPageTitle": "LemonDBD - ユーザープロフィール",
+  "homePageTitle": "LemonDBD - Dead by Daylight コンパニオン",
+  "loading": "読み込み中...",
+  "loadingLemonDBD": "LemonDBDを読み込み中...",
+  "loadingCharactersHub": "キャラクターハブを読み込み中...",
+  "loadingSmashOrPass": "スマッシュ・オア・パスを読み込み中...",
+  "loadingSWFPlanner": "SWFプランナーを読み込み中...",
+  "loadingQuests": "クエストを読み込み中...",
+  "notice": "お知らせ"
+};
 
-```tsx
-'use client';
-// frontend/src/components/character-detail/SurvivorDetailView.tsx
+```
 
-import React, { useState } from 'react';
-import { BookOpen, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
-import {
-  CharacterViewBaseProps,
-  AddonItem,
-  EquipmentItem,
-  OfferingItem,
-  formatLocalizedReleaseDate,
-} from './types';
-import { CharacterBreadcrumbs } from './components/CharacterBreadcrumbs';
-import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
-import { CharacterPerksSection } from './components/CharacterPerksSection';
-import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection';
-import { OfferingsSection } from './components/OfferingsSection';
-import { LoreModal } from './modals/LoreModal';
-import { Model3DModal } from './modals/Model3DModal';
-import { EquipmentDetailModal } from './modals/EquipmentDetailModal';
-import { PerkModal } from '@/components/PerkModal';
-import { Perk, PerkDictionary } from '@/types/perks';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
+### src/locales/ja/builds.ts
 
-export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
-  currentLocale,
-  dict,
-  detailData,
-  allCharacters = [],
-}) => {
-  const backendBase = getBackendBaseUrl();
-  const rawDict = (dict || {}) as Record<string, Record<string, string>>;
-  const t: Record<string, string> = rawDict.characterDetail || rawDict.characters || {};
+```ts
+export default {
+  "title": "コミュニティビルド保管庫",
+  "subtitle": "ガチ構成からネタ構成、コンセプトビルドまで、みんなのパーク構成を探して共有・投票しよう。",
+  "submitBuild": "ビルドを投稿",
+  "searchPlaceholder": "タイトル、説明、キャラクター、投稿者、パーク名で検索...",
+  "copy": "コピー",
+  "copied": "コピー完了",
+  "share": "共有",
+  "copyLoadout": "構成テキストをコピー",
+  "shareCard": "共有用ビルドカード＆QRコード",
+  "submitTitle": "カスタムビルドを投稿",
+  "submitSubtitle": "自慢のパーク構成をコミュニティに共有しましょう",
+  "buildTitle": "ビルド名 *",
+  "buildTitlePlaceholder": "例: 不屈怨霊ナース",
+  "description": "説明",
+  "descriptionPlaceholder": "立ち回りやパーク同士のシナジーを簡単に説明してください...",
+  "role": "陣営 *",
+  "survivor": "サバイバー",
+  "killer": "キラー",
+  "category": "カテゴリー *",
+  "targetCharacter": "対象キャラクター",
+  "targetCharacterPlaceholder": "例: ハントレス、メグ",
+  "authorName": "投稿者名",
+  "authorNamePlaceholder": "あなたのユーザー名",
+  "loadoutPerks": "装備パーク（4枠） *",
+  "shareModalTitle": "ビルドカードを共有",
+  "shareModalSubtitle": "QRコードをスキャンするかリンクをコピーして共有",
+  "qrAlt": "ビルドQRコード",
+  "scanMobile": "スマホでスキャン",
+  "linkCopied": "リンクをコピーしました！",
+  "copyShareLink": "共有リンクをコピー",
+  "otzdarva": "Otzdarvaおすすめ",
+  "meta": "ガチ構成（メタ）",
+  "meme": "ネタ・ロマン構成",
+  "stealth": "隠密",
+  "chase": "チェイス特化",
+  "byAuthorPrefix": "作成者:",
+  "targetCharacterLabel": "対象キャラクター:",
+  "sortFields": "並び替え",
+  "newestFirst": "新着順",
+  "mostUpvoted": "高評価順",
+  "perk1Placeholder": "パーク 1（必須）",
+  "perk2Placeholder": "パーク 2（必須）",
+  "perk3Placeholder": "パーク 3（必須）",
+  "perk4Placeholder": "パーク 4（必須）"
+};
 
-  const character = detailData?.character || { name: '', category: 'Survivor' };
-  const perks = Array.isArray(detailData?.perks) ? detailData.perks : [];
-  const addons = Array.isArray(detailData?.addons) ? detailData.addons : [];
-  const items = Array.isArray(detailData?.items) ? detailData.items : [];
-  const offerings = Array.isArray(detailData?.offerings) ? detailData.offerings : [];
+```
 
-  const [isLoreModalOpen, setIsLoreModalOpen] = useState<boolean>(false);
-  const [isModelModalOpen, setIsModelModalOpen] = useState<boolean>(false);
-  const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | OfferingItem | null>(null);
-  const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
+### src/locales/ja/card.ts
 
-  const chapterName = character.chapter_name || t.baseGame || 'Base Game';
-  const releaseDate = formatLocalizedReleaseDate(
-    character.release_date || String(character.release_year || '2016'),
-    currentLocale
-  );
-  const rawLoreText = character.lore || t.noLoreFound || "No lore records discovered in the Entity's Archives yet.";
+```ts
+export default {
+  "general": "共通パーク",
+  "viewDetails": "パーク詳細を見る",
+  "vaultTotal": "保管庫合計",
+  "ownedPerks": "所持パーク"
+};
 
-  return (
-    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={`${character.name} Details`}>
-      <CharacterBreadcrumbs
-        currentLocale={currentLocale}
-        character={character}
-        roleLabel={t.roleSurvivor || 'Survivor'}
-        isSurvivor={true}
-        allCharacters={allCharacters}
-        t={t}
-      />
+```
 
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <CharacterHeroAvatar
-          character={character}
-          isSurvivor={true}
-          roleLabel={t.roleSurvivor || 'Survivor'}
-          backendBase={backendBase}
-          onOpenModelModal={() => setIsModelModalOpen(true)}
-          t={t}
-        />
+### src/locales/ja/characterDetail.ts
 
-        <div className="lg:col-span-8 space-y-5">
-          <header className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <span className="text-xs font-mono font-bold tracking-wider text-emerald-400 uppercase">
-                {t.roleSurvivor || 'Survivor'}{' '}
-                {character.is_licensed
-                  ? `• ${t.dlcLicensed || 'Licensed'}`
-                  : `• ${t.dlcOriginal || 'Original'}`}
-              </span>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-100 font-mono tracking-tight">
-                {character.name}
-              </h1>
-              {character.real_name && character.real_name !== character.name && (
-                <p className="text-xs sm:text-sm font-semibold text-slate-400 mt-0.5">
-                  {t.realName || 'Full Name'}:{' '}
-                  <span className="text-slate-200">{character.real_name}</span>
-                </p>
-              )}
-            </div>
+```ts
+export default {
+  "backToCharacters": "キャラクター一覧に戻る",
+  "roleSurvivor": "サバイバー",
+  "roleKiller": "キラー",
+  "realName": "本名",
+  "codePrefix": "識別コード",
+  "characterOverview": "キャラクター概要",
+  "teachablePerks": "固有パーク",
+  "teachablePerksDesc": "このキャラクター特有の固有パーク。ブラッドウェブで解放することで、すべての{role}で使用可能になります。",
+  "noPerks": "このキャラクターの固有パークは登録されていません。",
+  "loreTitle": "背景ストーリー・伝承",
+  "lorePlaceholder": "エンティティは現在{name}の記憶とアーカイブを収集しています。記録の更新をお待ちください。",
+  "dlcTitle": "DLC＆チャプター情報",
+  "dlcChapter": "チャプター",
+  "dlcType": "リリース区分",
+  "dlcReleaseYear": "リリース年",
+  "dlcLicense": "ライセンス区分",
+  "dlcOriginal": "オリジナル",
+  "dlcLicensed": "版権（コラボ）",
+  "dlcBaseGame": "基本ゲーム収録",
+  "dlcFreeUpdate": "無料アップデート",
+  "dlcParagraph": "単体追加（パラグラフ）",
+  "dlcAssociatedWith": "同時実装キャラクター",
+  "equipmentTitleSurvivor": "サバイバルアイテム＆アドオン",
+  "equipmentDescSurvivor": "修理、治療、脱出、キラー対策に使用可能なサバイバー用アイテムとアドオン。",
+  "equipmentTitleKiller": "能力アドオン＆装備",
+  "equipmentDescKiller": "キラー固有の特殊能力を強化・変化させる専用アドオン。",
+  "noEquipment": "このキャラクター用のアイテムやアドオンは登録されていません。",
+  "fullModelTitle": "3Dキャラクターモデル",
+  "fullModelPlaceholder": "3Dキャラクターモデル表示（準備中）",
+  "fullModelNotice": "高精度3Dモデルビューア。現在はフルポートレートを表示しています。",
+  "modelModePortrait": "ポートレート表示",
+  "modelModeFull": "全身モデル表示",
+  "markAsOwned": "所持中に設定",
+  "markAsUnowned": "未所持に設定",
+  "ownedBadge": "コレクション済み",
+  "unownedBadge": "未所持",
+  "prevCharacter": "前のキャラクター",
+  "nextCharacter": "次のキャラクター",
+  "allCharacters": "キャラクターハブ",
+  "searchEquipment": "アドオン / アイテムを検索...",
+  "inspectPerk": "パークを詳しく見る",
+  "allRarities": "すべてのレア度",
+  "loading": "キャラクター詳細を読み込み中...",
+  "notFoundTitle": "キャラクターが見つかりません",
+  "notFoundDesc": "指定されたキャラクターは存在しないか、読み込めませんでした。",
+  "killerPower": "キラーの特殊能力",
+  "viewKillerPower": "能力の詳細を見る",
+  "killerPowerDesc": "このキラー独自の特殊能力と戦闘メカニズム。",
+  "movementSpeed": "移動速度",
+  "terrorRadius": "脅威範囲（心音範囲）",
+  "height": "背の高さ",
+  "terrorRadiusVisualizer": "脅威範囲ビジュアライザー",
+  "terrorRadiusVisualizerDesc": "心音の伝播範囲とサバイバーの逃走距離を示すインタラクティブ距離マップ。",
+  "heartbeatStages": "心音・BGMの段階",
+  "immediateThreat": "即死圏内・至近距離 (0 - 8m)",
+  "dangerZone": "危険ゾーン (8 - 16m)",
+  "approaching": "接近中 (16 - 24m)",
+  "audibleRange": "感知範囲 (24 - 32m)",
+  "survivorComparison": "サバイバー速度比較",
+  "survivorComparisonDesc": "サバイバーの通常ダッシュ速度は 4.0 m/s (100%) です。",
+  "viewLore": "伝承・ストーリーを読む",
+  "view3DModel": "クリックして3Dモデルを表示",
+  "loreModalTitle": "エンティティのアーカイブ — 背景伝承",
+  "equipmentDetails": "装備・アドオン詳細",
+  "close": "閉じる",
+  "baseGame": "基本ゲーム",
+  "heightTall": "高い",
+  "heightAverage": "普通",
+  "heightShort": "低い",
+  "offeringsTitle": "オファリング＆儀式の供物",
+  "offeringsDescSurvivor": "試練開始前に捧げるレルム指定、運上昇、出現位置、設計図などのオファリング。",
+  "offeringsDescKiller": "エンティティに力を捧げるメメント・モリ、魔除け、暗黒の覆い、フック関連のオファリング。",
+  "allOfferings": "すべてのオファリング",
+  "categoryMori": "メメント・モリ",
+  "categorySpecial": "特殊＆イベント",
+  "categoryBloodpoints": "ブラッドポイント",
+  "categoryMap": "マップ指定（レルム）",
+  "categoryLuck": "運の上昇",
+  "categoryShroud": "出現位置（覆い）",
+  "categoryWard": "保護（魔除け）",
+  "categoryBlueprint": "設計図",
+  "categoryChest": "チェスト＆霧の濃度",
+  "searchOfferings": "オファリングを検索...",
+  "noMatchingOfferings": "条件に一致するオファリングはありません。",
+  "clickToInspect": "クリックして詳細を確認",
+  "rarityCommon": "コモン",
+  "rarityUncommon": "アンコモン",
+  "rarityRare": "レア",
+  "rarityVeryRare": "ベリーレア",
+  "rarityUltraRare": "ウルトラレア",
+  "rarityEvent": "イベント",
+  "raritySpecial": "スペシャル",
+  "combatAttributes": "基本性能＆戦闘ステータス",
+  "clickTerrorRadiusVisualizer": "脅威範囲をクリックしてビジュアライザーを開く",
+  "clickOutsideToClose": "Escまたは枠外クリックで閉じる",
+  "acousticRange": "音響範囲",
+  "entityArchives": "エンティティのアーカイブ",
+  "codex": "図鑑",
+  "enteredTheFog": "霧の森へ足を踏み入れた。",
+  "currentBaseTerrorRadius": "現在の基本脅威範囲",
+  "lullaby": "子守唄",
+  "audible": "可聴域",
+  "chase": "チェイス中",
+  "killerBase": "キラー基本速度",
+  "survivorSprint": "サバイバーダッシュ",
+  "straightGapClose": "直線距離の追いつき時間",
+  "straightLine": "直線距離",
+  "sortRarityLowToHigh": "レア度: 低 → 高",
+  "sortRarityHighToLow": "レア度: 高 → 低",
+  "sortNameAsc": "名前: 五十音順 / A → Z",
+  "clickOfferingForDetails": "オファリングをクリックして詳細を表示",
+  "clickAddonForDetails": "アドオンをクリックして詳細を表示",
+  "clickItemForDetails": "アイテムをクリックして詳細を表示",
+  "clickToInspectPerk": "クリックしてパークの数値を詳しく見る",
+  "killerPerk": "キラーパーク",
+  "survivorPerk": "サバイバーパーク",
+  "unownedPerk": "未所持パーク",
+  "immediateChaseDesc": "最大テンポの心音、激しいチェイスBGM、至近距離での視覚的ステイン（赤い光）。",
+  "dangerZoneDesc": "激しい鼓動音。キラーが障害物や生成の周りで活発に立ち回っています。",
+  "approachingDesc": "リズミカルで安定した心音。サバイバーの目標付近への接近を示します。",
+  "audibleRangeDesc": "試練区画内にキラーが存在することを示す、かすかな最初の音響シグナル。",
+  "generalPerk": "共通パーク",
+  "alias": "別名",
+  "interactiveViewer": "インタラクティブビューア",
+  "breadcrumbs": "パンくずナビゲーション",
+  "highRes3dModelView": "高解像度3Dモデルビュー",
+  "interactive3dMeshEngineWip": "インタラクティブ3Dメッシュエンジン（開発中）",
+  "configRosterDesc": "キャラクターアイコンをクリックして、パークランダマイザーの抽選プールに含めるかを切り替えます。",
+  "hubSubtitle": "Dead by Daylightの全サバイバー＆キラーを探索。キャラクター詳細、固有パーク、能力アドオン、アイテムを網羅。",
+  "hubNoMatchingCharacters": "検索条件に一致するキャラクターは見つかりませんでした。",
+  "togglePerkOwnershipHelp": "パークをクリックして所持・未所持を切り替えます。",
+  "changesSaved": "変更を保存しました",
+  "dismiss": "閉じる",
+  "noTeachablePerksForCharacter": "このキャラクターには固有パークがありません。",
+  "bulletSeparator": "•",
+  "emDashSeparator": "—",
+  "quoteOpen": "「",
+  "quoteClose": "」",
+  "compatibleTarget": "対象アイテム:",
+  "distance45m": "45m",
+  "distance32m": "32m",
+  "distance8m": "8m",
+  "approxSymbol": "約",
+  "secondsUnit": "秒",
+  "configureRosterPrefix": "キャラクター設定:",
+  "characterRosterSuffix": "名簿",
+  "activeSelectionLabel": "選択中:",
+  "totalActiveCharactersLabel": "有効な総キャラクター数:",
+  "saveAndDone": "保存して完了",
+  "meterUnit": "m",
+  "phase3FeatureBadge": "フェーズ3機能",
+  "terrorRadiusPrefix": "脅威範囲:",
+  "outOfTwoSelectedSuffix": "/2 選択中",
+  "baseTrPrefix": "基本脅威範囲:",
+  "modifiedPrefix": "補正後:",
+  "communityGalleryPrefix": "コミュニティギャラリー (",
+  "realTimeLabel": "リアルタイム",
+  "role": "陣営",
+  "perk": "パーク",
+  "lullabyRadius": "子守唄の範囲"
+};
 
-            <div className="flex flex-wrap items-center gap-2.5">
-              <button
-                type="button"
-                onClick={() => setIsLoreModalOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
-              >
-                <BookOpen className="h-4 w-4" />
-                <span>{t.viewLore || 'Lore & Bio'}</span>
-              </button>
+```
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 select-none">
-                <Bookmark className="h-3.5 w-3.5 shrink-0" />
-                {chapterName}
-              </span>
+### src/locales/ja/customPerks.ts
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-400 select-none">
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
-                {releaseDate}
-              </span>
+```ts
+export default {
+  "conceptLab": "スタジオ＆コンセプト開発ラボ",
+  "subtitle": "DbD特有の菱形カードプレビューを見ながらオリジナルのパークコンセプトを設計したり、コミュニティ作成のパークを閲覧して高評価を投票できます。",
+  "designer": "パークデザイナー",
+  "configureConcept": "パークコンセプトを設定",
+  "requiredFields": "* 必須項目",
+  "titlePlaceholder": "例: 呪術：影の帳、アドレナリン・オーバードライブ...",
+  "characterPlaceholder": "例: メグ・トーマス、トラッパー、固有パーク...",
+  "authorPlaceholder": "例: 霧の建築家",
+  "descPlaceholder": "パーク効果を記述... 重要なステータス用語には **太字** を使用できます。",
+  "conceptTag": "LemonDBD コンセプト",
+  "searchPlaceholder": "タイトル、効果メカニズム、キャラクター名で検索...",
+  "createNew": "新しいコンセプトを作成"
+};
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-400 select-none">
-                <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
-                {character.is_licensed
-                  ? t.licensedFranchise || t.dlcLicensed || 'Licensed Franchise'
-                  : t.originalChapter || t.dlcOriginal || 'Dead by Daylight Original'}
-              </span>
-            </div>
-          </header>
+```
 
-          <CharacterPerksSection
-            perks={perks}
-            character={character}
-            backendBase={backendBase}
-            onSelectPerk={(p) => setSelectedPerk(p as unknown as Perk)}
-            t={t}
-          />
-        </div>
-      </section>
+### src/locales/ja/draft.ts
 
-      <SurvivorEquipmentSection
-        items={items}
-        addons={addons}
-        backendBase={backendBase}
-        onSelectEquipment={(item) => setSelectedEquipment(item)}
-        t={t}
-      />
+```ts
+export default {
+  "draftTitle": "競技用ドラフトルーム",
+  "draftSubtitle": "パークの戦略的 1v1 BAN＆PICK エンジン",
+  "roomCode": "ルームコード",
+  "createRoom": "ドラフトルームを作成",
+  "joinRoom": "ルームに参加",
+  "roomCodePlaceholder": "ルームコードを入力（例: AB12CD）",
+  "loadingRoom": "ドラフトルームを読み込み中...",
+  "roomNotFound": "ドラフトルームが見つからないか、有効期限が切れています。",
+  "copyRoomLink": "招待リンクをコピー",
+  "linkCopied": "招待リンクをクリップボードにコピーしました！",
+  "spectatorMode": "ドラフトルームを観戦中",
+  "currentTurn": "現在のターン",
+  "survivorTurn": "サバイバーのターン",
+  "killerTurn": "キラーのターン",
+  "phaseBan": "BANフェーズ",
+  "phasePick": "PICKフェーズ",
+  "phaseCompleted": "ドラフト完了",
+  "bannedPerks": "BANされたパーク",
+  "pickedPerks": "PICKされたパーク",
+  "banAction": "パークをBAN",
+  "pickAction": "パークをPICK",
+  "selectPerkToBan": "BANするパークを選択",
+  "selectPerkToPick": "PICKするパークを選択",
+  "waitingForOpponent": "相手のアクションを待機中...",
+  "plusPrefix": "+",
+  "maxPerSideSuffix": "（各陣営最大3枠）",
+  "loadingDraft": "ドラフトルームを読み込み中...",
+  "noMatchingPerks": "一致するパークは見つかりませんでした。"
+};
 
-      <OfferingsSection
-        offerings={offerings}
-        role="Survivor"
-        backendBase={backendBase}
-        onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
-        t={t}
-      />
+```
 
-      <LoreModal
-        isOpen={isLoreModalOpen}
-        onClose={() => setIsLoreModalOpen(false)}
-        character={character}
-        rawLoreText={rawLoreText}
-        t={t}
-      />
+### src/locales/ja/empty.ts
 
-      <Model3DModal
-        isOpen={isModelModalOpen}
-        onClose={() => setIsModelModalOpen(false)}
-        character={character}
-        isSurvivor={true}
-        backendBase={backendBase}
-        t={t}
-      />
+```ts
+export default {
+  "title": "パークが見つかりませんでした",
+  "subtitle": "検索ワードやフィルター条件を変更してお試しください。",
+  "loading": "パークを読み込み中..."
+};
 
-      <EquipmentDetailModal
-        item={selectedEquipment}
-        onClose={() => setSelectedEquipment(null)}
-        backendBase={backendBase}
-        t={t}
-      />
+```
 
-      {selectedPerk && (
-        <PerkModal
-          perk={selectedPerk}
-          onClose={() => setSelectedPerk(null)}
-          dict={dict as PerkDictionary}
-        />
-      )}
-    </article>
-  );
+### src/locales/ja/filters.ts
+
+```ts
+export default {
+  "searchPlaceholder": "パーク名や説明文で検索...",
+  "category": "カテゴリー",
+  "all": "すべて",
+  "allCategories": "すべての陣営",
+  "survivor": "サバイバー",
+  "killer": "キラー",
+  "character": "キャラクター",
+  "allCharacters": "すべてのキャラクター",
+  "sortBy": "並び替え基準",
+  "sortName": "パーク名",
+  "sortCharacter": "キャラクター",
+  "sortCategory": "陣営",
+  "order": "昇順/降順",
+  "asc": "昇順（五十音順 / A-Z）",
+  "desc": "降順（五十音逆順 / Z-A）",
+  "clear": "フィルターをリセット",
+  "generatorTab": "パークランダマイザー",
+  "perks": "パーク一覧",
+  "allPerks": "すべてのパーク",
+  "generalOnly": "共通パークのみ",
+  "everyPerk": "全パーク",
+  "ownedOnly": "所持パークのみ",
+  "filterByCharacter": "キャラクターで絞り込み...",
+  "generalPerksOnly": "共通パークのみ表示",
+  "sortByName": "パーク名",
+  "sortByCharacter": "キャラクター",
+  "sortByRole": "陣営",
+  "orderAsc": "昇順（五十音順 / A-Z）",
+  "orderDesc": "降順（五十音逆順 / Z-A）",
+  "aliasLabel": "別名:",
+  "allRarities": "すべてのレア度",
+  "rarityIridescent": "ウルトラレア / イリディセント",
+  "rarityVeryRare": "ベリーレア",
+  "rarityUncommon": "アンコモン",
+  "newestFirst": "新着順",
+  "mostUpvoted": "高評価順",
+  "resetAllFilters": "すべてのフィルターをリセット",
+  "viewMode": "パークグリッド表示"
+};
+
+```
+
+### src/locales/ja/generator.ts
+
+```ts
+export default {
+  "title": "パーク構成ジェネレーター",
+  "subtitle": "ゲーム内のインベントリ座標［ページ / スロット］に基づいてランダムにパークを抽選します。",
+  "modeInstant": "即時抽選",
+  "modeWheel": "ルーレットモード",
+  "configTitle": "インベントリ＆ルーレット設定",
+  "totalPages": "総ページ数",
+  "perksPerPage": "1ページのパーク数",
+  "lastPagePerks": "最終ページのパーク数",
+  "spinDuration": "回転時間（秒）",
+  "resetDefaults": "初期設定に戻す",
+  "rollButton": "新しい構成を抽選",
+  "spinWheels": "スロット #{slot} のルーレットを回す",
+  "spinning": "ルーレット回転中...",
+  "pageWheelTitle": "ページルーレット",
+  "perkWheelTitle": "パークルーレット",
+  "selectedPage": "選択されたページ: {page}",
+  "slotBadge": "ページ {page} / スロット {slot}",
+  "noRepeat": "重複なし抽選",
+  "drawnBadge": "抽選済み: {drawn} / {total}",
+  "resetDrawn": "使用済みパークをリセット",
+  "titleSuffix": "パークランダマイザー",
+  "pageLabel": "ページ",
+  "pagesLabel": "ページ",
+  "playableLabel": "使用可能",
+  "subtitleOwned": "解放・所持しているパークから抽選します。",
+  "subtitleAll": "Dead by Daylightの全パーク保管庫から抽選します。",
+  "survivor": "サバイバー",
+  "killer": "キラー",
+  "perksButtonLabel": "パーク",
+  "noRepeatLabel": "重複なし",
+  "resetAllLabel": "すべてリセット",
+  "noPerksTitle": "利用可能なパークがありません",
+  "noPerksDesc": "フィルター設定を調整するか、パークを解放して抽選を開始してください。",
+  "configureCharacters": "キャラクター設定",
+  "activeLoadoutTitle": "現在のランダム構成",
+  "slotFocus": "スロット #{slot}",
+  "emptySlot": "空きスロット",
+  "spinOrRollPrompt": "ルーレットを回すか抽選ボタンを押してパークを決定してください",
+  "cursedBlindness": "目眩ましの呪い（非表示）",
+  "clickToReveal": "クリックして公開",
+  "rollCompleteLoadout": "4枠のパーク構成を一括抽選",
+  "selectRole": "陣営を選択",
+  "generatorMode": "ジェネレーターモード",
+  "resetAllTooltip": "ルーレット、スロット、抽選履歴をすべてリセット",
+  "clearSlotTooltip": "スロットをクリア",
+  "chaosWheelTitle": "混沌の呪いルーレット",
+  "chaosWheelDesc": "ルーレットを回して4枠のパーク構成に試練の呪いまたはバフを付与します。",
+  "done": "完了",
+  "inventoryCoordinatesNote": "インベントリ座標表示付き［ページ / スロット］",
+  "slotLabel": "スロット #",
+  "coordOpenPage": "［P",
+  "coordSlot": " / S",
+  "coordClose": "］",
+  "emptyCoordinate": "［-/-］"
+};
+
+```
+
+### src/locales/ja/guesser.ts
+
+```ts
+export default {
+  "navLink": "クイズ",
+  "title": "DbD 知識力クイズ",
+  "subtitle": "サバイバー、キラー、能力、パークに関する知識をテストしよう。",
+  "selectMode": "ゲームモードを選択",
+  "currentStreak": "現在の連続正解数",
+  "bestStreak": "最高記録",
+  "accuracy": "正解率",
+  "totalGuesses": "総回答数",
+  "play": "プレイ",
+  "playing": "プレイ中",
+  "correct": "正解！",
+  "incorrect": "不正解！",
+  "next": "次の問題へ",
+  "back": "モード選択に戻る",
+  "loading": "ゲームを読み込み中...",
+  "modeCharacterTitle": "キャラクター当てクイズ",
+  "modeCharacterDesc": "説明文や本名を手がかりにサバイバーやキラー、特殊能力を特定しよう。",
+  "modePerkDescTitle": "パーク説明当てクイズ",
+  "modePerkDescDesc": "効果テキストからパーク名を当てよう。連続正解数が増えるとテキストが徐々に黒塗りに！",
+  "modePerkNameToIconTitle": "パーク名 → アイコン当て",
+  "modePerkNameToIconDesc": "正しいパークアイコンを選ぼう。連続正解数が増えると回転・白黒・拡大の妨害が発生！",
+  "modePerkIconToNameTitle": "アイコン → パーク名当て",
+  "modePerkIconToNameDesc": "アイコン画像からパーク名を当てよう。歪みやエフェクトの妨害が入ります！",
+  "modeMapTitle": "マップ当てクイズ",
+  "modeMapDesc": "レルムの風景、シード、タイル生成、発電機の配置などを見分ける視覚クイズ。",
+  "modeMemesTitle": "DbD ミーム当てクイズ",
+  "modeMemesDesc": "Dead by Daylightコミュニティで流行した定番ネタやミームを当てよう。",
+  "reset": "連続記録をリセット",
+  "streakResetSuccess": "連続記録をリセットしました",
+  "soundOn": "サウンドON",
+  "soundOff": "サウンドOFF",
+  "best": "最高:",
+  "streak": "連続正解",
+  "wip": "開発中",
+  "charAvatarHint": "キャラクターアイコンのヒント",
+  "redacted": "黒塗り（高難易度）",
+  "blurred": "ぼかし（中難易度）",
+  "distortedPerkIcon": "歪んだパークアイコンのヒント",
+  "perkIconChoice": "パークアイコンの選択肢",
+  "escReturn": "Esc: 戻る",
+  "spaceContinue": "Space: 続ける",
+  "identityMode": "正体特定モード",
+  "redactedMode": "黒塗りモード",
+  "visualChoice": "視覚的選択",
+  "distortionMode": "歪みモード",
+  "communityJokes": "コミュニティネタ",
+  "realmsAndSeeds": "レルム＆シード生成",
+  "mapGuesserWipDesc": "エンティティは現在シード値、ジャングルジム、板周り、トーテム生成タイルのマッピングプロトコルを再構築中です。このモジュールでは生成位置や構造をリアルタイムに推測できるようになります。公開をお楽しみに！",
+  "returnToDashboard": "ダッシュボードに戻る",
+  "memeMode": "ミームモード",
+  "grayscale": "グレースケール",
+  "croppedZoom": "拡大クロップ",
+  "space": "スペース"
+};
+
+```
+
+### src/locales/ja/index.ts
+
+```ts
+import app from './app';
+import landing from './landing';
+import generator from './generator';
+import stats from './stats';
+import filters from './filters';
+import pagination from './pagination';
+import card from './card';
+import modal from './modal';
+import empty from './empty';
+import guesser from './guesser';
+import voice from './voice';
+import characterDetail from './characterDetail';
+import sidebar from './sidebar';
+import smashOrPass from './smashOrPass';
+import user from './user';
+import swf from './swf';
+import draft from './draft';
+import streaks from './streaks';
+import builds from './builds';
+import admin from './admin';
+import maps from './maps';
+import quests from './quests';
+import killerCalculator from './killerCalculator';
+import customPerks from './customPerks';
+
+const ja = {
+  app,
+  landing,
+  generator,
+  stats,
+  filters,
+  pagination,
+  card,
+  modal,
+  empty,
+  guesser,
+  voice,
+  characterDetail,
+  sidebar,
+  smashOrPass,
+  user,
+  swf,
+  draft,
+  streaks,
+  builds,
+  admin,
+  maps,
+  quests,
+  killerCalculator,
+  customPerks,
+};
+
+export default ja;
+
+```
+
+### src/locales/ja/killerCalculator.ts
+
+```ts
+export default {
+  "chaseStatus": "チェイス状態:",
+  "carryingSurvivor": "サバイバー担ぎ中:",
+  "tokens": "トークン数（1個につき -4m）:"
+};
+
+```
+
+### src/locales/ja/landing.ts
+
+```ts
+export default {
+  "welcomeBadge": "Dead by Daylight コンパニオン",
+  "welcomeTitle": "LemonDBD へようこそ",
+  "welcomeSubtitle": "DbD専用のデータベース、インタラクティブマップ、パークランダマイザー、プレイヤーツールを提供する総合コンパニオンアプリ。",
+  "enterButton": "パーク保管庫を見る",
+  "characterOverview": "キャラクター一覧"
+};
+
+```
+
+### src/locales/ja/maps.ts
+
+```ts
+export default {
+  "searchPlaceholder": "マップまたはレルムを検索...",
+  "searchAria": "マップまたはレルムを検索",
+  "clearSearchAria": "検索入力をクリア",
+  "providerAria": "マップ提供元ソース",
+  "providerToggleAria": "マップ提供元の切り替え",
+  "allSources": "すべての提供元",
+  "all": "すべて",
+  "realmFiltersAria": "レルムフィルター",
+  "realmPillsAria": "レルム選択ピル",
+  "launch2DEngine": "2Dインタラクティブエンジンを起動",
+  "twoDEngine": "2Dエンジン",
+  "launchFullscreenEngine": "全画面エンジンを起動",
+  "popoutAria": "マップ画像を別ウィンドウでポップアウト",
+  "popout": "ポップアウト",
+  "dragPanScrollZoom": "ドラッグで移動 • スクロールでズーム",
+  "mapControlsAria": "マップ表示のズームおよび移動コントロール",
+  "zoomIn": "拡大",
+  "zoomInAria": "拡大",
+  "zoomOut": "縮小",
+  "zoomOutAria": "縮小",
+  "fitToScreen": "画面に合わせる",
+  "set100Zoom": "100% ズーム",
+  "set150Zoom": "150% ズーム",
+  "set200Zoom": "200% ズーム",
+  "resetView": "表示をリセット",
+  "resetZoomPan": "ズーム＆位置をリセット",
+  "resetPanZoom": "移動＆ズームをリセット",
+  "resetPanAndZoomAria": "移動とズームをリセット",
+  "fullscreenMode": "全画面インタラクティブモード",
+  "fullscreenAria": "全画面インタラクティブモード",
+  "popoutInWindow": "別ウィンドウで開く",
+  "loadingDirectory": "マップディレクトリを読み込み中",
+  "noMapsFound": "マップが見つかりませんでした",
+  "isometricScheme": "アイソメトリック見取図（Steamガイド）",
+  "clockCalloutScheme": "12時時計コールアウトマップシステム",
+  "sectorLegendAria": "マップセクター凡例",
+  "directoryAndLegendsAria": "マップディレクトリと凡例",
+  "closeBottomSheetAria": "ボトムシートを閉じる",
+  "mapVariantsAria": "レルム別マップバリエーション",
+  "mapVariants": "マップバリエーション:",
+  "variants": "バリエーション:",
+  "variant": "バリエーション:",
+  "floor": "階層:",
+  "mapVariantSelectorAria": "マップバリエーションセレクター",
+  "floorSelectorAria": "階層セレクター",
+  "renderingLayout": "戦術マップレイアウトを描画中...",
+  "layerTogglesAria": "マップレイヤー切り替え",
+  "engineControlsAria": "エンジンのズームおよびリセット操作",
+  "fullscreenEngineAria": "2D全画面マップエンジン",
+  "voiceEngineAria": "音声マップナビゲーションエンジン",
+  "palletPresent": "通常板（パレット）あり",
+  "godPallet": "強ポジ板（確定割り板）",
+  "godPalletDesc": "キラーが必ず壊さざるを得ない安全板。確実にチェイスを仕切り直せます。",
+  "safePallet": "安全板（セーフパレット）",
+  "safePalletDesc": "安全マージンが高い板。キラーが壊さずに読み勝つのは困難です。",
+  "mindgamePallet": "読み合い板（マインドゲームパレット）",
+  "mindgamePalletDesc": "中程度の安全性。ステイン隠しや切り返しによる不意打ちに警戒が必要です。",
+  "unsafePallet": "弱ポジ板 / デストラップ板",
+  "unsafePalletDesc": "背の低い障害物や短い周回ループ。先倒し即スタンを狙うか、すぐに離れましょう！",
+  "closeInspectorAria": "インスペクターを閉じる",
+  "allowedDirections": "有効な進入方向:",
+  "fastVault": "高速乗り越え (0.5秒):",
+  "mediumVault": "中速乗り越え (0.9秒):",
+  "locationNote": "場所の注記:",
+  "inspectorTitle": "LemonDBD レルム詳細インスペクター",
+  "pallets": "板 (パレット)",
+  "windows": "窓枠",
+  "totems": "トーテム",
+  "gens": "発電機",
+  "gatesHatch": "ゲート＆ハッチ",
+  "tiles": "タイル生成",
+  "callouts": "コールアウト",
+  "chromeEdgeSafari": "Chrome • Edge • Safari",
+  "universalPrivateInBrowser": "完全プライベート・ブラウザ内処理",
+  "preloadModel": "モデルを事前ロード",
+  "pageTitle": "LemonDBD - 戦術マップコマンドエクスプローラー",
+  "initializingTacticalMap": "戦術マップコマンドを初期化中...",
+  "loadingTacticalMaps": "戦術マップを読み込み中...",
+  "tacticalEngineVersion": "LemonDBD 戦術エンジン v2.0",
+  "mapDirectory": "マップ一覧",
+  "fit": "全体表示",
+  "noMapsAdjustFilter": "検索条件または選択中のレルムフィルターを変更してお試しください。",
+  "centerLandmarkObjective": "中央ランドマーク / メイン建物",
+  "palletSafetyAssessment": "板（パレット）の安全性評価",
+  "fastVaultMomentumNote": "窓枠に向かって最低2.5mの助走を直進で行う必要があります。",
+  "mediumVaultAngledNote": "斜め進入時に発生。キラーの攻撃を受けるリスクが高くなります！",
+  "survivorLoopingTipsTitle": "サバイバーのチェイス・走路テクニック",
+  "survivorLoopingTipsDefault": "周回距離を最短にするため高い壁にぴったり沿って走りましょう。低い障害物越しにキラーの赤い光（ステイン）を確認し、後ろを見ながらチェイスしましょう。",
+  "killerMindgameCounterTitle": "キラーの読み合い・対策テクニック",
+  "killerMindgameCounterDefault": "キラーは高い壁をムーンウォーク（後ろ歩き）でステインを隠したり、窓越えをフェイントして板の早期消費を誘います。",
+  "sourceHensClock": "Hens333 (12時時計式)",
+  "sourceSamoelIsometric": "SamoelColt (アイソメトリック)",
+  "detectedBrowser": "検出されたブラウザ",
+  "activeRecognitionEngine": "有効な認識エンジン",
+  "bulletSeparator": "•",
+  "hudBracketOpen": "［",
+  "hudBracketClose": "］",
+  "hudFloorLabel": "• 階層",
+  "hudVariantLabel": "• バリエーション",
+  "palletEmoji": "🪵",
+  "calloutEmoji": "📢",
+  "hatchEmoji": "🕳️",
+  "windowEmoji": "🪟",
+  "layersLabel": "表示レイヤー:",
+  "percentSign": "%",
+  "zoomPreset100": "100%",
+  "zoomPreset150": "150%",
+  "zoomPreset200": "200%",
+  "allRealms": "すべてのレルム",
+  "godPalletEmoji": "🟩",
+  "safePalletEmoji": "🟦",
+  "mindgamePalletEmoji": "🟨",
+  "unsafePalletEmoji": "🟥",
+  "vaultDirectionSpeedTips": "窓枠の乗り越え方向と速度のコツ",
+  "fastVaultEmoji": "⚡",
+  "mediumVaultEmoji": "🏃",
+  "sourceLabel": "提供元:",
+  "openQuote": "「",
+  "closeQuote": "」",
+  "heardLabel": "認識音声:",
+  "keyV": "V",
+  "sectorCalloutsClockSystem": "セクターコールアウト＆時計方位システム"
+};
+
+```
+
+### src/locales/ja/modal.ts
+
+```ts
+export default {
+  "close": "閉じる",
+  "character": "該当キャラクター",
+  "role": "陣営",
+  "copySlug": "識別子をコピー",
+  "slugCopied": "クリップボードにコピーしました！",
+  "perkDescription": "パーク説明",
+  "generalPerk": "共通パーク",
+  "alias": "別名",
+  "clickToInspectPerk": "クリックしてパーク詳細を見る",
+  "clickToInspect": "クリックして詳細を確認",
+  "killerPerk": "キラーパーク",
+  "survivorPerk": "サバイバーパーク",
+  "unownedPerk": "未所持パーク",
+  "equipment": "装備・アドオン",
+  "clickOutsideToClose": "Escまたは枠外クリックで閉じる",
+  "temporarilyDisabled": "一時的に無効化中",
+  "whyDisabled": "なぜ {item} は無効化されているのですか？",
+  "wasDisabledTemporarily": "{item} は一時的に無効化されています。",
+  "reasonLabel": "理由"
+};
+
+```
+
+### src/locales/ja/pagination.ts
+
+```ts
+export default {
+  "showing": "表示中:",
+  "of": "/",
+  "results": "件のパーク",
+  "perPage": "1ページの表示件数",
+  "page": "ページ",
+  "previous": "前のページ",
+  "next": "次のページ",
+  "firstPage": "最初のページ",
+  "lastPage": "最後のページ",
+  "goTo": "移動:",
+  "navAriaLabel": "ページネーションナビゲーション",
+  "to": "〜"
+};
+
+```
+
+### src/locales/ja/quests.ts
+
+```ts
+export default {
+  "title": "試練クエスト＆マイルストーン",
+  "subtitle": "デイリーやウィークリーの試練をクリアしてXPを獲得し、ステータスレベルを上げて実績を解放しよう。",
+  "pageTitle": "LemonDBD - クエスト＆試練",
+  "loadingQuests": "クエストを読み込み中...",
+  "xpSystem": "XPシステム",
+  "dailyQuests": "デイリークエスト",
+  "weeklyQuests": "ウィークリークエスト",
+  "noQuestsDesc": "現在このカテゴリーで利用可能なクエストはありません。新しい試練の目標が追加されるまでお待ちください！",
+  "noQuestsFound": "このカテゴリーのクエストは見つかりませんでした。",
+  "xpPrefix": "+",
+  "xpSuffix": " XP",
+  "allQuestsPrefix": "すべてのクエスト (",
+  "percentCloseParen": "%)",
+  "questsTitle": "試練クエスト＆マイルストーン",
+  "questsSubtitle": "デイリーやウィークリーの試練をクリアしてXPを獲得し、ステータスレベルを上げて実績を解放しよう。"
+};
+
+```
+
+### src/locales/ja/sidebar.ts
+
+```ts
+export default {
+  "perks": "パーク",
+  "challenges": "チャレンジ",
+  "mapExplorer": "マップエクスプローラー",
+  "characters": "キャラクター",
+  "smashOrPass": "スマッシュ・オア・パス",
+  "trophies": "トロフィー",
+  "draftRoom": "🏆 ドラフトルーム",
+  "swfPlanner": "👥 SWFプランナー",
+  "killerCalc": "🎯 キラー計算機",
+  "buildVault": "🔥 ビルド保管庫",
+  "perkStudio": "🎨 パークスタジオ",
+  "quests": "📜 クエスト",
+  "navigation": "ナビゲーション",
+  "perkRandomizer": "パークランダマイザー",
+  "others": "その他",
+  "admin": "管理者",
+  "adminControlCenter": "管理コントロールセンター",
+  "soon": "近日公開",
+  "signIn": "ログイン / 新規登録",
+  "signOut": "ログアウト",
+  "emailNotVerified": "メールアドレスが未認証です。今すぐ認証",
+  "reportBug": "バグ報告",
+  "buyCoffee": "コーヒーをおごる",
+  "switchLanguage": "言語を切り替え",
+  "toggleTheme": "ダークモード切替",
+  "collapseSidebar": "ナビゲーションバーを折りたたむ",
+  "expandSidebar": "ナビゲーションバーを展開",
+  "bugReportModalTitle": "問題・バグを報告",
+  "bugReportModalSubtitle": "バグ報告やフィードバックでLemonDBDの改善にご協力ください",
+  "bugCategoryPerks": "パーク＆固有データ",
+  "bugCategoryCharacters": "キャラクター＆キラーの特殊能力",
+  "bugCategoryMaps": "マップエクスプローラー＆コールアウト",
+  "bugCategoryChallenges": "パークランダマイザー＆チャレンジ",
+  "bugCategoryDraftSwf": "ドラフトルーム＆SWFプランナー",
+  "bugCategoryUiTranslations": "UI・デザイン・翻訳",
+  "bugCategoryOther": "その他のゲーム内不具合",
+  "bugTitleLabel": "問題のタイトル",
+  "bugTitlePlaceholder": "例: パーク説明文の誤字、能力クールダウン値の誤り...",
+  "bugCategoryLabel": "カテゴリー",
+  "bugDescriptionLabel": "詳細な説明",
+  "bugDescriptionPlaceholder": "発生したバグ、再現手順、本来の挙動などを記入してください...",
+  "bugGuestEmailLabel": "メールアドレス（任意、対応状況の通知用）",
+  "bugGuestEmailPlaceholder": "you@example.com",
+  "bugLoggedInAs": "ログイン中:",
+  "bugScreenshotsLabel": "スクリーンショット添付（最大3枚、各2MBまで）",
+  "bugUploadImage": "画像をアップロード",
+  "bugSecurityVerification": "セキュリティ認証",
+  "bugSubmitButton": "バグレポートを送信",
+  "bugSubmitting": "送信中...",
+  "bugSuccessMessage": "バグレポートを送信しました！LemonDBDの改善にご協力いただきありがとうございます。",
+  "bugErrorMessage": "レポートの送信に失敗しました。もう一度お試しください。",
+  "bugCloseButton": "閉じる",
+  "bugAltchaVerifying": "セキュリティ認証を確認中...",
+  "bugAltchaVerified": "セキュリティ認証を通過しました",
+  "coffeeTitle": "LemonDBD を支援する",
+  "coffeeSubtitle": "プレイヤーコミュニティからの直接のご支援",
+  "coffeeFuelNotice": "エンティティへの燃料補給",
+  "coffeeDonationMessage": "エンティティにカフェインを注入して、LemonDBDのデータベースサーバーとリアルタイムスクレイパーを24時間稼働させ続けましょう！",
+  "coffeeBuyMeCoffeeTagline": "ワンクリックで手軽にコーヒーを差し入れ",
+  "coffeeKofiTagline": "手数料0%の寄付＆単発チップ",
+  "coffeePatreonTagline": "月額サポーター特典＆先行新機能",
+  "coffeeVisit": "ページへ行く",
+  "coffeeFooterNotice": "完全無料＆コミュニティ主導で運営中",
+  "coffeeClose": "閉じる",
+  "homeAria": "LemonDBD ホーム",
+  "navAria": "メインナビゲーション",
+  "openDrawer": "ナビゲーションドロワーを開く",
+  "closeDrawer": "ナビゲーションドロワーを閉じる",
+  "claimed": "受取済み",
+  "verified": "認証済み",
+  "adminPanel": "管理コントロールセンター",
+  "streaks": "チャレンジ＆ストリーク",
+  "generator": "パークランダマイザー",
+  "maps": "マップエクスプローラー",
+  "disabled": "無効化中"
+};
+
+```
+
+### src/locales/ja/smashOrPass.ts
+
+```ts
+export default {
+  "title": "スマッシュ・オア・パス",
+  "selectRoster": "名簿を選択",
+  "dwellHint": "スワイプまたはドラッグで選択。中央で1秒静止して確定。",
+  "active": "有効",
+  "dwellActive": "選択中 ({seconds}秒)",
+  "subtitle": "DbDのキャラクターたちを評価し、あなたの『霧のロマンスタイプ』を診断＆投票しよう。",
+  "smash": "スマッシュ (推し)",
+  "pass": "パス",
+  "superSmash": "スーパースマッシュ",
+  "leaderboard": "殿堂入りランキング",
+  "leaderboardSubtitle": "全キラー＆サバイバーを対象とした公式コミュニティ投票統計",
+  "search": "キャラクター名やランキングを検索...",
+  "close": "閉じる",
+  "shuffle": "シャッフル",
+  "undo": "元に戻す",
+  "mySmashes": "あなたの推し一覧",
+  "stats": "調査書＆統計",
+  "reset": "山札をリセット",
+  "keybindings": "キー操作設定",
+  "hint": "矢印キーまたはスワイプで投票",
+  "godTier": "神ティア (至高)",
+  "fatalAttraction": "命がけの魅力",
+  "friendzone": "お友達止まり",
+  "eldritchVoid": "怪異・虚無行き",
+  "chaosRating": "混沌度",
+  "dangerLevel": "危険度",
+  "archetype": "診断タイプ",
+  "compatibilityScore": "相性スコア",
+  "communitySmashRate": "コミュニティ推し率",
+  "totalVotes": "総投票数",
+  "traits": "相性・性格特徴",
+  "all": "すべて",
+  "allRoles": "すべての陣営",
+  "survivors": "サバイバー",
+  "killers": "キラー",
+  "allGenders": "すべての性別",
+  "female": "女性",
+  "femaleOnly": "女性のみ",
+  "male": "男性",
+  "maleOnly": "男性のみ",
+  "monsters": "怪異・人外",
+  "rosters": {
+    "canon": {
+      "name": "Dead by Daylight: 本編公式",
+      "desc": "公式に登場する全98キャラクター（キラー＆サバイバー）の完全名簿。"
+    },
+    "hoy": {
+      "name": "Hooked on You: 恋の楽園",
+      "desc": "水着衣装と南国の陽気な雰囲気が漂う、恋愛シミュレーション公式スピンオフ版。"
+    },
+    "legendary": {
+      "name": "レジェンダリースキン＆コラボ",
+      "desc": "ゲーム史に名を残す名作コラボや象徴的なレジェンダリースキン。"
+    },
+    "cyberpunk": {
+      "name": "サイバーパンク・フォグ 2077",
+      "desc": "ディストピアの霧の中で戦う、ハイテクネオンで強化されたチャンピオンたち。"
+    },
+    "anime": {
+      "name": "霧のアニメ / マンガスタイル",
+      "desc": "お気に入りの霧の住人たちをアニメ・マンガ風にアレンジしたスタイル。"
+    },
+    "gothic": {
+      "name": "ヴィクトリアン＆ゴシック怪異伝説",
+      "desc": "ダークファンタジー、Bloodborne風の美学、ヴィクトリア朝のコズミックホラー。"
+    },
+    "hooked_on_you": {
+      "name": "Hooked on You: 恋の楽園",
+      "desc": "水着衣装と南国の陽気な雰囲気が漂う、恋愛シミュレーション公式スピンオフ版。"
+    },
+    "legendary_cosplay": {
+      "name": "レジェンダリースキン＆コラボ",
+      "desc": "ゲーム史に名を残す名作コラボや象徴的なレジェンダリースキン。"
+    },
+    "cyberpunk_2077": {
+      "name": "サイバーパンク・フォグ 2077",
+      "desc": "ディストピアの霧の中で戦う、ハイテクネオンで強化されたチャンピオンたち。"
+    },
+    "anime_manga": {
+      "name": "霧のアニメ / マンガスタイル",
+      "desc": "お気に入りの霧の住人たちをアニメ・マンガ風にアレンジしたスタイル。"
+    },
+    "gothic_eldritch": {
+      "name": "ヴィクトリアン＆ゴシック怪異伝説",
+      "desc": "ダークファンタジー、Bloodborne風の美学、ヴィクトリア朝のコズミックホラー。"
+    }
+  },
+  "controls": {
+    "pass": "パス",
+    "smash": "スマッシュ (推し)",
+    "superSmash": "スーパースマッシュ",
+    "stats": "調査書＆統計",
+    "reset": "山札をリセット",
+    "keybindings": "キー操作設定",
+    "hint": "矢印キーまたはスワイプで投票",
+    "arrowLeft": "パス（← 左矢印）",
+    "arrowRight": "スマッシュ（→ 右矢印）",
+    "arrowUp": "統計（↑ 上矢印）",
+    "arrowDown": "スーパースマッシュ（↓ 下矢印）",
+    "keyR": "リセット（Rキー）"
+  },
+  "tiers": {
+    "godTier": "神ティア (至高)",
+    "fatalAttraction": "命がけの魅力",
+    "friendzone": "お友達止まり",
+    "eldritchVoid": "怪異・虚無行き"
+  },
+  "statsDetail": {
+    "chaosRating": "混沌度",
+    "dangerLevel": "危険度",
+    "archetype": "診断タイプ",
+    "compatibilityScore": "相性スコア",
+    "communitySmashRate": "コミュニティ推し率",
+    "totalVotes": "総投票数",
+    "traits": "相性・性格特徴",
+    "smashCount": "スマッシュ数",
+    "passCount": "パス数",
+    "superSmashCount": "スーパースマッシュ数",
+    "rank": "順位",
+    "quote": "名言・セリフ"
+  },
+  "filters": {
+    "all": "すべて",
+    "allRoles": "すべての陣営",
+    "survivors": "サバイバー",
+    "killers": "キラー",
+    "allGenders": "すべての性別",
+    "female": "女性",
+    "femaleOnly": "女性のみ",
+    "male": "男性",
+    "maleOnly": "男性のみ",
+    "monsters": "怪異・人外"
+  },
+  "modals": {
+    "statsTitle": "キャラクター調査書",
+    "leaderboardTitle": "殿堂入りランキング",
+    "leaderboardSubtitle": "全キラー＆サバイバーを対象とした公式コミュニティ投票統計",
+    "personaTitle": "試練のロマンス診断タイプ",
+    "personaSubtitle": "あなたの投票傾向から分析された心理的相性レポート",
+    "resetConfirmTitle": "すべての投票をリセットしますか？",
+    "resetConfirmDesc": "このセッションで行ったすべての投票が巻き戻され、キャラクターの山札が再シャッフルされます。",
+    "confirm": "確定",
+    "cancel": "キャンセル",
+    "close": "閉じる"
+  },
+  "notifications": {
+    "voteRecorded": "投票を記録しました！",
+    "deckReset": "山札をリセットしました。",
+    "rateLimit": "投票が早すぎます！少し待ってから操作してください。",
+    "errorLoading": "キャラクター情報の読み込みに失敗しました。",
+    "errorVoting": "投票の記録に失敗しました。"
+  },
+  "empty": {
+    "title": "山札をすべて評価しました！",
+    "subtitle": "この名簿に含まれるすべての候補者の判定が完了しました。",
+    "resetAction": "リセットしてもう一度投票",
+    "viewLeaderboard": "ランキングを見る",
+    "switchRoster": "別の名簿を選ぶ"
+  },
+  "loreLabels": {
+    "trialClassification": "試練区分",
+    "datingArchetype": "恋愛タイプ",
+    "greenFlag": "好印象ポイント (推し要素)",
+    "redFlag": "要注意ポイント (警告)",
+    "identityProfile": "正体プロファイル",
+    "signatureQuote": "代表的なセリフ",
+    "trialWarning": "試練の警告",
+    "female": "女性",
+    "male": "男性",
+    "monster": "怪異 / 人外"
+  },
+  "hud": {
+    "left": "残り",
+    "smash": "スマッシュ",
+    "pass": "パス",
+    "smashRate": "支持率",
+    "bgm": "BGM",
+    "archetype": "タイプ",
+    "hallOfFame": "殿堂入り",
+    "howToPlay": "遊び方",
+    "shuffle": "シャッフル"
+  },
+  "occultDossier": "機密オカルト調書",
+  "percentSign": "%",
+  "percentClose": "%)",
+  "pipeSeparator": "|",
+  "loadingRosterPrefix": "データベースから",
+  "loadingRosterSuffix": "を読み込み中...",
+  "howToPlayModal": {
+    "title": "スマッシュ・オア・パスの遊び方",
+    "swipeTitle": "カードをスワイプ / ドラッグ",
+    "swipeDesc": "カードを右にドラッグするとスマッシュ 💋、左にドラッグするとパス ✖ します。",
+    "swipeIcon": "👆",
+    "iconsTitle": "カード上のアクションアイコン",
+    "iconsDesc": "左上の反転アイコンをクリックするとプロフィール、性格、推し/警告要素、ミームを閲覧できます。虫眼鏡で高解像度ポートレートを表示します。",
+    "iconsIcon": "🎯",
+    "keycapsTitle": "快適なキーボード操作",
+    "keycapsIcon": "⌨️",
+    "atmosphereTitle": "ダークな背景演出とBGM",
+    "atmosphereDesc": "背景の文字にカーソルを合わせると発光エフェクトとともに伝承が表示されます。Bキーを押してダークシンセBGMを再生しましょう！",
+    "atmosphereIcon": "🌌",
+    "letsPlay": "了解、プレイ開始！"
+  },
+  "personaArchetypes": {
+    "eldritchDevotee": {
+      "title": "異形・怪異の信奉者",
+      "subtitle": "人智を超えた恐怖や太古の存在こそが、あなたの真の愛の言葉です。",
+      "desc": "宇宙の虚無が呼んでいるのに、なぜ定命の者の恋で妥協するのでしょうか？触手、牙、そしてコズミックミステリーを愛しています。"
+    },
+    "redStainAddict": {
+      "title": "ステイン（赤い光）ジャンキー",
+      "subtitle": "危険こそが興奮のスパイス。心音範囲が近づくほど胸が高鳴ります。",
+      "desc": "メメント・モリの演出もあなたにとっては激しいハグのようなもの。圧倒的な力、脅威、そしてダークなカリスマに惹かれます。"
+    },
+    "campfireSoulmate": {
+      "title": "焚き火のソウルメイト",
+      "subtitle": "温かいチームワークと献身的な救助・治療に心がとろけます。",
+      "desc": "あなたが求めるのは本物の絆、飾らない笑顔、そして脱出ゲートを開ける前に必ずフックから助けてくれる誰かです。"
+    },
+    "entitysParamour": {
+      "title": "エンティティの愛人",
+      "subtitle": "霧の森に存在するほぼすべての魂に美しさとロマンスを見出します。",
+      "desc": "理想が高い？そんな言葉は無縁です。あなたの心はすべてのサバイバーとキラーを受け入れる無限の聖域です。"
+    },
+    "coldHeartedPragmatist": {
+      "title": "冷徹な現実主義者",
+      "subtitle": "極めて選り好みが激しく、色仕掛けには動じず、ただ生き残ることのみを考えます。",
+      "desc": "あなたの厳しいチェックリストを通過できる者はごくわずか。完璧な立ち回り、隙のないパーク構成、欠点ゼロが求められます。"
+    },
+    "fogRomantic": {
+      "title": "霧のロマンチスト",
+      "subtitle": "試練の中で情熱とスリルを同時に追い求めるバランスの取れた魂。",
+      "desc": "エンティティの果てしない試練の中であっても、真のロマンスの輝きは必ず見つかると信じています。"
+    }
+  },
+  "tooltips": {
+    "mute": "効果音をミュート (M)",
+    "unmute": "効果音のミュート解除 (M)",
+    "playBgm": "ダークアンビエントBGMを再生 (B)",
+    "pauseBgm": "BGMを一時停止 (B)",
+    "resetAllVotes": "自分の投票をすべてリセット",
+    "howToPlay": "遊び方とキーボード操作",
+    "shuffle": "残りの候補者をシャッフル"
+  },
+  "tierFilterLabel": "ティアで絞り込み:",
+  "left": "残り",
+  "bgm": "BGM",
+  "hallOfFame": "殿堂入り",
+  "howToPlay": "遊び方"
+};
+
+```
+
+### src/locales/ja/stats.ts
+
+```ts
+export default {
+  "vaultStats": "保管庫の統計",
+  "totalPerks": "総パーク数",
+  "characters": "キャラクター数",
+  "survivors": "サバイバー",
+  "killers": "キラー",
+  "ratio": "陣営比率",
+  "totalXpClaimed": "獲得済み総XP",
+  "completed": "完了",
+  "streak": "連勝・ストリーク",
+  "win": "勝利",
+  "vaultTotal": "保管庫合計",
+  "ownedPerks": "所持パーク",
+  "totalXpEarned": "総獲得XP",
+  "questProgress": "クエスト進行度",
+  "claimed": "受取済み",
+  "active": "進行中",
+  "loss": "敗北",
+  "current": "現在",
+  "best": "最高"
+};
+
+```
+
+### src/locales/ja/streaks.ts
+
+```ts
+export default {
+  "streaksTitle": "チャレンジ＆ストリークハブ",
+  "backToKillerStreaks": "キラーストリーク一覧に戻る",
+  "backToKillers": "キラー一覧に戻る",
+  "rules": "ルール",
+  "stats": "統計データ",
+  "perkPool": "パークプール",
+  "resetRun": "挑戦をリセット",
+  "resetRunTitle": "この挑戦をリセットしますか？",
+  "chooseDifficulty": "難易度を選択",
+  "chooseMode": "モードを選択",
+  "chooseGauntletMode": "ガントレットモードを選択",
+  "runProgress": "挑戦の進行度",
+  "pullTheLever": "レバーを引く！",
+  "challengeStarted": "チャレンジを開始しました。",
+  "readyForGauntlet": "ガントレットに挑戦しますか？",
+  "winMatch": "マッチ勝利",
+  "loseMatch": "マッチ敗北",
+  "anyPerkYouLike": "好きなパークを装備可能",
+  "perksUnlocked": "解放されたパーク",
+  "noNewPerks": "今回解放された新規パークはありません。",
+  "noPerksUnlockedYet": "解放されたパークはまだありません。",
+  "everyPerkUnlocked": "すべてのパークが解放されています。",
+  "loadingStreak": "ストリークを読み込み中…",
+  "yourBuild": "あなたの構成",
+  "attempt": "回目の挑戦",
+  "layoutFrozen": "構成固定中",
+  "streakRoleTabs": "ストリーク陣営タブ",
+  "matchSummary": "マッチ結果サマリーと履歴",
+  "temporarilyDisabled": "このチャレンジは一時的に無効化されています。",
+  "pageStreak": "ページストリーク",
+  "loadingKillers": "所持キラーを読み込み中...",
+  "retry": "再試行",
+  "loadingRoster": "名簿を読み込み中…",
+  "resetRunPrompt": "もう一度最初から挑戦したい場合はリセットしてください。",
+  "chaosRulesTitle": "カオスストリークのルール",
+  "chaosRulesSubtitle": "抽選、キラー選択、チェックポイントの仕組み",
+  "chaosStreak": "カオスストリーク",
+  "original": "オリジナル版",
+  "lemonVersion": "LemonDBD版",
+  "comingSoon": "近日公開。",
+  "yourOwnTeachablePerks": "自身の固有パーク",
+  "threeKillsOrMore": "3人以上処刑（3K以上）",
+  "escape": "脱出",
+  "checkpoint": "チェックポイント",
+  "historyRulesTitle": "ヒストリーストリークのルール",
+  "historyRulesSubtitle": "ロードマップ、進行列、パークプールの仕組み",
+  "historyStreak": "ヒストリーストリーク",
+  "pageStreakRulesTitle": "ページストリークのルール",
+  "pageStreakRulesSubtitle": "ページ、構成ビルド、パークプールの仕組み",
+  "perksCount": "個のパーク",
+  "pagesCount": "ページ",
+  "lastPage": "最終ページ",
+  "devSkipWinTitle": "開発用: 残りの全キラーで勝利してクリア画面へスキップ",
+  "startStreak": "ストリーク開始",
+  "starting": "開始中…",
+  "gameCancelled": "マッチ無効:",
+  "hackers": "不正プレイヤー（チーター）:",
+  "crashServerFailure": "クラッシュまたはサーバー障害:",
+  "noDodging": "マッチ離脱（ドッジ）の禁止:",
+  "chaosConcept": "カオスのコンセプト",
+  "chaosConceptDesc": "レバーを引いて、あなたが所持・解放している全キラーパークの中からランダムに4つのパークと2つのアドオンレア度条件を抽選します。プール内の全パークが出尽くすまで重複しません。次に残っている所持キラーの中からプレイするキラーを選んで確定し、その構成を指針として試練に挑みます。",
+  "anythingLessLoss": "それ未満は敗北となります。",
+  "chaosAddonRequirement": "指定された2つのレア度に合致するアドオンを装備してプレイする必要があります。",
+  "chaosWinRun": "この難易度で所持しているすべてのキラーで勝利すればクリアとなります。",
+  "poolLockedNotice": "パークプールは挑戦開始時の状態で固定されます。挑戦の途中で新しく解放したキラーやパークは、リセット、0勝への敗北、またはクリアするまでプールに追加されません。",
+  "rosterLockedNotice": "キャラクター名簿は挑戦開始時の状態で固定されます。挑戦の途中で新しく解放したキャラクターは、リセット、0勝への敗北、またはクリアするまで追加されません。",
+  "inactivityLossNotice": "進行中の挑戦が90日間放置された場合、自動的に敗北扱いとなります。",
+  "difficultyAndCheckpoints": "難易度とチェックポイント",
+  "difficultyCheckpointsDesc": "チェックポイント到達後に敗北した場合、0勝に戻るのではなく直前のチェックポイントまで戻ります。ただし、それ以降に勝利したキラーは再びプールへ戻されます。",
+  "exceptionsAndClarifications": "例外規定と補足事項",
+  "exceptions": "例外規定",
+  "clarifications": "補足事項",
+  "gameCancelledDesc": "ロード画面中に誰かが切断してマッチが始まらなかった場合。再抽選は行わず、同じ構成で再度プレイしてください。",
+  "hackersDesc": "明らかなチーターに遭遇した場合はマッチ無効。再抽選は行わず、同じ構成で再度プレイしてください。",
+  "crashServerFailureDesc": "ゲームの強制終了やサーバーエラーは敗北になりません。再抽選は行わず、同じ構成で再度プレイしてください。",
+  "noDodgingDesc": "サバイバーのアイテムや編成に関係なく、マッチングしたロビーでそのままプレイしてください。",
+  "startGame": "ゲーム開始",
+  "target": "目標",
+  "activeGauntletTarget": "現在のガントレット対象",
+  "yourBuildForMatch": "このマッチの指定構成",
+  "pickTheseInGame": "ゲーム内でこれらを選択してください。ここでの確定操作は不要です。",
+  "noTeachablePerks": "このキャラクターの固有パークは登録されていません。",
+  "rosterProgress": "名簿の進行状況",
+  "rosterProgressDesc": "所持している全キャラクターでマッチをクリアして名簿を制覇しましょう。",
+  "checkpointBanked": "チェックポイント到達",
+  "checkpointLoseFallback": "ここから敗北した場合の戻り先:",
+  "notToZero": "（0勝には戻りません）",
+  "keepGoing": "挑戦を続ける",
+  "gauntletComplete": "ガントレット制覇！",
+  "startNewRun": "新しい挑戦を始める",
+  "gauntlet": "ガントレット",
+  "current": "現在",
+  "best": "最高",
+  "checkpointHeader": "チェックポイント",
+  "gauntletConcept": "ガントレットのコンセプト",
+  "youOnlyEverRun": "装備できるのは常に",
+  "trialOnlyCountsWinOn": "試練の勝利条件:",
+  "trialOnlyCountsWinIf": "試練の勝利条件:",
+  "exitGatesOrHatch": "（脱出ゲートまたはハッチからの脱出）。それ以外はすべて敗北となります。",
+  "every10WinsBanks": "10勝ごとに保存される",
+  "progressiveTierRestrictions": "段階的なティア制限",
+  "historyStreakComplete": "ヒストリーストリーク制覇！",
+  "pickYourKiller": "キラーを選択",
+  "acceptPick": "キラーを決定",
+  "killersBeaten": "撃破したキラー",
+  "checkpointRow": "チェックポイント行",
+  "concept": "コンセプト",
+  "historyConceptDesc1": "所持キラーが実装順に5人ずつの行（グループ）に分けられます。プレイできるのは現在の行のみです。その行の全キラーで勝利すると次の行が解放されます。",
+  "historyConceptDesc2": "最初はすべての共通パークが解放された状態でスタートします。キラーで勝利すると、そのキラーの固有パークがパークプールに追加されます。アドオンや構成の制限はありません。キラーを選んで勝利を目指しましょう。",
+  "historyConceptHint": "本来の体験を味わうため、できるだけ実装が古いキラーから新しいキラーへの順でプレイすることをおすすめします。🙂",
+  "modes": "モード一覧",
+  "mediumMode": "ノーマル",
+  "hellMode": "ヘルモード",
+  "hellModeDesc": "チェックポイントなし。1度でも敗北すると全進行度、全行、解放した全パークがリセットされます。",
+  "pageStreakConceptDesc1": "キラーを1人選択します。そのキラーで現在使える全パークがページごとに分割されます。現在のページにあるパークのみを使って最強の構成を組み、マッチの勝敗を記録してください。",
+  "pageStreakConceptDesc2": "勝利すると次のページへ進みます。敗北するとページ1に戻り新しい挑戦が始まります（それまでのページ履歴は記録されます）。",
+  "pageStreakLayoutFrozenNotice": "ページ内のパーク配置は挑戦開始時に固定されます。挑戦中に新しく解放されたパークがあっても、リセットするまで再シャッフルされません。",
+  "progress": "進行状況",
+  "pageStreakCurrentDesc": "今回の挑戦でクリアしたページ数。敗北すると0に戻ります。",
+  "pageStreakBestDesc": "このキラーで過去すべての挑戦を通じて到達した最高ページ数。",
+  "pageStreakStartPanelDesc": "ページ1からスタートします。勝利で次のページへ進み、敗北で最初からやり直しになります。ページ配置は挑戦中ずっと固定されます。",
+  "disabled": "無効化中",
+  "winRate": "勝率",
+  "matches": "試合数",
+  "wins": "勝利数",
+  "losses": "敗北数",
+  "recentMatchHistory": "最近のマッチ履歴",
+  "noMatchesLogged": "記録されたマッチはまだありません。最初のマッチを完了しましょう！",
+  "autoLossInactive": "長期間非アクティブによる自動敗北",
+  "verifyEmailToTrack": "チャレンジを記録するにはメール認証を行ってください",
+  "verifyEmail": "メールを認証する",
+  "loginToTrack": "ログインしてチャレンジを記録",
+  "loginToTrackDesc": "チャレンジはお手持ちのキラーやパークの所持状況を使用するため、アカウント登録が必要です。",
+  "logIn": "ログイン",
+  "youWonOn": "クリア難易度:",
+  "modeSuffix": "モード",
+  "devSkipWinLabel": "開発用: 勝利画面へスキップ",
+  "winsSuffix": "勝",
+  "usedLabel": "使用済み",
+  "leftThisCycle": "現在のサイクル残り",
+  "usedTab": "使用済み",
+  "remainingTab": "残り",
+  "killersCleared": "キラークリア",
+  "streakLabel": "ストリーク:",
+  "streakArrow": "→",
+  "middotSeparator": "·",
+  "bulletSeparator": "•",
+  "tierLabel": "ティア",
+  "noPerksThisTrial": "この試練はパークなし（ノーパーク）です。",
+  "goesInBare": "はパークなしで挑みます。",
+  "slotLabel": "枠",
+  "lockedSuffix": "ロック中",
+  "ruleSuffix": "ルール",
+  "ownPerkOf": "対象キャラの固有パーク:",
+  "slotOneOfThese": "枠 1: 以下のいずれか",
+  "ownPerksOf": "対象キャラの固有パーク:",
+  "nextUpLabel": "次の対象:",
+  "backToLabel": "戻る:",
+  "streaksSuffix": "ストリーク",
+  "youWonThe": "見事クリア:",
+  "gauntletSuffix": "ガントレット",
+  "gauntletOriginalDescription": "伝統のガントレット: 各キャラクター自身の固有パークのみを使用し、ティアが上がるごとに制限が厳しくなる過酷な挑戦。",
+  "beatEveryPrefix": "所持しているすべての",
+  "gauntletConceptBody": "で1試練ずつ勝利を目指します。連勝が伸びるほど持ち込めるパーク数が減少し、最終ティアではノーパーク（パークなし）での勝利が求められます。",
+  "neverAnyoneElseNote": "のみを使用し、他キャラクターのパークは一切使えません。最初は3個すべて装備でき、ティアが上がるごとに1個ずつ失われます。3個未満になった際はどれを残すか自分で選択します。",
+  "checkpointFallbackNote": "。それ以降に敗北しても直前のチェックポイントまでしか戻りません（0勝には戻りません）。ただし、そのチェックポイント以降にクリアした",
+  "checkpointPoolNote": "は再びプールへ戻されます。チェックポイントとティア昇格は同時に発生するため、パークの喪失と進行度の保存は同じ勝利時に適用されます。",
+  "youBeatEveryRowOn": "すべての行をクリア:",
+  "rowLabel": "行",
+  "ofLabel": "/",
+  "killerLabel": "キラー",
+  "nextRowPreviewLabel": "次の行のプレビュー",
+  "unlockedSuffix": "解放済み",
+  "availableLabel": "選択可能",
+  "lockedLabel": "ロック中",
+  "rowClearedPrefix": "行クリア！ 行",
+  "rowUnlockedSuffix": "が解放されました。",
+  "mediumModeDesc": "ノーマルではクリアした行ごとにチェックポイントが保存されます。敗北時は0ではなくその行の最初に戻ります。",
+  "killersColonLabel": "キラー数:",
+  "percentSign": "%",
+  "killersYouOwn": "人の所持キラー",
+  "allPagesClearedPrefix": "全",
+  "pagesClearedOnSuffix": "ページクリア（対象:",
+  "pageLabel": "ページ",
+  "pickCountSeparator": "、選択数:",
+  "nextUpPagePrefix": "次へ進む: ページ",
+  "attemptLabel": "挑戦",
+  "readyForPrefix": "準備完了:",
+  "pagesOnSuffix": "ページ（対象:",
+  "freezeNotice": "配置固定の注記",
+  "pageStreakDesc": "ページストリークチャレンジの概要と進行状況の追跡。",
+  "threeKillsOrMoreWin": "3人以上の処刑（3K以上）で勝利となります。",
+  "survivor": "サバイバー",
+  "killer": "キラー",
+  "completed": "完了",
+  "noOwnedCharacters": "この条件に一致する所持キャラクターは見つかりませんでした。",
+  "continueButton": "続ける"
+};
+
+```
+
+### src/locales/ja/swf.ts
+
+```ts
+export default {
+  "engineBadge": "SWF フルパチームエンジン",
+  "pageTitle": "4人チーム構成プランナー",
+  "pageSubtitle": "サバイバーごとの役割分担を調整し、パークの重複・無駄を排除して、パーティ（SWF）のシナジーを最大化します。",
+  "shareLoadout": "チーム構成を共有",
+  "copiedToast": "チーム構成URLをクリップボードにコピーしました！仲間に共有してください。",
+  "redundancyDetector": "パーク重複検知システム",
+  "optimal": "最適（重複なし）",
+  "redundantPerksCount": "{count} 個の重複パーク",
+  "duplicateWarning": "重複するパークが検出されました！味方同士で同じパークを重ねるとチーム全体の汎用性が低下する場合があります。",
+  "equippedBy": "装備者:",
+  "zeroRedundancy": "重複ゼロ: チーム全体の16枠すべてのパークがユニークです！",
+  "survivor": "サバイバー",
+  "perkLoadout": "4枠のパーク構成",
+  "roleChaser": "チェイス担当",
+  "roleChaserDesc": "チェイスを牽引し、板を効果的に使ってキラーのヘイトを集めます。",
+  "roleGenRusher": "発電機担当（修理特化）",
+  "roleGenRusherDesc": "修理加速パークを活用し、素早い発電機修理に専念します。",
+  "roleMedic": "衛生兵（回復担当）",
+  "roleMedicDesc": "味方の負傷を素早く治し、チーム全体の健康状態を維持します。",
+  "roleUnhooker": "救助担当",
+  "roleUnhookerDesc": "安全なフック救助や通電後の救出作戦に特化します。",
+  "slot": "枠",
+  "removePerk": "パークを外す",
+  "synergyRating": "シナジー評価",
+  "analyzing": "分析中...",
+  "synergyLabel": "シナジー",
+  "conflictLabel": "競合",
+  "selectPerkTitle": "サバイバー {id} のパークを選択（スロット {slot}）",
+  "choosePerkVault": "サバイバーパーク保管庫から選択",
+  "searchPlaceholder": "サバイバーパークを検索...",
+  "loadingPerks": "サバイバーパークを読み込み中...",
+  "noPerksFound": "一致するパークは見つかりませんでした。",
+  "loadingSwf": "SWFプランナーを読み込み中..."
+};
+
+```
+
+### src/locales/ja/user.ts
+
+```ts
+export default {
+  "profileTitle": "ユーザープロフィール＆アカウント",
+  "profileSubtitle": "プロフィール、記録統計、キャラクター所持状況、バグレポートの管理。",
+  "tabOverview": "アカウント概要",
+  "tabBugReports": "マイバグレポート",
+  "memberSince": "登録日",
+  "roleAdmin": "管理者",
+  "roleUser": "一般プレイヤー",
+  "changeAvatar": "アバターを変更",
+  "removeAvatar": "アバターを削除",
+  "statusPending": "確認待ち",
+  "statusInProgress": "対応中",
+  "statusResolved": "解決済み",
+  "statusClosed": "クローズ",
+  "bugReportsTitle": "送信したバグレポート一覧",
+  "bugReportsSubtitle": "報告したチケットの調査状況、開発者からの返信、修正対応を確認できます。",
+  "reportNewBug": "新しいバグを報告",
+  "loadingReports": "送信済みチケットを読み込み中...",
+  "noReportsTitle": "送信されたバグレポートはありません",
+  "noReportsSubtitle": "まだ不具合の報告はありません。パークの数値ミスやマップのコールアウト間違いを見つけたら報告してください！",
+  "submitBugReport": "バグレポートを送信",
+  "reportedOn": "報告日時",
+  "attachments": "添付ファイル",
+  "devResponse": "開発者からの回答",
+  "saveChanges": "変更を保存",
+  "currentPassword": "現在のパスワード",
+  "newPassword": "新しいパスワード",
+  "confirmPassword": "新しいパスワード（確認）",
+  "passwordPlaceholder": "変更しない場合は空欄のまま",
+  "confirmPasswordPlaceholder": "新しいパスワードを再入力",
+  "adminBadge": "管理者バッジ",
+  "forgotSentNotice": "そのメールアドレスが登録されている場合、パスワード再設定リンクを送信しました。",
+  "usernameOrEmailPlaceholder": "ユーザー名またはメールアドレスを入力",
+  "emailPlaceholder": "yourname@domain.com",
+  "signIn": "ログイン",
+  "createAccount": "アカウント作成",
+  "sendResetLink": "再設定リンクを送信",
+  "adminDemo": "管理者（lemon）",
+  "userDemo": "一般ユーザー（user）",
+  "verifyEmailRequired": "キャラクター所持状況を管理するにはメール認証が必要です。",
+  "authRequiredTitle": "ログインが必要です",
+  "authRequiredDesc": "LemonDBDのプロフィール閲覧、固有パークの管理、ゲームチャレンジの記録を行うにはログインまたは新規登録してください。",
+  "returnToHome": "ホームに戻る",
+  "activePlayerSubtitle": "アクティブプレイヤー ＆ LemonDBDコミュニティメンバー",
+  "quickShortcuts": "クイックショートカット",
+  "accountCreatedVerificationSent": "アカウントを作成しました！ {email} 宛に認証コードを送信しました。",
+  "usernameOrEmailLabel": "ユーザー名またはメールアドレス",
+  "emailLabel": "メールアドレス",
+  "passwordLabel": "パスワード",
+  "quickDemoAccounts": "デモ用クイックアカウント",
+  "backToSignIn": "ログイン画面に戻る",
+  "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+  "dontHaveAccount": "アカウントをお持ちでないですか？",
+  "register": "新規登録",
+  "signedInButPrefix": "ログイン中ですが、",
+  "notVerifiedYetNotice": "はまだ認証されていません。メールで届いた認証コードを以下に入力してください。",
+  "forgotPasswordLink": "パスワードをお忘れですか？",
+  "quoteOpen": "「",
+  "quoteClose": "」",
+  "setNewPassword": "新しいパスワードを設定",
+  "passwordResetSuccess": "パスワードの再設定が完了しました！",
+  "goToHome": "ホームへ移動",
+  "resetPassword": "パスワード再設定",
+  "adminPanel": "管理コントロールセンター",
+  "streaks": "チャレンジ＆ストリーク",
+  "generator": "パークランダマイザー",
+  "maps": "マップエクスプローラー"
+};
+
+```
+
+### src/locales/ja/voice.ts
+
+```ts
+export default {
+  "engine": "音声認識エンジン",
+  "engineSubtitle": "ブラウザ自動フォールバック対応のマルチエンジン設計",
+  "engineNative": "Web Speech フレームワーク",
+  "engineNativeDesc": "Google / Apple クラウド音声認識",
+  "engineClient": "クライアント側 音声認識モデル",
+  "engineClientDesc": "ブラウザ内ローカル音声AI",
+  "engineClientBadge": "ローカルAIモデル",
+  "engineNativeBadge": "Google / Web Speech API",
+  "browserSupported": "Google Chrome、Microsoft Edge、Safari でサポートされています。",
+  "browserFallbackNeeded": "Firefoxなどの一部ブラウザにはGoogleの音声認識機能が組み込まれていません。",
+  "howItWorksTitle": "音声認識エンジンと互換性について",
+  "howItWorksNative": "Chrome、Edge、Safari では、OS標準の Google / Apple Web Speech フレームワークを使用して追加ダウンロードなし（0MB）でリアルタイムに音声を文字起こしします。",
+  "howItWorksClient": "FirefoxやBraveなどのブラウザでは、軽量なクライアント側音声モデル（約39MB）をブラウザメモリに自動ダウンロードします。音声データはデバイス上で100%ローカル処理され、プライバシーが完全に保護されます。",
+  "whyNeededTitle": "なぜクライアント側フォールバックが必要なのか？",
+  "whyNeededText": "Mozilla FirefoxやBraveなどプライバシー重視のブラウザには、Google独自のWeb Speech APIサーバー接続機能が含まれていません。LemonDBDではクライアント側フォールバックAIモデルをバックグラウンドで読み込むことで、どのブラウザからでも音声によるマップ操作を可能にしています！",
+  "statusIdle": "待機中 • 準備完了",
+  "statusListening": "聞き取り中 • お話しください",
+  "statusProcessing": "音声を処理中...",
+  "statusDownloading": "モデルをダウンロード中",
+  "statusReady": "モデル準備完了（メモリ内）",
+  "downloadProgress": "モデルをダウンロード中: {progress}%",
+  "modelCached": "モデルはCacheStorageに保存され、次回以降ラグなしで即座に読み込まれます。",
+  "toggleModel": "エンジンを切り替え",
+  "useClientModel": "ローカルクライアントモデルを強制使用",
+  "useNativeEngine": "標準 Web Speech API を使用",
+  "privacyNotice": "プライバシーに関する注記: ローカルクライアントモデルはすべての音声コマンドをブラウザ内・完全オフラインで処理します。",
+  "holdOrPress": "[V]キー長押し または マイクをクリック",
+  "micBlocked": "マイクへのアクセスがブロックされています。マイクの使用を許可してください。"
 };
 
 ```

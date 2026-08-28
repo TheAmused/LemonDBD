@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/page-streak/StartRunPanel.tsx
 'use client';
+// frontend/src/components/streaks/page-streak/StartRunPanel.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { fetchPoolSummary } from '@/services/pageStreakApi';
@@ -9,7 +10,7 @@ interface StartRunPanelProps {
   killer: string;
   busy: boolean;
   onStart: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onStart, dict }) => {
@@ -41,11 +42,10 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
   return (
     <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-300 bg-white/60 dark:border-slate-800 dark:bg-slate-900/30 px-6 py-14 text-center shadow-sm">
       <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100">
-        Ready for {pageCount ?? '…'} pages on {killer}?
+        {dict?.streaks?.readyForPrefix || 'Ready for'} {pageCount ?? '…'} {dict?.streaks?.pagesOnSuffix || 'pages on'} {killer}?
       </h3>
       <p className="max-w-md text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-        You start on page 1. A win moves you to the next page, a loss sends you back to the beginning. The page layout
-        is frozen for the whole attempt.
+        {dict?.streaks?.pageStreakStartPanelDesc || 'You start on page 1. A win moves you to the next page, a loss sends you back to the beginning. The page layout is frozen for the whole attempt.'}
       </p>
       <div className="flex flex-wrap justify-center gap-5 font-mono text-[11px] text-slate-500">
         <span>{dict?.streaks?.perksCount || 'perks'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{poolSize ?? '—'}</b></span>

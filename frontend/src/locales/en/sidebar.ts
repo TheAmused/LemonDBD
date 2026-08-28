@@ -67,5 +67,11 @@ export default {
   "navAria": "Main Navigation",
   "openDrawer": "Open Navigation Drawer",
   "closeDrawer": "Close Navigation Drawer",
-  "claimed": "Claimed"
+  "claimed": "Claimed",
+  "verified": "Verified",
+  "adminPanel": "Admin Control Center",
+  "streaks": "Challenges & Streaks",
+  "generator": "Perk Randomizer",
+  "maps": "Map Explorer",
+  "disabled": "Disabled"
 };

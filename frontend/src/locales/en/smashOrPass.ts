@@ -181,15 +181,25 @@ export default {
     "howToPlay": "How to Play",
     "shuffle": "Shuffle"
   },
+  "occultDossier": "OCCULT DOSSIER",
+  "percentSign": "%",
+  "percentClose": "%)",
+  "pipeSeparator": "|",
+  "loadingRosterPrefix": "Loading",
+  "loadingRosterSuffix": "from Database...",
   "howToPlayModal": {
     "title": "How to Play Smash or Pass",
     "swipeTitle": "Swipe or Drag Cards",
     "swipeDesc": "Drag card Right to Smash 💋 or drag Left to Pass ✖.",
+    "swipeIcon": "👆",
     "iconsTitle": "On-Card Action Icons",
     "iconsDesc": "Click Flip (top-left icon) to read bio, traits, green/red flags, and community memes. Click Zoom for high-res portrait art.",
+    "iconsIcon": "🎯",
     "keycapsTitle": "Tactile Keyboard Keycaps",
+    "keycapsIcon": "⌨️",
     "atmosphereTitle": "Atmospheric Background & Music",
     "atmosphereDesc": "Hover over background text elements to inspect quotes and lore with glowing effects. Toggle BGM (B key) for dark synth ambience!",
+    "atmosphereIcon": "🌌",
     "letsPlay": "Got It, Let's Play!"
   },
   "personaArchetypes": {
@@ -232,5 +242,10 @@ export default {
     "resetAllVotes": "Reset all my votes",
     "howToPlay": "How to play & keybindings",
     "shuffle": "Shuffle remaining candidates"
-  }
+  },
+  "tierFilterLabel": "Filter by Tier:",
+  "left": "left",
+  "bgm": "BGM",
+  "hallOfFame": "Hall of Fame",
+  "howToPlay": "How to Play"
 };

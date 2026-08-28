@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/history/HistoryHeader.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryHeader.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';
@@ -21,7 +22,7 @@ export interface HistoryHeaderProps {
   onOpenStats: () => void;
   onOpenReset: () => void;
   onChangeMode: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
@@ -53,7 +54,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
               {mode}
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight text-center sm:text-left">
-              History Streak
+              {dict?.streaks?.historyStreak || 'History Streak'}
             </h1>
           </div>
         </div>
@@ -64,7 +65,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             <Flame className="w-5 h-5 text-slate-500 fill-slate-500/20" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Killers beaten
+                {dict?.streaks?.killersBeaten || 'Killers beaten'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {totalKillersBeaten}
@@ -76,7 +77,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             <Trophy className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Best
+                {dict?.streaks?.best || 'Best'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {bestKillersBeaten}
@@ -88,7 +89,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             <Shield className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Checkpoint row
+                {dict?.streaks?.checkpointRow || 'Checkpoint row'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {checkpointRowIndex + 1}

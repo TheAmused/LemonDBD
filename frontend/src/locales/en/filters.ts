@@ -1,6 +1,7 @@
 export default {
   "searchPlaceholder": "Search by perk title or description...",
   "category": "Category",
+  "all": "All",
   "allCategories": "All Roles",
   "survivor": "Survivors",
   "killer": "Killers",
@@ -26,5 +27,14 @@ export default {
   "sortByCharacter": "Character",
   "sortByRole": "Role",
   "orderAsc": "Ascending (A-Z)",
-  "orderDesc": "Descending (Z-A)"
+  "orderDesc": "Descending (Z-A)",
+  "aliasLabel": "Alias:",
+  "allRarities": "All Rarities",
+  "rarityIridescent": "Ultra Rare / Iridescent",
+  "rarityVeryRare": "Very Rare",
+  "rarityUncommon": "Uncommon",
+  "newestFirst": "Newest First",
+  "mostUpvoted": "Most Upvoted",
+  "resetAllFilters": "Reset Filters",
+  "viewMode": "Perks Grid"
 };

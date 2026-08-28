@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/QuestsModal.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -18,7 +19,7 @@ import { PerkDictionary } from '@/types/perks';
 interface QuestsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict }) => {
@@ -114,14 +115,15 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             <div>
               <div className="flex items-center gap-2">
                 <h2 id="quests-modal-title" className="text-xl font-black tracking-wide text-slate-900 dark:text-white">
-                  {dict?.landing?.questsTitle || 'Trial Quests & Milestones'}
+                  {dict?.quests?.title || 'Trial Quests & Milestones'}
                 </h2>
                 <span className="rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">
-                  XP System
+                  {dict?.quests?.xpSystem || 'XP System'}
                 </span>
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                {dict?.landing?.questsSubtitle || 'Complete daily and weekly trials to earn XP and level up your status.'}
+
+                {dict?.quests?.subtitle || 'Complete daily and weekly trials to earn XP and level up your status.'}
               </p>
             </div>
           </div>
@@ -135,7 +137,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                 </span>
               </div>
               <span className="text-sm font-black font-mono text-amber-700 dark:text-amber-400">
-                +{totalXpEarned} XP
+                {dict?.quests?.xpPrefix || '+'}
+                {totalXpEarned} {dict?.quests?.xpSuffix || 'XP'}
               </span>
             </div>
 
@@ -173,7 +176,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
-            All Quests ({quests.length})
+            {dict?.quests?.allQuestsPrefix || 'All Quests ('}
+            {quests.length})
           </button>
           <button
             type="button"
@@ -185,10 +189,11 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             }`}
           >
             <Calendar className="h-3.5 w-3.5" />
-            Daily Quests
+            {dict?.quests?.dailyQuests || 'Daily Quests'}
           </button>
           <button
             type="button"
+
             onClick={() => setFilterCategory('weekly')}
             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
               filterCategory === 'weekly'
@@ -197,7 +202,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             }`}
           >
             <Flame className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
-            Weekly Quests
+            {dict?.quests?.weeklyQuests || 'Weekly Quests'}
           </button>
         </div>
 
@@ -210,10 +215,11 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             </div>
           ) : filteredQuests.length === 0 ? (
             <div className="py-8 text-center text-xs text-slate-500 dark:text-slate-400">
-              No quests found in this category.
+              {dict?.quests?.noQuestsFound || 'No quests found in this category.'}
             </div>
           ) : (
             filteredQuests.map((quest) => {
+
               const isReadyToClaim = quest.progress >= quest.goal && !quest.is_completed;
               const pct = Math.min(100, Math.round((quest.progress / quest.goal) * 100));
 
@@ -248,7 +254,8 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                         <div className="flex justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-mono">
                           <span>{dict?.streaks?.runProgress || 'Progress'}</span>
                           <span>
-                            {quest.progress} / {quest.goal} ({pct}%)
+                            {quest.progress} / {quest.goal} ({pct}
+                            {dict?.quests?.percentCloseParen || '%)'}
                           </span>
                         </div>
                         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
@@ -269,7 +276,10 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                     <div className="flex sm:flex-col items-center justify-between sm:items-end gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200 dark:border-slate-800">
                       <div className="flex items-center gap-1 rounded-xl bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 text-xs font-black text-amber-700 dark:text-amber-400 shadow-sm">
                         <Zap className="h-3.5 w-3.5" />
-                        <span>+{quest.xp_reward} XP</span>
+                        <span>
+                          {dict?.quests?.xpPrefix || '+'}
+                          {quest.xp_reward} {dict?.quests?.xpSuffix || 'XP'}
+                        </span>
                       </div>
 
                       {quest.is_completed ? (
@@ -312,10 +322,11 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             onClick={onClose}
             className="px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
           >
-            Close
+            {dict?.modal?.close || 'Close'}
           </button>
         </div>
       </div>
+
     </div>
   );
 };

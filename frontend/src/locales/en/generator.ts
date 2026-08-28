@@ -1,3 +1,4 @@
+// frontend/src/locales/en/generator.ts
 export default {
   "title": "Perk Loadout Generator",
   "subtitle": "Roll random perks based on in-game inventory coordinates [Page/Slot].",
@@ -43,5 +44,15 @@ export default {
   "selectRole": "Select Role",
   "generatorMode": "Generator Mode",
   "resetAllTooltip": "Reset wheels, loadout slots, and memory",
-  "clearSlotTooltip": "Clear slot"
+  "clearSlotTooltip": "Clear slot",
+  "chaosWheelTitle": "Chaos Wheel of Curses",
+  "chaosWheelDesc": "Spin to apply a single trial Curse or Buff to your 4 perk loadout.",
+  "done": "Done",
+  "inventoryCoordinatesNote": "with inventory coordinates [Page / Slot]",
+  "slotLabel": "Slot #",
+  "coordOpenPage": "[P",
+  "coordSlot": "/S",
+  "coordClose": "]",
+  "emptyCoordinate": "[-/-]"
 };
+

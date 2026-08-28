@@ -1,14 +1,22 @@
+// frontend/src/locales/es/stats.ts
 export default {
-  "vaultStats": "Estadísticas de Bóveda",
-  "totalPerks": "Total Perks",
+  "vaultStats": "Estadísticas de la Bóveda",
+  "totalPerks": "Habilidades Totales",
   "characters": "Personajes",
   "survivors": "Supervivientes",
   "killers": "Asesinos",
-  "ratio": "Distribución",
-  "totalXpClaimed": "XP Total Reclamado",
+  "ratio": "Distribución por Rol",
+  "totalXpClaimed": "EXP Total Reclamada",
   "completed": "Completado",
   "streak": "Racha",
-  "win": "derrotado",
+  "win": "superados",
   "vaultTotal": "Total en Bóveda",
-  "ownedPerks": "Perks Desbloqueados"
+  "ownedPerks": "Habilidades Adquiridas",
+  "totalXpEarned": "EXP Total",
+  "questProgress": "Progreso de Misiones",
+  "claimed": "Reclamado",
+  "active": "Activo",
+  "loss": "Derrota",
+  "current": "Actual",
+  "best": "Mejor"
 };

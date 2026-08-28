@@ -1,5 +1,6 @@
-// frontend/src/components/smash-or-pass/SmashAnimations.tsx
 'use client';
+// frontend/src/components/smash-or-pass/SmashAnimations.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Heart, Flame, Skull, Zap } from 'lucide-react';
@@ -47,7 +48,7 @@ export interface SmashAnimationsProps {
   triggerKey: number; // Incrementing key to re-trigger
   originX?: number;
   originY?: number;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 // Generate jagged lightning path

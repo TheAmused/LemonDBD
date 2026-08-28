@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserProfileForm.tsx
 
 import React, { useState } from 'react';
@@ -8,7 +9,7 @@ import { StatusFeedback } from '@/types/userProfile';
 interface UserProfileFormProps {
   initialEmail: string;
   onRefreshUser: () => Promise<void>;
-  dict?: any;
+  dict?: Dictionary;
   t?: Record<string, string>;
 }
 
@@ -103,7 +104,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
       <form onSubmit={handleUpdateProfile} className="space-y-4">
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-            Email Address
+            {dict?.user?.emailLabel || 'Email Address'}
           </label>
           <input
             type="email"

@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/DisabledReasonModal.tsx
 
 import React from 'react';
@@ -9,7 +10,7 @@ interface DisabledReasonModalProps {
   onClose: () => void;
   label: string;
   reason?: string | null;
-  dict?: any;
+  dict?: Dictionary;
   t?: Record<string, string>;
 }
 

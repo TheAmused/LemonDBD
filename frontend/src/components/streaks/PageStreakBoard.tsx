@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/PageStreakBoard.tsx
 import React from 'react';
 import Link from 'next/link';
@@ -6,7 +7,7 @@ import { PageStreakRoster } from './page-streak/PageStreakRoster';
 
 interface PageStreakBoardProps {
   locale: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale, dict }) => (

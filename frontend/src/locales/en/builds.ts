@@ -33,5 +33,14 @@ export default {
   "meta": "Meta",
   "meme": "Meme",
   "stealth": "Stealth",
-  "chase": "Chase"
+  "chase": "Chase",
+  "byAuthorPrefix": "by",
+  "targetCharacterLabel": "Target Character:",
+  "sortFields": "Sort",
+  "newestFirst": "Newest First",
+  "mostUpvoted": "Most Upvoted",
+  "perk1Placeholder": "Perk 1 (Required)",
+  "perk2Placeholder": "Perk 2 (Required)",
+  "perk3Placeholder": "Perk 3 (Required)",
+  "perk4Placeholder": "Perk 4 (Required)"
 };

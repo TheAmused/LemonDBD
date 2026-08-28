@@ -1,5 +1,6 @@
+// frontend/src/locales/pl/empty.ts
 export default {
-  "title": "Brak Umiejętności",
-  "subtitle": "Brak wyników spełniających podane kryteria wyszukiwania.",
-  "loading": "Ładowanie perków..."
+  "title": "Nie znaleziono umiejętności",
+  "subtitle": "Spróbuj zmienić wyszukiwaną frazę lub filtry.",
+  "loading": "Wczytywanie Umiejętności..."
 };

@@ -1,37 +1,35 @@
 # backend/tests/live/workflows/test_user_profile_lifecycle_workflow.py
 import pytest
 
+
+@pytest.mark.live
+@pytest.mark.workflow
 def test_full_user_profile_and_password_lifecycle(live_client, auth_client_factory):
-    # Step 1: Register initial user
-    client, headers, user = auth_client_factory("profile_user_1", "prof1@test.com", "InitialPass123!")
+    client, headers, user = auth_client_factory("profile_user_1", "prof1@example.com", "InitialPass123!")
     user_id = user["id"]
 
-    # Step 2: Fetch current profile via /api/v1/auth/me
     me_res = client.get("/api/v1/auth/me", headers=headers)
     assert me_res.status_code == 200
     me_data = me_res.get_json()
     assert me_data["user"]["username"] == "profile_user_1"
-    assert me_data["user"]["email"] == "prof1@test.com"
+    assert me_data["user"]["email"] == "prof1@example.com"
 
-    # Step 3: Update profile (email, avatar_url, new password) via PUT /api/v1/auth/profile
     update_res = client.put("/api/v1/auth/profile", json={
-        "email": "prof_updated@test.com",
+        "email": "prof_updated@example.com",
         "avatar_url": "custom_avatar_icon",
         "new_password": "NewStrongPassword456!",
     }, headers=headers)
     assert update_res.status_code == 200
     updated_user = update_res.get_json()["user"]
-    assert updated_user["email"] == "prof_updated@test.com"
+    assert updated_user["email"] == "prof_updated@example.com"
     assert updated_user["avatar_url"] == "custom_avatar_icon"
 
-    # Step 4: Verify login with OLD password fails
     old_login = live_client.post("/api/v1/auth/login", json={
         "username": "profile_user_1",
         "password": "InitialPass123!",
     })
     assert old_login.status_code in (400, 401)
 
-    # Step 5: Verify login with NEW password succeeds
     new_login = live_client.post("/api/v1/auth/login", json={
         "username": "profile_user_1",
         "password": "NewStrongPassword456!",
@@ -40,7 +38,6 @@ def test_full_user_profile_and_password_lifecycle(live_client, auth_client_facto
     new_token = new_login.get_json()["token"]
     new_headers = {"Authorization": f"Bearer {new_token}", "Content-Type": "application/json"}
 
-    # Step 6: Verify authenticated profile with new session token
     me_res2 = client.get("/api/v1/auth/me", headers=new_headers)
     assert me_res2.status_code == 200
-    assert me_res2.get_json()["user"]["email"] == "prof_updated@test.com"
+    assert me_res2.get_json()["user"]["email"] == "prof_updated@example.com"

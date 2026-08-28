@@ -1,8 +1,10 @@
 # backend/tests/live/api/test_live_user_ownership_api.py
 import pytest
 
+
+@pytest.mark.live
 def test_live_user_registration_login_and_ownership(live_client, auth_client_factory):
-    client, headers, user = auth_client_factory("live_user_1", "live_1@test.com", "pass123")
+    client, headers, user = auth_client_factory("live_user_1", "live_1@example.com", "pass123")
     user_id = user["id"]
 
     res_me = client.get("/api/v1/auth/me", headers=headers)
@@ -31,8 +33,9 @@ def test_live_user_registration_login_and_ownership(live_client, auth_client_fac
     assert updated_char["is_owned"] == new_state
 
 
+@pytest.mark.live
 def test_live_perk_ownership_toggle(live_client, auth_client_factory):
-    client, headers, user = auth_client_factory("live_user_perks", "live_p@test.com", "pass123")
+    client, headers, user = auth_client_factory("live_user_perks", "live_p@example.com", "pass123")
     user_id = user["id"]
 
     res_perks = client.get(f"/api/v1/users/{user_id}/perks", headers=headers)

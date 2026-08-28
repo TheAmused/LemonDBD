@@ -1,8 +1,10 @@
 # backend/tests/live/workflows/test_perk_detail_and_teachables_workflow.py
 import pytest
 
+
+@pytest.mark.live
+@pytest.mark.workflow
 def test_perk_detail_and_teachables_association_workflow(live_client):
-    # Step 1: Query character detail for Meg Thomas (Survivor)
     meg_res = live_client.get("/api/v1/characters/Meg_Thomas/detail")
     if meg_res.status_code == 404:
         meg_res = live_client.get("/api/v1/characters/Meg%20Thomas/detail")
@@ -13,7 +15,6 @@ def test_perk_detail_and_teachables_association_workflow(live_client):
     assert len(meg_perk_names) == 3
     assert any("Sprint Burst" in name for name in meg_perk_names) or any("Adrenaline" in name for name in meg_perk_names) or any("Quick & Quiet" in name for name in meg_perk_names)
 
-    # Step 2: Query character detail for The Trapper (Killer)
     trapper_res = live_client.get("/api/v1/characters/The_Trapper/detail")
     if trapper_res.status_code == 404:
         trapper_res = live_client.get("/api/v1/characters/The%20Trapper/detail")

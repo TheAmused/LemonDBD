@@ -1,10 +1,10 @@
 # backend/tests/live/conftest.py
+import logging
 import os
 import subprocess
-import logging
+from typing import Any
 import pytest
-from typing import Dict, Any, Tuple
-from sqlalchemy import select, text
+from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 
@@ -30,9 +30,9 @@ def _setup_test_database_clone():
         f"(pg_restore -U {POSTGRES_USER} --no-owner --no-privileges -d {TEST_DB_NAME} /tmp/{TEST_DB_NAME}.dump || true) && "
         f"rm -f /tmp/{TEST_DB_NAME}.dump"
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True, stdin=subprocess.DEVNULL, timeout=25)
+    result = subprocess.run(cmd, capture_output=True, text=True, stdin=subprocess.DEVNULL, timeout=30)
     if result.returncode != 0:
-        raise RuntimeError(f"Failed to clone test database: {result.stderr or result.stdout}")
+        raise RuntimeError(f"Failed to clone live test database: {result.stderr or result.stdout}")
 
 
 def _teardown_test_database_clone():
@@ -41,7 +41,7 @@ def _teardown_test_database_clone():
         "docker", "exec", "dbd_db", "psql", "-U", POSTGRES_USER, "-d", "postgres",
         "-c", f"DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE);"
     ]
-    subprocess.run(cmd, capture_output=True, stdin=subprocess.DEVNULL, timeout=10)
+    subprocess.run(cmd, capture_output=True, stdin=subprocess.DEVNULL, timeout=15)
 
 
 @pytest.fixture(scope="session")
@@ -59,7 +59,6 @@ def live_app(live_database_url):
 
     from app import create_app
     from app.core.config import Config
-    from app.core.extensions import db
 
     class LiveTestingConfig(Config):
         TESTING = True
@@ -82,8 +81,8 @@ def live_client(live_app):
 
 @pytest.fixture(scope="session")
 def live_admin_token(live_app):
-    from app.models import User
     from app.core.extensions import db
+    from app.models import User
     from app.services.user_service import UserService
 
     with live_app.app_context():
@@ -92,7 +91,7 @@ def live_admin_token(live_app):
         if not admin_user:
             admin_user, _ = user_service.register_user(
                 username="admin_live_tester",
-                email="admin_live@test.com",
+                email="admin_live@example.com",
                 password="adminpassword123",
                 role="admin",
             )
@@ -135,12 +134,12 @@ def admin_client(live_client, live_admin_token):
 
 @pytest.fixture
 def auth_client_factory(live_app, live_client):
-    from app.services.user_service import UserService
-    from app.models import User
     from app.core.extensions import db
+    from app.models import User
+    from app.services.user_service import UserService
 
-    def _create_user_and_client(username="testuser", email=None, password="password123", role="user"):
-        email = email or f"{username}@test.com"
+    def _create_user_and_client(username="testuser", email=None, password="password123", role="user") -> tuple[Any, dict[str, str], dict[str, Any]]:
+        email = email or f"{username}@example.com"
         with live_app.app_context():
             user_service = UserService()
             user = db.session.scalars(select(User).where(User.username == username)).first()

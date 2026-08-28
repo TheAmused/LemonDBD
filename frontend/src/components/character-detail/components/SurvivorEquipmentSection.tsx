@@ -2,7 +2,6 @@
 import React, { useState, useMemo } from 'react';
 import {
   Package,
-  Search,
   ShieldAlert,
   Heart,
   Wrench,
@@ -103,8 +102,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   t,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<SurvivorCategoryKey>('medkit');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [rarityFilter, setRarityFilter] = useState<string>('all');
   const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
   const categories = useMemo(
@@ -126,30 +123,10 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   }, [categories, selectedCategory]);
 
   const categorizedData = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
-
     const safeItems = Array.isArray(items) ? items : [];
     const safeAddons = Array.isArray(addons) ? addons : [];
 
     const isMatch = (it: EquipmentItem | AddonItem, isAddon: boolean): boolean => {
-      const name = (it.name || '').toLowerCase();
-      const raw = (it.raw_name || '').toLowerCase();
-      const desc = (it.description || '').toLowerCase();
-
-      const matchesSearch =
-        !query ||
-        name.includes(query) ||
-        raw.includes(query) ||
-        desc.includes(query);
-
-      if (!matchesSearch) return false;
-
-      const itemRarity = (it.rarity || '').toLowerCase();
-      const matchesRarity =
-        rarityFilter === 'all' || itemRarity.includes(rarityFilter.toLowerCase());
-
-      if (!matchesRarity) return false;
-
       const itemCategory = isAddon
         ? getSurvivorAddonCategory(it as AddonItem)
         : getSurvivorItemCategory(it as EquipmentItem);
@@ -168,7 +145,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       displayedItems: safeItems.filter((it) => isMatch(it, false)).sort(sortByRarity),
       displayedAddons: safeAddons.filter((ad) => isMatch(ad as AddonItem, true)).sort(sortByRarity),
     };
-  }, [items, addons, selectedCategory, searchQuery, rarityFilter]);
+  }, [items, addons, selectedCategory]);
 
   return (
     <section className="space-y-4 w-full" aria-labelledby="survivor-equipment-heading">
@@ -182,35 +159,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
             </h2>
           </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-full sm:w-48">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" aria-hidden="true" />
-            <input
-              type="text"
-              placeholder={t.searchEquipment || 'Filter name...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label={t.searchEquipment || 'Filter equipment name'}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-inner"
-            />
-          </div>
-
-          <select
-            value={rarityFilter}
-            onChange={(e) => setRarityFilter(e.target.value)}
-            aria-label={t.filterByRarity || 'Filter by rarity'}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
-          >
-            <option value="all">{t.allRarities || 'All Rarities'}</option>
-            <option value="Common">{t.rarityCommon || 'Common'}</option>
-            <option value="Uncommon">{t.rarityUncommon || 'Uncommon'}</option>
-            <option value="Rare">{t.rarityRare || 'Rare'}</option>
-            <option value="Very Rare">{t.rarityVeryRare || 'Very Rare'}</option>
-            <option value="Ultra Rare">{t.rarityUltraRare || 'Ultra Rare'}</option>
-            <option value="Event">{t.rarityEvent || 'Event'}</option>
-          </select>
         </div>
       </div>
 

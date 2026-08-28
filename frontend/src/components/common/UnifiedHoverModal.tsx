@@ -11,6 +11,7 @@ import {
   OfferingItem,
   getRarityTileStyle,
   getLocalizedRarity,
+  getLocalizedItemCategory,
   renderFormattedDbdText,
 } from '@/components/character-detail/types';
 import { Perk } from '@/types/perks';
@@ -158,7 +159,8 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
       : getLocalizedRarity(itemRarity, t) || itemRarity);
 
   const rawCategory = 'category' in item && typeof item.category === 'string' ? item.category : undefined;
-  const isRoleLeakingAsCategory = rawCategory === 'Survivor' || rawCategory === 'Killer';
+  const isRoleLeakingAsCategory =
+    rawCategory === 'Survivor' || rawCategory === 'Killer' || /Offerings$/.test(rawCategory || '');
 
   const categoryText =
     activeHover.category ||
@@ -166,7 +168,7 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
       ? isGeneric
         ? generalLabel
         : charName || perkBadgeText
-      : (isRoleLeakingAsCategory ? undefined : rawCategory) || t.equipment || 'Equipment');
+      : (isRoleLeakingAsCategory ? undefined : getLocalizedItemCategory(rawCategory, t)) || t.equipment || 'Equipment');
 
   const defaultAction =
     actionPrompt ||

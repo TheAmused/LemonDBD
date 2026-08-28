@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/layouts/DesktopMapLayout.tsx
 
 import React, { useState } from 'react';
@@ -60,7 +61,7 @@ export interface DesktopMapLayoutProps {
 
   onLaunchFullscreen?: () => void;
   onPopoutImage?: (url: string, title: string) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
@@ -112,7 +113,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                 <Compass className="h-4 w-4" />
               </div>
               <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 font-mono truncate">
-                Map Directory
+                {dict?.maps?.mapDirectory || 'Map Directory'}
               </h3>
               <span className="rounded-full bg-slate-200 dark:bg-slate-800 px-2 py-0.5 text-[10px] font-bold text-slate-600 dark:text-slate-400 font-mono">
                 {maps.length}
@@ -230,7 +231,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                 }`}
                 data-testid="desktop-map-realm-pill-all"
               >
-                All ({maps.length})
+                {dict?.maps?.all || 'All'} ({maps.length})
               </button>
               {uniqueRealms.map((r) => {
                 const count = groupedMaps[r]?.length || 0;

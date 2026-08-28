@@ -147,13 +147,15 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
             </div>
             <div>
               <h2 id="char-config-title" className="text-xl font-black tracking-wide text-slate-900 dark:text-white">
-                Configure {role} Character Roster
+                {dict?.characterDetail?.configureRosterPrefix || 'Configure'} {role}{' '}
+                {dict?.characterDetail?.characterRosterSuffix || 'Character Roster'}
               </h2>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                Click character avatar buttons to toggle them in your Perk Randomizer pool.
+                {dict?.characterDetail?.configRosterDesc || 'Click character avatar buttons to toggle them in your Perk Randomizer pool.'}
               </p>
             </div>
           </div>
+
 
           <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
             <div className="relative flex-1 w-full">
@@ -193,7 +195,8 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
         <div className="p-5 sm:p-6 overflow-y-auto flex-1">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Active Selection: {selected.size} / {characterOptions.length + 1}
+              {dict?.characterDetail?.activeSelectionLabel || 'Active Selection:'} {selected.size} /{' '}
+              {characterOptions.length + 1}
             </span>
           </div>
 
@@ -212,10 +215,11 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
                 <Sparkles className="h-8 w-8 group-hover:scale-110 transition-transform" />
               </div>
               <span className="mt-1.5 text-[11px] font-extrabold text-amber-800 dark:text-amber-300 text-center truncate max-w-full">
-                General
+                {dict?.card?.general || dict?.filters?.generalOnly || 'General'}
               </span>
 
               <div
+
                 className={`absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border shadow-lg transition-transform ${
                   isGeneralSelected
                     ? 'border-amber-300 bg-amber-500 text-slate-950 font-bold scale-100'
@@ -282,7 +286,7 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
 
         <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/90 flex items-center justify-between shrink-0">
           <p className="text-xs text-slate-600 dark:text-slate-400">
-            Total Active Characters:{' '}
+            {dict?.characterDetail?.totalActiveCharactersLabel || 'Total Active Characters:'}{' '}
             <span className="font-extrabold text-slate-900 dark:text-slate-200">
               {selected.size}
             </span>
@@ -293,7 +297,7 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
             onClick={handleSaveAndClose}
             className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 text-white text-xs font-black hover:from-cyan-500 hover:to-teal-500 transition-colors shadow-lg shadow-cyan-950/30 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
           >
-            Save &amp; Done
+            {dict?.characterDetail?.saveAndDone || 'Save & Done'}
           </button>
         </div>
       </div>

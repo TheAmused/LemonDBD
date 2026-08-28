@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminChallengeStats.tsx
 
 import React from 'react';
@@ -22,22 +23,25 @@ const VARIANT_LABELS: Record<string, string> = {
 
 interface AdminChallengeStatsProps {
   stats: AdminStats | null;
+  dict?: Dictionary;
 }
 
-const VariantRow: React.FC<{ label: string; breakdown: { completed_runs: number; unique_users: number } }> = ({
-  label,
-  breakdown,
-}) => (
+const VariantRow: React.FC<{
+  label: string;
+  breakdown: { completed_runs: number; unique_users: number };
+  dict?: Dictionary;
+}> = ({ label, breakdown, dict }) => (
   <div className="flex items-center justify-between text-xs px-3 py-2 rounded-lg bg-slate-950/50 border border-slate-800/80">
     <span className="font-bold text-slate-300">{label}</span>
     <span className="font-mono text-slate-400">
-      <span className="text-slate-100 font-black">{breakdown.completed_runs}</span> completions &middot;{' '}
-      {breakdown.unique_users} users
+      <span className="text-slate-100 font-black">{breakdown.completed_runs}</span>{' '}
+      {dict?.admin?.completionsLabel || 'completions'} {dict?.admin?.middotSeparator || '·'}{' '}
+      {breakdown.unique_users} {dict?.admin?.usersLabel || 'users'}
     </span>
   </div>
 );
 
-export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats }) => {
+export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats, dict }) => {
   const completions = stats?.challenge_completions;
 
   return (
@@ -58,7 +62,7 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats 
                   {breakdown?.total.completed_runs ?? '-'}
                 </div>
                 <div className="text-[10px] text-slate-500">
-                  {breakdown?.total.unique_users ?? '-'} unique users
+                  {breakdown?.total.unique_users ?? '-'} {dict?.admin?.uniqueUsersLabel || 'unique users'}
                 </div>
               </div>
             </div>
@@ -66,12 +70,12 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats 
             {variants.length > 0 ? (
               <div className="space-y-1.5">
                 {variants.map(([variant, counts]) => (
-                  <VariantRow key={variant} label={VARIANT_LABELS[variant] || variant} breakdown={counts} />
+                  <VariantRow key={variant} label={VARIANT_LABELS[variant] || variant} breakdown={counts} dict={dict} />
                 ))}
               </div>
             ) : (
               <p className="text-[11px] text-slate-500">
-                Page Streak has one run per killer, so completions aren't broken down further here.
+                {dict?.admin?.pageStreakCompletionsNotice || "Page Streak has one run per killer, so completions aren't broken down further here."}
               </p>
             )}
           </div>

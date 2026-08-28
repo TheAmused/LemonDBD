@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/StreakPanel.tsx
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -15,6 +16,7 @@ interface StreakPanelBaseProps {
   image?: string;
   disabled?: boolean;
   disabledReason?: string | null;
+  dict?: Dictionary;
 }
 
 type StreakPanelProps = StreakPanelBaseProps &
@@ -35,6 +37,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   comingSoon,
   disabled,
   disabledReason,
+  dict,
 }) => {
   const [showDisabledModal, setShowDisabledModal] = useState(false);
   const hoverClasses = PANEL_HOVER_CLASSES[color];
@@ -64,11 +67,11 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         {disabled ? (
           <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-950/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-400">
             <AlertTriangle className="h-3 w-3" />
-            Disabled
+            {dict?.streaks?.disabled || 'Disabled'}
           </span>
         ) : comingSoon ? (
           <span className="rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Coming soon
+            {dict?.streaks?.comingSoon || 'Coming soon.'}
           </span>
         ) : (
           <ArrowRight className={`h-4 w-4 ${accent} transition-transform group-hover:translate-x-1`} />

@@ -1,14 +1,22 @@
+// frontend/src/locales/de/stats.ts
 export default {
   "vaultStats": "Tresor-Statistiken",
-  "totalPerks": "Gesamte Perks",
+  "totalPerks": "Talente gesamt",
   "characters": "Charaktere",
   "survivors": "Überlebende",
   "killers": "Killer",
   "ratio": "Rollenverteilung",
-  "totalXpClaimed": "Gesamt XP Eingelöst",
+  "totalXpClaimed": "Eingeforderte EP gesamt",
   "completed": "Abgeschlossen",
-  "streak": "Streak",
-  "win": "besiegt",
-  "vaultTotal": "Tresor Gesamt",
-  "ownedPerks": "Besessene Perks"
+  "streak": "Serie",
+  "win": "geschlagen",
+  "vaultTotal": "Tresor gesamt",
+  "ownedPerks": "Besessene Talente",
+  "totalXpEarned": "EP gesamt",
+  "questProgress": "Quest-Fortschritt",
+  "claimed": "Eingefordert",
+  "active": "Aktiv",
+  "loss": "Niederlage",
+  "current": "Aktuell",
+  "best": "Bestwert"
 };

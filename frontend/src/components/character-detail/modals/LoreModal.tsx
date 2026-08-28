@@ -40,10 +40,10 @@ export const LoreModal: React.FC<LoreModalProps> = ({
             </div>
             <div>
               <span className="text-[11px] font-mono font-black uppercase tracking-wider text-purple-400">
-                {t.entityArchives || "The Entity's Archives"} &bull; {t.codex || 'Codex'} #{character.id || 1}
+                {t.entityArchives || "The Entity's Archives"} {t.bulletSeparator || '•'} {t.codex || 'Codex'} #{character.id || 1}
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono mt-0.5">
-                {character.name} &mdash; {t.loreTitle || 'Lore & Bio'}
+                {character.name} {t.emDashSeparator || '—'} {t.loreTitle || 'Lore & Bio'}
               </h2>
             </div>
           </div>
@@ -59,7 +59,7 @@ export const LoreModal: React.FC<LoreModalProps> = ({
 
         <div className="p-6 overflow-y-auto space-y-4 text-sm leading-relaxed font-sans text-slate-300">
           <p className="italic text-slate-400 border-l-2 border-purple-500 pl-4 py-1">
-            &quot;{character.name} &mdash; {t.enteredTheFog || 'Entered The Fog.'}&quot;
+            {t.quoteOpen || '"'}{character.name} {t.emDashSeparator || '—'} {t.enteredTheFog || 'Entered The Fog.'}{t.quoteClose || '"'}
           </p>
           <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 text-sm leading-relaxed whitespace-pre-line text-slate-200 font-medium">
             {rawLoreText}

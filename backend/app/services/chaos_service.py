@@ -33,10 +33,9 @@ class ChaosService:
         r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
 
     def _freeze_pools_if_needed(self, r: ChaosRun) -> None:
-        force = r.current_streak == 0
-        if force or not json.loads(r.owned_killers_json or "[]"):
+        if not json.loads(r.owned_killers_json or "[]"):
             r.owned_killers_json = json.dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
-        if force or not json.loads(r.unlocked_perks_json or "[]"):
+        if not json.loads(r.unlocked_perks_json or "[]"):
             r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
 
     def _with_resolved_pool(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -72,12 +71,9 @@ class ChaosService:
             self._freeze_pools(r)
 
     def _compute_loss_outcome(self, r: ChaosRun):
-        """Computes the state a loss resets Chaos progress to: checkpoint
-        fallback if this difficulty has one, otherwise reset to zero.
-        Read-only -- does not mutate r. Shared by submit_result's real-match
-        loss branch and apply_inactivity_loss's synthetic one, since this
-        exact computation caused the same checkpoint-zero-detection bug
-        class (see History's identical history) when it was duplicated."""
+        """Pure helper to compute all streak/checkpoint reset state for a loss.
+        Mirrors the original calculate_chaos_loss_outcome function from the
+        old standalone module; brought onto the class (see History's identical history) when it was duplicated."""
         last_checkpoint = r.last_checkpoint_streak
         interval = checkpoint_interval(r.difficulty)
 
@@ -108,6 +104,9 @@ class ChaosService:
 
         assert_challenge_mode_enabled("chaos")
 
+        live_owned_ids = get_owned_killer_ids(user_id, self.ownership_service)
+        live_unlocked_ids = get_unlocked_killer_perk_ids(user_id, self.ownership_service)
+
         new_run = ChaosRun(
             user_id=user_id,
             difficulty=difficulty,
@@ -118,9 +117,10 @@ class ChaosService:
             completed_killers_json="[]",
             checkpoint_killers_json="[]",
             checkpoint_used_perks_json="[]",
+            owned_killers_json=json.dumps(live_owned_ids),
+            unlocked_perks_json=json.dumps(live_unlocked_ids),
             perks_revealed=False,
         )
-        live_unlocked_ids = get_unlocked_killer_perk_ids(user_id, self.ownership_service)
         unlocked_detail = resolve_perks_by_ids(live_unlocked_ids)
         perks, used_perks, addon_rarities = self._draw_build(unlocked_detail, [])
         new_run.used_perks_json = json.dumps(used_perks)

@@ -1,5 +1,6 @@
-// frontend/src/app/[locale]/smash-or-pass/page.tsx
 'use client';
+// frontend/src/app/[locale]/smash-or-pass/page.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -17,7 +18,7 @@ export default function SmashOrPassPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Record<string, any> | null>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -29,8 +30,10 @@ export default function SmashOrPassPage() {
   const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
-    document.title = 'LemonDBD - Smash or Pass | Dead by Daylight Romance';
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => {
+      setDict(d);
+      document.title = d?.app?.smashOrPassPageTitle || 'LemonDBD - Smash or Pass | Dead by Daylight Romance';
+    });
   }, [locale]);
 
   useEffect(() => {
@@ -62,7 +65,7 @@ export default function SmashOrPassPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-        Loading Smash or Pass...
+        {'Loading Smash or Pass...'}
       </div>
     );
   }

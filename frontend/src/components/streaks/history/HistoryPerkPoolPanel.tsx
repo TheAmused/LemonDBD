@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Layers, CheckCircle2, Lock, Sparkles } from 'lucide-react';
@@ -66,7 +67,7 @@ const LockedTile: React.FC<{ perk: Perk }> = ({ perk }) => {
 export interface HistoryPerkPoolPanelProps {
   pool: Perk[];
   unlockedPerkNames: string[];
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool, unlockedPerkNames, dict }) => {
@@ -100,17 +101,19 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
         </div>
         <div>
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-            Perk pool
+            {dict?.streaks?.perkPool || 'Perk pool'}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            {unlocked.length} unlocked &middot; {locked.length} locked
+            {unlocked.length} {dict?.streaks?.unlockedSuffix || 'unlocked'}{' '}
+            {dict?.streaks?.middotSeparator || '·'} {locked.length}{' '}
+            {dict?.streaks?.lockedSuffix || 'locked'}
           </p>
         </div>
       </div>
 
       <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
         <CheckCircle2 className="w-3.5 h-3.5" />
-        Available ({unlocked.length})
+        {dict?.streaks?.availableLabel || 'Available'} ({unlocked.length})
       </div>
       {unlocked.length === 0 ? (
         <p className="text-xs text-slate-400 dark:text-slate-500 mb-5">
@@ -126,7 +129,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
 
       <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
         <Lock className="w-3.5 h-3.5" />
-        Locked ({locked.length})
+        {dict?.streaks?.lockedLabel || 'Locked'} ({locked.length})
       </div>
       {locked.length === 0 ? (
         <p className="text-xs text-slate-400 dark:text-slate-500">

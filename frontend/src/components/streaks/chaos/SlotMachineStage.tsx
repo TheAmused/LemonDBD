@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/chaos/SlotMachineStage.tsx
 'use client';
+// frontend/src/components/streaks/chaos/SlotMachineStage.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshCw, Sparkles } from 'lucide-react';
@@ -138,7 +139,7 @@ export interface SlotMachineStageProps {
   onPullLever: () => void;
   loading?: boolean;
   locked?: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
@@ -240,7 +241,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         }`}
       >
         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-        <span>{dict?.common?.loading || 'Loading...'}</span>
+        <span>{dict?.app?.loading || 'Loading...'}</span>
       </div>
     </div>
   );

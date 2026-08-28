@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/page-streak/RunHeader.tsx
 'use client';
+// frontend/src/components/streaks/page-streak/RunHeader.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { RotateCcw, Skull, Flame, Trophy, BookOpen, BarChart2 } from 'lucide-react';
@@ -12,7 +13,7 @@ interface RunHeaderProps {
   onOpenReset: () => void;
   onOpenRules: () => void;
   onOpenStats: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenReset, onOpenRules, onOpenStats, dict }) => {
@@ -112,7 +113,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenRese
           <span>
             {run.status === 'completed' ? 'All pages cleared' : `Page ${run.current_page} of ${run.page_count}`}
           </span>
-          <span className="tabular-nums font-semibold">{pct}%</span>
+          <span className="tabular-nums font-semibold">{pct}{dict?.streaks?.percentSign || '%'}</span>
         </div>
         <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
           <div

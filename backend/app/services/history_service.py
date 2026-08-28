@@ -32,9 +32,7 @@ class HistoryService:
         return resolve_killer_names_by_ids(ids)
 
     def _is_unfrozen(self, run: HistoryRun) -> bool:
-        """True while the run hasn't genuinely started (row 0, nothing beaten) or its pool was never frozen."""
-        if run.current_row_index == 0 and run.total_killers_beaten == 0:
-            return True
+        """True while its pool was never frozen."""
         return not json.loads(run.owned_killers_json or "[]")
 
     def _resolve_loss(self, run: HistoryRun):
@@ -114,6 +112,7 @@ class HistoryService:
         assert_challenge_mode_enabled("history")
 
         general = get_general_killer_perk_names()
+        owned_killer_ids = get_owned_killer_ids_by_release(user_id, self.ownership_service)
         run = HistoryRun(
             user_id=user_id,
             mode=mode,
@@ -122,6 +121,7 @@ class HistoryService:
             total_killers_beaten=0,
             best_killers_beaten=0,
             completed_killers_json="[]",
+            owned_killers_json=json.dumps(owned_killer_ids),
             unlocked_perk_names_json=json.dumps(general),
             checkpoint_row_index=0,
             checkpoint_total_killers_beaten=0,

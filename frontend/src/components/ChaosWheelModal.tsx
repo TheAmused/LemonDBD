@@ -223,10 +223,10 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           </div>
           <div>
             <h2 id="chaos-modal-title" className="text-lg font-black tracking-wide text-slate-900 dark:text-white">
-              Chaos Wheel of Curses
+              {(dict?.generator as any)?.chaosWheelTitle || 'Chaos Wheel of Curses'}
             </h2>
             <p id="chaos-modal-desc" className="text-xs text-slate-600 dark:text-slate-400">
-              Spin to apply a single trial Curse or Buff to your 4 perk loadout.
+              {(dict?.generator as any)?.chaosWheelDesc || 'Spin to apply a single trial Curse or Buff to your 4 perk loadout.'}
             </p>
           </div>
         </div>
@@ -244,11 +244,10 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             type="button"
             onClick={spinChaosWheel}
             disabled={isSpinning}
-            className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all cursor-pointer ${
-              isSpinning
+            className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all cursor-pointer ${isSpinning
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed'
                 : 'bg-gradient-to-r from-purple-600 via-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-purple-900/40'
-            }`}
+              }`}
           >
             <Sparkles className={`h-4 w-4 ${isSpinning ? 'animate-spin' : ''}`} />
             {isSpinning ? 'Spinning Chaos Curses...' : 'Spin Chaos Wheel!'}
@@ -277,7 +276,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
               </div>
               <div className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-bold text-xs bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
                 <Check className="h-3.5 w-3.5" />
-                Active
+                {dict?.smashOrPass?.active || 'Active'}
               </div>
             </div>
           </div>
@@ -289,7 +288,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             onClick={onClose}
             className="rounded-xl bg-slate-100 dark:bg-slate-800 px-5 py-2.5 font-bold text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
           >
-            Done
+            {(dict?.generator as any)?.done || 'Done'}
           </button>
         </div>
       </div>

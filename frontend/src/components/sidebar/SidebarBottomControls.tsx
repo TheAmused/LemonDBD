@@ -1,5 +1,6 @@
-// frontend/src/components/sidebar/SidebarBottomControls.tsx
 'use client';
+// frontend/src/components/sidebar/SidebarBottomControls.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
@@ -18,7 +19,7 @@ export const LANGUAGES: { code: string; label: string }[] = [
 
 export interface SidebarBottomControlsProps {
   currentLocale: string;
-  dict?: any;
+  dict?: Dictionary;
   onOpenBugModal: () => void;
   onOpenCoffeeModal: () => void;
 }

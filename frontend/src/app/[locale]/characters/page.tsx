@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/characters/page.tsx
 
 import React, { useEffect, useState } from 'react';
@@ -16,7 +17,7 @@ export default function CharactersPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Record<string, unknown> | null>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -28,8 +29,10 @@ export default function CharactersPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Characters & Teachables';
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => {
+      setDict(d);
+      document.title = (d?.app as any)?.charactersPageTitle || 'LemonDBD - Characters & Teachables';
+    });
   }, [locale]);
 
   useEffect(() => {
@@ -61,7 +64,7 @@ export default function CharactersPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-        Loading Characters Hub...
+        {((dict as any)?.app?.loadingCharactersHub) || 'Loading Characters Hub...'}
       </div>
     );
   }
@@ -90,4 +93,3 @@ export default function CharactersPage() {
     </div>
   );
 }
-

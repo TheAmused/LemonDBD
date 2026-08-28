@@ -1,5 +1,6 @@
-// frontend/src/components/Sidebar.tsx
 'use client';
+// frontend/src/components/Sidebar.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -38,7 +39,7 @@ import { i18n, type Locale } from '@/i18n/config';
 
 interface SidebarProps {
   currentLocale?: string;
-  dict: any;
+  dict: Dictionary;
   activeCategory?: string;
   onSelectCategory?: (category: string) => void;
   onOpenQuests?: () => void;
@@ -308,10 +309,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             <div>
               <span className="font-black text-base tracking-wider text-slate-900 dark:text-slate-100 font-mono">
-                LemonDBD
+                {dict?.app?.title || 'LemonDBD'}
               </span>
             </div>
           </Link>
+
         </div>
 
         {/* Navigation */}
@@ -492,7 +494,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <LemonIcon className="h-6 w-6" />
           </div>
           <span className="font-extrabold text-sm tracking-wider font-mono text-slate-900 dark:text-slate-100">
-            LemonDBD
+            {dict?.app?.title || 'LemonDBD'}
           </span>
         </Link>
 

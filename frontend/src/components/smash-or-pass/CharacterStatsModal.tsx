@@ -1,5 +1,6 @@
-// frontend/src/components/smash-or-pass/CharacterStatsModal.tsx
 'use client';
+// frontend/src/components/smash-or-pass/CharacterStatsModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useMemo } from 'react';
 import {
@@ -24,7 +25,7 @@ interface CharacterStatsModalProps {
   character: any;
   stats?: EntityStatItem;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
@@ -233,7 +234,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={dict?.smashOrPass?.close || 'Close'}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
@@ -261,7 +262,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
             <div className="text-right">
               <span className="text-[10px] text-zinc-400 block">{smashRateLabel}</span>
               <span className="text-xl font-black text-[#ff0055] flex items-center gap-1 justify-end">
-                <Heart className="h-4 w-4 fill-[#ff0055]" /> {smashRate}%
+                <Heart className="h-4 w-4 fill-[#ff0055]" /> {smashRate}{dict?.smashOrPass?.percentSign || '%'}
               </span>
             </div>
           </div>
@@ -270,10 +271,10 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           <div className="space-y-1.5 p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800">
             <div className="flex justify-between text-xs font-bold">
               <span className="flex items-center gap-1 text-[#ff0055]">
-                <Heart className="h-3.5 w-3.5 fill-[#ff0055]" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}%)
+                <Heart className="h-3.5 w-3.5 fill-[#ff0055]" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}{dict?.smashOrPass?.percentClose || '%)'}
               </span>
               <span className="flex items-center gap-1 text-zinc-400">
-                <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} {passesLabel} ({passPct}%)
+                <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} {passesLabel} ({passPct}{dict?.smashOrPass?.percentClose || '%)'}
               </span>
             </div>
             <div className="h-3 w-full bg-zinc-800 rounded-full overflow-hidden flex">

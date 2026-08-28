@@ -1,36 +1,37 @@
+// frontend/src/locales/pl/smashOrPass.ts
 export default {
-  "title": "Smash czy Pass",
-  "selectRoster": "WYBIERZ ZESTAW",
+  "title": "Smash or Pass",
+  "selectRoster": "WYBIERZ LISTĘ",
   "dwellHint": "Chwyć i obróć. Przytrzymaj 1s na środku, aby wybrać.",
-  "active": "AKTYWNY",
-  "dwellActive": "Aktywny ({seconds}s)",
-  "subtitle": "Oceń kandydatów Dead by Daylight, odkryj swój Archetyp Randkowy Próby i głosuj. Współtwórz rankingi społeczności.",
+  "active": "AKTYWNE",
+  "dwellActive": "Aktywne ({seconds}s)",
+  "subtitle": "Oceniaj kandydatów z Dead by Daylight, odkryj swój Archetyp Romansu w Próbie i głosuj.",
   "smash": "Smash",
   "pass": "Pass",
   "superSmash": "Super Smash",
-  "leaderboard": "Galeria Sław",
-  "leaderboardSubtitle": "Oficjalne statystyki głosowania społeczności dla wszystkich Zabójców i Ocalałych",
-  "search": "Szukaj kandydatów lub w rankingu...",
+  "leaderboard": "Sala Chwały",
+  "leaderboardSubtitle": "Oficjalne statystyki głosowania społeczności dla Zabójców i Ocalałych",
+  "search": "Szukaj kandydatów lub rankingu...",
   "close": "Zamknij",
   "shuffle": "Przetasuj",
   "undo": "Cofnij",
   "mySmashes": "Twoje Smashe",
-  "stats": "Teczka i Statystyki",
+  "stats": "Akta i Statystyki",
   "reset": "Zresetuj Talię",
-  "keybindings": "Skróty Klawiszowe",
-  "hint": "Użyj strzałek lub przeciągnij, aby zagłosować",
-  "godTier": "Boski Poziom",
-  "fatalAttraction": "Zguba z Miłości",
+  "keybindings": "Skróty klawiszowe",
+  "hint": "Użyj strzałek lub przeciągaj karty, aby głosować",
+  "godTier": "Tier Boski",
+  "fatalAttraction": "Śmiertelne Zauroczenie",
   "friendzone": "Strefa Przyjaźni",
-  "eldritchVoid": "Kosmiczna Otchłań",
+  "eldritchVoid": "Otchłań Przedwiecznych",
   "chaosRating": "Wskaźnik Chaosu",
   "dangerLevel": "Poziom Zagrożenia",
   "archetype": "Archetyp",
-  "compatibilityScore": "Wynik Zgodności",
+  "compatibilityScore": "Zgodność",
   "communitySmashRate": "Wskaźnik Smash Społeczności",
-  "totalVotes": "Liczba Głosów",
+  "totalVotes": "Wszystkie Głosy",
   "traits": "Cechy Zgodności",
-  "all": "Wszystko",
+  "all": "Wszyscy",
   "allRoles": "Wszystkie Role",
   "survivors": "Ocalali",
   "killers": "Zabójcy",
@@ -43,85 +44,85 @@ export default {
   "rosters": {
     "canon": {
       "name": "Dead by Daylight: Kanon Mgły",
-      "desc": "Kompletny zestaw 98 oficjalnych postaci Zabójców i Ocalałych."
-    },
-    "hooked_on_you": {
-      "name": "Hooked on You: Romans na Wyspie",
-      "desc": "Tropikalna edycja symulatora randkowego w plażowych strojach i wakacyjnym klimacie."
-    },
-    "legendary_cosplay": {
-      "name": "Legendarne Skórki i Kolaboracje",
-      "desc": "Kultowe legendarne skórki i crossovery z historii gier wideo."
-    },
-    "cyberpunk_2077": {
-      "name": "Cyberpunkowa Mgła 2077",
-      "desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle."
-    },
-    "anime_manga": {
-      "name": "Estetyka Anime / Mangi w Mgle",
-      "desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły."
-    },
-    "gothic_eldritch": {
-      "name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
-      "desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych."
+      "desc": "Kompletna lista 98 oficjalnych Zabójców i Ocalałych."
     },
     "hoy": {
       "name": "Hooked on You: Romans na Wyspie",
-      "desc": "Tropikalna edycja symulatora randkowego w plażowych strojach i wakacyjnym klimacie."
+      "desc": "Wakacyjny symulator randkowy w strojach plażowych i słonecznym klimacie."
     },
     "legendary": {
-      "name": "Legendarne Skórki i Kolaboracje",
-      "desc": "Kultowe legendarne skórki i crossovery z historii gier wideo."
+      "name": "Skórki Legendarne i Crossovery",
+      "desc": "Ikoniczne legendarne skórki i crossovery z historii gier."
     },
     "cyberpunk": {
-      "name": "Cyberpunkowa Mgła 2077",
-      "desc": "Zaawansowani technologicznie neonowi czempioni w dystopijnej mgle."
+      "name": "Cyberpunk Mgła 2077",
+      "desc": "Zaawansowani technologicznie cybernetyczni bohaterowie walczący w dystopijnej mgle."
     },
     "anime": {
-      "name": "Estetyka Anime / Mangi w Mgle",
+      "name": "Estetyka Anime / Mangi",
       "desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły."
     },
     "gothic": {
-      "name": "Wiktoriańskie i Gotyckie Legendy Przedwiecznych",
-      "desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary przedwiecznych."
+      "name": "Wiktoriańskie i Gotyckie Legendy",
+      "desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary."
+    },
+    "hooked_on_you": {
+      "name": "Hooked on You: Romans na Wyspie",
+      "desc": "Wakacyjny symulator randkowy w strojach plażowych i słonecznym klimacie."
+    },
+    "legendary_cosplay": {
+      "name": "Skórki Legendarne i Crossovery",
+      "desc": "Ikoniczne legendarne skórki i crossovery z historii gier."
+    },
+    "cyberpunk_2077": {
+      "name": "Cyberpunk Mgła 2077",
+      "desc": "Zaawansowani technologicznie cybernetyczni bohaterowie walczący w dystopijnej mgle."
+    },
+    "anime_manga": {
+      "name": "Estetyka Anime / Mangi",
+      "desc": "Stylizowane adaptacje anime Twoich ulubionych postaci z Mgły."
+    },
+    "gothic_eldritch": {
+      "name": "Wiktoriańskie i Gotyckie Legendy",
+      "desc": "Mroczne fantasy, estetyka Bloodborne i wiktoriańskie koszmary."
     }
   },
   "controls": {
     "pass": "Pass",
     "smash": "Smash",
     "superSmash": "Super Smash",
-    "stats": "Teczka i Statystyki",
+    "stats": "Akta i Statystyki",
     "reset": "Zresetuj Talię",
-    "keybindings": "Skróty Klawiszowe",
-    "hint": "Użyj strzałek lub przeciągnij, aby zagłosować",
-    "arrowLeft": "Pass (Strzałka w Lewo)",
-    "arrowRight": "Smash (Strzałka w Prawo)",
-    "arrowUp": "Statystyki (Strzałka w Górę)",
-    "arrowDown": "Super Smash (Strzałka w Dół)",
+    "keybindings": "Skróty klawiszowe",
+    "hint": "Użyj strzałek lub przeciągaj karty, aby głosować",
+    "arrowLeft": "Pass (Strzałka w lewo)",
+    "arrowRight": "Smash (Strzałka w prawo)",
+    "arrowUp": "Statystyki (Strzałka w górę)",
+    "arrowDown": "Super Smash (Strzałka w dół)",
     "keyR": "Reset (Klawisz R)"
   },
   "tiers": {
-    "godTier": "Boski Poziom",
-    "fatalAttraction": "Zguba z Miłości",
+    "godTier": "Tier Boski",
+    "fatalAttraction": "Śmiertelne Zauroczenie",
     "friendzone": "Strefa Przyjaźni",
-    "eldritchVoid": "Kosmiczna Otchłań"
+    "eldritchVoid": "Otchłań Przedwiecznych"
   },
   "statsDetail": {
     "chaosRating": "Wskaźnik Chaosu",
     "dangerLevel": "Poziom Zagrożenia",
     "archetype": "Archetyp",
-    "compatibilityScore": "Wynik Zgodności",
+    "compatibilityScore": "Zgodność",
     "communitySmashRate": "Wskaźnik Smash Społeczności",
-    "totalVotes": "Liczba Głosów",
+    "totalVotes": "Wszystkie Głosy",
     "traits": "Cechy Zgodności",
     "smashCount": "Smashe",
     "passCount": "Passy",
     "superSmashCount": "Super Smashe",
-    "rank": "Pozycja",
+    "rank": "Ranga",
     "quote": "Cytat"
   },
   "filters": {
-    "all": "Wszystko",
+    "all": "Wszyscy",
     "allRoles": "Wszystkie Role",
     "survivors": "Ocalali",
     "killers": "Zabójcy",
@@ -133,104 +134,119 @@ export default {
     "monsters": "Potwory i Przedwieczni"
   },
   "modals": {
-    "statsTitle": "Teczka Kandydata",
-    "leaderboardTitle": "Galeria Sław",
-    "leaderboardSubtitle": "Oficjalne statystyki głosowania społeczności dla wszystkich Zabójców i Ocalałych",
-    "personaTitle": "Archetyp Romansu we Mgle",
-    "personaSubtitle": "Twój raport zgodności psychologicznej na podstawie oddanych głosów",
+    "statsTitle": "Akta Kandydata",
+    "leaderboardTitle": "Sala Chwały",
+    "leaderboardSubtitle": "Oficjalne statystyki głosowania społeczności dla Zabójców i Ocalałych",
+    "personaTitle": "Archetyp Romansu w Próbie",
+    "personaSubtitle": "Twój profil zgodności psychologicznej na podstawie Twoich wyborów",
     "resetConfirmTitle": "Zresetować wszystkie głosy?",
-    "resetConfirmDesc": "Spowoduje to cofnięcie wszystkich Twoich głosów w tej sesji i ponowne przetasowanie talii.",
+    "resetConfirmDesc": "Spowoduje to cofnięcie wszystkich Twoich głosów w tej sesji i ponowne przetasowanie talii kandydatów.",
     "confirm": "Potwierdź",
     "cancel": "Anuluj",
     "close": "Zamknij"
   },
-  "howToPlayModal": {
-    "title": "Jak Grać w Smash or Pass",
-    "swipeTitle": "Przesuwanie i Głosowanie Kartami",
-    "swipeDesc": "Przeciągnij kartę w Prawo, aby dać Smash 💋 lub w Lewo, aby dać Pass ✖.",
-    "iconsTitle": "Ikony i Funkcje na Karcie",
-    "iconsDesc": "Kliknij Obróć (ikona w lewym górnym rogu), aby przeczytać biografię, flagi i memy. Kliknij Powiększ dla grafiki w wysokiej rozdzielczości.",
-    "keycapsTitle": "Dotykowe Skróty Klawiszowe",
-    "atmosphereTitle": "Klimatyczne Tło i Muzyka",
-    "atmosphereDesc": "Najedź kursorem na latające teksty w tle, aby odkrywać cytaty i cechy. Włącz BGM (klawisz B), aby cieszyć się mroczną, zmysłową muzyką syntezatorową!",
-    "letsPlay": "Rozumiem, Gramy!"
-  },
-  "personaArchetypes": {
-    "eldritchDevotee": {
-      "title": "Wyznawca Przedwiecznych",
-      "subtitle": "Niezgłębione koszmary i pradawne byty to Twój prawdziwy język miłości.",
-      "desc": "Po co zadowalać się śmiertelnym romansem, skoro wzywa kosmiczna pustka? Macki, zęby i kosmiczne tajemnice to Twój żywioł."
-    },
-    "redStainAddict": {
-      "title": "Uzależniony od Czerwonej Plamy",
-      "subtitle": "Niebezpieczeństwo Cię pociąga, a bicie serca w promieniu terroru przyspiesza Twój puls.",
-      "desc": "Animacje Memento Mori to dla Ciebie po prostu agresywne przytulasy. Pociąga Cię potęga, groza i mroczna charyzma."
-    },
-    "campfireSoulmate": {
-      "title": "Bratnia Dusza przy Ognisku",
-      "subtitle": "Czysta praca zespołowa i altruistyczne leczenie rozgrzewają Twoje serce.",
-      "desc": "Szukasz prawdziwej więzi, szczerych uśmiechów i kogoś, kto odepnie Cię z haka przed otwarciem bramy wyjściowej."
-    },
-    "entitysParamour": {
-      "title": "Kochanek Bytu",
-      "subtitle": "Dostrzegasz piękno, urok i powab w niemal każdej istocie we Mgle.",
-      "desc": "Wysokie standardy? Nigdy o nich nie słyszałeś. Twoje serce jest bezkresnym schronieniem dla wszystkich Ocalałych i Zabójców."
-    },
-    "coldHeartedPragmatist": {
-      "title": "Zimnokrwisty Pragmatyk",
-      "subtitle": "Niezwykle wybredny, odporny na urok, skupiony wyłącznie na przetrwaniu.",
-      "desc": "Mało kto przejdzie Twoją rygorystyczną listę randkową. Wymagasz perfekcji, bezbłędnych perków i zerowej liczby czerwonych flag."
-    },
-    "fogRomantic": {
-      "title": "Romantyk z Mgły",
-      "subtitle": "Zrównoważone serce szukające pasji i adrenaliny pośród mrocznych prób.",
-      "desc": "Wierzysz, że nawet w nieskończonych koszmarach Bytu można odnaleźć prawdziwą iskrę miłości."
-    }
-  },
-  "tooltips": {
-    "mute": "Wycisz efekty dźwiękowe (M)",
-    "unmute": "Włącz efekty dźwiękowe (M)",
-    "playBgm": "Włącz zmysłową muzykę tła (B)",
-    "pauseBgm": "Zatrzymaj muzykę tła (B)",
-    "resetAllVotes": "Zresetuj wszystkie moje głosy",
-    "howToPlay": "Jak grać i skróty klawiszowe",
-    "shuffle": "Przetasuj pozostałych kandydatów"
-  },
   "notifications": {
     "voteRecorded": "Głos zapisany!",
     "deckReset": "Talia została zresetowana.",
-    "rateLimit": "Zbyt szybkie głosowanie! Zwolnij tempo.",
+    "rateLimit": "Zbyt szybkie głosowanie! Zwolnij nieco.",
     "errorLoading": "Nie udało się załadować listy kandydatów.",
     "errorVoting": "Nie udało się zapisać głosu."
   },
   "empty": {
     "title": "Talia Ukończona!",
-    "subtitle": "Oceniłeś już wszystkich dostępnych kandydatów w tym zestawie.",
-    "resetAction": "Zresetuj i Głosuj Ponownie",
-    "viewLeaderboard": "Zobacz Tabelę Wyników",
-    "switchRoster": "Wybierz Inny Zestaw"
+    "subtitle": "Oceniono już wszystkich dostępnych kandydatów w tej liście.",
+    "resetAction": "Zresetuj i głosuj ponownie",
+    "viewLeaderboard": "Zobacz Salę Chwały",
+    "switchRoster": "Wybierz Inną Listę"
   },
   "loreLabels": {
     "trialClassification": "Klasyfikacja Próby",
     "datingArchetype": "Archetyp Randkowy",
-    "greenFlag": "Zielona Flaga",
-    "redFlag": "Czerwona Flaga",
+    "greenFlag": "Zielona Flaga w Próbie",
+    "redFlag": "Czerwona Flaga w Próbie",
     "identityProfile": "Profil Tożsamości",
-    "signatureQuote": "Charakterystyczny Cytat",
+    "signatureQuote": "Kultowy Cytat",
     "trialWarning": "Ostrzeżenie Próby",
     "female": "Kobieta",
     "male": "Mężczyzna",
-    "monster": "Potwór / Przedwieczny"
+    "monster": "Przedwieczny / Potwór"
   },
   "hud": {
     "left": "pozostało",
     "smash": "Smash",
     "pass": "Pass",
     "smashRate": "Wskaźnik",
-    "bgm": "BGM",
+    "bgm": "Muzyka",
     "archetype": "Archetyp",
-    "hallOfFame": "Galeria Sław",
+    "hallOfFame": "Sala Chwały",
     "howToPlay": "Jak Grać",
     "shuffle": "Przetasuj"
-  }
+  },
+  "occultDossier": "AKTA OKULTYSTYCZNE",
+  "percentSign": "%",
+  "percentClose": "%)",
+  "pipeSeparator": "|",
+  "loadingRosterPrefix": "Wczytywanie listy",
+  "loadingRosterSuffix": "z bazy danych...",
+  "howToPlayModal": {
+    "title": "Jak grać w Smash or Pass",
+    "swipeTitle": "Przesuwaj lub przeciągaj karty",
+    "swipeDesc": "Przeciągnij kartę w Prawo, aby dać Smash 💋 lub w Lewo, aby dać Pass ✖.",
+    "swipeIcon": "👆",
+    "iconsTitle": "Ikony akcji na karcie",
+    "iconsDesc": "Kliknij Odwróć (ikona w lewym górnym rogu), aby przeczytać bio, cechy, zielone/czerwone flagi i memy. Kliknij Zoom, aby zobaczyć portret w wysokiej rozdzielczości.",
+    "iconsIcon": "🎯",
+    "keycapsTitle": "Sterowanie z klawiatury",
+    "keycapsIcon": "⌨️",
+    "atmosphereTitle": "Klimatyczne tło i muzyka",
+    "atmosphereDesc": "Najedź kursorem na elementy tła, aby sprawdzić świecące cytaty i lore. Włącz podkład muzyczny (klawisz B) dla mrocznego klimatu synth!",
+    "atmosphereIcon": "🌌",
+    "letsPlay": "Zrozumiałem, gramy!"
+  },
+  "personaArchetypes": {
+    "eldritchDevotee": {
+      "title": "Oddany Przedwiecznym",
+      "subtitle": "Niezgłębione koszmary i pradawne byty to Twój prawdziwy język miłości.",
+      "desc": "Po co ograniczać się do śmiertelników, gdy wzywa kosmiczna pustka? Macki, kły i kosmiczne tajemnice to to, co kochasz."
+    },
+    "redStainAddict": {
+      "title": "Uzależniony od Czerwonej Plamy",
+      "subtitle": "Niebezpieczeństwo Cię kręci, a bicie serca w zasięgu terroru przyspiesza Twój puls.",
+      "desc": "Animacje Mori to według Ciebie po prostu agresywne przytulanie. Pociąga Cię potęga, groza i mroczna charyzma."
+    },
+    "campfireSoulmate": {
+      "title": "Bratnia Dusza z Ogniska",
+      "subtitle": "Ciepła współpraca i bezinteresowne leczenie roztapiają Twoje serce.",
+      "desc": "Szukasz bliskości, szczerych uśmiechów i kogoś, kto ściągnie Cię z haka przed otwarciem bramy wyjściowej."
+    },
+    "entitysParamour": {
+      "title": "Kochanek Bytu",
+      "subtitle": "Dostrzegasz piękno, urok i romantyzm w niemal każdej duszy we Mgle.",
+      "desc": "Wysokie standardy? Nigdy o nich nie słyszałeś. Twoje serce pomieści wszystkich ocalałych i zabójców bez wyjątku."
+    },
+    "coldHeartedPragmatist": {
+      "title": "Zimny Pragmatyk",
+      "subtitle": "Niezwykle wybredny, odporny na wdzięki, skupiony wyłącznie na przetrwaniu.",
+      "desc": "Mało kto przejdzie Twoją rygorystyczną listę wymagań randkowych. Wymagasz perfekcji, bezbłędnych umiejętności i zera czerwonych flag."
+    },
+    "fogRomantic": {
+      "title": "Romantyk z Mgły",
+      "subtitle": "Zrównoważona dusza szukająca pasji i adrenaliny w próbach.",
+      "desc": "Wierzysz, że nawet w nieskończonych próbach Bytu zawsze można odnaleźć prawdziwą iskrę miłości."
+    }
+  },
+  "tooltips": {
+    "mute": "Wycisz efekty dźwiękowe (M)",
+    "unmute": "Włącz efekty dźwiękowe (M)",
+    "playBgm": "Włącz mroczną muzykę tła (B)",
+    "pauseBgm": "Wstrzymaj muzykę tła (B)",
+    "resetAllVotes": "Zresetuj wszystkie moje głosy",
+    "howToPlay": "Jak grać i skróty klawiszowe",
+    "shuffle": "Przetasuj pozostałych kandydatów"
+  },
+  "tierFilterLabel": "Filtruj wg Tieru:",
+  "left": "pozostało",
+  "bgm": "Muzyka",
+  "hallOfFame": "Sala Chwały",
+  "howToPlay": "Jak Grać"
 };

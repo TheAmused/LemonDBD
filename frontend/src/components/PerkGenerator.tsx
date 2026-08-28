@@ -422,7 +422,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                     'Randomizes dynamically from your unlocked & owned perks'
                   : dict?.generator?.subtitleAll ||
                     'Randomizes from all Dead by Daylight perks'}{' '}
-                with inventory coordinates [Page / Slot]
+                {dict?.generator?.inventoryCoordinatesNote || 'with inventory coordinates [Page / Slot]'}
               </p>
             </div>
           </div>
@@ -610,7 +610,8 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-bold">
                   {dict?.generator?.slotFocus || 'Focus'}:{' '}
                   <span className="text-amber-600 dark:text-amber-400 font-black">
-                    Slot #{activeSlotIdx + 1}
+                    {dict?.generator?.slotLabel || 'Slot #'}
+                    {activeSlotIdx + 1}
                   </span>
                 </span>
               </div>
@@ -649,17 +650,22 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                         <div className="flex items-center justify-between">
                           {slotData ? (
                             <span className="rounded-md bg-amber-500/15 px-2 py-0.5 font-mono text-[11px] font-black text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                              [P{slotData.page}/S{slotData.slot}]
+                              {dict?.generator?.coordOpenPage || '[P'}
+                              {slotData.page}
+                              {dict?.generator?.coordSlot || '/S'}
+                              {slotData.slot}
+                              {dict?.generator?.coordClose || ']'}
                             </span>
                           ) : (
                             <span className="rounded-md bg-slate-100 dark:bg-slate-900 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-800">
-                              [-/-]
+                              {dict?.generator?.emptyCoordinate || '[-/-]'}
                             </span>
                           )}
 
                           <div className="flex items-center gap-1">
                             <span className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400">
-                              Slot #{idx + 1}
+                              {dict?.generator?.slotLabel || 'Slot #'}
+                              {idx + 1}
                             </span>
                             {slotData && (
                               <button

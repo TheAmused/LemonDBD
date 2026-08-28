@@ -86,6 +86,8 @@ def create_new_run(
         attempt=1,
         current_page=1,
         best_page=0,
+        pages_json=json.dumps(pages),
+        snapshot_at=utcnow(),
     )
     db.session.add(run)
     db.session.commit()

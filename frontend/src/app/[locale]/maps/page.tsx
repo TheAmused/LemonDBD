@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/maps/page.tsx
 
 import React, { Suspense, useEffect, useState } from 'react';
@@ -20,7 +21,7 @@ function MapsPageInner() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<PerkDictionary | null>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const initialMapName = searchParams?.get('mapName') || '';
 
@@ -52,9 +53,11 @@ function MapsPageInner() {
   const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
-    document.title = 'LemonDBD - Tactical Map Command Explorer';
     getDictionary(locale)
-      .then((d) => setDict(d as PerkDictionary))
+      .then((d) => {
+        setDict(d as any);
+        document.title = d?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer';
+      })
       .catch((err: unknown) => console.error('Failed to load maps dictionary:', err));
   }, [locale]);
 
@@ -92,7 +95,7 @@ function MapsPageInner() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono text-xs">
-        Initializing Tactical Map Command...
+        {(dict as any)?.maps?.initializingTacticalMap || 'Initializing Tactical Map Command...'}
       </div>
     );
   }
@@ -112,9 +115,8 @@ function MapsPageInner() {
       />
 
       <main
-        className={`flex-1 w-full min-h-screen transition-all duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className={`flex-1 w-full min-h-screen transition-all duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+          }`}
       >
         <VoiceCommandBanner
           locale={locale}
@@ -158,7 +160,7 @@ export default function MapsPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono text-xs">
-          Loading Tactical Maps...
+          {'Loading Tactical Maps...'}
         </div>
       }
     >

@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/ResetConfirmModal.tsx
 
 import React from 'react';
@@ -11,7 +12,7 @@ export interface ResetConfirmModalProps {
   busy?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({

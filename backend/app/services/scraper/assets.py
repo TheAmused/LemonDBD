@@ -2,6 +2,7 @@
 import asyncio
 import io
 import logging
+import re
 from pathlib import Path
 from typing import List, Optional
 
@@ -166,6 +167,46 @@ async def download_all_assets(
                             timeout=request_timeout,
                         )
                     )
+                    # Also download under base name if different (e.g. without (The Slasher))
+                    base_name = re.sub(r"\s*\([^)]*\)", "", addon.name).strip()
+                    base_slug = sanitize_filename(base_name)
+                    base_path = f"icons/addons/{base_slug}.png"
+                    if base_path != addon.icon_local_path:
+                        tasks.append(
+                            download_single_asset(
+                                client,
+                                semaphore,
+                                static_dir,
+                                addon.icon_url,
+                                base_path,
+                                timeout=request_timeout,
+                            )
+                        )
+
+                    # Common spelling / legacy aliases
+                    alias_slugs = []
+                    if "ether_15" in base_slug or "aether_15" in base_slug:
+                        alias_slugs.extend(["aether_15%", "ether_15_vol%", "aether_15_vol%"])
+                    if "molted_skin" in base_slug or "moulted_skin" in base_slug:
+                        alias_slugs.extend(["molted_skin", "moulted_skin"])
+                    if "honey_locust_thorn" in base_slug:
+                        alias_slugs.extend(["honey_locust_thorn", "honey_locust_thorns"])
+                    if "adi_valente" in base_slug:
+                        alias_slugs.extend(["adi_valente_issue_1", "adi_valente_issue_#1", "adi_valente_1"])
+
+                    for alias in set(alias_slugs):
+                        alias_path = f"icons/addons/{sanitize_filename(alias)}.png"
+                        if alias_path != addon.icon_local_path and alias_path != base_path:
+                            tasks.append(
+                                download_single_asset(
+                                    client,
+                                    semaphore,
+                                    static_dir,
+                                    addon.icon_url,
+                                    alias_path,
+                                    timeout=request_timeout,
+                                )
+                            )
         if offerings:
             for off in offerings:
                 if off.icon_url:

@@ -9,5 +9,6 @@ export default {
   "firstPage": "First Page",
   "lastPage": "Last Page",
   "goTo": "Go to",
-  "navAriaLabel": "Pagination Navigation"
+  "navAriaLabel": "Pagination Navigation",
+  "to": "to"
 };

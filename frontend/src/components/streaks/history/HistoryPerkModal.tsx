@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/history/HistoryPerkModal.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryPerkModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { PartyPopper, Sparkles, Lock } from 'lucide-react';
@@ -74,7 +75,7 @@ export interface HistoryPerkModalProps {
   killerName: string | null;
   perks: Perk[];
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose, dict }) => {
@@ -132,7 +133,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
           onClick={onClose}
           className="mt-6 w-full rounded-xl bg-emerald-500 py-3 text-sm font-extrabold text-slate-950 shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-400 cursor-pointer"
         >
-          {dict?.generator?.continueButton || 'Continue'}
+          {dict?.streaks?.continueButton || 'Continue'}
         </button>
       </div>
     </div>

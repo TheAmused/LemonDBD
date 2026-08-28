@@ -1,17 +1,18 @@
+// frontend/src/locales/de/modal.ts
 export default {
   "close": "Schließen",
   "character": "Zugehöriger Charakter",
   "role": "Rolle",
-  "copySlug": "Identifikator kopieren",
-  "slugCopied": "In die Zwischenablage kopiert!",
-  "perkDescription": "Perk-Beschreibung",
-  "generalPerk": "Allgemeiner Perk",
+  "copySlug": "Kennung kopieren",
+  "slugCopied": "In Zwischenablage kopiert!",
+  "perkDescription": "Talent-Beschreibung",
+  "generalPerk": "Allgemeines Talent",
   "alias": "Alias",
-  "clickToInspectPerk": "Klicken, um Perk zu untersuchen",
-  "clickToInspect": "Klicken, um vollständige Mechaniken anzuzeigen",
-  "killerPerk": "Killer-Perk",
-  "survivorPerk": "Überlebenden-Perk",
-  "unownedPerk": "Nicht freigeschalteter Perk",
+  "clickToInspectPerk": "Klicken zum Inspizieren des Talents",
+  "clickToInspect": "Klicken, um vollständige Mechaniken einzusehen",
+  "killerPerk": "Killer-Talent",
+  "survivorPerk": "Überlebenden-Talent",
+  "unownedPerk": "Nicht besessenes Talent",
   "equipment": "Ausrüstung",
   "clickOutsideToClose": "Esc oder außerhalb klicken zum Schließen",
   "temporarilyDisabled": "Vorübergehend deaktiviert",
@@ -19,4 +20,3 @@ export default {
   "wasDisabledTemporarily": "{item} wurde vorübergehend deaktiviert.",
   "reasonLabel": "Grund"
 };
-

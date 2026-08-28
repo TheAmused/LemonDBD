@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/gauntlet/ActiveTargetStage.tsx
 'use client';
+// frontend/src/components/streaks/gauntlet/ActiveTargetStage.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { GauntletRun, Perk, Role } from '@/types/gauntletStreak';
@@ -57,7 +58,7 @@ export interface ActiveTargetStageProps {
   /** The target the reel has actually finished landing on, lifted so the roster grid can share it. */
   shownTarget: string | null;
   onShownTargetChange: (name: string | null) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 /**
@@ -254,7 +255,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               disabled={loading}
               className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-lg py-4 px-10 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
             >
-              START GAME
+              {dict?.streaks?.startGame || 'START GAME'}
             </button>
           </>
         )}
@@ -297,13 +298,13 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               )}
             </div>
             <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full whitespace-nowrap tracking-wider shadow-sm">
-              TARGET
+              {dict?.streaks?.target || 'TARGET'}
             </span>
           </div>
 
           <div>
             <div className="text-xs uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 mb-1">
-              Active Gauntlet Target
+              {dict?.streaks?.activeGauntletTarget || 'Active Gauntlet Target'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               {targetName}
@@ -315,7 +316,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   {role === 'survivor' ? (dict?.filters?.survivor || 'Survivor') : (dict?.filters?.killer || 'Killer')}
                 </strong>
               </span>
-              <span>•</span>
+              <span>{dict?.streaks?.bulletSeparator || '•'}</span>
               <span>
                 {dict?.stats?.streak || 'Streak'}:{' '}
                 <strong className="text-amber-600 dark:text-amber-400 font-mono">{run.current_streak}</strong>
@@ -329,7 +330,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           <Lock className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
           <div>
             <div className="text-[10px] uppercase font-black text-amber-600 dark:text-amber-400 tracking-wider">
-              Tier {tierInfo.tier_level}: {tierInfo.name}
+              {dict?.streaks?.tierLabel || 'Tier'} {tierInfo.tier_level}: {tierInfo.name}
             </div>
             <div className="text-xs font-bold text-slate-900 dark:text-white">
               {perkLimit === 0 ? '0 Perks (Perkless Trial)' : `${perkLimit} Perk${perkLimit > 1 ? 's' : ''} Allowed`}
@@ -343,16 +344,16 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-            Your build for this match
+            {dict?.streaks?.yourBuildForMatch || 'Your build for this match'}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Pick these in-game. Nothing to confirm here.
+            {dict?.streaks?.pickTheseInGame || 'Pick these in-game. Nothing to confirm here.'}
           </p>
         </div>
-
         {charactersPerksOnly && perkLimit === 0 && (
           <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
-            No perks this trial. {targetName} goes in bare.
+            {dict?.streaks?.noPerksThisTrial || 'No perks this trial.'} {targetName}{' '}
+            {dict?.streaks?.goesInBare || 'goes in bare.'}
           </p>
         )}
 
@@ -369,10 +370,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Slot {idx + 1} locked
+                      {dict?.streaks?.slotLabel || 'Slot'} {idx + 1} {dict?.streaks?.lockedSuffix || 'locked'}
                     </h4>
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-                      Tier {tierInfo.tier_level} rule
+                      {dict?.streaks?.tierLabel || 'Tier'} {tierInfo.tier_level} {dict?.streaks?.ruleSuffix || 'rule'}
                     </p>
                   </div>
                 </div>
@@ -398,10 +399,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   </div>
                   <div className="overflow-hidden">
                     <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
-                      Slot {idx + 1}
+                      {dict?.streaks?.slotLabel || 'Slot'} {idx + 1}
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                      {targetName}&apos;s own perk
+                      {dict?.streaks?.ownPerkOf || 'Own perk:'} {targetName}
                     </p>
                   </div>
                 </div>
@@ -416,10 +417,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 >
                   <div>
                     <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
-                      Slot 1: one of these
+                      {dict?.streaks?.slotOneOfThese || 'Slot 1: one of these'}
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                      {targetName}&apos;s own perks
+                      {dict?.streaks?.ownPerksOf || 'Own perks:'} {targetName}
                     </p>
                   </div>
                   {charPerks.length > 0 ? (
@@ -430,7 +431,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                     </div>
                   ) : (
                     <p className="text-xs text-slate-400 dark:text-slate-500 italic">
-                      No teachable perks on record for this character.
+                      {dict?.streaks?.noTeachablePerks || 'No teachable perks on record for this character.'}
                     </p>
                   )}
                 </div>

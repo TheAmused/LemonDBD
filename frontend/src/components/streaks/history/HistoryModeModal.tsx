@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/history/HistoryModeModal.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryModeModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Shield, Skull } from 'lucide-react';
@@ -12,7 +13,7 @@ export interface HistoryModeModalProps {
   onClose: () => void;
   onSelectMode: (mode: HistoryMode) => void;
   currentMode?: HistoryMode;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({

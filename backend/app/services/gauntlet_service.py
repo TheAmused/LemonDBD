@@ -38,9 +38,7 @@ class GauntletService:
         return ids
 
     def _is_unfrozen(self, current_streak: int, owned_character_ids: list) -> bool:
-        """True while the run hasn't genuinely started (zero streak) or its pool was never frozen; write-path only."""
-        if current_streak == 0:
-            return True
+        """True while its pool was never frozen; write-path only."""
         return not owned_character_ids
 
     def _with_owned_characters(self, data: Dict[str, Any]) -> Dict[str, Any]:
@@ -73,6 +71,7 @@ class GauntletService:
             "character_perks": get_character_teachable_perks(target_character),
             "tier_info": tier_info,
         }
+        live_owned_ids = get_owned_character_ids(user_id, role, self.ownership_service)
 
         new_run = GauntletRun(
             user_id=user_id,
@@ -84,6 +83,7 @@ class GauntletService:
             last_checkpoint_streak=0,
             completed_characters_json="[]",
             checkpoint_characters_json="[]",
+            owned_characters_json=json.dumps(live_owned_ids),
             current_loadout_json=json.dumps(initial_loadout),
         )
         db.session.add(new_run)

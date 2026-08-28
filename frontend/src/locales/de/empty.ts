@@ -1,5 +1,6 @@
+// frontend/src/locales/de/empty.ts
 export default {
-  "title": "Keine Perks gefunden",
-  "subtitle": "Passe deine Suchbegriffe oder Filterkombinationen an.",
-  "loading": "Lade Perks..."
+  "title": "Keine Talente gefunden",
+  "subtitle": "Versuche deine Suchbegriffe oder Filtereinstellungen anzupassen.",
+  "loading": "Lade Talente..."
 };

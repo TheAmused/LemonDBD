@@ -30,5 +30,6 @@ export default {
   "choosePerkVault": "Choose from Survivor perk vault",
   "searchPlaceholder": "Search survivor perks...",
   "loadingPerks": "Loading survivor perks...",
-  "noPerksFound": "No matching perks found."
+  "noPerksFound": "No matching perks found.",
+  "loadingSwf": "Loading SWF Planner..."
 };

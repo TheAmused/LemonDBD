@@ -1,5 +1,6 @@
-// frontend/src/components/smash-or-pass/CharacterCard.tsx
 'use client';
+// frontend/src/components/smash-or-pass/CharacterCard.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
@@ -31,7 +32,7 @@ interface CharacterCardProps {
   initialExitOffset?: { x: number; y: number } | null;
   onExitComplete?: () => void;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({
@@ -448,7 +449,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                title="Pass"
+                title={dict?.smashOrPass?.pass || 'Pass'}
                 className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-slate-950/90 border-2 border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-400 hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer"
               >
                 <ThumbsDown className="h-6 w-6 sm:h-7 sm:w-7" />
@@ -464,7 +465,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                title="Smash"
+                title={dict?.smashOrPass?.smash || 'Smash'}
                 className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-600 to-[#ff0055] text-white hover:scale-110 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,0,85,0.6)] cursor-pointer"
               >
                 <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-white" />
@@ -607,11 +608,11 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                title={t.pass || 'Pass'}
+                title={(t as any)?.pass || 'Pass'}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-zinc-900 border-2 border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 text-xs font-bold transition-all cursor-pointer"
               >
                 <ThumbsDown className="h-4 w-4" />
-                <span>{t.pass || 'Pass'}</span>
+                <span>{(t as any)?.pass || 'Pass'}</span>
               </button>
 
               <button
@@ -623,11 +624,11 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                title={t.smash || 'Smash'}
+                title={(t as any)?.smash || 'Smash'}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-rose-600 to-[#ff0055] text-white text-xs font-black hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,0,85,0.5)] cursor-pointer"
               >
                 <Heart className="h-4 w-4 fill-white" />
-                <span>{t.smash || 'Smash'}</span>
+                <span>{(t as any)?.smash || 'Smash'}</span>
               </button>
             </div>
           </div>

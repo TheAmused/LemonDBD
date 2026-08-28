@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserBugReportsList.tsx
 
 import React from 'react';
@@ -18,7 +19,7 @@ interface UserBugReportsListProps {
   reports: UserBugReport[];
   loading: boolean;
   onOpenReportModal: () => void;
-  dict?: any;
+  dict?: Dictionary;
   t?: Record<string, string>;
 }
 
@@ -179,7 +180,9 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                     <span>{t.devResponse || 'Developer Response'}</span>
                   </div>
                   <p className="text-xs text-slate-300 italic">
-                    &quot;{report.admin_notes}&quot;
+                    {t.quoteOpen || '"'}
+                    {report.admin_notes}
+                    {t.quoteClose || '"'}
                   </p>
                 </div>
               )}

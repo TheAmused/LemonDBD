@@ -1,33 +1,34 @@
+// frontend/src/locales/es/smashOrPass.ts
 export default {
   "title": "Smash or Pass",
-  "selectRoster": "SELECCIONAR ROSTER",
+  "selectRoster": "SELECCIONAR ELENCO",
   "dwellHint": "Arrastra y gira. Mantén 1s en el centro para seleccionar.",
   "active": "ACTIVO",
   "dwellActive": "Activo ({seconds}s)",
-  "subtitle": "Evalúa a los candidatos de Dead by Daylight, descubre tu arquetipo romántico de la Niebla y contribuye a las clasificaciones globales.",
+  "subtitle": "Califica a los candidatos de Dead by Daylight, descubre tu Arquetipo Romántico de la Niebla y vota.",
   "smash": "Smash",
   "pass": "Pass",
   "superSmash": "Super Smash",
   "leaderboard": "Salón de la Fama",
-  "leaderboardSubtitle": "Estadísticas oficiales de votación comunitaria de todos los Asesinos y Supervivientes",
+  "leaderboardSubtitle": "Estadísticas oficiales de votos de la comunidad en todos los Asesinos y Supervivientes",
   "search": "Buscar candidatos o clasificación...",
   "close": "Cerrar",
-  "shuffle": "Barajar",
+  "shuffle": "Mezclar",
   "undo": "Deshacer",
   "mySmashes": "Tus Smashes",
   "stats": "Expediente y Estadísticas",
   "reset": "Reiniciar Baraja",
   "keybindings": "Atajos de Teclado",
-  "hint": "Usa las flechas o desliza para votar",
+  "hint": "Usa las Teclas de Flecha o Desliza para Votar",
   "godTier": "Nivel Dios",
   "fatalAttraction": "Atracción Fatal",
-  "friendzone": "Zona de Amigos",
+  "friendzone": "Friendzone",
   "eldritchVoid": "Vacío Primigenio",
   "chaosRating": "Nivel de Caos",
   "dangerLevel": "Nivel de Peligro",
   "archetype": "Arquetipo",
-  "compatibilityScore": "Puntuación de Compatibilidad",
-  "communitySmashRate": "Tasa de Smash Comunitaria",
+  "compatibilityScore": "Puntaje de Compatibilidad",
+  "communitySmashRate": "Tasa de Smash Global",
   "totalVotes": "Votos Totales",
   "traits": "Rasgos de Compatibilidad",
   "all": "Todos",
@@ -36,54 +37,54 @@ export default {
   "killers": "Asesinos",
   "allGenders": "Todos los Géneros",
   "female": "Femenino",
-  "femaleOnly": "Solo Mujeres",
+  "femaleOnly": "Solo Femenino",
   "male": "Masculino",
-  "maleOnly": "Solo Hombres",
+  "maleOnly": "Solo Masculino",
   "monsters": "Monstruos y Primigenios",
   "rosters": {
     "canon": {
       "name": "Dead by Daylight: Canon de la Niebla",
-      "desc": "El elenco completo de 98 personajes de asesinos y supervivientes oficiales."
+      "desc": "El elenco completo oficial con todos los Asesinos y Supervivientes del juego."
     },
     "hoy": {
-      "name": "Hooked on You: Romance en la Isla",
-      "desc": "Edición simulador de citas en un paraíso tropical con trajes de playa y vibras veraniegas."
+      "name": "Hooked on You: Romance Isleño",
+      "desc": "Edición simulador de citas en el paraíso tropical con atuendos playeros."
     },
     "legendary": {
-      "name": "Skins Legendarias y Colaboraciones",
-      "desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos."
+      "name": "Aspectos Legendarios y Colaboraciones",
+      "desc": "Skins legendarias icónicas y crossovers legendarios de la historia del videojuego."
     },
     "cyberpunk": {
       "name": "Edición Niebla Cyberpunk 2077",
-      "desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica."
+      "desc": "Campeones con aumentos de neón de alta tecnología luchando en una niebla distópica."
     },
     "anime": {
-      "name": "Estética Anime y Manga de la Niebla",
+      "name": "Estética Anime / Manga de la Niebla",
       "desc": "Adaptaciones estilizadas en anime de tus personajes favoritos de la Niebla."
     },
     "gothic": {
-      "name": "Leyendas Góticas y Primigenias Victorianas",
-      "desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios."
+      "name": "Leyendas Góticas y Victorianas Primigenias",
+      "desc": "Fantasía oscura, estética estilo Bloodborne y horrores victorianos del vacío."
     },
     "hooked_on_you": {
-      "name": "Hooked on You: Romance en la Isla",
-      "desc": "Edición simulador de citas en un paraíso tropical con trajes de playa y vibras veraniegas."
+      "name": "Hooked on You: Romance Isleño",
+      "desc": "Edición simulador de citas en el paraíso tropical con atuendos playeros."
     },
     "legendary_cosplay": {
-      "name": "Skins Legendarias y Colaboraciones",
-      "desc": "Skins legendarias icónicas y colaboraciones históricas de videojuegos."
+      "name": "Aspectos Legendarios y Colaboraciones",
+      "desc": "Skins legendarias icónicas y crossovers legendarios de la historia del videojuego."
     },
     "cyberpunk_2077": {
       "name": "Edición Niebla Cyberpunk 2077",
-      "desc": "Campeones aumentados con neón de alta tecnología en una niebla distópica."
+      "desc": "Campeones con aumentos de neón de alta tecnología luchando en una niebla distópica."
     },
     "anime_manga": {
-      "name": "Estética Anime y Manga de la Niebla",
+      "name": "Estética Anime / Manga de la Niebla",
       "desc": "Adaptaciones estilizadas en anime de tus personajes favoritos de la Niebla."
     },
     "gothic_eldritch": {
-      "name": "Leyendas Góticas y Primigenias Victorianas",
-      "desc": "Fantasía oscura, estética Bloodborne y horrores victorianos primigenios."
+      "name": "Leyendas Góticas y Victorianas Primigenias",
+      "desc": "Fantasía oscura, estética estilo Bloodborne y horrores victorianos del vacío."
     }
   },
   "controls": {
@@ -93,7 +94,7 @@ export default {
     "stats": "Expediente y Estadísticas",
     "reset": "Reiniciar Baraja",
     "keybindings": "Atajos de Teclado",
-    "hint": "Usa las flechas o desliza para votar",
+    "hint": "Usa las Teclas de Flecha o Desliza para Votar",
     "arrowLeft": "Pass (Flecha Izquierda)",
     "arrowRight": "Smash (Flecha Derecha)",
     "arrowUp": "Estadísticas (Flecha Arriba)",
@@ -103,15 +104,15 @@ export default {
   "tiers": {
     "godTier": "Nivel Dios",
     "fatalAttraction": "Atracción Fatal",
-    "friendzone": "Zona de Amigos",
+    "friendzone": "Friendzone",
     "eldritchVoid": "Vacío Primigenio"
   },
   "statsDetail": {
     "chaosRating": "Nivel de Caos",
     "dangerLevel": "Nivel de Peligro",
     "archetype": "Arquetipo",
-    "compatibilityScore": "Puntuación de Compatibilidad",
-    "communitySmashRate": "Tasa de Smash Comunitaria",
+    "compatibilityScore": "Puntaje de Compatibilidad",
+    "communitySmashRate": "Tasa de Smash Global",
     "totalVotes": "Votos Totales",
     "traits": "Rasgos de Compatibilidad",
     "smashCount": "Smashes",
@@ -127,19 +128,19 @@ export default {
     "killers": "Asesinos",
     "allGenders": "Todos los Géneros",
     "female": "Femenino",
-    "femaleOnly": "Solo Mujeres",
+    "femaleOnly": "Solo Femenino",
     "male": "Masculino",
-    "maleOnly": "Solo Hombres",
+    "maleOnly": "Solo Masculino",
     "monsters": "Monstruos y Primigenios"
   },
   "modals": {
     "statsTitle": "Expediente del Candidato",
     "leaderboardTitle": "Salón de la Fama",
-    "leaderboardSubtitle": "Estadísticas oficiales de votación comunitaria de todos los Asesinos y Supervivientes",
-    "personaTitle": "Arquetipo Romántico de la Niebla",
-    "personaSubtitle": "Tu informe de compatibilidad psicológica basado en tus votos",
-    "resetConfirmTitle": "¿Reiniciar todos los votos?",
-    "resetConfirmDesc": "Esto rebobinará todos tus votos en esta sesión y reorganizará la baraja de candidatos.",
+    "leaderboardSubtitle": "Estadísticas oficiales de la comunidad en todos los Asesinos y Supervivientes",
+    "personaTitle": "Arquetipo Romántico de la Partida",
+    "personaSubtitle": "Tu informe de compatibilidad psicológica basado en tus patrones de votación",
+    "resetConfirmTitle": "¿Reiniciar Todos los Votos?",
+    "resetConfirmDesc": "Esto rebobinará todos tus votos en esta sesión y volverá a mezclar la baraja de candidatos.",
     "confirm": "Confirmar",
     "cancel": "Cancelar",
     "close": "Cerrar"
@@ -147,7 +148,7 @@ export default {
   "notifications": {
     "voteRecorded": "¡Voto registrado!",
     "deckReset": "La baraja ha sido reiniciada.",
-    "rateLimit": "¡Votando muy rápido! Por favor, ve más despacio.",
+    "rateLimit": "¡Votando demasiado rápido! Por favor, ve más despacio.",
     "errorLoading": "Error al cargar la lista de candidatos.",
     "errorVoting": "Error al registrar el voto."
   },
@@ -155,17 +156,17 @@ export default {
     "title": "¡Baraja Completada!",
     "subtitle": "Has evaluado a todos los candidatos disponibles en este elenco.",
     "resetAction": "Reiniciar y Votar de Nuevo",
-    "viewLeaderboard": "Ver Clasificación",
+    "viewLeaderboard": "Ver Salón de la Fama",
     "switchRoster": "Elegir Otro Elenco"
   },
   "loreLabels": {
-    "trialClassification": "Clasificación de Prueba",
-    "datingArchetype": "Arquetipo de Citas",
-    "greenFlag": "Bandera Verde",
-    "redFlag": "Advertencia de Prueba",
+    "trialClassification": "Clasificación en la Prueba",
+    "datingArchetype": "Arquetipo Amoroso",
+    "greenFlag": "Bandera Verde en la Partida",
+    "redFlag": "Alerta / Bandera Roja",
     "identityProfile": "Perfil de Identidad",
-    "signatureQuote": "Cita Distintiva",
-    "trialWarning": "Advertencia de Prueba",
+    "signatureQuote": "Frase Célebre",
+    "trialWarning": "Advertencia en Partida",
     "female": "Femenino",
     "male": "Masculino",
     "monster": "Monstruo / Primigenio"
@@ -175,62 +176,77 @@ export default {
     "smash": "Smash",
     "pass": "Pass",
     "smashRate": "Tasa",
-    "bgm": "BGM",
+    "bgm": "Música",
     "archetype": "Arquetipo",
     "hallOfFame": "Salón de la Fama",
     "howToPlay": "Cómo Jugar",
-    "shuffle": "Barajar"
+    "shuffle": "Mezclar"
   },
+  "occultDossier": "EXPEDIENTE OCULTO",
+  "percentSign": "%",
+  "percentClose": "%)",
+  "pipeSeparator": "|",
+  "loadingRosterPrefix": "Cargando",
+  "loadingRosterSuffix": "de la Base de Datos...",
   "howToPlayModal": {
-    "title": "Cómo Jugar Smash or Pass",
-    "swipeTitle": "Deslizar y Votar Cartas",
-    "swipeDesc": "Desliza la carta a la Derecha para Smash 💋 o a la Izquierda para Pass ✖.",
+    "title": "Cómo Jugar a Smash or Pass",
+    "swipeTitle": "Desliza o Arrastra las Cartas",
+    "swipeDesc": "Arrastra la carta a la Derecha para Smash 💋 o a la Izquierda para Pass ✖.",
+    "swipeIcon": "👆",
     "iconsTitle": "Iconos de Acción en la Carta",
-    "iconsDesc": "Haz clic en Girar (icono superior izquierdo) para leer biografía, rasgos y memes. Haz clic en Zoom para ver el retrato en alta resolución.",
-    "keycapsTitle": "Atajos de Teclado Táctiles",
+    "iconsDesc": "Haz clic en Girar (icono superior izquierdo) para leer biografía, rasgos, banderas verdes/rojas y memes. Haz clic en Zoom para ver el retrato en alta resolución.",
+    "iconsIcon": "🎯",
+    "keycapsTitle": "Teclas Táctiles de Teclado",
+    "keycapsIcon": "⌨️",
     "atmosphereTitle": "Fondo Atmosférico y Música",
-    "atmosphereDesc": "Pasa el ratón sobre los elementos flotantes del fondo para ver citas y rasgos con brillo. ¡Activa la música BGM (tecla B) para ambientación oscura!",
+    "atmosphereDesc": "Pasa el cursor sobre los textos de fondo para inspeccionar citas e historia con efectos de brillo. ¡Activa la música ambiental (tecla B) para una inmersión completa!",
+    "atmosphereIcon": "🌌",
     "letsPlay": "¡Entendido, a Jugar!"
   },
   "personaArchetypes": {
     "eldritchDevotee": {
       "title": "El Devoto Primigenio",
-      "subtitle": "Los horrores incomprensibles y seres ancestrales son tu verdadero lenguaje del amor.",
-      "desc": "¿Por qué conformarse con el romance mortal cuando el vacío cósmico te llama? Abrazas tentáculos, colmillos y misterio cósmico."
+      "subtitle": "Los horrores incomprensibles y seres ancestrales son tu verdadero lenguaje de amor.",
+      "desc": "¿Por qué conformarse con el romance mortal cuando el vacío cósmico te llama? Aceptas los tentáculos, los colmillos y el misterio universal."
     },
     "redStainAddict": {
-      "title": "Adicto a la Mancha Roja",
-      "subtitle": "El peligro te atrae y los radios de terror hacen latir tu corazón.",
-      "desc": "Las animaciones de Memento Mori son solo abrazos agresivos para ti. Te atrae el poder, la amenaza y el carisma oscuro."
+      "title": "El Adicto a la Mancha Roja",
+      "subtitle": "El peligro es tu pasión, y el radio de terror hace latir tu corazón a mil por hora.",
+      "desc": "Las animaciones de Mori son solo abrazos intensos para ti. Te atrae el poder, la amenaza y el carisma oscuro."
     },
     "campfireSoulmate": {
-      "title": "Alma Gemela de la Fogata",
-      "subtitle": "El trabajo en equipo y la curación altruista derriten tu corazón.",
-      "desc": "Buscas compañía genuina, sonrisas sinceras y alguien que te descuelgue antes de abrir la puerta de salida."
+      "title": "El Alma Gemela de la Fogata",
+      "subtitle": "El trabajo en equipo leal y las curaciones altruistas derriten tu corazón.",
+      "desc": "Buscas compañía sincera, sonrisas genuinas y alguien que te descuelgue del gancho antes de abrir la puerta de salida."
     },
     "entitysParamour": {
       "title": "El Amante del Ente",
-      "subtitle": "Ves belleza y romance en casi todas las almas de la Niebla.",
-      "desc": "¿Altos estándares? Nunca los tuviste. Tu corazón es un santuario infinito para supervivientes y asesinos por igual."
+      "subtitle": "Ves belleza, encanto y romance en casi todas las almas atrapadas en la Niebla.",
+      "desc": "¿Estándares altos? Nunca los conociste. Tu corazón es un santuario infinito tanto para supervivientes como para asesinos."
     },
     "coldHeartedPragmatist": {
-      "title": "El Pragmático Frío",
-      "subtitle": "Extremadamente selectivo, inmune a encantos, enfocado solo en sobrevivir.",
-      "desc": "Muy pocos pasan tu estricta lista de verificación de citas. Exiges perfección y cero banderas rojas."
+      "title": "El Pragmático Implacable",
+      "subtitle": "Extremadamente selectivo, inmune a los encantos y enfocado únicamente en la supervivencia.",
+      "desc": "Muy pocos pasan tu estricta lista de verificación. Exiges perfección absoluta, habilidades impecables y cero banderas rojas."
     },
     "fogRomantic": {
       "title": "El Romántico de la Niebla",
-      "subtitle": "Un alma equilibrada que busca pasión y adrenalina en las pruebas.",
-      "desc": "Crees que incluso en las infinitas pruebas del Ente se puede encontrar una chispa de amor verdadero."
+      "subtitle": "Un alma equilibrada que busca pasión y adrenalina a lo largo de las partidas.",
+      "desc": "Crees que incluso dentro de los tormentos infinitos del Ente, siempre se puede encender una chispa genuina de amor."
     }
   },
   "tooltips": {
-    "mute": "Silenciar efectos (M)",
-    "unmute": "Activar efectos (M)",
-    "playBgm": "Reproducir música ambiental (B)",
-    "pauseBgm": "Pausar música ambiental (B)",
+    "mute": "Silenciar efectos de sonido (M)",
+    "unmute": "Activar efectos de sonido (M)",
+    "playBgm": "Reproducir música ambiental oscura (B)",
+    "pauseBgm": "Pausar música ambiental oscura (B)",
     "resetAllVotes": "Reiniciar todos mis votos",
-    "howToPlay": "Cómo jugar y atajos",
-    "shuffle": "Barajar candidatos restantes"
-  }
+    "howToPlay": "Cómo jugar y atajos de teclado",
+    "shuffle": "Mezclar candidatos restantes"
+  },
+  "tierFilterLabel": "Filtrar por Nivel:",
+  "left": "restantes",
+  "bgm": "Música",
+  "hallOfFame": "Salón de la Fama",
+  "howToPlay": "Cómo Jugar"
 };

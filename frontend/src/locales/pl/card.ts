@@ -1,6 +1,7 @@
+// frontend/src/locales/pl/card.ts
 export default {
-  "general": "Umiejętność Ogólna",
-  "viewDetails": "Inspekcja Perku",
-  "vaultTotal": "Wszystkie perki",
-  "ownedPerks": "Posiadane perki"
+  "general": "Umiejętność ogólna",
+  "viewDetails": "Zbadaj umiejętność",
+  "vaultTotal": "Wszystkie w Skarbcu",
+  "ownedPerks": "Posiadane umiejętności"
 };

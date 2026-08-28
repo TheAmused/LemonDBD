@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/RoleTabs.tsx
 'use client';
+// frontend/src/components/streaks/RoleTabs.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import Link from 'next/link';
@@ -8,7 +9,7 @@ import { Shield, Skull, Puzzle } from 'lucide-react';
 
 interface RoleTabsProps {
   locale: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {

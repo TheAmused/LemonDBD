@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/perks/page.tsx
 
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
@@ -42,7 +43,7 @@ function PerksContent() {
   const paramTab = searchParams ? searchParams.get('tab') : null;
   const paramRole = searchParams ? searchParams.get('role') : null;
 
-  const [dict, setDict] = useState<PerkDictionary | null>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [perks, setPerks] = useState<Perk[]>([]);
   const [allPerksForGenerator, setAllPerksForGenerator] = useState<Perk[]>([]);
   const [characterOptions, setCharacterOptions] = useState<CharacterOption[]>([]);
@@ -74,21 +75,21 @@ function PerksContent() {
   const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
-    getDictionary(locale).then((d) => setDict(d as PerkDictionary));
+    getDictionary(locale).then(setDict);
   }, [locale]);
 
   useEffect(() => {
     if (paramTab === 'generator') {
       setActiveTab('generator');
-      document.title = 'LemonDBD - Perk Randomizer';
+      document.title = dict?.app?.perkRandomizerPageTitle || 'LemonDBD - Perk Randomizer';
     } else {
       setActiveTab('vault');
       if (paramRole === 'Killer' || paramRole === 'Survivor') {
         setRole(paramRole);
       }
-      document.title = 'LemonDBD - Dead by Daylight Perks Vault';
+      document.title = dict?.app?.perksVaultPageTitle || 'LemonDBD - Dead by Daylight Perks Vault';
     }
-  }, [paramTab, paramRole]);
+  }, [paramTab, paramRole, dict]);
 
   const handleSelectCategoryFromSidebar = (selected: string) => {
     if (selected === 'generator') {
@@ -276,10 +277,11 @@ function PerksContent() {
                   </div>
                   <div>
                     <h1 className="text-2xl font-black text-slate-100 tracking-tight sm:text-3xl">
-                      Perks Vault & Codex
+                      {dict?.app?.perksVaultTitle || 'Perks Vault & Codex'}
                     </h1>
                     <p className="text-xs text-slate-400 mt-1 max-w-xl">
-                      Complete catalog of Dead by Daylight Survivor and Killer teachables, general perks, and aliases.
+                      {dict?.app?.perksVaultSubtitle ||
+                        'Complete catalog of Dead by Daylight Survivor and Killer teachables, general perks, and aliases.'}
                     </p>
                   </div>
                 </div>
@@ -405,7 +407,7 @@ function PerksContent() {
                   onClick={handleResetFilters}
                   className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/30"
                 >
-                  Reset Filters
+                  {dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters'}
                 </button>
               </section>
             ) : (
@@ -467,7 +469,7 @@ export default function PerksPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-          Loading Perks Vault...
+          {'Loading...'}
         </div>
       }
     >

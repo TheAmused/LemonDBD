@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/history/HistoryStatsDrawer.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryStatsDrawer.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryStats, HistoryMatchLog } from '@/types/historyStreak';
@@ -9,7 +10,7 @@ export interface HistoryStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: HistoryStats | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (
@@ -24,7 +25,11 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
       <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer_id}</div>
     )}
     renderMeta={(log) => (
-      <span>Killers: {log.streak_before} &rarr; {log.streak_after} &middot; Row {log.row_index + 1}</span>
+      <span>
+        {dict?.streaks?.killersColonLabel || 'Killers:'} {log.streak_before}{' '}
+        {dict?.streaks?.streakArrow || '→'} {log.streak_after} {dict?.streaks?.middotSeparator || '·'}{' '}
+        {dict?.streaks?.rowLabel || 'Row'} {log.row_index + 1}
+      </span>
     )}
   />
 );

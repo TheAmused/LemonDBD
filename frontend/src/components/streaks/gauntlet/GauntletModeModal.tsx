@@ -1,5 +1,6 @@
 // frontend/src/components/streaks/gauntlet/GauntletModeModal.tsx
 'use client';
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Swords, Lock } from 'lucide-react';
@@ -12,7 +13,7 @@ export interface GauntletModeModalProps {
   onSelectOriginal: () => void;
   role: 'killer' | 'survivor';
   currentMode?: 'original' | 'lemon';
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({

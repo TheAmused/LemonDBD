@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/sidebar/BugReportModal.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -26,7 +27,7 @@ import {
 export interface BugReportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
   t?: Record<string, string>;
 }
 
@@ -369,14 +370,14 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     </div>
                     <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                       <UserCheck className="h-3 w-3" />
-                      Verified
+                      {t.verified || 'Verified'}
                     </span>
                   </div>
                 ) : (
                   <div>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
                       <Mail className="h-3.5 w-3.5 text-amber-500" />
-                      {t.bugGuestEmailLabel || 'Email (Optional, for resolution updates)'} <span className="text-rose-500">*</span>
+                      {t.bugGuestEmailLabel || 'Email (Optional, for resolution updates)'} <span className="text-rose-500">{'*'}</span>
                     </label>
                     <input
                       type="email"
@@ -392,7 +393,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-2">
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                      {t.bugTitleLabel || 'Issue Title'} <span className="text-rose-500">*</span>
+                      {t.bugTitleLabel || 'Issue Title'} <span className="text-rose-500">{'*'}</span>
                     </label>
                     <input
                       type="text"
@@ -425,7 +426,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
                     {t.bugDescriptionLabel || 'Detailed Description'}{' '}
-                    <span className="text-rose-500">*</span>
+                    <span className="text-rose-500">{'*'}</span>
                   </label>
                   <textarea
                     required

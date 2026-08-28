@@ -1,5 +1,6 @@
-// frontend/src/app/[locale]/custom-perks/page.tsx
 'use client';
+// frontend/src/app/[locale]/custom-perks/page.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useParams } from 'next/navigation';
@@ -15,7 +16,7 @@ export default function CustomPerksPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -27,8 +28,10 @@ export default function CustomPerksPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Custom Perk Studio';
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => {
+      setDict(d);
+      document.title = d?.app?.customPerksPageTitle || 'LemonDBD - Custom Perk Studio';
+    });
   }, [locale]);
 
   useEffect(() => {
@@ -65,10 +68,11 @@ export default function CustomPerksPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono">
-        Loading...
+        {'Loading...'}
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">

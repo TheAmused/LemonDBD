@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 'use client';
+// frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';
@@ -10,7 +11,7 @@ export interface GauntletRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
   role: 'killer' | 'survivor';
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const SURVIVOR_TIERS = [
@@ -65,28 +66,28 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
       <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
         <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
           <Trophy className="w-4 h-4" />
-          Gauntlet Concept
+          {dict?.streaks?.gauntletConcept || 'Gauntlet Concept'}
         </h3>
         <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          Beat every {role} you own, one trial at a time. The longer your streak runs, the fewer perks
-          you get to bring, until the final tier has you winning bare.
+          {dict?.streaks?.beatEveryPrefix || 'Beat every'} {role}{' '}
+          {dict?.streaks?.gauntletConceptBody ||
+            'you own, one trial at a time. The longer your streak runs, the fewer perks you get to bring, until the final tier has you winning bare.'}
         </p>
         {role === 'killer' && (
           <>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              You only ever run <strong>{dict?.streaks?.yourOwnTeachablePerks || 'your own teachable perks'}</strong>, never anyone else&apos;s. You
-              start with all 3, and lose one at every tier. Once you are below 3, you choose which ones
-              to keep.
+              {dict?.streaks?.youOnlyEverRun || 'You only ever run'} <strong>{dict?.streaks?.yourOwnTeachablePerks || 'your own teachable perks'}</strong>
+              {dict?.streaks?.neverAnyoneElseNote ||
+                ", never anyone else's. You start with all 3, and lose one at every tier. Once you are below 3, you choose which ones to keep."}
             </p>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              A trial only counts as won on <strong>{dict?.streaks?.threeKillsOrMore || '3 kills or more'}</strong>. Anything less is a loss.
+              {dict?.streaks?.trialOnlyCountsWinOn || 'A trial only counts as won on'} <strong>{dict?.streaks?.threeKillsOrMore || '3 kills or more'}</strong>. {dict?.streaks?.anythingLessLoss || 'Anything less is a loss.'}
             </p>
           </>
         )}
         {role === 'survivor' && (
           <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-            A trial only counts as won if you <strong>{dict?.streaks?.escape || 'escape'}</strong>, through the exit gates or the
-            hatch. Anything else is a loss.
+            {dict?.streaks?.trialOnlyCountsWinIf || 'A trial only counts as won if you'} <strong>{dict?.streaks?.escape || 'escape'}</strong>{dict?.streaks?.exitGatesOrHatch || ', through the exit gates or the hatch. Anything else is a loss.'}
           </p>
         )}
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
@@ -95,26 +96,28 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             : 'The roster stops at the 52 survivors, up through Kwon Tae-young.'}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          Every 10 wins banks a <strong>{dict?.streaks?.checkpoint || 'checkpoint'}</strong>. Lose after that and you only fall back to
-          your last checkpoint, not all the way to zero, though every {role} cleared since then goes
-          back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress
-          you keep happen on the very same win.
+          {dict?.streaks?.every10WinsBanks || 'Every 10 wins banks a'} <strong>{dict?.streaks?.checkpoint || 'checkpoint'}</strong>
+          {dict?.streaks?.checkpointFallbackNote ||
+            '. Lose after that and you only fall back to your last checkpoint, not all the way to zero, though every'}{' '}
+          {role}{' '}
+          {dict?.streaks?.checkpointPoolNote ||
+            'cleared since then goes back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress you keep happen on the very same win.'}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-          The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here.
+          {dict?.streaks?.pickTheseInGame || 'The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here.'}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          The roster is locked in for the run you're on. New characters you unlock mid-run won't join until you reset, lose back to zero, or complete it.
+          {dict?.streaks?.rosterLockedNotice || "The roster is locked in for the run you're on. New characters you unlock mid-run won't join until you reset, lose back to zero, or complete it."}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          An in-progress run untouched for 90 days automatically counts as a loss.
+          {dict?.streaks?.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.'}
         </p>
       </div>
 
       <div>
         <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
           <Flame className="w-4 h-4 text-amber-500" />
-          Progressive Tier Restrictions
+          {dict?.streaks?.progressiveTierRestrictions || 'Progressive Tier Restrictions'}
         </h3>
         <div className="grid grid-cols-1 gap-2.5">
           {tiers.map((tier) => (
@@ -124,7 +127,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             >
               <div className="flex items-center gap-3">
                 <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
-                  Tier {tier.level}: {tier.name}
+                  {dict?.streaks?.tierLabel || 'Tier'} {tier.level}: {tier.name}
                 </span>
                 <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
                   ({tier.streakRange})
@@ -151,7 +154,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
         <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
           <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-            Exceptions & Clarifications
+            {dict?.streaks?.exceptionsAndClarifications || 'Exceptions & Clarifications'}
           </h3>
           <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             {KILLER_EXCEPTIONS.map((item) => (
@@ -166,7 +169,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
           <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
             <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-              Exceptions
+              {dict?.streaks?.exceptions || 'Exceptions'}
             </h3>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               {SURVIVOR_EXCEPTIONS.map((item) => (
@@ -180,7 +183,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
           <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 space-y-3 shadow-sm">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-              Clarifications
+              {dict?.streaks?.clarifications || 'Clarifications'}
             </h3>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               {SURVIVOR_CLARIFICATIONS.map((item) => (

@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/gauntlet/GauntletHeader.tsx
 'use client';
+// frontend/src/components/streaks/gauntlet/GauntletHeader.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';
@@ -15,7 +16,7 @@ export interface GauntletHeaderProps {
   onOpenStats: () => void;
   onOpenRules: () => void;
   onOpenReset: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
@@ -44,17 +45,16 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             ) : (
               <Skull className="w-6 h-6 text-red-500" />
             )}
-            <span className="capitalize">{role}</span> Gauntlet
+            <span className="capitalize">{role}</span> {dict?.streaks?.gauntlet || 'Gauntlet'}
           </h1>
         </div>
-
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
           <FreezeBadge frozen={poolFrozen} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-amber-500/30 text-amber-600 dark:text-amber-400 shadow-sm">
             <Flame className="w-5 h-5 text-amber-500 fill-amber-500/20 animate-pulse" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Current
+                {dict?.streaks?.current || 'Current'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {currentStreak}
@@ -66,7 +66,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             <Trophy className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Best
+                {dict?.streaks?.best || 'Best'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {bestStreak}
@@ -78,7 +78,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             <Shield className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
-                Checkpoint
+                {dict?.streaks?.checkpointHeader || 'Checkpoint'}
               </span>
               <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
                 {lastCheckpointStreak}

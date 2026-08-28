@@ -42,7 +42,7 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
             </div>
             <div>
               <span className="text-[11px] font-mono font-black uppercase tracking-wider text-amber-400">
-                High-Res 3D Model View
+                {t.highRes3dModelView || 'High-Res 3D Model View'}
               </span>
               <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
                 {character.name}
@@ -68,7 +68,7 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
             <div className="absolute bottom-2 left-2 right-2 p-2 rounded-xl bg-slate-950/80 backdrop-blur-md border border-amber-500/30 text-[10px] font-mono text-amber-400">
-              Interactive 3D Mesh Engine (WIP)
+              {t.interactive3dMeshEngineWip || 'Interactive 3D Mesh Engine (WIP)'}
             </div>
           </div>
 

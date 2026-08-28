@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/chaos/ChaosProgressBar.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosProgressBar.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 
@@ -8,7 +9,7 @@ export interface ChaosProgressBarProps {
   lastCheckpointStreak: number;
   checkpointInterval: number;
   totalKillers: number;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ChaosProgressBar: React.FC<ChaosProgressBarProps> = ({
@@ -37,7 +38,7 @@ export const ChaosProgressBar: React.FC<ChaosProgressBarProps> = ({
           {dict?.streaks?.runProgress || 'Run progress'}
         </span>
         <span className="text-slate-500 dark:text-slate-400 font-mono">
-          {currentStreak} / {totalKillers} killers cleared
+          {currentStreak} / {totalKillers} {dict?.streaks?.killersCleared || 'killers cleared'}
         </span>
       </div>
       <div className="relative h-3 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">

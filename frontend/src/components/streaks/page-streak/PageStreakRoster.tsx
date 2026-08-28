@@ -1,5 +1,6 @@
-// frontend/src/components/streaks/page-streak/PageStreakRoster.tsx
 'use client';
+// frontend/src/components/streaks/page-streak/PageStreakRoster.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { fetchRoster } from '@/services/pageStreakApi';
@@ -9,7 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 
 interface PageStreakRosterProps {
   locale: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale, dict }) => {
@@ -41,7 +42,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale, dict
     <div>
       <div className="mb-5 flex flex-wrap items-center gap-3">
         <span className="font-mono text-[11px] text-slate-500">
-          {roster.length} killers you own · {pageCount} pages
+          {roster.length} {dict?.streaks?.killersYouOwn || 'killers you own'} {dict?.streaks?.middotSeparator || '·'} {pageCount} {dict?.streaks?.pagesCount || 'pages'}
         </span>
       </div>
 

@@ -1,5 +1,6 @@
-// frontend/src/components/smash-or-pass/RomancePersonaModal.tsx
 'use client';
+// frontend/src/components/smash-or-pass/RomancePersonaModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useMemo, useState } from 'react';
 import {
@@ -25,7 +26,7 @@ interface RomancePersonaModalProps {
   votes: VoteRecord[];
   onResetAll?: () => void;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
@@ -39,7 +40,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   const [copied, setCopied] = useState(false);
 
   const persona = useMemo(() => {
-    const archetypes = dict?.smashOrPass?.personaArchetypes || {};
+    const archetypes: any = dict?.smashOrPass?.personaArchetypes || {};
 
     if (votes.length === 0) {
       return {
@@ -191,10 +192,10 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             <div className="space-y-1.5">
               <div className="flex justify-between text-[11px] font-bold">
                 <span className="flex items-center gap-1 text-emerald-400">
-                  <Shield className="h-3.5 w-3.5" /> {survivorsLabel} ({persona.survivorAffinity}%)
+                  <Shield className="h-3.5 w-3.5" /> {survivorsLabel} ({persona.survivorAffinity}{dict?.smashOrPass?.percentClose || '%)'}
                 </span>
                 <span className="flex items-center gap-1 text-rose-400">
-                  <Skull className="h-3.5 w-3.5" /> {killersLabel} ({persona.killerAffinity}%)
+                  <Skull className="h-3.5 w-3.5" /> {killersLabel} ({persona.killerAffinity}{dict?.smashOrPass?.percentClose || '%)'}
                 </span>
               </div>
               <div className="h-2.5 w-full bg-zinc-800 rounded-full overflow-hidden flex">

@@ -187,6 +187,8 @@ CREATE TABLE IF NOT EXISTS map_realms (
     map_id TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
     realm TEXT NOT NULL,
+    source TEXT NOT NULL DEFAULT 'hens333',
+    source_label TEXT NOT NULL DEFAULT 'Hens333 12-Clock Callouts',
     layout_type TEXT,
     jungle_gyms_count INTEGER DEFAULT 0,
     totem_spawns_count INTEGER DEFAULT 5,
@@ -359,16 +361,29 @@ CREATE TABLE IF NOT EXISTS translations (
 
 
 def init_raw_sqlite_schema(conn: sqlite3.Connection) -> None:
-    """Executes schema DDL commands for fallback SQLite databases."""
+    """Executes schema DDL commands for fallback SQLite databases and migrates missing columns."""
     try:
         cursor = conn.cursor()
         cursor.execute("PRAGMA table_info(map_realms);")
         cols = [row[1] for row in cursor.fetchall()]
-        if cols and "map_id" not in cols:
-            cursor.execute("DROP TABLE IF EXISTS map_realms;")
-            cursor.execute("DROP TABLE IF EXISTS map_tiles;")
-            cursor.execute("DROP TABLE IF EXISTS map_objectives;")
-            conn.commit()
+        if cols:
+            if "map_id" not in cols:
+                cursor.execute("DROP TABLE IF EXISTS map_realms;")
+                cursor.execute("DROP TABLE IF EXISTS map_tiles;")
+                cursor.execute("DROP TABLE IF EXISTS map_objectives;")
+                conn.commit()
+            else:
+                if "source" not in cols:
+                    try:
+                        cursor.execute("ALTER TABLE map_realms ADD COLUMN source TEXT NOT NULL DEFAULT 'hens333';")
+                    except Exception:
+                        pass
+                if "source_label" not in cols:
+                    try:
+                        cursor.execute("ALTER TABLE map_realms ADD COLUMN source_label TEXT NOT NULL DEFAULT 'Hens333 12-Clock Callouts';")
+                    except Exception:
+                        pass
+                conn.commit()
 
         cursor.executescript(SQLITE_FALLBACK_DDL)
         conn.commit()

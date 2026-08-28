@@ -1,5 +1,6 @@
-// frontend/src/app/[locale]/draft/page.tsx
 'use client';
+// frontend/src/app/[locale]/draft/page.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
@@ -10,7 +11,7 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
 
-function DraftContent({ locale, dict }: { locale: Locale; dict: any }) {
+function DraftContent({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const searchParams = useSearchParams();
   const initialRoom = searchParams?.get('room') || '';
 
@@ -22,7 +23,7 @@ export default function DraftPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -34,8 +35,10 @@ export default function DraftPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
-    document.title = 'LemonDBD - Draft Mode';
-    getDictionary(locale).then(setDict);
+    getDictionary(locale).then((d) => {
+      setDict(d);
+      document.title = d?.app?.draftPageTitle || 'LemonDBD - Draft Mode';
+    });
   }, [locale]);
 
   useEffect(() => {
@@ -72,10 +75,11 @@ export default function DraftPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        Loading...
+        {'Loading Draft Room...'}
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">

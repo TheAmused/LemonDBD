@@ -22,5 +22,9 @@ export default {
   "pickAction": "Pick Perk",
   "selectPerkToBan": "Select a Perk to Ban",
   "selectPerkToPick": "Select a Perk to Pick",
-  "waitingForOpponent": "Waiting for opponent's action..."
+  "waitingForOpponent": "Waiting for opponent's action...",
+  "plusPrefix": "+",
+  "maxPerSideSuffix": "(Max 3 Per Side)",
+  "loadingDraft": "Loading Draft Room...",
+  "noMatchingPerks": "No matching perks found."
 };

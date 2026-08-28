@@ -1,5 +1,6 @@
-// frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
 'use client';
+// frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useMemo } from 'react';
 import {
@@ -28,7 +29,7 @@ export interface SmashLeaderboardModalProps {
   editionName?: string;
   isAuthenticated?: boolean;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 type TierKey = 'godTier' | 'fatalAttraction' | 'friendzone' | 'eldritchVoid';
@@ -44,7 +45,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   locale = 'en',
   dict,
 }) => {
-  const t = dict?.smashOrPass || {};
+  const t: any = dict?.smashOrPass || {};
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'monster_other'>('all');
@@ -323,7 +324,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           <div>
             <div className="flex items-center gap-1 justify-end font-black font-mono text-sm text-[#ff0055]">
               <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
-              <span>{smashRate}%</span>
+              <span>{smashRate}{dict?.smashOrPass?.percentSign || '%'}</span>
             </div>
             <span className="text-[10px] font-mono text-zinc-400">
               {totalVotes.toLocaleString()} {votesWord}
@@ -376,7 +377,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={dict?.smashOrPass?.close || 'Close'}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />

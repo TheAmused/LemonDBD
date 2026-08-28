@@ -1,7 +1,8 @@
+// frontend/src/locales/de/pagination.ts
 export default {
-  "showing": "Zeige",
+  "showing": "Angezeigt werden",
   "of": "von",
-  "results": "Perks",
+  "results": "Talenten",
   "perPage": "Pro Seite",
   "page": "Seite",
   "previous": "Vorherige Seite",
@@ -9,5 +10,6 @@ export default {
   "firstPage": "Erste Seite",
   "lastPage": "Letzte Seite",
   "goTo": "Gehe zu",
-  "navAriaLabel": "Seitennavigation"
+  "navAriaLabel": "Seitennavigation",
+  "to": "bis"
 };

@@ -1,5 +1,6 @@
-// frontend/src/app/[locale]/reset-password/page.tsx
 'use client';
+// frontend/src/app/[locale]/reset-password/page.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { Suspense, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
@@ -25,7 +26,7 @@ function ResetPasswordContent() {
   const token = searchParams.get('token') || '';
   const { resetPassword } = useAuth();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +34,7 @@ function ResetPasswordContent() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    document.title = 'LemonDBD - Reset Password';
+    document.title = dict?.app?.resetPasswordPageTitle || 'LemonDBD - Reset Password';
     getDictionary(locale).then(setDict);
   }, [locale]);
 

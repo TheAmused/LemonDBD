@@ -100,7 +100,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm sm:text-base font-bold text-slate-100">{perk.name}</p>
             <p className="truncate text-xs text-slate-400">
-              {isGeneral ? generalLabel : perk.character} · {roleLabel}
+              {isGeneral ? generalLabel : perk.character} {'·'} {roleLabel}
             </p>
           </div>
 

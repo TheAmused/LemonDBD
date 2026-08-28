@@ -36,6 +36,12 @@ class Config:
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     JWT_ACCESS_TOKEN_EXPIRES: timedelta = timedelta(hours=int(os.getenv("JWT_EXPIRATION_HOURS", "24")))
 
+    # Rate Limiting Configuration
+    RATELIMIT_ENABLED: bool = os.getenv("RATELIMIT_ENABLED", "true").lower() in ("true", "1", "yes")
+    RATELIMIT_STORAGE_URI: str = os.getenv("RATELIMIT_STORAGE_URI", "memory://")
+    RATELIMIT_STRATEGY: str = os.getenv("RATELIMIT_STRATEGY", "fixed-window")
+    RATELIMIT_DEFAULT: str = os.getenv("RATELIMIT_DEFAULT", "200 per minute")
+
     raw_db_url = os.getenv(
         "DATABASE_URL",
         "postgresql+psycopg://dbd_user:dbd_pass@localhost:5432/dbd_db",

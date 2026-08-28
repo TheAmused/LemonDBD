@@ -1,14 +1,14 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosPerkPoolModal.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { X, Layers, CheckCircle2, Circle, Sparkles } from 'lucide-react';
-import { Perk } from '@/types/gauntletStreak';
+import type { Dictionary } from '@/locales/types';
+import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 
 const PerkTile: React.FC<{ perk: Perk }> = ({ perk }) => {
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<boolean>(false);
   const src = perkIconFor(perk);
   return (
     <div className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
@@ -21,7 +21,7 @@ const PerkTile: React.FC<{ perk: Perk }> = ({ perk }) => {
             onError={() => setFailed(true)}
           />
         ) : (
-          <Sparkles className="w-6 h-6 text-slate-400" />
+          <Sparkles className="w-6 h-6 text-slate-400" aria-hidden="true" />
         )}
       </div>
       <span className="text-[11px] font-medium text-center text-slate-700 dark:text-slate-200 leading-tight line-clamp-2">
@@ -66,8 +66,11 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="chaos-perk-pool-title"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 dark:bg-slate-950/80 backdrop-blur-md cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 dark:bg-slate-950/80 backdrop-blur-md cursor-pointer select-none"
     >
       <div
         className="relative w-full max-w-6xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] cursor-default"
@@ -75,11 +78,11 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
       >
         <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-violet-500/10 border border-violet-500/20 rounded-xl text-violet-600 dark:text-violet-400">
+            <div className="p-2.5 bg-violet-500/10 border border-violet-500/20 rounded-xl text-violet-600 dark:text-violet-400" aria-hidden="true">
               <Layers className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
+              <h2 id="chaos-perk-pool-title" className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
                 {dict?.streaks?.perkPool || 'Perk Pool'}
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -90,15 +93,20 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label={dict?.modal?.close || 'Close perk pool modal'}
             className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
-        <div className="flex items-center gap-2 px-5 pt-4">
+        <div className="flex items-center gap-2 px-5 pt-4" role="tablist" aria-label={dict?.streaks?.perkPoolTabs || 'Perk pool view tabs'}>
           <button
+            type="button"
+            role="tab"
+            aria-selected={tab === 'used'}
             onClick={() => setTab('used')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${
               tab === 'used'
@@ -106,10 +114,13 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
                 : 'bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-700 dark:hover:text-slate-200'
             }`}
           >
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            {dict?.streaks?.usedTab || 'Used'} ({used.length})
+            <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{dict?.streaks?.usedTab || 'Used'} ({used.length})</span>
           </button>
           <button
+            type="button"
+            role="tab"
+            aria-selected={tab === 'remaining'}
             onClick={() => setTab('remaining')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${
               tab === 'remaining'
@@ -117,8 +128,8 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
                 : 'bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-700 dark:hover:text-slate-200'
             }`}
           >
-            <Circle className="w-3.5 h-3.5" />
-            {dict?.streaks?.remainingTab || 'Remaining'} ({remaining.length})
+            <Circle className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{dict?.streaks?.remainingTab || 'Remaining'} ({remaining.length})</span>
           </button>
         </div>
 
@@ -126,11 +137,11 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
           {shown.length === 0 ? (
             <p className="text-xs text-slate-400 dark:text-slate-500">
               {tab === 'used'
-                ? 'No perks drawn yet this cycle.'
-                : 'The pool is empty; the next draw starts a fresh cycle.'}
+                ? dict?.streaks?.noPerksDrawnYet || 'No perks drawn yet this cycle.'
+                : dict?.streaks?.perkPoolEmptyFreshCycle || 'The pool is empty; the next draw starts a fresh cycle.'}
             </p>
           ) : (
-            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2" role="list">
               {shown.map((perk) => (
                 <PerkTile key={perk.id ?? perk.name} perk={perk} />
               ))}
@@ -141,3 +152,4 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
     </div>
   );
 };
+

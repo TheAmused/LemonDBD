@@ -4,6 +4,12 @@ services:
     image: postgres:alpine
     container_name: dbd_db
     restart: unless-stopped
+    # Bumped from the postgres:alpine default (100) -- the backend's pool
+    # (pool_size + max_overflow, per gunicorn worker) plus umami/pgadmin can
+    # otherwise exhaust connections under the live/frontend test suite's
+    # concurrent load, causing Postgres to drop connections mid-query
+    # ("server closed the connection unexpectedly") and 500s on the backend.
+    command: postgres -c max_connections=200
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
@@ -37,6 +43,13 @@ services:
       - ./backend/app/static:/app/app/static
     environment:
       - FLASK_ENV=${FLASK_ENV:-production}
+      # More headroom than gunicorn.conf.py's production default (2/4) --
+      # the live/frontend test suite throws a lot of concurrent requests at
+      # this stack locally, which otherwise queues through too few worker
+      # slots and can starve the DB pool. Override with real values in your
+      # environment/.env for an actual production deployment.
+      - GUNICORN_WORKERS=${GUNICORN_WORKERS:-4}
+      - GUNICORN_THREADS=${GUNICORN_THREADS:-8}
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
       - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
       - CORS_ORIGINS=${CORS_ORIGINS:-*}

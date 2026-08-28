@@ -17,4 +17,3 @@ __all__ = [
     "evaluate_tactical_badges",
     "evaluate_build_synergy",
 ]
-

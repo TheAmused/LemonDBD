@@ -4,18 +4,17 @@ import logging
 import re
 import unicodedata
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
-
+from typing import Any
 from sqlalchemy import select
+
 from app.core.extensions import db
 from app.models.character import Character
-from app.models.equipment import Addon, Item
+from app.models.equipment import Addon, Item, Offering
 from app.models.perk import Perk
-from app.scrapers.utils import normalize_name_key
 
 logger = logging.getLogger(__name__)
 
-SUPPORTED_LOCALES = ["en", "pl", "de", "es", "ja"]
+SUPPORTED_LOCALES: list[str] = ["en", "pl", "de", "es", "ja"]
 
 
 def simplify_lookup_key(s: str) -> str:
@@ -23,7 +22,6 @@ def simplify_lookup_key(s: str) -> str:
     if not s:
         return ""
     s = s.lower().replace("\xa0", " ")
-    # Unicode NFKD normalization to strip accents (e.g. Déjà Vu -> Deja Vu)
     s = unicodedata.normalize("NFKD", s).encode("ASCII", "ignore").decode("utf-8")
     s = re.sub(r"\(the [^)]+\)", "", s)
     s = re.sub(r"\([^)]+\)", "", s)
@@ -88,12 +86,11 @@ def simplify_lookup_key(s: str) -> str:
 
 class TranslationService:
     """
-    High-performance translation service that synchronizes official Dead by Daylight
-    multi-language translations (EN, PL, DE, ES, JA) from squashed, stripped JSON files
-    into PostgreSQL JSONB columns.
+    High-performance translation service that synchronizes official multi-language
+    translations (EN, PL, DE, ES, JA) into PostgreSQL JSONB columns.
     """
 
-    def __init__(self, translations_dir: Optional[Path] = None):
+    def __init__(self, translations_dir: Path | None = None):
         if translations_dir is None:
             base_dir = Path(__file__).resolve().parent.parent.parent
             candidates = [
@@ -114,10 +111,9 @@ class TranslationService:
         self.translations_dir = Path(translations_dir)
         self.translations_file = self.translations_dir / "translations.json"
 
-    def load_squashed_translations(self) -> Dict[str, Any]:
+    def load_squashed_translations(self) -> dict[str, Any]:
         """Load the squashed translations JSON bundle."""
         if not self.translations_file.exists():
-            # Try alternate candidate paths
             for alt in [
                 Path("app/translations/translations.json"),
                 Path("/app/app/translations/translations.json"),
@@ -136,11 +132,11 @@ class TranslationService:
             return json.load(f)
 
     def sync_all_locales_to_db(
-        self, locales: Optional[List[str]] = None
-    ) -> Dict[str, Any]:
+        self, locales: list[str] | None = None
+    ) -> dict[str, Any]:
         """
-        Synchronizes all entity translations (Characters, Perks, Items, Addons)
-        from squashed translations bundle directly into PostgreSQL.
+        Synchronizes all entity translations (Characters, Perks, Items, Addons, Offerings)
+        into PostgreSQL.
         """
         data = self.load_squashed_translations()
         if not data:
@@ -162,12 +158,10 @@ class TranslationService:
         # 1. Sync Characters
         char_name_map = {simplify_lookup_key(c.name): c for c in db_characters}
         char_prefix_map = {c.code_prefix.upper(): c for c in db_characters if c.code_prefix}
-
         chapters_data = data.get("chapters", {})
 
         for c_key, c_val in chars_data.items():
             trans = c_val.get("translations", {})
-            # Prioritize canonical name matching to prevent S18/S19 Stranger Things inversion
             matched = (
                 char_name_map.get(simplify_lookup_key(c_val.get("name", "")))
                 or char_name_map.get(simplify_lookup_key(c_key))
@@ -282,10 +276,7 @@ class TranslationService:
                     matched.translations = curr
 
         # 5. Sync Offerings
-        from app.models.equipment import Offering
         db_offerings = list(db.session.scalars(select(Offering)).all())
-
-        # Deduplicate offerings in database if multiple variants exist (e.g. Moldy vs Mouldy, I.D. vs ID, curly quotes)
         seen_keys = {}
         for o in list(db_offerings):
             key = simplify_lookup_key(o.name)
@@ -344,11 +335,7 @@ class TranslationService:
                             curr[l] = trans[l]
                     matched.translations = curr
 
-        # ── Post-sync cleanup ──────────────────────────────────────────────────
-        # These run on every container start, so anyone recreating the Docker
-        # environment gets clean data without manual intervention.
-
-        # 6a. Delete decommissioned addons (text left over from old scraper runs)
+        # 6. Post-sync cleanup
         DECOM_PHRASES = [
             "THIS ADD-ON WAS DECOMMISSIONED",
             "THIS ADD-ON IS UNUSED",
@@ -365,8 +352,6 @@ class TranslationService:
             if any(p in desc.upper() for p in DECOM_PHRASES) or "(Decommissioned)" in name:
                 db.session.delete(item)
 
-        # 6b. Fog Vials category must contain ONLY the 5 canonical addons.
-        # Any other addon that somehow got associated_target='Fog Vials' is garbage.
         CANONICAL_FOG_VIAL_ADDONS = {
             "volcanic stone",
             "reactive compound",
@@ -381,7 +366,6 @@ class TranslationService:
                 logger.info(f"Removing stray Fog Vial addon: {addon.name!r}")
                 db.session.delete(addon)
 
-        # 6c. Clean up mobile-only offerings (not part of PC Dead by Daylight)
         MOBILE_OFFERING_NAMES = {
             "milk tea", "burdock tea", "black tea", "lotus leaf tea",
             "blank postcard", "crumpled postcard", "stamped postcard", "lovers' postcard",
@@ -392,7 +376,6 @@ class TranslationService:
             if (off.name or "").strip().lower() in MOBILE_OFFERING_NAMES:
                 logger.info(f"Removing mobile-only offering: {off.name!r}")
                 db.session.delete(off)
-        # ── end cleanup ────────────────────────────────────────────────────────
 
         db.session.commit()
 
@@ -407,8 +390,7 @@ class TranslationService:
         logger.info(f"Successfully synced squashed translations: {stats}")
         return stats
 
-
-    def export_squashed_json(self, target_path: Optional[Path] = None) -> Path:
+    def export_squashed_json(self, target_path: Path | None = None) -> Path:
         """Exports currently loaded DB translations to squashed JSON."""
         out_file = target_path or self.translations_file
         db_characters = db.session.scalars(select(Character)).all()

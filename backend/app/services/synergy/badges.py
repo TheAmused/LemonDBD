@@ -1,7 +1,5 @@
 # backend/app/services/synergy/badges.py
-from typing import Dict, List, Set
-
-BADGE_CATEGORIES: Dict[str, Set[str]] = {
+BADGE_CATEGORIES: dict[str, set[str]] = {
     "Gen Pressure": {
         "scourge hook: pain resonance",
         "pop goes the weasel",
@@ -93,12 +91,11 @@ BADGE_CATEGORIES: Dict[str, Set[str]] = {
 }
 
 
-def evaluate_tactical_badges(perk_lowers: Set[str]) -> List[str]:
+def evaluate_tactical_badges(perk_lowers: set[str]) -> list[str]:
     """Identify build playstyle badges based on perk combinations."""
-    tactical_badges: List[str] = []
+    tactical_badges: list[str] = []
     for badge_name, badge_perks in BADGE_CATEGORIES.items():
         matches = perk_lowers.intersection(badge_perks)
         if len(matches) >= 2:
             tactical_badges.append(badge_name)
     return tactical_badges
-

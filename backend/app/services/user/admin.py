@@ -1,6 +1,6 @@
 # backend/app/services/user/admin.py
 import logging
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 
 
 def list_all_users_paginated(
-    search: Optional[str] = None,
-    role: Optional[str] = None,
+    search: str | None = None,
+    role: str | None = None,
     page: int = 1,
     per_page: int = 20,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Retrieve paginated user records annotated with owned count metrics."""
     stmt = select(User)
 
@@ -75,9 +75,9 @@ def list_all_users_paginated(
 
 def admin_modify_user(
     user_id: int,
-    role: Optional[str] = None,
-    is_active: Optional[bool] = None,
-) -> Tuple[Optional[User], Optional[str]]:
+    role: str | None = None,
+    is_active: bool | None = None,
+) -> tuple[User | None, str | None]:
     """Administrative update for role assignment and active account status."""
     user = db.session.get(User, user_id)
     if not user:
@@ -104,7 +104,7 @@ def admin_remove_user(user_id: int) -> bool:
     return True
 
 
-def fetch_admin_metrics() -> Dict[str, Any]:
+def fetch_admin_metrics() -> dict[str, Any]:
     """Retrieve system totals for users, characters, and perks."""
     total_users = db.session.scalar(select(func.count(User.id))) or 0
     active_users = (
@@ -149,4 +149,3 @@ def seed_default_admin_if_empty() -> None:
         seed_default_users()
     except Exception as e:
         logger.debug(f"Error executing user seeder: {e}")
-

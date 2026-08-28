@@ -50,4 +50,3 @@ __all__ = [
     "fetch_admin_metrics",
     "seed_default_admin_if_empty",
 ]
-

@@ -5,7 +5,7 @@ from app.models import GeneratorSetting, GuesserStat, PerkRule
 
 logger = logging.getLogger(__name__)
 
-GUESSER_TYPES = [
+GUESSER_TYPES: list[str] = [
     "character",
     "perk_description",
     "perk_name_to_icon",
@@ -17,7 +17,6 @@ GUESSER_TYPES = [
 def seed_default_configs(db) -> None:
     """Seeds baseline settings and rules into the SQLAlchemy session if not already present."""
     try:
-        # 1. Default Perk Rule
         default_rule = db.session.get(PerkRule, 1)
         if not default_rule:
             db.session.add(
@@ -32,7 +31,6 @@ def seed_default_configs(db) -> None:
                 )
             )
 
-        # 2. Generator settings
         gen_setting = db.session.get(GeneratorSetting, 1)
         if not gen_setting:
             db.session.add(
@@ -44,7 +42,6 @@ def seed_default_configs(db) -> None:
                 )
             )
 
-        # 3. Guesser statistics
         for g_type in GUESSER_TYPES:
             stat = db.session.scalars(
                 select(GuesserStat).where(GuesserStat.guesser_type == g_type)
@@ -56,4 +53,3 @@ def seed_default_configs(db) -> None:
     except Exception as e:
         db.session.rollback()
         logger.warning(f"Error seeding default settings in SQLAlchemy: {e}")
-

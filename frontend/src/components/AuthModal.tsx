@@ -92,7 +92,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         if (res.success) {
           setNotice({ type: 'forgot-sent' });
         } else {
-          setError(res.error || 'Failed to request password reset');
+          setError(res.error || dict?.user?.failedToRequestPasswordReset || 'Failed to request password reset');
         }
       } else if (mode === 'login') {
         const res = await login(username, password, {
@@ -106,7 +106,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             onClose();
           }
         } else {
-          setError(res.error || 'Invalid credentials');
+          setError(res.error || dict?.user?.invalidCredentials || 'Invalid credentials');
         }
       } else {
         const res = await register(username, email, password, {
@@ -116,11 +116,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         if (res.success) {
           setNotice({ type: 'register-success', email: res.user?.email || email });
         } else {
-          setError(res.error || 'Registration failed');
+          setError(res.error || dict?.user?.registrationFailed || 'Registration failed');
         }
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
+      const message = err instanceof Error ? err.message : dict?.user?.unexpectedError || 'An unexpected error occurred.';
       setError(message);
     } finally {
       setLoading(false);
@@ -169,26 +169,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             className="text-xl font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono"
           >
             {notice?.type === 'verify-reminder' || notice?.type === 'register-success'
-              ? 'Verify Your Email'
+              ? dict?.user?.authVerifyEmailTitle || 'Verify Your Email'
               : notice?.type === 'forgot-sent'
-                ? 'Reset Your Password'
+                ? dict?.user?.resetPassword || 'Reset Your Password'
                 : mode === 'login'
-                  ? 'Sign In to LemonDBD'
+                  ? dict?.user?.authSignInTitle || 'Sign In to LemonDBD'
                   : mode === 'register'
-                    ? 'Create LemonDBD Account'
-                    : 'Reset Your Password'}
+                    ? dict?.user?.authRegisterTitle || 'Create LemonDBD Account'
+                    : dict?.user?.resetPassword || 'Reset Your Password'}
           </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-            {notice?.type === 'verify-reminder' || notice?.type === 'register-success'
-              ? "Check your inbox for the code we sent you."
-              : notice?.type === 'forgot-sent'
-                ? "Enter your email and we'll send you a reset link."
-                : mode === 'login'
-                  ? 'Access your owned characters, perk unlocks, and personal builds.'
-                  : mode === 'register'
-                    ? 'Join the community to track streaks, teachables, and game stats.'
-                    : "Enter your email and we'll send you a reset link."}
-          </p>
+          {(notice?.type === 'verify-reminder' ||
+            notice?.type === 'register-success' ||
+            notice?.type === 'forgot-sent' ||
+            mode === 'forgot') && (
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              {notice?.type === 'verify-reminder' || notice?.type === 'register-success'
+                ? dict?.user?.authVerifySubtitle || 'Check your inbox for the code we sent you.'
+                : dict?.user?.authResetSubtitle || "Enter your email and we'll send you a reset link."}
+            </p>
+          )}
         </div>
 
         {error && (
@@ -219,7 +218,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <EmailVerificationForm
               email={notice.email}
               onVerified={onClose}
-              submitLabel={notice.type === 'register-success' ? 'Verify & Continue' : 'Verify'}
+              submitLabel={
+                notice.type === 'register-success'
+                  ? dict?.user?.verifyAndContinue || 'Verify & Continue'
+                  : dict?.user?.verifyEmailAction || 'Verify'
+              }
+              dict={dict}
             />
           </div>
         )}

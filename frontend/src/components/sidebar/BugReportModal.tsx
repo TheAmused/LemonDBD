@@ -339,9 +339,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     <span>{t.bugReportModalTitle || 'Report an Issue / Bug'}</span>
                     <Flame className="h-4 w-4 text-rose-500" />
                   </h2>
-                  <p className="text-xs text-slate-400">
-                    {t.bugReportModalSubtitle || 'Help improve LemonDBD with bug reports or feedback'}
-                  </p>
                 </div>
               </div>
 

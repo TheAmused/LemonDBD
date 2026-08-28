@@ -1,6 +1,6 @@
 // frontend/src/locales/pl/filters.ts
 export default {
-  "searchPlaceholder": "Szukaj po nazwie umiejętności lub opisie...",
+  "searchPlaceholder": "Szukaj...",
   "category": "Kategoria",
   "all": "Wszystkie",
   "allCategories": "Wszystkie role",
@@ -22,7 +22,7 @@ export default {
   "generalOnly": "Tylko ogólne",
   "everyPerk": "Każda umiejętność",
   "ownedOnly": "Tylko posiadane",
-  "filterByCharacter": "Filtruj wg postaci...",
+  "filterByCharacter": "Szukaj...",
   "generalPerksOnly": "Tylko umiejętności ogólne",
   "sortByName": "Nazwa umiejętności",
   "sortByCharacter": "Postać",

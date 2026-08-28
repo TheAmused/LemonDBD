@@ -506,9 +506,6 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
                 <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                   {dict?.builds?.submitTitle || 'Submit Custom Build'}
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {dict?.builds?.submitSubtitle || 'Share your custom loadout with the community'}
-                </p>
               </div>
             </div>
 

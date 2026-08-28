@@ -1,6 +1,6 @@
 // frontend/src/locales/en/filters.ts
 export default {
-  "searchPlaceholder": "Search by perk title or description...",
+  "searchPlaceholder": "Search...",
   "category": "Category",
   "all": "All",
   "allCategories": "All Roles",
@@ -22,7 +22,7 @@ export default {
   "generalOnly": "General Only",
   "everyPerk": "Every Perk",
   "ownedOnly": "Owned Only",
-  "filterByCharacter": "Filter by character...",
+  "filterByCharacter": "Search...",
   "generalPerksOnly": "General Perks Only",
   "sortByName": "Perk Name",
   "sortByCharacter": "Character",

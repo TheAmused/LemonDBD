@@ -1,7 +1,6 @@
 // frontend/src/locales/de/voice.ts
 export default {
   "engine": "Erkennungs-Engine",
-  "engineSubtitle": "Multi-Engine-Architektur mit automatischem Browser-Fallback",
   "engineNative": "Web Speech Framework",
   "engineNativeDesc": "Google / Apple Cloud Speech",
   "engineClient": "Clientseitiges Sprachmodell",

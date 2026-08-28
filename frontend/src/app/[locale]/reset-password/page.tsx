@@ -43,15 +43,15 @@ function ResetPasswordContent() {
     setError(null);
 
     if (!token) {
-      setError('Missing reset token.');
+      setError(dict?.user?.missingResetToken || 'Missing reset token.');
       return;
     }
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
+      setError(dict?.user?.passwordTooShort || 'Password must be at least 6 characters long.');
       return;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError(dict?.user?.passwordsDoNotMatch || 'Passwords do not match.');
       return;
     }
 
@@ -62,7 +62,7 @@ function ResetPasswordContent() {
     if (res.success) {
       setDone(true);
     } else {
-      setError(res.error || 'Failed to reset password.');
+      setError(res.error || dict?.user?.failedToResetPassword || 'Failed to reset password.');
     }
   };
 

@@ -2,7 +2,6 @@
 export default {
   "engineBadge": "SWFスクワッド連携エンジン",
   "pageTitle": "4人チーム構成プランナー",
-  "pageSubtitle": "サバイバーの役割分担を調整し、パークの重複を排除してフルパーティ（Survive With Friends）のシナジーを最大化します。",
   "shareLoadout": "チーム構成を共有",
   "copiedToast": "チーム構成URLをクリップボードにコピーしました！チームメイトに共有してください。",
   "redundancyDetector": "パーク重複検知システム",
@@ -29,7 +28,7 @@ export default {
   "conflictLabel": "重複・競合",
   "selectPerkTitle": "サバイバー {id} のパークを選択 (スロット {slot})",
   "choosePerkVault": "サバイバーパーク一覧から選択",
-  "searchPlaceholder": "サバイバーパークを検索...",
+  "searchPlaceholder": "検索...",
   "loadingPerks": "サバイバーパークを読み込み中...",
   "noPerksFound": "一致するパークが見つかりません。",
   "loadingSwf": "SWFプランナーを読み込み中...",

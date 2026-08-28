@@ -186,15 +186,26 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     setPendingAction(null);
   };
 
+  const disableTitle = (name: string) => (dict?.admin?.disableConfirmTitle || 'Disable {name}?').replace('{name}', name);
+
   const modalCopy = (() => {
     if (!pendingAction) return null;
     if (pendingAction.kind === 'mode') {
-      return { title: `Disable ${MODE_LABELS[pendingAction.mode]}?`, subtitle: 'Blocks new runs and match submissions for everyone.' };
+      return {
+        title: disableTitle(MODE_LABELS[pendingAction.mode]),
+        subtitle: dict?.admin?.disableModeSubtitle || 'Blocks new runs and match submissions for everyone.',
+      };
     }
     if (pendingAction.kind === 'character') {
-      return { title: `Disable ${pendingAction.character.name}?`, subtitle: "Won't be rollable into new challenge pools." };
+      return {
+        title: disableTitle(pendingAction.character.name),
+        subtitle: dict?.admin?.disableCharacterSubtitle || "Won't be rollable into new challenge pools.",
+      };
     }
-    return { title: `Disable ${pendingAction.perk.name}?`, subtitle: "Won't be offered in new challenge pools/pages." };
+    return {
+      title: disableTitle(pendingAction.perk.name),
+      subtitle: dict?.admin?.disablePerkSubtitle || "Won't be offered in new challenge pools/pages.",
+    };
   })();
 
   return (
@@ -227,7 +238,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                       : 'border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'
                   }`}
                 >
-                  {setting.is_enabled ? 'Enabled' : 'Disabled'}
+                  {setting.is_enabled ? dict?.admin?.enabledLabel || 'Enabled' : dict?.admin?.disabledLabel || 'Disabled'}
                 </button>
               </div>
               {setting.disabled_reason && (
@@ -288,15 +299,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={subTab === 'killers' ? 'Search characters...' : 'Search perks or owner...'}
+              placeholder={dict?.admin?.searchGenericPlaceholder || 'Search...'}
               className="pl-7 pr-3 py-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-amber-500"
             />
           </div>
         </div>
-        <p className="text-[11px] text-slate-500 mb-4">
-          {dict?.admin?.bugPoolNotice ||
-            "Covers both roles: killers occasionally ship with a bugged power, and a survivor scraped from the wiki ahead of their actual in-game release needs to stay hidden until launch. Perks occasionally ship broken on their own too."}
-        </p>
 
         {characters.length === 0 && perks.length === 0 && loading ? (
           <p className="text-xs text-slate-500 py-6 text-center">{dict?.admin?.loading || 'Loading...'}</p>
@@ -379,9 +386,9 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
 
       <AdminReasonModal
         isOpen={pendingAction !== null}
-        title={modalCopy?.title || 'Disable?'}
+        title={modalCopy?.title || dict?.admin?.disable || 'Disable?'}
         subtitle={modalCopy?.subtitle}
-        confirmLabel="Disable"
+        confirmLabel={dict?.admin?.disable || 'Disable'}
         onCancel={() => setPendingAction(null)}
         onConfirm={confirmPendingAction}
         dict={dict}

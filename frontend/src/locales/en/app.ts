@@ -4,7 +4,6 @@ export default {
   "syncWiki": "Sync Wiki Data",
   "syncing": "Syncing Data...",
   "perksVaultTitle": "Perks Vault & Codex",
-  "perksVaultSubtitle": "Complete catalog of Dead by Daylight Survivor and Killer teachables, general perks, and aliases.",
   "perksVaultPageTitle": "LemonDBD - Dead by Daylight Perks Vault",
   "perkRandomizerPageTitle": "LemonDBD - Perk Randomizer",
   "loadingPerks": "Loading Perks Vault...",

@@ -32,6 +32,7 @@ import {
   getRarityTileStyle,
 } from '@/components/character-detail/types';
 import { RoleCategory, PerkDictionary } from '@/types/perks';
+import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 interface OwnedCharacter {
@@ -314,10 +315,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 {dict?.characterDetail?.allCharacters || 'Characters Hub'}
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl">
-              {dict?.characterDetail?.hubSubtitle ||
-                'Explore Dead by Daylight Survivors & Killers. View character details, unique teachable perks, power add-ons, and equipment.'}
-            </p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -391,7 +388,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             }`}
           >
             {ownershipMode ? <X className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-            {ownershipLoading ? 'Loading...' : ownershipMode ? 'Exit Selection' : 'My Characters'}
+            {ownershipLoading
+              ? dict?.app?.loading || 'Loading...'
+              : ownershipMode
+                ? dict?.characterDetail?.exitSelection || 'Exit Selection'
+                : dict?.characterDetail?.myCharacters || 'My Characters'}
           </button>
         </div>
 
@@ -476,7 +477,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     }`}
                   >
                     {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
-                    {char.category}
+                    {isSurvivor
+                      ? dict?.characterDetail?.roleSurvivor || 'Survivor'
+                      : dict?.characterDetail?.roleKiller || 'Killer'}
                   </span>
                 </div>
 
@@ -670,7 +673,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               disabled={ownershipSaving}
               className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/30 hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
             >
-              {ownershipSaving ? 'Saving...' : 'Accept'}
+              {ownershipSaving ? dict?.characterDetail?.saving || 'Saving...' : dict?.characterDetail?.accept || 'Accept'}
             </button>
           </div>
         </div>
@@ -728,6 +731,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
+        dict={dict as unknown as Dictionary}
       />
     </div>
   );

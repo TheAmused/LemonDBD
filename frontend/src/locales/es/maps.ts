@@ -1,6 +1,6 @@
 // frontend/src/locales/es/maps.ts
 export default {
-  "searchPlaceholder": "Buscar mapa o reino...",
+  "searchPlaceholder": "Buscar...",
   "searchAria": "Buscar mapa o reino",
   "clearSearchAria": "Limpiar campo de búsqueda",
   "providerAria": "Proveedor de Fuente del Mapa",

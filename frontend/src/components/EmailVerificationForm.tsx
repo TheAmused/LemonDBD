@@ -3,11 +3,13 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import type { Dictionary } from '@/locales/types';
 
 interface EmailVerificationFormProps {
   email: string;
   onVerified?: () => void;
   submitLabel?: string;
+  dict?: Dictionary;
 }
 
 const CODE_LENGTH = 6;
@@ -16,8 +18,11 @@ const RESEND_COOLDOWN_SECONDS = 60;
 export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
   email,
   onVerified,
-  submitLabel = 'Verify',
+  submitLabel,
+  dict,
 }) => {
+  const t = dict?.user;
+  const resolvedSubmitLabel = submitLabel || t?.verifyEmailAction || 'Verify';
   const { verifyEmail, resendVerification, refreshUser } = useAuth();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(''));
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +83,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
       await refreshUser();
       onVerified?.();
     } else {
-      setError(res.error || 'Invalid verification code.');
+      setError(res.error || t?.invalidVerificationCode || 'Invalid verification code.');
     }
   };
 
@@ -87,7 +92,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
     setError(null);
     const res = await resendVerification(email);
     if (!res.success) {
-      setError(res.error || 'Failed to resend code.');
+      setError(res.error || t?.failedToResendCode || 'Failed to resend code.');
     }
     setCooldown(RESEND_COOLDOWN_SECONDS);
   };
@@ -112,7 +117,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
             value={digit}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            aria-label={`Digit ${index + 1} of verification code`}
+            aria-label={(t?.digitAriaLabel || 'Digit {n} of verification code').replace('{n}', String(index + 1))}
             className="h-11 w-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/60 text-center font-mono text-base text-slate-900 dark:text-slate-100 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
         ))}
@@ -122,7 +127,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
         disabled={verifying || code.length !== CODE_LENGTH}
         className="w-full max-w-xs rounded-xl bg-amber-600 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-amber-500 disabled:opacity-50 transition-colors cursor-pointer"
       >
-        {verifying ? 'Verifying...' : submitLabel}
+        {verifying ? t?.verifying || 'Verifying...' : resolvedSubmitLabel}
       </button>
       <button
         type="button"
@@ -130,7 +135,9 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
         disabled={cooldown > 0}
         className="text-[11px] font-bold underline text-amber-700 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 disabled:opacity-60 cursor-pointer"
       >
-        {cooldown > 0 ? `Resend code in ${cooldown}s` : 'Resend code'}
+        {cooldown > 0
+          ? (t?.resendCodeIn || 'Resend code in {seconds}s').replace('{seconds}', String(cooldown))
+          : t?.resendCode || 'Resend code'}
       </button>
     </form>
   );

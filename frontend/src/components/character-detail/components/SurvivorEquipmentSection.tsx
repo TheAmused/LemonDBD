@@ -95,16 +95,16 @@ function getSurvivorAddonCategory(it: AddonItem): SurvivorCategoryKey {
   return 'trial_exclusive';
 }
 
-const CATEGORIES: { key: SurvivorCategoryKey; label: string; icon: any; desc: string }[] = [
-  { key: 'medkit', label: 'Med-Kits', icon: Heart, desc: 'Healing & Syringes' },
-  { key: 'toolbox', label: 'Toolboxes', icon: Wrench, desc: 'Repairs & Sabotage' },
-  { key: 'flashlight', label: 'Flashlights', icon: Flashlight, desc: 'Blinding & Saves' },
-  { key: 'key', label: 'Keys', icon: Key, desc: 'Auras & Hatch' },
-  { key: 'map', label: 'Maps', icon: MapIcon, desc: 'Objectives & Totems' },
-  { key: 'fog_vial', label: 'Fog Vials', icon: Cloud, desc: 'Mist & Concealment' },
-  { key: 'event', label: 'Event Items & Add-ons', icon: Sparkles, desc: 'Limited Time & Anniversary Items' },
-  { key: 'trial_exclusive', label: 'Trial Artifacts', icon: ShieldAlert, desc: 'In-Trial Counter Items' },
-];
+const CATEGORY_ICONS: Record<SurvivorCategoryKey, any> = {
+  medkit: Heart,
+  toolbox: Wrench,
+  flashlight: Flashlight,
+  key: Key,
+  map: MapIcon,
+  fog_vial: Cloud,
+  event: Sparkles,
+  trial_exclusive: ShieldAlert,
+};
 
 export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> = ({
   items = [],
@@ -118,9 +118,23 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   const [rarityFilter, setRarityFilter] = useState<string>('all');
   const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
+  const CATEGORIES = useMemo(
+    () => [
+      { key: 'medkit' as const, label: t.categoryMedkit || 'Med-Kits', icon: CATEGORY_ICONS.medkit, desc: t.categoryMedkitDesc || 'Healing & Syringes' },
+      { key: 'toolbox' as const, label: t.categoryToolbox || 'Toolboxes', icon: CATEGORY_ICONS.toolbox, desc: t.categoryToolboxDesc || 'Repairs & Sabotage' },
+      { key: 'flashlight' as const, label: t.categoryFlashlight || 'Flashlights', icon: CATEGORY_ICONS.flashlight, desc: t.categoryFlashlightDesc || 'Blinding & Saves' },
+      { key: 'key' as const, label: t.categoryKey || 'Keys', icon: CATEGORY_ICONS.key, desc: t.categoryKeyDesc || 'Auras & Hatch' },
+      { key: 'map' as const, label: t.categoryMapItem || 'Maps', icon: CATEGORY_ICONS.map, desc: t.categoryMapItemDesc || 'Objectives & Totems' },
+      { key: 'fog_vial' as const, label: t.categoryFogVial || 'Fog Vials', icon: CATEGORY_ICONS.fog_vial, desc: t.categoryFogVialDesc || 'Mist & Concealment' },
+      { key: 'event' as const, label: t.categoryEventItems || 'Event Items & Add-ons', icon: CATEGORY_ICONS.event, desc: t.categoryEventItemsDesc || 'Limited Time & Anniversary Items' },
+      { key: 'trial_exclusive' as const, label: t.categoryTrialArtifacts || 'Trial Artifacts', icon: CATEGORY_ICONS.trial_exclusive, desc: t.categoryTrialArtifactsDesc || 'In-Trial Counter Items' },
+    ],
+    [t]
+  );
+
   const activeCategoryConfig = useMemo(() => {
     return CATEGORIES.find((c) => c.key === selectedCategory) || CATEGORIES[0];
-  }, [selectedCategory]);
+  }, [CATEGORIES, selectedCategory]);
 
   const categorizedData = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
@@ -178,9 +192,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
               {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
             </h2>
-            <p className="text-xs text-slate-400">
-              {t.equipmentDescSurvivor || 'Select an item category to explore items and their compatible add-on attachments.'}
-            </p>
           </div>
         </div>
 
@@ -222,7 +233,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 type="button"
                 key={cat.key}
                 onClick={() => setSelectedCategory(cat.key as SurvivorCategoryKey)}
-                className={`relative h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
+                className={`relative h-12 w-14 sm:h-14 sm:w-16 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
                   isSelected
                     ? 'bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 shadow-lg shadow-emerald-950/60 scale-105'
                     : 'bg-slate-900/60 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -231,7 +242,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 aria-label={cat.label}
               >
                 <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                <span className="text-[9px] font-mono font-bold truncate max-w-[48px] mt-0.5">
+                <span className="text-[9px] font-mono font-bold truncate max-w-[56px] mt-0.5">
                   {cat.label.split(' ')[0]}
                 </span>
                 {isSelected && (
@@ -249,9 +260,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 <Package className="h-4 w-4" />
                 {activeCategoryConfig.label} {t.bulletSeparator || '•'} {t.items || 'Items'} ({categorizedData.displayedItems.length})
               </h3>
-              <span className="text-[10px] font-mono text-slate-400">
-                {t.clickItemForDetails || 'Click item for details'}
-              </span>
             </div>
 
             {categorizedData.displayedItems.length === 0 ? (
@@ -307,11 +315,11 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                   ? t.artifactMechanics || 'Artifact Mechanics'
                   : `${t.compatibleAddons || 'Compatible Add-ons'} (${categorizedData.displayedAddons.length})`}
               </h3>
-              <span className="text-[10px] font-mono text-slate-400">
-                {selectedCategory === 'trial_exclusive'
-                  ? t.specialTrialRules || 'Special Trial Rules'
-                  : t.attachAddonsPrompt || 'Attach up to 2 per item'}
-              </span>
+              {selectedCategory === 'trial_exclusive' && (
+                <span className="text-[10px] font-mono text-slate-400">
+                  {t.specialTrialRules || 'Special Trial Rules'}
+                </span>
+              )}
             </div>
 
             {selectedCategory === 'trial_exclusive' ? (

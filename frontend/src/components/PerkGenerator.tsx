@@ -416,14 +416,6 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                   {dict?.generator?.playableLabel || 'Playable'})
                 </span>
               </div>
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                {user
-                  ? dict?.generator?.subtitleOwned ||
-                    'Randomizes dynamically from your unlocked & owned perks'
-                  : dict?.generator?.subtitleAll ||
-                    'Randomizes from all Dead by Daylight perks'}{' '}
-                {dict?.generator?.inventoryCoordinatesNote || 'with inventory coordinates [Page / Slot]'}
-              </p>
             </div>
           </div>
 

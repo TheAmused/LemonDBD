@@ -74,9 +74,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             <Bug className="h-5 w-5 text-rose-500" />
             <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            {t.bugReportsSubtitle || 'Track investigation status, feedback, and fixes for your tickets.'}
-          </p>
         </div>
 
         <button

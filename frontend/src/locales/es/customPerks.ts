@@ -1,7 +1,6 @@
 // frontend/src/locales/es/customPerks.ts
 export default {
   "conceptLab": "Estudio y Laboratorio de Conceptos",
-  "subtitle": "Diseña conceptos originales de habilidades de Dead by Daylight con vista previa interactiva en tarjeta de diamante, o descubre y vota creaciones de la comunidad.",
   "designer": "Diseñador de Habilidades",
   "configureConcept": "Configurar Concepto de Habilidad",
   "requiredFields": "* Campos obligatorios",
@@ -10,7 +9,7 @@ export default {
   "authorPlaceholder": "p. ej. ArquitectoDelEnte",
   "descPlaceholder": "Describe la mecánica de la habilidad... Usa **negrita** para estados alterados.",
   "conceptTag": "Concepto LemonDBD",
-  "searchPlaceholder": "Buscar conceptos por nombre, mecánica o personaje...",
+  "searchPlaceholder": "Buscar...",
   "createNew": "Crear Nuevo Concepto",
   "tagExhausted": "+**Agotamiento**",
   "tagHindered": "+**Entorpecimiento**",

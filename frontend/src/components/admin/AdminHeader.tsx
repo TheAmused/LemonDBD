@@ -41,9 +41,6 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-slate-100 font-mono">
             {dict?.sidebar?.adminControlCenter || 'Admin Control Center'}
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            {dict?.admin?.adminControlCenterSubtitle || 'User directory, JSON database export/import, and scraper orchestration.'}
-          </p>
         </div>
       </div>
 
@@ -88,7 +85,11 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-red-950/30 transition-all cursor-pointer disabled:opacity-60 flex-1 sm:flex-initial"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-          <span>{isSyncing ? `Syncing (${syncStatus})` : 'Sync Scraper'}</span>
+          <span>
+            {isSyncing
+              ? (dict?.admin?.syncingStatus || 'Syncing ({status})').replace('{status}', syncStatus)
+              : dict?.admin?.syncScraper || 'Sync Scraper'}
+          </span>
         </button>
 
         <button

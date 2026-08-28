@@ -64,6 +64,7 @@ export default {
   "view3DModel": "Click to View Full 3D Model",
   "loreModalTitle": "The Entity's Archives — Codex Lore",
   "equipmentDetails": "Equipment Details",
+  "equipment": "Equipment",
   "close": "Close",
   "baseGame": "Base Game",
   "heightTall": "Tall",

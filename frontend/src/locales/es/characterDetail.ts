@@ -64,6 +64,7 @@ export default {
   "view3DModel": "Clic para Ver Modelo 3D Completo",
   "loreModalTitle": "Archivos del Ente — Códice de Lore",
   "equipmentDetails": "Detalles del Equipamiento",
+  "equipment": "Equipo",
   "close": "Cerrar",
   "baseGame": "Juego Base",
   "heightTall": "Alto",

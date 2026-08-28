@@ -126,11 +126,7 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
         zIndex: 99999,
       };
 
-  const isPerkItem =
-    isPerk ||
-    item.category === 'Survivor' ||
-    item.category === 'Killer' ||
-    'character' in item;
+  const isPerkItem = isPerk || 'character' in item;
 
   const itemRarity =
     'rarity' in item && typeof item.rarity === 'string' ? item.rarity : undefined;
@@ -138,10 +134,6 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
 
   // Character info for perks
   const charName = 'character' in item ? (item.character as string) : undefined;
-  const charRealName =
-    'character_real_name' in item
-      ? (item.character_real_name as string)
-      : undefined;
   const isGeneric =
     !charName ||
     charName === 'General' ||
@@ -165,13 +157,16 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
       ? perkBadgeText
       : getLocalizedRarity(itemRarity, t) || itemRarity);
 
+  const rawCategory = 'category' in item && typeof item.category === 'string' ? item.category : undefined;
+  const isRoleLeakingAsCategory = rawCategory === 'Survivor' || rawCategory === 'Killer';
+
   const categoryText =
     activeHover.category ||
     (isPerkItem
       ? isGeneric
         ? generalLabel
         : charName || perkBadgeText
-      : item.category || t.equipment || 'Equipment');
+      : (isRoleLeakingAsCategory ? undefined : rawCategory) || t.equipment || 'Equipment');
 
   const defaultAction =
     actionPrompt ||
@@ -199,11 +194,6 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
           {isPerkItem && (
             <p className="text-[11px] font-bold text-slate-400 mt-0.5 truncate">
               {isGeneric ? generalLabel : charName}
-              {charRealName && charRealName !== charName && (
-                <span className="text-[10px] font-normal text-slate-500 ml-1">
-                  ({charRealName})
-                </span>
-              )}
             </p>
           )}
         </div>

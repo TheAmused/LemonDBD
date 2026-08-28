@@ -63,6 +63,7 @@ export default {
   "view3DModel": "クリックで3Dモデルを表示",
   "loreModalTitle": "エンティティの記録簿 — アーカイブ",
   "equipmentDetails": "装備詳細",
+  "equipment": "装備",
   "close": "閉じる",
   "baseGame": "基本ゲーム",
   "heightTall": "高い",

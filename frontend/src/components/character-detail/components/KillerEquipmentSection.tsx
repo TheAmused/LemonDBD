@@ -91,7 +91,6 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
                   item,
                   rect,
                   accentColor: 'text-rose-400',
-                  category: item.category || t.killerPower || 'Killer Addon',
                 });
               }}
               onMouseLeave={() => setActiveHover(null)}

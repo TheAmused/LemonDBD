@@ -1,5 +1,5 @@
 # backend/app/services/page_streak/pool.py
-from typing import Any, Dict, List
+from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
@@ -17,11 +17,11 @@ def get_configured_perks_per_page() -> int:
     return DEFAULT_PERKS_PER_PAGE
 
 
-def fetch_all_killer_perks(perk_service: PerkService) -> List[Dict[str, Any]]:
+def fetch_all_killer_perks(perk_service: PerkService) -> list[dict[str, Any]]:
     """Retrieve all available killer perks via paginated service extraction."""
     page = 1
     limit = 200
-    collected: List[Dict[str, Any]] = []
+    collected: list[dict[str, Any]] = []
     total = None
     while True:
         result = perk_service.get_perks(category="Killer", page=page, limit=limit)
@@ -37,7 +37,7 @@ def fetch_all_killer_perks(perk_service: PerkService) -> List[Dict[str, Any]]:
     return collected
 
 
-def get_user_killer_pool(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> List[Dict[str, Any]]:
+def get_user_killer_pool(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> list[dict[str, Any]]:
     """Return killer perks unlocked by the specific user."""
     owned_perks = ownership_service.get_user_perks(user_id, category="Killer")
     unlocked_names = {p["name"] for p in owned_perks if p["is_unlocked"] and not p.get("is_disabled")}
@@ -45,7 +45,7 @@ def get_user_killer_pool(user_id: int, perk_service: PerkService, ownership_serv
     return sorted(perks, key=lambda p: p["name"])
 
 
-def build_user_perk_pages(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> List[List[str]]:
+def build_user_perk_pages(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> list[list[str]]:
     """Partition the user's unlocked killer perks into sequential page arrays."""
     pool = get_user_killer_pool(user_id, perk_service, ownership_service)
     size = get_configured_perks_per_page()
@@ -53,10 +53,7 @@ def build_user_perk_pages(user_id: int, perk_service: PerkService, ownership_ser
     return [names[i : i + size] for i in range(0, len(names), size)]
 
 
-def get_perk_icon_map(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> Dict[str, str]:
-    """Name -> icon_local_path for the user's unlocked killer perk pool, so
-    the frontend can render page/build/history perk icons without a
-    separate, duplicate catalog fetch of its own."""
+def get_perk_icon_map(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> dict[str, str]:
+    """Name -> icon_local_path for the user's unlocked killer perk pool."""
     pool = get_user_killer_pool(user_id, perk_service, ownership_service)
     return {p["name"]: p["icon_local_path"] for p in pool if p.get("icon_local_path")}
-

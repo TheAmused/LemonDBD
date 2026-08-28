@@ -1,14 +1,16 @@
 # backend/app/services/page_streak/roster.py
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_loads
 from app.models import PageStreakRun
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
 
 
-def get_character_release_numbers(perk_service: PerkService) -> Dict[str, int]:
+def get_character_release_numbers(perk_service: PerkService) -> dict[str, int]:
     """Retrieve canonical character release order numbers."""
     get_characters = getattr(perk_service, "get_characters", None)
     if not callable(get_characters):
@@ -18,7 +20,7 @@ def get_character_release_numbers(perk_service: PerkService) -> Dict[str, int]:
     except Exception:
         return {}
 
-    numbers: Dict[str, int] = {}
+    numbers: dict[str, int] = {}
     for character in characters:
         name = (character or {}).get("name")
         release_number = (character or {}).get("release_number")
@@ -27,7 +29,7 @@ def get_character_release_numbers(perk_service: PerkService) -> Dict[str, int]:
     return numbers
 
 
-def get_owned_killers_ordered(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> List[str]:
+def get_owned_killers_ordered(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> list[str]:
     """Retrieve owned killer names sorted by release sequence."""
     owned_characters = ownership_service.get_user_characters(user_id, role="Killer")
     owned_names = {c["name"] for c in owned_characters if c["is_owned"] and not c.get("is_disabled")}
@@ -42,7 +44,7 @@ def get_owned_killers_ordered(user_id: int, perk_service: PerkService, ownership
     return sorted(owned_names, key=sort_key)
 
 
-def get_killer_avatar_map(user_id: int, ownership_service: OwnershipService) -> Dict[str, str]:
+def get_killer_avatar_map(user_id: int, ownership_service: OwnershipService) -> dict[str, str]:
     """Name -> avatar_local_path for the user's owned killers."""
     owned = ownership_service.get_user_characters(user_id, role="Killer")
     return {c["name"]: c["avatar_local_path"] for c in owned if c["is_owned"] and c.get("avatar_local_path")}
@@ -52,18 +54,16 @@ def build_roster_summary(
     user_id: int,
     perk_service: PerkService,
     ownership_service: OwnershipService,
-    build_pages_fn: Callable[[int], List[List[str]]],
-) -> List[Dict[str, Any]]:
+    build_pages_fn: Callable[[int], list[list[str]]],
+) -> list[dict[str, Any]]:
     """Generate roster status overview with active streak checkpoints."""
-    import json
-
     page_count = len(build_pages_fn(user_id))
     runs_db = db.session.scalars(
         select(PageStreakRun).where(PageStreakRun.user_id == user_id)
     ).all()
     runs = {r.killer: r for r in runs_db}
     avatar_map = get_killer_avatar_map(user_id, ownership_service)
-    roster: List[Dict[str, Any]] = []
+    roster: list[dict[str, Any]] = []
 
     for killer in get_owned_killers_ordered(user_id, perk_service, ownership_service):
         r = runs.get(killer)
@@ -85,8 +85,7 @@ def build_roster_summary(
                 "attempt": r.attempt,
                 "current_page": r.current_page,
                 "best_page": r.best_page,
-                "page_count": len(json.loads(r.pages_json or "[]")),
+                "page_count": len(safe_json_loads(r.pages_json, default=[])),
                 "avatar_local_path": avatar_local_path,
             })
     return roster
-

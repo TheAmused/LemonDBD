@@ -134,10 +134,6 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
 
   // Character info for perks
   const charName = 'character' in item ? (item.character as string) : undefined;
-  const charRealName =
-    'character_real_name' in item
-      ? (item.character_real_name as string)
-      : undefined;
   const isGeneric =
     !charName ||
     charName === 'General' ||
@@ -198,11 +194,6 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
           {isPerkItem && (
             <p className="text-[11px] font-bold text-slate-400 mt-0.5 truncate">
               {isGeneric ? generalLabel : charName}
-              {charRealName && charRealName !== charName && (
-                <span className="text-[10px] font-normal text-slate-500 ml-1">
-                  ({charRealName})
-                </span>
-              )}
             </p>
           )}
         </div>

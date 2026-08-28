@@ -1,8 +1,8 @@
 # backend/app/services/maps/data.py
-import json
-from typing import Any, Dict, List
+from typing import Any
+from app.core.json_provider import safe_json_dumps
 
-SAMPLE_MAPS: List[Dict[str, Any]] = [
+SAMPLE_MAPS: list[dict[str, Any]] = [
     {
         "id": "coal_tower",
         "name": "Coal Tower",
@@ -77,7 +77,7 @@ SAMPLE_MAPS: List[Dict[str, Any]] = [
     },
 ]
 
-DEFAULT_TILES_SEED_A: List[Dict[str, Any]] = [
+DEFAULT_TILES_SEED_A: list[dict[str, Any]] = [
     {
         "name": "Killer Shack",
         "type": "shack",
@@ -86,7 +86,7 @@ DEFAULT_TILES_SEED_A: List[Dict[str, Any]] = [
         "has_pallet": True,
         "pallet_safety_rating": "god",
         "has_window": True,
-        "vault_directions": json.dumps(["East"]),
+        "vault_directions": safe_json_dumps(["East"]),
         "looping_tips": "Hug outer wall tightly. Fast-vault window to reset distance, and only drop the Shack Pallet when committed by killer.",
         "mindgame_counter": "Killer can hide red stain inside doorway to fake a window vault check.",
     },
@@ -98,7 +98,7 @@ DEFAULT_TILES_SEED_A: List[Dict[str, Any]] = [
         "has_pallet": True,
         "pallet_safety_rating": "safe",
         "has_window": True,
-        "vault_directions": json.dumps(["North", "West"]),
+        "vault_directions": safe_json_dumps(["North", "West"]),
         "looping_tips": "Utilize 2nd floor iron walkway vault. Drop to ground floor to break line of sight and chain to jungle gyms.",
         "mindgame_counter": "Listen carefully to footsteps on iron stairs and watch for moonwalks near outer doorway.",
     },
@@ -110,7 +110,7 @@ DEFAULT_TILES_SEED_A: List[Dict[str, Any]] = [
         "has_pallet": True,
         "pallet_safety_rating": "safe",
         "has_window": True,
-        "vault_directions": json.dumps(["South"]),
+        "vault_directions": safe_json_dumps(["South"]),
         "looping_tips": "Run outer long wall counter-clockwise to ensure perpendicular fast-vault angle.",
         "mindgame_counter": "Killer can hide red stain behind center high wall pillar.",
     },
@@ -122,7 +122,7 @@ DEFAULT_TILES_SEED_A: List[Dict[str, Any]] = [
         "has_pallet": False,
         "pallet_safety_rating": None,
         "has_window": True,
-        "vault_directions": json.dumps(["West", "East"]),
+        "vault_directions": safe_json_dumps(["West", "East"]),
         "looping_tips": "React to killer red stain at corner junction before selecting L-window or T-window.",
         "mindgame_counter": "Killer can fake direction at corner to catch vault animation.",
     },
@@ -134,7 +134,7 @@ DEFAULT_TILES_SEED_A: List[Dict[str, Any]] = [
         "has_pallet": True,
         "pallet_safety_rating": "mindgameable",
         "has_window": False,
-        "vault_directions": json.dumps([]),
+        "vault_directions": safe_json_dumps([]),
         "looping_tips": "Short wood pile loop. Pre-drop pallet if killer is gaining Bloodlust.",
         "mindgame_counter": "Killer can double-back over low crate pile.",
     },
@@ -146,13 +146,13 @@ DEFAULT_TILES_SEED_A: List[Dict[str, Any]] = [
         "has_pallet": True,
         "pallet_safety_rating": "unsafe",
         "has_window": False,
-        "vault_directions": json.dumps([]),
+        "vault_directions": safe_json_dumps([]),
         "looping_tips": "Very short loop with low vision blocking. Drop quickly for stun or abandon tile.",
         "mindgame_counter": "Killer can lunge easily over short hood wall.",
     },
 ]
 
-DEFAULT_OBJECTIVES_SEED_A: List[Dict[str, Any]] = [
+DEFAULT_OBJECTIVES_SEED_A: list[dict[str, Any]] = [
     {"type": "totem", "x": 20.0, "y": 30.0, "location_description": "Killer Shack Corner"},
     {"type": "totem", "x": 75.0, "y": 25.0, "location_description": "Main Building Stairwell"},
     {"type": "totem", "x": 50.0, "y": 80.0, "location_description": "Jungle Gym B Behind Tree"},
@@ -173,4 +173,3 @@ DEFAULT_OBJECTIVES_SEED_A: List[Dict[str, Any]] = [
     {"type": "chest", "x": 46.0, "y": 76.0, "location_description": "Jungle Gym Chest"},
     {"type": "basement", "x": 21.0, "y": 28.0, "location_description": "Killer Shack Basement"},
 ]
-

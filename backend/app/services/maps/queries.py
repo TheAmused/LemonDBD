@@ -1,12 +1,12 @@
 # backend/app/services/maps/queries.py
-import json
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 from flask import current_app
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_loads
 from app.models import MapRealm
 from app.services.maps.data import SAMPLE_MAPS
 from app.services.maps.seeder import seed_maps_if_empty
@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 def fetch_maps(
     use_sqlalchemy: bool,
     db_service: Any,
-    realm: Optional[str] = None,
-    search: Optional[str] = None,
-    source: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    realm: str | None = None,
+    search: str | None = None,
+    source: str | None = None,
+) -> list[dict[str, Any]]:
     """Retrieve maps list with optional realm, search, and source filtering."""
     if use_sqlalchemy:
         try:
@@ -56,7 +56,6 @@ def fetch_maps(
     seed_maps_if_empty(conn, db_service)
     cursor = conn.cursor()
 
-    # Check available columns in fallback SQLite
     cursor.execute("PRAGMA table_info(map_realms);")
     cols = {row[1] for row in cursor.fetchall()}
 
@@ -103,7 +102,7 @@ def fetch_map_by_id(
     map_id: str,
     seed_variant: str = "seed_a",
     floor: int = 1,
-) -> Optional[Dict[str, Any]]:
+) -> dict[str, Any] | None:
     """Retrieve detailed map info including tiles and objective coordinates."""
     if use_sqlalchemy:
         try:
@@ -175,12 +174,7 @@ def fetch_map_by_id(
 
     tiles = []
     for r in tile_rows:
-        v_dirs = r["vault_directions"]
-        if isinstance(v_dirs, str):
-            try:
-                v_dirs = json.loads(v_dirs)
-            except Exception:
-                v_dirs = []
+        v_dirs = safe_json_loads(r["vault_directions"], default=[]) if isinstance(r["vault_directions"], str) else (r["vault_directions"] or [])
         tiles.append({
             "id": r["id"],
             "name": r["name"],
@@ -190,7 +184,7 @@ def fetch_map_by_id(
             "has_pallet": bool(r["has_pallet"]),
             "pallet_safety_rating": r["pallet_safety_rating"],
             "has_window": bool(r["has_window"]),
-            "vault_directions": v_dirs if v_dirs is not None else [],
+            "vault_directions": v_dirs,
             "looping_tips": r["looping_tips"] or "",
             "mindgame_counter": r["mindgame_counter"] or "",
             "seed_variant": r["seed_variant"],
@@ -244,4 +238,3 @@ def fetch_map_by_id(
     ]
 
     return result
-

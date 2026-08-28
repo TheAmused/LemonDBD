@@ -82,4 +82,3 @@ def seed_maps_if_empty(conn: sqlite3.Connection, db_service: Any) -> None:
                         )
 
         conn.commit()
-

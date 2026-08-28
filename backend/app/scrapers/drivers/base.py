@@ -2,23 +2,19 @@
 from __future__ import annotations
 
 import logging
+import re
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 from urllib.parse import unquote
-from bs4 import BeautifulSoup, Tag
 from curl_cffi import requests
 
 from app.scrapers.types import AddonData, CharacterData, ItemData, PerkData
 from app.scrapers.utils import (
-    clean_description_text,
-    extract_cell_markdown_text,
-    extract_high_res_url,
-    extract_slug_from_href,
     normalize_name_key,
-    sanitize_filename,
 )
-import re
+
+logger = logging.getLogger(__name__)
 
 PORTRAIT_PATTERN = re.compile(r"(?:^|/)(K|S)(\d+)[-_]", re.IGNORECASE)
 
@@ -45,7 +41,7 @@ class BaseWikiDriver:
     IMPERSONATE_BROWSER: str = "chrome120"
     REQUEST_TIMEOUT: int = 30
 
-    def __init__(self, base_dir: Optional[Path] = None, lang_code: str = "en"):
+    def __init__(self, base_dir: Path | None = None, lang_code: str = "en"):
         if base_dir is None:
             base_dir = Path(__file__).resolve().parent.parent.parent.parent
         self.base_dir = Path(base_dir)
@@ -95,7 +91,6 @@ class BaseWikiDriver:
                 logger.debug(f"[{self.lang_code}] API fetch attempt {attempt + 1} for '{clean_title}' failed: {err}")
                 time.sleep(1.5)
 
-        # Fallback to direct URL
         fallback_url = (
             f"{self.BASE_DOMAIN}/wiki/{clean_title}"
             if self.lang_code == "en"
@@ -112,22 +107,20 @@ class BaseWikiDriver:
 
     def build_lookup_indexes(
         self,
-        characters: List[CharacterData],
-        perks: List[PerkData],
-        items: List[ItemData],
-        addons: List[AddonData],
-    ) -> Dict[str, Dict[str, Any]]:
+        characters: list[CharacterData],
+        perks: list[PerkData],
+        items: list[ItemData],
+        addons: list[AddonData],
+    ) -> dict[str, dict[str, Any]]:
         """Constructs fast icon token and normalized name lookups for enrichment."""
-        from app.scrapers.wikigg import extract_icon_token
-
-        perks_by_token: Dict[str, PerkData] = {}
+        perks_by_token: dict[str, PerkData] = {}
         for p in perks:
             tok = extract_icon_token(p.icon_url or p.icon_local_path)
             if tok:
                 perks_by_token[tok] = p
             perks_by_token[normalize_name_key(p.name)] = p
 
-        chars_by_token: Dict[str, CharacterData] = {}
+        chars_by_token: dict[str, CharacterData] = {}
         for c in characters:
             if c.code_prefix and c.release_number:
                 chars_by_token[f"{c.code_prefix.upper()}{c.release_number:02d}"] = c
@@ -138,14 +131,14 @@ class BaseWikiDriver:
             if c.real_name:
                 chars_by_token[normalize_name_key(c.real_name)] = c
 
-        items_by_token: Dict[str, ItemData] = {}
+        items_by_token: dict[str, ItemData] = {}
         for i in items:
             tok = extract_icon_token(i.icon_url or i.icon_local_path)
             if tok:
                 items_by_token[tok] = i
             items_by_token[normalize_name_key(i.name)] = i
 
-        addons_by_token: Dict[str, AddonData] = {}
+        addons_by_token: dict[str, AddonData] = {}
         for a in addons:
             tok = extract_icon_token(a.icon_url or a.icon_local_path)
             if tok:

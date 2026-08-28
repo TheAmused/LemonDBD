@@ -2,7 +2,6 @@
 import html
 import re
 import unicodedata
-from typing import Optional, Tuple
 from urllib.parse import unquote
 from bs4 import Tag
 
@@ -11,7 +10,7 @@ YEAR_REGEX = re.compile(r"\b(201[6-9]|202[0-9]|203[0-9])\b")
 TERROR_RADIUS_NUM_REGEX = re.compile(r"(\d+)\s*m(?:etre|eter)?s?", re.IGNORECASE)
 
 
-def classify_portrait(image_url: str) -> Optional[Tuple[str, int]]:
+def classify_portrait(image_url: str) -> tuple[str, int] | None:
     if not image_url:
         return None
     filename = image_url.split("/revision")[0].rstrip("/").split("/")[-1]
@@ -43,7 +42,6 @@ def normalize_name_key(text: str) -> str:
         return ""
     normalized = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8")
     normalized = normalized.lower().strip()
-    # Replace ALL non-alphanumeric characters (colons, apostrophes, hyphens, quotes) with spaces
     normalized = re.sub(r"[^a-z0-9]", " ", normalized)
     return re.sub(r"\s+", " ", normalized).strip()
 
@@ -68,7 +66,6 @@ def clean_description_text(text: str) -> str:
     cleaned = re.sub(r"(\d+)\s+(%)", r"\1\2", cleaned)
     cleaned = re.sub(r"(\d+)\s+(s|m)\b(?!\w)", r"\1\2", cleaned)
 
-    # Strip wiki deprecation / decommissioning banners
     cleaned = re.sub(
         r"THIS\s+(?:ADD-ON|ADDON|ITEM|UNLOCKABLE|OFFERING)\s+(?:IS\s+NO\s+LONGER\s+AVAILABLE|WAS\s+DECOMMISSIONED)\s*(?:\([^)]*\))?",
         "",
@@ -106,7 +103,7 @@ def clean_description_text(text: str) -> str:
     return "\n".join(filtered_lines).strip()
 
 
-def extract_cell_markdown_text(cell_tag: Optional[Tag]) -> str:
+def extract_cell_markdown_text(cell_tag: Tag | None) -> str:
     """Converts a MediaWiki table cell containing rich text, lists, and quotes into clean markdown."""
     if not cell_tag:
         return ""
@@ -135,7 +132,7 @@ def sanitize_filename(name: str) -> str:
     return clean_str.strip("_")
 
 
-def extract_high_res_url(img_tag: Optional[Tag], base_domain: str = "https://deadbydaylight.wiki.gg") -> str:
+def extract_high_res_url(img_tag: Tag | None, base_domain: str = "https://deadbydaylight.wiki.gg") -> str:
     if not img_tag:
         return ""
     raw_url = (
@@ -178,10 +175,7 @@ def extract_slug_from_href(href: str) -> str:
 
 
 def convert_bytes_to_webp(image_bytes: bytes, quality: int = 90) -> bytes:
-    """
-    Converts raw image bytes (PNG, JPEG, GIF, etc.) into high-efficiency WebP format bytes,
-    preserving full alpha transparency and reducing file size by 70-80%.
-    """
+    """Converts raw image bytes into high-efficiency WebP format bytes."""
     import io
     from PIL import Image
 
@@ -197,10 +191,6 @@ def convert_bytes_to_webp(image_bytes: bytes, quality: int = 90) -> bytes:
 
 
 def save_image_as_webp(image_bytes: bytes, output_path, quality: int = 90):
-    """
-    Saves image bytes as a .webp file on disk, ensuring parent directories exist.
-    Returns the Path to the saved .webp file.
-    """
     from pathlib import Path
     target_path = Path(output_path).with_suffix(".webp")
     target_path.parent.mkdir(parents=True, exist_ok=True)
@@ -211,19 +201,13 @@ def save_image_as_webp(image_bytes: bytes, output_path, quality: int = 90):
 
 
 def auto_save_webp(quality: int = 90):
-    """
-    Decorator for scraper download functions that ensures all downloaded images
-    are automatically saved or converted into optimized WebP files.
-    """
     import functools
     from pathlib import Path
 
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            # Run the underlying download function
             res = func(*args, **kwargs)
-            # If target output path was passed as positional or keyword argument, convert it
             out_file = None
             if len(args) > 1 and isinstance(args[1], (str, Path)):
                 out_file = Path(args[1])

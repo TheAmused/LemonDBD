@@ -3,19 +3,19 @@ from __future__ import annotations
 
 import asyncio
 import html
-import json
 import logging
 import re
 import time
 import unicodedata
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 from bs4 import BeautifulSoup, Tag
 from curl_cffi import requests
 from curl_cffi.requests import AsyncSession
 
-from app.scrapers.constants import KNOWN_KILLER_POWER_ALIASES
+from app.core.json_provider import safe_json_dumps
+from app.scrapers.constants import GENERIC_PERK_CANONICAL_MAP, KNOWN_KILLER_POWER_ALIASES
 from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, OfferingData, PerkData
 from app.scrapers.utils import (
     clean_description_text,
@@ -45,28 +45,6 @@ def extract_icon_token(src_or_alt: str) -> str:
     fn = re.sub(r"^(?:Full_)?(?:Icon(?:Addon|Addons|Items|Perks|Powers)_)?", "", fn, flags=re.IGNORECASE)
     return re.sub(r"[^a-zA-Z0-9]", "", fn).lower()
 
-GENERIC_PERK_CANONICAL_MAP = {
-    "will to live": ("Decisive Strike", "Will to Live"),
-    "down to the last": ("Sole Survivor", "Down to the Last"),
-    "bound by obsession": ("Object of Obsession", "Bound by Obsession"),
-    "keep them waiting": ("Save the Best for Last", "Keep Them Waiting"),
-    "see how they run": ("Play with Your Food", "See How They Run"),
-    "cull the weak": ("Dying Light", "Cull the Weak"),
-    "no holds barred": ("Deadlock", "No Holds Barred"),
-    "hex fortune s fool": ("Hex: Plaything", "Hex: Fortune's Fool"),
-    "hex fortunes fool": ("Hex: Plaything", "Hex: Fortune's Fool"),
-    "scourge hook weeping wounds": ("Scourge Hook: Gift of Pain", "Scourge Hook: Weeping Wounds"),
-    "jolt": ("Surge", "Jolt"),
-    "fearmonger": ("Mindbreaker", "Fearmonger"),
-    "claustrophobia": ("Cruel Limits", "Claustrophobia"),
-    "guardian": ("Babysitter", "Guardian"),
-    "kinship": ("Camaraderie", "Kinship"),
-    "self aware": ("Fixated", "Self-Aware"),
-    "selfaware": ("Fixated", "Self-Aware"),
-    "situational awareness": ("Better Together", "Situational Awareness"),
-    "inner healing": ("Inner Strength", "Inner Healing"),
-    "renewal": ("Second Wind", "Renewal"),
-}
 
 MONTHS_REGEX_STR = (
     r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
@@ -90,7 +68,7 @@ RARITY_PATTERN = re.compile(
 )
 
 
-def parse_date_and_year(text: str) -> Tuple[Optional[str], Optional[int]]:
+def parse_date_and_year(text: str) -> tuple[str | None, int | None]:
     if not text:
         return None, None
 
@@ -117,7 +95,7 @@ def parse_date_and_year(text: str) -> Tuple[Optional[str], Optional[int]]:
     return None, None
 
 
-def clean_chapter_title(raw_chapter: str) -> Tuple[Optional[str], str]:
+def clean_chapter_title(raw_chapter: str) -> tuple[str | None, str]:
     if not raw_chapter:
         return None, ""
 
@@ -140,19 +118,16 @@ def clean_chapter_title(raw_chapter: str) -> Tuple[Optional[str], str]:
 
 
 def extract_rarity_from_elements(
-    cells: List[Tag],
-    img_tag: Optional[Tag] = None,
+    cells: list[Tag],
+    img_tag: Tag | None = None,
     section_context: str = "",
 ) -> str:
-    """Extracts the item/add-on rarity from live wiki elements, image sources, or section context."""
-    # 1. Check direct table cells text if a designated column is present
     if len(cells) >= 4:
         c_text = cells[2].get_text(strip=True)
         m = RARITY_PATTERN.search(c_text)
         if m:
             return normalize_rarity_name(m.group(1))
 
-    # 2. Check HTML attributes on cell elements (title, class, data-rarity, alt)
     for cell in cells:
         for el in [cell] + cell.find_all(["a", "div", "span", "img", "td"]):
             for attr in ["title", "data-rarity", "class", "alt"]:
@@ -164,7 +139,6 @@ def extract_rarity_from_elements(
                     if m:
                         return normalize_rarity_name(m.group(1))
 
-    # 3. Check Image URL / filename (e.g. IconAddon_..._veryRare.png or IconItems_..._ultraRare.png)
     if img_tag:
         img_src = (
             img_tag.get("data-src")
@@ -177,7 +151,6 @@ def extract_rarity_from_elements(
             if m:
                 return normalize_rarity_name(m.group(1))
 
-    # 4. Check section context
     if section_context:
         m = RARITY_PATTERN.search(section_context)
         if m:
@@ -206,11 +179,10 @@ def normalize_rarity_name(raw_rarity: str) -> str:
 class WikiGGScraperDriver:
     BASE_DOMAIN = "https://deadbydaylight.wiki.gg"
     API_URL = "https://deadbydaylight.wiki.gg/api.php"
-
     IMPERSONATE_BROWSER = "chrome120"
     REQUEST_TIMEOUT = 30
 
-    def __init__(self, base_dir: Optional[Path] = None):
+    def __init__(self, base_dir: Path | None = None):
         if base_dir is None:
             base_dir = Path(__file__).resolve().parent.parent.parent
         self.base_dir = Path(base_dir)
@@ -251,15 +223,15 @@ class WikiGGScraperDriver:
         res.raise_for_status()
         return res.text
 
-    def scrape_roster_from_page(self, page_title: str, role: str) -> List[CharacterData]:
+    def scrape_roster_from_page(self, page_title: str, role: str) -> list[CharacterData]:
         html_doc = self.fetch_page_html(page_title)
         soup = BeautifulSoup(html_doc, "html.parser")
         content = soup.find("div", class_="mw-parser-output") or soup
 
-        characters: List[CharacterData] = []
-        seen_slugs: Set[str] = set()
+        characters: list[CharacterData] = []
+        seen_slugs: set[str] = set()
 
-        killer_meta_by_slug: Dict[str, Dict[str, Any]] = {}
+        killer_meta_by_slug: dict[str, dict[str, Any]] = {}
         if role == "Killer":
             for cell in content.find_all(["td", "th"]):
                 links = cell.find_all("a", href=re.compile(r"^/wiki/(?!File:|Category:|Special:).+"))
@@ -360,9 +332,8 @@ class WikiGGScraperDriver:
 
         return characters
 
-    def scrape_dlcs_from_wiki(self) -> List[Dict[str, Any]]:
-        """Scrapes the live Downloadable_Content and Chapters catalogs directly from wiki.gg."""
-        dlcs: List[Dict[str, Any]] = []
+    def scrape_dlcs_from_wiki(self) -> list[dict[str, Any]]:
+        dlcs: list[dict[str, Any]] = []
         seen_dlc_names = set()
 
         for page in ["Downloadable_Content", "Chapters"]:
@@ -371,7 +342,6 @@ class WikiGGScraperDriver:
                 soup = BeautifulSoup(html_doc, "html.parser")
                 content = soup.find("div", class_="mw-parser-output") or soup
 
-                # 1. Parse tables on DLC/Chapters pages
                 for table in content.find_all("table", class_=re.compile(r"wikitable|article-table")):
                     rows = table.find_all("tr")
                     for tr in rows:
@@ -382,7 +352,6 @@ class WikiGGScraperDriver:
                         row_text = tr.get_text(separator=" ", strip=True)
                         date_str, year_num = parse_date_and_year(row_text)
 
-                        # Find character links and DLC links in the row
                         links = tr.find_all("a", href=re.compile(r"^/wiki/"))
                         row_chars = []
                         dlc_name = ""
@@ -412,7 +381,6 @@ class WikiGGScraperDriver:
                                 "characters": row_chars,
                             })
 
-                # 2. Parse section headers (h2, h3, h4)
                 is_under_licensed = False
                 for node in content.find_all(["h2", "h3", "h4"]):
                     if node.name == "h2":
@@ -481,18 +449,16 @@ class WikiGGScraperDriver:
 
         return dlcs
 
-    def enrich_characters_from_pages(self, characters: List[CharacterData]) -> None:
+    def enrich_characters_from_pages(self, characters: list[CharacterData]) -> None:
         def norm_key(text: str) -> str:
             if not text:
                 return ""
             n = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8").lower()
             return re.sub(r"[^a-z0-9]", "", n)
 
-        # 1. Scrape live DLC catalog from wiki.gg
         dlcs = self.scrape_dlcs_from_wiki()
         logger.info(f"Loaded {len(dlcs)} live DLC entries from wiki.gg")
 
-        # 2. Enrich combat stats, chapter info, and release dates directly per character page
         async def _fetch_all():
             async with AsyncSession(impersonate="chrome120", verify=False) as session:
                 semaphore = asyncio.Semaphore(5)
@@ -536,7 +502,6 @@ class WikiGGScraperDriver:
                                 infobox_dlc_link = ""
                                 infobox_release_date = ""
 
-                                # A. Parse Infobox Rows
                                 for tr in content.find_all("tr"):
                                     th = tr.find(["th", "td"], class_=lambda c: c and "title" in str(c).lower())
                                     td = tr.find(["td"], class_=lambda c: c and "value" in str(c).lower())
@@ -583,7 +548,6 @@ class WikiGGScraperDriver:
                                         elif t_txt in ["release date", "released", "release"]:
                                             infobox_release_date = v_txt
 
-                                # B. Parse Lead Overview Paragraphs for Introduction & Release Date
                                 intro_paragraphs = []
                                 for p in content.find_all("p"):
                                     p_txt = p.get_text(separator=" ", strip=True)
@@ -598,7 +562,6 @@ class WikiGGScraperDriver:
                                 parsed_release_date = ""
                                 parsed_release_year = None
 
-                                # Pattern 1: Standard wiki introductory sentence
                                 intro_match = re.search(
                                     r"introduced as (?:the|a)\s+(?:Killer|Survivor)\s+of\s+(?:the\s+)?([^,]+?),\s+a\s+([^,]+?)\s+released\s+(?:on|in)\s+([0-9]{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+of)?\s+[0-9]{4}|[A-Za-z]+\s+[0-9]{1,2}(?:st|nd|rd|th)?,?\s+[0-9]{4}|[A-Za-z]+\s+[0-9]{4}|[0-9]{4})",
                                     intro_full_text,
@@ -613,7 +576,6 @@ class WikiGGScraperDriver:
                                     parsed_chapter_number = c_num or ""
                                     parsed_chapter_name = c_title or raw_chap
 
-                                # Pattern 2: Base Game intro
                                 if not parsed_release_date:
                                     if "base game" in intro_full_text.lower() or (char.release_number and char.release_number <= 4 and "chapter" not in intro_full_text.lower()):
                                         parsed_chapter_name = "Base Game"
@@ -622,14 +584,12 @@ class WikiGGScraperDriver:
                                         parsed_release_date = d_p or "14 June 2016"
                                         parsed_release_year = y_p or 2016
 
-                                # Pattern 3: General release date extractor from intro paragraphs
                                 if not parsed_release_date:
                                     d_p, y_p = parse_date_and_year(intro_full_text)
                                     if d_p:
                                         parsed_release_date = d_p
                                         parsed_release_year = y_p
 
-                                # Pattern 4: Fallback to infobox DLC & release date
                                 if not parsed_release_date and infobox_release_date:
                                     d_p, y_p = parse_date_and_year(infobox_release_date)
                                     if d_p:
@@ -641,7 +601,6 @@ class WikiGGScraperDriver:
                                     parsed_chapter_number = c_num or ""
                                     parsed_chapter_name = c_title or infobox_dlc_text
 
-                                # Pattern 5: Cross-reference with live DLC catalog if still missing
                                 if not parsed_release_date or not parsed_chapter_name:
                                     c_norm = norm_key(char.name)
                                     for d in dlcs:
@@ -661,7 +620,6 @@ class WikiGGScraperDriver:
                                         if parsed_release_date and parsed_chapter_name:
                                             break
 
-                                # Pattern 6: Fetch Chapter DLC page directly if date is still missing
                                 if (not parsed_release_date or not parsed_release_year) and (infobox_dlc_link or parsed_chapter_name):
                                     chap_slug = infobox_dlc_link or parsed_chapter_name.replace(" ", "_")
                                     try:
@@ -687,7 +645,6 @@ class WikiGGScraperDriver:
                                     except Exception:
                                         pass
 
-                                # C. Licensing Assessment
                                 is_licensed = False
                                 if cost_text:
                                     if "auric cells" in cost_text.lower() and "iridescent" not in cost_text.lower():
@@ -698,7 +655,6 @@ class WikiGGScraperDriver:
                                 if not is_licensed and ("™" in char.name or "®" in char.name or "™" in parsed_chapter_name or "®" in parsed_chapter_name):
                                     is_licensed = True
 
-                                # D. Power & Image Extraction for Killers
                                 if char.category == "Killer":
                                     for img in content.find_all("img"):
                                         alt = img.get("alt", "")
@@ -724,7 +680,6 @@ class WikiGGScraperDriver:
                                                 power_desc = clean_description_text("\n\n".join(p_elems[:5]))
                                                 break
 
-                                # E. Lore Paragraphs
                                 lore_text = ""
                                 for h in content.find_all(["h2", "h3"]):
                                     htxt = h.get_text(strip=True).lower()
@@ -741,7 +696,6 @@ class WikiGGScraperDriver:
                                             lore_text = "\n\n".join(p_list[:6])
                                             break
 
-                                # Assign fields to character
                                 if real_name and real_name != char.name:
                                     char.real_name = real_name
 
@@ -784,7 +738,6 @@ class WikiGGScraperDriver:
         except Exception as err:
             logger.error(f"Error in enrich_characters_from_pages: {err}")
 
-        # 3. Dynamic DLC Counterparts Linking
         chapter_groups = defaultdict(list)
         for char in characters:
             if char.chapter_name and char.chapter_name.lower() != "base game":
@@ -793,9 +746,9 @@ class WikiGGScraperDriver:
         for group in chapter_groups.values():
             if len(group) > 1:
                 for c in group:
-                    c.dlc_counterparts = json.dumps([other.name for other in group if other.name != c.name])
+                    c.dlc_counterparts = safe_json_dumps([other.name for other in group if other.name != c.name], default_val="[]")
 
-    def scrape_characters_dynamically(self) -> List[CharacterData]:
+    def scrape_characters_dynamically(self) -> list[CharacterData]:
         logger.info("Fetching Survivors via MediaWiki API...")
         survivors = self.scrape_roster_from_page("Survivors", "Survivor")
 
@@ -809,14 +762,14 @@ class WikiGGScraperDriver:
         logger.info(f"Discovered {len(all_characters)} characters ({len(survivors)} Survivors, {len(killers)} Killers).")
         return all_characters
 
-    def parse_perks(self, html_content: str, characters: List[CharacterData]) -> List[PerkData]:
+    def parse_perks(self, html_content: str, characters: list[CharacterData]) -> list[PerkData]:
         soup = BeautifulSoup(html_content, "html.parser")
-        perks_dict: Dict[str, PerkData] = {}
-        alias_backlog: Dict[str, str] = {}
-        current_category: Optional[str] = None
+        perks_dict: dict[str, PerkData] = {}
+        alias_backlog: dict[str, str] = {}
+        current_category: str | None = None
         content_area = soup.find("div", class_="mw-parser-output") or soup
 
-        char_by_key: Dict[str, CharacterData] = {}
+        char_by_key: dict[str, CharacterData] = {}
         for c in characters:
             keys = [c.name, c.real_name, c.wiki_slug, c.short_name]
             if c.name.startswith("The "):
@@ -938,9 +891,9 @@ class WikiGGScraperDriver:
 
         return list(perks_dict.values())
 
-    def parse_wiki_items(self, html_content: str) -> List[ItemData]:
+    def parse_wiki_items(self, html_content: str) -> list[ItemData]:
         soup = BeautifulSoup(html_content, "html.parser")
-        items: List[ItemData] = []
+        items: list[ItemData] = []
         content_area = soup.find("div", class_="mw-parser-output") or soup
         current_category = "Survivor"
         current_section = ""
@@ -1102,15 +1055,15 @@ class WikiGGScraperDriver:
                         continue
         return items
 
-    def parse_wiki_addons(self, html_content: str, characters: Optional[List[CharacterData]] = None) -> List[AddonData]:
+    def parse_wiki_addons(self, html_content: str, characters: list[CharacterData] | None = None) -> list[AddonData]:
         soup = BeautifulSoup(html_content, "html.parser")
-        raw_addons: List[dict] = []
+        raw_addons: list[dict] = []
         content_area = soup.find("div", class_="mw-parser-output") or soup
         current_target = "General"
         current_category = "Survivor"
         current_section = ""
 
-        dynamic_power_to_killer: Dict[str, str] = {}
+        dynamic_power_to_killer: dict[str, str] = {}
         if characters:
             for c in characters:
                 if c.category == "Killer" or getattr(c, "role", "") == "Killer":
@@ -1201,7 +1154,6 @@ class WikiGGScraperDriver:
 
                         rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
 
-                        # Positional fallback if rarity is still generic Common and standard 20-row killer table
                         if rarity == "Common" and row_count == 20:
                             if row_idx < 4:
                                 rarity = "Common"
@@ -1229,7 +1181,7 @@ class WikiGGScraperDriver:
         for a in raw_addons:
             name_target_counts[normalize_name_key(a["name"])].add(normalize_name_key(a["target"]))
 
-        addons: List[AddonData] = []
+        addons: list[AddonData] = []
         seen_unique_names = set()
         for a in raw_addons:
             addon_name = a["name"]
@@ -1263,8 +1215,7 @@ class WikiGGScraperDriver:
 
         return addons
 
-    def scrape_addons_from_character_page(self, char: CharacterData) -> List[AddonData]:
-        """Scrape killer-specific addons from the killer's dedicated page on wiki.gg if omitted from main table."""
+    def scrape_addons_from_character_page(self, char: CharacterData) -> list[AddonData]:
         candidate_slugs = []
         if char.wiki_slug:
             candidate_slugs.append(char.wiki_slug)
@@ -1292,7 +1243,7 @@ class WikiGGScraperDriver:
 
         soup = BeautifulSoup(html_content, "html.parser")
         content_area = soup.find("div", class_="mw-parser-output") or soup
-        addons: List[AddonData] = []
+        addons: list[AddonData] = []
         target = char.name
         current_section = ""
 
@@ -1354,90 +1305,11 @@ class WikiGGScraperDriver:
                             continue
         return addons
 
-
-    def fetch_lang_page_html(self, lang: str, page_title: str) -> str:
-        from app.scrapers.drivers import LANGUAGE_DRIVERS
-        lang_key = lang.lower().strip()
-        driver_cls = LANGUAGE_DRIVERS.get(lang_key)
-        if driver_cls and driver_cls is not WikiGGDriverEN:
-            driver = driver_cls(base_dir=self.base_dir)
-            return driver.fetch_page_html(page_title)
-        return self.fetch_page_html(page_title)
-
-    def scrape_translations(
-        self,
-        characters: List[CharacterData],
-        perks: List[PerkData],
-        items: List[ItemData],
-        addons: List[AddonData],
-        languages: Optional[Union[str, List[str]]] = None,
-    ) -> None:
-        """Enriches entities using dedicated language drivers."""
-        from app.scrapers.drivers import LANGUAGE_DRIVERS
-        for p in perks:
-            if "en" not in p.translations and p.description:
-                p.translations["en"] = {"name": p.name, "description": p.description}
-        for c in characters:
-            if "en" not in c.translations:
-                p_name = c.power.name if c.power else ""
-                p_desc = c.power.description if c.power else ""
-                c.translations["en"] = {
-                    "name": c.name,
-                    "lore": c.lore or "",
-                    "chapter_name": c.chapter_name or "",
-                    "power_name": p_name,
-                    "power_description": p_desc,
-                }
-        for i in items:
-            if "en" not in i.translations and i.description:
-                i.translations["en"] = {"name": i.name, "description": i.description}
-        for a in addons:
-            if "en" not in a.translations and a.description:
-                a.translations["en"] = {"name": a.name, "description": a.description}
-
-        if languages == "all" or languages is None:
-            target_langs = ["pl", "de", "es", "ja", "fr", "it"]
-        elif isinstance(languages, list):
-            target_langs = [l for l in languages if l.lower() != "en"]
-        else:
-            target_langs = []
-
-        for lang in target_langs:
-            lang_key = lang.lower().strip()
-            driver_cls = LANGUAGE_DRIVERS.get(lang_key)
-            if not driver_cls or driver_cls is WikiGGScraperDriver:
-                continue
-
-            try:
-                driver_instance = driver_cls(base_dir=self.base_dir)
-                if hasattr(self, "fetch_lang_page_html") and callable(self.fetch_lang_page_html):
-                    driver_instance.fetch_page_html = lambda p, l=lang_key: self.fetch_lang_page_html(l, p)
-                if hasattr(driver_instance, "enrich_translations"):
-                    driver_instance.enrich_translations(characters, perks, items, addons)
-            except Exception as e:
-                logger.warning(f"Failed running translation driver for '{lang_key}': {e}")
-
-    def parse_wiki_offerings(self, html_content: str) -> List[OfferingData]:
+    def parse_wiki_offerings(self, html_content: str) -> list[OfferingData]:
         soup = BeautifulSoup(html_content, "html.parser")
-        offerings: List[OfferingData] = []
-        seen_offerings: Set[str] = set()
+        offerings: list[OfferingData] = []
+        seen_offerings: set[str] = set()
 
-        # Build a flat list of all top-level content elements in document order so
-        # we can walk backwards from any <tr> to find the nearest section heading.
-        # wiki.gg Offerings page structure:
-        #   <h4 id="Survivor">        → role = Survivor
-        #     <h5 id="Altruism">      → still Survivor
-        #     <h5 id="Boldness">      → still Survivor
-        #     …
-        #   <h4 id="Killer">          → role = Killer
-        #     <h5 id="Brutality">     → still Killer
-        #     …
-        #   <h4 id="All_Categories">  → role = All
-        #   <h4 id="Memento_Mori">    → role = Killer
-        #   <h4 id="Luck">            → role = Survivor
-        #   (Map Modifications, Realm, Shrouds, Splinters, Wards) → All
-
-        # Heading-id → role mapping
         HEADING_ROLE: dict[str, str] = {
             "survivor": "Survivor",
             "altruism": "Survivor",
@@ -1457,7 +1329,6 @@ class WikiGGScraperDriver:
             return HEADING_ROLE.get(heading_id.lower().replace("-", "_"), "All")
 
         def nearest_section_role(tag) -> str:
-            """Walk previous siblings and parents to find the nearest heading."""
             for ancestor in [tag] + list(tag.parents):
                 for sibling in ancestor.find_all_previous(["h2", "h3", "h4", "h5"]):
                     span = sibling.find("span", class_="mw-headline")
@@ -1513,12 +1384,7 @@ class WikiGGScraperDriver:
                 sanitized = sanitize_filename(off_name)
                 local_path = f"icons/offerings/{sanitized}.png"
 
-                # Determine role from nearest section heading, not row text
                 role = nearest_section_role(row)
-
-                # For offerings under "All Categories", the individual description
-                # may still target only one role, e.g. "to all Survivors" or
-                # "to the Killer". Refine in that case.
                 if role == "All":
                     raw_desc = row.get_text().lower()
                     survivors_only = (
@@ -1583,8 +1449,7 @@ class WikiGGScraperDriver:
 
         return offerings
 
-
-    def scrape_offerings(self) -> List[OfferingData]:
+    def scrape_offerings(self) -> list[OfferingData]:
         try:
             logger.info("Fetching Offerings...")
             html_offerings = self.fetch_page_html("Offerings")
@@ -1595,8 +1460,7 @@ class WikiGGScraperDriver:
 
     def scrape_all(
         self,
-        languages: Optional[Union[str, List[str]]] = None,
-    ) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData], List[OfferingData]]:
+    ) -> tuple[list[CharacterData], list[PerkData], list[ItemData], list[AddonData], list[OfferingData]]:
         logger.info("Scraping deadbydaylight.wiki.gg dynamic data via MediaWiki API...")
         characters = self.scrape_characters_dynamically()
 
@@ -1617,7 +1481,6 @@ class WikiGGScraperDriver:
             html_addons = self.fetch_page_html("Add-ons")
             addons = self.parse_wiki_addons(html_addons, characters)
 
-            # Check for killers whose addons are hosted on dedicated character pages
             known_covered_killers = {
                 normalize_name_key(a.associated_target) for a in addons if a.associated_target
             }
@@ -1642,5 +1505,4 @@ class WikiGGScraperDriver:
             logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
             offerings = []
 
-        # Multi-language translations are strictly managed by TranslationService from translations.json
         return characters, perks, items, addons, offerings

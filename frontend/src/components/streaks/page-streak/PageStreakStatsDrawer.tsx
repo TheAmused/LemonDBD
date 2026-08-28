@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/page-streak/PageStreakStatsDrawer.tsx
 'use client';
+// frontend/src/components/streaks/page-streak/PageStreakStatsDrawer.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { PageStreakStats, PageStreakMatchLog } from '@/types/pageStreak';

@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/Sidebar.tsx
 'use client';
+// frontend/src/components/Sidebar.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';

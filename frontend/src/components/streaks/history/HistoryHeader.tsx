@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/history/HistoryHeader.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryHeader.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';

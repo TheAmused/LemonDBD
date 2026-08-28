@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/gauntlet/ActiveTargetStage.tsx
 'use client';
+// frontend/src/components/streaks/gauntlet/ActiveTargetStage.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { GauntletRun, Perk, Role } from '@/types/gauntletStreak';

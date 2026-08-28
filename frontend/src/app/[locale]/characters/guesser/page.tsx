@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/app/[locale]/characters/guesser/page.tsx
 'use client';
+// frontend/src/app/[locale]/characters/guesser/page.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
@@ -655,7 +655,7 @@ export default function GuesserPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
-        'Loading...'
+        {'Loading...'}
       </div>
     );
   }
@@ -1135,10 +1135,10 @@ export default function GuesserPage() {
 
               <div className="space-y-2">
                 <h2 className="text-xl font-black text-white uppercase tracking-wider font-mono">
-                  Realm Survey: Map Guesser
+                  {dict?.guesser?.realmSurveyTitle || 'Realm Survey: Map Guesser'}
                 </h2>
                 <div className="inline-flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400 font-mono text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest animate-pulse">
-                  System: Data Stream Corrupted
+                  {dict?.guesser?.systemDataCorrupted || 'System: Data Stream Corrupted'}
                 </div>
               </div>
 
@@ -1171,7 +1171,7 @@ export default function GuesserPage() {
                       {activeMode.replace(/_/g, ' ')}
                     </span>
                     <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
-                      Keyboard: press [1], [2], [3] or [4]
+                      {dict?.guesser?.keyboardHint || 'Keyboard: press [1], [2], [3] or [4]'}
                     </span>
                   </div>
                   <h2 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
@@ -1278,7 +1278,7 @@ export default function GuesserPage() {
                           {currentQuestion.difficultyEffects.rotate > 0 && (
 
                             <span className="px-2 py-0.5 rounded bg-slate-100 text-[9px] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-400 uppercase tracking-widest border border-slate-200 dark:border-slate-700">
-                              Rotated {currentQuestion.difficultyEffects.rotate}°
+                              {dict?.guesser?.rotated || 'Rotated'}{' '}{currentQuestion.difficultyEffects.rotate}{'°'}
                             </span>
                           )}
                           {currentQuestion.difficultyEffects.scale > 1 && (
@@ -1410,7 +1410,7 @@ export default function GuesserPage() {
                         </p>
                         {selectedAnswerIndex !== currentQuestion?.correctIndex && currentQuestion && (
                           <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
-                            Correct answer:{' '}
+                            {dict?.guesser?.correctAnswer || 'Correct answer:'}{' '}
                             <strong className="text-slate-900 dark:text-white">
                               {currentQuestion.type === 'name_to_icon'
                                 ? (currentQuestion.options[currentQuestion.correctIndex] as Perk).name

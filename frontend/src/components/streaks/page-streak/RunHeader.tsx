@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/page-streak/RunHeader.tsx
 'use client';
+// frontend/src/components/streaks/page-streak/RunHeader.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { RotateCcw, Skull, Flame, Trophy, BookOpen, BarChart2 } from 'lucide-react';

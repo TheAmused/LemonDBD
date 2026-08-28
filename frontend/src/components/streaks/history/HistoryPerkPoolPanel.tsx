@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Layers, CheckCircle2, Lock, Sparkles } from 'lucide-react';

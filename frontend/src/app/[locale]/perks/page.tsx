@@ -1,5 +1,5 @@
-import type { Dictionary } from '@/locales/types';
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/perks/page.tsx
 
 import React, { useEffect, useState, useCallback, Suspense } from 'react';

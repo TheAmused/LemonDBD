@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/maps/VoiceEngineInfoModal.tsx
 'use client';
+// frontend/src/components/maps/VoiceEngineInfoModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';

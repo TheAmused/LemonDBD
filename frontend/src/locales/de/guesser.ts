@@ -52,5 +52,10 @@ export default {
   "memeMode": "Meme-Modus",
   "grayscale": "Graustufen",
   "croppedZoom": "Zuschnitt-Zoom",
-  "space": "Leertaste"
+  "space": "Leertaste",
+  "realmSurveyTitle": "Realm-Umfrage: Karten-Rater",
+  "systemDataCorrupted": "System: Datenstrom beschädigt",
+  "keyboardHint": "Tastatur: drücke [1], [2], [3] oder [4]",
+  "rotated": "Gedreht",
+  "correctAnswer": "Richtige Antwort:"
 };

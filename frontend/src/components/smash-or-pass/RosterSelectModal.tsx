@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 'use client';
+// frontend/src/components/smash-or-pass/RosterSelectModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Check, Flame, X } from 'lucide-react';

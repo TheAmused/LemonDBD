@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/app/[locale]/streaks/layout.tsx
 'use client';
+// frontend/src/app/[locale]/streaks/layout.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { useParams, usePathname } from 'next/navigation';
@@ -84,7 +84,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        Loading Challenges...
+        {'Loading Challenges...'}
       </div>
     );
   }

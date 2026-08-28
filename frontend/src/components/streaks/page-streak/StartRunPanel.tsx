@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/page-streak/StartRunPanel.tsx
 'use client';
+// frontend/src/components/streaks/page-streak/StartRunPanel.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { fetchPoolSummary } from '@/services/pageStreakApi';

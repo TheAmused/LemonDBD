@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/history/HistoryRowClearedBanner.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryRowClearedBanner.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
 import { Trophy } from 'lucide-react';

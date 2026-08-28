@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
 'use client';
+// frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';

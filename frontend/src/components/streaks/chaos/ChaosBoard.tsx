@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/chaos/ChaosBoard.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosBoard.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';

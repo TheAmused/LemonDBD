@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/draft/DraftRoom.tsx
 'use client';
+// frontend/src/components/draft/DraftRoom.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import {

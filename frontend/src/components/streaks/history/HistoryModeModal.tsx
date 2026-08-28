@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/history/HistoryModeModal.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryModeModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
 import { X, Shield, Skull } from 'lucide-react';

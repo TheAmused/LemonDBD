@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/StreakStatsDrawer.tsx
 'use client';
+// frontend/src/components/streaks/StreakStatsDrawer.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
 import { X, BarChart2, CheckCircle2, XCircle, Trophy, Percent, Activity, Clock } from 'lucide-react';

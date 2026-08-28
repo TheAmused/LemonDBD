@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/killer/KillerCalculator.tsx
 'use client';
+// frontend/src/components/killer/KillerCalculator.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useRef } from 'react';
 import {

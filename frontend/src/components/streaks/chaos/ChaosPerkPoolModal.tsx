@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/chaos/ChaosPerkPoolModal.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosPerkPoolModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { X, Layers, CheckCircle2, Circle, Sparkles } from 'lucide-react';

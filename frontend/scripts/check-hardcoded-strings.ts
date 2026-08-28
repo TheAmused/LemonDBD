@@ -1,9 +1,12 @@
+// frontend/scripts/check-hardcoded-strings.ts
 import { Project, SyntaxKind, Node } from "ts-morph";
+
+const isStrict = process.argv.includes("--strict");
 
 const project = new Project();
 project.addSourceFilesAtPaths("src/**/*.{tsx,jsx}");
 
-// Attributes that represent user-facing text
+// Attributes whose values represent user-facing text displayed directly to the end-user
 const USER_FACING_ATTRIBUTES = new Set([
   "placeholder",
   "alt",
@@ -11,16 +14,27 @@ const USER_FACING_ATTRIBUTES = new Set([
   "aria-label",
   "aria-placeholder",
   "aria-roledescription",
+  "aria-description",
 ]);
 
 // Tags whose contents should never be treated as translatable JSX text
-const IGNORED_PARENT_TAGS = new Set(["style", "script", "code", "pre"]);
+const IGNORED_TAGS = new Set(["style", "script", "code", "pre"]);
 
 // Pure file extensions (e.g. ".json", ".png", ".svg")
 const FILE_EXTENSION_REGEX = /^\.[a-zA-Z0-9]+$/;
 
 // Masking symbols for passwords or placeholders (e.g. "••••••••", "********")
 const MASK_SYMBOLS_REGEX = /^[•*·\-_=~]+$/;
+
+// Single template interpolation placeholders like "{email}", "{count}", "{slot}", "{progress}"
+const PLACEHOLDER_ONLY_REGEX = /^\{[a-zA-Z0-9_]+\}$/;
+
+// Internal identifier prefixes, URLs, technical identifiers, or asset paths
+const IDENTIFIER_OR_PATH_REGEX =
+  /^(https?:\/\/|\/|\.\/|\.\.\/|offering-|item-|addon-|seed_[a-z]|key-|tab-|#)/;
+
+// CSS property fragments or keyframe rules
+const CSS_OR_CODE_REGEX = /(@keyframes|transform:|opacity:|filter:|box-shadow:|rotate\(|scale\(|translate\()/;
 
 // Structural numbers and punctuation (e.g. "15", "(", ")", ":", "/", "#")
 const STRUCTURAL_PUNCTUATION_OR_NUMBERS = /^[\d\s.,!?:;()/#&_–—\-|/\\%*+=[\]{}<>]+$/;
@@ -56,16 +70,25 @@ function shouldIgnoreText(rawText: string): boolean {
   // 1. Ignore single visual characters (e.g., "S", "K", "💀", "🛡️", "%", "·", "→", "°")
   if (getGraphemeCount(text) <= 1) return true;
 
-  // 2. Ignore file extensions (e.g., ".json")
+  // 2. Ignore pure interpolation parameters (e.g. "{email}", "{count}", "{progress}")
+  if (PLACEHOLDER_ONLY_REGEX.test(text)) return true;
+
+  // 3. Ignore file extensions (e.g., ".json")
   if (FILE_EXTENSION_REGEX.test(text)) return true;
 
-  // 3. Ignore mask / dot sequences (e.g., "••••••••")
+  // 4. Ignore URLs, routes, or DOM identifier prefixes (e.g. "item-", "offering-", "/streaks/")
+  if (IDENTIFIER_OR_PATH_REGEX.test(text)) return true;
+
+  // 5. Ignore CSS rules or keyframe code blocks
+  if (CSS_OR_CODE_REGEX.test(text)) return true;
+
+  // 6. Ignore mask / dot sequences (e.g., "••••••••")
   if (MASK_SYMBOLS_REGEX.test(text)) return true;
 
-  // 4. Ignore strings made purely of emojis, symbols, and formatting selectors
+  // 7. Ignore strings made purely of emojis, symbols, and formatting selectors
   if (EMOJI_AND_SYMBOLS_REGEX.test(text)) return true;
 
-  // 5. Ignore structural punctuation and pure numbers (e.g., "15", "/4", ":")
+  // 8. Ignore structural punctuation and pure numbers (e.g., "15", "/4", ":")
   if (STRUCTURAL_PUNCTUATION_OR_NUMBERS.test(text)) return true;
 
   return false;
@@ -91,30 +114,112 @@ function hasIgnoreComment(node: Node): boolean {
 }
 
 /**
- * Checks if a node is nested inside an ignored tag like <style> or <code>.
+ * Checks if a node is or is nested inside an ignored tag like <style>, <script>, <code>, or <pre>.
  */
-function isInsideIgnoredTag(node: Node): boolean {
-  let current: Node | undefined = node.getParent();
+function isIgnoredTag(node: Node): boolean {
+  let current: Node | undefined = node;
   while (current) {
     if (Node.isJsxElement(current)) {
-      const tagName = current.getOpeningElement().getTagNameNode().getText();
-      if (IGNORED_PARENT_TAGS.has(tagName)) {
-        return true;
-      }
+      const tagName = current.getOpeningElement().getTagNameNode().getText().toLowerCase();
+      if (IGNORED_TAGS.has(tagName)) return true;
+    }
+    if (Node.isJsxSelfClosingElement(current)) {
+      const tagName = current.getTagNameNode().getText().toLowerCase();
+      if (IGNORED_TAGS.has(tagName)) return true;
     }
     current = current.getParent();
   }
   return false;
 }
 
+interface StringCandidate {
+  text: string;
+  line: number;
+  isFallback: boolean;
+}
+
+/**
+ * Evaluates an expression tree recursively ONLY along direct render paths
+ * (ternary branches, logical OR fallbacks, template strings, parenthesized expressions).
+ */
+function extractRenderedStrings(expr: Node, isRightOfFallback = false): StringCandidate[] {
+  if (hasIgnoreComment(expr)) return [];
+
+  // String Literals
+  if (Node.isStringLiteral(expr) || Node.isNoSubstitutionTemplateLiteral(expr)) {
+    return [
+      {
+        text: expr.getLiteralValue(),
+        line: expr.getStartLineNumber(),
+        isFallback: isRightOfFallback,
+      },
+    ];
+  }
+
+  // Template Strings: `Hello ${name}`
+  if (Node.isTemplateExpression(expr)) {
+    const candidates: StringCandidate[] = [];
+    const headText = expr.getHead().getLiteralText();
+    if (headText) {
+      candidates.push({
+        text: headText,
+        line: expr.getHead().getStartLineNumber(),
+        isFallback: isRightOfFallback,
+      });
+    }
+    for (const span of expr.getTemplateSpans()) {
+      const spanText = span.getLiteral().getLiteralText();
+      if (spanText) {
+        candidates.push({
+          text: spanText,
+          line: span.getLiteral().getStartLineNumber(),
+          isFallback: isRightOfFallback,
+        });
+      }
+    }
+    return candidates;
+  }
+
+  // Parentheses: ( cond ? 'a' : 'b' )
+  if (Node.isParenthesizedExpression(expr)) {
+    return extractRenderedStrings(expr.getExpression(), isRightOfFallback);
+  }
+
+  // Ternary: cond ? 'a' : 'b'
+  if (Node.isConditionalExpression(expr)) {
+    return [
+      ...extractRenderedStrings(expr.getWhenTrue(), isRightOfFallback),
+      ...extractRenderedStrings(expr.getWhenFalse(), isRightOfFallback),
+    ];
+  }
+
+  // Logical Binary Operations (&&, ||, ??)
+  if (Node.isBinaryExpression(expr)) {
+    const op = expr.getOperatorToken().getKind();
+
+    if (op === SyntaxKind.AmpersandAmpersandToken) {
+      return extractRenderedStrings(expr.getRight(), isRightOfFallback);
+    }
+
+    if (op === SyntaxKind.BarBarToken || op === SyntaxKind.QuestionQuestionToken) {
+      return [
+        ...extractRenderedStrings(expr.getLeft(), isRightOfFallback),
+        ...extractRenderedStrings(expr.getRight(), true),
+      ];
+    }
+  }
+
+  return [];
+}
+
 // Traverse all source files
 for (const sourceFile of project.getSourceFiles()) {
   const filePath = sourceFile.getFilePath();
 
-  // 1. Check raw JSX text nodes: <div>Raw Text</div>
+  // 1. Raw JSX Text Nodes: <h1>Raw text</h1>
   const jsxTexts = sourceFile.getDescendantsOfKind(SyntaxKind.JsxText);
   for (const node of jsxTexts) {
-    if (isInsideIgnoredTag(node) || hasIgnoreComment(node)) continue;
+    if (isIgnoredTag(node) || hasIgnoreComment(node)) continue;
 
     const rawText = node.getText();
     if (!shouldIgnoreText(rawText)) {
@@ -122,50 +227,62 @@ for (const sourceFile of project.getSourceFiles()) {
     }
   }
 
-  // 2. Check JSX string expressions: <div>{'Raw Text'}</div>
-  const jsxExprs = sourceFile.getDescendantsOfKind(SyntaxKind.JsxExpression);
-  for (const expr of jsxExprs) {
-    if (expr.getParentIfKind(SyntaxKind.JsxAttribute)) continue;
-    if (isInsideIgnoredTag(expr) || hasIgnoreComment(expr)) continue;
+  // 2. Direct JSX Element/Fragment Children: <div>{'Hardcoded'}</div> or <div>{cond ? 'A' : 'B'}</div>
+  const jsxElements = [
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxElement),
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxFragment),
+  ];
 
-    const exprNode = expr.getExpression();
-    if (
-      exprNode &&
-      (Node.isStringLiteral(exprNode) || Node.isNoSubstitutionTemplateLiteral(exprNode))
-    ) {
-      const literalValue = exprNode.getLiteralValue();
-      if (!shouldIgnoreText(literalValue)) {
-        reportError(filePath, expr.getStartLineNumber(), literalValue, "JSX String Expression");
+  for (const el of jsxElements) {
+    if (isIgnoredTag(el) || hasIgnoreComment(el)) continue;
+
+    for (const child of el.getJsxChildren()) {
+      if (Node.isJsxExpression(child)) {
+        const expr = child.getExpression();
+        if (!expr) continue;
+
+        const candidates = extractRenderedStrings(expr);
+        for (const candidate of candidates) {
+          if (shouldIgnoreText(candidate.text)) continue;
+          if (candidate.isFallback && !isStrict) continue;
+
+          reportError(filePath, candidate.line, candidate.text, "JSX String Expression");
+        }
       }
     }
   }
 
-  // 3. Check hardcoded user-facing JSX attributes: <input placeholder="Enter text" />
+  // 3. User-Facing JSX Attributes: placeholder="...", title="...", aria-label="..."
   const jsxAttributes = sourceFile.getDescendantsOfKind(SyntaxKind.JsxAttribute);
   for (const attr of jsxAttributes) {
     if (hasIgnoreComment(attr)) continue;
 
     const attrName = attr.getNameNode().getText();
-    if (USER_FACING_ATTRIBUTES.has(attrName)) {
-      const initializer = attr.getInitializer();
+    if (!USER_FACING_ATTRIBUTES.has(attrName)) continue;
 
-      // Static strings: placeholder="Enter text"
-      if (initializer && Node.isStringLiteral(initializer)) {
-        const val = initializer.getLiteralValue();
-        if (!shouldIgnoreText(val)) {
-          reportError(filePath, attr.getStartLineNumber(), val, `Attribute (${attrName})`);
-        }
+    const initializer = attr.getInitializer();
+    if (!initializer) continue;
+
+    // Static Attribute: placeholder="Search..."
+    if (Node.isStringLiteral(initializer) || Node.isNoSubstitutionTemplateLiteral(initializer)) {
+      const val = initializer.getLiteralValue();
+      if (!shouldIgnoreText(val)) {
+        reportError(filePath, attr.getStartLineNumber(), val, `Attribute (${attrName})`);
       }
+      continue;
+    }
 
-      // Expression strings: placeholder={'Enter text'}
-      if (initializer && Node.isJsxExpression(initializer)) {
-        const innerExpr = initializer.getExpression();
-        if (innerExpr && Node.isStringLiteral(innerExpr)) {
-          const val = innerExpr.getLiteralValue();
-          if (!shouldIgnoreText(val)) {
-            reportError(filePath, attr.getStartLineNumber(), val, `Attribute (${attrName})`);
-          }
-        }
+    // Dynamic Attribute Expression: placeholder={isSearch ? "Search..." : "Filter..."}
+    if (Node.isJsxExpression(initializer)) {
+      const expr = initializer.getExpression();
+      if (!expr) continue;
+
+      const candidates = extractRenderedStrings(expr);
+      for (const candidate of candidates) {
+        if (shouldIgnoreText(candidate.text)) continue;
+        if (candidate.isFallback && !isStrict) continue;
+
+        reportError(filePath, candidate.line, candidate.text, `Attribute (${attrName})`);
       }
     }
   }

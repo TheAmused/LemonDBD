@@ -1,3 +1,4 @@
+// frontend/src/__tests__/unit/i18n-hardcoded.test.ts
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execSync } from "node:child_process";

@@ -361,7 +361,6 @@ CREATE TABLE IF NOT EXISTS translations (
 
 
 def init_raw_sqlite_schema(conn: sqlite3.Connection) -> None:
-    """Executes schema DDL commands for fallback SQLite databases and migrates missing columns."""
     try:
         cursor = conn.cursor()
         cursor.execute("PRAGMA table_info(map_realms);")
@@ -389,4 +388,3 @@ def init_raw_sqlite_schema(conn: sqlite3.Connection) -> None:
         conn.commit()
     except Exception as e:
         logger.error(f"Fallback SQLite init_db failed: {e}")
-

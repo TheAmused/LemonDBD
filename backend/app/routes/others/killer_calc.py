@@ -1,5 +1,5 @@
 # backend/app/routes/others/killer_calc.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
 from app.services.others.killer_calc_service import KillerCalcService
 
 killer_calc_bp = Blueprint("killer_calc", __name__, url_prefix="/api/v1/killer-calc")
@@ -19,7 +19,7 @@ def get_killer_calc_data():
 @killer_calc_bp.route("/calculate", methods=["POST"])
 def calculate():
     """Calculate exact stat deltas and modified terror radius for given killer, add-ons, and perks."""
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
 
     killer_id = data.get("killer_id", "huntress")
     addon_ids = data.get("addon_ids", [])

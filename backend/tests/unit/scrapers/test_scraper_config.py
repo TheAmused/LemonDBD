@@ -1,77 +1,85 @@
-# backend/tests/scrapers/test_scraper_config.py
+# backend/tests/unit/scrapers/test_scraper_config.py
 import json
 import tempfile
-import unittest
 from pathlib import Path
-
+from typing import Generator
+import pytest
 from app.services.scraper_service import ScraperConfig, ScraperService
 
 
-class TestScraperConfig(unittest.TestCase):
-    def setUp(self):
-        self.temp_dir = tempfile.TemporaryDirectory()
-        self.base_dir = Path(self.temp_dir.name)
-        self.service = ScraperService(base_dir=self.base_dir)
+@pytest.mark.unit
+class TestScraperConfig:
+    """Tests for persistent scraper configuration serialization and fallback defaults."""
 
-    def tearDown(self):
-        self.temp_dir.cleanup()
+    @pytest.fixture
+    def temp_scraper_service(self) -> Generator[tuple[ScraperService, Path], None, None]:
+        temp_dir = tempfile.TemporaryDirectory()
+        base_dir = Path(temp_dir.name)
+        service = ScraperService(base_dir=base_dir)
+        yield service, base_dir
+        temp_dir.cleanup()
 
-    def test_scraper_config_defaults(self):
+    def test_scraper_config_defaults(self) -> None:
         config = ScraperConfig()
-        self.assertEqual(config.source, "wikigg")
-        self.assertFalse(config.fallback_to_wiki)
-        self.assertEqual(config.last_used_source, "wikigg")
-        self.assertIsNone(config.last_run_timestamp)
+        assert config.source == "wikigg"
+        assert config.fallback_to_wiki is False
+        assert config.last_used_source == "wikigg"
+        assert config.last_run_timestamp is None
 
-    def test_load_config_returns_defaults_when_file_missing(self):
-        config = self.service.load_config()
-        self.assertIsInstance(config, ScraperConfig)
-        self.assertEqual(config.source, "wikigg")
-        self.assertFalse(config.fallback_to_wiki)
-        self.assertEqual(config.last_used_source, "wikigg")
-        self.assertIsNone(config.last_run_timestamp)
+    def test_load_config_returns_defaults_when_file_missing(
+        self, temp_scraper_service: tuple[ScraperService, Path]
+    ) -> None:
+        service, _ = temp_scraper_service
+        config = service.load_config()
+        assert isinstance(config, ScraperConfig)
+        assert config.source == "wikigg"
+        assert config.fallback_to_wiki is False
+        assert config.last_used_source == "wikigg"
+        assert config.last_run_timestamp is None
 
-    def test_save_and_load_config_with_dict(self):
-        updated = self.service.save_config({
-            "source": "wiki",
-            "fallback_to_wiki": False,
-            "last_used_source": "wiki",
-            "last_run_timestamp": "2026-08-10T12:00:00Z"
-        })
-        self.assertIsInstance(updated, ScraperConfig)
-        self.assertEqual(updated.source, "wiki")
-        self.assertFalse(updated.fallback_to_wiki)
+    def test_save_and_load_config_with_dict(
+        self, temp_scraper_service: tuple[ScraperService, Path]
+    ) -> None:
+        service, base_dir = temp_scraper_service
+        updated = service.save_config(
+            {
+                "source": "wiki",
+                "fallback_to_wiki": False,
+                "last_used_source": "wiki",
+                "last_run_timestamp": "2026-08-10T12:00:00Z",
+            }
+        )
+        assert isinstance(updated, ScraperConfig)
+        assert updated.source == "wiki"
+        assert updated.fallback_to_wiki is False
 
-        # Reload from disk
-        loaded = self.service.load_config()
-        self.assertEqual(loaded.source, "wiki")
-        self.assertFalse(loaded.fallback_to_wiki)
-        self.assertEqual(loaded.last_used_source, "wiki")
-        self.assertEqual(loaded.last_run_timestamp, "2026-08-10T12:00:00Z")
+        loaded = service.load_config()
+        assert loaded.source == "wiki"
+        assert loaded.fallback_to_wiki is False
+        assert loaded.last_used_source == "wiki"
+        assert loaded.last_run_timestamp == "2026-08-10T12:00:00Z"
 
-        # Verify JSON file structure on disk
-        config_path = self.base_dir / "data" / "scraper_config.json"
-        self.assertTrue(config_path.exists())
+        config_path = base_dir / "data" / "scraper_config.json"
+        assert config_path.exists()
         with open(config_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        self.assertEqual(data["source"], "wiki")
+        assert data["source"] == "wiki"
 
-    def test_save_and_load_config_with_dataclass(self):
+    def test_save_and_load_config_with_dataclass(
+        self, temp_scraper_service: tuple[ScraperService, Path]
+    ) -> None:
+        service, _ = temp_scraper_service
         config_obj = ScraperConfig(
             source="custom",
             fallback_to_wiki=False,
             last_used_source="custom",
-            last_run_timestamp="2026-01-01T00:00:00Z"
+            last_run_timestamp="2026-01-01T00:00:00Z",
         )
-        saved = self.service.save_config(config_obj)
-        self.assertEqual(saved.source, "custom")
+        saved = service.save_config(config_obj)
+        assert saved.source == "custom"
 
-        loaded = self.service.load_config()
-        self.assertEqual(loaded.source, "custom")
-        self.assertFalse(loaded.fallback_to_wiki)
-        self.assertEqual(loaded.last_used_source, "custom")
-        self.assertEqual(loaded.last_run_timestamp, "2026-01-01T00:00:00Z")
-
-
-if __name__ == "__main__":
-    unittest.main()
+        loaded = service.load_config()
+        assert loaded.source == "custom"
+        assert loaded.fallback_to_wiki is False
+        assert loaded.last_used_source == "custom"
+        assert loaded.last_run_timestamp == "2026-01-01T00:00:00Z"

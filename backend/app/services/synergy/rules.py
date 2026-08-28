@@ -1,7 +1,5 @@
 # backend/app/services/synergy/rules.py
-from typing import Any, Dict, List, Set, Tuple
-
-POSITIVE_SYNERGY_RULES: List[Tuple[Set[str], List[str], str]] = [
+POSITIVE_SYNERGY_RULES: list[tuple[set[str], list[str], str]] = [
     (
         {"sloppy butcher", "a nurse's calling"},
         ["Sloppy Butcher", "A Nurse's Calling"],
@@ -139,7 +137,7 @@ POSITIVE_SYNERGY_RULES: List[Tuple[Set[str], List[str], str]] = [
     ),
 ]
 
-EXHAUSTION_PERKS: Set[str] = {
+EXHAUSTION_PERKS: set[str] = {
     "sprint burst",
     "dead hard",
     "lithe",
@@ -151,7 +149,7 @@ EXHAUSTION_PERKS: Set[str] = {
     "background player",
 }
 
-NO_MITHER_ANTI_PERKS: List[Tuple[str, str, str]] = [
+NO_MITHER_ANTI_PERKS: list[tuple[str, str, str]] = [
     ("self-care", "Self-Care", "No Mither keeps you permanently Broken/Injured, rendering Self-Care completely useless."),
     ("inner healing", "Inner Healing", "No Mither keeps you permanently Broken, preventing Inner Healing from restoring health."),
     ("for the people", "For the People", "No Mither keeps you Broken, preventing you from using For the People."),
@@ -160,10 +158,9 @@ NO_MITHER_ANTI_PERKS: List[Tuple[str, str, str]] = [
     ("solidarity", "Solidarity", "No Mither keeps you permanently Broken."),
 ]
 
-HEX_RUIN_ANTI_PERKS: List[Tuple[str, str, str]] = [
+HEX_RUIN_ANTI_PERKS: list[tuple[str, str, str]] = [
     ("pop goes the weasel", "Pop Goes the Weasel", "Hex: Ruin automatically regresses generators, preventing generator kick interactions required for Pop Goes the Weasel."),
     ("overcharge", "Overcharge", "Hex: Ruin automatically regresses generators, preventing generator kick interactions required for Overcharge."),
     ("call of brine", "Call of Brine", "Hex: Ruin automatically regresses generators, preventing generator kick interactions required for Call of Brine."),
     ("dragon's grip", "Dragon's Grip", "Hex: Ruin automatically regresses generators, preventing generator kick interactions."),
 ]
-

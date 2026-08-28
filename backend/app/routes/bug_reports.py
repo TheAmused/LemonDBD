@@ -1,22 +1,22 @@
 # backend/app/routes/bug_reports.py
 import base64
-import json
 import logging
 import os
 import threading
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from curl_cffi import requests
 from flask import Blueprint, current_app, g, jsonify, request
 from sqlalchemy import desc, func, or_, select
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps
 from app.core.limiter import limiter, validate_honeypot
 from app.core.security import admin_required, get_current_user
-from app.models import BugReport, User
+from app.models import BugReport
 from app.schemas.community import BugReportResponse
 from app.services.admin_control_service import log_admin_action
 
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 bug_reports_bp = Blueprint("bug_reports", __name__, url_prefix="/api/v1")
 
 
-def _get_discord_webhook_url() -> Optional[str]:
+def _get_discord_webhook_url() -> str | None:
     """Retrieves Discord webhook URL from environment variables or app config."""
     env_url = os.getenv("DISCORD_WEBHOOK_URL")
     if env_url and env_url.strip():
@@ -41,7 +41,7 @@ def _get_discord_webhook_url() -> Optional[str]:
     return None
 
 
-def _save_base64_image(b64_data: str, base_dir: Path) -> Optional[str]:
+def _save_base64_image(b64_data: str, base_dir: Path) -> str | None:
     """Decodes a base64 image payload and saves it to static uploads."""
     try:
         if "," in b64_data:
@@ -72,8 +72,8 @@ def _save_base64_image(b64_data: str, base_dir: Path) -> Optional[str]:
         return None
 
 
-def _dispatch_discord_webhook(report_dict: Dict[str, Any], webhook_url: Optional[str] = None) -> None:
-    """Dispatches a Dead by Daylight styled embed notification to Discord asynchronously."""
+def _dispatch_discord_webhook(report_dict: dict[str, Any], webhook_url: str | None = None) -> None:
+    """Dispatches an embed notification to Discord asynchronously."""
     target_webhook = webhook_url or _get_discord_webhook_url()
     if not target_webhook:
         logger.warning("[Discord Webhook] DISCORD_WEBHOOK_URL not configured. Skipping notification.")
@@ -83,10 +83,10 @@ def _dispatch_discord_webhook(report_dict: Dict[str, Any], webhook_url: Optional
         report_id = report_dict.get("id", 0)
         try:
             status_colors = {
-                "pending": 14423100,      # Entity Blood Red (0xDC2626)
-                "in_progress": 16097035,  # Entity Amber (0xF59E0B)
-                "resolved": 1096065,      # Escape Green (0x10B981)
-                "rejected": 6583371,      # Fog Grey (0x64748B)
+                "pending": 14423100,
+                "in_progress": 16097035,
+                "resolved": 1096065,
+                "rejected": 6583371,
             }
 
             color = status_colors.get(report_dict.get("status", "pending"), 14423100)
@@ -106,13 +106,13 @@ def _dispatch_discord_webhook(report_dict: Dict[str, Any], webhook_url: Optional
                 "description": (report_dict.get("message") or "No description provided.")[:1900],
                 "color": color,
                 "fields": fields,
-                "footer": {"text": "LemonDBD Entity Bug Tracking System"},
-                "timestamp": datetime.now(timezone.utc).isoformat()
+                "footer": {"text": "LemonDBD Bug Tracking System"},
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
             payload = {
-                "username": "LemonDBD The Entity",
-                "embeds": [embed]
+                "username": "LemonDBD Bug Watcher",
+                "embeds": [embed],
             }
 
             resp = requests.post(
@@ -120,7 +120,7 @@ def _dispatch_discord_webhook(report_dict: Dict[str, Any], webhook_url: Optional
                 json=payload,
                 impersonate="chrome120",
                 timeout=15,
-                headers={"Content-Type": "application/json"}
+                headers={"Content-Type": "application/json"},
             )
             logger.info(f"[Discord Webhook] Discord API responded with HTTP {resp.status_code}")
         except Exception as err:
@@ -128,10 +128,6 @@ def _dispatch_discord_webhook(report_dict: Dict[str, Any], webhook_url: Optional
 
     threading.Thread(target=_send, daemon=True).start()
 
-
-# ==========================================
-# PUBLIC / AUTHENTICATED USER ENDPOINTS
-# ==========================================
 
 @bug_reports_bp.route("/bug-reports", methods=["POST"])
 @limiter.limit("15 per minute")
@@ -163,8 +159,7 @@ def submit_bug_report():
         if not reporter_email:
             return jsonify({"error": "Email address is required for guest bug reports."}), 400
 
-    # Save uploaded base64 screenshots
-    processed_images: List[str] = []
+    processed_images: list[str] = []
     base_dir = Path(current_app.root_path)
 
     for img in raw_images:
@@ -183,7 +178,7 @@ def submit_bug_report():
         title=title,
         category=category,
         message=message,
-        images_json=json.dumps(processed_images),
+        images_json=safe_json_dumps(processed_images, default_val="[]"),
         status="pending",
     )
 
@@ -206,7 +201,7 @@ def submit_bug_report():
 
         return jsonify({
             "message": "Bug report submitted successfully! The team has been notified via Discord.",
-            "report": BugReportResponse.model_validate(new_report).model_dump()
+            "report": BugReportResponse.model_validate(new_report).model_dump(),
         }), 201
     except Exception as e:
         db.session.rollback()
@@ -236,16 +231,12 @@ def get_my_bug_reports():
         reports = db.session.scalars(stmt).all()
         return jsonify({
             "reports": [BugReportResponse.model_validate(r).model_dump() for r in reports],
-            "total": len(reports)
+            "total": len(reports),
         }), 200
     except Exception as e:
         logger.error(f"Error fetching user bug reports: {e}", exc_info=True)
         return jsonify({"error": "Failed to fetch bug reports."}), 500
 
-
-# ==========================================
-# ADMIN MANAGEMENT ENDPOINTS
-# ==========================================
 
 @bug_reports_bp.route("/admin/bug-reports", methods=["GET"])
 @admin_required
@@ -331,7 +322,7 @@ def admin_update_bug_report(report_id: int):
         )
         return jsonify({
             "message": f"Bug report #{report_id} updated successfully.",
-            "report": BugReportResponse.model_validate(report).model_dump()
+            "report": BugReportResponse.model_validate(report).model_dump(),
         }), 200
     except Exception as e:
         db.session.rollback()

@@ -1,5 +1,13 @@
 # backend/app/services/others/quest_service.py
+import logging
+from flask import current_app
+from sqlalchemy import func, select
+
+from app.core.extensions import db
+from app.models import DailyQuest
 from app.services.db_service import DatabaseService
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_QUESTS = [
     {
@@ -33,18 +41,9 @@ DEFAULT_QUESTS = [
 ]
 
 
-import logging
-from flask import current_app
-from sqlalchemy import select, func
-from app.core.extensions import db
-from app.models import DailyQuest
-
-logger = logging.getLogger(__name__)
-
-
 class QuestService:
     def __init__(self, db_service=None):
-        self._use_sqlalchemy = (db_service is None)
+        self._use_sqlalchemy = db_service is None
         self.db_service = db_service or DatabaseService()
 
     def _init_table(self):

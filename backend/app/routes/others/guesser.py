@@ -5,6 +5,7 @@ from app.services.others.guesser_service import GuesserService
 guesser_bp = Blueprint("guesser", __name__, url_prefix="/api/v1/guesser")
 guesser_service = GuesserService()
 
+
 @guesser_bp.route("/stats", methods=["GET"])
 def get_stats():
     try:
@@ -12,6 +13,7 @@ def get_stats():
         return jsonify({"data": stats}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @guesser_bp.route("/stats", methods=["POST"])
 def post_result():
@@ -31,6 +33,7 @@ def post_result():
         return jsonify({"data": updated}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @guesser_bp.route("/reset", methods=["POST"])
 def reset_streak():

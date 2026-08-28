@@ -1,11 +1,11 @@
 # backend/app/routes/perks.py
 import logging
+import re
 import threading
 from dataclasses import asdict
 from pathlib import Path
-from typing import Optional
 
-from flask import Blueprint, current_app, g, jsonify, request, send_from_directory
+from flask import Blueprint, current_app, jsonify, request, send_from_directory
 
 from app.core.security import admin_required, get_current_user
 from app.services.perk_service import PerkService
@@ -16,7 +16,7 @@ perks_bp = Blueprint("perks", __name__)
 perk_service = PerkService()
 
 
-def _extract_optional_user_id() -> Optional[int]:
+def _extract_optional_user_id() -> int | None:
     """Helper to retrieve user ID from explicit query parameter or authenticated JWT context."""
     user_id_param = request.args.get("user_id", type=int)
     if user_id_param:
@@ -29,23 +29,18 @@ def _extract_optional_user_id() -> Optional[int]:
     return None
 
 
-import re
-
-def _extract_lang() -> Optional[str]:
+def _extract_lang() -> str | None:
     """Extract requested language from query parameter, Referer path, or Accept-Language header."""
-    # 1. Explicit query parameter (?lang=pl)
     lang = request.args.get("lang")
     if lang:
         return lang.strip().lower()
 
-    # 2. Referer URL path (e.g. /pl/perks, /de/characters, /ja/characters)
     referer = request.headers.get("Referer", "")
     if referer:
         m = re.search(r"/(pl|de|es|fr|it|ja|en)(?:/|$|\?)", referer, re.IGNORECASE)
         if m:
             return m.group(1).lower()
 
-    # 3. Accept-Language header
     accept_lang = request.headers.get("Accept-Language", "")
     if accept_lang:
         primary = accept_lang.split(",")[0].split(";")[0].split("-")[0].strip().lower()
@@ -140,9 +135,6 @@ def get_character_detail(character_name: str):
 
 @perks_bp.route("/api/v1/challenge-modes", methods=["GET"])
 def list_challenge_modes_public():
-    """Public read of each challenge mode's admin kill-switch state, so the
-    frontend can show a disabled badge and block entry before a user hits
-    the 400 that only fires when starting a brand-new run."""
     from app.services.admin_control_service import get_challenge_mode_settings
     return jsonify({"modes": get_challenge_mode_settings()}), 200
 
@@ -179,10 +171,6 @@ def list_addons():
     addons = perk_service.get_addons(category=category, target=target, search=search, lang=lang)
     return jsonify({"count": len(addons), "data": addons}), 200
 
-
-# ==========================================
-# SCRAPER & DATA SYNC PIPELINE (ADMIN ONLY)
-# ==========================================
 
 def _run_background_scrape(app, override_source=None, override_fallback=None):
     with app.app_context():
@@ -267,7 +255,7 @@ def update_scrape_config():
 @perks_bp.route("/api/v1/scrape/translations/game-dumps", methods=["POST"])
 @admin_required
 def sync_game_dump_translations_route():
-    """Synchronize official Unreal Engine translations (EN, PL, DE, ES, JA) to the database (Admin only)."""
+    """Synchronize official translations (EN, PL, DE, ES, JA) to the database (Admin only)."""
     try:
         data = request.get_json(silent=True) or {}
         locales = data.get("locales") or ["en", "pl", "de", "es", "ja"]

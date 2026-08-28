@@ -1,3 +1,4 @@
+# docker/crowdsec/acquis.yaml
 filenames:
   - /var/log/nginx/access.log
   - /var/log/nginx/error.log

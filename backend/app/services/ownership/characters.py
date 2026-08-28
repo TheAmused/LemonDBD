@@ -1,18 +1,19 @@
 # backend/app/services/ownership/characters.py
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from typing import Any
 from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
 from app.models import Character, UserCharacterOwnership
 
-FREE_CHARACTER_SLUGS = {
+FREE_CHARACTER_SLUGS: set[str] = {
     "The_Trapper", "The_Wraith", "The_Hillbilly", "The_Nurse", "The_Huntress",
     "Dwight_Fairfield", "Meg_Thomas", "Claudette_Morel", "Jake_Park",
     "Nea_Karlsson", "Bill_Overbeck", "David_King",
 }
 
 
-def fetch_user_characters(user_id: Optional[int] = None, role: Optional[str] = None) -> List[Dict[str, Any]]:
+def fetch_user_characters(user_id: int | None = None, role: str | None = None) -> list[dict[str, Any]]:
     """Retrieve all characters annotated with the user's ownership flag."""
     stmt = select(Character)
     if role and role.lower() != "all":
@@ -41,7 +42,7 @@ def fetch_user_characters(user_id: Optional[int] = None, role: Optional[str] = N
     return result
 
 
-def mutate_character_ownership(user_id: int, character_id: int, is_owned: bool) -> Dict[str, Any]:
+def mutate_character_ownership(user_id: int, character_id: int, is_owned: bool) -> dict[str, Any]:
     """Toggle or assign ownership of a specific character for a user."""
     char = db.session.get(Character, character_id)
     if not char:
@@ -64,7 +65,6 @@ def mutate_character_ownership(user_id: int, character_id: int, is_owned: bool) 
     else:
         record.is_owned = is_owned
 
-    # Cascade to character's teachable perks
     from app.models import Perk, UserPerkOwnership
     teachable_perks = db.session.scalars(
         select(Perk).where(Perk.character_id == character_id)
@@ -99,9 +99,9 @@ def mutate_character_ownership(user_id: int, character_id: int, is_owned: bool) 
 
 def bulk_mutate_character_ownership(
     user_id: int,
-    updates: List[Dict[str, Any]],
-    summary_fn: Callable[[Optional[int]], Dict[str, Any]],
-) -> Dict[str, Any]:
+    updates: list[dict[str, Any]],
+    summary_fn: Callable[[int | None], dict[str, Any]],
+) -> dict[str, Any]:
     """Bulk update multiple character ownership entries in a single database transaction."""
     from app.models import Perk, UserPerkOwnership
     updated_count = 0
@@ -167,7 +167,7 @@ def bulk_mutate_character_ownership(
 
 
 def seed_default_character_ownership(user_id: int) -> int:
-    """Lock every character except FREE_CHARACTER_SLUGS for a new account (characters default to owned otherwise)."""
+    """Lock every character except FREE_CHARACTER_SLUGS for a new account."""
     locked_ids = db.session.scalars(
         select(Character.id).where(
             or_(
@@ -182,4 +182,3 @@ def seed_default_character_ownership(user_id: int) -> int:
     updates = [{"character_id": cid, "is_owned": False} for cid in locked_ids]
     bulk_mutate_character_ownership(user_id, updates, lambda _uid: {})
     return len(locked_ids)
-

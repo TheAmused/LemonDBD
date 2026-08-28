@@ -3,7 +3,7 @@ from flask import Blueprint, current_app, jsonify, request
 from app.services.generator_service import GeneratorService
 
 generator_bp = Blueprint("generator", __name__, url_prefix="/api/v1/generator")
-_default_service = None
+_default_service: GeneratorService | None = None
 
 
 def get_generator_service() -> GeneratorService:

@@ -1,6 +1,6 @@
 # backend/app/services/perks/queries_equipment.py
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
@@ -10,10 +10,10 @@ from app.services.perks.utils import HEADER_EXCLUSIONS
 
 def fetch_items(
     service,
-    category: Optional[str] = None,
-    search: Optional[str] = None,
-    lang: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    category: str | None = None,
+    search: str | None = None,
+    lang: str | None = None,
+) -> list[dict[str, Any]]:
     """Retrieve survivors items with category filtering and header exclusions."""
     try:
         stmt = select(Item).where(~Item.name.ilike("% items"))
@@ -46,11 +46,11 @@ def fetch_items(
 
 def fetch_addons(
     service,
-    category: Optional[str] = None,
-    target: Optional[str] = None,
-    search: Optional[str] = None,
-    lang: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    category: str | None = None,
+    target: str | None = None,
+    search: str | None = None,
+    lang: str | None = None,
+) -> list[dict[str, Any]]:
     """Retrieve equipment addons filtered by category or associated target power/item."""
     try:
         stmt = select(Addon)
@@ -91,5 +91,3 @@ def fetch_addons(
         return result
     except Exception:
         return []
-
-

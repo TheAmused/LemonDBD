@@ -1,22 +1,23 @@
 # backend/app/schemas/chaos.py
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 from pydantic import BaseModel, ConfigDict
 
 
 class ChaosMatchLogBase(BaseModel):
     killer_id: str
     result: str
-    perks: List[Any] = []
-    addon_rarities: List[str] = []
+    perks: list[Any] = []
+    addon_rarities: list[str] = []
     streak_before: int
     streak_after: int
+    triggered_by: str = "player"
 
 
 class ChaosMatchLogResponse(ChaosMatchLogBase):
     id: int
     run_id: int
-    timestamp: Optional[datetime] = None
+    timestamp: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -33,13 +34,15 @@ class ChaosRunBase(BaseModel):
 class ChaosRunResponse(ChaosRunBase):
     id: int
     user_id: int
-    completed_killers: List[str] = []
-    checkpoint_killers: List[str] = []
-    used_perks: List[str] = []
-    checkpoint_used_perks: List[str] = []
-    current_perks: List[Dict[str, Any]] = []
-    current_addon_rarities: List[str] = []
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    completed_killers: list[str] = []
+    checkpoint_killers: list[str] = []
+    used_perks: list[str] = []
+    checkpoint_used_perks: list[str] = []
+    current_perks: list[dict[str, Any]] = []
+    current_addon_rarities: list[str] = []
+    owned_killer_ids: list[str] = []
+    unlocked_perk_ids: list[str] = []
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)

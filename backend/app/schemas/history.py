@@ -1,6 +1,5 @@
 # backend/app/schemas/history.py
 from datetime import datetime
-from typing import List, Optional
 from pydantic import BaseModel, ConfigDict
 
 
@@ -10,12 +9,13 @@ class HistoryMatchLogBase(BaseModel):
     row_index: int
     streak_before: int
     streak_after: int
+    triggered_by: str = "player"
 
 
 class HistoryMatchLogResponse(HistoryMatchLogBase):
     id: int
     run_id: int
-    timestamp: Optional[datetime] = None
+    timestamp: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -31,10 +31,11 @@ class HistoryRunBase(BaseModel):
 class HistoryRunResponse(HistoryRunBase):
     id: int
     user_id: int
-    completed_killers: List[str] = []
-    unlocked_perk_names: List[str] = []
+    completed_killers: list[str] = []
+    unlocked_perk_names: list[str] = []
+    owned_killer_ids: list[str] = []
     checkpoint_row_index: int = 0
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)

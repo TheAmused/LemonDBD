@@ -1,5 +1,6 @@
 # backend/app/services/ownership/perks.py
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from typing import Any
 from sqlalchemy import func, select
 from sqlalchemy.orm import joinedload
 
@@ -7,7 +8,7 @@ from app.core.extensions import db
 from app.models import Perk, UserCharacterOwnership, UserPerkOwnership
 
 
-def fetch_user_perks(user_id: Optional[int] = None, category: Optional[str] = None) -> List[Dict[str, Any]]:
+def fetch_user_perks(user_id: int | None = None, category: str | None = None) -> list[dict[str, Any]]:
     """Retrieve all perks annotated with unlock status for the given user."""
     stmt = select(Perk).options(joinedload(Perk.character))
     if category and category.lower() != "all":
@@ -55,7 +56,7 @@ def fetch_user_perks(user_id: Optional[int] = None, category: Optional[str] = No
     return result
 
 
-def mutate_perk_ownership(user_id: int, perk_id: int, is_unlocked: bool) -> Dict[str, Any]:
+def mutate_perk_ownership(user_id: int, perk_id: int, is_unlocked: bool) -> dict[str, Any]:
     """Toggle or set the unlock status of a specific perk for a user."""
     perk = db.session.get(Perk, perk_id)
     if not perk:
@@ -84,9 +85,9 @@ def mutate_perk_ownership(user_id: int, perk_id: int, is_unlocked: bool) -> Dict
 
 def bulk_mutate_perk_ownership(
     user_id: int,
-    updates: List[Dict[str, Any]],
-    summary_fn: Callable[[Optional[int]], Dict[str, Any]],
-) -> Dict[str, Any]:
+    updates: list[dict[str, Any]],
+    summary_fn: Callable[[int | None], dict[str, Any]],
+) -> dict[str, Any]:
     """Bulk update multiple perk unlock entries in a single database transaction."""
     updated_count = 0
     for item in updates:
@@ -118,4 +119,3 @@ def bulk_mutate_perk_ownership(
         "updated_count": updated_count,
         "summary": summary_fn(user_id),
     }
-

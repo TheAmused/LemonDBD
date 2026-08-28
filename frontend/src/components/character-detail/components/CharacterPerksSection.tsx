@@ -60,7 +60,6 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   name: perk.name,
                   category: perk.category,
                   character: perk.character || character.name,
-                  character_real_name: perk.character_real_name || character.real_name,
                   character_avatar_path: perk.character_avatar_path || character.avatar_local_path,
                   description: perk.description,
                   icon_url: perk.icon_url || '',

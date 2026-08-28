@@ -3,18 +3,18 @@ from __future__ import annotations
 
 import asyncio
 import html
-import json
 import logging
 import re
 import time
 import unicodedata
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 from bs4 import BeautifulSoup, Tag
 from curl_cffi import requests
 from curl_cffi.requests import AsyncSession
 
+from app.core.json_provider import safe_json_dumps
 from app.scrapers.constants import GENERIC_PERK_CANONICAL_MAP, KNOWN_KILLER_POWER_ALIASES
 from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, OfferingData, PerkData
 from app.scrapers.utils import (
@@ -51,7 +51,7 @@ RARITY_PATTERN = re.compile(
 )
 
 
-def parse_date_and_year(text: str) -> Tuple[Optional[str], Optional[int]]:
+def parse_date_and_year(text: str) -> tuple[str | None, int | None]:
     if not text:
         return None, None
 
@@ -78,7 +78,7 @@ def parse_date_and_year(text: str) -> Tuple[Optional[str], Optional[int]]:
     return None, None
 
 
-def clean_chapter_title(raw_chapter: str) -> Tuple[Optional[str], str]:
+def clean_chapter_title(raw_chapter: str) -> tuple[str | None, str]:
     if not raw_chapter:
         return None, ""
 
@@ -101,19 +101,16 @@ def clean_chapter_title(raw_chapter: str) -> Tuple[Optional[str], str]:
 
 
 def extract_rarity_from_elements(
-    cells: List[Tag],
-    img_tag: Optional[Tag] = None,
+    cells: list[Tag],
+    img_tag: Tag | None = None,
     section_context: str = "",
 ) -> str:
-    """Extracts the item/add-on rarity from live wiki elements, image sources, or section context."""
-    # 1. Check direct table cells text if a designated column is present
     if len(cells) >= 4:
         c_text = cells[2].get_text(strip=True)
         m = RARITY_PATTERN.search(c_text)
         if m:
             return normalize_rarity_name(m.group(1))
 
-    # 2. Check HTML attributes on cell elements (title, class, data-rarity, alt)
     for cell in cells:
         for el in [cell] + cell.find_all(["a", "div", "span", "img", "td"]):
             for attr in ["title", "data-rarity", "class", "alt"]:
@@ -125,7 +122,6 @@ def extract_rarity_from_elements(
                     if m:
                         return normalize_rarity_name(m.group(1))
 
-    # 3. Check Image URL / filename (e.g. IconAddon_..._veryRare.png or IconItems_..._ultraRare.png)
     if img_tag:
         img_src = (
             img_tag.get("data-src")
@@ -138,7 +134,6 @@ def extract_rarity_from_elements(
             if m:
                 return normalize_rarity_name(m.group(1))
 
-    # 4. Check section context
     if section_context:
         m = RARITY_PATTERN.search(section_context)
         if m:
@@ -182,11 +177,10 @@ def extract_icon_token(src_or_alt: str) -> str:
 class WikiGGDriverEN:
     BASE_DOMAIN = "https://deadbydaylight.wiki.gg"
     API_URL = "https://deadbydaylight.wiki.gg/api.php"
-
     IMPERSONATE_BROWSER = "chrome120"
     REQUEST_TIMEOUT = 30
 
-    def __init__(self, base_dir: Optional[Path] = None):
+    def __init__(self, base_dir: Path | None = None):
         if base_dir is None:
             base_dir = Path(__file__).resolve().parent.parent.parent.parent
         self.base_dir = Path(base_dir)
@@ -227,15 +221,15 @@ class WikiGGDriverEN:
         res.raise_for_status()
         return res.text
 
-    def scrape_roster_from_page(self, page_title: str, role: str) -> List[CharacterData]:
+    def scrape_roster_from_page(self, page_title: str, role: str) -> list[CharacterData]:
         html_doc = self.fetch_page_html(page_title)
         soup = BeautifulSoup(html_doc, "html.parser")
         content = soup.find("div", class_="mw-parser-output") or soup
 
-        characters: List[CharacterData] = []
-        seen_slugs: Set[str] = set()
+        characters: list[CharacterData] = []
+        seen_slugs: set[str] = set()
 
-        killer_meta_by_slug: Dict[str, Dict[str, Any]] = {}
+        killer_meta_by_slug: dict[str, dict[str, Any]] = {}
         if role == "Killer":
             for cell in content.find_all(["td", "th"]):
                 links = cell.find_all("a", href=re.compile(r"^/wiki/(?!File:|Category:|Special:).+"))
@@ -336,9 +330,8 @@ class WikiGGDriverEN:
 
         return characters
 
-    def scrape_dlcs_from_wiki(self) -> List[Dict[str, Any]]:
-        """Scrapes the live Downloadable_Content and Chapters catalogs directly from wiki.gg."""
-        dlcs: List[Dict[str, Any]] = []
+    def scrape_dlcs_from_wiki(self) -> list[dict[str, Any]]:
+        dlcs: list[dict[str, Any]] = []
         seen_dlc_names = set()
 
         for page in ["Downloadable_Content", "Chapters"]:
@@ -347,7 +340,6 @@ class WikiGGDriverEN:
                 soup = BeautifulSoup(html_doc, "html.parser")
                 content = soup.find("div", class_="mw-parser-output") or soup
 
-                # 1. Parse tables on DLC/Chapters pages
                 for table in content.find_all("table", class_=re.compile(r"wikitable|article-table")):
                     rows = table.find_all("tr")
                     for tr in rows:
@@ -358,7 +350,6 @@ class WikiGGDriverEN:
                         row_text = tr.get_text(separator=" ", strip=True)
                         date_str, year_num = parse_date_and_year(row_text)
 
-                        # Find character links and DLC links in the row
                         links = tr.find_all("a", href=re.compile(r"^/wiki/"))
                         row_chars = []
                         dlc_name = ""
@@ -388,7 +379,6 @@ class WikiGGDriverEN:
                                 "characters": row_chars,
                             })
 
-                # 2. Parse section headers (h2, h3, h4)
                 is_under_licensed = False
                 for node in content.find_all(["h2", "h3", "h4"]):
                     if node.name == "h2":
@@ -457,7 +447,7 @@ class WikiGGDriverEN:
 
         return dlcs
 
-    def enrich_characters_from_pages(self, characters: List[CharacterData]) -> None:
+    def enrich_characters_from_pages(self, characters: list[CharacterData]) -> None:
         def norm_key(text: str) -> str:
             if not text:
                 return ""
@@ -754,9 +744,9 @@ class WikiGGDriverEN:
         for group in chapter_groups.values():
             if len(group) > 1:
                 for c in group:
-                    c.dlc_counterparts = json.dumps([other.name for other in group if other.name != c.name])
+                    c.dlc_counterparts = safe_json_dumps([other.name for other in group if other.name != c.name], default_val="[]")
 
-    def scrape_characters_dynamically(self) -> List[CharacterData]:
+    def scrape_characters_dynamically(self) -> list[CharacterData]:
         logger.info("Fetching Survivors via MediaWiki API...")
         survivors = self.scrape_roster_from_page("Survivors", "Survivor")
 
@@ -770,14 +760,14 @@ class WikiGGDriverEN:
         logger.info(f"Discovered {len(all_characters)} characters ({len(survivors)} Survivors, {len(killers)} Killers).")
         return all_characters
 
-    def parse_perks(self, html_content: str, characters: List[CharacterData]) -> List[PerkData]:
+    def parse_perks(self, html_content: str, characters: list[CharacterData]) -> list[PerkData]:
         soup = BeautifulSoup(html_content, "html.parser")
-        perks_dict: Dict[str, PerkData] = {}
-        alias_backlog: Dict[str, str] = {}
-        current_category: Optional[str] = None
+        perks_dict: dict[str, PerkData] = {}
+        alias_backlog: dict[str, str] = {}
+        current_category: str | None = None
         content_area = soup.find("div", class_="mw-parser-output") or soup
 
-        char_by_key: Dict[str, CharacterData] = {}
+        char_by_key: dict[str, CharacterData] = {}
         for c in characters:
             keys = [c.name, c.real_name, c.wiki_slug, c.short_name]
             if c.name.startswith("The "):
@@ -899,10 +889,10 @@ class WikiGGDriverEN:
 
         return list(perks_dict.values())
 
-    def parse_wiki_items(self, html_content: str) -> List[ItemData]:
+    def parse_wiki_items(self, html_content: str) -> list[ItemData]:
         soup = BeautifulSoup(html_content, "html.parser")
-        items: List[ItemData] = []
-        seen_items: Set[str] = set()
+        items: list[ItemData] = []
+        seen_items: set[str] = set()
 
         content_area = soup.find("div", class_="mw-parser-output") or soup
         current_category = "Survivor"
@@ -1000,8 +990,8 @@ class WikiGGDriverEN:
                         items.append(
                             ItemData(
                                 name=item_name,
-                                category=current_category,
-                                role=current_category,
+                                category=item_category,
+                                role=item_role,
                                 description=description,
                                 icon_url=icon_url,
                                 icon_local_path=local_path,
@@ -1012,16 +1002,16 @@ class WikiGGDriverEN:
                         continue
         return items
 
-    def parse_wiki_addons(self, html_content: str, characters: Optional[List[CharacterData]] = None) -> List[AddonData]:
+    def parse_wiki_addons(self, html_content: str, characters: list[CharacterData] | None = None) -> list[AddonData]:
         soup = BeautifulSoup(html_content, "html.parser")
-        raw_addons: List[dict] = []
+        raw_addons: list[dict] = []
         content_area = soup.find("div", class_="mw-parser-output") or soup
         current_target = "General"
         current_category = "Survivor"
         current_section = ""
 
-        dynamic_power_to_killer: Dict[str, str] = {}
-        killers: List[CharacterData] = []
+        dynamic_power_to_killer: dict[str, str] = {}
+        killers: list[CharacterData] = []
         if characters:
             for c in characters:
                 if c.category == "Killer":
@@ -1128,7 +1118,6 @@ class WikiGGDriverEN:
 
                         rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
 
-                        # Positional fallback if rarity is still generic Common and standard 20-row killer table
                         if rarity == "Common" and row_count == 20:
                             if row_idx < 4:
                                 rarity = "Common"
@@ -1152,7 +1141,6 @@ class WikiGGDriverEN:
                     except Exception:
                         continue
 
-        # Fallback: For any killer with 0 addons from the main page, scrape from their individual page
         scraped_killer_targets = {normalize_name_key(a["target"]) for a in raw_addons if a["category"] == "Killer"}
         for k in killers:
             k_norm = normalize_name_key(k.name)
@@ -1208,7 +1196,7 @@ class WikiGGDriverEN:
         for a in raw_addons:
             name_target_counts[normalize_name_key(a["name"])].add(normalize_name_key(a["target"]))
 
-        addons: List[AddonData] = []
+        addons: list[AddonData] = []
         seen_unique_names = set()
 
         for a in raw_addons:
@@ -1243,12 +1231,11 @@ class WikiGGDriverEN:
 
         return addons
 
-    def parse_wiki_offerings(self, html_content: str) -> List[OfferingData]:
+    def parse_wiki_offerings(self, html_content: str) -> list[OfferingData]:
         soup = BeautifulSoup(html_content, "html.parser")
-        offerings: List[OfferingData] = []
-        seen_offerings: Set[str] = set()
+        offerings: list[OfferingData] = []
+        seen_offerings: set[str] = set()
 
-        # Heading-id → role mapping (wiki.gg Offerings page section headings)
         HEADING_ROLE: dict[str, str] = {
             "survivor": "Survivor",
             "altruism": "Survivor",
@@ -1268,7 +1255,6 @@ class WikiGGDriverEN:
             return HEADING_ROLE.get(heading_id.lower().replace("-", "_"), "All")
 
         def nearest_section_role(tag) -> str:
-            """Walk previous siblings and parents to find the nearest heading."""
             for ancestor in [tag] + list(tag.parents):
                 for sibling in ancestor.find_all_previous(["h2", "h3", "h4", "h5"]):
                     span = sibling.find("span", class_="mw-headline")
@@ -1324,12 +1310,7 @@ class WikiGGDriverEN:
                 sanitized = sanitize_filename(off_name)
                 local_path = f"icons/offerings/{sanitized}.png"
 
-                # Determine role from nearest section heading, not row text
                 role = nearest_section_role(row)
-
-                # For offerings under "All Categories", the individual description
-                # may still target only one role, e.g. "to all Survivors" or
-                # "to the Killer". Refine in that case.
                 if role == "All":
                     raw_desc = row.get_text().lower()
                     survivors_only = (
@@ -1395,11 +1376,9 @@ class WikiGGDriverEN:
                     )
                 )
 
-
         return offerings
 
-
-    def scrape_offerings(self) -> List[OfferingData]:
+    def scrape_offerings(self) -> list[OfferingData]:
         try:
             logger.info("Fetching Offerings...")
             html_offerings = self.fetch_page_html("Offerings")
@@ -1410,7 +1389,7 @@ class WikiGGDriverEN:
 
     def scrape_all(
         self,
-    ) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData], List[OfferingData]]:
+    ) -> tuple[list[CharacterData], list[PerkData], list[ItemData], list[AddonData], list[OfferingData]]:
         logger.info("Scraping deadbydaylight.wiki.gg dynamic data via MediaWiki API...")
         characters = self.scrape_characters_dynamically()
 

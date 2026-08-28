@@ -1,6 +1,6 @@
 # backend/app/scrapers/types.py
 from dataclasses import asdict, dataclass, field, fields
-from typing import Any, Dict, Optional, List
+from typing import Any
 
 
 @dataclass
@@ -8,13 +8,13 @@ class ScraperConfig:
     source: str = "wikigg"
     fallback_to_wiki: bool = False
     last_used_source: str = "wikigg"
-    last_run_timestamp: Optional[str] = None
+    last_run_timestamp: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ScraperConfig":
+    def from_dict(cls, data: dict[str, Any]) -> "ScraperConfig":
         if not isinstance(data, dict):
             return cls()
         valid_keys = {f.name for f in fields(cls)}
@@ -30,7 +30,7 @@ class KillerPowerData:
     icon_local_path: str = ""
     movement_speed: str = ""
     terror_radius: str = ""
-    terror_radius_meters: Optional[int] = None
+    terror_radius_meters: int | None = None
     height: str = ""
 
 
@@ -44,17 +44,17 @@ class CharacterData:
     avatar_url: str
     avatar_local_path: str
     release_number: int = 0
-    code_prefix: Optional[str] = None
-    chapter_name: Optional[str] = None
-    chapter_number: Optional[str] = None
-    dlc_type: Optional[str] = None
+    code_prefix: str | None = None
+    chapter_name: str | None = None
+    chapter_number: str | None = None
+    dlc_type: str | None = None
     is_licensed: bool = False
-    release_year: Optional[int] = None
-    release_date: Optional[str] = None
-    dlc_counterparts: Optional[str] = None
-    lore: Optional[str] = None
-    power: Optional[KillerPowerData] = None
-    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    release_year: int | None = None
+    release_date: str | None = None
+    dlc_counterparts: str | None = None
+    lore: str | None = None
+    power: KillerPowerData | None = None
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -66,7 +66,7 @@ class ItemData:
     icon_url: str
     icon_local_path: str
     rarity: str
-    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -78,7 +78,7 @@ class AddonData:
     icon_url: str
     icon_local_path: str
     rarity: str
-    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -90,7 +90,7 @@ class OfferingData:
     icon_url: str
     icon_local_path: str
     rarity: str
-    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -103,9 +103,9 @@ class PerkData:
     description: str
     icon_url: str
     icon_local_path: str
-    alternate_name: Optional[str] = None
+    alternate_name: str | None = None
     is_generic_counterpart: bool = False
-    translations: Dict[str, Dict[str, Any]] = field(default_factory=dict)
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
 @dataclass
@@ -117,6 +117,6 @@ class MapData:
     callout_image_url: str
     callout_image_local_path: str
     dpath: str
-    clock_system: Dict[str, Any]
+    clock_system: dict[str, Any]
     source: str = "hens333"
     source_label: str = "Hens333 12-Clock Callouts"

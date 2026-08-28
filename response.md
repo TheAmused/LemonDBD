@@ -1,3625 +1,4286 @@
-### backend/app/services/history/__init__.py
+### backend/app/scrapers/__init__.py
 ```python
-from app.services.history.stats import fetch_history_user_stats
-
-__all__ = [
-    "fetch_history_user_stats",
-]
-```
-
-### backend/app/services/history/roster.py
-```python
-from typing import Any
-from sqlalchemy import select
-
-from app.core.extensions import db
-from app.models import Character, Perk
-from app.services.ownership_service import OwnershipService
-
-ROW_SIZE = 5
-
-
-def build_rows(owned_killer_names: list[str]) -> list[list[str]]:
-    return [
-        owned_killer_names[i:i + ROW_SIZE]
-        for i in range(0, len(owned_killer_names), ROW_SIZE)
-    ]
-
-
-def _release_key(character: dict[str, Any]):
-    release_number = character.get("release_number")
-    return release_number if release_number is not None else float("inf")
-
-
-def get_owned_killer_names_by_release(user_id: int, ownership_service: OwnershipService) -> list[str]:
-    owned = [
-        c for c in ownership_service.get_user_characters(user_id, role="Killer")
-        if c["is_owned"] and not c.get("is_disabled")
-    ]
-    owned.sort(key=_release_key)
-    return [c["name"] for c in owned]
-
-
-def get_owned_killer_ids_by_release(user_id: int, ownership_service: OwnershipService) -> list[int]:
-    """Same release-order filtering as get_owned_killer_names_by_release,
-    but keyed by the killer's stable id."""
-    owned = [
-        c for c in ownership_service.get_user_characters(user_id, role="Killer")
-        if c["is_owned"] and not c.get("is_disabled")
-    ]
-    owned.sort(key=_release_key)
-    return [c["id"] for c in owned]
-
-
-def resolve_killer_names_by_ids(ids: list[int]) -> list[str]:
-    """Turns a frozen killer id list back into current names, in release order."""
-    if not ids:
-        return []
-    rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
-    by_id = {c.id: c.name for c in rows}
-    return [by_id[i] for i in ids if i in by_id]
-
-
-def get_general_killer_perk_names() -> list[str]:
-    stmt = select(Perk.name).where(
-        Perk.category == "Killer",
-        (Perk.character_id.is_(None)) | (Perk.is_generic_counterpart.is_(True)),
-        Perk.is_disabled.is_(False),
-    )
-    return list(db.session.scalars(stmt).all())
-
-
-def get_killer_teachable_perk_names(killer_name: str) -> list[str]:
-    character = db.session.scalars(
-        select(Character).where(Character.name == killer_name)
-    ).first()
-    if not character:
-        return []
-    stmt = select(Perk.name).where(
-        Perk.character_id == character.id, Perk.is_teachable.is_(True), Perk.is_disabled.is_(False)
-    )
-    return list(db.session.scalars(stmt).all())
-```
-
-### backend/app/services/history/stats.py
-```python
-from typing import Any
-from sqlalchemy import select
-
-from app.core.extensions import db
-from app.models import HistoryMatchLog, HistoryRun
-from app.services.streak_stats import fetch_streak_stats
-
-
-def fetch_history_user_stats(user_id: int, mode: str) -> dict[str, Any]:
-    run_ids = db.session.scalars(
-        select(HistoryRun.id).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
-    ).all()
-    return fetch_streak_stats(run_ids, HistoryMatchLog)
-```
-
-### backend/app/services/maps/__init__.py
-```python
-from app.services.maps.data import (
-    DEFAULT_OBJECTIVES_SEED_A,
-    DEFAULT_TILES_SEED_A,
-    SAMPLE_MAPS,
+from app.scrapers.constants import (
+    GENERIC_PERK_CANONICAL_MAP,
+    KNOWN_KILLER_POWER_ALIASES,
 )
-from app.services.maps.queries import fetch_map_by_id, fetch_maps
-from app.services.maps.seeder import seed_maps_if_empty
+from app.scrapers.maps import (
+    HensMapScraperDriver,
+    SamoelColtMapScraperDriver,
+    get_map_landmarks_data,
+)
+from app.scrapers.types import (
+    AddonData,
+    CharacterData,
+    ItemData,
+    MapData,
+    PerkData,
+    ScraperConfig,
+)
+from app.scrapers.utils import (
+    classify_portrait,
+    clean_description_text,
+    extract_high_res_url,
+    extract_slug_from_href,
+    normalize_name_key,
+    sanitize_filename,
+)
+from app.scrapers.wikigg import WikiGGScraperDriver
 
 __all__ = [
-    "SAMPLE_MAPS",
-    "DEFAULT_TILES_SEED_A",
-    "DEFAULT_OBJECTIVES_SEED_A",
-    "seed_maps_if_empty",
-    "fetch_maps",
-    "fetch_map_by_id",
+    "ScraperConfig",
+    "CharacterData",
+    "ItemData",
+    "AddonData",
+    "PerkData",
+    "MapData",
+    "GENERIC_PERK_CANONICAL_MAP",
+    "KNOWN_KILLER_POWER_ALIASES",
+    "clean_description_text",
+    "normalize_name_key",
+    "sanitize_filename",
+    "extract_high_res_url",
+    "extract_slug_from_href",
+    "classify_portrait",
+    "WikiGGScraperDriver",
+    "get_map_landmarks_data",
+    "HensMapScraperDriver",
+    "SamoelColtMapScraperDriver",
 ]
 ```
 
-### backend/app/services/maps/data.py
+### backend/app/scrapers/constants.py
 ```python
-from typing import Any
-from app.core.json_provider import safe_json_dumps
+GENERIC_PERK_CANONICAL_MAP: dict[str, tuple[str, str]] = {
+    "will to live": ("Decisive Strike", "Will to Live"),
+    "down to the last": ("Sole Survivor", "Down to the Last"),
+    "bound by obsession": ("Object of Obsession", "Bound by Obsession"),
+    "keep them waiting": ("Save the Best for Last", "Keep Them Waiting"),
+    "see how they run": ("Play with Your Food", "See How They Run"),
+    "cull the weak": ("Dying Light", "Cull the Weak"),
+    "no holds barred": ("Deadlock", "No Holds Barred"),
+    "hex fortune s fool": ("Hex: Plaything", "Hex: Fortune's Fool"),
+    "hex fortunes fool": ("Hex: Plaything", "Hex: Fortune's Fool"),
+    "scourge hook weeping wounds": ("Scourge Hook: Gift of Pain", "Scourge Hook: Weeping Wounds"),
+    "jolt": ("Surge", "Jolt"),
+    "fearmonger": ("Mindbreaker", "Fearmonger"),
+    "claustrophobia": ("Cruel Limits", "Claustrophobia"),
+    "guardian": ("Babysitter", "Guardian"),
+    "kinship": ("Camaraderie", "Kinship"),
+    "self aware": ("Fixated", "Self-Aware"),
+    "selfaware": ("Fixated", "Self-Aware"),
+    "situational awareness": ("Better Together", "Situational Awareness"),
+    "inner healing": ("Inner Strength", "Inner Healing"),
+    "renewal": ("Second Wind", "Renewal"),
+}
 
-SAMPLE_MAPS: list[dict[str, Any]] = [
-    {
-        "id": "coal_tower",
-        "name": "Coal Tower",
-        "realm": "The MacMillan Estate",
-        "layout_type": "Asymmetrical Open",
-        "jungle_gyms_count": 4,
-        "totem_spawns_count": 5,
-        "pallet_density": "High (12-14 Pallets)",
-        "shack_has_basement": True,
-        "description": "A classic balanced map featuring a two-story central tower main building and strong Jungle Gym loops.",
-        "image_url": "/static/maps/coal_tower.png",
-    },
-    {
-        "id": "azarov_resting_place",
-        "name": "Azarov's Resting Place",
-        "realm": "Autohaven Wreckers",
-        "layout_type": "Dumbbell Narrow",
-        "jungle_gyms_count": 5,
-        "totem_spawns_count": 5,
-        "pallet_density": "High (14-16 Pallets)",
-        "shack_has_basement": False,
-        "description": "Iconic dumbbell-shaped map with narrow middle choke point separating main garage and killer shack.",
-        "image_url": "/static/maps/azarov.png",
-    },
-    {
-        "id": "thompson_house",
-        "name": "Thompson House",
-        "realm": "Coldwind Farm",
-        "layout_type": "Open Cornfield",
-        "jungle_gyms_count": 4,
-        "totem_spawns_count": 5,
-        "pallet_density": "Medium (11-13 Pallets)",
-        "shack_has_basement": True,
-        "description": "Massive central house surrounded by tall cornfield tiles offering high line-of-sight concealment.",
-        "image_url": "/static/maps/thompson_house.png",
-    },
-    {
-        "id": "treatment_theatre",
-        "name": "Treatment Theatre",
-        "realm": "Léry's Memorial Institute",
-        "layout_type": "Indoor Grid",
-        "jungle_gyms_count": 6,
-        "totem_spawns_count": 5,
-        "pallet_density": "Very High (16-18 Pallets)",
-        "shack_has_basement": False,
-        "description": "Dense indoor hospital grid with high vault window density and central shock treatment operating room.",
-        "image_url": "/static/maps/lerys.png",
-    },
-    {
-        "id": "rpd_east",
-        "name": "RPD East Wing",
-        "realm": "Raccoon City Police Station",
-        "layout_type": "Indoor Two-Story",
-        "jungle_gyms_count": 3,
-        "totem_spawns_count": 5,
-        "pallet_density": "High (13-15 Pallets)",
-        "shack_has_basement": False,
-        "description": "Intricate multi-story police department featuring main hall, helicopter crash site, and narrow corridors.",
-        "image_url": "/static/maps/rpd.png",
-    },
-    {
-        "id": "midwich",
-        "name": "Midwich Elementary School",
-        "realm": "Silent Hill",
-        "layout_type": "Indoor Square Courtyard",
-        "jungle_gyms_count": 4,
-        "totem_spawns_count": 5,
-        "pallet_density": "Medium (10-12 Pallets)",
-        "shack_has_basement": False,
-        "description": "Square two-story nightmare school surrounding a central courtyard with secret clocktower hatch logic.",
-        "image_url": "/static/maps/midwich.png",
-    },
-]
-
-DEFAULT_TILES_SEED_A: list[dict[str, Any]] = [
-    {
-        "name": "Killer Shack",
-        "type": "shack",
-        "x": 22.0,
-        "y": 28.0,
-        "has_pallet": True,
-        "pallet_safety_rating": "god",
-        "has_window": True,
-        "vault_directions": safe_json_dumps(["East"]),
-        "looping_tips": "Hug outer wall tightly. Fast-vault window to reset distance, and only drop the Shack Pallet when committed by killer.",
-        "mindgame_counter": "Killer can hide red stain inside doorway to fake a window vault check.",
-    },
-    {
-        "name": "Main Building (Coal Tower)",
-        "type": "main",
-        "x": 70.0,
-        "y": 30.0,
-        "has_pallet": True,
-        "pallet_safety_rating": "safe",
-        "has_window": True,
-        "vault_directions": safe_json_dumps(["North", "West"]),
-        "looping_tips": "Utilize 2nd floor iron walkway vault. Drop to ground floor to break line of sight and chain to jungle gyms.",
-        "mindgame_counter": "Listen carefully to footsteps on iron stairs and watch for moonwalks near outer doorway.",
-    },
-    {
-        "name": "Jungle Gym Alpha",
-        "type": "gym",
-        "x": 45.0,
-        "y": 75.0,
-        "has_pallet": True,
-        "pallet_safety_rating": "safe",
-        "has_window": True,
-        "vault_directions": safe_json_dumps(["South"]),
-        "looping_tips": "Run outer long wall counter-clockwise to ensure perpendicular fast-vault angle.",
-        "mindgame_counter": "Killer can hide red stain behind center high wall pillar.",
-    },
-    {
-        "name": "LT Wall Beta",
-        "type": "lt_wall",
-        "x": 20.0,
-        "y": 65.0,
-        "has_pallet": False,
-        "pallet_safety_rating": None,
-        "has_window": True,
-        "vault_directions": safe_json_dumps(["West", "East"]),
-        "looping_tips": "React to killer red stain at corner junction before selecting L-window or T-window.",
-        "mindgame_counter": "Killer can fake direction at corner to catch vault animation.",
-    },
-    {
-        "name": "Outer Debris Loop",
-        "type": "filler",
-        "x": 80.0,
-        "y": 70.0,
-        "has_pallet": True,
-        "pallet_safety_rating": "mindgameable",
-        "has_window": False,
-        "vault_directions": safe_json_dumps([]),
-        "looping_tips": "Short wood pile loop. Pre-drop pallet if killer is gaining Bloodlust.",
-        "mindgame_counter": "Killer can double-back over low crate pile.",
-    },
-    {
-        "name": "Wrecked Truck",
-        "type": "filler",
-        "x": 50.0,
-        "y": 20.0,
-        "has_pallet": True,
-        "pallet_safety_rating": "unsafe",
-        "has_window": False,
-        "vault_directions": safe_json_dumps([]),
-        "looping_tips": "Very short loop with low vision blocking. Drop quickly for stun or abandon tile.",
-        "mindgame_counter": "Killer can lunge easily over short hood wall.",
-    },
-]
-
-DEFAULT_OBJECTIVES_SEED_A: list[dict[str, Any]] = [
-    {"type": "totem", "x": 20.0, "y": 30.0, "location_description": "Killer Shack Corner"},
-    {"type": "totem", "x": 75.0, "y": 25.0, "location_description": "Main Building Stairwell"},
-    {"type": "totem", "x": 50.0, "y": 80.0, "location_description": "Jungle Gym B Behind Tree"},
-    {"type": "totem", "x": 15.0, "y": 70.0, "location_description": "LT Wall Debris"},
-    {"type": "totem", "x": 85.0, "y": 65.0, "location_description": "Outer Perimeter Bush"},
-    {"type": "generator", "x": 70.0, "y": 32.0, "location_description": "Main Building Ground Floor"},
-    {"type": "generator", "x": 22.0, "y": 30.0, "location_description": "Shack Outside Wall"},
-    {"type": "generator", "x": 45.0, "y": 70.0, "location_description": "Jungle Gym Alpha Center"},
-    {"type": "generator", "x": 85.0, "y": 80.0, "location_description": "Perimeter Fence Hill"},
-    {"type": "generator", "x": 15.0, "y": 15.0, "location_description": "North Corner Water Tower"},
-    {"type": "generator", "x": 55.0, "y": 45.0, "location_description": "Central Field Debris"},
-    {"type": "generator", "x": 85.0, "y": 20.0, "location_description": "East Gate Rocks"},
-    {"type": "exit_gate", "x": 5.0, "y": 50.0, "location_description": "West Exit Gate"},
-    {"type": "exit_gate", "x": 95.0, "y": 50.0, "location_description": "East Exit Gate"},
-    {"type": "hatch", "x": 48.0, "y": 52.0, "location_description": "Center Field Hatch Spawn"},
-    {"type": "chest", "x": 72.0, "y": 28.0, "location_description": "Main Building 2nd Floor Chest"},
-    {"type": "chest", "x": 21.0, "y": 27.0, "location_description": "Basement Chest"},
-    {"type": "chest", "x": 46.0, "y": 76.0, "location_description": "Jungle Gym Chest"},
-    {"type": "basement", "x": 21.0, "y": 28.0, "location_description": "Killer Shack Basement"},
-]
+KNOWN_KILLER_POWER_ALIASES: dict[str, str] = {
+    "bear trap": "The Trapper",
+    "bear traps": "The Trapper",
+    "wailing bell": "The Wraith",
+    "the chainsaw": "The Hillbilly",
+    "chainsaw": "The Hillbilly",
+    "spencer s last breath": "The Nurse",
+    "spencers last breath": "The Nurse",
+    "evil within": "The Shape",
+    "blackened catalyst": "The Hag",
+    "carter s spark": "The Doctor",
+    "carters spark": "The Doctor",
+    "hunting hatchets": "The Huntress",
+    "hunting hatchet": "The Huntress",
+    "bubba s chainsaw": "The Cannibal",
+    "bubbas chainsaw": "The Cannibal",
+    "dream demon": "The Nightmare",
+    "jigsaw s baptism": "The Pig",
+    "jigsaws baptism": "The Pig",
+    "the afterpiece tonic": "The Clown",
+    "afterpiece tonic": "The Clown",
+    "yamaoka s haunting": "The Spirit",
+    "yamaokas haunting": "The Spirit",
+    "feral frenzy": "The Legion",
+    "vile purge": "The Plague",
+    "night shroud": "The Ghost Face",
+    "of the abyss": "The Demogorgon",
+    "yamaoka s wrath": "The Oni",
+    "yamaokas wrath": "The Oni",
+    "the redeemer": "The Deathslinger",
+    "redeemer": "The Deathslinger",
+    "rites of judgement": "The Executioner",
+    "blighted corruption": "The Blight",
+    "blood bond": "The Twins",
+    "showstopper": "The Trickster",
+    "t virus": "The Nemesis",
+    "summons of pain": "The Cenobite",
+    "birds of torment": "The Artist",
+    "deluge of fear": "The Onryō",
+    "reign of darkness": "The Dredge",
+    "virulent bound": "The Mastermind",
+    "guardia compagnia": "The Knight",
+    "eyes in the sky": "The Skull Merchant",
+    "quantum instantiation": "The Singularity",
+    "hidden pursuit": "The Xenomorph",
+    "playtime s over": "The Good Guy",
+    "playtimes over": "The Good Guy",
+    "uvx": "The Unknown",
+    "vile darkness": "The Lich",
+    "viledarkness": "The Lich",
+    "vampiric shift": "The Dark Lord",
+    "scent of blood": "The Houndmaster",
+    "one eyed terror": "The Ghoul",
+    "fazbear s fright": "The Animatronic",
+    "fazbears fright": "The Animatronic",
+    "unbodied flesh": "The Krasue",
+    "test subject 001": "The First",
+    "test subject 1": "The First",
+    "omnipresent evil": "The Slasher",
+    "will of the gods": "The Judgment",
+}
 ```
 
-### backend/app/services/maps/queries.py
+### backend/app/scrapers/maps.py
 ```python
 import logging
+import re
+import time
 from typing import Any
+from bs4 import BeautifulSoup
+from curl_cffi import requests
 from flask import current_app
-from sqlalchemy import func, or_, select
+from sqlalchemy import select
 from sqlalchemy.orm import joinedload
-
 from app.core.extensions import db
-from app.core.json_provider import safe_json_loads
 from app.models import MapRealm
-from app.services.maps.data import SAMPLE_MAPS
-from app.services.maps.seeder import seed_maps_if_empty
+from app.scrapers.types import MapData
+from app.scrapers.utils import normalize_name_key, sanitize_filename
 
 logger = logging.getLogger(__name__)
 
 
-def fetch_maps(
-    use_sqlalchemy: bool,
-    db_service: Any,
-    realm: str | None = None,
-    search: str | None = None,
-    source: str | None = None,
-) -> list[dict[str, Any]]:
-    """Retrieve maps list with optional realm, search, and source filtering."""
-    if use_sqlalchemy:
-        try:
-            if current_app:
-                stmt = select(MapRealm).options(
-                    joinedload(MapRealm.tiles),
-                    joinedload(MapRealm.objectives),
+def get_map_landmarks_data(
+    map_name: str, realm_name: str, source: str = "hens333"
+) -> dict[str, Any]:
+    try:
+        if current_app:
+            norm_map = normalize_name_key(map_name)
+            maps = db.session.scalars(
+                select(MapRealm).options(joinedload(MapRealm.tiles))
+            ).all()
+            for m in maps:
+                m_norm = normalize_name_key(m.name)
+                if norm_map and (norm_map == m_norm or norm_map in m_norm or m_norm in norm_map):
+                    twelve = next(
+                        (t.name for t in m.tiles if "twelve" in t.name.lower() or t.y < 0.25),
+                        "Main Building / North Exit Gate",
+                    )
+                    three = next(
+                        (t.name for t in m.tiles if "three" in t.name.lower() or t.x > 0.75),
+                        "East Jungle Gym / Outer Loop",
+                    )
+                    six = next(
+                        (t.name for t in m.tiles if "six" in t.name.lower() or "shack" in t.name.lower() or t.y > 0.75),
+                        "Killer Shack & Basement / South Exit Gate",
+                    )
+                    nine = next(
+                        (t.name for t in m.tiles if "nine" in t.name.lower() or t.x < 0.25),
+                        "West Gym / L-T Walls",
+                    )
+                    center = next(
+                        (t.name for t in m.tiles if "center" in t.name.lower() or (0.4 <= t.x <= 0.6 and 0.4 <= t.y <= 0.6)),
+                        "Center Spine / Central Generator",
+                    )
+                    desc = m.description or f"Landmark layout for {m.name} ({m.realm})."
+                    return {
+                        "description": f"12-Clock Callout System for {m.name} ({m.realm}). {desc}".strip(),
+                        "twelve_o_clock": twelve,
+                        "three_o_clock": three,
+                        "six_o_clock": six,
+                        "nine_o_clock": nine,
+                        "center": center,
+                    }
+    except Exception:
+        pass
+
+    return {
+        "description": f"12-Clock Callout System for {map_name} ({realm_name}). Standard top-middle starts at 12 o'clock.",
+        "twelve_o_clock": "Main Landmark / North Exit Gate",
+        "three_o_clock": "East Loop Tile / Generator Cluster",
+        "six_o_clock": "Killer Shack & Basement / South Exit Gate",
+        "nine_o_clock": "West Jungle Gym / Pallet Gym",
+        "center": "Center Landmark / Central Generator",
+    }
+
+
+class HensMapScraperDriver:
+    HENS_CALLOUTS_URL = "https://hens333.com/callouts"
+    CDN_BASE = "https://hens333.com/img/dbd/callouts/"
+    IMPERSONATE_BROWSER = "chrome120"
+    REQUEST_TIMEOUT = 25
+
+    def scrape_maps(self) -> list[MapData]:
+        logger.info("Scraping map callouts from Hens333...")
+        session = requests.Session(impersonate=self.IMPERSONATE_BROWSER)
+        res = None
+        for attempt in range(3):
+            try:
+                res = session.get(
+                    self.HENS_CALLOUTS_URL,
+                    verify=False,
+                    timeout=self.REQUEST_TIMEOUT,
+                    headers={
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+                        "Accept-Language": "en-US,en;q=0.9",
+                    },
                 )
-                if realm and realm.lower() != "all":
-                    stmt = stmt.where(func.lower(MapRealm.realm) == realm.lower())
-                if source and source.lower() != "all":
-                    stmt = stmt.where(func.lower(MapRealm.source) == source.lower())
-                if search and search.strip():
-                    term = f"%{search.strip().lower()}%"
-                    stmt = stmt.where(
-                        or_(
-                            func.lower(MapRealm.name).ilike(term),
-                            func.lower(MapRealm.realm).ilike(term),
+                if res.status_code == 200:
+                    break
+                logger.warning(f"Attempt {attempt + 1}: Hens333 returned HTTP {res.status_code}")
+                time.sleep(1.5)
+            except Exception as req_err:
+                logger.warning(f"Attempt {attempt + 1}: Failed to fetch Hens333 callouts: {req_err}")
+                time.sleep(1.5)
+
+        if not res or res.status_code != 200:
+            logger.warning("Could not retrieve Hens333 callouts page after multiple attempts.")
+            return []
+
+        try:
+            soup = BeautifulSoup(res.text, "html.parser")
+            maps: list[MapData] = []
+            seen_ids = set()
+
+            realm_wrappers = soup.find_all("div", class_="realm-wrapper")
+            if not realm_wrappers:
+                buttons = soup.find_all(attrs={"data-path": True})
+                for btn in buttons:
+                    dpath = btn.get("data-path", "").strip()
+                    if not dpath:
+                        continue
+                    map_name = btn.get_text(strip=True) or dpath.split("/")[-1].split(".")[0]
+                    map_slug = sanitize_filename(map_name)
+                    realm_name = dpath.split("/")[0] if "/" in dpath else "General Realm"
+                    realm_slug = sanitize_filename(realm_name)
+
+                    encoded_dpath = re.sub(r"\s", "%20", dpath)
+                    remote_url = f"{self.CDN_BASE}{encoded_dpath}" if not dpath.startswith("http") else dpath
+                    rel_static_path = f"maps/callouts/hens333/{realm_slug}/{map_slug}.webp"
+                    unique_id = f"hens_{realm_slug}_{map_slug}"
+
+                    if unique_id in seen_ids:
+                        continue
+                    seen_ids.add(unique_id)
+
+                    maps.append(
+                        MapData(
+                            id=unique_id,
+                            name=map_name,
+                            realm=realm_name,
+                            realm_id=realm_slug,
+                            callout_image_url=remote_url,
+                            callout_image_local_path=rel_static_path,
+                            dpath=dpath,
+                            clock_system=get_map_landmarks_data(
+                                map_name=map_name,
+                                realm_name=realm_name,
+                                source="hens333",
+                            ),
+                            source="hens333",
+                            source_label="Hens333 12-Clock Callouts",
                         )
                     )
-                stmt = stmt.order_by(MapRealm.name.asc())
-                rows = db.session.scalars(stmt).unique().all()
-                if rows:
-                    return [r.to_dict() for r in rows]
-        except Exception as e:
-            logger.debug(f"SQLAlchemy get_maps fallback: {e}")
-            try:
-                db.session.rollback()
-            except Exception:
-                pass
+                logger.info(f"Scraped {len(maps)} maps from Hens333 (fallback structure).")
+                return maps
 
-    conn = db_service.get_connection()
-    seed_maps_if_empty(conn, db_service)
-    cursor = conn.cursor()
+            for rw in realm_wrappers:
+                h1 = rw.find(["h1", "h2", "h3", "div"], class_=lambda c: not c or "realm" in str(c).lower())
+                realm_name = h1.get_text(strip=True) if h1 else "General Realm"
+                realm_slug = sanitize_filename(realm_name)
 
-    cursor.execute("PRAGMA table_info(map_realms);")
-    cols = {row[1] for row in cursor.fetchall()}
+                for btn in rw.find_all(attrs={"data-path": True}):
+                    dpath = btn["data-path"].strip()
+                    if not dpath:
+                        continue
+                    map_name = btn.get_text(strip=True)
+                    if not map_name:
+                        map_name = dpath.split("/")[-1].split(".")[0]
+                    map_slug = sanitize_filename(map_name)
 
-    query = "SELECT * FROM map_realms WHERE 1=1"
-    params = []
+                    encoded_dpath = re.sub(r"\s", "%20", dpath)
+                    remote_url = f"{self.CDN_BASE}{encoded_dpath}" if not dpath.startswith("http") else dpath
+                    rel_static_path = f"maps/callouts/hens333/{realm_slug}/{map_slug}.webp"
+                    unique_id = f"hens_{realm_slug}_{map_slug}"
 
-    if realm and realm != "All":
-        query += " AND LOWER(realm) = LOWER(?)"
-        params.append(realm)
-    if source and source != "all" and "source" in cols:
-        query += " AND LOWER(source) = LOWER(?)"
-        params.append(source)
-    if search:
-        query += " AND (LOWER(name) LIKE ? OR LOWER(realm) LIKE ?)"
-        term = f"%{search.lower()}%"
-        params.extend([term, term])
+                    if unique_id in seen_ids:
+                        continue
+                    seen_ids.add(unique_id)
 
-    cursor.execute(query, params)
-    rows = cursor.fetchall()
-    conn.close()
-
-    maps = []
-    for r in rows:
-        maps.append({
-            "id": r["map_id"],
-            "name": r["name"],
-            "realm": r["realm"],
-            "source": r["source"] if "source" in r.keys() else "hens333",
-            "source_label": r["source_label"] if "source_label" in r.keys() else "Hens333 12-Clock Callouts",
-            "layout_type": r["layout_type"],
-            "jungle_gyms_count": r["jungle_gyms_count"],
-            "totem_spawns_count": r["totem_spawns_count"],
-            "pallet_density": r["pallet_density"],
-            "shack_has_basement": bool(r["shack_has_basement"]),
-            "description": r["description"],
-            "image_url": r["image_url"],
-        })
-    return maps
-
-
-def fetch_map_by_id(
-    use_sqlalchemy: bool,
-    db_service: Any,
-    map_id: str,
-    seed_variant: str = "seed_a",
-    floor: int = 1,
-) -> dict[str, Any] | None:
-    """Retrieve detailed map info including tiles and objective coordinates."""
-    if use_sqlalchemy:
-        try:
-            if current_app:
-                clean_id = (map_id or "").strip()
-                stmt = (
-                    select(MapRealm)
-                    .options(
-                        joinedload(MapRealm.tiles),
-                        joinedload(MapRealm.objectives),
-                    )
-                    .where(
-                        or_(
-                            MapRealm.map_id == clean_id,
-                            func.lower(MapRealm.map_id) == clean_id.lower(),
-                            func.lower(MapRealm.name) == clean_id.lower().replace("_", " "),
+                    maps.append(
+                        MapData(
+                            id=unique_id,
+                            name=map_name,
+                            realm=realm_name,
+                            realm_id=realm_slug,
+                            callout_image_url=remote_url,
+                            callout_image_local_path=rel_static_path,
+                            dpath=dpath,
+                            clock_system=get_map_landmarks_data(
+                                map_name=map_name,
+                                realm_name=realm_name,
+                                source="hens333",
+                            ),
+                            source="hens333",
+                            source_label="Hens333 12-Clock Callouts",
                         )
                     )
-                )
-                m = db.session.scalars(stmt).unique().first()
-                if m:
-                    d = m.to_dict()
-                    d["seed_variant"] = seed_variant
-                    d["floor"] = floor
-                    return d
+            logger.info(f"Scraped {len(maps)} maps from Hens333.")
+            return maps
         except Exception as e:
-            logger.debug(f"SQLAlchemy get_map_by_id fallback: {e}")
-            try:
-                db.session.rollback()
-            except Exception:
-                pass
+            logger.error(f"Error parsing Hens333 maps: {e}")
+            return []
 
-    conn = db_service.get_connection()
-    seed_maps_if_empty(conn, db_service)
-    cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM map_realms WHERE map_id = ?", (map_id,))
-    realm_row = cursor.fetchone()
+class SamoelColtMapScraperDriver:
+    STEAM_GUIDE_URL = "https://steamcommunity.com/sharedfiles/filedetails/?id=2899093390"
+    IMPERSONATE_BROWSER = "chrome120"
+    REQUEST_TIMEOUT = 30
 
-    if not realm_row:
-        map_info = next((m for m in SAMPLE_MAPS if m["id"] == map_id), None)
-        if not map_info:
-            conn.close()
-            return None
-    else:
-        map_info = {
-            "id": realm_row["map_id"],
-            "name": realm_row["name"],
-            "realm": realm_row["realm"],
-            "source": realm_row["source"] if "source" in realm_row.keys() else "hens333",
-            "source_label": realm_row["source_label"] if "source_label" in realm_row.keys() else "Hens333 12-Clock Callouts",
-            "layout_type": realm_row["layout_type"],
-            "jungle_gyms_count": realm_row["jungle_gyms_count"],
-            "totem_spawns_count": realm_row["totem_spawns_count"],
-            "pallet_density": realm_row["pallet_density"],
-            "shack_has_basement": bool(realm_row["shack_has_basement"]),
-            "description": realm_row["description"],
-            "image_url": realm_row["image_url"],
+    def scrape_maps(self) -> list[MapData]:
+        logger.info("Scraping SamoelColt map guides from Steam Workshop...")
+        session = requests.Session(impersonate=self.IMPERSONATE_BROWSER)
+        res = None
+        cookies = {
+            "birthtime": "283993201",
+            "mature_content": "1",
+            "wants_mature_content": "1",
+            "lastagecheckage": "1-January-1980",
         }
 
-    cursor.execute(
-        "SELECT * FROM map_tiles WHERE map_id = ? AND seed_variant = ? AND floor = ?",
-        (map_id, seed_variant, floor),
-    )
-    tile_rows = cursor.fetchall()
-    if not tile_rows:
-        cursor.execute("SELECT * FROM map_tiles WHERE map_id = ?", (map_id,))
-        tile_rows = cursor.fetchall()
+        for attempt in range(3):
+            try:
+                res = session.get(
+                    self.STEAM_GUIDE_URL,
+                    cookies=cookies,
+                    verify=False,
+                    timeout=self.REQUEST_TIMEOUT,
+                    headers={
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+                        "Accept-Language": "en-US,en;q=0.9",
+                    },
+                )
+                if res.status_code == 200:
+                    break
+                logger.warning(f"Attempt {attempt + 1}: Steam guide returned HTTP {res.status_code}")
+                time.sleep(2.0)
+            except Exception as req_err:
+                logger.warning(f"Attempt {attempt + 1}: Failed to fetch Steam guide: {req_err}")
+                time.sleep(2.0)
 
-    tiles = []
-    for r in tile_rows:
-        v_dirs = safe_json_loads(r["vault_directions"], default=[]) if isinstance(r["vault_directions"], str) else (r["vault_directions"] or [])
-        tiles.append({
-            "id": r["id"],
-            "name": r["name"],
-            "type": r["type"],
-            "x": r["x"],
-            "y": r["y"],
-            "has_pallet": bool(r["has_pallet"]),
-            "pallet_safety_rating": r["pallet_safety_rating"],
-            "has_window": bool(r["has_window"]),
-            "vault_directions": v_dirs,
-            "looping_tips": r["looping_tips"] or "",
-            "mindgame_counter": r["mindgame_counter"] or "",
-            "seed_variant": r["seed_variant"],
-            "floor": r["floor"],
-        })
+        if not res or res.status_code != 200:
+            logger.warning("Could not retrieve SamoelColt Steam guide after multiple attempts.")
+            return []
 
-    cursor.execute(
-        "SELECT * FROM map_objectives WHERE map_id = ? AND seed_variant = ? AND floor = ?",
-        (map_id, seed_variant, floor),
-    )
-    obj_rows = cursor.fetchall()
-    if not obj_rows:
-        cursor.execute("SELECT * FROM map_objectives WHERE map_id = ?", (map_id,))
-        obj_rows = cursor.fetchall()
+        try:
+            soup = BeautifulSoup(res.text, "html.parser")
+            maps: list[MapData] = []
+            seen_ids = set()
 
-    objectives = []
-    for r in obj_rows:
-        objectives.append({
-            "id": r["id"],
-            "type": r["type"],
-            "x": r["x"],
-            "y": r["y"],
-            "location_description": r["location_description"],
-            "seed_variant": r["seed_variant"],
-            "floor": r["floor"],
-        })
+            subsections = soup.find_all("div", class_="subSection")
+            for sub in subsections:
+                title_div = sub.find("div", class_="subSectionTitle")
+                realm_name = title_div.get_text(strip=True) if title_div else "General Realm"
+                if realm_name in ["Overview", "Comments", "General", "Change Log", "Introduction", "Changelog", "Credits"]:
+                    continue
 
-    conn.close()
+                realm_slug = sanitize_filename(realm_name)
+                lines = [text.strip() for text in sub.stripped_strings if text.strip() and text.strip() != realm_name]
 
-    result = dict(map_info)
-    result["seed_variant"] = seed_variant
-    result["floor"] = floor
-    result["tiles"] = tiles
-    result["objectives"] = objectives
+                links = sub.find_all("a", class_="modalContentLink")
+                if not links:
+                    links = sub.find_all("a", href=re.compile(r"images\.steamusercontent\.com|steamuserimages"))
 
-    totems = [obj for obj in objectives if obj["type"] == "totem"]
-    result["totem_spawns"] = [
-        {"id": t["id"], "x": t["x"], "y": t["y"], "location": t["location_description"]}
-        for t in totems
-    ]
-    result["key_tiles"] = [
-        {
-            "name": t["name"],
-            "type": t["type"],
-            "x": t["x"],
-            "y": t["y"],
-            "has_pallet": t["has_pallet"],
-            "has_window": t["has_window"],
-        }
-        for t in tiles
-    ]
+                for idx, link in enumerate(links):
+                    href = link.get("href", "")
+                    if not href:
+                        img_tag = link.find("img")
+                        if img_tag:
+                            href = img_tag.get("src", "")
 
-    return result
-```
+                    if href and ("images.steamusercontent.com" in href or "steamuserimages" in href):
+                        map_name = f"{realm_name} Map {idx + 1}"
+                        if idx < len(lines):
+                            potential_name = lines[idx]
+                            if 3 < len(potential_name) < 50 and not potential_name.startswith("http") and not potential_name.startswith("Preview"):
+                                map_name = potential_name
 
-### backend/app/services/maps/seeder.py
-```python
-import sqlite3
-from typing import Any
-from app.services.maps.data import (
-    DEFAULT_OBJECTIVES_SEED_A,
-    DEFAULT_TILES_SEED_A,
-    SAMPLE_MAPS,
-)
+                        map_slug = sanitize_filename(map_name)
+                        unique_id = f"samoel_{realm_slug}_{map_slug}_{idx + 1}"
+                        if unique_id in seen_ids:
+                            continue
+                        seen_ids.add(unique_id)
 
+                        rel_static_path = f"maps/callouts/samoelcolt/{realm_slug}/{map_slug}_{idx + 1}.jpg"
 
-def seed_maps_if_empty(conn: sqlite3.Connection, db_service: Any) -> None:
-    """Seeds baseline maps, multi-seed tiles, and landmark objectives into SQLite if empty."""
-    db_service.init_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM map_realms")
-    count = cursor.fetchone()[0]
-
-    if count == 0:
-        for m in SAMPLE_MAPS:
-            cursor.execute(
-                """
-                INSERT INTO map_realms (map_id, name, realm, source, source_label, layout_type, jungle_gyms_count, totem_spawns_count, pallet_density, shack_has_basement, description, image_url)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    m["id"],
-                    m["name"],
-                    m["realm"],
-                    m.get("source", "hens333"),
-                    m.get("source_label", "Hens333 12-Clock Callouts"),
-                    m.get("layout_type", ""),
-                    m.get("jungle_gyms_count", 4),
-                    m.get("totem_spawns_count", 5),
-                    m.get("pallet_density", ""),
-                    m.get("shack_has_basement", True),
-                    m.get("description", ""),
-                    m.get("image_url", ""),
-                ),
-            )
-
-            for seed in ["seed_a", "seed_b", "seed_c"]:
-                floors = [1, 2] if m["id"] in ["rpd_east", "midwich"] else [1]
-                for fl in floors:
-                    for tile in DEFAULT_TILES_SEED_A:
-                        cursor.execute(
-                            """
-                            INSERT INTO map_tiles (map_id, seed_variant, floor, name, type, x, y, has_pallet, pallet_safety_rating, has_window, vault_directions, looping_tips, mindgame_counter)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                            """,
-                            (
-                                m["id"],
-                                seed,
-                                fl,
-                                tile["name"],
-                                tile["type"],
-                                tile["x"],
-                                tile["y"],
-                                tile["has_pallet"],
-                                tile["pallet_safety_rating"],
-                                tile["has_window"],
-                                tile["vault_directions"],
-                                tile["looping_tips"],
-                                tile["mindgame_counter"],
-                            ),
+                        maps.append(
+                            MapData(
+                                id=unique_id,
+                                name=map_name,
+                                realm=realm_name,
+                                realm_id=realm_slug,
+                                callout_image_url=href,
+                                callout_image_local_path=rel_static_path,
+                                dpath="",
+                                clock_system=get_map_landmarks_data(
+                                    map_name=map_name,
+                                    realm_name=realm_name,
+                                    source="samoelcolt",
+                                ),
+                                source="samoelcolt",
+                                source_label="SamoelColt Isometric Scheme",
+                            )
                         )
-
-                    for obj in DEFAULT_OBJECTIVES_SEED_A:
-                        cursor.execute(
-                            """
-                            INSERT INTO map_objectives (map_id, seed_variant, floor, type, x, y, location_description)
-                            VALUES (?, ?, ?, ?, ?, ?, ?)
-                            """,
-                            (
-                                m["id"],
-                                seed,
-                                fl,
-                                obj["type"],
-                                obj["x"],
-                                obj["y"],
-                                obj["location_description"],
-                            ),
-                        )
-
-        conn.commit()
+            logger.info(f"Scraped {len(maps)} SamoelColt maps from Steam Workshop.")
+            return maps
+        except Exception as e:
+            logger.error(f"Error parsing SamoelColt maps: {e}")
+            return []
 ```
 
-### backend/app/services/others/__init__.py
-```python
-from .draft_service import DraftService
-from .quest_service import QuestService
-from .killer_calc_service import KillerCalcService, calculate_killer_calc
-from .build_service import BuildService
-from .custom_perk_service import CustomPerkService
-from .guesser_service import GuesserService
-
-__all__ = [
-    "DraftService",
-    "QuestService",
-    "KillerCalcService",
-    "calculate_killer_calc",
-    "BuildService",
-    "CustomPerkService",
-    "GuesserService",
-]
-```
-
-### backend/app/services/others/build_service.py
+### backend/app/scrapers/roster_images.py
 ```python
 import logging
-from flask import current_app
-from sqlalchemy import func, or_, select
+from pathlib import Path
+from typing import Any
+from bs4 import BeautifulSoup
+from curl_cffi import requests
 
-from app.core.extensions import db
-from app.core.json_provider import safe_json_dumps, safe_json_loads
-from app.models import CommunityBuild
-from app.services.db_service import DatabaseService
+from app.scrapers.utils import auto_save_webp, sanitize_filename, save_image_as_webp
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_BUILDS = [
-    {
-        "title": "Otzdarva's Ultimate Huntress",
-        "description": "High pressure ranged sniper Huntress loadout refined by Otzdarva for consistent trial victories.",
-        "role": "killer",
-        "category": "otzdarva",
-        "character_id": "huntress",
-        "perks": ["Barbecue & Chilli", "I'm All Ears", "Scourge Hook: Pain Resonance", "Lethal Pursuer"],
-        "upvotes": 342,
-        "author": "Otzdarva",
+WIKI_BASE_URL = "https://deadbydaylight.wiki.gg"
+
+ROSTER_COVER_URLS: dict[str, str] = {
+    "canon": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_MidnightGrove_BC.png",
+    "hooked_on_you": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_HookedOnYou.png",
+    "legendary_cosplay": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_Chucky.png",
+    "cyberpunk_2077": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_BioPunk.png",
+    "anime_manga": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_TokyoGhoul.png",
+    "gothic_eldritch": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_GothicTales.png",
+}
+
+EDITION_PORTRAIT_DIRECT_MAP: dict[str, dict[str, str]] = {
+    "hooked_on_you": {
+        "the_huntress_hoy": "https://deadbydaylight.wiki.gg/images/Title_Screen_The_Huntress_HoY.png",
+        "the_trapper_hoy": "https://deadbydaylight.wiki.gg/images/Title_Screen_The_Trapper_HoY.png",
+        "the_spirit_hoy": "https://deadbydaylight.wiki.gg/images/Title_Screen_The_Spirit_HoY.png",
+        "the_wraith_hoy": "https://deadbydaylight.wiki.gg/images/Title_Screen_The_Wraith_HoY.png",
+        "claudette_morel_hoy": "https://deadbydaylight.wiki.gg/images/Claudette_outfit_006.png",
+        "dwight_fairfield_hoy": "https://deadbydaylight.wiki.gg/images/Summer_vacation.jpeg",
+        "the_trickster_hoy": "https://deadbydaylight.wiki.gg/images/Trickster_Crescendo_Concept_Art.jpeg",
+        "the_ocean_hoy": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_HookedOnYou.png",
     },
-    {
-        "title": "Meta Survivor Chase Build",
-        "description": "Maximum chase longevity and exhaustion recovery loadout designed for high MMR trials.",
-        "role": "survivor",
-        "category": "meta",
-        "character_id": "meg_thomas",
-        "perks": ["Sprint Burst", "Adrenaline", "Windows of Opportunity", "Resilience"],
-        "upvotes": 289,
-        "author": "Meta Analytics",
+    "legendary_cosplay": {
+        "william_birkin": "https://deadbydaylight.wiki.gg/images/CC021_charSelect_portrait.png",
+        "hunk": "https://deadbydaylight.wiki.gg/images/CC020_charSelect_portrait.png",
+        "james_sunderland": "https://deadbydaylight.wiki.gg/images/CC011_charSelect_portrait.png",
+        "maria": "https://deadbydaylight.wiki.gg/images/CC023_charSelect_portrait.png",
+        "cybil_bennett": "https://deadbydaylight.wiki.gg/images/CC009_charSelect_portrait.png",
+        "lisa_garland": "https://deadbydaylight.wiki.gg/images/CC007_charSelect_portrait.png",
+        "naughty_bear": "https://deadbydaylight.wiki.gg/images/CC028_charSelect_portrait.png",
+        "baba_yaga": "https://deadbydaylight.wiki.gg/images/CC008_charSelect_portrait.png",
+        "the_look_see": "https://deadbydaylight.wiki.gg/images/CC001_charSelect_portrait.png",
+        "the_mordeo": "https://deadbydaylight.wiki.gg/images/CC003_charSelect_portrait.png",
+        "the_birch": "https://deadbydaylight.wiki.gg/images/CC002_charSelect_portrait.png",
+        "minotaur": "https://deadbydaylight.wiki.gg/images/CC005_charSelect_portrait.png",
+        "tiffany_valentine": "https://deadbydaylight.wiki.gg/images/CC029_charSelect_portrait.png",
+        "chatterer": "https://deadbydaylight.wiki.gg/images/CC010_charSelect_portrait.png",
     },
-    {
-        "title": "Meme Head On Squad",
-        "description": "Locker surprise stun combo engineered for maximum team coordination and hilarity.",
-        "role": "survivor",
-        "category": "meme",
-        "character_id": "jane_romero",
-        "perks": ["Head On", "Flashbang", "Quick & Quiet", "Deception"],
-        "upvotes": 215,
-        "author": "SwinySquad",
+    "cyberpunk_2077": {
+        "cyber_trickster": "https://deadbydaylight.wiki.gg/images/Trickster_DOMREBEL_Concept_Art.png",
+        "netrunner_nea": "https://deadbydaylight.wiki.gg/images/NK_outfit_014.png",
+        "chrome_wesker": "https://deadbydaylight.wiki.gg/images/K29_charSelect_portrait.png",
+        "neon_sable": "https://deadbydaylight.wiki.gg/images/Sable_Ward_Fiery_Spider_Cosmetic_Promo.png",
+        "cyber_feng_min": "https://deadbydaylight.wiki.gg/images/FM_outfit_014.png",
+        "high_tech_trapper": "https://deadbydaylight.wiki.gg/images/Trapper_DeadlyGames_Concept_Art.png",
+        "hightech_trapper": "https://deadbydaylight.wiki.gg/images/Trapper_DeadlyGames_Concept_Art.png",
+        "meg_turbo": "https://deadbydaylight.wiki.gg/images/S02_charSelect_portrait.png",
+        "cyber_oni": "https://deadbydaylight.wiki.gg/images/K18_charSelect_portrait.png",
+        "netrunner_dwight": "https://deadbydaylight.wiki.gg/images/Dwight_Fairfield_AOT_Concept_Art.jpeg",
+        "neon_skull_merchant": "https://deadbydaylight.wiki.gg/images/K31_charSelect_portrait.png",
+        "cyber_nurse": "https://deadbydaylight.wiki.gg/images/Nurse_Greek_Concept_Art.png",
+        "cyber_david_king": "https://deadbydaylight.wiki.gg/images/DK_outfit_012.png",
     },
-    {
-        "title": "Hex Dominator Trapper",
-        "description": "Total map slowdown and trap lockdown powered by oppressive hex totem synergy.",
-        "role": "killer",
-        "category": "otzdarva",
-        "character_id": "trapper",
-        "perks": ["Hex: Ruin", "Hex: Undying", "Hex: Pentimento", "Corrupt Intervention"],
-        "upvotes": 198,
-        "author": "Otzdarva",
+    "anime_manga": {
+        "anime_spirit": "https://deadbydaylight.wiki.gg/images/Spirit_AOT_Concept_Art.png",
+        "anime_mikaela": "https://deadbydaylight.wiki.gg/images/Mikaela_Reid_DeadlyGames_Concept_Art.jpeg",
+        "anime_yui": "https://deadbydaylight.wiki.gg/images/Yui_Kimura_AOT_Concept_Art.png",
+        "anime_trickster": "https://deadbydaylight.wiki.gg/images/Trickster_FireMoon_Concept_Art.jpeg",
+        "anime_huntress": "https://deadbydaylight.wiki.gg/images/Huntress_Artists_Concept_Art.png",
+        "anime_legion": "https://deadbydaylight.wiki.gg/images/Legion_outfit_009.png",
+        "anime_meg": "https://deadbydaylight.wiki.gg/images/S02_charSelect_portrait.png",
+        "anime_feng_min": "https://deadbydaylight.wiki.gg/images/FM_outfit_008.png",
+        "anime_feng": "https://deadbydaylight.wiki.gg/images/FM_outfit_008.png",
+        "anime_dracula": "https://deadbydaylight.wiki.gg/images/K37_charSelect_portrait.png",
+        "anime_sable": "https://deadbydaylight.wiki.gg/images/Sable_Ward_Little_Red_Concept_Art.png",
+        "anime_wesker": "https://deadbydaylight.wiki.gg/images/K29_charSelect_portrait.png",
     },
-    {
-        "title": "Stealth Ninja Myers",
-        "description": "Zero terror radius jumpscare Shape build engineered to catch survivors completely off guard.",
-        "role": "killer",
-        "category": "stealth",
-        "character_id": "shape",
-        "perks": ["Monitor & Abuse", "Tinkerer", "Discordance", "Play with Your Food"],
-        "upvotes": 174,
-        "author": "StalkerNinja",
+    "gothic_eldritch": {
+        "gothic_dracula": "https://deadbydaylight.wiki.gg/images/K37_charSelect_portrait.png",
+        "gothic_sable": "https://deadbydaylight.wiki.gg/images/Sable_Ward_Gothic_Romance_Concept_Art.png",
+        "bloodborne_huntress": "https://deadbydaylight.wiki.gg/images/Huntress_BabaYaga_Concept_Art.png",
+        "dark_fantasy_mikaela": "https://deadbydaylight.wiki.gg/images/MikaelaMidnightGroveCosmetic.png",
+        "eldritch_nurse": "https://deadbydaylight.wiki.gg/images/Nurse_Greek_Concept_Art.png",
+        "victorian_blight": "https://deadbydaylight.wiki.gg/images/Blight_Rare_Concept_Art.png",
+        "plague_priestess": "https://deadbydaylight.wiki.gg/images/K15_charSelect_portrait.png",
+        "gothic_artist": "https://deadbydaylight.wiki.gg/images/Artist_Baroque_Concept_Art.png",
+        "raven_artist": "https://deadbydaylight.wiki.gg/images/Artist_Community_Concept_Art.png",
+        "eldritch_dredge": "https://deadbydaylight.wiki.gg/images/Dredge_Fear_of_Reminiscence_Concept_Art.png",
+        "abyssal_dredge": "https://deadbydaylight.wiki.gg/images/Dredge_Fear_of_Reminiscence_Concept_Art.png",
+        "gothic_knight": "https://deadbydaylight.wiki.gg/images/Knight_VeryRare_Concept_Art.png",
+        "occult_vittorio": "https://deadbydaylight.wiki.gg/images/S34_charSelect_portrait.png",
+        "phantom_wraith": "https://deadbydaylight.wiki.gg/images/Wraith_Baroque_Concept_Art.png",
     },
-    {
-        "title": "Gen Pressure Merchant",
-        "description": "High regression and area surveillance loadout for supreme trial delay.",
-        "role": "killer",
-        "category": "meta",
-        "character_id": "skull_merchant",
-        "perks": ["Pop Goes the Weasel", "Scourge Hook: Pain Resonance", "Overcharge", "Nowhere to Hide"],
-        "upvotes": 156,
-        "author": "TrialDoctor",
-    },
-    {
-        "title": "Aggressive Chase King",
-        "description": "Relentless killer chase acceleration and vault speed stack for ultra fast downs.",
-        "role": "killer",
-        "category": "chase",
-        "character_id": "wraith",
-        "perks": ["Save the Best for Last", "Bamboozle", "Enduring", "Spirit Fury"],
-        "upvotes": 142,
-        "author": "FastDowns",
-    },
-]
+}
+
+EDITION_ROLE_DIR_MAP: dict[str, str] = {
+    "the_trapper_hoy": "killers",
+    "the_huntress_hoy": "killers",
+    "the_spirit_hoy": "killers",
+    "the_wraith_hoy": "killers",
+    "claudette_morel_hoy": "survivors",
+    "dwight_fairfield_hoy": "survivors",
+    "the_trickster_hoy": "killers",
+    "the_ocean_hoy": "killers",
+    "william_birkin": "killers",
+    "hunk": "killers",
+    "james_sunderland": "survivors",
+    "maria": "survivors",
+    "cybil_bennett": "survivors",
+    "lisa_garland": "survivors",
+    "naughty_bear": "killers",
+    "baba_yaga": "killers",
+    "the_look_see": "killers",
+    "the_mordeo": "killers",
+    "the_birch": "killers",
+    "minotaur": "killers",
+    "tiffany_valentine": "killers",
+    "chatterer": "killers",
+    "cyber_trickster": "killers",
+    "netrunner_nea": "survivors",
+    "chrome_wesker": "killers",
+    "neon_sable": "survivors",
+    "cyber_feng_min": "survivors",
+    "high_tech_trapper": "killers",
+    "hightech_trapper": "killers",
+    "meg_turbo": "survivors",
+    "cyber_oni": "killers",
+    "netrunner_dwight": "survivors",
+    "neon_skull_merchant": "killers",
+    "cyber_nurse": "killers",
+    "cyber_david_king": "survivors",
+    "anime_spirit": "killers",
+    "anime_mikaela": "survivors",
+    "anime_yui": "survivors",
+    "anime_trickster": "killers",
+    "anime_huntress": "killers",
+    "anime_legion": "killers",
+    "anime_meg": "survivors",
+    "anime_feng_min": "survivors",
+    "anime_feng": "survivors",
+    "anime_dracula": "killers",
+    "anime_sable": "survivors",
+    "anime_wesker": "killers",
+    "gothic_dracula": "killers",
+    "gothic_sable": "survivors",
+    "bloodborne_huntress": "killers",
+    "dark_fantasy_mikaela": "survivors",
+    "eldritch_nurse": "killers",
+    "victorian_blight": "killers",
+    "plague_priestess": "killers",
+    "gothic_artist": "killers",
+    "raven_artist": "killers",
+    "eldritch_dredge": "killers",
+    "abyssal_dredge": "killers",
+    "gothic_knight": "killers",
+    "occult_vittorio": "survivors",
+    "phantom_wraith": "killers",
+}
 
 
-class BuildService:
-    def __init__(self, db_service=None):
-        self._use_sqlalchemy = db_service is None
-        self.db_service = db_service or DatabaseService()
+class RosterImageScraperDriver:
+    """Dedicated scraper driver for acquiring high-resolution character portraits."""
 
-    def _init_table(self):
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS community_builds (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                description TEXT NOT NULL,
-                role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
-                category TEXT NOT NULL CHECK (category IN ('otzdarva', 'meta', 'meme', 'stealth', 'chase')),
-                character_id TEXT NOT NULL DEFAULT 'all',
-                perks_json TEXT NOT NULL DEFAULT '[]',
-                upvotes INTEGER NOT NULL DEFAULT 0,
-                author TEXT NOT NULL DEFAULT 'Community',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        """)
-        conn.commit()
-        conn.close()
+    def __init__(self, timeout: int = 25, user_agent: str | None = None):
+        self.timeout = timeout
+        self.session = requests.Session()
+        self.session.headers.update({
+            "User-Agent": user_agent
+            or "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        })
 
-    def seed_builds_if_empty(self):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    count = db.session.scalar(select(func.count(CommunityBuild.id))) or 0
-                    if count == 0:
-                        for b in DEFAULT_BUILDS:
-                            db.session.add(
-                                CommunityBuild(
-                                    title=b["title"],
-                                    description=b["description"],
-                                    role=b["role"].lower(),
-                                    category=b["category"].lower(),
-                                    character_id=b.get("character_id", "all"),
-                                    perks_json=safe_json_dumps(b.get("perks", []), default_val="[]"),
-                                    upvotes=b.get("upvotes", 0),
-                                    author=b.get("author", "Community"),
-                                )
-                            )
-                        db.session.commit()
-                    return
-            except Exception as e:
-                logger.debug(f"SQLAlchemy seed_builds_if_empty fallback: {e}")
+    def fetch_page_soup(self, url: str) -> BeautifulSoup | None:
+        try:
+            resp = self.session.get(url, timeout=self.timeout, impersonate="chrome120", verify=False)
+            if resp.status_code == 200:
+                return BeautifulSoup(resp.text, "html.parser")
+            logger.warning(f"Failed to fetch {url} (status: {resp.status_code})")
+        except Exception as e:
+            logger.error(f"Error fetching page {url}: {e}")
+        return None
 
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) as count FROM community_builds;")
-        row = cursor.fetchone()
-        count = row["count"] if row else 0
-        if count == 0:
-            for b in DEFAULT_BUILDS:
-                cursor.execute("""
-                    INSERT INTO community_builds (title, description, role, category, character_id, perks_json, upvotes, author)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?);
-                """, (
-                    b["title"],
-                    b["description"],
-                    b["role"].lower(),
-                    b["category"].lower(),
-                    b.get("character_id", "all"),
-                    safe_json_dumps(b.get("perks", []), default_val="[]"),
-                    b.get("upvotes", 0),
-                    b.get("author", "Community")
-                ))
-            conn.commit()
-        conn.close()
-
-    def get_builds(self, role=None, category=None, search=None, sort_by="upvotes"):
-        self.seed_builds_if_empty()
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    stmt = select(CommunityBuild)
-                    if role and role.lower() != "all":
-                        stmt = stmt.where(func.lower(CommunityBuild.role) == role.lower())
-                    if category and category.lower() != "all":
-                        stmt = stmt.where(func.lower(CommunityBuild.category) == category.lower())
-                    if search and search.strip():
-                        pat = f"%{search.strip().lower()}%"
-                        stmt = stmt.where(
-                            or_(
-                                func.lower(CommunityBuild.title).ilike(pat),
-                                func.lower(CommunityBuild.description).ilike(pat),
-                                func.lower(CommunityBuild.character_id).ilike(pat),
-                                func.lower(CommunityBuild.author).ilike(pat),
-                                func.lower(CommunityBuild.perks_json).ilike(pat),
-                            )
-                        )
-                    if sort_by == "newest":
-                        stmt = stmt.order_by(CommunityBuild.id.desc())
-                    else:
-                        stmt = stmt.order_by(CommunityBuild.upvotes.desc(), CommunityBuild.id.desc())
-
-                    rows = db.session.scalars(stmt).all()
-                    return [r.to_dict() for r in rows]
-            except Exception as e:
-                logger.debug(f"SQLAlchemy get_builds fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-
-        query = "SELECT * FROM community_builds WHERE 1=1"
-        params = []
-
-        if role:
-            query += " AND LOWER(role) = LOWER(?)"
-            params.append(role)
-
-        if category:
-            query += " AND LOWER(category) = LOWER(?)"
-            params.append(category)
-
-        if search:
-            query += " AND (LOWER(title) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?) OR LOWER(character_id) LIKE LOWER(?) OR LOWER(author) LIKE LOWER(?) OR LOWER(perks_json) LIKE LOWER(?))"
-            search_pattern = f"%{search}%"
-            params.extend([search_pattern, search_pattern, search_pattern, search_pattern, search_pattern])
-
-        if sort_by == "newest":
-            query += " ORDER BY id DESC"
-        else:
-            query += " ORDER BY upvotes DESC, id DESC"
-
-        cursor.execute(query, params)
-        rows = cursor.fetchall()
-        conn.close()
-
-        builds = []
-        for r in rows:
-            item = dict(r)
-            item["perks"] = safe_json_loads(item.get("perks_json"), default=[])
-            builds.append(item)
-
-        return builds
-
-    def get_build_by_id(self, build_id):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    b = db.session.get(CommunityBuild, int(build_id))
-                    return b.to_dict() if b else None
-            except Exception as e:
-                logger.debug(f"SQLAlchemy get_build_by_id fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM community_builds WHERE id = ?;", (build_id,))
-        row = cursor.fetchone()
-        conn.close()
-
-        if not row:
-            return None
-
-        item = dict(row)
-        item["perks"] = safe_json_loads(item.get("perks_json"), default=[])
-        return item
-
-    def create_build(self, title, description, role, category, perks, character_id="all", author="Community"):
-        role_clean = (role or "").lower()
-        if role_clean not in ["survivor", "killer"]:
-            raise ValueError("Role must be 'survivor' or 'killer'.")
-
-        category_clean = (category or "").lower()
-        allowed_categories = ["otzdarva", "meta", "meme", "stealth", "chase"]
-        if category_clean not in allowed_categories:
-            category_clean = "meta"
-
-        title_clean = (title or "").strip()
-        if not title_clean:
-            raise ValueError("Title is required.")
-
-        perks_list = perks if isinstance(perks, list) else []
-        perks_json = safe_json_dumps(perks_list, default_val="[]")
-
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    nb = CommunityBuild(
-                        title=title_clean,
-                        description=(description or "").strip(),
-                        role=role_clean,
-                        category=category_clean,
-                        character_id=(character_id or "all").strip(),
-                        perks_json=perks_json,
-                        author=(author or "Community").strip(),
-                        upvotes=0,
-                    )
-                    db.session.add(nb)
-                    db.session.commit()
-                    return nb.to_dict()
-            except Exception as e:
-                logger.debug(f"SQLAlchemy create_build fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO community_builds (title, description, role, category, character_id, perks_json, upvotes, author)
-            VALUES (?, ?, ?, ?, ?, ?, 0, ?);
-        """, (
-            title_clean,
-            (description or "").strip(),
-            role_clean,
-            category_clean,
-            (character_id or "all").strip(),
-            perks_json,
-            (author or "Community").strip()
-        ))
-        conn.commit()
-        build_id = cursor.lastrowid
-        conn.close()
-
-        return self.get_build_by_id(build_id)
-
-    def upvote_build(self, build_id):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    b = db.session.get(CommunityBuild, int(build_id))
-                    if not b:
-                        raise ValueError(f"Build with ID {build_id} not found.")
-                    b.upvotes = (b.upvotes or 0) + 1
-                    db.session.commit()
-                    return b.to_dict()
-            except Exception as e:
-                logger.debug(f"SQLAlchemy upvote_build fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT id FROM community_builds WHERE id = ?;", (build_id,))
-        row = cursor.fetchone()
-        if not row:
-            conn.close()
-            raise ValueError(f"Build with ID {build_id} not found.")
-
-        cursor.execute("UPDATE community_builds SET upvotes = upvotes + 1 WHERE id = ?;", (build_id,))
-        conn.commit()
-        conn.close()
-
-        return self.get_build_by_id(build_id)
-```
-
-### backend/app/services/others/custom_perk_service.py
-```python
-import logging
-from typing import Any
-from flask import current_app
-from sqlalchemy import func, or_, select
-
-from app.core.extensions import db
-from app.models import CustomPerk
-from app.services.db_service import DatabaseService
-
-logger = logging.getLogger(__name__)
-
-DEFAULT_CUSTOM_PERKS = [
-    (
-        "Hex: Shadow Veil",
-        "killer",
-        "The Wraith",
-        "Iridescent",
-        "hex_totem",
-        "A Hex that cloaks the killer's terror radius while totem is active. When survivors get within 12 meters of the totem, their aura is revealed to the Killer for 4 seconds.",
-        18,
-        "EntityArchitect"
-    ),
-    (
-        "Adrenaline Rush: Overdrive",
-        "survivor",
-        "Meg Thomas",
-        "Very Rare",
-        "sprint",
-        "When all generators are powered, instantly heal one health state and gain 150% movement speed for 8 seconds. Causes **Exhausted** status effect for 40 seconds.",
-        25,
-        "SpeedDemon"
-    ),
-    (
-        "Totem Whisperer",
-        "survivor",
-        "Mikaela Reid",
-        "Uncommon",
-        "totem_cleanse",
-        "Hear auditory cues when near dull or hex totems within 16 meters. Cleansing totems takes 15% less time and reveals the Killer's aura for 3 seconds.",
-        14,
-        "WitchyVibes"
-    ),
-    (
-        "Entity's Shadow",
-        "killer",
-        "The Trapper",
-        "Iridescent",
-        "entity_claws",
-        "The Entity blocks all pallets within 24 meters of a hooked survivor for 15 seconds after hooking. Any survivor attempting to vault a blocked pallet screams and suffers **Hindered** for 5 seconds.",
-        21,
-        "FogLord"
-    ),
-]
-
-
-class CustomPerkService:
-    def __init__(self, db_service: DatabaseService | None = None):
-        self._use_sqlalchemy = db_service is None
-        self.db_service = db_service or DatabaseService()
-
-    def init_table_and_seed(self):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    count = db.session.scalar(select(func.count(CustomPerk.id))) or 0
-                    if count == 0:
-                        for p in DEFAULT_CUSTOM_PERKS:
-                            db.session.add(
-                                CustomPerk(
-                                    name=p[0],
-                                    role=p[1],
-                                    character_name=p[2],
-                                    rarity=p[3],
-                                    icon_preset=p[4],
-                                    description=p[5],
-                                    upvotes=p[6],
-                                    author=p[7],
-                                )
-                            )
-                        db.session.commit()
-                    return
-            except Exception as e:
-                logger.debug(f"SQLAlchemy init_table_and_seed fallback: {e}")
-
-        self.db_service.init_db()
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("SELECT COUNT(*) as count FROM custom_perks")
-        row = cursor.fetchone()
-        if row and row["count"] == 0:
-            logger.info("Seeding initial custom perk concepts into database...")
-            cursor.executemany(
-                """
-                INSERT INTO custom_perks (name, role, character_name, rarity, icon_preset, description, upvotes, author)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                DEFAULT_CUSTOM_PERKS
-            )
-            conn.commit()
-
-        conn.close()
-
-    def get_custom_perks(
-        self,
-        role: str | None = None,
-        rarity: str | None = None,
-        search: str | None = None,
-        sort_by: str = "newest",
-    ) -> list[dict[str, Any]]:
-        self.init_table_and_seed()
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    stmt = select(CustomPerk)
-                    if role and role.lower() != "all":
-                        stmt = stmt.where(func.lower(CustomPerk.role) == role.lower())
-                    if rarity and rarity.lower() != "all":
-                        stmt = stmt.where(func.lower(CustomPerk.rarity) == rarity.lower())
-                    if search and search.strip():
-                        pat = f"%{search.strip().lower()}%"
-                        stmt = stmt.where(
-                            or_(
-                                func.lower(CustomPerk.name).ilike(pat),
-                                func.lower(CustomPerk.description).ilike(pat),
-                                func.lower(CustomPerk.character_name).ilike(pat),
-                                func.lower(CustomPerk.author).ilike(pat),
-                            )
-                        )
-                    if sort_by == "upvotes":
-                        stmt = stmt.order_by(CustomPerk.upvotes.desc(), CustomPerk.created_at.desc())
-                    else:
-                        stmt = stmt.order_by(CustomPerk.created_at.desc(), CustomPerk.id.desc())
-
-                    rows = db.session.scalars(stmt).all()
-                    return [r.to_dict() for r in rows]
-            except Exception as e:
-                logger.debug(f"SQLAlchemy get_custom_perks fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-
-        query = "SELECT * FROM custom_perks WHERE 1=1"
-        params = []
-
-        if role:
-            query += " AND LOWER(role) = LOWER(?)"
-            params.append(role)
-
-        if rarity:
-            query += " AND LOWER(rarity) = LOWER(?)"
-            params.append(rarity)
-
-        if search:
-            query += " AND (LOWER(name) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?) OR LOWER(character_name) LIKE LOWER(?) OR LOWER(author) LIKE LOWER(?))"
-            pattern = f"%{search}%"
-            params.extend([pattern, pattern, pattern, pattern])
-
-        if sort_by == "upvotes":
-            query += " ORDER BY upvotes DESC, created_at DESC"
-        else:
-            query += " ORDER BY created_at DESC, id DESC"
-
-        cursor.execute(query, params)
-        rows = cursor.fetchall()
-        results = [dict(r) for r in rows]
-        conn.close()
+    def scrape_roster_portraits(self, edition_id: str) -> list[dict[str, Any]]:
+        results: list[dict[str, Any]] = []
+        if edition_id in EDITION_PORTRAIT_DIRECT_MAP:
+            for slug, img_url in EDITION_PORTRAIT_DIRECT_MAP[edition_id].items():
+                role_sub = EDITION_ROLE_DIR_MAP.get(slug, "killers")
+                results.append({
+                    "edition": edition_id,
+                    "character_name": slug.replace("_", " ").title(),
+                    "slug": slug,
+                    "image_url": img_url,
+                    "relative_path": f"avatars/{role_sub}/{slug}.png",
+                    "source_page": WIKI_BASE_URL,
+                })
         return results
 
-    def create_custom_perk(
-        self,
-        name: str,
-        role: str,
-        character_name: str,
-        rarity: str,
-        icon_preset: str,
-        description: str,
-        author: str = "Community",
-    ) -> dict[str, Any]:
-        role_clean = role.lower() if role else "survivor"
-        if role_clean not in ["survivor", "killer"]:
-            role_clean = "survivor"
+    @auto_save_webp(quality=90)
+    def download_roster_image(self, image_url: str, output_path: Path) -> bool:
+        try:
+            output_path = Path(output_path)
+            webp_path = output_path.with_suffix(".webp")
+            if output_path.exists() and output_path.stat().st_size > 500 and webp_path.exists():
+                return True
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            resp = self.session.get(image_url, timeout=self.timeout, impersonate="chrome120", verify=False)
+            if resp.status_code == 200 and len(resp.content) > 500:
+                with open(output_path, "wb") as f:
+                    f.write(resp.content)
+                save_image_as_webp(resp.content, output_path, quality=90)
+                logger.info(f"Successfully downloaded image: {output_path.name} ({len(resp.content):,} bytes)")
+                return True
+        except Exception as e:
+            logger.error(f"Failed to download image from {image_url}: {e}")
+        return False
 
-        rarities_valid = ["Iridescent", "Very Rare", "Uncommon"]
-        rarity_matched = next((r for r in rarities_valid if r.lower() == rarity.lower()), "Very Rare")
+    def sync_all_rosters(self, static_dir: Path) -> dict[str, Any]:
+        total_downloaded = 0
+        avatars_dir = static_dir / "avatars"
+        survivors_dir = avatars_dir / "survivors"
+        killers_dir = avatars_dir / "killers"
+        rosters_cover_dir = avatars_dir / "rosters"
 
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    cp = CustomPerk(
-                        name=name.strip(),
-                        role=role_clean,
-                        character_name=character_name.strip() if character_name else "Teachable",
-                        rarity=rarity_matched,
-                        icon_preset=icon_preset.strip() if icon_preset else "sparkles",
-                        description=description.strip(),
-                        author=author.strip() if author else "Community",
-                        upvotes=0,
-                    )
-                    db.session.add(cp)
-                    db.session.commit()
-                    return cp.to_dict()
-            except Exception as e:
-                logger.debug(f"SQLAlchemy create_custom_perk fallback: {e}")
+        survivors_dir.mkdir(parents=True, exist_ok=True)
+        killers_dir.mkdir(parents=True, exist_ok=True)
+        rosters_cover_dir.mkdir(parents=True, exist_ok=True)
 
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
+        for r_slug, banner_url in ROSTER_COVER_URLS.items():
+            dest = rosters_cover_dir / f"{r_slug}.png"
+            ok = self.download_roster_image(banner_url, dest)
+            if ok:
+                total_downloaded += 1
 
-        cursor.execute(
-            """
-            INSERT INTO custom_perks (name, role, character_name, rarity, icon_preset, description, upvotes, author)
-            VALUES (?, ?, ?, ?, ?, ?, 0, ?)
-            """,
-            (
-                name.strip(),
-                role_clean,
-                character_name.strip() if character_name else "Teachable",
-                rarity_matched,
-                icon_preset.strip() if icon_preset else "sparkles",
-                description.strip(),
-                author.strip() if author else "Community"
-            )
-        )
-        conn.commit()
-        new_id = cursor.lastrowid
-
-        cursor.execute("SELECT * FROM custom_perks WHERE id = ?", (new_id,))
-        row = cursor.fetchone()
-        conn.close()
-        return dict(row)
-
-    def upvote_custom_perk(self, perk_id: int) -> dict[str, Any] | None:
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    cp = db.session.get(CustomPerk, int(perk_id))
-                    if not cp:
-                        return None
-                    cp.upvotes = (cp.upvotes or 0) + 1
-                    db.session.commit()
-                    return cp.to_dict()
-            except Exception as e:
-                logger.debug(f"SQLAlchemy upvote_custom_perk fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("UPDATE custom_perks SET upvotes = upvotes + 1 WHERE id = ?", (perk_id,))
-        if cursor.rowcount == 0:
-            conn.close()
-            return None
-
-        conn.commit()
-        cursor.execute("SELECT * FROM custom_perks WHERE id = ?", (perk_id,))
-        row = cursor.fetchone()
-        conn.close()
-        return dict(row) if row else None
-```
-
-### backend/app/services/others/draft_service.py
-```python
-import logging
-import uuid
-from flask import current_app
-from sqlalchemy import select
-
-from app.core.extensions import db
-from app.core.json_provider import safe_json_dumps, safe_json_loads
-from app.models import DraftSession
-from app.services.db_service import DatabaseService
-
-logger = logging.getLogger(__name__)
-
-
-class DraftService:
-    def __init__(self, db_service=None):
-        self._use_sqlalchemy = db_service is None
-        self.db_service = db_service or DatabaseService()
-
-    def _init_table(self):
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS draft_sessions (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                room_code TEXT UNIQUE NOT NULL,
-                phase TEXT NOT NULL DEFAULT 'bans' CHECK (phase IN ('bans', 'picks', 'complete')),
-                banned_perks TEXT NOT NULL DEFAULT '[]',
-                picked_survivor_perks TEXT NOT NULL DEFAULT '[]',
-                picked_killer_perks TEXT NOT NULL DEFAULT '[]',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        """)
-        conn.commit()
-        conn.close()
-
-    def create_room(self, room_code=None):
-        if not room_code:
-            room_code = uuid.uuid4().hex[:6].upper()
-
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    existing = db.session.scalars(
-                        select(DraftSession).where(DraftSession.room_code == room_code)
-                    ).first()
-                    if existing:
-                        room_code = uuid.uuid4().hex[:6].upper()
-
-                    ds = DraftSession(
-                        room_code=room_code,
-                        phase="bans",
-                        banned_perks="[]",
-                        picked_survivor_perks="[]",
-                        picked_killer_perks="[]",
-                    )
-                    db.session.add(ds)
-                    db.session.commit()
-                    return ds.to_dict()
-            except Exception as e:
-                logger.debug(f"SQLAlchemy create_room fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM draft_sessions WHERE room_code = ?;", (room_code,))
-        if cursor.fetchone():
-            conn.close()
-            room_code = uuid.uuid4().hex[:6].upper()
-            conn = self.db_service.get_connection()
-            cursor = conn.cursor()
-
-        cursor.execute("""
-            INSERT INTO draft_sessions (room_code, phase, banned_perks, picked_survivor_perks, picked_killer_perks)
-            VALUES (?, 'bans', '[]', '[]', '[]');
-        """, (room_code,))
-        conn.commit()
-        conn.close()
-        return self.get_room(room_code)
-
-    def get_room(self, room_code):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    ds = db.session.scalars(
-                        select(DraftSession).where(DraftSession.room_code == room_code)
-                    ).first()
-                    return ds.to_dict() if ds else None
-            except Exception as e:
-                logger.debug(f"SQLAlchemy get_room fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM draft_sessions WHERE room_code = ?;", (room_code,))
-        row = cursor.fetchone()
-        conn.close()
-        if not row:
-            return None
-
-        data = dict(row)
-        data["banned_perks"] = safe_json_loads(data.get("banned_perks"), default=[])
-        data["picked_survivor_perks"] = safe_json_loads(data.get("picked_survivor_perks"), default=[])
-        data["picked_killer_perks"] = safe_json_loads(data.get("picked_killer_perks"), default=[])
-        return data
-
-    def process_action(self, room_code, action_data):
-        room = self.get_room(room_code)
-        if not room:
-            raise ValueError(f"Draft room '{room_code}' not found.")
-
-        action_type = action_data.get("action_type") or action_data.get("action")
-        perk_name = action_data.get("perk_name") or action_data.get("perk")
-        role = (action_data.get("role") or action_data.get("target_role") or "survivor").lower()
-        new_phase = action_data.get("phase")
-
-        banned_perks = list(room.get("banned_perks", []))
-        picked_survivor_perks = list(room.get("picked_survivor_perks", []))
-        picked_killer_perks = list(room.get("picked_killer_perks", []))
-        current_phase = room.get("phase", "bans")
-
-        if action_type == "ban":
-            if perk_name and perk_name not in banned_perks:
-                banned_perks.append(perk_name)
-        elif action_type == "pick":
-            if role == "killer":
-                if perk_name and perk_name not in picked_killer_perks:
-                    picked_killer_perks.append(perk_name)
-            else:
-                if perk_name and perk_name not in picked_survivor_perks:
-                    picked_survivor_perks.append(perk_name)
-
-        if new_phase in ("bans", "picks", "complete"):
-            current_phase = new_phase
-
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    ds = db.session.scalars(
-                        select(DraftSession).where(DraftSession.room_code == room_code)
-                    ).first()
-                    if ds:
-                        ds.phase = current_phase
-                        ds.banned_perks = safe_json_dumps(banned_perks, default_val="[]")
-                        ds.picked_survivor_perks = safe_json_dumps(picked_survivor_perks, default_val="[]")
-                        ds.picked_killer_perks = safe_json_dumps(picked_killer_perks, default_val="[]")
-                        db.session.commit()
-                        return ds.to_dict()
-            except Exception as e:
-                logger.debug(f"SQLAlchemy process_action fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            UPDATE draft_sessions
-            SET phase = ?, banned_perks = ?, picked_survivor_perks = ?, picked_killer_perks = ?, updated_at = CURRENT_TIMESTAMP
-            WHERE room_code = ?;
-        """, (current_phase, safe_json_dumps(banned_perks), safe_json_dumps(picked_survivor_perks), safe_json_dumps(picked_killer_perks), room_code))
-        conn.commit()
-        conn.close()
-
-        return self.get_room(room_code)
-```
-
-### backend/app/services/others/guesser_service.py
-```python
-import logging
-from flask import current_app
-from sqlalchemy import select
-
-from app.core.extensions import db
-from app.models import GuesserStat
-from app.services.db_service import DatabaseService
-
-logger = logging.getLogger(__name__)
-
-
-class GuesserService:
-    def __init__(self, db_service=None):
-        self._use_sqlalchemy = db_service is None
-        self.db_service = db_service or DatabaseService()
-
-    def get_all_stats(self):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    stmt = select(GuesserStat)
-                    rows = db.session.scalars(stmt).all()
-                    return {
-                        r.guesser_type: {
-                            "guesser_type": r.guesser_type,
-                            "current_streak": r.current_streak,
-                            "best_streak": r.best_streak,
-                            "total_guesses": r.total_guesses,
-                            "correct_guesses": r.correct_guesses,
-                        }
-                        for r in rows
-                    }
-            except Exception as e:
-                logger.debug(f"SQLAlchemy get_all_stats fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM guesser_stats;")
-        rows = cursor.fetchall()
-        conn.close()
-        
-        res = {}
-        for r in rows:
-            res[r["guesser_type"]] = {
-                "guesser_type": r["guesser_type"],
-                "current_streak": r["current_streak"],
-                "best_streak": r["best_streak"],
-                "total_guesses": r["total_guesses"],
-                "correct_guesses": r["correct_guesses"]
-            }
-        return res
-
-    def update_stats(self, guesser_type: str, is_correct: bool):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    stat = db.session.scalars(
-                        select(GuesserStat).where(GuesserStat.guesser_type == guesser_type)
-                    ).first()
-                    if not stat:
-                        stat = GuesserStat(guesser_type=guesser_type)
-                        db.session.add(stat)
-
-                    curr_streak = stat.current_streak
-                    best_streak = stat.best_streak
-                    total_guesses = stat.total_guesses + 1
-                    correct_guesses = stat.correct_guesses
-
-                    if is_correct:
-                        curr_streak += 1
-                        correct_guesses += 1
-                        if curr_streak > best_streak:
-                            best_streak = curr_streak
-                    else:
-                        curr_streak = 0
-
-                    stat.current_streak = curr_streak
-                    stat.best_streak = best_streak
-                    stat.total_guesses = total_guesses
-                    stat.correct_guesses = correct_guesses
-                    db.session.commit()
-
-                    return {
-                        "guesser_type": guesser_type,
-                        "current_streak": curr_streak,
-                        "best_streak": best_streak,
-                        "total_guesses": total_guesses,
-                        "correct_guesses": correct_guesses,
-                    }
-            except Exception as e:
-                logger.debug(f"SQLAlchemy update_stats fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute("SELECT * FROM guesser_stats WHERE guesser_type = ?;", (guesser_type,))
-        row = cursor.fetchone()
-        
-        if not row:
-            cursor.execute("""
-                INSERT INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses)
-                VALUES (?, 0, 0, 0, 0);
-            """, (guesser_type,))
-            conn.commit()
-            cursor.execute("SELECT * FROM guesser_stats WHERE guesser_type = ?;", (guesser_type,))
-            row = cursor.fetchone()
-
-        stats = dict(row)
-        curr_streak = stats["current_streak"]
-        best_streak = stats["best_streak"]
-        total_guesses = stats["total_guesses"] + 1
-        correct_guesses = stats["correct_guesses"]
-
-        if is_correct:
-            curr_streak += 1
-            correct_guesses += 1
-            if curr_streak > best_streak:
-                best_streak = curr_streak
-        else:
-            curr_streak = 0
-
-        cursor.execute("""
-            UPDATE guesser_stats
-            SET current_streak = ?, best_streak = ?, total_guesses = ?, correct_guesses = ?, updated_at = CURRENT_TIMESTAMP
-            WHERE guesser_type = ?;
-        """, (curr_streak, best_streak, total_guesses, correct_guesses, guesser_type))
-        conn.commit()
-        conn.close()
+        for edition_id in ["hooked_on_you", "legendary_cosplay", "cyberpunk_2077", "anime_manga", "gothic_eldritch"]:
+            portraits = self.scrape_roster_portraits(edition_id)
+            for item in portraits:
+                dest = static_dir / item["relative_path"]
+                ok = self.download_roster_image(item["image_url"], dest)
+                if ok:
+                    total_downloaded += 1
 
         return {
-            "guesser_type": guesser_type,
-            "current_streak": curr_streak,
-            "best_streak": best_streak,
-            "total_guesses": total_guesses,
-            "correct_guesses": correct_guesses
+            "status": "success",
+            "total_downloaded": total_downloaded,
+            "static_avatars_dir": str(avatars_dir),
         }
 
-    def reset_streak(self, guesser_type: str):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    stat = db.session.scalars(
-                        select(GuesserStat).where(GuesserStat.guesser_type == guesser_type)
-                    ).first()
-                    if stat:
-                        stat.current_streak = 0
-                        db.session.commit()
-                        return {
-                            "guesser_type": guesser_type,
-                            "current_streak": 0,
-                            "best_streak": stat.best_streak,
-                            "total_guesses": stat.total_guesses,
-                            "correct_guesses": stat.correct_guesses,
-                        }
-            except Exception as e:
-                logger.debug(f"SQLAlchemy reset_streak fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            UPDATE guesser_stats
-            SET current_streak = 0, updated_at = CURRENT_TIMESTAMP
-            WHERE guesser_type = ?;
-        """, (guesser_type,))
-        conn.commit()
-        
-        cursor.execute("SELECT * FROM guesser_stats WHERE guesser_type = ?;", (guesser_type,))
-        row = cursor.fetchone()
-        conn.close()
-        
-        if row:
-            return dict(row)
-        return {
-            "guesser_type": guesser_type,
-            "current_streak": 0,
-            "best_streak": 0,
-            "total_guesses": 0,
-            "correct_guesses": 0
-        }
+    def sync_and_seed_all(self, static_dir: Path) -> dict[str, Any]:
+        sync_result = self.sync_all_rosters(static_dir)
+        from app.seeds.smash_roster_seeder import seed_smash_rosters
+        seed_smash_rosters()
+        sync_result["database_seeded"] = True
+        return sync_result
 ```
 
-### backend/app/services/others/killer_calc_service.py
+### backend/app/scrapers/types.py
 ```python
+from dataclasses import asdict, dataclass, field, fields
 from typing import Any
 
-KILLERS_DATA: dict[str, dict[str, Any]] = {
-    "huntress": {
-        "id": "huntress",
-        "name": "The Huntress",
-        "title": "Anna",
-        "icon": "huntress.png",
-        "base_terror_radius": 20.0,
-        "lullaby_radius": 45.0,
-        "movement_speed": 4.4,
-        "power_name": "Hunting Hatchets",
-        "power_stats": {
-            "windup_time": {"name": "Hatchet Windup Time", "base": 1.0, "unit": "s", "lower_is_better": True},
-            "cooldown_time": {"name": "Hatchet Throw Cooldown", "base": 1.25, "unit": "s", "lower_is_better": True},
-            "reload_speed": {"name": "Locker Reload Speed", "base": 3.0, "unit": "s", "lower_is_better": True},
-            "hatchet_capacity": {"name": "Hatchet Capacity", "base": 5, "unit": "hatchets", "lower_is_better": False},
-        },
-        "addons": {
-            "flower_babushka": {
-                "id": "flower_babushka",
-                "name": "Flower Babushka",
-                "rarity": "Uncommon",
-                "description": "Moderately decreases hatchet windup time (-12%).",
-                "modifiers": {"windup_time": {"type": "percent", "value": -12}}
-            },
-            "manna_grass_braid": {
-                "id": "manna_grass_braid",
-                "name": "Manna Grass Braid",
-                "rarity": "Common",
-                "description": "Slightly decreases hatchet windup time (-8%).",
-                "modifiers": {"windup_time": {"type": "percent", "value": -8}}
-            },
-            "oak_shaft": {
-                "id": "oak_shaft",
-                "name": "Oak Shaft",
-                "rarity": "Rare",
-                "description": "Decreases cooldown between hatchet throws (-20%).",
-                "modifiers": {"cooldown_time": {"type": "percent", "value": -20}}
-            },
-            "leather_loop": {
-                "id": "leather_loop",
-                "name": "Leather Loop",
-                "rarity": "Uncommon",
-                "description": "Increases hatchet capacity (+1) and decreases reload time (-10%).",
-                "modifiers": {
-                    "hatchet_capacity": {"type": "flat", "value": 1},
-                    "reload_speed": {"type": "percent", "value": -10}
-                }
-            },
-            "wooden_fox": {
-                "id": "wooden_fox",
-                "name": "Wooden Fox",
-                "rarity": "Very Rare",
-                "description": "Grants Undetectable status for 15 seconds after reloading.",
-                "modifiers": {}
-            }
-        }
-    },
-    "nurse": {
-        "id": "nurse",
-        "name": "The Nurse",
-        "title": "Sally Smithson",
-        "icon": "nurse.png",
-        "base_terror_radius": 32.0,
-        "lullaby_radius": 0.0,
-        "movement_speed": 3.85,
-        "power_name": "Spencer's Last Breath",
-        "power_stats": {
-            "blink_charge_time": {"name": "Blink Charge Time", "base": 2.0, "unit": "s", "lower_is_better": True},
-            "blink_fatigue_time": {"name": "Blink Fatigue Duration", "base": 2.5, "unit": "s", "lower_is_better": True},
-            "max_blinks": {"name": "Max Blinks", "base": 2, "unit": "blinks", "lower_is_better": False},
-            "blink_charge_speed": {"name": "Blink Charge Speed", "base": 100.0, "unit": "%", "lower_is_better": False},
-        },
-        "addons": {
-            "fragile_wheeze": {
-                "id": "fragile_wheeze",
-                "name": "Fragile Wheeze",
-                "rarity": "Very Rare",
-                "description": "Decreases fatigue duration after blinks (-15%).",
-                "modifiers": {"blink_fatigue_time": {"type": "percent", "value": -15}}
-            },
-            "heavy_panting": {
-                "id": "heavy_panting",
-                "name": "Heavy Panting",
-                "rarity": "Rare",
-                "description": "Increases max blink charge speed (+20%).",
-                "modifiers": {"blink_charge_speed": {"type": "percent", "value": 20}}
-            },
-            "kavanaghs_last_breath": {
-                "id": "kavanaghs_last_breath",
-                "name": "Kavanagh's Last Breath",
-                "rarity": "Very Rare",
-                "description": "Increases max blink charge speed (+30%) but increases fatigue duration (+15%).",
-                "modifiers": {
-                    "blink_charge_speed": {"type": "percent", "value": 30},
-                    "blink_fatigue_time": {"type": "percent", "value": 15}
-                }
-            },
-            "dark_cincture": {
-                "id": "dark_cincture",
-                "name": "Dark Cincture",
-                "rarity": "Uncommon",
-                "description": "Increases movement speed (+0.2 m/s).",
-                "modifiers": {"movement_speed": {"type": "flat", "value": 0.2}}
-            },
-            "bad_mans_last_breath": {
-                "id": "bad_mans_last_breath",
-                "name": "Bad Man's Last Breath",
-                "rarity": "Ultra Rare",
-                "description": "Hitting a survivor with a blink attack hides Terror Radius for 25s.",
-                "modifiers": {}
-            }
-        }
-    },
-    "blight": {
-        "id": "blight",
-        "name": "The Blight",
-        "title": "Talbot Grimes",
-        "icon": "blight.png",
-        "base_terror_radius": 32.0,
-        "lullaby_radius": 0.0,
-        "movement_speed": 4.6,
-        "power_name": "Blighted Serum",
-        "power_stats": {
-            "rush_tokens": {"name": "Rush Tokens", "base": 5, "unit": "tokens", "lower_is_better": False},
-            "rush_recharge_time": {"name": "Token Recharge Time", "base": 2.0, "unit": "s", "lower_is_better": True},
-            "rush_speed": {"name": "Rush Movement Speed Boost", "base": 0.0, "unit": "%", "lower_is_better": False},
-            "turn_rate": {"name": "Rush Turn Rate", "base": 100.0, "unit": "%", "lower_is_better": False},
-        },
-        "addons": {
-            "blighted_rat": {
-                "id": "blighted_rat",
-                "name": "Blighted Rat",
-                "rarity": "Uncommon",
-                "description": "Increases Rush movement speed (+10%).",
-                "modifiers": {"rush_speed": {"type": "percent", "value": 10}}
-            },
-            "blighted_crow": {
-                "id": "blighted_crow",
-                "name": "Blighted Crow",
-                "rarity": "Very Rare",
-                "description": "Increases Rush movement speed (+15%).",
-                "modifiers": {"rush_speed": {"type": "percent", "value": 15}}
-            },
-            "adrenaline_vial": {
-                "id": "adrenaline_vial",
-                "name": "Adrenaline Vial",
-                "rarity": "Very Rare",
-                "description": "Increases max Rush tokens (+2) and decreases token recharge time (-25%).",
-                "modifiers": {
-                    "rush_tokens": {"type": "flat", "value": 2},
-                    "rush_recharge_time": {"type": "percent", "value": -25}
-                }
-            },
-            "umbra_salts": {
-                "id": "umbra_salts",
-                "name": "Umbra Salts",
-                "rarity": "Common",
-                "description": "Increases Rush turn rate (+15%).",
-                "modifiers": {"turn_rate": {"type": "percent", "value": 15}}
-            },
-            "compound_seven": {
-                "id": "compound_seven",
-                "name": "Compound Seven",
-                "rarity": "Uncommon",
-                "description": "Automatically targets nearby survivors within 16 meters during a rush.",
-                "modifiers": {}
-            }
-        }
-    },
-    "trapper": {
-        "id": "trapper",
-        "name": "The Trapper",
-        "title": "Evan MacMillan",
-        "icon": "trapper.png",
-        "base_terror_radius": 32.0,
-        "lullaby_radius": 0.0,
-        "movement_speed": 4.6,
-        "power_name": "Bear Trap",
-        "power_stats": {
-            "trap_set_time": {"name": "Trap Setting Time", "base": 2.5, "unit": "s", "lower_is_better": True},
-            "escape_difficulty": {"name": "Trap Rescue/Escape Time", "base": 100.0, "unit": "%", "lower_is_better": False},
-            "starting_traps": {"name": "Starting Traps", "base": 2, "unit": "traps", "lower_is_better": False},
-        },
-        "addons": {
-            "fast_fastening_kit": {
-                "id": "fast_fastening_kit",
-                "name": "Fast-Fastening Kit",
-                "rarity": "Uncommon",
-                "description": "Decreases trap setting time (-20%).",
-                "modifiers": {"trap_set_time": {"type": "percent", "value": -20}}
-            },
-            "trapper_gloves": {
-                "id": "trapper_gloves",
-                "name": "Trapper Gloves",
-                "rarity": "Common",
-                "description": "Decreases trap setting time (-30%).",
-                "modifiers": {"trap_set_time": {"type": "percent", "value": -30}}
-            },
-            "secondary_coil": {
-                "id": "secondary_coil",
-                "name": "Secondary Coil",
-                "rarity": "Very Rare",
-                "description": "Increases trap escape/rescue duration (+50%).",
-                "modifiers": {"escape_difficulty": {"type": "percent", "value": 50}}
-            },
-            "trapper_bag": {
-                "id": "trapper_bag",
-                "name": "Trapper Sack",
-                "rarity": "Very Rare",
-                "description": "Start with +2 extra Bear Traps.",
-                "modifiers": {"starting_traps": {"type": "flat", "value": 2}}
-            },
-            "tar_bottle": {
-                "id": "tar_bottle",
-                "name": "Tar Bottle",
-                "rarity": "Rare",
-                "description": "Considerably darkens Bear Traps.",
-                "modifiers": {}
-            }
-        }
-    },
-    "wraith": {
-        "id": "wraith",
-        "name": "The Wraith",
-        "title": "Philip Ojomo",
-        "icon": "wraith.png",
-        "base_terror_radius": 32.0,
-        "lullaby_radius": 0.0,
-        "movement_speed": 4.6,
-        "power_name": "Wailing Bell",
-        "power_stats": {
-            "uncloak_time": {"name": "Uncloaking Time", "base": 3.0, "unit": "s", "lower_is_better": True},
-            "cloak_time": {"name": "Cloaking Time", "base": 1.5, "unit": "s", "lower_is_better": True},
-            "cloaked_speed": {"name": "Cloaked Movement Speed", "base": 6.0, "unit": "m/s", "lower_is_better": False},
-        },
-        "addons": {
-            "swift_hunt": {
-                "id": "swift_hunt",
-                "name": "Swift Hunt - Blood",
-                "rarity": "Very Rare",
-                "description": "Decreases uncloaking time (-20%).",
-                "modifiers": {"uncloak_time": {"type": "percent", "value": -20}}
-            },
-            "windstorm": {
-                "id": "windstorm",
-                "name": "Windstorm - Blood",
-                "rarity": "Very Rare",
-                "description": "Increases movement speed while cloaked (+10%).",
-                "modifiers": {"cloaked_speed": {"type": "percent", "value": 10}}
-            },
-            "shadow_dance": {
-                "id": "shadow_dance",
-                "name": "Shadow Dance - White",
-                "rarity": "Rare",
-                "description": "Decreases cloaking time (-15%).",
-                "modifiers": {"cloak_time": {"type": "percent", "value": -15}}
-            },
-            "bone_clapper": {
-                "id": "bone_clapper",
-                "name": "Bone Clapper",
-                "rarity": "Uncommon",
-                "description": "Bell sound no longer lets survivors discern distance or direction.",
-                "modifiers": {}
-            },
-            "coxcomb_clapper": {
-                "id": "coxcomb_clapper",
-                "name": "The Coxcomb Clapper",
-                "rarity": "Ultra Rare",
-                "description": "Completely suppresses the Wailing Bell sound.",
-                "modifiers": {}
-            }
-        }
-    },
-    "spirit": {
-        "id": "spirit",
-        "name": "The Spirit",
-        "title": "Rin Yamaoka",
-        "icon": "spirit.png",
-        "base_terror_radius": 32.0,
-        "lullaby_radius": 0.0,
-        "movement_speed": 4.4,
-        "power_name": "Yamaoka's Haunting",
-        "power_stats": {
-            "phase_duration": {"name": "Phase Duration", "base": 5.0, "unit": "s", "lower_is_better": False},
-            "phase_speed": {"name": "Phase Movement Speed", "base": 7.0, "unit": "m/s", "lower_is_better": False},
-            "phase_recharge": {"name": "Phase Recharge Time", "base": 15.0, "unit": "s", "lower_is_better": True},
-        },
-        "addons": {
-            "yakuyoke_amulet": {
-                "id": "yakuyoke_amulet",
-                "name": "Yakuyoke Amulet",
-                "rarity": "Very Rare",
-                "description": "Increases phase duration (+20%) but decreases phase speed (-10%).",
-                "modifiers": {
-                    "phase_duration": {"type": "percent", "value": 20},
-                    "phase_speed": {"type": "percent", "value": -10}
-                }
-            },
-            "cherry_blossom": {
-                "id": "cherry_blossom",
-                "name": "Dried Cherry Blossom",
-                "rarity": "Rare",
-                "description": "Increases phase movement speed (+15%).",
-                "modifiers": {"phase_speed": {"type": "percent", "value": 15}}
-            },
-            "mother_daughter_ring": {
-                "id": "mother_daughter_ring",
-                "name": "Mother-Daughter Ring",
-                "rarity": "Ultra Rare",
-                "description": "Tremendously increases phase movement speed (+40%).",
-                "modifiers": {"phase_speed": {"type": "percent", "value": 40}}
-            },
-            "rusty_flute": {
-                "id": "rusty_flute",
-                "name": "Rusty Flute",
-                "rarity": "Uncommon",
-                "description": "Decreases phase recharge time (-20%).",
-                "modifiers": {"phase_recharge": {"type": "percent", "value": -20}}
-            },
-            "origami_crane": {
-                "id": "origami_crane",
-                "name": "Origami Crane",
-                "rarity": "Common",
-                "description": "Decreases phase recharge time (-10%).",
-                "modifiers": {"phase_recharge": {"type": "percent", "value": -10}}
-            }
-        }
-    }
-}
 
-PERKS_DATA: dict[str, dict[str, Any]] = {
-    "distressing": {
-        "id": "distressing",
-        "name": "Distressing",
-        "description": "Increases Terror Radius by 26%",
-        "type": "percent",
-        "value": 26
-    },
-    "monitor_and_abuse": {
-        "id": "monitor_and_abuse",
-        "name": "Monitor & Abuse",
-        "description": "Terror Radius +8m in chase, -8m outside chase",
-        "type": "conditional_flat"
-    },
-    "agitation": {
-        "id": "agitation",
-        "name": "Agitation",
-        "description": "Terror Radius +12m while carrying a survivor",
-        "type": "conditional_flat"
-    },
-    "furtive_chase": {
-        "id": "furtive_chase",
-        "name": "Furtive Chase",
-        "description": "Terror Radius -4m per token (up to 4 tokens = -16m)",
-        "type": "token_flat"
-    }
-}
+@dataclass
+class ScraperConfig:
+    source: str = "wikigg"
+    fallback_to_wiki: bool = False
+    last_used_source: str = "wikigg"
+    last_run_timestamp: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ScraperConfig":
+        if not isinstance(data, dict):
+            return cls()
+        valid_keys = {f.name for f in fields(cls)}
+        filtered = {k: v for k, v in data.items() if k in valid_keys}
+        return cls(**filtered)
 
 
-class KillerCalcService:
-    def get_killers(self) -> dict[str, dict[str, Any]]:
-        return KILLERS_DATA
-
-    def get_perks(self) -> dict[str, dict[str, Any]]:
-        return PERKS_DATA
-
-    def calculate(
-        self,
-        killer_id: str,
-        addon_ids: list[str] | None = None,
-        perk_ids: list[str] | None = None,
-        perk_options: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        addon_ids = addon_ids or []
-        perk_ids = perk_ids or []
-        perk_options = perk_options or {}
-
-        if killer_id not in KILLERS_DATA:
-            raise ValueError(f"Unknown killer_id: {killer_id}")
-
-        killer = KILLERS_DATA[killer_id]
-        base_tr = float(killer["base_terror_radius"])
-        lullaby_radius = float(killer["lullaby_radius"])
-
-        tr_breakdown = [{"source": "Base Terror Radius", "value": base_tr}]
-        percent_mod = 0.0
-        flat_mod = 0.0
-
-        if "distressing" in perk_ids:
-            dist_val = round(base_tr * 0.26, 2)
-            percent_mod += 26.0
-            tr_breakdown.append({"source": "Distressing (+26%)", "value": dist_val})
-
-        if "monitor_and_abuse" in perk_ids:
-            in_chase = perk_options.get("in_chase", False)
-            ma_val = 8.0 if in_chase else -8.0
-            flat_mod += ma_val
-            label = "Monitor & Abuse (In Chase +8m)" if in_chase else "Monitor & Abuse (Out of Chase -8m)"
-            tr_breakdown.append({"source": label, "value": ma_val})
-
-        if "agitation" in perk_ids:
-            carrying = perk_options.get("carrying_survivor", False)
-            ag_val = 12.0 if carrying else 0.0
-            if carrying:
-                flat_mod += ag_val
-                tr_breakdown.append({"source": "Agitation (Carrying +12m)", "value": ag_val})
-
-        if "furtive_chase" in perk_ids:
-            tokens = min(4, max(0, int(perk_options.get("furtive_chase_tokens", 0))))
-            fc_val = float(tokens * -4)
-            if tokens > 0:
-                flat_mod += fc_val
-                tr_breakdown.append({"source": f"Furtive Chase ({tokens} tokens)", "value": fc_val})
-
-        modified_tr = round(max(0.0, base_tr * (1.0 + percent_mod / 100.0) + flat_mod), 2)
-        tr_delta = round(modified_tr - base_tr, 2)
-
-        equipped_addons = []
-        addon_objects = []
-        for aid in addon_ids[:2]:
-            if aid in killer["addons"]:
-                aobj = killer["addons"][aid]
-                equipped_addons.append(aobj)
-                addon_objects.append({
-                    "id": aobj["id"],
-                    "name": aobj["name"],
-                    "rarity": aobj["rarity"],
-                    "description": aobj["description"]
-                })
-
-        stat_deltas = []
-        power_stats = killer["power_stats"]
-
-        for stat_id, sdata in power_stats.items():
-            base_val = float(sdata["base"])
-            unit = sdata["unit"]
-            lower_is_better = sdata["lower_is_better"]
-            stat_name = sdata["name"]
-
-            sum_percent = 0.0
-            sum_flat = 0.0
-
-            for addon in equipped_addons:
-                if stat_id in addon["modifiers"]:
-                    mod = addon["modifiers"][stat_id]
-                    if mod["type"] == "percent":
-                        sum_percent += mod["value"]
-                    elif mod["type"] == "flat":
-                        sum_flat += mod["value"]
-
-            if base_val == 0.0:
-                modified_val = round(base_val + sum_percent + sum_flat, 2)
-            else:
-                modified_val = round(base_val * (1.0 + sum_percent / 100.0) + sum_flat, 2)
-            delta_val = round(modified_val - base_val, 2)
-
-            if lower_is_better:
-                is_buff = modified_val < base_val
-            else:
-                is_buff = modified_val > base_val
-
-            is_changed = sum_percent != 0.0 or sum_flat != 0.0
-
-            formatted_delta = ""
-            if sum_percent != 0.0:
-                formatted_delta = f"{'+' if sum_percent > 0 else ''}{sum_percent}%"
-            elif sum_flat != 0.0:
-                formatted_delta = f"{'+' if sum_flat > 0 else ''}{sum_flat} {unit}"
-            else:
-                formatted_delta = "0"
-
-            stat_deltas.append({
-                "stat_id": stat_id,
-                "name": stat_name,
-                "base": base_val,
-                "modified": modified_val,
-                "delta_value": delta_val,
-                "delta_percent": round(sum_percent, 2),
-                "delta_flat": round(sum_flat, 2),
-                "formatted_delta": formatted_delta,
-                "unit": unit,
-                "lower_is_better": lower_is_better,
-                "is_buff": is_buff,
-                "is_changed": is_changed
-            })
-
-        return {
-            "killer": {
-                "id": killer["id"],
-                "name": killer["name"],
-                "title": killer["title"],
-                "base_terror_radius": base_tr,
-                "lullaby_radius": lullaby_radius,
-                "movement_speed": killer["movement_speed"],
-                "power_name": killer["power_name"]
-            },
-            "terror_radius": {
-                "base": base_tr,
-                "modified": modified_tr,
-                "delta": tr_delta,
-                "breakdown": tr_breakdown
-            },
-            "lullaby": {
-                "base": lullaby_radius,
-                "modified": lullaby_radius
-            },
-            "addons": addon_objects,
-            "stat_deltas": stat_deltas
-        }
+@dataclass
+class KillerPowerData:
+    name: str = ""
+    description: str = ""
+    icon_url: str = ""
+    icon_local_path: str = ""
+    movement_speed: str = ""
+    terror_radius: str = ""
+    terror_radius_meters: int | None = None
+    height: str = ""
 
 
-def calculate_killer_calc(
-    killer_id: str,
-    addon_ids: list[str] | None = None,
-    perk_ids: list[str] | None = None,
-    perk_options: dict[str, Any] | None = None,
-) -> dict[str, Any]:
-    service = KillerCalcService()
-    return service.calculate(killer_id, addon_ids, perk_ids, perk_options)
+@dataclass
+class CharacterData:
+    name: str
+    real_name: str
+    wiki_slug: str
+    short_name: str
+    category: str
+    avatar_url: str
+    avatar_local_path: str
+    release_number: int = 0
+    code_prefix: str | None = None
+    chapter_name: str | None = None
+    chapter_number: str | None = None
+    dlc_type: str | None = None
+    is_licensed: bool = False
+    release_year: int | None = None
+    release_date: str | None = None
+    dlc_counterparts: str | None = None
+    lore: str | None = None
+    power: KillerPowerData | None = None
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
+
+
+@dataclass
+class ItemData:
+    name: str
+    category: str
+    role: str
+    description: str
+    icon_url: str
+    icon_local_path: str
+    rarity: str
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
+
+
+@dataclass
+class AddonData:
+    name: str
+    associated_target: str
+    category: str
+    description: str
+    icon_url: str
+    icon_local_path: str
+    rarity: str
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
+
+
+@dataclass
+class OfferingData:
+    name: str
+    category: str
+    role: str
+    description: str
+    icon_url: str
+    icon_local_path: str
+    rarity: str
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
+
+
+@dataclass
+class PerkData:
+    name: str
+    character: str
+    character_real_name: str
+    character_avatar_path: str
+    category: str
+    description: str
+    icon_url: str
+    icon_local_path: str
+    alternate_name: str | None = None
+    is_generic_counterpart: bool = False
+    translations: dict[str, dict[str, Any]] = field(default_factory=dict)
+
+
+@dataclass
+class MapData:
+    id: str
+    name: str
+    realm: str
+    realm_id: str
+    callout_image_url: str
+    callout_image_local_path: str
+    dpath: str
+    clock_system: dict[str, Any]
+    source: str = "hens333"
+    source_label: str = "Hens333 12-Clock Callouts"
 ```
 
-### backend/app/services/others/quest_service.py
+### backend/app/scrapers/utils.py
 ```python
-import logging
-from flask import current_app
-from sqlalchemy import func, select
+import html
+import re
+import unicodedata
+from urllib.parse import unquote
+from bs4 import Tag
 
-from app.core.extensions import db
-from app.models import DailyQuest
-from app.services.db_service import DatabaseService
+PORTRAIT_REGEX = re.compile(r"^(K|S)(\d+)_.*_Portrait", re.ASCII)
+YEAR_REGEX = re.compile(r"\b(201[6-9]|202[0-9]|203[0-9])\b")
+TERROR_RADIUS_NUM_REGEX = re.compile(r"(\d+)\s*m(?:etre|eter)?s?", re.IGNORECASE)
+
+
+def classify_portrait(image_url: str) -> tuple[str, int] | None:
+    if not image_url:
+        return None
+    filename = image_url.split("/revision")[0].rstrip("/").split("/")[-1]
+    match = PORTRAIT_REGEX.match(filename)
+    if not match:
+        return None
+    role_letter = match.group(1)
+    if role_letter not in ("K", "S"):
+        return None
+    role = "Killer" if role_letter == "K" else "Survivor"
+    try:
+        rel_num = int(match.group(2))
+    except ValueError:
+        rel_num = 0
+    return role, rel_num
+
+
+def normalise_character_name(name: str, category: str = "") -> str:
+    if not name:
+        return ""
+    clean_name = name.strip()
+    if category.lower() == "killer" and clean_name.lower().startswith("the "):
+        return clean_name[4:].strip()
+    return clean_name
+
+
+def normalize_name_key(text: str) -> str:
+    if not text:
+        return ""
+    normalized = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8")
+    normalized = normalized.lower().strip()
+    normalized = re.sub(r"[^a-z0-9]", " ", normalized)
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
+def clean_description_text(text: str) -> str:
+    if not text or not isinstance(text, str):
+        return ""
+
+    cleaned = re.sub(r"<[^>]+>", "", text)
+    cleaned = re.sub(r'\b[a-zA-Z0-9_-]+=["\'][^"\']*["\']\s*>?', "", cleaned)
+    cleaned = html.unescape(cleaned)
+
+    cleaned = cleaned.replace("\ufffd", '"')
+    cleaned = re.sub(r'\?([A-Z"])', r'"\1', cleaned)
+    cleaned = re.sub(r'([a-z.,!])\?\s*-', r'\1" -', cleaned)
+
+    cleaned = re.sub(
+        r"(\d+)(?:\s*/\s*(\d+))+",
+        lambda m: re.sub(r"\s*/\s*", "/", m.group(0)),
+        cleaned,
+    )
+    cleaned = re.sub(r"(\d+)\s+(%)", r"\1\2", cleaned)
+    cleaned = re.sub(r"(\d+)\s+(s|m)\b(?!\w)", r"\1\2", cleaned)
+
+    cleaned = re.sub(
+        r"THIS\s+(?:ADD-ON|ADDON|ITEM|UNLOCKABLE|OFFERING)\s+(?:IS\s+NO\s+LONGER\s+AVAILABLE|WAS\s+DECOMMISSIONED)\s*(?:\([^)]*\))?",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(
+        r"STOCKPILES\s+MAY\s+STILL\s+BE\s+USED\s+IN\s+TRIALS",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+
+    cleaned = re.sub(
+        r"This description is based on the changes announced for or featured in the upcoming Patch\s*[\d.]*",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(
+        r"Unable to retrieve the Perk description.*$",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+
+    lines = [line.strip() for line in cleaned.splitlines() if line.strip()]
+    if not lines:
+        return ""
+
+    if len(lines) > 2 and lines[-1].lower() == lines[0].lower():
+        lines = lines[:-1]
+
+    filtered_lines = [l for l in lines if l.lower() not in ["survivor", "killer", "survivor perk", "killer perk"]]
+    return "\n".join(filtered_lines).strip()
+
+
+def extract_cell_markdown_text(cell_tag: Tag | None) -> str:
+    """Converts a MediaWiki table cell containing rich text, lists, and quotes into clean markdown."""
+    if not cell_tag:
+        return ""
+    from bs4 import BeautifulSoup
+    cell_copy = BeautifulSoup(str(cell_tag), "html.parser")
+    for icon_link in cell_copy.find_all(class_="iconLink"):
+        icon_link.decompose()
+    for li in cell_copy.find_all("li"):
+        li.replace_with(f"\n* {li.get_text().strip()}\n")
+    for br in cell_copy.find_all("br"):
+        br.replace_with("\n")
+    for p in cell_copy.find_all("p"):
+        p.replace_with(f"\n{p.get_text().strip()}\n")
+    for div in cell_copy.find_all("div"):
+        div.replace_with(f"\n{div.get_text().strip()}\n")
+
+    raw_text = cell_copy.get_text()
+    return clean_description_text(raw_text)
+
+
+def sanitize_filename(name: str) -> str:
+    clean_str = name.lower().strip()
+    clean_str = re.sub(r"[\s\-/]+", "_", clean_str)
+    clean_str = re.sub(r'[\\/*?:"<>|®™\']', "", clean_str)
+    clean_str = re.sub(r"_+", "_", clean_str)
+    return clean_str.strip("_")
+
+
+def extract_high_res_url(img_tag: Tag | None, base_domain: str = "https://deadbydaylight.wiki.gg") -> str:
+    if not img_tag:
+        return ""
+    raw_url = (
+        img_tag.get("data-src")
+        or img_tag.get("src")
+        or img_tag.get("data-srcset")
+        or ""
+    )
+    if not raw_url:
+        return ""
+
+    if "," in raw_url:
+        raw_url = raw_url.split(",")[-1].strip().split()[0]
+
+    if raw_url.startswith("//"):
+        raw_url = f"https:{raw_url}"
+    elif raw_url.startswith("/"):
+        raw_url = f"{base_domain.rstrip('/')}{raw_url}"
+
+    if "/images/thumb/" in raw_url:
+        match = re.search(r"/images/thumb/([0-9a-f]/[0-9a-f]{2}/[^/]+)/", raw_url)
+        if match:
+            raw_url = f"{base_domain.rstrip('/')}/images/{match.group(1)}"
+        else:
+            raw_url = raw_url.replace("/thumb", "")
+            raw_url = re.sub(r"/\d+px-[^/]+$", "", raw_url)
+
+    raw_url = re.sub(r"/scale-to-width-down/\d+", "", raw_url)
+    if "/revision/latest" in raw_url:
+        raw_url = raw_url.split("/revision/latest")[0] + "/revision/latest"
+
+    return raw_url
+
+
+def extract_slug_from_href(href: str) -> str:
+    if not href or "/wiki/" not in href:
+        return ""
+    raw_slug = href.split("/wiki/")[-1].split("#")[0].split("?")[0]
+    return unquote(raw_slug).strip()
+
+
+def convert_bytes_to_webp(image_bytes: bytes, quality: int = 90) -> bytes:
+    """Converts raw image bytes into high-efficiency WebP format bytes."""
+    import io
+    from PIL import Image
+
+    img = Image.open(io.BytesIO(image_bytes))
+    if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
+        img = img.convert("RGBA")
+    else:
+        img = img.convert("RGB")
+
+    out_buf = io.BytesIO()
+    img.save(out_buf, format="WEBP", quality=quality, method=6)
+    return out_buf.getvalue()
+
+
+def save_image_as_webp(image_bytes: bytes, output_path, quality: int = 90):
+    from pathlib import Path
+    target_path = Path(output_path).with_suffix(".webp")
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    webp_data = convert_bytes_to_webp(image_bytes, quality=quality)
+    with open(target_path, "wb") as f:
+        f.write(webp_data)
+    return target_path
+
+
+def auto_save_webp(quality: int = 90):
+    import functools
+    from pathlib import Path
+
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            res = func(*args, **kwargs)
+            out_file = None
+            if len(args) > 1 and isinstance(args[1], (str, Path)):
+                out_file = Path(args[1])
+            elif "output_path" in kwargs and isinstance(kwargs["output_path"], (str, Path)):
+                out_file = Path(kwargs["output_path"])
+            elif "dest" in kwargs and isinstance(kwargs["dest"], (str, Path)):
+                out_file = Path(kwargs["dest"])
+
+            if out_file and out_file.exists() and out_file.suffix.lower() != ".webp":
+                try:
+                    with open(out_file, "rb") as f:
+                        data = f.read()
+                    if len(data) > 100:
+                        save_image_as_webp(data, out_file, quality=quality)
+                except Exception:
+                    pass
+            return res
+        return wrapper
+    return decorator
+```
+
+### backend/app/scrapers/wikigg.py
+```python
+from __future__ import annotations
+
+import asyncio
+import html
+import logging
+import re
+import time
+import unicodedata
+from collections import defaultdict
+from pathlib import Path
+from typing import Any
+from bs4 import BeautifulSoup, Tag
+from curl_cffi import requests
+from curl_cffi.requests import AsyncSession
+
+from app.core.json_provider import safe_json_dumps
+from app.scrapers.constants import GENERIC_PERK_CANONICAL_MAP, KNOWN_KILLER_POWER_ALIASES
+from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, OfferingData, PerkData
+from app.scrapers.utils import (
+    clean_description_text,
+    extract_cell_markdown_text,
+    extract_high_res_url,
+    extract_slug_from_href,
+    normalize_name_key,
+    sanitize_filename,
+)
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_QUESTS = [
-    {
-        "title": "Escape 2 Trials",
-        "description": "Escape successfully as a survivor 2 times.",
-        "category": "daily",
-        "goal": 2,
-        "xp_reward": 500
-    },
-    {
-        "title": "Sacrifice 3 Survivors",
-        "description": "Hook and sacrifice 3 survivors as killer.",
-        "category": "daily",
-        "goal": 3,
-        "xp_reward": 500
-    },
-    {
-        "title": "Complete 5 Generator Skill Checks",
-        "description": "Succeed at 5 skill checks while repairing.",
-        "category": "daily",
-        "goal": 5,
-        "xp_reward": 500
-    },
-    {
-        "title": "Master of the Realm",
-        "description": "Win 10 matches in any role.",
-        "category": "weekly",
-        "goal": 10,
-        "xp_reward": 2500
-    }
-]
+PORTRAIT_PATTERN = re.compile(r"(?:^|/)(K|S)(\d+)[-_]", re.IGNORECASE)
 
 
-class QuestService:
-    def __init__(self, db_service=None):
-        self._use_sqlalchemy = db_service is None
-        self.db_service = db_service or DatabaseService()
+def extract_icon_token(src_or_alt: str) -> str:
+    if not src_or_alt:
+        return ""
+    m = re.search(r"(?:Full_)?Icon(?:Perks|Items|Addons|Addon|Powers|Help)_([^./?]+)", src_or_alt, re.IGNORECASE)
+    if m:
+        return re.sub(r"[^a-zA-Z0-9]", "", m.group(1)).lower()
+    m2 = re.search(r"(?:^|/)(K|S)(\d+)[-_]", src_or_alt, re.IGNORECASE)
+    if m2:
+        return f"{m2.group(1).upper()}{int(m2.group(2)):02d}"
+    fn = src_or_alt.split("/")[-1].split(".")[0]
+    fn = re.sub(r"^\d+px-", "", fn, flags=re.IGNORECASE)
+    fn = re.sub(r"^(?:Full_)?(?:Icon(?:Addon|Addons|Items|Perks|Powers)_)?", "", fn, flags=re.IGNORECASE)
+    return re.sub(r"[^a-zA-Z0-9]", "", fn).lower()
 
-    def _init_table(self):
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS daily_quests (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                description TEXT NOT NULL,
-                category TEXT NOT NULL CHECK (category IN ('daily', 'weekly')),
-                progress INTEGER NOT NULL DEFAULT 0,
-                goal INTEGER NOT NULL DEFAULT 1,
-                xp_reward INTEGER NOT NULL DEFAULT 500,
-                is_completed BOOLEAN NOT NULL DEFAULT 0,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        """)
-        conn.commit()
-        conn.close()
 
-    def seed_quests_if_empty(self):
-        if self._use_sqlalchemy:
+MONTHS_REGEX_STR = (
+    r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+)
+
+DATE_CLEAN_REGEX = re.compile(
+    rf"\b([0-9]{{1,2}})(?:st|nd|rd|th)?\s+(?:of\s+)?({MONTHS_REGEX_STR})\s+(?:of\s+)?(20[1-3][0-9])\b",
+    re.IGNORECASE,
+)
+
+DATE_MDY_REGEX = re.compile(
+    rf"\b({MONTHS_REGEX_STR})\s+([0-9]{{1,2}})(?:st|nd|rd|th)?,?\s+(?:of\s+)?(20[1-3][0-9])\b",
+    re.IGNORECASE,
+)
+
+YEAR_ONLY_REGEX = re.compile(r"\b(201[6-9]|202[0-9]|203[0-9])\b")
+
+RARITY_PATTERN = re.compile(
+    r"\b(common|uncommon|rare|very[_\s-]?rare|ultra[_\s-]?rare|event|special|artifact|limited)\b",
+    re.IGNORECASE,
+)
+
+
+def parse_date_and_year(text: str) -> tuple[str | None, int | None]:
+    if not text:
+        return None, None
+
+    clean = html.unescape(text)
+    m = DATE_CLEAN_REGEX.search(clean)
+    if m:
+        day = int(m.group(1))
+        month = m.group(2).capitalize()
+        year = int(m.group(3))
+        return f"{day} {month} {year}", year
+
+    m = DATE_MDY_REGEX.search(clean)
+    if m:
+        month = m.group(1).capitalize()
+        day = int(m.group(2))
+        year = int(m.group(3))
+        return f"{day} {month} {year}", year
+
+    ym = YEAR_ONLY_REGEX.search(clean)
+    if ym:
+        year = int(ym.group(1))
+        return str(year), year
+
+    return None, None
+
+
+def clean_chapter_title(raw_chapter: str) -> tuple[str | None, str]:
+    if not raw_chapter:
+        return None, ""
+
+    cleaned = (
+        raw_chapter.replace("[edit]", "")
+        .replace("â„¢", "™")
+        .replace("Â®", "®")
+        .strip()
+    )
+
+    m = re.match(
+        r"^((?:CHAPTER|PARAGRAPH)\s+(?:[0-9]+(?:\.[0-9]+)?|[IVXLCDM]+)):\s*(.+)$",
+        cleaned,
+        re.IGNORECASE,
+    )
+    if m:
+        return m.group(1).strip(), m.group(2).strip()
+
+    return None, cleaned
+
+
+def extract_rarity_from_elements(
+    cells: list[Tag],
+    img_tag: Tag | None = None,
+    section_context: str = "",
+) -> str:
+    if len(cells) >= 4:
+        c_text = cells[2].get_text(strip=True)
+        m = RARITY_PATTERN.search(c_text)
+        if m:
+            return normalize_rarity_name(m.group(1))
+
+    for cell in cells:
+        for el in [cell] + cell.find_all(["a", "div", "span", "img", "td"]):
+            for attr in ["title", "data-rarity", "class", "alt"]:
+                val = el.get(attr, "")
+                if isinstance(val, list):
+                    val = " ".join(val)
+                if val:
+                    m = RARITY_PATTERN.search(str(val))
+                    if m:
+                        return normalize_rarity_name(m.group(1))
+
+    if img_tag:
+        img_src = (
+            img_tag.get("data-src")
+            or img_tag.get("src")
+            or img_tag.get("data-srcset")
+            or ""
+        )
+        if img_src:
+            m = RARITY_PATTERN.search(img_src)
+            if m:
+                return normalize_rarity_name(m.group(1))
+
+    if section_context:
+        m = RARITY_PATTERN.search(section_context)
+        if m:
+            return normalize_rarity_name(m.group(1))
+
+    return "Common"
+
+
+def normalize_rarity_name(raw_rarity: str) -> str:
+    r = raw_rarity.lower().replace("_", " ").replace("-", " ").strip()
+    if "ultra" in r:
+        return "Ultra Rare"
+    if "very" in r:
+        return "Very Rare"
+    if "uncommon" in r:
+        return "Uncommon"
+    if "rare" in r:
+        return "Rare"
+    if "event" in r or "special" in r or "limited" in r:
+        return "Event"
+    if "artifact" in r:
+        return "Ultra Rare"
+    return "Common"
+
+
+class WikiGGScraperDriver:
+    BASE_DOMAIN = "https://deadbydaylight.wiki.gg"
+    API_URL = "https://deadbydaylight.wiki.gg/api.php"
+    IMPERSONATE_BROWSER = "chrome120"
+    REQUEST_TIMEOUT = 30
+
+    def __init__(self, base_dir: Path | None = None):
+        if base_dir is None:
+            base_dir = Path(__file__).resolve().parent.parent.parent
+        self.base_dir = Path(base_dir)
+        self.session = requests.Session(impersonate=self.IMPERSONATE_BROWSER)
+
+    def fetch_page_html(self, page_title: str) -> str:
+        params = {
+            "action": "parse",
+            "page": page_title,
+            "prop": "text",
+            "format": "json",
+            "redirects": "1",
+        }
+        for attempt in range(4):
             try:
-                if current_app:
-                    count = db.session.scalar(select(func.count(DailyQuest.id))) or 0
-                    if count == 0:
-                        for q in DEFAULT_QUESTS:
-                            db.session.add(
-                                DailyQuest(
-                                    title=q["title"],
-                                    description=q["description"],
-                                    category=q["category"],
-                                    progress=0,
-                                    goal=q["goal"],
-                                    xp_reward=q["xp_reward"],
-                                    is_completed=False,
+                response = self.session.get(
+                    self.API_URL,
+                    params=params,
+                    verify=False,
+                    timeout=self.REQUEST_TIMEOUT,
+                )
+                if response.status_code == 200:
+                    data = response.json()
+                    if "parse" in data and "text" in data["parse"]:
+                        return data["parse"]["text"]["*"]
+
+                if response.status_code == 429:
+                    time.sleep(2.0 * (attempt + 1))
+                    continue
+
+                response.raise_for_status()
+            except Exception as err:
+                logger.warning(f"API fetch attempt {attempt + 1} for '{page_title}' failed: {err}")
+                time.sleep(1.5)
+
+        fallback_url = f"{self.BASE_DOMAIN}/wiki/{page_title}"
+        res = self.session.get(fallback_url, verify=False, timeout=self.REQUEST_TIMEOUT)
+        res.raise_for_status()
+        return res.text
+
+    def scrape_roster_from_page(self, page_title: str, role: str) -> list[CharacterData]:
+        html_doc = self.fetch_page_html(page_title)
+        soup = BeautifulSoup(html_doc, "html.parser")
+        content = soup.find("div", class_="mw-parser-output") or soup
+
+        characters: list[CharacterData] = []
+        seen_slugs: set[str] = set()
+
+        killer_meta_by_slug: dict[str, dict[str, Any]] = {}
+        if role == "Killer":
+            for cell in content.find_all(["td", "th"]):
+                links = cell.find_all("a", href=re.compile(r"^/wiki/(?!File:|Category:|Special:).+"))
+                text_links = [a for a in links if not a.find("img") and a.get_text(strip=True)]
+                if len(text_links) >= 2:
+                    power_tag = text_links[0]
+                    killer_tag = text_links[1]
+                    k_slug = extract_slug_from_href(killer_tag.get("href", "")).lower()
+                    p_name = re.sub(
+                        r"\[\s*edit\s*\]", "", power_tag.get_text(strip=True), flags=re.IGNORECASE
+                    ).strip()
+                    if k_slug and p_name:
+                        killer_meta_by_slug[k_slug] = {
+                            "power_name": p_name,
+                            "power_desc": "",
+                            "movement_speed": "4.6 m/s (115%)",
+                            "terror_radius": "32 m",
+                            "terror_radius_meters": 32,
+                            "height": "Tall",
+                        }
+
+        for link in content.find_all("a", href=re.compile(r"^/wiki/")):
+            href = link.get("href", "")
+            slug = extract_slug_from_href(href)
+            slug_lower = slug.lower()
+
+            if not slug or slug_lower in seen_slugs:
+                continue
+            if slug.startswith(("Category:", "File:", "Special:", "Dead_by_Daylight", "Help:", "User:", "Template:", "Tome")):
+                continue
+
+            img = link.find("img")
+            if not img:
+                continue
+
+            avatar_url = extract_high_res_url(img, self.BASE_DOMAIN)
+            if not avatar_url:
+                continue
+
+            filename = avatar_url.split("/revision")[0].rstrip("/").split("/")[-1]
+            match = PORTRAIT_PATTERN.search(filename)
+            if not match:
+                continue
+
+            prefix_role = "Killer" if match.group(1).upper() == "K" else "Survivor"
+            if prefix_role != role:
+                continue
+
+            release_num = int(match.group(2))
+            code_prefix = f"{match.group(1).upper()}{match.group(2)}"
+
+            raw_title = (link.get("title") or link.get_text() or "").strip().replace("_", " ")
+            if not raw_title or len(raw_title) > 60:
+                raw_title = slug.replace("_", " ")
+
+            seen_slugs.add(slug_lower)
+            sanitized = sanitize_filename(raw_title)
+            sub_dir = "survivors" if role == "Survivor" else "killers"
+
+            power_data = None
+            if role == "Killer":
+                k_meta = (
+                    killer_meta_by_slug.get(slug_lower)
+                    or killer_meta_by_slug.get(slug_lower.replace("the_", ""))
+                    or killer_meta_by_slug.get(f"the_{slug_lower}")
+                    or {}
+                )
+                if not k_meta:
+                    for km_slug, km_val in killer_meta_by_slug.items():
+                        if km_slug in slug_lower or slug_lower in km_slug:
+                            k_meta = km_val
+                            break
+
+                power_name = k_meta.get("power_name") or ""
+                power_data = KillerPowerData(
+                    name=power_name,
+                    description=k_meta.get("power_desc", ""),
+                    movement_speed=k_meta.get("movement_speed", "4.6 m/s (115%)"),
+                    terror_radius=k_meta.get("terror_radius", "32 m"),
+                    terror_radius_meters=k_meta.get("terror_radius_meters", 32),
+                    height=k_meta.get("height", "Tall"),
+                )
+
+            characters.append(
+                CharacterData(
+                    name=raw_title,
+                    real_name=raw_title,
+                    wiki_slug=slug,
+                    short_name=slug_lower,
+                    category=role,
+                    avatar_url=avatar_url,
+                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                    release_number=release_num,
+                    code_prefix=code_prefix,
+                    power=power_data,
+                )
+            )
+
+        return characters
+
+    def scrape_dlcs_from_wiki(self) -> list[dict[str, Any]]:
+        dlcs: list[dict[str, Any]] = []
+        seen_dlc_names = set()
+
+        for page in ["Downloadable_Content", "Chapters"]:
+            try:
+                html_doc = self.fetch_page_html(page)
+                soup = BeautifulSoup(html_doc, "html.parser")
+                content = soup.find("div", class_="mw-parser-output") or soup
+
+                for table in content.find_all("table", class_=re.compile(r"wikitable|article-table")):
+                    rows = table.find_all("tr")
+                    for tr in rows:
+                        tds = tr.find_all("td")
+                        if not tds:
+                            continue
+
+                        row_text = tr.get_text(separator=" ", strip=True)
+                        date_str, year_num = parse_date_and_year(row_text)
+
+                        links = tr.find_all("a", href=re.compile(r"^/wiki/"))
+                        row_chars = []
+                        dlc_name = ""
+                        for a in links:
+                            txt = a.get_text(strip=True)
+                            if not txt or txt.startswith(("File:", "Special:", "Category:")):
+                                continue
+                            if any(k in txt.lower() for k in ["chapter", "paragraph", "pack"]):
+                                if not dlc_name:
+                                    dlc_name = txt
+                            elif txt not in ["Killer", "Survivor", "Map", "DLC", "Base Game", "PTB"]:
+                                row_chars.append(txt)
+
+                        if dlc_name and dlc_name.lower() not in seen_dlc_names:
+                            seen_dlc_names.add(dlc_name.lower())
+                            is_licensed = (
+                                "™" in dlc_name
+                                or "®" in dlc_name
+                                or "licensed" in row_text.lower()
+                                or ("auric cells" in row_text.lower() and "iridescent" not in row_text.lower())
+                            )
+                            dlcs.append({
+                                "dlc_name": dlc_name,
+                                "release_date": date_str or "",
+                                "release_year": year_num,
+                                "is_licensed": is_licensed,
+                                "characters": row_chars,
+                            })
+
+                is_under_licensed = False
+                for node in content.find_all(["h2", "h3", "h4"]):
+                    if node.name == "h2":
+                        h2_txt = node.get_text(strip=True).lower()
+                        if "licensed" in h2_txt:
+                            is_under_licensed = True
+                        elif "original" in h2_txt or "available" in h2_txt or "retired" in h2_txt:
+                            is_under_licensed = False
+
+                    if node.name in ["h3", "h4"]:
+                        raw_title = (
+                            node.get_text(strip=True)
+                            .replace("[edit]", "")
+                            .replace("â„¢", "™")
+                            .replace("Â®", "®")
+                            .strip()
+                        )
+                        if not raw_title or raw_title.lower() in [
+                            "overview", "contents", "purchasing a dlc", "licensed dlcs",
+                            "available dlcs", "chapters", "clothing packs", "character packs",
+                            "original soundtrack", "retired dlcs", "chapter packs"
+                        ]:
+                            continue
+
+                        date_str = ""
+                        year_num = None
+                        chars_added = []
+                        is_licensed = is_under_licensed or "™" in raw_title or "®" in raw_title
+
+                        curr = node.find_next_sibling()
+                        while curr and curr.name not in ["h2", "h3", "h4"]:
+                            txt = curr.get_text(separator=" ", strip=True)
+                            d_parsed, y_parsed = parse_date_and_year(txt)
+                            if d_parsed and not date_str:
+                                date_str = d_parsed
+                                year_num = y_parsed
+
+                            if "auric cells" in txt.lower() and "iridescent" not in txt.lower():
+                                is_licensed = True
+                            elif "iridescent" in txt.lower():
+                                is_licensed = False
+
+                            for a in curr.find_all("a"):
+                                c_name = a.get_text(strip=True)
+                                if (
+                                    c_name
+                                    and c_name not in ["Main Article", "DLC", "Chapter", "Paragraph", "Killer", "Survivor", "Store Page", "Retired"]
+                                    and not c_name.startswith(("File:", "Special:", "Category:"))
+                                    and len(c_name) < 40
+                                ):
+                                    chars_added.append(c_name)
+
+                            curr = curr.find_next_sibling()
+
+                        if raw_title.lower() not in seen_dlc_names and (date_str or chars_added):
+                            seen_dlc_names.add(raw_title.lower())
+                            dlcs.append({
+                                "dlc_name": raw_title,
+                                "release_date": date_str,
+                                "release_year": year_num,
+                                "is_licensed": is_licensed,
+                                "characters": chars_added,
+                            })
+            except Exception as e:
+                logger.warning(f"Failed scraping DLC catalog from '{page}': {e}")
+
+        return dlcs
+
+    def enrich_characters_from_pages(self, characters: list[CharacterData]) -> None:
+        def norm_key(text: str) -> str:
+            if not text:
+                return ""
+            n = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8").lower()
+            return re.sub(r"[^a-z0-9]", "", n)
+
+        dlcs = self.scrape_dlcs_from_wiki()
+        logger.info(f"Loaded {len(dlcs)} live DLC entries from wiki.gg")
+
+        async def _fetch_all():
+            async with AsyncSession(impersonate="chrome120", verify=False) as session:
+                semaphore = asyncio.Semaphore(5)
+
+                async def _fetch_one(char: CharacterData):
+                    slug = char.wiki_slug or char.name.replace(" ", "_")
+                    async with semaphore:
+                        for attempt in range(3):
+                            try:
+                                await asyncio.sleep(0.05)
+                                params = {
+                                    "action": "parse",
+                                    "page": slug,
+                                    "prop": "text",
+                                    "format": "json",
+                                    "redirects": "1",
+                                }
+                                r = await session.get(self.API_URL, params=params, timeout=15, verify=False)
+                                data = r.json()
+                                if "error" in data:
+                                    await asyncio.sleep(1.0)
+                                    continue
+
+                                html_raw = data.get("parse", {}).get("text", {}).get("*", "")
+                                if not html_raw:
+                                    return
+
+                                soup = BeautifulSoup(html_raw, "html.parser")
+                                content = soup.find("div", class_="mw-parser-output") or soup
+
+                                real_name = ""
+                                movement_speed = ""
+                                terror_radius = ""
+                                tr_meters = 32
+                                height = ""
+                                cost_text = ""
+                                power_name = ""
+                                power_desc = ""
+                                power_icon_url = ""
+                                infobox_dlc_text = ""
+                                infobox_dlc_link = ""
+                                infobox_release_date = ""
+
+                                for tr in content.find_all("tr"):
+                                    th = tr.find(["th", "td"], class_=lambda c: c and "title" in str(c).lower())
+                                    td = tr.find(["td"], class_=lambda c: c and "value" in str(c).lower())
+                                    if not (th and td):
+                                        tds = tr.find_all(["th", "td"])
+                                        if len(tds) >= 2:
+                                            th, td = tds[0], tds[1]
+                                    if th and td:
+                                        t_txt = th.get_text(strip=True).lower()
+                                        v_txt = td.get_text(separator=" ", strip=True)
+
+                                        if t_txt in ["name", "real name"]:
+                                            real_name = v_txt
+                                        elif "movement speed" in t_txt and "alternate" not in t_txt:
+                                            m_speed = re.search(
+                                                r"(\d+(?:\.\d+)?)\s*%\s*[\|\(]?\s*(\d+(?:\.\d+)?)\s*m/s", v_txt
+                                            )
+                                            if not m_speed:
+                                                m_speed = re.search(
+                                                    r"(\d+(?:\.\d+)?)\s*m/s.*?(\d+(?:\.\d+)?)\s*%", v_txt
+                                                )
+                                                if m_speed:
+                                                    movement_speed = f"{m_speed.group(1)} m/s ({m_speed.group(2)}%)"
+                                            else:
+                                                movement_speed = f"{m_speed.group(2)} m/s ({m_speed.group(1)}%)"
+                                            if not movement_speed:
+                                                movement_speed = v_txt
+                                        elif "terror radius" in t_txt:
+                                            terror_radius = v_txt
+                                            m = re.search(r"(\d+)", terror_radius)
+                                            if m:
+                                                tr_meters = int(m.group(1))
+                                        elif "height" in t_txt:
+                                            height = v_txt
+                                        elif "cost" in t_txt:
+                                            cost_text = v_txt
+                                        elif "power" in t_txt and "attack" not in t_txt and "trivia" not in t_txt:
+                                            power_name = v_txt
+                                        elif t_txt in ["dlc", "chapter"]:
+                                            infobox_dlc_text = v_txt
+                                            a_link = td.find("a")
+                                            if a_link:
+                                                infobox_dlc_link = extract_slug_from_href(a_link.get("href", ""))
+                                        elif t_txt in ["release date", "released", "release"]:
+                                            infobox_release_date = v_txt
+
+                                intro_paragraphs = []
+                                for p in content.find_all("p"):
+                                    p_txt = p.get_text(separator=" ", strip=True)
+                                    if len(p_txt) > 25 and ("introduced" in p_txt.lower() or "released" in p_txt.lower() or "featured in" in p_txt.lower()):
+                                        intro_paragraphs.append(p_txt)
+
+                                intro_full_text = " ".join(intro_paragraphs)
+
+                                parsed_chapter_name = ""
+                                parsed_chapter_number = ""
+                                parsed_dlc_type = ""
+                                parsed_release_date = ""
+                                parsed_release_year = None
+
+                                intro_match = re.search(
+                                    r"introduced as (?:the|a)\s+(?:Killer|Survivor)\s+of\s+(?:the\s+)?([^,]+?),\s+a\s+([^,]+?)\s+released\s+(?:on|in)\s+([0-9]{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+of)?\s+[0-9]{4}|[A-Za-z]+\s+[0-9]{1,2}(?:st|nd|rd|th)?,?\s+[0-9]{4}|[A-Za-z]+\s+[0-9]{4}|[0-9]{4})",
+                                    intro_full_text,
+                                    re.IGNORECASE,
+                                )
+                                if intro_match:
+                                    raw_chap = intro_match.group(1).strip()
+                                    parsed_dlc_type = intro_match.group(2).strip()
+                                    date_raw = intro_match.group(3).strip()
+                                    parsed_release_date, parsed_release_year = parse_date_and_year(date_raw)
+                                    c_num, c_title = clean_chapter_title(raw_chap)
+                                    parsed_chapter_number = c_num or ""
+                                    parsed_chapter_name = c_title or raw_chap
+
+                                if not parsed_release_date:
+                                    if "base game" in intro_full_text.lower() or (char.release_number and char.release_number <= 4 and "chapter" not in intro_full_text.lower()):
+                                        parsed_chapter_name = "Base Game"
+                                        parsed_dlc_type = "base_game"
+                                        d_p, y_p = parse_date_and_year(intro_full_text)
+                                        parsed_release_date = d_p or "14 June 2016"
+                                        parsed_release_year = y_p or 2016
+
+                                if not parsed_release_date:
+                                    d_p, y_p = parse_date_and_year(intro_full_text)
+                                    if d_p:
+                                        parsed_release_date = d_p
+                                        parsed_release_year = y_p
+
+                                if not parsed_release_date and infobox_release_date:
+                                    d_p, y_p = parse_date_and_year(infobox_release_date)
+                                    if d_p:
+                                        parsed_release_date = d_p
+                                        parsed_release_year = y_p
+
+                                if not parsed_chapter_name and infobox_dlc_text:
+                                    c_num, c_title = clean_chapter_title(infobox_dlc_text)
+                                    parsed_chapter_number = c_num or ""
+                                    parsed_chapter_name = c_title or infobox_dlc_text
+
+                                if not parsed_release_date or not parsed_chapter_name:
+                                    c_norm = norm_key(char.name)
+                                    for d in dlcs:
+                                        for ac in d.get("characters", []):
+                                            ac_norm = norm_key(ac)
+                                            if ac_norm == c_norm or (len(c_norm) >= 4 and (c_norm in ac_norm or ac_norm in c_norm)):
+                                                if not parsed_chapter_name:
+                                                    c_num, c_title = clean_chapter_title(d["dlc_name"])
+                                                    parsed_chapter_number = c_num or ""
+                                                    parsed_chapter_name = c_title or d["dlc_name"]
+                                                if not parsed_release_date and d.get("release_date"):
+                                                    parsed_release_date = d["release_date"]
+                                                    parsed_release_year = d.get("release_year")
+                                                if not parsed_dlc_type:
+                                                    parsed_dlc_type = "Chapter DLC"
+                                                break
+                                        if parsed_release_date and parsed_chapter_name:
+                                            break
+
+                                if (not parsed_release_date or not parsed_release_year) and (infobox_dlc_link or parsed_chapter_name):
+                                    chap_slug = infobox_dlc_link or parsed_chapter_name.replace(" ", "_")
+                                    try:
+                                        chap_params = {
+                                            "action": "parse",
+                                            "page": chap_slug,
+                                            "prop": "text",
+                                            "format": "json",
+                                            "redirects": "1",
+                                        }
+                                        cr = await session.get(self.API_URL, params=chap_params, timeout=12, verify=False)
+                                        cdata = cr.json()
+                                        chtml = cdata.get("parse", {}).get("text", {}).get("*", "")
+                                        if chtml:
+                                            csoup = BeautifulSoup(chtml, "html.parser")
+                                            for elem in csoup.find_all(["p", "tr"]):
+                                                ctxt = elem.get_text(separator=" ", strip=True)
+                                                cd_p, cy_p = parse_date_and_year(ctxt)
+                                                if cd_p:
+                                                    parsed_release_date = cd_p
+                                                    parsed_release_year = cy_p
+                                                    break
+                                    except Exception:
+                                        pass
+
+                                is_licensed = False
+                                if cost_text:
+                                    if "auric cells" in cost_text.lower() and "iridescent" not in cost_text.lower():
+                                        is_licensed = True
+                                    elif "iridescent" in cost_text.lower():
+                                        is_licensed = False
+
+                                if not is_licensed and ("™" in char.name or "®" in char.name or "™" in parsed_chapter_name or "®" in parsed_chapter_name):
+                                    is_licensed = True
+
+                                if char.category == "Killer":
+                                    for img in content.find_all("img"):
+                                        alt = img.get("alt", "")
+                                        src = img.get("src", "")
+                                        if "iconpowers" in src.lower() or "iconpowers" in alt.lower() or "power" in alt.lower():
+                                            power_icon_url = extract_high_res_url(img, self.BASE_DOMAIN)
+                                            if not power_name and alt:
+                                                power_name = alt.replace("IconPowers ", "").replace(".png", "").strip()
+                                            break
+
+                                    for h in content.find_all(["h2", "h3", "h4"]):
+                                        htxt = h.get_text(strip=True).lower()
+                                        if "power:" in htxt or "power" in htxt or "special ability" in htxt:
+                                            p_elems = []
+                                            curr = h.find_next_sibling()
+                                            while curr and curr.name not in ["h2", "h3"]:
+                                                if curr.name in ["p", "ul", "ol", "div"]:
+                                                    txt = curr.get_text(separator=" ", strip=True)
+                                                    if len(txt) > 20 and not txt.startswith("File:") and not txt.startswith("Main article"):
+                                                        p_elems.append(txt)
+                                                curr = curr.find_next_sibling()
+                                            if p_elems:
+                                                power_desc = clean_description_text("\n\n".join(p_elems[:5]))
+                                                break
+
+                                lore_text = ""
+                                for h in content.find_all(["h2", "h3"]):
+                                    htxt = h.get_text(strip=True).lower()
+                                    if "lore" in htxt or "background" in htxt or "biography" in htxt:
+                                        p_list = []
+                                        curr = h.find_next_sibling()
+                                        while curr and curr.name not in ["h2", "h3"]:
+                                            if curr.name in ["p", "blockquote"]:
+                                                txt = curr.get_text(separator=" ", strip=True)
+                                                if len(txt) > 30 and not txt.startswith("File:") and not txt.startswith("Main article"):
+                                                    p_list.append(clean_description_text(txt))
+                                            curr = curr.find_next_sibling()
+                                        if p_list:
+                                            lore_text = "\n\n".join(p_list[:6])
+                                            break
+
+                                if real_name and real_name != char.name:
+                                    char.real_name = real_name
+
+                                char.chapter_name = parsed_chapter_name or "Base Game"
+                                char.chapter_number = parsed_chapter_number or None
+                                char.dlc_type = parsed_dlc_type or ("base_game" if char.chapter_name == "Base Game" else "Chapter DLC")
+                                char.release_date = parsed_release_date or "14 June 2016"
+                                char.release_year = parsed_release_year or 2016
+                                char.is_licensed = is_licensed
+                                char.lore = lore_text or None
+
+                                if char.category == "Killer":
+                                    p_name = power_name or (char.power.name if char.power else "")
+                                    p_desc = power_desc or (char.power.description if char.power else "")
+                                    p_icon = power_icon_url or (char.power.icon_url if char.power else "")
+                                    p_speed = movement_speed or (char.power.movement_speed if char.power else "4.6 m/s (115%)")
+                                    p_tr = terror_radius or (char.power.terror_radius if char.power else "32 m")
+                                    p_height = height or (char.power.height if char.power else "Tall")
+
+                                    char.power = KillerPowerData(
+                                        name=p_name,
+                                        description=p_desc,
+                                        icon_url=p_icon,
+                                        movement_speed=p_speed,
+                                        terror_radius=p_tr,
+                                        terror_radius_meters=tr_meters,
+                                        height=p_height,
+                                    )
+                                return
+                            except Exception as e:
+                                if attempt == 2:
+                                    logger.warning(f"Failed enriching character {slug}: {e}")
+                                await asyncio.sleep(0.5 * (attempt + 1))
+
+                tasks = [_fetch_one(c) for c in characters]
+                await asyncio.gather(*tasks)
+
+        try:
+            asyncio.run(_fetch_all())
+        except Exception as err:
+            logger.error(f"Error in enrich_characters_from_pages: {err}")
+
+        chapter_groups = defaultdict(list)
+        for char in characters:
+            if char.chapter_name and char.chapter_name.lower() != "base game":
+                chapter_groups[norm_key(char.chapter_name)].append(char)
+
+        for group in chapter_groups.values():
+            if len(group) > 1:
+                for c in group:
+                    c.dlc_counterparts = safe_json_dumps([other.name for other in group if other.name != c.name], default_val="[]")
+
+    def scrape_characters_dynamically(self) -> list[CharacterData]:
+        logger.info("Fetching Survivors via MediaWiki API...")
+        survivors = self.scrape_roster_from_page("Survivors", "Survivor")
+
+        logger.info("Fetching Killers via MediaWiki API...")
+        killers = self.scrape_roster_from_page("Killers", "Killer")
+
+        all_characters = survivors + killers
+        logger.info(f"Enriching all {len(all_characters)} characters with live infobox, chapter, licensing, and combat power details...")
+        self.enrich_characters_from_pages(all_characters)
+
+        logger.info(f"Discovered {len(all_characters)} characters ({len(survivors)} Survivors, {len(killers)} Killers).")
+        return all_characters
+
+    def parse_perks(self, html_content: str, characters: list[CharacterData]) -> list[PerkData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        perks_dict: dict[str, PerkData] = {}
+        alias_backlog: dict[str, str] = {}
+        current_category: str | None = None
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+
+        char_by_key: dict[str, CharacterData] = {}
+        for c in characters:
+            keys = [c.name, c.real_name, c.wiki_slug, c.short_name]
+            if c.name.startswith("The "):
+                keys.append(c.name[4:])
+            else:
+                keys.append(f"The {c.name}")
+            for k in keys:
+                if k:
+                    char_by_key[normalize_name_key(k)] = c
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                header_text = element.get_text().lower()
+                if "survivor" in header_text:
+                    current_category = "Survivor"
+                elif "killer" in header_text:
+                    current_category = "Killer"
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                if not current_category:
+                    continue
+
+                rows = element.find_all("tr")
+                for row in rows[1:]:
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 3:
+                        continue
+                    try:
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        perk_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                        if not perk_name:
+                            continue
+
+                        norm_perk = normalize_name_key(perk_name)
+
+                        if norm_perk in GENERIC_PERK_CANONICAL_MAP:
+                            canonical_target, alias_name = GENERIC_PERK_CANONICAL_MAP[norm_perk]
+                            norm_target = normalize_name_key(canonical_target)
+                            if norm_target in perks_dict:
+                                perks_dict[norm_target].alternate_name = alias_name
+                                perks_dict[norm_target].is_generic_counterpart = True
+                            else:
+                                alias_backlog[norm_target] = alias_name
+                            continue
+
+                        icon_tag = cells[0].find("img")
+                        icon_url = extract_high_res_url(icon_tag, self.BASE_DOMAIN)
+
+                        cell_copy = BeautifulSoup(str(cells[2]), "html.parser")
+                        for bold in cell_copy.find_all(["b", "strong"]):
+                            bold.replace_with(f"**{bold.get_text().strip()}**")
+                        for italic in cell_copy.find_all(["i", "em"]):
+                            italic.replace_with(f"*{italic.get_text().strip()}*")
+                        for li in cell_copy.find_all("li"):
+                            li.replace_with(f"\n* {li.get_text().strip()}")
+                        for br in cell_copy.find_all("br"):
+                            br.replace_with("\n")
+                        lines = [line.strip() for line in cell_copy.get_text().splitlines()]
+                        raw_description = "\n".join(line for line in lines if line)
+                        description = clean_description_text(raw_description)
+
+                        canonical_name = "General"
+                        real_name = "General"
+                        avatar_path = ""
+
+                        if len(cells) >= 4:
+                            owner_cell = cells[3]
+                            owner_link = owner_cell.find("a")
+
+                            matched = None
+                            if owner_link:
+                                href = owner_link.get("href", "")
+                                link_title = owner_link.get("title", "").strip()
+                                slug = extract_slug_from_href(href)
+                                matched = (
+                                    char_by_key.get(normalize_name_key(slug))
+                                    or char_by_key.get(normalize_name_key(link_title))
+                                    or char_by_key.get(normalize_name_key(owner_link.get_text()))
+                                )
+
+                            if not matched:
+                                raw_text = owner_cell.get_text().strip()
+                                clean_text = re.sub(r"^[.\s\-–]+|[.\s\-–]+$", "", raw_text).strip()
+                                if clean_text and normalize_name_key(clean_text) not in ["all", "general", "none", "", "all survivors", "all killers"]:
+                                    matched = char_by_key.get(normalize_name_key(clean_text))
+
+                            if matched:
+                                canonical_name = matched.name
+                                real_name = matched.real_name
+                                avatar_path = matched.avatar_local_path
+
+                        sanitized_name = sanitize_filename(perk_name)
+                        category_dir = "survivors" if current_category == "Survivor" else "killers"
+
+                        if canonical_name == "General":
+                            local_rel_path = f"icons/{category_dir}/General/{sanitized_name}.png"
+                        else:
+                            local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.png"
+
+                        norm_key_str = normalize_name_key(perk_name)
+                        alternate_name = alias_backlog.get(norm_key_str)
+                        is_generic = alternate_name is not None
+
+                        perks_dict[norm_key_str] = PerkData(
+                            name=perk_name,
+                            character=canonical_name,
+                            character_real_name=real_name,
+                            character_avatar_path=avatar_path,
+                            category=current_category,
+                            description=description,
+                            icon_url=icon_url,
+                            icon_local_path=local_rel_path,
+                            alternate_name=alternate_name,
+                            is_generic_counterpart=is_generic,
+                        )
+                    except Exception:
+                        continue
+
+        return list(perks_dict.values())
+
+    def parse_wiki_items(self, html_content: str) -> list[ItemData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        items: list[ItemData] = []
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+        current_category = "Survivor"
+        current_section = ""
+        seen_items = set()
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                htext = element.get_text().lower()
+                current_section = htext
+                if "killer" in htext:
+                    current_category = "Killer"
+                elif "survivor" in htext:
+                    current_category = "Survivor"
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                rows = element.find_all("tr")
+                for row in rows[1:]:
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 2:
+                        continue
+                    try:
+                        img_tag = cells[0].find("img")
+                        icon_url = extract_high_res_url(img_tag, self.BASE_DOMAIN)
+
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        item_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                        if not item_name:
+                            continue
+
+                        name_lower = item_name.lower().strip()
+                        if name_lower.endswith(" items") or name_lower.endswith(" add-ons") or "uncommon items" in name_lower:
+                            continue
+
+                        norm_item = normalize_name_key(item_name)
+                        if norm_item in seen_items:
+                            continue
+                        seen_items.add(norm_item)
+
+                        description = ""
+                        if len(cells) >= 4:
+                            description = cells[3].get_text(separator="\n", strip=True)
+                        elif len(cells) == 3:
+                            description = cells[2].get_text(separator="\n", strip=True)
+
+                        rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
+                        description = clean_description_text(description)
+                        sanitized = sanitize_filename(item_name)
+                        local_path = f"icons/items/{sanitized}.png"
+
+                        name_low = item_name.lower().strip()
+                        is_event = (
+                            rarity.lower() == "event"
+                            or any(
+                                k in name_low
+                                for k in [
+                                    "anniversary",
+                                    "banquet",
+                                    "masquerade",
+                                    "lunchbox",
+                                    "will o' wisp",
+                                    "party starter",
+                                    "chinese firecracker",
+                                    "festive toolbox",
+                                ]
+                            )
+                        )
+                        is_fog_vial = "fog vial" in name_low
+                        is_trial = (
+                            name_low
+                            in [
+                                "first aid spray",
+                                "vaccine",
+                                "emp",
+                                "remote flame turret",
+                                "pocket mirror",
+                                "lament configuration",
+                                "hand of vecna",
+                                "eye of vecna",
+                                "flash grenade",
+                                "candelabra",
+                                "antidote",
+                                "keycard",
+                                "vhs tape",
+                                "void crystal",
+                                "glowing fungus",
+                                "blood can",
+                                "fragile mirror",
+                                "searcher's pendant",
+                                "fog crystal",
+                            ]
+                            or any(
+                                k in name_low
+                                for k in [
+                                    "spray",
+                                    "vaccine",
+                                    "turret",
+                                    "lament",
+                                    "vecna",
+                                    "keycard",
+                                    "candelabra",
+                                    "lantern",
+                                    "vhs tape",
+                                    "blood can",
+                                    "crystal",
+                                    "mirror",
+                                    "fungus",
+                                    "pendant",
+                                    "antidote",
+                                    "emp",
+                                ]
+                            )
+                        )
+
+                        if is_event:
+                            item_category = "Event"
+                            item_role = "Survivor"
+                            rarity = "Event"
+                        elif is_fog_vial:
+                            item_category = "Fog Vial"
+                            item_role = "Survivor"
+                        elif is_trial:
+                            item_category = "Trial Artifact"
+                            item_role = "Survivor"
+                        elif "med-kit" in name_low or "aid kit" in name_low:
+                            item_category = "Med-Kit"
+                            item_role = "Survivor"
+                        elif "toolbox" in name_low or "tools" in name_low:
+                            item_category = "Toolbox"
+                            item_role = "Survivor"
+                        elif "flashlight" in name_low:
+                            item_category = "Flashlight"
+                            item_role = "Survivor"
+                        elif "key" in name_low:
+                            item_category = "Key"
+                            item_role = "Survivor"
+                        elif "map" in name_low:
+                            item_category = "Map"
+                            item_role = "Survivor"
+                        elif "firecracker" in name_low:
+                            item_category = "Firecracker"
+                            item_role = "Survivor"
+                        else:
+                            item_category = current_category
+                            item_role = current_category
+
+                        items.append(
+                            ItemData(
+                                name=item_name,
+                                category=item_category,
+                                role=item_role,
+                                description=description,
+                                icon_url=icon_url,
+                                icon_local_path=local_path,
+                                rarity=rarity,
+                            )
+                        )
+                    except Exception:
+                        continue
+        return items
+
+    def parse_wiki_addons(self, html_content: str, characters: list[CharacterData] | None = None) -> list[AddonData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        raw_addons: list[dict] = []
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+        current_target = "General"
+        current_category = "Survivor"
+        current_section = ""
+
+        dynamic_power_to_killer: dict[str, str] = {}
+        if characters:
+            for c in characters:
+                if c.category == "Killer" or getattr(c, "role", "") == "Killer":
+                    dynamic_power_to_killer[normalize_name_key(c.name)] = c.name
+                    dynamic_power_to_killer[normalize_name_key(c.name.replace("The ", ""))] = c.name
+                    if c.real_name:
+                        dynamic_power_to_killer[normalize_name_key(c.real_name)] = c.name
+                    if c.wiki_slug:
+                        dynamic_power_to_killer[normalize_name_key(c.wiki_slug)] = c.name
+                    if c.short_name:
+                        dynamic_power_to_killer[normalize_name_key(c.short_name)] = c.name
+                    if c.power and c.power.name:
+                        p_norm = normalize_name_key(c.power.name)
+                        dynamic_power_to_killer[p_norm] = c.name
+
+        for k, v in KNOWN_KILLER_POWER_ALIASES.items():
+            if k not in dynamic_power_to_killer:
+                dynamic_power_to_killer[k] = v
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                headline = element.find(class_=re.compile(r"mw-headline"))
+                raw_header = headline.get_text(strip=True) if headline else element.get_text(strip=True)
+                cleaned_header = re.sub(r"\[\s*edit\s*\]", "", raw_header, flags=re.IGNORECASE).strip()
+                current_section = cleaned_header.lower()
+
+                if "killer" in current_section:
+                    current_category = "Killer"
+                elif "survivor" in current_section:
+                    current_category = "Survivor"
+
+                target_clean = re.sub(r"\s+(?:Add-ons|Addons|Add-on|Addon)$", "", cleaned_header, flags=re.IGNORECASE).strip()
+                if target_clean and target_clean.lower() not in [
+                    "survivor", "killer", "general", "common", "uncommon", "rare",
+                    "very rare", "ultra rare", "decommissioned", "unused", "event"
+                ]:
+                    norm_target = normalize_name_key(target_clean)
+                    matched_killer = dynamic_power_to_killer.get(norm_target)
+                    if not matched_killer:
+                        for p_key, k_name in dynamic_power_to_killer.items():
+                            if p_key and (p_key == norm_target or p_key in norm_target.split()):
+                                matched_killer = k_name
+                                break
+
+                    current_target = matched_killer if matched_killer else target_clean
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                if current_section in ["contents", "overview", "stacking", "numbers", "change log"]:
+                    continue
+
+                intro_target = None
+                p_prev = element.find_previous_sibling()
+                while p_prev and getattr(p_prev, "name", None) not in ["h1", "h2", "h3", "h4", "table"]:
+                    txt = p_prev.get_text()
+                    m = re.search(r"is the Power of (?:The\s+)?([^.]+)", txt, re.IGNORECASE)
+                    if m:
+                        candidate_killer = m.group(1).strip()
+                        norm_cand = normalize_name_key(candidate_killer)
+                        matched_k = dynamic_power_to_killer.get(norm_cand) or dynamic_power_to_killer.get("the " + norm_cand)
+                        if matched_k:
+                            intro_target = matched_k
+                            break
+                    p_prev = p_prev.find_previous_sibling()
+
+                table_target = intro_target or current_target
+
+                rows = element.find_all("tr")[1:]
+                row_count = len(rows)
+                for row_idx, row in enumerate(rows):
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 2:
+                        continue
+                    try:
+                        img_tag = cells[0].find("img")
+                        icon_url = extract_high_res_url(img_tag, self.BASE_DOMAIN)
+
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        addon_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                        if not addon_name:
+                            continue
+
+                        description = ""
+                        if len(cells) >= 4:
+                            description = extract_cell_markdown_text(cells[3])
+                        elif len(cells) == 3:
+                            description = extract_cell_markdown_text(cells[2])
+
+                        rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
+
+                        if rarity == "Common" and row_count == 20:
+                            if row_idx < 4:
+                                rarity = "Common"
+                            elif row_idx < 9:
+                                rarity = "Uncommon"
+                            elif row_idx < 14:
+                                rarity = "Rare"
+                            elif row_idx < 18:
+                                rarity = "Very Rare"
+                            else:
+                                rarity = "Ultra Rare"
+
+                        raw_addons.append({
+                            "name": addon_name,
+                            "target": table_target,
+                            "category": current_category,
+                            "description": description,
+                            "icon_url": icon_url,
+                            "rarity": rarity,
+                        })
+                    except Exception:
+                        continue
+
+        name_target_counts = defaultdict(set)
+        for a in raw_addons:
+            name_target_counts[normalize_name_key(a["name"])].add(normalize_name_key(a["target"]))
+
+        addons: list[AddonData] = []
+        seen_unique_names = set()
+        for a in raw_addons:
+            addon_name = a["name"]
+            target = a["target"]
+
+            if "serum" in addon_name.lower():
+                if a["category"] == "Survivor" or "survivor" in str(target).lower():
+                    target = "Special"
+
+            display_name = f"{addon_name} ({target})" if len(name_target_counts[normalize_name_key(addon_name)]) > 1 else addon_name
+
+            norm_unique = normalize_name_key(display_name)
+            if norm_unique in seen_unique_names:
+                continue
+            seen_unique_names.add(norm_unique)
+
+            sanitized = sanitize_filename(display_name)
+            local_path = f"icons/addons/{sanitized}.png"
+
+            addons.append(
+                AddonData(
+                    name=display_name,
+                    associated_target=target,
+                    category=a["category"],
+                    description=a["description"],
+                    icon_url=a["icon_url"],
+                    icon_local_path=local_path,
+                    rarity=a["rarity"],
+                )
+            )
+
+        return addons
+
+    def scrape_addons_from_character_page(self, char: CharacterData) -> list[AddonData]:
+        candidate_slugs = []
+        if char.wiki_slug:
+            candidate_slugs.append(char.wiki_slug)
+        if char.name:
+            candidate_slugs.append(char.name.replace(" ", "_"))
+        if char.real_name:
+            candidate_slugs.append(char.real_name.replace(" ", "_"))
+        if "slasher" in char.name.lower():
+            candidate_slugs.append("Jason_Voorhees")
+        if "judgment" in char.name.lower():
+            candidate_slugs.append("The_Judgment")
+
+        html_content = ""
+        for s in candidate_slugs:
+            try:
+                content = self.fetch_page_html(s)
+                if content and "add-on" in content.lower():
+                    html_content = content
+                    break
+            except Exception:
+                continue
+
+        if not html_content:
+            return []
+
+        soup = BeautifulSoup(html_content, "html.parser")
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+        addons: list[AddonData] = []
+        target = char.name
+        current_section = ""
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                current_section = element.get_text().strip().lower()
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                if "add-on" in current_section or "addon" in current_section:
+                    rows = element.find_all("tr")[1:]
+                    row_count = len(rows)
+                    for row_idx, row in enumerate(rows):
+                        cells = row.find_all(["td", "th"])
+                        if len(cells) < 2:
+                            continue
+                        try:
+                            img_tag = cells[0].find("img")
+                            icon_url = extract_high_res_url(img_tag, self.BASE_DOMAIN)
+                            name_cell = cells[1]
+                            name_link = name_cell.find("a")
+                            addon_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                            if not addon_name:
+                                continue
+
+                            description = ""
+                            if len(cells) >= 4:
+                                description = extract_cell_markdown_text(cells[3])
+                            elif len(cells) == 3:
+                                description = extract_cell_markdown_text(cells[2])
+
+                            rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
+                            if rarity == "Common" and row_count == 20:
+                                if row_idx < 4:
+                                    rarity = "Common"
+                                elif row_idx < 9:
+                                    rarity = "Uncommon"
+                                elif row_idx < 14:
+                                    rarity = "Rare"
+                                elif row_idx < 18:
+                                    rarity = "Very Rare"
+                                else:
+                                    rarity = "Ultra Rare"
+
+                            display_name = f"{addon_name} ({target})"
+                            sanitized = sanitize_filename(display_name)
+                            local_path = f"icons/addons/{sanitized}.png"
+
+                            addons.append(
+                                AddonData(
+                                    name=display_name,
+                                    associated_target=target,
+                                    category="Killer",
+                                    description=description,
+                                    icon_url=icon_url,
+                                    icon_local_path=local_path,
+                                    rarity=rarity,
                                 )
                             )
-                        db.session.commit()
-                    return
-            except Exception as e:
-                logger.debug(f"SQLAlchemy seed_quests_if_empty fallback: {e}")
+                        except Exception:
+                            continue
+        return addons
 
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) as count FROM daily_quests;")
-        row = cursor.fetchone()
-        count = row["count"] if row else 0
-        if count == 0:
-            for q in DEFAULT_QUESTS:
-                cursor.execute("""
-                    INSERT INTO daily_quests (title, description, category, progress, goal, xp_reward, is_completed)
-                    VALUES (?, ?, ?, 0, ?, ?, 0);
-                """, (q["title"], q["description"], q["category"], q["goal"], q["xp_reward"]))
-            conn.commit()
-        conn.close()
+    def parse_wiki_offerings(self, html_content: str) -> list[OfferingData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        offerings: list[OfferingData] = []
+        seen_offerings: set[str] = set()
 
-    def get_quests(self):
-        self.seed_quests_if_empty()
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    stmt = select(DailyQuest).order_by(DailyQuest.id.asc())
-                    rows = db.session.scalars(stmt).all()
-                    return [r.to_dict() for r in rows]
-            except Exception as e:
-                logger.debug(f"SQLAlchemy get_quests fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM daily_quests ORDER BY id ASC;")
-        rows = cursor.fetchall()
-        conn.close()
-
-        quests = []
-        for r in rows:
-            q = dict(r)
-            q["is_completed"] = bool(q["is_completed"])
-            quests.append(q)
-        return quests
-
-    def claim_quest(self, quest_id):
-        if self._use_sqlalchemy:
-            try:
-                if current_app:
-                    q = db.session.get(DailyQuest, int(quest_id))
-                    if not q:
-                        raise ValueError(f"Quest with ID {quest_id} not found.")
-                    if q.is_completed:
-                        raise ValueError(f"Quest with ID {quest_id} is already completed.")
-                    q.is_completed = True
-                    q.progress = q.goal
-                    db.session.commit()
-                    return {"quest": q.to_dict(), "xp_reward": q.xp_reward}
-            except Exception as e:
-                logger.debug(f"SQLAlchemy claim_quest fallback: {e}")
-
-        conn = self.db_service.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM daily_quests WHERE id = ?;", (quest_id,))
-        row = cursor.fetchone()
-        if not row:
-            conn.close()
-            raise ValueError(f"Quest with ID {quest_id} not found.")
-
-        quest = dict(row)
-        if bool(quest["is_completed"]):
-            conn.close()
-            raise ValueError(f"Quest with ID {quest_id} is already completed.")
-
-        cursor.execute("""
-            UPDATE daily_quests
-            SET is_completed = 1, progress = goal
-            WHERE id = ?;
-        """, (quest_id,))
-        conn.commit()
-
-        cursor.execute("SELECT * FROM daily_quests WHERE id = ?;", (quest_id,))
-        updated_row = dict(cursor.fetchone())
-        updated_row["is_completed"] = bool(updated_row["is_completed"])
-        conn.close()
-
-        return {
-            "quest": updated_row,
-            "xp_reward": updated_row["xp_reward"]
+        HEADING_ROLE: dict[str, str] = {
+            "survivor": "Survivor",
+            "altruism": "Survivor",
+            "boldness": "Survivor",
+            "objectives": "Survivor",
+            "survival": "Survivor",
+            "luck": "Survivor",
+            "killer": "Killer",
+            "brutality": "Killer",
+            "deviousness": "Killer",
+            "hunter": "Killer",
+            "sacrifice": "Killer",
+            "memento_mori": "Killer",
         }
+
+        def role_from_heading(heading_id: str) -> str:
+            return HEADING_ROLE.get(heading_id.lower().replace("-", "_"), "All")
+
+        def nearest_section_role(tag) -> str:
+            for ancestor in [tag] + list(tag.parents):
+                for sibling in ancestor.find_all_previous(["h2", "h3", "h4", "h5"]):
+                    span = sibling.find("span", class_="mw-headline")
+                    if span:
+                        hid = span.get("id", "").lower().replace("-", "_")
+                        return role_from_heading(hid)
+                    hid = sibling.get("id", "").lower().replace("-", "_")
+                    if hid:
+                        return role_from_heading(hid)
+            return "All"
+
+        for img in soup.find_all("img"):
+            src = img.get("src") or img.get("data-src") or ""
+            if "IconFavors_" in src or "IconsFavors_" in src or "IconFavor_" in src:
+                row = img.find_parent("tr")
+                if not row:
+                    continue
+                cells = row.find_all(["td", "th"])
+                off_name = ""
+                for c in cells:
+                    links = c.find_all("a")
+                    for l in links:
+                        txt = l.get_text(strip=True)
+                        if txt and not txt.startswith("File:") and len(txt) > 1:
+                            off_name = txt
+                            break
+                    if off_name:
+                        break
+                if not off_name and len(cells) > 1:
+                    off_name = cells[1].get_text(strip=True)
+                if not off_name:
+                    off_name = img.get("alt", "").replace(".png", "").replace("IconFavors_", "").replace("IconsFavors_", "").strip()
+
+                if not off_name or off_name.lower().startswith("category:"):
+                    continue
+
+                norm_key = normalize_name_key(off_name)
+                if norm_key in seen_offerings:
+                    continue
+                seen_offerings.add(norm_key)
+
+                icon_url = extract_high_res_url(img, self.BASE_DOMAIN)
+                description = ""
+                if len(cells) >= 4:
+                    description = cells[3].get_text(separator="\n", strip=True)
+                elif len(cells) == 3:
+                    description = cells[2].get_text(separator="\n", strip=True)
+                elif len(cells) == 2:
+                    description = cells[1].get_text(separator="\n", strip=True)
+
+                rarity = extract_rarity_from_elements(cells, img_tag=img)
+                description = clean_description_text(description)
+                sanitized = sanitize_filename(off_name)
+                local_path = f"icons/offerings/{sanitized}.png"
+
+                role = nearest_section_role(row)
+                if role == "All":
+                    raw_desc = row.get_text().lower()
+                    survivors_only = (
+                        "to all survivors" in raw_desc
+                        or "all survivor" in raw_desc
+                    ) and "killer" not in raw_desc
+                    killers_only = (
+                        "to the killer" in raw_desc
+                        or "to all killers" in raw_desc
+                        or "killer only" in raw_desc
+                    ) and "survivor" not in raw_desc
+                    if survivors_only:
+                        role = "Survivor"
+                    elif killers_only:
+                        role = "Killer"
+
+                row_text = row.get_text().lower()
+                category = "Offering"
+                if "mori" in row_text:
+                    category = "Memento Mori"
+                elif "bloodpoint" in row_text or "point" in row_text:
+                    category = "Bloodpoints"
+                elif "shroud" in row_text:
+                    category = "Shroud"
+                elif "ward" in row_text:
+                    category = "Ward"
+                elif "luck" in row_text or "salt" in row_text or "chalk" in row_text:
+                    category = "Luck"
+                elif "chest" in row_text or "fog" in row_text or "oak" in row_text or "blueprint" in row_text:
+                    category = "Map Modifications"
+                name_lower = off_name.lower()
+                if (
+                    rarity == "Event"
+                    or "dousing" in name_lower
+                    or "dowsing" in name_lower
+                    or "cobbler" in name_lower
+                    or "terrormisu" in name_lower
+                    or "flan" in name_lower
+                    or "torte" in name_lower
+                    or "scream pie" in name_lower
+                    or "gateau" in name_lower
+                    or "sacrificial cake" in name_lower
+                    or "cursed seed" in name_lower
+                    or "pustula" in name_lower
+                    or "bbq" in name_lower
+                    or "red envelope" in name_lower
+                    or "bloodshot eye" in name_lower
+                ):
+                    category = "Special"
+
+                offerings.append(
+                    OfferingData(
+                        name=off_name,
+                        category=category,
+                        role=role,
+                        description=description,
+                        icon_url=icon_url,
+                        icon_local_path=local_path,
+                        rarity=rarity,
+                    )
+                )
+
+        return offerings
+
+    def scrape_offerings(self) -> list[OfferingData]:
+        try:
+            logger.info("Fetching Offerings...")
+            html_offerings = self.fetch_page_html("Offerings")
+            return self.parse_wiki_offerings(html_offerings)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
+            return []
+
+    def scrape_all(
+        self,
+    ) -> tuple[list[CharacterData], list[PerkData], list[ItemData], list[AddonData], list[OfferingData]]:
+        logger.info("Scraping deadbydaylight.wiki.gg dynamic data via MediaWiki API...")
+        characters = self.scrape_characters_dynamically()
+
+        logger.info("Fetching Perks...")
+        html_perks = self.fetch_page_html("Perks")
+        perks = self.parse_perks(html_perks, characters)
+
+        try:
+            logger.info("Fetching Items...")
+            html_items = self.fetch_page_html("Items")
+            items = self.parse_wiki_items(html_items)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg items: {e}")
+            items = []
+
+        try:
+            logger.info("Fetching Add-ons...")
+            html_addons = self.fetch_page_html("Add-ons")
+            addons = self.parse_wiki_addons(html_addons, characters)
+
+            known_covered_killers = {
+                normalize_name_key(a.associated_target) for a in addons if a.associated_target
+            }
+            if characters:
+                for c in characters:
+                    if getattr(c, "category", "") == "Killer" or getattr(c, "role", "") == "Killer":
+                        c_norm = normalize_name_key(c.name)
+                        c_norm_no_the = normalize_name_key(c.name.replace("The ", ""))
+                        if c_norm not in known_covered_killers and c_norm_no_the not in known_covered_killers:
+                            char_addons = self.scrape_addons_from_character_page(c)
+                            if char_addons:
+                                logger.info(f"Enriched {len(char_addons)} add-ons from dedicated page for {c.name}")
+                                addons.extend(char_addons)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg addons: {e}")
+            addons = []
+
+        try:
+            logger.info("Fetching Offerings...")
+            offerings = self.scrape_offerings()
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
+            offerings = []
+
+        return characters, perks, items, addons, offerings
 ```
 
-### backend/app/services/others/smash_or_pass_service.py
+### backend/app/scrapers/drivers/__init__.py
 ```python
+from __future__ import annotations
+
 import logging
-from typing import Any
-from sqlalchemy import delete, func, or_, select
-from sqlalchemy.orm import joinedload
-from app.core.extensions import db
-from app.models.base import utcnow
-from app.models.smash_or_pass import (
-    Entity,
-    EntityStat,
-    Roster,
-    SmashPassStat,
-    SmashPassVote,
-    Translation,
-    Vote,
+from app.scrapers.drivers.base import BaseWikiDriver
+from app.scrapers.drivers.de import WikiGGDriverDE
+from app.scrapers.drivers.en import (
+    PORTRAIT_PATTERN,
+    WikiGGDriverEN,
+    clean_chapter_title,
+    extract_icon_token,
+    extract_rarity_from_elements,
+    parse_date_and_year,
 )
-from app.seeds.smash_roster_seeder import seed_smash_rosters
+from app.scrapers.drivers.es import WikiGGDriverES
+from app.scrapers.drivers.fr import WikiGGDriverFR
+from app.scrapers.drivers.it import WikiGGDriverIT
+from app.scrapers.drivers.ja import WikiGGDriverJP
+from app.scrapers.drivers.pl import WikiGGDriverPL
+from app.scrapers.types import AddonData, CharacterData, ItemData, OfferingData, PerkData
 
 logger = logging.getLogger(__name__)
 
-EDITIONS: list[dict[str, Any]] = [
-    {
-        "id": "canon",
-        "slug": "canon",
-        "name": "Dead by Daylight: Fog Canon",
-        "description": "The complete 98-character roster of all official Killers and Survivors.",
-        "icon": "Heart",
-        "character_count": 98,
-    },
-    {
-        "id": "hooked_on_you",
-        "slug": "hooked_on_you",
-        "name": "Hooked on You: Island Romance",
-        "description": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
-        "icon": "Sparkles",
-        "character_count": 8,
-    },
-    {
-        "id": "legendary_cosplay",
-        "slug": "legendary_cosplay",
-        "name": "Legendary Skins & Collabs",
-        "description": "Iconic legendary skins and crossover collabs from gaming history.",
-        "icon": "Flame",
-        "character_count": 12,
-    },
-    {
-        "id": "cyberpunk_2077",
-        "slug": "cyberpunk_2077",
-        "name": "Cyberpunk Fog 2077 Edition",
-        "description": "High-tech neon augmented champions fighting in a dystopian fog.",
-        "icon": "Cpu",
-        "character_count": 10,
-    },
-    {
-        "id": "anime_manga",
-        "slug": "anime_manga",
-        "name": "Fog Anime / Manga Aesthetic",
-        "description": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
-        "icon": "Sparkle",
-        "character_count": 10,
-    },
-    {
-        "id": "gothic_eldritch",
-        "slug": "gothic_eldritch",
-        "name": "Victorian & Gothic Eldritch Legends",
-        "description": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors.",
-        "icon": "Skull",
-        "character_count": 10,
-    },
-]
+LANGUAGE_DRIVERS: dict[str, type[BaseWikiDriver]] = {
+    "en": WikiGGDriverEN,
+    "pl": WikiGGDriverPL,
+    "de": WikiGGDriverDE,
+    "es": WikiGGDriverES,
+    "ja": WikiGGDriverJP,
+    "jp": WikiGGDriverJP,
+    "fr": WikiGGDriverFR,
+    "it": WikiGGDriverIT,
+}
 
 
-class SmashOrPassService:
-    """Service handling multi-roster Smash or Pass voting, feed generation, user persistence, and leaderboards."""
+class WikiGGScraperDriver(WikiGGDriverEN):
+    """Unified multi-language Dead by Daylight wiki.gg scraper orchestrator."""
 
-    def ensure_seeded(self) -> None:
-        try:
-            count = db.session.scalar(select(func.count(Roster.id)))
-            if not count or count == 0:
-                seed_smash_rosters()
-        except Exception as e:
-            logger.debug(f"Smash-or-pass seed notice: {e}")
+    def fetch_lang_page_html(self, lang: str, page_title: str) -> str:
+        lang_key = lang.lower().strip()
+        driver_cls = LANGUAGE_DRIVERS.get(lang_key)
+        if driver_cls and driver_cls is not WikiGGDriverEN:
+            driver = driver_cls(base_dir=self.base_dir)
+            return driver.fetch_page_html(page_title)
+        return self.fetch_page_html(page_title)
 
-    def get_rosters(self, active_only: bool = True) -> list[dict[str, Any]]:
-        self.ensure_seeded()
-        stmt = select(Roster)
-        if active_only:
-            stmt = stmt.where(Roster.is_active.is_(True))
-        stmt = stmt.order_by(Roster.slug)
-        rosters = db.session.scalars(stmt).all()
-
-        result = []
-        for r in rosters:
-            entity_count = (
-                db.session.scalar(
-                    select(func.count(Entity.id)).where(
-                        Entity.roster_id == r.id,
-                        Entity.is_active.is_(True),
-                    )
-                )
-                or 0
-            )
-
-            total_votes = (
-                db.session.scalar(
-                    select(func.coalesce(func.sum(EntityStat.total_votes), 0))
-                    .select_from(Entity)
-                    .join(EntityStat, Entity.id == EntityStat.entity_id)
-                    .where(
-                        Entity.roster_id == r.id,
-                        Entity.is_active.is_(True),
-                    )
-                )
-                or 0
-            )
-
-            r_dict = r.to_dict()
-            r_dict["entity_count"] = entity_count
-            r_dict["character_count"] = entity_count
-            r_dict["total_votes"] = int(total_votes)
-            result.append(r_dict)
-        return result
-
-    def get_feed(
+    def scrape_translations(
         self,
-        roster_slug: str = "canon",
-        session_id: str | None = None,
-        user_id: int | None = None,
-        role: str | None = None,
-        gender: str | None = None,
-        limit: int = 50,
-    ) -> dict[str, Any] | None:
-        self.ensure_seeded()
-        roster = db.session.scalar(select(Roster).where(Roster.slug == roster_slug))
-        if not roster:
-            return None
+        characters: list[CharacterData],
+        perks: list[PerkData],
+        items: list[ItemData],
+        addons: list[AddonData],
+        languages: str | list[str] | None = None,
+    ) -> None:
+        for p in perks:
+            if "en" not in p.translations and p.description:
+                p.translations["en"] = {"name": p.name, "description": p.description}
+        for c in characters:
+            if "en" not in c.translations:
+                p_name = c.power.name if c.power else ""
+                p_desc = c.power.description if c.power else ""
+                c.translations["en"] = {
+                    "name": c.name,
+                    "lore": c.lore or "",
+                    "chapter_name": c.chapter_name or "",
+                    "power_name": p_name,
+                    "power_description": p_desc,
+                }
+        for i in items:
+            if "en" not in i.translations and i.description:
+                i.translations["en"] = {"name": i.name, "description": i.description}
+        for a in addons:
+            if "en" not in a.translations and a.description:
+                a.translations["en"] = {"name": a.name, "description": a.description}
 
-        roster_info = next(
-            (r for r in self.get_rosters(active_only=False) if r["slug"] == roster_slug),
-            roster.to_dict(),
-        )
-
-        voted_conditions = []
-        if user_id is not None:
-            voted_conditions.append(Vote.user_id == user_id)
-        if session_id is not None:
-            voted_conditions.append(Vote.session_id == session_id)
-
-        voted_entity_ids: list[str] = []
-        if voted_conditions:
-            voted_stmt = select(Vote.entity_id).where(or_(*voted_conditions))
-            voted_entity_ids = list(db.session.scalars(voted_stmt).all())
-
-        count_stmt = select(func.count(Entity.id)).where(
-            Entity.roster_id == roster.id,
-            Entity.is_active.is_(True),
-        )
-        if voted_entity_ids:
-            count_stmt = count_stmt.where(Entity.id.not_in(voted_entity_ids))
-
-        if role and role != "all":
-            count_stmt = count_stmt.where(Entity.role == role)
-        if gender and gender != "all":
-            count_stmt = count_stmt.where(Entity.gender == gender)
-
-        total_remaining = db.session.scalar(count_stmt) or 0
-
-        stmt = (
-            select(Entity)
-            .options(joinedload(Entity.stat))
-            .where(
-                Entity.roster_id == roster.id,
-                Entity.is_active.is_(True),
-            )
-        )
-
-        if voted_entity_ids:
-            stmt = stmt.where(Entity.id.not_in(voted_entity_ids))
-
-        if role and role != "all":
-            stmt = stmt.where(Entity.role == role)
-        if gender and gender != "all":
-            stmt = stmt.where(Entity.gender == gender)
-
-        stmt = stmt.order_by(Entity.order_index).limit(limit)
-        entities = db.session.scalars(stmt).all()
-
-        return {
-            "roster": roster_info,
-            "entities": [e.to_dict() for e in entities],
-            "total_remaining": int(total_remaining),
-        }
-
-    def cast_vote(
-        self,
-        entity_id: str | None = None,
-        character_slug: str | None = None,
-        vote_type: str = "smash",
-        session_id: str | None = None,
-        user_id: int | None = None,
-        roster_slug: str | None = None,
-        edition: str = "canon",
-    ) -> dict[str, Any]:
-        self.ensure_seeded()
-        valid_votes = {"smash", "pass", "super_smash"}
-        if vote_type not in valid_votes:
-            raise ValueError(f"Invalid vote_type '{vote_type}'. Must be one of {valid_votes}")
-
-        try:
-            target_slug = roster_slug or edition
-            entity: Entity | None = None
-            if entity_id:
-                entity = db.session.get(Entity, entity_id)
-            elif character_slug:
-                roster = db.session.scalar(select(Roster).where(Roster.slug == target_slug))
-                if roster:
-                    entity = db.session.scalar(
-                        select(Entity).where(
-                            Entity.roster_id == roster.id,
-                            Entity.slug == character_slug,
-                        )
-                    )
-                if not entity:
-                    entity = db.session.scalar(select(Entity).where(Entity.slug == character_slug))
-
-            if not entity:
-                raise ValueError(f"Entity not found for entity_id='{entity_id}' or character_slug='{character_slug}'")
-
-            stat = db.session.scalar(select(EntityStat).where(EntityStat.entity_id == entity.id))
-            if not stat:
-                chaos = float(entity.get_metadata().get("chaos_score", 50.0))
-                stat = EntityStat(
-                    entity_id=entity.id,
-                    smash_count=0,
-                    pass_count=0,
-                    super_smash_count=0,
-                    total_votes=0,
-                    smash_rate=0.0,
-                    chaos_rating=chaos,
-                )
-                db.session.add(stat)
-                db.session.flush()
-
-            existing_vote = None
-            user_sess_conds = []
-            if user_id is not None:
-                user_sess_conds.append(Vote.user_id == user_id)
-            if session_id is not None:
-                user_sess_conds.append(Vote.session_id == session_id)
-
-            if user_sess_conds:
-                existing_vote = db.session.scalar(
-                    select(Vote).where(Vote.entity_id == entity.id, or_(*user_sess_conds))
-                )
-
-            prev_vote_type = None
-            if existing_vote:
-                prev_vote_type = existing_vote.vote_type
-                if prev_vote_type == "smash":
-                    stat.smash_count = max(0, stat.smash_count - 1)
-                elif prev_vote_type == "pass":
-                    stat.pass_count = max(0, stat.pass_count - 1)
-                elif prev_vote_type == "super_smash":
-                    stat.super_smash_count = max(0, stat.super_smash_count - 1)
-
-                existing_vote.vote_type = vote_type
-                if user_id is not None:
-                    existing_vote.user_id = user_id
-                if session_id is not None:
-                    existing_vote.session_id = session_id
-                existing_vote.created_at = utcnow()
-            else:
-                new_vote = Vote(
-                    entity_id=entity.id,
-                    session_id=session_id,
-                    user_id=user_id,
-                    vote_type=vote_type,
-                )
-                db.session.add(new_vote)
-
-            if vote_type == "smash":
-                stat.smash_count += 1
-            elif vote_type == "pass":
-                stat.pass_count += 1
-            elif vote_type == "super_smash":
-                stat.super_smash_count += 1
-
-            stat.calculate_rate()
-
-            try:
-                leg_stat = db.session.scalar(
-                    select(SmashPassStat).where(
-                        SmashPassStat.character_slug == entity.slug,
-                        SmashPassStat.edition == target_slug,
-                    )
-                )
-                if leg_stat:
-                    if prev_vote_type:
-                        if prev_vote_type == "smash":
-                            leg_stat.smash_count = max(0, leg_stat.smash_count - 1)
-                        elif prev_vote_type == "pass":
-                            leg_stat.pass_count = max(0, leg_stat.pass_count - 1)
-                        elif prev_vote_type == "super_smash":
-                            leg_stat.super_smash_count = max(0, leg_stat.super_smash_count - 1)
-
-                    if vote_type == "smash":
-                        leg_stat.smash_count += 1
-                    elif vote_type == "pass":
-                        leg_stat.pass_count += 1
-                    elif vote_type == "super_smash":
-                        leg_stat.super_smash_count += 1
-                    leg_stat.calculate_rate()
-            except Exception:
-                pass
-
-            db.session.commit()
-            db.session.refresh(entity)
-            db.session.refresh(stat)
-
-            res = entity.to_dict()
-            res["character_slug"] = entity.slug
-            res["character_name"] = entity.name
-            res["edition"] = target_slug
-            res["smash_count"] = stat.smash_count
-            res["pass_count"] = stat.pass_count
-            res["super_smash_count"] = stat.super_smash_count
-            res["total_votes"] = stat.total_votes
-            res["smash_rate"] = stat.smash_rate
-            res["chaos_rating"] = stat.chaos_rating
-            return res
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f"Error recording smash-or-pass vote: {e}")
-            raise e
-
-    def get_leaderboard(
-        self,
-        roster_slug: str = "canon",
-        role: str | None = None,
-        gender: str | None = None,
-        sort_by: str = "smash_rate",
-        limit: int = 100,
-        edition: str | None = None,
-    ) -> list[dict[str, Any]]:
-        self.ensure_seeded()
-        target_slug = roster_slug or edition or "canon"
-        roster = db.session.scalar(select(Roster).where(Roster.slug == target_slug))
-        if not roster:
-            return []
-
-        stmt = (
-            select(Entity, EntityStat)
-            .join(EntityStat, Entity.id == EntityStat.entity_id)
-            .where(
-                Entity.roster_id == roster.id,
-                Entity.is_active.is_(True),
-            )
-        )
-
-        if role and role != "all":
-            stmt = stmt.where(Entity.role == role)
-        if gender and gender != "all":
-            stmt = stmt.where(Entity.gender == gender)
-
-        if sort_by == "total_votes":
-            stmt = stmt.order_by(EntityStat.total_votes.desc(), EntityStat.smash_rate.desc())
-        elif sort_by == "smash_count":
-            stmt = stmt.order_by((EntityStat.smash_count + EntityStat.super_smash_count).desc(), EntityStat.smash_rate.desc())
-        elif sort_by == "chaos_rating":
-            stmt = stmt.order_by(EntityStat.chaos_rating.desc(), EntityStat.smash_rate.desc())
+        if languages == "all" or languages is None:
+            target_langs = ["pl", "de", "es", "ja", "fr", "it"]
+        elif isinstance(languages, list):
+            target_langs = [l for l in languages if l.lower() != "en"]
         else:
-            stmt = stmt.order_by(EntityStat.smash_rate.desc(), EntityStat.total_votes.desc())
+            target_langs = []
 
-        stmt = stmt.limit(limit)
-        rows = db.session.execute(stmt).all()
-
-        leaderboard = []
-        for rank, (entity, stat) in enumerate(rows, start=1):
-            rate = stat.smash_rate if stat.smash_rate is not None else 0.0
-            if rate >= 80.0:
-                tier = "God Tier"
-            elif rate >= 60.0:
-                tier = "Fatal Attraction"
-            elif rate >= 40.0:
-                tier = "Friendzone"
-            else:
-                tier = "Eldritch Void"
-
-            item = entity.to_dict()
-            item["rank"] = rank
-            item["tier"] = tier
-            item["character_slug"] = entity.slug
-            item["character_name"] = entity.name
-            item["edition"] = target_slug
-            item["smash_count"] = stat.smash_count
-            item["pass_count"] = stat.pass_count
-            item["super_smash_count"] = stat.super_smash_count
-            item["total_votes"] = stat.total_votes
-            item["smash_rate"] = stat.smash_rate
-            item["chaos_rating"] = stat.chaos_rating
-            leaderboard.append(item)
-
-        return leaderboard
-
-    def reset_session_votes(
-        self, session_id: str, roster_slug: str | None = None
-    ) -> dict[str, Any]:
-        try:
-            stmt = select(Vote).where(Vote.session_id == session_id)
-            if roster_slug:
-                roster = db.session.scalar(select(Roster).where(Roster.slug == roster_slug))
-                if roster:
-                    stmt = stmt.join(Entity, Vote.entity_id == Entity.id).where(Entity.roster_id == roster.id)
-                else:
-                    return {"status": "success", "reset_count": 0}
-
-            votes = db.session.scalars(stmt).all()
-            reset_count = len(votes)
-
-            for vote in votes:
-                stat = db.session.scalar(select(EntityStat).where(EntityStat.entity_id == vote.entity_id))
-                if stat:
-                    if vote.vote_type == "smash":
-                        stat.smash_count = max(0, stat.smash_count - 1)
-                    elif vote.vote_type == "pass":
-                        stat.pass_count = max(0, stat.pass_count - 1)
-                    elif vote.vote_type == "super_smash":
-                        stat.super_smash_count = max(0, stat.super_smash_count - 1)
-                    stat.calculate_rate()
-
-                db.session.delete(vote)
-
-            db.session.commit()
-            return {"status": "success", "reset_count": reset_count}
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f"Error resetting session votes: {e}")
-            raise e
-
-    def reset_user_votes(
-        self,
-        user_id: int,
-        roster_slug: str | None = None,
-        edition: str | None = None,
-    ) -> dict[str, Any]:
-        try:
-            target_slug = roster_slug or edition
-            stmt = select(Vote).where(Vote.user_id == user_id)
-            if target_slug:
-                roster = db.session.scalar(select(Roster).where(Roster.slug == target_slug))
-                if roster:
-                    stmt = stmt.join(Entity, Vote.entity_id == Entity.id).where(Entity.roster_id == roster.id)
-                else:
-                    return {"status": "success", "reset_count": 0}
-
-            votes = db.session.scalars(stmt).all()
-            reset_count = len(votes)
-
-            for vote in votes:
-                stat = db.session.scalar(select(EntityStat).where(EntityStat.entity_id == vote.entity_id))
-                if stat:
-                    if vote.vote_type == "smash":
-                        stat.smash_count = max(0, stat.smash_count - 1)
-                    elif vote.vote_type == "pass":
-                        stat.pass_count = max(0, stat.pass_count - 1)
-                    elif vote.vote_type == "super_smash":
-                        stat.super_smash_count = max(0, stat.super_smash_count - 1)
-                    stat.calculate_rate()
-
-                db.session.delete(vote)
+        for lang in target_langs:
+            lang_key = lang.lower().strip()
+            driver_cls = LANGUAGE_DRIVERS.get(lang_key)
+            if not driver_cls or driver_cls is WikiGGDriverEN:
+                continue
 
             try:
-                leg_stmt = select(SmashPassVote).where(SmashPassVote.user_id == user_id)
-                if target_slug:
-                    leg_stmt = leg_stmt.where(SmashPassVote.edition == target_slug)
-                leg_votes = db.session.scalars(leg_stmt).all()
-                for lv in leg_votes:
-                    ls = db.session.scalar(
-                        select(SmashPassStat).where(
-                            SmashPassStat.character_slug == lv.character_slug,
-                            SmashPassStat.edition == lv.edition,
-                        )
-                    )
-                    if ls:
-                        if lv.vote_type == "smash":
-                            ls.smash_count = max(0, ls.smash_count - 1)
-                        elif lv.vote_type == "pass":
-                            ls.pass_count = max(0, ls.pass_count - 1)
-                        elif lv.vote_type == "super_smash":
-                            ls.super_smash_count = max(0, ls.super_smash_count - 1)
-                        ls.calculate_rate()
-                    db.session.delete(lv)
-            except Exception:
-                pass
+                driver_instance = driver_cls(base_dir=self.base_dir)
+                if hasattr(self, "fetch_lang_page_html") and callable(self.fetch_lang_page_html):
+                    driver_instance.fetch_page_html = lambda p, l=lang_key: self.fetch_lang_page_html(l, p)
+                if hasattr(driver_instance, "enrich_translations"):
+                    driver_instance.enrich_translations(characters, perks, items, addons)
+            except Exception as e:
+                logger.warning(f"Failed running translation driver for '{lang_key}': {e}")
 
-            db.session.commit()
-            return {"status": "success", "reset_count": reset_count}
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f"Error resetting user votes: {e}")
-            raise e
-
-    def get_translations(self, locale: str = "en") -> dict[str, str]:
-        self.ensure_seeded()
-        stmt = select(Translation).where(Translation.locale == locale)
-        trans = db.session.scalars(stmt).all()
-        if not trans and locale != "en":
-            stmt_en = select(Translation).where(Translation.locale == "en")
-            trans = db.session.scalars(stmt_en).all()
-        return {t.key: t.value for t in trans}
-
-    def get_editions(self) -> list[dict[str, Any]]:
-        return self.get_rosters(active_only=True)
-
-    def get_characters_with_stats(
+    def scrape_all(
         self,
-        edition: str = "canon",
-        role: str | None = None,
-        gender: str | None = None,
-        search: str | None = None,
-    ) -> list[dict[str, Any]]:
-        self.ensure_seeded()
-        roster = db.session.scalar(select(Roster).where(Roster.slug == edition))
-        if not roster:
-            return []
+        languages: str | list[str] | None = None,
+    ) -> tuple[list[CharacterData], list[PerkData], list[ItemData], list[AddonData], list[OfferingData]]:
+        characters, perks, items, addons, offerings = super().scrape_all()
 
-        stmt = (
-            select(Entity)
-            .options(joinedload(Entity.stat))
-            .where(
-                Entity.roster_id == roster.id,
-                Entity.is_active.is_(True),
-            )
-        )
-        if role and role != "all":
-            stmt = stmt.where(Entity.role == role)
-        if gender and gender != "all":
-            stmt = stmt.where(Entity.gender == gender)
-        if search:
-            pattern = f"%{search}%"
-            stmt = stmt.where(or_(Entity.name.ilike(pattern), Entity.slug.ilike(pattern)))
+        if languages:
+            try:
+                self.scrape_translations(characters, perks, items, addons, languages=languages)
+            except Exception as e:
+                logger.warning(f"Error during multi-language translation enrichment: {e}")
 
-        stmt = stmt.order_by(Entity.order_index)
-        entities = db.session.scalars(stmt).all()
-        result = []
-        for e in entities:
-            d = e.to_dict()
-            stat = e.stat
-            d["character_slug"] = e.slug
-            d["character_name"] = e.name
-            d["edition"] = edition
-            d["smash_count"] = stat.smash_count if stat else 0
-            d["pass_count"] = stat.pass_count if stat else 0
-            d["super_smash_count"] = stat.super_smash_count if stat else 0
-            d["total_votes"] = stat.total_votes if stat else 0
-            d["smash_rate"] = stat.smash_rate if stat else 0.0
-            d["chaos_rating"] = stat.chaos_rating if stat else 50.0
-            result.append(d)
-        return result
+        return characters, perks, items, addons, offerings
 
-    def get_character_stat(
-        self, character_slug: str, edition: str = "canon"
-    ) -> dict[str, Any] | None:
-        self.ensure_seeded()
-        roster = db.session.scalar(select(Roster).where(Roster.slug == edition))
-        if not roster:
-            return None
-        entity = db.session.scalar(
-            select(Entity)
-            .options(joinedload(Entity.stat))
-            .where(
-                Entity.roster_id == roster.id,
-                Entity.slug == character_slug,
-            )
-        )
-        if not entity or not entity.stat:
-            return None
-        d = entity.to_dict()
-        stat = entity.stat
-        d["character_slug"] = entity.slug
-        d["character_name"] = entity.name
-        d["edition"] = edition
-        d["smash_count"] = stat.smash_count
-        d["pass_count"] = stat.pass_count
-        d["super_smash_count"] = stat.super_smash_count
-        d["total_votes"] = stat.total_votes
-        d["smash_rate"] = stat.smash_rate
-        d["chaos_rating"] = stat.chaos_rating
-        return d
-
-    def get_user_votes(
-        self, user_id: int, edition: str = "canon"
-    ) -> list[dict[str, Any]]:
-        self.ensure_seeded()
-        roster = db.session.scalar(select(Roster).where(Roster.slug == edition))
-        if not roster:
-            return []
-        stmt = (
-            select(Vote, Entity)
-            .join(Entity, Vote.entity_id == Entity.id)
-            .where(Vote.user_id == user_id, Entity.roster_id == roster.id)
-        )
-        rows = db.session.execute(stmt).all()
-        res = []
-        for v, e in rows:
-            vd = v.to_dict()
-            vd["character_slug"] = e.slug
-            vd["edition"] = edition
-            res.append(vd)
-        return res
-
-    def reset_stats(self) -> dict[str, Any]:
-        try:
-            db.session.execute(delete(Vote))
-            db.session.execute(delete(EntityStat))
-            db.session.execute(delete(SmashPassVote))
-            db.session.execute(delete(SmashPassStat))
-            db.session.commit()
-            seed_smash_rosters()
-            return {
-                "status": "reset_complete",
-                "message": "All smash-or-pass stats reset to 0",
-            }
-        except Exception as e:
-            db.session.rollback()
-            raise e
-```
-
-### backend/app/routes/others/__init__.py
-```python
-from .draft import draft_bp
-from .quests import quests_bp
-from .killer_calc import killer_calc_bp
-from .builds import builds_bp
-from .custom_perks import custom_perks_bp
-from .guesser import guesser_bp
-from .smash_or_pass import smash_or_pass_bp
 
 __all__ = [
-    "draft_bp",
-    "quests_bp",
-    "killer_calc_bp",
-    "builds_bp",
-    "custom_perks_bp",
-    "guesser_bp",
-    "smash_or_pass_bp",
+    "BaseWikiDriver",
+    "WikiGGDriverEN",
+    "WikiGGDriverPL",
+    "WikiGGDriverDE",
+    "WikiGGDriverES",
+    "WikiGGDriverJP",
+    "WikiGGDriverFR",
+    "WikiGGDriverIT",
+    "WikiGGScraperDriver",
+    "LANGUAGE_DRIVERS",
+    "PORTRAIT_PATTERN",
+    "extract_icon_token",
+    "extract_rarity_from_elements",
+    "clean_chapter_title",
+    "parse_date_and_year",
 ]
 ```
 
-### backend/app/routes/others/builds.py
+### backend/app/scrapers/drivers/base.py
 ```python
-from flask import Blueprint, current_app, jsonify, request
-from app.services.others.build_service import BuildService
+from __future__ import annotations
 
-builds_bp = Blueprint("builds", __name__, url_prefix="/api/v1/builds")
-_default_build_service: BuildService | None = None
-
-
-def get_build_service() -> BuildService:
-    if current_app and current_app.config.get("BUILD_SERVICE"):
-        return current_app.config["BUILD_SERVICE"]
-    global _default_build_service
-    if _default_build_service is None:
-        _default_build_service = BuildService()
-    return _default_build_service
-
-
-@builds_bp.route("/", methods=["GET"])
-@builds_bp.route("", methods=["GET"])
-def get_builds():
-    role = request.args.get("role")
-    category = request.args.get("category")
-    search = request.args.get("search")
-    sort_by = request.args.get("sort_by", "upvotes")
-
-    service = get_build_service()
-    builds = service.get_builds(role=role, category=category, search=search, sort_by=sort_by)
-    return jsonify({"status": "success", "builds": builds}), 200
-
-
-@builds_bp.route("/", methods=["POST"])
-@builds_bp.route("", methods=["POST"])
-def create_build():
-    data = request.get_json(silent=True) or {}
-    title = data.get("title")
-    description = data.get("description", "")
-    role = data.get("role")
-    category = data.get("category", "meta")
-    character_id = data.get("character_id") or data.get("character", "all")
-    perks = data.get("perks", [])
-    author = data.get("author", "Community")
-
-    if not title or not role:
-        return jsonify({"error": "Fields 'title' and 'role' are required."}), 400
-
-    service = get_build_service()
-    try:
-        build = service.create_build(
-            title=title,
-            description=description,
-            role=role,
-            category=category,
-            perks=perks,
-            character_id=character_id,
-            author=author
-        )
-        return jsonify({"status": "success", "build": build}), 201
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
-
-
-@builds_bp.route("/<int:build_id>/upvote", methods=["POST"])
-def upvote_build(build_id: int):
-    service = get_build_service()
-    try:
-        updated_build = service.upvote_build(build_id)
-        return jsonify({"status": "success", "build": updated_build}), 200
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 404
-```
-
-### backend/app/routes/others/custom_perks.py
-```python
-from flask import Blueprint, jsonify, request
-from app.services.others.custom_perk_service import CustomPerkService
-
-custom_perks_bp = Blueprint("custom_perks", __name__, url_prefix="/api/v1/custom-perks")
-service = CustomPerkService()
-
-
-@custom_perks_bp.route("/", methods=["GET"], strict_slashes=False)
-def list_custom_perks():
-    role = request.args.get("role")
-    rarity = request.args.get("rarity")
-    search = request.args.get("search")
-    sort_by = request.args.get("sort_by", "newest")
-
-    perks = service.get_custom_perks(
-        role=role,
-        rarity=rarity,
-        search=search,
-        sort_by=sort_by
-    )
-    return jsonify({
-        "custom_perks": perks,
-        "total": len(perks)
-    }), 200
-
-
-@custom_perks_bp.route("/", methods=["POST"], strict_slashes=False)
-def create_custom_perk():
-    data = request.get_json(silent=True) or {}
-
-    name = data.get("name")
-    description = data.get("description")
-
-    if not name or not str(name).strip():
-        return jsonify({"error": "Perk name is required"}), 400
-
-    if not description or not str(description).strip():
-        return jsonify({"error": "Perk description is required"}), 400
-
-    role = data.get("role", "survivor")
-    character_name = data.get("character_name", "Teachable")
-    rarity = data.get("rarity", "Very Rare")
-    icon_preset = data.get("icon_preset", "sparkles")
-    author = data.get("author", "Community")
-
-    perk = service.create_custom_perk(
-        name=name,
-        role=role,
-        character_name=character_name,
-        rarity=rarity,
-        icon_preset=icon_preset,
-        description=description,
-        author=author
-    )
-
-    return jsonify({
-        "custom_perk": perk,
-        "message": "Custom perk concept created successfully"
-    }), 201
-
-
-@custom_perks_bp.route("/<int:perk_id>/upvote", methods=["POST"], strict_slashes=False)
-def upvote_custom_perk(perk_id: int):
-    perk = service.upvote_custom_perk(perk_id)
-    if not perk:
-        return jsonify({"error": "Custom perk concept not found"}), 404
-
-    return jsonify({
-        "custom_perk": perk,
-        "message": "Upvoted successfully"
-    }), 200
-```
-
-### backend/app/routes/others/draft.py
-```python
-from flask import Blueprint, current_app, jsonify, request
-from app.services.others.draft_service import DraftService
-
-draft_bp = Blueprint("draft", __name__, url_prefix="/api/v1/draft")
-_default_draft_service: DraftService | None = None
-
-
-def get_draft_service() -> DraftService:
-    if current_app and current_app.config.get("DRAFT_SERVICE"):
-        return current_app.config["DRAFT_SERVICE"]
-    global _default_draft_service
-    if _default_draft_service is None:
-        _default_draft_service = DraftService()
-    return _default_draft_service
-
-
-@draft_bp.route("/create", methods=["POST"])
-def create_draft():
-    data = request.get_json(silent=True) or {}
-    room_code = data.get("room_code")
-    service = get_draft_service()
-    room = service.create_room(room_code=room_code)
-    return jsonify({"status": "success", "room": room}), 201
-
-
-@draft_bp.route("/<room_code>", methods=["GET"])
-def get_draft(room_code: str):
-    service = get_draft_service()
-    room = service.get_room(room_code)
-    if not room:
-        return jsonify({"error": f"Draft room '{room_code}' not found."}), 404
-    return jsonify({"status": "success", "room": room}), 200
-
-
-@draft_bp.route("/<room_code>/action", methods=["POST"])
-def process_draft_action(room_code: str):
-    data = request.get_json(silent=True) or {}
-    service = get_draft_service()
-    try:
-        updated_room = service.process_action(room_code, data)
-        return jsonify({"status": "success", "room": updated_room}), 200
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 404
-```
-
-### backend/app/routes/others/guesser.py
-```python
-from flask import Blueprint, jsonify, request
-from app.services.others.guesser_service import GuesserService
-
-guesser_bp = Blueprint("guesser", __name__, url_prefix="/api/v1/guesser")
-guesser_service = GuesserService()
-
-
-@guesser_bp.route("/stats", methods=["GET"])
-def get_stats():
-    try:
-        stats = guesser_service.get_all_stats()
-        return jsonify({"data": stats}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@guesser_bp.route("/stats", methods=["POST"])
-def post_result():
-    payload = request.get_json(silent=True) or {}
-    guesser_type = payload.get("guesser_type")
-    is_correct = payload.get("is_correct")
-    
-    if guesser_type is None or is_correct is None:
-        return jsonify({"error": "Fields 'guesser_type' and 'is_correct' are required"}), 400
-        
-    valid_types = {"character", "perk_description", "perk_name_to_icon", "perk_icon_to_name", "memes"}
-    if guesser_type not in valid_types:
-        return jsonify({"error": f"Invalid guesser_type: {guesser_type}"}), 400
-        
-    try:
-        updated = guesser_service.update_stats(guesser_type, bool(is_correct))
-        return jsonify({"data": updated}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@guesser_bp.route("/reset", methods=["POST"])
-def reset_streak():
-    payload = request.get_json(silent=True) or {}
-    guesser_type = payload.get("guesser_type")
-    
-    if not guesser_type:
-        return jsonify({"error": "Field 'guesser_type' is required"}), 400
-        
-    valid_types = {"character", "perk_description", "perk_name_to_icon", "perk_icon_to_name", "memes"}
-    if guesser_type not in valid_types:
-        return jsonify({"error": f"Invalid guesser_type: {guesser_type}"}), 400
-        
-    try:
-        updated = guesser_service.reset_streak(guesser_type)
-        return jsonify({"data": updated}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-```
-
-### backend/app/routes/others/killer_calc.py
-```python
-from flask import Blueprint, jsonify, request
-from app.services.others.killer_calc_service import KillerCalcService
-
-killer_calc_bp = Blueprint("killer_calc", __name__, url_prefix="/api/v1/killer-calc")
-calc_service = KillerCalcService()
-
-
-@killer_calc_bp.route("/data", methods=["GET"])
-def get_killer_calc_data():
-    """Return all available killers, power stats, add-ons, and perks for the calculator."""
-    return jsonify({
-        "status": "success",
-        "killers": calc_service.get_killers(),
-        "perks": calc_service.get_perks()
-    }), 200
-
-
-@killer_calc_bp.route("/calculate", methods=["POST"])
-def calculate():
-    """Calculate exact stat deltas and modified terror radius for given killer, add-ons, and perks."""
-    data = request.get_json(silent=True) or {}
-
-    killer_id = data.get("killer_id", "huntress")
-    addon_ids = data.get("addon_ids", [])
-    perk_ids = data.get("perk_ids", [])
-    perk_options = data.get("perk_options", {})
-
-    try:
-        result = calc_service.calculate(
-            killer_id=killer_id,
-            addon_ids=addon_ids,
-            perk_ids=perk_ids,
-            perk_options=perk_options
-        )
-        return jsonify(result), 200
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
-    except Exception as e:
-        return jsonify({"error": "Failed to calculate stats", "details": str(e)}), 500
-```
-
-### backend/app/routes/others/quests.py
-```python
-from flask import Blueprint, current_app, jsonify, request
-from app.services.others.quest_service import QuestService
-
-quests_bp = Blueprint("quests", __name__, url_prefix="/api/v1/quests")
-_default_quest_service: QuestService | None = None
-
-
-def get_quest_service() -> QuestService:
-    if current_app and current_app.config.get("QUEST_SERVICE"):
-        return current_app.config["QUEST_SERVICE"]
-    global _default_quest_service
-    if _default_quest_service is None:
-        _default_quest_service = QuestService()
-    return _default_quest_service
-
-
-@quests_bp.route("/", methods=["GET"])
-def get_active_quests():
-    service = get_quest_service()
-    quests = service.get_quests()
-    return jsonify({"status": "success", "quests": quests}), 200
-
-
-@quests_bp.route("/claim", methods=["POST"])
-def claim_quest():
-    data = request.get_json(silent=True) or {}
-    quest_id = data.get("quest_id") or data.get("id")
-    if quest_id is None:
-        return jsonify({"error": "Missing 'quest_id' parameter."}), 400
-
-    service = get_quest_service()
-    try:
-        res = service.claim_quest(quest_id)
-        return jsonify({"status": "success", **res}), 200
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
-```
-
-### backend/app/routes/others/smash_or_pass.py
-```python
 import logging
-import threading
+import re
 import time
-from collections import defaultdict
-from flask import Blueprint, jsonify, request
-from sqlalchemy import select
+from pathlib import Path
+from typing import Any
+from urllib.parse import unquote
+from curl_cffi import requests
 
-from app.core.extensions import db
-from app.core.limiter import get_client_ip
-from app.core.security import get_current_user
-from app.models.smash_or_pass import Roster
-from app.services.others.smash_or_pass_service import SmashOrPassService
+from app.scrapers.types import AddonData, CharacterData, ItemData, PerkData
+from app.scrapers.utils import (
+    normalize_name_key,
+)
 
 logger = logging.getLogger(__name__)
 
-smash_or_pass_bp = Blueprint("smash_or_pass", __name__, url_prefix="/api/v1/smash-or-pass")
-smash_service = SmashOrPassService()
+PORTRAIT_PATTERN = re.compile(r"(?:^|/)(K|S)(\d+)[-_]", re.IGNORECASE)
 
 
-class SlidingWindowRateLimiter:
-    """In-memory sliding window rate limiter per client identifier with auto-pruning."""
-
-    def __init__(self, max_requests: int = 60, window_seconds: int = 60, prune_interval: int = 50):
-        self.max_requests = max_requests
-        self.window_seconds = window_seconds
-        self.prune_interval = prune_interval
-        self._requests: dict[str, list[float]] = defaultdict(list)
-        self._lock = threading.Lock()
-        self._call_count = 0
-
-    def is_allowed(self, client_key: str) -> bool:
-        now = time.time()
-        cutoff = now - self.window_seconds
-        with self._lock:
-            self._call_count += 1
-            if self._call_count >= self.prune_interval:
-                self._prune_stale_keys(cutoff)
-                self._call_count = 0
-
-            timestamps = self._requests[client_key]
-            filtered = [t for t in timestamps if t > cutoff]
-            if len(filtered) >= self.max_requests:
-                self._requests[client_key] = filtered
-                return False
-            filtered.append(now)
-            self._requests[client_key] = filtered
-            return True
-
-    def _prune_stale_keys(self, cutoff: float) -> None:
-        stale_keys = [k for k, v in self._requests.items() if not v or max(v) <= cutoff]
-        for k in stale_keys:
-            del self._requests[k]
-
-    def reset(self) -> None:
-        with self._lock:
-            self._requests.clear()
-            self._call_count = 0
+def extract_icon_token(src_or_alt: str) -> str:
+    if not src_or_alt:
+        return ""
+    m = re.search(r"(?:Full_)?Icon(?:Perks|Items|Addons|Addon|Powers|Help)_([^./?]+)", src_or_alt, re.IGNORECASE)
+    if m:
+        return re.sub(r"[^a-zA-Z0-9]", "", m.group(1)).lower()
+    m2 = re.search(r"(?:^|/)(K|S)(\d+)[-_]", src_or_alt, re.IGNORECASE)
+    if m2:
+        return f"{m2.group(1).upper()}{int(m2.group(2)):02d}"
+    fn = src_or_alt.split("/")[-1].split(".")[0]
+    fn = re.sub(r"^\d+px-", "", fn, flags=re.IGNORECASE)
+    fn = re.sub(r"^(?:Full_)?(?:Icon(?:Addon|Addons|Items|Perks|Powers)_)?", "", fn, flags=re.IGNORECASE)
+    return re.sub(r"[^a-zA-Z0-9]", "", fn).lower()
 
 
-vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
+class BaseWikiDriver:
+    """Base driver providing network session, retries, and helper utilities for wiki.gg scraping."""
 
+    BASE_DOMAIN: str = "https://deadbydaylight.wiki.gg"
+    IMPERSONATE_BROWSER: str = "chrome120"
+    REQUEST_TIMEOUT: int = 30
 
-@smash_or_pass_bp.route("/rosters", methods=["GET"])
-def get_rosters():
-    """Retrieve all active rosters with real-time stats."""
-    try:
-        rosters = smash_service.get_rosters(active_only=True)
-        return jsonify({"data": rosters, "count": len(rosters)}), 200
-    except Exception as e:
-        logger.error(f"Error fetching smash-or-pass rosters: {e}")
-        return jsonify({"error": str(e)}), 500
+    def __init__(self, base_dir: Path | None = None, lang_code: str = "en"):
+        if base_dir is None:
+            base_dir = Path(__file__).resolve().parent.parent.parent.parent
+        self.base_dir = Path(base_dir)
+        self.lang_code = lang_code.lower().strip()
+        self.session = requests.Session(impersonate=self.IMPERSONATE_BROWSER)
 
+    @property
+    def api_url(self) -> str:
+        if self.lang_code == "en":
+            return f"{self.BASE_DOMAIN}/api.php"
+        return f"{self.BASE_DOMAIN}/{self.lang_code}/api.php"
 
-@smash_or_pass_bp.route("/rosters/<slug>/feed", methods=["GET"])
-def get_roster_feed(slug: str):
-    """Retrieve unvoted entities feed for a given roster and session/user."""
-    session_id = (
-        request.args.get("session_id")
-        or request.headers.get("X-Session-ID")
-        or request.cookies.get("session_id")
-    )
-    user_id = request.args.get("user_id", type=int)
-    role = request.args.get("role")
-    gender = request.args.get("gender")
-    limit = request.args.get("limit", default=50, type=int)
+    def fetch_page_html(self, page_title: str) -> str:
+        """Fetches and parses a page via MediaWiki API with retry and HTML fallback."""
+        clean_title = unquote(page_title)
+        params = {
+            "action": "parse",
+            "page": clean_title,
+            "prop": "text",
+            "format": "json",
+            "redirects": "1",
+            "disableeditsection": 1,
+            "disabletoc": 1,
+        }
+        for attempt in range(4):
+            try:
+                response = self.session.get(
+                    self.api_url,
+                    params=params,
+                    verify=False,
+                    timeout=self.REQUEST_TIMEOUT,
+                )
+                if response.status_code == 200:
+                    data = response.json()
+                    if "parse" in data and "text" in data["parse"]:
+                        return data["parse"]["text"]["*"]
+                    if "error" in data:
+                        logger.debug(f"MediaWiki parse error on {self.lang_code}/{clean_title}: {data.get('error')}")
+                        return ""
 
-    current_user = get_current_user()
-    if current_user:
-        user_id = current_user.id
+                if response.status_code == 429:
+                    time.sleep(2.0 * (attempt + 1))
+                    continue
 
-    try:
-        feed_data = smash_service.get_feed(
-            roster_slug=slug,
-            session_id=session_id,
-            user_id=user_id,
-            role=role,
-            gender=gender,
-            limit=limit,
+                response.raise_for_status()
+            except Exception as err:
+                logger.debug(f"[{self.lang_code}] API fetch attempt {attempt + 1} for '{clean_title}' failed: {err}")
+                time.sleep(1.5)
+
+        fallback_url = (
+            f"{self.BASE_DOMAIN}/wiki/{clean_title}"
+            if self.lang_code == "en"
+            else f"{self.BASE_DOMAIN}/{self.lang_code}/wiki/{clean_title}"
         )
-        if feed_data is None:
-            return jsonify({"error": f"Roster '{slug}' not found"}), 404
+        try:
+            res = self.session.get(fallback_url, verify=False, timeout=self.REQUEST_TIMEOUT)
+            if res.status_code == 200:
+                return res.text
+        except Exception as e:
+            logger.debug(f"[{self.lang_code}] Fallback fetch for '{clean_title}' failed: {e}")
 
-        return jsonify({"data": feed_data}), 200
-    except Exception as e:
-        logger.error(f"Error fetching feed for roster '{slug}': {e}")
-        return jsonify({"error": str(e)}), 500
+        return ""
 
+    def build_lookup_indexes(
+        self,
+        characters: list[CharacterData],
+        perks: list[PerkData],
+        items: list[ItemData],
+        addons: list[AddonData],
+    ) -> dict[str, dict[str, Any]]:
+        """Constructs fast icon token and normalized name lookups for enrichment."""
+        perks_by_token: dict[str, PerkData] = {}
+        for p in perks:
+            tok = extract_icon_token(p.icon_url or p.icon_local_path)
+            if tok:
+                perks_by_token[tok] = p
+            perks_by_token[normalize_name_key(p.name)] = p
 
-@smash_or_pass_bp.route("/vote", methods=["POST"])
-def cast_vote():
-    """Cast a vote (smash, pass, super_smash) for an entity or character."""
-    payload = request.get_json(silent=True) or {}
-    entity_id = payload.get("entity_id")
-    character_slug = payload.get("character_slug") or payload.get("slug")
-    vote_type = payload.get("vote_type") or payload.get("vote")
-    roster_slug = payload.get("roster_slug") or payload.get("edition") or "canon"
-    edition = payload.get("edition") or payload.get("roster_slug") or "canon"
-    session_id = (
-        payload.get("session_id")
-        or request.headers.get("X-Session-ID")
-        or request.cookies.get("session_id")
-    )
+        chars_by_token: dict[str, CharacterData] = {}
+        for c in characters:
+            if c.code_prefix and c.release_number:
+                chars_by_token[f"{c.code_prefix.upper()}{c.release_number:02d}"] = c
+            tok = extract_icon_token(c.avatar_url or c.avatar_local_path)
+            if tok:
+                chars_by_token[tok] = c
+            chars_by_token[normalize_name_key(c.name)] = c
+            if c.real_name:
+                chars_by_token[normalize_name_key(c.real_name)] = c
 
-    current_user = get_current_user()
-    user_id = current_user.id if current_user else None
+        items_by_token: dict[str, ItemData] = {}
+        for i in items:
+            tok = extract_icon_token(i.icon_url or i.icon_local_path)
+            if tok:
+                items_by_token[tok] = i
+            items_by_token[normalize_name_key(i.name)] = i
 
-    remote_ip = get_client_ip()
-    sub_key = session_id or (f"user:{user_id}" if user_id else "anon")
-    client_key = f"{remote_ip}:{sub_key}"
+        addons_by_token: dict[str, AddonData] = {}
+        for a in addons:
+            tok = extract_icon_token(a.icon_url or a.icon_local_path)
+            if tok:
+                addons_by_token[tok] = a
+            addons_by_token[normalize_name_key(a.name)] = a
 
-    if not vote_rate_limiter.is_allowed(client_key):
-        return (
-            jsonify(
-                {
-                    "error": "Rate limit exceeded. Maximum 60 votes per minute allowed.",
-                    "status": 429,
-                }
-            ),
-            429,
-        )
+        return {
+            "perks": perks_by_token,
+            "characters": chars_by_token,
+            "items": items_by_token,
+            "addons": addons_by_token,
+        }
+```
 
-    if not entity_id and not character_slug:
-        return (
-            jsonify(
-                {"error": "Fields 'entity_id' or 'character_slug' and 'vote_type' are required"}
-            ),
-            400,
-        )
+### backend/app/scrapers/drivers/en.py
+```python
+from __future__ import annotations
 
-    if not vote_type:
-        return jsonify({"error": "Field 'vote_type' is required"}), 400
+import asyncio
+import html
+import logging
+import re
+import time
+import unicodedata
+from collections import defaultdict
+from pathlib import Path
+from typing import Any
+from bs4 import BeautifulSoup, Tag
+from curl_cffi import requests
+from curl_cffi.requests import AsyncSession
 
-    if vote_type not in {"smash", "pass", "super_smash"}:
-        return (
-            jsonify(
-                {
-                    "error": f"Invalid vote_type '{vote_type}'. Must be one of ('smash', 'pass', 'super_smash')"
-                }
-            ),
-            400,
-        )
+from app.core.json_provider import safe_json_dumps
+from app.scrapers.constants import GENERIC_PERK_CANONICAL_MAP, KNOWN_KILLER_POWER_ALIASES
+from app.scrapers.types import AddonData, CharacterData, ItemData, KillerPowerData, OfferingData, PerkData
+from app.scrapers.utils import (
+    clean_description_text,
+    extract_high_res_url,
+    extract_slug_from_href,
+    normalize_name_key,
+    sanitize_filename,
+)
 
-    try:
-        result = smash_service.cast_vote(
-            entity_id=entity_id,
-            character_slug=character_slug,
-            vote_type=vote_type,
-            session_id=session_id,
-            user_id=user_id,
-            roster_slug=roster_slug,
-            edition=edition,
-        )
-        return jsonify({"data": result, "status": "success"}), 200
-    except ValueError as val_err:
-        return jsonify({"error": str(val_err)}), 400
-    except Exception as e:
-        logger.error(f"Error casting smash-or-pass vote: {e}")
-        return jsonify({"error": str(e)}), 500
+logger = logging.getLogger(__name__)
 
+PORTRAIT_PATTERN = re.compile(r"(?:^|/)(K|S)(\d+)[-_]", re.IGNORECASE)
 
-@smash_or_pass_bp.route("/rosters/<slug>/leaderboard", methods=["GET"])
-def get_roster_leaderboard(slug: str):
-    """Retrieve ranked leaderboard for a given roster."""
-    sort_by = request.args.get("sort_by", "smash_rate")
-    role = request.args.get("role")
-    gender = request.args.get("gender")
-    limit = request.args.get("limit", default=100, type=int)
+MONTHS_REGEX_STR = (
+    r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
+)
 
-    try:
-        roster_obj = db.session.scalar(select(Roster).where(Roster.slug == slug))
-        if not roster_obj:
-            return jsonify({"error": f"Roster '{slug}' not found"}), 404
+DATE_CLEAN_REGEX = re.compile(
+    rf"\b([0-9]{{1,2}})(?:st|nd|rd|th)?\s+(?:of\s+)?({MONTHS_REGEX_STR})\s+(?:of\s+)?(20[1-3][0-9])\b",
+    re.IGNORECASE,
+)
 
-        leaderboard = smash_service.get_leaderboard(
-            roster_slug=slug,
-            role=role,
-            gender=gender,
-            sort_by=sort_by,
-            limit=limit,
-        )
-        return (
-            jsonify(
-                {
-                    "data": leaderboard,
-                    "count": len(leaderboard),
-                    "roster": slug,
-                }
-            ),
-            200,
-        )
-    except Exception as e:
-        logger.error(f"Error fetching leaderboard for roster '{slug}': {e}")
-        return jsonify({"error": str(e)}), 500
+DATE_MDY_REGEX = re.compile(
+    rf"\b({MONTHS_REGEX_STR})\s+([0-9]{{1,2}})(?:st|nd|rd|th)?,?\s+(?:of\s+)?(20[1-3][0-9])\b",
+    re.IGNORECASE,
+)
+
+YEAR_ONLY_REGEX = re.compile(r"\b(201[6-9]|202[0-9]|203[0-9])\b")
+
+RARITY_PATTERN = re.compile(
+    r"\b(common|uncommon|rare|very[_\s-]?rare|ultra[_\s-]?rare|event|special|artifact|limited)\b",
+    re.IGNORECASE,
+)
 
 
-@smash_or_pass_bp.route("/session/reset", methods=["POST"])
-def reset_session():
-    """Reset and unwind votes cast in a session."""
-    payload = request.get_json(silent=True) or {}
-    session_id = (
-        payload.get("session_id")
-        or request.args.get("session_id")
-        or request.headers.get("X-Session-ID")
-        or request.cookies.get("session_id")
-    )
-    roster_slug = (
-        payload.get("roster_slug")
-        or payload.get("edition")
-        or request.args.get("roster_slug")
-        or request.args.get("edition")
-    )
+def parse_date_and_year(text: str) -> tuple[str | None, int | None]:
+    if not text:
+        return None, None
 
-    if not session_id:
-        return jsonify({"error": "Field 'session_id' is required to reset session votes"}), 400
+    clean = html.unescape(text)
+    m = DATE_CLEAN_REGEX.search(clean)
+    if m:
+        day = int(m.group(1))
+        month = m.group(2).capitalize()
+        year = int(m.group(3))
+        return f"{day} {month} {year}", year
 
-    try:
-        result = smash_service.reset_session_votes(
-            session_id=session_id, roster_slug=roster_slug
-        )
-        return jsonify({"data": result, "status": "success"}), 200
-    except Exception as e:
-        logger.error(f"Error resetting session votes: {e}")
-        return jsonify({"error": str(e)}), 500
+    m = DATE_MDY_REGEX.search(clean)
+    if m:
+        month = m.group(1).capitalize()
+        day = int(m.group(2))
+        year = int(m.group(3))
+        return f"{day} {month} {year}", year
+
+    ym = YEAR_ONLY_REGEX.search(clean)
+    if ym:
+        year = int(ym.group(1))
+        return str(year), year
+
+    return None, None
 
 
-@smash_or_pass_bp.route("/user-votes/reset", methods=["POST"])
-def reset_user_votes():
-    """Reset and wipe all votes for a specific user and recalculate stats."""
-    payload = request.get_json(silent=True) or {}
-    requested_user_id = payload.get("user_id") or request.args.get("user_id", type=int)
-    roster_slug = (
-        payload.get("roster_slug")
-        or payload.get("edition")
-        or request.args.get("roster_slug")
-        or request.args.get("edition")
-    )
-    edition = (
-        payload.get("edition")
-        or payload.get("roster_slug")
-        or request.args.get("edition")
-        or request.args.get("roster_slug")
+def clean_chapter_title(raw_chapter: str) -> tuple[str | None, str]:
+    if not raw_chapter:
+        return None, ""
+
+    cleaned = (
+        raw_chapter.replace("[edit]", "")
+        .replace("™", "")
+        .replace("®", "")
+        .strip()
     )
 
-    current_user = get_current_user()
-    if current_user:
-        if requested_user_id and requested_user_id != current_user.id and current_user.role != "admin":
-            return jsonify({"error": "Forbidden: Cannot reset votes for another user"}), 403
-        target_user_id = requested_user_id if (current_user.role == "admin" and requested_user_id) else current_user.id
-    else:
-        if requested_user_id:
-            return jsonify({"error": "Authentication required to reset user votes"}), 401
-        return jsonify({"error": "Field 'user_id' is required to reset user votes"}), 400
+    m = re.match(
+        r"^((?:CHAPTER|PARAGRAPH)\s+(?:[0-9]+(?:\.[0-9]+)?|[IVXLCDM]+)):\s*(.+)$",
+        cleaned,
+        re.IGNORECASE,
+    )
+    if m:
+        return m.group(1).strip(), m.group(2).strip()
 
-    try:
-        result = smash_service.reset_user_votes(
-            user_id=target_user_id,
-            roster_slug=roster_slug,
-            edition=edition,
+    return None, cleaned
+
+
+def extract_rarity_from_elements(
+    cells: list[Tag],
+    img_tag: Tag | None = None,
+    section_context: str = "",
+) -> str:
+    if len(cells) >= 4:
+        c_text = cells[2].get_text(strip=True)
+        m = RARITY_PATTERN.search(c_text)
+        if m:
+            return normalize_rarity_name(m.group(1))
+
+    for cell in cells:
+        for el in [cell] + cell.find_all(["a", "div", "span", "img", "td"]):
+            for attr in ["title", "data-rarity", "class", "alt"]:
+                val = el.get(attr, "")
+                if isinstance(val, list):
+                    val = " ".join(val)
+                if val:
+                    m = RARITY_PATTERN.search(str(val))
+                    if m:
+                        return normalize_rarity_name(m.group(1))
+
+    if img_tag:
+        img_src = (
+            img_tag.get("data-src")
+            or img_tag.get("src")
+            or img_tag.get("data-srcset")
+            or ""
         )
-        return jsonify({"data": result, "status": "success"}), 200
-    except Exception as e:
-        logger.error(f"Error resetting user smash-or-pass votes: {e}")
-        return jsonify({"error": str(e)}), 500
+        if img_src:
+            m = RARITY_PATTERN.search(img_src)
+            if m:
+                return normalize_rarity_name(m.group(1))
+
+    if section_context:
+        m = RARITY_PATTERN.search(section_context)
+        if m:
+            return normalize_rarity_name(m.group(1))
+
+    return "Common"
 
 
-@smash_or_pass_bp.route("/translations", methods=["GET"])
-def get_translations():
-    """Retrieve dynamic translations dictionary for a given locale."""
-    locale = request.args.get("locale", "en")
-    try:
-        translations = smash_service.get_translations(locale=locale)
-        return jsonify({"data": translations, "locale": locale}), 200
-    except Exception as e:
-        logger.error(f"Error fetching translations for locale '{locale}': {e}")
-        return jsonify({"error": str(e)}), 500
+def normalize_rarity_name(raw_rarity: str) -> str:
+    r = raw_rarity.lower().replace("_", " ").replace("-", " ").strip()
+    if "ultra" in r:
+        return "Ultra Rare"
+    if "very" in r:
+        return "Very Rare"
+    if "uncommon" in r:
+        return "Uncommon"
+    if "rare" in r:
+        return "Rare"
+    if "event" in r or "special" in r or "limited" in r:
+        return "Event"
+    if "artifact" in r:
+        return "Ultra Rare"
+    return "Common"
 
 
-@smash_or_pass_bp.route("/editions", methods=["GET"])
-def get_editions():
-    """Retrieve available smash or pass editions (legacy)."""
-    try:
-        editions = smash_service.get_editions()
-        return jsonify({"data": editions, "count": len(editions)}), 200
-    except Exception as e:
-        logger.error(f"Error fetching smash-or-pass editions: {e}")
-        return jsonify({"error": str(e)}), 500
+def extract_icon_token(src_or_alt: str) -> str:
+    if not src_or_alt:
+        return ""
+    m = re.search(r"(?:Full_)?Icon(?:Perks|Items|Addons|Addon|Powers|Help)_([^./?]+)", src_or_alt, re.IGNORECASE)
+    if m:
+        return re.sub(r"[^a-zA-Z0-9]", "", m.group(1)).lower()
+    m2 = re.search(r"(?:^|/)(K|S)(\d+)[-_]", src_or_alt, re.IGNORECASE)
+    if m2:
+        return f"{m2.group(1).upper()}{int(m2.group(2)):02d}"
+    fn = src_or_alt.split("/")[-1].split(".")[0]
+    fn = re.sub(r"^\d+px-", "", fn, flags=re.IGNORECASE)
+    fn = re.sub(r"^(?:Full_)?(?:Icon(?:Addon|Addons|Items|Perks|Powers)_)?", "", fn, flags=re.IGNORECASE)
+    return re.sub(r"[^a-zA-Z0-9]", "", fn).lower()
 
 
-@smash_or_pass_bp.route("/characters", methods=["GET"])
-def get_characters():
-    """Retrieve character list with stats filtered by edition, role, gender, or search query (legacy)."""
-    edition = request.args.get("edition", "canon")
-    role = request.args.get("role")
-    gender = request.args.get("gender")
-    search = request.args.get("q") or request.args.get("search")
+class WikiGGDriverEN:
+    BASE_DOMAIN = "https://deadbydaylight.wiki.gg"
+    API_URL = "https://deadbydaylight.wiki.gg/api.php"
+    IMPERSONATE_BROWSER = "chrome120"
+    REQUEST_TIMEOUT = 30
 
-    try:
-        data = smash_service.get_characters_with_stats(
-            edition=edition, role=role, gender=gender, search=search
-        )
-        return jsonify({"count": len(data), "data": data, "edition": edition}), 200
-    except Exception as e:
-        logger.error(f"Error fetching smash-or-pass characters: {e}")
-        return jsonify({"error": str(e)}), 500
+    def __init__(self, base_dir: Path | None = None):
+        if base_dir is None:
+            base_dir = Path(__file__).resolve().parent.parent.parent.parent
+        self.base_dir = Path(base_dir)
+        self.session = requests.Session(impersonate=self.IMPERSONATE_BROWSER)
 
+    def fetch_page_html(self, page_title: str) -> str:
+        params = {
+            "action": "parse",
+            "page": page_title,
+            "prop": "text",
+            "format": "json",
+            "redirects": "1",
+        }
+        for attempt in range(4):
+            try:
+                response = self.session.get(
+                    self.API_URL,
+                    params=params,
+                    verify=False,
+                    timeout=self.REQUEST_TIMEOUT,
+                )
+                if response.status_code == 200:
+                    data = response.json()
+                    if "parse" in data and "text" in data["parse"]:
+                        return data["parse"]["text"]["*"]
 
-@smash_or_pass_bp.route("/user-votes", methods=["GET"])
-def get_user_votes():
-    """Retrieve all votes cast by the current user for no-repeat deck filtering (legacy)."""
-    requested_user_id = request.args.get("user_id", type=int)
-    edition = request.args.get("edition", "canon")
+                if response.status_code == 429:
+                    time.sleep(2.0 * (attempt + 1))
+                    continue
 
-    current_user = get_current_user()
-    if current_user:
-        if requested_user_id and requested_user_id != current_user.id and current_user.role != "admin":
-            return jsonify({"error": "Forbidden: Cannot view votes for another user"}), 403
-        target_user_id = requested_user_id if (current_user.role == "admin" and requested_user_id) else current_user.id
-    else:
-        target_user_id = requested_user_id
+                response.raise_for_status()
+            except Exception as err:
+                logger.warning(f"API fetch attempt {attempt + 1} for '{page_title}' failed: {err}")
+                time.sleep(1.5)
 
-    if not target_user_id:
-        return jsonify({"data": [], "message": "No user_id provided"}), 200
+        fallback_url = f"{self.BASE_DOMAIN}/wiki/{page_title}"
+        res = self.session.get(fallback_url, verify=False, timeout=self.REQUEST_TIMEOUT)
+        res.raise_for_status()
+        return res.text
 
-    try:
-        votes = smash_service.get_user_votes(user_id=target_user_id, edition=edition)
-        return jsonify({"data": votes, "count": len(votes)}), 200
-    except Exception as e:
-        logger.error(f"Error fetching user smash-or-pass votes: {e}")
-        return jsonify({"error": str(e)}), 500
+    def scrape_roster_from_page(self, page_title: str, role: str) -> list[CharacterData]:
+        html_doc = self.fetch_page_html(page_title)
+        soup = BeautifulSoup(html_doc, "html.parser")
+        content = soup.find("div", class_="mw-parser-output") or soup
+
+        characters: list[CharacterData] = []
+        seen_slugs: set[str] = set()
+
+        killer_meta_by_slug: dict[str, dict[str, Any]] = {}
+        if role == "Killer":
+            for cell in content.find_all(["td", "th"]):
+                links = cell.find_all("a", href=re.compile(r"^/wiki/(?!File:|Category:|Special:).+"))
+                text_links = [a for a in links if not a.find("img") and a.get_text(strip=True)]
+                if len(text_links) >= 2:
+                    power_tag = text_links[0]
+                    killer_tag = text_links[1]
+                    k_slug = extract_slug_from_href(killer_tag.get("href", "")).lower()
+                    p_name = re.sub(
+                        r"\[\s*edit\s*\]", "", power_tag.get_text(strip=True), flags=re.IGNORECASE
+                    ).strip()
+                    if k_slug and p_name:
+                        killer_meta_by_slug[k_slug] = {
+                            "power_name": p_name,
+                            "power_desc": "",
+                            "movement_speed": "4.6 m/s (115%)",
+                            "terror_radius": "32 m",
+                            "terror_radius_meters": 32,
+                            "height": "Tall",
+                        }
+
+        for link in content.find_all("a", href=re.compile(r"^/wiki/")):
+            href = link.get("href", "")
+            slug = extract_slug_from_href(href)
+            slug_lower = slug.lower()
+
+            if not slug or slug_lower in seen_slugs:
+                continue
+            if slug.startswith(("Category:", "File:", "Special:", "Dead_by_Daylight", "Help:", "User:", "Template:", "Tome")):
+                continue
+
+            img = link.find("img")
+            if not img:
+                continue
+
+            avatar_url = extract_high_res_url(img, self.BASE_DOMAIN)
+            if not avatar_url:
+                continue
+
+            filename = avatar_url.split("/revision")[0].rstrip("/").split("/")[-1]
+            match = PORTRAIT_PATTERN.search(filename)
+            if not match:
+                continue
+
+            prefix_role = "Killer" if match.group(1).upper() == "K" else "Survivor"
+            if prefix_role != role:
+                continue
+
+            release_num = int(match.group(2))
+            code_prefix = f"{match.group(1).upper()}{match.group(2)}"
+
+            raw_title = (link.get("title") or link.get_text() or "").strip().replace("_", " ")
+            if not raw_title or len(raw_title) > 60:
+                raw_title = slug.replace("_", " ")
+
+            seen_slugs.add(slug_lower)
+            sanitized = sanitize_filename(raw_title)
+            sub_dir = "survivors" if role == "Survivor" else "killers"
+
+            power_data = None
+            if role == "Killer":
+                k_meta = (
+                    killer_meta_by_slug.get(slug_lower)
+                    or killer_meta_by_slug.get(slug_lower.replace("the_", ""))
+                    or killer_meta_by_slug.get(f"the_{slug_lower}")
+                    or {}
+                )
+                if not k_meta:
+                    for km_slug, km_val in killer_meta_by_slug.items():
+                        if km_slug in slug_lower or slug_lower in km_slug:
+                            k_meta = km_val
+                            break
+
+                power_name = k_meta.get("power_name") or ""
+                power_data = KillerPowerData(
+                    name=power_name,
+                    description=k_meta.get("power_desc", ""),
+                    movement_speed=k_meta.get("movement_speed", "4.6 m/s (115%)"),
+                    terror_radius=k_meta.get("terror_radius", "32 m"),
+                    terror_radius_meters=k_meta.get("terror_radius_meters", 32),
+                    height=k_meta.get("height", "Tall"),
+                )
+
+            characters.append(
+                CharacterData(
+                    name=raw_title,
+                    real_name=raw_title,
+                    wiki_slug=slug,
+                    short_name=slug_lower,
+                    category=role,
+                    avatar_url=avatar_url,
+                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                    release_number=release_num,
+                    code_prefix=code_prefix,
+                    power=power_data,
+                )
+            )
+
+        return characters
+
+    def scrape_dlcs_from_wiki(self) -> list[dict[str, Any]]:
+        dlcs: list[dict[str, Any]] = []
+        seen_dlc_names = set()
+
+        for page in ["Downloadable_Content", "Chapters"]:
+            try:
+                html_doc = self.fetch_page_html(page)
+                soup = BeautifulSoup(html_doc, "html.parser")
+                content = soup.find("div", class_="mw-parser-output") or soup
+
+                for table in content.find_all("table", class_=re.compile(r"wikitable|article-table")):
+                    rows = table.find_all("tr")
+                    for tr in rows:
+                        tds = tr.find_all("td")
+                        if not tds:
+                            continue
+
+                        row_text = tr.get_text(separator=" ", strip=True)
+                        date_str, year_num = parse_date_and_year(row_text)
+
+                        links = tr.find_all("a", href=re.compile(r"^/wiki/"))
+                        row_chars = []
+                        dlc_name = ""
+                        for a in links:
+                            txt = a.get_text(strip=True)
+                            if not txt or txt.startswith(("File:", "Special:", "Category:")):
+                                continue
+                            if any(k in txt.lower() for k in ["chapter", "paragraph", "pack"]):
+                                if not dlc_name:
+                                    dlc_name = txt
+                            elif txt not in ["Killer", "Survivor", "Map", "DLC", "Base Game", "PTB"]:
+                                row_chars.append(txt)
+
+                        if dlc_name and dlc_name.lower() not in seen_dlc_names:
+                            seen_dlc_names.add(dlc_name.lower())
+                            is_licensed = (
+                                "™" in dlc_name
+                                or "®" in dlc_name
+                                or "licensed" in row_text.lower()
+                                or ("auric cells" in row_text.lower() and "iridescent" not in row_text.lower())
+                            )
+                            dlcs.append({
+                                "dlc_name": dlc_name,
+                                "release_date": date_str or "",
+                                "release_year": year_num,
+                                "is_licensed": is_licensed,
+                                "characters": row_chars,
+                            })
+
+                is_under_licensed = False
+                for node in content.find_all(["h2", "h3", "h4"]):
+                    if node.name == "h2":
+                        h2_txt = node.get_text(strip=True).lower()
+                        if "licensed" in h2_txt:
+                            is_under_licensed = True
+                        elif "original" in h2_txt or "available" in h2_txt or "retired" in h2_txt:
+                            is_under_licensed = False
+
+                    if node.name in ["h3", "h4"]:
+                        raw_title = (
+                            node.get_text(strip=True)
+                            .replace("[edit]", "")
+                            .replace("™", "")
+                            .replace("®", "")
+                            .strip()
+                        )
+                        if not raw_title or raw_title.lower() in [
+                            "overview", "contents", "purchasing a dlc", "licensed dlcs",
+                            "available dlcs", "chapters", "clothing packs", "character packs",
+                            "original soundtrack", "retired dlcs", "chapter packs"
+                        ]:
+                            continue
+
+                        date_str = ""
+                        year_num = None
+                        chars_added = []
+                        is_licensed = is_under_licensed or "™" in raw_title or "®" in raw_title
+
+                        curr = node.find_next_sibling()
+                        while curr and curr.name not in ["h2", "h3", "h4"]:
+                            txt = curr.get_text(separator=" ", strip=True)
+                            d_parsed, y_parsed = parse_date_and_year(txt)
+                            if d_parsed and not date_str:
+                                date_str = d_parsed
+                                year_num = y_parsed
+
+                            if "auric cells" in txt.lower() and "iridescent" not in txt.lower():
+                                is_licensed = True
+                            elif "iridescent" in txt.lower():
+                                is_licensed = False
+
+                            for a in curr.find_all("a"):
+                                c_name = a.get_text(strip=True)
+                                if (
+                                    c_name
+                                    and c_name not in ["Main Article", "DLC", "Chapter", "Paragraph", "Killer", "Survivor", "Store Page", "Retired"]
+                                    and not c_name.startswith(("File:", "Special:", "Category:"))
+                                    and len(c_name) < 40
+                                ):
+                                    chars_added.append(c_name)
+
+                            curr = curr.find_next_sibling()
+
+                        if raw_title.lower() not in seen_dlc_names and (date_str or chars_added):
+                            seen_dlc_names.add(raw_title.lower())
+                            dlcs.append({
+                                "dlc_name": raw_title,
+                                "release_date": date_str,
+                                "release_year": year_num,
+                                "is_licensed": is_licensed,
+                                "characters": chars_added,
+                            })
+            except Exception as e:
+                logger.warning(f"Failed scraping DLC catalog from '{page}': {e}")
+
+        return dlcs
+
+    def enrich_characters_from_pages(self, characters: list[CharacterData]) -> None:
+        def norm_key(text: str) -> str:
+            if not text:
+                return ""
+            n = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8").lower()
+            return re.sub(r"[^a-z0-9]", "", n)
+
+        dlcs = self.scrape_dlcs_from_wiki()
+        logger.info(f"Loaded {len(dlcs)} live DLC entries from wiki.gg")
+
+        async def _fetch_all():
+            async with AsyncSession(impersonate="chrome120", verify=False) as session:
+                semaphore = asyncio.Semaphore(5)
+
+                async def _fetch_one(char: CharacterData):
+                    slug = char.wiki_slug or char.name.replace(" ", "_")
+                    async with semaphore:
+                        for attempt in range(3):
+                            try:
+                                await asyncio.sleep(0.05)
+                                params = {
+                                    "action": "parse",
+                                    "page": slug,
+                                    "prop": "text",
+                                    "format": "json",
+                                    "redirects": "1",
+                                }
+                                r = await session.get(self.API_URL, params=params, timeout=15, verify=False)
+                                data = r.json()
+                                if "error" in data:
+                                    await asyncio.sleep(1.0)
+                                    continue
+
+                                html_raw = data.get("parse", {}).get("text", {}).get("*", "")
+                                if not html_raw:
+                                    return
+
+                                soup = BeautifulSoup(html_raw, "html.parser")
+                                content = soup.find("div", class_="mw-parser-output") or soup
+
+                                real_name = ""
+                                movement_speed = ""
+                                terror_radius = ""
+                                tr_meters = 32
+                                height = ""
+                                cost_text = ""
+                                power_name = ""
+                                power_desc = ""
+                                power_icon_url = ""
+                                infobox_dlc_text = ""
+                                infobox_dlc_link = ""
+                                infobox_release_date = ""
+
+                                for tr in content.find_all("tr"):
+                                    th = tr.find(["th", "td"], class_=lambda c: c and "title" in str(c).lower())
+                                    td = tr.find(["td"], class_=lambda c: c and "value" in str(c).lower())
+                                    if not (th and td):
+                                        tds = tr.find_all(["th", "td"])
+                                        if len(tds) >= 2:
+                                            th, td = tds[0], tds[1]
+                                    if th and td:
+                                        t_txt = th.get_text(strip=True).lower()
+                                        v_txt = td.get_text(separator=" ", strip=True)
+
+                                        if t_txt in ["name", "real name"]:
+                                            real_name = v_txt
+                                        elif "movement speed" in t_txt and "alternate" not in t_txt:
+                                            m_speed = re.search(
+                                                r"(\d+(?:\.\d+)?)\s*%\s*[\|\(]?\s*(\d+(?:\.\d+)?)\s*m/s", v_txt
+                                            )
+                                            if not m_speed:
+                                                m_speed = re.search(
+                                                    r"(\d+(?:\.\d+)?)\s*m/s.*?(\d+(?:\.\d+)?)\s*%", v_txt
+                                                )
+                                                if m_speed:
+                                                    movement_speed = f"{m_speed.group(1)} m/s ({m_speed.group(2)}%)"
+                                            else:
+                                                movement_speed = f"{m_speed.group(2)} m/s ({m_speed.group(1)}%)"
+                                            if not movement_speed:
+                                                movement_speed = v_txt
+                                        elif "terror radius" in t_txt:
+                                            terror_radius = v_txt
+                                            m = re.search(r"(\d+)", terror_radius)
+                                            if m:
+                                                tr_meters = int(m.group(1))
+                                        elif "height" in t_txt:
+                                            height = v_txt
+                                        elif "cost" in t_txt:
+                                            cost_text = v_txt
+                                        elif "power" in t_txt and "attack" not in t_txt and "trivia" not in t_txt:
+                                            power_name = v_txt
+                                        elif t_txt in ["dlc", "chapter"]:
+                                            infobox_dlc_text = v_txt
+                                            a_link = td.find("a")
+                                            if a_link:
+                                                infobox_dlc_link = extract_slug_from_href(a_link.get("href", ""))
+                                        elif t_txt in ["release date", "released", "release"]:
+                                            infobox_release_date = v_txt
+
+                                intro_paragraphs = []
+                                for p in content.find_all("p"):
+                                    p_txt = p.get_text(separator=" ", strip=True)
+                                    if len(p_txt) > 25 and ("introduced" in p_txt.lower() or "released" in p_txt.lower() or "featured in" in p_txt.lower()):
+                                        intro_paragraphs.append(p_txt)
+
+                                intro_full_text = " ".join(intro_paragraphs)
+
+                                parsed_chapter_name = ""
+                                parsed_chapter_number = ""
+                                parsed_dlc_type = ""
+                                parsed_release_date = ""
+                                parsed_release_year = None
+
+                                intro_match = re.search(
+                                    r"introduced as (?:the|a)\s+(?:Killer|Survivor)\s+of\s+(?:the\s+)?([^,]+?),\s+a\s+([^,]+?)\s+released\s+(?:on|in)\s+([0-9]{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+of)?\s+[0-9]{4}|[A-Za-z]+\s+[0-9]{1,2}(?:st|nd|rd|th)?,?\s+[0-9]{4}|[A-Za-z]+\s+[0-9]{4}|[0-9]{4})",
+                                    intro_full_text,
+                                    re.IGNORECASE,
+                                )
+                                if intro_match:
+                                    raw_chap = intro_match.group(1).strip()
+                                    parsed_dlc_type = intro_match.group(2).strip()
+                                    date_raw = intro_match.group(3).strip()
+                                    parsed_release_date, parsed_release_year = parse_date_and_year(date_raw)
+                                    c_num, c_title = clean_chapter_title(raw_chap)
+                                    parsed_chapter_number = c_num or ""
+                                    parsed_chapter_name = c_title or raw_chap
+
+                                if not parsed_release_date:
+                                    if "base game" in intro_full_text.lower() or (char.release_number and char.release_number <= 4 and "chapter" not in intro_full_text.lower()):
+                                        parsed_chapter_name = "Base Game"
+                                        parsed_dlc_type = "base_game"
+                                        d_p, y_p = parse_date_and_year(intro_full_text)
+                                        parsed_release_date = d_p or "14 June 2016"
+                                        parsed_release_year = y_p or 2016
+
+                                if not parsed_release_date:
+                                    d_p, y_p = parse_date_and_year(intro_full_text)
+                                    if d_p:
+                                        parsed_release_date = d_p
+                                        parsed_release_year = y_p
+
+                                if not parsed_release_date and infobox_release_date:
+                                    d_p, y_p = parse_date_and_year(infobox_release_date)
+                                    if d_p:
+                                        parsed_release_date = d_p
+                                        parsed_release_year = y_p
+
+                                if not parsed_chapter_name and infobox_dlc_text:
+                                    c_num, c_title = clean_chapter_title(infobox_dlc_text)
+                                    parsed_chapter_number = c_num or ""
+                                    parsed_chapter_name = c_title or infobox_dlc_text
+
+                                if not parsed_release_date or not parsed_chapter_name:
+                                    c_norm = norm_key(char.name)
+                                    for d in dlcs:
+                                        for ac in d.get("characters", []):
+                                            ac_norm = norm_key(ac)
+                                            if ac_norm == c_norm or (len(c_norm) >= 4 and (c_norm in ac_norm or ac_norm in c_norm)):
+                                                if not parsed_chapter_name:
+                                                    c_num, c_title = clean_chapter_title(d["dlc_name"])
+                                                    parsed_chapter_number = c_num or ""
+                                                    parsed_chapter_name = c_title or d["dlc_name"]
+                                                if not parsed_release_date and d.get("release_date"):
+                                                    parsed_release_date = d["release_date"]
+                                                    parsed_release_year = d.get("release_year")
+                                                if not parsed_dlc_type:
+                                                    parsed_dlc_type = "Chapter DLC"
+                                                break
+                                        if parsed_release_date and parsed_chapter_name:
+                                            break
+
+                                if (not parsed_release_date or not parsed_release_year) and (infobox_dlc_link or parsed_chapter_name):
+                                    chap_slug = infobox_dlc_link or parsed_chapter_name.replace(" ", "_")
+                                    try:
+                                        chap_params = {
+                                            "action": "parse",
+                                            "page": chap_slug,
+                                            "prop": "text",
+                                            "format": "json",
+                                            "redirects": "1",
+                                        }
+                                        cr = await session.get(self.API_URL, params=chap_params, timeout=12, verify=False)
+                                        cdata = cr.json()
+                                        chtml = cdata.get("parse", {}).get("text", {}).get("*", "")
+                                        if chtml:
+                                            csoup = BeautifulSoup(chtml, "html.parser")
+                                            for elem in csoup.find_all(["p", "tr"]):
+                                                ctxt = elem.get_text(separator=" ", strip=True)
+                                                cd_p, cy_p = parse_date_and_year(ctxt)
+                                                if cd_p:
+                                                    parsed_release_date = cd_p
+                                                    parsed_release_year = cy_p
+                                                    break
+                                    except Exception:
+                                        pass
+
+                                is_licensed = False
+                                if cost_text:
+                                    if "auric cells" in cost_text.lower() and "iridescent" not in cost_text.lower():
+                                        is_licensed = True
+                                    elif "iridescent" in cost_text.lower():
+                                        is_licensed = False
+
+                                if not is_licensed and ("™" in char.name or "®" in char.name or "™" in parsed_chapter_name or "®" in parsed_chapter_name):
+                                    is_licensed = True
+
+                                if char.category == "Killer":
+                                    for img in content.find_all("img"):
+                                        alt = img.get("alt", "")
+                                        src = img.get("src", "")
+                                        if "iconpowers" in src.lower() or "iconpowers" in alt.lower() or "power" in alt.lower():
+                                            power_icon_url = extract_high_res_url(img, self.BASE_DOMAIN)
+                                            if not power_name and alt:
+                                                power_name = alt.replace("IconPowers ", "").replace(".png", "").strip()
+                                            break
+
+                                    for h in content.find_all(["h2", "h3", "h4"]):
+                                        htxt = h.get_text(strip=True).lower()
+                                        if "power:" in htxt or "power" in htxt or "special ability" in htxt:
+                                            p_elems = []
+                                            curr = h.find_next_sibling()
+                                            while curr and curr.name not in ["h2", "h3"]:
+                                                if curr.name in ["p", "ul", "ol", "div"]:
+                                                    txt = curr.get_text(separator=" ", strip=True)
+                                                    if len(txt) > 20 and not txt.startswith("File:") and not txt.startswith("Main article"):
+                                                        p_elems.append(txt)
+                                                curr = curr.find_next_sibling()
+                                            if p_elems:
+                                                power_desc = clean_description_text("\n\n".join(p_elems[:5]))
+                                                break
+
+                                lore_text = ""
+                                for h in content.find_all(["h2", "h3"]):
+                                    htxt = h.get_text(strip=True).lower()
+                                    if "lore" in htxt or "background" in htxt or "biography" in htxt:
+                                        p_list = []
+                                        curr = h.find_next_sibling()
+                                        while curr and curr.name not in ["h2", "h3"]:
+                                            if curr.name in ["p", "blockquote"]:
+                                                txt = curr.get_text(separator=" ", strip=True)
+                                                if len(txt) > 30 and not txt.startswith("File:") and not txt.startswith("Main article"):
+                                                    p_list.append(clean_description_text(txt))
+                                            curr = curr.find_next_sibling()
+                                        if p_list:
+                                            lore_text = "\n\n".join(p_list[:6])
+                                            break
+
+                                if real_name and real_name != char.name:
+                                    char.real_name = real_name
+
+                                char.chapter_name = parsed_chapter_name or "Base Game"
+                                char.chapter_number = parsed_chapter_number or None
+                                char.dlc_type = parsed_dlc_type or ("base_game" if char.chapter_name == "Base Game" else "Chapter DLC")
+                                char.release_date = parsed_release_date or "14 June 2016"
+                                char.release_year = parsed_release_year or 2016
+                                char.is_licensed = is_licensed
+                                char.lore = lore_text or None
+
+                                if char.category == "Killer":
+                                    p_name = power_name or (char.power.name if char.power else "")
+                                    p_desc = power_desc or (char.power.description if char.power else "")
+                                    p_icon = power_icon_url or (char.power.icon_url if char.power else "")
+                                    p_speed = movement_speed or (char.power.movement_speed if char.power else "4.6 m/s (115%)")
+                                    p_tr = terror_radius or (char.power.terror_radius if char.power else "32 m")
+                                    p_height = height or (char.power.height if char.power else "Tall")
+
+                                    char.power = KillerPowerData(
+                                        name=p_name,
+                                        description=p_desc,
+                                        icon_url=p_icon,
+                                        movement_speed=p_speed,
+                                        terror_radius=p_tr,
+                                        terror_radius_meters=tr_meters,
+                                        height=p_height,
+                                    )
+                                return
+                            except Exception as e:
+                                if attempt == 2:
+                                    logger.warning(f"Failed enriching character {slug}: {e}")
+                                await asyncio.sleep(0.5 * (attempt + 1))
+
+                tasks = [_fetch_one(c) for c in characters]
+                await asyncio.gather(*tasks)
+
+        try:
+            asyncio.run(_fetch_all())
+        except Exception as err:
+            logger.error(f"Error in enrich_characters_from_pages: {err}")
+
+        chapter_groups = defaultdict(list)
+        for char in characters:
+            if char.chapter_name and char.chapter_name.lower() != "base game":
+                chapter_groups[norm_key(char.chapter_name)].append(char)
+
+        for group in chapter_groups.values():
+            if len(group) > 1:
+                for c in group:
+                    c.dlc_counterparts = safe_json_dumps([other.name for other in group if other.name != c.name], default_val="[]")
+
+    def scrape_characters_dynamically(self) -> list[CharacterData]:
+        logger.info("Fetching Survivors via MediaWiki API...")
+        survivors = self.scrape_roster_from_page("Survivors", "Survivor")
+
+        logger.info("Fetching Killers via MediaWiki API...")
+        killers = self.scrape_roster_from_page("Killers", "Killer")
+
+        all_characters = survivors + killers
+        logger.info(f"Enriching all {len(all_characters)} characters with live infobox, chapter, licensing, and combat power details...")
+        self.enrich_characters_from_pages(all_characters)
+
+        logger.info(f"Discovered {len(all_characters)} characters ({len(survivors)} Survivors, {len(killers)} Killers).")
+        return all_characters
+
+    def parse_perks(self, html_content: str, characters: list[CharacterData]) -> list[PerkData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        perks_dict: dict[str, PerkData] = {}
+        alias_backlog: dict[str, str] = {}
+        current_category: str | None = None
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+
+        char_by_key: dict[str, CharacterData] = {}
+        for c in characters:
+            keys = [c.name, c.real_name, c.wiki_slug, c.short_name]
+            if c.name.startswith("The "):
+                keys.append(c.name[4:])
+            else:
+                keys.append(f"The {c.name}")
+            for k in keys:
+                if k:
+                    char_by_key[normalize_name_key(k)] = c
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                header_text = element.get_text().lower()
+                if "survivor" in header_text:
+                    current_category = "Survivor"
+                elif "killer" in header_text:
+                    current_category = "Killer"
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                if not current_category:
+                    continue
+
+                rows = element.find_all("tr")
+                for row in rows[1:]:
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 3:
+                        continue
+                    try:
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        perk_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                        if not perk_name:
+                            continue
+
+                        norm_perk = normalize_name_key(perk_name)
+
+                        if norm_perk in GENERIC_PERK_CANONICAL_MAP:
+                            canonical_target, alias_name = GENERIC_PERK_CANONICAL_MAP[norm_perk]
+                            norm_target = normalize_name_key(canonical_target)
+                            if norm_target in perks_dict:
+                                perks_dict[norm_target].alternate_name = alias_name
+                                perks_dict[norm_target].is_generic_counterpart = True
+                            else:
+                                alias_backlog[norm_target] = alias_name
+                            continue
+
+                        icon_tag = cells[0].find("img")
+                        icon_url = extract_high_res_url(icon_tag, self.BASE_DOMAIN)
+
+                        cell_copy = BeautifulSoup(str(cells[2]), "html.parser")
+                        for bold in cell_copy.find_all(["b", "strong"]):
+                            bold.replace_with(f"**{bold.get_text().strip()}**")
+                        for italic in cell_copy.find_all(["i", "em"]):
+                            italic.replace_with(f"*{italic.get_text().strip()}*")
+                        for li in cell_copy.find_all("li"):
+                            li.replace_with(f"\n* {li.get_text().strip()}")
+                        for br in cell_copy.find_all("br"):
+                            br.replace_with("\n")
+                        lines = [line.strip() for line in cell_copy.get_text().splitlines()]
+                        raw_description = "\n".join(line for line in lines if line)
+                        description = clean_description_text(raw_description)
+
+                        canonical_name = "General"
+                        real_name = "General"
+                        avatar_path = ""
+
+                        if len(cells) >= 4:
+                            owner_cell = cells[3]
+                            owner_link = owner_cell.find("a")
+
+                            matched = None
+                            if owner_link:
+                                href = owner_link.get("href", "")
+                                link_title = owner_link.get("title", "").strip()
+                                slug = extract_slug_from_href(href)
+                                matched = (
+                                    char_by_key.get(normalize_name_key(slug))
+                                    or char_by_key.get(normalize_name_key(link_title))
+                                    or char_by_key.get(normalize_name_key(owner_link.get_text()))
+                                )
+
+                            if not matched:
+                                raw_text = owner_cell.get_text().strip()
+                                clean_text = re.sub(r"^[.\s\-–]+|[.\s\-–]+$", "", raw_text).strip()
+                                if clean_text and normalize_name_key(clean_text) not in ["all", "general", "none", "", "all survivors", "all killers"]:
+                                    matched = char_by_key.get(normalize_name_key(clean_text))
+
+                            if matched:
+                                canonical_name = matched.name
+                                real_name = matched.real_name
+                                avatar_path = matched.avatar_local_path
+
+                        sanitized_name = sanitize_filename(perk_name)
+                        category_dir = "survivors" if current_category == "Survivor" else "killers"
+
+                        if canonical_name == "General":
+                            local_rel_path = f"icons/{category_dir}/General/{sanitized_name}.png"
+                        else:
+                            local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.png"
+
+                        norm_key_str = normalize_name_key(perk_name)
+                        alternate_name = alias_backlog.get(norm_key_str)
+                        is_generic = alternate_name is not None
+
+                        perks_dict[norm_key_str] = PerkData(
+                            name=perk_name,
+                            character=canonical_name,
+                            character_real_name=real_name,
+                            character_avatar_path=avatar_path,
+                            category=current_category,
+                            description=description,
+                            icon_url=icon_url,
+                            icon_local_path=local_rel_path,
+                            alternate_name=alternate_name,
+                            is_generic_counterpart=is_generic,
+                        )
+                    except Exception:
+                        continue
+
+        return list(perks_dict.values())
+
+    def parse_wiki_items(self, html_content: str) -> list[ItemData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        items: list[ItemData] = []
+        seen_items: set[str] = set()
+
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+        current_category = "Survivor"
+        current_section = ""
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                headline = element.find(class_=re.compile(r"mw-headline"))
+                if headline:
+                    raw_header = headline.get_text(strip=True)
+                else:
+                    for edit_tag in element.find_all(class_=re.compile(r"mw-editsection|editsection")):
+                        edit_tag.decompose()
+                    raw_header = element.get_text().strip()
+
+                cleaned_header = re.sub(r"\[\s*edit\s*\]", "", raw_header, flags=re.IGNORECASE).strip()
+                current_section = cleaned_header.lower()
+
+                if "survivor" in current_section:
+                    current_category = "Survivor"
+                elif "killer" in current_section:
+                    current_category = "Killer"
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                rows = element.find_all("tr")[1:]
+                for row in rows:
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 2:
+                        continue
+                    try:
+                        img_tag = cells[0].find("img")
+                        icon_url = extract_high_res_url(img_tag, self.BASE_DOMAIN)
+
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        item_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                        if not item_name:
+                            continue
+
+                        name_lower = item_name.lower().strip()
+                        if name_lower.endswith(" items") or name_lower.endswith(" add-ons") or "uncommon items" in name_lower:
+                            continue
+
+                        norm_item = normalize_name_key(item_name)
+                        if norm_item in seen_items:
+                            continue
+                        seen_items.add(norm_item)
+
+                        description = ""
+                        if len(cells) >= 4:
+                            description = cells[3].get_text(separator="\n", strip=True)
+                        elif len(cells) == 3:
+                            description = cells[2].get_text(separator="\n", strip=True)
+
+                        rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
+                        description = clean_description_text(description)
+                        sanitized = sanitize_filename(item_name)
+                        local_path = f"icons/items/{sanitized}.png"
+
+                        name_low = item_name.lower().strip()
+                        special_items = [
+                            "first aid spray", "vaccine", "emp", "remote flame turret", "pocket mirror",
+                            "lament configuration", "hand of vecna", "eye of vecna", "flash grenade",
+                            "candelabra", "antidote", "keycard", "vhs tape", "void crystal",
+                            "glowing fungus", "blood can", "fragile mirror", "searcher's pendant", "fog crystal"
+                        ]
+                        if name_low in special_items or "spray" in name_low or "vaccine" in name_low or "turret" in name_low:
+                            item_category = "Special"
+                            item_role = "Survivor"
+                        elif "med-kit" in name_low or "aid kit" in name_low or "lunchbox" in name_low:
+                            item_category = "Med-Kit"
+                            item_role = "Survivor"
+                        elif "toolbox" in name_low or "tools" in name_low:
+                            item_category = "Toolbox"
+                            item_role = "Survivor"
+                        elif "flashlight" in name_low or "wisp" in name_low:
+                            item_category = "Flashlight"
+                            item_role = "Survivor"
+                        elif "key" in name_low and "keycard" not in name_low:
+                            item_category = "Key"
+                            item_role = "Survivor"
+                        elif "map" in name_low:
+                            item_category = "Map"
+                            item_role = "Survivor"
+                        elif "firecracker" in name_low or "party starter" in name_low:
+                            item_category = "Firecracker"
+                            item_role = "Survivor"
+                        elif "fog vial" in name_low:
+                            item_category = "Fog Vial"
+                            item_role = "Survivor"
+                        else:
+                            item_category = current_category
+                            item_role = current_category
+
+                        items.append(
+                            ItemData(
+                                name=item_name,
+                                category=item_category,
+                                role=item_role,
+                                description=description,
+                                icon_url=icon_url,
+                                icon_local_path=local_path,
+                                rarity=rarity,
+                            )
+                        )
+                    except Exception:
+                        continue
+        return items
+
+    def parse_wiki_addons(self, html_content: str, characters: list[CharacterData] | None = None) -> list[AddonData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        raw_addons: list[dict] = []
+        content_area = soup.find("div", class_="mw-parser-output") or soup
+        current_target = "General"
+        current_category = "Survivor"
+        current_section = ""
+
+        dynamic_power_to_killer: dict[str, str] = {}
+        killers: list[CharacterData] = []
+        if characters:
+            for c in characters:
+                if c.category == "Killer":
+                    killers.append(c)
+                    dynamic_power_to_killer[normalize_name_key(c.name)] = c.name
+                    dynamic_power_to_killer[normalize_name_key(c.name.replace("The ", ""))] = c.name
+                    if c.real_name:
+                        dynamic_power_to_killer[normalize_name_key(c.real_name)] = c.name
+                    if c.wiki_slug:
+                        dynamic_power_to_killer[normalize_name_key(c.wiki_slug)] = c.name
+                    if c.short_name:
+                        dynamic_power_to_killer[normalize_name_key(c.short_name)] = c.name
+                    if c.power and c.power.name:
+                        p_norm = normalize_name_key(c.power.name)
+                        dynamic_power_to_killer[p_norm] = c.name
+                        if p_norm.endswith("s"):
+                            dynamic_power_to_killer[p_norm[:-1]] = c.name
+                        else:
+                            dynamic_power_to_killer[p_norm + "s"] = c.name
+                        if p_norm.startswith("the "):
+                            dynamic_power_to_killer[p_norm[4:]] = c.name
+                        else:
+                            dynamic_power_to_killer["the " + p_norm] = c.name
+
+        for k, v in KNOWN_KILLER_POWER_ALIASES.items():
+            if k not in dynamic_power_to_killer:
+                dynamic_power_to_killer[k] = v
+
+        for element in content_area.find_all(["h1", "h2", "h3", "h4", "table"]):
+            if element.name in ["h1", "h2", "h3", "h4"]:
+                headline = element.find(class_=re.compile(r"mw-headline"))
+                if headline:
+                    raw_header = headline.get_text(strip=True)
+                else:
+                    for edit_tag in element.find_all(class_=re.compile(r"mw-editsection|editsection")):
+                        edit_tag.decompose()
+                    raw_header = element.get_text().strip()
+
+                cleaned_header = re.sub(r"\[\s*edit\s*\]", "", raw_header, flags=re.IGNORECASE).strip()
+                current_section = cleaned_header.lower()
+
+                if "killer power add-ons" in current_section or "killer" in current_section:
+                    current_category = "Killer"
+                elif "survivor item add-ons" in current_section or "survivor" in current_section:
+                    current_category = "Survivor"
+
+                target_clean = re.sub(r"\s+(?:Add-ons|Addons|Add-on|Addon)$", "", cleaned_header, flags=re.IGNORECASE).strip()
+                if target_clean and target_clean.lower() not in [
+                    "survivor", "killer", "general", "common", "uncommon", "rare",
+                    "very rare", "ultra rare", "decommissioned", "unused", "event",
+                    "contents", "overview", "stacking", "numbers", "change log"
+                ]:
+                    norm_target = normalize_name_key(target_clean)
+                    matched_killer = dynamic_power_to_killer.get(norm_target)
+                    if not matched_killer:
+                        for p_key, k_name in dynamic_power_to_killer.items():
+                            if p_key and (p_key == norm_target or p_key in norm_target.split()):
+                                matched_killer = k_name
+                                break
+
+                    current_target = matched_killer if matched_killer else target_clean
+
+            elif element.name == "table" and "wikitable" in element.get("class", []):
+                intro_target = None
+                p_prev = element.previous_sibling
+                while p_prev and getattr(p_prev, "name", None) not in ["h1", "h2", "h3", "h4", "table"]:
+                    if getattr(p_prev, "name", None) == "p":
+                        txt = p_prev.get_text()
+                        m = re.search(r"is the Power of (?:The\s+)?([^.]+)", txt, re.IGNORECASE)
+                        if m:
+                            candidate_killer = m.group(1).strip()
+                            norm_cand = normalize_name_key(candidate_killer)
+                            matched_k = dynamic_power_to_killer.get(norm_cand)
+                            if not matched_k:
+                                matched_k = dynamic_power_to_killer.get("the " + norm_cand)
+                            if matched_k:
+                                intro_target = matched_k
+                                break
+                    p_prev = p_prev.previous_sibling
+
+                table_target = intro_target or current_target
+
+                rows = element.find_all("tr")[1:]
+                row_count = len(rows)
+                for row_idx, row in enumerate(rows):
+                    cells = row.find_all(["td", "th"])
+                    if len(cells) < 2:
+                        continue
+                    try:
+                        img_tag = cells[0].find("img")
+                        icon_url = extract_high_res_url(img_tag, self.BASE_DOMAIN)
+
+                        name_cell = cells[1]
+                        name_link = name_cell.find("a")
+                        addon_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                        if not addon_name:
+                            continue
+
+                        description = ""
+                        if len(cells) >= 4:
+                            description = clean_description_text(cells[3].get_text(separator="\n", strip=True))
+                        elif len(cells) == 3:
+                            description = clean_description_text(cells[2].get_text(separator="\n", strip=True))
+
+                        rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
+
+                        if rarity == "Common" and row_count == 20:
+                            if row_idx < 4:
+                                rarity = "Common"
+                            elif row_idx < 9:
+                                rarity = "Uncommon"
+                            elif row_idx < 14:
+                                rarity = "Rare"
+                            elif row_idx < 18:
+                                rarity = "Very Rare"
+                            else:
+                                rarity = "Ultra Rare"
+
+                        raw_addons.append({
+                            "name": addon_name,
+                            "target": table_target,
+                            "category": current_category,
+                            "description": description,
+                            "icon_url": icon_url,
+                            "rarity": rarity,
+                        })
+                    except Exception:
+                        continue
+
+        scraped_killer_targets = {normalize_name_key(a["target"]) for a in raw_addons if a["category"] == "Killer"}
+        for k in killers:
+            k_norm = normalize_name_key(k.name)
+            if k_norm not in scraped_killer_targets and normalize_name_key(k.name.replace("The ", "")) not in scraped_killer_targets:
+                try:
+                    k_html = self.fetch_page_html(k.wiki_slug or k.name.replace(" ", "_"))
+                    if k_html:
+                        k_soup = BeautifulSoup(k_html, "html.parser")
+                        for t in k_soup.find_all("table", class_=re.compile(r"wikitable")):
+                            t_rows = t.find_all("tr")
+                            if len(t_rows) >= 5:
+                                for row_idx, r in enumerate(t_rows[1:]):
+                                    cells = r.find_all(["td", "th"])
+                                    if len(cells) < 2:
+                                        continue
+                                    img_tag = cells[0].find("img")
+                                    icon_url = extract_high_res_url(img_tag, self.BASE_DOMAIN)
+                                    name_cell = cells[1]
+                                    name_link = name_cell.find("a")
+                                    addon_name = (name_link.get_text() if name_link else name_cell.get_text()).strip()
+                                    if not addon_name:
+                                        continue
+                                    desc = ""
+                                    if len(cells) >= 4:
+                                        desc = clean_description_text(cells[3].get_text(separator="\n", strip=True))
+                                    elif len(cells) == 3:
+                                        desc = clean_description_text(cells[2].get_text(separator="\n", strip=True))
+                                    rarity = extract_rarity_from_elements(cells, img_tag=img_tag)
+                                    if rarity == "Common" and len(t_rows[1:]) == 20:
+                                        if row_idx < 4:
+                                            rarity = "Common"
+                                        elif row_idx < 9:
+                                            rarity = "Uncommon"
+                                        elif row_idx < 14:
+                                            rarity = "Rare"
+                                        elif row_idx < 18:
+                                            rarity = "Very Rare"
+                                        else:
+                                            rarity = "Ultra Rare"
+
+                                    raw_addons.append({
+                                        "name": addon_name,
+                                        "target": k.name,
+                                        "category": "Killer",
+                                        "description": desc,
+                                        "icon_url": icon_url,
+                                        "rarity": rarity,
+                                    })
+                except Exception as e:
+                    logger.warning(f"Fallback addon scraping for {k.name} failed: {e}")
+
+        name_target_counts = defaultdict(set)
+        for a in raw_addons:
+            name_target_counts[normalize_name_key(a["name"])].add(normalize_name_key(a["target"]))
+
+        addons: list[AddonData] = []
+        seen_unique_names = set()
+
+        for a in raw_addons:
+            addon_name = a["name"]
+            target = a["target"]
+
+            if "serum" in addon_name.lower():
+                if a["category"] == "Survivor" or "survivor" in str(target).lower():
+                    target = "Special"
+
+            display_name = f"{addon_name} ({target})" if len(name_target_counts[normalize_name_key(addon_name)]) > 1 else addon_name
+
+            norm_unique = normalize_name_key(display_name)
+            if norm_unique in seen_unique_names:
+                continue
+            seen_unique_names.add(norm_unique)
+
+            sanitized = sanitize_filename(display_name)
+            local_path = f"icons/addons/{sanitized}.png"
+
+            addons.append(
+                AddonData(
+                    name=display_name,
+                    associated_target=target,
+                    category=a["category"],
+                    description=a["description"],
+                    icon_url=a["icon_url"],
+                    icon_local_path=local_path,
+                    rarity=a["rarity"],
+                )
+            )
+
+        return addons
+
+    def parse_wiki_offerings(self, html_content: str) -> list[OfferingData]:
+        soup = BeautifulSoup(html_content, "html.parser")
+        offerings: list[OfferingData] = []
+        seen_offerings: set[str] = set()
+
+        HEADING_ROLE: dict[str, str] = {
+            "survivor": "Survivor",
+            "altruism": "Survivor",
+            "boldness": "Survivor",
+            "objectives": "Survivor",
+            "survival": "Survivor",
+            "luck": "Survivor",
+            "killer": "Killer",
+            "brutality": "Killer",
+            "deviousness": "Killer",
+            "hunter": "Killer",
+            "sacrifice": "Killer",
+            "memento_mori": "Killer",
+        }
+
+        def role_from_heading(heading_id: str) -> str:
+            return HEADING_ROLE.get(heading_id.lower().replace("-", "_"), "All")
+
+        def nearest_section_role(tag) -> str:
+            for ancestor in [tag] + list(tag.parents):
+                for sibling in ancestor.find_all_previous(["h2", "h3", "h4", "h5"]):
+                    span = sibling.find("span", class_="mw-headline")
+                    if span:
+                        hid = span.get("id", "").lower().replace("-", "_")
+                        return role_from_heading(hid)
+                    hid = sibling.get("id", "").lower().replace("-", "_")
+                    if hid:
+                        return role_from_heading(hid)
+            return "All"
+
+        for img in soup.find_all("img"):
+            src = img.get("src") or img.get("data-src") or ""
+            if "IconFavors_" in src or "IconsFavors_" in src or "IconFavor_" in src:
+                row = img.find_parent("tr")
+                if not row:
+                    continue
+                cells = row.find_all(["td", "th"])
+                off_name = ""
+                for c in cells:
+                    links = c.find_all("a")
+                    for l in links:
+                        txt = l.get_text(strip=True)
+                        if txt and not txt.startswith("File:") and len(txt) > 1:
+                            off_name = txt
+                            break
+                    if off_name:
+                        break
+                if not off_name and len(cells) > 1:
+                    off_name = cells[1].get_text(strip=True)
+                if not off_name:
+                    off_name = img.get("alt", "").replace(".png", "").replace("IconFavors_", "").replace("IconsFavors_", "").strip()
+
+                if not off_name or off_name.lower().startswith("category:"):
+                    continue
+
+                norm_key = normalize_name_key(off_name)
+                if norm_key in seen_offerings:
+                    continue
+                seen_offerings.add(norm_key)
+
+                icon_url = extract_high_res_url(img, self.BASE_DOMAIN)
+                description = ""
+                if len(cells) >= 4:
+                    description = cells[3].get_text(separator="\n", strip=True)
+                elif len(cells) == 3:
+                    description = cells[2].get_text(separator="\n", strip=True)
+                elif len(cells) == 2:
+                    description = cells[1].get_text(separator="\n", strip=True)
+
+                rarity = extract_rarity_from_elements(cells, img_tag=img)
+                description = clean_description_text(description)
+                sanitized = sanitize_filename(off_name)
+                local_path = f"icons/offerings/{sanitized}.png"
+
+                role = nearest_section_role(row)
+                if role == "All":
+                    raw_desc = row.get_text().lower()
+                    survivors_only = (
+                        "to all survivors" in raw_desc
+                        or "all survivor" in raw_desc
+                    ) and "killer" not in raw_desc
+                    killers_only = (
+                        "to the killer" in raw_desc
+                        or "to all killers" in raw_desc
+                        or "killer only" in raw_desc
+                    ) and "survivor" not in raw_desc
+                    if survivors_only:
+                        role = "Survivor"
+                    elif killers_only:
+                        role = "Killer"
+
+                row_text = row.get_text().lower()
+                category = "Offering"
+                if "mori" in row_text:
+                    category = "Memento Mori"
+                elif "bloodpoint" in row_text or "point" in row_text:
+                    category = "Bloodpoints"
+                elif "shroud" in row_text:
+                    category = "Shroud"
+                elif "ward" in row_text:
+                    category = "Ward"
+                elif "luck" in row_text or "salt" in row_text or "chalk" in row_text:
+                    category = "Luck"
+                elif "chest" in row_text or "fog" in row_text or "oak" in row_text or "blueprint" in row_text:
+                    category = "Map Modifications"
+                elif "chance" in row_text or "realm" in row_text:
+                    category = "Realm"
+
+                name_lower = off_name.lower()
+                if (
+                    rarity == "Event"
+                    or "dousing" in name_lower
+                    or "dowsing" in name_lower
+                    or "cobbler" in name_lower
+                    or "terrormisu" in name_lower
+                    or "flan" in name_lower
+                    or "torte" in name_lower
+                    or "scream pie" in name_lower
+                    or "gateau" in name_lower
+                    or "sacrificial cake" in name_lower
+                    or "cursed seed" in name_lower
+                    or "pustula" in name_lower
+                    or "bbq" in name_lower
+                    or "red envelope" in name_lower
+                    or "bloodshot eye" in name_lower
+                ):
+                    category = "Special"
+
+                offerings.append(
+                    OfferingData(
+                        name=off_name,
+                        category=category,
+                        role=role,
+                        description=description,
+                        icon_url=icon_url,
+                        icon_local_path=local_path,
+                        rarity=rarity,
+                    )
+                )
+
+        return offerings
+
+    def scrape_offerings(self) -> list[OfferingData]:
+        try:
+            logger.info("Fetching Offerings...")
+            html_offerings = self.fetch_page_html("Offerings")
+            return self.parse_wiki_offerings(html_offerings)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
+            return []
+
+    def scrape_all(
+        self,
+    ) -> tuple[list[CharacterData], list[PerkData], list[ItemData], list[AddonData], list[OfferingData]]:
+        logger.info("Scraping deadbydaylight.wiki.gg dynamic data via MediaWiki API...")
+        characters = self.scrape_characters_dynamically()
+
+        logger.info("Fetching Perks...")
+        html_perks = self.fetch_page_html("Perks")
+        perks = self.parse_perks(html_perks, characters)
+
+        try:
+            logger.info("Fetching Items...")
+            html_items = self.fetch_page_html("Items")
+            items = self.parse_wiki_items(html_items)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg items: {e}")
+            items = []
+
+        try:
+            logger.info("Fetching Add-ons...")
+            html_addons = self.fetch_page_html("Add-ons")
+            addons = self.parse_wiki_addons(html_addons, characters)
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg addons: {e}")
+            addons = []
+
+        try:
+            logger.info("Fetching Offerings...")
+            offerings = self.scrape_offerings()
+        except Exception as e:
+            logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
+            offerings = []
+
+        return characters, perks, items, addons, offerings
 ```

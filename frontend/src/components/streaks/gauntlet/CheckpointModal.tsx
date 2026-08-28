@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/gauntlet/CheckpointModal.tsx
 'use client';
+// frontend/src/components/streaks/gauntlet/CheckpointModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
 import { ShieldCheck, PartyPopper } from 'lucide-react';

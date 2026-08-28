@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/smash-or-pass/CharacterCard.tsx
 'use client';
+// frontend/src/components/smash-or-pass/CharacterCard.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {

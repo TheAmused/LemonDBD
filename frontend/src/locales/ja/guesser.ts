@@ -52,6 +52,11 @@ export default {
   "memeMode": "ミームモード",
   "grayscale": "グレースケール",
   "croppedZoom": "拡大クロップ",
-  "space": "スペース"
+  "space": "スペース",
+  "realmSurveyTitle": "レルム調査: マップ推測",
+  "systemDataCorrupted": "システム: データストリーム破損",
+  "keyboardHint": "キーボード: [1]、[2]、[3]または[4]を押す",
+  "rotated": "回転",
+  "correctAnswer": "正解:"
 };
 

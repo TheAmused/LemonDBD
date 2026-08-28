@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/chaos/ChaosRulesModal.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosRulesModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { BookOpen, AlertTriangle, Trophy, Dices } from 'lucide-react';

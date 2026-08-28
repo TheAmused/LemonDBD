@@ -1,5 +1,5 @@
-import type { Dictionary } from '@/locales/types';
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/characters/page.tsx
 
 import React, { useEffect, useState } from 'react';

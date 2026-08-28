@@ -1,5 +1,5 @@
-import type { Dictionary } from '@/locales/types';
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/characters/[slug]/page.tsx
 
 import React, { useEffect, useState } from 'react';
@@ -137,7 +137,7 @@ export default function CharacterDetailPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-        Loading...
+        {'Loading...'}
       </div>
     );
   }

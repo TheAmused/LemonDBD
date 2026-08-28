@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/perk-studio/CustomPerkStudio.tsx
 'use client';
+// frontend/src/components/perk-studio/CustomPerkStudio.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import {

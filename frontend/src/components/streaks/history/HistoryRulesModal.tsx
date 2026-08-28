@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/history/HistoryRulesModal.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryRulesModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { BookOpen, Trophy, Dices } from 'lucide-react';

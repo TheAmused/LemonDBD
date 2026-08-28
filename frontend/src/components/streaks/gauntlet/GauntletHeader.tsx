@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/gauntlet/GauntletHeader.tsx
 'use client';
+// frontend/src/components/streaks/gauntlet/GauntletHeader.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';

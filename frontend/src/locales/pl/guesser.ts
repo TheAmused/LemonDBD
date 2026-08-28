@@ -52,5 +52,10 @@ export default {
   "memeMode": "Tryb Memów",
   "grayscale": "Skala szarości",
   "croppedZoom": "Przybliżenie",
-  "space": "Spacja"
+  "space": "Spacja",
+  "realmSurveyTitle": "Ankieta Krainy: Zgadywacz Map",
+  "systemDataCorrupted": "System: Strumień danych uszkodzony",
+  "keyboardHint": "Klawiatura: naciśnij [1], [2], [3] lub [4]",
+  "rotated": "Obrócony",
+  "correctAnswer": "Poprawna odpowiedź:"
 };

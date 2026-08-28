@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/smash-or-pass/FloatingLoreScattered.tsx
 'use client';
+// frontend/src/components/smash-or-pass/FloatingLoreScattered.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import {

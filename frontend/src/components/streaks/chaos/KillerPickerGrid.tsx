@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/chaos/KillerPickerGrid.tsx
 'use client';
+// frontend/src/components/streaks/chaos/KillerPickerGrid.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Check, Skull } from 'lucide-react';

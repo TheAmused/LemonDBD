@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/chaos/ChaosProgressBar.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosProgressBar.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 

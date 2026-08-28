@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/gauntlet/GauntletStatsDrawer.tsx
 'use client';
+// frontend/src/components/streaks/gauntlet/GauntletStatsDrawer.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { GauntletStats, MatchLog } from '@/types/gauntletStreak';

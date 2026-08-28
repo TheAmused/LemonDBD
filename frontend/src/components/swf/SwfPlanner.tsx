@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/swf/SwfPlanner.tsx
 'use client';
+// frontend/src/components/swf/SwfPlanner.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {

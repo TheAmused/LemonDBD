@@ -52,5 +52,10 @@ export default {
   "memeMode": "Modo Meme",
   "grayscale": "Escala de Grises",
   "croppedZoom": "Zoom Recortado",
-  "space": "Espacio"
+  "space": "Espacio",
+  "realmSurveyTitle": "Encuesta de Realm: Adivinador de Mapas",
+  "systemDataCorrupted": "Sistema: Flujo de datos corrupto",
+  "keyboardHint": "Teclado: presiona [1], [2], [3] o [4]",
+  "rotated": "Rotado",
+  "correctAnswer": "Respuesta correcta:"
 };

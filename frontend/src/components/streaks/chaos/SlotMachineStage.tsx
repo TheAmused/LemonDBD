@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/chaos/SlotMachineStage.tsx
 'use client';
+// frontend/src/components/streaks/chaos/SlotMachineStage.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshCw, Sparkles } from 'lucide-react';

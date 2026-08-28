@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
 'use client';
+// frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useMemo } from 'react';
 import {

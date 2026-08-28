@@ -52,6 +52,11 @@ export default {
   "memeMode": "Meme Mode",
   "grayscale": "Grayscale",
   "croppedZoom": "Cropped Zoom",
-  "space": "Space"
+  "space": "Space",
+  "realmSurveyTitle": "Realm Survey: Map Guesser",
+  "systemDataCorrupted": "System: Data Stream Corrupted",
+  "keyboardHint": "Keyboard: press [1], [2], [3] or [4]",
+  "rotated": "Rotated",
+  "correctAnswer": "Correct answer:"
 };
 

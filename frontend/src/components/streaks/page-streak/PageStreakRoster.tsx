@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/page-streak/PageStreakRoster.tsx
 'use client';
+// frontend/src/components/streaks/page-streak/PageStreakRoster.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { fetchRoster } from '@/services/pageStreakApi';

@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/app/[locale]/reset-password/page.tsx
 'use client';
+// frontend/src/app/[locale]/reset-password/page.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { Suspense, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';

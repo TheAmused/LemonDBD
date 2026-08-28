@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/chaos/ChaosModeModal.tsx
 'use client';
+// frontend/src/components/streaks/chaos/ChaosModeModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
 import { X, Coins, Flame, Skull } from 'lucide-react';

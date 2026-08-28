@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/history/HistoryPerkModal.tsx
 'use client';
+// frontend/src/components/streaks/history/HistoryPerkModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { PartyPopper, Sparkles, Lock } from 'lucide-react';

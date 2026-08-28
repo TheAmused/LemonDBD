@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/smash-or-pass/RomancePersonaModal.tsx
 'use client';
+// frontend/src/components/smash-or-pass/RomancePersonaModal.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useMemo, useState } from 'react';
 import {

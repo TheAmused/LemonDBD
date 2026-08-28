@@ -1,6 +1,6 @@
-import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/FreezeBadge.tsx
 'use client';
+// frontend/src/components/streaks/FreezeBadge.tsx
+import type { Dictionary } from '@/locales/types';
 
 import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';

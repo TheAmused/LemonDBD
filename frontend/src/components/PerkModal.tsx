@@ -54,10 +54,6 @@ export const PerkModal: React.FC<PerkModalProps> = ({
     perk.character === 'General' ||
     Boolean(perk.is_generic_counterpart);
   const isSurvivor = perk.category === 'Survivor';
-  const showRealName =
-    perk.character_real_name &&
-    perk.character_real_name !== 'General' &&
-    perk.character_real_name !== perk.character;
 
   const handleCopySlug = async () => {
     const slug = formatPerkSlug(perk.name);
@@ -142,11 +138,6 @@ export const PerkModal: React.FC<PerkModalProps> = ({
                     ? dict?.modal?.generalPerk || 'General Perk'
                     : perk.character}
                 </span>
-                {showRealName && (
-                  <span className="text-[11px] text-slate-400 font-normal">
-                    ({perk.character_real_name})
-                  </span>
-                )}
               </div>
 
               {perk.alternate_name && (

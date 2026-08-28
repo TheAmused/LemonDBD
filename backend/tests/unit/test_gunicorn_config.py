@@ -4,6 +4,7 @@ import os
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+import pytest
 
 
 def load_gunicorn_config():
@@ -14,6 +15,7 @@ def load_gunicorn_config():
     return module
 
 
+@pytest.mark.unit
 class TestGunicornConfig(unittest.TestCase):
     def test_default_gunicorn_settings(self):
         conf = load_gunicorn_config()

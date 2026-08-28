@@ -19,6 +19,7 @@ def _solve_challenge(challenge_data: dict) -> int:
     raise ValueError(f"Could not find solution up to {max_num}")
 
 
+@pytest.mark.unit
 def test_altcha_create_challenge():
     secret_key = "test-secret-key-altcha"
     challenge = AltchaService.create_challenge(secret_key, max_number=1000, expires_in_seconds=300)
@@ -26,15 +27,14 @@ def test_altcha_create_challenge():
     assert isinstance(challenge, dict)
     assert challenge["algorithm"] == "SHA-256"
     assert "challenge" in challenge
-    assert len(challenge["challenge"]) == 64  # SHA-256 hex length
+    assert len(challenge["challenge"]) == 64
     assert "salt" in challenge
-    assert len(challenge["salt"]) >= 16  # Random hex salt
+    assert len(challenge["salt"]) >= 16
     assert challenge["maxnumber"] == 1000
     assert challenge["expires"] > time.time()
     assert "signature" in challenge
     assert len(challenge["signature"]) == 64
 
-    # Verify signature format
     expected_sig_payload = f"{challenge['challenge']}:{challenge['salt']}:{challenge['maxnumber']}:{challenge['expires']}"
     expected_signature = hmac.new(
         secret_key.encode("utf-8"),
@@ -44,6 +44,7 @@ def test_altcha_create_challenge():
     assert challenge["signature"] == expected_signature
 
 
+@pytest.mark.unit
 def test_altcha_solve_and_verify_success():
     secret_key = "test-secret-key-solve"
     challenge = AltchaService.create_challenge(secret_key, max_number=2000, expires_in_seconds=300)
@@ -65,6 +66,7 @@ def test_altcha_solve_and_verify_success():
     assert err == ""
 
 
+@pytest.mark.unit
 def test_altcha_verify_invalid_number():
     secret_key = "test-secret-key-invalid-num"
     challenge = AltchaService.create_challenge(secret_key, max_number=2000, expires_in_seconds=300)
@@ -87,9 +89,9 @@ def test_altcha_verify_invalid_number():
     assert len(err) > 0
 
 
+@pytest.mark.unit
 def test_altcha_verify_expired_challenge():
     secret_key = "test-secret-key-expired"
-    # Create an already expired challenge
     challenge = AltchaService.create_challenge(secret_key, max_number=1000, expires_in_seconds=-10)
 
     solved_number = _solve_challenge(challenge)
@@ -109,13 +111,12 @@ def test_altcha_verify_expired_challenge():
     assert "expired" in err.lower()
 
 
+@pytest.mark.unit
 def test_altcha_verify_tampered_signature():
     secret_key = "test-secret-key-tamper"
     challenge = AltchaService.create_challenge(secret_key, max_number=2000, expires_in_seconds=300)
 
     solved_number = _solve_challenge(challenge)
-
-    # Modify the signature
     tampered_signature = "a" + challenge["signature"][1:] if challenge["signature"][0] != "a" else "b" + challenge["signature"][1:]
 
     payload = {
@@ -133,18 +134,19 @@ def test_altcha_verify_tampered_signature():
     assert len(err) > 0
 
 
+@pytest.mark.unit
 def test_altcha_verify_missing_fields():
     secret_key = "test-secret-key"
     payload = {
         "algorithm": "SHA-256",
         "challenge": "abc",
-        # missing number, salt, signature, expires
     }
     is_valid, err = AltchaService.verify_solution(payload, secret_key)
     assert is_valid is False
     assert "Missing required field" in err
 
 
+@pytest.mark.unit
 def test_altcha_verify_wrong_algorithm():
     secret_key = "test-secret-key"
     payload = {
@@ -160,6 +162,7 @@ def test_altcha_verify_wrong_algorithm():
     assert "algorithm" in err.lower()
 
 
+@pytest.mark.unit
 def test_altcha_challenge_route(client, app):
     response = client.get("/api/v1/auth/altcha-challenge")
     assert response.status_code == 200
@@ -172,7 +175,6 @@ def test_altcha_challenge_route(client, app):
     assert "signature" in data
     assert "expires" in data
 
-    # Verify that the generated challenge solves and verifies with app's SECRET_KEY
     secret_key = app.config.get("SECRET_KEY")
     solved_number = _solve_challenge(data)
     payload = {

@@ -1,5 +1,6 @@
 # backend/tests/unit/test_chaos_roller.py
 import unittest
+import pytest
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
@@ -13,6 +14,7 @@ from app.services.chaos.constants import (
 from app.services.chaos.roller import draw_addon_rarities, draw_chaos_perks, resolve_perks_by_names
 
 
+@pytest.mark.unit
 class TestChaosConstants(unittest.TestCase):
     def test_checkpoint_interval_per_difficulty(self):
         self.assertEqual(checkpoint_interval("easy"), 5)
@@ -33,6 +35,7 @@ class TestChaosConstants(unittest.TestCase):
         )
 
 
+@pytest.mark.unit
 class TestDrawAddonRarities(unittest.TestCase):
     def test_always_returns_two(self):
         for _ in range(20):
@@ -42,7 +45,6 @@ class TestDrawAddonRarities(unittest.TestCase):
                 self.assertIn(r, ADDON_RARITY_POOL)
 
     def test_duplicates_are_possible_over_many_draws(self):
-        # Not guaranteed on any single draw, but overwhelmingly likely across 200.
         saw_duplicate = False
         for _ in range(200):
             a, b = draw_addon_rarities()
@@ -56,6 +58,7 @@ def _perk(name):
     return {"id": hash(name) % 100000, "name": name, "category": "Killer"}
 
 
+@pytest.mark.unit
 class TestDrawChaosPerks(unittest.TestCase):
     def test_draws_four_perks(self):
         pool = [_perk(f"Perk {i}") for i in range(10)]
@@ -74,11 +77,8 @@ class TestDrawChaosPerks(unittest.TestCase):
         already_used = [p["name"] for p in pool[:4]]
         drawn, updated_used = draw_chaos_perks(pool, already_used)
         drawn_names = {p["name"] for p in drawn}
-        # Only 2 perks were not yet used, so the pool must refill mid-draw,
-        # meaning drawn perks may include names from `already_used` again.
         self.assertEqual(len(drawn), 4)
         self.assertGreaterEqual(len(updated_used), 1)
-        # But at least the 2 previously-unused perks were drawn first.
         previously_unused = {p["name"] for p in pool[4:]}
         self.assertTrue(previously_unused.issubset(drawn_names))
 
@@ -87,8 +87,6 @@ class TestDrawChaosPerks(unittest.TestCase):
         drawn, updated_used = draw_chaos_perks(pool, [])
         self.assertEqual(len(drawn), 4)
         self.assertTrue(all(p["name"] == "Only Perk" for p in drawn))
-        # The pool (size 1) was exhausted and refilled 3 times after the
-        # first draw, so used_perk_names ends up holding just the one name.
         self.assertEqual(updated_used, ["Only Perk"])
 
     def test_empty_pool_returns_nothing(self):
@@ -97,6 +95,7 @@ class TestDrawChaosPerks(unittest.TestCase):
         self.assertEqual(updated_used, [])
 
 
+@pytest.mark.unit
 class TestResolvePerksByNames(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)
@@ -122,8 +121,6 @@ class TestResolvePerksByNames(unittest.TestCase):
         self.assertIn("icon_local_path", result[0])
 
     def test_filters_by_killer_category(self):
-        # "Iron Will" is a Survivor perk -- resolving it through the killer
-        # perk pool lookup must not return it even if the name is passed in.
         result = resolve_perks_by_names(["Iron Will"])
         self.assertEqual(result, [])
 

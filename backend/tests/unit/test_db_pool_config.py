@@ -2,9 +2,11 @@
 import os
 import unittest
 from unittest.mock import patch
+import pytest
 from app.core.config import Config, TestingConfig
 
 
+@pytest.mark.unit
 class TestDatabasePoolConfig(unittest.TestCase):
     def test_default_pool_options(self):
         engine_options = Config.SQLALCHEMY_ENGINE_OPTIONS
@@ -25,7 +27,6 @@ class TestDatabasePoolConfig(unittest.TestCase):
         "DB_POOL_TIMEOUT": "45",
     })
     def test_custom_pool_env_vars(self):
-        # Dynamically reload or evaluate pool options with patched env
         pool_size = int(os.getenv("DB_POOL_SIZE", "10"))
         max_overflow = int(os.getenv("DB_MAX_OVERFLOW", "20"))
         pool_recycle = int(os.getenv("DB_POOL_RECYCLE", "300"))

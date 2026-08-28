@@ -1,5 +1,6 @@
 # backend/tests/unit/test_history_roster.py
 import unittest
+import pytest
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
@@ -15,6 +16,7 @@ from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
 
 
+@pytest.mark.unit
 class TestBuildRows(unittest.TestCase):
     def test_row_size_is_five(self):
         self.assertEqual(ROW_SIZE, 5)
@@ -44,6 +46,7 @@ def seed_killer(name, release_number, perk_count=2):
     return character
 
 
+@pytest.mark.unit
 class HistoryRosterTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)
@@ -64,6 +67,7 @@ class HistoryRosterTestCase(unittest.TestCase):
         return user.id
 
 
+@pytest.mark.unit
 class TestGetOwnedKillerNamesByRelease(HistoryRosterTestCase):
     def test_sorted_by_release_number(self):
         seed_killer("The Nurse", release_number=4)
@@ -85,13 +89,14 @@ class TestGetOwnedKillerNamesByRelease(HistoryRosterTestCase):
     def test_unowned_killers_excluded(self):
         seed_killer("The Trapper", release_number=1)
         char2 = seed_killer("The Wraith", release_number=2)
-        user_id = self.register_user("partialowner")
+        user_id = self.register_user("jeweluser")
         self.ownership_service.set_character_ownership(user_id, char2.id, is_owned=False)
 
         names = get_owned_killer_names_by_release(user_id, self.ownership_service)
         self.assertEqual(names, ["The Trapper"])
 
 
+@pytest.mark.unit
 class TestPerkNameHelpers(HistoryRosterTestCase):
     def test_general_perks_have_no_character(self):
         db.session.add(Perk(name="Whispers", character_id=None, category="Killer"))
@@ -103,7 +108,7 @@ class TestPerkNameHelpers(HistoryRosterTestCase):
         self.assertIn("A Nurse's Calling", names)
 
     def test_general_perks_exclude_teachables(self):
-        char = seed_killer("The Trapper", release_number=1, perk_count=1)
+        seed_killer("The Trapper", release_number=1, perk_count=1)
         db.session.commit()
 
         names = get_general_killer_perk_names()

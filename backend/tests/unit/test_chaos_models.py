@@ -1,12 +1,14 @@
 # backend/tests/unit/test_chaos_models.py
-import json
 import unittest
+import pytest
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import ChaosRun, ChaosMatchLog, User
+from app.core.json_provider import safe_json_dumps
+from app.models import ChaosMatchLog, ChaosRun, User
 
 
+@pytest.mark.unit
 class TestChaosModels(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)
@@ -36,10 +38,10 @@ class TestChaosModels(unittest.TestCase):
             last_checkpoint_streak=0,
             completed_killers_json="[]",
             checkpoint_killers_json="[]",
-            used_perks_json=json.dumps(["Hex: Ruin"]),
+            used_perks_json=safe_json_dumps(["Hex: Ruin"]),
             checkpoint_used_perks_json="[]",
-            current_perks_json=json.dumps([{"name": "Hex: Ruin"}]),
-            current_addon_rarities_json=json.dumps(["Rare", "Rare"]),
+            current_perks_json=safe_json_dumps([{"name": "Hex: Ruin"}]),
+            current_addon_rarities_json=safe_json_dumps(["Rare", "Rare"]),
             perks_revealed=False,
         )
         db.session.add(run)
@@ -71,8 +73,8 @@ class TestChaosModels(unittest.TestCase):
             run_id=run.id,
             killer_id="The Trapper",
             result="win",
-            perks_json=json.dumps([{"name": "Hex: Ruin"}]),
-            addon_rarities_json=json.dumps(["Common", "Rare"]),
+            perks_json=safe_json_dumps([{"name": "Hex: Ruin"}]),
+            addon_rarities_json=safe_json_dumps(["Common", "Rare"]),
             streak_before=0,
             streak_after=1,
         )

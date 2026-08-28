@@ -44,7 +44,7 @@ class TestHoneypotValidation:
     def test_clean_payload_passes(self) -> None:
         payload = {
             "username": "trapper_main",
-            "email": "trapper@dbd.local",
+            "email": "trapper@example.com",
             "website_trap": "",
             "honeypot_verification": None,
             "company_fax": False,

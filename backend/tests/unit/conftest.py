@@ -1,21 +1,21 @@
-﻿# backend/tests/unit/conftest.py
+# backend/tests/unit/conftest.py
 import os
 import pytest
 
-os.environ['TESTING'] = 'True'
-os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
+os.environ["TESTING"] = "True"
+os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def app():
-    app = create_app(TestingConfig)
-    app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    return app
+    flask_app = create_app(TestingConfig)
+    flask_app.config["TESTING"] = True
+    flask_app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+    return flask_app
 
 
 @pytest.fixture(autouse=True)

@@ -1,11 +1,13 @@
 # backend/tests/unit/test_db_service.py
 import gc
-import os
 import tempfile
 import unittest
 from pathlib import Path
+import pytest
 from app.services.db_service import DatabaseService
 
+
+@pytest.mark.unit
 class TestDatabaseService(unittest.TestCase):
     def setUp(self):
         self._temp_dir = tempfile.TemporaryDirectory()
@@ -31,6 +33,7 @@ class TestDatabaseService(unittest.TestCase):
         self.assertIn("gauntlet_runs", tables)
         self.assertIn("gauntlet_match_logs", tables)
         conn.close()
+
 
 if __name__ == "__main__":
     unittest.main()

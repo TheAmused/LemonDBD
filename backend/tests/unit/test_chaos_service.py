@@ -1,5 +1,6 @@
 # backend/tests/unit/test_chaos_service.py
 import unittest
+import pytest
 from sqlalchemy import select
 
 from app import create_app
@@ -32,6 +33,7 @@ def seed_new_perk(name, character_name="The Trapper"):
     return perk
 
 
+@pytest.mark.unit
 class ChaosTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)
@@ -54,6 +56,7 @@ class ChaosTestCase(unittest.TestCase):
         return user.id
 
 
+@pytest.mark.unit
 class TestGetOrCreateRun(ChaosTestCase):
     def setUp(self):
         super().setUp()
@@ -83,6 +86,7 @@ class TestGetOrCreateRun(ChaosTestCase):
         self.assertEqual(first["id"], second["id"])
 
 
+@pytest.mark.unit
 class TestReveal(ChaosTestCase):
     def setUp(self):
         super().setUp()
@@ -99,16 +103,12 @@ class TestReveal(ChaosTestCase):
             self.service.reveal(self.user_id, 999999)
 
     def test_reveal_carries_the_frozen_perk_pool_names(self):
-        # reveal() must return the same frozen unlocked_perks name list as
-        # get_or_create_run -- the frontend resolves those names to full
-        # display objects (icon, description) client-side against its own
-        # already-fetched perk catalog, so reveal() only needs to carry the
-        # name list, not a re-resolved full-object copy of the whole pool.
         run = self.service.get_or_create_run(self.user_id, "hell")
         revealed = self.service.reveal(self.user_id, run["id"])
         self.assertEqual(sorted(revealed["unlocked_perks"]), sorted(run["unlocked_perks"]))
 
 
+@pytest.mark.unit
 class TestHellDifficulty(ChaosTestCase):
     def setUp(self):
         super().setUp()
@@ -185,6 +185,7 @@ class TestHellDifficulty(ChaosTestCase):
         self.assertEqual(db.session.query(ChaosMatchLog).count(), before_count)
 
 
+@pytest.mark.unit
 class TestEasyCheckpoint(ChaosTestCase):
     def setUp(self):
         super().setUp()
@@ -219,6 +220,7 @@ class TestEasyCheckpoint(ChaosTestCase):
         self.assertEqual(len(after_loss["completed_killers"]), 5)
 
 
+@pytest.mark.unit
 class TestResetRun(ChaosTestCase):
     def setUp(self):
         super().setUp()
@@ -238,6 +240,7 @@ class TestResetRun(ChaosTestCase):
             self.service.reset_run(self.user_id, "medium")
 
 
+@pytest.mark.unit
 class TestGetStats(ChaosTestCase):
     def setUp(self):
         super().setUp()

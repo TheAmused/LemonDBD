@@ -1,14 +1,15 @@
 # backend/tests/unit/test_gauntlet_service.py
 import unittest
+import pytest
 from sqlalchemy import select
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
 from app.models import Character, GauntletMatchLog, GauntletRun, Perk
-from app.services.user_service import UserService
-from app.services.ownership_service import OwnershipService
 from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names
 from app.services.gauntlet_service import GauntletService
+from app.services.ownership_service import OwnershipService
+from app.services.user_service import UserService
 
 
 def seed_killer(name, perk_count=3):
@@ -41,10 +42,9 @@ def seed_survivor(name="Meg Thomas", perk_count=1):
     return character
 
 
+@pytest.mark.unit
 class GauntletTestCase(unittest.TestCase):
     def setUp(self):
-        # TestingConfig keeps this on an in-memory SQLite DB. Without it the tests
-        # bind to the real DATABASE_URL and tearDown's drop_all() wipes the dev database.
         self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
         self.ctx = self.app.app_context()
@@ -68,6 +68,7 @@ class GauntletTestCase(unittest.TestCase):
         self.ownership_service.set_character_ownership(user_id, character_id, is_owned=False)
 
 
+@pytest.mark.unit
 class TestGauntletTiers(GauntletTestCase):
     def test_survivor_tier_perk_limits(self):
         self.assertEqual(self.service.get_tier_info(0, "survivor")["perk_limit"], 4)
@@ -98,8 +99,6 @@ class TestGauntletTiers(GauntletTestCase):
         self.assertNotIn("min_streak", self.service.get_tier_info(0, "survivor"))
 
     def test_tier_info_carries_the_roster_limit(self):
-        """The frontend filters its roster grid off this value instead of
-        keeping its own copy of the original challenge's cutoff."""
         self.assertEqual(self.service.get_tier_info(0, "killer")["roster_limit"], 43)
         self.assertEqual(self.service.get_tier_info(0, "survivor")["roster_limit"], 52)
 
@@ -114,6 +113,7 @@ class TestGauntletTiers(GauntletTestCase):
         self.assertEqual(killer["name"], "The Obsession")
 
 
+@pytest.mark.unit
 class TestOriginalKillerRosterCap(GauntletTestCase):
     def setUp(self):
         super().setUp()
@@ -147,6 +147,7 @@ class TestOriginalKillerRosterCap(GauntletTestCase):
         self.assertNotIn("The Judgment", run["completed_characters"])
 
 
+@pytest.mark.unit
 class TestGauntletRun(GauntletTestCase):
     def setUp(self):
         super().setUp()
@@ -196,7 +197,6 @@ class TestGauntletRun(GauntletTestCase):
 
     def test_roll_no_longer_assigns_a_playable_build(self):
         run = self.service.roll(self.user_id, "killer", target_character="Trapper")
-        # Only the target's own teachable perks are carried, as a reference display.
         self.assertNotIn("perks", run["current_loadout"])
         self.assertTrue(
             all(p["character"] == "Trapper" for p in run["current_loadout"]["character_perks"])
@@ -211,6 +211,7 @@ class TestGauntletRun(GauntletTestCase):
         self.assertEqual(revealed["current_character_id"], target)
 
 
+@pytest.mark.unit
 class TestGauntletResults(GauntletTestCase):
     def setUp(self):
         super().setUp()
@@ -270,8 +271,6 @@ class TestGauntletResults(GauntletTestCase):
     def test_completion_check_ignores_a_character_owned_mid_run(self):
         seed_killer("Huntress")
         run = self.service.get_or_create_run(self.user_id, "killer")
-        # get_or_create_run above only re-reads; the pool was frozen to
-        # {Nurse, Trapper} back in setUp's initial get_or_create_run call.
         for _ in range(2):
             run = self.service.submit_result(self.user_id, run["id"], "win")
             if run["status"] != "completed":
@@ -293,7 +292,7 @@ class TestGauntletResults(GauntletTestCase):
         self.assertIn("Huntress", run["owned_characters"])
 
     def test_submit_result_records_triggered_by_player_by_default(self):
-        updated = self.service.submit_result(self.user_id, self.run["id"], "win")
+        self.service.submit_result(self.user_id, self.run["id"], "win")
         log = db.session.scalars(
             select(GauntletMatchLog).where(GauntletMatchLog.run_id == self.run["id"])
         ).first()
@@ -307,6 +306,7 @@ class TestGauntletResults(GauntletTestCase):
         self.assertEqual(log.triggered_by, "inactivity")
 
 
+@pytest.mark.unit
 class TestGauntletLazyFreeze(GauntletTestCase):
     def test_existing_run_with_empty_snapshot_freezes_on_read(self):
         seed_killer("Nurse")
@@ -321,6 +321,7 @@ class TestGauntletLazyFreeze(GauntletTestCase):
         self.assertEqual(sorted(reloaded["owned_characters"]), ["Nurse", "Trapper"])
 
 
+@pytest.mark.unit
 class TestGauntletCharacterPerks(GauntletTestCase):
     def setUp(self):
         super().setUp()
@@ -344,6 +345,7 @@ class TestGauntletCharacterPerks(GauntletTestCase):
         self.assertTrue(all(p["character"] == target for p in perks))
 
 
+@pytest.mark.unit
 class TestGauntletCompletion(GauntletTestCase):
     def setUp(self):
         super().setUp()
@@ -387,11 +389,11 @@ class TestGauntletCompletion(GauntletTestCase):
         self.assertFalse(fresh["target_revealed"])
 
 
+@pytest.mark.unit
 class TestGauntletStats(GauntletTestCase):
     def setUp(self):
         super().setUp()
         seed_killer("Nurse")
-        # A second killer keeps the run from completing (and locking) after one win.
         seed_killer("Trapper")
         self.user_id = self.register_user("statsuser")
 
@@ -424,6 +426,7 @@ class TestGauntletStats(GauntletTestCase):
         self.assertEqual(survivor_stats["total_matches"], 0)
 
 
+@pytest.mark.unit
 class TestGauntletLoadoutHasNoGear(GauntletTestCase):
     def test_survivor_loadout_carries_no_item(self):
         seed_survivor()

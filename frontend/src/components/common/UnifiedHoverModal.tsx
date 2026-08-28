@@ -126,11 +126,7 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
         zIndex: 99999,
       };
 
-  const isPerkItem =
-    isPerk ||
-    item.category === 'Survivor' ||
-    item.category === 'Killer' ||
-    'character' in item;
+  const isPerkItem = isPerk || 'character' in item;
 
   const itemRarity =
     'rarity' in item && typeof item.rarity === 'string' ? item.rarity : undefined;
@@ -165,13 +161,16 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
       ? perkBadgeText
       : getLocalizedRarity(itemRarity, t) || itemRarity);
 
+  const rawCategory = 'category' in item && typeof item.category === 'string' ? item.category : undefined;
+  const isRoleLeakingAsCategory = rawCategory === 'Survivor' || rawCategory === 'Killer';
+
   const categoryText =
     activeHover.category ||
     (isPerkItem
       ? isGeneric
         ? generalLabel
         : charName || perkBadgeText
-      : item.category || t.equipment || 'Equipment');
+      : (isRoleLeakingAsCategory ? undefined : rawCategory) || t.equipment || 'Equipment');
 
   const defaultAction =
     actionPrompt ||

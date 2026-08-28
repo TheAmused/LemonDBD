@@ -1,6 +1,5 @@
 # backend/tests/unit/scrapers/test_modular_drivers.py
-# backend/tests/scrapers/test_modular_drivers.py
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 import pytest
 
 from app.scrapers.drivers import (
@@ -18,6 +17,7 @@ from app.scrapers.drivers import (
 from app.scrapers.types import AddonData, CharacterData, ItemData, PerkData
 
 
+@pytest.mark.unit
 def test_language_drivers_registry():
     assert "en" in LANGUAGE_DRIVERS
     assert "pl" in LANGUAGE_DRIVERS
@@ -34,6 +34,7 @@ def test_language_drivers_registry():
     assert LANGUAGE_DRIVERS["jp"] is WikiGGDriverJP
 
 
+@pytest.mark.unit
 def test_base_driver_api_urls():
     en = BaseWikiDriver(lang_code="en")
     assert en.api_url == "https://deadbydaylight.wiki.gg/api.php"
@@ -45,6 +46,7 @@ def test_base_driver_api_urls():
     assert es.api_url == "https://deadbydaylight.wiki.gg/es/api.php"
 
 
+@pytest.mark.unit
 def test_wiki_gg_driver_pl_enrichment():
     driver = WikiGGDriverPL()
     chars = [
@@ -130,6 +132,7 @@ def test_wiki_gg_driver_pl_enrichment():
     assert chars[0].translations["pl"]["name"] == "Traper"
 
 
+@pytest.mark.unit
 def test_wiki_gg_driver_de_enrichment():
     driver = WikiGGDriverDE()
     perks = [
@@ -165,6 +168,7 @@ def test_wiki_gg_driver_de_enrichment():
     assert "Nachdem du ein Totem" in perks[0].translations["de"]["description"]
 
 
+@pytest.mark.unit
 def test_wiki_gg_scraper_orchestrator_selective():
     orchestrator = WikiGGScraperDriver()
     orchestrator.scrape_characters_dynamically = MagicMock(return_value=[])

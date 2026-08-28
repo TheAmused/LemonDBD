@@ -1,9 +1,10 @@
 # backend/tests/unit/api/test_character_detail_route.py
-# backend/tests/api/test_character_detail_route.py
 import unittest
+import pytest
 from app import create_app
 
 
+@pytest.mark.unit
 class TestCharacterDetailRoute(unittest.TestCase):
     def setUp(self):
         self.app = create_app()

@@ -1,18 +1,17 @@
 # backend/tests/unit/scrapers/test_roster_image_scraper.py
-# backend/tests/test_roster_image_scraper.py
 import pytest
-from pathlib import Path
-from unittest.mock import MagicMock, patch
 from app.scrapers.roster_images import RosterImageScraperDriver
 from app.services.scraper_service import ScraperService
 
 
+@pytest.mark.unit
 def test_roster_image_scraper_driver_init():
     driver = RosterImageScraperDriver(timeout=15)
     assert driver.timeout == 15
     assert "User-Agent" in driver.session.headers
 
 
+@pytest.mark.unit
 def test_roster_image_scraper_scrape_portraits_mocked():
     driver = RosterImageScraperDriver()
     results = driver.scrape_roster_portraits("hooked_on_you")
@@ -27,6 +26,7 @@ def test_roster_image_scraper_scrape_portraits_mocked():
         assert r["image_url"].startswith("http")
 
 
+@pytest.mark.unit
 def test_scraper_service_roster_integration(tmp_path):
     service = ScraperService(base_dir=tmp_path)
     assert hasattr(service, "scrape_roster_edition_images")

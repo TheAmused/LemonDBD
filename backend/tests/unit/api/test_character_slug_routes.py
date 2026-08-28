@@ -1,10 +1,11 @@
 # backend/tests/unit/api/test_character_slug_routes.py
-# backend/tests/api/test_character_slug_routes.py
 import unittest
+import pytest
 from app import create_app
 from app.core.config import TestingConfig
 
 
+@pytest.mark.unit
 class TestCharacterSlugRoutes(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)
@@ -102,4 +103,3 @@ class TestCharacterSlugRoutes(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

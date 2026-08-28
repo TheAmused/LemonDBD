@@ -1,9 +1,16 @@
 # backend/tests/unit/scrapers/test_character_scraper.py
-# backend/tests/scrapers/test_character_scraper.py
+import gc
+import tempfile
 import unittest
+from pathlib import Path
+import pytest
+
+from app.services.db_service import DatabaseService
+from app.services.perk_service import CharacterModel
 from app.services.scraper_service import ScraperService
 
 
+@pytest.mark.unit
 class TestClassifyPortrait(unittest.TestCase):
     def test_killer_portrait_yields_category_and_number(self):
         self.assertEqual(
@@ -50,6 +57,7 @@ class TestClassifyPortrait(unittest.TestCase):
         )
 
 
+@pytest.mark.unit
 class TestNormaliseCharacterName(unittest.TestCase):
     def test_killer_loses_the_article(self):
         self.assertEqual(ScraperService.normalise_character_name("The Trapper", "Killer"), "Trapper")
@@ -92,6 +100,7 @@ KILLER_PAGE_HTML = """
 """
 
 
+@pytest.mark.unit
 class TestParseCharacterPage(unittest.TestCase):
     def setUp(self):
         self.service = ScraperService()
@@ -135,10 +144,9 @@ class TestParseCharacterPage(unittest.TestCase):
         self.assertEqual(self.service.parse_character_page(html), [])
 
 
+@pytest.mark.unit
 class TestCharacterModelCarriesReleaseNumber(unittest.TestCase):
     def test_model_accepts_and_returns_release_number(self):
-        from app.services.perk_service import CharacterModel
-
         model = CharacterModel(
             name="Trapper",
             real_name="The Trapper",
@@ -149,8 +157,6 @@ class TestCharacterModelCarriesReleaseNumber(unittest.TestCase):
         self.assertEqual(model.model_dump()["release_number"], 1)
 
     def test_release_number_defaults_when_absent(self):
-        from app.services.perk_service import CharacterModel
-
         model = CharacterModel(name="Meg Thomas", real_name="Meg Thomas", category="Survivor")
         self.assertIsNone(model.model_dump()["release_number"])
 
@@ -169,7 +175,6 @@ PERKS_HTML = """
   </table>
 </div>
 """
-
 
 SURVIVOR_PAGE_HTML = """
 <div class="mw-parser-output">
@@ -195,11 +200,9 @@ TROUPE_PERKS_HTML = """
 """
 
 
+@pytest.mark.unit
 class TestPerkOwnerMatching(unittest.TestCase):
     def test_survivor_stored_with_an_article_matches_a_link_without_one(self):
-        # "The Troupe" is stored with its article, but the perks page links it as
-        # /wiki/Troupe with the title "Troupe". Without both spellings registered,
-        # its perks silently fall through to "General".
         service = ScraperService()
         characters = service.parse_character_page(SURVIVOR_PAGE_HTML)
         perks = service.parse_perks(TROUPE_PERKS_HTML, characters)
@@ -238,14 +241,7 @@ class TestPerkOwnerMatching(unittest.TestCase):
         self.assertEqual(iron_grasp.character, "General")
 
 
-import gc
-import os
-import tempfile
-import unittest
-from pathlib import Path
-from app.services.db_service import DatabaseService
-
-
+@pytest.mark.unit
 class TestPruneStaleCharacterRows(unittest.TestCase):
     def setUp(self):
         self._temp_dir = tempfile.TemporaryDirectory()
@@ -322,8 +318,6 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
         self.assertEqual(self._count("gauntlet_runs"), 2)
 
     def test_child_rows_are_cascaded_with_their_parent(self):
-        # Guards the PRAGMA foreign_keys = ON in prune_stale_character_rows: without it
-        # SQLite ignores ON DELETE CASCADE and leaves orphaned history behind.
         self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
         self.assertEqual(self._count("gauntlet_match_logs"), 0)
         self.assertEqual(self._count("page_streak_page_logs"), 0)

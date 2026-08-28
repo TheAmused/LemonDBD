@@ -1,8 +1,8 @@
 # backend/tests/unit/api/test_db_export_import.py
-# backend/tests/api/test_db_export_import.py
 import io
 import json
 import pytest
+from sqlalchemy import select
 from app import create_app
 from app.core.extensions import db
 from app.core.security import generate_token
@@ -18,8 +18,7 @@ def app():
     test_app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
     with test_app.app_context():
         db.create_all()
-        # Seed test admin and regular user if not existing
-        admin_user = db.session.query(User).filter_by(username="admin_test").first()
+        admin_user = db.session.scalars(select(User).where(User.username == "admin_test")).first()
         if not admin_user:
             admin_user = User(
                 username="admin_test",
@@ -29,7 +28,7 @@ def app():
             )
             db.session.add(admin_user)
 
-        reg_user = db.session.query(User).filter_by(username="player_test").first()
+        reg_user = db.session.scalars(select(User).where(User.username == "player_test")).first()
         if not reg_user:
             reg_user = User(
                 username="player_test",
@@ -39,12 +38,12 @@ def app():
             )
             db.session.add(reg_user)
 
-        char = db.session.query(Character).filter_by(name="The Trapper").first()
+        char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
         if not char:
             char = Character(name="The Trapper", role="Killer", short_name="Trapper")
             db.session.add(char)
 
-        perk = db.session.query(Perk).filter_by(name="Brutal Strength").first()
+        perk = db.session.scalars(select(Perk).where(Perk.name == "Brutal Strength")).first()
         if not perk:
             perk = Perk(name="Brutal Strength", category="Killer")
             db.session.add(perk)
@@ -63,17 +62,18 @@ def client(app):
 @pytest.fixture
 def admin_token(app):
     with app.app_context():
-        user = db.session.query(User).filter_by(username="admin_test").first()
+        user = db.session.scalars(select(User).where(User.username == "admin_test")).first()
         return generate_token(user.id, role=user.role)
 
 
 @pytest.fixture
 def user_token(app):
     with app.app_context():
-        user = db.session.query(User).filter_by(username="player_test").first()
+        user = db.session.scalars(select(User).where(User.username == "player_test")).first()
         return generate_token(user.id, role=user.role)
 
 
+@pytest.mark.unit
 def test_export_database_all(client, admin_token):
     res = client.get(
         "/api/v1/admin/database/export",
@@ -89,6 +89,7 @@ def test_export_database_all(client, admin_token):
     assert any(c["name"] == "The Trapper" for c in data["data"]["characters"])
 
 
+@pytest.mark.unit
 def test_export_database_selective(client, admin_token):
     res = client.get(
         "/api/v1/admin/database/export?targets=perks",
@@ -100,6 +101,7 @@ def test_export_database_selective(client, admin_token):
     assert "characters" not in data["data"]
 
 
+@pytest.mark.unit
 def test_export_database_download_header(client, admin_token):
     res = client.get(
         "/api/v1/admin/database/export?download=true",
@@ -109,19 +111,19 @@ def test_export_database_download_header(client, admin_token):
     assert "attachment; filename=lemondbd_export_" in res.headers.get("Content-Disposition", "")
 
 
+@pytest.mark.unit
 def test_export_database_unauthorized(client, user_token):
-    # Non-admin
     res = client.get(
         "/api/v1/admin/database/export",
         headers={"Authorization": f"Bearer {user_token}"},
     )
     assert res.status_code == 403
 
-    # Unauthenticated
     res_no_auth = client.get("/api/v1/admin/database/export")
     assert res_no_auth.status_code == 401
 
 
+@pytest.mark.unit
 def test_import_database_merge_json_body(client, admin_token):
     payload = {
         "version": "1.0",
@@ -156,17 +158,17 @@ def test_import_database_merge_json_body(client, admin_token):
     assert res_data["summary"]["characters"]["created"] == 1
     assert res_data["summary"]["perks"]["created"] == 1
 
-    # Verify character and perk in DB
-    char = db.session.query(Character).filter_by(name="The Wraith").first()
+    char = db.session.scalars(select(Character).where(Character.name == "The Wraith")).first()
     assert char is not None
     assert char.real_name == "Philip Ojomo"
     assert char.translations == {"pl": {"name": "Upiór"}}
 
-    perk = db.session.query(Perk).filter_by(name="Shadowborn").first()
+    perk = db.session.scalars(select(Perk).where(Perk.name == "Shadowborn")).first()
     assert perk is not None
     assert perk.character_id == char.id
 
 
+@pytest.mark.unit
 def test_import_database_multipart_file(client, admin_token):
     backup = {
         "version": "1.0",
@@ -194,9 +196,9 @@ def test_import_database_multipart_file(client, admin_token):
     assert res_data["summary"]["items"]["created"] == 1
 
 
+@pytest.mark.unit
 def test_import_database_replace_mode(client, admin_token):
-    # Initially we have The Trapper
-    assert db.session.query(Character).filter_by(name="The Trapper").first() is not None
+    assert db.session.scalars(select(Character).where(Character.name == "The Trapper")).first() is not None
 
     payload = {
         "characters": [
@@ -211,11 +213,11 @@ def test_import_database_replace_mode(client, admin_token):
     )
     assert res.status_code == 200
 
-    # The Trapper was replaced by The Nurse
-    assert db.session.query(Character).filter_by(name="The Trapper").first() is None
-    assert db.session.query(Character).filter_by(name="The Nurse").first() is not None
+    assert db.session.scalars(select(Character).where(Character.name == "The Trapper")).first() is None
+    assert db.session.scalars(select(Character).where(Character.name == "The Nurse")).first() is not None
 
 
+@pytest.mark.unit
 def test_import_database_invalid_payload(client, admin_token):
     res = client.post(
         "/api/v1/admin/database/import",

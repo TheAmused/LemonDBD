@@ -1,6 +1,6 @@
 # backend/tests/unit/api/test_gauntlet_routes.py
-# backend/tests/api/test_gauntlet_routes.py
 import unittest
+import pytest
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
@@ -23,10 +23,9 @@ def seed_killer(name, perk_count=3):
     return character
 
 
+@pytest.mark.unit
 class TestGauntletRoutes(unittest.TestCase):
     def setUp(self):
-        # TestingConfig keeps this on an in-memory SQLite DB. Without it the tests
-        # bind to the real DATABASE_URL and tearDown's drop_all() wipes the dev database.
         self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
         self.ctx = self.app.app_context()
@@ -79,7 +78,7 @@ class TestGauntletRoutes(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         data = res.get_json()
         self.assertEqual(data["previous_run"]["current_streak"], 1)
-        self.assertIn("run", data)  # the freshly-rolled next run
+        self.assertIn("run", data)
 
     def test_reveal_endpoint(self):
         run_res = self.client.get("/api/v1/gauntlet-streak/run?role=killer", headers=self.headers)

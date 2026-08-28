@@ -1,6 +1,6 @@
 # backend/tests/unit/scrapers/test_wikigg_items_addons.py
-# backend/tests/scrapers/test_wikigg_items_addons.py
 import unittest
+import pytest
 from app.scrapers.wikigg import WikiGGScraperDriver
 
 
@@ -55,6 +55,7 @@ ADDONS_HTML = """
 """
 
 
+@pytest.mark.unit
 class TestParseWikiItems(unittest.TestCase):
     def setUp(self):
         self.driver = WikiGGScraperDriver()
@@ -81,6 +82,7 @@ class TestParseWikiItems(unittest.TestCase):
         self.assertNotIn("Killer Items", self.by_name)
 
 
+@pytest.mark.unit
 class TestParseWikiAddons(unittest.TestCase):
     def setUp(self):
         self.driver = WikiGGScraperDriver()
@@ -138,6 +140,7 @@ KILLER_ADDONS_HTML = """
 """
 
 
+@pytest.mark.unit
 class TestKillerAddonParsingAndEdgeCases(unittest.TestCase):
     def setUp(self):
         self.driver = WikiGGScraperDriver()
@@ -171,7 +174,7 @@ class TestKillerAddonParsingAndEdgeCases(unittest.TestCase):
                 category="Killer",
                 avatar_url="",
                 avatar_local_path="",
-                power=KillerPowerData(name="Bear Traps"),  # plural
+                power=KillerPowerData(name="Bear Traps"),
             ),
             CharacterData(
                 name="The Skull Merchant",

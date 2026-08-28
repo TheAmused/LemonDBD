@@ -1,13 +1,14 @@
 # backend/tests/unit/scrapers/test_scraper_config.py
-# backend/tests/scrapers/test_scraper_config.py
 import json
 import tempfile
 import unittest
 from pathlib import Path
+import pytest
 
 from app.services.scraper_service import ScraperConfig, ScraperService
 
 
+@pytest.mark.unit
 class TestScraperConfig(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()
@@ -43,14 +44,12 @@ class TestScraperConfig(unittest.TestCase):
         self.assertEqual(updated.source, "wiki")
         self.assertFalse(updated.fallback_to_wiki)
 
-        # Reload from disk
         loaded = self.service.load_config()
         self.assertEqual(loaded.source, "wiki")
         self.assertFalse(loaded.fallback_to_wiki)
         self.assertEqual(loaded.last_used_source, "wiki")
         self.assertEqual(loaded.last_run_timestamp, "2026-08-10T12:00:00Z")
 
-        # Verify JSON file structure on disk
         config_path = self.base_dir / "data" / "scraper_config.json"
         self.assertTrue(config_path.exists())
         with open(config_path, "r", encoding="utf-8") as f:

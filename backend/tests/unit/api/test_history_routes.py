@@ -1,6 +1,6 @@
 # backend/tests/unit/api/test_history_routes.py
-# backend/tests/api/test_history_routes.py
 import unittest
+import pytest
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
@@ -21,6 +21,7 @@ def seed_killer(name, release_number, perk_count=2):
     return character
 
 
+@pytest.mark.unit
 class TestHistoryRoutes(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)

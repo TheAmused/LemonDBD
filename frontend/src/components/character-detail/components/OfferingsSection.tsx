@@ -1,7 +1,6 @@
 // frontend/src/components/character-detail/components/OfferingsSection.tsx
 import React, { useState, useMemo } from 'react';
 import {
-  Search,
   Gift,
   Skull,
   Coins,
@@ -141,29 +140,14 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>(
     isKiller ? 'mori' : 'bloodpoint'
   );
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [rarityFilter, setRarityFilter] = useState<string>('all');
-  const [sortOrder, setSortOrder] = useState<'rarity_desc' | 'rarity_asc' | 'name_asc'>('rarity_asc');
   const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
   const activeCategoryConfig =
     categories.find((c) => c.key === selectedCategory) || categories[0];
 
   const sortedAndFilteredOfferings = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
-
     return offerings
       .filter((off) => {
-        const matchesSearch =
-          !query ||
-          off.name.toLowerCase().includes(query) ||
-          Boolean(off.raw_name && off.raw_name.toLowerCase().includes(query)) ||
-          Boolean(off.description && off.description.toLowerCase().includes(query));
-
-        const offRarity = (off.rarity || '').toLowerCase();
-        const matchesRarity =
-          rarityFilter === 'all' || offRarity.includes(rarityFilter.toLowerCase());
-
         const raw = (off.raw_name || off.name || '').trim();
         const rawLower = raw.toLowerCase();
         const nameLower = (off.name || '').toLowerCase();
@@ -276,23 +260,15 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           itemCategory = 'map';
         }
 
-        const matchesCat = itemCategory === selectedCategory;
-        return matchesSearch && matchesRarity && matchesCat;
+        return itemCategory === selectedCategory;
       })
       .sort((a, b) => {
-        if (sortOrder === 'name_asc') {
-          return a.name.localeCompare(b.name);
-        }
         const rankA = getRarityRank(a.rarity);
         const rankB = getRarityRank(b.rarity);
-        if (sortOrder === 'rarity_asc') {
-          if (rankA !== rankB) return rankA - rankB;
-          return a.name.localeCompare(b.name);
-        }
-        if (rankA !== rankB) return rankB - rankA;
+        if (rankA !== rankB) return rankA - rankB;
         return a.name.localeCompare(b.name);
       });
-  }, [offerings, searchQuery, rarityFilter, selectedCategory, sortOrder]);
+  }, [offerings, selectedCategory]);
 
   if (!offerings || offerings.length === 0) return null;
 
@@ -318,46 +294,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           </div>
         </div>
 
-        {/* Filter / Search Controls */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-full sm:w-44">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" aria-hidden="true" />
-            <input
-              type="text"
-              placeholder={t.searchOfferings || 'Filter offerings...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label={t.searchOfferings || 'Filter offerings'}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-500 shadow-inner"
-            />
-          </div>
-
-          <select
-            value={rarityFilter}
-            onChange={(e) => setRarityFilter(e.target.value)}
-            aria-label={t.filterByRarity || 'Filter by rarity'}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
-          >
-            <option value="all">{t.allRarities || 'All Rarities'}</option>
-            <option value="Common">{t.rarityCommon || 'Common'}</option>
-            <option value="Uncommon">{t.rarityUncommon || 'Uncommon'}</option>
-            <option value="Rare">{t.rarityRare || 'Rare'}</option>
-            <option value="Very Rare">{t.rarityVeryRare || 'Very Rare'}</option>
-            <option value="Ultra Rare">{t.rarityUltraRare || 'Ultra Rare'}</option>
-            <option value="Event">{t.rarityEvent || 'Event'}</option>
-          </select>
-
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value as 'rarity_desc' | 'rarity_asc' | 'name_asc')}
-            aria-label={t.orderOfferings || 'Order offerings'}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
-          >
-            <option value="rarity_asc">{t.sortRarityLowToHigh || 'Rarity: Low → High'}</option>
-            <option value="rarity_desc">{t.sortRarityHighToLow || 'Rarity: High → Low'}</option>
-            <option value="name_asc">{t.sortNameAsc || 'Name: A → Z'}</option>
-          </select>
-        </div>
       </div>
 
       {/* Main Container with Centered Category Buttons Straddling the Top Border */}

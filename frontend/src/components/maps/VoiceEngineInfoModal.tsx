@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/VoiceEngineInfoModal.tsx
 'use client';
 
@@ -28,7 +29,7 @@ export interface VoiceEngineInfoModalProps {
   hasNativeWebSpeech: boolean;
   modelProgress: ModelProgressInfo;
   onPreloadModel: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
@@ -62,7 +63,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
 
   if (!isOpen) return null;
 
-  const t = dict?.voice || {};
+  const t: any = dict?.voice || {};
 
   const modalElement = (
     <div

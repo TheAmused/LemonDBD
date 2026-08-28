@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/user/page.tsx
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -38,7 +39,7 @@ export default function UserProfilePage() {
   const { isCollapsed } = useSidebarState();
   const { user, isAuthenticated, isLoading, ownership, refreshUser } = useAuth();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<'overview' | 'bugs'>('overview');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bugModalOpen, setBugModalOpen] = useState(false);
@@ -167,7 +168,7 @@ export default function UserProfilePage() {
     }
   };
 
-  if (isLoading) {
+  if (!dict || isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs">
         <div className="flex flex-col items-center gap-3">

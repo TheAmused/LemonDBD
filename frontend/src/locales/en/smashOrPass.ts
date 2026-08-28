@@ -242,5 +242,10 @@ export default {
     "resetAllVotes": "Reset all my votes",
     "howToPlay": "How to play & keybindings",
     "shuffle": "Shuffle remaining candidates"
-  }
+  },
+  "tierFilterLabel": "Filter by Tier:",
+  "left": "left",
+  "bgm": "BGM",
+  "hallOfFame": "Hall of Fame",
+  "howToPlay": "How to Play"
 };

@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapLegendDrawer.tsx
 
 import React, { useState } from 'react';
@@ -24,7 +25,7 @@ export interface MapLegendDrawerProps {
   title?: string;
   mapName?: string;
   realmName?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const GENERIC_PLACEHOLDERS: ReadonlySet<string> = new Set([

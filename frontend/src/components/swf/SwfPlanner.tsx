@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/swf/SwfPlanner.tsx
 'use client';
 
@@ -46,7 +47,7 @@ interface SynergyResult {
 }
 
 interface SwfPlannerProps {
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const DEFAULT_SURVIVORS: SurvivorBuild[] = [

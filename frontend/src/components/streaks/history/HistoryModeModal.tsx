@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/history/HistoryModeModal.tsx
 'use client';
 
@@ -9,7 +10,7 @@ export interface HistoryModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectMode: (mode: HistoryMode) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const TILES: { mode: HistoryMode; label: string; desc: string; icon: React.ElementType }[] = [

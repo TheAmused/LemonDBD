@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 'use client';
 // frontend/src/app/[locale]/maps/page.tsx
 
@@ -20,7 +21,7 @@ function MapsPageInner() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<PerkDictionary | null>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const initialMapName = searchParams?.get('mapName') || '';
 
@@ -54,8 +55,8 @@ function MapsPageInner() {
   useEffect(() => {
     getDictionary(locale)
       .then((d) => {
-        setDict(d as PerkDictionary);
-        document.title = (d as PerkDictionary)?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer';
+        setDict(d as any);
+        document.title = d?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer';
       })
       .catch((err: unknown) => console.error('Failed to load maps dictionary:', err));
   }, [locale]);

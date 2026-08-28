@@ -1,4 +1,3 @@
-// frontend/src/locales/en/user.ts
 export default {
   "profileTitle": "User Profile & Account",
   "profileSubtitle": "Manage your profile, tracked stats, character ownership, and bug reports.",
@@ -57,6 +56,13 @@ export default {
   "notVerifiedYetNotice": "isn't verified yet. Enter the code we emailed you below.",
   "forgotPasswordLink": "Forgot password?",
   "quoteOpen": "\"",
-  "quoteClose": "\""
+  "quoteClose": "\"",
+  "setNewPassword": "Set New Password",
+  "passwordResetSuccess": "Your password has been reset successfully!",
+  "goToHome": "Go to Home",
+  "resetPassword": "Reset Password",
+  "adminPanel": "Admin Control Center",
+  "streaks": "Challenges & Streaks",
+  "generator": "Perk Randomizer",
+  "maps": "Map Explorer"
 };
-

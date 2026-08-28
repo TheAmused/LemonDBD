@@ -1181,7 +1181,7 @@ export function VoiceCommandBanner({
         hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
         modelProgress={modelProgress}
         onPreloadModel={() => initClientSpeechModel(locale)}
-        dict={dict}
+        dict={dict as any}
       />
     </section>
   );

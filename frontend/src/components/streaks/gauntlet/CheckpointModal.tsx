@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/gauntlet/CheckpointModal.tsx
 'use client';
 
@@ -10,7 +11,7 @@ export interface CheckpointModalProps {
   role: Role;
   nextTier: TierInfo | null;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const CheckpointModal: React.FC<CheckpointModalProps> = ({ checkpoint, role, nextTier, onClose, dict }) => {

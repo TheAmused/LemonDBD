@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/streaks/layout.tsx
 'use client';
 
@@ -22,7 +23,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   const [totalPerksCount, setTotalPerksCount] = useState<number>(0);
@@ -83,7 +84,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        {dict?.app?.loading || dict?.streaks?.loadingStreak || 'Loading...'}
+        Loading Challenges...
       </div>
     );
   }

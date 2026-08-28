@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/sidebar/BugReportModal.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -26,7 +27,7 @@ import {
 export interface BugReportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
   t?: Record<string, string>;
 }
 

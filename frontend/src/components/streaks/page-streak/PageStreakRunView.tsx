@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 'use client';
 
@@ -18,7 +19,7 @@ import { staticUrl } from '@/utils/staticUrl';
 interface PageStreakRunViewProps {
   locale: string;
   killer: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (

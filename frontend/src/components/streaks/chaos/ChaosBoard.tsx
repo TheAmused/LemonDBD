@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
 'use client';
 
@@ -24,7 +25,7 @@ import { useAuth } from '@/context/AuthContext';
 
 interface ChaosBoardProps {
   locale: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale, dict }) => {

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/sidebar/SidebarStatsCard.tsx
 'use client';
 
@@ -5,7 +6,7 @@ import React from 'react';
 import { Database, Layers, Users, Shield, Skull } from 'lucide-react';
 
 export interface SidebarStatsCardProps {
-  dict: any;
+  dict: Dictionary;
   totalPerksCount: number;
   survivorCount: number;
   killerCount: number;

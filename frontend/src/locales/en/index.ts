@@ -21,6 +21,8 @@ import builds from './builds';
 import admin from './admin';
 import maps from './maps';
 import quests from './quests';
+import killerCalculator from './killerCalculator';
+import customPerks from './customPerks';
 
 const en = {
   app,
@@ -45,6 +47,8 @@ const en = {
   admin,
   maps,
   quests,
+  killerCalculator,
+  customPerks,
 };
 
 export default en;

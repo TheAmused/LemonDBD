@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/smash-or-pass/CharacterStatsModal.tsx
 'use client';
 
@@ -24,7 +25,7 @@ interface CharacterStatsModalProps {
   character: any;
   stats?: EntityStatItem;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
 'use client';
 
@@ -66,7 +67,7 @@ const LockedTile: React.FC<{ perk: Perk }> = ({ perk }) => {
 export interface HistoryPerkPoolPanelProps {
   pool: Perk[];
   unlockedPerkNames: string[];
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool, unlockedPerkNames, dict }) => {

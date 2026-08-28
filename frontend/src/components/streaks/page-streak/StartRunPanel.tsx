@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/page-streak/StartRunPanel.tsx
 'use client';
 
@@ -9,7 +10,7 @@ interface StartRunPanelProps {
   killer: string;
   busy: boolean;
   onStart: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onStart, dict }) => {

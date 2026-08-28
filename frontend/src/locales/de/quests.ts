@@ -1,17 +1,18 @@
 // frontend/src/locales/de/quests.ts
 export default {
   "title": "Prüfungs-Quests & Meilensteine",
-  "subtitle": "Schließe tägliche und wöchentliche Prüfungen ab, um XP zu verdienen und deinen Status zu verbessern.",
+  "subtitle": "Schließe tägliche und wöchentliche Prüfungen ab, um EP zu verdienen, deinen Status zu steigern und Erfolge freizuschalten.",
   "pageTitle": "LemonDBD - Quests & Prüfungen",
   "loadingQuests": "Lade Quests...",
-  "xpSystem": "XP-System",
+  "xpSystem": "EP-System",
   "dailyQuests": "Tägliche Quests",
   "weeklyQuests": "Wöchentliche Quests",
-  "noQuestsDesc": "Derzeit keine Quests in dieser Kategorie verfügbar. Schau bald wieder vorbei!",
+  "noQuestsDesc": "In dieser Kategorie sind derzeit keine Quests verfügbar. Schau bald wieder vorbei für neue Prüfungsziele!",
   "noQuestsFound": "Keine Quests in dieser Kategorie gefunden.",
   "xpPrefix": "+",
-  "xpSuffix": "XP",
+  "xpSuffix": "EP",
   "allQuestsPrefix": "Alle Quests (",
-  "percentCloseParen": "%)"
+  "percentCloseParen": "%)",
+  "questsTitle": "Prüfungs-Quests & Meilensteine",
+  "questsSubtitle": "Schließe tägliche und wöchentliche Prüfungen ab, um EP zu verdienen, deinen Status zu steigern und Erfolge freizuschalten."
 };
-

@@ -1,13 +1,15 @@
+// frontend/src/locales/pl/pagination.ts
 export default {
   "showing": "Wyświetlanie",
   "of": "z",
-  "results": "perków",
+  "results": "umiejętności",
   "perPage": "Na stronę",
   "page": "Strona",
-  "previous": "Poprzednia Strona",
-  "next": "Następna Strona",
-  "firstPage": "Pierwsza Strona",
-  "lastPage": "Ostatnia Strona",
+  "previous": "Poprzednia strona",
+  "next": "Następna strona",
+  "firstPage": "Pierwsza strona",
+  "lastPage": "Ostatnia strona",
   "goTo": "Przejdź do",
-  "navAriaLabel": "Nawigacja Stronicowania"
+  "navAriaLabel": "Nawigacja po stronach",
+  "to": "do"
 };

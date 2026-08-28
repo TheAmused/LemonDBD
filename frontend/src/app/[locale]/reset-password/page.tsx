@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/reset-password/page.tsx
 'use client';
 
@@ -25,7 +26,7 @@ function ResetPasswordContent() {
   const token = searchParams.get('token') || '';
   const { resetPassword } = useAuth();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);

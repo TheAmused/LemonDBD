@@ -1,7 +1,8 @@
+// frontend/src/locales/pl/landing.ts
 export default {
-  "welcomeBadge": "Kompan Dead by Daylight",
+  "welcomeBadge": "Twój Towarzysz Dead by Daylight",
   "welcomeTitle": "Witaj w LemonDBD",
-  "welcomeSubtitle": "Twoja baza wiedzy Dead by Daylight, interaktywny eksplorator map, losownik perków oraz pomocnik w próbach.",
-  "enterButton": "Wejdź do Skarbca Perków",
-  "characterOverview": "Przegląd postaci"
+  "welcomeSubtitle": "Twoja baza danych Dead by Daylight, interaktywny eksplorator map, losownik umiejętności i centrum gracza.",
+  "enterButton": "Wejdź do Skarbca Umiejętności",
+  "characterOverview": "Przegląd Postaci"
 };

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/KillerPickerGrid.tsx
 'use client';
 
@@ -75,7 +76,7 @@ export interface KillerPickerGridProps {
   disabled?: boolean;
   loading?: boolean;
   center?: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({

@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/layouts/DesktopMapLayout.tsx
 
 import React, { useState } from 'react';
@@ -60,7 +61,7 @@ export interface DesktopMapLayoutProps {
 
   onLaunchFullscreen?: () => void;
   onPopoutImage?: (url: string, title: string) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
 'use client';
 
@@ -28,7 +29,7 @@ const GauntletFireBackground = dynamic(
 interface GauntletBoardProps {
   locale: string;
   role: Role;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict }) => {

@@ -28,5 +28,13 @@ export default {
   "sortByRole": "Role",
   "orderAsc": "Ascending (A-Z)",
   "orderDesc": "Descending (Z-A)",
-  "aliasLabel": "Alias:"
+  "aliasLabel": "Alias:",
+  "allRarities": "All Rarities",
+  "rarityIridescent": "Ultra Rare / Iridescent",
+  "rarityVeryRare": "Very Rare",
+  "rarityUncommon": "Uncommon",
+  "newestFirst": "Newest First",
+  "mostUpvoted": "Most Upvoted",
+  "resetAllFilters": "Reset Filters",
+  "viewMode": "Perks Grid"
 };

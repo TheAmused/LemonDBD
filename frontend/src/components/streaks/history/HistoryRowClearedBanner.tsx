@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/history/HistoryRowClearedBanner.tsx
 'use client';
 
@@ -7,7 +8,7 @@ import { Trophy } from 'lucide-react';
 export interface HistoryRowClearedBannerProps {
   rowNumber: number | null;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryRowClearedBanner: React.FC<HistoryRowClearedBannerProps> = ({

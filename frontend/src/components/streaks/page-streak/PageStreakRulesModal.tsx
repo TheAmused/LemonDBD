@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/page-streak/PageStreakRulesModal.tsx
 'use client';
 
@@ -8,7 +9,7 @@ import { RulesModalShell } from '../RulesModalShell';
 export interface PageStreakRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOpen, onClose, dict }) => (

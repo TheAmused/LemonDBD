@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 'use client';
 // frontend/src/app/[locale]/perks/page.tsx
 
@@ -42,7 +43,7 @@ function PerksContent() {
   const paramTab = searchParams ? searchParams.get('tab') : null;
   const paramRole = searchParams ? searchParams.get('role') : null;
 
-  const [dict, setDict] = useState<PerkDictionary | null>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [perks, setPerks] = useState<Perk[]>([]);
   const [allPerksForGenerator, setAllPerksForGenerator] = useState<Perk[]>([]);
   const [characterOptions, setCharacterOptions] = useState<CharacterOption[]>([]);
@@ -74,7 +75,7 @@ function PerksContent() {
   const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
-    getDictionary(locale).then((d) => setDict(d as PerkDictionary));
+    getDictionary(locale).then(setDict);
   }, [locale]);
 
   useEffect(() => {

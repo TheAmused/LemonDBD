@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/Sidebar.tsx
 'use client';
 
@@ -38,7 +39,7 @@ import { i18n, type Locale } from '@/i18n/config';
 
 interface SidebarProps {
   currentLocale?: string;
-  dict: any;
+  dict: Dictionary;
   activeCategory?: string;
   onSelectCategory?: (category: string) => void;
   onOpenQuests?: () => void;

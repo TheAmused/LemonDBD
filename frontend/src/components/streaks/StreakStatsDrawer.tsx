@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/StreakStatsDrawer.tsx
 'use client';
 
@@ -54,7 +55,7 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   renderLabel: (log: TLog) => React.ReactNode;
   /** Secondary line under the label, e.g. "Streak: 3 -> 4" or "Attempt 2, Page 3". */
   renderMeta: (log: TLog) => React.ReactNode;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 /**

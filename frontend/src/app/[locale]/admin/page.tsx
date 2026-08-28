@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/admin/page.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -35,7 +36,7 @@ export default function AdminPanelPage() {
   const { isCollapsed } = useSidebarState();
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [activeTab, setActiveTab] = useState<'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit'>('users');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
@@ -408,7 +409,7 @@ export default function AdminPanelPage() {
     }
   };
 
-  if (isLoading || !isAuthenticated || !isAdmin) {
+  if (!dict || isLoading || !isAuthenticated || !isAdmin) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs">
         <div className="flex flex-col items-center gap-3">

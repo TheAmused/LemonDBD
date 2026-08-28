@@ -35,5 +35,12 @@ export default {
   "stealth": "Stealth",
   "chase": "Chase",
   "byAuthorPrefix": "by",
-  "targetCharacterLabel": "Target Character:"
+  "targetCharacterLabel": "Target Character:",
+  "sortFields": "Sort",
+  "newestFirst": "Newest First",
+  "mostUpvoted": "Most Upvoted",
+  "perk1Placeholder": "Perk 1 (Required)",
+  "perk2Placeholder": "Perk 2 (Required)",
+  "perk3Placeholder": "Perk 3 (Required)",
+  "perk4Placeholder": "Perk 4 (Required)"
 };

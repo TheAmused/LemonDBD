@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/sidebar/SidebarUserSection.tsx
 'use client';
 
@@ -8,7 +9,7 @@ import { UserAvatar } from '@/components/UserAvatar';
 
 export interface SidebarUserSectionProps {
   currentLocale: string;
-  dict?: any;
+  dict?: Dictionary;
   user: any;
   isAuthenticated: boolean;
   isAdmin: boolean;

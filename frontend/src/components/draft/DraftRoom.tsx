@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/draft/DraftRoom.tsx
 'use client';
 
@@ -17,7 +18,7 @@ import { Perk } from '@/components/PerkCard';
 
 interface DraftRoomProps {
   initialRoomCode?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) => {
@@ -586,7 +587,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
             <div className="max-h-[50vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2 pr-1">
               {availablePerks.length === 0 ? (
                 <div className="col-span-2 py-8 text-center text-xs text-slate-400 dark:text-slate-500 font-mono">
-                  {dict?.empty?.noMatchingPerks || 'No matching available perks.'}
+                  {dict?.draft?.noMatchingPerks || 'No matching available perks.'}
                 </div>
               ) : (
                 availablePerks.map((perk) => (

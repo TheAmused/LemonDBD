@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/killer/KillerCalculator.tsx
 'use client';
 
@@ -25,7 +26,7 @@ interface PerkOptionState {
 }
 
 interface KillerCalculatorProps {
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
@@ -608,7 +609,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
               </div>
             ) : (
               <p className="text-xs text-slate-500 italic">
-                {dict?.empty?.description || 'No power stats modified.'}
+                {dict?.empty?.subtitle || 'No power stats modified.'}
               </p>
             )}
 

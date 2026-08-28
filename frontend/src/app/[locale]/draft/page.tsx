@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/draft/page.tsx
 'use client';
 
@@ -10,7 +11,7 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
 
-function DraftContent({ locale, dict }: { locale: Locale; dict: any }) {
+function DraftContent({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const searchParams = useSearchParams();
   const initialRoom = searchParams?.get('room') || '';
 
@@ -22,7 +23,7 @@ export default function DraftPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -74,7 +75,7 @@ export default function DraftPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        {dict?.app?.loading || dict?.draft?.loadingRoom || 'Loading...'}
+        Loading Draft Room...
       </div>
     );
   }

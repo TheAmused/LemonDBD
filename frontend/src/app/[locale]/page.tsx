@@ -9,6 +9,7 @@ import { LemonIcon } from '@/components/LemonIcon';
 import { QuestsModal } from '@/components/QuestsModal';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
+import type { Dictionary } from '@/locales/types';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
@@ -17,7 +18,7 @@ function LandingContent() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   useEffect(() => {

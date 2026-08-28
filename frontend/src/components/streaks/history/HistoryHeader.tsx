@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/history/HistoryHeader.tsx
 'use client';
 
@@ -20,7 +21,7 @@ export interface HistoryHeaderProps {
   onOpenRules: () => void;
   onOpenStats: () => void;
   onOpenReset: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryHeader: React.FC<HistoryHeaderProps> = ({

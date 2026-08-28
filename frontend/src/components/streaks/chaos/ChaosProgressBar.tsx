@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/ChaosProgressBar.tsx
 'use client';
 
@@ -8,7 +9,7 @@ export interface ChaosProgressBarProps {
   lastCheckpointStreak: number;
   checkpointInterval: number;
   totalKillers: number;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ChaosProgressBar: React.FC<ChaosProgressBarProps> = ({

@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/AuthModal.tsx
 
 import React, { useEffect, useState } from 'react';
@@ -26,7 +27,7 @@ interface AuthModalProps {
   initialMode?: 'login' | 'register';
   /** When set, the modal opens straight into the verification-code screen for this email, skipping login/register. */
   verifyEmailFor?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 type AuthMode = 'login' | 'register' | 'forgot';

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/ChaosHeader.tsx
 'use client';
 
@@ -22,7 +23,7 @@ export interface ChaosHeaderProps {
   onOpenRules: () => void;
   onOpenPerkPool: () => void;
   onOpenReset: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ChaosHeader: React.FC<ChaosHeaderProps> = ({

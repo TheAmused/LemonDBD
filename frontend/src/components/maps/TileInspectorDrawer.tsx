@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/TileInspectorDrawer.tsx
 
 import React from 'react';
@@ -11,7 +12,7 @@ interface TileInspectorDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   selectedItem: InspectorSelectedItem;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const TileInspectorDrawer: React.FC<TileInspectorDrawerProps> = ({

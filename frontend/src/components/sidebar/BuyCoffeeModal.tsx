@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/sidebar/BuyCoffeeModal.tsx
 
 import React, { useEffect, useState } from 'react';
@@ -18,7 +19,7 @@ import {
 export interface BuyCoffeeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
   t?: Record<string, string>;
 }
 

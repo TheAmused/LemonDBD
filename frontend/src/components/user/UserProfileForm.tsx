@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserProfileForm.tsx
 
 import React, { useState } from 'react';
@@ -8,7 +9,7 @@ import { StatusFeedback } from '@/types/userProfile';
 interface UserProfileFormProps {
   initialEmail: string;
   onRefreshUser: () => Promise<void>;
-  dict?: any;
+  dict?: Dictionary;
   t?: Record<string, string>;
 }
 

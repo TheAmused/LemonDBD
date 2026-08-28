@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/ScraperConfigModal.tsx
 
 import React, { useState, useRef } from 'react';
@@ -27,7 +28,7 @@ interface ScraperConfigModalProps {
   onClose: () => void;
   onPurgeSuccess?: () => void;
   initialTab?: 'export' | 'import' | 'purge';
-  dict?: any;
+  dict?: Dictionary;
 }
 
 interface TargetItem {

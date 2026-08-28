@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/StreakPanel.tsx
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -15,7 +16,7 @@ interface StreakPanelBaseProps {
   image?: string;
   disabled?: boolean;
   disabledReason?: string | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 type StreakPanelProps = StreakPanelBaseProps &

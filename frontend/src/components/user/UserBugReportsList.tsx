@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserBugReportsList.tsx
 
 import React from 'react';
@@ -18,7 +19,7 @@ interface UserBugReportsListProps {
   reports: UserBugReport[];
   loading: boolean;
   onOpenReportModal: () => void;
-  dict?: any;
+  dict?: Dictionary;
   t?: Record<string, string>;
 }
 

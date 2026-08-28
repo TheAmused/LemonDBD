@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/sidebar/SidebarBottomControls.tsx
 'use client';
 
@@ -18,7 +19,7 @@ export const LANGUAGES: { code: string; label: string }[] = [
 
 export interface SidebarBottomControlsProps {
   currentLocale: string;
-  dict?: any;
+  dict?: Dictionary;
   onOpenBugModal: () => void;
   onOpenCoffeeModal: () => void;
 }

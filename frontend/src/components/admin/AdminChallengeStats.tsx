@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminChallengeStats.tsx
 
 import React from 'react';
@@ -22,13 +23,13 @@ const VARIANT_LABELS: Record<string, string> = {
 
 interface AdminChallengeStatsProps {
   stats: AdminStats | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const VariantRow: React.FC<{
   label: string;
   breakdown: { completed_runs: number; unique_users: number };
-  dict?: any;
+  dict?: Dictionary;
 }> = ({ label, breakdown, dict }) => (
   <div className="flex items-center justify-between text-xs px-3 py-2 rounded-lg bg-slate-950/50 border border-slate-800/80">
     <span className="font-bold text-slate-300">{label}</span>

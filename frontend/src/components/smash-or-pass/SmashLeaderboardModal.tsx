@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
 'use client';
 
@@ -28,7 +29,7 @@ export interface SmashLeaderboardModalProps {
   editionName?: string;
   isAuthenticated?: boolean;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 type TierKey = 'godTier' | 'fatalAttraction' | 'friendzone' | 'eldritchVoid';
@@ -44,7 +45,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   locale = 'en',
   dict,
 }) => {
-  const t = dict?.smashOrPass || {};
+  const t: any = dict?.smashOrPass || {};
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'monster_other'>('all');

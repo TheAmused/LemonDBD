@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/gauntlet/GauntletHeader.tsx
 'use client';
 
@@ -15,7 +16,7 @@ export interface GauntletHeaderProps {
   onOpenStats: () => void;
   onOpenRules: () => void;
   onOpenReset: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const GauntletHeader: React.FC<GauntletHeaderProps> = ({

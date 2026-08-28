@@ -1,5 +1,4 @@
 // frontend/src/locales/es/index.ts
-import type { Dictionary } from '../types';
 import app from './app';
 import landing from './landing';
 import generator from './generator';
@@ -22,8 +21,10 @@ import builds from './builds';
 import admin from './admin';
 import maps from './maps';
 import quests from './quests';
+import killerCalculator from './killerCalculator';
+import customPerks from './customPerks';
 
-const es: Dictionary = {
+const es = {
   app,
   landing,
   generator,
@@ -46,7 +47,8 @@ const es: Dictionary = {
   admin,
   maps,
   quests,
+  killerCalculator,
+  customPerks,
 };
 
 export default es;
-

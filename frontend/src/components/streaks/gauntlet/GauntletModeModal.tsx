@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
 import { X, Swords, Lock } from 'lucide-react';
@@ -7,7 +8,7 @@ export interface GauntletModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectOriginal: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({

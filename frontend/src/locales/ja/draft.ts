@@ -1,13 +1,14 @@
+// frontend/src/locales/ja/draft.ts
 export default {
-  "draftTitle": "競技ドラフトルーム",
-  "draftSubtitle": "戦略的1v1パークBAN＆PICKエンジン",
+  "draftTitle": "競技用ドラフトルーム",
+  "draftSubtitle": "パークの戦略的 1v1 BAN＆PICK エンジン",
   "roomCode": "ルームコード",
   "createRoom": "ドラフトルームを作成",
   "joinRoom": "ルームに参加",
-  "roomCodePlaceholder": "ルームコードを入力 (例: AB12CD)",
+  "roomCodePlaceholder": "ルームコードを入力（例: AB12CD）",
   "loadingRoom": "ドラフトルームを読み込み中...",
-  "roomNotFound": "ドラフトルームが見つからないか、期限切れです。",
-  "copyRoomLink": "ルーム招待リンクをコピー",
+  "roomNotFound": "ドラフトルームが見つからないか、有効期限が切れています。",
+  "copyRoomLink": "招待リンクをコピー",
   "linkCopied": "招待リンクをクリップボードにコピーしました！",
   "spectatorMode": "ドラフトルームを観戦中",
   "currentTurn": "現在のターン",
@@ -22,7 +23,10 @@ export default {
   "pickAction": "パークをPICK",
   "selectPerkToBan": "BANするパークを選択",
   "selectPerkToPick": "PICKするパークを選択",
-  "waitingForOpponent": "対戦相手のアクションを待機中...",
+  "waitingForOpponent": "相手のアクションを待機中...",
   "plusPrefix": "+",
-  "maxPerSideSuffix": "（各サイド最大3つ）"
+  "maxPerSideSuffix": "（各陣営最大3枠）",
+  "loadingDraft": "ドラフトルームを読み込み中...",
+  "noMatchingPerks": "一致するパークは見つかりませんでした。"
 };
+

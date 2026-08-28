@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/QuestsModal.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -18,7 +19,7 @@ import { PerkDictionary } from '@/types/perks';
 interface QuestsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict }) => {
@@ -114,7 +115,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             <div>
               <div className="flex items-center gap-2">
                 <h2 id="quests-modal-title" className="text-xl font-black tracking-wide text-slate-900 dark:text-white">
-                  {dict?.landing?.questsTitle || 'Trial Quests & Milestones'}
+                  {dict?.quests?.title || 'Trial Quests & Milestones'}
                 </h2>
                 <span className="rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">
                   {dict?.quests?.xpSystem || 'XP System'}
@@ -122,7 +123,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
 
-                {dict?.landing?.questsSubtitle || 'Complete daily and weekly trials to earn XP and level up your status.'}
+                {dict?.quests?.subtitle || 'Complete daily and weekly trials to earn XP and level up your status.'}
               </p>
             </div>
           </div>

@@ -5,6 +5,7 @@ from typing import Any
 from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.orm import joinedload
 
+from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.models import Addon, Character, Item, Offering
 from app.services.perks.utils import HEADER_EXCLUSIONS, normalize_search_key, slugify
@@ -28,13 +29,22 @@ def fetch_characters(service, category: str | None = None, lang: str | None = No
             Character.name.asc(),
         )
 
-        characters = db.session.scalars(stmt).unique().all()
+        characters = _run_characters_query(stmt)
         if characters:
             return [c.to_dict(lang=lang) for c in characters]
     except Exception as e:
         logger.debug(f"Querying characters from DB: {e}")
 
     return service._characters_cache
+
+
+@retry_on_transient_db_error()
+def _run_characters_query(stmt):
+    # Split out so a transient connection drop gets retried once here,
+    # before fetch_characters' broader except falls back to the (possibly
+    # empty/stale) in-memory cache -- without this, a one-off blip silently
+    # degrades every caller to a near-empty catalog instead of a clean error.
+    return db.session.scalars(stmt).unique().all()
 
 
 def fetch_character_suggestions(

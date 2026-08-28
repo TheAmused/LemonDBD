@@ -2,6 +2,7 @@
 from typing import Any, Callable
 import pytest
 from flask.testing import FlaskClient
+from tests.live.conftest import AuthenticatedClient
 
 
 @pytest.mark.live
@@ -12,8 +13,15 @@ class TestGauntletMultiroundProgressionWorkflow:
     def test_gauntlet_multiround_progression_workflow(
         self,
         live_client: FlaskClient,
+        admin_client: AuthenticatedClient,
         auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
     ) -> None:
+        # Upewnij się, że tryb gauntlet jest aktywny
+        admin_client.put(
+            "/api/v1/admin/challenge-modes/gauntlet",
+            json={"is_enabled": True},
+        )
+
         client, headers, user = auth_client_factory(
             "gauntlet_boss", "gboss@example.com", "pass123"
         )

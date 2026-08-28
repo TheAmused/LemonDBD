@@ -1,10 +1,9 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/ActiveTargetStage.tsx
-import type { Dictionary } from '@/locales/types';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { GauntletRun, Perk, Role } from '@/types/gauntletStreak';
-import { OwnedCharacterItem } from './useOwnedCharacters';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import type { GauntletRun, Perk, Role } from '@/types/gauntletStreak';
+import type { OwnedCharacterItem } from './useOwnedCharacters';
 import { useTargetDraw, DrawPhase } from './useTargetDraw';
 import {
   RefreshCw,
@@ -16,6 +15,7 @@ import {
   Lock,
   HelpCircle,
 } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import { avatarUrlForCharacter, perkIconUrl } from '@/utils/staticUrl';
 
 export const avatarUrlFor = (name: string, role: Role) =>
@@ -53,24 +53,18 @@ export interface ActiveTargetStageProps {
   onWin: () => void;
   onLoss: () => void;
   onReveal: () => void;
-  /** Holds off the next reel while something else (the checkpoint modal) has the floor. */
   holdReel?: boolean;
-  /** The target the reel has actually finished landing on, lifted so the roster grid can share it. */
   shownTarget: string | null;
   onShownTargetChange: (name: string | null) => void;
   dict?: Dictionary;
 }
 
-/**
- * The portrait on the reel. Re-keying it per name restarts the frame animation,
- * so each face fades in rather than swapping flatly.
- */
 const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> = ({
   name,
   role,
   phase,
 }) => {
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<boolean>(false);
   const src = name ? avatarUrlFor(name, role) : null;
 
   useEffect(() => setFailed(false), [name]);
@@ -82,7 +76,7 @@ const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> 
       <div
         className={`w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400 ${motion}`}
       >
-        {role === 'survivor' ? <User className="w-10 h-10" /> : <Skull className="w-10 h-10" />}
+        {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <Skull className="w-10 h-10" aria-hidden="true" />}
       </div>
     );
   }
@@ -99,7 +93,7 @@ const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> 
 };
 
 const PerkIcon: React.FC<{ perk: Perk; size?: string }> = ({ perk, size = 'w-12 h-12' }) => {
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<boolean>(false);
   const src = perkIconFor(perk);
 
   return (
@@ -115,7 +109,7 @@ const PerkIcon: React.FC<{ perk: Perk; size?: string }> = ({ perk, size = 'w-12 
           onError={() => setFailed(true)}
         />
       ) : (
-        <Sparkles className="w-5 h-5 text-amber-500/60 dark:text-amber-400/60" />
+        <Sparkles className="w-5 h-5 text-amber-500/60 dark:text-amber-400/60" aria-hidden="true" />
       )}
     </div>
   );
@@ -134,21 +128,21 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   onShownTargetChange,
   dict,
 }) => {
-  const [avatarError, setAvatarError] = useState(false);
+  const [avatarError, setAvatarError] = useState<boolean>(false);
 
   const targetName = run?.current_character_id || run?.current_loadout?.character || '';
   const completed = run?.completed_characters || [];
 
-  // The reel runs through whoever is still standing, in roster order.
-  const drawPool = React.useMemo(() => {
+  const drawPool = useMemo(() => {
     const names = characters.map((c) => c.name).filter((name) => !completed.includes(name));
     return names.includes(targetName) ? names : [...names, targetName].filter(Boolean);
-  }, [characters, completed.join('|'), targetName]);
+  }, [characters, completed, targetName]);
 
   const { displayName, phase, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
 
   const sendOffPool = role === 'killer' ? KILLER_SEND_OFFS : SURVIVOR_SEND_OFFS;
-  const [sendOff, setSendOff] = useState(sendOffPool[0]);
+  const [sendOff, setSendOff] = useState<string>(sendOffPool[0]);
+
   const beginDraw = useCallback(
     (onDone: () => void) => {
       setSendOff(sendOffPool[Math.floor(Math.random() * sendOffPool.length)]);
@@ -157,14 +151,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     [startDraw, sendOffPool]
   );
 
-  // Which target the card is currently allowed to show. Holding this in state
-  // (rather than reacting after the fact) keeps a freshly drawn target from
-  // flashing on screen for a frame before its reel starts.
   const isRevealed = Boolean(run?.target_revealed);
   const awaitingDraw = isRevealed && Boolean(targetName) && shownTarget !== targetName;
 
-  // Every later match re-runs the reel on its own, so the next target arrives
-  // as a reveal rather than just appearing in place.
   useEffect(() => {
     if (!isRevealed || !targetName) {
       onShownTargetChange(null);
@@ -172,26 +161,16 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     }
     if (shownTarget === targetName || isDrawing) return;
 
-    // A run that was already revealed before this mount (a reload, say) has
-    // nothing to reveal, so it skips straight to the card.
     if (shownTarget === null) {
       onShownTargetChange(targetName);
       return;
     }
-    // The checkpoint modal gets its moment before the next reel steals focus;
-    // this effect re-fires once holdReel drops, picking the draw back up.
+
     if (holdReel) return;
     beginDraw(() => onShownTargetChange(targetName));
   }, [isRevealed, targetName, shownTarget, isDrawing, beginDraw, holdReel, onShownTargetChange]);
 
-  // The very first reveal is player-triggered (the START GAME click) and its
-  // backend confirmation (target_revealed flipping true) lands after the
-  // reel's local hold already ended. `revealing` spans that whole window
-  // explicitly, from click to confirmation, so the card never falls back to
-  // "Ready for the Gauntlet?" mid-flow -- unlike deriving the gap from
-  // shownTarget/targetName equality, it doesn't care whether those two end up
-  // spelled identically once the backend response lands.
-  const [revealing, setRevealing] = useState(false);
+  const [revealing, setRevealing] = useState<boolean>(false);
   useEffect(() => {
     if (isRevealed && !isDrawing) setRevealing(false);
   }, [isRevealed, isDrawing]);
@@ -229,14 +208,14 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         {drawing ? (
           <>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
-              {displayName ?? ' '}
+              {displayName ?? ' '}
             </h2>
             <p
               className={`h-6 text-base font-bold text-amber-600 dark:text-amber-400 ${
                 phase === 'landed' ? 'gn-name-in' : ''
               }`}
             >
-              {phase === 'landed' ? sendOff : ' '}
+              {phase === 'landed' ? sendOff : ' '}
             </p>
           </>
         ) : (
@@ -245,6 +224,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               {dict?.streaks?.readyForGauntlet || 'Ready for the Gauntlet?'}
             </h2>
             <button
+              type="button"
               onClick={() => {
                 setRevealing(true);
                 beginDraw(() => {
@@ -279,7 +259,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   return (
     <div className="w-full min-h-[420px] bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
-      {/* Top Banner / Stage Header */}
+      {/* Top Banner */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-6 mb-6">
         <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
           <div className="relative">
@@ -293,7 +273,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 />
               ) : (
                 <div className="w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400">
-                  {role === 'survivor' ? <User className="w-10 h-10" /> : <Skull className="w-10 h-10" />}
+                  {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <Skull className="w-10 h-10" aria-hidden="true" />}
                 </div>
               )}
             </div>
@@ -327,23 +307,25 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
         {/* Active Perk Tier Badge */}
         <div className="flex items-center gap-3 px-4 py-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-800 dark:text-amber-300 w-full md:w-auto justify-center">
-          <Lock className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
+          <Lock className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
           <div>
             <div className="text-[10px] uppercase font-black text-amber-600 dark:text-amber-400 tracking-wider">
               {dict?.streaks?.tierLabel || 'Tier'} {tierInfo.tier_level}: {tierInfo.name}
             </div>
             <div className="text-xs font-bold text-slate-900 dark:text-white">
-              {perkLimit === 0 ? '0 Perks (Perkless Trial)' : `${perkLimit} Perk${perkLimit > 1 ? 's' : ''} Allowed`}
+              {perkLimit === 0
+                ? dict?.streaks?.perklessTrial || '0 Perks (Perkless Trial)'
+                : `${perkLimit} ${perkLimit > 1 ? (dict?.streaks?.perksAllowedPlural || 'Perks Allowed') : (dict?.streaks?.perksAllowedSingular || 'Perk Allowed')}`}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Build guide: informational only, you pick the actual perks in-game */}
+      {/* Build guide */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+            <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
             {dict?.streaks?.yourBuildForMatch || 'Your build for this match'}
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -357,7 +339,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </p>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" role="list">
           {perkSlots.map((idx) => {
             if (idx >= perkLimit) {
               return (
@@ -365,7 +347,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   key={`locked-${idx}`}
                   className="bg-slate-100/60 border border-slate-200 border-dashed dark:bg-slate-950/40 dark:border-slate-800/80 rounded-xl p-4 flex items-center gap-3 opacity-60 select-none"
                 >
-                  <div className="w-16 h-16 shrink-0 bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600">
+                  <div className="w-16 h-16 shrink-0 bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600" aria-hidden="true">
                     <Lock className="w-7 h-7" />
                   </div>
                   <div>
@@ -386,7 +368,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   key={`char-slot-${idx}`}
                   className="bg-amber-500/[0.07] border border-amber-500/40 rounded-xl p-4 flex items-center gap-3"
                 >
-                  <div className="relative w-16 h-16 shrink-0 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400">
+                  <div className="relative w-16 h-16 shrink-0 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400" aria-hidden="true">
                     <HelpCircle className="w-9 h-9" />
                     {avatarSrc && !avatarError && (
                       <img
@@ -443,7 +425,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 key={`free-${idx}`}
                 className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center gap-3"
               >
-                <div className="w-16 h-16 shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-500">
+                <div className="w-16 h-16 shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-500" aria-hidden="true">
                   <HelpCircle className="w-9 h-9" />
                 </div>
                 <div>
@@ -464,20 +446,22 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800/80">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
+            type="button"
             onClick={onWin}
             disabled={loading}
             className="w-full sm:w-auto flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
           >
-            <CheckCircle className="w-5 h-5 text-emerald-100" />
+            <CheckCircle className="w-5 h-5 text-emerald-100" aria-hidden="true" />
             <span>{dict?.streaks?.winMatch || 'WIN MATCH'}</span>
           </button>
 
           <button
+            type="button"
             onClick={onLoss}
             disabled={loading}
             className="w-full sm:w-auto flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 active:bg-rose-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-rose-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
           >
-            <XCircle className="w-5 h-5 text-rose-100" />
+            <XCircle className="w-5 h-5 text-rose-100" aria-hidden="true" />
             <span>{dict?.streaks?.loseMatch || 'LOSE MATCH'}</span>
           </button>
         </div>
@@ -485,3 +469,4 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     </div>
   );
 };
+

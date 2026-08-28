@@ -1,13 +1,12 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
-import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
-import { Difficulty } from '@/types/chaosStreak';
-import { Perk } from '@/types/gauntletStreak';
+import type { Difficulty } from '@/types/chaosStreak';
+import type { Perk } from '@/types/gauntletStreak';
 import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
 import { ResetConfirmModal } from '../ResetConfirmModal';
 import { useChaosRun } from './useChaosRun';
@@ -53,23 +52,19 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const { pool: perkPool } = useKillerPerkPool();
   const { isAdmin } = useAuth();
 
-  const rosterKillers = React.useMemo(() => {
+  const rosterKillers = useMemo(() => {
     if (!run) return killers;
     return [...run.owned_killers].sort(
       (a, b) => (releaseOrder.get(a) ?? Infinity) - (releaseOrder.get(b) ?? Infinity)
     );
   }, [run, releaseOrder, killers]);
-  // The frozen run only ever needs to carry *which* perk names are in the
-  // pool (run.unlocked_perks) -- resolving those to full display objects
-  // (icon, description) client-side against the already-fetched perk
-  // catalog avoids re-sending every pool perk's full payload from the
-  // backend on every single run mutation (get_or_create_run/reveal/
-  // submit_result), which used to add ~450KB to each of those responses.
-  const perkPoolByName = React.useMemo(
+
+  const perkPoolByName = useMemo(
     () => new Map(perkPool.map((p) => [p.name, p] as const)),
     [perkPool]
   );
-  const rosterPerkPool: Perk[] = React.useMemo(() => {
+
+  const rosterPerkPool: Perk[] = useMemo(() => {
     if (!run) return perkPool;
     return run.unlocked_perks
       .map((name) => perkPoolByName.get(name))
@@ -78,19 +73,20 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
-  const [celebrating, setCelebrating] = useState(false);
-  const [confirmingReset, setConfirmingReset] = useState(false);
-  const [isStatsOpen, setIsStatsOpen] = useState(false);
-  const [isRulesOpen, setIsRulesOpen] = useState(false);
-  const [isPerkPoolOpen, setIsPerkPoolOpen] = useState(false);
-  const [isChangeDifficultyOpen, setIsChangeDifficultyOpen] = useState(false);
+  const [celebrating, setCelebrating] = useState<boolean>(false);
+  const [confirmingReset, setConfirmingReset] = useState<boolean>(false);
+  const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
+  const [isRulesOpen, setIsRulesOpen] = useState<boolean>(false);
+  const [isPerkPoolOpen, setIsPerkPoolOpen] = useState<boolean>(false);
+  const [isChangeDifficultyOpen, setIsChangeDifficultyOpen] = useState<boolean>(false);
 
-  const celebrationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const celebrationTimerRef = useRef<NodeJS.Timeout | null>(null);
   const celebrate = () => {
     if (celebrationTimerRef.current) clearTimeout(celebrationTimerRef.current);
     setCelebrating(true);
     celebrationTimerRef.current = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
   };
+
   useEffect(() => () => {
     if (celebrationTimerRef.current) clearTimeout(celebrationTimerRef.current);
   }, []);
@@ -135,6 +131,20 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
     }
   };
 
+  const completionTitle =
+    dict?.streaks?.chaosStreakComplete ||
+    dict?.streaks?.streakComplete ||
+    dict?.streaks?.chaosStreak ||
+    '';
+
+  const youWonText = dict?.streaks?.youWonOn
+    ? `${dict.streaks.youWonOn} `
+    : '';
+
+  const modeSuffixText = dict?.streaks?.modeSuffix
+    ? ` ${dict.streaks.modeSuffix}`
+    : '';
+
   return (
     <div>
       <Confetti active={celebrating} />
@@ -143,13 +153,13 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         href={`/${locale}/streaks/killer`}
         className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-violet-500 dark:text-slate-400 dark:hover:text-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
       >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>
+        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+        <span>{dict?.streaks?.backToKillerStreaks || ''}</span>
       </Link>
 
       <div className="mt-4">
         {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-sm flex items-center justify-between shadow-lg">
+          <div className="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-sm flex items-center justify-between shadow-lg" role="alert">
             <span>{error}</span>
           </div>
         )}
@@ -178,23 +188,23 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
 
         {isCompleted ? (
           <div className="mb-8 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400" aria-hidden="true">
               <Trophy className="h-8 w-8" />
             </div>
             <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              {dict?.streaks?.chaosStreak ? `${dict.streaks.chaosStreak} complete!` : 'Chaos Streak complete!'}
+              {completionTitle}
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              {dict?.streaks?.youWonOn || 'You won on'} <span className="capitalize">{difficulty}</span>{' '}
-              {dict?.streaks?.modeSuffix || 'mode.'}
+              {youWonText}<span className="capitalize font-bold">{difficulty}</span>{modeSuffixText}
             </p>
             <button
+              type="button"
               onClick={reset}
               disabled={busy}
               className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
             >
-              <RotateCcw className="h-4 w-4" />
-              {dict?.streaks?.startNewRun || 'Start a new run'}
+              <RotateCcw className="h-4 w-4" aria-hidden="true" />
+              <span>{dict?.streaks?.startNewRun || ''}</span>
             </button>
           </div>
         ) : (
@@ -211,42 +221,44 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
             </div>
             <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 shadow-sm">
               <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
-                {dict?.streaks?.pickYourKiller || 'Pick your killer'}
+                {dict?.streaks?.pickYourKiller || ''}
               </h3>
 
               {!acceptedKillerId ? (
                 <div className="mt-5 flex items-center justify-center">
                   <button
+                    type="button"
                     onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
                     disabled={busy || !run?.perks_revealed || !selectedKillerId}
                     className="flex-1 max-w-xs bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
-                    {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
+                    {dict?.streaks?.acceptPick || ''}
                   </button>
                 </div>
               ) : (
                 <div className="mt-5 flex items-center justify-center gap-4">
                   <button
+                    type="button"
                     onClick={() => handleResult('win')}
                     disabled={busy}
                     className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
-                    {dict?.streaks?.winMatch || 'WIN MATCH'}
+                    {dict?.streaks?.winMatch || ''}
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleResult('loss')}
                     disabled={busy}
                     className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
-                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
+                    {dict?.streaks?.loseMatch || ''}
                   </button>
                 </div>
               )}
 
               <div
-                className={`mt-5 transition-opacity ${
-                  run?.perks_revealed ? '' : 'opacity-40 pointer-events-none'
-                }`}
+                className={`mt-5 transition-opacity ${run?.perks_revealed ? '' : 'opacity-40 pointer-events-none'
+                  }`}
               >
                 <KillerPickerGrid
                   killers={rosterKillers}
@@ -264,13 +276,14 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         {!isCompleted && isAdmin && (
           <div className="mt-10 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm px-4 py-4 shadow-sm">
             <button
+              type="button"
               onClick={handleDevSkipToWin}
               disabled={busy || !killers.length}
-              title={dict?.streaks?.devSkipWinTitle || 'Dev only: win with every remaining killer to reach the completion screen'}
+              title={dict?.streaks?.devSkipWinTitle || ''}
               className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
-              <Trophy className="h-3.5 w-3.5" />
-              {dict?.streaks?.devSkipWinLabel || 'DEV: Skip to win screen'}
+              <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{dict?.streaks?.devSkipWinLabel || ''}</span>
             </button>
           </div>
         )}
@@ -278,7 +291,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         <ResetConfirmModal
           open={confirmingReset}
           busy={busy}
-          message="Streak, checkpoints and every cleared killer go back to zero. This cannot be undone."
+          message={dict?.streaks?.resetConfirmPrompt || ''}
           onCancel={() => setConfirmingReset(false)}
           onConfirm={handleReset}
         />
@@ -290,6 +303,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onClose={() => setIsPerkPoolOpen(false)}
           pool={rosterPerkPool}
           usedPerkNames={run?.used_perks || []}
+          dict={dict}
         />
         <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />
         <ChaosModeModal

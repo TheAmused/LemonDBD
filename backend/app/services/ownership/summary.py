@@ -3,10 +3,12 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
+from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.models import Character, Perk, User, UserCharacterOwnership, UserPerkOwnership
 
 
+@retry_on_transient_db_error()
 def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
     """Calculate aggregated ownership statistics and identifiers for characters and perks."""
     all_characters = db.session.scalars(select(Character)).all()

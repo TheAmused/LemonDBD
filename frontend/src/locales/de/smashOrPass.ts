@@ -1,249 +1,259 @@
-// frontend/src/locales/de/smashOrPass.ts
 export default {
-  "title": "Smash or Pass",
-  "selectRoster": "KADER WÄHLEN",
-  "dwellHint": "Greifen und drehen. 1 Sek. in der Mitte halten zum Auswählen.",
-  "active": "AKTIV",
-  "dwellActive": "Aktiv ({seconds}s)",
-  "subtitle": "Bewerte Dead by Daylight Charaktere, entdecke deinen Prüfungs-Romantik-Archetyp und stimme ab.",
-  "smash": "Smash",
-  "pass": "Pass",
-  "superSmash": "Super Smash",
-  "leaderboard": "Ruhmeshalle",
-  "search": "Suchen...",
-  "close": "Schließen",
-  "shuffle": "Mischen",
-  "undo": "Rückgängig",
-  "mySmashes": "Deine Smashes",
-  "stats": "Dossier & Statistiken",
-  "reset": "Deck zurücksetzen",
-  "keybindings": "Tastenbelegung",
-  "hint": "Pfeiltasten oder Wischen zum Abstimmen nutzen",
-  "godTier": "Götter-Tier",
-  "fatalAttraction": "Fatale Anziehung",
-  "friendzone": "Friendzone",
-  "eldritchVoid": "Eldritch-Leere",
-  "chaosRating": "Chaos-Bewertung",
-  "dangerLevel": "Gefahrenstufe",
-  "archetype": "Archetyp",
-  "compatibilityScore": "Kompatibilitätswert",
-  "communitySmashRate": "Community-Smash-Rate",
-  "totalVotes": "Stimmen gesamt",
-  "traits": "Kompatibilitätsmerkmale",
-  "all": "Alle",
-  "allRoles": "Alle Rollen",
-  "survivors": "Überlebende",
-  "killers": "Killer",
-  "allGenders": "Alle Geschlechter",
-  "female": "Weiblich",
-  "femaleOnly": "Nur weiblich",
-  "male": "Männlich",
-  "maleOnly": "Nur männlich",
-  "monsters": "Monster & Eldritch",
-  "rosters": {
-    "canon": {
-      "name": "Dead by Daylight: Nebel-Kanon",
-      "desc": "Der vollständige 98-Charakter-Kader aller offiziellen Killer und Überlebenden."
+  title: 'DBD Smash or Pass',
+  pageTitle: 'Smash or Pass • Prüfungs-Dating & Charakter-Hub',
+  subtitle: 'Wische, bewerte und entdecke Community-Präferenzen im Nebel.',
+  selectRoster: 'ROSTER WÄHLEN',
+  selectPrefix: 'Wählen:',
+  select: 'Wählen',
+  active: 'AKTIV',
+  pass: 'Pass',
+  smash: 'Smash',
+  superSmash: 'Super Smash',
+  streak: 'Serie',
+  streakRecord: 'Serienrekord',
+  highScore: 'Höchstpunktzahl',
+  dwellHint: 'Greifen und drehen. Die Karte in der Mitte wird ausgewählt.',
+  candidates: 'Kandidaten',
+  candidatesWord: 'Kandidaten',
+  votes: 'Stimmen',
+  votesWord: 'Stimmen',
+  smashWord: 'Smash',
+  passWord: 'Pass',
+  showingCandidates: 'Angezeigte Kandidaten:',
+  showingCount: '{count} von {total} Kandidaten angezeigt',
+  leaderboard: 'Ruhmeshalle',
+  search: 'Kandidaten oder Bestenliste durchsuchen...',
+  all: 'Alle',
+  allTiers: 'Alle Ränge',
+  allRoles: 'Alle Rollen',
+  allGenders: 'Alle Geschlechter',
+  femaleOnly: 'Weiblich',
+  maleOnly: 'Männlich',
+  monsters: 'Monster & Uralte Wesen',
+  close: 'Schließen',
+  loginNotice: 'Melde dich an, damit deine Stimmen in der globalen Ruhmeshalle gezählt werden!',
+  groupByTier: 'Nach Rang gruppieren',
+  rankedList: 'Rangliste',
+  sort: 'Sortieren:',
+  sortSmashRate: 'Smash-Rate (%)',
+  sortTotalVotes: 'Gesamtstimmen',
+  sortMostSmashes: 'Meiste Smashes',
+  noCommunityVotesTitle: 'Noch keine Community-Stimmen',
+  noCommunityVotesDesc: 'Sei der Erste, der Kandidaten bewertet und die Ruhmeshalle füllt!',
+  noCandidatesFound: 'Keine Kandidaten gefunden, die den Kriterien entsprechen.',
+  tierFilterLabel: 'Rang:',
+  percentSign: '%',
+  percentClose: '%)',
+  candidateRankLabel: '{name} - Rang #{rank}, Smash-Rate: {rate}%',
+  youSmashedThis: 'Du hast für Smash gestimmt',
+  flipToDatingProfile: 'Umdrehen für Profil & Werte',
+  zoomFullPortrait: 'Porträt vergrößern',
+  flipBack: 'Zurück zum Artwork',
+  loreAndPersonality: 'Hintergrund & Persönlichkeit',
+  trialRumor: 'Prüfungsgerüchte & Memes',
+  greenFlags: 'Grüne Flaggen',
+  redFlags: 'Rote Flaggen',
+  turnOn: 'Pluspunkte:',
+  dealbreaker: 'Ausschlusskriterium:',
+  datingPsychology: 'Dating-Psychologie-Analyse',
+  totalEvaluated: 'Insgesamt bewertet:',
+  copiedToClipboard: 'In die Zwischenablage kopiert!',
+  shareArchetype: 'Archetyp teilen',
+  affinityComparisonAria: '{survivor} vs {killer} Affinität',
+  godTier: 'God Tier',
+  fatalAttraction: 'Fatal Attraction',
+  friendzone: 'Friendzone',
+  eldritchVoid: 'Eldritch Void',
+  chaosRating: 'Chaos-Bewertung',
+  dangerLevel: 'Gefahrenstufe',
+  compatibilityScore: 'Kompatibilitätswert',
+  survivors: 'Überlebende',
+  killers: 'Killer',
+  occultDossier: 'OKKULTES DOSSIER',
+  pipeSeparator: '|',
+  loadingRosterPrefix: 'Laden',
+  loadingRosterSuffix: 'aus der Datenbank...',
+  stats: 'Info',
+  reset: 'Zurücksetzen',
+  rosters: {
+    canon: {
+      name: 'Dead by Daylight: Nebelkanon',
+      description: 'Originale Überlebende und Killer aus dem Prüfungsreich.',
     },
-    "hoy": {
-      "name": "Hooked on You: Insel-Romantik",
-      "desc": "Tropische Dating-Sim-Edition mit Strandoutfits und sonnigen Vibes."
+    hoy: {
+      name: 'Hooked on You: Insel-Romanze',
+      description: 'Charaktere aus der tropischen Dating-Simulation.',
     },
-    "legendary": {
-      "name": "Legendäre Skins & Crossover",
-      "desc": "Ikonische legendäre Skins und Crossover-Kollaborationen der Spielegeschichte."
+    legendary: {
+      name: 'Legendäre Skins & Kollaborationen',
+      description: 'Kultige Crossover-Legenden und Elite-Skins.',
     },
-    "cyberpunk": {
-      "name": "Cyberpunk Fog 2077 Edition",
-      "desc": "High-Tech Neon-augmentierte Champions im dystopischen Nebel."
+    cyberpunk: {
+      name: 'Cyberpunk Nebel 2077',
+      description: 'Futuristische Cyber-Upgrades und synthetische Killer.',
     },
-    "anime": {
-      "name": "Nebel-Anime / Manga-Ästhetik",
-      "desc": "Stilisierte Anime-Adaptionen deiner Lieblingscharaktere aus dem Nebel."
+    anime: {
+      name: 'Anime & Manga Ästhetik',
+      description: 'Stilisierte japanische Neuinterpretationen.',
     },
-    "gothic": {
-      "name": "Viktorianische & Gothic-Eldritch-Legenden",
-      "desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror."
+    gothic: {
+      name: 'Viktorianischer & Kosmischer Horror',
+      description: 'Düstere viktorianische Schrecken und uralte Wesen.',
     },
-    "hooked_on_you": {
-      "name": "Hooked on You: Insel-Romantik",
-      "desc": "Tropische Dating-Sim-Edition mit Strandoutfits und sonnigen Vibes."
+    hooked_on_you: {
+      name: 'Hooked on You: Insel-Romanze',
+      description: 'Charaktere aus der tropischen Dating-Simulation.',
     },
-    "legendary_cosplay": {
-      "name": "Legendäre Skins & Crossover",
-      "desc": "Ikonische legendäre Skins und Crossover-Kollaborationen der Spielegeschichte."
+    legendary_cosplay: {
+      name: 'Legendäre Skins & Kollaborationen',
+      description: 'Kultige Crossover-Legenden und Elite-Skins.',
     },
-    "cyberpunk_2077": {
-      "name": "Cyberpunk Fog 2077 Edition",
-      "desc": "High-Tech Neon-augmentierte Champions im dystopischen Nebel."
+    cyberpunk_2077: {
+      name: 'Cyberpunk Nebel 2077',
+      description: 'Futuristische Cyber-Upgrades und synthetische Killer.',
     },
-    "anime_manga": {
-      "name": "Nebel-Anime / Manga-Ästhetik",
-      "desc": "Stilisierte Anime-Adaptionen deiner Lieblingscharaktere aus dem Nebel."
+    anime_manga: {
+      name: 'Anime & Manga Ästhetik',
+      description: 'Stilisierte japanische Neuinterpretationen.',
     },
-    "gothic_eldritch": {
-      "name": "Viktorianische & Gothic-Eldritch-Legenden",
-      "desc": "Dark Fantasy, Bloodborne-Ästhetik und viktorianischer Eldritch-Horror."
-    }
+    gothic_eldritch: {
+      name: 'Viktorianischer & Kosmischer Horror',
+      description: 'Düstere viktorianische Schrecken und uralte Wesen.',
+    },
   },
-  "controls": {
-    "pass": "Pass",
-    "smash": "Smash",
-    "superSmash": "Super Smash",
-    "stats": "Dossier & Statistiken",
-    "reset": "Deck zurücksetzen",
-    "keybindings": "Tastenbelegung",
-    "hint": "Pfeiltasten oder Wischen zum Abstimmen nutzen",
-    "arrowLeft": "Pass (Pfeil Links)",
-    "arrowRight": "Smash (Pfeil Rechts)",
-    "arrowUp": "Statistiken (Pfeil Oben)",
-    "arrowDown": "Super Smash (Pfeil Unten)",
-    "keyR": "Zurücksetzen (Taste R)"
+  controls: {
+    pass: 'Pass',
+    smash: 'Smash',
+    superSmash: 'Super Smash',
+    stats: 'Info',
+    reset: 'Zurücksetzen',
+    keybindings: 'Tastenbelegung',
+    passButton: 'Pass',
+    smashButton: 'Smash',
+    superSmashButton: 'Super Smash',
+    flipCard: 'Karte umdrehen',
+    fullscreen: 'Vollbild',
+    resetStreak: 'Serie zurücksetzen',
+    hint: 'Nutze Pfeiltasten oder ziehe die Karte zum Abstimmen',
   },
-  "tiers": {
-    "godTier": "Götter-Tier",
-    "fatalAttraction": "Fatale Anziehung",
-    "friendzone": "Friendzone",
-    "eldritchVoid": "Eldritch-Leere"
+  tiers: {
+    godTier: 'God Tier',
+    fatalAttraction: 'Fatal Attraction',
+    friendzone: 'Friendzone',
+    eldritchVoid: 'Eldritch Void',
   },
-  "statsDetail": {
-    "chaosRating": "Chaos-Bewertung",
-    "dangerLevel": "Gefahrenstufe",
-    "archetype": "Archetyp",
-    "compatibilityScore": "Kompatibilitätswert",
-    "communitySmashRate": "Community-Smash-Rate",
-    "totalVotes": "Stimmen gesamt",
-    "traits": "Kompatibilitätsmerkmale",
-    "smashCount": "Smashes",
-    "passCount": "Passes",
-    "superSmashCount": "Super Smashes",
-    "rank": "Rang",
-    "quote": "Zitat"
+  statsDetail: {
+    smashRate: 'Smash-Rate',
+    totalVotes: 'Gesamte Stimmen',
+    winStreak: 'Siegesserie',
+    popularity: 'Beliebtheit',
+    communitySmashRate: 'Community-Smash-Rate',
+    smashCount: 'Smashes',
+    passCount: 'Pässe',
+    rank: 'Globaler Rang',
   },
-  "filters": {
-    "all": "Alle",
-    "allRoles": "Alle Rollen",
-    "survivors": "Überlebende",
-    "killers": "Killer",
-    "allGenders": "Alle Geschlechter",
-    "female": "Weiblich",
-    "femaleOnly": "Nur weiblich",
-    "male": "Männlich",
-    "maleOnly": "Nur männlich",
-    "monsters": "Monster & Eldritch"
+  filters: {
+    allRoles: 'Alle Rollen',
+    survivors: 'Überlebende',
+    killers: 'Killer',
+    allGenders: 'Alle Geschlechter',
+    femaleOnly: 'Weiblich',
+    maleOnly: 'Männlich',
+    monsters: 'Monster & Uralte Wesen',
   },
-  "modals": {
-    "statsTitle": "Kandidaten-Dossier",
-    "leaderboardTitle": "Ruhmeshalle",
-    "personaTitle": "Prüfungs-Romantik-Archetyp",
-    "resetConfirmTitle": "Alle Stimmen zurücksetzen?",
-    "resetConfirmDesc": "Dadurch werden alle deine Stimmen in dieser Sitzung zurückgesetzt und das Deck neu gemischt.",
-    "confirm": "Bestätigen",
-    "cancel": "Abbrechen",
-    "close": "Schließen"
+  modals: {
+    personaTitle: 'Prüfungs-Romantik-Archetyp',
+    leaderboardTitle: 'Ruhmeshallen-Rangliste',
+    howToPlay: 'Spielanleitung',
+    resetConfirmTitle: 'Alle Stimmen zurücksetzen?',
+    resetConfirmDesc: 'Dadurch wird dein Abstimmungsverlauf gelöscht und alle Kandidaten werden zurückgesetzt.',
+    cancel: 'Abbrechen',
+    confirm: 'Ja, alle zurücksetzen',
   },
-  "notifications": {
-    "voteRecorded": "Stimme erfasst!",
-    "deckReset": "Deck wurde zurückgesetzt.",
-    "rateLimit": "Zu schnell abgestimmt! Bitte verlangsame das Tempo.",
-    "errorLoading": "Fehler beim Laden des Kandidaten-Feeds.",
-    "errorVoting": "Fehler beim Speichern der Stimme."
+  notifications: {
+    voteRecorded: 'Stimme erfasst!',
+    streakUpdated: 'Serie aktualisiert!',
   },
-  "empty": {
-    "title": "Deck abgeschlossen!",
-    "subtitle": "Du hast alle verfügbaren Kandidaten in diesem Kader bewertet.",
-    "resetAction": "Zurücksetzen & Erneut abstimmen",
-    "viewLeaderboard": "Ruhmeshalle ansehen",
-    "switchRoster": "Anderen Kader wählen"
+  empty: {
+    title: 'Keine Kandidaten gefunden',
+    subtitle: 'Passe deine Filter an oder setze die Suche zurück.',
+    resetAction: 'Zurücksetzen & erneut spielen',
   },
-  "loreLabels": {
-    "trialClassification": "Prüfungs-Klassifizierung",
-    "datingArchetype": "Dating-Archetyp",
-    "greenFlag": "Prüfungs-Green-Flag",
-    "redFlag": "Prüfungs-Warnung",
-    "identityProfile": "Identitätsprofil",
-    "signatureQuote": "Signatur-Zitat",
-    "trialWarning": "Prüfungs-Warnung",
-    "female": "Weiblich",
-    "male": "Männlich",
-    "monster": "Eldritch / Monster"
+  loreLabels: {
+    role: 'Rolle',
+    realm: 'Reich',
+    bio: 'Biografie',
+    signatureQuote: 'Charakteristisches Zitat',
+    greenFlag: 'Grüne Flaggen',
+    redFlag: 'Rote Flaggen',
   },
-  "hud": {
-    "left": "übrig",
-    "smash": "Smash",
-    "pass": "Pass",
-    "smashRate": "Rate",
-    "bgm": "Hintergrundmusik",
-    "archetype": "Archetyp",
-    "hallOfFame": "Ruhmeshalle",
-    "howToPlay": "Spielanleitung",
-    "shuffle": "Mischen"
+  hud: {
+    swipeLeftHint: 'Nach links wischen für Pass',
+    swipeRightHint: 'Nach rechts wischen für Smash',
+    shuffle: 'Verbleibende mischen',
+    howToPlay: 'Spielanleitung & Tastenbelegung',
   },
-  "occultDossier": "OKKULTES DOSSIER",
-  "percentSign": "%",
-  "percentClose": "%)",
-  "pipeSeparator": "|",
-  "loadingRosterPrefix": "Lade",
-  "loadingRosterSuffix": "aus Datenbank...",
-  "howToPlayModal": {
-    "title": "So funktioniert Smash or Pass",
-    "swipeTitle": "Karten wischen oder ziehen",
-    "swipeDesc": "Ziehe die Karte nach Rechts für Smash 💋 oder nach Links für Pass ✖.",
-    "swipeIcon": "👆",
-    "iconsTitle": "Aktionssymbole auf der Karte",
-    "iconsDesc": "Klicke auf Umdrehen (oben links) für Biografie, Merkmale, Flags und Community-Memes. Klicke auf Zoom für hochauflösende Porträts.",
-    "iconsIcon": "🎯",
-    "keycapsTitle": "Tastatur-Kurzbefehle",
-    "keycapsIcon": "⌨️",
-    "atmosphereTitle": "Atmosphärischer Hintergrund & Musik",
-    "atmosphereDesc": "Bewege die Maus über Hintergrundtexte für Zitate und Lore mit Leuchteffekten. Schalte Hintergrundmusik mit [B] für Dark-Synth-Atmosphäre ein!",
-    "atmosphereIcon": "🌌",
-    "letsPlay": "Verstanden, los geht's!"
+  howToPlayModal: {
+    title: 'Wie man Smash or Pass spielt',
+    body: 'Wische nach rechts für Smash oder nach links für Pass. Entdecke deinen Beziehungs-Archetyp!',
+    swipeIcon: '👆',
+    swipeTitle: 'Karten wischen oder ziehen',
+    swipeDesc: 'Karte nach rechts ziehen für Smash oder nach links für Pass.',
+    iconsIcon: '🎯',
+    iconsTitle: 'Aktionssymbole auf der Karte',
+    iconsDesc: 'Klicke auf Umdrehen für Biografie & Memes. Klicke auf Zoom für hochauflösende Porträts.',
+    keycapsIcon: '⌨️',
+    keycapsTitle: 'Tastatur-Kurzbefehle',
+    atmosphereIcon: '🌌',
+    atmosphereTitle: 'Atmosphärischer Hintergrund & Musik',
+    atmosphereDesc: 'Bewege den Mauszeiger über Hintergrundtextelemente, um Zitate mit Leuchteffekten zu sehen.',
+    letsPlay: 'Verstanden, los geht\'s!',
   },
-  "personaArchetypes": {
-    "eldritchDevotee": {
-      "title": "Der Eldritch-Ergebene",
-      "subtitle": "Unbegreifliche Schrecken und uralte Wesen sind deine wahre Liebessprache.",
-      "desc": "Warum sich mit sterblicher Romantik zufriedengeben, wenn die kosmische Leere ruft? Du umarmst Tentakel, Fänge und kosmische Mysterien."
+  personaArchetypes: {
+    untappedSoul: {
+      title: 'Die unentdeckte Seele',
+      subtitle: 'Stimme öfter ab, um deinen Archetyp zu enthüllen!',
+      desc: 'Du hast noch nicht genügend Kandidaten bewertet.',
     },
-    "redStainAddict": {
-      "title": "Der Roter-Schein-Süchtige",
-      "subtitle": "Gefahr ist dein Reiz und Terror-Radien lassen dein Herz höherschlagen.",
-      "desc": "Mori-Animationen sind für dich nur energische Kuscheleinheiten. Du fühlst dich zu Macht, Bedrohung und dunklem Charisma hingezogen."
+    fogRomantic: {
+      title: 'Der Nebel-Romantiker',
+      subtitle: 'Ein ausgewogenes Herz auf der Suche nach Leidenschaft.',
+      desc: 'Du glaubst an die Liebe selbst in den dunkelsten Prüfungen des Entitus.',
     },
-    "campfireSoulmate": {
-      "title": "Der Lagerfeuer-Seelenverwandte",
-      "subtitle": "Harmonisches Teamwork und selbstlose Heilung erwärmen dein Herz.",
-      "desc": "Du suchst echte Verbundenheit, aufrichtige Blicke und jemanden, der dich vor dem Öffnen des Ausgangstors vom Haken rettet."
+    eldritchDevotee: {
+      title: 'Kosmischer Ergebener',
+      subtitle: 'Fasziniert von uralten Kreaturen und jenseitigen Mächten.',
+      desc: 'Du siehst Schönheit im Unbekannten.',
     },
-    "entitysParamour": {
-      "title": "Der Geliebte des Entitus",
-      "subtitle": "Du siehst Schönheit, Charme und Romantik in fast jeder einzelnen Seele im Nebel.",
-      "desc": "Hohe Ansprüche? Noch nie davon gehört. Dein Herz ist eine endlose Zuflucht für alle Überlebenden und Killer gleichermaßen."
+    redStainAddict: {
+      title: 'Süchtig nach Gefahr',
+      subtitle: 'Gefahr und Adrenalin ziehen dich magisch an.',
+      desc: 'Du liebst das intensive Spiel mit dem Feuer.',
     },
-    "coldHeartedPragmatist": {
-      "title": "Der kaltherzige Pragmatiker",
-      "subtitle": "Extrem wählerisch, immun gegen Reize, ausschließlich auf das Überleben fokussiert.",
-      "desc": "Nur die wenigsten bestehen deine strenge Dating-Checkliste. Du verlangst Perfektion, makellose Talente und null Red Flags."
+    campfireSoulmate: {
+      title: 'Lagerfeuer-Seelenverwandter',
+      subtitle: 'Loyalität und Zusammenhalt stehen an erster Stelle.',
+      desc: 'Du schätzt verlässliche Partner im Team.',
     },
-    "fogRomantic": {
-      "title": "Der Nebel-Romantiker",
-      "subtitle": "Eine ausgeglichene Seele auf der Suche nach Leidenschaft und Adrenalin in den Prüfungen.",
-      "desc": "Du glaubst daran, dass selbst in den unendlichen Prüfungen des Entitus immer ein wahrer Funke Romantik zu finden ist."
-    }
+    entitysParamour: {
+      title: 'Liebling des Entitus',
+      subtitle: 'Offen, leidenschaftlich und für jeden zu haben.',
+      desc: 'Dein Herz hat Platz für den gesamten Nebel.',
+    },
+    coldHeartedPragmatist: {
+      title: 'Kalter Pragmatiker',
+      subtitle: 'Extrem wählerisch und schwer zu beeindrucken.',
+      desc: 'Nur die Allerbesten erhalten dein Smash.',
+    },
   },
-  "tooltips": {
-    "mute": "Soundeffekte stummschalten (M)",
-    "unmute": "Soundeffekte aktivieren (M)",
-    "playBgm": "Dunkle Ambient-BGM abspielen (B)",
-    "pauseBgm": "Dunkle Ambient-BGM pausieren (B)",
-    "resetAllVotes": "Alle meine Stimmen zurücksetzen",
-    "howToPlay": "Spielanleitung & Tastenbelegung",
-    "shuffle": "Verbleibende Kandidaten mischen"
+  tooltips: {
+    resetAllVotes: 'Stimmendaten zurücksetzen',
+    viewStats: 'Detaillierte Statistiken anzeigen',
+    pauseBgm: 'Hintergrundmusik anhalten (B)',
+    playBgm: 'Hintergrundmusik abspielen (B)',
+    shuffle: 'Verbleibende mischen',
+    unmute: 'Soundeffekte einschalten (M)',
+    mute: 'Soundeffekte stummstellen (M)',
+    howToPlay: 'Spielanleitung & Tastenbelegung',
   },
-  "tierFilterLabel": "Nach Tier filtern:",
-  "left": "übrig",
-  "bgm": "Musik",
-  "hallOfFame": "Ruhmeshalle",
-  "howToPlay": "Spielanleitung"
-};
+} as const;

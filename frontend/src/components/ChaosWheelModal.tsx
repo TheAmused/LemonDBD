@@ -3,8 +3,8 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Skull, Sparkles, X, Check } from 'lucide-react';
-import { ChaosMutator } from '@/types/chaos';
-import { PerkDictionary } from '@/types/perks';
+import type { Dictionary } from '@/locales/types';
+import type { ChaosMutator } from '@/types/chaos';
 import { CHAOS_MUTATORS } from '@/constants/chaosMutators';
 
 export { CHAOS_MUTATORS };
@@ -15,7 +15,7 @@ interface ChaosWheelModalProps {
   onClose: () => void;
   onSelectMutator: (mutator: ChaosMutator) => void;
   activeMutator: ChaosMutator | null;
-  dict?: PerkDictionary;
+  dict?: Dictionary;
 }
 
 export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
@@ -47,7 +47,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     const total = CHAOS_MUTATORS.length;
     const sliceAngle = (2 * Math.PI) / total;
 
-    // Slices background
     for (let i = 0; i < total; i++) {
       const startAngle = angleRef.current + i * sliceAngle;
       const endAngle = startAngle + sliceAngle;
@@ -74,7 +73,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       ctx.strokeStyle = m.type === 'curse' ? '#9333ea' : '#10b981';
       ctx.stroke();
 
-      // Slice Text with Orientation Normalization
       ctx.save();
       ctx.translate(center, center);
       const midAngle = startAngle + sliceAngle / 2;
@@ -98,7 +96,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       ctx.restore();
     }
 
-    // Center Hub Badge
     ctx.beginPath();
     ctx.arc(center, center, 42, 0, 2 * Math.PI);
     ctx.fillStyle = '#0f172a';
@@ -115,7 +112,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     ctx.font = '700 9px system-ui, sans-serif';
     ctx.fillText('WHEEL', center, center + 10);
 
-    // Top Pointer Arrow
     ctx.beginPath();
     ctx.moveTo(center - 16, 4);
     ctx.lineTo(center + 16, 4);
@@ -202,7 +198,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       aria-labelledby="chaos-modal-title"
       aria-describedby="chaos-modal-desc"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md cursor-pointer animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md cursor-pointer animate-in fade-in duration-200 select-none"
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -214,29 +210,29 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           aria-label={dict?.modal?.close || 'Close modal'}
           className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
         >
-          <X className="h-5 w-5" />
+          <X className="h-5 w-5" aria-hidden="true" />
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 dark:bg-purple-900/50 border border-purple-500/30 text-purple-600 dark:text-purple-300 shadow-sm">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 dark:bg-purple-900/50 border border-purple-500/30 text-purple-600 dark:text-purple-300 shadow-sm" aria-hidden="true">
             <Skull className="h-6 w-6 animate-pulse" />
           </div>
           <div>
             <h2 id="chaos-modal-title" className="text-lg font-black tracking-wide text-slate-900 dark:text-white">
-              {(dict?.generator as any)?.chaosWheelTitle || 'Chaos Wheel of Curses'}
+              {dict?.generator?.chaosWheelTitle || 'Chaos Wheel of Curses'}
             </h2>
             <p id="chaos-modal-desc" className="text-xs text-slate-600 dark:text-slate-400">
-              {(dict?.generator as any)?.chaosWheelDesc || 'Spin to apply a single trial Curse or Buff to your 4 perk loadout.'}
+              {dict?.generator?.chaosWheelDesc || 'Spin to apply a single trial Curse or Buff to your 4 perk loadout.'}
             </p>
           </div>
         </div>
 
-        {/* Wheel Canvas Container */}
         <div className="relative flex flex-col items-center justify-center my-4">
           <canvas
             ref={canvasRef}
             width={400}
             height={400}
+            aria-label={dict?.generator?.chaosWheelTitle || 'Chaos Wheel of Curses Canvas'}
             className="h-[300px] w-[300px] sm:h-[360px] sm:w-[360px] drop-shadow-[0_0_25px_rgba(147,51,234,0.3)]"
           />
 
@@ -244,17 +240,21 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             type="button"
             onClick={spinChaosWheel}
             disabled={isSpinning}
-            className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all cursor-pointer ${isSpinning
+            className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
+              isSpinning
                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed'
                 : 'bg-gradient-to-r from-purple-600 via-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-purple-900/40'
-              }`}
+            }`}
           >
-            <Sparkles className={`h-4 w-4 ${isSpinning ? 'animate-spin' : ''}`} />
-            {isSpinning ? 'Spinning Chaos Curses...' : 'Spin Chaos Wheel!'}
+            <Sparkles className={`h-4 w-4 ${isSpinning ? 'animate-spin' : ''}`} aria-hidden="true" />
+            <span>
+              {isSpinning
+                ? (dict?.generator?.spinningCurses || 'Spinning Chaos Curses...')
+                : (dict?.generator?.spinChaosWheel || 'Spin Chaos Wheel!')}
+            </span>
           </button>
         </div>
 
-        {/* Active Won Mutator Display Card */}
         {wonMutator && (
           <div
             aria-live="polite"
@@ -275,8 +275,8 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
                 </div>
               </div>
               <div className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-bold text-xs bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
-                <Check className="h-3.5 w-3.5" />
-                {dict?.smashOrPass?.active || 'Active'}
+                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>{dict?.smashOrPass?.active || 'Active'}</span>
               </div>
             </div>
           </div>
@@ -288,10 +288,11 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             onClick={onClose}
             className="rounded-xl bg-slate-100 dark:bg-slate-800 px-5 py-2.5 font-bold text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
           >
-            {(dict?.generator as any)?.done || 'Done'}
+            {dict?.modal?.done || dict?.generator?.done || 'Done'}
           </button>
         </div>
       </div>
     </div>
   );
 };
+

@@ -1,250 +1,259 @@
-// frontend/src/locales/ja/smashOrPass.ts
 export default {
-  "title": "スマッシュ・オア・パス",
-  "selectRoster": "名簿を選択",
-  "dwellHint": "スワイプまたはドラッグで選択。中央で1秒静止して確定。",
-  "active": "有効",
-  "dwellActive": "選択中 ({seconds}秒)",
-  "subtitle": "DbDのキャラクターたちを評価し、あなたの『霧のロマンスタイプ』を診断＆投票しよう。",
-  "smash": "スマッシュ (推し)",
-  "pass": "パス",
-  "superSmash": "スーパースマッシュ",
-  "leaderboard": "殿堂入りランキング",
-  "search": "検索...",
-  "close": "閉じる",
-  "shuffle": "シャッフル",
-  "undo": "元に戻す",
-  "mySmashes": "あなたの推し一覧",
-  "stats": "調査書＆統計",
-  "reset": "山札をリセット",
-  "keybindings": "キー操作設定",
-  "hint": "矢印キーまたはスワイプで投票",
-  "godTier": "神ティア (至高)",
-  "fatalAttraction": "命がけの魅力",
-  "friendzone": "お友達止まり",
-  "eldritchVoid": "怪異・虚無行き",
-  "chaosRating": "混沌度",
-  "dangerLevel": "危険度",
-  "archetype": "診断タイプ",
-  "compatibilityScore": "相性スコア",
-  "communitySmashRate": "コミュニティ推し率",
-  "totalVotes": "総投票数",
-  "traits": "相性・性格特徴",
-  "all": "すべて",
-  "allRoles": "すべての陣営",
-  "survivors": "サバイバー",
-  "killers": "キラー",
-  "allGenders": "すべての性別",
-  "female": "女性",
-  "femaleOnly": "女性のみ",
-  "male": "男性",
-  "maleOnly": "男性のみ",
-  "monsters": "怪異・人外",
-  "rosters": {
-    "canon": {
-      "name": "Dead by Daylight: 本編公式",
-      "desc": "公式に登場する全98キャラクター（キラー＆サバイバー）の完全名簿。"
+  title: 'DBD Smash or Pass',
+  pageTitle: 'Smash or Pass • 霧の試練デート＆キャラクターハブ',
+  subtitle: 'スワイプして評価し、コミュニティの好みを探索しましょう。',
+  selectRoster: '名簿を選択',
+  selectPrefix: '選択:',
+  select: '選択',
+  active: 'アクティブ',
+  pass: 'Pass',
+  smash: 'Smash',
+  superSmash: 'Super Smash',
+  streak: '連勝',
+  streakRecord: '最高連勝記録',
+  highScore: 'ハイスコア',
+  dwellHint: '回転させて中央のカードを選択します。',
+  candidates: '候補者',
+  candidatesWord: '候補者',
+  votes: '票',
+  votesWord: '票',
+  smashWord: 'Smash',
+  passWord: 'Pass',
+  showingCandidates: '表示中の候補者:',
+  showingCount: '{count} / {total} 人の候補者を表示中',
+  leaderboard: '殿堂入り',
+  search: '候補者やランキングを検索...',
+  all: 'すべて',
+  allTiers: 'すべてのティア',
+  allRoles: 'すべての役割',
+  allGenders: 'すべての性別',
+  femaleOnly: '女性',
+  maleOnly: '男性',
+  monsters: '異形・モンスター',
+  close: '閉じる',
+  loginNotice: 'ログインするとあなたの投票がグローバルランキングに反映されます！',
+  groupByTier: 'ティア別にグループ化',
+  rankedList: 'ランキング一覧',
+  sort: '並び替え:',
+  sortSmashRate: 'Smash率 (%)',
+  sortTotalVotes: '総投票数',
+  sortMostSmashes: 'Smash数順',
+  noCommunityVotesTitle: 'コミュニティ投票がまだありません',
+  noCommunityVotesDesc: '最初の投票者になってランキングを作成しましょう！',
+  noCandidatesFound: '条件に一致する候補者が見つかりません。',
+  tierFilterLabel: 'ティア:',
+  percentSign: '%',
+  percentClose: '%)',
+  candidateRankLabel: '{name} - 順位 #{rank}, Smash率: {rate}%',
+  youSmashedThis: 'この候補者にSmashしました',
+  flipToDatingProfile: '裏返して詳細とステータスを表示',
+  zoomFullPortrait: '全身ポートレートを拡大',
+  flipBack: 'カード表面に戻る',
+  loreAndPersonality: '背景と性格',
+  trialRumor: '試練の噂＆ミーム',
+  greenFlags: '魅力的な特徴 (Green Flags)',
+  redFlags: '要注意な特徴 (Red Flags)',
+  turnOn: 'プラス要素:',
+  dealbreaker: 'マイナス要素:',
+  datingPsychology: '恋愛心理分析',
+  totalEvaluated: '評価済み総数:',
+  copiedToClipboard: 'クリップボードにコピーしました！',
+  shareArchetype: 'アーキタイプを共有',
+  affinityComparisonAria: '{survivor} 対 {killer} の傾向',
+  godTier: 'ゴッドティア',
+  fatalAttraction: '危険な魅力',
+  friendzone: '友達止まり',
+  eldritchVoid: '深淵の彼方',
+  chaosRating: 'カオス度',
+  dangerLevel: '危険度',
+  compatibilityScore: '相性スコア',
+  survivors: 'サバイバー',
+  killers: 'キラー',
+  occultDossier: 'オカルト機密記録',
+  pipeSeparator: '|',
+  loadingRosterPrefix: '読み込み中',
+  loadingRosterSuffix: 'データベースから...',
+  stats: 'Info',
+  reset: 'リセット',
+  rosters: {
+    canon: {
+      name: 'Dead by Daylight: 霧の正史',
+      description: '正史の世界観に登場するサバイバーとキラー。',
     },
-    "hoy": {
-      "name": "Hooked on You: 恋の楽園",
-      "desc": "水着衣装と南国の陽気な雰囲気が漂う、恋愛シミュレーション公式スピンオフ版。"
+    hoy: {
+      name: 'Hooked on You: アイランドロマンス',
+      description: '南国恋愛シミュレーションのキャラクター。',
     },
-    "legendary": {
-      "name": "レジェンダリースキン＆コラボ",
-      "desc": "ゲーム史に名を残す名作コラボや象徴的なレジェンダリースキン。"
+    legendary: {
+      name: 'レジェンダリースキン＆コラボ',
+      description: '特別なコラボスキンとレジェンダリーキャラ。',
     },
-    "cyberpunk": {
-      "name": "サイバーパンク・フォグ 2077",
-      "desc": "ディストピアの霧の中で戦う、ハイテクネオンで強化されたチャンピオンたち。"
+    cyberpunk: {
+      name: 'サイバーパンク・フォグ 2077',
+      description: '近未来サイバーパンクスタイルのキラーたち。',
     },
-    "anime": {
-      "name": "霧のアニメ / マンガスタイル",
-      "desc": "お気に入りの霧の住人たちをアニメ・マンガ風にアレンジしたスタイル。"
+    anime: {
+      name: 'アニメ・マンガ風スタイル',
+      description: '日本のアニメ調に再解釈されたビジュアル。',
     },
-    "gothic": {
-      "name": "ヴィクトリアン＆ゴシック怪異伝説",
-      "desc": "ダークファンタジー、Bloodborne風の美学、ヴィクトリア朝のコズミックホラー。"
+    gothic: {
+      name: 'ゴシック＆コズミックホラー',
+      description: 'ヴィクトリア調の闇と古の神々の恐怖。',
     },
-    "hooked_on_you": {
-      "name": "Hooked on You: 恋の楽園",
-      "desc": "水着衣装と南国の陽気な雰囲気が漂う、恋愛シミュレーション公式スピンオフ版。"
+    hooked_on_you: {
+      name: 'Hooked on You: アイランドロマンス',
+      description: '南国恋愛シミュレーションのキャラクター。',
     },
-    "legendary_cosplay": {
-      "name": "レジェンダリースキン＆コラボ",
-      "desc": "ゲーム史に名を残す名作コラボや象徴的なレジェンダリースキン。"
+    legendary_cosplay: {
+      name: 'レジェンダリースキン＆コラボ',
+      description: '特別なコラボスキンとレジェンダリーキャラ。',
     },
-    "cyberpunk_2077": {
-      "name": "サイバーパンク・フォグ 2077",
-      "desc": "ディストピアの霧の中で戦う、ハイテクネオンで強化されたチャンピオンたち。"
+    cyberpunk_2077: {
+      name: 'サイバーパンク・フォグ 2077',
+      description: '近未来サイバーパンクスタイルのキラーたち。',
     },
-    "anime_manga": {
-      "name": "霧のアニメ / マンガスタイル",
-      "desc": "お気に入りの霧の住人たちをアニメ・マンガ風にアレンジしたスタイル。"
+    anime_manga: {
+      name: 'アニメ・マンガ風スタイル',
+      description: '日本のアニメ調に再解釈されたビジュアル。',
     },
-    "gothic_eldritch": {
-      "name": "ヴィクトリアン＆ゴシック怪異伝説",
-      "desc": "ダークファンタジー、Bloodborne風の美学、ヴィクトリア朝のコズミックホラー。"
-    }
+    gothic_eldritch: {
+      name: 'ゴシック＆コズミックホラー',
+      description: 'ヴィクトリア調の闇と古の神々の恐怖。',
+    },
   },
-  "controls": {
-    "pass": "パス",
-    "smash": "スマッシュ (推し)",
-    "superSmash": "スーパースマッシュ",
-    "stats": "調査書＆統計",
-    "reset": "山札をリセット",
-    "keybindings": "キー操作設定",
-    "hint": "矢印キーまたはスワイプで投票",
-    "arrowLeft": "パス（← 左矢印）",
-    "arrowRight": "スマッシュ（→ 右矢印）",
-    "arrowUp": "統計（↑ 上矢印）",
-    "arrowDown": "スーパースマッシュ（↓ 下矢印）",
-    "keyR": "リセット（Rキー）"
+  controls: {
+    pass: 'Pass',
+    smash: 'Smash',
+    superSmash: 'Super Smash',
+    stats: 'Info',
+    reset: 'リセット',
+    keybindings: 'キーバインド',
+    passButton: 'Pass',
+    smashButton: 'Smash',
+    superSmashButton: 'Super Smash',
+    flipCard: 'カードをめくる',
+    fullscreen: '全画面表示',
+    resetStreak: '連勝記録をリセット',
+    hint: '矢印キーまたはドラッグで投票',
   },
-  "tiers": {
-    "godTier": "神ティア (至高)",
-    "fatalAttraction": "命がけの魅力",
-    "friendzone": "お友達止まり",
-    "eldritchVoid": "怪異・虚無行き"
+  tiers: {
+    godTier: 'God Tier',
+    fatalAttraction: 'Fatal Attraction',
+    friendzone: 'Friendzone',
+    eldritchVoid: 'Eldritch Void',
   },
-  "statsDetail": {
-    "chaosRating": "混沌度",
-    "dangerLevel": "危険度",
-    "archetype": "診断タイプ",
-    "compatibilityScore": "相性スコア",
-    "communitySmashRate": "コミュニティ推し率",
-    "totalVotes": "総投票数",
-    "traits": "相性・性格特徴",
-    "smashCount": "スマッシュ数",
-    "passCount": "パス数",
-    "superSmashCount": "スーパースマッシュ数",
-    "rank": "順位",
-    "quote": "名言・セリフ"
+  statsDetail: {
+    smashRate: 'Smash率',
+    totalVotes: '総投票数',
+    winStreak: '現在の連勝',
+    popularity: '人気度',
+    communitySmashRate: '全体Smash率',
+    smashCount: 'Smash数',
+    passCount: 'Pass数',
+    rank: '全体順位',
   },
-  "filters": {
-    "all": "すべて",
-    "allRoles": "すべての陣営",
-    "survivors": "サバイバー",
-    "killers": "キラー",
-    "allGenders": "すべての性別",
-    "female": "女性",
-    "femaleOnly": "女性のみ",
-    "male": "男性",
-    "maleOnly": "男性のみ",
-    "monsters": "怪異・人外"
+  filters: {
+    allRoles: 'すべての役割',
+    survivors: 'サバイバー',
+    killers: 'キラー',
+    allGenders: 'すべての性別',
+    femaleOnly: '女性',
+    maleOnly: '男性',
+    monsters: '異形・モンスター',
   },
-  "modals": {
-    "statsTitle": "キャラクター調査書",
-    "leaderboardTitle": "殿堂入りランキング",
-    "personaTitle": "試練のロマンス診断タイプ",
-    "resetConfirmTitle": "すべての投票をリセットしますか？",
-    "resetConfirmDesc": "このセッションで行ったすべての投票が巻き戻され、キャラクターの山札が再シャッフルされます。",
-    "confirm": "確定",
-    "cancel": "キャンセル",
-    "close": "閉じる"
+  modals: {
+    personaTitle: '試練の恋愛アーキタイプ',
+    leaderboardTitle: '殿堂入りランキング',
+    howToPlay: '遊び方',
+    resetConfirmTitle: 'すべての投票をリセットしますか？',
+    resetConfirmDesc: 'これまでの投票履歴が消去され、すべての候補者がデッキに復元されます。',
+    cancel: 'キャンセル',
+    confirm: 'はい、すべてリセット',
   },
-  "notifications": {
-    "voteRecorded": "投票を記録しました！",
-    "deckReset": "山札をリセットしました。",
-    "rateLimit": "投票が早すぎます！少し待ってから操作してください。",
-    "errorLoading": "キャラクター情報の読み込みに失敗しました。",
-    "errorVoting": "投票の記録に失敗しました。"
+  notifications: {
+    voteRecorded: '投票を記録しました！',
+    streakUpdated: '連勝記録が更新されました！',
   },
-  "empty": {
-    "title": "山札をすべて評価しました！",
-    "subtitle": "この名簿に含まれるすべての候補者の判定が完了しました。",
-    "resetAction": "リセットしてもう一度投票",
-    "viewLeaderboard": "ランキングを見る",
-    "switchRoster": "別の名簿を選ぶ"
+  empty: {
+    title: '候補者が見つかりません',
+    subtitle: 'フィルター条件を変更するか検索をリセットしてください。',
+    resetAction: 'リセットしてもう一度プレイ',
   },
-  "loreLabels": {
-    "trialClassification": "試練区分",
-    "datingArchetype": "恋愛タイプ",
-    "greenFlag": "好印象ポイント (推し要素)",
-    "redFlag": "要注意ポイント (警告)",
-    "identityProfile": "正体プロファイル",
-    "signatureQuote": "代表的なセリフ",
-    "trialWarning": "試練の警告",
-    "female": "女性",
-    "male": "男性",
-    "monster": "怪異 / 人外"
+  loreLabels: {
+    role: '役割',
+    realm: '領域',
+    bio: '経歴',
+    signatureQuote: '代表的なセリフ',
+    greenFlag: '魅力的な特徴 (Green Flags)',
+    redFlag: '警戒すべき特徴 (Red Flags)',
   },
-  "hud": {
-    "left": "残り",
-    "smash": "スマッシュ",
-    "pass": "パス",
-    "smashRate": "支持率",
-    "bgm": "BGM",
-    "archetype": "タイプ",
-    "hallOfFame": "殿堂入り",
-    "howToPlay": "遊び方",
-    "shuffle": "シャッフル"
+  hud: {
+    swipeLeftHint: '左スワイプで Pass',
+    swipeRightHint: '右スワイプで Smash',
+    shuffle: '残りをシャッフル',
+    howToPlay: '遊び方＆キーバインド',
   },
-  "occultDossier": "機密オカルト調書",
-  "percentSign": "%",
-  "percentClose": "%)",
-  "pipeSeparator": "|",
-  "loadingRosterPrefix": "データベースから",
-  "loadingRosterSuffix": "を読み込み中...",
-  "howToPlayModal": {
-    "title": "スマッシュ・オア・パスの遊び方",
-    "swipeTitle": "カードをスワイプ / ドラッグ",
-    "swipeDesc": "カードを右にドラッグするとスマッシュ 💋、左にドラッグするとパス ✖ します。",
-    "swipeIcon": "👆",
-    "iconsTitle": "カード上のアクションアイコン",
-    "iconsDesc": "左上の反転アイコンをクリックするとプロフィール、性格、推し/警告要素、ミームを閲覧できます。虫眼鏡で高解像度ポートレートを表示します。",
-    "iconsIcon": "🎯",
-    "keycapsTitle": "快適なキーボード操作",
-    "keycapsIcon": "⌨️",
-    "atmosphereTitle": "ダークな背景演出とBGM",
-    "atmosphereDesc": "背景の文字にカーソルを合わせると発光エフェクトとともに伝承が表示されます。Bキーを押してダークシンセBGMを再生しましょう！",
-    "atmosphereIcon": "🌌",
-    "letsPlay": "了解、プレイ開始！"
+  howToPlayModal: {
+    title: 'Smash or Pass の遊び方',
+    body: '好みのキャラには右スワイプ(Smash)、スキップは左スワイプ(Pass)。投票を重ねてあなたの恋愛アーキタイプを解放しましょう！',
+    swipeIcon: '👆',
+    swipeTitle: 'カードをスワイプ / ドラッグ',
+    swipeDesc: 'カードを右に引いてSmash、左に引いてPass。',
+    iconsIcon: '🎯',
+    iconsTitle: 'カード上のアクションアイコン',
+    iconsDesc: '「裏返す」で背景とミームを確認、「拡大」で高解像度アートを表示。',
+    keycapsIcon: '⌨️',
+    keycapsTitle: 'タクタイルキーボード操作',
+    atmosphereIcon: '🌌',
+    atmosphereTitle: '臨場感あふれる背景とBGM',
+    atmosphereDesc: '背景のテキストにマウスを合わせると発光エフェクトとともに伝承を確認できます。',
+    letsPlay: '了解、プレイ開始！',
   },
-  "personaArchetypes": {
-    "eldritchDevotee": {
-      "title": "異形・怪異の信奉者",
-      "subtitle": "人智を超えた恐怖や太古の存在こそが、あなたの真の愛の言葉です。",
-      "desc": "宇宙の虚無が呼んでいるのに、なぜ定命の者の恋で妥協するのでしょうか？触手、牙、そしてコズミックミステリーを愛しています。"
+  personaArchetypes: {
+    untappedSoul: {
+      title: '秘められし魂',
+      subtitle: '投票を続けてあなたの恋愛アーキタイプを解放しましょう！',
+      desc: 'まだ十分な候補者を評価していません。',
     },
-    "redStainAddict": {
-      "title": "ステイン（赤い光）ジャンキー",
-      "subtitle": "危険こそが興奮のスパイス。心音範囲が近づくほど胸が高鳴ります。",
-      "desc": "メメント・モリの演出もあなたにとっては激しいハグのようなもの。圧倒的な力、脅威、そしてダークなカリスマに惹かれます。"
+    fogRomantic: {
+      title: '霧のロマンチスト',
+      subtitle: '試練の中でも情熱とスリルを求める心優しい魂。',
+      desc: 'エンティティの果てしない試練の中でも真実の愛を見出せると信じています。',
     },
-    "campfireSoulmate": {
-      "title": "焚き火のソウルメイト",
-      "subtitle": "温かいチームワークと献身的な救助・治療に心がとろけます。",
-      "desc": "あなたが求めるのは本物の絆、飾らない笑顔、そして脱出ゲートを開ける前に必ずフックから助けてくれる誰かです。"
+    eldritchDevotee: {
+      title: '旧支配者の信徒',
+      subtitle: '異形の神々や神秘的な存在に強く惹かれる者。',
+      desc: '宇宙的恐怖や人知を超えた美しさに魅了されています。',
     },
-    "entitysParamour": {
-      "title": "エンティティの愛人",
-      "subtitle": "霧の森に存在するほぼすべての魂に美しさとロマンスを見出します。",
-      "desc": "理想が高い？そんな言葉は無縁です。あなたの心はすべてのサバイバーとキラーを受け入れる無限の聖域です。"
+    redStainAddict: {
+      title: '赤い光の虜',
+      subtitle: '危険、チェイス、圧倒的なスリルを好む者。',
+      desc: '危険な関係こそがあなたの心に火をつけます。',
     },
-    "coldHeartedPragmatist": {
-      "title": "冷徹な現実主義者",
-      "subtitle": "極めて選り好みが激しく、色仕掛けには動じず、ただ生き残ることのみを考えます。",
-      "desc": "あなたの厳しいチェックリストを通過できる者はごくわずか。完璧な立ち回り、隙のないパーク構成、欠点ゼロが求められます。"
+    campfireSoulmate: {
+      title: '焚火のソウルメイト',
+      subtitle: '忠誠心とチームワークを何より重んじる者。',
+      desc: '暗闇の中で互いを支え合えるパートナーを大切にします。',
     },
-    "fogRomantic": {
-      "title": "霧のロマンチスト",
-      "subtitle": "試練の中で情熱とスリルを同時に追い求めるバランスの取れた魂。",
-      "desc": "エンティティの果てしない試練の中であっても、真のロマンスの輝きは必ず見つかると信じています。"
-    }
+    entitysParamour: {
+      title: 'エンティティの寵児',
+      subtitle: '霧の住人すべてに愛を注ぐ情熱家。',
+      desc: 'あなたの心には霧のすべての存在を受け入れる余地があります。',
+    },
+    coldHeartedPragmatist: {
+      title: '冷徹な現実主義者',
+      subtitle: '極めて選び抜かれた者だけを認める審美眼の持ち主。',
+      desc: '容易には心を許さず、真に優れた者だけにSmashを捧げます。',
+    },
   },
-  "tooltips": {
-    "mute": "効果音をミュート (M)",
-    "unmute": "効果音のミュート解除 (M)",
-    "playBgm": "ダークアンビエントBGMを再生 (B)",
-    "pauseBgm": "BGMを一時停止 (B)",
-    "resetAllVotes": "自分の投票をすべてリセット",
-    "howToPlay": "遊び方とキーボード操作",
-    "shuffle": "残りの候補者をシャッフル"
+  tooltips: {
+    resetAllVotes: '投票データをリセット',
+    viewStats: '詳細ステータスを表示',
+    pauseBgm: 'BGMを一時停止 (B)',
+    playBgm: 'BGMを再生 (B)',
+    shuffle: '残りをシャッフル',
+    unmute: '効果音をオン (M)',
+    mute: '効果音をミュート (M)',
+    howToPlay: '遊び方＆キーバインド',
   },
-  "tierFilterLabel": "ティアで絞り込み:",
-  "left": "残り",
-  "bgm": "BGM",
-  "hallOfFame": "殿堂入り",
-  "howToPlay": "遊び方"
-};
-
+} as const;

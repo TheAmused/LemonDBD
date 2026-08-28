@@ -1,18 +1,16 @@
-// frontend/src/locales/en/customPerks.ts
 export default {
-  "conceptLab": "Studio & Concept Lab",
-  "designer": "Perk Designer",
-  "configureConcept": "Configure Perk Concept",
-  "requiredFields": "* Required fields",
-  "titlePlaceholder": "e.g. Hex: Shadow Veil, Adrenaline Overdrive...",
-  "characterPlaceholder": "e.g. Meg Thomas, The Trapper, Teachable...",
-  "authorPlaceholder": "e.g. EntityArchitect",
-  "descPlaceholder": "Write perk mechanics... Use **bold** for key status terms.",
-  "conceptTag": "LemonDBD Concept",
-  "searchPlaceholder": "Search...",
-  "createNew": "Create New Concept",
-  "tagExhausted": "+**Exhausted**",
-  "tagHindered": "+**Hindered**",
-  "tagAura": "+**Aura**"
-};
-
+  conceptLab: "Studio & Concept Lab",
+  designer: "Perk Designer",
+  configureConcept: "Configure Perk Concept",
+  requiredFields: "* Required fields",
+  titlePlaceholder: "e.g. Hex: Shadow Veil, Adrenaline Overdrive...",
+  characterPlaceholder: "e.g. Meg Thomas, The Trapper, Teachable...",
+  authorPlaceholder: "e.g. EntityArchitect",
+  descPlaceholder: "Write perk mechanics... Use **bold** for key status terms.",
+  conceptTag: "LemonDBD Concept",
+  searchPlaceholder: "Search...",
+  createNew: "Create New Concept",
+  tagExhausted: "+**Exhausted**",
+  tagHindered: "+**Hindered**",
+  tagAura: "+**Aura**",
+} as const;

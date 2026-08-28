@@ -90,10 +90,11 @@ export default function LandingPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-          {'Loading LemonDBD...'}
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
         </div>
       }
     >
+
       <LandingContent />
     </Suspense>
   );

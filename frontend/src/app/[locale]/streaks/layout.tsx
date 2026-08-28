@@ -82,13 +82,14 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
     .slice(2); // drop the locale and "streaks" segments
   const isPickerPage = segmentsAfterStreaks.length <= 1;
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        {'Loading Challenges...'}
-      </div>
-    );
-  }
+   if (!dict) {
+     return (
+       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
+         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+       </div>
+     );
+   }
+
 
 
   return (

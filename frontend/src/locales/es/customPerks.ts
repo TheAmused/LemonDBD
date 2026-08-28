@@ -1,15 +1,19 @@
 // frontend/src/locales/es/customPerks.ts
 export default {
   "conceptLab": "Estudio y Laboratorio de Conceptos",
-  "subtitle": "Diseña conceptos originales de habilidades de Dead by Daylight con vista previa interactiva en tarjeta de diamante, o explora y vota habilidades creadas por la comunidad.",
+  "subtitle": "Diseña conceptos originales de habilidades de Dead by Daylight con vista previa interactiva en tarjeta de diamante, o descubre y vota creaciones de la comunidad.",
   "designer": "Diseñador de Habilidades",
   "configureConcept": "Configurar Concepto de Habilidad",
   "requiredFields": "* Campos obligatorios",
-  "titlePlaceholder": "ej. Maleficio: Velo Sombrío, Sobrecarga de Adrenalina...",
-  "characterPlaceholder": "ej. Meg Thomas, El Trampero, Enseñable...",
-  "authorPlaceholder": "ej. ArquitectoDelEnte",
-  "descPlaceholder": "Describe las mecánicas... Usa **negrita** para términos de estado clave.",
+  "titlePlaceholder": "p. ej. Maleficio: Velo Sombrío, Sobremarcha de Adrenalina...",
+  "characterPlaceholder": "p. ej. Meg Thomas, El Trampero, General...",
+  "authorPlaceholder": "p. ej. ArquitectoDelEnte",
+  "descPlaceholder": "Describe la mecánica de la habilidad... Usa **negrita** para estados alterados.",
   "conceptTag": "Concepto LemonDBD",
-  "searchPlaceholder": "Buscar conceptos por título, mecánica, personaje...",
-  "createNew": "Crear Nuevo Concepto"
+  "searchPlaceholder": "Buscar conceptos por nombre, mecánica o personaje...",
+  "createNew": "Crear Nuevo Concepto",
+  "tagExhausted": "+**Agotamiento**",
+  "tagHindered": "+**Entorpecimiento**",
+  "tagAura": "+**Aura**"
 };
+

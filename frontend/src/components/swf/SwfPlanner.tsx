@@ -486,11 +486,12 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                                 alt={perkName}
                                 className="h-10 w-10 shrink-0 object-contain drop-shadow-md"
                               />
-                            ) : (
-                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-bold text-xs">
-                                {'DBD'}
-                              </div>
-                            )}
+                                     ) : (
+                                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-bold text-xs">
+                                         {t.dbdBadge}
+                                       </div>
+                                     )}
+
                             <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate pr-4">
                               {perkName}
                             </span>
@@ -684,11 +685,12 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
                         alt={perk.name}
                         className="h-10 w-10 shrink-0 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
                       />
-                    ) : (
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-bold text-xs">
-                        {'DBD'}
-                      </div>
-                    )}
+                                     ) : (
+                                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-bold text-xs">
+                                         {t.dbdBadge}
+                                       </div>
+                                     )}
+
                     <div className="overflow-hidden">
                       <h4 className="text-xs font-bold text-slate-900 dark:text-slate-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
                         {perk.name}

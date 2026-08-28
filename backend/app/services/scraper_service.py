@@ -1,9 +1,10 @@
 # backend/app/services/scraper_service.py
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from app.scrapers.maps import HensMapScraperDriver, SamoelColtMapScraperDriver
+from app.scrapers.roster_images import RosterImageScraperDriver
 from app.scrapers.types import (
     AddonData,
     CharacterData,
@@ -36,9 +37,6 @@ from app.services.scraper.state import ScraperStateManager
 logger = logging.getLogger(__name__)
 
 
-from app.scrapers.roster_images import RosterImageScraperDriver
-
-
 class ScraperService:
     """Facade for the Dead by Daylight data synchronization and scraping pipeline."""
 
@@ -56,8 +54,8 @@ class ScraperService:
 
     def __init__(
         self,
-        base_dir: Optional[Path] = None,
-        config_file: Optional[Path] = None,
+        base_dir: Path | None = None,
+        config_file: Path | None = None,
     ):
         if base_dir is None:
             self.base_dir = Path(__file__).resolve().parent.parent.parent
@@ -74,29 +72,28 @@ class ScraperService:
             timeout=self.REQUEST_TIMEOUT,
         )
 
-    def scrape_roster_edition_images(self, edition_id: str = "hooked_on_you") -> List[Dict[str, Any]]:
+    def scrape_roster_edition_images(self, edition_id: str = "hooked_on_you") -> list[dict[str, Any]]:
         """Scrape character portrait image URLs for a specific Smash-or-Pass edition."""
         return self.roster_driver.scrape_roster_portraits(edition_id)
 
-    def sync_roster_edition_assets(self, edition_id: str = "hooked_on_you", static_dir: Optional[Path] = None) -> Dict[str, Any]:
+    def sync_roster_edition_assets(self, edition_id: str = "hooked_on_you", static_dir: Path | None = None) -> dict[str, Any]:
         """Scrape and download artwork assets for a custom edition into static assets directory."""
         target_static = static_dir or self.static_dir
         return self.roster_driver.sync_edition_assets(edition_id, target_static)
 
-    def sync_translations(self, locales: Optional[List[str]] = None, translations_dir: Optional[Path] = None) -> Dict[str, Any]:
+    def sync_translations(self, locales: list[str] | None = None, translations_dir: Path | None = None) -> dict[str, Any]:
         """Synchronize official translations (EN, PL, DE, ES, JA) to the database."""
         from app.services.translations import TranslationService
         service = TranslationService(translations_dir=translations_dir)
         return service.sync_all_locales_to_db(locales=locales)
 
-    def sync_game_dump_translations(self, locales: Optional[List[str]] = None, translations_dir: Optional[Path] = None) -> Dict[str, Any]:
-        """Backwards compatibility alias for sync_translations."""
+    def sync_game_dump_translations(self, locales: list[str] | None = None, translations_dir: Path | None = None) -> dict[str, Any]:
         return self.sync_translations(locales=locales, translations_dir=translations_dir)
 
-    def parse_character_page(self, html: str, page_category: str = "") -> List[CharacterData]:
+    def parse_character_page(self, html: str, page_category: str = "") -> list[CharacterData]:
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, "html.parser")
-        characters = []
+        characters: list[CharacterData] = []
         seen = set()
         for a in soup.find_all("a"):
             title = a.get("title", "").strip()
@@ -130,7 +127,7 @@ class ScraperService:
             )
         return characters
 
-    def match_perk_owner(self, owner_str: str, characters: List[CharacterData]) -> Optional[CharacterData]:
+    def match_perk_owner(self, owner_str: str, characters: list[CharacterData]) -> CharacterData | None:
         if not owner_str:
             return None
         norm = normalize_name_key(owner_str)
@@ -143,10 +140,10 @@ class ScraperService:
                     return c
         return None
 
-    def parse_perks(self, html: str, characters: List[CharacterData]) -> List[PerkData]:
+    def parse_perks(self, html: str, characters: list[CharacterData]) -> list[PerkData]:
         return self.wikigg_driver.parse_perks(html, characters)
 
-    def prune_stale_character_rows(self, valid_characters: Any) -> Dict[str, int]:
+    def prune_stale_character_rows(self, valid_characters: Any) -> dict[str, int]:
         from app.services.db_service import DatabaseService
         if isinstance(valid_characters, list):
             valid_names = {c.name for c in valid_characters}
@@ -162,7 +159,7 @@ class ScraperService:
     _PERK_FRAME_TEMPLATE_PATH = PERK_FRAME_TEMPLATE_PATH
 
     @classmethod
-    def get_status(cls) -> Dict[str, Any]:
+    def get_status(cls) -> dict[str, Any]:
         return ScraperStateManager.get_status()
 
     @classmethod
@@ -180,16 +177,16 @@ class ScraperService:
     def load_config(self) -> ScraperConfig:
         return ScraperStateManager.load_config(self.config_file)
 
-    def save_config(self, data: Union[ScraperConfig, Dict[str, Any]]) -> ScraperConfig:
+    def save_config(self, data: ScraperConfig | dict[str, Any]) -> ScraperConfig:
         return ScraperStateManager.save_config(self.config_file, data)
 
     async def download_all_assets_async(
         self,
-        perks: List[PerkData],
-        characters: List[CharacterData],
-        items: Optional[List[ItemData]] = None,
-        addons: Optional[List[AddonData]] = None,
-        maps: Optional[List[MapData]] = None,
+        perks: list[PerkData],
+        characters: list[CharacterData],
+        items: list[ItemData] | None = None,
+        addons: list[AddonData] | None = None,
+        maps: list[MapData] | None = None,
     ) -> None:
         await download_all_assets(
             static_dir=self.static_dir,
@@ -208,10 +205,10 @@ class ScraperService:
 
     def run_sync_pipeline(
         self,
-        override_source: Optional[str] = None,
-        override_fallback: Optional[bool] = None,
+        override_source: str | None = None,
+        override_fallback: bool | None = None,
         download_assets: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         return execute_sync_pipeline(
             base_dir=self.base_dir,
             static_dir=self.static_dir,
@@ -230,12 +227,12 @@ class ScraperService:
 
     def sync_to_database(
         self,
-        characters: List[CharacterData],
-        perks: List[PerkData],
-        items: Optional[List[ItemData]] = None,
-        addons: Optional[List[AddonData]] = None,
-        maps: Optional[List[MapData]] = None,
-    ) -> Dict[str, int]:
+        characters: list[CharacterData],
+        perks: list[PerkData],
+        items: list[ItemData] | None = None,
+        addons: list[AddonData] | None = None,
+        maps: list[MapData] | None = None,
+    ) -> dict[str, int]:
         return sync_all_to_database(
             characters=characters,
             perks=perks,
@@ -243,4 +240,3 @@ class ScraperService:
             addons=addons,
             maps=maps,
         )
-

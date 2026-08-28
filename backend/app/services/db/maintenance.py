@@ -1,18 +1,17 @@
 # backend/app/services/db/maintenance.py
-from typing import Dict, Optional, Set
 from flask import current_app
 from sqlalchemy import select
 from app.core.extensions import db
 from app.models import GauntletRun, PageStreakRun
 
 
-def prune_stale_character_rows(valid_names: Optional[Set[str]], get_conn_fn) -> Dict[str, int]:
+def prune_stale_character_rows(valid_names: set[str] | None, get_conn_fn) -> dict[str, int]:
     """Delete run rows pinned to characters that no longer exist."""
     names = {str(n) for n in (valid_names or set())}
     if not names:
         return {}
 
-    deleted: Dict[str, int] = {}
+    deleted: dict[str, int] = {}
     if get_conn_fn:
         conn = get_conn_fn()
         try:
@@ -57,4 +56,3 @@ def prune_stale_character_rows(valid_names: Optional[Set[str]], get_conn_fn) -> 
         pass
 
     return deleted
-

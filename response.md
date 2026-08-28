@@ -1,1200 +1,1907 @@
-### backend/app/core/json_provider.py
+### backend/app/services/chaos/__init__.py
 ```python
-import dataclasses
-from datetime import date, datetime
-from typing import Any
-from uuid import UUID
-from flask.json.provider import DefaultJSONProvider
-
-try:
-    import orjson
-    HAS_ORJSON = True
-except ImportError:
-    import json
-    orjson = None  # type: ignore
-    HAS_ORJSON = False
-
-
-def safe_json_loads(val: str | bytes | None, default: Any = None) -> Any:
-    """Safely deserialize JSON string or bytes using orjson with fallback."""
-    if not val:
-        return default
-    try:
-        if HAS_ORJSON:
-            return orjson.loads(val)
-        return json.loads(val)
-    except Exception:
-        return default
-
-
-def safe_json_dumps(val: Any, default_val: str = "{}") -> str:
-    """Safely serialize Python object to JSON string using orjson with fallback."""
-    try:
-        if HAS_ORJSON:
-            return orjson.dumps(val).decode("utf-8")
-        return json.dumps(val)
-    except Exception:
-        return default_val
-
-
-class ORJSONProvider(DefaultJSONProvider):
-    """High-performance JSON provider for Flask using Rust-backed orjson serialization."""
-
-    def default(self, obj: Any) -> Any:
-        if isinstance(obj, (datetime, date)):
-            return obj.isoformat()
-        if isinstance(obj, UUID):
-            return str(obj)
-        if isinstance(obj, set):
-            return list(obj)
-        if dataclasses.is_dataclass(obj) and not isinstance(obj, type):
-            return dataclasses.asdict(obj)
-        if hasattr(obj, "model_dump") and callable(obj.model_dump):
-            return obj.model_dump()
-        if hasattr(obj, "to_dict") and callable(obj.to_dict):
-            return obj.to_dict()
-        return super().default(obj)
-
-    def dumps(self, obj: Any, **kwargs: Any) -> str:
-        if not HAS_ORJSON:
-            return super().dumps(obj, **kwargs)
-
-        options = (
-            orjson.OPT_NON_STR_KEYS
-            | orjson.OPT_SERIALIZE_NUMPY
-            | orjson.OPT_SERIALIZE_DATACLASS
-            | orjson.OPT_PASSTHROUGH_DATETIME
-        )
-        return orjson.dumps(obj, default=self.default, option=options).decode("utf-8")
-
-    def loads(self, s: str | bytes, **kwargs: Any) -> Any:
-        if not HAS_ORJSON:
-            return super().loads(s, **kwargs)
-        return orjson.loads(s)
-```
-
-### backend/app/models/character.py
-```python
-from typing import TYPE_CHECKING, Any
-from sqlalchemy import JSON, Boolean, Integer, String, Text
-from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-
-if TYPE_CHECKING:
-    from app.models.perk import Perk
-
-
-class Character(Base):
-    __tablename__ = "characters"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
-    role: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
-    code_prefix: Mapped[str | None] = mapped_column(String(10), nullable=True)
-    portrait_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    real_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    short_name: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
-    wiki_slug: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
-    avatar_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    release_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    chapter_name: Mapped[str | None] = mapped_column(String(150), nullable=True)
-    chapter_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    dlc_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    is_licensed: Mapped[bool | None] = mapped_column(Boolean, default=False, nullable=True)
-    is_disabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    disabled_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    release_year: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    release_date: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    dlc_counterparts: Mapped[str | None] = mapped_column(Text, nullable=True)
-    lore: Mapped[str | None] = mapped_column(Text, nullable=True)
-
-    power_name: Mapped[str | None] = mapped_column(String(150), nullable=True)
-    power_description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    power_icon_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    movement_speed: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    terror_radius: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    terror_radius_meters: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    height: Mapped[str | None] = mapped_column(String(50), nullable=True)
-    translations: Mapped[dict[str, Any] | None] = mapped_column(
-        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
-    )
-
-    perks: Mapped[list["Perk"]] = relationship(
-        back_populates="character", cascade="all, delete-orphan", lazy="selectin"
-    )
-
-    __mapper_args__ = {
-        "polymorphic_on": "role",
-        "polymorphic_identity": "Character",
-    }
-
-    def to_dict(self, lang: str | None = None) -> dict[str, Any]:
-        counterparts: list[str] = []
-        if self.dlc_counterparts:
-            try:
-                stripped = self.dlc_counterparts.strip()
-                if stripped.startswith("["):
-                    counterparts = safe_json_loads(stripped, default=[])
-                else:
-                    counterparts = [x.strip() for x in stripped.split(",") if x.strip()]
-            except Exception:
-                counterparts = []
-
-        name = self.name
-        lore = self.lore or ""
-        chapter_name = self.chapter_name or "Base Game"
-        power_name = self.power_name or ""
-        power_desc = self.power_description or ""
-
-        if lang and self.translations and lang in self.translations:
-            trans = self.translations.get(lang) or {}
-            if isinstance(trans, dict):
-                name = trans.get("name") or name
-                lore = trans.get("lore") or lore
-                chapter_name = trans.get("chapter_name") or chapter_name
-                power_name = trans.get("power_name") or power_name
-                power_desc = trans.get("power_description") or power_desc
-
-        data: dict[str, Any] = {
-            "id": self.id,
-            "name": name,
-            "role": self.role,
-            "category": self.role,
-            "code_prefix": self.code_prefix,
-            "portrait_url": self.portrait_url,
-            "real_name": self.real_name or self.name,
-            "short_name": self.short_name or self.name.lower().replace(" ", "_"),
-            "wiki_slug": self.wiki_slug or self.name.lower().replace(" ", "_"),
-            "avatar_url": self.portrait_url or "",
-            "avatar_local_path": self.avatar_local_path or "",
-            "release_number": self.release_number,
-            "chapter_name": chapter_name,
-            "chapter_number": self.chapter_number or "",
-            "dlc_type": self.dlc_type or "original_chapter",
-            "is_licensed": bool(self.is_licensed),
-            "is_disabled": bool(self.is_disabled),
-            "disabled_reason": self.disabled_reason,
-            "release_year": self.release_year or 2016,
-            "release_date": self.release_date or "",
-            "dlc_counterparts": counterparts,
-            "lore": lore,
-            "translations": self.translations or {},
-        }
-
-        if self.role == "Killer" or self.power_name:
-            p_clean = (
-                self.power_name.lower().replace(" ", "_").replace("'", "").replace("-", "_")
-                if self.power_name
-                else ""
-            )
-            data["power"] = {
-                "name": power_name,
-                "description": power_desc,
-                "icon_url": self.power_icon_url or "",
-                "icon_local_path": f"icons/powers/{p_clean}.png" if p_clean else "",
-                "movement_speed": self.movement_speed or "4.6 m/s (115%)",
-                "terror_radius": self.terror_radius or "32 m",
-                "terror_radius_meters": self.terror_radius_meters or 32,
-                "height": self.height or "Tall",
-            }
-        return data
-
-
-class Survivor(Character):
-    __mapper_args__ = {
-        "polymorphic_identity": "Survivor",
-    }
-
-
-class Killer(Character):
-    __mapper_args__ = {
-        "polymorphic_identity": "Killer",
-    }
-```
-
-### backend/app/models/chaos.py
-```python
-from datetime import datetime
-from typing import Any
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
-
-
-class ChaosRun(Base):
-    __tablename__ = "chaos_runs"
-    __table_args__ = (
-        UniqueConstraint("user_id", "difficulty", name="uq_chaos_run_user_difficulty"),
-    )
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    difficulty: Mapped[str] = mapped_column(String(20), nullable=False)
-    status: Mapped[str] = mapped_column(String(20), default="in_progress", nullable=False)
-    current_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    best_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    last_checkpoint_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    checkpoint_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    used_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    checkpoint_used_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    current_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    current_addon_rarities_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    unlocked_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    perks_revealed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    match_logs: Mapped[list["ChaosMatchLog"]] = relationship(
-        back_populates="run", cascade="all, delete-orphan", order_by="ChaosMatchLog.timestamp.asc()"
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "difficulty": self.difficulty,
-            "status": self.status,
-            "current_streak": self.current_streak,
-            "best_streak": self.best_streak,
-            "last_checkpoint_streak": self.last_checkpoint_streak,
-            "completed_killers_json": self.completed_killers_json,
-            "completed_killers": safe_json_loads(self.completed_killers_json, default=[]),
-            "checkpoint_killers_json": self.checkpoint_killers_json,
-            "checkpoint_killers": safe_json_loads(self.checkpoint_killers_json, default=[]),
-            "used_perks_json": self.used_perks_json,
-            "used_perks": safe_json_loads(self.used_perks_json, default=[]),
-            "checkpoint_used_perks_json": self.checkpoint_used_perks_json,
-            "checkpoint_used_perks": safe_json_loads(self.checkpoint_used_perks_json, default=[]),
-            "current_perks_json": self.current_perks_json,
-            "current_perks": safe_json_loads(self.current_perks_json, default=[]),
-            "current_addon_rarities_json": self.current_addon_rarities_json,
-            "current_addon_rarities": safe_json_loads(self.current_addon_rarities_json, default=[]),
-            "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
-            "unlocked_perk_ids": safe_json_loads(self.unlocked_perks_json, default=[]),
-            "perks_revealed": self.perks_revealed,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
-
-class ChaosMatchLog(Base):
-    __tablename__ = "chaos_match_logs"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    run_id: Mapped[int] = mapped_column(
-        ForeignKey("chaos_runs.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    killer_id: Mapped[str] = mapped_column(String(100), nullable=False)
-    result: Mapped[str] = mapped_column(String(20), nullable=False)
-    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    addon_rarities_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    streak_before: Mapped[int] = mapped_column(Integer, nullable=False)
-    streak_after: Mapped[int] = mapped_column(Integer, nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, index=True, nullable=False
-    )
-    triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
-
-    run: Mapped["ChaosRun"] = relationship(back_populates="match_logs")
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "run_id": self.run_id,
-            "killer_id": self.killer_id,
-            "result": self.result,
-            "perks_json": self.perks_json,
-            "perks": safe_json_loads(self.perks_json, default=[]),
-            "addon_rarities_json": self.addon_rarities_json,
-            "addon_rarities": safe_json_loads(self.addon_rarities_json, default=[]),
-            "streak_before": self.streak_before,
-            "streak_after": self.streak_after,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
-            "triggered_by": self.triggered_by,
-        }
-```
-
-### backend/app/models/community.py
-```python
-from datetime import datetime
-from typing import TYPE_CHECKING, Any
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
-
-if TYPE_CHECKING:
-    from app.models.user import User
-
-
-class DailyQuest(Base):
-    __tablename__ = "daily_quests"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String(200), nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=False)
-    category: Mapped[str] = mapped_column(String(20), nullable=False)
-    progress: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    goal: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    xp_reward: Mapped[int] = mapped_column(Integer, default=500, nullable=False)
-    is_completed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "category": self.category,
-            "progress": self.progress,
-            "goal": self.goal,
-            "xp_reward": self.xp_reward,
-            "is_completed": self.is_completed,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
-
-
-class CommunityBuild(Base):
-    __tablename__ = "community_builds"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    title: Mapped[str] = mapped_column(String(200), nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=False)
-    role: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
-    category: Mapped[str] = mapped_column(String(50), nullable=False)
-    character_id: Mapped[str] = mapped_column(String(100), default="all", nullable=False)
-    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    upvotes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    author: Mapped[str] = mapped_column(String(100), default="Community", nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "role": self.role,
-            "category": self.category,
-            "character_id": self.character_id,
-            "perks_json": self.perks_json,
-            "perks": safe_json_loads(self.perks_json, default=[]),
-            "upvotes": self.upvotes,
-            "author": self.author,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
-
-
-class CustomPerk(Base):
-    __tablename__ = "custom_perks"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(150), unique=True, index=True, nullable=False)
-    role: Mapped[str] = mapped_column(String(20), nullable=False)
-    character_name: Mapped[str] = mapped_column(String(100), default="Teachable", nullable=False)
-    rarity: Mapped[str] = mapped_column(String(50), default="Very Rare", nullable=False)
-    icon_preset: Mapped[str] = mapped_column(String(50), default="sparkles", nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=False)
-    upvotes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    author: Mapped[str] = mapped_column(String(100), default="Community", nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "name": self.name,
-            "role": self.role,
-            "character_name": self.character_name,
-            "rarity": self.rarity,
-            "icon_preset": self.icon_preset,
-            "description": self.description,
-            "upvotes": self.upvotes,
-            "author": self.author,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
-
-
-class BugReport(Base):
-    __tablename__ = "bug_reports"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int | None] = mapped_column(
-        ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
-    )
-    reporter_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    reporter_email: Mapped[str | None] = mapped_column(String(150), nullable=True)
-    title: Mapped[str] = mapped_column(String(200), nullable=False)
-    category: Mapped[str] = mapped_column(String(50), default="General", nullable=False)
-    message: Mapped[str] = mapped_column(Text, nullable=False)
-    images_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    status: Mapped[str] = mapped_column(String(30), default="pending", nullable=False)
-    admin_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    user: Mapped["User | None"] = relationship(back_populates="bug_reports")
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "reporter_name": self.reporter_name,
-            "reporter_email": self.reporter_email or "",
-            "title": self.title,
-            "category": self.category,
-            "message": self.message,
-            "images": safe_json_loads(self.images_json, default=[]),
-            "status": self.status,
-            "admin_notes": self.admin_notes or "",
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-```
-
-### backend/app/models/gauntlet.py
-```python
-from datetime import datetime
-from typing import Any
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
-
-
-class GauntletRun(Base):
-    __tablename__ = "gauntlet_runs"
-    __table_args__ = (
-        UniqueConstraint("user_id", "role", "game_mode", name="uq_gauntlet_run_user_role_mode"),
-    )
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    role: Mapped[str] = mapped_column(String(20), nullable=False)
-    status: Mapped[str] = mapped_column(String(20), default="in_progress", nullable=False)
-    game_mode: Mapped[str] = mapped_column(String(20), default="original", nullable=False)
-    target_revealed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    current_character_id: Mapped[str] = mapped_column(String(100), nullable=False)
-    current_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    best_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    last_checkpoint_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    completed_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    checkpoint_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    current_loadout_json: Mapped[str] = mapped_column(Text, default="{}", nullable=False)
-    owned_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    match_logs: Mapped[list["GauntletMatchLog"]] = relationship(
-        back_populates="run", cascade="all, delete-orphan", order_by="GauntletMatchLog.timestamp.asc()"
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "role": self.role,
-            "status": self.status,
-            "game_mode": self.game_mode,
-            "target_revealed": self.target_revealed,
-            "current_character_id": self.current_character_id,
-            "current_streak": self.current_streak,
-            "best_streak": self.best_streak,
-            "last_checkpoint_streak": self.last_checkpoint_streak,
-            "completed_characters_json": self.completed_characters_json,
-            "checkpoint_characters_json": self.checkpoint_characters_json,
-            "current_loadout_json": self.current_loadout_json,
-            "completed_characters": safe_json_loads(self.completed_characters_json, default=[]),
-            "checkpoint_characters": safe_json_loads(self.checkpoint_characters_json, default=[]),
-            "current_loadout": safe_json_loads(self.current_loadout_json, default={}),
-            "owned_character_ids": safe_json_loads(self.owned_characters_json, default=[]),
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
-
-class GauntletMatchLog(Base):
-    __tablename__ = "gauntlet_match_logs"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    run_id: Mapped[int] = mapped_column(
-        ForeignKey("gauntlet_runs.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    role: Mapped[str] = mapped_column(String(20), nullable=False)
-    character_id: Mapped[str] = mapped_column(String(100), nullable=False)
-    result: Mapped[str] = mapped_column(String(20), nullable=False)
-    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    streak_before: Mapped[int] = mapped_column(Integer, nullable=False)
-    streak_after: Mapped[int] = mapped_column(Integer, nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, index=True, nullable=False
-    )
-    triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
-
-    run: Mapped["GauntletRun"] = relationship(back_populates="match_logs")
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "run_id": self.run_id,
-            "role": self.role,
-            "character_id": self.character_id,
-            "result": self.result,
-            "perks_json": self.perks_json,
-            "perks": safe_json_loads(self.perks_json, default=[]),
-            "streak_before": self.streak_before,
-            "streak_after": self.streak_after,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
-            "triggered_by": self.triggered_by,
-        }
-```
-
-### backend/app/models/history.py
-```python
-from datetime import datetime
-from typing import Any
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
-
-
-class HistoryRun(Base):
-    __tablename__ = "history_runs"
-    __table_args__ = (
-        UniqueConstraint("user_id", "mode", name="uq_history_run_user_mode"),
-    )
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    mode: Mapped[str] = mapped_column(String(20), nullable=False)
-    status: Mapped[str] = mapped_column(String(20), default="in_progress", nullable=False)
-    current_row_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    total_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    best_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    checkpoint_row_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    checkpoint_total_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    checkpoint_completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    checkpoint_unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    match_logs: Mapped[list["HistoryMatchLog"]] = relationship(
-        back_populates="run", cascade="all, delete-orphan", order_by="HistoryMatchLog.timestamp.asc()"
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "mode": self.mode,
-            "status": self.status,
-            "current_row_index": self.current_row_index,
-            "total_killers_beaten": self.total_killers_beaten,
-            "best_killers_beaten": self.best_killers_beaten,
-            "completed_killers": safe_json_loads(self.completed_killers_json, default=[]),
-            "unlocked_perk_names": safe_json_loads(self.unlocked_perk_names_json, default=[]),
-            "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
-            "checkpoint_row_index": self.checkpoint_row_index,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
-
-class HistoryMatchLog(Base):
-    __tablename__ = "history_match_logs"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    run_id: Mapped[int] = mapped_column(
-        ForeignKey("history_runs.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    killer_id: Mapped[str] = mapped_column(String(100), nullable=False)
-    result: Mapped[str] = mapped_column(String(20), nullable=False)
-    row_index: Mapped[int] = mapped_column(Integer, nullable=False)
-    streak_before: Mapped[int] = mapped_column(Integer, nullable=False)
-    streak_after: Mapped[int] = mapped_column(Integer, nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, index=True, nullable=False
-    )
-    triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
-
-    run: Mapped["HistoryRun"] = relationship(back_populates="match_logs")
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "run_id": self.run_id,
-            "killer_id": self.killer_id,
-            "result": self.result,
-            "row_index": self.row_index,
-            "streak_before": self.streak_before,
-            "streak_after": self.streak_after,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
-            "triggered_by": self.triggered_by,
-        }
-```
-
-### backend/app/models/minigames.py
-```python
-from datetime import datetime
-from typing import Any
-from sqlalchemy import Boolean, DateTime, Float, Integer, String, Text, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
-from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
-
-
-class GeneratorSetting(Base):
-    __tablename__ = "generator_settings"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    role: Mapped[str] = mapped_column(String(20), default="Survivor", nullable=False)
-    gen_mode: Mapped[str] = mapped_column(String(20), default="instant", nullable=False)
-    no_repeat_perks: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    total_pages: Mapped[int] = mapped_column(Integer, default=12, nullable=False)
-    perks_per_page: Mapped[int] = mapped_column(Integer, default=15, nullable=False)
-    last_page_perks: Mapped[int] = mapped_column(Integer, default=8, nullable=False)
-    spin_duration_sec: Mapped[float] = mapped_column(Float, default=3.0, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "role": self.role,
-            "gen_mode": self.gen_mode,
-            "no_repeat_perks": 1 if self.no_repeat_perks else 0,
-            "total_pages": self.total_pages,
-            "perks_per_page": self.perks_per_page,
-            "last_page_perks": self.last_page_perks,
-            "spin_duration_sec": self.spin_duration_sec,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
-
-class GeneratorDrawnPerk(Base):
-    __tablename__ = "generator_drawn_perks"
-    __table_args__ = (
-        UniqueConstraint("role", "perk_name", name="uq_drawn_role_perk"),
-    )
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    role: Mapped[str] = mapped_column(String(20), nullable=False)
-    perk_name: Mapped[str] = mapped_column(String(150), nullable=False)
-    drawn_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "role": self.role,
-            "perk_name": self.perk_name,
-            "drawn_at": self.drawn_at.isoformat() if self.drawn_at else None,
-        }
-
-
-class DraftSession(Base):
-    __tablename__ = "draft_sessions"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    room_code: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
-    phase: Mapped[str] = mapped_column(String(20), default="bans", nullable=False)
-    banned_perks: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    picked_survivor_perks: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    picked_killer_perks: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "room_code": self.room_code,
-            "phase": self.phase,
-            "banned_perks": safe_json_loads(self.banned_perks, default=[]),
-            "picked_survivor_perks": safe_json_loads(self.picked_survivor_perks, default=[]),
-            "picked_killer_perks": safe_json_loads(self.picked_killer_perks, default=[]),
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
-
-class GuesserStat(Base):
-    __tablename__ = "guesser_stats"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    guesser_type: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
-    current_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    best_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    total_guesses: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    correct_guesses: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "guesser_type": self.guesser_type,
-            "current_streak": self.current_streak,
-            "best_streak": self.best_streak,
-            "total_guesses": self.total_guesses,
-            "correct_guesses": self.correct_guesses,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
-
-class ScraperSetting(Base):
-    __tablename__ = "scraper_settings"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    source: Mapped[str] = mapped_column(String(50), default="wikigg", nullable=False)
-    fallback_to_wiki: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    last_used_source: Mapped[str] = mapped_column(String(50), default="wikigg", nullable=False)
-    last_run_timestamp: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "source": self.source,
-            "fallback_to_wiki": self.fallback_to_wiki,
-            "last_used_source": self.last_used_source,
-            "last_run_timestamp": self.last_run_timestamp,
-        }
-```
-
-### backend/app/models/page_streak.py
-```python
-from datetime import datetime
-from typing import Any
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
-
-
-class PageStreakRun(Base):
-    __tablename__ = "page_streak_runs"
-    __table_args__ = (
-        UniqueConstraint("user_id", "killer", name="uq_page_streak_run_user_killer"),
-    )
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    killer: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    status: Mapped[str] = mapped_column(String(20), default="in_progress", nullable=False)
-    attempt: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    current_page: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
-    best_page: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    pages_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    snapshot_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    page_logs: Mapped[list["PageStreakPageLog"]] = relationship(
-        back_populates="run", cascade="all, delete-orphan", order_by="PageStreakPageLog.timestamp.asc()"
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "killer": self.killer,
-            "status": self.status,
-            "attempt": self.attempt,
-            "current_page": self.current_page,
-            "best_page": self.best_page,
-            "pages_json": self.pages_json,
-            "pages": safe_json_loads(self.pages_json, default=[]),
-            "snapshot_at": self.snapshot_at.isoformat() if self.snapshot_at else None,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
-
-class PageStreakPageLog(Base):
-    __tablename__ = "page_streak_page_logs"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    run_id: Mapped[int] = mapped_column(
-        ForeignKey("page_streak_runs.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    attempt: Mapped[int] = mapped_column(Integer, nullable=False)
-    page_number: Mapped[int] = mapped_column(Integer, nullable=False)
-    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    result: Mapped[str] = mapped_column(String(20), nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, index=True, nullable=False
-    )
-    triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
-
-    run: Mapped["PageStreakRun"] = relationship(back_populates="page_logs")
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "run_id": self.run_id,
-            "attempt": self.attempt,
-            "page_number": self.page_number,
-            "perks_json": self.perks_json,
-            "perks": safe_json_loads(self.perks_json, default=[]),
-            "result": self.result,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
-            "triggered_by": self.triggered_by,
-        }
-```
-
-### backend/app/models/smash_or_pass.py
-```python
-import uuid
-from datetime import datetime
-from typing import Any
-from sqlalchemy import (
-    Boolean,
-    DateTime,
-    Float,
-    ForeignKey,
-    Integer,
-    JSON,
-    String,
-    Text,
+from app.services.chaos.constants import (
+    ADDON_RARITY_POOL,
+    CHAOS_CHECKPOINT_INTERVAL,
+    DIFFICULTIES,
+    checkpoint_interval,
 )
-from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.core.extensions import Base
+from app.services.chaos.roller import (
+    draw_addon_rarities,
+    draw_chaos_perks,
+    get_owned_killer_ids,
+    get_owned_killer_names,
+    get_unlocked_killer_perk_ids,
+    get_unlocked_killer_perks,
+    resolve_killer_names_by_ids,
+    resolve_perk_names_by_ids,
+    resolve_perks_by_ids,
+    resolve_perks_by_names,
+)
+from app.services.chaos.stats import fetch_chaos_user_stats
+
+__all__ = [
+    "DIFFICULTIES",
+    "CHAOS_CHECKPOINT_INTERVAL",
+    "ADDON_RARITY_POOL",
+    "checkpoint_interval",
+    "get_owned_killer_names",
+    "get_owned_killer_ids",
+    "get_unlocked_killer_perks",
+    "get_unlocked_killer_perk_ids",
+    "resolve_perks_by_names",
+    "resolve_perks_by_ids",
+    "resolve_perk_names_by_ids",
+    "resolve_killer_names_by_ids",
+    "draw_chaos_perks",
+    "draw_addon_rarities",
+    "fetch_chaos_user_stats",
+]
+```
+
+### backend/app/services/chaos/constants.py
+```python
+DIFFICULTIES: tuple[str, ...] = ("easy", "medium", "hell")
+
+# 0 means no checkpoint: one loss fully resets the run.
+CHAOS_CHECKPOINT_INTERVAL: dict[str, int] = {"easy": 5, "medium": 10, "hell": 0}
+
+# "Event" rarity addons are excluded as they are tied to limited-time events.
+ADDON_RARITY_POOL: list[str] = ["Common", "Uncommon", "Rare", "Very Rare", "Ultra Rare"]
+
+
+def checkpoint_interval(difficulty: str) -> int:
+    return CHAOS_CHECKPOINT_INTERVAL.get(difficulty, 0)
+```
+
+### backend/app/services/chaos/roller.py
+```python
+import random
+from typing import Any
+
+from sqlalchemy import select
+
+from app.core.extensions import db
+from app.models import Character, Perk
+from app.services.chaos.constants import ADDON_RARITY_POOL
+from app.services.ownership_service import OwnershipService
+
+
+def get_owned_killer_names(user_id: int, ownership_service: OwnershipService) -> list[str]:
+    """Every killer the user owns. Unlike Gauntlet Original, no roster cap."""
+    owned = ownership_service.get_user_characters(user_id, role="Killer")
+    return [c["name"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
+
+
+def get_owned_killer_ids(user_id: int, ownership_service: OwnershipService) -> list[int]:
+    """Same as get_owned_killer_names, but keyed by the killer's stable id."""
+    owned = ownership_service.get_user_characters(user_id, role="Killer")
+    return [c["id"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
+
+
+def get_unlocked_killer_perks(user_id: int, ownership_service: OwnershipService) -> list[dict[str, Any]]:
+    """Every unlocked perk in the Killer category."""
+    perks = ownership_service.get_user_perks(user_id, category="Killer")
+    return [p for p in perks if p["is_unlocked"] and not p.get("is_disabled")]
+
+
+def get_unlocked_killer_perk_ids(user_id: int, ownership_service: OwnershipService) -> list[int]:
+    """Same as get_unlocked_killer_perks, but keyed by the perk's stable id."""
+    perks = ownership_service.get_user_perks(user_id, category="Killer")
+    return [p["perk_id"] for p in perks if p["is_unlocked"] and not p.get("is_disabled")]
+
+
+def resolve_perks_by_names(names: list[str]) -> list[dict[str, Any]]:
+    """Turns a frozen name list back into full perk dicts (icon, description)."""
+    if not names:
+        return []
+    perks = db.session.scalars(select(Perk).where(Perk.name.in_(names), Perk.category == "Killer")).all()
+    by_name = {p.name: p.to_dict() for p in perks}
+    return [by_name[n] for n in names if n in by_name]
+
+
+def resolve_perks_by_ids(ids: list[int]) -> list[dict[str, Any]]:
+    """Turns a frozen perk id list back into full perk dicts (icon, description)."""
+    if not ids:
+        return []
+    perks = db.session.scalars(select(Perk).where(Perk.id.in_(ids), Perk.category == "Killer")).all()
+    by_id = {p.id: p.to_dict() for p in perks}
+    return [by_id[i] for i in ids if i in by_id]
+
+
+def resolve_perk_names_by_ids(ids: list[int]) -> list[str]:
+    """Frozen perk id list -> current names."""
+    return [p["name"] for p in resolve_perks_by_ids(ids)]
+
+
+def resolve_killer_names_by_ids(ids: list[int]) -> list[str]:
+    """Turns a frozen killer id list back into current names."""
+    if not ids:
+        return []
+    rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
+    by_id = {c.id: c.name for c in rows}
+    return [by_id[i] for i in ids if i in by_id]
+
+
+def draw_chaos_perks(
+    unlocked_perks: list[dict[str, Any]],
+    used_perk_names: list[str],
+) -> tuple[list[dict[str, Any]], list[str]]:
+    """
+    Draws 4 perks one at a time without repeating a perk already in
+    used_perk_names. If the eligible pool runs out mid-draw, the whole pool
+    becomes eligible again.
+    """
+    if not unlocked_perks:
+        return [], list(used_perk_names)
+
+    used = list(used_perk_names)
+    drawn: list[dict[str, Any]] = []
+
+    for _ in range(4):
+        eligible = [p for p in unlocked_perks if p["name"] not in used]
+        if not eligible:
+            used = []
+            eligible = list(unlocked_perks)
+        pick = random.choice(eligible)
+        drawn.append(pick)
+        used.append(pick["name"])
+
+    return drawn, used
+
+
+def draw_addon_rarities() -> list[str]:
+    """Two independent picks from ADDON_RARITY_POOL; duplicates are allowed."""
+    return [random.choice(ADDON_RARITY_POOL), random.choice(ADDON_RARITY_POOL)]
+```
+
+### backend/app/services/chaos/stats.py
+```python
+from typing import Any
+from sqlalchemy import select
+
+from app.core.extensions import db
+from app.models import ChaosMatchLog, ChaosRun
+from app.services.streak_stats import fetch_streak_stats
+
+
+def fetch_chaos_user_stats(user_id: int, difficulty: str) -> dict[str, Any]:
+    run_ids = db.session.scalars(
+        select(ChaosRun.id).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
+    ).all()
+    return fetch_streak_stats(run_ids, ChaosMatchLog)
+```
+
+### backend/app/services/db/__init__.py
+```python
+from app.services.db.connection import MemConnectionWrapper, create_sqlite_connection
+from app.services.db.maintenance import prune_stale_character_rows
+from app.services.db.raw_schema import init_raw_sqlite_schema
+from app.services.db.seeders import seed_default_configs
+
+__all__ = [
+    "MemConnectionWrapper",
+    "create_sqlite_connection",
+    "init_raw_sqlite_schema",
+    "seed_default_configs",
+    "prune_stale_character_rows",
+]
+```
+
+### backend/app/services/db/connection.py
+```python
+import os
+import sqlite3
+
+
+class MemConnectionWrapper:
+    """Wrapper that prevents closing an in-memory SQLite database connection."""
+
+    def __init__(self, conn: sqlite3.Connection):
+        self._conn = conn
+
+    def cursor(self):
+        return self._conn.cursor()
+
+    def commit(self):
+        return self._conn.commit()
+
+    def rollback(self):
+        return self._conn.rollback()
+
+    def execute(self, *args, **kwargs):
+        return self._conn.execute(*args, **kwargs)
+
+    def executemany(self, *args, **kwargs):
+        return self._conn.executemany(*args, **kwargs)
+
+    def executescript(self, *args, **kwargs):
+        return self._conn.executescript(*args, **kwargs)
+
+    def close(self):
+        pass
+
+    def __getattr__(self, name: str):
+        return getattr(self._conn, name)
+
+
+def create_sqlite_connection(db_path: str = ":memory:") -> sqlite3.Connection:
+    """Create a configured SQLite connection with row factory enabled."""
+    if db_path != ":memory:":
+        dir_name = os.path.dirname(os.path.abspath(db_path))
+        if dir_name:
+            os.makedirs(dir_name, exist_ok=True)
+
+    conn = sqlite3.connect(db_path, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    return conn
+```
+
+### backend/app/services/db/export_import.py
+```python
+import logging
+from datetime import datetime, timezone
+from typing import Any
+
+from sqlalchemy import delete, select
+from app.core.extensions import db
 from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
+from app.models.character import Character
+from app.models.perk import Perk
+from app.models.equipment import Item, Addon
+from app.models.map import MapRealm, MapTile, MapObjective
+from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
+from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
+from app.models.minigames import GeneratorSetting, GuesserStat
+
+logger = logging.getLogger(__name__)
+
+SUPPORTED_EXPORT_TARGETS = [
+    "characters",
+    "perks",
+    "items",
+    "addons",
+    "maps",
+    "users",
+    "ownerships",
+    "community_builds",
+    "custom_perks",
+    "daily_quests",
+    "bug_reports",
+    "generator_settings",
+    "guesser_stats",
+]
 
 
-class Roster(Base):
-    __tablename__ = "rosters"
+def _parse_datetime(val: str | datetime | None) -> datetime | None:
+    if not val:
+        return None
+    try:
+        if isinstance(val, datetime):
+            return val
+        clean = val.replace("Z", "+00:00")
+        return datetime.fromisoformat(clean)
+    except Exception:
+        return None
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
-    )
-    slug: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
-    name_i18n_key: Mapped[str] = mapped_column(String(128), nullable=False)
-    description_i18n_key: Mapped[str] = mapped_column(String(256), nullable=False)
-    cover_image_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
-    theme_color: Mapped[str] = mapped_column(String(32), default="#ff0055", nullable=False)
-    category: Mapped[str] = mapped_column(String(64), default="DBD", nullable=False)
-    is_nsfw: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
 
-    entities: Mapped[list["Entity"]] = relationship(
-        "Entity",
-        back_populates="roster",
-        cascade="all, delete-orphan",
-        order_by="Entity.order_index",
-        lazy="selectin",
-    )
+class DatabaseExportImportService:
+    """
+    Handles JSON-based export, backup, and restore operations across all LemonDBD database entities.
+    Supports atomic execution, merge upserts, full table replacements, and foreign key resolution.
+    """
 
-    def to_dict(self) -> dict[str, Any]:
+    @classmethod
+    def export_database(cls, targets: list[str] | None = None) -> dict[str, Any]:
+        target_set: set[str] = set(targets) if targets else set(SUPPORTED_EXPORT_TARGETS)
+        export_data: dict[str, Any] = {}
+        counts: dict[str, int] = {}
+
+        if "characters" in target_set:
+            chars = db.session.scalars(select(Character).order_by(Character.id)).all()
+            char_list = []
+            for c in chars:
+                char_list.append({
+                    "name": c.name,
+                    "role": c.role,
+                    "code_prefix": c.code_prefix,
+                    "portrait_url": c.portrait_url,
+                    "real_name": c.real_name,
+                    "short_name": c.short_name,
+                    "wiki_slug": c.wiki_slug,
+                    "avatar_local_path": c.avatar_local_path,
+                    "release_number": c.release_number,
+                    "chapter_name": c.chapter_name,
+                    "chapter_number": c.chapter_number,
+                    "dlc_type": c.dlc_type,
+                    "is_licensed": c.is_licensed,
+                    "release_year": c.release_year,
+                    "release_date": c.release_date,
+                    "dlc_counterparts": c.dlc_counterparts,
+                    "lore": c.lore,
+                    "power_name": c.power_name,
+                    "power_description": c.power_description,
+                    "power_icon_url": c.power_icon_url,
+                    "movement_speed": c.movement_speed,
+                    "terror_radius": c.terror_radius,
+                    "terror_radius_meters": c.terror_radius_meters,
+                    "height": c.height,
+                    "translations": c.translations or {},
+                })
+            export_data["characters"] = char_list
+            counts["characters"] = len(char_list)
+
+        if "perks" in target_set:
+            perks = db.session.scalars(select(Perk).order_by(Perk.id)).all()
+            perk_list = []
+            for p in perks:
+                perk_list.append({
+                    "name": p.name,
+                    "alternate_name": p.alternate_name,
+                    "is_generic_counterpart": p.is_generic_counterpart,
+                    "is_teachable": p.is_teachable,
+                    "category": p.category,
+                    "description": p.description,
+                    "icon_url": p.icon_url,
+                    "icon_local_path": p.icon_local_path,
+                    "character_name": p.character.name if p.character else None,
+                    "translations": p.translations or {},
+                })
+            export_data["perks"] = perk_list
+            counts["perks"] = len(perk_list)
+
+        if "items" in target_set:
+            items = db.session.scalars(select(Item).order_by(Item.id)).all()
+            item_list = []
+            for item in items:
+                item_list.append({
+                    "name": item.name,
+                    "category": item.category,
+                    "role": item.role,
+                    "description": item.description,
+                    "icon_url": item.icon_url,
+                    "icon_local_path": item.icon_local_path,
+                    "rarity": item.rarity,
+                    "translations": item.translations or {},
+                })
+            export_data["items"] = item_list
+            counts["items"] = len(item_list)
+
+        if "addons" in target_set:
+            addons = db.session.scalars(select(Addon).order_by(Addon.id)).all()
+            addon_list = []
+            for a in addons:
+                addon_list.append({
+                    "name": a.name,
+                    "associated_target": a.associated_target,
+                    "category": a.category,
+                    "description": a.description,
+                    "icon_url": a.icon_url,
+                    "icon_local_path": a.icon_local_path,
+                    "rarity": a.rarity,
+                    "translations": a.translations or {},
+                })
+            export_data["addons"] = addon_list
+            counts["addons"] = len(addon_list)
+
+        if "maps" in target_set:
+            realms = db.session.scalars(select(MapRealm).order_by(MapRealm.id)).all()
+            map_list = []
+            for r in realms:
+                tiles = [
+                    {
+                        "name": t.name,
+                        "type": t.type,
+                        "x": t.x,
+                        "y": t.y,
+                        "seed_variant": t.seed_variant,
+                        "floor": t.floor,
+                        "has_pallet": t.has_pallet,
+                        "has_window": t.has_window,
+                    }
+                    for t in r.tiles
+                ]
+                objectives = [
+                    {
+                        "type": o.type,
+                        "x": o.x,
+                        "y": o.y,
+                        "floor": o.floor,
+                    }
+                    for o in r.objectives
+                ]
+                map_list.append({
+                    "map_id": r.map_id,
+                    "name": r.name,
+                    "realm": r.realm,
+                    "realm_id": r.realm_id,
+                    "source": r.source,
+                    "source_label": r.source_label,
+                    "layout_type": r.layout_type,
+                    "jungle_gyms_count": r.jungle_gyms_count,
+                    "totem_spawns_count": r.totem_spawns_count,
+                    "pallet_density": r.pallet_density,
+                    "shack_has_basement": r.shack_has_basement,
+                    "description": r.description,
+                    "image_url": r.image_url,
+                    "callout_image_url": r.callout_image_url,
+                    "callout_image_local_path": r.callout_image_local_path,
+                    "tiles": tiles,
+                    "objectives": objectives,
+                })
+            export_data["maps"] = map_list
+            counts["maps"] = len(map_list)
+
+        if "users" in target_set:
+            users = db.session.scalars(select(User).order_by(User.id)).all()
+            user_list = []
+            for u in users:
+                user_list.append({
+                    "username": u.username,
+                    "email": u.email,
+                    "password_hash": u.password_hash,
+                    "role": u.role,
+                    "avatar_url": u.avatar_url,
+                    "is_active": u.is_active,
+                    "created_at": u.created_at.isoformat() if u.created_at else None,
+                    "updated_at": u.updated_at.isoformat() if u.updated_at else None,
+                })
+            export_data["users"] = user_list
+            counts["users"] = len(user_list)
+
+        if "ownerships" in target_set:
+            char_owns = db.session.scalars(select(UserCharacterOwnership)).all()
+            perk_owns = db.session.scalars(select(UserPerkOwnership)).all()
+            export_data["ownerships"] = {
+                "characters": [
+                    {
+                        "username": co.user.username if co.user else None,
+                        "character_name": co.character.name if co.character else None,
+                        "is_owned": co.is_owned,
+                    }
+                    for co in char_owns
+                    if co.user and co.character
+                ],
+                "perks": [
+                    {
+                        "username": po.user.username if po.user else None,
+                        "perk_name": po.perk.name if po.perk else None,
+                        "is_unlocked": po.is_unlocked,
+                    }
+                    for po in perk_owns
+                    if po.user and po.perk
+                ],
+            }
+            counts["character_ownerships"] = len(export_data["ownerships"]["characters"])
+            counts["perk_ownerships"] = len(export_data["ownerships"]["perks"])
+
+        if "community_builds" in target_set:
+            builds = db.session.scalars(select(CommunityBuild).order_by(CommunityBuild.id)).all()
+            export_data["community_builds"] = [b.to_dict() for b in builds]
+            counts["community_builds"] = len(builds)
+
+        if "custom_perks" in target_set:
+            cperks = db.session.scalars(select(CustomPerk).order_by(CustomPerk.id)).all()
+            export_data["custom_perks"] = [cp.to_dict() for cp in cperks]
+            counts["custom_perks"] = len(cperks)
+
+        if "daily_quests" in target_set:
+            quests = db.session.scalars(select(DailyQuest).order_by(DailyQuest.id)).all()
+            export_data["daily_quests"] = [q.to_dict() for q in quests]
+            counts["daily_quests"] = len(quests)
+
+        if "bug_reports" in target_set:
+            reports = db.session.scalars(select(BugReport).order_by(BugReport.id)).all()
+            export_data["bug_reports"] = [r.to_dict() for r in reports]
+            counts["bug_reports"] = len(reports)
+
+        if "generator_settings" in target_set:
+            settings = db.session.scalars(select(GeneratorSetting).order_by(GeneratorSetting.id)).all()
+            export_data["generator_settings"] = [s.to_dict() for s in settings]
+            counts["generator_settings"] = len(settings)
+
+        if "guesser_stats" in target_set:
+            gstats = db.session.scalars(select(GuesserStat).order_by(GuesserStat.id)).all()
+            export_data["guesser_stats"] = [gs.to_dict() for gs in gstats]
+            counts["guesser_stats"] = len(gstats)
+
         return {
-            "id": self.id,
-            "slug": self.slug,
-            "name_i18n_key": self.name_i18n_key,
-            "description_i18n_key": self.description_i18n_key,
-            "cover_image_url": self.cover_image_url,
-            "theme_color": self.theme_color,
-            "category": self.category,
-            "is_nsfw": self.is_nsfw,
-            "is_active": self.is_active,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "version": "1.0",
+            "exported_at": datetime.now(timezone.utc).isoformat(),
+            "source": "LemonDBD",
+            "counts": counts,
+            "data": export_data,
         }
 
+    @classmethod
+    def import_database(
+        cls,
+        payload: dict[str, Any],
+        mode: str = "merge",
+        targets: list[str] | None = None,
+    ) -> dict[str, Any]:
+        if not isinstance(payload, dict):
+            raise ValueError("Invalid JSON payload: root must be an object.")
 
-class Entity(Base):
-    __tablename__ = "entities"
+        data: dict[str, Any] = payload.get("data", payload)
+        target_keys = set(targets) if targets else set(data.keys())
+        summary: dict[str, dict[str, int]] = {}
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
-    )
-    roster_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("rosters.id", ondelete="CASCADE"), index=True, nullable=False
-    )
-    slug: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
-    name: Mapped[str] = mapped_column(String(128), nullable=False)
-    role: Mapped[str] = mapped_column(String(32), default="Survivor", nullable=False)
-    gender: Mapped[str] = mapped_column(String(32), default="female", nullable=False)
-    media_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
-    media_type: Mapped[str] = mapped_column(String(16), default="image", nullable=False)
-    metadata_json: Mapped[dict[str, Any] | None] = mapped_column(
-        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
-    )
-    order_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
+        try:
+            if mode == "replace":
+                if "ownerships" in target_keys:
+                    db.session.execute(delete(UserCharacterOwnership))
+                    db.session.execute(delete(UserPerkOwnership))
+                if "bug_reports" in target_keys:
+                    db.session.execute(delete(BugReport))
+                if "community_builds" in target_keys:
+                    db.session.execute(delete(CommunityBuild))
+                if "custom_perks" in target_keys:
+                    db.session.execute(delete(CustomPerk))
+                if "daily_quests" in target_keys:
+                    db.session.execute(delete(DailyQuest))
+                if "maps" in target_keys:
+                    db.session.execute(delete(MapObjective))
+                    db.session.execute(delete(MapTile))
+                    db.session.execute(delete(MapRealm))
+                if "addons" in target_keys:
+                    db.session.execute(delete(Addon))
+                if "items" in target_keys:
+                    db.session.execute(delete(Item))
+                if "perks" in target_keys:
+                    db.session.execute(delete(Perk))
+                if "characters" in target_keys:
+                    db.session.execute(delete(Character))
+                if "generator_settings" in target_keys:
+                    db.session.execute(delete(GeneratorSetting))
+                if "guesser_stats" in target_keys:
+                    db.session.execute(delete(GuesserStat))
+                db.session.flush()
 
-    roster: Mapped["Roster"] = relationship("Roster", back_populates="entities")
-    stat: Mapped["EntityStat | None"] = relationship(
-        "EntityStat", back_populates="entity", uselist=False, cascade="all, delete-orphan", lazy="selectin"
-    )
-    votes: Mapped[list["Vote"]] = relationship(
-        "Vote", back_populates="entity", cascade="all, delete-orphan"
-    )
+            if "characters" in target_keys and "characters" in data:
+                raw_chars = data["characters"]
+                created, updated = 0, 0
+                for cdata in raw_chars:
+                    name = cdata.get("name")
+                    if not name:
+                        continue
+                    char_obj = db.session.scalar(select(Character).where(Character.name == name))
+                    if not char_obj:
+                        char_obj = Character(name=name, role=cdata.get("role", "Survivor"))
+                        db.session.add(char_obj)
+                        created += 1
+                    else:
+                        updated += 1
 
-    def get_metadata(self) -> dict[str, Any]:
-        if isinstance(self.metadata_json, dict):
-            return self.metadata_json
-        if isinstance(self.metadata_json, str):
-            return safe_json_loads(self.metadata_json, default={})
+                    for k in [
+                        "role", "code_prefix", "portrait_url", "real_name", "short_name",
+                        "wiki_slug", "avatar_local_path", "release_number", "chapter_name",
+                        "chapter_number", "dlc_type", "is_licensed", "release_year",
+                        "release_date", "dlc_counterparts", "lore", "power_name",
+                        "power_description", "power_icon_url", "movement_speed",
+                        "terror_radius", "terror_radius_meters", "height", "translations"
+                    ]:
+                        if k in cdata:
+                            setattr(char_obj, k, cdata[k])
+                db.session.flush()
+                summary["characters"] = {"created": created, "updated": updated}
+
+            char_map: dict[str, int] = {}
+            for c in db.session.scalars(select(Character)).all():
+                char_map[c.name.strip().lower()] = c.id
+                if c.real_name:
+                    char_map[c.real_name.strip().lower()] = c.id
+                if c.wiki_slug:
+                    char_map[c.wiki_slug.strip().lower()] = c.id
+
+            if "perks" in target_keys and "perks" in data:
+                raw_perks = data["perks"]
+                created, updated = 0, 0
+                for pdata in raw_perks:
+                    name = pdata.get("name")
+                    if not name:
+                        continue
+                    perk_obj = db.session.scalar(select(Perk).where(Perk.name == name))
+                    if not perk_obj:
+                        perk_obj = Perk(name=name)
+                        db.session.add(perk_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in [
+                        "alternate_name", "is_generic_counterpart", "is_teachable",
+                        "category", "description", "icon_url", "icon_local_path", "translations"
+                    ]:
+                        if k in pdata:
+                            setattr(perk_obj, k, pdata[k])
+
+                    char_name = pdata.get("character_name")
+                    if char_name:
+                        char_id = char_map.get(char_name.strip().lower())
+                        if char_id:
+                            perk_obj.character_id = char_id
+                db.session.flush()
+                summary["perks"] = {"created": created, "updated": updated}
+
+            if "items" in target_keys and "items" in data:
+                raw_items = data["items"]
+                created, updated = 0, 0
+                for idata in raw_items:
+                    name = idata.get("name")
+                    if not name:
+                        continue
+                    item_obj = db.session.scalar(select(Item).where(Item.name == name))
+                    if not item_obj:
+                        item_obj = Item(name=name)
+                        db.session.add(item_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in [
+                        "category", "role", "description", "icon_url",
+                        "icon_local_path", "rarity", "translations"
+                    ]:
+                        if k in idata:
+                            setattr(item_obj, k, idata[k])
+                db.session.flush()
+                summary["items"] = {"created": created, "updated": updated}
+
+            if "addons" in target_keys and "addons" in data:
+                raw_addons = data["addons"]
+                created, updated = 0, 0
+                for adata in raw_addons:
+                    name = adata.get("name")
+                    if not name:
+                        continue
+                    addon_obj = db.session.scalar(select(Addon).where(Addon.name == name))
+                    if not addon_obj:
+                        addon_obj = Addon(name=name)
+                        db.session.add(addon_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in [
+                        "associated_target", "category", "description",
+                        "icon_url", "icon_local_path", "rarity", "translations"
+                    ]:
+                        if k in adata:
+                            setattr(addon_obj, k, adata[k])
+                db.session.flush()
+                summary["addons"] = {"created": created, "updated": updated}
+
+            if "maps" in target_keys and "maps" in data:
+                raw_maps = data["maps"]
+                created, updated = 0, 0
+                for mdata in raw_maps:
+                    map_id = mdata.get("map_id")
+                    if not map_id:
+                        continue
+                    realm_obj = db.session.scalar(select(MapRealm).where(MapRealm.map_id == map_id))
+                    if not realm_obj:
+                        realm_obj = MapRealm(
+                            map_id=map_id,
+                            name=mdata.get("name", map_id),
+                            realm=mdata.get("realm", "Unknown Realm"),
+                        )
+                        db.session.add(realm_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in [
+                        "name", "realm", "realm_id", "source", "source_label",
+                        "layout_type", "jungle_gyms_count", "totem_spawns_count",
+                        "pallet_density", "shack_has_basement", "description",
+                        "image_url", "callout_image_url", "callout_image_local_path"
+                    ]:
+                        if k in mdata:
+                            setattr(realm_obj, k, mdata[k])
+
+                    if "tiles" in mdata:
+                        db.session.execute(delete(MapTile).where(MapTile.map_id == map_id))
+                        for tdata in mdata["tiles"]:
+                            tile = MapTile(
+                                map_id=map_id,
+                                name=tdata.get("name", "Tile"),
+                                type=tdata.get("type", "standard"),
+                                x=float(tdata.get("x", 0.0)),
+                                y=float(tdata.get("y", 0.0)),
+                                seed_variant=tdata.get("seed_variant", "seed_a"),
+                                floor=int(tdata.get("floor", 1)),
+                                has_pallet=bool(tdata.get("has_pallet", False)),
+                                has_window=bool(tdata.get("has_window", False)),
+                            )
+                            db.session.add(tile)
+
+                    if "objectives" in mdata:
+                        db.session.execute(delete(MapObjective).where(MapObjective.map_id == map_id))
+                        for odata in mdata["objectives"]:
+                            obj = MapObjective(
+                                map_id=map_id,
+                                type=odata.get("type", "generator"),
+                                x=float(odata.get("x", 0.0)),
+                                y=float(odata.get("y", 0.0)),
+                                floor=int(odata.get("floor", 1)),
+                            )
+                            db.session.add(obj)
+                db.session.flush()
+                summary["maps"] = {"created": created, "updated": updated}
+
+            if "users" in target_keys and "users" in data:
+                raw_users = data["users"]
+                created, updated = 0, 0
+                for udata in raw_users:
+                    username = udata.get("username")
+                    if not username:
+                        continue
+                    user_obj = db.session.scalar(select(User).where(User.username == username))
+                    if not user_obj:
+                        user_obj = User(
+                            username=username,
+                            email=udata.get("email", f"{username}@lemondbd.com"),
+                            password_hash=udata.get("password_hash", ""),
+                            role=udata.get("role", "user"),
+                            avatar_url=udata.get("avatar_url", "default_avatar"),
+                            is_active=udata.get("is_active", True),
+                        )
+                        db.session.add(user_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in ["email", "password_hash", "role", "avatar_url", "is_active"]:
+                        if k in udata and udata[k] is not None:
+                            setattr(user_obj, k, udata[k])
+                    if "created_at" in udata and udata["created_at"]:
+                        user_obj.created_at = _parse_datetime(udata["created_at"]) or user_obj.created_at
+                db.session.flush()
+                summary["users"] = {"created": created, "updated": updated}
+
+            user_map: dict[str, int] = {u.username: u.id for u in db.session.scalars(select(User)).all()}
+            perk_map: dict[str, int] = {p.name.strip().lower(): p.id for p in db.session.scalars(select(Perk)).all()}
+
+            if "ownerships" in target_keys and "ownerships" in data:
+                raw_owns = data["ownerships"]
+                char_created, char_updated = 0, 0
+                perk_created, perk_updated = 0, 0
+
+                for co_data in raw_owns.get("characters", []):
+                    uname = co_data.get("username")
+                    cname = co_data.get("character_name")
+                    u_id = user_map.get(uname) if uname else None
+                    c_id = char_map.get(cname.strip().lower()) if cname else None
+                    if u_id and c_id:
+                        co = db.session.scalar(
+                            select(UserCharacterOwnership).where(
+                                UserCharacterOwnership.user_id == u_id,
+                                UserCharacterOwnership.character_id == c_id,
+                            )
+                        )
+                        if not co:
+                            co = UserCharacterOwnership(user_id=u_id, character_id=c_id)
+                            db.session.add(co)
+                            char_created += 1
+                        else:
+                            char_updated += 1
+                        co.is_owned = co_data.get("is_owned", True)
+
+                for po_data in raw_owns.get("perks", []):
+                    uname = po_data.get("username")
+                    pname = po_data.get("perk_name")
+                    u_id = user_map.get(uname) if uname else None
+                    p_id = perk_map.get(pname.strip().lower()) if pname else None
+                    if u_id and p_id:
+                        po = db.session.scalar(
+                            select(UserPerkOwnership).where(
+                                UserPerkOwnership.user_id == u_id,
+                                UserPerkOwnership.perk_id == p_id,
+                            )
+                        )
+                        if not po:
+                            po = UserPerkOwnership(user_id=u_id, perk_id=p_id)
+                            db.session.add(po)
+                            perk_created += 1
+                        else:
+                            perk_updated += 1
+                        po.is_unlocked = po_data.get("is_unlocked", True)
+
+                db.session.flush()
+                summary["character_ownerships"] = {"created": char_created, "updated": char_updated}
+                summary["perk_ownerships"] = {"created": perk_created, "updated": perk_updated}
+
+            if "community_builds" in target_keys and "community_builds" in data:
+                raw_builds = data["community_builds"]
+                created, updated = 0, 0
+                for bdata in raw_builds:
+                    title = bdata.get("title")
+                    if not title:
+                        continue
+                    build_obj = db.session.scalar(select(CommunityBuild).where(CommunityBuild.title == title))
+                    if not build_obj:
+                        build_obj = CommunityBuild(
+                            title=title,
+                            description=bdata.get("description", ""),
+                            role=bdata.get("role", "Survivor"),
+                            category=bdata.get("category", "Meta"),
+                        )
+                        db.session.add(build_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in ["description", "role", "category", "character_id", "perks_json", "upvotes", "author"]:
+                        if k in bdata:
+                            setattr(build_obj, k, bdata[k])
+                db.session.flush()
+                summary["community_builds"] = {"created": created, "updated": updated}
+
+            if "custom_perks" in target_keys and "custom_perks" in data:
+                raw_cperks = data["custom_perks"]
+                created, updated = 0, 0
+                for cpdata in raw_cperks:
+                    name = cpdata.get("name")
+                    if not name:
+                        continue
+                    cp_obj = db.session.scalar(select(CustomPerk).where(CustomPerk.name == name))
+                    if not cp_obj:
+                        cp_obj = CustomPerk(
+                            name=name,
+                            role=cpdata.get("role", "Survivor"),
+                            rarity=cpdata.get("rarity", "Very Rare"),
+                            description=cpdata.get("description", ""),
+                        )
+                        db.session.add(cp_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in ["role", "character_name", "rarity", "icon_preset", "description", "upvotes", "author"]:
+                        if k in cpdata:
+                            setattr(cp_obj, k, cpdata[k])
+                db.session.flush()
+                summary["custom_perks"] = {"created": created, "updated": updated}
+
+            if "daily_quests" in target_keys and "daily_quests" in data:
+                raw_quests = data["daily_quests"]
+                created, updated = 0, 0
+                for qdata in raw_quests:
+                    title = qdata.get("title")
+                    if not title:
+                        continue
+                    q_obj = db.session.scalar(select(DailyQuest).where(DailyQuest.title == title))
+                    if not q_obj:
+                        q_obj = DailyQuest(
+                            title=title,
+                            description=qdata.get("description", ""),
+                            category=qdata.get("category", "General"),
+                        )
+                        db.session.add(q_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in ["description", "category", "progress", "goal", "xp_reward", "is_completed"]:
+                        if k in qdata:
+                            setattr(q_obj, k, qdata[k])
+                db.session.flush()
+                summary["daily_quests"] = {"created": created, "updated": updated}
+
+            if "bug_reports" in target_keys and "bug_reports" in data:
+                raw_reports = data["bug_reports"]
+                created, updated = 0, 0
+                for rdata in raw_reports:
+                    title = rdata.get("title")
+                    if not title:
+                        continue
+                    r_obj = db.session.scalar(select(BugReport).where(BugReport.title == title))
+                    if not r_obj:
+                        r_obj = BugReport(
+                            title=title,
+                            reporter_name=rdata.get("reporter_name", "Anonymous"),
+                            message=rdata.get("message", ""),
+                        )
+                        db.session.add(r_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in ["reporter_name", "reporter_email", "category", "message", "images_json", "status", "admin_notes"]:
+                        if k in rdata:
+                            setattr(r_obj, k, rdata[k])
+                db.session.flush()
+                summary["bug_reports"] = {"created": created, "updated": updated}
+
+            if "generator_settings" in target_keys and "generator_settings" in data:
+                raw_settings = data["generator_settings"]
+                created, updated = 0, 0
+                for sdata in raw_settings:
+                    role = sdata.get("role", "Survivor")
+                    s_obj = db.session.scalar(select(GeneratorSetting).where(GeneratorSetting.role == role))
+                    if not s_obj:
+                        s_obj = GeneratorSetting(role=role)
+                        db.session.add(s_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in [
+                        "gen_mode", "no_repeat_perks", "total_pages",
+                        "perks_per_page", "last_page_perks", "spin_duration_sec"
+                    ]:
+                        if k in sdata:
+                            setattr(s_obj, k, sdata[k])
+                db.session.flush()
+                summary["generator_settings"] = {"created": created, "updated": updated}
+
+            if "guesser_stats" in target_keys and "guesser_stats" in data:
+                raw_gstats = data["guesser_stats"]
+                created, updated = 0, 0
+                for gsdata in raw_gstats:
+                    gtype = gsdata.get("guesser_type")
+                    if not gtype:
+                        continue
+                    gs_obj = db.session.scalar(select(GuesserStat).where(GuesserStat.guesser_type == gtype))
+                    if not gs_obj:
+                        gs_obj = GuesserStat(guesser_type=gtype)
+                        db.session.add(gs_obj)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in ["current_streak", "best_streak", "total_guesses", "correct_guesses"]:
+                        if k in gsdata:
+                            setattr(gs_obj, k, gsdata[k])
+                db.session.flush()
+                summary["guesser_stats"] = {"created": created, "updated": updated}
+
+            db.session.commit()
+
+            try:
+                from app.routes.perks import perk_service
+                perk_service.reload_data()
+            except Exception as reload_err:
+                logger.debug(f"PerkService reload_data notice during import: {reload_err}")
+
+            return {
+                "status": "success",
+                "message": f"Database import completed ({mode} mode).",
+                "mode": mode,
+                "summary": summary,
+            }
+
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Error during database import: {e}", exc_info=True)
+            raise e
+```
+
+### backend/app/services/db/maintenance.py
+```python
+from flask import current_app
+from sqlalchemy import select
+from app.core.extensions import db
+from app.models import GauntletRun, PageStreakRun
+
+
+def prune_stale_character_rows(valid_names: set[str] | None, get_conn_fn) -> dict[str, int]:
+    """Delete run rows pinned to characters that no longer exist."""
+    names = {str(n) for n in (valid_names or set())}
+    if not names:
         return {}
 
-    def set_metadata(self, value: Any) -> None:
-        self.metadata_json = value
+    deleted: dict[str, int] = {}
+    if get_conn_fn:
+        conn = get_conn_fn()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("PRAGMA foreign_keys = ON;")
 
-    def to_dict(self) -> dict[str, Any]:
-        meta = self.get_metadata()
-        return {
-            "id": self.id,
-            "roster_id": self.roster_id,
-            "slug": self.slug,
-            "name": self.name,
-            "role": self.role,
-            "gender": self.gender,
-            "media_url": self.media_url,
-            "media_type": self.media_type,
-            "metadata": meta,
-            "metadata_json": meta,
-            "order_index": self.order_index,
-            "is_active": self.is_active,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "stat": self.stat.to_dict() if self.stat else None,
+            for table, column in (("gauntlet_runs", "current_character_id"), ("page_streak_runs", "killer")):
+                cursor.execute(f"SELECT id, {column} AS character_name FROM {table};")
+                stale = [row["id"] for row in cursor.fetchall() if row["character_name"] not in names]
+                if stale:
+                    placeholders = ",".join("?" for _ in stale)
+                    cursor.execute(f"DELETE FROM {table} WHERE id IN ({placeholders});", stale)
+                deleted[table] = len(stale)
+
+            conn.commit()
+            return deleted
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+    try:
+        if current_app:
+            stale_cr = db.session.scalars(
+                select(GauntletRun).where(~GauntletRun.current_character_id.in_(names))
+            ).all()
+            deleted["gauntlet_runs"] = len(stale_cr)
+            for cr in stale_cr:
+                db.session.delete(cr)
+
+            stale_psr = db.session.scalars(
+                select(PageStreakRun).where(~PageStreakRun.killer.in_(names))
+            ).all()
+            deleted["page_streak_runs"] = len(stale_psr)
+            for psr in stale_psr:
+                db.session.delete(psr)
+
+            db.session.commit()
+            return deleted
+    except Exception:
+        pass
+
+    return deleted
+```
+
+### backend/app/services/db/raw_schema.py
+```python
+import logging
+import sqlite3
+
+logger = logging.getLogger(__name__)
+
+SQLITE_FALLBACK_DDL = """
+CREATE TABLE IF NOT EXISTS perk_rules (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    is_default BOOLEAN NOT NULL DEFAULT 0,
+    slot1_type TEXT NOT NULL DEFAULT 'character_own',
+    slot2_type TEXT NOT NULL DEFAULT 'character_own',
+    slot3_type TEXT NOT NULL DEFAULT 'general_role',
+    slot4_type TEXT NOT NULL DEFAULT 'any_role',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS gauntlet_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
+    status TEXT NOT NULL DEFAULT 'in_progress',
+    game_mode TEXT NOT NULL DEFAULT 'original',
+    target_revealed BOOLEAN NOT NULL DEFAULT 0,
+    current_character_id TEXT NOT NULL,
+    current_streak INTEGER NOT NULL DEFAULT 0,
+    best_streak INTEGER NOT NULL DEFAULT 0,
+    last_checkpoint_streak INTEGER NOT NULL DEFAULT 0,
+    completed_characters_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_characters_json TEXT NOT NULL DEFAULT '[]',
+    current_loadout_json TEXT NOT NULL DEFAULT '{}',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS gauntlet_match_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER NOT NULL,
+    role TEXT NOT NULL,
+    character_id TEXT NOT NULL,
+    result TEXT NOT NULL CHECK (result IN ('win', 'loss')),
+    perks_json TEXT NOT NULL,
+    streak_before INTEGER NOT NULL,
+    streak_after INTEGER NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (run_id) REFERENCES gauntlet_runs(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS chaos_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    difficulty TEXT NOT NULL CHECK (difficulty IN ('easy', 'medium', 'hell')),
+    status TEXT NOT NULL DEFAULT 'in_progress',
+    current_streak INTEGER NOT NULL DEFAULT 0,
+    best_streak INTEGER NOT NULL DEFAULT 0,
+    last_checkpoint_streak INTEGER NOT NULL DEFAULT 0,
+    completed_killers_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_killers_json TEXT NOT NULL DEFAULT '[]',
+    used_perks_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_used_perks_json TEXT NOT NULL DEFAULT '[]',
+    current_perks_json TEXT NOT NULL DEFAULT '[]',
+    current_addon_rarities_json TEXT NOT NULL DEFAULT '[]',
+    perks_revealed BOOLEAN NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS chaos_match_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER NOT NULL,
+    killer_id TEXT NOT NULL,
+    result TEXT NOT NULL CHECK (result IN ('win', 'loss')),
+    perks_json TEXT NOT NULL,
+    addon_rarities_json TEXT NOT NULL,
+    streak_before INTEGER NOT NULL,
+    streak_after INTEGER NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (run_id) REFERENCES chaos_runs(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS history_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    mode TEXT NOT NULL CHECK (mode IN ('medium', 'hell')),
+    status TEXT NOT NULL DEFAULT 'in_progress',
+    current_row_index INTEGER NOT NULL DEFAULT 0,
+    total_killers_beaten INTEGER NOT NULL DEFAULT 0,
+    best_killers_beaten INTEGER NOT NULL DEFAULT 0,
+    completed_killers_json TEXT NOT NULL DEFAULT '[]',
+    unlocked_perk_names_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_row_index INTEGER NOT NULL DEFAULT 0,
+    checkpoint_total_killers_beaten INTEGER NOT NULL DEFAULT 0,
+    checkpoint_completed_killers_json TEXT NOT NULL DEFAULT '[]',
+    checkpoint_unlocked_perk_names_json TEXT NOT NULL DEFAULT '[]',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS history_match_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER NOT NULL,
+    killer_id TEXT NOT NULL,
+    result TEXT NOT NULL CHECK (result IN ('win', 'loss')),
+    row_index INTEGER NOT NULL,
+    streak_before INTEGER NOT NULL,
+    streak_after INTEGER NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (run_id) REFERENCES history_runs(id) ON DELETE CASCADE
+);
+
+INSERT INTO perk_rules (id, name, is_default, slot1_type, slot2_type, slot3_type, slot4_type)
+SELECT 1, 'Default Balanced (2 Own, 1 General, 1 Any)', 1, 'character_own', 'character_own', 'general_role', 'any_role'
+WHERE NOT EXISTS (SELECT 1 FROM perk_rules WHERE id = 1);
+
+CREATE TABLE IF NOT EXISTS generator_settings (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    role TEXT NOT NULL DEFAULT 'Survivor',
+    gen_mode TEXT NOT NULL DEFAULT 'instant',
+    no_repeat_perks BOOLEAN NOT NULL DEFAULT 1,
+    total_pages INTEGER NOT NULL DEFAULT 12,
+    perks_per_page INTEGER NOT NULL DEFAULT 15,
+    last_page_perks INTEGER NOT NULL DEFAULT 8,
+    spin_duration_sec REAL NOT NULL DEFAULT 3.0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS generator_drawn_perks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role TEXT NOT NULL,
+    perk_name TEXT NOT NULL,
+    drawn_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(role, perk_name)
+);
+
+CREATE TABLE IF NOT EXISTS draft_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    room_code TEXT UNIQUE NOT NULL,
+    phase TEXT NOT NULL DEFAULT 'bans' CHECK (phase IN ('bans', 'picks', 'complete')),
+    banned_perks TEXT NOT NULL DEFAULT '[]',
+    picked_survivor_perks TEXT NOT NULL DEFAULT '[]',
+    picked_killer_perks TEXT NOT NULL DEFAULT '[]',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS daily_quests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('daily', 'weekly')),
+    progress INTEGER NOT NULL DEFAULT 0,
+    goal INTEGER NOT NULL DEFAULT 1,
+    xp_reward INTEGER NOT NULL DEFAULT 500,
+    is_completed BOOLEAN NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS community_builds (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
+    category TEXT NOT NULL CHECK (category IN ('otzdarva', 'meta', 'meme', 'stealth', 'chase')),
+    character_id TEXT NOT NULL DEFAULT 'all',
+    perks_json TEXT NOT NULL DEFAULT '[]',
+    upvotes INTEGER NOT NULL DEFAULT 0,
+    author TEXT NOT NULL DEFAULT 'Community',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS custom_perks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
+    character_name TEXT NOT NULL DEFAULT 'Teachable',
+    rarity TEXT NOT NULL CHECK (rarity IN ('Iridescent', 'Very Rare', 'Uncommon')),
+    icon_preset TEXT NOT NULL DEFAULT 'sparkles',
+    description TEXT NOT NULL,
+    upvotes INTEGER NOT NULL DEFAULT 0,
+    author TEXT NOT NULL DEFAULT 'Community',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS map_realms (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    map_id TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    realm TEXT NOT NULL,
+    source TEXT NOT NULL DEFAULT 'hens333',
+    source_label TEXT NOT NULL DEFAULT 'Hens333 12-Clock Callouts',
+    layout_type TEXT,
+    jungle_gyms_count INTEGER DEFAULT 0,
+    totem_spawns_count INTEGER DEFAULT 5,
+    pallet_density TEXT,
+    shack_has_basement BOOLEAN DEFAULT 1,
+    description TEXT,
+    image_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS map_tiles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    map_id TEXT NOT NULL,
+    seed_variant TEXT NOT NULL DEFAULT 'seed_a',
+    floor INTEGER NOT NULL DEFAULT 1,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    x REAL NOT NULL,
+    y REAL NOT NULL,
+    has_pallet BOOLEAN NOT NULL DEFAULT 0,
+    pallet_safety_rating TEXT CHECK (pallet_safety_rating IS NULL OR pallet_safety_rating IN ('god', 'safe', 'mindgameable', 'unsafe')),
+    has_window BOOLEAN NOT NULL DEFAULT 0,
+    vault_directions TEXT DEFAULT '[]',
+    looping_tips TEXT NOT NULL DEFAULT '',
+    mindgame_counter TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (map_id) REFERENCES map_realms(map_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS map_objectives (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    map_id TEXT NOT NULL,
+    seed_variant TEXT NOT NULL DEFAULT 'seed_a',
+    floor INTEGER NOT NULL DEFAULT 1,
+    type TEXT NOT NULL CHECK (type IN ('totem', 'generator', 'exit_gate', 'hatch', 'chest', 'basement')),
+    x REAL NOT NULL,
+    y REAL NOT NULL,
+    location_description TEXT NOT NULL DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (map_id) REFERENCES map_realms(map_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS page_streak_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    killer TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'in_progress' CHECK (status IN ('in_progress', 'completed')),
+    attempt INTEGER NOT NULL DEFAULT 1,
+    current_page INTEGER NOT NULL DEFAULT 1,
+    best_page INTEGER NOT NULL DEFAULT 0,
+    pages_json TEXT NOT NULL DEFAULT '[]',
+    snapshot_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS page_streak_page_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER NOT NULL,
+    attempt INTEGER NOT NULL,
+    page_number INTEGER NOT NULL,
+    perks_json TEXT NOT NULL,
+    result TEXT NOT NULL CHECK (result IN ('win', 'loss')),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (run_id) REFERENCES page_streak_runs(id) ON DELETE CASCADE
+);
+
+INSERT OR IGNORE INTO generator_settings (id, role, gen_mode, no_repeat_perks)
+VALUES (1, 'Survivor', 'instant', 1);
+
+CREATE TABLE IF NOT EXISTS guesser_stats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    guesser_type TEXT UNIQUE NOT NULL,
+    current_streak INTEGER NOT NULL DEFAULT 0,
+    best_streak INTEGER NOT NULL DEFAULT 0,
+    total_guesses INTEGER NOT NULL DEFAULT 0,
+    correct_guesses INTEGER NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses) VALUES ('character', 0, 0, 0, 0);
+INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses) VALUES ('perk_description', 0, 0, 0, 0);
+INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses) VALUES ('perk_name_to_icon', 0, 0, 0, 0);
+INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses) VALUES ('perk_icon_to_name', 0, 0, 0, 0);
+INSERT OR IGNORE INTO guesser_stats (guesser_type, current_streak, best_streak, total_guesses, correct_guesses) VALUES ('memes', 0, 0, 0, 0);
+
+CREATE TABLE IF NOT EXISTS smash_pass_stats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_slug TEXT UNIQUE NOT NULL,
+    character_name TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'Survivor',
+    gender TEXT NOT NULL DEFAULT 'female',
+    smash_count INTEGER NOT NULL DEFAULT 0,
+    pass_count INTEGER NOT NULL DEFAULT 0,
+    super_smash_count INTEGER NOT NULL DEFAULT 0,
+    total_votes INTEGER NOT NULL DEFAULT 0,
+    smash_rate REAL NOT NULL DEFAULT 50.0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS smash_pass_votes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    character_slug TEXT NOT NULL,
+    vote_type TEXT NOT NULL,
+    user_id INTEGER,
+    session_id TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS rosters (
+    id TEXT PRIMARY KEY,
+    slug TEXT UNIQUE NOT NULL,
+    name_i18n_key TEXT NOT NULL,
+    description_i18n_key TEXT NOT NULL,
+    cover_image_url TEXT,
+    theme_color TEXT NOT NULL DEFAULT '#ff0055',
+    category TEXT NOT NULL DEFAULT 'DBD',
+    is_nsfw BOOLEAN NOT NULL DEFAULT 0,
+    is_active BOOLEAN NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS entities (
+    id TEXT PRIMARY KEY,
+    roster_id TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    name TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'Survivor',
+    gender TEXT NOT NULL DEFAULT 'female',
+    media_url TEXT,
+    media_type TEXT NOT NULL DEFAULT 'image',
+    metadata_json TEXT DEFAULT '{}',
+    order_index INTEGER NOT NULL DEFAULT 0,
+    is_active BOOLEAN NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (roster_id) REFERENCES rosters(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS entity_stats (
+    id TEXT PRIMARY KEY,
+    entity_id TEXT UNIQUE NOT NULL,
+    smash_count INTEGER NOT NULL DEFAULT 0,
+    pass_count INTEGER NOT NULL DEFAULT 0,
+    super_smash_count INTEGER NOT NULL DEFAULT 0,
+    total_votes INTEGER NOT NULL DEFAULT 0,
+    smash_rate REAL NOT NULL DEFAULT 0.0,
+    chaos_rating REAL NOT NULL DEFAULT 50.0,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS votes (
+    id TEXT PRIMARY KEY,
+    entity_id TEXT NOT NULL,
+    session_id TEXT,
+    user_id INTEGER,
+    vote_type TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS translations (
+    id TEXT PRIMARY KEY,
+    locale TEXT NOT NULL,
+    key TEXT NOT NULL,
+    value TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+"""
+
+
+def init_raw_sqlite_schema(conn: sqlite3.Connection) -> None:
+    try:
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(map_realms);")
+        cols = [row[1] for row in cursor.fetchall()]
+        if cols:
+            if "map_id" not in cols:
+                cursor.execute("DROP TABLE IF EXISTS map_realms;")
+                cursor.execute("DROP TABLE IF EXISTS map_tiles;")
+                cursor.execute("DROP TABLE IF EXISTS map_objectives;")
+                conn.commit()
+            else:
+                if "source" not in cols:
+                    try:
+                        cursor.execute("ALTER TABLE map_realms ADD COLUMN source TEXT NOT NULL DEFAULT 'hens333';")
+                    except Exception:
+                        pass
+                if "source_label" not in cols:
+                    try:
+                        cursor.execute("ALTER TABLE map_realms ADD COLUMN source_label TEXT NOT NULL DEFAULT 'Hens333 12-Clock Callouts';")
+                    except Exception:
+                        pass
+                conn.commit()
+
+        cursor.executescript(SQLITE_FALLBACK_DDL)
+        conn.commit()
+    except Exception as e:
+        logger.error(f"Fallback SQLite init_db failed: {e}")
+```
+
+### backend/app/services/db/seeders.py
+```python
+import logging
+from sqlalchemy import select
+from app.models import GeneratorSetting, GuesserStat, PerkRule
+
+logger = logging.getLogger(__name__)
+
+GUESSER_TYPES: list[str] = [
+    "character",
+    "perk_description",
+    "perk_name_to_icon",
+    "perk_icon_to_name",
+    "memes",
+]
+
+
+def seed_default_configs(db) -> None:
+    """Seeds baseline settings and rules into the SQLAlchemy session if not already present."""
+    try:
+        default_rule = db.session.get(PerkRule, 1)
+        if not default_rule:
+            db.session.add(
+                PerkRule(
+                    id=1,
+                    name="Default Balanced (2 Own, 1 General, 1 Any)",
+                    is_default=True,
+                    slot1_type="character_own",
+                    slot2_type="character_own",
+                    slot3_type="general_role",
+                    slot4_type="any_role",
+                )
+            )
+
+        gen_setting = db.session.get(GeneratorSetting, 1)
+        if not gen_setting:
+            db.session.add(
+                GeneratorSetting(
+                    id=1,
+                    role="Survivor",
+                    gen_mode="instant",
+                    no_repeat_perks=True,
+                )
+            )
+
+        for g_type in GUESSER_TYPES:
+            stat = db.session.scalars(
+                select(GuesserStat).where(GuesserStat.guesser_type == g_type)
+            ).first()
+            if not stat:
+                db.session.add(GuesserStat(guesser_type=g_type))
+
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        logger.warning(f"Error seeding default settings in SQLAlchemy: {e}")
+```
+
+### backend/app/services/gauntlet/__init__.py
+```python
+from app.services.gauntlet.constants import (
+    BUILD_SIZE,
+    CHECKPOINT_INTERVAL,
+    GENERAL_CHARACTER,
+    KILLER_TIERS,
+    ORIGINAL_KILLER_ROSTER_LIMIT,
+    ORIGINAL_SURVIVOR_ROSTER_LIMIT,
+    SURVIVOR_TIERS,
+    get_tier_info,
+)
+from app.services.gauntlet.roller import (
+    get_character_teachable_perks,
+    get_owned_character_ids,
+    get_owned_character_names,
+    pick_initial_target,
+    resolve_character_names_by_ids,
+    roll_gauntlet_target,
+)
+from app.services.gauntlet.stats import fetch_gauntlet_user_stats
+
+__all__ = [
+    "CHECKPOINT_INTERVAL",
+    "BUILD_SIZE",
+    "GENERAL_CHARACTER",
+    "ORIGINAL_KILLER_ROSTER_LIMIT",
+    "ORIGINAL_SURVIVOR_ROSTER_LIMIT",
+    "SURVIVOR_TIERS",
+    "KILLER_TIERS",
+    "get_tier_info",
+    "get_owned_character_names",
+    "get_owned_character_ids",
+    "resolve_character_names_by_ids",
+    "get_character_teachable_perks",
+    "pick_initial_target",
+    "roll_gauntlet_target",
+    "fetch_gauntlet_user_stats",
+]
+```
+
+### backend/app/services/gauntlet/constants.py
+```python
+from typing import Any
+
+CHECKPOINT_INTERVAL: int = 10
+BUILD_SIZE: int = 4
+GENERAL_CHARACTER: str = "General"
+
+ORIGINAL_KILLER_ROSTER_LIMIT: int = 43
+ORIGINAL_SURVIVOR_ROSTER_LIMIT: int = 52
+
+SURVIVOR_TIERS: list[dict[str, Any]] = [
+    {"min_streak": 0, "tier_level": 0, "name": "The Warm Up", "perk_limit": 4, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"min_streak": CHECKPOINT_INTERVAL, "tier_level": 1, "name": "The Thinning", "perk_limit": 3, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"min_streak": CHECKPOINT_INTERVAL * 2, "tier_level": 2, "name": "The Struggle", "perk_limit": 2, "character_perks_only": False, "description": "Must include at least 1 character teachable perk"},
+    {"min_streak": CHECKPOINT_INTERVAL * 3, "tier_level": 3, "name": "The Hardcore", "perk_limit": 1, "character_perks_only": False, "description": "Must be a character teachable perk"},
+    {"min_streak": CHECKPOINT_INTERVAL * 4, "tier_level": 4, "name": "The Legend", "perk_limit": 0, "character_perks_only": False, "description": "No perks allowed (no-perk trial)"},
+]
+
+KILLER_TIERS: list[dict[str, Any]] = [
+    {"min_streak": 0, "tier_level": 0, "name": "The Bloodbath", "perk_limit": 3, "character_perks_only": True, "description": "All 3 of the killer's own perks"},
+    {"min_streak": CHECKPOINT_INTERVAL, "tier_level": 1, "name": "The Obsession", "perk_limit": 2, "character_perks_only": True, "description": "Any 2 of the killer's own perks"},
+    {"min_streak": CHECKPOINT_INTERVAL * 2, "tier_level": 2, "name": "The Executioner", "perk_limit": 1, "character_perks_only": True, "description": "Any 1 of the killer's own perks"},
+    {"min_streak": CHECKPOINT_INTERVAL * 3, "tier_level": 3, "name": "The Entity", "perk_limit": 0, "character_perks_only": True, "description": "No perks allowed (no-perk trial)"},
+]
+
+
+def get_tier_info(streak: int, role: str) -> dict[str, Any]:
+    tiers = KILLER_TIERS if role == "killer" else SURVIVOR_TIERS
+    tier = tiers[0]
+    for candidate in tiers:
+        if streak >= candidate["min_streak"]:
+            tier = candidate
+    info = dict(tier)
+    info.pop("min_streak")
+    info["roster_limit"] = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
+    return info
+```
+
+### backend/app/services/gauntlet/roller.py
+```python
+import random
+from typing import Any
+
+from sqlalchemy import select
+
+from app.core.extensions import db
+from app.models import Character, Perk
+from app.services.gauntlet.constants import (
+    ORIGINAL_KILLER_ROSTER_LIMIT,
+    ORIGINAL_SURVIVOR_ROSTER_LIMIT,
+    get_tier_info,
+)
+from app.services.ownership_service import OwnershipService
+
+
+def get_owned_character_names(user_id: int, role: str, ownership_service: OwnershipService) -> list[str]:
+    db_role = "Killer" if role == "killer" else "Survivor"
+    owned = ownership_service.get_user_characters(user_id, role=db_role)
+    limit = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
+    owned = [
+        c for c in owned
+        if c.get("release_number") is None or c["release_number"] <= limit
+    ]
+    return [c["name"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
+
+
+def get_owned_character_ids(user_id: int, role: str, ownership_service: OwnershipService) -> list[int]:
+    db_role = "Killer" if role == "killer" else "Survivor"
+    owned = ownership_service.get_user_characters(user_id, role=db_role)
+    limit = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
+    owned = [
+        c for c in owned
+        if c.get("release_number") is None or c["release_number"] <= limit
+    ]
+    return [c["id"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
+
+
+def resolve_character_names_by_ids(ids: list[int]) -> list[str]:
+    if not ids:
+        return []
+    rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
+    by_id = {c.id: c.name for c in rows}
+    return [by_id[i] for i in ids if i in by_id]
+
+
+def get_character_teachable_perks(character_name: str) -> list[dict[str, Any]]:
+    perks = db.session.scalars(
+        select(Perk)
+        .join(Character, Perk.character_id == Character.id)
+        .where(Character.name == character_name, Perk.is_teachable.is_(True), Perk.is_disabled.is_(False))
+        .order_by(Perk.name.asc())
+    ).all()
+    return [p.to_dict() for p in perks]
+
+
+def pick_initial_target(user_id: int, role: str, ownership_service: OwnershipService) -> str:
+    names = get_owned_character_names(user_id, role, ownership_service)
+    if names:
+        return random.choice(names)
+    return "Meg Thomas" if role == "survivor" else "The Trapper"
+
+
+def roll_gauntlet_target(
+    role: str,
+    current_streak: int,
+    completed_characters: list[str],
+    owned_characters: list[str],
+    target_character: str | None = None,
+) -> tuple[str, dict[str, Any], dict[str, Any]]:
+    tier_info = get_tier_info(current_streak, role)
+
+    remaining = [c for c in owned_characters if c not in completed_characters]
+    if not remaining:
+        remaining = owned_characters if owned_characters else [
+            "Meg Thomas" if role == "survivor" else "The Trapper"
+        ]
+
+    target_char = target_character if target_character else random.choice(remaining)
+
+    loadout = {
+        "character": target_char,
+        "character_perks": get_character_teachable_perks(target_char),
+        "tier_info": tier_info,
+    }
+
+    return target_char, loadout, tier_info
+```
+
+### backend/app/services/gauntlet/stats.py
+```python
+from typing import Any
+from sqlalchemy import select
+
+from app.core.extensions import db
+from app.models import GauntletMatchLog, GauntletRun
+from app.services.streak_stats import fetch_streak_stats
+
+
+def fetch_gauntlet_user_stats(user_id: int, role: str) -> dict[str, Any]:
+    run_ids = db.session.scalars(
+        select(GauntletRun.id).where(GauntletRun.user_id == user_id, GauntletRun.role == role)
+    ).all()
+    return fetch_streak_stats(run_ids, GauntletMatchLog)
+```
+
+### backend/app/services/generator/__init__.py
+```python
+from app.services.generator.config_manager import (
+    get_generator_config,
+    update_generator_config,
+)
+from app.services.generator.drawn_manager import (
+    add_drawn_perks,
+    get_drawn_perks,
+    reset_drawn_perks,
+)
+
+__all__ = [
+    "get_generator_config",
+    "update_generator_config",
+    "get_drawn_perks",
+    "add_drawn_perks",
+    "reset_drawn_perks",
+]
+```
+
+### backend/app/services/generator/config_manager.py
+```python
+import logging
+from typing import Any
+from flask import current_app
+
+from app.core.extensions import db
+from app.models import GeneratorSetting
+
+logger = logging.getLogger(__name__)
+
+CONFIG_FIELDS = [
+    "role",
+    "gen_mode",
+    "no_repeat_perks",
+    "total_pages",
+    "perks_per_page",
+    "last_page_perks",
+    "spin_duration_sec",
+]
+
+
+def get_generator_config(use_sqlalchemy: bool, db_service: Any) -> dict[str, Any]:
+    if use_sqlalchemy:
+        try:
+            if current_app:
+                setting = db.session.get(GeneratorSetting, 1)
+                if not setting:
+                    setting = GeneratorSetting(
+                        id=1,
+                        role="Survivor",
+                        gen_mode="instant",
+                        no_repeat_perks=True,
+                        total_pages=12,
+                        perks_per_page=15,
+                        last_page_perks=8,
+                        spin_duration_sec=3.0,
+                    )
+                    db.session.add(setting)
+                    db.session.commit()
+                return setting.to_dict()
+        except Exception as e:
+            logger.debug(f"SQLAlchemy GeneratorService get_config fallback: {e}")
+
+    conn = db_service.get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM generator_settings WHERE id = 1;")
+    row = cursor.fetchone()
+    conn.close()
+
+    return (
+        dict(row)
+        if row
+        else {
+            "role": "Survivor",
+            "gen_mode": "instant",
+            "no_repeat_perks": 1,
+            "total_pages": 12,
+            "perks_per_page": 15,
+            "last_page_perks": 8,
+            "spin_duration_sec": 3.0,
         }
-
-
-class EntityStat(Base):
-    __tablename__ = "entity_stats"
-
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
-    )
-    entity_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("entities.id", ondelete="CASCADE"), unique=True, index=True, nullable=False
-    )
-    smash_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    pass_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    super_smash_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    total_votes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    smash_rate: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    chaos_rating: Mapped[float] = mapped_column(Float, default=50.0, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
 
-    entity: Mapped["Entity"] = relationship("Entity", back_populates="stat")
 
-    def calculate_rate(self) -> float:
-        smash = self.smash_count if self.smash_count is not None else 0
-        p = self.pass_count if self.pass_count is not None else 0
-        super_smash = self.super_smash_count if self.super_smash_count is not None else 0
-        total = smash + p + super_smash
-        self.total_votes = total
-        if total == 0:
-            self.smash_rate = 0.0
-        else:
-            positive_votes = smash + super_smash
-            self.smash_rate = round((positive_votes / total) * 100.0, 1)
-        return self.smash_rate
+def update_generator_config(data: dict[str, Any], use_sqlalchemy: bool, db_service: Any) -> dict[str, Any]:
+    if use_sqlalchemy:
+        try:
+            if current_app:
+                setting = db.session.get(GeneratorSetting, 1)
+                if not setting:
+                    setting = GeneratorSetting(id=1)
+                    db.session.add(setting)
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "entity_id": self.entity_id,
-            "smash_count": self.smash_count,
-            "pass_count": self.pass_count,
-            "super_smash_count": self.super_smash_count,
-            "total_votes": self.total_votes,
-            "smash_rate": self.smash_rate,
-            "chaos_rating": self.chaos_rating,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
+                for key in CONFIG_FIELDS:
+                    if key in data:
+                        val = data[key]
+                        if key == "no_repeat_perks":
+                            val = bool(val)
+                        setattr(setting, key, val)
+
+                db.session.commit()
+                return setting.to_dict()
+        except Exception as e:
+            logger.debug(f"SQLAlchemy GeneratorService update_config fallback: {e}")
+
+    conn = db_service.get_connection()
+    cursor = conn.cursor()
+    fields = []
+    values = []
+
+    for key in CONFIG_FIELDS:
+        if key in data:
+            fields.append(f"{key} = ?")
+            values.append(data[key])
+
+    if fields:
+        values.append(1)
+        query = f"UPDATE generator_settings SET {', '.join(fields)}, updated_at = CURRENT_TIMESTAMP WHERE id = ?;"
+        cursor.execute(query, tuple(values))
+        conn.commit()
+    conn.close()
+
+    return get_generator_config(use_sqlalchemy=False, db_service=db_service)
+```
+
+### backend/app/services/generator/drawn_manager.py
+```python
+import logging
+from typing import Any
+from flask import current_app
+from sqlalchemy import delete, select
+
+from app.core.extensions import db
+from app.models import GeneratorDrawnPerk
+
+logger = logging.getLogger(__name__)
 
 
-class Vote(Base):
-    __tablename__ = "votes"
+def get_drawn_perks(role: str | None, use_sqlalchemy: bool, db_service: Any) -> list[str]:
+    role_clean = (role or "Survivor").capitalize()
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    if use_sqlalchemy:
+        try:
+            if current_app:
+                stmt = select(GeneratorDrawnPerk.perk_name).where(GeneratorDrawnPerk.role == role_clean)
+                rows = db.session.scalars(stmt).all()
+                return list(rows)
+        except Exception as e:
+            logger.debug(f"SQLAlchemy GeneratorService get_drawn_perks fallback: {e}")
+
+    conn = db_service.get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT perk_name FROM generator_drawn_perks WHERE role = ?;",
+        (role_clean,),
     )
-    entity_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("entities.id", ondelete="CASCADE"), index=True, nullable=False
-    )
-    session_id: Mapped[str | None] = mapped_column(String(128), index=True, nullable=True)
-    user_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
-    )
-    vote_type: Mapped[str] = mapped_column(String(20), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
+    rows = cursor.fetchall()
+    conn.close()
 
-    entity: Mapped["Entity"] = relationship("Entity", back_populates="votes")
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "entity_id": self.entity_id,
-            "session_id": self.session_id,
-            "user_id": self.user_id,
-            "vote_type": self.vote_type,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
+    return [row[0] for row in rows]
 
 
-class Translation(Base):
-    __tablename__ = "translations"
+def add_drawn_perks(role: str | None, perk_names: list[str], use_sqlalchemy: bool, db_service: Any) -> list[str]:
+    role_clean = (role or "Survivor").capitalize()
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
-    )
-    locale: Mapped[str] = mapped_column(String(10), index=True, nullable=False)
-    key: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
-    value: Mapped[str] = mapped_column(Text, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
+    if use_sqlalchemy:
+        try:
+            if current_app:
+                for name in perk_names:
+                    exists = db.session.scalars(
+                        select(GeneratorDrawnPerk).where(
+                            GeneratorDrawnPerk.role == role_clean,
+                            GeneratorDrawnPerk.perk_name == name,
+                        )
+                    ).first()
+                    if not exists:
+                        db.session.add(GeneratorDrawnPerk(role=role_clean, perk_name=name))
+                db.session.commit()
+                return get_drawn_perks(role_clean, use_sqlalchemy=True, db_service=db_service)
+        except Exception as e:
+            logger.debug(f"SQLAlchemy GeneratorService add_drawn_perks fallback: {e}")
 
-    def to_dict(self) -> dict[str, str | None]:
-        return {
-            "id": self.id,
-            "locale": self.locale,
-            "key": self.key,
-            "value": self.value,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
+    conn = db_service.get_connection()
+    cursor = conn.cursor()
+    for name in perk_names:
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO generator_drawn_perks (role, perk_name)
+            VALUES (?, ?);
+            """,
+            (role_clean, name),
+        )
+    conn.commit()
+    conn.close()
 
-
-class SmashPassStat(Base):
-    __tablename__ = "smash_pass_stats"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    character_slug: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
-    character_name: Mapped[str] = mapped_column(String(150), index=True, nullable=False)
-    role: Mapped[str] = mapped_column(String(20), default="Survivor", nullable=False)
-    gender: Mapped[str] = mapped_column(String(20), default="female", nullable=False)
-    edition: Mapped[str] = mapped_column(String(50), default="canon", index=True, nullable=False)
-    smash_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    pass_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    super_smash_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    total_votes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    smash_rate: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    def calculate_rate(self) -> float:
-        smash = self.smash_count if self.smash_count is not None else 0
-        p = self.pass_count if self.pass_count is not None else 0
-        super_smash = self.super_smash_count if self.super_smash_count is not None else 0
-        total = smash + p + super_smash
-        self.total_votes = total
-        if total == 0:
-            self.smash_rate = 0.0
-        else:
-            positive_votes = smash + super_smash
-            self.smash_rate = round((positive_votes / total) * 100.0, 1)
-        return self.smash_rate
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "character_slug": self.character_slug,
-            "character_name": self.character_name,
-            "role": self.role,
-            "gender": self.gender,
-            "edition": self.edition,
-            "smash_count": self.smash_count,
-            "pass_count": self.pass_count,
-            "super_smash_count": self.super_smash_count,
-            "total_votes": self.total_votes,
-            "smash_rate": self.smash_rate,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
+    return get_drawn_perks(role_clean, use_sqlalchemy=False, db_service=db_service)
 
 
-class SmashPassVote(Base):
-    __tablename__ = "smash_pass_votes"
+def reset_drawn_perks(role: str | None, use_sqlalchemy: bool, db_service: Any) -> list[str]:
+    if use_sqlalchemy:
+        try:
+            if current_app:
+                if role:
+                    role_clean = role.capitalize()
+                    db.session.execute(delete(GeneratorDrawnPerk).where(GeneratorDrawnPerk.role == role_clean))
+                else:
+                    db.session.execute(delete(GeneratorDrawnPerk))
+                db.session.commit()
+                return []
+        except Exception as e:
+            logger.debug(f"SQLAlchemy GeneratorService reset_drawn_perks fallback: {e}")
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    character_slug: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
-    vote_type: Mapped[str] = mapped_column(String(20), nullable=False)
-    edition: Mapped[str] = mapped_column(String(50), default="canon", index=True, nullable=False)
-    user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
-    session_id: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
+    conn = db_service.get_connection()
+    cursor = conn.cursor()
+    if role:
+        cursor.execute(
+            "DELETE FROM generator_drawn_perks WHERE role = ?;",
+            (role.capitalize(),),
+        )
+    else:
+        cursor.execute("DELETE FROM generator_drawn_perks;")
+    conn.commit()
+    conn.close()
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "character_slug": self.character_slug,
-            "vote_type": self.vote_type,
-            "edition": self.edition,
-            "user_id": self.user_id,
-            "session_id": self.session_id,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
+    return []
 ```

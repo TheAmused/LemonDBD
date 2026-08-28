@@ -16,4 +16,3 @@ __all__ = [
     "add_drawn_perks",
     "reset_drawn_perks",
 ]
-

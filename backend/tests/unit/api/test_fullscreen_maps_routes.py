@@ -1,9 +1,10 @@
 # backend/tests/unit/api/test_fullscreen_maps_routes.py
-# backend/tests/api/test_fullscreen_maps_routes.py
 import unittest
+import pytest
 from app import create_app
 
 
+@pytest.mark.unit
 class TestFullscreenMapsRoutes(unittest.TestCase):
     def setUp(self):
         self.app = create_app()

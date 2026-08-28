@@ -1,10 +1,11 @@
 # backend/tests/unit/api/test_item_routes.py
-# backend/tests/api/test_item_routes.py
 import unittest
+import pytest
 from app import create_app
 from app.services.perk_service import PerkService
 
 
+@pytest.mark.unit
 class TestItemRoutes(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
@@ -27,7 +28,6 @@ class TestItemRoutes(unittest.TestCase):
         self.assertIn("data", data)
         self.assertIsInstance(data["data"], list)
 
-        # Test search and category query parameters
         response_filtered = self.client.get("/api/v1/addons?category=Med-Kit&search=Bandage")
         self.assertEqual(response_filtered.status_code, 200)
         data_filtered = response_filtered.get_json()

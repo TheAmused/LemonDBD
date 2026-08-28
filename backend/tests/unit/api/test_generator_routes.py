@@ -1,9 +1,10 @@
 # backend/tests/unit/api/test_generator_routes.py
-# backend/tests/api/test_generator_routes.py
 import unittest
+import pytest
 from app import create_app
 
 
+@pytest.mark.unit
 class TestGeneratorRoutes(unittest.TestCase):
     def setUp(self):
         self.app = create_app()

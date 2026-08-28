@@ -1,12 +1,13 @@
 # backend/tests/unit/api/test_scraper_routes.py
-# backend/tests/api/test_scraper_routes.py
 import unittest
 from unittest.mock import MagicMock, patch
+import pytest
 
 from app import create_app
 from app.services.scraper_service import ScraperConfig, ScraperService
 
 
+@pytest.mark.unit
 class TestScraperRoutes(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
@@ -20,7 +21,6 @@ class TestScraperRoutes(unittest.TestCase):
         mock_load_config.return_value = ScraperConfig(source="nightlight", fallback_to_wiki=True)
         mock_save_config.return_value = ScraperConfig(source="wiki", fallback_to_wiki=False)
 
-        # GET /api/v1/scrape/config
         response = self.client.get("/api/v1/scrape/config")
         self.assertEqual(response.status_code, 200)
         data = response.get_json()
@@ -29,7 +29,6 @@ class TestScraperRoutes(unittest.TestCase):
         self.assertEqual(data["source"], "nightlight")
         self.assertTrue(data["fallback_to_wiki"])
 
-        # POST /api/v1/scrape/config
         payload = {"source": "wiki", "fallback_to_wiki": False}
         post_response = self.client.post("/api/v1/scrape/config", json=payload)
         self.assertEqual(post_response.status_code, 200)

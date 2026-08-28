@@ -200,11 +200,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
               {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
             </h2>
-            <p className="text-xs text-slate-400">
-              {isKiller
-                ? t.offeringsDescKiller || 'Burn offerings to the Entity to alter Realm conditions, score gains, and execution rules.'
-                : t.offeringsDescSurvivor || 'Burn offerings before a Trial to modify luck, chests, maps, and protection.'}
-            </p>
           </div>
         </div>
 

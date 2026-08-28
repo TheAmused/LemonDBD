@@ -1,7 +1,6 @@
 // frontend/src/locales/ja/customPerks.ts
 export default {
   "conceptLab": "スタジオ＆コンセプト研究所",
-  "subtitle": "インタラクティブなダイヤモンドカードプレビューでDead by Daylightオリジナルのパークを作成、またはコミュニティが制作したパークを探索・評価できます。",
   "designer": "パークデザイナー",
   "configureConcept": "パークコンセプトの設定",
   "requiredFields": "* 必須項目",

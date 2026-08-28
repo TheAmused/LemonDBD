@@ -2,7 +2,6 @@
 export default {
   "engineBadge": "SWF-Squad-Team-Engine",
   "pageTitle": "4-Spieler Team-Loadout-Planer",
-  "pageSubtitle": "Koordiniere Überlebenden-Rollen, vermeide Perk-Redundanzen und maximiere die Team-Synergie für Survive With Friends Gruppen.",
   "shareLoadout": "Squad-Loadout Teilen",
   "copiedToast": "Squad-Loadout-URL in die Zwischenablage kopiert! Teile sie mit deinen Mitspielern.",
   "redundancyDetector": "Team-Perk-Redundanzdetektor",

@@ -191,9 +191,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
               {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
             </h2>
-            <p className="text-xs text-slate-400">
-              {t.equipmentDescSurvivor || 'Select an item category to explore items and their compatible add-on attachments.'}
-            </p>
           </div>
         </div>
 

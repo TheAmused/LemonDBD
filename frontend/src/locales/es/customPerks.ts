@@ -1,7 +1,6 @@
 // frontend/src/locales/es/customPerks.ts
 export default {
   "conceptLab": "Estudio y Laboratorio de Conceptos",
-  "subtitle": "Diseña conceptos originales de habilidades de Dead by Daylight con vista previa interactiva en tarjeta de diamante, o descubre y vota creaciones de la comunidad.",
   "designer": "Diseñador de Habilidades",
   "configureConcept": "Configurar Concepto de Habilidad",
   "requiredFields": "* Campos obligatorios",

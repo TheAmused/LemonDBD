@@ -10,7 +10,6 @@ export default {
   "copyLoadout": "Kopiuj zestaw jako tekst",
   "shareCard": "Karta Buildu i Kod QR do udostępnienia",
   "submitTitle": "Opublikuj Własny Build",
-  "submitSubtitle": "Podziel się swoim zestawem ze społecznością",
   "buildTitle": "Tytuł Buildu *",
   "buildTitlePlaceholder": "np. Enduring Spirit Nurse",
   "description": "Opis",

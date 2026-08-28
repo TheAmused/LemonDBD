@@ -1,7 +1,6 @@
 // frontend/src/locales/de/user.ts
 export default {
   "profileTitle": "Benutzerprofil & Konto",
-  "profileSubtitle": "Verwalte dein Profil, getrackte Statistiken, Charakterbesitz und Fehlerberichte.",
   "tabOverview": "Konto-Übersicht",
   "tabBugReports": "Meine Fehlerberichte",
   "memberSince": "Mitglied seit",
@@ -14,7 +13,6 @@ export default {
   "statusResolved": "Gelöst",
   "statusClosed": "Geschlossen",
   "bugReportsTitle": "Deine eingereichten Fehlerberichte",
-  "bugReportsSubtitle": "Verfolge den Untersuchungsstatus, Antworten und Fixes für deine Tickets.",
   "reportNewBug": "Neuen Fehler melden",
   "loadingReports": "Lade deine gemeldeten Tickets...",
   "noReportsTitle": "Keine Fehlerberichte eingereicht",
@@ -69,8 +67,6 @@ export default {
   "authVerifyEmailTitle": "E-Mail bestätigen",
   "authSignInTitle": "Bei LemonDBD anmelden",
   "authRegisterTitle": "LemonDBD-Konto erstellen",
-  "authSignInSubtitle": "Greife auf deine Charaktere, Perk-Freischaltungen und persönlichen Builds zu.",
-  "authRegisterSubtitle": "Tritt der Community bei, um Serien, Teachables und Spielstatistiken zu verfolgen.",
   "authResetSubtitle": "Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen.",
   "authVerifySubtitle": "Prüfe dein Postfach auf den Code, den wir dir gesendet haben.",
   "verifyAndContinue": "Bestätigen & Fortfahren",

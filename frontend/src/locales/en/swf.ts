@@ -2,7 +2,6 @@
 export default {
   "engineBadge": "SWF Squad Team Engine",
   "pageTitle": "4-Player Team Loadout Planner",
-  "pageSubtitle": "Coordinate survivor roles, eliminate perk redundancy, and maximize team synergy for Survive With Friends squads.",
   "shareLoadout": "Share Squad Loadout",
   "copiedToast": "Squad Loadout URL copied to clipboard! Share it with your teammates.",
   "redundancyDetector": "Team Perk Redundancy Detector",

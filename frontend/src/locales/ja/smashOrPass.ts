@@ -10,7 +10,6 @@ export default {
   "pass": "パス",
   "superSmash": "スーパースマッシュ",
   "leaderboard": "殿堂入りランキング",
-  "leaderboardSubtitle": "全キラー＆サバイバーを対象とした公式コミュニティ投票統計",
   "search": "キャラクター名やランキングを検索...",
   "close": "閉じる",
   "shuffle": "シャッフル",
@@ -136,9 +135,7 @@ export default {
   "modals": {
     "statsTitle": "キャラクター調査書",
     "leaderboardTitle": "殿堂入りランキング",
-    "leaderboardSubtitle": "全キラー＆サバイバーを対象とした公式コミュニティ投票統計",
     "personaTitle": "試練のロマンス診断タイプ",
-    "personaSubtitle": "あなたの投票傾向から分析された心理的相性レポート",
     "resetConfirmTitle": "すべての投票をリセットしますか？",
     "resetConfirmDesc": "このセッションで行ったすべての投票が巻き戻され、キャラクターの山札が再シャッフルされます。",
     "confirm": "確定",

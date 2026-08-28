@@ -2,7 +2,6 @@
 export default {
   "engineBadge": "SWFスクワッド連携エンジン",
   "pageTitle": "4人チーム構成プランナー",
-  "pageSubtitle": "サバイバーの役割分担を調整し、パークの重複を排除してフルパーティ（Survive With Friends）のシナジーを最大化します。",
   "shareLoadout": "チーム構成を共有",
   "copiedToast": "チーム構成URLをクリップボードにコピーしました！チームメイトに共有してください。",
   "redundancyDetector": "パーク重複検知システム",

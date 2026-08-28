@@ -304,10 +304,6 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             />
           </div>
         </div>
-        <p className="text-[11px] text-slate-500 mb-4">
-          {dict?.admin?.bugPoolNotice ||
-            "Covers both roles: killers occasionally ship with a bugged power, and a survivor scraped from the wiki ahead of their actual in-game release needs to stay hidden until launch. Perks occasionally ship broken on their own too."}
-        </p>
 
         {characters.length === 0 && perks.length === 0 && loading ? (
           <p className="text-xs text-slate-500 py-6 text-center">{dict?.admin?.loading || 'Loading...'}</p>

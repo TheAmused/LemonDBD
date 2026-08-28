@@ -380,24 +380,6 @@ export function ScraperConfigModal({
               </h2>
             </div>
           </div>
-
-
-          <a
-            href={
-              (process.env.NEXT_PUBLIC_PGADMIN_URL && process.env.NEXT_PUBLIC_PGADMIN_URL.trim() !== '')
-                ? process.env.NEXT_PUBLIC_PGADMIN_URL
-                : typeof window !== 'undefined'
-                ? `${window.location.protocol}//${window.location.hostname}:5050`
-                : 'https://localhost:5050'
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            title={dict?.admin?.openPgAdmin || 'Open pgAdmin Web Management Interface'}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:text-white hover:border-indigo-400 text-xs font-bold transition-all"
-          >
-            <Database className="h-3.5 w-3.5 text-indigo-400" />
-            <span>{dict?.admin?.launchPgAdmin || 'Launch pgAdmin'}</span>
-          </a>
         </div>
 
         {/* Tabs Bar */}
@@ -588,7 +570,6 @@ export function ScraperConfigModal({
                   <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a LemonDBD'} <span className="text-emerald-500 font-mono">{'.json'}</span> {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-1">{dict?.admin?.jsonFormatNotice || 'Accepts full or partial JSON database exports'}</p>
                 </div>
 
               )}

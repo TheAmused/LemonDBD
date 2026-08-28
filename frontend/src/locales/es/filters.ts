@@ -1,6 +1,6 @@
 // frontend/src/locales/es/filters.ts
 export default {
-  "searchPlaceholder": "Buscar por nombre de habilidad o descripción...",
+  "searchPlaceholder": "Buscar...",
   "category": "Categoría",
   "all": "Todos",
   "allCategories": "Todos los Roles",
@@ -22,7 +22,7 @@ export default {
   "generalOnly": "Solo Generales",
   "everyPerk": "Cada Habilidad",
   "ownedOnly": "Solo en Posesión",
-  "filterByCharacter": "Filtrar por personaje...",
+  "filterByCharacter": "Buscar...",
   "generalPerksOnly": "Solo Habilidades Generales",
   "sortByName": "Nombre de Habilidad",
   "sortByCharacter": "Personaje",

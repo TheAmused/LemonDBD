@@ -9,7 +9,7 @@ export default {
   "authorPlaceholder": "z. B. EntityArchitekt",
   "descPlaceholder": "Beschreibe die Perk-Mechanik... Nutze **Fettschrift** für Statuseffekte.",
   "conceptTag": "LemonDBD Konzept",
-  "searchPlaceholder": "Konzepte nach Name, Mechanik oder Charakter durchsuchen...",
+  "searchPlaceholder": "Suchen...",
   "createNew": "Neues Konzept Erstellen",
   "tagExhausted": "+**Erschöpft**",
   "tagHindered": "+**Gehindert**",

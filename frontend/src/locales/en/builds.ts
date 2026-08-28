@@ -2,7 +2,7 @@ export default {
   "title": "Community Build Vault",
   "subtitle": "Discover, share, and vote on competitive, meme, and thematic builds.",
   "submitBuild": "Submit Build",
-  "searchPlaceholder": "Search by title, description, character, author, or perk...",
+  "searchPlaceholder": "Search...",
   "copy": "Copy",
   "copied": "Copied",
   "share": "Share",

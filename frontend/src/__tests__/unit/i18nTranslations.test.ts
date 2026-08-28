@@ -127,8 +127,6 @@ test('Modal and Hover i18n coverage: all inspection and role keys present in all
     'close',
     'character',
     'role',
-    'copySlug',
-    'slugCopied',
     'perkDescription',
     'generalPerk',
     'alias',
@@ -138,7 +136,6 @@ test('Modal and Hover i18n coverage: all inspection and role keys present in all
     'survivorPerk',
     'unownedPerk',
     'equipment',
-    'clickOutsideToClose',
   ] as const;
 
   for (const loc of allLocales) {
@@ -208,7 +205,6 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
   const expectedDetailKeys = [
     'combatAttributes',
     'clickTerrorRadiusVisualizer',
-    'clickOutsideToClose',
     'acousticRange',
     'entityArchives',
     'codex',

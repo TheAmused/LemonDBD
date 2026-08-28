@@ -28,7 +28,7 @@ export default {
   "conflictLabel": "Konflikt",
   "selectPerkTitle": "Wybierz Umiejętność dla Ocalałego {id} (Slot {slot})",
   "choosePerkVault": "Wybierz ze Skarbca Umiejętności Ocalałych",
-  "searchPlaceholder": "Szukaj umiejętności ocalałych...",
+  "searchPlaceholder": "Szukaj...",
   "loadingPerks": "Ładowanie umiejętności ocalałych...",
   "noPerksFound": "Nie znaleziono pasujących umiejętności.",
   "loadingSwf": "Ładowanie Planera SWF...",

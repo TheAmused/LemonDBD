@@ -9,7 +9,7 @@ export default {
   "authorPlaceholder": "e.g. EntityArchitect",
   "descPlaceholder": "Write perk mechanics... Use **bold** for key status terms.",
   "conceptTag": "LemonDBD Concept",
-  "searchPlaceholder": "Search concepts by title, mechanic, character...",
+  "searchPlaceholder": "Search...",
   "createNew": "Create New Concept",
   "tagExhausted": "+**Exhausted**",
   "tagHindered": "+**Hindered**",

@@ -339,10 +339,6 @@ export default function UserProfilePage() {
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-400 pt-0.5">
-                  {dict?.user?.activePlayerSubtitle || 'Active Player & LemonDBD Community Member'}
-                </p>
-
                 {user.role === 'admin' && (
 
                   <div className="pt-2">

@@ -40,7 +40,6 @@ export default {
   "authRequiredTitle": "ログインが必要です",
   "authRequiredDesc": "LemonDBDのプロフィール閲覧、固有パークの管理、ゲームチャレンジの記録を行うにはログインまたは新規登録してください。",
   "returnToHome": "ホームに戻る",
-  "activePlayerSubtitle": "アクティブプレイヤー ＆ LemonDBDコミュニティメンバー",
   "quickShortcuts": "クイックショートカット",
   "accountCreatedVerificationSent": "アカウントを作成しました！ {email} 宛に認証コードを送信しました。",
   "usernameOrEmailLabel": "ユーザー名またはメールアドレス",

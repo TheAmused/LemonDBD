@@ -3,7 +3,7 @@ export default {
   "title": "コミュニティビルド保管庫",
   "subtitle": "ガチ構成からネタ構成、コンセプトビルドまで、みんなのパーク構成を探して共有・投票しよう。",
   "submitBuild": "ビルドを投稿",
-  "searchPlaceholder": "タイトル、説明、キャラクター、投稿者、パーク名で検索...",
+  "searchPlaceholder": "検索...",
   "copy": "コピー",
   "copied": "コピー完了",
   "share": "共有",

@@ -164,8 +164,8 @@ export const CharacterConfigModal: React.FC<CharacterConfigModalProps> = ({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder={`Search ${role} roster...`}
-                aria-label={`Search ${role} roster`}
+                placeholder={dict?.filters?.searchPlaceholder || 'Search...'}
+                aria-label={dict?.filters?.searchPlaceholder || 'Search...'}
                 className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 py-2 pl-10 pr-4 text-xs font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-cyan-500/60 focus:outline-none transition-colors shadow-sm"
               />
             </div>

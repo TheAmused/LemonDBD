@@ -1,6 +1,6 @@
 // frontend/src/locales/de/maps.ts
 export default {
-  "searchPlaceholder": "Karte oder Reich suchen...",
+  "searchPlaceholder": "Suchen...",
   "searchAria": "Karte oder Reich suchen",
   "clearSearchAria": "Suche zurücksetzen",
   "providerAria": "Kartenquellen-Anbieter",

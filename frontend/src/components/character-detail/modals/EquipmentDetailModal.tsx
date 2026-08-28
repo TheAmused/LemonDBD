@@ -75,17 +75,6 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
             {renderFormattedDbdText(item.description || '', false)}
           </div>
         </div>
-
-        <div className="flex items-center justify-between p-4 px-6 border-t border-slate-800 bg-slate-950/30">
-          <span className="text-xs text-slate-400 font-mono">{t.clickOutsideToClose || 'Esc or click outside to close'}</span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-white text-slate-900 transition-all cursor-pointer shadow-sm"
-          >
-            {t.close || 'Close'}
-          </button>
-        </div>
       </div>
     </div>
   );

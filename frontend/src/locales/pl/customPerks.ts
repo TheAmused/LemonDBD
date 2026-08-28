@@ -9,7 +9,7 @@ export default {
   "authorPlaceholder": "np. ArchitektBytu",
   "descPlaceholder": "Opisz mechanikę umiejętności... Użyj **pogrubienia** dla kluczowych efektów statusu.",
   "conceptTag": "Koncept LemonDBD",
-  "searchPlaceholder": "Szukaj konceptów według nazwy, mechaniki, postaci...",
+  "searchPlaceholder": "Szukaj...",
   "createNew": "Stwórz Nowy Koncept",
   "tagExhausted": "+**Wyczerpanie**",
   "tagHindered": "+**Spowolnienie**",

@@ -9,7 +9,7 @@ export default {
   "authorPlaceholder": "p. ej. ArquitectoDelEnte",
   "descPlaceholder": "Describe la mecánica de la habilidad... Usa **negrita** para estados alterados.",
   "conceptTag": "Concepto LemonDBD",
-  "searchPlaceholder": "Buscar conceptos por nombre, mecánica o personaje...",
+  "searchPlaceholder": "Buscar...",
   "createNew": "Crear Nuevo Concepto",
   "tagExhausted": "+**Agotamiento**",
   "tagHindered": "+**Entorpecimiento**",

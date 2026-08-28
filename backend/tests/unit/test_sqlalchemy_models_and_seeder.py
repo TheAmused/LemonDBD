@@ -1,15 +1,16 @@
 # backend/tests/unit/test_sqlalchemy_models_and_seeder.py
 import unittest
-from flask import Flask
-from sqlalchemy import select, delete
+import pytest
+from sqlalchemy import delete, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 
 from app import create_app
-from app.core.config import Config, TestingConfig
+from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import Character, Perk, Item, Addon, MapRealm
+from app.models import Character, Perk
 
 
+@pytest.mark.unit
 class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)
@@ -26,7 +27,6 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
         self.ctx.pop()
 
     def test_character_and_perk_mapped_models(self):
-        # Create character
         char = Character(
             name="Test Trapper",
             role="Killer",
@@ -43,7 +43,6 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
         self.assertEqual(char.role, "Killer")
         self.assertEqual(char.code_prefix, "K01")
 
-        # Create perks linked to character
         perk1 = Perk(
             name="Test Unnerving Presence",
             category="Killer",
@@ -61,14 +60,12 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
         db.session.add_all([perk1, perk2])
         db.session.commit()
 
-        # Test SQLAlchemy 2.0 query syntax: db.session.scalars(select(...))
         stmt = select(Character).where(Character.name == "Test Trapper")
         retrieved_char = db.session.scalars(stmt).first()
         self.assertIsNotNone(retrieved_char)
         self.assertEqual(len(retrieved_char.perks), 2)
         self.assertEqual(retrieved_char.perks[0].character.name, "Test Trapper")
 
-        # Test to_dict serialization
         char_dict = retrieved_char.to_dict()
         self.assertEqual(char_dict["name"], "Test Trapper")
         self.assertEqual(char_dict["real_name"], "Evan MacMillan")
@@ -88,16 +85,13 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
         db.session.add(perk)
         db.session.commit()
 
-        # Delete character
         db.session.delete(char)
         db.session.commit()
 
-        # Perk should be deleted due to cascade="all, delete-orphan"
         perk_check = db.session.scalars(select(Perk).where(Perk.name == "Test Sprint Burst")).first()
         self.assertIsNone(perk_check)
 
     def test_atomic_upsert_on_conflict(self):
-        # Insert initial character
         stmt1 = sqlite_insert(Character).values({
             "name": "Test Claudette",
             "role": "Survivor",
@@ -107,7 +101,6 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
         db.session.execute(stmt1)
         db.session.commit()
 
-        # Upsert update with new portrait url without duplicate key error
         stmt2 = sqlite_insert(Character).values({
             "name": "Test Claudette",
             "role": "Survivor",
@@ -144,7 +137,6 @@ class TestSQLAlchemyModelsAndSeeder(unittest.TestCase):
                 os.environ.pop("DATABASE_URL", None)
 
     def test_api_scrape_and_seed_route(self):
-        # Test POST /api/scrape-and-seed
         response = self.client.post("/api/scrape-and-seed", json={"source": "test"})
         self.assertIn(response.status_code, [200, 401, 500])
         if response.status_code == 200:

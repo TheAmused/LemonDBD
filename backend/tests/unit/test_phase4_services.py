@@ -1,9 +1,11 @@
 # backend/tests/unit/test_phase4_services.py
 import unittest
+import pytest
 from app import create_app
 from app.services.others.build_service import BuildService
 
 
+@pytest.mark.unit
 class TestPhase4Services(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
@@ -11,9 +13,6 @@ class TestPhase4Services(unittest.TestCase):
         self.client = self.app.test_client()
         self.build_service = BuildService()
 
-    # -------------------------------------------------------------
-    # 1. Build Service Core Tests
-    # -------------------------------------------------------------
     def test_seed_builds_count(self):
         builds = self.build_service.get_builds()
         self.assertGreaterEqual(len(builds), 6)
@@ -62,9 +61,6 @@ class TestPhase4Services(unittest.TestCase):
         updated_build = self.build_service.upvote_build(new_build["id"])
         self.assertEqual(updated_build["upvotes"], 1)
 
-    # -------------------------------------------------------------
-    # 2. API Endpoints Tests
-    # -------------------------------------------------------------
     def test_api_list_builds(self):
         res = self.client.get("/api/v1/builds/?role=killer&category=otzdarva")
         self.assertEqual(res.status_code, 200)
@@ -88,7 +84,6 @@ class TestPhase4Services(unittest.TestCase):
         self.assertEqual(data["build"]["title"], "API Created Loadout")
 
     def test_api_upvote_build(self):
-        # Create build first
         create_res = self.client.post("/api/v1/builds/", json={
             "title": "Upvote Target Build",
             "description": "Target build",

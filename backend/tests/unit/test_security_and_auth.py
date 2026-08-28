@@ -1,16 +1,14 @@
 # backend/tests/unit/test_security_and_auth.py
 from datetime import datetime, timedelta, timezone
-from typing import Any
 import jwt
 import pytest
-from flask import Flask, g, jsonify, request
+from flask import Flask, g, jsonify
 from app.core.security import (
     DEFAULT_JWT_ALGORITHM,
     DEFAULT_SECRET_KEY,
     admin_required,
     decode_token,
     generate_token,
-    get_current_user,
     hash_password,
     login_required,
     verify_password,
@@ -118,7 +116,7 @@ class TestAuthDecoratorsAndUserExtraction:
         mock_user = User(
             id=7,
             username="dwight_fairfield",
-            email="dwight@dbd.local",
+            email="dwight@example.com",
             password_hash=hash_password("test"),
             role="user",
             is_active=True,
@@ -141,7 +139,7 @@ class TestAuthDecoratorsAndUserExtraction:
         mock_user = User(
             id=12,
             username="meg_thomas",
-            email="meg@dbd.local",
+            email="meg@example.com",
             password_hash=hash_password("sprintburst"),
             role="user",
             is_active=True,
@@ -163,7 +161,7 @@ class TestAuthDecoratorsAndUserExtraction:
         standard_user = User(
             id=15,
             username="claudette_morel",
-            email="claudette@dbd.local",
+            email="claudette@example.com",
             password_hash=hash_password("botany"),
             role="user",
             is_active=True,
@@ -185,7 +183,7 @@ class TestAuthDecoratorsAndUserExtraction:
         admin_user = User(
             id=1,
             username="the_entity_admin",
-            email="entity@dbd.local",
+            email="entity@example.com",
             password_hash=hash_password("masterkey"),
             role="admin",
             is_active=True,
@@ -208,7 +206,7 @@ class TestAuthDecoratorsAndUserExtraction:
         inactive_user = User(
             id=88,
             username="banned_player",
-            email="banned@dbd.local",
+            email="banned@example.com",
             password_hash=hash_password("bannedpass"),
             role="user",
             is_active=False,

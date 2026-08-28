@@ -1,10 +1,11 @@
 # backend/tests/unit/test_page_streak_service.py
 import unittest
+import pytest
 from sqlalchemy import select
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import Character, Perk, PageStreakPageLog, PageStreakRun
+from app.models import Character, Perk, PageStreakPageLog
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak_service import PageStreakService
@@ -14,8 +15,6 @@ GENERAL_CHARACTER = "General"
 
 
 class FakePerkService:
-    """Deterministic stand-in for PerkService so tests do not depend on scraped data."""
-
     def __init__(self, perks):
         self._perks = perks
 
@@ -25,11 +24,6 @@ class FakePerkService:
 
 
 class ClampingFakePerkService:
-    """Mimics production PerkService.get_perks pagination behaviour: it clamps
-    `limit` to 200, slices by `page`, and reports the true `total` in
-    `pagination`. Used to catch truncation bugs that FakePerkService (which
-    ignores `limit` entirely) cannot detect."""
-
     def __init__(self, perks):
         self._perks = perks
 
@@ -47,8 +41,6 @@ class ClampingFakePerkService:
 
 
 class OrderedFakePerkService(FakePerkService):
-    """Supplies character records carrying release numbers."""
-
     def __init__(self, perks, characters):
         super().__init__(perks)
         self._characters = characters
@@ -60,7 +52,6 @@ class OrderedFakePerkService(FakePerkService):
 
 
 def make_perks(count, category="Killer", character="Trapper", start=1):
-    # Names are zero-padded so code-point order is also numeric order.
     return [
         {
             "name": f"Perk {i:03d}",
@@ -72,8 +63,6 @@ def make_perks(count, category="Killer", character="Trapper", start=1):
 
 
 def seed_perks(perks):
-    """Create matching Character + Perk DB rows for a list of perk dicts,
-    so OwnershipService (which reads real Character/Perk tables) can see them."""
     char_cache = {}
     for p in perks:
         char_name = p.get("character")
@@ -106,10 +95,9 @@ def seed_killers(names):
     db.session.commit()
 
 
+@pytest.mark.unit
 class PageStreakTestCase(unittest.TestCase):
     def setUp(self):
-        # TestingConfig keeps this on an in-memory SQLite DB. Without it the tests
-        # bind to the real DATABASE_URL and tearDown's drop_all() wipes the dev database.
         self.app = create_app(TestingConfig)
         self.client = self.app.test_client()
         self.ctx = self.app.app_context()
@@ -133,6 +121,7 @@ class PageStreakTestCase(unittest.TestCase):
         self.ownership_service.set_perk_ownership(user_id, perk.id, is_unlocked=False)
 
 
+@pytest.mark.unit
 class TestPageStreakPool(PageStreakTestCase):
     def setUp(self):
         super().setUp()
@@ -181,11 +170,8 @@ class TestPageStreakPool(PageStreakTestCase):
         self.assertEqual(pages, [["Perk 001", "Perk 002"]])
 
 
+@pytest.mark.unit
 class TestPageStreakPoolPagination(PageStreakTestCase):
-    """Regression coverage for the pool-truncation bug: PerkService.get_perks
-    clamps `limit` to 200 server-side, so _all_killer_perks() must page
-    through the full result set rather than requesting one huge page."""
-
     def setUp(self):
         super().setUp()
         self.perks = make_perks(250)
@@ -206,6 +192,7 @@ class TestPageStreakPoolPagination(PageStreakTestCase):
         self.assertEqual(sorted(flattened), sorted(p["name"] for p in self.perks))
 
 
+@pytest.mark.unit
 class TestPageStreakRoster(PageStreakTestCase):
     def setUp(self):
         super().setUp()
@@ -215,7 +202,6 @@ class TestPageStreakRoster(PageStreakTestCase):
             + make_perks(5, character=GENERAL_CHARACTER)
             + make_perks(4, category="Survivor", character="Meg")
         )
-        # Give every perk a unique name so the pool has 35 killer perks.
         for i, perk in enumerate(self.perks, start=1):
             perk["name"] = f"Perk {i:03d}"
         seed_perks(self.perks)
@@ -227,7 +213,7 @@ class TestPageStreakRoster(PageStreakTestCase):
         names = [entry["killer"] for entry in roster]
         self.assertEqual(names, ["Nurse", "Trapper"])
         self.assertTrue(all(entry["status"] == "not_started" for entry in roster))
-        self.assertEqual(roster[0]["page_count"], 3)  # 35 killer perks incl. General
+        self.assertEqual(roster[0]["page_count"], 3)
 
     def test_locked_killer_is_excluded_from_roster(self):
         trapper = db.session.scalars(select(Character).where(Character.name == "Trapper")).first()
@@ -249,7 +235,6 @@ class TestPageStreakRoster(PageStreakTestCase):
         self.assertEqual(run["page_count"], 3)
         self.assertEqual(len(run["pages"][0]), 15)
 
-        # Locking perks afterwards must not touch the frozen run.
         for i in range(1, 21):
             self.lock_perk(self.user_id, f"Perk {i:03d}")
         reloaded = self.service.get_run(self.user_id, "Nurse")
@@ -283,6 +268,7 @@ class TestPageStreakRoster(PageStreakTestCase):
         self.assertEqual(other_roster["Nurse"]["status"], "not_started")
 
 
+@pytest.mark.unit
 class TestPageStreakResults(PageStreakTestCase):
     def setUp(self):
         super().setUp()
@@ -320,7 +306,7 @@ class TestPageStreakResults(PageStreakTestCase):
         self.assertEqual(updated["attempt"], 2)
         self.assertEqual(updated["best_page"], 1)
         self.assertEqual(len(updated["history"]), 2)
-        self.assertEqual(updated["pages"], self.run["pages"])  # snapshot survives a loss
+        self.assertEqual(updated["pages"], self.run["pages"])
 
     def test_short_last_page_accepts_a_short_build(self):
         page3 = self.run["pages"][2]
@@ -368,7 +354,7 @@ class TestPageStreakResults(PageStreakTestCase):
         self.assertEqual(updated["current_page"], 1)
         self.assertEqual(updated["attempt"], 2)
         self.assertEqual(updated["status"], "in_progress")
-        self.assertEqual(updated["page_count"], 1)  # 15 perks left -> one page
+        self.assertEqual(updated["page_count"], 1)
         self.assertEqual(len(updated["history"]), 1)
         self.assertEqual(updated["best_page"], 1)
 
@@ -410,6 +396,7 @@ class TestPageStreakResults(PageStreakTestCase):
         self.assertEqual(reloaded["status"], "completed")
 
 
+@pytest.mark.unit
 class TestPageStreakRosterOrder(PageStreakTestCase):
     def setUp(self):
         super().setUp()
@@ -422,7 +409,6 @@ class TestPageStreakRosterOrder(PageStreakTestCase):
         seed_killers(["Wraith", "Trapper", "Nurse", "Animatronic"])
         self.user_id = self.register_user("orderuser")
 
-        # Deliberately out of order in the list, and Animatronic has no release record at all.
         characters = [
             {"name": "Nurse", "category": "Killer", "release_number": 4},
             {"name": "Trapper", "category": "Killer", "release_number": 1},
@@ -449,8 +435,6 @@ class TestPageStreakRosterOrder(PageStreakTestCase):
         )
 
     def test_falls_back_to_alphabetical_order_without_release_numbers(self):
-        # A perk_service without get_characters() means _release_numbers() is empty;
-        # ordering should still succeed for the DB-driven killer list, alphabetically.
         service = PageStreakService(perk_service=FakePerkService(self.perks))
         self.assertEqual(
             service.get_killers(self.user_id),

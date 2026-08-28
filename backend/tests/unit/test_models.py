@@ -1,20 +1,14 @@
 # backend/tests/unit/test_models.py
-import json
 from datetime import datetime, timezone
 import pytest
+from app.core.json_provider import safe_json_dumps
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
-from app.models.character import Character, Killer, Survivor
-from app.models.chaos import ChaosMatchLog, ChaosRun
-from app.models.community import BugReport, CommunityBuild, CustomPerk, DailyQuest
+from app.models.character import Killer, Survivor
+from app.models.chaos import ChaosRun
 from app.models.equipment import Addon, Item, Offering
-from app.models.gauntlet import GauntletMatchLog, GauntletRun
-from app.models.history import HistoryMatchLog, HistoryRun
-from app.models.map import MapObjective, MapRealm, MapTile
-from app.models.minigames import DraftSession, GeneratorDrawnPerk, GeneratorSetting, GuesserStat, ScraperSetting
-from app.models.page_streak import PageStreakPageLog, PageStreakRun
-from app.models.perk import Perk, PerkRule
-from app.models.smash_or_pass import Entity, EntityStat, Roster, SmashPassStat, SmashPassVote, Vote
-from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
+from app.models.gauntlet import GauntletRun
+from app.models.perk import Perk
+from app.models.smash_or_pass import EntityStat
 
 
 @pytest.mark.unit
@@ -166,7 +160,7 @@ class TestModelToDictTransformations:
             user_id=3,
             difficulty="hard",
             completed_killers_json='["trapper"]',
-            used_perks_json='["Agitation"]',
+            used_perks_json=safe_json_dumps(["Agitation"]),
         )
         c_d = chaos.to_dict()
         assert c_d["completed_killers"] == ["trapper"]

@@ -1,5 +1,4 @@
 # backend/tests/unit/test_translations_verification.py
-# backend/tests/test_translations_verification.py
 import pytest
 from sqlalchemy import select
 from app import create_app
@@ -20,17 +19,17 @@ class TestConfig(Config):
 
 @pytest.fixture
 def app():
-    app = create_app(TestConfig)
-    with app.app_context():
+    flask_app = create_app(TestConfig)
+    with flask_app.app_context():
         db.create_all()
-        yield app
+        yield flask_app
         db.session.remove()
         db.drop_all()
 
 
+@pytest.mark.unit
 def test_translations_sync_and_retrieval(app):
     with app.app_context():
-        # Retrieve or seed test entities matching characters_dump.json and items_dump.json
         trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
         if not trapper:
             trapper = Character(
@@ -72,46 +71,6 @@ def test_translations_sync_and_retrieval(app):
             )
             db.session.add(addon)
 
-        db.session.commit()
-
-        service = TranslationService()
-        res = service.sync_all_locales_to_db(locales=["en", "pl", "de", "es", "ja"])
-
-        assert res["characters_updated"] >= 1
-        assert res["perks_updated"] >= 1
-        assert res["items_updated"] >= 1
-        assert res["addons_updated"] >= 1
-
-        # 1. Verify Character Translations for all 5 languages
-        loaded_trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
-        assert loaded_trapper is not None
-        for lang in ["en", "pl", "de", "es", "ja"]:
-            assert lang in loaded_trapper.translations
-            trans_dict = loaded_trapper.to_dict(lang=lang)
-            assert trans_dict["name"] is not None
-            assert len(trans_dict["lore"]) > 0
-
-        # Polish name and lore check
-        pl_char = loaded_trapper.to_dict(lang="pl")
-        assert pl_char["name"] in ["Traper", "The Trapper"]
-        assert len(pl_char["lore"]) > 20
-
-        # 2. Verify Perk Translations for all 5 languages
-        loaded_perk = db.session.scalars(select(Perk).where(Perk.name == "Unnerving Presence")).first()
-        assert loaded_perk is not None
-        for lang in ["en", "pl", "de", "es", "ja"]:
-            assert lang in loaded_perk.translations
-            p_dict = loaded_perk.to_dict(lang=lang)
-            assert len(p_dict["description"]) > 10
-
-        # Polish perk name
-        pl_perk = loaded_perk.to_dict(lang="pl")
-        assert pl_perk["name"] in ["Niepokojąca Obecność", "Unnerving Presence"]
-
-        # 3. Verify Item Translations for all 5 languages
-        loaded_item = db.session.scalars(select(Item).where(Item.name == "Chinese Firecracker")).first()
-        assert loaded_item is not None
-        # 5. Verify Ash Williams & Localized Character Detail Lookup (e.g. ashley_j_williams, traper)
         ash = db.session.scalars(select(Character).where(Character.name == "Ash Williams")).first()
         if not ash:
             ash = Character(
@@ -123,20 +82,47 @@ def test_translations_sync_and_retrieval(app):
                 wiki_slug="Ash_Williams",
             )
             db.session.add(ash)
-            db.session.commit()
 
-        service.sync_all_locales_to_db(locales=["en", "pl", "de", "es", "ja"])
+        db.session.commit()
+
+        service = TranslationService()
+        res = service.sync_all_locales_to_db(locales=["en", "pl", "de", "es", "ja"])
+
+        assert res["characters_updated"] >= 1
+        assert res["perks_updated"] >= 1
+        assert res["items_updated"] >= 1
+        assert res["addons_updated"] >= 1
+
+        loaded_trapper = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+        assert loaded_trapper is not None
+        for lang in ["en", "pl", "de", "es", "ja"]:
+            assert lang in loaded_trapper.translations
+            trans_dict = loaded_trapper.to_dict(lang=lang)
+            assert trans_dict["name"] is not None
+            assert len(trans_dict["lore"]) > 0
+
+        pl_char = loaded_trapper.to_dict(lang="pl")
+        assert pl_char["name"] in ["Traper", "The Trapper"]
+        assert len(pl_char["lore"]) > 20
+
+        loaded_perk = db.session.scalars(select(Perk).where(Perk.name == "Unnerving Presence")).first()
+        assert loaded_perk is not None
+        for lang in ["en", "pl", "de", "es", "ja"]:
+            assert lang in loaded_perk.translations
+            p_dict = loaded_perk.to_dict(lang=lang)
+            assert len(p_dict["description"]) > 10
+
+        pl_perk = loaded_perk.to_dict(lang="pl")
+        assert pl_perk["name"] in ["Niepokojąca Obecność", "Unnerving Presence"]
 
         from app.services.perk_service import PerkService
         perk_svc = PerkService()
         
-        # Test lookup by ashley_j_williams (translated Polish/English name slug)
         ash_detail_pl = perk_svc.get_character_detail("ashley_j_williams", lang="pl")
         assert ash_detail_pl is not None
         assert ash_detail_pl["character"]["name"] == "Ashley J. Williams"
         assert len(ash_detail_pl["character"]["lore"]) > 50
 
-        # Test lookup by traper (translated Polish name slug)
         trapper_detail_pl = perk_svc.get_character_detail("traper", lang="pl")
         assert trapper_detail_pl is not None
         assert trapper_detail_pl["character"]["name"] == "Traper"

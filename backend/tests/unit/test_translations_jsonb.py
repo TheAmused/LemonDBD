@@ -1,11 +1,9 @@
 # backend/tests/unit/test_translations_jsonb.py
 import pytest
 from app import create_app
+from app.core.config import Config
 from app.core.extensions import db
 from app.models import Addon, Character, Item, Perk
-
-
-from app.core.config import Config
 
 
 class TestConfig(Config):
@@ -17,10 +15,10 @@ class TestConfig(Config):
 
 @pytest.fixture
 def app():
-    app = create_app(TestConfig)
-    with app.app_context():
+    flask_app = create_app(TestConfig)
+    with flask_app.app_context():
         db.create_all()
-        yield app
+        yield flask_app
         db.session.remove()
         db.drop_all()
 
@@ -30,6 +28,7 @@ def client(app):
     return app.test_client()
 
 
+@pytest.mark.unit
 def test_perk_translations_model(app):
     with app.app_context():
         perk = Perk(
@@ -50,28 +49,25 @@ def test_perk_translations_model(app):
         assert "pl" in loaded.translations
         assert loaded.translations["pl"]["name"] == "Zdecydowany Cios"
 
-        # Test to_dict default (English)
         default_dict = loaded.to_dict()
         assert default_dict["name"] == "Decisive Strike"
         assert default_dict["description"] == "English description for Decisive Strike."
         assert "pl" in default_dict["translations"]
 
-        # Test to_dict with Polish
         pl_dict = loaded.to_dict(lang="pl")
         assert pl_dict["name"] == "Zdecydowany Cios"
         assert pl_dict["description"] == "Polski opis Zdecydowanego Ciosu."
 
-        # Test to_dict with German
         de_dict = loaded.to_dict(lang="de")
         assert de_dict["name"] == "Entscheidungsschlag"
         assert de_dict["description"] == "Deutsche Beschreibung für Entscheidungsschlag."
 
-        # Test to_dict with non-existent language (fallback to default)
         ja_dict = loaded.to_dict(lang="ja")
         assert ja_dict["name"] == "Decisive Strike"
         assert ja_dict["description"] == "English description for Decisive Strike."
 
 
+@pytest.mark.unit
 def test_character_translations_model(app):
     with app.app_context():
         char = Character(
@@ -104,7 +100,6 @@ def test_character_translations_model(app):
         loaded = db.session.scalars(db.select(Character).where(Character.name == "The Trapper")).first()
         assert loaded is not None
 
-        # Test Polish localization
         pl_dict = loaded.to_dict(lang="pl")
         assert pl_dict["name"] == "Traper"
         assert pl_dict["lore"] == "Polska historia."
@@ -113,6 +108,7 @@ def test_character_translations_model(app):
         assert pl_dict["power"]["description"] == "Polski opis mocy."
 
 
+@pytest.mark.unit
 def test_item_and_addon_translations_model(app):
     with app.app_context():
         item = Item(
@@ -148,6 +144,7 @@ def test_item_and_addon_translations_model(app):
         assert loaded_addon.to_dict(lang="pl")["description"] == "Wydłuża czas działania."
 
 
+@pytest.mark.unit
 def test_api_routes_with_lang_parameter(client, app):
     with app.app_context():
         perk = Perk(
@@ -173,7 +170,6 @@ def test_api_routes_with_lang_parameter(client, app):
         perk_id = perk.id
         killer_id = killer.id
 
-    # Test /api/v1/perks?lang=pl
     resp = client.get("/api/v1/perks?lang=pl")
     assert resp.status_code == 200
     data = resp.get_json().get("data", [])
@@ -183,7 +179,6 @@ def test_api_routes_with_lang_parameter(client, app):
     assert found_perk["name"] == "Sprint"
     assert found_perk["description"] == "Podczas rozpoczynania biegu zrywasz się do sprintu."
 
-    # Test /api/v1/characters?lang=pl
     resp_char = client.get("/api/v1/characters?lang=pl")
     assert resp_char.status_code == 200
     char_data = resp_char.get_json().get("data", [])

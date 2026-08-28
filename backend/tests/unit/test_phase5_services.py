@@ -1,9 +1,11 @@
 # backend/tests/unit/test_phase5_services.py
 import unittest
+import pytest
 from app import create_app
 from app.services.others.custom_perk_service import CustomPerkService
 
 
+@pytest.mark.unit
 class TestPhase5Services(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
@@ -11,9 +13,6 @@ class TestPhase5Services(unittest.TestCase):
         self.client = self.app.test_client()
         self.service = CustomPerkService()
 
-    # -------------------------------------------------------------
-    # 1. Custom Perk Service Core Tests
-    # -------------------------------------------------------------
     def test_seed_custom_perks(self):
         perks = self.service.get_custom_perks()
         self.assertGreaterEqual(len(perks), 4)
@@ -73,9 +72,6 @@ class TestPhase5Services(unittest.TestCase):
         res = self.service.upvote_custom_perk(999999)
         self.assertIsNone(res)
 
-    # -------------------------------------------------------------
-    # 2. API Endpoints Tests
-    # -------------------------------------------------------------
     def test_api_list_custom_perks(self):
         res = self.client.get("/api/v1/custom-perks/?role=killer")
         self.assertEqual(res.status_code, 200)
@@ -100,7 +96,6 @@ class TestPhase5Services(unittest.TestCase):
         self.assertEqual(data["custom_perk"]["name"], "API Perk Concept")
 
     def test_api_create_custom_perk_validation_error(self):
-        # Missing required name
         res = self.client.post("/api/v1/custom-perks/", json={"role": "survivor", "description": "Test"})
         self.assertEqual(res.status_code, 400)
 

@@ -1,7 +1,8 @@
 # backend/app/core/limiter.py
 import logging
 import os
-from typing import Any, Dict, Optional, Sequence
+from collections.abc import Sequence
+from typing import Any
 from flask import request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -30,13 +31,13 @@ def get_client_ip() -> str:
 
 
 def validate_honeypot(
-    data: Optional[Dict[str, Any]],
+    data: dict[str, Any] | None,
     field_names: Sequence[str] = ("website_trap", "honeypot_verification", "company_fax"),
 ) -> bool:
     """
     Validates honeypot fields.
     Returns False if any field in field_names is present in data with a non-empty string or boolean True,
-    True otherwise.
+    True otherwise. Whitespace-only strings, None, and False are treated as benign empty inputs.
     """
     if not isinstance(data, dict):
         return True
@@ -48,7 +49,7 @@ def validate_honeypot(
                 return False
         elif val is True:
             return False
-        elif val is not None and not isinstance(val, bool) and val:
+        elif val is not None and not isinstance(val, bool) and bool(val):
             return False
     return True
 

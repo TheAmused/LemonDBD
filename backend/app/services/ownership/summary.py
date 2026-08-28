@@ -1,5 +1,5 @@
 # backend/app/services/ownership/summary.py
-from typing import Any, Dict, List, Optional
+from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
@@ -7,7 +7,7 @@ from app.core.extensions import db
 from app.models import Character, Perk, User, UserCharacterOwnership, UserPerkOwnership
 
 
-def calculate_ownership_summary(user_id: Optional[int] = None) -> Dict[str, Any]:
+def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
     """Calculate aggregated ownership statistics and identifiers for characters and perks."""
     all_characters = db.session.scalars(select(Character)).all()
     char_map = {c.id: c for c in all_characters}
@@ -19,7 +19,7 @@ def calculate_ownership_summary(user_id: Optional[int] = None) -> Dict[str, Any]
     total_kill_perks = sum(1 for p in all_perks if (p.category or "Survivor").lower() == "killer")
 
     if not user_id:
-        all_perk_names: List[str] = []
+        all_perk_names: list[str] = []
         for p in all_perks:
             all_perk_names.append(p.name)
             if p.alternate_name and p.alternate_name not in all_perk_names:
@@ -66,8 +66,8 @@ def calculate_ownership_summary(user_id: Optional[int] = None) -> Dict[str, Any]
     explicit_perk_unlocked = {po.perk_id for po in perk_ownership_rows if po.is_unlocked}
     explicit_perk_locked = {po.perk_id for po in perk_ownership_rows if not po.is_unlocked}
 
-    owned_perk_ids: List[int] = []
-    owned_perk_names: List[str] = []
+    owned_perk_ids: list[int] = []
+    owned_perk_names: list[str] = []
     owned_surv_perks = 0
     owned_kill_perks = 0
 
@@ -124,4 +124,3 @@ def calculate_ownership_summary(user_id: Optional[int] = None) -> Dict[str, Any]
         "owned_character_ids": list(owned_character_ids_set),
         "owned_character_names": owned_character_names,
     }
-

@@ -26,16 +26,17 @@ def _greeting_name(user: User) -> str:
 
 
 def _attach_logo(message: Message) -> None:
-    """Attach the LemonDBD logo inline so it renders regardless of FRONTEND_URL reachability."""
+    """Attach the logo inline if present on disk."""
     try:
-        with open(_LOGO_PATH, "rb") as f:
-            message.attach(
-                filename="logo.png",
-                content_type="image/png",
-                data=f.read(),
-                disposition="inline",
-                headers={"Content-ID": f"<{_LOGO_CID}>"},
-            )
+        if _LOGO_PATH.exists():
+            with open(_LOGO_PATH, "rb") as f:
+                message.attach(
+                    filename="logo.png",
+                    content_type="image/png",
+                    data=f.read(),
+                    disposition="inline",
+                    headers={"Content-ID": f"<{_LOGO_CID}>"},
+                )
     except OSError as err:
         logger.warning(f"Could not attach email logo: {err}")
 

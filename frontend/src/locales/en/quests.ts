@@ -1,3 +1,4 @@
+// frontend/src/locales/en/quests.ts
 export default {
   "title": "Trial Quests & Milestones",
   "pageTitle": "LemonDBD - Quests & Trials",

@@ -1,6 +1,5 @@
 # backend/app/services/synergy/evaluator.py
-from typing import Any, Dict, List, Set
-
+from typing import Any
 from app.services.synergy.badges import evaluate_tactical_badges
 from app.services.synergy.rules import (
     EXHAUSTION_PERKS,
@@ -10,14 +9,14 @@ from app.services.synergy.rules import (
 )
 
 
-def evaluate_build_synergy(perk_names: List[str], role: str = "survivor") -> Dict[str, Any]:
+def evaluate_build_synergy(perk_names: list[str], role: str = "survivor") -> dict[str, Any]:
     """Calculates compatibility score, positive combos, anti-synergies, and badges."""
     cleaned_perks = [p.strip() for p in perk_names if p and p.strip()]
     perk_lower_map = {p.lower(): p for p in cleaned_perks}
     perk_lowers = set(perk_lower_map.keys())
 
-    positive_synergies: List[Dict[str, Any]] = []
-    anti_synergies: List[Dict[str, Any]] = []
+    positive_synergies: list[dict[str, Any]] = []
+    anti_synergies: list[dict[str, Any]] = []
 
     # 1. Detect Positive Synergies
     for rule_set, _, desc in POSITIVE_SYNERGY_RULES:
@@ -29,7 +28,6 @@ def evaluate_build_synergy(perk_names: List[str], role: str = "survivor") -> Dic
             })
 
     # 2. Detect Anti-Synergies
-    # A. Multiple Exhaustion Perks
     equipped_exhaustion = [perk_lower_map[p] for p in perk_lowers if p in EXHAUSTION_PERKS]
     if len(equipped_exhaustion) >= 2:
         anti_synergies.append({
@@ -37,7 +35,6 @@ def evaluate_build_synergy(perk_names: List[str], role: str = "survivor") -> Dic
             "description": f"Equipping multiple Exhaustion perks ({', '.join(equipped_exhaustion)}) reduces efficiency because Exhaustion cooldowns are shared.",
         })
 
-    # B. No Mither Anti-Synergies
     if "no mither" in perk_lowers:
         for bad_key, _, desc in NO_MITHER_ANTI_PERKS:
             if bad_key in perk_lowers:
@@ -46,7 +43,6 @@ def evaluate_build_synergy(perk_names: List[str], role: str = "survivor") -> Dic
                     "description": desc,
                 })
 
-    # C. Hex: Ruin Anti-Synergies
     if "hex: ruin" in perk_lowers:
         for bad_key, _, desc in HEX_RUIN_ANTI_PERKS:
             if bad_key in perk_lowers:
@@ -81,4 +77,3 @@ def evaluate_build_synergy(perk_names: List[str], role: str = "survivor") -> Dic
         "tactical_badges": tactical_badges,
         "details": f"Compatibility Score: {score}%. Found {len(positive_synergies)} positive synergies and {len(anti_synergies)} anti-synergies.",
     }
-

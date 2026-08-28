@@ -1,6 +1,6 @@
 # backend/app/services/generator/config_manager.py
 import logging
-from typing import Any, Dict
+from typing import Any
 from flask import current_app
 
 from app.core.extensions import db
@@ -19,8 +19,7 @@ CONFIG_FIELDS = [
 ]
 
 
-def get_generator_config(use_sqlalchemy: bool, db_service: Any) -> Dict[str, Any]:
-    """Retrieve generator wheel parameters via SQLAlchemy or SQLite fallback."""
+def get_generator_config(use_sqlalchemy: bool, db_service: Any) -> dict[str, Any]:
     if use_sqlalchemy:
         try:
             if current_app:
@@ -63,8 +62,7 @@ def get_generator_config(use_sqlalchemy: bool, db_service: Any) -> Dict[str, Any
     )
 
 
-def update_generator_config(data: Dict[str, Any], use_sqlalchemy: bool, db_service: Any) -> Dict[str, Any]:
-    """Update generator wheel parameters with database synchronization."""
+def update_generator_config(data: dict[str, Any], use_sqlalchemy: bool, db_service: Any) -> dict[str, Any]:
     if use_sqlalchemy:
         try:
             if current_app:
@@ -103,4 +101,3 @@ def update_generator_config(data: Dict[str, Any], use_sqlalchemy: bool, db_servi
     conn.close()
 
     return get_generator_config(use_sqlalchemy=False, db_service=db_service)
-

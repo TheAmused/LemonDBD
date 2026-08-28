@@ -3,7 +3,6 @@ import logging
 import os
 import time
 import uuid
-from typing import Optional, Set, Tuple
 from flask import current_app
 from werkzeug.utils import secure_filename
 
@@ -12,7 +11,7 @@ from app.models import User
 
 logger = logging.getLogger(__name__)
 
-ALLOWED_EXTENSIONS: Set[str] = {"png", "jpg", "jpeg", "webp", "gif", "bmp", "tiff"}
+ALLOWED_EXTENSIONS: set[str] = {"png", "jpg", "jpeg", "webp", "gif", "bmp", "tiff"}
 
 
 def is_allowed_avatar_file(filename: str) -> bool:
@@ -38,7 +37,7 @@ def get_avatar_storage_directory() -> str:
     return base_dir
 
 
-def remove_stale_avatar_file(avatar_url: Optional[str], avatar_dir: str) -> None:
+def remove_stale_avatar_file(avatar_url: str | None, avatar_dir: str) -> None:
     """Deletes old avatar image from disk to prevent storage accumulation."""
     if not avatar_url or avatar_url == "default_avatar":
         return
@@ -52,7 +51,7 @@ def remove_stale_avatar_file(avatar_url: Optional[str], avatar_dir: str) -> None
                 logger.warning(f"Could not remove old avatar {old_path}: {e}")
 
 
-def process_and_save_avatar(user_id: int, file_storage) -> Tuple[Optional[User], Optional[str]]:
+def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, str | None]:
     """Center-crops image to 1:1, resizes to 256x256, and saves in WebP format."""
     user = db.session.get(User, user_id)
     if not user:
@@ -110,7 +109,7 @@ def process_and_save_avatar(user_id: int, file_storage) -> Tuple[Optional[User],
         return None, f"Failed to process image: {str(e)}"
 
 
-def clear_user_avatar(user_id: int) -> Tuple[Optional[User], Optional[str]]:
+def clear_user_avatar(user_id: int) -> tuple[User | None, str | None]:
     """Resets user avatar to default."""
     user = db.session.get(User, user_id)
     if not user:
@@ -122,4 +121,3 @@ def clear_user_avatar(user_id: int) -> Tuple[Optional[User], Optional[str]]:
     user.avatar_url = "default_avatar"
     db.session.commit()
     return user, None
-

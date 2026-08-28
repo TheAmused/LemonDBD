@@ -1,18 +1,18 @@
 # backend/app/services/db/export_import.py
-import json
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 from sqlalchemy import delete, select
 from app.core.extensions import db
+from app.core.json_provider import safe_json_loads
 from app.models.character import Character
 from app.models.perk import Perk
 from app.models.equipment import Item, Addon
 from app.models.map import MapRealm, MapTile, MapObjective
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
-from app.models.minigames import GeneratorSetting, GeneratorDrawnPerk, GuesserStat, DraftSession
+from app.models.minigames import GeneratorSetting, GuesserStat
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ SUPPORTED_EXPORT_TARGETS = [
 ]
 
 
-def _parse_datetime(val: Optional[str]) -> Optional[datetime]:
+def _parse_datetime(val: str | datetime | None) -> datetime | None:
     if not val:
         return None
     try:
@@ -52,16 +52,11 @@ class DatabaseExportImportService:
     """
 
     @classmethod
-    def export_database(cls, targets: Optional[List[str]] = None) -> Dict[str, Any]:
-        """
-        Exports database entities as a structured dictionary.
-        If targets is None or empty, exports all supported entity tables.
-        """
-        target_set: Set[str] = set(targets) if targets else set(SUPPORTED_EXPORT_TARGETS)
-        export_data: Dict[str, Any] = {}
-        counts: Dict[str, int] = {}
+    def export_database(cls, targets: list[str] | None = None) -> dict[str, Any]:
+        target_set: set[str] = set(targets) if targets else set(SUPPORTED_EXPORT_TARGETS)
+        export_data: dict[str, Any] = {}
+        counts: dict[str, int] = {}
 
-        # 1. Characters
         if "characters" in target_set:
             chars = db.session.scalars(select(Character).order_by(Character.id)).all()
             char_list = []
@@ -96,7 +91,6 @@ class DatabaseExportImportService:
             export_data["characters"] = char_list
             counts["characters"] = len(char_list)
 
-        # 2. Perks
         if "perks" in target_set:
             perks = db.session.scalars(select(Perk).order_by(Perk.id)).all()
             perk_list = []
@@ -116,7 +110,6 @@ class DatabaseExportImportService:
             export_data["perks"] = perk_list
             counts["perks"] = len(perk_list)
 
-        # 3. Items
         if "items" in target_set:
             items = db.session.scalars(select(Item).order_by(Item.id)).all()
             item_list = []
@@ -134,7 +127,6 @@ class DatabaseExportImportService:
             export_data["items"] = item_list
             counts["items"] = len(item_list)
 
-        # 4. Add-ons
         if "addons" in target_set:
             addons = db.session.scalars(select(Addon).order_by(Addon.id)).all()
             addon_list = []
@@ -152,7 +144,6 @@ class DatabaseExportImportService:
             export_data["addons"] = addon_list
             counts["addons"] = len(addon_list)
 
-        # 5. Maps (Realms, Tiles, Objectives)
         if "maps" in target_set:
             realms = db.session.scalars(select(MapRealm).order_by(MapRealm.id)).all()
             map_list = []
@@ -175,7 +166,6 @@ class DatabaseExportImportService:
                         "type": o.type,
                         "x": o.x,
                         "y": o.y,
-                        "label": o.label,
                         "floor": o.floor,
                     }
                     for o in r.objectives
@@ -202,7 +192,6 @@ class DatabaseExportImportService:
             export_data["maps"] = map_list
             counts["maps"] = len(map_list)
 
-        # 6. Users
         if "users" in target_set:
             users = db.session.scalars(select(User).order_by(User.id)).all()
             user_list = []
@@ -220,7 +209,6 @@ class DatabaseExportImportService:
             export_data["users"] = user_list
             counts["users"] = len(user_list)
 
-        # 7. Ownerships
         if "ownerships" in target_set:
             char_owns = db.session.scalars(select(UserCharacterOwnership)).all()
             perk_owns = db.session.scalars(select(UserPerkOwnership)).all()
@@ -230,8 +218,6 @@ class DatabaseExportImportService:
                         "username": co.user.username if co.user else None,
                         "character_name": co.character.name if co.character else None,
                         "is_owned": co.is_owned,
-                        "is_prestiged": co.is_prestiged,
-                        "prestige_level": co.prestige_level,
                     }
                     for co in char_owns
                     if co.user and co.character
@@ -241,8 +227,6 @@ class DatabaseExportImportService:
                         "username": po.user.username if po.user else None,
                         "perk_name": po.perk.name if po.perk else None,
                         "is_unlocked": po.is_unlocked,
-                        "tier": po.tier,
-                        "favorite": po.favorite,
                     }
                     for po in perk_owns
                     if po.user and po.perk
@@ -251,47 +235,35 @@ class DatabaseExportImportService:
             counts["character_ownerships"] = len(export_data["ownerships"]["characters"])
             counts["perk_ownerships"] = len(export_data["ownerships"]["perks"])
 
-        # 8. Community Builds
         if "community_builds" in target_set:
             builds = db.session.scalars(select(CommunityBuild).order_by(CommunityBuild.id)).all()
-            build_list = [b.to_dict() for b in builds]
-            export_data["community_builds"] = build_list
-            counts["community_builds"] = len(build_list)
+            export_data["community_builds"] = [b.to_dict() for b in builds]
+            counts["community_builds"] = len(builds)
 
-        # 9. Custom Perks
         if "custom_perks" in target_set:
             cperks = db.session.scalars(select(CustomPerk).order_by(CustomPerk.id)).all()
-            cperk_list = [cp.to_dict() for cp in cperks]
-            export_data["custom_perks"] = cperk_list
-            counts["custom_perks"] = len(cperk_list)
+            export_data["custom_perks"] = [cp.to_dict() for cp in cperks]
+            counts["custom_perks"] = len(cperks)
 
-        # 10. Daily Quests
         if "daily_quests" in target_set:
             quests = db.session.scalars(select(DailyQuest).order_by(DailyQuest.id)).all()
-            quest_list = [q.to_dict() for q in quests]
-            export_data["daily_quests"] = quest_list
-            counts["daily_quests"] = len(quest_list)
+            export_data["daily_quests"] = [q.to_dict() for q in quests]
+            counts["daily_quests"] = len(quests)
 
-        # 11. Bug Reports
         if "bug_reports" in target_set:
             reports = db.session.scalars(select(BugReport).order_by(BugReport.id)).all()
-            report_list = [r.to_dict() for r in reports]
-            export_data["bug_reports"] = report_list
-            counts["bug_reports"] = len(report_list)
+            export_data["bug_reports"] = [r.to_dict() for r in reports]
+            counts["bug_reports"] = len(reports)
 
-        # 12. Generator Settings
         if "generator_settings" in target_set:
             settings = db.session.scalars(select(GeneratorSetting).order_by(GeneratorSetting.id)).all()
-            setting_list = [s.to_dict() for s in settings]
-            export_data["generator_settings"] = setting_list
-            counts["generator_settings"] = len(setting_list)
+            export_data["generator_settings"] = [s.to_dict() for s in settings]
+            counts["generator_settings"] = len(settings)
 
-        # 13. Guesser Stats
         if "guesser_stats" in target_set:
             gstats = db.session.scalars(select(GuesserStat).order_by(GuesserStat.id)).all()
-            gstat_list = [gs.to_dict() for gs in gstats]
-            export_data["guesser_stats"] = gstat_list
-            counts["guesser_stats"] = len(gstat_list)
+            export_data["guesser_stats"] = [gs.to_dict() for gs in gstats]
+            counts["guesser_stats"] = len(gstats)
 
         return {
             "version": "1.0",
@@ -304,25 +276,18 @@ class DatabaseExportImportService:
     @classmethod
     def import_database(
         cls,
-        payload: Dict[str, Any],
+        payload: dict[str, Any],
         mode: str = "merge",
-        targets: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
-        """
-        Imports and deserializes database payload.
-        mode:
-          - 'merge': Updates existing records by unique key, inserts new ones.
-          - 'replace': Purges target tables first, then inserts imported records.
-        """
+        targets: list[str] | None = None,
+    ) -> dict[str, Any]:
         if not isinstance(payload, dict):
             raise ValueError("Invalid JSON payload: root must be an object.")
 
-        data: Dict[str, Any] = payload.get("data", payload)
+        data: dict[str, Any] = payload.get("data", payload)
         target_keys = set(targets) if targets else set(data.keys())
-        summary: Dict[str, Dict[str, int]] = {}
+        summary: dict[str, dict[str, int]] = {}
 
         try:
-            # 1. In 'replace' mode, purge tables in reverse dependency order
             if mode == "replace":
                 if "ownerships" in target_keys:
                     db.session.execute(delete(UserCharacterOwnership))
@@ -353,7 +318,6 @@ class DatabaseExportImportService:
                     db.session.execute(delete(GuesserStat))
                 db.session.flush()
 
-            # 2. Characters
             if "characters" in target_keys and "characters" in data:
                 raw_chars = data["characters"]
                 created, updated = 0, 0
@@ -382,8 +346,7 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["characters"] = {"created": created, "updated": updated}
 
-            # Build character lookup by name/real_name/wiki_slug
-            char_map: Dict[str, int] = {}
+            char_map: dict[str, int] = {}
             for c in db.session.scalars(select(Character)).all():
                 char_map[c.name.strip().lower()] = c.id
                 if c.real_name:
@@ -391,7 +354,6 @@ class DatabaseExportImportService:
                 if c.wiki_slug:
                     char_map[c.wiki_slug.strip().lower()] = c.id
 
-            # 3. Perks
             if "perks" in target_keys and "perks" in data:
                 raw_perks = data["perks"]
                 created, updated = 0, 0
@@ -414,7 +376,6 @@ class DatabaseExportImportService:
                         if k in pdata:
                             setattr(perk_obj, k, pdata[k])
 
-                    # Resolve character_id
                     char_name = pdata.get("character_name")
                     if char_name:
                         char_id = char_map.get(char_name.strip().lower())
@@ -423,7 +384,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["perks"] = {"created": created, "updated": updated}
 
-            # 4. Items
             if "items" in target_keys and "items" in data:
                 raw_items = data["items"]
                 created, updated = 0, 0
@@ -448,7 +408,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["items"] = {"created": created, "updated": updated}
 
-            # 5. Add-ons
             if "addons" in target_keys and "addons" in data:
                 raw_addons = data["addons"]
                 created, updated = 0, 0
@@ -473,7 +432,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["addons"] = {"created": created, "updated": updated}
 
-            # 6. Maps (Realms, Tiles, Objectives)
             if "maps" in target_keys and "maps" in data:
                 raw_maps = data["maps"]
                 created, updated = 0, 0
@@ -502,9 +460,7 @@ class DatabaseExportImportService:
                         if k in mdata:
                             setattr(realm_obj, k, mdata[k])
 
-                    # Sync MapTiles
                     if "tiles" in mdata:
-                        # Clear old tiles and recreate
                         db.session.execute(delete(MapTile).where(MapTile.map_id == map_id))
                         for tdata in mdata["tiles"]:
                             tile = MapTile(
@@ -520,7 +476,6 @@ class DatabaseExportImportService:
                             )
                             db.session.add(tile)
 
-                    # Sync MapObjectives
                     if "objectives" in mdata:
                         db.session.execute(delete(MapObjective).where(MapObjective.map_id == map_id))
                         for odata in mdata["objectives"]:
@@ -529,14 +484,12 @@ class DatabaseExportImportService:
                                 type=odata.get("type", "generator"),
                                 x=float(odata.get("x", 0.0)),
                                 y=float(odata.get("y", 0.0)),
-                                label=odata.get("label", ""),
                                 floor=int(odata.get("floor", 1)),
                             )
                             db.session.add(obj)
                 db.session.flush()
                 summary["maps"] = {"created": created, "updated": updated}
 
-            # 7. Users
             if "users" in target_keys and "users" in data:
                 raw_users = data["users"]
                 created, updated = 0, 0
@@ -567,11 +520,9 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["users"] = {"created": created, "updated": updated}
 
-            # Build user lookup & perk lookup
-            user_map: Dict[str, int] = {u.username: u.id for u in db.session.scalars(select(User)).all()}
-            perk_map: Dict[str, int] = {p.name.strip().lower(): p.id for p in db.session.scalars(select(Perk)).all()}
+            user_map: dict[str, int] = {u.username: u.id for u in db.session.scalars(select(User)).all()}
+            perk_map: dict[str, int] = {p.name.strip().lower(): p.id for p in db.session.scalars(select(Perk)).all()}
 
-            # 8. Ownerships
             if "ownerships" in target_keys and "ownerships" in data:
                 raw_owns = data["ownerships"]
                 char_created, char_updated = 0, 0
@@ -596,8 +547,6 @@ class DatabaseExportImportService:
                         else:
                             char_updated += 1
                         co.is_owned = co_data.get("is_owned", True)
-                        co.is_prestiged = co_data.get("is_prestiged", False)
-                        co.prestige_level = co_data.get("prestige_level", 0)
 
                 for po_data in raw_owns.get("perks", []):
                     uname = po_data.get("username")
@@ -618,14 +567,11 @@ class DatabaseExportImportService:
                         else:
                             perk_updated += 1
                         po.is_unlocked = po_data.get("is_unlocked", True)
-                        po.tier = po_data.get("tier", 3)
-                        po.favorite = po_data.get("favorite", False)
 
                 db.session.flush()
                 summary["character_ownerships"] = {"created": char_created, "updated": char_updated}
                 summary["perk_ownerships"] = {"created": perk_created, "updated": perk_updated}
 
-            # 9. Community Builds
             if "community_builds" in target_keys and "community_builds" in data:
                 raw_builds = data["community_builds"]
                 created, updated = 0, 0
@@ -652,7 +598,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["community_builds"] = {"created": created, "updated": updated}
 
-            # 10. Custom Perks
             if "custom_perks" in target_keys and "custom_perks" in data:
                 raw_cperks = data["custom_perks"]
                 created, updated = 0, 0
@@ -679,7 +624,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["custom_perks"] = {"created": created, "updated": updated}
 
-            # 11. Daily Quests
             if "daily_quests" in target_keys and "daily_quests" in data:
                 raw_quests = data["daily_quests"]
                 created, updated = 0, 0
@@ -705,7 +649,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["daily_quests"] = {"created": created, "updated": updated}
 
-            # 12. Bug Reports
             if "bug_reports" in target_keys and "bug_reports" in data:
                 raw_reports = data["bug_reports"]
                 created, updated = 0, 0
@@ -731,7 +674,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["bug_reports"] = {"created": created, "updated": updated}
 
-            # 13. Generator Settings
             if "generator_settings" in target_keys and "generator_settings" in data:
                 raw_settings = data["generator_settings"]
                 created, updated = 0, 0
@@ -754,7 +696,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["generator_settings"] = {"created": created, "updated": updated}
 
-            # 14. Guesser Stats
             if "guesser_stats" in target_keys and "guesser_stats" in data:
                 raw_gstats = data["guesser_stats"]
                 created, updated = 0, 0
@@ -778,7 +719,6 @@ class DatabaseExportImportService:
 
             db.session.commit()
 
-            # Refresh in-memory caches
             try:
                 from app.routes.perks import perk_service
                 perk_service.reload_data()

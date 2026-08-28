@@ -1,10 +1,10 @@
 # backend/app/routes/gauntlet_streak.py
-from flask import Blueprint, current_app, jsonify, request, g
-from app.services.gauntlet_service import GauntletService
+from flask import Blueprint, current_app, g, jsonify, request
 from app.core.security import login_required
+from app.services.gauntlet_service import GauntletService
 
 gauntlet_streak_bp = Blueprint("gauntlet_streak", __name__, url_prefix="/api/v1/gauntlet-streak")
-_default_service = None
+_default_service: GauntletService | None = None
 
 
 def get_gauntlet_service() -> GauntletService:
@@ -16,7 +16,7 @@ def get_gauntlet_service() -> GauntletService:
     return _default_service
 
 
-def _clean_role(role):
+def _clean_role(role: str | None) -> str | None:
     if role not in ("survivor", "killer"):
         return None
     return role
@@ -51,7 +51,6 @@ def submit_result():
     service = get_gauntlet_service()
     try:
         updated_run = service.submit_result(g.current_user.id, run_id, result)
-        # A won gauntlet has no next target to draw — leave the completed run standing.
         if updated_run.get("status") == "completed":
             return jsonify({"run": updated_run, "previous_run": updated_run}), 200
         rolled_run = service.roll(g.current_user.id, role)

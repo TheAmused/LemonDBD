@@ -1,8 +1,8 @@
 # backend/app/services/perks/queries_perk.py
 import logging
 import math
-from typing import Any, Dict, List, Optional
-from sqlalchemy import and_, case, func, or_, select
+from typing import Any
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
@@ -14,15 +14,15 @@ logger = logging.getLogger(__name__)
 
 def fetch_perks_fallback(
     service,
-    category: Optional[str] = None,
-    character: Optional[str] = None,
-    scope: Optional[str] = None,
-    search: Optional[str] = None,
+    category: str | None = None,
+    character: str | None = None,
+    scope: str | None = None,
+    search: str | None = None,
     sort_by: str = "name",
     order: str = "asc",
     page: int = 1,
     limit: int = 50,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """In-memory cache fallback filtering for perk queries."""
     results = service._cache
     if category and category.lower() != "all":
@@ -114,18 +114,18 @@ def fetch_perks_fallback(
 
 def fetch_perks(
     service,
-    category: Optional[str] = None,
-    character: Optional[str] = None,
-    scope: Optional[str] = None,
-    search: Optional[str] = None,
+    category: str | None = None,
+    character: str | None = None,
+    scope: str | None = None,
+    search: str | None = None,
     sort_by: str = "name",
     order: str = "asc",
     page: int = 1,
     limit: int = 50,
-    user_id: Optional[int] = None,
+    user_id: int | None = None,
     owned_only: bool = False,
-    lang: Optional[str] = None,
-) -> Dict[str, Any]:
+    lang: str | None = None,
+) -> dict[str, Any]:
     """Execute paginated, sorted perk search with optional role and ownership filtering."""
     try:
         stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
@@ -301,9 +301,9 @@ def fetch_perks(
 def fetch_perk_suggestions(
     service,
     query: str = "",
-    category: Optional[str] = None,
+    category: str | None = None,
     limit: int = 10,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """Autocomplete suggestions for perks by name."""
     try:
         stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
@@ -354,7 +354,7 @@ def fetch_perk_suggestions(
         return res
 
 
-def fetch_perk_by_identifier(service, identifier: str, lang: Optional[str] = None) -> Optional[Dict[str, Any]]:
+def fetch_perk_by_identifier(service, identifier: str, lang: str | None = None) -> dict[str, Any] | None:
     """Find a perk by canonical title or formatted slug."""
     target = identifier.lower().strip()
     target_slug = slugify(identifier)
@@ -380,4 +380,3 @@ def fetch_perk_by_identifier(service, identifier: str, lang: Optional[str] = Non
         if p_name == target or p_alt == target or slugify(p_name) == target_slug or slugify(p_alt) == target_slug:
             return p
     return None
-

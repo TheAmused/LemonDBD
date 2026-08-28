@@ -1,3 +1,4 @@
+// frontend/src/__tests__/unit/mapLayouts.test.ts
 // frontend/src/utils/__tests__/mapLayouts.test.ts
 import test from 'node:test';
 import assert from 'node:assert';

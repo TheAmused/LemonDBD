@@ -3,7 +3,7 @@ import json
 import logging
 import threading
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 from app.scrapers.types import ScraperConfig
 
@@ -14,7 +14,7 @@ class ScraperStateManager:
     """Thread-safe state manager for scraper pipeline status and configuration persistence in database."""
 
     _lock = threading.Lock()
-    _status: Dict[str, Any] = {
+    _status: dict[str, Any] = {
         "is_running": False,
         "progress": 0,
         "total": 0,
@@ -26,7 +26,7 @@ class ScraperStateManager:
     }
 
     @classmethod
-    def get_status(cls) -> Dict[str, Any]:
+    def get_status(cls) -> dict[str, Any]:
         with cls._lock:
             return cls._status.copy()
 
@@ -41,7 +41,7 @@ class ScraperStateManager:
             cls._status["progress"] += 1
 
     @staticmethod
-    def load_config(config_file: Optional[Path] = None) -> ScraperConfig:
+    def load_config(config_file: Path | None = None) -> ScraperConfig:
         """Load scraper configuration from PostgreSQL database with file / in-memory fallback."""
         try:
             from app.core.extensions import db
@@ -59,7 +59,6 @@ class ScraperStateManager:
         except Exception as db_err:
             logger.debug(f"Database load for ScraperSetting not available: {db_err}")
 
-        # Fallback to local file if provided and exists
         if config_file and config_file.exists():
             try:
                 with open(config_file, "r", encoding="utf-8") as f:
@@ -72,8 +71,8 @@ class ScraperStateManager:
 
     @staticmethod
     def save_config(
-        config_file: Optional[Path],
-        data: Union[ScraperConfig, Dict[str, Any]],
+        config_file: Path | None,
+        data: ScraperConfig | dict[str, Any],
     ) -> ScraperConfig:
         """Persist scraper configuration to PostgreSQL database and optional file."""
         if isinstance(data, ScraperConfig):
@@ -85,7 +84,6 @@ class ScraperStateManager:
         else:
             raise ValueError("Data must be a ScraperConfig instance or a dict")
 
-        # Save to PostgreSQL database
         try:
             from app.core.extensions import db
             from app.models.minigames import ScraperSetting
@@ -109,7 +107,6 @@ class ScraperStateManager:
         except Exception as db_err:
             logger.debug(f"Database persistence for ScraperSetting skipped: {db_err}")
 
-        # If a config_file path is explicitly provided, also write to it
         if config_file:
             try:
                 config_file.parent.mkdir(parents=True, exist_ok=True)

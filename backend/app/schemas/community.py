@@ -1,6 +1,5 @@
 # backend/app/schemas/community.py
 from datetime import datetime
-from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -16,7 +15,7 @@ class DailyQuestBase(BaseModel):
 
 class DailyQuestResponse(DailyQuestBase):
     id: int
-    created_at: Optional[datetime] = None
+    created_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -27,7 +26,7 @@ class CommunityBuildBase(BaseModel):
     role: str = Field(..., max_length=20)
     category: str = Field(..., max_length=50)
     character_id: str = "all"
-    perks: List[str] = []
+    perks: list[str] = []
     upvotes: int = 0
     author: str = "Community"
 
@@ -38,12 +37,12 @@ class CommunityBuildCreate(BaseModel):
     role: str
     category: str
     character_id: str = "all"
-    perks: List[str] = Field(..., max_length=4)
+    perks: list[str] = Field(..., min_length=1, max_length=4)
 
 
 class CommunityBuildResponse(CommunityBuildBase):
     id: int
-    created_at: Optional[datetime] = None
+    created_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -62,39 +61,38 @@ class CustomPerkBase(BaseModel):
 class CustomPerkCreate(BaseModel):
     name: str = Field(..., min_length=2, max_length=150)
     role: str
-    character_name: Optional[str] = "Teachable"
-    rarity: Optional[str] = "Very Rare"
-    icon_preset: Optional[str] = "sparkles"
+    character_name: str | None = "Teachable"
+    rarity: str | None = "Very Rare"
+    icon_preset: str | None = "sparkles"
     description: str = Field(..., min_length=5)
 
 
 class CustomPerkResponse(CustomPerkBase):
     id: int
-    created_at: Optional[datetime] = None
+    created_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class BugReportBase(BaseModel):
     reporter_name: str = Field(..., max_length=100)
-    reporter_email: Optional[str] = Field(None, max_length=150)
+    reporter_email: str | None = Field(None, max_length=150)
     title: str = Field(..., max_length=200)
     category: str = Field("General", max_length=50)
     message: str
-    images: List[str] = []
+    images: list[str] = []
 
 
 class BugReportCreate(BugReportBase):
-    user_id: Optional[int] = None
+    user_id: int | None = None
 
 
 class BugReportResponse(BugReportBase):
     id: int
-    user_id: Optional[int] = None
+    user_id: int | None = None
     status: str
-    admin_notes: Optional[str] = ""
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    admin_notes: str | None = ""
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
-

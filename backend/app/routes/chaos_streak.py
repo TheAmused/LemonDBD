@@ -1,11 +1,11 @@
 # backend/app/routes/chaos_streak.py
-from flask import Blueprint, current_app, jsonify, request, g
+from flask import Blueprint, current_app, g, jsonify, request
+from app.core.security import login_required
 from app.services.chaos.constants import DIFFICULTIES
 from app.services.chaos_service import ChaosService
-from app.core.security import login_required
 
 chaos_streak_bp = Blueprint("chaos_streak", __name__, url_prefix="/api/v1/chaos-streak")
-_default_service = None
+_default_service: ChaosService | None = None
 
 
 def get_chaos_service() -> ChaosService:
@@ -17,7 +17,7 @@ def get_chaos_service() -> ChaosService:
     return _default_service
 
 
-def _clean_difficulty(difficulty):
+def _clean_difficulty(difficulty: str | None) -> str | None:
     if difficulty not in DIFFICULTIES:
         return None
     return difficulty

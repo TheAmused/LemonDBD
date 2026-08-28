@@ -1,3 +1,4 @@
+// frontend/src/__tests__/unit/voiceClientModel.test.ts
 // frontend/src/utils/__tests__/voiceClientModel.test.ts
 import test from 'node:test';
 import assert from 'node:assert';

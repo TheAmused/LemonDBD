@@ -1,5 +1,4 @@
 # backend/app/services/user/profile.py
-from typing import Optional, Tuple
 from sqlalchemy import select
 
 from app.core.extensions import db
@@ -7,17 +6,17 @@ from app.core.security import hash_password
 from app.models import User
 
 
-def fetch_user_by_id(user_id: int) -> Optional[User]:
+def fetch_user_by_id(user_id: int) -> User | None:
     """Retrieve user entity by primary key."""
     return db.session.get(User, user_id)
 
 
 def modify_user_profile(
     user_id: int,
-    email: Optional[str] = None,
-    avatar_url: Optional[str] = None,
-    new_password: Optional[str] = None,
-) -> Tuple[Optional[User], Optional[str]]:
+    email: str | None = None,
+    avatar_url: str | None = None,
+    new_password: str | None = None,
+) -> tuple[User | None, str | None]:
     """Update profile attributes including email address, avatar, or password."""
     user = db.session.get(User, user_id)
     if not user:
@@ -43,4 +42,3 @@ def modify_user_profile(
 
     db.session.commit()
     return user, None
-

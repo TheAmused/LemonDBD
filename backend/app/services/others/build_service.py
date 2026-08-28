@@ -1,6 +1,14 @@
 # backend/app/services/others/build_service.py
-import json
+import logging
+from flask import current_app
+from sqlalchemy import func, or_, select
+
+from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps, safe_json_loads
+from app.models import CommunityBuild
 from app.services.db_service import DatabaseService
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_BUILDS = [
     {
@@ -11,7 +19,7 @@ DEFAULT_BUILDS = [
         "character_id": "huntress",
         "perks": ["Barbecue & Chilli", "I'm All Ears", "Scourge Hook: Pain Resonance", "Lethal Pursuer"],
         "upvotes": 342,
-        "author": "Otzdarva"
+        "author": "Otzdarva",
     },
     {
         "title": "Meta Survivor Chase Build",
@@ -21,7 +29,7 @@ DEFAULT_BUILDS = [
         "character_id": "meg_thomas",
         "perks": ["Sprint Burst", "Adrenaline", "Windows of Opportunity", "Resilience"],
         "upvotes": 289,
-        "author": "Meta Analytics"
+        "author": "Meta Analytics",
     },
     {
         "title": "Meme Head On Squad",
@@ -31,7 +39,7 @@ DEFAULT_BUILDS = [
         "character_id": "jane_romero",
         "perks": ["Head On", "Flashbang", "Quick & Quiet", "Deception"],
         "upvotes": 215,
-        "author": "SwinySquad"
+        "author": "SwinySquad",
     },
     {
         "title": "Hex Dominator Trapper",
@@ -41,7 +49,7 @@ DEFAULT_BUILDS = [
         "character_id": "trapper",
         "perks": ["Hex: Ruin", "Hex: Undying", "Hex: Pentimento", "Corrupt Intervention"],
         "upvotes": 198,
-        "author": "Otzdarva"
+        "author": "Otzdarva",
     },
     {
         "title": "Stealth Ninja Myers",
@@ -51,7 +59,7 @@ DEFAULT_BUILDS = [
         "character_id": "shape",
         "perks": ["Monitor & Abuse", "Tinkerer", "Discordance", "Play with Your Food"],
         "upvotes": 174,
-        "author": "StalkerNinja"
+        "author": "StalkerNinja",
     },
     {
         "title": "Gen Pressure Merchant",
@@ -61,7 +69,7 @@ DEFAULT_BUILDS = [
         "character_id": "skull_merchant",
         "perks": ["Pop Goes the Weasel", "Scourge Hook: Pain Resonance", "Overcharge", "Nowhere to Hide"],
         "upvotes": 156,
-        "author": "TrialDoctor"
+        "author": "TrialDoctor",
     },
     {
         "title": "Aggressive Chase King",
@@ -71,23 +79,14 @@ DEFAULT_BUILDS = [
         "character_id": "wraith",
         "perks": ["Save the Best for Last", "Bamboozle", "Enduring", "Spirit Fury"],
         "upvotes": 142,
-        "author": "FastDowns"
-    }
+        "author": "FastDowns",
+    },
 ]
-
-
-import logging
-from flask import current_app
-from sqlalchemy import select, or_, func
-from app.core.extensions import db
-from app.models import CommunityBuild
-
-logger = logging.getLogger(__name__)
 
 
 class BuildService:
     def __init__(self, db_service=None):
-        self._use_sqlalchemy = (db_service is None)
+        self._use_sqlalchemy = db_service is None
         self.db_service = db_service or DatabaseService()
 
     def _init_table(self):
@@ -124,7 +123,7 @@ class BuildService:
                                     role=b["role"].lower(),
                                     category=b["category"].lower(),
                                     character_id=b.get("character_id", "all"),
-                                    perks_json=json.dumps(b.get("perks", [])),
+                                    perks_json=safe_json_dumps(b.get("perks", []), default_val="[]"),
                                     upvotes=b.get("upvotes", 0),
                                     author=b.get("author", "Community"),
                                 )
@@ -150,7 +149,7 @@ class BuildService:
                     b["role"].lower(),
                     b["category"].lower(),
                     b.get("character_id", "all"),
-                    json.dumps(b.get("perks", [])),
+                    safe_json_dumps(b.get("perks", []), default_val="[]"),
                     b.get("upvotes", 0),
                     b.get("author", "Community")
                 ))
@@ -219,10 +218,7 @@ class BuildService:
         builds = []
         for r in rows:
             item = dict(r)
-            try:
-                item["perks"] = json.loads(item.get("perks_json") or "[]")
-            except Exception:
-                item["perks"] = []
+            item["perks"] = safe_json_loads(item.get("perks_json"), default=[])
             builds.append(item)
 
         return builds
@@ -246,10 +242,7 @@ class BuildService:
             return None
 
         item = dict(row)
-        try:
-            item["perks"] = json.loads(item.get("perks_json") or "[]")
-        except Exception:
-            item["perks"] = []
+        item["perks"] = safe_json_loads(item.get("perks_json"), default=[])
         return item
 
     def create_build(self, title, description, role, category, perks, character_id="all", author="Community"):
@@ -267,7 +260,7 @@ class BuildService:
             raise ValueError("Title is required.")
 
         perks_list = perks if isinstance(perks, list) else []
-        perks_json = json.dumps(perks_list)
+        perks_json = safe_json_dumps(perks_list, default_val="[]")
 
         if self._use_sqlalchemy:
             try:

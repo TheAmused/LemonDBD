@@ -1,6 +1,5 @@
 # backend/app/routes/admin_control.py
-from typing import Optional
-
+from typing import Any
 from flask import Blueprint, g, jsonify, request
 from sqlalchemy import and_, case, select
 
@@ -20,11 +19,10 @@ admin_control_bp = Blueprint("admin_control", __name__, url_prefix="/api/v1/admi
 MAX_REASON_LENGTH = 255
 
 
-def _clean_reason(data: dict) -> Optional[str]:
+def _clean_reason(data: dict[str, Any]) -> str | None:
     """Trims and length-validates the admin-supplied disable reason before
-    it hits a String(255) column. Raises ValueError (caught as a 400) on
-    overflow instead of letting a DB-level DataError 500 the request and
-    leave the disable action silently un-applied."""
+    it hits a String(255) column. Raises ValueError on overflow instead of
+    letting a DB-level DataError 500 the request."""
     reason = (data.get("reason") or "").strip() or None
     if reason and len(reason) > MAX_REASON_LENGTH:
         raise ValueError(f"Reason must be {MAX_REASON_LENGTH} characters or fewer.")
@@ -41,9 +39,7 @@ def list_characters_for_admin():
     stmt = select(Character)
     if role and role.lower() != "all":
         stmt = stmt.where(Character.role == role)
-    # Same release-order convention as the public /api/v1/characters list
-    # (queries_character.fetch_characters), so admins see killers/survivors
-    # in the order players actually recognize them by, not A-Z.
+
     stmt = stmt.order_by(
         case(
             (and_(Character.release_number.is_not(None), Character.release_number > 0), Character.release_number),
@@ -76,9 +72,7 @@ def list_characters_for_admin():
 @admin_control_bp.route("/characters/<int:character_id>/disable", methods=["PUT"])
 @admin_required
 def set_character_disabled(character_id: int):
-    """Enables/disables a killer or survivor from being rolled into new
-    challenge pools. Does not retroactively affect already-frozen
-    in-progress runs -- see the freeze/refreeze model each mode uses."""
+    """Enables/disables a killer or survivor from being rolled into new challenge pools."""
     character = db.session.get(Character, character_id)
     if not character:
         return jsonify({"error": "Character not found."}), 404
@@ -118,8 +112,7 @@ def set_character_disabled(character_id: int):
 @admin_control_bp.route("/perks", methods=["GET"])
 @admin_required
 def list_perks_for_admin():
-    """Lists perks with their disable state, for the admin kill-switch UI.
-    Defaults to every category -- a broken perk can ship on either side."""
+    """Lists perks with their disable state, for the admin kill-switch UI."""
     category = request.args.get("category", "All").strip()
     search = request.args.get("search", "").strip().lower()
 
@@ -155,9 +148,7 @@ def list_perks_for_admin():
 @admin_control_bp.route("/perks/<int:perk_id>/disable", methods=["PUT"])
 @admin_required
 def set_perk_disabled(perk_id: int):
-    """Enables/disables a single perk from being offered in new challenge
-    pools/pages. Same freeze-model caveat as character disabling: won't
-    retroactively pull it out of an already-frozen in-progress run."""
+    """Enables/disables a single perk from being offered in new challenge pools/pages."""
     perk = db.session.get(Perk, perk_id)
     if not perk:
         return jsonify({"error": "Perk not found."}), 404

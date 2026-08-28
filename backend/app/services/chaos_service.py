@@ -1,12 +1,13 @@
 # backend/app/services/chaos_service.py
-import json
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import ChaosMatchLog, ChaosRun
+from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.chaos import (
     checkpoint_interval,
     draw_addon_rarities,
@@ -18,27 +19,26 @@ from app.services.chaos import (
     resolve_perk_names_by_ids,
     resolve_perks_by_ids,
 )
-from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.ownership_service import OwnershipService
 
 logger = logging.getLogger(__name__)
 
 
 class ChaosService:
-    def __init__(self, ownership_service: Optional[OwnershipService] = None):
+    def __init__(self, ownership_service: OwnershipService | None = None):
         self.ownership_service = ownership_service or OwnershipService()
 
     def _freeze_pools(self, r: ChaosRun) -> None:
-        r.owned_killers_json = json.dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
-        r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
+        r.owned_killers_json = safe_json_dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
+        r.unlocked_perks_json = safe_json_dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
 
     def _freeze_pools_if_needed(self, r: ChaosRun) -> None:
-        if not json.loads(r.owned_killers_json or "[]"):
-            r.owned_killers_json = json.dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
-        if not json.loads(r.unlocked_perks_json or "[]"):
-            r.unlocked_perks_json = json.dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
+        if not safe_json_loads(r.owned_killers_json, default=[]):
+            r.owned_killers_json = safe_json_dumps(get_owned_killer_ids(r.user_id, self.ownership_service))
+        if not safe_json_loads(r.unlocked_perks_json, default=[]):
+            r.unlocked_perks_json = safe_json_dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
 
-    def _with_resolved_pool(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def _with_resolved_pool(self, data: dict[str, Any]) -> dict[str, Any]:
         killer_ids = data["owned_killer_ids"]
         perk_ids = data["unlocked_perk_ids"]
         data["pool_frozen"] = bool(killer_ids) and bool(perk_ids)
@@ -56,31 +56,23 @@ class ChaosService:
         return perks, updated_used, addon_rarities
 
     def _redraw_and_maybe_refreeze(self, r: ChaosRun, used_perks, streak_after: int) -> None:
-        """Shared tail of a loss (real or inactivity-triggered): redraw
-        perks against the frozen pool, and refreeze if the loss reset
-        progress all the way to zero. streak_after == 0 only happens on a
-        loss (a win always increments it), so this doubles as the
-        result == 'loss' check without needing the result string here."""
-        unlocked_detail = resolve_perks_by_ids(json.loads(r.unlocked_perks_json or "[]"))
+        unlocked_detail = resolve_perks_by_ids(safe_json_loads(r.unlocked_perks_json, default=[]))
         new_perks, updated_used, addon_rarities = self._draw_build(unlocked_detail, used_perks)
-        r.used_perks_json = json.dumps(updated_used)
-        r.current_perks_json = json.dumps(new_perks)
-        r.current_addon_rarities_json = json.dumps(addon_rarities)
+        r.used_perks_json = safe_json_dumps(updated_used)
+        r.current_perks_json = safe_json_dumps(new_perks)
+        r.current_addon_rarities_json = safe_json_dumps(addon_rarities)
         r.perks_revealed = False
         if streak_after == 0:
             self._freeze_pools(r)
 
     def _compute_loss_outcome(self, r: ChaosRun):
-        """Pure helper to compute all streak/checkpoint reset state for a loss.
-        Mirrors the original calculate_chaos_loss_outcome function from the
-        old standalone module; brought onto the class (see History's identical history) when it was duplicated."""
         last_checkpoint = r.last_checkpoint_streak
         interval = checkpoint_interval(r.difficulty)
 
         if interval > 0:
             streak_after = last_checkpoint
-            completed = json.loads(r.checkpoint_killers_json or "[]")
-            used_perks = json.loads(r.checkpoint_used_perks_json or "[]")
+            completed = safe_json_loads(r.checkpoint_killers_json, default=[])
+            used_perks = safe_json_loads(r.checkpoint_used_perks_json, default=[])
             checkpoint_killers = list(completed)
             checkpoint_used_perks = list(used_perks)
         else:
@@ -93,7 +85,7 @@ class ChaosService:
 
         return streak_after, completed, used_perks, last_checkpoint, checkpoint_killers, checkpoint_used_perks
 
-    def get_or_create_run(self, user_id: int, difficulty: str) -> Dict[str, Any]:
+    def get_or_create_run(self, user_id: int, difficulty: str) -> dict[str, Any]:
         run = db.session.scalars(
             select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
         ).first()
@@ -117,15 +109,15 @@ class ChaosService:
             completed_killers_json="[]",
             checkpoint_killers_json="[]",
             checkpoint_used_perks_json="[]",
-            owned_killers_json=json.dumps(live_owned_ids),
-            unlocked_perks_json=json.dumps(live_unlocked_ids),
+            owned_killers_json=safe_json_dumps(live_owned_ids),
+            unlocked_perks_json=safe_json_dumps(live_unlocked_ids),
             perks_revealed=False,
         )
         unlocked_detail = resolve_perks_by_ids(live_unlocked_ids)
         perks, used_perks, addon_rarities = self._draw_build(unlocked_detail, [])
-        new_run.used_perks_json = json.dumps(used_perks)
-        new_run.current_perks_json = json.dumps(perks)
-        new_run.current_addon_rarities_json = json.dumps(addon_rarities)
+        new_run.used_perks_json = safe_json_dumps(used_perks)
+        new_run.current_perks_json = safe_json_dumps(perks)
+        new_run.current_addon_rarities_json = safe_json_dumps(addon_rarities)
         db.session.add(new_run)
         db.session.commit()
 
@@ -133,7 +125,7 @@ class ChaosService:
         data["checkpoint_interval"] = checkpoint_interval(difficulty)
         return data
 
-    def reveal(self, user_id: int, run_id: int) -> Dict[str, Any]:
+    def reveal(self, user_id: int, run_id: int) -> dict[str, Any]:
         r = db.session.scalars(
             select(ChaosRun).where(ChaosRun.id == run_id, ChaosRun.user_id == user_id)
         ).first()
@@ -146,7 +138,7 @@ class ChaosService:
         data["checkpoint_interval"] = checkpoint_interval(r.difficulty)
         return data
 
-    def reset_run(self, user_id: int, difficulty: str) -> Dict[str, Any]:
+    def reset_run(self, user_id: int, difficulty: str) -> dict[str, Any]:
         assert_challenge_mode_enabled("chaos")
         r = db.session.scalars(
             select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
@@ -157,7 +149,7 @@ class ChaosService:
         db.session.commit()
         return self.get_or_create_run(user_id, difficulty)
 
-    def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> Dict[str, Any]:
+    def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> dict[str, Any]:
         assert_challenge_mode_enabled("chaos")
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
@@ -177,12 +169,12 @@ class ChaosService:
         current_streak = r.current_streak
         best_streak = r.best_streak
         last_checkpoint = r.last_checkpoint_streak
-        completed = json.loads(r.completed_killers_json or "[]")
-        checkpoint_killers = json.loads(r.checkpoint_killers_json or "[]")
-        used_perks = json.loads(r.used_perks_json or "[]")
-        checkpoint_used_perks = json.loads(r.checkpoint_used_perks_json or "[]")
-        perks_this_round = json.loads(r.current_perks_json or "[]")
-        addon_rarities_this_round = json.loads(r.current_addon_rarities_json or "[]")
+        completed = safe_json_loads(r.completed_killers_json, default=[])
+        checkpoint_killers = safe_json_loads(r.checkpoint_killers_json, default=[])
+        used_perks = safe_json_loads(r.used_perks_json, default=[])
+        checkpoint_used_perks = safe_json_loads(r.checkpoint_used_perks_json, default=[])
+        perks_this_round = safe_json_loads(r.current_perks_json, default=[])
+        addon_rarities_this_round = safe_json_loads(r.current_addon_rarities_json, default=[])
         interval = checkpoint_interval(r.difficulty)
 
         if result == "win":
@@ -210,8 +202,8 @@ class ChaosService:
             run_id=run_id,
             killer_id=killer_id,
             result=result,
-            perks_json=json.dumps(perks_this_round),
-            addon_rarities_json=json.dumps(addon_rarities_this_round),
+            perks_json=safe_json_dumps(perks_this_round),
+            addon_rarities_json=safe_json_dumps(addon_rarities_this_round),
             streak_before=current_streak,
             streak_after=streak_after,
         ))
@@ -219,16 +211,14 @@ class ChaosService:
         r.current_streak = streak_after
         r.best_streak = best_after
         r.last_checkpoint_streak = last_checkpoint
-        r.completed_killers_json = json.dumps(completed)
-        r.checkpoint_killers_json = json.dumps(checkpoint_killers)
-        r.checkpoint_used_perks_json = json.dumps(checkpoint_used_perks)
+        r.completed_killers_json = safe_json_dumps(completed)
+        r.checkpoint_killers_json = safe_json_dumps(checkpoint_killers)
+        r.checkpoint_used_perks_json = safe_json_dumps(checkpoint_used_perks)
 
-        # completed_killers_json stays name-keyed (existing convention), so
-        # resolve the frozen id pool to current names before comparing.
-        owned_names = resolve_killer_names_by_ids(json.loads(r.owned_killers_json or "[]"))
+        owned_names = resolve_killer_names_by_ids(safe_json_loads(r.owned_killers_json, default=[]))
         if result == "win" and owned_names and all(name in completed for name in owned_names):
             r.status = "completed"
-            r.used_perks_json = json.dumps(used_perks)
+            r.used_perks_json = safe_json_dumps(used_perks)
             self._freeze_pools(r)
         else:
             self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
@@ -239,10 +229,6 @@ class ChaosService:
         return data
 
     def apply_inactivity_loss(self, run_id: int) -> None:
-        """Applies the same state transition submit_result's loss branch
-        would, without a killer_id -- there's no real match being played.
-        Used only by the inactivity cleanup job (Task 11). A no-op if the
-        run doesn't exist or is already completed."""
         r = db.session.scalars(select(ChaosRun).where(ChaosRun.id == run_id)).first()
         if not r or r.status == "completed":
             return
@@ -272,12 +258,12 @@ class ChaosService:
 
         r.current_streak = streak_after
         r.last_checkpoint_streak = last_checkpoint
-        r.completed_killers_json = json.dumps(completed)
-        r.checkpoint_killers_json = json.dumps(checkpoint_killers)
-        r.checkpoint_used_perks_json = json.dumps(checkpoint_used_perks)
+        r.completed_killers_json = safe_json_dumps(completed)
+        r.checkpoint_killers_json = safe_json_dumps(checkpoint_killers)
+        r.checkpoint_used_perks_json = safe_json_dumps(checkpoint_used_perks)
 
         self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
         db.session.commit()
 
-    def get_stats(self, user_id: int, difficulty: str) -> Dict[str, Any]:
+    def get_stats(self, user_id: int, difficulty: str) -> dict[str, Any]:
         return fetch_chaos_user_stats(user_id, difficulty)

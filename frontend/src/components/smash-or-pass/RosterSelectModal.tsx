@@ -420,8 +420,8 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 typeof window !== 'undefined' && window.innerWidth < 640
                   ? 145
                   : typeof window !== 'undefined' && window.innerWidth < 1024
-                  ? 205
-                  : 260;
+                    ? 205
+                    : 260;
 
               const translateX = visualOffset * spreadUnit;
               const rotateY = Math.max(-55, Math.min(55, -visualOffset * 30));
@@ -443,11 +443,10 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       commitSelection();
                     }
                   }}
-                  className={`absolute w-[240px] sm:w-[300px] md:w-[350px] lg:w-[370px] h-[360px] sm:h-[450px] md:h-[500px] lg:h-[540px] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${
-                    isCenter
+                  className={`absolute w-[240px] sm:w-[300px] md:w-[350px] lg:w-[370px] h-[360px] sm:h-[450px] md:h-[500px] lg:h-[540px] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
                       ? 'border-2 sm:border-[3px] border-[#ff0055] shadow-[0_0_55px_rgba(255,0,85,0.75),inset_0_0_25px_rgba(255,0,85,0.3)]'
                       : 'border border-pink-500/20 shadow-[0_0_25px_rgba(0,0,0,0.85)]'
-                  }`}
+                    }`}
                   style={{
                     transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
                     opacity,

@@ -1,6 +1,5 @@
 # backend/app/services/history/roster.py
-from typing import Any, Dict, List
-
+from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
@@ -10,19 +9,19 @@ from app.services.ownership_service import OwnershipService
 ROW_SIZE = 5
 
 
-def build_rows(owned_killer_names: List[str]) -> List[List[str]]:
+def build_rows(owned_killer_names: list[str]) -> list[list[str]]:
     return [
         owned_killer_names[i:i + ROW_SIZE]
         for i in range(0, len(owned_killer_names), ROW_SIZE)
     ]
 
 
-def _release_key(character: Dict[str, Any]):
+def _release_key(character: dict[str, Any]):
     release_number = character.get("release_number")
     return release_number if release_number is not None else float("inf")
 
 
-def get_owned_killer_names_by_release(user_id: int, ownership_service: OwnershipService) -> List[str]:
+def get_owned_killer_names_by_release(user_id: int, ownership_service: OwnershipService) -> list[str]:
     owned = [
         c for c in ownership_service.get_user_characters(user_id, role="Killer")
         if c["is_owned"] and not c.get("is_disabled")
@@ -31,11 +30,9 @@ def get_owned_killer_names_by_release(user_id: int, ownership_service: Ownership
     return [c["name"] for c in owned]
 
 
-def get_owned_killer_ids_by_release(user_id: int, ownership_service: OwnershipService) -> List[int]:
+def get_owned_killer_ids_by_release(user_id: int, ownership_service: OwnershipService) -> list[int]:
     """Same release-order filtering as get_owned_killer_names_by_release,
-    but keyed by the killer's stable id -- a later rename won't drop it
-    from an already-frozen run's pool, and resolving the ids back to
-    names preserves this same release order (see resolve_killer_names_by_ids)."""
+    but keyed by the killer's stable id."""
     owned = [
         c for c in ownership_service.get_user_characters(user_id, role="Killer")
         if c["is_owned"] and not c.get("is_disabled")
@@ -44,10 +41,8 @@ def get_owned_killer_ids_by_release(user_id: int, ownership_service: OwnershipSe
     return [c["id"] for c in owned]
 
 
-def resolve_killer_names_by_ids(ids: List[int]) -> List[str]:
-    """Turns a frozen killer id list back into current names, in the same
-    order as ids (release order, if ids came from get_owned_killer_ids_by_release).
-    Unknown ids (a killer deleted outright) are dropped."""
+def resolve_killer_names_by_ids(ids: list[int]) -> list[str]:
+    """Turns a frozen killer id list back into current names, in release order."""
     if not ids:
         return []
     rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
@@ -55,7 +50,7 @@ def resolve_killer_names_by_ids(ids: List[int]) -> List[str]:
     return [by_id[i] for i in ids if i in by_id]
 
 
-def get_general_killer_perk_names() -> List[str]:
+def get_general_killer_perk_names() -> list[str]:
     stmt = select(Perk.name).where(
         Perk.category == "Killer",
         (Perk.character_id.is_(None)) | (Perk.is_generic_counterpart.is_(True)),
@@ -64,7 +59,7 @@ def get_general_killer_perk_names() -> List[str]:
     return list(db.session.scalars(stmt).all())
 
 
-def get_killer_teachable_perk_names(killer_name: str) -> List[str]:
+def get_killer_teachable_perk_names(killer_name: str) -> list[str]:
     character = db.session.scalars(
         select(Character).where(Character.name == killer_name)
     ).first()

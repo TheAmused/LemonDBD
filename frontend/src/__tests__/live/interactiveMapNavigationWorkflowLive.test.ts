@@ -1,3 +1,4 @@
+// frontend/src/__tests__/live/interactiveMapNavigationWorkflowLive.test.ts
 import test from "node:test";
 import assert from "node:assert/strict";
 

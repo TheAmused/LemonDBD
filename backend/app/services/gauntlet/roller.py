@@ -1,6 +1,6 @@
 # backend/app/services/gauntlet/roller.py
 import random
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from sqlalchemy import select
 
@@ -14,11 +14,7 @@ from app.services.gauntlet.constants import (
 from app.services.ownership_service import OwnershipService
 
 
-def get_owned_character_names(user_id: int, role: str, ownership_service: OwnershipService) -> List[str]:
-    """Owned character names for a role, capped to the original challenge's
-    roster (43 killers through The Slasher, 52 survivors through Kwon
-    Tae-young). A character with no recorded release_number stays in the pool
-    rather than being dropped by an unrelated data gap."""
+def get_owned_character_names(user_id: int, role: str, ownership_service: OwnershipService) -> list[str]:
     db_role = "Killer" if role == "killer" else "Survivor"
     owned = ownership_service.get_user_characters(user_id, role=db_role)
     limit = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
@@ -29,10 +25,7 @@ def get_owned_character_names(user_id: int, role: str, ownership_service: Owners
     return [c["name"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
 
 
-def get_owned_character_ids(user_id: int, role: str, ownership_service: OwnershipService) -> List[int]:
-    """Same filtering as get_owned_character_names, but keyed by the
-    character's stable id -- a later rename won't drop it from an
-    already-frozen run's pool the way a name-keyed snapshot would."""
+def get_owned_character_ids(user_id: int, role: str, ownership_service: OwnershipService) -> list[int]:
     db_role = "Killer" if role == "killer" else "Survivor"
     owned = ownership_service.get_user_characters(user_id, role=db_role)
     limit = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
@@ -43,10 +36,7 @@ def get_owned_character_ids(user_id: int, role: str, ownership_service: Ownershi
     return [c["id"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
 
 
-def resolve_character_names_by_ids(ids: List[int]) -> List[str]:
-    """Turns a frozen character id list back into current names, in the
-    same order as ids. Unknown ids (a character deleted outright) are
-    silently dropped."""
+def resolve_character_names_by_ids(ids: list[int]) -> list[str]:
     if not ids:
         return []
     rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
@@ -54,8 +44,7 @@ def resolve_character_names_by_ids(ids: List[int]) -> List[str]:
     return [by_id[i] for i in ids if i in by_id]
 
 
-def get_character_teachable_perks(character_name: str) -> List[Dict[str, Any]]:
-    """The target's own teachable perks, shown as the suggested first-slot picks."""
+def get_character_teachable_perks(character_name: str) -> list[dict[str, Any]]:
     perks = db.session.scalars(
         select(Perk)
         .join(Character, Perk.character_id == Character.id)
@@ -66,7 +55,6 @@ def get_character_teachable_perks(character_name: str) -> List[Dict[str, Any]]:
 
 
 def pick_initial_target(user_id: int, role: str, ownership_service: OwnershipService) -> str:
-    """Selects an initial target character from the owned pool with fallback defaults."""
     names = get_owned_character_names(user_id, role, ownership_service)
     if names:
         return random.choice(names)
@@ -76,14 +64,10 @@ def pick_initial_target(user_id: int, role: str, ownership_service: OwnershipSer
 def roll_gauntlet_target(
     role: str,
     current_streak: int,
-    completed_characters: List[str],
-    owned_characters: List[str],
-    target_character: Optional[str] = None,
-) -> Tuple[str, Dict[str, Any], Dict[str, Any]]:
-    """
-    Selects the next target character and its build guide.
-    Returns: (target_character, loadout_dict, tier_info_dict)
-    """
+    completed_characters: list[str],
+    owned_characters: list[str],
+    target_character: str | None = None,
+) -> tuple[str, dict[str, Any], dict[str, Any]]:
     tier_info = get_tier_info(current_streak, role)
 
     remaining = [c for c in owned_characters if c not in completed_characters]

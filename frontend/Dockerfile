@@ -1,3 +1,4 @@
+# frontend/Dockerfile
 # Stage 1: Base Alpine Setup
 FROM node:alpine AS base
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false

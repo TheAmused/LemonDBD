@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/OfferingsSection.tsx
 import React, { useState, useMemo } from 'react';
 import {
   Search,

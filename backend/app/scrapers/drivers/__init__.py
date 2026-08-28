@@ -2,9 +2,6 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
-
 from app.scrapers.drivers.base import BaseWikiDriver
 from app.scrapers.drivers.de import WikiGGDriverDE
 from app.scrapers.drivers.en import (
@@ -20,11 +17,11 @@ from app.scrapers.drivers.fr import WikiGGDriverFR
 from app.scrapers.drivers.it import WikiGGDriverIT
 from app.scrapers.drivers.ja import WikiGGDriverJP
 from app.scrapers.drivers.pl import WikiGGDriverPL
-from app.scrapers.types import AddonData, CharacterData, ItemData, PerkData
+from app.scrapers.types import AddonData, CharacterData, ItemData, OfferingData, PerkData
 
 logger = logging.getLogger(__name__)
 
-LANGUAGE_DRIVERS: Dict[str, Type[BaseWikiDriver]] = {
+LANGUAGE_DRIVERS: dict[str, type[BaseWikiDriver]] = {
     "en": WikiGGDriverEN,
     "pl": WikiGGDriverPL,
     "de": WikiGGDriverDE,
@@ -37,12 +34,7 @@ LANGUAGE_DRIVERS: Dict[str, Type[BaseWikiDriver]] = {
 
 
 class WikiGGScraperDriver(WikiGGDriverEN):
-    """Unified multi-language Dead by Daylight wiki.gg scraper orchestrator.
-
-    By default, executes the original canonical English scraping logic.
-    When run with languages (e.g. languages='all' or ['pl', 'de', 'es', 'ja', ...]),
-    it runs English first, then runs each dedicated language driver to enrich translations.
-    """
+    """Unified multi-language Dead by Daylight wiki.gg scraper orchestrator."""
 
     def fetch_lang_page_html(self, lang: str, page_title: str) -> str:
         lang_key = lang.lower().strip()
@@ -54,14 +46,12 @@ class WikiGGScraperDriver(WikiGGDriverEN):
 
     def scrape_translations(
         self,
-        characters: List[CharacterData],
-        perks: List[PerkData],
-        items: List[ItemData],
-        addons: List[AddonData],
-        languages: Optional[Union[str, List[str]]] = None,
+        characters: list[CharacterData],
+        perks: list[PerkData],
+        items: list[ItemData],
+        addons: list[AddonData],
+        languages: str | list[str] | None = None,
     ) -> None:
-        """Enriches entities using dedicated language drivers."""
-        # Initialize English baseline in translations dict
         for p in perks:
             if "en" not in p.translations and p.description:
                 p.translations["en"] = {"name": p.name, "description": p.description}
@@ -107,9 +97,8 @@ class WikiGGScraperDriver(WikiGGDriverEN):
 
     def scrape_all(
         self,
-        languages: Optional[Union[str, List[str]]] = None,
-    ) -> Tuple[List[CharacterData], List[PerkData], List[ItemData], List[AddonData], List[OfferingData]]:
-        """Scrapes canonical data and optionally enriches with multi-language translations."""
+        languages: str | list[str] | None = None,
+    ) -> tuple[list[CharacterData], list[PerkData], list[ItemData], list[AddonData], list[OfferingData]]:
         characters, perks, items, addons, offerings = super().scrape_all()
 
         if languages:

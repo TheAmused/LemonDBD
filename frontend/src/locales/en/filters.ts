@@ -1,3 +1,4 @@
+// frontend/src/locales/en/filters.ts
 export default {
   "searchPlaceholder": "Search...",
   "category": "Category",

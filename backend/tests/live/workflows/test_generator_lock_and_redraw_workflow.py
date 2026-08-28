@@ -1,10 +1,12 @@
 # backend/tests/live/workflows/test_generator_lock_and_redraw_workflow.py
 import pytest
 
-def test_generator_lock_and_redraw_workflow(live_client, auth_client_factory):
-    client, headers, user = auth_client_factory("gen_user_lock", "genlock@test.com", "pass123")
 
-    # Step 1: Save generator configuration
+@pytest.mark.live
+@pytest.mark.workflow
+def test_generator_lock_and_redraw_workflow(live_client, auth_client_factory):
+    client, headers, user = auth_client_factory("gen_user_lock", "genlock@example.com", "pass123")
+
     config_res = client.post("/api/v1/generator/config", json={
         "role": "Survivor",
         "mode": "random",
@@ -12,7 +14,6 @@ def test_generator_lock_and_redraw_workflow(live_client, auth_client_factory):
     })
     assert config_res.status_code == 200
 
-    # Step 2: Draw initial 4 perks
     draw1 = client.post("/api/v1/generator/draw", json={
         "role": "Survivor",
         "perks": ["Sprint Burst", "Self-Care", "Adrenaline", "Iron Will"]
@@ -21,7 +22,6 @@ def test_generator_lock_and_redraw_workflow(live_client, auth_client_factory):
     drawn1 = draw1.get_json()["drawn_perks"]
     assert len(drawn1) >= 4
 
-    # Step 3: Draw additional perks (simulate lock & redraw)
     draw2 = client.post("/api/v1/generator/draw", json={
         "role": "Survivor",
         "perks": ["Sprint Burst", "Adrenaline", "Kindred", "Decisive Strike"]
@@ -32,7 +32,6 @@ def test_generator_lock_and_redraw_workflow(live_client, auth_client_factory):
     assert "Sprint Burst" in drawn2
     assert "Adrenaline" in drawn2
 
-    # Step 4: Reset generator state
     reset_res = client.post("/api/v1/generator/reset", json={"role": "Survivor"})
     assert reset_res.status_code == 200
     assert len(reset_res.get_json()["drawn_perks"]) == 0

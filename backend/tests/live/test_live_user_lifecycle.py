@@ -2,7 +2,7 @@
 import pytest
 from sqlalchemy import select
 from app.core.extensions import db
-from app.core.security import hash_password, verify_password
+from app.core.security import verify_password
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.character import Character, Survivor
 from app.models.perk import Perk
@@ -16,10 +16,9 @@ class TestLiveUserAndOwnershipLifecycle:
         with live_app.app_context():
             user_service = UserService()
             username = "live_test_user_alpha"
-            email = "alpha@dbd-live-test.local"
+            email = "alpha@example.com"
             password = "liveSecurePassword2026!"
 
-            # Clean previous run artifact if any
             existing = db.session.scalars(select(User).where(User.username == username)).first()
             if existing:
                 db.session.delete(existing)
@@ -35,12 +34,10 @@ class TestLiveUserAndOwnershipLifecycle:
             assert user.username == username
             assert verify_password(password, user.password_hash) is True
 
-            # Query afresh via SQLAlchemy 2.0 select
             fetched = db.session.scalars(select(User).where(User.id == user.id)).one()
             assert fetched.email == email
             assert fetched.role == "user"
 
-            # Verify user
             fetched.is_verified = True
             db.session.commit()
 
@@ -49,7 +46,6 @@ class TestLiveUserAndOwnershipLifecycle:
 
     def test_user_ownership_relations_integrity(self, live_app) -> None:
         with live_app.app_context():
-            # Ensure a canonical character & perk exist
             test_char = db.session.scalars(select(Character).where(Character.name == "Live Ace Visconti")).first()
             if not test_char:
                 test_char = Survivor(
@@ -73,19 +69,17 @@ class TestLiveUserAndOwnershipLifecycle:
             user_service = UserService()
             user, _ = user_service.register_user(
                 username="live_gambler_ace",
-                email="ace_gambler@live-test.local",
+                email="ace_gambler@example.com",
                 password="acePassword777!",
                 role="user",
             )
             db.session.commit()
 
-            # Assign character and perk ownership
             char_ownership = UserCharacterOwnership(user_id=user.id, character_id=test_char.id, is_owned=True)
             perk_ownership = UserPerkOwnership(user_id=user.id, perk_id=test_perk.id, is_unlocked=True)
             db.session.add_all([char_ownership, perk_ownership])
             db.session.commit()
 
-            # Verify back-populates cascade
             reloaded_user = db.session.get(User, user.id)
             assert len(reloaded_user.character_ownerships) == 1
             assert reloaded_user.character_ownerships[0].character_id == test_char.id
@@ -117,7 +111,6 @@ class TestLiveUserAndOwnershipLifecycle:
             gauntlet_setting.disabled_reason = "Live test maintenance"
             db.session.commit()
 
-            # Verify persistence
             persisted_audit = db.session.scalars(
                 select(AdminAuditLog).where(AdminAuditLog.admin_user_id == admin_user.id)
             ).all()

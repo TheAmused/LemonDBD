@@ -19,14 +19,13 @@ class TestLiveChallengesAndEntities:
             if not user:
                 user, _ = user_service.register_user(
                     username=username,
-                    email="runner@dbd-live.local",
+                    email="runner@example.com",
                     password="RunnerPassword123!",
                     role="user",
                 )
                 user.is_verified = True
                 db.session.commit()
 
-            # Clean any old run for idempotency
             existing_run = db.session.scalars(
                 select(GauntletRun).where(
                     GauntletRun.user_id == user.id,
@@ -50,7 +49,6 @@ class TestLiveChallengesAndEntities:
             db.session.add(run)
             db.session.flush()
 
-            # Add match log
             log = GauntletMatchLog(
                 run_id=run.id,
                 role="Killer",
@@ -66,7 +64,6 @@ class TestLiveChallengesAndEntities:
             db.session.add(log)
             db.session.commit()
 
-            # Verify in DB
             reloaded_run = db.session.get(GauntletRun, run.id)
             assert reloaded_run.current_streak == 1
             assert len(reloaded_run.match_logs) == 1
@@ -107,7 +104,6 @@ class TestLiveChallengesAndEntities:
             db.session.add(stat)
             db.session.flush()
 
-            # Cast 2 smashes and 1 pass
             vote1 = Vote(entity_id=entity.id, vote_type="smash", session_id="sess_alpha")
             vote2 = Vote(entity_id=entity.id, vote_type="super_smash", session_id="sess_beta")
             vote3 = Vote(entity_id=entity.id, vote_type="pass", session_id="sess_gamma")
@@ -119,7 +115,6 @@ class TestLiveChallengesAndEntities:
             stat.calculate_rate()
             db.session.commit()
 
-            # Verify aggregation and cascade
             reloaded_stat = db.session.scalars(
                 select(EntityStat).where(EntityStat.entity_id == entity.id)
             ).one()

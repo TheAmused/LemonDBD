@@ -1,14 +1,16 @@
 # backend/tests/live/workflows/test_auth_ownership_workflow.py
 import pytest
 from sqlalchemy import select
-from app.models import Character, Perk, UserCharacterOwnership, UserPerkOwnership
 from app.core.extensions import db
+from app.models import Perk
 
+
+@pytest.mark.live
+@pytest.mark.workflow
 def test_full_auth_and_ownership_cascade_workflow(live_client, live_app, auth_client_factory):
-    # Step 1: Register new account
     reg_res = live_client.post("/api/v1/auth/register", json={
         "username": "workflow_owner_1",
-        "email": "owner1@workflow.com",
+        "email": "owner1@example.com",
         "password": "StrongPassword123!",
     })
     assert reg_res.status_code == 201
@@ -16,20 +18,17 @@ def test_full_auth_and_ownership_cascade_workflow(live_client, live_app, auth_cl
     token = reg_res.get_json()["token"]
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
-    # Step 2: Login via /api/v1/auth/login
     login_res = live_client.post("/api/v1/auth/login", json={
         "username": "workflow_owner_1",
         "password": "StrongPassword123!",
     })
     assert login_res.status_code == 200
-    assert login_res.get_json()["user"]["email"] == "owner1@workflow.com"
+    assert login_res.get_json()["user"]["email"] == "owner1@example.com"
 
-    # Step 3: Verify authenticated profile /api/v1/auth/me
     me_res = live_client.get("/api/v1/auth/me", headers=headers)
     assert me_res.status_code == 200
     assert me_res.get_json()["user"]["username"] == "workflow_owner_1"
 
-    # Step 4: Verify default character ownership
     chars_res = live_client.get(f"/api/v1/users/{user_id}/characters", headers=headers)
     assert chars_res.status_code == 200
     chars = chars_res.get_json()["data"]
@@ -41,7 +40,6 @@ def test_full_auth_and_ownership_cascade_workflow(live_client, live_app, auth_cl
         if c["name"] in free_names:
             assert c["is_owned"] is True, f"Expected {c['name']} to be owned by default"
 
-    # Step 5: Lock a free character (The Trapper) and verify cascade perk lock in DB
     trapper = next(c for c in chars if c["name"] == "The Trapper")
     lock_res = live_client.post(
         f"/api/v1/users/{user_id}/characters",
@@ -52,7 +50,6 @@ def test_full_auth_and_ownership_cascade_workflow(live_client, live_app, auth_cl
 
     with live_app.app_context():
         trapper_perks = db.session.scalars(select(Perk.id).where(Perk.character_id == trapper["id"])).all()
-        # Verify perk endpoint reflects locked status
         perks_res = live_client.get(f"/api/v1/users/{user_id}/perks", headers=headers)
         assert perks_res.status_code == 200
         user_perks = {p["id"]: p for p in perks_res.get_json()["data"]}
@@ -60,7 +57,6 @@ def test_full_auth_and_ownership_cascade_workflow(live_client, live_app, auth_cl
             if pid in user_perks:
                 assert user_perks[pid]["is_unlocked"] is False
 
-    # Step 6: Unlock The Trapper and verify teachable perks are restored
     unlock_res = live_client.post(
         f"/api/v1/users/{user_id}/characters",
         json={"character_id": trapper["id"], "is_owned": True},

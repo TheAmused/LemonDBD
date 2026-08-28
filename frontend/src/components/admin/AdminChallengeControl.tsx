@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminChallengeControl.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -22,7 +23,7 @@ const MODE_LABELS: Record<ChallengeMode, string> = {
 
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 function authHeaders(token: string): HeadersInit {

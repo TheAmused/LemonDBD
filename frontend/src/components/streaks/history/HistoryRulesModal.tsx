@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/history/HistoryRulesModal.tsx
 'use client';
 
@@ -8,7 +9,7 @@ import { RulesModalShell } from '../RulesModalShell';
 export interface HistoryRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, onClose, dict }) => (

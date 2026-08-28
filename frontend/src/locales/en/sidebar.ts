@@ -1,4 +1,3 @@
-// frontend/src/locales/en/sidebar.ts
 export default {
   "perks": "Perks",
   "challenges": "Challenges",
@@ -69,6 +68,10 @@ export default {
   "openDrawer": "Open Navigation Drawer",
   "closeDrawer": "Close Navigation Drawer",
   "claimed": "Claimed",
-  "verified": "Verified"
+  "verified": "Verified",
+  "adminPanel": "Admin Control Center",
+  "streaks": "Challenges & Streaks",
+  "generator": "Perk Randomizer",
+  "maps": "Map Explorer",
+  "disabled": "Disabled"
 };
-

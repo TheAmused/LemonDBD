@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/history/HistoryBoard.tsx
 'use client';
 
@@ -22,7 +23,7 @@ import { Perk } from '@/types/gauntletStreak';
 
 interface HistoryBoardProps {
   locale: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale, dict }) => {

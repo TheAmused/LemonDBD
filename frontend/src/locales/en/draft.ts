@@ -24,5 +24,7 @@ export default {
   "selectPerkToPick": "Select a Perk to Pick",
   "waitingForOpponent": "Waiting for opponent's action...",
   "plusPrefix": "+",
-  "maxPerSideSuffix": "(Max 3 Per Side)"
+  "maxPerSideSuffix": "(Max 3 Per Side)",
+  "loadingDraft": "Loading Draft Room...",
+  "noMatchingPerks": "No matching perks found."
 };

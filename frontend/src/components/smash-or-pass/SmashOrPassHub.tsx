@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
 'use client';
 
@@ -53,7 +54,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 interface SmashOrPassHubProps {
-  dict?: any;
+  dict?: Dictionary;
   locale?: string;
 }
 
@@ -249,7 +250,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   const getRosterDisplayName = useCallback(
     (r: { slug: string; name?: string }) => {
-      const locName = dict?.smashOrPass?.rosters?.[r.slug]?.name;
+      const locName = (dict?.smashOrPass?.rosters as any)?.[r.slug]?.name;
       if (locName) return locName;
       if (r.slug === 'canon') return locale === 'pl' ? 'Dead by Daylight: Kanon Mgły' : 'Dead by Daylight: Fog Canon';
       if (r.slug === 'hooked_on_you') return locale === 'pl' ? 'Hooked on You: Romans na Wyspie' : 'Hooked on You: Island Romance';
@@ -435,7 +436,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const maleOnlyLabel = dict?.smashOrPass?.filters?.maleOnly || dict?.smashOrPass?.maleOnly || 'Male';
   const monstersLabel = dict?.smashOrPass?.filters?.monsters || dict?.smashOrPass?.monsters || 'Monsters & Eldritch';
   const leaderboardLabel = dict?.smashOrPass?.modals?.leaderboardTitle || dict?.smashOrPass?.leaderboard || 'Hall of Fame';
-  const hudLabels = dict?.smashOrPass?.hud || {};
+  const hudLabels: any = dict?.smashOrPass?.hud || {};
 
   return (
     <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-hidden">

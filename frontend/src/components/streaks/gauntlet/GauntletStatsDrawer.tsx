@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/gauntlet/GauntletStatsDrawer.tsx
 'use client';
 
@@ -10,7 +11,7 @@ export interface GauntletStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: GauntletStats | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/smash-or-pass/FloatingLoreScattered.tsx
 'use client';
 
@@ -19,7 +20,7 @@ import { EntityItem } from '@/types/smashOrPass';
 interface FloatingLoreScatteredProps {
   character: EntityItem | null;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 // Known DBD signature quote translations
@@ -102,7 +103,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
     (currentLoc === 'pl' ? ['Nieprzewidywalność we mgle'] : ['Unpredictable in the fog']);
 
   // Localized Labels
-  const loreLabels = dict?.smashOrPass?.loreLabels || {};
+  const loreLabels: any = dict?.smashOrPass?.loreLabels || {};
   const trialClassificationLabel = loreLabels.trialClassification || (currentLoc === 'pl' ? 'Klasyfikacja Próby' : 'Trial Classification');
   const datingArchetypeLabel = loreLabels.datingArchetype || (currentLoc === 'pl' ? 'Archetyp Randkowy' : 'Dating Archetype');
   const greenFlagLabel = loreLabels.greenFlag || (currentLoc === 'pl' ? 'Zielona Flaga' : 'Trial Green Flag');

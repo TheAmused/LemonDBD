@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/page-streak/PageStreakStatsDrawer.tsx
 'use client';
 
@@ -9,7 +10,7 @@ export interface PageStreakStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: PageStreakStats | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (

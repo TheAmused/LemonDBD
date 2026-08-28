@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapCanvas.tsx
 
 import React, { useState, useEffect } from 'react';
@@ -28,7 +29,7 @@ export interface MapCanvasProps {
   onTouchCancel?: (e: React.TouchEvent<HTMLDivElement>) => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
   children?: React.ReactNode;
-  dict?: any;
+  dict?: Dictionary;
   panHint?: string;
 }
 

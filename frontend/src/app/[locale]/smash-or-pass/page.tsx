@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/smash-or-pass/page.tsx
 'use client';
 
@@ -17,7 +18,7 @@ export default function SmashOrPassPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -64,7 +65,7 @@ export default function SmashOrPassPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-        {dict?.app?.loadingSmashOrPass || 'Loading Smash or Pass...'}
+        Loading Smash or Pass...
       </div>
     );
   }

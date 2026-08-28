@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/smash-or-pass/SmashAnimations.tsx
 'use client';
 
@@ -47,7 +48,7 @@ export interface SmashAnimationsProps {
   triggerKey: number; // Incrementing key to re-trigger
   originX?: number;
   originY?: number;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 // Generate jagged lightning path

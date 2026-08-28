@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/builds/BuildVault.tsx
 'use client';
 
@@ -34,7 +35,7 @@ export interface Build {
 }
 
 interface BuildVaultProps {
-  dict?: any;
+  dict?: Dictionary;
   currentLocale?: string;
 }
 
@@ -302,7 +303,7 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
 
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
             <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              {dict?.filters?.sortFields || 'Sort By:'}
+              {dict?.filters?.sortBy || 'Sort By:'}
             </span>
             <select
               value={sortBy}

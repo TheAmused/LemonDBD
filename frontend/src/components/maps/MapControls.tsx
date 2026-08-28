@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapControls.tsx
 
 import React from 'react';
@@ -15,7 +16,7 @@ export interface MapControlsProps {
   layoutMode?: 'horizontal' | 'compact' | 'vertical';
   className?: string;
   showPresets?: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const MapControls: React.FC<MapControlsProps> = ({

@@ -1,22 +1,22 @@
+// frontend/src/locales/es/modal.ts
 export default {
   "close": "Cerrar",
   "character": "Personaje Asociado",
   "role": "Rol",
   "copySlug": "Copiar Identificador",
   "slugCopied": "¡Copiado al Portapapeles!",
-  "perkDescription": "Descripción del Perk",
-  "generalPerk": "Perk General",
+  "perkDescription": "Descripción de la Habilidad",
+  "generalPerk": "Habilidad General",
   "alias": "Alias",
-  "clickToInspectPerk": "Haz clic para inspeccionar habilidad",
-  "clickToInspect": "Haz clic para ver mecánicas completas",
+  "clickToInspectPerk": "Haz clic para inspeccionar la habilidad",
+  "clickToInspect": "Haz clic para inspeccionar todas las mecánicas",
   "killerPerk": "Habilidad de Asesino",
   "survivorPerk": "Habilidad de Superviviente",
   "unownedPerk": "Habilidad no adquirida",
-  "equipment": "Equipamiento",
-  "clickOutsideToClose": "Esc o haz clic fuera para cerrar",
-  "temporarilyDisabled": "Temporalmente desactivado",
+  "equipment": "Equipo",
+  "clickOutsideToClose": "Esc o clic afuera para cerrar",
+  "temporarilyDisabled": "Desactivado temporalmente",
   "whyDisabled": "¿Por qué está desactivado {item}?",
   "wasDisabledTemporarily": "{item} fue desactivado temporalmente.",
-  "reasonLabel": "Razón"
+  "reasonLabel": "Motivo"
 };
-

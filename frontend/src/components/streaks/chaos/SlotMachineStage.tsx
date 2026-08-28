@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/SlotMachineStage.tsx
 'use client';
 
@@ -138,7 +139,7 @@ export interface SlotMachineStageProps {
   onPullLever: () => void;
   loading?: boolean;
   locked?: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
@@ -240,7 +241,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         }`}
       >
         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-        <span>{dict?.common?.loading || 'Loading...'}</span>
+        <span>{dict?.app?.loading || 'Loading...'}</span>
       </div>
     </div>
   );

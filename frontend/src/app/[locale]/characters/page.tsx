@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 'use client';
 // frontend/src/app/[locale]/characters/page.tsx
 
@@ -16,7 +17,7 @@ export default function CharactersPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Record<string, unknown> | null>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar

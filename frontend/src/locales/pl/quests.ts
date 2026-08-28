@@ -1,17 +1,18 @@
 // frontend/src/locales/pl/quests.ts
 export default {
-  "title": "Zadania Prób & Osiągnięcia",
-  "subtitle": "Wykonuj codzienne i cotygodniowe próby, aby zdobywać XP, podnosić poziom i odblokowywać osiągnięcia.",
-  "pageTitle": "LemonDBD - Zadania & Próby",
-  "loadingQuests": "Ładowanie Zadań...",
-  "xpSystem": "System XP",
+  "title": "Zadania Prób i Osiągnięcia",
+  "subtitle": "Wykonuj codzienne i cotygodniowe próby, zdobywaj PD, podnoś swój status i odblokowuj osiągnięcia.",
+  "pageTitle": "LemonDBD - Zadania i Próby",
+  "loadingQuests": "Wczytywanie Zadań...",
+  "xpSystem": "System PD",
   "dailyQuests": "Zadania Codzienne",
   "weeklyQuests": "Zadania Tygodniowe",
-  "noQuestsDesc": "Brak zadań w tej kategorii w tej chwili. Sprawdź wkrótce nowe cele!",
+  "noQuestsDesc": "Brak dostępnych zadań w tej kategorii. Sprawdź ponownie wkrótce, aby poznać nowe cele prób!",
   "noQuestsFound": "Nie znaleziono zadań w tej kategorii.",
   "xpPrefix": "+",
-  "xpSuffix": "XP",
-  "allQuestsPrefix": "Wszystkie zadania (",
-  "percentCloseParen": "%)"
+  "xpSuffix": "PD",
+  "allQuestsPrefix": "Wszystkie Zadania (",
+  "percentCloseParen": "%)",
+  "questsTitle": "Zadania Prób i Osiągnięcia",
+  "questsSubtitle": "Wykonuj codzienne i cotygodniowe próby, zdobywaj PD, podnoś swój status i odblokowuj osiągnięcia."
 };
-

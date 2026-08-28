@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/killer-calculator/page.tsx
 'use client';
 
@@ -15,7 +16,7 @@ export default function KillerCalculatorPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -67,7 +68,7 @@ export default function KillerCalculatorPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        {dict?.app?.loading || 'Loading...'}
+        'Loading...'
       </div>
     );
   }

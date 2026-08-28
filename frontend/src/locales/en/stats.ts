@@ -10,5 +10,12 @@ export default {
   "streak": "Streak",
   "win": "beaten",
   "vaultTotal": "Vault Total",
-  "ownedPerks": "Owned Perks"
+  "ownedPerks": "Owned Perks",
+  "totalXpEarned": "Total XP",
+  "questProgress": "Quest Progress",
+  "claimed": "Claimed",
+  "active": "Active",
+  "loss": "Loss",
+  "current": "Current",
+  "best": "Best"
 };

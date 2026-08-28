@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminHeader.tsx
 
 import React from 'react';
@@ -11,7 +12,7 @@ interface AdminHeaderProps {
   onOpenDbMaintenance: (tab?: 'export' | 'import' | 'purge') => void;
   onTriggerSync: () => void;
   onRefreshData: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const AdminHeader: React.FC<AdminHeaderProps> = ({

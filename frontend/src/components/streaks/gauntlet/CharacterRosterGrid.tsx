@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Role } from '@/types/gauntletStreak';
@@ -13,7 +14,7 @@ export interface CharacterRosterGridProps {
   checkpointCharacters?: string[];
   activeCharacterId?: string;
   loading?: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
@@ -48,7 +49,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
     ? (dict?.streaks?.survivor || dict?.generator?.survivor || 'Survivor')
     : (dict?.streaks?.killer || dict?.generator?.killer || 'Killer');
 
-  const completedText = dict?.stats?.completed || dict?.smashOrPass?.completed || 'Completed';
+  const completedText = dict?.stats?.completed || dict?.streaks?.completed || 'Completed';
   const activeTargetText = dict?.streaks?.activeGauntletTarget || dict?.streaks?.target || 'Active Target';
 
   return (

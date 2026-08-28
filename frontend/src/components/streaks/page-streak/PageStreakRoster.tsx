@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/page-streak/PageStreakRoster.tsx
 'use client';
 
@@ -9,7 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 
 interface PageStreakRosterProps {
   locale: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale, dict }) => {

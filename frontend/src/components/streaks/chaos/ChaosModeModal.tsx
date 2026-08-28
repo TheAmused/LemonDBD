@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/ChaosModeModal.tsx
 'use client';
 
@@ -9,7 +10,7 @@ export interface ChaosModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectDifficulty: (difficulty: Difficulty) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const TILES: { difficulty: Difficulty; label: string; desc: string; icon: React.ElementType }[] = [

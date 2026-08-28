@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/ChallengeModeGate.tsx
 
 import React, { useEffect, useState } from 'react';
@@ -12,7 +13,7 @@ interface ChallengeModeGateProps {
   locale: string;
   role: string;
   children: React.ReactNode;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 /** Guards a challenge mode's route: while its admin kill switch is on, the

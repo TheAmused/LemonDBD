@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/FreezeBadge.tsx
 'use client';
 
@@ -7,7 +8,7 @@ import { Snowflake } from 'lucide-react';
 
 export interface FreezeBadgeProps {
   frozen: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 'use client';
 // frontend/src/app/[locale]/characters/[slug]/page.tsx
 
@@ -26,7 +27,7 @@ export default function CharacterDetailPage() {
 
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Record<string, Record<string, string>> | null>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const [detailData, setDetailData] = useState<CharacterDetailPayload | null>(null);
   const [allCharacters, setAllCharacters] = useState<CharacterItem[]>([]);
@@ -46,7 +47,7 @@ export default function CharacterDetailPage() {
     getDictionary(locale)
       .then((res) => {
         if (isMounted) {
-          setDict(res as unknown as Record<string, Record<string, string>>);
+          setDict(res);
         }
       })
       .catch((err) => {
@@ -133,13 +134,21 @@ export default function CharacterDetailPage() {
     };
   }, [slug, backendBase, locale]);
 
-  const t = dict?.characterDetail || dict?.characters || {};
+  if (!dict) {
+    return (
+      <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
+        Loading...
+      </div>
+    );
+  }
+
+  const t = dict.characterDetail;
 
   return (
     <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
-        dict={dict || {}}
+        dict={dict}
         activeCategory="characters"
         onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalPerksCount}
@@ -185,7 +194,7 @@ export default function CharacterDetailPage() {
         ) : (
           <CharacterSubpageView
             currentLocale={locale}
-            dict={dict || {}}
+            dict={dict}
             detailData={detailData}
             allCharacters={allCharacters}
           />
@@ -194,10 +203,9 @@ export default function CharacterDetailPage() {
         <QuestsModal
           isOpen={isQuestsOpen}
           onClose={() => setIsQuestsOpen(false)}
-          dict={dict || {}}
+          dict={dict}
         />
       </main>
     </div>
   );
 }
-

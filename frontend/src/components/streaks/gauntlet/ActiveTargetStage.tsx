@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/gauntlet/ActiveTargetStage.tsx
 'use client';
 
@@ -57,7 +58,7 @@ export interface ActiveTargetStageProps {
   /** The target the reel has actually finished landing on, lifted so the roster grid can share it. */
   shownTarget: string | null;
   onShownTargetChange: (name: string | null) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 /**

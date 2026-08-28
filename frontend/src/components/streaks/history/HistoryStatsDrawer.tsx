@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/history/HistoryStatsDrawer.tsx
 'use client';
 
@@ -9,7 +10,7 @@ export interface HistoryStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: HistoryStats | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (

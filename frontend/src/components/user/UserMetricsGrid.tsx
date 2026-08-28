@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserMetricsGrid.tsx
 
 import React from 'react';
@@ -22,7 +23,7 @@ interface OwnershipData {
 
 interface UserMetricsGridProps {
   ownership?: OwnershipData | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dict }) => {

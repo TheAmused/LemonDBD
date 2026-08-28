@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminCreateUserModal.tsx
 
 import React, { useState } from 'react';
@@ -13,7 +14,7 @@ interface AdminCreateUserModalProps {
     password: string;
     role: 'user' | 'admin';
   }) => Promise<void>;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({

@@ -1,7 +1,8 @@
+// frontend/src/locales/es/pagination.ts
 export default {
   "showing": "Mostrando",
   "of": "de",
-  "results": "perks",
+  "results": "habilidades",
   "perPage": "Por página",
   "page": "Página",
   "previous": "Página Anterior",
@@ -9,5 +10,6 @@ export default {
   "firstPage": "Primera Página",
   "lastPage": "Última Página",
   "goTo": "Ir a",
-  "navAriaLabel": "Navegación de Paginación"
+  "navAriaLabel": "Navegación de Paginación",
+  "to": "a"
 };

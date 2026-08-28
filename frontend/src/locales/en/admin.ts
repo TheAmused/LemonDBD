@@ -1,4 +1,3 @@
-// frontend/src/locales/en/admin.ts
 export default {
   "killSwitches": "Kill Switches",
   "challengeStats": "Challenge Stats",
@@ -121,6 +120,13 @@ export default {
   "cannotBeUndone": "This cannot be undone.",
   "kbReadySuffix": "KB, ready to restore",
   "createdCountPrefix": "+",
-  "updatedCountSuffix": "updated)"
+  "updatedCountSuffix": "updated)",
+  "title": "User Accounts",
+  "loading": "Loading users...",
+  "noUsers": "No users found matching query.",
+  "you": "You",
+  "promote": "Promote to Admin",
+  "demote": "Demote to User",
+  "disableAccount": "Disable Account",
+  "enableAccount": "Enable Account"
 };
-

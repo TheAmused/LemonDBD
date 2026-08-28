@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminAuditLogView.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -20,7 +21,7 @@ const ACTION_COLORS: Record<string, string> = {
   user_deleted: 'text-rose-400',
 };
 
-export const AdminAuditLogView: React.FC<{ dict?: any }> = ({ dict }) => {
+export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => {
   const [logs, setLogs] = useState<AdminAuditLogEntry[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);

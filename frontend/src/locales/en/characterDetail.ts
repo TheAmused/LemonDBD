@@ -1,4 +1,3 @@
-// frontend/src/locales/en/characterDetail.ts
 export default {
   "backToCharacters": "Back to Characters",
   "roleSurvivor": "Survivor",
@@ -156,6 +155,8 @@ export default {
   "baseTrPrefix": "Base TR:",
   "modifiedPrefix": "Modified:",
   "communityGalleryPrefix": "Community Gallery (",
-  "realTimeLabel": "REAL-TIME"
+  "realTimeLabel": "REAL-TIME",
+  "role": "Role",
+  "perk": "Perk",
+  "lullabyRadius": "Lullaby Radius"
 };
-

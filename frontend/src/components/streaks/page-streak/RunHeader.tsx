@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/page-streak/RunHeader.tsx
 'use client';
 
@@ -12,7 +13,7 @@ interface RunHeaderProps {
   onOpenReset: () => void;
   onOpenRules: () => void;
   onOpenStats: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenReset, onOpenRules, onOpenStats, dict }) => {

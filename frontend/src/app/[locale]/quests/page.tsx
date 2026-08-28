@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/quests/page.tsx
 'use client';
 
@@ -24,7 +25,7 @@ export default function QuestsPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [quests, setQuests] = useState<Quest[]>([]);
   const [filterCategory, setFilterCategory] = useState<'all' | 'daily' | 'weekly'>('all');
   const [loading, setLoading] = useState<boolean>(true);
@@ -109,7 +110,7 @@ export default function QuestsPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono">
-        {dict?.quests?.loadingQuests || dict?.app?.loadingQuests || 'Loading Quests...'}
+        Loading Quests...
       </div>
     );
   }
@@ -161,7 +162,7 @@ export default function QuestsPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight sm:text-3xl">
-                      {dict?.quests?.title || dict?.landing?.questsTitle || 'Trial Quests & Milestones'}
+                      {dict?.quests?.title || dict?.quests?.title || 'Trial Quests & Milestones'}
                     </h1>
                     <span className="rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">
                       {dict?.quests?.xpSystem || 'XP System'}

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/swf/page.tsx
 'use client';
 
@@ -15,7 +16,7 @@ export default function SwfPage() {
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<any>(null);
+  const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -65,7 +66,7 @@ export default function SwfPage() {
   if (!dict) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-        {dict?.app?.loadingSWFPlanner || 'Loading SWF Planner...'}
+        Loading SWF Planner...
       </div>
     );
   }

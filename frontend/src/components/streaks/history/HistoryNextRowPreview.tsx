@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/history/HistoryNextRowPreview.tsx
 'use client';
 
@@ -9,7 +10,7 @@ export interface HistoryNextRowPreviewProps {
   killers: string[];
   rowSize: number;
   currentRowIndex: number;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const PreviewTile: React.FC<{ name: string }> = ({ name }) => {

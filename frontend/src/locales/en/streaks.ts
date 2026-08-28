@@ -1,4 +1,3 @@
-// frontend/src/locales/en/streaks.ts
 export default {
   "streaksTitle": "Challenge & Streak Hub",
   "backToKillerStreaks": "Back to killer streaks",
@@ -188,6 +187,13 @@ export default {
   "nextUpPagePrefix": "Next up, page",
   "attemptLabel": "Attempt",
   "readyForPrefix": "Ready for",
-  "pagesOnSuffix": "pages on"
+  "pagesOnSuffix": "pages on",
+  "freezeNotice": "Freeze Notice",
+  "pageStreakDesc": "Page Streak challenge overview and progress tracking.",
+  "threeKillsOrMoreWin": "3 kills or more counts as a win.",
+  "survivor": "Survivor",
+  "killer": "Killer",
+  "completed": "Completed",
+  "noOwnedCharacters": "No owned characters found for this filter.",
+  "continueButton": "Continue"
 };
-

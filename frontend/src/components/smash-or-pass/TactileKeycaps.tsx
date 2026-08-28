@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/smash-or-pass/TactileKeycaps.tsx
 'use client';
 
@@ -17,7 +18,7 @@ export interface TactileKeycapsProps {
   onStats: () => void;
   onReset: () => void;
   disabled?: boolean;
-  dict?: any;
+  dict?: Dictionary;
   className?: string;
 }
 

@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/FullscreenMapEngine.tsx
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
@@ -28,7 +29,7 @@ interface FullscreenMapEngineProps {
   onClose: () => void;
   availableMaps?: MapRealm[];
   onSelectMapId?: (id: string) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({

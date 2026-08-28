@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapDirectoryList.tsx
 
 import React, { useMemo } from 'react';
@@ -20,7 +21,7 @@ export interface MapDirectoryListProps {
   backendBase?: string;
   className?: string;
   showFilters?: boolean;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({

@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/ChaosPerkPoolModal.tsx
 'use client';
 
@@ -35,7 +36,7 @@ export interface ChaosPerkPoolModalProps {
   onClose: () => void;
   pool: Perk[];
   usedPerkNames: string[];
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({

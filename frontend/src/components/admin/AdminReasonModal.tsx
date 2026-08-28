@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminReasonModal.tsx
 
 import React, { useEffect, useState } from 'react';
@@ -9,7 +10,7 @@ export interface AdminReasonModalProps {
   title: string;
   subtitle?: string;
   confirmLabel?: string;
-  dict?: any;
+  dict?: Dictionary;
   onCancel: () => void;
   onConfirm: (reason: string) => void;
 }

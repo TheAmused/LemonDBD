@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/smash-or-pass/RomancePersonaModal.tsx
 'use client';
 
@@ -25,7 +26,7 @@ interface RomancePersonaModalProps {
   votes: VoteRecord[];
   onResetAll?: () => void;
   locale?: string;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
@@ -39,7 +40,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   const [copied, setCopied] = useState(false);
 
   const persona = useMemo(() => {
-    const archetypes = dict?.smashOrPass?.personaArchetypes || {};
+    const archetypes: any = dict?.smashOrPass?.personaArchetypes || {};
 
     if (votes.length === 0) {
       return {

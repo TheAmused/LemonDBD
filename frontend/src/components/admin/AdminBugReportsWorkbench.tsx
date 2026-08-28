@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminBugReportsWorkbench.tsx
 
 import React from 'react';
@@ -60,7 +61,7 @@ interface AdminBugReportsWorkbenchProps {
   onNoteChange: (id: number, text: string) => void;
   onUpdateBug: (id: number, newStatus?: string) => void;
   onDeleteBug: (id: number) => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> = ({

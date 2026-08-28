@@ -1,4 +1,5 @@
 'use client';
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminStatsGrid.tsx
 
 import React from 'react';
@@ -7,7 +8,7 @@ import { AdminStats } from '@/types/admin';
 
 interface AdminStatsGridProps {
   stats: AdminStats | null;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) => {

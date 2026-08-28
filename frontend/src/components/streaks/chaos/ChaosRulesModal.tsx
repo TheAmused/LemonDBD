@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/ChaosRulesModal.tsx
 'use client';
 
@@ -8,7 +9,7 @@ import { RulesModalShell } from '../RulesModalShell';
 export interface ChaosRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 const DIFFICULTY_ROWS = [

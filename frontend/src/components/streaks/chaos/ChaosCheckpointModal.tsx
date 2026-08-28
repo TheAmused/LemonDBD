@@ -1,3 +1,4 @@
+import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/chaos/ChaosCheckpointModal.tsx
 'use client';
 
@@ -7,7 +8,7 @@ import { ShieldCheck, PartyPopper } from 'lucide-react';
 export interface ChaosCheckpointModalProps {
   checkpoint: number | null;
   onClose: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const ChaosCheckpointModal: React.FC<ChaosCheckpointModalProps> = ({ checkpoint, onClose, dict }) => {

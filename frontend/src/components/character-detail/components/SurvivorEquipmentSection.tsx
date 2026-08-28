@@ -94,16 +94,16 @@ function getSurvivorAddonCategory(it: AddonItem): SurvivorCategoryKey {
   return 'trial_exclusive';
 }
 
-const CATEGORIES: { key: SurvivorCategoryKey; label: string; icon: any; desc: string }[] = [
-  { key: 'medkit', label: 'Med-Kits', icon: Heart, desc: 'Healing & Syringes' },
-  { key: 'toolbox', label: 'Toolboxes', icon: Wrench, desc: 'Repairs & Sabotage' },
-  { key: 'flashlight', label: 'Flashlights', icon: Flashlight, desc: 'Blinding & Saves' },
-  { key: 'key', label: 'Keys', icon: Key, desc: 'Auras & Hatch' },
-  { key: 'map', label: 'Maps', icon: MapIcon, desc: 'Objectives & Totems' },
-  { key: 'fog_vial', label: 'Fog Vials', icon: Cloud, desc: 'Mist & Concealment' },
-  { key: 'event', label: 'Event Items & Add-ons', icon: Sparkles, desc: 'Limited Time & Anniversary Items' },
-  { key: 'trial_exclusive', label: 'Trial Artifacts', icon: ShieldAlert, desc: 'In-Trial Counter Items' },
-];
+const CATEGORY_ICONS: Record<SurvivorCategoryKey, any> = {
+  medkit: Heart,
+  toolbox: Wrench,
+  flashlight: Flashlight,
+  key: Key,
+  map: MapIcon,
+  fog_vial: Cloud,
+  event: Sparkles,
+  trial_exclusive: ShieldAlert,
+};
 
 export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> = ({
   items = [],
@@ -117,9 +117,23 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   const [rarityFilter, setRarityFilter] = useState<string>('all');
   const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
+  const CATEGORIES = useMemo(
+    () => [
+      { key: 'medkit' as const, label: t.categoryMedkit || 'Med-Kits', icon: CATEGORY_ICONS.medkit, desc: t.categoryMedkitDesc || 'Healing & Syringes' },
+      { key: 'toolbox' as const, label: t.categoryToolbox || 'Toolboxes', icon: CATEGORY_ICONS.toolbox, desc: t.categoryToolboxDesc || 'Repairs & Sabotage' },
+      { key: 'flashlight' as const, label: t.categoryFlashlight || 'Flashlights', icon: CATEGORY_ICONS.flashlight, desc: t.categoryFlashlightDesc || 'Blinding & Saves' },
+      { key: 'key' as const, label: t.categoryKey || 'Keys', icon: CATEGORY_ICONS.key, desc: t.categoryKeyDesc || 'Auras & Hatch' },
+      { key: 'map' as const, label: t.categoryMapItem || 'Maps', icon: CATEGORY_ICONS.map, desc: t.categoryMapItemDesc || 'Objectives & Totems' },
+      { key: 'fog_vial' as const, label: t.categoryFogVial || 'Fog Vials', icon: CATEGORY_ICONS.fog_vial, desc: t.categoryFogVialDesc || 'Mist & Concealment' },
+      { key: 'event' as const, label: t.categoryEventItems || 'Event Items & Add-ons', icon: CATEGORY_ICONS.event, desc: t.categoryEventItemsDesc || 'Limited Time & Anniversary Items' },
+      { key: 'trial_exclusive' as const, label: t.categoryTrialArtifacts || 'Trial Artifacts', icon: CATEGORY_ICONS.trial_exclusive, desc: t.categoryTrialArtifactsDesc || 'In-Trial Counter Items' },
+    ],
+    [t]
+  );
+
   const activeCategoryConfig = useMemo(() => {
     return CATEGORIES.find((c) => c.key === selectedCategory) || CATEGORIES[0];
-  }, [selectedCategory]);
+  }, [CATEGORIES, selectedCategory]);
 
   const categorizedData = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();

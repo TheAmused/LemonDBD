@@ -1,11 +1,12 @@
 # backend/tests/unit/test_scheduler_config.py
 import unittest
 from unittest.mock import MagicMock, patch
-from flask import Flask
+import pytest
 from app import create_app
 from app.core.config import Config, TestingConfig
 
 
+@pytest.mark.unit
 class TestSchedulerConfig(unittest.TestCase):
     def test_testing_config_disables_scheduler(self):
         self.assertFalse(TestingConfig.SCHEDULER_ENABLED)
@@ -24,7 +25,7 @@ class TestSchedulerConfig(unittest.TestCase):
             SCHEDULER_ENABLED = True
             SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 
-        app = create_app(CustomConfig)
+        create_app(CustomConfig)
         self.assertTrue(mock_scheduler_cls.called)
         self.assertTrue(mock_instance.add_job.called)
         self.assertTrue(mock_instance.start.called)
@@ -36,7 +37,7 @@ class TestSchedulerConfig(unittest.TestCase):
             SCHEDULER_ENABLED = False
             SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 
-        app = create_app(DisabledConfig)
+        create_app(DisabledConfig)
         self.assertFalse(mock_scheduler_cls.called)
 
 

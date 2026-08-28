@@ -1,8 +1,11 @@
 # backend/tests/unit/test_phase6_services.py
 import unittest
+import pytest
 from app import create_app
 from app.services.map_service import MapService
 
+
+@pytest.mark.unit
 class TestMapService(unittest.TestCase):
     def setUp(self):
         self.service = MapService()
@@ -34,6 +37,7 @@ class TestMapService(unittest.TestCase):
         data = res.get_json()
         self.assertIn("map", data)
         self.assertEqual(data["map"]["name"], "Azarov's Resting Place")
+
 
 if __name__ == "__main__":
     unittest.main()

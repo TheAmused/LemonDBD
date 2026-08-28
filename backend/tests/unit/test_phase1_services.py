@@ -1,15 +1,16 @@
 # backend/tests/unit/test_phase1_services.py
 import gc
-import os
 import tempfile
 import unittest
 from pathlib import Path
+import pytest
 from app import create_app
 from app.services.db_service import DatabaseService
 from app.services.others.draft_service import DraftService
 from app.services.others.quest_service import QuestService
 
 
+@pytest.mark.unit
 class TestPhase1Services(unittest.TestCase):
     def setUp(self):
         self._temp_dir = tempfile.TemporaryDirectory()
@@ -30,11 +31,7 @@ class TestPhase1Services(unittest.TestCase):
         except Exception:
             pass
 
-    # -------------------------------------------------------------
-    # 1. Tournament Draft Service & API Tests
-    # -------------------------------------------------------------
     def test_draft_service_and_endpoints(self):
-        # Create draft room via POST /api/v1/draft/create
         res = self.client.post("/api/v1/draft/create", json={"room_code": "TESTROOM"})
         self.assertEqual(res.status_code, 201)
         data = res.get_json()
@@ -42,14 +39,12 @@ class TestPhase1Services(unittest.TestCase):
         self.assertEqual(data["room"]["room_code"], "TESTROOM")
         self.assertEqual(data["room"]["phase"], "bans")
 
-        # Fetch state via GET /api/v1/draft/<room_code>
         res = self.client.get("/api/v1/draft/TESTROOM")
         self.assertEqual(res.status_code, 200)
         data = res.get_json()
         self.assertEqual(data["room"]["room_code"], "TESTROOM")
         self.assertEqual(data["room"]["banned_perks"], [])
 
-        # Action: Ban perk
         res = self.client.post("/api/v1/draft/TESTROOM/action", json={
             "action": "ban",
             "perk": "Sprint Burst",
@@ -60,7 +55,6 @@ class TestPhase1Services(unittest.TestCase):
         self.assertIn("Sprint Burst", data["room"]["banned_perks"])
         self.assertEqual(data["room"]["phase"], "picks")
 
-        # Action: Pick survivor perk & killer perk
         res = self.client.post("/api/v1/draft/TESTROOM/action", json={
             "action": "pick",
             "perk": "Dead Hard",
@@ -80,15 +74,10 @@ class TestPhase1Services(unittest.TestCase):
         self.assertIn("Scourge Hook: Pain Resonance", data["room"]["picked_killer_perks"])
         self.assertEqual(data["room"]["phase"], "complete")
 
-        # Fetch non-existent room
         res = self.client.get("/api/v1/draft/NONEXISTENT")
         self.assertEqual(res.status_code, 404)
 
-    # -------------------------------------------------------------
-    # 2. Daily & Weekly Quest Service & API Tests
-    # -------------------------------------------------------------
     def test_quest_service_and_endpoints(self):
-        # GET /api/v1/quests/ should auto-seed 3 daily + 1 weekly
         res = self.client.get("/api/v1/quests/")
         self.assertEqual(res.status_code, 200)
         data = res.get_json()
@@ -100,7 +89,6 @@ class TestPhase1Services(unittest.TestCase):
         self.assertEqual(len(daily_quests), 3)
         self.assertEqual(len(weekly_quests), 1)
 
-        # Claim a quest via POST /api/v1/quests/claim
         first_quest_id = quests[0]["id"]
         res = self.client.post("/api/v1/quests/claim", json={"quest_id": first_quest_id})
         self.assertEqual(res.status_code, 200)
@@ -109,7 +97,6 @@ class TestPhase1Services(unittest.TestCase):
         self.assertTrue(claim_data["quest"]["is_completed"])
         self.assertGreater(claim_data["xp_reward"], 0)
 
-        # Attempting to claim again should return 400 error
         res = self.client.post("/api/v1/quests/claim", json={"quest_id": first_quest_id})
         self.assertEqual(res.status_code, 400)
 

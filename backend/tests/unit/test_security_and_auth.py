@@ -18,6 +18,8 @@ from app.models.user import User
 
 @pytest.mark.unit
 class TestPasswordHashing:
+    """Tests for secure password hashing and verification."""
+
     def test_hash_and_verify_success(self) -> None:
         raw = "UltraSecureDbD#2026!"
         pwd_hash = hash_password(raw)
@@ -37,6 +39,8 @@ class TestPasswordHashing:
 
 @pytest.mark.unit
 class TestJWTGenerationAndDecode:
+    """Tests for JWT token creation, decoding, expiration, and tampering."""
+
     def test_generate_and_decode_token_in_app_context(self, app: Flask) -> None:
         with app.app_context():
             token = generate_token(user_id=42, role="admin", extra_claims={"env": "unit_test"})
@@ -86,6 +90,8 @@ class TestJWTGenerationAndDecode:
 
 @pytest.mark.unit
 class TestAuthDecoratorsAndUserExtraction:
+    """Tests for route security decorators and request context extraction."""
+
     @pytest.fixture
     def test_flask_app(self) -> Flask:
         test_app = Flask(__name__)

@@ -13,6 +13,8 @@ from app.models.smash_or_pass import EntityStat
 
 @pytest.mark.unit
 class TestModelToDictTransformations:
+    """Tests for model dictionary serialization, localization overrides, and calculated rates."""
+
     def test_character_and_power_to_dict(self) -> None:
         killer = Killer(
             id=1,

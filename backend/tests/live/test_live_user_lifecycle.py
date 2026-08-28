@@ -1,5 +1,6 @@
 # backend/tests/live/test_live_user_lifecycle.py
 import pytest
+from flask import Flask
 from sqlalchemy import select
 from app.core.extensions import db
 from app.core.security import verify_password
@@ -12,7 +13,9 @@ from app.services.user_service import UserService
 
 @pytest.mark.live
 class TestLiveUserAndOwnershipLifecycle:
-    def test_user_registration_and_verification_cycle(self, live_app) -> None:
+    """Tests for User authentication, verification state, ownership relations, and audit logging in PostgreSQL."""
+
+    def test_user_registration_and_verification_cycle(self, live_app: Flask) -> None:
         with live_app.app_context():
             user_service = UserService()
             username = "live_test_user_alpha"
@@ -42,11 +45,14 @@ class TestLiveUserAndOwnershipLifecycle:
             db.session.commit()
 
             refetched = db.session.get(User, user.id)
+            assert refetched is not None
             assert refetched.is_verified is True
 
-    def test_user_ownership_relations_integrity(self, live_app) -> None:
+    def test_user_ownership_relations_integrity(self, live_app: Flask) -> None:
         with live_app.app_context():
-            test_char = db.session.scalars(select(Character).where(Character.name == "Live Ace Visconti")).first()
+            test_char = db.session.scalars(
+                select(Character).where(Character.name == "Live Ace Visconti")
+            ).first()
             if not test_char:
                 test_char = Survivor(
                     name="Live Ace Visconti",
@@ -56,7 +62,9 @@ class TestLiveUserAndOwnershipLifecycle:
                 db.session.add(test_char)
                 db.session.flush()
 
-            test_perk = db.session.scalars(select(Perk).where(Perk.name == "Live Open-Handed")).first()
+            test_perk = db.session.scalars(
+                select(Perk).where(Perk.name == "Live Open-Handed")
+            ).first()
             if not test_perk:
                 test_perk = Perk(
                     name="Live Open-Handed",
@@ -75,20 +83,29 @@ class TestLiveUserAndOwnershipLifecycle:
             )
             db.session.commit()
 
-            char_ownership = UserCharacterOwnership(user_id=user.id, character_id=test_char.id, is_owned=True)
-            perk_ownership = UserPerkOwnership(user_id=user.id, perk_id=test_perk.id, is_unlocked=True)
+            char_ownership = UserCharacterOwnership(
+                user_id=user.id, character_id=test_char.id, is_owned=True
+            )
+            perk_ownership = UserPerkOwnership(
+                user_id=user.id, perk_id=test_perk.id, is_unlocked=True
+            )
             db.session.add_all([char_ownership, perk_ownership])
             db.session.commit()
 
             reloaded_user = db.session.get(User, user.id)
+            assert reloaded_user is not None
             assert len(reloaded_user.character_ownerships) == 1
             assert reloaded_user.character_ownerships[0].character_id == test_char.id
             assert len(reloaded_user.perk_ownerships) == 1
             assert reloaded_user.perk_ownerships[0].perk_id == test_perk.id
 
-    def test_admin_audit_log_and_challenge_setting(self, live_app, live_admin_token) -> None:
+    def test_admin_audit_log_and_challenge_setting(
+        self, live_app: Flask, live_admin_token: str
+    ) -> None:
         with live_app.app_context():
-            admin_user = db.session.scalars(select(User).where(User.username == "admin_live_tester")).first()
+            admin_user = db.session.scalars(
+                select(User).where(User.username == "admin_live_tester")
+            ).first()
             assert admin_user is not None
 
             audit_entry = AdminAuditLog(

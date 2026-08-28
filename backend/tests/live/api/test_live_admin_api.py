@@ -1,23 +1,33 @@
 # backend/tests/live/api/test_live_admin_api.py
 import pytest
+from tests.live.conftest import AuthenticatedClient
 
 
 @pytest.mark.live
-def test_live_admin_killswitch_and_audit(admin_client):
-    res = admin_client.get("/api/v1/admin/characters")
-    assert res.status_code == 200
-    chars = res.get_json()["data"]
-    assert len(chars) > 0
-    trapper = next((c for c in chars if c["name"] == "The Trapper"), chars[0])
-    target_id = trapper["id"]
+class TestLiveAdminAPI:
+    """Tests for administrative character killswitch toggles, audit logs, and settings in PostgreSQL."""
 
-    res_dis = admin_client.put(f"/api/v1/admin/characters/{target_id}/disable", json={"is_disabled": True, "reason": "Live Test Maintenance"})
-    assert res_dis.status_code == 200
+    def test_live_admin_killswitch_and_audit(self, admin_client: AuthenticatedClient) -> None:
+        res = admin_client.get("/api/v1/admin/characters")
+        assert res.status_code == 200
+        chars = res.get_json()["data"]
+        assert len(chars) > 0
+        trapper = next((c for c in chars if c["name"] == "The Trapper"), chars[0])
+        target_id = trapper["id"]
 
-    res_en = admin_client.put(f"/api/v1/admin/characters/{target_id}/disable", json={"is_disabled": False})
-    assert res_en.status_code == 200
+        res_dis = admin_client.put(
+            f"/api/v1/admin/characters/{target_id}/disable",
+            json={"is_disabled": True, "reason": "Live Test Maintenance"},
+        )
+        assert res_dis.status_code == 200
 
-    res_audit = admin_client.get("/api/v1/admin/audit-logs")
-    assert res_audit.status_code == 200
-    logs = res_audit.get_json().get("logs", [])
-    assert len(logs) > 0
+        res_en = admin_client.put(
+            f"/api/v1/admin/characters/{target_id}/disable",
+            json={"is_disabled": False},
+        )
+        assert res_en.status_code == 200
+
+        res_audit = admin_client.get("/api/v1/admin/audit-logs")
+        assert res_audit.status_code == 200
+        logs = res_audit.get_json().get("logs", [])
+        assert len(logs) > 0

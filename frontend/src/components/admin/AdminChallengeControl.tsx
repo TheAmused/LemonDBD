@@ -299,11 +299,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={
-                subTab === 'killers'
-                  ? dict?.admin?.searchCharactersPlaceholder || 'Search characters...'
-                  : dict?.admin?.searchPerksOrOwnerPlaceholder || 'Search perks or owner...'
-              }
+              placeholder={dict?.admin?.searchGenericPlaceholder || 'Search...'}
               className="pl-7 pr-3 py-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-amber-500"
             />
           </div>

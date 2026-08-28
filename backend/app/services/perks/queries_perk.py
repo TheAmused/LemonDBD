@@ -7,9 +7,87 @@ from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
 from app.models import Character, Perk, UserCharacterOwnership, UserPerkOwnership
-from app.services.perks.utils import slugify
+from app.services.perks.utils import normalize_search_key, slugify
 
 logger = logging.getLogger(__name__)
+
+
+def _text_matches(haystack: str, query_lower: str, norm_query: str) -> bool:
+    """Substring match that tolerates diacritics, without breaking scripts (CJK, Cyrillic, ...)
+    that normalize_search_key strips down to an empty string."""
+    if not haystack:
+        return False
+    if query_lower and query_lower in haystack.lower():
+        return True
+    if norm_query:
+        return norm_query in normalize_search_key(haystack)
+    return False
+
+
+def _text_equals(value: str, target_lower: str, norm_target: str) -> bool:
+    if not value:
+        return False
+    if target_lower and value.lower() == target_lower:
+        return True
+    if norm_target:
+        return normalize_search_key(value) == norm_target
+    return False
+
+
+def _resolve_character_ids_by_name(character: str) -> List[int]:
+    """Match a character filter value against every locale's name, not just the raw English columns."""
+    target_lower = character.strip().lower()
+    norm_target = normalize_search_key(character)
+    matched_ids: List[int] = []
+    for c in db.session.scalars(select(Character)).unique().all():
+        candidates = [c.name, c.real_name or "", c.short_name or "", c.wiki_slug or ""]
+        if isinstance(c.translations, dict):
+            for loc_data in c.translations.values():
+                if isinstance(loc_data, dict):
+                    candidates.append(loc_data.get("name") or "")
+                    candidates.append(loc_data.get("real_name") or "")
+        if any(_text_equals(v, target_lower, norm_target) for v in candidates):
+            matched_ids.append(c.id)
+    return matched_ids
+
+
+def _perk_search_haystacks(p: Perk) -> List[str]:
+    """All name/description strings a perk can be found under, across every stored locale."""
+    haystacks = [p.name, p.alternate_name or "", p.description or ""]
+    if isinstance(p.translations, dict):
+        for loc_data in p.translations.values():
+            if isinstance(loc_data, dict):
+                haystacks.append(loc_data.get("name") or "")
+                haystacks.append(loc_data.get("description") or "")
+    if p.character:
+        haystacks.append(p.character.name or "")
+        haystacks.append(p.character.real_name or "")
+        if isinstance(p.character.translations, dict):
+            for loc_data in p.character.translations.values():
+                if isinstance(loc_data, dict):
+                    haystacks.append(loc_data.get("name") or "")
+                    haystacks.append(loc_data.get("real_name") or "")
+    return haystacks
+
+
+def _perk_matches_search(p: Perk, query_lower: str, norm_query: str, is_general_match: bool) -> bool:
+    if is_general_match and (p.character_id is None or p.is_generic_counterpart):
+        return True
+    return any(_text_matches(h, query_lower, norm_query) for h in _perk_search_haystacks(p))
+
+
+def _perk_dict_matches_search(p: Dict[str, Any], query_lower: str, norm_query: str, is_general_match: bool) -> bool:
+    """Same multi-locale search as _perk_matches_search, for the in-memory cache fallback."""
+    if is_general_match and (not p.get("character") or p.get("character", "").lower() == "general"):
+        return True
+    haystacks = [p.get("name", ""), p.get("alternate_name", ""), p.get("description", ""), p.get("character", "")]
+    translations = p.get("translations")
+    if isinstance(translations, dict):
+        for loc_data in translations.values():
+            if isinstance(loc_data, dict):
+                haystacks.append(loc_data.get("name") or "")
+                haystacks.append(loc_data.get("description") or "")
+    return any(_text_matches(h, query_lower, norm_query) for h in haystacks)
 
 
 def fetch_perks_fallback(
@@ -58,16 +136,11 @@ def fetch_perks_fallback(
             and not p.get("is_generic_counterpart")
         ]
 
-    if search:
-        query = search.lower().strip()
-        results = [
-            p for p in results
-            if query in p.get("name", "").lower()
-            or query in p.get("alternate_name", "").lower()
-            or query in p.get("description", "").lower()
-            or query in p.get("character", "").lower()
-            or (query == "general" and (not p.get("character") or p.get("character").lower() == "general"))
-        ]
+    if search and search.strip():
+        query_lower = search.strip().lower()
+        norm_query = normalize_search_key(search)
+        is_general_match = "general" in query_lower
+        results = [p for p in results if _perk_dict_matches_search(p, query_lower, norm_query, is_general_match)]
 
     valid_sort_field = sort_by.lower() if sort_by.lower() in service.ALLOWED_SORT_FIELDS else "name"
     reverse = (order.lower() == "desc")
@@ -142,14 +215,8 @@ def fetch_perks(
                     )
                 )
             else:
-                stmt = stmt.where(
-                    or_(
-                        func.lower(Character.name) == character.lower(),
-                        func.lower(Character.real_name) == character.lower(),
-                        func.lower(Character.short_name) == character.lower(),
-                        func.lower(Character.wiki_slug) == character.lower(),
-                    )
-                )
+                matched_char_ids = _resolve_character_ids_by_name(character)
+                stmt = stmt.where(Perk.character_id.in_(matched_char_ids))
 
         if scope and scope.lower() == "general":
             stmt = stmt.where(
@@ -194,24 +261,15 @@ def fetch_perks(
                 )
             )
 
-        if search:
-            query_str = f"%{search.strip().lower()}%"
-            is_general_match = "general" in search.strip().lower()
-            conditions = [
-                func.lower(Perk.name).like(query_str),
-                func.lower(Perk.alternate_name).like(query_str),
-                func.lower(Perk.description).like(query_str),
-                func.lower(Character.name).like(query_str),
-                func.lower(Character.real_name).like(query_str),
+        if search and search.strip():
+            query_lower = search.strip().lower()
+            norm_query = normalize_search_key(search)
+            is_general_match = "general" in query_lower
+            candidates = db.session.scalars(stmt).unique().all()
+            matched_ids = [
+                p.id for p in candidates if _perk_matches_search(p, query_lower, norm_query, is_general_match)
             ]
-            if is_general_match:
-                conditions.append(
-                    or_(
-                        Perk.character_id.is_(None),
-                        Perk.is_generic_counterpart.is_(True),
-                    )
-                )
-            stmt = stmt.where(or_(*conditions))
+            stmt = stmt.where(Perk.id.in_(matched_ids))
 
         valid_sort_field = sort_by.lower() if sort_by.lower() in service.ALLOWED_SORT_FIELDS else "name"
         if valid_sort_field == "character":
@@ -298,40 +356,71 @@ def fetch_perks(
     return fetch_perks_fallback(service, category, character, scope, search, sort_by, order, page, limit)
 
 
+def _perk_translation_names(p: Perk) -> List[str]:
+    names = []
+    if isinstance(p.translations, dict):
+        for loc_data in p.translations.values():
+            if isinstance(loc_data, dict) and loc_data.get("name"):
+                names.append(loc_data["name"])
+    return names
+
+
+def _localized_perk_name(p: Perk, lang: Optional[str]) -> str:
+    if lang and isinstance(p.translations, dict) and lang in p.translations:
+        trans = p.translations.get(lang) or {}
+        if isinstance(trans, dict) and trans.get("name"):
+            return trans["name"]
+    return p.name
+
+
+def _localized_character_name(character: Optional[Character], lang: Optional[str]) -> str:
+    if not character:
+        return "General"
+    if lang and isinstance(character.translations, dict) and lang in character.translations:
+        trans = character.translations.get(lang) or {}
+        if isinstance(trans, dict) and trans.get("name"):
+            return trans["name"]
+    return character.name
+
+
 def fetch_perk_suggestions(
     service,
     query: str = "",
     category: Optional[str] = None,
     limit: int = 10,
+    lang: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
-    """Autocomplete suggestions for perks by name."""
+    """Autocomplete suggestions for perks by name, matched across every stored locale."""
     try:
         stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
         if category and category.lower() != "all":
             stmt = stmt.where(func.lower(Perk.category) == category.lower())
 
-        if query:
-            q_clean = f"%{query.strip().lower()}%"
-            stmt = stmt.where(
-                or_(
-                    func.lower(Perk.name).like(q_clean),
-                    func.lower(Perk.alternate_name).like(q_clean),
-                )
-            )
+        candidates = db.session.scalars(stmt).unique().all()
 
-        stmt = stmt.order_by(Perk.name.asc()).limit(limit)
-        perks = db.session.scalars(stmt).unique().all()
+        if query and query.strip():
+            query_lower = query.strip().lower()
+            norm_query = normalize_search_key(query)
+            candidates = [
+                p for p in candidates
+                if any(
+                    _text_matches(h, query_lower, norm_query)
+                    for h in (p.name, p.alternate_name or "", *_perk_translation_names(p))
+                )
+            ]
+
+        candidates = sorted(candidates, key=lambda p: p.name.lower())[:limit]
         return [
             {
                 "id": p.id,
-                "name": p.name,
+                "name": _localized_perk_name(p, lang),
                 "alternate_name": p.alternate_name or "",
                 "category": p.category,
-                "character": p.character.name if p.character else "General",
+                "character": _localized_character_name(p.character, lang),
                 "icon_url": p.icon_url or "",
                 "icon_local_path": p.icon_local_path or "",
             }
-            for p in perks
+            for p in candidates
         ]
     except Exception:
         q_clean = query.strip().lower()

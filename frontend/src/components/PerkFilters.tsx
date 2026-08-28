@@ -51,6 +51,7 @@ interface PerkFiltersProps {
   characterOptions: CharacterOption[];
   dict?: PerkDictionary;
   onReset: () => void;
+  locale?: string;
 }
 
 export const PerkFilters: React.FC<PerkFiltersProps> = ({
@@ -73,6 +74,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   characterOptions,
   dict,
   onReset,
+  locale,
 }) => {
   const backendBase = getBackendBaseUrl();
 
@@ -119,7 +121,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         const res = await fetch(
           `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(
             search
-          )}&category=${role}&limit=8`
+          )}&category=${role}&limit=8&lang=${encodeURIComponent(locale || 'en')}`
         );
         if (res.ok) {
           const json = await res.json();
@@ -130,7 +132,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       }
     }, 180);
     return () => clearTimeout(timer);
-  }, [search, role, backendBase]);
+  }, [search, role, backendBase, locale]);
 
   const filteredCharacterOptions = useMemo(() => {
     const query = charInput.toLowerCase().trim();

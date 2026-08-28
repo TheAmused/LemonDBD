@@ -370,6 +370,7 @@ function PerksContent() {
               characterOptions={characterOptions}
               dict={dict}
               onReset={handleResetFilters}
+              locale={locale}
             />
 
             {loading ? (

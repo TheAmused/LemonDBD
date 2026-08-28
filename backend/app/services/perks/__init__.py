@@ -66,4 +66,3 @@ __all__ = [
     "fetch_maps",
     "fetch_map_detail",
 ]
-

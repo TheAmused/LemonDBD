@@ -2,10 +2,10 @@
 import html
 import re
 import unicodedata
-from typing import Any, Dict, List, Optional, Set
-from pydantic import BaseModel, Field
+from typing import Any
+from pydantic import BaseModel, ConfigDict, Field
 
-HEADER_EXCLUSIONS: Set[str] = {
+HEADER_EXCLUSIONS: set[str] = {
     "uncommon items",
     "rare items",
     "very rare items",
@@ -22,7 +22,7 @@ HEADER_EXCLUSIONS: Set[str] = {
     "equipment",
 }
 
-DEFAULT_SURVIVORS: List[str] = [
+DEFAULT_SURVIVORS: list[str] = [
     "Meg Thomas",
     "Claudette Morel",
     "Dwight Fairfield",
@@ -32,7 +32,7 @@ DEFAULT_SURVIVORS: List[str] = [
     "Ace Visconti",
 ]
 
-DEFAULT_KILLERS: List[str] = [
+DEFAULT_KILLERS: list[str] = [
     "The Trapper",
     "The Wraith",
     "The Hillbilly",
@@ -93,61 +93,70 @@ def clean_description(text: str) -> str:
 
 class CharacterModel(BaseModel):
     name: str = Field(..., description="Canonical title e.g. 'Meg Thomas' or 'The Wraith'")
-    real_name: Optional[str] = Field(default="", description="Real name e.g. 'Philip Ojomo'")
-    wiki_slug: Optional[str] = ""
-    short_name: Optional[str] = ""
+    real_name: str | None = Field(default="", description="Real name e.g. 'Philip Ojomo'")
+    wiki_slug: str | None = ""
+    short_name: str | None = ""
     category: str = "Survivor"
-    avatar_url: Optional[str] = ""
-    avatar_local_path: Optional[str] = ""
-    release_number: Optional[int] = None
+    avatar_url: str | None = ""
+    avatar_local_path: str | None = ""
+    release_number: int | None = None
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ItemModel(BaseModel):
     name: str
     category: str = ""
-    role: Optional[str] = "Survivor"
-    description: Optional[str] = ""
-    icon_url: Optional[str] = ""
-    icon_local_path: Optional[str] = ""
-    rarity: Optional[str] = ""
+    role: str | None = "Survivor"
+    description: str | None = ""
+    icon_url: str | None = ""
+    icon_local_path: str | None = ""
+    rarity: str | None = ""
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class AddonModel(BaseModel):
     name: str
-    associated_target: Optional[str] = ""
-    category: Optional[str] = ""
-    description: Optional[str] = ""
-    icon_url: Optional[str] = ""
-    icon_local_path: Optional[str] = ""
-    rarity: Optional[str] = ""
+    associated_target: str | None = ""
+    category: str | None = ""
+    description: str | None = ""
+    icon_url: str | None = ""
+    icon_local_path: str | None = ""
+    rarity: str | None = ""
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MapModel(BaseModel):
     id: str
     name: str
     realm: str
-    realm_id: Optional[str] = ""
-    callout_image_url: Optional[str] = ""
-    callout_image_local_path: Optional[str] = ""
-    source: Optional[str] = "hens333"
-    source_label: Optional[str] = "Hens333 12-Clock Callouts"
-    clock_system: Optional[Dict[str, Any]] = None
-    tiles: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
-    objectives: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
-    totems: Optional[List[Dict[str, Any]]] = Field(default_factory=list)
-    seed_variant: Optional[str] = "seed_a"
-    floor: Optional[int] = 1
+    realm_id: str | None = ""
+    callout_image_url: str | None = ""
+    callout_image_local_path: str | None = ""
+    source: str | None = "hens333"
+    source_label: str | None = "Hens333 12-Clock Callouts"
+    clock_system: dict[str, Any] | None = None
+    tiles: list[dict[str, Any]] | None = Field(default_factory=list)
+    objectives: list[dict[str, Any]] | None = Field(default_factory=list)
+    totems: list[dict[str, Any]] | None = Field(default_factory=list)
+    seed_variant: str | None = "seed_a"
+    floor: int | None = 1
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PerkModel(BaseModel):
     name: str
-    alternate_name: Optional[str] = ""
+    alternate_name: str | None = ""
     is_generic_counterpart: bool = False
     character: str = "General"
-    character_real_name: Optional[str] = "General"
-    character_avatar_path: Optional[str] = ""
+    character_real_name: str | None = "General"
+    character_avatar_path: str | None = ""
     category: str = "Survivor"
     description: str = ""
     icon_url: str = ""
     icon_local_path: str = ""
 
+    model_config = ConfigDict(from_attributes=True)

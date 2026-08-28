@@ -1,7 +1,7 @@
 // frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
 import { X } from 'lucide-react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, renderFormattedDbdText } from '../types';
+import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, getLocalizedRarity, renderFormattedDbdText } from '../types';
 
 interface EquipmentDetailModalProps {
   item: AddonItem | EquipmentItem | null;
@@ -47,7 +47,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
             <div>
               {item.rarity && (
                 <span className="text-[10px] font-mono font-bold uppercase text-amber-400 block">
-                  {item.rarity}
+                  {getLocalizedRarity(item.rarity, t)}
                 </span>
               )}
               <h2 className="text-base sm:text-lg font-black text-slate-100 font-mono leading-snug">

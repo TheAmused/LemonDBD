@@ -54,6 +54,22 @@ const ALL_TARGETS: readonly TargetItem[] = [
   { id: 'guesser_stats', label: 'Guesser Stats', desc: 'Streaks and guesser game records', category: 'settings' },
 ];
 
+const TARGET_KEY_MAP: Record<string, string> = {
+  characters: 'Characters',
+  perks: 'Perks',
+  items: 'Items',
+  addons: 'Addons',
+  maps: 'Maps',
+  users: 'Users',
+  ownerships: 'Ownerships',
+  community_builds: 'CommunityBuilds',
+  custom_perks: 'CustomPerks',
+  daily_quests: 'DailyQuests',
+  bug_reports: 'BugReports',
+  generator_settings: 'GeneratorSettings',
+  guesser_stats: 'GuesserStats',
+};
+
 export function ScraperConfigModal({
   isOpen,
   onClose,
@@ -62,6 +78,18 @@ export function ScraperConfigModal({
   dict,
 }: ScraperConfigModalProps) {
   const [activeTab, setActiveTab] = useState<'export' | 'import' | 'purge'>(initialTab);
+
+  const localizedTargets = React.useMemo(() => {
+    const adminDict = (dict?.admin || {}) as Record<string, string>;
+    return ALL_TARGETS.map((target) => {
+      const pascal = TARGET_KEY_MAP[target.id];
+      return {
+        ...target,
+        label: adminDict[`target${pascal}Label`] || target.label,
+        desc: adminDict[`target${pascal}Desc`] || target.desc,
+      };
+    });
+  }, [dict]);
 
   // Export State
   const [exportTargets, setExportTargets] = useState<string[]>(ALL_TARGETS.map((t) => t.id));
@@ -446,12 +474,14 @@ export function ScraperConfigModal({
                 onClick={toggleAllExport}
                 className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
               >
-                {exportTargets.length === ALL_TARGETS.length ? 'Deselect All' : 'Select All'}
+                {exportTargets.length === ALL_TARGETS.length
+                  ? dict?.admin?.deselectAll || 'Deselect All'
+                  : dict?.admin?.selectAll || 'Select All'}
               </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-              {ALL_TARGETS.map((target) => {
+              {localizedTargets.map((target) => {
                 const isSelected = exportTargets.includes(target.id);
                 return (
                   <div
@@ -501,7 +531,14 @@ export function ScraperConfigModal({
                 ) : (
                   <Download className="h-3.5 w-3.5" />
                 )}
-                <span>{isExporting ? 'Exporting...' : `Download Backup (${exportTargets.length})`}</span>
+                <span>
+                  {isExporting
+                    ? dict?.admin?.exportingStatus || 'Exporting...'
+                    : (dict?.admin?.downloadBackup || 'Download Backup ({count})').replace(
+                        '{count}',
+                        String(exportTargets.length)
+                      )}
+                </span>
               </button>
             </div>
           </div>
@@ -651,7 +688,7 @@ export function ScraperConfigModal({
                 ) : (
                   <Upload className="h-3.5 w-3.5" />
                 )}
-                <span>{isImporting ? 'Importing...' : 'Execute Import'}</span>
+                <span>{isImporting ? dict?.admin?.importingStatus || 'Importing...' : dict?.admin?.executeImport || 'Execute Import'}</span>
               </button>
             </div>
           </div>
@@ -686,12 +723,14 @@ export function ScraperConfigModal({
                 onClick={toggleAllPurge}
                 className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
               >
-                {purgeTargets.length === ALL_TARGETS.length ? 'Deselect All' : 'Select All'}
+                {purgeTargets.length === ALL_TARGETS.length
+                  ? dict?.admin?.deselectAll || 'Deselect All'
+                  : dict?.admin?.selectAll || 'Select All'}
               </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-              {ALL_TARGETS.map((target) => {
+              {localizedTargets.map((target) => {
                 const isSelected = purgeTargets.includes(target.id);
                 return (
                   <div
@@ -741,7 +780,14 @@ export function ScraperConfigModal({
                 ) : (
                   <Trash2 className="h-3.5 w-3.5" />
                 )}
-                <span>{isPurging ? 'Purging...' : `Purge Selected (${purgeTargets.length})`}</span>
+                <span>
+                  {isPurging
+                    ? dict?.admin?.purgingStatus || 'Purging...'
+                    : (dict?.admin?.purgeSelected || 'Purge Selected ({count})').replace(
+                        '{count}',
+                        String(purgeTargets.length)
+                      )}
+                </span>
               </button>
             </div>
           </div>

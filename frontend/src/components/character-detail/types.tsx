@@ -286,6 +286,24 @@ export function getLocalizedRarity(rarity?: string, t?: Record<string, string>):
   return rarity;
 }
 
+const ITEM_CATEGORY_KEY_MAP: Record<string, string> = {
+  'med-kit': 'categoryMedkit',
+  'toolbox': 'categoryToolbox',
+  'flashlight': 'categoryFlashlight',
+  'key': 'categoryKey',
+  'map': 'categoryMapItem',
+  'fog vial': 'categoryFogVial',
+  'event': 'categoryEventItems',
+  'firecracker': 'categoryFirecracker',
+  'trial artifact': 'categoryTrialArtifacts',
+};
+
+export function getLocalizedItemCategory(category?: string, t?: Record<string, string>): string | undefined {
+  if (!category) return undefined;
+  const key = ITEM_CATEGORY_KEY_MAP[category.toLowerCase().trim()];
+  return (key && t?.[key]) || category;
+}
+
 export {
   DBD_KEYWORDS,
   ACTION_KEYWORDS,

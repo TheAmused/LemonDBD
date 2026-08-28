@@ -235,7 +235,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 type="button"
                 key={cat.key}
                 onClick={() => setSelectedCategory(cat.key as SurvivorCategoryKey)}
-                className={`relative h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
+                className={`relative h-12 w-14 sm:h-14 sm:w-16 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
                   isSelected
                     ? 'bg-emerald-500/20 border-2 border-emerald-500 text-emerald-400 shadow-lg shadow-emerald-950/60 scale-105'
                     : 'bg-slate-900/60 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
@@ -244,7 +244,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 aria-label={cat.label}
               >
                 <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                <span className="text-[9px] font-mono font-bold truncate max-w-[48px] mt-0.5">
+                <span className="text-[9px] font-mono font-bold truncate max-w-[56px] mt-0.5">
                   {cat.label.split(' ')[0]}
                 </span>
                 {isSelected && (

@@ -539,6 +539,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
+        dict={dict}
       />
       <BugReportModal
         isOpen={bugModalOpen}

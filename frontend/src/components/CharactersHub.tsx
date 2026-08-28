@@ -32,6 +32,7 @@ import {
   getRarityTileStyle,
 } from '@/components/character-detail/types';
 import { RoleCategory, PerkDictionary } from '@/types/perks';
+import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 interface OwnedCharacter {
@@ -734,6 +735,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
+        dict={dict as unknown as Dictionary}
       />
     </div>
   );

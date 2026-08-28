@@ -63,6 +63,13 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isBottomSheetOpen]);
 
+  const hensTooltip = dict?.maps?.clockCalloutScheme
+    ? `Hens333 (${dict.maps.clockCalloutScheme})`
+    : 'Hens333 (12-Clock)';
+  const samoelTooltip = dict?.maps?.isometricScheme
+    ? `SamoelColt (${dict.maps.isometricScheme})`
+    : 'SamoelColt (Isometric)';
+
   return (
     <div
       className="flex flex-col w-full h-[calc(100vh-14rem)] min-h-[480px] rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-950/95 shadow-xl dark:shadow-2xl overflow-hidden relative backdrop-blur-xl"
@@ -74,10 +81,10 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
       >
         <div className="flex items-center gap-2 min-w-0">
           <span className="rounded-full bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-0.5 text-[11px] font-black text-cyan-700 dark:text-cyan-400 whitespace-nowrap font-mono">
-            {activeMap?.realm || 'Select a Map'}
+            {activeMap?.realm || dict?.maps?.selectMap || 'Select a Map'}
           </span>
           <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white truncate font-mono">
-            {activeMap ? activeMap.name : 'Select a Map'}
+            {activeMap ? activeMap.name : dict?.maps?.selectMap || 'Select a Map'}
           </h2>
         </div>
 
@@ -92,7 +99,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               type="button"
               onClick={() => onSourceChange('hens333')}
               aria-pressed={activeSource === 'hens333'}
-              title={dict?.maps?.clockCalloutScheme ? `Hens333 (${dict?.maps?.clockCalloutScheme})` : 'Hens333 (12-Clock)'}
+              title={hensTooltip}
               className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer min-h-[30px] min-w-[30px] flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500 ${
                 activeSource === 'hens333'
                   ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-black shadow-sm'
@@ -106,7 +113,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               type="button"
               onClick={() => onSourceChange('samoelcolt')}
               aria-pressed={activeSource === 'samoelcolt'}
-              title={dict?.maps?.isometricScheme ? `SamoelColt (${dict?.maps?.isometricScheme})` : 'SamoelColt (Isometric)'}
+              title={samoelTooltip}
               className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer min-h-[30px] min-w-[30px] flex items-center justify-center focus:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 ${
                 activeSource === 'samoelcolt'
                   ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black shadow-sm'
@@ -204,7 +211,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
             <div className="flex items-center gap-2 truncate">
               <Compass className="h-4 w-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
               <span className="truncate">
-                {activeMap ? activeMap.name : 'Browse All Maps & Realms'}
+                {activeMap ? activeMap.name : dict?.maps?.browseAllMaps || 'Browse All Maps & Realms'}
               </span>
             </div>
             <div className="flex items-center gap-1.5 shrink-0 text-slate-400 dark:text-slate-400">
@@ -270,7 +277,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
               <button
                 type="button"
                 onClick={() => onSelectRealm('all')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500 ${
                   selectedRealm === 'all'
                     ? 'bg-cyan-500/15 border-cyan-500/40 text-cyan-700 dark:text-cyan-300 shadow-md'
                     : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'
@@ -287,7 +294,7 @@ export const MobileMapLayout: React.FC<MobileMapLayoutProps> = ({
                     key={r}
                     type="button"
                     onClick={() => onSelectRealm(r)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border min-h-[32px] focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500 ${
                       selectedRealm === r
                         ? 'bg-cyan-500/15 border-cyan-500/40 text-cyan-700 dark:text-cyan-300 shadow-md'
                         : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'

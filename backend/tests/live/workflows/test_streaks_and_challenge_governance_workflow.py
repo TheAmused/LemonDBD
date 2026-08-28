@@ -16,6 +16,12 @@ class TestStreaksAndChallengeGovernanceWorkflow:
         admin_client: AuthenticatedClient,
         auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
     ) -> None:
+        # Zapewnij stan początkowy
+        admin_client.put(
+            "/api/v1/admin/challenge-modes/gauntlet",
+            json={"is_enabled": True},
+        )
+
         client, headers, user = auth_client_factory(
             "challenge_master", "cmaster@example.com", "pass123"
         )
@@ -44,25 +50,28 @@ class TestStreaksAndChallengeGovernanceWorkflow:
         hist_res = client.get("/api/v1/history-streak/run?mode=medium", headers=headers)
         assert hist_res.status_code == 200
 
-        dis_res = admin_client.put(
-            "/api/v1/admin/challenge-modes/gauntlet",
-            json={"is_enabled": False, "reason": "Gauntlet maintenance"},
-        )
-        assert dis_res.status_code == 200
+        try:
+            # Test wyłączenia trybu przez admina
+            dis_res = admin_client.put(
+                "/api/v1/admin/challenge-modes/gauntlet",
+                json={"is_enabled": False, "reason": "Gauntlet maintenance"},
+            )
+            assert dis_res.status_code == 200
 
-        client_new, headers_new, user_new = auth_client_factory(
-            "blocked_runner", "block@example.com", "pass123"
-        )
-        blocked_res = client_new.get(
-            "/api/v1/gauntlet-streak/run?role=killer", headers=headers_new
-        )
-        assert blocked_res.status_code == 400
-        assert "disabled" in blocked_res.get_json()["error"].lower()
-
-        en_res = admin_client.put(
-            "/api/v1/admin/challenge-modes/gauntlet", json={"is_enabled": True}
-        )
-        assert en_res.status_code == 200
+            client_new, headers_new, user_new = auth_client_factory(
+                "blocked_runner", "block@example.com", "pass123"
+            )
+            blocked_res = client_new.get(
+                "/api/v1/gauntlet-streak/run?role=killer", headers=headers_new
+            )
+            assert blocked_res.status_code == 400
+            assert "disabled" in blocked_res.get_json()["error"].lower()
+        finally:
+            # Zawsze przywróć stan aktywny
+            en_res = admin_client.put(
+                "/api/v1/admin/challenge-modes/gauntlet", json={"is_enabled": True}
+            )
+            assert en_res.status_code == 200
 
         unblocked_res = client_new.get(
             "/api/v1/gauntlet-streak/run?role=killer", headers=headers_new

@@ -23,8 +23,8 @@ import {
   RoleCategory,
   GeneratorMode,
   GeneratorStoredState,
-  PerkDictionary,
 } from '@/types/perks';
+import { Dictionary } from '@/locales/types';
 import { WheelOfFortune, EXHAUSTION_PERK_NAMES } from './WheelOfFortune';
 import { ChaosWheelModal, ChaosMutator } from './ChaosWheelModal';
 import { CharacterConfigModal } from './CharacterConfigModal';
@@ -45,7 +45,7 @@ import {
 interface PerkGeneratorProps {
   allPerks: Perk[];
   onSelectPerk: (perk: Perk) => void;
-  dict?: PerkDictionary;
+  dict?: Dictionary;
 }
 
 const STORAGE_KEY = 'lemon_dbd_generator_v7';
@@ -386,19 +386,17 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
     <div className="w-full space-y-6">
       <header className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:border-slate-800 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-5 shadow-sm dark:shadow-2xl backdrop-blur-2xl">
         <div
-          className={`pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full opacity-20 blur-3xl transition-all duration-700 ${
-            isSurvivor ? 'bg-emerald-500' : 'bg-rose-600'
-          }`}
+          className={`pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full opacity-20 blur-3xl transition-all duration-700 ${isSurvivor ? 'bg-emerald-500' : 'bg-rose-600'
+            }`}
         />
 
         <div className="relative z-10 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex items-center gap-3">
             <div
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border shadow-sm dark:shadow-lg ${
-                isSurvivor
-                  ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                  : 'border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400'
-              }`}
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border shadow-sm dark:shadow-lg ${isSurvivor
+                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                : 'border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400'
+                }`}
             >
               <Dices className="h-5 w-5 animate-pulse" />
             </div>
@@ -429,11 +427,10 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               <button
                 type="button"
                 onClick={() => handleRoleChange('Survivor')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
-                  isSurvivor
-                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md'
-                    : 'text-slate-600 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${isSurvivor
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md'
+                  : 'text-slate-600 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-slate-200'
+                  }`}
               >
                 <Shield className="h-3.5 w-3.5" />
                 <span>{dict?.generator?.survivor || 'Survivor'}</span>
@@ -442,11 +439,10 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               <button
                 type="button"
                 onClick={() => handleRoleChange('Killer')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
-                  !isSurvivor
-                    ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-md'
-                    : 'text-slate-600 hover:text-rose-700 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${!isSurvivor
+                  ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-md'
+                  : 'text-slate-600 hover:text-rose-700 dark:text-slate-400 dark:hover:text-slate-200'
+                  }`}
               >
                 <Skull className="h-3.5 w-3.5" />
                 <span>{dict?.generator?.killer || 'Killer'}</span>
@@ -462,11 +458,10 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               <button
                 type="button"
                 onClick={() => handleGenModeChange('wheel')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
-                  genMode === 'wheel'
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md'
-                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${genMode === 'wheel'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                  }`}
               >
                 <CircleDot className="h-3.5 w-3.5" />
                 <span>{dict?.generator?.modeWheel || 'Wheel'}</span>
@@ -475,11 +470,10 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
               <button
                 type="button"
                 onClick={() => handleGenModeChange('instant')}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${
-                  genMode === 'instant'
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md'
-                    : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer ${genMode === 'instant'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black shadow-md'
+                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                  }`}
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>{dict?.generator?.modeInstant || 'Instant'}</span>
@@ -501,16 +495,14 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
             <button
               type="button"
               onClick={handleToggleNoRepeat}
-              className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-                noRepeatPerks
-                  ? 'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-300'
-                  : 'border-slate-200 bg-slate-100/90 text-slate-600 dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+              className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${noRepeatPerks
+                ? 'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-300'
+                : 'border-slate-200 bg-slate-100/90 text-slate-600 dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                }`}
             >
               <Repeat
-                className={`h-3.5 w-3.5 ${
-                  noRepeatPerks ? 'text-amber-600 dark:text-amber-400' : ''
-                }`}
+                className={`h-3.5 w-3.5 ${noRepeatPerks ? 'text-amber-600 dark:text-amber-400' : ''
+                  }`}
               />
               <span>{dict?.generator?.noRepeatLabel || 'No-Repeat'}</span>
             </button>
@@ -576,11 +568,10 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                 <button
                   type="button"
                   onClick={rollInstantLoadout}
-                  className={`flex items-center gap-3 rounded-2xl px-10 py-5 font-black text-lg tracking-wider uppercase shadow-2xl transition-all duration-300 cursor-pointer ${
-                    isSurvivor
-                      ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/80 active:scale-95'
-                      : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/80 active:scale-95'
-                  }`}
+                  className={`flex items-center gap-3 rounded-2xl px-10 py-5 font-black text-lg tracking-wider uppercase shadow-2xl transition-all duration-300 cursor-pointer ${isSurvivor
+                    ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white shadow-emerald-950/80 active:scale-95'
+                    : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white shadow-rose-950/80 active:scale-95'
+                    }`}
                 >
                   <Dices className="h-6 w-6 fill-current animate-spin" />
                   <span>
@@ -632,11 +623,10 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                           onSelectPerk(perk);
                         }
                       }}
-                      className={`group relative flex cursor-pointer flex-col justify-between rounded-2xl border p-4 shadow-sm dark:shadow-lg backdrop-blur-xl transition-all duration-200 ${
-                        isSelectedForWheelSlot
-                          ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/50'
-                          : 'border-slate-200 bg-slate-50 hover:border-amber-500/50 dark:border-slate-800 dark:bg-slate-950/80 dark:hover:border-amber-500/50'
-                      }`}
+                      className={`group relative flex cursor-pointer flex-col justify-between rounded-2xl border p-4 shadow-sm dark:shadow-lg backdrop-blur-xl transition-all duration-200 ${isSelectedForWheelSlot
+                        ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/50'
+                        : 'border-slate-200 bg-slate-50 hover:border-amber-500/50 dark:border-slate-800 dark:bg-slate-950/80 dark:hover:border-amber-500/50'
+                        }`}
                     >
                       <div className="flex flex-col gap-3">
                         <div className="flex items-center justify-between">
@@ -664,8 +654,12 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                                 type="button"
                                 onClick={(e) => handleClearSlot(idx, e)}
                                 className="rounded-lg p-1 text-slate-400 hover:bg-rose-500/20 hover:text-rose-500 transition-colors cursor-pointer"
-                                title={dict?.generator?.clearSlotTooltip || 'Clear slot'}
-                                aria-label={`Clear slot ${idx + 1}`}
+                                title={dict?.generator?.clearSlotTooltip || ''}
+                                aria-label={
+                                  dict?.generator?.clearSlotTooltip
+                                    ? `${dict.generator.clearSlotTooltip} ${idx + 1}`
+                                    : `${dict?.generator?.slotLabel || 'Slot'} ${idx + 1}`
+                                }
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
                               </button>
@@ -701,7 +695,7 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                             ) : avatarSrc ? (
                               <img
                                 src={avatarSrc}
-                                alt={perk?.character || 'Avatar'}
+                                alt={perk?.character || ''}
                                 className="h-14 w-14 rounded-xl object-cover border-2 border-slate-200 dark:border-slate-700 shadow-md group-hover:border-amber-500/60 transition-colors duration-300"
                               />
                             ) : (
@@ -715,11 +709,10 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                             )}
 
                             <div
-                              className={`absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border shadow-sm backdrop-blur-md ${
-                                isSurvivor
-                                  ? 'border-emerald-500/60 bg-emerald-100 text-emerald-700 ring-2 ring-white dark:bg-emerald-950 dark:text-emerald-400 dark:ring-slate-950'
-                                  : 'border-rose-500/60 bg-rose-100 text-rose-700 ring-2 ring-white dark:bg-rose-950 dark:text-rose-400 dark:ring-slate-950'
-                              }`}
+                              className={`absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border shadow-sm backdrop-blur-md ${isSurvivor
+                                ? 'border-emerald-500/60 bg-emerald-100 text-emerald-700 ring-2 ring-white dark:bg-emerald-950 dark:text-emerald-400 dark:ring-slate-950'
+                                : 'border-rose-500/60 bg-rose-100 text-rose-700 ring-2 ring-white dark:bg-rose-950 dark:text-rose-400 dark:ring-slate-950'
+                                }`}
                               title={role}
                             >
                               {isSurvivor ? (
@@ -735,16 +728,16 @@ export const PerkGenerator: React.FC<PerkGeneratorProps> = ({
                           <h3 className="text-sm font-black leading-tight text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-1">
                             {isObscuredByBlindness
                               ? dict?.generator?.clickToReveal ||
-                                '??? (Click to Reveal)'
+                              '??? (Click to Reveal)'
                               : perk
-                              ? perk.name
-                              : dict?.generator?.emptySlot || 'Empty Slot'}
+                                ? perk.name
+                                : dict?.generator?.emptySlot || 'Empty Slot'}
                           </h3>
                           <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
                             {perk
                               ? perk.character || 'General Perk'
                               : dict?.generator?.spinOrRollPrompt ||
-                                'Spin wheel or roll'}
+                              'Spin wheel or roll'}
                           </p>
                         </div>
                       </div>

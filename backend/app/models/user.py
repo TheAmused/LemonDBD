@@ -55,11 +55,21 @@ class User(Base):
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
 
+    # lazy="select" (the default) on purpose: nothing in the codebase reads
+    # user.character_ownerships / user.perk_ownerships directly -- ownership
+    # data is fetched separately via direct UserCharacterOwnership /
+    # UserPerkOwnership queries (see app/services/ownership/). These
+    # relationships exist only so cascade="all, delete-orphan" can clean up
+    # on user deletion. eager-loading them (lazy="selectin", plus each row's
+    # own lazy="joined" Character/Perk) meant every select(User) anywhere in
+    # the app -- every login, every /auth/me check, every registration's
+    # duplicate check -- paid for a full join across every owned perk and
+    # character for that user on every request, for data nobody used.
     character_ownerships: Mapped[list["UserCharacterOwnership"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan", lazy="selectin"
+        back_populates="user", cascade="all, delete-orphan"
     )
     perk_ownerships: Mapped[list["UserPerkOwnership"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan", lazy="selectin"
+        back_populates="user", cascade="all, delete-orphan"
     )
     bug_reports: Mapped[list["BugReport"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"

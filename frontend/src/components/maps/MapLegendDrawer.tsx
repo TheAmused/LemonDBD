@@ -1,9 +1,9 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapLegendDrawer.tsx
 
 import React, { useState } from 'react';
 import { Clock, Layers, ChevronDown, ChevronUp, Info, Compass } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import { getMapLandmarks, MapLandmarks } from '@/utils/mapLandmarks';
 
 export interface ClockSystemData {
@@ -81,8 +81,8 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
   const isSamoel = source === 'samoelcolt';
 
   const defaultTitle = isSamoel
-    ? '4-Quadrant Sector System (Isometric Scheme)'
-    : '12-Clock Callout System (Hens333 Navigation)';
+    ? dict?.maps?.quadrantSystemTitle || '4-Quadrant Sector System (Isometric Scheme)'
+    : dict?.maps?.clockSystemTitle || '12-Clock Callout System (Hens333 Navigation)';
 
   const displayTitle = title || defaultTitle;
 
@@ -112,22 +112,30 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
 
   const sectors = [
     {
-      label: isSamoel ? 'North Sector' : "12 O'Clock (Top)",
+      label: isSamoel
+        ? dict?.maps?.northSector || 'North Sector'
+        : dict?.maps?.twelveOClock || "12 O'Clock (Top)",
       value: twelveVal,
       badge: isSamoel ? 'N' : '12',
     },
     {
-      label: isSamoel ? 'East Sector' : "3 O'Clock (Right)",
+      label: isSamoel
+        ? dict?.maps?.eastSector || 'East Sector'
+        : dict?.maps?.threeOClock || "3 O'Clock (Right)",
       value: threeVal,
       badge: isSamoel ? 'E' : '3',
     },
     {
-      label: isSamoel ? 'South Sector' : "6 O'Clock (Bottom)",
+      label: isSamoel
+        ? dict?.maps?.southSector || 'South Sector'
+        : dict?.maps?.sixOClock || "6 O'Clock (Bottom)",
       value: sixVal,
       badge: isSamoel ? 'S' : '6',
     },
     {
-      label: isSamoel ? 'West Sector' : "9 O'Clock (Left)",
+      label: isSamoel
+        ? dict?.maps?.westSector || 'West Sector'
+        : dict?.maps?.nineOClock || "9 O'Clock (Left)",
       value: nineVal,
       badge: isSamoel ? 'W' : '9',
     },
@@ -153,6 +161,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
                 ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                 : 'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400'
             }`}
+            aria-hidden="true"
           >
             {isSamoel ? <Layers className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
           </div>
@@ -162,8 +171,8 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
             </h4>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
               {isSamoel
-                ? 'Steam Workshop 3D Isometric Map Reference'
-                : 'Clockwise navigation callouts for team callouts'}
+                ? dict?.maps?.quadrantSystemSubtitle || 'Steam Workshop 3D Isometric Map Reference'
+                : dict?.maps?.clockSystemSubtitle || 'Clockwise navigation callouts for team callouts'}
             </p>
           </div>
         </div>
@@ -176,11 +185,15 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
               handleToggle();
             }}
             aria-expanded={isExpanded}
-            aria-label={isExpanded ? 'Collapse Legend' : 'Expand Legend'}
+            aria-label={
+              isExpanded
+                ? dict?.maps?.collapseLegend || 'Collapse Legend'
+                : dict?.maps?.expandLegend || 'Expand Legend'
+            }
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors min-h-[36px] min-w-[36px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
             data-testid="map-legend-toggle-btn"
           >
-            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {isExpanded ? <ChevronUp className="h-4 w-4" aria-hidden="true" /> : <ChevronDown className="h-4 w-4" aria-hidden="true" />}
           </button>
         )}
       </div>
@@ -189,7 +202,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
         <div className="p-3.5 md:p-4 space-y-3" data-testid="map-legend-body">
           {descriptionVal && (
             <div className="flex items-start gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 p-3 text-xs text-slate-700 dark:text-slate-300 shadow-inner">
-              <Info className="h-4 w-4 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" />
+              <Info className="h-4 w-4 text-amber-500 dark:text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
               <span>{descriptionVal}</span>
             </div>
           )}
@@ -210,6 +223,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
                       ? 'border-emerald-500/50 bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300'
                       : 'border-amber-500/50 bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300'
                   }`}
+                  aria-hidden="true"
                 >
                   <Compass className="h-3.5 w-3.5" />
                 </span>
@@ -244,7 +258,7 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
                   >
                     {sector.label}
                   </span>
-                  <span className="flex h-5 w-5 items-center justify-center rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-[10px] font-black text-slate-600 dark:text-slate-400 font-mono shadow-sm">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-[10px] font-black text-slate-600 dark:text-slate-400 font-mono shadow-sm" aria-hidden="true">
                     {sector.badge}
                   </span>
                 </div>
@@ -259,3 +273,4 @@ export const MapLegendDrawer: React.FC<MapLegendDrawerProps> = ({
     </section>
   );
 };
+

@@ -169,9 +169,6 @@ export default function QuestsPage() {
                       {dict?.quests?.xpSystem || 'XP System'}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 max-w-xl">
-                    {dict?.quests?.subtitle || 'Complete daily and weekly trials to earn XP, level up your status, and unlock achievements.'}
-                  </p>
                 </div>
               </div>
 

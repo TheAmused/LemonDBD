@@ -2,12 +2,11 @@
 // frontend/src/components/PerkModal.tsx
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { X, User, Shield, Skull, Copy, Check, ImageOff, Repeat } from 'lucide-react';
+import { X, User, Shield, Skull, ImageOff, Repeat } from 'lucide-react';
 import { Perk, PerkDictionary } from '@/types/perks';
 import {
   getPerkIconUrl,
   getCharacterAvatarUrl,
-  formatPerkSlug,
 } from '@/utils/perkUtils';
 import { PerkDescription } from '@/components/PerkDescription';
 
@@ -22,7 +21,6 @@ export const PerkModal: React.FC<PerkModalProps> = ({
   onClose,
   dict,
 }) => {
-  const [copied, setCopied] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
 
@@ -54,17 +52,6 @@ export const PerkModal: React.FC<PerkModalProps> = ({
     perk.character === 'General' ||
     Boolean(perk.is_generic_counterpart);
   const isSurvivor = perk.category === 'Survivor';
-
-  const handleCopySlug = async () => {
-    const slug = formatPerkSlug(perk.name);
-    try {
-      await navigator.clipboard.writeText(slug);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (e) {
-      console.error('Failed copying slug to clipboard:', e);
-    }
-  };
 
   return (
     <div
@@ -157,25 +144,6 @@ export const PerkModal: React.FC<PerkModalProps> = ({
             <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 font-mono">
               {dict?.modal?.perkDescription || 'Perk Description'}
             </h3>
-            <button
-              type="button"
-              onClick={handleCopySlug}
-              className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-amber-400 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-400 rounded px-1.5 py-0.5"
-            >
-              {copied ? (
-                <>
-                  <Check className="h-3.5 w-3.5 text-emerald-400" />
-                  <span className="text-emerald-400 font-bold">
-                    {dict?.modal?.slugCopied || 'Copied!'}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>{dict?.modal?.copySlug || 'Copy Identifier'}</span>
-                </>
-              )}
-            </button>
           </div>
 
           <div

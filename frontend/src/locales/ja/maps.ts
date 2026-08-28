@@ -1,6 +1,6 @@
 // frontend/src/locales/ja/maps.ts
 export default {
-  "searchPlaceholder": "マップまたはレルムを検索...",
+  "searchPlaceholder": "検索...",
   "searchAria": "マップまたはレルムを検索",
   "clearSearchAria": "検索をクリア",
   "providerAria": "マップ提供元ソース",

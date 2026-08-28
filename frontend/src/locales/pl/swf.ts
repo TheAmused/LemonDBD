@@ -2,7 +2,6 @@
 export default {
   "engineBadge": "Kreator Drużyny SWF",
   "pageTitle": "Planer Zestawów 4-Osobowej Drużyny",
-  "pageSubtitle": "Koordynuj role ocalałych, eliminuj powtarzalność perków i maksymalizuj synergię drużynową dla zespołów Survive With Friends.",
   "shareLoadout": "Udostępnij Zestaw Drużyny",
   "copiedToast": "Link do zestawu drużyny skopiowany do schowka! Podziel się nim ze znajomymi.",
   "redundancyDetector": "Wykrywacz Duplikatów Umiejętności",
@@ -29,7 +28,7 @@ export default {
   "conflictLabel": "Konflikt",
   "selectPerkTitle": "Wybierz Umiejętność dla Ocalałego {id} (Slot {slot})",
   "choosePerkVault": "Wybierz ze Skarbca Umiejętności Ocalałych",
-  "searchPlaceholder": "Szukaj umiejętności ocalałych...",
+  "searchPlaceholder": "Szukaj...",
   "loadingPerks": "Ładowanie umiejętności ocalałych...",
   "noPerksFound": "Nie znaleziono pasujących umiejętności.",
   "loadingSwf": "Ładowanie Planera SWF...",

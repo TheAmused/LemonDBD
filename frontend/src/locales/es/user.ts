@@ -1,7 +1,6 @@
 // frontend/src/locales/es/user.ts
 export default {
   "profileTitle": "Perfil de Usuario y Cuenta",
-  "profileSubtitle": "Administra tu perfil, estadísticas registradas, personajes adquiridos y reportes de errores.",
   "tabOverview": "Resumen de Cuenta",
   "tabBugReports": "Mis Reportes de Errores",
   "memberSince": "Miembro desde",
@@ -14,7 +13,6 @@ export default {
   "statusResolved": "Resuelto",
   "statusClosed": "Cerrado",
   "bugReportsTitle": "Tus Reportes de Errores Enviados",
-  "bugReportsSubtitle": "Sigue el estado de investigación, respuestas y soluciones de tus tickets.",
   "reportNewBug": "Reportar Nuevo Error",
   "loadingReports": "Cargando tus reportes...",
   "noReportsTitle": "No Hay Reportes de Errores Enviados",
@@ -42,7 +40,6 @@ export default {
   "authRequiredTitle": "Autenticación Requerida",
   "authRequiredDesc": "Por favor, inicia sesión o crea una cuenta para ver tu perfil de LemonDBD, gestionar tus enseñables y registrar tus desafíos.",
   "returnToHome": "Volver al Inicio",
-  "activePlayerSubtitle": "Jugador Activo y Miembro de la Comunidad LemonDBD",
   "quickShortcuts": "Accesos Rápidos",
   "accountCreatedVerificationSent": "¡Cuenta creada! Hemos enviado un código de verificación a {email}.",
   "usernameOrEmailLabel": "Usuario o Correo Electrónico",
@@ -69,8 +66,6 @@ export default {
   "authVerifyEmailTitle": "Verifica tu Correo",
   "authSignInTitle": "Iniciar Sesión en LemonDBD",
   "authRegisterTitle": "Crear Cuenta de LemonDBD",
-  "authSignInSubtitle": "Accede a tus personajes, habilidades desbloqueadas y builds personales.",
-  "authRegisterSubtitle": "Únete a la comunidad para seguir rachas, habilidades enseñables y estadísticas del juego.",
   "authResetSubtitle": "Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.",
   "authVerifySubtitle": "Revisa tu bandeja de entrada para ver el código que te enviamos.",
   "verifyAndContinue": "Verificar y Continuar",

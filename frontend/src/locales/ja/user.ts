@@ -1,7 +1,6 @@
 // frontend/src/locales/ja/user.ts
 export default {
   "profileTitle": "ユーザープロフィール＆アカウント",
-  "profileSubtitle": "プロフィール、記録統計、キャラクター所持状況、バグレポートの管理。",
   "tabOverview": "アカウント概要",
   "tabBugReports": "マイバグレポート",
   "memberSince": "登録日",
@@ -14,7 +13,6 @@ export default {
   "statusResolved": "解決済み",
   "statusClosed": "クローズ",
   "bugReportsTitle": "送信したバグレポート一覧",
-  "bugReportsSubtitle": "報告したチケットの調査状況、開発者からの返信、修正対応を確認できます。",
   "reportNewBug": "新しいバグを報告",
   "loadingReports": "送信済みチケットを読み込み中...",
   "noReportsTitle": "送信されたバグレポートはありません",
@@ -42,7 +40,6 @@ export default {
   "authRequiredTitle": "ログインが必要です",
   "authRequiredDesc": "LemonDBDのプロフィール閲覧、固有パークの管理、ゲームチャレンジの記録を行うにはログインまたは新規登録してください。",
   "returnToHome": "ホームに戻る",
-  "activePlayerSubtitle": "アクティブプレイヤー ＆ LemonDBDコミュニティメンバー",
   "quickShortcuts": "クイックショートカット",
   "accountCreatedVerificationSent": "アカウントを作成しました！ {email} 宛に認証コードを送信しました。",
   "usernameOrEmailLabel": "ユーザー名またはメールアドレス",
@@ -69,8 +66,6 @@ export default {
   "authVerifyEmailTitle": "メールアドレスを確認",
   "authSignInTitle": "LemonDBDにサインイン",
   "authRegisterTitle": "LemonDBDアカウントを作成",
-  "authSignInSubtitle": "所有キャラクター、パーク解放、個人ビルドにアクセスします。",
-  "authRegisterSubtitle": "コミュニティに参加してストリーク、教示パーク、ゲーム統計を記録しましょう。",
   "authResetSubtitle": "メールアドレスを入力すると、パスワード再設定用のリンクをお送りします。",
   "authVerifySubtitle": "送信された確認コードを受信箱でご確認ください。",
   "verifyAndContinue": "確認して続ける",

@@ -178,17 +178,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     ? dict?.user?.authRegisterTitle || 'Create LemonDBD Account'
                     : dict?.user?.resetPassword || 'Reset Your Password'}
           </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-            {notice?.type === 'verify-reminder' || notice?.type === 'register-success'
-              ? dict?.user?.authVerifySubtitle || "Check your inbox for the code we sent you."
-              : notice?.type === 'forgot-sent'
-                ? dict?.user?.authResetSubtitle || "Enter your email and we'll send you a reset link."
-                : mode === 'login'
-                  ? dict?.user?.authSignInSubtitle || 'Access your owned characters, perk unlocks, and personal builds.'
-                  : mode === 'register'
-                    ? dict?.user?.authRegisterSubtitle || 'Join the community to track streaks, teachables, and game stats.'
-                    : dict?.user?.authResetSubtitle || "Enter your email and we'll send you a reset link."}
-          </p>
+          {(notice?.type === 'verify-reminder' ||
+            notice?.type === 'register-success' ||
+            notice?.type === 'forgot-sent' ||
+            mode === 'forgot') && (
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+              {notice?.type === 'verify-reminder' || notice?.type === 'register-success'
+                ? dict?.user?.authVerifySubtitle || 'Check your inbox for the code we sent you.'
+                : dict?.user?.authResetSubtitle || "Enter your email and we'll send you a reset link."}
+            </p>
+          )}
         </div>
 
         {error && (

@@ -1,7 +1,6 @@
 // frontend/src/locales/de/customPerks.ts
 export default {
   "conceptLab": "Studio & Konzeptlabor",
-  "subtitle": "Entwirf originelle Dead by Daylight Perk-Konzepte mit interaktiver Diamantkarten-Vorschau oder entdecke und bewerte Kreationen der Community.",
   "designer": "Perk-Designer",
   "configureConcept": "Perk-Konzept Konfigurieren",
   "requiredFields": "* Pflichtfelder",
@@ -10,7 +9,7 @@ export default {
   "authorPlaceholder": "z. B. EntityArchitekt",
   "descPlaceholder": "Beschreibe die Perk-Mechanik... Nutze **Fettschrift** für Statuseffekte.",
   "conceptTag": "LemonDBD Konzept",
-  "searchPlaceholder": "Konzepte nach Name, Mechanik oder Charakter durchsuchen...",
+  "searchPlaceholder": "Suchen...",
   "createNew": "Neues Konzept Erstellen",
   "tagExhausted": "+**Erschöpft**",
   "tagHindered": "+**Gehindert**",

@@ -41,9 +41,6 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-slate-100 font-mono">
             {dict?.sidebar?.adminControlCenter || 'Admin Control Center'}
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            {dict?.admin?.adminControlCenterSubtitle || 'User directory, JSON database export/import, and scraper orchestration.'}
-          </p>
         </div>
       </div>
 

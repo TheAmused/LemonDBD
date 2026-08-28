@@ -4,7 +4,6 @@ export default {
   "syncWiki": "Wiki-Daten synchronisieren",
   "syncing": "Synchronisiere Daten...",
   "perksVaultTitle": "Talente-Tresor & Kodex",
-  "perksVaultSubtitle": "Vollständiger Katalog aller Dead by Daylight Überlebenden- und Killer-Lehrtalente, allgemeinen Talente und Aliasse.",
   "perksVaultPageTitle": "LemonDBD - Dead by Daylight Talente-Tresor",
   "perkRandomizerPageTitle": "LemonDBD - Perk-Zufallsgenerator",
   "loadingPerks": "Lade Talente-Tresor...",

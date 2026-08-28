@@ -215,10 +215,6 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
                   {t.draftSubtitle || 'Strategic 1v1 Perk Banning & Picking Engine'}
                 </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                {t.draftSubtitle ||
-                  'Ban & Pick perks interactively for tournament matches with live spectator support.'}
-              </p>
             </div>
           </div>
 

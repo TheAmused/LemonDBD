@@ -160,6 +160,30 @@ export function formatKillerHeight(height?: string, t?: Record<string, string>):
   return height || t?.heightAverage || 'Average';
 }
 
+export function localizeMetresUnit(count: number, locale: string): string {
+  switch (locale) {
+    case 'pl': {
+      if (count === 1) return 'metr';
+      const lastDigit = count % 10;
+      const lastTwo = count % 100;
+      if (lastDigit >= 2 && lastDigit <= 4 && !(lastTwo >= 12 && lastTwo <= 14)) return 'metry';
+      return 'metrów';
+    }
+    case 'de':
+      return 'Meter';
+    case 'es':
+      return count === 1 ? 'metro' : 'metros';
+    case 'ja':
+      return 'メートル';
+    default:
+      return count === 1 ? 'metre' : 'metres';
+  }
+}
+
+export function localizeTerrorRadiusText(raw: string, locale: string): string {
+  return raw.replace(/(\d+)\s*metres?\b/gi, (_match, num: string) => `${num} ${localizeMetresUnit(Number(num), locale)}`);
+}
+
 export function getCharacterSlug(name: string): string {
   return name
     .toLowerCase()

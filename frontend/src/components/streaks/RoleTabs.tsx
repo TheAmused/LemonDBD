@@ -18,7 +18,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
   const tabs = [
     {
       id: 'survivor',
-      label: dict?.filters?.survivor || 'Survivor',
+      label: dict?.characterDetail?.roleSurvivor || 'Survivor',
       icon: Shield,
       active: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/40 shadow-sm',
       hover: 'hover:border-emerald-500/50 hover:text-emerald-700 dark:hover:text-emerald-400',
@@ -26,7 +26,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
     },
     {
       id: 'killer',
-      label: dict?.filters?.killer || 'Killer',
+      label: dict?.characterDetail?.roleKiller || 'Killer',
       icon: Skull,
       active: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/40 shadow-sm',
       hover: 'hover:border-rose-500/50 hover:text-rose-700 dark:hover:text-rose-400',
@@ -34,7 +34,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
     },
     {
       id: 'challenge',
-      label: `${dict?.filters?.survivor || 'Survivor'}/${dict?.filters?.killer || 'Killer'}`,
+      label: `${dict?.characterDetail?.roleSurvivor || 'Survivor'}/${dict?.characterDetail?.roleKiller || 'Killer'}`,
       icon: Puzzle,
       active: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/40 shadow-sm',
       hover: 'hover:border-cyan-500/50 hover:text-cyan-700 dark:hover:text-cyan-400',

@@ -11,6 +11,7 @@ import {
   getAssetUrl,
   formatLocalizedReleaseDate,
   formatKillerHeight,
+  localizeTerrorRadiusText,
 } from './types';
 import { CharacterBreadcrumbs } from './components/CharacterBreadcrumbs';
 import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
@@ -51,7 +52,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
   const killerSpeed = killerPower?.movement_speed || '4.6 m/s (115%)';
-  const killerTerrorRadius = killerPower?.terror_radius || '32 metres';
+  const killerTerrorRadius = localizeTerrorRadiusText(killerPower?.terror_radius || '32 metres', currentLocale);
   const killerTRMeters = killerPower?.terror_radius_meters || 32;
   const killerHeight = formatKillerHeight(killerPower?.height, t);
 

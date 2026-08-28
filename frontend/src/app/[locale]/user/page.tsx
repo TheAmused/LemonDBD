@@ -391,7 +391,7 @@ export default function UserProfilePage() {
 
           {activeSubTab === 'overview' ? (
             <>
-              <UserMetricsGrid ownership={ownership} />
+              <UserMetricsGrid ownership={ownership} dict={dict} />
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 w-full">

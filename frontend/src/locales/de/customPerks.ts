@@ -1,7 +1,6 @@
 // frontend/src/locales/de/customPerks.ts
 export default {
   "conceptLab": "Studio & Konzeptlabor",
-  "subtitle": "Entwirf originelle Dead by Daylight Perk-Konzepte mit interaktiver Diamantkarten-Vorschau oder entdecke und bewerte Kreationen der Community.",
   "designer": "Perk-Designer",
   "configureConcept": "Perk-Konzept Konfigurieren",
   "requiredFields": "* Pflichtfelder",

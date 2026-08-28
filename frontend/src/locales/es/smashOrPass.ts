@@ -10,7 +10,6 @@ export default {
   "pass": "Pass",
   "superSmash": "Super Smash",
   "leaderboard": "Salón de la Fama",
-  "leaderboardSubtitle": "Estadísticas oficiales de votos de la comunidad en todos los Asesinos y Supervivientes",
   "search": "Buscar candidatos o clasificación...",
   "close": "Cerrar",
   "shuffle": "Mezclar",
@@ -136,9 +135,7 @@ export default {
   "modals": {
     "statsTitle": "Expediente del Candidato",
     "leaderboardTitle": "Salón de la Fama",
-    "leaderboardSubtitle": "Estadísticas oficiales de la comunidad en todos los Asesinos y Supervivientes",
     "personaTitle": "Arquetipo Romántico de la Partida",
-    "personaSubtitle": "Tu informe de compatibilidad psicológica basado en tus patrones de votación",
     "resetConfirmTitle": "¿Reiniciar Todos los Votos?",
     "resetConfirmDesc": "Esto rebobinará todos tus votos en esta sesión y volverá a mezclar la baraja de candidatos.",
     "confirm": "Confirmar",

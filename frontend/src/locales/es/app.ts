@@ -4,7 +4,6 @@ export default {
   "syncWiki": "Sincronizar datos de la Wiki",
   "syncing": "Sincronizando datos...",
   "perksVaultTitle": "Bóveda de Habilidades y Códice",
-  "perksVaultSubtitle": "Catálogo completo de habilidades enseñables, habilidades generales y alias de Supervivientes y Asesinos de Dead by Daylight.",
   "perksVaultPageTitle": "LemonDBD - Bóveda de Habilidades de Dead by Daylight",
   "perkRandomizerPageTitle": "LemonDBD - Generador Aleatorio de Habilidades",
   "loadingPerks": "Cargando Bóveda de Habilidades...",

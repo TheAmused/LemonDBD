@@ -10,7 +10,6 @@ export default {
   "copyLoadout": "構成テキストをコピー",
   "shareCard": "共有用ビルドカード＆QRコード",
   "submitTitle": "カスタムビルドを投稿",
-  "submitSubtitle": "自慢のパーク構成をコミュニティに共有しましょう",
   "buildTitle": "ビルド名 *",
   "buildTitlePlaceholder": "例: 不屈怨霊ナース",
   "description": "説明",

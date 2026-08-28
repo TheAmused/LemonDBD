@@ -10,7 +10,6 @@ export default {
   "copyLoadout": "Copiar texto de la build",
   "shareCard": "Tarjeta compartible y código QR",
   "submitTitle": "Publicar Build Personalizada",
-  "submitSubtitle": "Comparte tu configuración personalizada con la comunidad",
   "buildTitle": "Título de la Build *",
   "buildTitlePlaceholder": "ej. Enfermera con Espíritu Duradero",
   "description": "Descripción",

@@ -44,9 +44,6 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
             <h3 className="text-lg font-black tracking-tight text-white font-mono flex items-center gap-2">
               {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
             </h3>
-            <p className="text-xs text-slate-400">
-              {t.equipmentDescKiller || 'Explore specialized add-ons modifying this killer’s special power.'}
-            </p>
           </div>
         </div>
         <div className="py-8 text-center text-xs text-slate-500 font-mono">
@@ -70,9 +67,6 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
                 {addons.length}
               </span>
             </h3>
-            <p className="text-xs text-slate-400">
-              {t.equipmentDescKiller || 'Explore specialized add-ons modifying this killer’s special power.'}
-            </p>
           </div>
         </div>
       </div>

@@ -378,9 +378,6 @@ export function ScraperConfigModal({
               <h2 id="db-modal-title" className="text-lg font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
                 {dict?.admin?.dbBackupSnapshots || 'Database Backup & Snapshots'}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {dict?.admin?.dbBackupSnapshotsSubtitle || 'Export complete JSON snapshots, restore backups, or manage PostgreSQL via pgAdmin'}
-              </p>
             </div>
           </div>
 

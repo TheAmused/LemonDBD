@@ -10,7 +10,6 @@ export default {
   "copyLoadout": "Loadout-Text kopieren",
   "shareCard": "Teilbare Build-Karte & QR-Code",
   "submitTitle": "Eigenen Build einreichen",
-  "submitSubtitle": "Teile dein individuelles Loadout mit der Community",
   "buildTitle": "Build-Titel *",
   "buildTitlePlaceholder": "z. B. Enduring Spirit Nurse",
   "description": "Beschreibung",

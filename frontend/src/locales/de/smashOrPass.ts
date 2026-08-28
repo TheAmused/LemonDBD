@@ -10,7 +10,6 @@ export default {
   "pass": "Pass",
   "superSmash": "Super Smash",
   "leaderboard": "Ruhmeshalle",
-  "leaderboardSubtitle": "Offizielle Community-Abstimmungsstatistiken für alle Killer & Überlebenden",
   "search": "Kandidaten oder Rangliste durchsuchen...",
   "close": "Schließen",
   "shuffle": "Mischen",
@@ -136,9 +135,7 @@ export default {
   "modals": {
     "statsTitle": "Kandidaten-Dossier",
     "leaderboardTitle": "Ruhmeshalle",
-    "leaderboardSubtitle": "Offizielle Community-Abstimmungsstatistiken für alle Killer & Überlebenden",
     "personaTitle": "Prüfungs-Romantik-Archetyp",
-    "personaSubtitle": "Dein psychologischer Kompatibilitätsbericht basierend auf deinem Abstimmungsverhalten",
     "resetConfirmTitle": "Alle Stimmen zurücksetzen?",
     "resetConfirmDesc": "Dadurch werden alle deine Stimmen in dieser Sitzung zurückgesetzt und das Deck neu gemischt.",
     "confirm": "Bestätigen",

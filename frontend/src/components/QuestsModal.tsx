@@ -121,10 +121,6 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                   {dict?.quests?.xpSystem || 'XP System'}
                 </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-
-                {dict?.quests?.subtitle || 'Complete daily and weekly trials to earn XP and level up your status.'}
-              </p>
             </div>
           </div>
 

@@ -1,6 +1,5 @@
 export default {
   "profileTitle": "User Profile & Account",
-  "profileSubtitle": "Manage your profile, tracked stats, character ownership, and bug reports.",
   "tabOverview": "Account Overview",
   "tabBugReports": "My Bug Reports",
   "memberSince": "Member since",
@@ -13,7 +12,6 @@ export default {
   "statusResolved": "Resolved",
   "statusClosed": "Closed",
   "bugReportsTitle": "Your Submitted Bug Reports",
-  "bugReportsSubtitle": "Track investigation status, feedback, and fixes for your tickets.",
   "reportNewBug": "Report New Bug",
   "loadingReports": "Loading your reported tickets...",
   "noReportsTitle": "No Bug Reports Submitted",
@@ -68,8 +66,6 @@ export default {
   "authVerifyEmailTitle": "Verify Your Email",
   "authSignInTitle": "Sign In to LemonDBD",
   "authRegisterTitle": "Create LemonDBD Account",
-  "authSignInSubtitle": "Access your owned characters, perk unlocks, and personal builds.",
-  "authRegisterSubtitle": "Join the community to track streaks, teachables, and game stats.",
   "authResetSubtitle": "Enter your email and we'll send you a reset link.",
   "authVerifySubtitle": "Check your inbox for the code we sent you.",
   "verifyAndContinue": "Verify & Continue",

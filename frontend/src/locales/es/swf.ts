@@ -2,7 +2,6 @@
 export default {
   "engineBadge": "Motor de Escuadrones SWF",
   "pageTitle": "Planificador de Cargas para 4 Jugadores",
-  "pageSubtitle": "Coordina roles de supervivientes, elimina habilidades redundantes y maximiza la sinergia para partidas de Survive With Friends.",
   "shareLoadout": "Compartir Configuración del Equipo",
   "copiedToast": "¡Enlace copiado al portapapeles! Compártelo con tus compañeros de equipo.",
   "redundancyDetector": "Detector de Redundancia de Habilidades",

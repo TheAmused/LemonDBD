@@ -9,7 +9,6 @@ export default {
   "copyLoadout": "Copy loadout text",
   "shareCard": "Shareable Build Card & QR Code",
   "submitTitle": "Submit Custom Build",
-  "submitSubtitle": "Share your custom loadout with the community",
   "buildTitle": "Build Title *",
   "buildTitlePlaceholder": "e.g. Enduring Spirit Nurse",
   "description": "Description",

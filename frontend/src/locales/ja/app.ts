@@ -4,7 +4,6 @@ export default {
   "syncWiki": "Wikiデータを同期",
   "syncing": "データを同期中...",
   "perksVaultTitle": "パーク保管庫＆図鑑",
-  "perksVaultSubtitle": "Dead by Daylightのサバイバー・キラー固有パーク、共通パーク、別名（エイリアス）の完全カタログ。",
   "perksVaultPageTitle": "LemonDBD - Dead by Daylight パーク保管庫",
   "perkRandomizerPageTitle": "LemonDBD - パークランダマイザー",
   "loadingPerks": "パーク保管庫を読み込み中...",

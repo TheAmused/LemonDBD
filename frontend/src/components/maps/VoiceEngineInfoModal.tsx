@@ -98,9 +98,6 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
               >
                 {t.howItWorksTitle || 'Voice Recognition Engine & Compatibility'}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {t.engineSubtitle || 'Multi-engine architecture with automatic browser fallback'}
-              </p>
             </div>
           </div>
 

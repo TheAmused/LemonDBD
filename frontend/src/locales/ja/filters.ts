@@ -1,6 +1,6 @@
 // frontend/src/locales/ja/filters.ts
 export default {
-  "searchPlaceholder": "パーク名や説明文で検索...",
+  "searchPlaceholder": "検索...",
   "category": "カテゴリー",
   "all": "すべて",
   "allCategories": "すべての陣営",
@@ -22,7 +22,7 @@ export default {
   "generalOnly": "共通パークのみ",
   "everyPerk": "全パーク",
   "ownedOnly": "所持パークのみ",
-  "filterByCharacter": "キャラクターで絞り込み...",
+  "filterByCharacter": "検索...",
   "generalPerksOnly": "共通パークのみ表示",
   "sortByName": "パーク名",
   "sortByCharacter": "キャラクター",

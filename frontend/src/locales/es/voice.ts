@@ -1,7 +1,6 @@
 // frontend/src/locales/es/voice.ts
 export default {
   "engine": "Motor de Reconocimiento",
-  "engineSubtitle": "Arquitectura multimotor con respaldo automático según el navegador",
   "engineNative": "Framework de Voz Web",
   "engineNativeDesc": "Voz en la Nube de Google / Apple",
   "engineClient": "Modelo de Voz en el Cliente",

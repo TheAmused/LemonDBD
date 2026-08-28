@@ -1,6 +1,5 @@
 export default {
   "title": "Trial Quests & Milestones",
-  "subtitle": "Complete daily and weekly trials to earn XP, level up your status, and unlock achievements.",
   "pageTitle": "LemonDBD - Quests & Trials",
   "loadingQuests": "Loading Quests...",
   "xpSystem": "XP System",
@@ -12,6 +11,4 @@ export default {
   "xpSuffix": "XP",
   "allQuestsPrefix": "All Quests (",
   "percentCloseParen": "%)",
-  "questsTitle": "Trial Quests & Milestones",
-  "questsSubtitle": "Complete daily and weekly trials to earn XP, level up your status, and unlock achievements."
 };

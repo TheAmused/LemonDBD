@@ -1,7 +1,6 @@
 // frontend/src/locales/ja/quests.ts
 export default {
   "title": "試練クエスト＆マイルストーン",
-  "subtitle": "デイリーやウィークリーの試練をクリアしてXPを獲得し、ステータスレベルを上げて実績を解放しよう。",
   "pageTitle": "LemonDBD - クエスト＆試練",
   "loadingQuests": "クエストを読み込み中...",
   "xpSystem": "XPシステム",
@@ -13,7 +12,5 @@ export default {
   "xpSuffix": " XP",
   "allQuestsPrefix": "すべてのクエスト (",
   "percentCloseParen": "%)",
-  "questsTitle": "試練クエスト＆マイルストーン",
-  "questsSubtitle": "デイリーやウィークリーの試練をクリアしてXPを獲得し、ステータスレベルを上げて実績を解放しよう。"
 };
 

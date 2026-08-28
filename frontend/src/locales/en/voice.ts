@@ -1,6 +1,5 @@
 export default {
   "engine": "Recognition Engine",
-  "engineSubtitle": "Multi-engine architecture with automatic browser fallback",
   "engineNative": "Web Speech Framework",
   "engineNativeDesc": "Google / Apple Cloud Speech",
   "engineClient": "Client-Side Speech Model",

@@ -194,9 +194,6 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
                 <span>{t.coffeeTitle || 'Support LemonDBD'}</span>
                 <Flame className="h-4 w-4 text-amber-500" />
               </h2>
-              <p className="text-xs text-slate-400">
-                {t.coffeeSubtitle || 'Direct support from the player community'}
-              </p>
             </div>
           </div>
 

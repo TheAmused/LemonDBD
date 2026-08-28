@@ -315,10 +315,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 {dict?.characterDetail?.allCharacters || 'Characters Hub'}
               </h1>
             </div>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-xl">
-              {dict?.characterDetail?.hubSubtitle ||
-                'Explore Dead by Daylight Survivors & Killers. View character details, unique teachable perks, power add-ons, and equipment.'}
-            </p>
           </div>
 
           <div className="flex items-center gap-3">

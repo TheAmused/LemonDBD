@@ -174,11 +174,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
   // Localized Labels
   const title = dict?.smashOrPass?.leaderboard || (locale === 'pl' ? 'Galeria Sław' : 'Hall of Fame');
-  const subtitle =
-    dict?.smashOrPass?.leaderboardSubtitle ||
-    (locale === 'pl'
-      ? 'Oficjalne statystyki głosowania społeczności dla wszystkich Zabójców i Ocalałych'
-      : 'Official community voting statistics across all Killers & Survivors');
   const searchPlaceholder = dict?.smashOrPass?.search || (locale === 'pl' ? 'Szukaj kandydatów lub w rankingu...' : 'Search candidates or leaderboard...');
   const allRolesLabel = dict?.smashOrPass?.filters?.allRoles || dict?.smashOrPass?.allRoles || (locale === 'pl' ? 'Wszystkie Role' : 'All Roles');
   const survivorsLabel = dict?.smashOrPass?.filters?.survivors || dict?.smashOrPass?.survivors || (locale === 'pl' ? 'Ocalali' : 'Survivors');
@@ -370,7 +365,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                   {editionName}
                 </span>
               </div>
-              <p className="text-xs text-zinc-400">{subtitle}</p>
             </div>
           </div>
 

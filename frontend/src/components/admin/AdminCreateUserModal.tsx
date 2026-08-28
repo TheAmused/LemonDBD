@@ -69,9 +69,6 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
             <h3 className="text-base font-black tracking-wider text-slate-100 font-mono">
               {dict?.admin?.createUserTitle || 'Create New User'}
             </h3>
-            <p className="text-xs text-slate-400">
-              {dict?.admin?.createUserSubtitle || 'Add a new account directly to the database'}
-            </p>
           </div>
         </div>
 

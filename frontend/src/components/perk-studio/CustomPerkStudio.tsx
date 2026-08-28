@@ -273,9 +273,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono">
               {dict?.app?.customPerksPageTitle || 'Custom Perk Creator Studio'}
             </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
-              {dict?.customPerks?.subtitle || 'Design original Dead by Daylight perk concepts with a live interactive diamond card preview, or explore and upvote community-created perks.'}
-            </p>
           </div>
           <div className="flex items-center bg-white/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shrink-0 shadow-sm">
             <button

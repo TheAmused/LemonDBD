@@ -1,7 +1,6 @@
 // frontend/src/locales/ja/voice.ts
 export default {
   "engine": "音声認識エンジン",
-  "engineSubtitle": "ブラウザ自動フォールバック対応のマルチエンジン設計",
   "engineNative": "Web Speech フレームワーク",
   "engineNativeDesc": "Google / Apple クラウド音声認識",
   "engineClient": "クライアント側 音声認識モデル",

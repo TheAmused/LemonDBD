@@ -284,9 +284,6 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
               <Skull className="h-7 w-7 text-rose-500" />
               {dict?.app?.killerCalculatorPageTitle || 'Killer Add-on Stat Calculator & TR Radar'}
             </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
-              {dict?.characterDetail?.terrorRadiusVisualizerDesc || 'Select a Killer, pair 2 Add-ons to calculate exact stat deltas (windup time, charge speed, power cooldowns), and toggle Terror Radius perks to view live 2D Radar circle dynamics.'}
-            </p>
           </div>
         </div>
       </div>

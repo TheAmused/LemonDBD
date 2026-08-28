@@ -4,7 +4,6 @@ export default {
   "syncWiki": "Synchronizuj dane z Wiki",
   "syncing": "Synchronizowanie danych...",
   "perksVaultTitle": "Skarbiec i Kodeks Umiejętności",
-  "perksVaultSubtitle": "Kompletny katalog umiejętności uczalnych i ogólnych dla Ocalałych i Zabójców z Dead by Daylight wraz z aliasami.",
   "perksVaultPageTitle": "LemonDBD - Skarbiec Umiejętności Dead by Daylight",
   "perkRandomizerPageTitle": "LemonDBD - Losownik Umiejętności",
   "loadingPerks": "Wczytywanie Skarbca Umiejętności...",

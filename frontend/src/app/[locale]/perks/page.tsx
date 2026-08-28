@@ -279,10 +279,6 @@ function PerksContent() {
                     <h1 className="text-2xl font-black text-slate-100 tracking-tight sm:text-3xl">
                       {dict?.app?.perksVaultTitle || 'Perks Vault & Codex'}
                     </h1>
-                    <p className="text-xs text-slate-400 mt-1 max-w-xl">
-                      {dict?.app?.perksVaultSubtitle ||
-                        'Complete catalog of Dead by Daylight Survivor and Killer teachables, general perks, and aliases.'}
-                    </p>
                   </div>
                 </div>
 

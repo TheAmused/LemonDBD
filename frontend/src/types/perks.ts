@@ -106,8 +106,6 @@ export interface PerkDictionary {
     character?: string;
     role?: string;
     perkDescription?: string;
-    slugCopied?: string;
-    copySlug?: string;
     generalPerk?: string;
     alias?: string;
     clickToInspectPerk?: string;
@@ -116,7 +114,6 @@ export interface PerkDictionary {
     survivorPerk?: string;
     unownedPerk?: string;
     equipment?: string;
-    clickOutsideToClose?: string;
     [key: string]: string | undefined;
   };
   generator?: {
@@ -124,8 +121,6 @@ export interface PerkDictionary {
     pageLabel?: string;
     pagesLabel?: string;
     playableLabel?: string;
-    subtitleOwned?: string;
-    subtitleAll?: string;
     survivor?: string;
     killer?: string;
     modeWheel?: string;
@@ -147,7 +142,6 @@ export interface PerkDictionary {
     generatorMode?: string;
     resetAllTooltip?: string;
     clearSlotTooltip?: string;
-    inventoryCoordinatesNote?: string;
     slotLabel?: string;
     coordOpenPage?: string;
     coordSlot?: string;

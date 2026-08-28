@@ -28,7 +28,7 @@ export default {
   "conflictLabel": "Konflikt",
   "selectPerkTitle": "Perk für Überlebenden {id} auswählen (Slot {slot})",
   "choosePerkVault": "Aus dem Überlebenden-Perk-Tresor wählen",
-  "searchPlaceholder": "Überlebenden-Perks durchsuchen...",
+  "searchPlaceholder": "Suchen...",
   "loadingPerks": "Lade Überlebenden-Perks...",
   "noPerksFound": "Keine passenden Perks gefunden.",
   "loadingSwf": "Lade SWF-Planer...",

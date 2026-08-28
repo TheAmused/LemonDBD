@@ -1,6 +1,6 @@
 // frontend/src/locales/de/filters.ts
 export default {
-  "searchPlaceholder": "Nach Talent-Titel oder Beschreibung suchen...",
+  "searchPlaceholder": "Suchen...",
   "category": "Kategorie",
   "all": "Alle",
   "allCategories": "Alle Rollen",
@@ -22,7 +22,7 @@ export default {
   "generalOnly": "Nur allgemeine",
   "everyPerk": "Jedes Talent",
   "ownedOnly": "Nur besessene",
-  "filterByCharacter": "Nach Charakter filtern...",
+  "filterByCharacter": "Suchen...",
   "generalPerksOnly": "Nur allgemeine Talente",
   "sortByName": "Talentname",
   "sortByCharacter": "Charakter",

@@ -10,7 +10,7 @@ export default {
   "pass": "Pass",
   "superSmash": "Super Smash",
   "leaderboard": "Ruhmeshalle",
-  "search": "Kandidaten oder Rangliste durchsuchen...",
+  "search": "Suchen...",
   "close": "Schließen",
   "shuffle": "Mischen",
   "undo": "Rückgängig",

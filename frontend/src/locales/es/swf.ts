@@ -28,7 +28,7 @@ export default {
   "conflictLabel": "Conflicto",
   "selectPerkTitle": "Seleccionar Habilidad para Superviviente {id} (Casilla {slot})",
   "choosePerkVault": "Elegir de la Bóveda de Habilidades de Superviviente",
-  "searchPlaceholder": "Buscar habilidades de superviviente...",
+  "searchPlaceholder": "Buscar...",
   "loadingPerks": "Cargando habilidades de superviviente...",
   "noPerksFound": "No se encontraron habilidades coincidentes.",
   "loadingSwf": "Cargando Planificador SWF...",

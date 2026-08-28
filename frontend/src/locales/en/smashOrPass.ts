@@ -9,7 +9,7 @@ export default {
   "pass": "Pass",
   "superSmash": "Super Smash",
   "leaderboard": "Hall of Fame",
-  "search": "Search candidates or leaderboard...",
+  "search": "Search...",
   "close": "Close",
   "shuffle": "Shuffle",
   "undo": "Undo",

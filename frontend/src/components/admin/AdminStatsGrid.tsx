@@ -22,7 +22,6 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
         <p className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
           {stats?.total_users ?? '-'}
         </p>
-        <span className="text-[10px] text-slate-500">{dict?.admin?.activeLabel || 'Active:'} {stats?.active_users ?? '-'}</span>
       </div>
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-xl backdrop-blur-sm">
@@ -33,9 +32,6 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
         <p className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
           {stats?.admin_count ?? '-'}
         </p>
-        <span className="text-[10px] text-slate-500">
-          {dict?.admin?.privilegedAccounts || 'Privileged accounts'}
-        </span>
       </div>
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-xl backdrop-blur-sm">
@@ -46,9 +42,6 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
         <p className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
           {stats?.total_characters ?? '98'}
         </p>
-        <span className="text-[10px] text-slate-500">
-          {stats?.survivors_count ?? 54} {dict?.admin?.survAbbrev || 'Surv /'} {stats?.killers_count ?? 44} {dict?.admin?.roleKiller || 'Killer'}
-        </span>
       </div>
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-xl backdrop-blur-sm">
@@ -59,9 +52,6 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
         <p className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
           {stats?.total_perks ?? '321'}
         </p>
-        <span className="text-[10px] text-slate-500">
-          {dict?.admin?.databaseTeachables || 'Database teachables'}
-        </span>
       </div>
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 shadow-xl backdrop-blur-sm col-span-2 sm:col-span-1">
@@ -72,9 +62,6 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
         <p className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">
           {dict?.admin?.online || 'ONLINE'}
         </p>
-        <span className="text-[10px] text-slate-500">
-          {dict?.admin?.relationalStore || 'Relational Store'}
-        </span>
       </div>
     </div>
   );

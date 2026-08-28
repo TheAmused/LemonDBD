@@ -28,7 +28,7 @@ export default {
   "conflictLabel": "Conflict",
   "selectPerkTitle": "Select Perk for Survivor {id} (Slot {slot})",
   "choosePerkVault": "Choose from Survivor perk vault",
-  "searchPlaceholder": "Search survivor perks...",
+  "searchPlaceholder": "Search...",
   "loadingPerks": "Loading survivor perks...",
   "noPerksFound": "No matching perks found.",
   "loadingSwf": "Loading SWF Planner...",

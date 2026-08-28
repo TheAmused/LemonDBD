@@ -259,9 +259,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 <Package className="h-4 w-4" />
                 {activeCategoryConfig.label} {t.bulletSeparator || '•'} {t.items || 'Items'} ({categorizedData.displayedItems.length})
               </h3>
-              <span className="text-[10px] font-mono text-slate-400">
-                {t.clickItemForDetails || 'Click item for details'}
-              </span>
             </div>
 
             {categorizedData.displayedItems.length === 0 ? (
@@ -317,11 +314,11 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                   ? t.artifactMechanics || 'Artifact Mechanics'
                   : `${t.compatibleAddons || 'Compatible Add-ons'} (${categorizedData.displayedAddons.length})`}
               </h3>
-              <span className="text-[10px] font-mono text-slate-400">
-                {selectedCategory === 'trial_exclusive'
-                  ? t.specialTrialRules || 'Special Trial Rules'
-                  : t.attachAddonsPrompt || 'Attach up to 2 per item'}
-              </span>
+              {selectedCategory === 'trial_exclusive' && (
+                <span className="text-[10px] font-mono text-slate-400">
+                  {t.specialTrialRules || 'Special Trial Rules'}
+                </span>
+              )}
             </div>
 
             {selectedCategory === 'trial_exclusive' ? (

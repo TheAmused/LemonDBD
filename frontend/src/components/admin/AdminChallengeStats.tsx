@@ -69,9 +69,6 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats,
                 <div className="text-2xl font-black text-slate-100 font-mono">
                   {breakdown?.total.completed_runs ?? '-'}
                 </div>
-                <div className="text-[10px] text-slate-500">
-                  {breakdown?.total.unique_users ?? '-'} {dict?.admin?.uniqueUsersLabel || 'unique users'}
-                </div>
               </div>
             </div>
 

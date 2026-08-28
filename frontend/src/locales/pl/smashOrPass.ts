@@ -10,7 +10,7 @@ export default {
   "pass": "Pass",
   "superSmash": "Super Smash",
   "leaderboard": "Sala Chwały",
-  "search": "Szukaj kandydatów lub rankingu...",
+  "search": "Szukaj...",
   "close": "Zamknij",
   "shuffle": "Przetasuj",
   "undo": "Cofnij",

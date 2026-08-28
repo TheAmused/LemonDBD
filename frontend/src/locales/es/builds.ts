@@ -3,7 +3,7 @@ export default {
   "title": "Bóveda de Builds de la Comunidad",
   "subtitle": "Descubre, comparte y vota por configuraciones competitivas, temáticas y de memes.",
   "submitBuild": "Publicar Build",
-  "searchPlaceholder": "Buscar por título, descripción, personaje, autor o habilidad...",
+  "searchPlaceholder": "Buscar...",
   "copy": "Copiar",
   "copied": "Copiado",
   "share": "Compartir",

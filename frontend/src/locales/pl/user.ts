@@ -40,7 +40,6 @@ export default {
   "authRequiredTitle": "Wymagane Uwierzytelnienie",
   "authRequiredDesc": "Zaloguj się lub załóż konto, aby przeglądać profil LemonDBD, zarządzać umiejętnościami uczalnymi i śledzić wyzwania w grze.",
   "returnToHome": "Powrót do Strony Głównej",
-  "activePlayerSubtitle": "Aktywny Gracz i Członek Społeczności LemonDBD",
   "quickShortcuts": "Szybkie Skróty",
   "accountCreatedVerificationSent": "Konto utworzone! Wysłaliśmy kod weryfikacyjny na adres {email}.",
   "usernameOrEmailLabel": "Nazwa użytkownika lub E-mail",

@@ -3,7 +3,7 @@ export default {
   "title": "Community-Build-Tresor",
   "subtitle": "Entdecke, teile und bewerte kompetitive, spaßige und thematische Builds.",
   "submitBuild": "Build einreichen",
-  "searchPlaceholder": "Nach Titel, Beschreibung, Charakter, Ersteller oder Talent suchen...",
+  "searchPlaceholder": "Suchen...",
   "copy": "Kopieren",
   "copied": "Kopiert",
   "share": "Teilen",

@@ -3,7 +3,7 @@ export default {
   "title": "Skarbiec Buildów Społeczności",
   "subtitle": "Odkrywaj, udostępniaj i oceniaj turniejowe, memiczne i tematyczne zestawy umiejętności.",
   "submitBuild": "Dodaj Build",
-  "searchPlaceholder": "Szukaj po tytule, opisie, postaci, autorze lub umiejętności...",
+  "searchPlaceholder": "Szukaj...",
   "copy": "Kopiuj",
   "copied": "Skopiowano",
   "share": "Udostępnij",

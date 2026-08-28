@@ -10,7 +10,7 @@ export default {
   "pass": "Pass",
   "superSmash": "Super Smash",
   "leaderboard": "Salón de la Fama",
-  "search": "Buscar candidatos o clasificación...",
+  "search": "Buscar...",
   "close": "Cerrar",
   "shuffle": "Mezclar",
   "undo": "Deshacer",

@@ -9,7 +9,7 @@ export default {
   "authorPlaceholder": "例: エンティティの設計者",
   "descPlaceholder": "パークの性能を記述してください... ステータス効果には **太字** を使用できます。",
   "conceptTag": "LemonDBD コンセプト",
-  "searchPlaceholder": "タイトル、効果、キャラクター名でコンセプトを検索...",
+  "searchPlaceholder": "検索...",
   "createNew": "新しいコンセプトを作成",
   "tagExhausted": "+**疲労**",
   "tagHindered": "+**妨害**",

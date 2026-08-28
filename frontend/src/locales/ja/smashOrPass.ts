@@ -10,7 +10,7 @@ export default {
   "pass": "パス",
   "superSmash": "スーパースマッシュ",
   "leaderboard": "殿堂入りランキング",
-  "search": "キャラクター名やランキングを検索...",
+  "search": "検索...",
   "close": "閉じる",
   "shuffle": "シャッフル",
   "undo": "元に戻す",

@@ -40,7 +40,6 @@ export default {
   "authRequiredTitle": "Autenticación Requerida",
   "authRequiredDesc": "Por favor, inicia sesión o crea una cuenta para ver tu perfil de LemonDBD, gestionar tus enseñables y registrar tus desafíos.",
   "returnToHome": "Volver al Inicio",
-  "activePlayerSubtitle": "Jugador Activo y Miembro de la Comunidad LemonDBD",
   "quickShortcuts": "Accesos Rápidos",
   "accountCreatedVerificationSent": "¡Cuenta creada! Hemos enviado un código de verificación a {email}.",
   "usernameOrEmailLabel": "Usuario o Correo Electrónico",

@@ -28,7 +28,7 @@ export default {
   "conflictLabel": "重複・競合",
   "selectPerkTitle": "サバイバー {id} のパークを選択 (スロット {slot})",
   "choosePerkVault": "サバイバーパーク一覧から選択",
-  "searchPlaceholder": "サバイバーパークを検索...",
+  "searchPlaceholder": "検索...",
   "loadingPerks": "サバイバーパークを読み込み中...",
   "noPerksFound": "一致するパークが見つかりません。",
   "loadingSwf": "SWFプランナーを読み込み中...",

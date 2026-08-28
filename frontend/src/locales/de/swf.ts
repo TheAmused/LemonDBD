@@ -2,7 +2,6 @@
 export default {
   "engineBadge": "SWF-Squad-Team-Engine",
   "pageTitle": "4-Spieler Team-Loadout-Planer",
-  "pageSubtitle": "Koordiniere Überlebenden-Rollen, vermeide Perk-Redundanzen und maximiere die Team-Synergie für Survive With Friends Gruppen.",
   "shareLoadout": "Squad-Loadout Teilen",
   "copiedToast": "Squad-Loadout-URL in die Zwischenablage kopiert! Teile sie mit deinen Mitspielern.",
   "redundancyDetector": "Team-Perk-Redundanzdetektor",
@@ -29,7 +28,7 @@ export default {
   "conflictLabel": "Konflikt",
   "selectPerkTitle": "Perk für Überlebenden {id} auswählen (Slot {slot})",
   "choosePerkVault": "Aus dem Überlebenden-Perk-Tresor wählen",
-  "searchPlaceholder": "Überlebenden-Perks durchsuchen...",
+  "searchPlaceholder": "Suchen...",
   "loadingPerks": "Lade Überlebenden-Perks...",
   "noPerksFound": "Keine passenden Perks gefunden.",
   "loadingSwf": "Lade SWF-Planer...",

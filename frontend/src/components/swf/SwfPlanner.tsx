@@ -321,10 +321,6 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono tracking-tight">
               {t.pageTitle || '4-Player Team Loadout Planner'}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-              {t.pageSubtitle ||
-                'Coordinate survivor roles, eliminate perk redundancy, and maximize team synergy for Survive With Friends squads.'}
-            </p>
           </div>
 
           <button

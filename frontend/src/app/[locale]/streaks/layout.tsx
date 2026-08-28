@@ -123,7 +123,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
             </header>
 
             <div className="mb-6">
-              <RoleTabs locale={locale} />
+              <RoleTabs locale={locale} dict={dict} />
             </div>
           </>
         )}

@@ -201,11 +201,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
               {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
             </h2>
-            <p className="text-xs text-slate-400">
-              {isKiller
-                ? t.offeringsDescKiller || 'Burn offerings to the Entity to alter Realm conditions, score gains, and execution rules.'
-                : t.offeringsDescSurvivor || 'Burn offerings before a Trial to modify luck, chests, maps, and protection.'}
-            </p>
           </div>
         </div>
 
@@ -302,9 +297,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             <Gift className="h-4 w-4" />
             {activeCategoryConfig.label} {t.bulletSeparator || '•'} {t.offerings || 'Offerings'} ({sortedAndFilteredOfferings.length})
           </h3>
-          <span className="text-[10px] font-mono text-slate-400">
-            {t.clickOfferingForDetails || 'Click offering for details'}
-          </span>
         </div>
 
         {/* Offerings Grid */}
@@ -332,7 +324,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                   }}
                   onMouseEnter={(e) => {
                     const rect = e.currentTarget.getBoundingClientRect();
-                    setActiveHover({ item: offering, rect });
+                    setActiveHover({ item: offering, rect, category: activeCategoryConfig.label });
                   }}
                   onMouseLeave={() => setActiveHover(null)}
                   className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}

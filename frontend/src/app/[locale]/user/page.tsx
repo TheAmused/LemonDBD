@@ -339,10 +339,6 @@ export default function UserProfilePage() {
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-400 pt-0.5">
-                  {dict?.user?.activePlayerSubtitle || 'Active Player & LemonDBD Community Member'}
-                </p>
-
                 {user.role === 'admin' && (
 
                   <div className="pt-2">
@@ -391,7 +387,7 @@ export default function UserProfilePage() {
 
           {activeSubTab === 'overview' ? (
             <>
-              <UserMetricsGrid ownership={ownership} />
+              <UserMetricsGrid ownership={ownership} dict={dict} />
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 w-full">

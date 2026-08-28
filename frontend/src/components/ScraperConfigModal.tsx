@@ -54,6 +54,22 @@ const ALL_TARGETS: readonly TargetItem[] = [
   { id: 'guesser_stats', label: 'Guesser Stats', desc: 'Streaks and guesser game records', category: 'settings' },
 ];
 
+const TARGET_KEY_MAP: Record<string, string> = {
+  characters: 'Characters',
+  perks: 'Perks',
+  items: 'Items',
+  addons: 'Addons',
+  maps: 'Maps',
+  users: 'Users',
+  ownerships: 'Ownerships',
+  community_builds: 'CommunityBuilds',
+  custom_perks: 'CustomPerks',
+  daily_quests: 'DailyQuests',
+  bug_reports: 'BugReports',
+  generator_settings: 'GeneratorSettings',
+  guesser_stats: 'GuesserStats',
+};
+
 export function ScraperConfigModal({
   isOpen,
   onClose,
@@ -62,6 +78,18 @@ export function ScraperConfigModal({
   dict,
 }: ScraperConfigModalProps) {
   const [activeTab, setActiveTab] = useState<'export' | 'import' | 'purge'>(initialTab);
+
+  const localizedTargets = React.useMemo(() => {
+    const adminDict = (dict?.admin || {}) as Record<string, string>;
+    return ALL_TARGETS.map((target) => {
+      const pascal = TARGET_KEY_MAP[target.id];
+      return {
+        ...target,
+        label: adminDict[`target${pascal}Label`] || target.label,
+        desc: adminDict[`target${pascal}Desc`] || target.desc,
+      };
+    });
+  }, [dict]);
 
   // Export State
   const [exportTargets, setExportTargets] = useState<string[]>(ALL_TARGETS.map((t) => t.id));
@@ -350,29 +378,8 @@ export function ScraperConfigModal({
               <h2 id="db-modal-title" className="text-lg font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
                 {dict?.admin?.dbBackupSnapshots || 'Database Backup & Snapshots'}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {dict?.admin?.dbBackupSnapshotsSubtitle || 'Export complete JSON snapshots, restore backups, or manage PostgreSQL via pgAdmin'}
-              </p>
             </div>
           </div>
-
-
-          <a
-            href={
-              (process.env.NEXT_PUBLIC_PGADMIN_URL && process.env.NEXT_PUBLIC_PGADMIN_URL.trim() !== '')
-                ? process.env.NEXT_PUBLIC_PGADMIN_URL
-                : typeof window !== 'undefined'
-                ? `${window.location.protocol}//${window.location.hostname}:5050`
-                : 'https://localhost:5050'
-            }
-            target="_blank"
-            rel="noopener noreferrer"
-            title={dict?.admin?.openPgAdmin || 'Open pgAdmin Web Management Interface'}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-950/40 text-indigo-300 hover:text-white hover:border-indigo-400 text-xs font-bold transition-all"
-          >
-            <Database className="h-3.5 w-3.5 text-indigo-400" />
-            <span>{dict?.admin?.launchPgAdmin || 'Launch pgAdmin'}</span>
-          </a>
         </div>
 
         {/* Tabs Bar */}
@@ -446,12 +453,14 @@ export function ScraperConfigModal({
                 onClick={toggleAllExport}
                 className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
               >
-                {exportTargets.length === ALL_TARGETS.length ? 'Deselect All' : 'Select All'}
+                {exportTargets.length === ALL_TARGETS.length
+                  ? dict?.admin?.deselectAll || 'Deselect All'
+                  : dict?.admin?.selectAll || 'Select All'}
               </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-              {ALL_TARGETS.map((target) => {
+              {localizedTargets.map((target) => {
                 const isSelected = exportTargets.includes(target.id);
                 return (
                   <div
@@ -501,7 +510,14 @@ export function ScraperConfigModal({
                 ) : (
                   <Download className="h-3.5 w-3.5" />
                 )}
-                <span>{isExporting ? 'Exporting...' : `Download Backup (${exportTargets.length})`}</span>
+                <span>
+                  {isExporting
+                    ? dict?.admin?.exportingStatus || 'Exporting...'
+                    : (dict?.admin?.downloadBackup || 'Download Backup ({count})').replace(
+                        '{count}',
+                        String(exportTargets.length)
+                      )}
+                </span>
               </button>
             </div>
           </div>
@@ -554,7 +570,6 @@ export function ScraperConfigModal({
                   <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a LemonDBD'} <span className="text-emerald-500 font-mono">{'.json'}</span> {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-1">{dict?.admin?.jsonFormatNotice || 'Accepts full or partial JSON database exports'}</p>
                 </div>
 
               )}
@@ -651,7 +666,7 @@ export function ScraperConfigModal({
                 ) : (
                   <Upload className="h-3.5 w-3.5" />
                 )}
-                <span>{isImporting ? 'Importing...' : 'Execute Import'}</span>
+                <span>{isImporting ? dict?.admin?.importingStatus || 'Importing...' : dict?.admin?.executeImport || 'Execute Import'}</span>
               </button>
             </div>
           </div>
@@ -686,12 +701,14 @@ export function ScraperConfigModal({
                 onClick={toggleAllPurge}
                 className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
               >
-                {purgeTargets.length === ALL_TARGETS.length ? 'Deselect All' : 'Select All'}
+                {purgeTargets.length === ALL_TARGETS.length
+                  ? dict?.admin?.deselectAll || 'Deselect All'
+                  : dict?.admin?.selectAll || 'Select All'}
               </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-              {ALL_TARGETS.map((target) => {
+              {localizedTargets.map((target) => {
                 const isSelected = purgeTargets.includes(target.id);
                 return (
                   <div
@@ -741,7 +758,14 @@ export function ScraperConfigModal({
                 ) : (
                   <Trash2 className="h-3.5 w-3.5" />
                 )}
-                <span>{isPurging ? 'Purging...' : `Purge Selected (${purgeTargets.length})`}</span>
+                <span>
+                  {isPurging
+                    ? dict?.admin?.purgingStatus || 'Purging...'
+                    : (dict?.admin?.purgeSelected || 'Purge Selected ({count})').replace(
+                        '{count}',
+                        String(purgeTargets.length)
+                      )}
+                </span>
               </button>
             </div>
           </div>

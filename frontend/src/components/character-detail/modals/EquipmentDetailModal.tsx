@@ -1,7 +1,7 @@
 // frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
 import { X } from 'lucide-react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, renderFormattedDbdText } from '../types';
+import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, getLocalizedRarity, renderFormattedDbdText } from '../types';
 
 interface EquipmentDetailModalProps {
   item: AddonItem | EquipmentItem | null;
@@ -47,7 +47,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
             <div>
               {item.rarity && (
                 <span className="text-[10px] font-mono font-bold uppercase text-amber-400 block">
-                  {item.rarity}
+                  {getLocalizedRarity(item.rarity, t)}
                 </span>
               )}
               <h2 className="text-base sm:text-lg font-black text-slate-100 font-mono leading-snug">
@@ -74,17 +74,6 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
           <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-2 text-sm">
             {renderFormattedDbdText(item.description || '', false)}
           </div>
-        </div>
-
-        <div className="flex items-center justify-between p-4 px-6 border-t border-slate-800 bg-slate-950/30">
-          <span className="text-xs text-slate-400 font-mono">{t.clickOutsideToClose || 'Esc or click outside to close'}</span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-white text-slate-900 transition-all cursor-pointer shadow-sm"
-          >
-            {t.close || 'Close'}
-          </button>
         </div>
       </div>
     </div>

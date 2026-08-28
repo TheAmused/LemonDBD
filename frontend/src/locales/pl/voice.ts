@@ -1,7 +1,6 @@
 // frontend/src/locales/pl/voice.ts
 export default {
   "engine": "Silnik Rozpoznawania",
-  "engineSubtitle": "Architektura wielosilnikowa z automatycznym mechanizmem awaryjnym (fallback)",
   "engineNative": "Natywny Web Speech Framework",
   "engineNativeDesc": "Google / Apple Cloud Speech",
   "engineClient": "Lokalny Model Mowy Klienta",

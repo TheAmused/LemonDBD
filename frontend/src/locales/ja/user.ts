@@ -1,7 +1,6 @@
 // frontend/src/locales/ja/user.ts
 export default {
   "profileTitle": "ユーザープロフィール＆アカウント",
-  "profileSubtitle": "プロフィール、記録統計、キャラクター所持状況、バグレポートの管理。",
   "tabOverview": "アカウント概要",
   "tabBugReports": "マイバグレポート",
   "memberSince": "登録日",
@@ -14,7 +13,6 @@ export default {
   "statusResolved": "解決済み",
   "statusClosed": "クローズ",
   "bugReportsTitle": "送信したバグレポート一覧",
-  "bugReportsSubtitle": "報告したチケットの調査状況、開発者からの返信、修正対応を確認できます。",
   "reportNewBug": "新しいバグを報告",
   "loadingReports": "送信済みチケットを読み込み中...",
   "noReportsTitle": "送信されたバグレポートはありません",
@@ -42,7 +40,6 @@ export default {
   "authRequiredTitle": "ログインが必要です",
   "authRequiredDesc": "LemonDBDのプロフィール閲覧、固有パークの管理、ゲームチャレンジの記録を行うにはログインまたは新規登録してください。",
   "returnToHome": "ホームに戻る",
-  "activePlayerSubtitle": "アクティブプレイヤー ＆ LemonDBDコミュニティメンバー",
   "quickShortcuts": "クイックショートカット",
   "accountCreatedVerificationSent": "アカウントを作成しました！ {email} 宛に認証コードを送信しました。",
   "usernameOrEmailLabel": "ユーザー名またはメールアドレス",
@@ -65,6 +62,27 @@ export default {
   "adminPanel": "管理コントロールセンター",
   "streaks": "チャレンジ＆ストリーク",
   "generator": "パークランダマイザー",
-  "maps": "マップエクスプローラー"
+  "maps": "マップエクスプローラー",
+  "authVerifyEmailTitle": "メールアドレスを確認",
+  "authSignInTitle": "LemonDBDにサインイン",
+  "authRegisterTitle": "LemonDBDアカウントを作成",
+  "authResetSubtitle": "メールアドレスを入力すると、パスワード再設定用のリンクをお送りします。",
+  "authVerifySubtitle": "送信された確認コードを受信箱でご確認ください。",
+  "verifyAndContinue": "確認して続ける",
+  "verifyEmailAction": "確認",
+  "verifying": "確認中...",
+  "resendCode": "コードを再送信",
+  "resendCodeIn": "{seconds}秒後にコードを再送信",
+  "invalidVerificationCode": "確認コードが無効です。",
+  "failedToResendCode": "コードの再送信に失敗しました。",
+  "digitAriaLabel": "確認コードの{n}桁目",
+  "missingResetToken": "リセットトークンがありません。",
+  "passwordTooShort": "パスワードは6文字以上である必要があります。",
+  "passwordsDoNotMatch": "パスワードが一致しません。",
+  "failedToResetPassword": "パスワードのリセットに失敗しました。",
+  "failedToRequestPasswordReset": "パスワードリセットのリクエストに失敗しました。",
+  "invalidCredentials": "認証情報が無効です。",
+  "registrationFailed": "登録に失敗しました。",
+  "unexpectedError": "予期しないエラーが発生しました。"
 };
 

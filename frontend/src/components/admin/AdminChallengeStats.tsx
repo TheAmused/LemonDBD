@@ -6,20 +6,12 @@ import React from 'react';
 import { Trophy, Skull, Rows3, BookOpen } from 'lucide-react';
 import { AdminStats, ChallengeCompletionBreakdown } from '@/types/admin';
 
-const MODE_CARDS = [
-  { key: 'gauntlet', label: 'Gauntlet', icon: Trophy, color: 'text-amber-400', border: 'border-amber-500/20' },
-  { key: 'chaos', label: 'Chaos Streak', icon: Skull, color: 'text-violet-400', border: 'border-violet-500/20' },
-  { key: 'history', label: 'History Streak', icon: Rows3, color: 'text-slate-400', border: 'border-slate-700' },
-  { key: 'page_streak', label: 'Page Streak', icon: BookOpen, color: 'text-orange-400', border: 'border-orange-500/20' },
+const MODE_CARD_CONFIG = [
+  { key: 'gauntlet', icon: Trophy, color: 'text-amber-400', border: 'border-amber-500/20' },
+  { key: 'chaos', icon: Skull, color: 'text-violet-400', border: 'border-violet-500/20' },
+  { key: 'history', icon: Rows3, color: 'text-slate-400', border: 'border-slate-700' },
+  { key: 'page_streak', icon: BookOpen, color: 'text-orange-400', border: 'border-orange-500/20' },
 ] as const;
-
-const VARIANT_LABELS: Record<string, string> = {
-  survivor: 'Survivor',
-  killer: 'Killer',
-  easy: 'Easy',
-  medium: 'Medium',
-  hell: 'Hell',
-};
 
 interface AdminChallengeStatsProps {
   stats: AdminStats | null;
@@ -44,9 +36,25 @@ const VariantRow: React.FC<{
 export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats, dict }) => {
   const completions = stats?.challenge_completions;
 
+  const MODE_LABELS: Record<string, string> = {
+    gauntlet: dict?.streaks?.gauntlet || 'Gauntlet',
+    chaos: dict?.streaks?.chaosStreak || 'Chaos Streak',
+    history: dict?.streaks?.historyStreak || 'History Streak',
+    page_streak: dict?.streaks?.pageStreak || 'Page Streak',
+  };
+
+  const VARIANT_LABELS: Record<string, string> = {
+    survivor: dict?.characterDetail?.roleSurvivor || 'Survivor',
+    killer: dict?.characterDetail?.roleKiller || 'Killer',
+    easy: dict?.admin?.difficultyEasy || 'Easy',
+    medium: dict?.admin?.difficultyMedium || 'Medium',
+    hell: dict?.admin?.difficultyHell || 'Hell',
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      {MODE_CARDS.map(({ key, label, icon: Icon, color, border }) => {
+      {MODE_CARD_CONFIG.map(({ key, icon: Icon, color, border }) => {
+        const label = MODE_LABELS[key];
         const breakdown: ChallengeCompletionBreakdown | undefined = completions?.[key];
         const variants = Object.entries(breakdown?.by_variant || {});
 

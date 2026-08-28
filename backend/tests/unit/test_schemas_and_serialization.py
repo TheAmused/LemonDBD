@@ -21,6 +21,8 @@ from app.schemas.user import UserCreate, UserResponse, UserUpdate
 
 @pytest.mark.unit
 class TestUserSchemas:
+    """Tests for User schema validation and responses."""
+
     def test_user_create_valid(self) -> None:
         payload = {
             "username": "ClaudetteM",
@@ -70,6 +72,8 @@ class TestUserSchemas:
 
 @pytest.mark.unit
 class TestCharacterAndPerkSchemas:
+    """Tests for Character and Perk serialization contracts."""
+
     def test_character_response_serialization(self) -> None:
         power = KillerPowerSchema(
             name="Spencer's Last Breath",
@@ -135,6 +139,8 @@ class TestCharacterAndPerkSchemas:
 
 @pytest.mark.unit
 class TestCommunityAndStreakSchemas:
+    """Tests for Community builds and challenge streak request payloads."""
+
     def test_community_build_create_validation(self) -> None:
         valid_build = CommunityBuildCreate(
             title="Gen Rush Meta 2026",

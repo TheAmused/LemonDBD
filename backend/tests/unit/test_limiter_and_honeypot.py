@@ -6,6 +6,8 @@ from app.core.limiter import get_client_ip, validate_honeypot
 
 @pytest.mark.unit
 class TestClientIPExtraction:
+    """Tests for secure client IP address resolution through proxy headers."""
+
     @pytest.fixture
     def app_with_ip_test_route(self) -> Flask:
         app = Flask(__name__)
@@ -41,6 +43,8 @@ class TestClientIPExtraction:
 
 @pytest.mark.unit
 class TestHoneypotValidation:
+    """Tests for bot trapping honeypot field detectors on authentication endpoints."""
+
     def test_clean_payload_passes(self) -> None:
         payload = {
             "username": "trapper_main",

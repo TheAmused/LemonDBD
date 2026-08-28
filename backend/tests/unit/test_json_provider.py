@@ -2,9 +2,15 @@
 import dataclasses
 import uuid
 from datetime import date, datetime, timezone
+from enum import Enum
 import pytest
 from flask import Flask, jsonify
 from app.core.json_provider import ORJSONProvider
+
+
+class RealmType(Enum):
+    OUTDOOR = "outdoor"
+    INDOOR = "indoor"
 
 
 @dataclasses.dataclass
@@ -25,6 +31,8 @@ class ModelWithToDict:
 
 @pytest.mark.unit
 class TestORJSONProvider:
+    """Tests for custom fast orjson-backed Flask JSON provider and custom type serializers."""
+
     @pytest.fixture
     def app_with_orjson(self) -> Flask:
         app = Flask(__name__)

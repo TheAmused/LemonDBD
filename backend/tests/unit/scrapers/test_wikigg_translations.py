@@ -1,5 +1,4 @@
 # backend/tests/unit/scrapers/test_wikigg_translations.py
-import unittest
 from unittest.mock import MagicMock
 import pytest
 from app.scrapers.wikigg import WikiGGScraperDriver
@@ -7,11 +6,11 @@ from app.scrapers.types import CharacterData, PerkData, ItemData, AddonData, Kil
 
 
 @pytest.mark.unit
-class TestWikiGGTranslations(unittest.TestCase):
-    def setUp(self):
-        self.driver = WikiGGScraperDriver()
+class TestWikiGGTranslations:
+    """Tests for multi-locale translation scraping, enrichment, and parsing."""
 
-    def test_translation_enrichment_mock(self):
+    def test_translation_enrichment_mock(self) -> None:
+        driver = WikiGGScraperDriver()
         characters = [
             CharacterData(
                 name="The Trapper",
@@ -102,7 +101,7 @@ class TestWikiGGTranslations(unittest.TestCase):
         </table>
         """
 
-        def mock_fetch_lang(lang, page):
+        def mock_fetch_lang(lang: str, page: str) -> str:
             if lang == "pl":
                 if "Umiej" in page:
                     return pl_perks_html
@@ -114,8 +113,8 @@ class TestWikiGGTranslations(unittest.TestCase):
                     return pl_addons_html
             return ""
 
-        self.driver.fetch_lang_page_html = MagicMock(side_effect=mock_fetch_lang)
-        self.driver.scrape_translations(characters, perks, items, addons)
+        driver.fetch_lang_page_html = MagicMock(side_effect=mock_fetch_lang)
+        driver.scrape_translations(characters, perks, items, addons)
 
         assert "en" in perks[0].translations
         assert perks[0].translations["en"]["name"] == "Decisive Strike"
@@ -134,7 +133,3 @@ class TestWikiGGTranslations(unittest.TestCase):
 
         assert "pl" in addons[0].translations
         assert addons[0].translations["pl"]["name"] == "Bateria"
-
-
-if __name__ == "__main__":
-    unittest.main()

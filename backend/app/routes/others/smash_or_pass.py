@@ -3,11 +3,11 @@ import logging
 import threading
 import time
 from collections import defaultdict
-from typing import Dict, List, Optional
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.core.limiter import get_client_ip
 from app.core.security import get_current_user
 from app.models.smash_or_pass import Roster
 from app.services.others.smash_or_pass_service import SmashOrPassService
@@ -25,7 +25,7 @@ class SlidingWindowRateLimiter:
         self.max_requests = max_requests
         self.window_seconds = window_seconds
         self.prune_interval = prune_interval
-        self._requests: Dict[str, List[float]] = defaultdict(list)
+        self._requests: dict[str, list[float]] = defaultdict(list)
         self._lock = threading.Lock()
         self._call_count = 0
 
@@ -59,11 +59,6 @@ class SlidingWindowRateLimiter:
 
 
 vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
-
-
-# ============================================================================
-# Core Multi-Roster API Endpoints
-# ============================================================================
 
 
 @smash_or_pass_bp.route("/rosters", methods=["GET"])
@@ -114,10 +109,7 @@ def get_roster_feed(slug: str):
 
 @smash_or_pass_bp.route("/vote", methods=["POST"])
 def cast_vote():
-    """
-    Cast a vote (smash, pass, super_smash) for an entity or character.
-    Applies sliding-window rate limiting per IP and session identifier.
-    """
+    """Cast a vote (smash, pass, super_smash) for an entity or character."""
     payload = request.get_json(silent=True) or {}
     entity_id = payload.get("entity_id")
     character_slug = payload.get("character_slug") or payload.get("slug")
@@ -130,12 +122,10 @@ def cast_vote():
         or request.cookies.get("session_id")
     )
 
-    # Extract authenticated user: always enforce current_user.id if logged in, prevent spoofing
     current_user = get_current_user()
     user_id = current_user.id if current_user else None
 
-    # Hardened rate limiting: include client IP in rate limiter key
-    remote_ip = request.remote_addr or "127.0.0.1"
+    remote_ip = get_client_ip()
     sub_key = session_id or (f"user:{user_id}" if user_id else "anon")
     client_key = f"{remote_ip}:{sub_key}"
 
@@ -304,11 +294,6 @@ def get_translations():
     except Exception as e:
         logger.error(f"Error fetching translations for locale '{locale}': {e}")
         return jsonify({"error": str(e)}), 500
-
-
-# ============================================================================
-# Legacy Endpoints (Backward Compatibility)
-# ============================================================================
 
 
 @smash_or_pass_bp.route("/editions", methods=["GET"])

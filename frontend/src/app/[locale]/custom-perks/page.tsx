@@ -65,13 +65,14 @@ export default function CustomPerksPage() {
     }
   };
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono">
-        {'Loading...'}
-      </div>
-    );
-  }
+   if (!dict) {
+     return (
+       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono">
+         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+       </div>
+     );
+   }
+
 
 
   return (

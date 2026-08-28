@@ -652,13 +652,14 @@ export default function GuesserPage() {
     }
   };
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
-        {'Loading...'}
-      </div>
-    );
-  }
+   if (!dict) {
+     return (
+       <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
+         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+       </div>
+     );
+   }
+
 
 
   return (

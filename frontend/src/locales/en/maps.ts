@@ -1,3 +1,4 @@
+// frontend/src/locales/en/maps.ts
 export default {
   "searchPlaceholder": "Search map or realm...",
   "searchAria": "Search map or realm",
@@ -91,6 +92,8 @@ export default {
   "killerMindgameCounterDefault": "Killers will attempt to hide red stain by moonwalking backward around high walls or faking window vault angles to force premature pallet drops.",
   "sourceHensClock": "Hens333 (12-Clock)",
   "sourceSamoelIsometric": "SamoelColt (Isometric)",
+  "sourceHens": "Hens333",
+  "sourceSamoel": "SamoelColt",
   "detectedBrowser": "Detected Browser",
   "activeRecognitionEngine": "Active Recognition Engine",
   "bulletSeparator": "•",
@@ -122,3 +125,4 @@ export default {
   "keyV": "V",
   "sectorCalloutsClockSystem": "Sector Callouts & Clock System"
 };
+

@@ -1,3 +1,4 @@
+// frontend/src/locales/en/customPerks.ts
 export default {
   "conceptLab": "Studio & Concept Lab",
   "subtitle": "Design original Dead by Daylight perk concepts with a live interactive diamond card preview, or explore and upvote community-created perks.",
@@ -10,5 +11,9 @@ export default {
   "descPlaceholder": "Write perk mechanics... Use **bold** for key status terms.",
   "conceptTag": "LemonDBD Concept",
   "searchPlaceholder": "Search concepts by title, mechanic, character...",
-  "createNew": "Create New Concept"
+  "createNew": "Create New Concept",
+  "tagExhausted": "+**Exhausted**",
+  "tagHindered": "+**Hindered**",
+  "tagAura": "+**Aura**"
 };
+

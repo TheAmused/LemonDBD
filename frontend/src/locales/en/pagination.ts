@@ -1,3 +1,4 @@
+// frontend/src/locales/en/pagination.ts
 export default {
   "showing": "Showing",
   "of": "of",

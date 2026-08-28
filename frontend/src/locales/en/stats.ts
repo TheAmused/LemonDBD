@@ -1,3 +1,4 @@
+// frontend/src/locales/en/stats.ts
 export default {
   "vaultStats": "Vault Statistics",
   "totalPerks": "Total Perks",

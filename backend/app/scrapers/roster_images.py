@@ -1,3 +1,4 @@
+# backend/app/scrapers/roster_images.py
 import json
 import logging
 import os

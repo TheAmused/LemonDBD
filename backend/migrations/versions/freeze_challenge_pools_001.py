@@ -1,3 +1,4 @@
+# backend/migrations/versions/freeze_challenge_pools_001.py
 """add frozen pool snapshot columns to gauntlet/chaos/history runs
 
 Revision ID: freeze_pools_001

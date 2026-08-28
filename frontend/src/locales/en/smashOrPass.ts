@@ -1,3 +1,4 @@
+// frontend/src/locales/en/smashOrPass.ts
 export default {
   "title": "Smash or Pass",
   "selectRoster": "SELECT ROSTER",

@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/gauntlet/useTargetDraw.ts
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';

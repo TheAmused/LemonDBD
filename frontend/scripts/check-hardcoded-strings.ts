@@ -1,3 +1,4 @@
+// frontend/scripts/check-hardcoded-strings.ts
 import { Project, SyntaxKind, Node } from "ts-morph";
 
 const isStrict = process.argv.includes("--strict");

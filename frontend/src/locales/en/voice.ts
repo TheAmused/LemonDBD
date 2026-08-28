@@ -1,3 +1,4 @@
+// frontend/src/locales/en/voice.ts
 export default {
   "engine": "Recognition Engine",
   "engineSubtitle": "Multi-engine architecture with automatic browser fallback",

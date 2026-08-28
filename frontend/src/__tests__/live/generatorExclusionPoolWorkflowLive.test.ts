@@ -1,3 +1,4 @@
+// frontend/src/__tests__/live/generatorExclusionPoolWorkflowLive.test.ts
 import test from "node:test";
 import assert from "node:assert/strict";
 

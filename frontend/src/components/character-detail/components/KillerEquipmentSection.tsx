@@ -1,3 +1,4 @@
+// frontend/src/components/character-detail/components/KillerEquipmentSection.tsx
 import React, { useState, useMemo } from 'react';
 import { Flame } from 'lucide-react';
 import {

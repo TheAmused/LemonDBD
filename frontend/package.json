@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "tsc --noEmit && npm run check:i18n",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "pretest": "tsc --noEmit",
     "test": "tsx --test src/__tests__/unit/*.test.ts src/__tests__/live/*.test.ts",
     "test:unit": "tsx --test src/__tests__/unit/*.test.ts",
     "test:live": "tsx --test src/__tests__/live/*.test.ts",

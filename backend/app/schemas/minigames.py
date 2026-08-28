@@ -1,7 +1,6 @@
 # backend/app/schemas/minigames.py
 from datetime import datetime
-from typing import List, Optional
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class GeneratorSettingBase(BaseModel):
@@ -16,7 +15,7 @@ class GeneratorSettingBase(BaseModel):
 
 class GeneratorSettingResponse(GeneratorSettingBase):
     id: int
-    updated_at: Optional[datetime] = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -28,7 +27,7 @@ class GeneratorDrawnPerkBase(BaseModel):
 
 class GeneratorDrawnPerkResponse(GeneratorDrawnPerkBase):
     id: int
-    drawn_at: Optional[datetime] = None
+    drawn_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -36,15 +35,15 @@ class GeneratorDrawnPerkResponse(GeneratorDrawnPerkBase):
 class DraftSessionBase(BaseModel):
     room_code: str
     phase: str = "bans"
-    banned_perks: List[str] = []
-    picked_survivor_perks: List[str] = []
-    picked_killer_perks: List[str] = []
+    banned_perks: list[str] = []
+    picked_survivor_perks: list[str] = []
+    picked_killer_perks: list[str] = []
 
 
 class DraftSessionResponse(DraftSessionBase):
     id: int
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -59,7 +58,6 @@ class GuesserStatBase(BaseModel):
 
 class GuesserStatResponse(GuesserStatBase):
     id: int
-    updated_at: Optional[datetime] = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
-

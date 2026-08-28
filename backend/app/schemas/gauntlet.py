@@ -1,22 +1,23 @@
 # backend/app/schemas/gauntlet.py
 from datetime import datetime
-from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Any
+from pydantic import BaseModel, ConfigDict
 
 
 class GauntletMatchLogBase(BaseModel):
     role: str
     character_id: str
     result: str
-    perks: List[Any] = []
+    perks: list[Any] = []
     streak_before: int
     streak_after: int
+    triggered_by: str = "player"
 
 
 class GauntletMatchLogResponse(GauntletMatchLogBase):
     id: int
     run_id: int
-    timestamp: Optional[datetime] = None
+    timestamp: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -41,11 +42,11 @@ class GauntletRunCreate(BaseModel):
 class GauntletRunResponse(GauntletRunBase):
     id: int
     user_id: int
-    completed_characters: List[str] = []
-    checkpoint_characters: List[str] = []
-    current_loadout: Dict[str, Any] = {}
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    completed_characters: list[str] = []
+    checkpoint_characters: list[str] = []
+    current_loadout: dict[str, Any] = {}
+    owned_character_ids: list[str] = []
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
-

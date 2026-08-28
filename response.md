@@ -1,1650 +1,1200 @@
-### src/locales/ja/admin.ts
+### backend/app/core/json_provider.py
+```python
+import dataclasses
+from datetime import date, datetime
+from typing import Any
+from uuid import UUID
+from flask.json.provider import DefaultJSONProvider
 
-```ts
-export default {
-  "killSwitches": "キルスイッチ",
-  "challengeStats": "チャレンジ統計",
-  "auditLog": "監査ログ",
-  "deleteUserTitle": "ユーザーを削除しますか？",
-  "deleteBugReportTitle": "バグレポートを削除しますか？",
-  "loadingAuditLog": "監査ログを読み込み中...",
-  "noAuditLogs": "記録された管理者アクションはまだありません。",
-  "thAdmin": "管理者",
-  "thAction": "操作",
-  "thTarget": "対象",
-  "thReason": "理由",
-  "thWhen": "日時",
-  "searchTicketsPlaceholder": "チケット / 報告者を検索...",
-  "filterLabel": "フィルター:",
-  "statusAll": "すべてのステータス",
-  "statusPending": "確認待ち",
-  "statusInProgress": "対応中",
-  "statusResolved": "解決済み",
-  "statusRejected": "却下 / クローズ",
-  "createUserUsernamePlaceholder": "例: killer_master",
-  "createUserEmailPlaceholder": "例: master@lemondbd.com",
-  "createUserPasswordPlaceholder": "3文字以上",
-  "roleStandard": "一般ユーザー（プレイヤー）",
-  "roleAdministrator": "管理者（フルアクセス権限）",
-  "createAccount": "アカウント作成",
-  "exportBackupTitle": "データベースJSONバックアップのエクスポート",
-  "export": "エクスポート",
-  "importBackupTitle": "データベースJSONバックアップの復元",
-  "import": "インポート",
-  "pgAdminTitle": "pgAdmin Web管理画面を開く（PostgreSQL DBマネージャー）",
-  "pgAdmin": "pgAdmin (DB)",
-  "runScraperTitle": "データスクレイパーとDBシードの実行",
-  "refreshTitle": "メトリクスを更新",
-  "refresh": "更新",
-  "analyticsTitle": "Umamiアナリティクスダッシュボードを開く（PV・機能利用状況）",
-  "analytics": "アナリティクス",
-  "reasonPlaceholder": "例: 能力にバグが発生しているため、修正完了まで一時的に無効化",
-  "totalUsers": "総ユーザー数",
-  "admins": "管理者数",
-  "privilegedAccounts": "特権アカウント",
-  "characters": "キャラクター",
-  "perks": "パーク",
-  "databaseTeachables": "登録固有パーク",
-  "database": "データベース",
-  "online": "オンライン",
-  "relationalStore": "リレーショナルストア",
-  "searchUserPlaceholder": "ユーザー名 / メールアドレスを検索...",
-  "allRoles": "すべての権限",
-  "standardUsers": "一般ユーザー",
-  "createUser": "ユーザーを作成",
-  "thId": "ID",
-  "thUser": "ユーザー",
-  "thEmail": "メールアドレス",
-  "thRole": "権限",
-  "thOwnedChars": "所持キャラ数",
-  "thUnlockedPerks": "解放パーク数",
-  "thStatus": "ステータス",
-  "thActions": "操作",
-  "closeDbModal": "データベースモーダルを閉じる",
-  "openPgAdmin": "pgAdmin Web管理インターフェースを開く",
-  "launchPgAdmin": "pgAdminを起動",
-  "exportJson": "JSONエクスポート",
-  "importJson": "JSONインポート",
-  "purgeReset": "全消去＆リセット",
-  "jsonFormatNotice": "完全または部分的なJSONバックアップに対応",
-  "mergeUpdate": "統合＆更新（安全）",
-  "wipeReplace": "全消去＆置換（クリーン）",
-  "wipeReplaceConfirm": "データベースを全消去して置換しますか？",
-  "purgeConfirm": "選択したテーブルを消去しますか？",
-  "adminControlCenterSubtitle": "ユーザー名簿、JSONバックアップのエクスポート/インポート、スクレイパーの統括管理。",
-  "createUserTitle": "新規ユーザー作成",
-  "createUserSubtitle": "データベースに新しいアカウントを直接追加します",
-  "thUsername": "ユーザー名",
-  "thPassword": "パスワード",
-  "rolePrivilege": "アカウント権限",
-  "cancel": "キャンセル",
-  "reasonShownToPlayers": "理由（プレイヤーに表示）",
-  "challengeModeKillSwitches": "チャレンジモード・キルスイッチ",
-  "pageStreakCompletionsNotice": "ページストリークはキラーごとに1回のみの進行となるため、完了数の詳細内訳は表示されません。",
-  "dbBackupSnapshots": "データベースバックアップ＆スナップショット",
-  "dbBackupSnapshotsSubtitle": "完全なJSONスナップショットのエクスポート、バックアップの復元、またはpgAdminによるPostgreSQL管理",
-  "selectBackupEntities": "バックアップに含めるエンティティを選択",
-  "clickOrDragBackup": "LemonDBDの .json バックアップファイルをクリックまたはドラッグ＆ドロップ",
-  "clickOrDragBackupPrefix": "LemonDBDの",
-  "clickOrDragBackupSuffix": "バックアップファイルをクリックまたはドラッグ＆ドロップ",
-  "chooseImportStrategy": "インポート方式を選択",
-  "mergeUpdateDesc": "既存のデータを削除せず、名前/スラッグに基づいてレコードを上書き・追加します",
-  "wipeReplaceDesc": "対象テーブルを一度空にしてから、アップロードされたデータを完全に復元します",
-  "importResultsBreakdown": "インポート結果の内訳",
-  "selectTablesToWipe": "消去対象テーブルを選択",
-  "close": "閉じる",
-  "pending": "確認待ち",
-  "inProgress": "対応中",
-  "resolved": "解決済み",
-  "totalTickets": "総チケット数",
-  "loadingTickets": "チケットを読み込み中...",
-  "noBugReports": "バグレポートは見つかりませんでした。",
-  "reportedBy": "報告者:",
-  "noEmailProvided": "メールアドレス未登録",
-  "description": "説明",
-  "devFeedbackLabel": "開発者フィードバック / 回答メモ（報告者に公開）",
-  "totalActionsLabel": "件のアクション",
-  "pageLabel": "ページ",
-  "ofLabel": "/",
-  "attachmentsLabel": "添付ファイル",
-  "roleSurvivor": "サバイバー",
-  "roleKiller": "キラー",
-  "bugPoolNotice": "両陣営に対応: キラーの特殊能力にバグがある場合や、Wikiから先行取得された未実装サバイバーを正式リリースまで非表示にする場合に使用します。不具合のあるパーク単体の制限も可能です。",
-  "completionsLabel": "回完了",
-  "middotSeparator": "·",
-  "usersLabel": "ユーザー",
-  "uniqueUsersLabel": "ユニークユーザー",
-  "activeLabel": "有効:",
-  "survAbbrev": "サバ /",
-  "closeSymbol": "×",
-  "userDirectoryLabel": "ユーザー名簿",
-  "bugReportsLabel": "バグレポート",
-  "confirmDeleteUserPrefix": "本当にこのユーザーを削除しますか:",
-  "cannotBeUndone": "この操作は取り消せません。",
-  "kbReadySuffix": "KB（復元準備完了）",
-  "createdCountPrefix": "+",
-  "updatedCountSuffix": "件更新)",
-  "title": "ユーザーアカウント一覧",
-  "loading": "ユーザーを読み込み中...",
-  "noUsers": "該当するユーザーは見つかりませんでした。",
-  "you": "あなた",
-  "promote": "管理者に昇格",
-  "demote": "一般ユーザーに降格",
-  "disableAccount": "アカウントを無効化",
-  "enableAccount": "アカウントを有効化"
-};
+try:
+    import orjson
+    HAS_ORJSON = True
+except ImportError:
+    import json
+    orjson = None  # type: ignore
+    HAS_ORJSON = False
 
+
+def safe_json_loads(val: str | bytes | None, default: Any = None) -> Any:
+    """Safely deserialize JSON string or bytes using orjson with fallback."""
+    if not val:
+        return default
+    try:
+        if HAS_ORJSON:
+            return orjson.loads(val)
+        return json.loads(val)
+    except Exception:
+        return default
+
+
+def safe_json_dumps(val: Any, default_val: str = "{}") -> str:
+    """Safely serialize Python object to JSON string using orjson with fallback."""
+    try:
+        if HAS_ORJSON:
+            return orjson.dumps(val).decode("utf-8")
+        return json.dumps(val)
+    except Exception:
+        return default_val
+
+
+class ORJSONProvider(DefaultJSONProvider):
+    """High-performance JSON provider for Flask using Rust-backed orjson serialization."""
+
+    def default(self, obj: Any) -> Any:
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        if isinstance(obj, UUID):
+            return str(obj)
+        if isinstance(obj, set):
+            return list(obj)
+        if dataclasses.is_dataclass(obj) and not isinstance(obj, type):
+            return dataclasses.asdict(obj)
+        if hasattr(obj, "model_dump") and callable(obj.model_dump):
+            return obj.model_dump()
+        if hasattr(obj, "to_dict") and callable(obj.to_dict):
+            return obj.to_dict()
+        return super().default(obj)
+
+    def dumps(self, obj: Any, **kwargs: Any) -> str:
+        if not HAS_ORJSON:
+            return super().dumps(obj, **kwargs)
+
+        options = (
+            orjson.OPT_NON_STR_KEYS
+            | orjson.OPT_SERIALIZE_NUMPY
+            | orjson.OPT_SERIALIZE_DATACLASS
+            | orjson.OPT_PASSTHROUGH_DATETIME
+        )
+        return orjson.dumps(obj, default=self.default, option=options).decode("utf-8")
+
+    def loads(self, s: str | bytes, **kwargs: Any) -> Any:
+        if not HAS_ORJSON:
+            return super().loads(s, **kwargs)
+        return orjson.loads(s)
 ```
 
-### src/locales/ja/app.ts
+### backend/app/models/character.py
+```python
+from typing import TYPE_CHECKING, Any
+from sqlalchemy import JSON, Boolean, Integer, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
 
-```ts
-export default {
-  "title": "LemonDBD",
-  "syncWiki": "Wikiデータを同期",
-  "syncing": "データを同期中...",
-  "perksVaultTitle": "パーク保管庫＆図鑑",
-  "perksVaultSubtitle": "Dead by Daylightのサバイバー・キラー固有パーク、共通パーク、別名（エイリアス）の完全カタログ。",
-  "perksVaultPageTitle": "LemonDBD - Dead by Daylight パーク保管庫",
-  "perkRandomizerPageTitle": "LemonDBD - パークランダマイザー",
-  "loadingPerks": "パーク保管庫を読み込み中...",
-  "resetFilters": "フィルターをリセット",
-  "adminPageTitle": "LemonDBD - 管理コントロールセンター",
-  "buildsPageTitle": "LemonDBD - コミュニティビルド構成",
-  "guesserPageTitle": "LemonDBD - ミニゲーム＆クイズ",
-  "charactersPageTitle": "LemonDBD - キャラクター＆固有パーク",
-  "customPerksPageTitle": "LemonDBD - カスタムパークスタジオ",
-  "draftPageTitle": "LemonDBD - ドラフトモード",
-  "killerCalculatorPageTitle": "LemonDBD - キラー計算機",
-  "mapsPageTitle": "LemonDBD - 戦術マップコマンドエクスプローラー",
-  "questsPageTitle": "LemonDBD - クエスト＆試練",
-  "resetPasswordPageTitle": "LemonDBD - パスワード再設定",
-  "smashOrPassPageTitle": "LemonDBD - スマッシュ・オア・パス | 霧のロマンス",
-  "streaksPageTitle": "LemonDBD - チャレンジ＆ストリーク",
-  "swfPageTitle": "LemonDBD - フルパ（SWF）チームプランナー",
-  "userPageTitle": "LemonDBD - ユーザープロフィール",
-  "homePageTitle": "LemonDBD - Dead by Daylight コンパニオン",
-  "loading": "読み込み中...",
-  "loadingLemonDBD": "LemonDBDを読み込み中...",
-  "loadingCharactersHub": "キャラクターハブを読み込み中...",
-  "loadingSmashOrPass": "スマッシュ・オア・パスを読み込み中...",
-  "loadingSWFPlanner": "SWFプランナーを読み込み中...",
-  "loadingQuests": "クエストを読み込み中...",
-  "notice": "お知らせ"
-};
+if TYPE_CHECKING:
+    from app.models.perk import Perk
 
-```
 
-### src/locales/ja/builds.ts
+class Character(Base):
+    __tablename__ = "characters"
 
-```ts
-export default {
-  "title": "コミュニティビルド保管庫",
-  "subtitle": "ガチ構成からネタ構成、コンセプトビルドまで、みんなのパーク構成を探して共有・投票しよう。",
-  "submitBuild": "ビルドを投稿",
-  "searchPlaceholder": "タイトル、説明、キャラクター、投稿者、パーク名で検索...",
-  "copy": "コピー",
-  "copied": "コピー完了",
-  "share": "共有",
-  "copyLoadout": "構成テキストをコピー",
-  "shareCard": "共有用ビルドカード＆QRコード",
-  "submitTitle": "カスタムビルドを投稿",
-  "submitSubtitle": "自慢のパーク構成をコミュニティに共有しましょう",
-  "buildTitle": "ビルド名 *",
-  "buildTitlePlaceholder": "例: 不屈怨霊ナース",
-  "description": "説明",
-  "descriptionPlaceholder": "立ち回りやパーク同士のシナジーを簡単に説明してください...",
-  "role": "陣営 *",
-  "survivor": "サバイバー",
-  "killer": "キラー",
-  "category": "カテゴリー *",
-  "targetCharacter": "対象キャラクター",
-  "targetCharacterPlaceholder": "例: ハントレス、メグ",
-  "authorName": "投稿者名",
-  "authorNamePlaceholder": "あなたのユーザー名",
-  "loadoutPerks": "装備パーク（4枠） *",
-  "shareModalTitle": "ビルドカードを共有",
-  "shareModalSubtitle": "QRコードをスキャンするかリンクをコピーして共有",
-  "qrAlt": "ビルドQRコード",
-  "scanMobile": "スマホでスキャン",
-  "linkCopied": "リンクをコピーしました！",
-  "copyShareLink": "共有リンクをコピー",
-  "otzdarva": "Otzdarvaおすすめ",
-  "meta": "ガチ構成（メタ）",
-  "meme": "ネタ・ロマン構成",
-  "stealth": "隠密",
-  "chase": "チェイス特化",
-  "byAuthorPrefix": "作成者:",
-  "targetCharacterLabel": "対象キャラクター:",
-  "sortFields": "並び替え",
-  "newestFirst": "新着順",
-  "mostUpvoted": "高評価順",
-  "perk1Placeholder": "パーク 1（必須）",
-  "perk2Placeholder": "パーク 2（必須）",
-  "perk3Placeholder": "パーク 3（必須）",
-  "perk4Placeholder": "パーク 4（必須）"
-};
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    role: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    code_prefix: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    portrait_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    real_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    short_name: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
+    wiki_slug: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
+    avatar_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    release_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    chapter_name: Mapped[str | None] = mapped_column(String(150), nullable=True)
+    chapter_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    dlc_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    is_licensed: Mapped[bool | None] = mapped_column(Boolean, default=False, nullable=True)
+    is_disabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    disabled_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    release_year: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    release_date: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    dlc_counterparts: Mapped[str | None] = mapped_column(Text, nullable=True)
+    lore: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-```
+    power_name: Mapped[str | None] = mapped_column(String(150), nullable=True)
+    power_description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    power_icon_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    movement_speed: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    terror_radius: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    terror_radius_meters: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    height: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    translations: Mapped[dict[str, Any] | None] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
+    )
 
-### src/locales/ja/card.ts
+    perks: Mapped[list["Perk"]] = relationship(
+        back_populates="character", cascade="all, delete-orphan", lazy="selectin"
+    )
 
-```ts
-export default {
-  "general": "共通パーク",
-  "viewDetails": "パーク詳細を見る",
-  "vaultTotal": "保管庫合計",
-  "ownedPerks": "所持パーク"
-};
-
-```
-
-### src/locales/ja/characterDetail.ts
-
-```ts
-export default {
-  "backToCharacters": "キャラクター一覧に戻る",
-  "roleSurvivor": "サバイバー",
-  "roleKiller": "キラー",
-  "realName": "本名",
-  "codePrefix": "識別コード",
-  "characterOverview": "キャラクター概要",
-  "teachablePerks": "固有パーク",
-  "teachablePerksDesc": "このキャラクター特有の固有パーク。ブラッドウェブで解放することで、すべての{role}で使用可能になります。",
-  "noPerks": "このキャラクターの固有パークは登録されていません。",
-  "loreTitle": "背景ストーリー・伝承",
-  "lorePlaceholder": "エンティティは現在{name}の記憶とアーカイブを収集しています。記録の更新をお待ちください。",
-  "dlcTitle": "DLC＆チャプター情報",
-  "dlcChapter": "チャプター",
-  "dlcType": "リリース区分",
-  "dlcReleaseYear": "リリース年",
-  "dlcLicense": "ライセンス区分",
-  "dlcOriginal": "オリジナル",
-  "dlcLicensed": "版権（コラボ）",
-  "dlcBaseGame": "基本ゲーム収録",
-  "dlcFreeUpdate": "無料アップデート",
-  "dlcParagraph": "単体追加（パラグラフ）",
-  "dlcAssociatedWith": "同時実装キャラクター",
-  "equipmentTitleSurvivor": "サバイバルアイテム＆アドオン",
-  "equipmentDescSurvivor": "修理、治療、脱出、キラー対策に使用可能なサバイバー用アイテムとアドオン。",
-  "equipmentTitleKiller": "能力アドオン＆装備",
-  "equipmentDescKiller": "キラー固有の特殊能力を強化・変化させる専用アドオン。",
-  "noEquipment": "このキャラクター用のアイテムやアドオンは登録されていません。",
-  "fullModelTitle": "3Dキャラクターモデル",
-  "fullModelPlaceholder": "3Dキャラクターモデル表示（準備中）",
-  "fullModelNotice": "高精度3Dモデルビューア。現在はフルポートレートを表示しています。",
-  "modelModePortrait": "ポートレート表示",
-  "modelModeFull": "全身モデル表示",
-  "markAsOwned": "所持中に設定",
-  "markAsUnowned": "未所持に設定",
-  "ownedBadge": "コレクション済み",
-  "unownedBadge": "未所持",
-  "prevCharacter": "前のキャラクター",
-  "nextCharacter": "次のキャラクター",
-  "allCharacters": "キャラクターハブ",
-  "searchEquipment": "アドオン / アイテムを検索...",
-  "inspectPerk": "パークを詳しく見る",
-  "allRarities": "すべてのレア度",
-  "loading": "キャラクター詳細を読み込み中...",
-  "notFoundTitle": "キャラクターが見つかりません",
-  "notFoundDesc": "指定されたキャラクターは存在しないか、読み込めませんでした。",
-  "killerPower": "キラーの特殊能力",
-  "viewKillerPower": "能力の詳細を見る",
-  "killerPowerDesc": "このキラー独自の特殊能力と戦闘メカニズム。",
-  "movementSpeed": "移動速度",
-  "terrorRadius": "脅威範囲（心音範囲）",
-  "height": "背の高さ",
-  "terrorRadiusVisualizer": "脅威範囲ビジュアライザー",
-  "terrorRadiusVisualizerDesc": "心音の伝播範囲とサバイバーの逃走距離を示すインタラクティブ距離マップ。",
-  "heartbeatStages": "心音・BGMの段階",
-  "immediateThreat": "即死圏内・至近距離 (0 - 8m)",
-  "dangerZone": "危険ゾーン (8 - 16m)",
-  "approaching": "接近中 (16 - 24m)",
-  "audibleRange": "感知範囲 (24 - 32m)",
-  "survivorComparison": "サバイバー速度比較",
-  "survivorComparisonDesc": "サバイバーの通常ダッシュ速度は 4.0 m/s (100%) です。",
-  "viewLore": "伝承・ストーリーを読む",
-  "view3DModel": "クリックして3Dモデルを表示",
-  "loreModalTitle": "エンティティのアーカイブ — 背景伝承",
-  "equipmentDetails": "装備・アドオン詳細",
-  "close": "閉じる",
-  "baseGame": "基本ゲーム",
-  "heightTall": "高い",
-  "heightAverage": "普通",
-  "heightShort": "低い",
-  "offeringsTitle": "オファリング＆儀式の供物",
-  "offeringsDescSurvivor": "試練開始前に捧げるレルム指定、運上昇、出現位置、設計図などのオファリング。",
-  "offeringsDescKiller": "エンティティに力を捧げるメメント・モリ、魔除け、暗黒の覆い、フック関連のオファリング。",
-  "allOfferings": "すべてのオファリング",
-  "categoryMori": "メメント・モリ",
-  "categorySpecial": "特殊＆イベント",
-  "categoryBloodpoints": "ブラッドポイント",
-  "categoryMap": "マップ指定（レルム）",
-  "categoryLuck": "運の上昇",
-  "categoryShroud": "出現位置（覆い）",
-  "categoryWard": "保護（魔除け）",
-  "categoryBlueprint": "設計図",
-  "categoryChest": "チェスト＆霧の濃度",
-  "searchOfferings": "オファリングを検索...",
-  "noMatchingOfferings": "条件に一致するオファリングはありません。",
-  "clickToInspect": "クリックして詳細を確認",
-  "rarityCommon": "コモン",
-  "rarityUncommon": "アンコモン",
-  "rarityRare": "レア",
-  "rarityVeryRare": "ベリーレア",
-  "rarityUltraRare": "ウルトラレア",
-  "rarityEvent": "イベント",
-  "raritySpecial": "スペシャル",
-  "combatAttributes": "基本性能＆戦闘ステータス",
-  "clickTerrorRadiusVisualizer": "脅威範囲をクリックしてビジュアライザーを開く",
-  "clickOutsideToClose": "Escまたは枠外クリックで閉じる",
-  "acousticRange": "音響範囲",
-  "entityArchives": "エンティティのアーカイブ",
-  "codex": "図鑑",
-  "enteredTheFog": "霧の森へ足を踏み入れた。",
-  "currentBaseTerrorRadius": "現在の基本脅威範囲",
-  "lullaby": "子守唄",
-  "audible": "可聴域",
-  "chase": "チェイス中",
-  "killerBase": "キラー基本速度",
-  "survivorSprint": "サバイバーダッシュ",
-  "straightGapClose": "直線距離の追いつき時間",
-  "straightLine": "直線距離",
-  "sortRarityLowToHigh": "レア度: 低 → 高",
-  "sortRarityHighToLow": "レア度: 高 → 低",
-  "sortNameAsc": "名前: 五十音順 / A → Z",
-  "clickOfferingForDetails": "オファリングをクリックして詳細を表示",
-  "clickAddonForDetails": "アドオンをクリックして詳細を表示",
-  "clickItemForDetails": "アイテムをクリックして詳細を表示",
-  "clickToInspectPerk": "クリックしてパークの数値を詳しく見る",
-  "killerPerk": "キラーパーク",
-  "survivorPerk": "サバイバーパーク",
-  "unownedPerk": "未所持パーク",
-  "immediateChaseDesc": "最大テンポの心音、激しいチェイスBGM、至近距離での視覚的ステイン（赤い光）。",
-  "dangerZoneDesc": "激しい鼓動音。キラーが障害物や生成の周りで活発に立ち回っています。",
-  "approachingDesc": "リズミカルで安定した心音。サバイバーの目標付近への接近を示します。",
-  "audibleRangeDesc": "試練区画内にキラーが存在することを示す、かすかな最初の音響シグナル。",
-  "generalPerk": "共通パーク",
-  "alias": "別名",
-  "interactiveViewer": "インタラクティブビューア",
-  "breadcrumbs": "パンくずナビゲーション",
-  "highRes3dModelView": "高解像度3Dモデルビュー",
-  "interactive3dMeshEngineWip": "インタラクティブ3Dメッシュエンジン（開発中）",
-  "configRosterDesc": "キャラクターアイコンをクリックして、パークランダマイザーの抽選プールに含めるかを切り替えます。",
-  "hubSubtitle": "Dead by Daylightの全サバイバー＆キラーを探索。キャラクター詳細、固有パーク、能力アドオン、アイテムを網羅。",
-  "hubNoMatchingCharacters": "検索条件に一致するキャラクターは見つかりませんでした。",
-  "togglePerkOwnershipHelp": "パークをクリックして所持・未所持を切り替えます。",
-  "changesSaved": "変更を保存しました",
-  "dismiss": "閉じる",
-  "noTeachablePerksForCharacter": "このキャラクターには固有パークがありません。",
-  "bulletSeparator": "•",
-  "emDashSeparator": "—",
-  "quoteOpen": "「",
-  "quoteClose": "」",
-  "compatibleTarget": "対象アイテム:",
-  "distance45m": "45m",
-  "distance32m": "32m",
-  "distance8m": "8m",
-  "approxSymbol": "約",
-  "secondsUnit": "秒",
-  "configureRosterPrefix": "キャラクター設定:",
-  "characterRosterSuffix": "名簿",
-  "activeSelectionLabel": "選択中:",
-  "totalActiveCharactersLabel": "有効な総キャラクター数:",
-  "saveAndDone": "保存して完了",
-  "meterUnit": "m",
-  "phase3FeatureBadge": "フェーズ3機能",
-  "terrorRadiusPrefix": "脅威範囲:",
-  "outOfTwoSelectedSuffix": "/2 選択中",
-  "baseTrPrefix": "基本脅威範囲:",
-  "modifiedPrefix": "補正後:",
-  "communityGalleryPrefix": "コミュニティギャラリー (",
-  "realTimeLabel": "リアルタイム",
-  "role": "陣営",
-  "perk": "パーク",
-  "lullabyRadius": "子守唄の範囲"
-};
-
-```
-
-### src/locales/ja/customPerks.ts
-
-```ts
-export default {
-  "conceptLab": "スタジオ＆コンセプト開発ラボ",
-  "subtitle": "DbD特有の菱形カードプレビューを見ながらオリジナルのパークコンセプトを設計したり、コミュニティ作成のパークを閲覧して高評価を投票できます。",
-  "designer": "パークデザイナー",
-  "configureConcept": "パークコンセプトを設定",
-  "requiredFields": "* 必須項目",
-  "titlePlaceholder": "例: 呪術：影の帳、アドレナリン・オーバードライブ...",
-  "characterPlaceholder": "例: メグ・トーマス、トラッパー、固有パーク...",
-  "authorPlaceholder": "例: 霧の建築家",
-  "descPlaceholder": "パーク効果を記述... 重要なステータス用語には **太字** を使用できます。",
-  "conceptTag": "LemonDBD コンセプト",
-  "searchPlaceholder": "タイトル、効果メカニズム、キャラクター名で検索...",
-  "createNew": "新しいコンセプトを作成"
-};
-
-```
-
-### src/locales/ja/draft.ts
-
-```ts
-export default {
-  "draftTitle": "競技用ドラフトルーム",
-  "draftSubtitle": "パークの戦略的 1v1 BAN＆PICK エンジン",
-  "roomCode": "ルームコード",
-  "createRoom": "ドラフトルームを作成",
-  "joinRoom": "ルームに参加",
-  "roomCodePlaceholder": "ルームコードを入力（例: AB12CD）",
-  "loadingRoom": "ドラフトルームを読み込み中...",
-  "roomNotFound": "ドラフトルームが見つからないか、有効期限が切れています。",
-  "copyRoomLink": "招待リンクをコピー",
-  "linkCopied": "招待リンクをクリップボードにコピーしました！",
-  "spectatorMode": "ドラフトルームを観戦中",
-  "currentTurn": "現在のターン",
-  "survivorTurn": "サバイバーのターン",
-  "killerTurn": "キラーのターン",
-  "phaseBan": "BANフェーズ",
-  "phasePick": "PICKフェーズ",
-  "phaseCompleted": "ドラフト完了",
-  "bannedPerks": "BANされたパーク",
-  "pickedPerks": "PICKされたパーク",
-  "banAction": "パークをBAN",
-  "pickAction": "パークをPICK",
-  "selectPerkToBan": "BANするパークを選択",
-  "selectPerkToPick": "PICKするパークを選択",
-  "waitingForOpponent": "相手のアクションを待機中...",
-  "plusPrefix": "+",
-  "maxPerSideSuffix": "（各陣営最大3枠）",
-  "loadingDraft": "ドラフトルームを読み込み中...",
-  "noMatchingPerks": "一致するパークは見つかりませんでした。"
-};
-
-```
-
-### src/locales/ja/empty.ts
-
-```ts
-export default {
-  "title": "パークが見つかりませんでした",
-  "subtitle": "検索ワードやフィルター条件を変更してお試しください。",
-  "loading": "パークを読み込み中..."
-};
-
-```
-
-### src/locales/ja/filters.ts
-
-```ts
-export default {
-  "searchPlaceholder": "パーク名や説明文で検索...",
-  "category": "カテゴリー",
-  "all": "すべて",
-  "allCategories": "すべての陣営",
-  "survivor": "サバイバー",
-  "killer": "キラー",
-  "character": "キャラクター",
-  "allCharacters": "すべてのキャラクター",
-  "sortBy": "並び替え基準",
-  "sortName": "パーク名",
-  "sortCharacter": "キャラクター",
-  "sortCategory": "陣営",
-  "order": "昇順/降順",
-  "asc": "昇順（五十音順 / A-Z）",
-  "desc": "降順（五十音逆順 / Z-A）",
-  "clear": "フィルターをリセット",
-  "generatorTab": "パークランダマイザー",
-  "perks": "パーク一覧",
-  "allPerks": "すべてのパーク",
-  "generalOnly": "共通パークのみ",
-  "everyPerk": "全パーク",
-  "ownedOnly": "所持パークのみ",
-  "filterByCharacter": "キャラクターで絞り込み...",
-  "generalPerksOnly": "共通パークのみ表示",
-  "sortByName": "パーク名",
-  "sortByCharacter": "キャラクター",
-  "sortByRole": "陣営",
-  "orderAsc": "昇順（五十音順 / A-Z）",
-  "orderDesc": "降順（五十音逆順 / Z-A）",
-  "aliasLabel": "別名:",
-  "allRarities": "すべてのレア度",
-  "rarityIridescent": "ウルトラレア / イリディセント",
-  "rarityVeryRare": "ベリーレア",
-  "rarityUncommon": "アンコモン",
-  "newestFirst": "新着順",
-  "mostUpvoted": "高評価順",
-  "resetAllFilters": "すべてのフィルターをリセット",
-  "viewMode": "パークグリッド表示"
-};
-
-```
-
-### src/locales/ja/generator.ts
-
-```ts
-export default {
-  "title": "パーク構成ジェネレーター",
-  "subtitle": "ゲーム内のインベントリ座標［ページ / スロット］に基づいてランダムにパークを抽選します。",
-  "modeInstant": "即時抽選",
-  "modeWheel": "ルーレットモード",
-  "configTitle": "インベントリ＆ルーレット設定",
-  "totalPages": "総ページ数",
-  "perksPerPage": "1ページのパーク数",
-  "lastPagePerks": "最終ページのパーク数",
-  "spinDuration": "回転時間（秒）",
-  "resetDefaults": "初期設定に戻す",
-  "rollButton": "新しい構成を抽選",
-  "spinWheels": "スロット #{slot} のルーレットを回す",
-  "spinning": "ルーレット回転中...",
-  "pageWheelTitle": "ページルーレット",
-  "perkWheelTitle": "パークルーレット",
-  "selectedPage": "選択されたページ: {page}",
-  "slotBadge": "ページ {page} / スロット {slot}",
-  "noRepeat": "重複なし抽選",
-  "drawnBadge": "抽選済み: {drawn} / {total}",
-  "resetDrawn": "使用済みパークをリセット",
-  "titleSuffix": "パークランダマイザー",
-  "pageLabel": "ページ",
-  "pagesLabel": "ページ",
-  "playableLabel": "使用可能",
-  "subtitleOwned": "解放・所持しているパークから抽選します。",
-  "subtitleAll": "Dead by Daylightの全パーク保管庫から抽選します。",
-  "survivor": "サバイバー",
-  "killer": "キラー",
-  "perksButtonLabel": "パーク",
-  "noRepeatLabel": "重複なし",
-  "resetAllLabel": "すべてリセット",
-  "noPerksTitle": "利用可能なパークがありません",
-  "noPerksDesc": "フィルター設定を調整するか、パークを解放して抽選を開始してください。",
-  "configureCharacters": "キャラクター設定",
-  "activeLoadoutTitle": "現在のランダム構成",
-  "slotFocus": "スロット #{slot}",
-  "emptySlot": "空きスロット",
-  "spinOrRollPrompt": "ルーレットを回すか抽選ボタンを押してパークを決定してください",
-  "cursedBlindness": "目眩ましの呪い（非表示）",
-  "clickToReveal": "クリックして公開",
-  "rollCompleteLoadout": "4枠のパーク構成を一括抽選",
-  "selectRole": "陣営を選択",
-  "generatorMode": "ジェネレーターモード",
-  "resetAllTooltip": "ルーレット、スロット、抽選履歴をすべてリセット",
-  "clearSlotTooltip": "スロットをクリア",
-  "chaosWheelTitle": "混沌の呪いルーレット",
-  "chaosWheelDesc": "ルーレットを回して4枠のパーク構成に試練の呪いまたはバフを付与します。",
-  "done": "完了",
-  "inventoryCoordinatesNote": "インベントリ座標表示付き［ページ / スロット］",
-  "slotLabel": "スロット #",
-  "coordOpenPage": "［P",
-  "coordSlot": " / S",
-  "coordClose": "］",
-  "emptyCoordinate": "［-/-］"
-};
-
-```
-
-### src/locales/ja/guesser.ts
-
-```ts
-export default {
-  "navLink": "クイズ",
-  "title": "DbD 知識力クイズ",
-  "subtitle": "サバイバー、キラー、能力、パークに関する知識をテストしよう。",
-  "selectMode": "ゲームモードを選択",
-  "currentStreak": "現在の連続正解数",
-  "bestStreak": "最高記録",
-  "accuracy": "正解率",
-  "totalGuesses": "総回答数",
-  "play": "プレイ",
-  "playing": "プレイ中",
-  "correct": "正解！",
-  "incorrect": "不正解！",
-  "next": "次の問題へ",
-  "back": "モード選択に戻る",
-  "loading": "ゲームを読み込み中...",
-  "modeCharacterTitle": "キャラクター当てクイズ",
-  "modeCharacterDesc": "説明文や本名を手がかりにサバイバーやキラー、特殊能力を特定しよう。",
-  "modePerkDescTitle": "パーク説明当てクイズ",
-  "modePerkDescDesc": "効果テキストからパーク名を当てよう。連続正解数が増えるとテキストが徐々に黒塗りに！",
-  "modePerkNameToIconTitle": "パーク名 → アイコン当て",
-  "modePerkNameToIconDesc": "正しいパークアイコンを選ぼう。連続正解数が増えると回転・白黒・拡大の妨害が発生！",
-  "modePerkIconToNameTitle": "アイコン → パーク名当て",
-  "modePerkIconToNameDesc": "アイコン画像からパーク名を当てよう。歪みやエフェクトの妨害が入ります！",
-  "modeMapTitle": "マップ当てクイズ",
-  "modeMapDesc": "レルムの風景、シード、タイル生成、発電機の配置などを見分ける視覚クイズ。",
-  "modeMemesTitle": "DbD ミーム当てクイズ",
-  "modeMemesDesc": "Dead by Daylightコミュニティで流行した定番ネタやミームを当てよう。",
-  "reset": "連続記録をリセット",
-  "streakResetSuccess": "連続記録をリセットしました",
-  "soundOn": "サウンドON",
-  "soundOff": "サウンドOFF",
-  "best": "最高:",
-  "streak": "連続正解",
-  "wip": "開発中",
-  "charAvatarHint": "キャラクターアイコンのヒント",
-  "redacted": "黒塗り（高難易度）",
-  "blurred": "ぼかし（中難易度）",
-  "distortedPerkIcon": "歪んだパークアイコンのヒント",
-  "perkIconChoice": "パークアイコンの選択肢",
-  "escReturn": "Esc: 戻る",
-  "spaceContinue": "Space: 続ける",
-  "identityMode": "正体特定モード",
-  "redactedMode": "黒塗りモード",
-  "visualChoice": "視覚的選択",
-  "distortionMode": "歪みモード",
-  "communityJokes": "コミュニティネタ",
-  "realmsAndSeeds": "レルム＆シード生成",
-  "mapGuesserWipDesc": "エンティティは現在シード値、ジャングルジム、板周り、トーテム生成タイルのマッピングプロトコルを再構築中です。このモジュールでは生成位置や構造をリアルタイムに推測できるようになります。公開をお楽しみに！",
-  "returnToDashboard": "ダッシュボードに戻る",
-  "memeMode": "ミームモード",
-  "grayscale": "グレースケール",
-  "croppedZoom": "拡大クロップ",
-  "space": "スペース"
-};
-
-```
-
-### src/locales/ja/index.ts
-
-```ts
-import app from './app';
-import landing from './landing';
-import generator from './generator';
-import stats from './stats';
-import filters from './filters';
-import pagination from './pagination';
-import card from './card';
-import modal from './modal';
-import empty from './empty';
-import guesser from './guesser';
-import voice from './voice';
-import characterDetail from './characterDetail';
-import sidebar from './sidebar';
-import smashOrPass from './smashOrPass';
-import user from './user';
-import swf from './swf';
-import draft from './draft';
-import streaks from './streaks';
-import builds from './builds';
-import admin from './admin';
-import maps from './maps';
-import quests from './quests';
-import killerCalculator from './killerCalculator';
-import customPerks from './customPerks';
-
-const ja = {
-  app,
-  landing,
-  generator,
-  stats,
-  filters,
-  pagination,
-  card,
-  modal,
-  empty,
-  guesser,
-  voice,
-  characterDetail,
-  sidebar,
-  smashOrPass,
-  user,
-  swf,
-  draft,
-  streaks,
-  builds,
-  admin,
-  maps,
-  quests,
-  killerCalculator,
-  customPerks,
-};
-
-export default ja;
-
-```
-
-### src/locales/ja/killerCalculator.ts
-
-```ts
-export default {
-  "chaseStatus": "チェイス状態:",
-  "carryingSurvivor": "サバイバー担ぎ中:",
-  "tokens": "トークン数（1個につき -4m）:"
-};
-
-```
-
-### src/locales/ja/landing.ts
-
-```ts
-export default {
-  "welcomeBadge": "Dead by Daylight コンパニオン",
-  "welcomeTitle": "LemonDBD へようこそ",
-  "welcomeSubtitle": "DbD専用のデータベース、インタラクティブマップ、パークランダマイザー、プレイヤーツールを提供する総合コンパニオンアプリ。",
-  "enterButton": "パーク保管庫を見る",
-  "characterOverview": "キャラクター一覧"
-};
-
-```
-
-### src/locales/ja/maps.ts
-
-```ts
-export default {
-  "searchPlaceholder": "マップまたはレルムを検索...",
-  "searchAria": "マップまたはレルムを検索",
-  "clearSearchAria": "検索入力をクリア",
-  "providerAria": "マップ提供元ソース",
-  "providerToggleAria": "マップ提供元の切り替え",
-  "allSources": "すべての提供元",
-  "all": "すべて",
-  "realmFiltersAria": "レルムフィルター",
-  "realmPillsAria": "レルム選択ピル",
-  "launch2DEngine": "2Dインタラクティブエンジンを起動",
-  "twoDEngine": "2Dエンジン",
-  "launchFullscreenEngine": "全画面エンジンを起動",
-  "popoutAria": "マップ画像を別ウィンドウでポップアウト",
-  "popout": "ポップアウト",
-  "dragPanScrollZoom": "ドラッグで移動 • スクロールでズーム",
-  "mapControlsAria": "マップ表示のズームおよび移動コントロール",
-  "zoomIn": "拡大",
-  "zoomInAria": "拡大",
-  "zoomOut": "縮小",
-  "zoomOutAria": "縮小",
-  "fitToScreen": "画面に合わせる",
-  "set100Zoom": "100% ズーム",
-  "set150Zoom": "150% ズーム",
-  "set200Zoom": "200% ズーム",
-  "resetView": "表示をリセット",
-  "resetZoomPan": "ズーム＆位置をリセット",
-  "resetPanZoom": "移動＆ズームをリセット",
-  "resetPanAndZoomAria": "移動とズームをリセット",
-  "fullscreenMode": "全画面インタラクティブモード",
-  "fullscreenAria": "全画面インタラクティブモード",
-  "popoutInWindow": "別ウィンドウで開く",
-  "loadingDirectory": "マップディレクトリを読み込み中",
-  "noMapsFound": "マップが見つかりませんでした",
-  "isometricScheme": "アイソメトリック見取図（Steamガイド）",
-  "clockCalloutScheme": "12時時計コールアウトマップシステム",
-  "sectorLegendAria": "マップセクター凡例",
-  "directoryAndLegendsAria": "マップディレクトリと凡例",
-  "closeBottomSheetAria": "ボトムシートを閉じる",
-  "mapVariantsAria": "レルム別マップバリエーション",
-  "mapVariants": "マップバリエーション:",
-  "variants": "バリエーション:",
-  "variant": "バリエーション:",
-  "floor": "階層:",
-  "mapVariantSelectorAria": "マップバリエーションセレクター",
-  "floorSelectorAria": "階層セレクター",
-  "renderingLayout": "戦術マップレイアウトを描画中...",
-  "layerTogglesAria": "マップレイヤー切り替え",
-  "engineControlsAria": "エンジンのズームおよびリセット操作",
-  "fullscreenEngineAria": "2D全画面マップエンジン",
-  "voiceEngineAria": "音声マップナビゲーションエンジン",
-  "palletPresent": "通常板（パレット）あり",
-  "godPallet": "強ポジ板（確定割り板）",
-  "godPalletDesc": "キラーが必ず壊さざるを得ない安全板。確実にチェイスを仕切り直せます。",
-  "safePallet": "安全板（セーフパレット）",
-  "safePalletDesc": "安全マージンが高い板。キラーが壊さずに読み勝つのは困難です。",
-  "mindgamePallet": "読み合い板（マインドゲームパレット）",
-  "mindgamePalletDesc": "中程度の安全性。ステイン隠しや切り返しによる不意打ちに警戒が必要です。",
-  "unsafePallet": "弱ポジ板 / デストラップ板",
-  "unsafePalletDesc": "背の低い障害物や短い周回ループ。先倒し即スタンを狙うか、すぐに離れましょう！",
-  "closeInspectorAria": "インスペクターを閉じる",
-  "allowedDirections": "有効な進入方向:",
-  "fastVault": "高速乗り越え (0.5秒):",
-  "mediumVault": "中速乗り越え (0.9秒):",
-  "locationNote": "場所の注記:",
-  "inspectorTitle": "LemonDBD レルム詳細インスペクター",
-  "pallets": "板 (パレット)",
-  "windows": "窓枠",
-  "totems": "トーテム",
-  "gens": "発電機",
-  "gatesHatch": "ゲート＆ハッチ",
-  "tiles": "タイル生成",
-  "callouts": "コールアウト",
-  "chromeEdgeSafari": "Chrome • Edge • Safari",
-  "universalPrivateInBrowser": "完全プライベート・ブラウザ内処理",
-  "preloadModel": "モデルを事前ロード",
-  "pageTitle": "LemonDBD - 戦術マップコマンドエクスプローラー",
-  "initializingTacticalMap": "戦術マップコマンドを初期化中...",
-  "loadingTacticalMaps": "戦術マップを読み込み中...",
-  "tacticalEngineVersion": "LemonDBD 戦術エンジン v2.0",
-  "mapDirectory": "マップ一覧",
-  "fit": "全体表示",
-  "noMapsAdjustFilter": "検索条件または選択中のレルムフィルターを変更してお試しください。",
-  "centerLandmarkObjective": "中央ランドマーク / メイン建物",
-  "palletSafetyAssessment": "板（パレット）の安全性評価",
-  "fastVaultMomentumNote": "窓枠に向かって最低2.5mの助走を直進で行う必要があります。",
-  "mediumVaultAngledNote": "斜め進入時に発生。キラーの攻撃を受けるリスクが高くなります！",
-  "survivorLoopingTipsTitle": "サバイバーのチェイス・走路テクニック",
-  "survivorLoopingTipsDefault": "周回距離を最短にするため高い壁にぴったり沿って走りましょう。低い障害物越しにキラーの赤い光（ステイン）を確認し、後ろを見ながらチェイスしましょう。",
-  "killerMindgameCounterTitle": "キラーの読み合い・対策テクニック",
-  "killerMindgameCounterDefault": "キラーは高い壁をムーンウォーク（後ろ歩き）でステインを隠したり、窓越えをフェイントして板の早期消費を誘います。",
-  "sourceHensClock": "Hens333 (12時時計式)",
-  "sourceSamoelIsometric": "SamoelColt (アイソメトリック)",
-  "detectedBrowser": "検出されたブラウザ",
-  "activeRecognitionEngine": "有効な認識エンジン",
-  "bulletSeparator": "•",
-  "hudBracketOpen": "［",
-  "hudBracketClose": "］",
-  "hudFloorLabel": "• 階層",
-  "hudVariantLabel": "• バリエーション",
-  "palletEmoji": "🪵",
-  "calloutEmoji": "📢",
-  "hatchEmoji": "🕳️",
-  "windowEmoji": "🪟",
-  "layersLabel": "表示レイヤー:",
-  "percentSign": "%",
-  "zoomPreset100": "100%",
-  "zoomPreset150": "150%",
-  "zoomPreset200": "200%",
-  "allRealms": "すべてのレルム",
-  "godPalletEmoji": "🟩",
-  "safePalletEmoji": "🟦",
-  "mindgamePalletEmoji": "🟨",
-  "unsafePalletEmoji": "🟥",
-  "vaultDirectionSpeedTips": "窓枠の乗り越え方向と速度のコツ",
-  "fastVaultEmoji": "⚡",
-  "mediumVaultEmoji": "🏃",
-  "sourceLabel": "提供元:",
-  "openQuote": "「",
-  "closeQuote": "」",
-  "heardLabel": "認識音声:",
-  "keyV": "V",
-  "sectorCalloutsClockSystem": "セクターコールアウト＆時計方位システム"
-};
-
-```
-
-### src/locales/ja/modal.ts
-
-```ts
-export default {
-  "close": "閉じる",
-  "character": "該当キャラクター",
-  "role": "陣営",
-  "copySlug": "識別子をコピー",
-  "slugCopied": "クリップボードにコピーしました！",
-  "perkDescription": "パーク説明",
-  "generalPerk": "共通パーク",
-  "alias": "別名",
-  "clickToInspectPerk": "クリックしてパーク詳細を見る",
-  "clickToInspect": "クリックして詳細を確認",
-  "killerPerk": "キラーパーク",
-  "survivorPerk": "サバイバーパーク",
-  "unownedPerk": "未所持パーク",
-  "equipment": "装備・アドオン",
-  "clickOutsideToClose": "Escまたは枠外クリックで閉じる",
-  "temporarilyDisabled": "一時的に無効化中",
-  "whyDisabled": "なぜ {item} は無効化されているのですか？",
-  "wasDisabledTemporarily": "{item} は一時的に無効化されています。",
-  "reasonLabel": "理由"
-};
-
-```
-
-### src/locales/ja/pagination.ts
-
-```ts
-export default {
-  "showing": "表示中:",
-  "of": "/",
-  "results": "件のパーク",
-  "perPage": "1ページの表示件数",
-  "page": "ページ",
-  "previous": "前のページ",
-  "next": "次のページ",
-  "firstPage": "最初のページ",
-  "lastPage": "最後のページ",
-  "goTo": "移動:",
-  "navAriaLabel": "ページネーションナビゲーション",
-  "to": "〜"
-};
-
-```
-
-### src/locales/ja/quests.ts
-
-```ts
-export default {
-  "title": "試練クエスト＆マイルストーン",
-  "subtitle": "デイリーやウィークリーの試練をクリアしてXPを獲得し、ステータスレベルを上げて実績を解放しよう。",
-  "pageTitle": "LemonDBD - クエスト＆試練",
-  "loadingQuests": "クエストを読み込み中...",
-  "xpSystem": "XPシステム",
-  "dailyQuests": "デイリークエスト",
-  "weeklyQuests": "ウィークリークエスト",
-  "noQuestsDesc": "現在このカテゴリーで利用可能なクエストはありません。新しい試練の目標が追加されるまでお待ちください！",
-  "noQuestsFound": "このカテゴリーのクエストは見つかりませんでした。",
-  "xpPrefix": "+",
-  "xpSuffix": " XP",
-  "allQuestsPrefix": "すべてのクエスト (",
-  "percentCloseParen": "%)",
-  "questsTitle": "試練クエスト＆マイルストーン",
-  "questsSubtitle": "デイリーやウィークリーの試練をクリアしてXPを獲得し、ステータスレベルを上げて実績を解放しよう。"
-};
-
-```
-
-### src/locales/ja/sidebar.ts
-
-```ts
-export default {
-  "perks": "パーク",
-  "challenges": "チャレンジ",
-  "mapExplorer": "マップエクスプローラー",
-  "characters": "キャラクター",
-  "smashOrPass": "スマッシュ・オア・パス",
-  "trophies": "トロフィー",
-  "draftRoom": "🏆 ドラフトルーム",
-  "swfPlanner": "👥 SWFプランナー",
-  "killerCalc": "🎯 キラー計算機",
-  "buildVault": "🔥 ビルド保管庫",
-  "perkStudio": "🎨 パークスタジオ",
-  "quests": "📜 クエスト",
-  "navigation": "ナビゲーション",
-  "perkRandomizer": "パークランダマイザー",
-  "others": "その他",
-  "admin": "管理者",
-  "adminControlCenter": "管理コントロールセンター",
-  "soon": "近日公開",
-  "signIn": "ログイン / 新規登録",
-  "signOut": "ログアウト",
-  "emailNotVerified": "メールアドレスが未認証です。今すぐ認証",
-  "reportBug": "バグ報告",
-  "buyCoffee": "コーヒーをおごる",
-  "switchLanguage": "言語を切り替え",
-  "toggleTheme": "ダークモード切替",
-  "collapseSidebar": "ナビゲーションバーを折りたたむ",
-  "expandSidebar": "ナビゲーションバーを展開",
-  "bugReportModalTitle": "問題・バグを報告",
-  "bugReportModalSubtitle": "バグ報告やフィードバックでLemonDBDの改善にご協力ください",
-  "bugCategoryPerks": "パーク＆固有データ",
-  "bugCategoryCharacters": "キャラクター＆キラーの特殊能力",
-  "bugCategoryMaps": "マップエクスプローラー＆コールアウト",
-  "bugCategoryChallenges": "パークランダマイザー＆チャレンジ",
-  "bugCategoryDraftSwf": "ドラフトルーム＆SWFプランナー",
-  "bugCategoryUiTranslations": "UI・デザイン・翻訳",
-  "bugCategoryOther": "その他のゲーム内不具合",
-  "bugTitleLabel": "問題のタイトル",
-  "bugTitlePlaceholder": "例: パーク説明文の誤字、能力クールダウン値の誤り...",
-  "bugCategoryLabel": "カテゴリー",
-  "bugDescriptionLabel": "詳細な説明",
-  "bugDescriptionPlaceholder": "発生したバグ、再現手順、本来の挙動などを記入してください...",
-  "bugGuestEmailLabel": "メールアドレス（任意、対応状況の通知用）",
-  "bugGuestEmailPlaceholder": "you@example.com",
-  "bugLoggedInAs": "ログイン中:",
-  "bugScreenshotsLabel": "スクリーンショット添付（最大3枚、各2MBまで）",
-  "bugUploadImage": "画像をアップロード",
-  "bugSecurityVerification": "セキュリティ認証",
-  "bugSubmitButton": "バグレポートを送信",
-  "bugSubmitting": "送信中...",
-  "bugSuccessMessage": "バグレポートを送信しました！LemonDBDの改善にご協力いただきありがとうございます。",
-  "bugErrorMessage": "レポートの送信に失敗しました。もう一度お試しください。",
-  "bugCloseButton": "閉じる",
-  "bugAltchaVerifying": "セキュリティ認証を確認中...",
-  "bugAltchaVerified": "セキュリティ認証を通過しました",
-  "coffeeTitle": "LemonDBD を支援する",
-  "coffeeSubtitle": "プレイヤーコミュニティからの直接のご支援",
-  "coffeeFuelNotice": "エンティティへの燃料補給",
-  "coffeeDonationMessage": "エンティティにカフェインを注入して、LemonDBDのデータベースサーバーとリアルタイムスクレイパーを24時間稼働させ続けましょう！",
-  "coffeeBuyMeCoffeeTagline": "ワンクリックで手軽にコーヒーを差し入れ",
-  "coffeeKofiTagline": "手数料0%の寄付＆単発チップ",
-  "coffeePatreonTagline": "月額サポーター特典＆先行新機能",
-  "coffeeVisit": "ページへ行く",
-  "coffeeFooterNotice": "完全無料＆コミュニティ主導で運営中",
-  "coffeeClose": "閉じる",
-  "homeAria": "LemonDBD ホーム",
-  "navAria": "メインナビゲーション",
-  "openDrawer": "ナビゲーションドロワーを開く",
-  "closeDrawer": "ナビゲーションドロワーを閉じる",
-  "claimed": "受取済み",
-  "verified": "認証済み",
-  "adminPanel": "管理コントロールセンター",
-  "streaks": "チャレンジ＆ストリーク",
-  "generator": "パークランダマイザー",
-  "maps": "マップエクスプローラー",
-  "disabled": "無効化中"
-};
-
-```
-
-### src/locales/ja/smashOrPass.ts
-
-```ts
-export default {
-  "title": "スマッシュ・オア・パス",
-  "selectRoster": "名簿を選択",
-  "dwellHint": "スワイプまたはドラッグで選択。中央で1秒静止して確定。",
-  "active": "有効",
-  "dwellActive": "選択中 ({seconds}秒)",
-  "subtitle": "DbDのキャラクターたちを評価し、あなたの『霧のロマンスタイプ』を診断＆投票しよう。",
-  "smash": "スマッシュ (推し)",
-  "pass": "パス",
-  "superSmash": "スーパースマッシュ",
-  "leaderboard": "殿堂入りランキング",
-  "leaderboardSubtitle": "全キラー＆サバイバーを対象とした公式コミュニティ投票統計",
-  "search": "キャラクター名やランキングを検索...",
-  "close": "閉じる",
-  "shuffle": "シャッフル",
-  "undo": "元に戻す",
-  "mySmashes": "あなたの推し一覧",
-  "stats": "調査書＆統計",
-  "reset": "山札をリセット",
-  "keybindings": "キー操作設定",
-  "hint": "矢印キーまたはスワイプで投票",
-  "godTier": "神ティア (至高)",
-  "fatalAttraction": "命がけの魅力",
-  "friendzone": "お友達止まり",
-  "eldritchVoid": "怪異・虚無行き",
-  "chaosRating": "混沌度",
-  "dangerLevel": "危険度",
-  "archetype": "診断タイプ",
-  "compatibilityScore": "相性スコア",
-  "communitySmashRate": "コミュニティ推し率",
-  "totalVotes": "総投票数",
-  "traits": "相性・性格特徴",
-  "all": "すべて",
-  "allRoles": "すべての陣営",
-  "survivors": "サバイバー",
-  "killers": "キラー",
-  "allGenders": "すべての性別",
-  "female": "女性",
-  "femaleOnly": "女性のみ",
-  "male": "男性",
-  "maleOnly": "男性のみ",
-  "monsters": "怪異・人外",
-  "rosters": {
-    "canon": {
-      "name": "Dead by Daylight: 本編公式",
-      "desc": "公式に登場する全98キャラクター（キラー＆サバイバー）の完全名簿。"
-    },
-    "hoy": {
-      "name": "Hooked on You: 恋の楽園",
-      "desc": "水着衣装と南国の陽気な雰囲気が漂う、恋愛シミュレーション公式スピンオフ版。"
-    },
-    "legendary": {
-      "name": "レジェンダリースキン＆コラボ",
-      "desc": "ゲーム史に名を残す名作コラボや象徴的なレジェンダリースキン。"
-    },
-    "cyberpunk": {
-      "name": "サイバーパンク・フォグ 2077",
-      "desc": "ディストピアの霧の中で戦う、ハイテクネオンで強化されたチャンピオンたち。"
-    },
-    "anime": {
-      "name": "霧のアニメ / マンガスタイル",
-      "desc": "お気に入りの霧の住人たちをアニメ・マンガ風にアレンジしたスタイル。"
-    },
-    "gothic": {
-      "name": "ヴィクトリアン＆ゴシック怪異伝説",
-      "desc": "ダークファンタジー、Bloodborne風の美学、ヴィクトリア朝のコズミックホラー。"
-    },
-    "hooked_on_you": {
-      "name": "Hooked on You: 恋の楽園",
-      "desc": "水着衣装と南国の陽気な雰囲気が漂う、恋愛シミュレーション公式スピンオフ版。"
-    },
-    "legendary_cosplay": {
-      "name": "レジェンダリースキン＆コラボ",
-      "desc": "ゲーム史に名を残す名作コラボや象徴的なレジェンダリースキン。"
-    },
-    "cyberpunk_2077": {
-      "name": "サイバーパンク・フォグ 2077",
-      "desc": "ディストピアの霧の中で戦う、ハイテクネオンで強化されたチャンピオンたち。"
-    },
-    "anime_manga": {
-      "name": "霧のアニメ / マンガスタイル",
-      "desc": "お気に入りの霧の住人たちをアニメ・マンガ風にアレンジしたスタイル。"
-    },
-    "gothic_eldritch": {
-      "name": "ヴィクトリアン＆ゴシック怪異伝説",
-      "desc": "ダークファンタジー、Bloodborne風の美学、ヴィクトリア朝のコズミックホラー。"
+    __mapper_args__ = {
+        "polymorphic_on": "role",
+        "polymorphic_identity": "Character",
     }
-  },
-  "controls": {
-    "pass": "パス",
-    "smash": "スマッシュ (推し)",
-    "superSmash": "スーパースマッシュ",
-    "stats": "調査書＆統計",
-    "reset": "山札をリセット",
-    "keybindings": "キー操作設定",
-    "hint": "矢印キーまたはスワイプで投票",
-    "arrowLeft": "パス（← 左矢印）",
-    "arrowRight": "スマッシュ（→ 右矢印）",
-    "arrowUp": "統計（↑ 上矢印）",
-    "arrowDown": "スーパースマッシュ（↓ 下矢印）",
-    "keyR": "リセット（Rキー）"
-  },
-  "tiers": {
-    "godTier": "神ティア (至高)",
-    "fatalAttraction": "命がけの魅力",
-    "friendzone": "お友達止まり",
-    "eldritchVoid": "怪異・虚無行き"
-  },
-  "statsDetail": {
-    "chaosRating": "混沌度",
-    "dangerLevel": "危険度",
-    "archetype": "診断タイプ",
-    "compatibilityScore": "相性スコア",
-    "communitySmashRate": "コミュニティ推し率",
-    "totalVotes": "総投票数",
-    "traits": "相性・性格特徴",
-    "smashCount": "スマッシュ数",
-    "passCount": "パス数",
-    "superSmashCount": "スーパースマッシュ数",
-    "rank": "順位",
-    "quote": "名言・セリフ"
-  },
-  "filters": {
-    "all": "すべて",
-    "allRoles": "すべての陣営",
-    "survivors": "サバイバー",
-    "killers": "キラー",
-    "allGenders": "すべての性別",
-    "female": "女性",
-    "femaleOnly": "女性のみ",
-    "male": "男性",
-    "maleOnly": "男性のみ",
-    "monsters": "怪異・人外"
-  },
-  "modals": {
-    "statsTitle": "キャラクター調査書",
-    "leaderboardTitle": "殿堂入りランキング",
-    "leaderboardSubtitle": "全キラー＆サバイバーを対象とした公式コミュニティ投票統計",
-    "personaTitle": "試練のロマンス診断タイプ",
-    "personaSubtitle": "あなたの投票傾向から分析された心理的相性レポート",
-    "resetConfirmTitle": "すべての投票をリセットしますか？",
-    "resetConfirmDesc": "このセッションで行ったすべての投票が巻き戻され、キャラクターの山札が再シャッフルされます。",
-    "confirm": "確定",
-    "cancel": "キャンセル",
-    "close": "閉じる"
-  },
-  "notifications": {
-    "voteRecorded": "投票を記録しました！",
-    "deckReset": "山札をリセットしました。",
-    "rateLimit": "投票が早すぎます！少し待ってから操作してください。",
-    "errorLoading": "キャラクター情報の読み込みに失敗しました。",
-    "errorVoting": "投票の記録に失敗しました。"
-  },
-  "empty": {
-    "title": "山札をすべて評価しました！",
-    "subtitle": "この名簿に含まれるすべての候補者の判定が完了しました。",
-    "resetAction": "リセットしてもう一度投票",
-    "viewLeaderboard": "ランキングを見る",
-    "switchRoster": "別の名簿を選ぶ"
-  },
-  "loreLabels": {
-    "trialClassification": "試練区分",
-    "datingArchetype": "恋愛タイプ",
-    "greenFlag": "好印象ポイント (推し要素)",
-    "redFlag": "要注意ポイント (警告)",
-    "identityProfile": "正体プロファイル",
-    "signatureQuote": "代表的なセリフ",
-    "trialWarning": "試練の警告",
-    "female": "女性",
-    "male": "男性",
-    "monster": "怪異 / 人外"
-  },
-  "hud": {
-    "left": "残り",
-    "smash": "スマッシュ",
-    "pass": "パス",
-    "smashRate": "支持率",
-    "bgm": "BGM",
-    "archetype": "タイプ",
-    "hallOfFame": "殿堂入り",
-    "howToPlay": "遊び方",
-    "shuffle": "シャッフル"
-  },
-  "occultDossier": "機密オカルト調書",
-  "percentSign": "%",
-  "percentClose": "%)",
-  "pipeSeparator": "|",
-  "loadingRosterPrefix": "データベースから",
-  "loadingRosterSuffix": "を読み込み中...",
-  "howToPlayModal": {
-    "title": "スマッシュ・オア・パスの遊び方",
-    "swipeTitle": "カードをスワイプ / ドラッグ",
-    "swipeDesc": "カードを右にドラッグするとスマッシュ 💋、左にドラッグするとパス ✖ します。",
-    "swipeIcon": "👆",
-    "iconsTitle": "カード上のアクションアイコン",
-    "iconsDesc": "左上の反転アイコンをクリックするとプロフィール、性格、推し/警告要素、ミームを閲覧できます。虫眼鏡で高解像度ポートレートを表示します。",
-    "iconsIcon": "🎯",
-    "keycapsTitle": "快適なキーボード操作",
-    "keycapsIcon": "⌨️",
-    "atmosphereTitle": "ダークな背景演出とBGM",
-    "atmosphereDesc": "背景の文字にカーソルを合わせると発光エフェクトとともに伝承が表示されます。Bキーを押してダークシンセBGMを再生しましょう！",
-    "atmosphereIcon": "🌌",
-    "letsPlay": "了解、プレイ開始！"
-  },
-  "personaArchetypes": {
-    "eldritchDevotee": {
-      "title": "異形・怪異の信奉者",
-      "subtitle": "人智を超えた恐怖や太古の存在こそが、あなたの真の愛の言葉です。",
-      "desc": "宇宙の虚無が呼んでいるのに、なぜ定命の者の恋で妥協するのでしょうか？触手、牙、そしてコズミックミステリーを愛しています。"
-    },
-    "redStainAddict": {
-      "title": "ステイン（赤い光）ジャンキー",
-      "subtitle": "危険こそが興奮のスパイス。心音範囲が近づくほど胸が高鳴ります。",
-      "desc": "メメント・モリの演出もあなたにとっては激しいハグのようなもの。圧倒的な力、脅威、そしてダークなカリスマに惹かれます。"
-    },
-    "campfireSoulmate": {
-      "title": "焚き火のソウルメイト",
-      "subtitle": "温かいチームワークと献身的な救助・治療に心がとろけます。",
-      "desc": "あなたが求めるのは本物の絆、飾らない笑顔、そして脱出ゲートを開ける前に必ずフックから助けてくれる誰かです。"
-    },
-    "entitysParamour": {
-      "title": "エンティティの愛人",
-      "subtitle": "霧の森に存在するほぼすべての魂に美しさとロマンスを見出します。",
-      "desc": "理想が高い？そんな言葉は無縁です。あなたの心はすべてのサバイバーとキラーを受け入れる無限の聖域です。"
-    },
-    "coldHeartedPragmatist": {
-      "title": "冷徹な現実主義者",
-      "subtitle": "極めて選り好みが激しく、色仕掛けには動じず、ただ生き残ることのみを考えます。",
-      "desc": "あなたの厳しいチェックリストを通過できる者はごくわずか。完璧な立ち回り、隙のないパーク構成、欠点ゼロが求められます。"
-    },
-    "fogRomantic": {
-      "title": "霧のロマンチスト",
-      "subtitle": "試練の中で情熱とスリルを同時に追い求めるバランスの取れた魂。",
-      "desc": "エンティティの果てしない試練の中であっても、真のロマンスの輝きは必ず見つかると信じています。"
+
+    def to_dict(self, lang: str | None = None) -> dict[str, Any]:
+        counterparts: list[str] = []
+        if self.dlc_counterparts:
+            try:
+                stripped = self.dlc_counterparts.strip()
+                if stripped.startswith("["):
+                    counterparts = safe_json_loads(stripped, default=[])
+                else:
+                    counterparts = [x.strip() for x in stripped.split(",") if x.strip()]
+            except Exception:
+                counterparts = []
+
+        name = self.name
+        lore = self.lore or ""
+        chapter_name = self.chapter_name or "Base Game"
+        power_name = self.power_name or ""
+        power_desc = self.power_description or ""
+
+        if lang and self.translations and lang in self.translations:
+            trans = self.translations.get(lang) or {}
+            if isinstance(trans, dict):
+                name = trans.get("name") or name
+                lore = trans.get("lore") or lore
+                chapter_name = trans.get("chapter_name") or chapter_name
+                power_name = trans.get("power_name") or power_name
+                power_desc = trans.get("power_description") or power_desc
+
+        data: dict[str, Any] = {
+            "id": self.id,
+            "name": name,
+            "role": self.role,
+            "category": self.role,
+            "code_prefix": self.code_prefix,
+            "portrait_url": self.portrait_url,
+            "real_name": self.real_name or self.name,
+            "short_name": self.short_name or self.name.lower().replace(" ", "_"),
+            "wiki_slug": self.wiki_slug or self.name.lower().replace(" ", "_"),
+            "avatar_url": self.portrait_url or "",
+            "avatar_local_path": self.avatar_local_path or "",
+            "release_number": self.release_number,
+            "chapter_name": chapter_name,
+            "chapter_number": self.chapter_number or "",
+            "dlc_type": self.dlc_type or "original_chapter",
+            "is_licensed": bool(self.is_licensed),
+            "is_disabled": bool(self.is_disabled),
+            "disabled_reason": self.disabled_reason,
+            "release_year": self.release_year or 2016,
+            "release_date": self.release_date or "",
+            "dlc_counterparts": counterparts,
+            "lore": lore,
+            "translations": self.translations or {},
+        }
+
+        if self.role == "Killer" or self.power_name:
+            p_clean = (
+                self.power_name.lower().replace(" ", "_").replace("'", "").replace("-", "_")
+                if self.power_name
+                else ""
+            )
+            data["power"] = {
+                "name": power_name,
+                "description": power_desc,
+                "icon_url": self.power_icon_url or "",
+                "icon_local_path": f"icons/powers/{p_clean}.png" if p_clean else "",
+                "movement_speed": self.movement_speed or "4.6 m/s (115%)",
+                "terror_radius": self.terror_radius or "32 m",
+                "terror_radius_meters": self.terror_radius_meters or 32,
+                "height": self.height or "Tall",
+            }
+        return data
+
+
+class Survivor(Character):
+    __mapper_args__ = {
+        "polymorphic_identity": "Survivor",
     }
-  },
-  "tooltips": {
-    "mute": "効果音をミュート (M)",
-    "unmute": "効果音のミュート解除 (M)",
-    "playBgm": "ダークアンビエントBGMを再生 (B)",
-    "pauseBgm": "BGMを一時停止 (B)",
-    "resetAllVotes": "自分の投票をすべてリセット",
-    "howToPlay": "遊び方とキーボード操作",
-    "shuffle": "残りの候補者をシャッフル"
-  },
-  "tierFilterLabel": "ティアで絞り込み:",
-  "left": "残り",
-  "bgm": "BGM",
-  "hallOfFame": "殿堂入り",
-  "howToPlay": "遊び方"
-};
 
+
+class Killer(Character):
+    __mapper_args__ = {
+        "polymorphic_identity": "Killer",
+    }
 ```
 
-### src/locales/ja/stats.ts
+### backend/app/models/chaos.py
+```python
+from datetime import datetime
+from typing import Any
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
+from app.models.base import utcnow
 
-```ts
-export default {
-  "vaultStats": "保管庫の統計",
-  "totalPerks": "総パーク数",
-  "characters": "キャラクター数",
-  "survivors": "サバイバー",
-  "killers": "キラー",
-  "ratio": "陣営比率",
-  "totalXpClaimed": "獲得済み総XP",
-  "completed": "完了",
-  "streak": "連勝・ストリーク",
-  "win": "勝利",
-  "vaultTotal": "保管庫合計",
-  "ownedPerks": "所持パーク",
-  "totalXpEarned": "総獲得XP",
-  "questProgress": "クエスト進行度",
-  "claimed": "受取済み",
-  "active": "進行中",
-  "loss": "敗北",
-  "current": "現在",
-  "best": "最高"
-};
 
+class ChaosRun(Base):
+    __tablename__ = "chaos_runs"
+    __table_args__ = (
+        UniqueConstraint("user_id", "difficulty", name="uq_chaos_run_user_difficulty"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    difficulty: Mapped[str] = mapped_column(String(20), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="in_progress", nullable=False)
+    current_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    best_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    last_checkpoint_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    checkpoint_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    used_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    checkpoint_used_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    current_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    current_addon_rarities_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    unlocked_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    perks_revealed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    match_logs: Mapped[list["ChaosMatchLog"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan", order_by="ChaosMatchLog.timestamp.asc()"
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "difficulty": self.difficulty,
+            "status": self.status,
+            "current_streak": self.current_streak,
+            "best_streak": self.best_streak,
+            "last_checkpoint_streak": self.last_checkpoint_streak,
+            "completed_killers_json": self.completed_killers_json,
+            "completed_killers": safe_json_loads(self.completed_killers_json, default=[]),
+            "checkpoint_killers_json": self.checkpoint_killers_json,
+            "checkpoint_killers": safe_json_loads(self.checkpoint_killers_json, default=[]),
+            "used_perks_json": self.used_perks_json,
+            "used_perks": safe_json_loads(self.used_perks_json, default=[]),
+            "checkpoint_used_perks_json": self.checkpoint_used_perks_json,
+            "checkpoint_used_perks": safe_json_loads(self.checkpoint_used_perks_json, default=[]),
+            "current_perks_json": self.current_perks_json,
+            "current_perks": safe_json_loads(self.current_perks_json, default=[]),
+            "current_addon_rarities_json": self.current_addon_rarities_json,
+            "current_addon_rarities": safe_json_loads(self.current_addon_rarities_json, default=[]),
+            "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
+            "unlocked_perk_ids": safe_json_loads(self.unlocked_perks_json, default=[]),
+            "perks_revealed": self.perks_revealed,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class ChaosMatchLog(Base):
+    __tablename__ = "chaos_match_logs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[int] = mapped_column(
+        ForeignKey("chaos_runs.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    killer_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    result: Mapped[str] = mapped_column(String(20), nullable=False)
+    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    addon_rarities_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    streak_before: Mapped[int] = mapped_column(Integer, nullable=False)
+    streak_after: Mapped[int] = mapped_column(Integer, nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, index=True, nullable=False
+    )
+    triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
+
+    run: Mapped["ChaosRun"] = relationship(back_populates="match_logs")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "run_id": self.run_id,
+            "killer_id": self.killer_id,
+            "result": self.result,
+            "perks_json": self.perks_json,
+            "perks": safe_json_loads(self.perks_json, default=[]),
+            "addon_rarities_json": self.addon_rarities_json,
+            "addon_rarities": safe_json_loads(self.addon_rarities_json, default=[]),
+            "streak_before": self.streak_before,
+            "streak_after": self.streak_after,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "triggered_by": self.triggered_by,
+        }
 ```
 
-### src/locales/ja/streaks.ts
+### backend/app/models/community.py
+```python
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
+from app.models.base import utcnow
 
-```ts
-export default {
-  "streaksTitle": "チャレンジ＆ストリークハブ",
-  "backToKillerStreaks": "キラーストリーク一覧に戻る",
-  "backToKillers": "キラー一覧に戻る",
-  "rules": "ルール",
-  "stats": "統計データ",
-  "perkPool": "パークプール",
-  "resetRun": "挑戦をリセット",
-  "resetRunTitle": "この挑戦をリセットしますか？",
-  "chooseDifficulty": "難易度を選択",
-  "chooseMode": "モードを選択",
-  "chooseGauntletMode": "ガントレットモードを選択",
-  "runProgress": "挑戦の進行度",
-  "pullTheLever": "レバーを引く！",
-  "challengeStarted": "チャレンジを開始しました。",
-  "readyForGauntlet": "ガントレットに挑戦しますか？",
-  "winMatch": "マッチ勝利",
-  "loseMatch": "マッチ敗北",
-  "anyPerkYouLike": "好きなパークを装備可能",
-  "perksUnlocked": "解放されたパーク",
-  "noNewPerks": "今回解放された新規パークはありません。",
-  "noPerksUnlockedYet": "解放されたパークはまだありません。",
-  "everyPerkUnlocked": "すべてのパークが解放されています。",
-  "loadingStreak": "ストリークを読み込み中…",
-  "yourBuild": "あなたの構成",
-  "attempt": "回目の挑戦",
-  "layoutFrozen": "構成固定中",
-  "streakRoleTabs": "ストリーク陣営タブ",
-  "matchSummary": "マッチ結果サマリーと履歴",
-  "temporarilyDisabled": "このチャレンジは一時的に無効化されています。",
-  "pageStreak": "ページストリーク",
-  "loadingKillers": "所持キラーを読み込み中...",
-  "retry": "再試行",
-  "loadingRoster": "名簿を読み込み中…",
-  "resetRunPrompt": "もう一度最初から挑戦したい場合はリセットしてください。",
-  "chaosRulesTitle": "カオスストリークのルール",
-  "chaosRulesSubtitle": "抽選、キラー選択、チェックポイントの仕組み",
-  "chaosStreak": "カオスストリーク",
-  "original": "オリジナル版",
-  "lemonVersion": "LemonDBD版",
-  "comingSoon": "近日公開。",
-  "yourOwnTeachablePerks": "自身の固有パーク",
-  "threeKillsOrMore": "3人以上処刑（3K以上）",
-  "escape": "脱出",
-  "checkpoint": "チェックポイント",
-  "historyRulesTitle": "ヒストリーストリークのルール",
-  "historyRulesSubtitle": "ロードマップ、進行列、パークプールの仕組み",
-  "historyStreak": "ヒストリーストリーク",
-  "pageStreakRulesTitle": "ページストリークのルール",
-  "pageStreakRulesSubtitle": "ページ、構成ビルド、パークプールの仕組み",
-  "perksCount": "個のパーク",
-  "pagesCount": "ページ",
-  "lastPage": "最終ページ",
-  "devSkipWinTitle": "開発用: 残りの全キラーで勝利してクリア画面へスキップ",
-  "startStreak": "ストリーク開始",
-  "starting": "開始中…",
-  "gameCancelled": "マッチ無効:",
-  "hackers": "不正プレイヤー（チーター）:",
-  "crashServerFailure": "クラッシュまたはサーバー障害:",
-  "noDodging": "マッチ離脱（ドッジ）の禁止:",
-  "chaosConcept": "カオスのコンセプト",
-  "chaosConceptDesc": "レバーを引いて、あなたが所持・解放している全キラーパークの中からランダムに4つのパークと2つのアドオンレア度条件を抽選します。プール内の全パークが出尽くすまで重複しません。次に残っている所持キラーの中からプレイするキラーを選んで確定し、その構成を指針として試練に挑みます。",
-  "anythingLessLoss": "それ未満は敗北となります。",
-  "chaosAddonRequirement": "指定された2つのレア度に合致するアドオンを装備してプレイする必要があります。",
-  "chaosWinRun": "この難易度で所持しているすべてのキラーで勝利すればクリアとなります。",
-  "poolLockedNotice": "パークプールは挑戦開始時の状態で固定されます。挑戦の途中で新しく解放したキラーやパークは、リセット、0勝への敗北、またはクリアするまでプールに追加されません。",
-  "rosterLockedNotice": "キャラクター名簿は挑戦開始時の状態で固定されます。挑戦の途中で新しく解放したキャラクターは、リセット、0勝への敗北、またはクリアするまで追加されません。",
-  "inactivityLossNotice": "進行中の挑戦が90日間放置された場合、自動的に敗北扱いとなります。",
-  "difficultyAndCheckpoints": "難易度とチェックポイント",
-  "difficultyCheckpointsDesc": "チェックポイント到達後に敗北した場合、0勝に戻るのではなく直前のチェックポイントまで戻ります。ただし、それ以降に勝利したキラーは再びプールへ戻されます。",
-  "exceptionsAndClarifications": "例外規定と補足事項",
-  "exceptions": "例外規定",
-  "clarifications": "補足事項",
-  "gameCancelledDesc": "ロード画面中に誰かが切断してマッチが始まらなかった場合。再抽選は行わず、同じ構成で再度プレイしてください。",
-  "hackersDesc": "明らかなチーターに遭遇した場合はマッチ無効。再抽選は行わず、同じ構成で再度プレイしてください。",
-  "crashServerFailureDesc": "ゲームの強制終了やサーバーエラーは敗北になりません。再抽選は行わず、同じ構成で再度プレイしてください。",
-  "noDodgingDesc": "サバイバーのアイテムや編成に関係なく、マッチングしたロビーでそのままプレイしてください。",
-  "startGame": "ゲーム開始",
-  "target": "目標",
-  "activeGauntletTarget": "現在のガントレット対象",
-  "yourBuildForMatch": "このマッチの指定構成",
-  "pickTheseInGame": "ゲーム内でこれらを選択してください。ここでの確定操作は不要です。",
-  "noTeachablePerks": "このキャラクターの固有パークは登録されていません。",
-  "rosterProgress": "名簿の進行状況",
-  "rosterProgressDesc": "所持している全キャラクターでマッチをクリアして名簿を制覇しましょう。",
-  "checkpointBanked": "チェックポイント到達",
-  "checkpointLoseFallback": "ここから敗北した場合の戻り先:",
-  "notToZero": "（0勝には戻りません）",
-  "keepGoing": "挑戦を続ける",
-  "gauntletComplete": "ガントレット制覇！",
-  "startNewRun": "新しい挑戦を始める",
-  "gauntlet": "ガントレット",
-  "current": "現在",
-  "best": "最高",
-  "checkpointHeader": "チェックポイント",
-  "gauntletConcept": "ガントレットのコンセプト",
-  "youOnlyEverRun": "装備できるのは常に",
-  "trialOnlyCountsWinOn": "試練の勝利条件:",
-  "trialOnlyCountsWinIf": "試練の勝利条件:",
-  "exitGatesOrHatch": "（脱出ゲートまたはハッチからの脱出）。それ以外はすべて敗北となります。",
-  "every10WinsBanks": "10勝ごとに保存される",
-  "progressiveTierRestrictions": "段階的なティア制限",
-  "historyStreakComplete": "ヒストリーストリーク制覇！",
-  "pickYourKiller": "キラーを選択",
-  "acceptPick": "キラーを決定",
-  "killersBeaten": "撃破したキラー",
-  "checkpointRow": "チェックポイント行",
-  "concept": "コンセプト",
-  "historyConceptDesc1": "所持キラーが実装順に5人ずつの行（グループ）に分けられます。プレイできるのは現在の行のみです。その行の全キラーで勝利すると次の行が解放されます。",
-  "historyConceptDesc2": "最初はすべての共通パークが解放された状態でスタートします。キラーで勝利すると、そのキラーの固有パークがパークプールに追加されます。アドオンや構成の制限はありません。キラーを選んで勝利を目指しましょう。",
-  "historyConceptHint": "本来の体験を味わうため、できるだけ実装が古いキラーから新しいキラーへの順でプレイすることをおすすめします。🙂",
-  "modes": "モード一覧",
-  "mediumMode": "ノーマル",
-  "hellMode": "ヘルモード",
-  "hellModeDesc": "チェックポイントなし。1度でも敗北すると全進行度、全行、解放した全パークがリセットされます。",
-  "pageStreakConceptDesc1": "キラーを1人選択します。そのキラーで現在使える全パークがページごとに分割されます。現在のページにあるパークのみを使って最強の構成を組み、マッチの勝敗を記録してください。",
-  "pageStreakConceptDesc2": "勝利すると次のページへ進みます。敗北するとページ1に戻り新しい挑戦が始まります（それまでのページ履歴は記録されます）。",
-  "pageStreakLayoutFrozenNotice": "ページ内のパーク配置は挑戦開始時に固定されます。挑戦中に新しく解放されたパークがあっても、リセットするまで再シャッフルされません。",
-  "progress": "進行状況",
-  "pageStreakCurrentDesc": "今回の挑戦でクリアしたページ数。敗北すると0に戻ります。",
-  "pageStreakBestDesc": "このキラーで過去すべての挑戦を通じて到達した最高ページ数。",
-  "pageStreakStartPanelDesc": "ページ1からスタートします。勝利で次のページへ進み、敗北で最初からやり直しになります。ページ配置は挑戦中ずっと固定されます。",
-  "disabled": "無効化中",
-  "winRate": "勝率",
-  "matches": "試合数",
-  "wins": "勝利数",
-  "losses": "敗北数",
-  "recentMatchHistory": "最近のマッチ履歴",
-  "noMatchesLogged": "記録されたマッチはまだありません。最初のマッチを完了しましょう！",
-  "autoLossInactive": "長期間非アクティブによる自動敗北",
-  "verifyEmailToTrack": "チャレンジを記録するにはメール認証を行ってください",
-  "verifyEmail": "メールを認証する",
-  "loginToTrack": "ログインしてチャレンジを記録",
-  "loginToTrackDesc": "チャレンジはお手持ちのキラーやパークの所持状況を使用するため、アカウント登録が必要です。",
-  "logIn": "ログイン",
-  "youWonOn": "クリア難易度:",
-  "modeSuffix": "モード",
-  "devSkipWinLabel": "開発用: 勝利画面へスキップ",
-  "winsSuffix": "勝",
-  "usedLabel": "使用済み",
-  "leftThisCycle": "現在のサイクル残り",
-  "usedTab": "使用済み",
-  "remainingTab": "残り",
-  "killersCleared": "キラークリア",
-  "streakLabel": "ストリーク:",
-  "streakArrow": "→",
-  "middotSeparator": "·",
-  "bulletSeparator": "•",
-  "tierLabel": "ティア",
-  "noPerksThisTrial": "この試練はパークなし（ノーパーク）です。",
-  "goesInBare": "はパークなしで挑みます。",
-  "slotLabel": "枠",
-  "lockedSuffix": "ロック中",
-  "ruleSuffix": "ルール",
-  "ownPerkOf": "対象キャラの固有パーク:",
-  "slotOneOfThese": "枠 1: 以下のいずれか",
-  "ownPerksOf": "対象キャラの固有パーク:",
-  "nextUpLabel": "次の対象:",
-  "backToLabel": "戻る:",
-  "streaksSuffix": "ストリーク",
-  "youWonThe": "見事クリア:",
-  "gauntletSuffix": "ガントレット",
-  "gauntletOriginalDescription": "伝統のガントレット: 各キャラクター自身の固有パークのみを使用し、ティアが上がるごとに制限が厳しくなる過酷な挑戦。",
-  "beatEveryPrefix": "所持しているすべての",
-  "gauntletConceptBody": "で1試練ずつ勝利を目指します。連勝が伸びるほど持ち込めるパーク数が減少し、最終ティアではノーパーク（パークなし）での勝利が求められます。",
-  "neverAnyoneElseNote": "のみを使用し、他キャラクターのパークは一切使えません。最初は3個すべて装備でき、ティアが上がるごとに1個ずつ失われます。3個未満になった際はどれを残すか自分で選択します。",
-  "checkpointFallbackNote": "。それ以降に敗北しても直前のチェックポイントまでしか戻りません（0勝には戻りません）。ただし、そのチェックポイント以降にクリアした",
-  "checkpointPoolNote": "は再びプールへ戻されます。チェックポイントとティア昇格は同時に発生するため、パークの喪失と進行度の保存は同じ勝利時に適用されます。",
-  "youBeatEveryRowOn": "すべての行をクリア:",
-  "rowLabel": "行",
-  "ofLabel": "/",
-  "killerLabel": "キラー",
-  "nextRowPreviewLabel": "次の行のプレビュー",
-  "unlockedSuffix": "解放済み",
-  "availableLabel": "選択可能",
-  "lockedLabel": "ロック中",
-  "rowClearedPrefix": "行クリア！ 行",
-  "rowUnlockedSuffix": "が解放されました。",
-  "mediumModeDesc": "ノーマルではクリアした行ごとにチェックポイントが保存されます。敗北時は0ではなくその行の最初に戻ります。",
-  "killersColonLabel": "キラー数:",
-  "percentSign": "%",
-  "killersYouOwn": "人の所持キラー",
-  "allPagesClearedPrefix": "全",
-  "pagesClearedOnSuffix": "ページクリア（対象:",
-  "pageLabel": "ページ",
-  "pickCountSeparator": "、選択数:",
-  "nextUpPagePrefix": "次へ進む: ページ",
-  "attemptLabel": "挑戦",
-  "readyForPrefix": "準備完了:",
-  "pagesOnSuffix": "ページ（対象:",
-  "freezeNotice": "配置固定の注記",
-  "pageStreakDesc": "ページストリークチャレンジの概要と進行状況の追跡。",
-  "threeKillsOrMoreWin": "3人以上の処刑（3K以上）で勝利となります。",
-  "survivor": "サバイバー",
-  "killer": "キラー",
-  "completed": "完了",
-  "noOwnedCharacters": "この条件に一致する所持キャラクターは見つかりませんでした。",
-  "continueButton": "続ける"
-};
+if TYPE_CHECKING:
+    from app.models.user import User
 
+
+class DailyQuest(Base):
+    __tablename__ = "daily_quests"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    category: Mapped[str] = mapped_column(String(20), nullable=False)
+    progress: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    goal: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    xp_reward: Mapped[int] = mapped_column(Integer, default=500, nullable=False)
+    is_completed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "category": self.category,
+            "progress": self.progress,
+            "goal": self.goal,
+            "xp_reward": self.xp_reward,
+            "is_completed": self.is_completed,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class CommunityBuild(Base):
+    __tablename__ = "community_builds"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    role: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    category: Mapped[str] = mapped_column(String(50), nullable=False)
+    character_id: Mapped[str] = mapped_column(String(100), default="all", nullable=False)
+    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    upvotes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    author: Mapped[str] = mapped_column(String(100), default="Community", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "role": self.role,
+            "category": self.category,
+            "character_id": self.character_id,
+            "perks_json": self.perks_json,
+            "perks": safe_json_loads(self.perks_json, default=[]),
+            "upvotes": self.upvotes,
+            "author": self.author,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class CustomPerk(Base):
+    __tablename__ = "custom_perks"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(150), unique=True, index=True, nullable=False)
+    role: Mapped[str] = mapped_column(String(20), nullable=False)
+    character_name: Mapped[str] = mapped_column(String(100), default="Teachable", nullable=False)
+    rarity: Mapped[str] = mapped_column(String(50), default="Very Rare", nullable=False)
+    icon_preset: Mapped[str] = mapped_column(String(50), default="sparkles", nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    upvotes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    author: Mapped[str] = mapped_column(String(100), default="Community", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "role": self.role,
+            "character_name": self.character_name,
+            "rarity": self.rarity,
+            "icon_preset": self.icon_preset,
+            "description": self.description,
+            "upvotes": self.upvotes,
+            "author": self.author,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class BugReport(Base):
+    __tablename__ = "bug_reports"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    reporter_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    reporter_email: Mapped[str | None] = mapped_column(String(150), nullable=True)
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    category: Mapped[str] = mapped_column(String(50), default="General", nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    images_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    status: Mapped[str] = mapped_column(String(30), default="pending", nullable=False)
+    admin_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    user: Mapped["User | None"] = relationship(back_populates="bug_reports")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "reporter_name": self.reporter_name,
+            "reporter_email": self.reporter_email or "",
+            "title": self.title,
+            "category": self.category,
+            "message": self.message,
+            "images": safe_json_loads(self.images_json, default=[]),
+            "status": self.status,
+            "admin_notes": self.admin_notes or "",
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
 ```
 
-### src/locales/ja/swf.ts
+### backend/app/models/gauntlet.py
+```python
+from datetime import datetime
+from typing import Any
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
+from app.models.base import utcnow
 
-```ts
-export default {
-  "engineBadge": "SWF フルパチームエンジン",
-  "pageTitle": "4人チーム構成プランナー",
-  "pageSubtitle": "サバイバーごとの役割分担を調整し、パークの重複・無駄を排除して、パーティ（SWF）のシナジーを最大化します。",
-  "shareLoadout": "チーム構成を共有",
-  "copiedToast": "チーム構成URLをクリップボードにコピーしました！仲間に共有してください。",
-  "redundancyDetector": "パーク重複検知システム",
-  "optimal": "最適（重複なし）",
-  "redundantPerksCount": "{count} 個の重複パーク",
-  "duplicateWarning": "重複するパークが検出されました！味方同士で同じパークを重ねるとチーム全体の汎用性が低下する場合があります。",
-  "equippedBy": "装備者:",
-  "zeroRedundancy": "重複ゼロ: チーム全体の16枠すべてのパークがユニークです！",
-  "survivor": "サバイバー",
-  "perkLoadout": "4枠のパーク構成",
-  "roleChaser": "チェイス担当",
-  "roleChaserDesc": "チェイスを牽引し、板を効果的に使ってキラーのヘイトを集めます。",
-  "roleGenRusher": "発電機担当（修理特化）",
-  "roleGenRusherDesc": "修理加速パークを活用し、素早い発電機修理に専念します。",
-  "roleMedic": "衛生兵（回復担当）",
-  "roleMedicDesc": "味方の負傷を素早く治し、チーム全体の健康状態を維持します。",
-  "roleUnhooker": "救助担当",
-  "roleUnhookerDesc": "安全なフック救助や通電後の救出作戦に特化します。",
-  "slot": "枠",
-  "removePerk": "パークを外す",
-  "synergyRating": "シナジー評価",
-  "analyzing": "分析中...",
-  "synergyLabel": "シナジー",
-  "conflictLabel": "競合",
-  "selectPerkTitle": "サバイバー {id} のパークを選択（スロット {slot}）",
-  "choosePerkVault": "サバイバーパーク保管庫から選択",
-  "searchPlaceholder": "サバイバーパークを検索...",
-  "loadingPerks": "サバイバーパークを読み込み中...",
-  "noPerksFound": "一致するパークは見つかりませんでした。",
-  "loadingSwf": "SWFプランナーを読み込み中..."
-};
 
+class GauntletRun(Base):
+    __tablename__ = "gauntlet_runs"
+    __table_args__ = (
+        UniqueConstraint("user_id", "role", "game_mode", name="uq_gauntlet_run_user_role_mode"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    role: Mapped[str] = mapped_column(String(20), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="in_progress", nullable=False)
+    game_mode: Mapped[str] = mapped_column(String(20), default="original", nullable=False)
+    target_revealed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    current_character_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    current_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    best_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    last_checkpoint_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    completed_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    checkpoint_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    current_loadout_json: Mapped[str] = mapped_column(Text, default="{}", nullable=False)
+    owned_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    match_logs: Mapped[list["GauntletMatchLog"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan", order_by="GauntletMatchLog.timestamp.asc()"
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "role": self.role,
+            "status": self.status,
+            "game_mode": self.game_mode,
+            "target_revealed": self.target_revealed,
+            "current_character_id": self.current_character_id,
+            "current_streak": self.current_streak,
+            "best_streak": self.best_streak,
+            "last_checkpoint_streak": self.last_checkpoint_streak,
+            "completed_characters_json": self.completed_characters_json,
+            "checkpoint_characters_json": self.checkpoint_characters_json,
+            "current_loadout_json": self.current_loadout_json,
+            "completed_characters": safe_json_loads(self.completed_characters_json, default=[]),
+            "checkpoint_characters": safe_json_loads(self.checkpoint_characters_json, default=[]),
+            "current_loadout": safe_json_loads(self.current_loadout_json, default={}),
+            "owned_character_ids": safe_json_loads(self.owned_characters_json, default=[]),
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class GauntletMatchLog(Base):
+    __tablename__ = "gauntlet_match_logs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[int] = mapped_column(
+        ForeignKey("gauntlet_runs.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    role: Mapped[str] = mapped_column(String(20), nullable=False)
+    character_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    result: Mapped[str] = mapped_column(String(20), nullable=False)
+    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    streak_before: Mapped[int] = mapped_column(Integer, nullable=False)
+    streak_after: Mapped[int] = mapped_column(Integer, nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, index=True, nullable=False
+    )
+    triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
+
+    run: Mapped["GauntletRun"] = relationship(back_populates="match_logs")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "run_id": self.run_id,
+            "role": self.role,
+            "character_id": self.character_id,
+            "result": self.result,
+            "perks_json": self.perks_json,
+            "perks": safe_json_loads(self.perks_json, default=[]),
+            "streak_before": self.streak_before,
+            "streak_after": self.streak_after,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "triggered_by": self.triggered_by,
+        }
 ```
 
-### src/locales/ja/user.ts
+### backend/app/models/history.py
+```python
+from datetime import datetime
+from typing import Any
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
+from app.models.base import utcnow
 
-```ts
-export default {
-  "profileTitle": "ユーザープロフィール＆アカウント",
-  "profileSubtitle": "プロフィール、記録統計、キャラクター所持状況、バグレポートの管理。",
-  "tabOverview": "アカウント概要",
-  "tabBugReports": "マイバグレポート",
-  "memberSince": "登録日",
-  "roleAdmin": "管理者",
-  "roleUser": "一般プレイヤー",
-  "changeAvatar": "アバターを変更",
-  "removeAvatar": "アバターを削除",
-  "statusPending": "確認待ち",
-  "statusInProgress": "対応中",
-  "statusResolved": "解決済み",
-  "statusClosed": "クローズ",
-  "bugReportsTitle": "送信したバグレポート一覧",
-  "bugReportsSubtitle": "報告したチケットの調査状況、開発者からの返信、修正対応を確認できます。",
-  "reportNewBug": "新しいバグを報告",
-  "loadingReports": "送信済みチケットを読み込み中...",
-  "noReportsTitle": "送信されたバグレポートはありません",
-  "noReportsSubtitle": "まだ不具合の報告はありません。パークの数値ミスやマップのコールアウト間違いを見つけたら報告してください！",
-  "submitBugReport": "バグレポートを送信",
-  "reportedOn": "報告日時",
-  "attachments": "添付ファイル",
-  "devResponse": "開発者からの回答",
-  "saveChanges": "変更を保存",
-  "currentPassword": "現在のパスワード",
-  "newPassword": "新しいパスワード",
-  "confirmPassword": "新しいパスワード（確認）",
-  "passwordPlaceholder": "変更しない場合は空欄のまま",
-  "confirmPasswordPlaceholder": "新しいパスワードを再入力",
-  "adminBadge": "管理者バッジ",
-  "forgotSentNotice": "そのメールアドレスが登録されている場合、パスワード再設定リンクを送信しました。",
-  "usernameOrEmailPlaceholder": "ユーザー名またはメールアドレスを入力",
-  "emailPlaceholder": "yourname@domain.com",
-  "signIn": "ログイン",
-  "createAccount": "アカウント作成",
-  "sendResetLink": "再設定リンクを送信",
-  "adminDemo": "管理者（lemon）",
-  "userDemo": "一般ユーザー（user）",
-  "verifyEmailRequired": "キャラクター所持状況を管理するにはメール認証が必要です。",
-  "authRequiredTitle": "ログインが必要です",
-  "authRequiredDesc": "LemonDBDのプロフィール閲覧、固有パークの管理、ゲームチャレンジの記録を行うにはログインまたは新規登録してください。",
-  "returnToHome": "ホームに戻る",
-  "activePlayerSubtitle": "アクティブプレイヤー ＆ LemonDBDコミュニティメンバー",
-  "quickShortcuts": "クイックショートカット",
-  "accountCreatedVerificationSent": "アカウントを作成しました！ {email} 宛に認証コードを送信しました。",
-  "usernameOrEmailLabel": "ユーザー名またはメールアドレス",
-  "emailLabel": "メールアドレス",
-  "passwordLabel": "パスワード",
-  "quickDemoAccounts": "デモ用クイックアカウント",
-  "backToSignIn": "ログイン画面に戻る",
-  "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
-  "dontHaveAccount": "アカウントをお持ちでないですか？",
-  "register": "新規登録",
-  "signedInButPrefix": "ログイン中ですが、",
-  "notVerifiedYetNotice": "はまだ認証されていません。メールで届いた認証コードを以下に入力してください。",
-  "forgotPasswordLink": "パスワードをお忘れですか？",
-  "quoteOpen": "「",
-  "quoteClose": "」",
-  "setNewPassword": "新しいパスワードを設定",
-  "passwordResetSuccess": "パスワードの再設定が完了しました！",
-  "goToHome": "ホームへ移動",
-  "resetPassword": "パスワード再設定",
-  "adminPanel": "管理コントロールセンター",
-  "streaks": "チャレンジ＆ストリーク",
-  "generator": "パークランダマイザー",
-  "maps": "マップエクスプローラー"
-};
 
+class HistoryRun(Base):
+    __tablename__ = "history_runs"
+    __table_args__ = (
+        UniqueConstraint("user_id", "mode", name="uq_history_run_user_mode"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    mode: Mapped[str] = mapped_column(String(20), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="in_progress", nullable=False)
+    current_row_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    total_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    best_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    checkpoint_row_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    checkpoint_total_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    checkpoint_completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    checkpoint_unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    match_logs: Mapped[list["HistoryMatchLog"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan", order_by="HistoryMatchLog.timestamp.asc()"
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "mode": self.mode,
+            "status": self.status,
+            "current_row_index": self.current_row_index,
+            "total_killers_beaten": self.total_killers_beaten,
+            "best_killers_beaten": self.best_killers_beaten,
+            "completed_killers": safe_json_loads(self.completed_killers_json, default=[]),
+            "unlocked_perk_names": safe_json_loads(self.unlocked_perk_names_json, default=[]),
+            "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
+            "checkpoint_row_index": self.checkpoint_row_index,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class HistoryMatchLog(Base):
+    __tablename__ = "history_match_logs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[int] = mapped_column(
+        ForeignKey("history_runs.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    killer_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    result: Mapped[str] = mapped_column(String(20), nullable=False)
+    row_index: Mapped[int] = mapped_column(Integer, nullable=False)
+    streak_before: Mapped[int] = mapped_column(Integer, nullable=False)
+    streak_after: Mapped[int] = mapped_column(Integer, nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, index=True, nullable=False
+    )
+    triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
+
+    run: Mapped["HistoryRun"] = relationship(back_populates="match_logs")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "run_id": self.run_id,
+            "killer_id": self.killer_id,
+            "result": self.result,
+            "row_index": self.row_index,
+            "streak_before": self.streak_before,
+            "streak_after": self.streak_after,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "triggered_by": self.triggered_by,
+        }
 ```
 
-### src/locales/ja/voice.ts
+### backend/app/models/minigames.py
+```python
+from datetime import datetime
+from typing import Any
+from sqlalchemy import Boolean, DateTime, Float, Integer, String, Text, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
+from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
+from app.models.base import utcnow
 
-```ts
-export default {
-  "engine": "音声認識エンジン",
-  "engineSubtitle": "ブラウザ自動フォールバック対応のマルチエンジン設計",
-  "engineNative": "Web Speech フレームワーク",
-  "engineNativeDesc": "Google / Apple クラウド音声認識",
-  "engineClient": "クライアント側 音声認識モデル",
-  "engineClientDesc": "ブラウザ内ローカル音声AI",
-  "engineClientBadge": "ローカルAIモデル",
-  "engineNativeBadge": "Google / Web Speech API",
-  "browserSupported": "Google Chrome、Microsoft Edge、Safari でサポートされています。",
-  "browserFallbackNeeded": "Firefoxなどの一部ブラウザにはGoogleの音声認識機能が組み込まれていません。",
-  "howItWorksTitle": "音声認識エンジンと互換性について",
-  "howItWorksNative": "Chrome、Edge、Safari では、OS標準の Google / Apple Web Speech フレームワークを使用して追加ダウンロードなし（0MB）でリアルタイムに音声を文字起こしします。",
-  "howItWorksClient": "FirefoxやBraveなどのブラウザでは、軽量なクライアント側音声モデル（約39MB）をブラウザメモリに自動ダウンロードします。音声データはデバイス上で100%ローカル処理され、プライバシーが完全に保護されます。",
-  "whyNeededTitle": "なぜクライアント側フォールバックが必要なのか？",
-  "whyNeededText": "Mozilla FirefoxやBraveなどプライバシー重視のブラウザには、Google独自のWeb Speech APIサーバー接続機能が含まれていません。LemonDBDではクライアント側フォールバックAIモデルをバックグラウンドで読み込むことで、どのブラウザからでも音声によるマップ操作を可能にしています！",
-  "statusIdle": "待機中 • 準備完了",
-  "statusListening": "聞き取り中 • お話しください",
-  "statusProcessing": "音声を処理中...",
-  "statusDownloading": "モデルをダウンロード中",
-  "statusReady": "モデル準備完了（メモリ内）",
-  "downloadProgress": "モデルをダウンロード中: {progress}%",
-  "modelCached": "モデルはCacheStorageに保存され、次回以降ラグなしで即座に読み込まれます。",
-  "toggleModel": "エンジンを切り替え",
-  "useClientModel": "ローカルクライアントモデルを強制使用",
-  "useNativeEngine": "標準 Web Speech API を使用",
-  "privacyNotice": "プライバシーに関する注記: ローカルクライアントモデルはすべての音声コマンドをブラウザ内・完全オフラインで処理します。",
-  "holdOrPress": "[V]キー長押し または マイクをクリック",
-  "micBlocked": "マイクへのアクセスがブロックされています。マイクの使用を許可してください。"
-};
 
+class GeneratorSetting(Base):
+    __tablename__ = "generator_settings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    role: Mapped[str] = mapped_column(String(20), default="Survivor", nullable=False)
+    gen_mode: Mapped[str] = mapped_column(String(20), default="instant", nullable=False)
+    no_repeat_perks: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    total_pages: Mapped[int] = mapped_column(Integer, default=12, nullable=False)
+    perks_per_page: Mapped[int] = mapped_column(Integer, default=15, nullable=False)
+    last_page_perks: Mapped[int] = mapped_column(Integer, default=8, nullable=False)
+    spin_duration_sec: Mapped[float] = mapped_column(Float, default=3.0, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "role": self.role,
+            "gen_mode": self.gen_mode,
+            "no_repeat_perks": 1 if self.no_repeat_perks else 0,
+            "total_pages": self.total_pages,
+            "perks_per_page": self.perks_per_page,
+            "last_page_perks": self.last_page_perks,
+            "spin_duration_sec": self.spin_duration_sec,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class GeneratorDrawnPerk(Base):
+    __tablename__ = "generator_drawn_perks"
+    __table_args__ = (
+        UniqueConstraint("role", "perk_name", name="uq_drawn_role_perk"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    role: Mapped[str] = mapped_column(String(20), nullable=False)
+    perk_name: Mapped[str] = mapped_column(String(150), nullable=False)
+    drawn_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "role": self.role,
+            "perk_name": self.perk_name,
+            "drawn_at": self.drawn_at.isoformat() if self.drawn_at else None,
+        }
+
+
+class DraftSession(Base):
+    __tablename__ = "draft_sessions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    room_code: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
+    phase: Mapped[str] = mapped_column(String(20), default="bans", nullable=False)
+    banned_perks: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    picked_survivor_perks: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    picked_killer_perks: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "room_code": self.room_code,
+            "phase": self.phase,
+            "banned_perks": safe_json_loads(self.banned_perks, default=[]),
+            "picked_survivor_perks": safe_json_loads(self.picked_survivor_perks, default=[]),
+            "picked_killer_perks": safe_json_loads(self.picked_killer_perks, default=[]),
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class GuesserStat(Base):
+    __tablename__ = "guesser_stats"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    guesser_type: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
+    current_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    best_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    total_guesses: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    correct_guesses: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "guesser_type": self.guesser_type,
+            "current_streak": self.current_streak,
+            "best_streak": self.best_streak,
+            "total_guesses": self.total_guesses,
+            "correct_guesses": self.correct_guesses,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class ScraperSetting(Base):
+    __tablename__ = "scraper_settings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    source: Mapped[str] = mapped_column(String(50), default="wikigg", nullable=False)
+    fallback_to_wiki: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    last_used_source: Mapped[str] = mapped_column(String(50), default="wikigg", nullable=False)
+    last_run_timestamp: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "source": self.source,
+            "fallback_to_wiki": self.fallback_to_wiki,
+            "last_used_source": self.last_used_source,
+            "last_run_timestamp": self.last_run_timestamp,
+        }
+```
+
+### backend/app/models/page_streak.py
+```python
+from datetime import datetime
+from typing import Any
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
+from app.models.base import utcnow
+
+
+class PageStreakRun(Base):
+    __tablename__ = "page_streak_runs"
+    __table_args__ = (
+        UniqueConstraint("user_id", "killer", name="uq_page_streak_run_user_killer"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    killer: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    status: Mapped[str] = mapped_column(String(20), default="in_progress", nullable=False)
+    attempt: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    current_page: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    best_page: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    pages_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    snapshot_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    page_logs: Mapped[list["PageStreakPageLog"]] = relationship(
+        back_populates="run", cascade="all, delete-orphan", order_by="PageStreakPageLog.timestamp.asc()"
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "killer": self.killer,
+            "status": self.status,
+            "attempt": self.attempt,
+            "current_page": self.current_page,
+            "best_page": self.best_page,
+            "pages_json": self.pages_json,
+            "pages": safe_json_loads(self.pages_json, default=[]),
+            "snapshot_at": self.snapshot_at.isoformat() if self.snapshot_at else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class PageStreakPageLog(Base):
+    __tablename__ = "page_streak_page_logs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[int] = mapped_column(
+        ForeignKey("page_streak_runs.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    attempt: Mapped[int] = mapped_column(Integer, nullable=False)
+    page_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    result: Mapped[str] = mapped_column(String(20), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, index=True, nullable=False
+    )
+    triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
+
+    run: Mapped["PageStreakRun"] = relationship(back_populates="page_logs")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "run_id": self.run_id,
+            "attempt": self.attempt,
+            "page_number": self.page_number,
+            "perks_json": self.perks_json,
+            "perks": safe_json_loads(self.perks_json, default=[]),
+            "result": self.result,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
+            "triggered_by": self.triggered_by,
+        }
+```
+
+### backend/app/models/smash_or_pass.py
+```python
+import uuid
+from datetime import datetime
+from typing import Any
+from sqlalchemy import (
+    Boolean,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+    Text,
+)
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
+from app.models.base import utcnow
+
+
+class Roster(Base):
+    __tablename__ = "rosters"
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    slug: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
+    name_i18n_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    description_i18n_key: Mapped[str] = mapped_column(String(256), nullable=False)
+    cover_image_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    theme_color: Mapped[str] = mapped_column(String(32), default="#ff0055", nullable=False)
+    category: Mapped[str] = mapped_column(String(64), default="DBD", nullable=False)
+    is_nsfw: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    entities: Mapped[list["Entity"]] = relationship(
+        "Entity",
+        back_populates="roster",
+        cascade="all, delete-orphan",
+        order_by="Entity.order_index",
+        lazy="selectin",
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "slug": self.slug,
+            "name_i18n_key": self.name_i18n_key,
+            "description_i18n_key": self.description_i18n_key,
+            "cover_image_url": self.cover_image_url,
+            "theme_color": self.theme_color,
+            "category": self.category,
+            "is_nsfw": self.is_nsfw,
+            "is_active": self.is_active,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class Entity(Base):
+    __tablename__ = "entities"
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    roster_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("rosters.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    slug: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    role: Mapped[str] = mapped_column(String(32), default="Survivor", nullable=False)
+    gender: Mapped[str] = mapped_column(String(32), default="female", nullable=False)
+    media_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    media_type: Mapped[str] = mapped_column(String(16), default="image", nullable=False)
+    metadata_json: Mapped[dict[str, Any] | None] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
+    )
+    order_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    roster: Mapped["Roster"] = relationship("Roster", back_populates="entities")
+    stat: Mapped["EntityStat | None"] = relationship(
+        "EntityStat", back_populates="entity", uselist=False, cascade="all, delete-orphan", lazy="selectin"
+    )
+    votes: Mapped[list["Vote"]] = relationship(
+        "Vote", back_populates="entity", cascade="all, delete-orphan"
+    )
+
+    def get_metadata(self) -> dict[str, Any]:
+        if isinstance(self.metadata_json, dict):
+            return self.metadata_json
+        if isinstance(self.metadata_json, str):
+            return safe_json_loads(self.metadata_json, default={})
+        return {}
+
+    def set_metadata(self, value: Any) -> None:
+        self.metadata_json = value
+
+    def to_dict(self) -> dict[str, Any]:
+        meta = self.get_metadata()
+        return {
+            "id": self.id,
+            "roster_id": self.roster_id,
+            "slug": self.slug,
+            "name": self.name,
+            "role": self.role,
+            "gender": self.gender,
+            "media_url": self.media_url,
+            "media_type": self.media_type,
+            "metadata": meta,
+            "metadata_json": meta,
+            "order_index": self.order_index,
+            "is_active": self.is_active,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "stat": self.stat.to_dict() if self.stat else None,
+        }
+
+
+class EntityStat(Base):
+    __tablename__ = "entity_stats"
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    entity_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("entities.id", ondelete="CASCADE"), unique=True, index=True, nullable=False
+    )
+    smash_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    pass_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    super_smash_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    total_votes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    smash_rate: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    chaos_rating: Mapped[float] = mapped_column(Float, default=50.0, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    entity: Mapped["Entity"] = relationship("Entity", back_populates="stat")
+
+    def calculate_rate(self) -> float:
+        smash = self.smash_count if self.smash_count is not None else 0
+        p = self.pass_count if self.pass_count is not None else 0
+        super_smash = self.super_smash_count if self.super_smash_count is not None else 0
+        total = smash + p + super_smash
+        self.total_votes = total
+        if total == 0:
+            self.smash_rate = 0.0
+        else:
+            positive_votes = smash + super_smash
+            self.smash_rate = round((positive_votes / total) * 100.0, 1)
+        return self.smash_rate
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "entity_id": self.entity_id,
+            "smash_count": self.smash_count,
+            "pass_count": self.pass_count,
+            "super_smash_count": self.super_smash_count,
+            "total_votes": self.total_votes,
+            "smash_rate": self.smash_rate,
+            "chaos_rating": self.chaos_rating,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class Vote(Base):
+    __tablename__ = "votes"
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    entity_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("entities.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    session_id: Mapped[str | None] = mapped_column(String(128), index=True, nullable=True)
+    user_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    vote_type: Mapped[str] = mapped_column(String(20), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    entity: Mapped["Entity"] = relationship("Entity", back_populates="votes")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "entity_id": self.entity_id,
+            "session_id": self.session_id,
+            "user_id": self.user_id,
+            "vote_type": self.vote_type,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class Translation(Base):
+    __tablename__ = "translations"
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    locale: Mapped[str] = mapped_column(String(10), index=True, nullable=False)
+    key: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
+    value: Mapped[str] = mapped_column(Text, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, str | None]:
+        return {
+            "id": self.id,
+            "locale": self.locale,
+            "key": self.key,
+            "value": self.value,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class SmashPassStat(Base):
+    __tablename__ = "smash_pass_stats"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    character_slug: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
+    character_name: Mapped[str] = mapped_column(String(150), index=True, nullable=False)
+    role: Mapped[str] = mapped_column(String(20), default="Survivor", nullable=False)
+    gender: Mapped[str] = mapped_column(String(20), default="female", nullable=False)
+    edition: Mapped[str] = mapped_column(String(50), default="canon", index=True, nullable=False)
+    smash_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    pass_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    super_smash_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    total_votes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    smash_rate: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    def calculate_rate(self) -> float:
+        smash = self.smash_count if self.smash_count is not None else 0
+        p = self.pass_count if self.pass_count is not None else 0
+        super_smash = self.super_smash_count if self.super_smash_count is not None else 0
+        total = smash + p + super_smash
+        self.total_votes = total
+        if total == 0:
+            self.smash_rate = 0.0
+        else:
+            positive_votes = smash + super_smash
+            self.smash_rate = round((positive_votes / total) * 100.0, 1)
+        return self.smash_rate
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "character_slug": self.character_slug,
+            "character_name": self.character_name,
+            "role": self.role,
+            "gender": self.gender,
+            "edition": self.edition,
+            "smash_count": self.smash_count,
+            "pass_count": self.pass_count,
+            "super_smash_count": self.super_smash_count,
+            "total_votes": self.total_votes,
+            "smash_rate": self.smash_rate,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+class SmashPassVote(Base):
+    __tablename__ = "smash_pass_votes"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    character_slug: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
+    vote_type: Mapped[str] = mapped_column(String(20), nullable=False)
+    edition: Mapped[str] = mapped_column(String(50), default="canon", index=True, nullable=False)
+    user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    session_id: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "character_slug": self.character_slug,
+            "vote_type": self.vote_type,
+            "edition": self.edition,
+            "user_id": self.user_id,
+            "session_id": self.session_id,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
 ```

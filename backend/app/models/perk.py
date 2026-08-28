@@ -1,6 +1,6 @@
 # backend/app/models/perk.py
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Dict, Optional
+from typing import TYPE_CHECKING, Any
 from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -15,34 +15,26 @@ class Perk(Base):
     __tablename__ = "perks"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(150), unique=True, index=True)
-    alternate_name: Mapped[Optional[str]] = mapped_column(
-        String(150), nullable=True
-    )
-    is_generic_counterpart: Mapped[bool] = mapped_column(
-        Boolean, default=False
-    )
-    is_teachable: Mapped[bool] = mapped_column(Boolean, default=True)
-    category: Mapped[str] = mapped_column(String(20), default="Survivor")
-    is_disabled: Mapped[bool] = mapped_column(Boolean, default=False)
-    disabled_reason: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    description: Mapped[str] = mapped_column(Text, default="")
-    icon_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-    icon_local_path: Mapped[Optional[str]] = mapped_column(
-        String(255), nullable=True
-    )
-    translations: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+    name: Mapped[str] = mapped_column(String(150), unique=True, index=True, nullable=False)
+    alternate_name: Mapped[str | None] = mapped_column(String(150), nullable=True)
+    is_generic_counterpart: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_teachable: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    category: Mapped[str] = mapped_column(String(20), default="Survivor", nullable=False, index=True)
+    is_disabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    disabled_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    description: Mapped[str] = mapped_column(Text, default="", nullable=False)
+    icon_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    icon_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    translations: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
     )
 
-    character_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("characters.id", ondelete="SET NULL"), nullable=True
+    character_id: Mapped[int | None] = mapped_column(
+        ForeignKey("characters.id", ondelete="SET NULL"), nullable=True, index=True
     )
-    character: Mapped[Optional["Character"]] = relationship(
-        back_populates="perks"
-    )
+    character: Mapped["Character | None"] = relationship(back_populates="perks")
 
-    def to_dict(self, lang: Optional[str] = None) -> dict:
+    def to_dict(self, lang: str | None = None) -> dict[str, Any]:
         char_name = "General"
         char_real = "General"
         char_avatar = ""
@@ -84,21 +76,17 @@ class PerkRule(Base):
     __tablename__ = "perk_rules"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(150))
-    is_default: Mapped[bool] = mapped_column(Boolean, default=False)
-    slot1_type: Mapped[str] = mapped_column(
-        String(50), default="character_own"
+    name: Mapped[str] = mapped_column(String(150), nullable=False)
+    is_default: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    slot1_type: Mapped[str] = mapped_column(String(50), default="character_own", nullable=False)
+    slot2_type: Mapped[str] = mapped_column(String(50), default="character_own", nullable=False)
+    slot3_type: Mapped[str] = mapped_column(String(50), default="general_role", nullable=False)
+    slot4_type: Mapped[str] = mapped_column(String(50), default="any_role", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
     )
-    slot2_type: Mapped[str] = mapped_column(
-        String(50), default="character_own"
-    )
-    slot3_type: Mapped[str] = mapped_column(
-        String(50), default="general_role"
-    )
-    slot4_type: Mapped[str] = mapped_column(String(50), default="any_role")
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "name": self.name,
@@ -107,8 +95,5 @@ class PerkRule(Base):
             "slot2_type": self.slot2_type,
             "slot3_type": self.slot3_type,
             "slot4_type": self.slot4_type,
-            "created_at": self.created_at.isoformat()
-            if self.created_at
-            else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
         }
-

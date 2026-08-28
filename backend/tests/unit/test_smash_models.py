@@ -1,19 +1,18 @@
-# backend/tests/unit/test_smash_models.py
-﻿# backend/tests/test_smash_models.py
 import sqlite3
 import pytest
 from app.models.smash_or_pass import (
-    Roster,
     Entity,
     EntityStat,
-    Vote,
-    Translation,
+    Roster,
     SmashPassStat,
     SmashPassVote,
+    Translation,
+    Vote,
 )
 from app.services.db.raw_schema import init_raw_sqlite_schema
 
 
+@pytest.mark.unit
 def test_create_roster_and_entity(db_session):
     roster = Roster(
         slug="test_cyberpunk",
@@ -71,6 +70,7 @@ def test_create_roster_and_entity(db_session):
     assert entity_dict["role"] == "Killer"
 
 
+@pytest.mark.unit
 def test_entity_stat_calculations_and_relationships(db_session):
     roster = Roster(
         slug="test_canon",
@@ -119,6 +119,7 @@ def test_entity_stat_calculations_and_relationships(db_session):
     assert zero_stat.total_votes == 0
 
 
+@pytest.mark.unit
 def test_vote_model_and_relationship(db_session):
     roster = Roster(
         slug="test_hooked",
@@ -159,6 +160,7 @@ def test_vote_model_and_relationship(db_session):
     assert vote_dict["user_id"] == 1
 
 
+@pytest.mark.unit
 def test_translation_model(db_session):
     translation = Translation(
         locale="pl",
@@ -179,6 +181,7 @@ def test_translation_model(db_session):
     assert t_dict["value"] == "Kanon Mgły"
 
 
+@pytest.mark.unit
 def test_cascade_delete(db_session):
     roster = Roster(
         slug="test_cascade",
@@ -221,6 +224,7 @@ def test_cascade_delete(db_session):
     assert db_session.get(Vote, vote_id) is None
 
 
+@pytest.mark.unit
 def test_legacy_smash_pass_models(db_session):
     stat = SmashPassStat(
         character_slug="meg_thomas",
@@ -250,6 +254,7 @@ def test_legacy_smash_pass_models(db_session):
     assert vote.to_dict()["character_slug"] == "meg_thomas"
 
 
+@pytest.mark.unit
 def test_raw_sqlite_schema_init():
     conn = sqlite3.connect(":memory:")
     init_raw_sqlite_schema(conn)

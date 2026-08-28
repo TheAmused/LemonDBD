@@ -1,5 +1,4 @@
 # backend/app/schemas/character.py
-from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -17,30 +16,31 @@ class KillerPowerSchema(BaseModel):
 class CharacterBase(BaseModel):
     name: str = Field(..., max_length=100)
     role: str = Field(..., max_length=20)
-    code_prefix: Optional[str] = Field(None, max_length=10)
-    portrait_url: Optional[str] = Field(None, max_length=255)
-    real_name: Optional[str] = Field(None, max_length=100)
-    short_name: Optional[str] = Field(None, max_length=50)
-    wiki_slug: Optional[str] = Field(None, max_length=100)
-    avatar_local_path: Optional[str] = Field(None, max_length=255)
-    release_number: Optional[int] = None
-    chapter_name: Optional[str] = Field("Base Game", max_length=150)
-    chapter_number: Optional[str] = Field(None, max_length=50)
-    dlc_type: Optional[str] = Field("original_chapter", max_length=50)
-    is_licensed: Optional[bool] = False
-    release_year: Optional[int] = 2016
-    release_date: Optional[str] = Field(None, max_length=50)
-    dlc_counterparts: Optional[str] = None
-    lore: Optional[str] = None
+    code_prefix: str | None = Field(None, max_length=10)
+    portrait_url: str | None = Field(None, max_length=255)
+    real_name: str | None = Field(None, max_length=100)
+    short_name: str | None = Field(None, max_length=50)
+    wiki_slug: str | None = Field(None, max_length=100)
+    avatar_local_path: str | None = Field(None, max_length=255)
+    release_number: int | None = None
+    chapter_name: str | None = Field("Base Game", max_length=150)
+    chapter_number: str | None = Field(None, max_length=50)
+    dlc_type: str | None = Field("original_chapter", max_length=50)
+    is_licensed: bool | None = False
+    is_disabled: bool = False
+    disabled_reason: str | None = Field(None, max_length=255)
+    release_year: int | None = 2016
+    release_date: str | None = Field(None, max_length=50)
+    dlc_counterparts: str | None = None
+    lore: str | None = None
 
-    # Killer specifics
-    power_name: Optional[str] = Field(None, max_length=150)
-    power_description: Optional[str] = None
-    power_icon_url: Optional[str] = Field(None, max_length=500)
-    movement_speed: Optional[str] = Field(None, max_length=100)
-    terror_radius: Optional[str] = Field(None, max_length=100)
-    terror_radius_meters: Optional[int] = None
-    height: Optional[str] = Field(None, max_length=50)
+    power_name: str | None = Field(None, max_length=150)
+    power_description: str | None = None
+    power_icon_url: str | None = Field(None, max_length=500)
+    movement_speed: str | None = Field(None, max_length=100)
+    terror_radius: str | None = Field(None, max_length=100)
+    terror_radius_meters: int | None = None
+    height: str | None = Field(None, max_length=50)
 
 
 class CharacterCreate(CharacterBase):
@@ -52,23 +52,24 @@ class CharacterResponse(BaseModel):
     name: str
     role: str
     category: str
-    code_prefix: Optional[str] = None
-    portrait_url: Optional[str] = None
+    code_prefix: str | None = None
+    portrait_url: str | None = None
     real_name: str
     short_name: str
     wiki_slug: str
     avatar_url: str
     avatar_local_path: str
-    release_number: Optional[int] = None
+    release_number: int | None = None
     chapter_name: str
     chapter_number: str
     dlc_type: str
     is_licensed: bool
+    is_disabled: bool = False
+    disabled_reason: str | None = None
     release_year: int
     release_date: str
-    dlc_counterparts: List[str] = []
+    dlc_counterparts: list[str] = []
     lore: str
-    power: Optional[KillerPowerSchema] = None
+    power: KillerPowerSchema | None = None
 
     model_config = ConfigDict(from_attributes=True)
-

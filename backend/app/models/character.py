@@ -1,10 +1,10 @@
 # backend/app/models/character.py
-import json
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any
 from sqlalchemy import JSON, Boolean, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
+from app.core.json_provider import safe_json_loads
 
 if TYPE_CHECKING:
     from app.models.perk import Perk
@@ -14,67 +14,39 @@ class Character(Base):
     __tablename__ = "characters"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(100), unique=True, index=True)
-    role: Mapped[str] = mapped_column(String(20))
-    code_prefix: Mapped[Optional[str]] = mapped_column(
-        String(10), nullable=True
-    )
-    portrait_url: Mapped[Optional[str]] = mapped_column(
-        String(255), nullable=True
-    )
-    real_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    short_name: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    wiki_slug: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    avatar_local_path: Mapped[Optional[str]] = mapped_column(
-        String(255), nullable=True
-    )
-    release_number: Mapped[Optional[int]] = mapped_column(
-        Integer, nullable=True
-    )
-    chapter_name: Mapped[Optional[str]] = mapped_column(
-        String(150), nullable=True
-    )
-    chapter_number: Mapped[Optional[str]] = mapped_column(
-        String(50), nullable=True
-    )
-    dlc_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    is_licensed: Mapped[Optional[bool]] = mapped_column(
-        Boolean, default=False, nullable=True
-    )
-    is_disabled: Mapped[bool] = mapped_column(Boolean, default=False)
-    disabled_reason: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    release_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    release_date: Mapped[Optional[str]] = mapped_column(
-        String(50), nullable=True
-    )
-    dlc_counterparts: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    lore: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    name: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
+    role: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    code_prefix: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    portrait_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    real_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    short_name: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
+    wiki_slug: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
+    avatar_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    release_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    chapter_name: Mapped[str | None] = mapped_column(String(150), nullable=True)
+    chapter_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    dlc_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    is_licensed: Mapped[bool | None] = mapped_column(Boolean, default=False, nullable=True)
+    is_disabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    disabled_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    release_year: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    release_date: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    dlc_counterparts: Mapped[str | None] = mapped_column(Text, nullable=True)
+    lore: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    power_name: Mapped[Optional[str]] = mapped_column(
-        String(150), nullable=True
-    )
-    power_description: Mapped[Optional[str]] = mapped_column(
-        Text, nullable=True
-    )
-    power_icon_url: Mapped[Optional[str]] = mapped_column(
-        String(500), nullable=True
-    )
-    movement_speed: Mapped[Optional[str]] = mapped_column(
-        String(100), nullable=True
-    )
-    terror_radius: Mapped[Optional[str]] = mapped_column(
-        String(100), nullable=True
-    )
-    terror_radius_meters: Mapped[Optional[int]] = mapped_column(
-        Integer, nullable=True
-    )
-    height: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    translations: Mapped[Optional[Dict[str, Any]]] = mapped_column(
+    power_name: Mapped[str | None] = mapped_column(String(150), nullable=True)
+    power_description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    power_icon_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    movement_speed: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    terror_radius: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    terror_radius_meters: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    height: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    translations: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
     )
 
-    perks: Mapped[List["Perk"]] = relationship(
-        back_populates="character", cascade="all, delete-orphan"
+    perks: Mapped[list["Perk"]] = relationship(
+        back_populates="character", cascade="all, delete-orphan", lazy="selectin"
     )
 
     __mapper_args__ = {
@@ -82,18 +54,15 @@ class Character(Base):
         "polymorphic_identity": "Character",
     }
 
-    def to_dict(self, lang: Optional[str] = None) -> dict:
-        counterparts = []
+    def to_dict(self, lang: str | None = None) -> dict[str, Any]:
+        counterparts: list[str] = []
         if self.dlc_counterparts:
             try:
-                if self.dlc_counterparts.strip().startswith("["):
-                    counterparts = json.loads(self.dlc_counterparts)
+                stripped = self.dlc_counterparts.strip()
+                if stripped.startswith("["):
+                    counterparts = safe_json_loads(stripped, default=[])
                 else:
-                    counterparts = [
-                        x.strip()
-                        for x in self.dlc_counterparts.split(",")
-                        if x.strip()
-                    ]
+                    counterparts = [x.strip() for x in stripped.split(",") if x.strip()]
             except Exception:
                 counterparts = []
 
@@ -112,7 +81,7 @@ class Character(Base):
                 power_name = trans.get("power_name") or power_name
                 power_desc = trans.get("power_description") or power_desc
 
-        data = {
+        data: dict[str, Any] = {
             "id": self.id,
             "name": name,
             "role": self.role,
@@ -140,10 +109,7 @@ class Character(Base):
 
         if self.role == "Killer" or self.power_name:
             p_clean = (
-                self.power_name.lower()
-                .replace(" ", "_")
-                .replace("'", "")
-                .replace("-", "_")
+                self.power_name.lower().replace(" ", "_").replace("'", "").replace("-", "_")
                 if self.power_name
                 else ""
             )
@@ -151,9 +117,7 @@ class Character(Base):
                 "name": power_name,
                 "description": power_desc,
                 "icon_url": self.power_icon_url or "",
-                "icon_local_path": f"icons/powers/{p_clean}.png"
-                if p_clean
-                else "",
+                "icon_local_path": f"icons/powers/{p_clean}.png" if p_clean else "",
                 "movement_speed": self.movement_speed or "4.6 m/s (115%)",
                 "terror_radius": self.terror_radius or "32 m",
                 "terror_radius_meters": self.terror_radius_meters or 32,
@@ -172,4 +136,3 @@ class Killer(Character):
     __mapper_args__ = {
         "polymorphic_identity": "Killer",
     }
-

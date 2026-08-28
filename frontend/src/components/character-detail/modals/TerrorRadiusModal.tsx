@@ -84,13 +84,14 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
                     ? 'border-2 border-rose-500 bg-rose-500/10 animate-pulse'
                     : 'border-slate-800'
                 } flex items-start justify-center pt-1`}
-              >
-                <span className="text-[9px] font-mono font-bold text-amber-400">{'24m'}</span>
-              </div>
+               >
+                 <span className="text-[9px] font-mono font-bold text-amber-400">{t.distance24m}</span>
+               </div>
 
-              <div className="absolute inset-20 rounded-full border border-rose-600/60 bg-rose-600/10 flex items-start justify-center pt-1">
-                <span className="text-[9px] font-mono font-bold text-rose-300">{'16m'}</span>
-              </div>
+               <div className="absolute inset-20 rounded-full border border-rose-600/60 bg-rose-600/10 flex items-start justify-center pt-1">
+                 <span className="text-[9px] font-mono font-bold text-rose-300">{t.distance16m}</span>
+               </div>
+
 
               <div className="absolute inset-28 rounded-full border-2 border-red-500 bg-red-600/20 flex items-center justify-center">
                 <span className="text-[9px] font-mono font-black text-red-300">{t.distance8m || '8m'} ({t.chase || 'Chase'})</span>

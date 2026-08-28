@@ -1,14 +1,15 @@
 # Stage 1: Base Alpine Setup
 FROM node:alpine AS base
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
-
-# Stage 2: Dependencies Installation
-FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# Stage 2: Dependencies Installation (Includes devDependencies needed for build)
+FROM base AS deps
+WORKDIR /app
+
 COPY package.json package-lock.json* ./
-RUN npm ci || npm install
+RUN npm ci --include=dev || npm install --include=dev
 
 # Stage 3: Next.js Production Build
 FROM base AS builder
@@ -28,7 +29,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
 
-# Stage 4: Standalone Production Runner
+# Stage 4: Standalone Production Runner (Zero devDependencies footprint)
 FROM base AS runner
 WORKDIR /app
 

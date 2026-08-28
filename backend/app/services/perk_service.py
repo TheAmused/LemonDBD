@@ -129,8 +129,9 @@ class PerkService:
         query: str = "",
         category: Optional[str] = None,
         limit: int = 10,
+        lang: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
-        return _fetch_perk_suggestions_fn(self, query=query, category=category, limit=limit)
+        return _fetch_perk_suggestions_fn(self, query=query, category=category, limit=limit, lang=lang)
 
     def get_character_suggestions(
         self,

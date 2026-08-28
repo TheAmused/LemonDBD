@@ -99,7 +99,8 @@ def get_perk_suggestions():
     q = request.args.get("q", default="", type=str)
     category = request.args.get("category")
     limit = request.args.get("limit", default=10, type=int)
-    suggestions = perk_service.get_perk_suggestions(query=q, category=category, limit=limit)
+    lang = _extract_lang()
+    suggestions = perk_service.get_perk_suggestions(query=q, category=category, limit=limit, lang=lang)
     return jsonify({"data": suggestions, "count": len(suggestions)}), 200
 
 

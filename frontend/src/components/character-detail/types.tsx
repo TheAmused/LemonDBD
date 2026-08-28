@@ -214,18 +214,18 @@ export function getRarityTileStyle(rarity?: string): RarityTileStyle {
       text: 'text-purple-400',
     };
   }
-  if (r.includes('rare') || r.includes('green')) {
+  if (r.includes('rare') || r.includes('blue')) {
+    return {
+      bg: 'bg-gradient-to-br from-[#1f6fb2] via-[#154d7a] to-[#0a2740] border-[#3b9fe0] shadow-[0_0_12px_rgba(59,159,224,0.4)]',
+      badge: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
+      text: 'text-sky-400',
+    };
+  }
+  if (r.includes('uncommon') || r.includes('green')) {
     return {
       bg: 'bg-gradient-to-br from-[#277a3c] via-[#1a5328] to-[#0c2a13] border-[#38b259] shadow-[0_0_12px_rgba(56,178,89,0.4)]',
       badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
       text: 'text-emerald-400',
-    };
-  }
-  if (r.includes('uncommon') || r.includes('yellow')) {
-    return {
-      bg: 'bg-gradient-to-br from-[#c99a2c] via-[#8c6b16] to-[#453406] border-[#f0bb33] shadow-[0_0_12px_rgba(240,187,51,0.4)]',
-      badge: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-      text: 'text-amber-400',
     };
   }
   if (r.includes('common') || r.includes('brown')) {

@@ -1,10 +1,14 @@
 // frontend/src/components/streaks/StreakPanelGrid.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { StreakPanel } from './StreakPanel';
-import { KILLER_STREAK_PANELS, SURVIVOR_STREAK_PANELS, CHALLENGE_STREAK_PANELS } from './panels';
+import {
+  getKillerStreakPanels,
+  getSurvivorStreakPanels,
+  getChallengeStreakPanels,
+} from './panels';
 import { GauntletModeModal } from './gauntlet/GauntletModeModal';
 import { ChaosModeModal } from './chaos/ChaosModeModal';
 import { HistoryModeModal } from './history/HistoryModeModal';
@@ -40,8 +44,13 @@ interface StreakPanelGridProps {
 export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }) => {
   const router = useRouter();
   const dict = useStreaksDict();
-  const panels =
-    role === 'killer' ? KILLER_STREAK_PANELS : role === 'challenge' ? CHALLENGE_STREAK_PANELS : SURVIVOR_STREAK_PANELS;
+
+  const panels = useMemo(() => {
+    if (role === 'killer') return getKillerStreakPanels(dict);
+    if (role === 'challenge') return getChallengeStreakPanels(dict);
+    return getSurvivorStreakPanels(dict);
+  }, [role, dict]);
+
   const [isModeModalOpen, setIsModeModalOpen] = useState(false);
   const [isChaosModeModalOpen, setIsChaosModeModalOpen] = useState(false);
   const [isHistoryModeModalOpen, setIsHistoryModeModalOpen] = useState(false);
@@ -67,6 +76,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               comingSoon
+              dict={dict}
             />
           );
         }
@@ -89,6 +99,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               href={`/${locale}/streaks/${role}/${panel.id}`}
               disabled
               disabledReason={mode?.disabled_reason}
+              dict={dict}
             />
           );
         }
@@ -104,6 +115,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               accentBorder={panel.accentBorder}
               color={panel.color}
               image={panel.image}
+              dict={dict}
               onClick={() => {
                 const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
                 if (saved === 'original') {
@@ -127,6 +139,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               accentBorder={panel.accentBorder}
               color={panel.color}
               image={panel.image}
+              dict={dict}
               onClick={() => {
                 const saved = getSavedChaosDifficulty();
                 if (saved) {
@@ -150,6 +163,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               accentBorder={panel.accentBorder}
               color={panel.color}
               image={panel.image}
+              dict={dict}
               onClick={() => {
                 const saved = getSavedHistoryMode();
                 if (saved) {
@@ -173,6 +187,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               accentBorder={panel.accentBorder}
               color={panel.color}
               image={panel.image}
+              dict={dict}
               onClick={() => {
                 if (hasSeenPageStreakIntro()) {
                   router.push(`/${locale}/streaks/${role}/page-streak`);
@@ -195,6 +210,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             color={panel.color}
             image={panel.image}
             href={`/${locale}/streaks/${role}/${panel.id}`}
+            dict={dict}
           />
         );
       })}

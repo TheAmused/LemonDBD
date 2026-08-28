@@ -62,13 +62,14 @@ export default function SmashOrPassPage() {
     loadVaultStats();
   }, [backendBase]);
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-        {'Loading Smash or Pass...'}
-      </div>
-    );
-  }
+   if (!dict) {
+     return (
+       <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
+         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+       </div>
+     );
+   }
+
 
   return (
     <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">

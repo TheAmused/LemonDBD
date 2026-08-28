@@ -1,3 +1,4 @@
+// frontend/src/locales/en/streaks.ts
 export default {
   "streaksTitle": "Challenge & Streak Hub",
   "backToKillerStreaks": "Back to killer streaks",
@@ -216,5 +217,20 @@ export default {
   "killer": "Killer",
   "completed": "Completed",
   "noOwnedCharacters": "No owned characters found for this filter.",
-  "continueButton": "Continue"
+  "continueButton": "Continue",
+  "gauntletStreakTitle": "Gauntlet streak",
+  "pageStreakPanelTitle": "Page streak",
+  "pageStreakPanelDesc": "Win a round using perks from page 1, then move to page 2, and keep going through all 12 perk pages.",
+  "historyStreakPanelTitle": "History streak",
+  "historyStreakPanelDesc": "A run built around the killer roster in release order.",
+  "chaosStreakPanelTitle": "Chaos streak",
+  "chaosStreakPanelDesc": "Every round randomises 4 perks and 2 addon rarities. You pick which killer plays them.",
+  "niceGuyStreakTitle": "Nice Guy streak",
+  "niceGuyStreakDesc": "A new challenge mode. Details soon.",
+  "bloodMoneyStreakTitle": "Blood Money streak",
+  "bloodMoneyStreakDesc": "A new challenge mode. Details soon.",
+  "copycatStreakTitle": "Copycat streak",
+  "copycatSurvivorDesc": "Shortened, survivor only version of Copycat streak. Details soon.",
+  "copycatChallengeDesc": "Full version of Copycat streak, mixing killer and survivor picks together. Details soon."
 };
+

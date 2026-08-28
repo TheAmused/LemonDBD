@@ -1,3 +1,4 @@
+// frontend/src/locales/en/characterDetail.ts
 export default {
   "backToCharacters": "Back to Characters",
   "roleSurvivor": "Survivor",
@@ -140,6 +141,8 @@ export default {
   "compatibleTarget": "Compatible Target:",
   "distance45m": "45m",
   "distance32m": "32m",
+  "distance24m": "24m",
+  "distance16m": "16m",
   "distance8m": "8m",
   "approxSymbol": "~",
   "secondsUnit": "s",
@@ -160,3 +163,4 @@ export default {
   "perk": "Perk",
   "lullabyRadius": "Lullaby Radius"
 };
+

@@ -1,3 +1,4 @@
+// frontend/src/locales/en/swf.ts
 export default {
   "engineBadge": "SWF Squad Team Engine",
   "pageTitle": "4-Player Team Loadout Planner",
@@ -31,5 +32,7 @@ export default {
   "searchPlaceholder": "Search survivor perks...",
   "loadingPerks": "Loading survivor perks...",
   "noPerksFound": "No matching perks found.",
-  "loadingSwf": "Loading SWF Planner..."
+  "loadingSwf": "Loading SWF Planner...",
+  "dbdBadge": "DBD"
 };
+

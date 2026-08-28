@@ -1,5 +1,4 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/layouts/DesktopMapLayout.tsx
 
 import React, { useState } from 'react';
@@ -15,6 +14,7 @@ import {
   Compass,
   X,
 } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { MapCanvas } from '../MapCanvas';
 import { MapControls } from '../MapControls';
@@ -183,7 +183,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                   data-testid="desktop-map-source-hens333"
                 >
                   <Clock className="h-3 w-3" />
-                  <span>{'Hens333'}</span>
+                  <span>{dict?.maps?.sourceHens || 'Hens333'}</span>
                 </button>
                 <button
                   type="button"
@@ -197,7 +197,7 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
                   data-testid="desktop-map-source-samoelcolt"
                 >
                   <Layers className="h-3 w-3" />
-                  <span>{'SamoelColt'}</span>
+                  <span>{dict?.maps?.sourceSamoel || 'SamoelColt'}</span>
                 </button>
                 <button
                   type="button"
@@ -381,3 +381,4 @@ export const DesktopMapLayout: React.FC<DesktopMapLayoutProps> = ({
     </div>
   );
 };
+

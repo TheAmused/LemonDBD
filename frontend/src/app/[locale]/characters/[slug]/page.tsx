@@ -134,13 +134,14 @@ export default function CharacterDetailPage() {
     };
   }, [slug, backendBase, locale]);
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-        {'Loading...'}
-      </div>
-    );
-  }
+   if (!dict) {
+     return (
+       <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
+         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+       </div>
+     );
+   }
+
 
   const t = dict.characterDetail;
 

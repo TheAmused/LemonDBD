@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/perk-studio/CustomPerkStudio.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import {
@@ -19,12 +18,11 @@ import {
   Plus,
   Layers,
   User,
-  Filter,
   CheckCircle2,
   Swords,
   Sliders,
-  Clock,
 } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 
 export interface CustomPerk {
   id: number;
@@ -178,11 +176,10 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
         throw new Error(errData.error || 'Failed to create custom perk');
       }
 
-      const resData = await res.json();
+      await res.json();
       setSuccessToast(`Successfully published "${payload.name}"!`);
       setTimeout(() => setSuccessToast(''), 4000);
 
-      // Refresh gallery
       fetchCommunityPerks();
       setActiveTab('gallery');
     } catch (err: any) {
@@ -206,7 +203,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
         method: 'POST',
       });
       if (!res.ok) {
-        // revert optimistic upvote
         setUpvotedIds((prev) => ({ ...prev, [id]: false }));
         setCustomPerks((prev) =>
           prev.map((p) => (p.id === id ? { ...p, upvotes: p.upvotes - 1 } : p))
@@ -217,13 +213,11 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
     }
   };
 
-  // Helper for rendering Icon component based on preset id
   const getPresetIconComponent = (presetId: string) => {
     const matched = ICON_PRESETS.find((p) => p.id === presetId);
     return matched ? matched.icon : Sparkles;
   };
 
-  // Markdown renderer helper
   const renderMarkdown = (text: string) => {
     if (!text) return null;
     const lines = text.split('\n');
@@ -268,7 +262,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
   return (
     <div className="space-y-8">
-      {/* Header Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-red-50 via-slate-100 to-purple-50 dark:from-red-950 dark:via-slate-900 dark:to-purple-950 p-6 sm:p-8 border border-red-500/20 shadow-sm dark:shadow-2xl">
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -284,7 +277,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               {dict?.customPerks?.subtitle || 'Design original Dead by Daylight perk concepts with a live interactive diamond card preview, or explore and upvote community-created perks.'}
             </p>
           </div>
-          {/* Tab Switcher */}
           <div className="flex items-center bg-white/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shrink-0 shadow-sm">
             <button
               onClick={() => setActiveTab('designer')}
@@ -315,7 +307,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
         </div>
       </div>
 
-      {/* Toast Notification */}
       {successToast && (
         <div className="flex items-center gap-2 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-sm font-semibold animate-in fade-in slide-in-from-top-2">
           <CheckCircle2 className="h-5 w-5 shrink-0" />
@@ -323,10 +314,8 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
         </div>
       )}
 
-      {/* TAB 1: PERK DESIGNER STUDIO */}
       {activeTab === 'designer' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Form (7 cols) */}
           <div className="lg:col-span-7 bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-6">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
@@ -345,7 +334,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Perk Name */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   {dict?.builds?.buildTitle || 'Perk Title *'}
@@ -360,7 +348,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 />
               </div>
 
-              {/* Role & Character */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
@@ -407,7 +394,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 </div>
               </div>
 
-              {/* Rarity */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   {dict?.characterDetail?.raritySpecial || 'Rarity *'}
@@ -430,7 +416,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 </div>
               </div>
 
-              {/* Icon Preset Picker */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   {dict?.guesser?.perkIconChoice || 'Icon Preset *'}
@@ -458,7 +443,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 </div>
               </div>
 
-              {/* Author */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
                   {dict?.builds?.authorName || 'Creator / Author Name'}
@@ -472,7 +456,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 />
               </div>
 
-              {/* Description Markdown */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
@@ -484,21 +467,21 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       onClick={() => setDescription((prev) => prev + ' **Exhausted**')}
                       className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
-                      {'+**Exhausted**'}
+                      {dict?.customPerks?.tagExhausted || '+**Exhausted**'}
                     </button>
                     <button
                       type="button"
                       onClick={() => setDescription((prev) => prev + ' **Hindered**')}
                       className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
-                      {'+**Hindered**'}
+                      {dict?.customPerks?.tagHindered || '+**Hindered**'}
                     </button>
                     <button
                       type="button"
                       onClick={() => setDescription((prev) => prev + ' **Aura**')}
                       className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-amber-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer shadow-sm"
                     >
-                      {'+**Aura**'}
+                      {dict?.customPerks?.tagAura || '+**Aura**'}
                     </button>
                   </div>
                 </div>
@@ -512,7 +495,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 />
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -524,7 +506,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             </form>
           </div>
 
-          {/* Right Column: Live Interactive Perk Card Preview (5 cols) */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
             <div className="flex items-center justify-between px-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
@@ -535,7 +516,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 {dict?.characterDetail?.realTimeLabel || 'REAL-TIME'}
               </span>
             </div>
-            {/* DBD Styled Custom Perk Card */}
             {(() => {
               const rConfig = getRarityConfig(rarity);
               const CurrentIcon = getPresetIconComponent(iconPreset);
@@ -544,12 +524,9 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 <div
                   className={`relative rounded-3xl bg-gradient-to-b ${rConfig.bg} border ${rConfig.border} p-6 shadow-2xl ${rConfig.glow} transition-all duration-300`}
                 >
-                  {/* Perk Diamond Header */}
                   <div className="flex flex-col items-center text-center space-y-4 pb-4 border-b border-slate-800/80">
-                    {/* Diamond Frame */}
                     <div className="relative group">
                       <div className="w-24 h-24 rotate-45 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border-2 border-slate-700/80 flex items-center justify-center shadow-2xl shadow-slate-950 group-hover:scale-105 transition-transform overflow-hidden">
-                        {/* Glow accent */}
                         <div
                           className={`absolute inset-0 bg-gradient-to-br ${rConfig.bg} opacity-50 blur-sm`}
                         />
@@ -559,7 +536,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       </div>
                     </div>
 
-                    {/* Perk Title & Metadata */}
                     <div className="space-y-1.5 pt-2">
                       <h3 className="text-lg font-black text-slate-100 font-mono tracking-tight">
                         {name || 'Untitled Perk'}
@@ -569,7 +545,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       </p>
                     </div>
 
-                    {/* Badges */}
                     <div className="flex items-center justify-center gap-2">
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
@@ -588,7 +563,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                     </div>
                   </div>
 
-                  {/* Markdown Mechanics Description Body */}
                   <div className="py-4 px-2 min-h-[100px]">
                     {description ? (
                       renderMarkdown(description)
@@ -599,7 +573,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                     )}
                   </div>
 
-                  {/* Footer Author Tag */}
                   <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
                     <span className="flex items-center gap-1.5">
                       <User className="h-3.5 w-3.5 text-slate-500" />
@@ -616,13 +589,10 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
         </div>
       )}
 
-      {/* TAB 2: COMMUNITY PERK GALLERY */}
       {activeTab === 'gallery' && (
         <div className="space-y-6">
-          {/* Gallery Filters & Search */}
           <div className="bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-              {/* Search Bar (5 cols) */}
               <div className="md:col-span-5 relative">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
                 <input
@@ -634,7 +604,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 />
               </div>
 
-              {/* Role Filters (3 cols) */}
               <div className="md:col-span-3 flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-2xl border border-slate-200 dark:border-slate-800">
                 {['all', 'survivor', 'killer'].map((r) => (
                   <button
@@ -651,7 +620,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 ))}
               </div>
 
-              {/* Rarity Filters (2 cols) */}
               <div className="md:col-span-2">
                 <select
                   value={filterRarity}
@@ -665,7 +633,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 </select>
               </div>
 
-              {/* Sort By (2 cols) */}
               <div className="md:col-span-2">
                 <select
                   value={sortBy}
@@ -679,7 +646,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             </div>
           </div>
 
-          {/* Cards Grid */}
           {loadingGallery ? (
             <div className="py-16 text-center text-slate-500 dark:text-slate-400 animate-pulse font-mono text-xs">
               {dict?.app?.loadingPerks || 'Loading perk concepts...'}
@@ -711,10 +677,9 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 return (
                   <div
                     key={perk.id}
-                    className={`flex flex-col justify-between rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-5 hover:border-red-500/40 dark:hover:border-slate-700 transition-all duration-200 shadow-sm dark:shadow-xl group`}
+                    className="flex flex-col justify-between rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-5 hover:border-red-500/40 dark:hover:border-slate-700 transition-all duration-200 shadow-sm dark:shadow-xl group"
                   >
                     <div>
-                      {/* Top Bar: Icon + Rarity & Role Badges */}
                       <div className="flex items-start justify-between gap-3 mb-4">
                         <div className="flex items-center gap-3">
                           <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 group-hover:scale-105 transition-transform overflow-hidden shadow-inner">
@@ -742,7 +707,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                         </span>
                       </div>
 
-                      {/* Rarity Pill */}
                       <div className="mb-3">
                         <span
                           className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${rConfig.badgeBg}`}
@@ -751,13 +715,11 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                         </span>
                       </div>
 
-                      {/* Mechanics Description */}
                       <div className="bg-slate-50 dark:bg-slate-950/60 rounded-2xl p-3.5 border border-slate-200 dark:border-slate-800/80 mb-4 min-h-[90px] shadow-inner">
                         {renderMarkdown(perk.description)}
                       </div>
                     </div>
 
-                    {/* Bottom Metadata & Upvote Action */}
                     <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
                         <User className="h-3.5 w-3.5" />
@@ -787,3 +749,4 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
     </div>
   );
 };
+

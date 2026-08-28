@@ -1,15 +1,19 @@
 // frontend/src/locales/pl/customPerks.ts
 export default {
   "conceptLab": "Studio i Laboratorium Konceptów",
-  "subtitle": "Projektuj autorskie umiejętności do Dead by Daylight z podglądem na żywo w klasycznej diamentowej ramce lub przeglądaj i oceniaj koncepty społeczności.",
+  "subtitle": "Projektuj oryginalne koncepty umiejętności do Dead by Daylight z podglądem na żywo w formie diamentowej karty lub przeglądaj i oceniaj projekty społeczności.",
   "designer": "Kreator Umiejętności",
-  "configureConcept": "Skonfiguruj Koncept Umiejętności",
+  "configureConcept": "Konfiguruj Koncept Umiejętności",
   "requiredFields": "* Pola wymagane",
-  "titlePlaceholder": "np. Hex: Shadow Veil, Adrenaline Overdrive...",
-  "characterPlaceholder": "np. Meg Thomas, The Trapper, Ogólna...",
+  "titlePlaceholder": "np. Klątwa: Całun Cienia, Zastrzyk Adrenaliny...",
+  "characterPlaceholder": "np. Meg Thomas, Trapper, Ogólna...",
   "authorPlaceholder": "np. ArchitektBytu",
-  "descPlaceholder": "Napisz mechanikę umiejętności... Użyj **pogrubienia** dla kluczowych statusów.",
+  "descPlaceholder": "Opisz mechanikę umiejętności... Użyj **pogrubienia** dla kluczowych efektów statusu.",
   "conceptTag": "Koncept LemonDBD",
-  "searchPlaceholder": "Szukaj konceptów po tytule, mechanice, postaci...",
-  "createNew": "Stwórz Nowy Koncept"
+  "searchPlaceholder": "Szukaj konceptów według nazwy, mechaniki, postaci...",
+  "createNew": "Stwórz Nowy Koncept",
+  "tagExhausted": "+**Wyczerpanie**",
+  "tagHindered": "+**Spowolnienie**",
+  "tagAura": "+**Aura**"
 };
+

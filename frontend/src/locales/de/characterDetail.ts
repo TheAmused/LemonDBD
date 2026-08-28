@@ -64,6 +64,7 @@ export default {
   "view3DModel": "Klicken für Vollständiges 3D-Modell",
   "loreModalTitle": "Archive des Entitus — Kodex-Wissen",
   "equipmentDetails": "Ausrüstungsdetails",
+  "equipment": "Ausrüstung",
   "close": "Schließen",
   "baseGame": "Grundspiel",
   "heightTall": "Groß",

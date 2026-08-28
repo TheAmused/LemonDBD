@@ -64,6 +64,7 @@ export default {
   "view3DModel": "Kliknij, aby Zobaczyć Pełny Model 3D",
   "loreModalTitle": "Archiwa Bytu — Kodeks Wiedzy",
   "equipmentDetails": "Szczegóły Wyposażenia",
+  "equipment": "Wyposażenie",
   "close": "Zamknij",
   "baseGame": "Gra Podstawowa",
   "heightTall": "Wysoki",

@@ -2,7 +2,7 @@
 """
 Models Package
 Re-exports all database models so they can be imported directly from `app.models`.
-This ensures SQLAlchemy registers all tables and relationships upon package import.
+Ensures SQLAlchemy registers all tables and polymorphic relationships upon package import.
 """
 
 from app.models.base import utcnow
@@ -89,4 +89,3 @@ __all__ = [
     "ChallengeModeSetting",
     "AdminAuditLog",
 ]
-

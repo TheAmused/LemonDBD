@@ -1,3 +1,4 @@
+# backend/tests/unit/test_translations_jsonb.py
 import pytest
 from app import create_app
 from app.core.extensions import db

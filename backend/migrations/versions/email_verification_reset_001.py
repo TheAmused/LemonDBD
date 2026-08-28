@@ -1,3 +1,4 @@
+# backend/migrations/versions/email_verification_reset_001.py
 """add email verification and password reset fields to users
 
 Revision ID: email_verification_reset_001

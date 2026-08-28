@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# backend/app/fix_missing_translations.py
 """
 fix_missing_translations.py
 ===========================

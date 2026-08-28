@@ -1,3 +1,4 @@
+# backend/tests/unit/scrapers/test_character_scraper.py
 # backend/tests/scrapers/test_character_scraper.py
 import unittest
 from app.services.scraper_service import ScraperService

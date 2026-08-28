@@ -1,3 +1,4 @@
+# backend/tests/unit/scrapers/test_wikigg_items_addons.py
 # backend/tests/scrapers/test_wikigg_items_addons.py
 import unittest
 from app.scrapers.wikigg import WikiGGScraperDriver

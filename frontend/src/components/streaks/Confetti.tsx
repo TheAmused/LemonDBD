@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/Confetti.tsx
 // frontend/src/components/streaks/page-streak/Confetti.tsx
 'use client';
 

@@ -1,3 +1,4 @@
+// frontend/src/__tests__/unit/i18nTranslations.test.ts
 // frontend/src/utils/__tests__/i18nTranslations.test.ts
 import test from 'node:test';
 import assert from 'node:assert';
@@ -250,4 +251,4 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
       assert.ok((detailDict as any)[key].length > 0);
     }
   }
-});
+});

@@ -1,3 +1,4 @@
+// frontend/src/__tests__/live/characterCatalogAndFilteringWorkflowLive.test.ts
 import test from "node:test";
 import assert from "node:assert/strict";
 

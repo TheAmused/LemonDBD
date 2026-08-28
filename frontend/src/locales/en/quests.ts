@@ -1,3 +1,4 @@
+// frontend/src/locales/en/quests.ts
 export default {
   "title": "Trial Quests & Milestones",
   "subtitle": "Complete daily and weekly trials to earn XP, level up your status, and unlock achievements.",

@@ -1,3 +1,4 @@
+// frontend/src/locales/en/user.ts
 export default {
   "profileTitle": "User Profile & Account",
   "profileSubtitle": "Manage your profile, tracked stats, character ownership, and bug reports.",

@@ -25,7 +25,15 @@ def verify_password(password: str, password_hash: str) -> bool:
     """Verify a plaintext password against a stored password hash."""
     if not password or not password_hash:
         return False
-    return check_password_hash(password_hash, password)
+    try:
+        return check_password_hash(password_hash, password)
+    except (ValueError, TypeError) as exc:
+        # A hash produced by an older/incompatible hashing scheme (e.g. a
+        # pre-refactor default account seeded before the password hashing
+        # method changed) isn't a 500-worthy server error -- it just means
+        # this credential can't be verified. Treat it as "wrong password".
+        logger.warning(f"Password hash is unreadable/unsupported: {exc}")
+        return False
 
 
 def generate_token(user_id: int, role: str = "user", extra_claims: dict[str, Any] | None = None) -> str:

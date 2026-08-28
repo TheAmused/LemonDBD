@@ -1,1389 +1,1002 @@
-### backend/tests/live/services/test_live_services_integration.py
-```python
-import pytest
-from flask import Flask
-from app.services.others.smash_or_pass_service import SmashOrPassService
-from app.services.perk_service import PerkService
-from app.services.user_service import UserService
+### src/components/streaks/gauntlet/GauntletRulesModal.tsx
 
+```tsx
+'use client';
 
-@pytest.mark.live
-class TestLiveServicesIntegration:
-    """Live PostgreSQL service layer queries, entity counts, user creation, and mini-game rosters."""
+import React from 'react';
+import { BookOpen, AlertTriangle, Flame, Trophy, Lock } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
+import type { Role } from '@/types/gauntletStreak';
+import { RulesModalShell } from '../RulesModalShell';
 
-    def test_live_perk_service_queries(self, live_app: Flask) -> None:
-        with live_app.app_context():
-            service = PerkService()
-            perks = service.get_perks(limit=100)
-            assert len(perks["data"]) == 100
-            assert perks["pagination"]["total"] > 200
+export interface GauntletRulesModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  role: Role;
+  dict?: Dictionary;
+}
 
-            chars = service.get_characters()
-            assert len(chars) >= 50
+interface TierDefinition {
+  level: number;
+  name: string;
+  streakRange: string;
+  perkLimit: number;
+  badgeColor: string;
+  description: string;
+}
 
-    def test_live_user_service_registration_and_token(self, live_app: Flask) -> None:
-        with live_app.app_context():
-            user_service = UserService()
-            user, err = user_service.register_user("service_tester", "serv@example.com", "secure123")
-            assert err is None
-            assert user.id is not None
+interface RuleException {
+  label: string;
+  text: string;
+}
 
-            token = user_service.generate_auth_token(user)
-            assert token is not None
-            assert len(token) > 20
+const SURVIVOR_TIERS: TierDefinition[] = [
+  {
+    level: 0,
+    name: 'The Warm Up',
+    streakRange: 'Streak 0 to 9',
+    perkLimit: 4,
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    description: 'Full 4 perk loadout.',
+  },
+  {
+    level: 1,
+    name: 'The Thinning',
+    streakRange: 'Streak 10 to 19',
+    perkLimit: 3,
+    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    description: 'Down to 3 perks.',
+  },
+  {
+    level: 2,
+    name: 'The Struggle',
+    streakRange: 'Streak 20 to 29',
+    perkLimit: 2,
+    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    description: 'Down to 2 perks.',
+  },
+  {
+    level: 3,
+    name: 'The Hardcore',
+    streakRange: 'Streak 30 to 39',
+    perkLimit: 1,
+    badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+    description: 'Just 1 perk.',
+  },
+  {
+    level: 4,
+    name: 'The Legend',
+    streakRange: 'Streak 40+',
+    perkLimit: 0,
+    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+    description: 'No perks. The full perkless trial.',
+  },
+];
 
-    def test_live_smash_or_pass_service_stats(self, live_app: Flask) -> None:
-        with live_app.app_context():
-            service = SmashOrPassService()
-            rosters = service.get_rosters(active_only=True)
-            assert len(rosters) > 0
+const KILLER_TIERS: TierDefinition[] = [
+  {
+    level: 0,
+    name: 'The Bloodbath',
+    streakRange: 'Streak 0 to 9',
+    perkLimit: 3,
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    description: 'All 3 of your own perks.',
+  },
+  {
+    level: 1,
+    name: 'The Obsession',
+    streakRange: 'Streak 10 to 19',
+    perkLimit: 2,
+    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    description: 'Pick any 2 of your own.',
+  },
+  {
+    level: 2,
+    name: 'The Executioner',
+    streakRange: 'Streak 20 to 29',
+    perkLimit: 1,
+    badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+    description: 'Pick any 1 of your own.',
+  },
+  {
+    level: 3,
+    name: 'The Entity',
+    streakRange: 'Streak 30+',
+    perkLimit: 0,
+    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+    description: 'No perks. The full perkless trial.',
+  },
+];
+
+const KILLER_EXCEPTIONS: RuleException[] = [
+  {
+    label: 'Game cancelled',
+    text: 'someone left while the lobby was loading and the match never started. No reroll, same killer next queue.',
+  },
+  {
+    label: 'Hackers',
+    text: 'obvious cheaters void the match. No reroll, replay the same killer.',
+  },
+  {
+    label: 'Crash or server failure',
+    text: 'not a loss. No reroll, replay the same killer.',
+  },
+  {
+    label: 'Survivor disconnects',
+    text: 'keep playing. The bot match still counts.',
+  },
+  {
+    label: 'No dodging',
+    text: 'play whatever lobby you get, no matter the items or prestige levels.',
+  },
+  {
+    label: 'Add-ons and offerings',
+    text: 'are always allowed, at every tier.',
+  },
+];
+
+const SURVIVOR_EXCEPTIONS: RuleException[] = [
+  {
+    label: 'Early disconnect',
+    text: 'a survivor leaves before any generator finishes? The match does not count either way. No reroll, play the same character next time.',
+  },
+  {
+    label: 'Game cancelled',
+    text: 'someone left while the lobby was loading and the match never started. No reroll, same character next queue.',
+  },
+  {
+    label: 'Hackers',
+    text: 'obvious cheaters on either side void the match. No reroll, replay the same character.',
+  },
+];
+
+const SURVIVOR_CLARIFICATIONS: RuleException[] = [
+  {
+    label: 'Rat off',
+    text: 'survivors teaming up with the killer to get you out counts as a loss.',
+  },
+  {
+    label: 'A death is a death',
+    text: 'dying by any means during a live match counts, whether that is the killer, a hatchet, a sabotage play, or a survivor working against you.',
+  },
+  {
+    label: 'Killer disconnects',
+    text: 'if they rage quit after a generator is done, it counts as an escape. If they left from a bug or server issue, it does not count. No reroll, replay the same character.',
+  },
+];
+
+export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
+  isOpen,
+  onClose,
+  role,
+  dict,
+}) => {
+  const tiers = role === 'killer' ? KILLER_TIERS : SURVIVOR_TIERS;
+  const roleLabel = role === 'killer'
+    ? (dict?.filters?.killer || 'Killer')
+    : (dict?.filters?.survivor || 'Survivor');
+
+  return (
+    <RulesModalShell
+      isOpen={isOpen}
+      onClose={onClose}
+      icon={BookOpen}
+      title={
+        dict?.streaks?.gauntletRulesTitle
+          ? dict.streaks.gauntletRulesTitle.replace('{role}', roleLabel)
+          : `The ${roleLabel} Gauntlet Rules`
+      }
+      subtitle={dict?.streaks?.gauntletRulesSubtitle || 'Progressive challenge rules, tier restrictions, & exception guidelines'}
+      iconClassName="bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
+      footerButtonClassName="bg-amber-500 hover:bg-amber-400 !text-slate-950 shadow-amber-500/20"
+      closeButtonText={dict?.modal?.close || 'Got It'}
+    >
+      <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
+        <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+          <Trophy className="w-4 h-4" aria-hidden="true" />
+          <span>{dict?.streaks?.gauntletConcept || 'Gauntlet Concept'}</span>
+        </h3>
+        <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          {dict?.streaks?.beatEveryPrefix || 'Beat every'} {role}{' '}
+          {dict?.streaks?.gauntletConceptBody ||
+            'you own, one trial at a time. The longer your streak runs, the fewer perks you get to bring, until the final tier has you winning bare.'}
+        </p>
+        {role === 'killer' && (
+          <>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              {dict?.streaks?.youOnlyEverRun || 'You only ever run'} <strong>{dict?.streaks?.yourOwnTeachablePerks || 'your own teachable perks'}</strong>
+              {dict?.streaks?.neverAnyoneElseNote ||
+                ", never anyone else's. You start with all 3, and lose one at every tier. Once you are below 3, you choose which ones to keep."}
+            </p>
+            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+              {dict?.streaks?.trialOnlyCountsWinOn || 'A trial only counts as won on'} <strong>{dict?.streaks?.threeKillsOrMore || '3 kills or more'}</strong>. {dict?.streaks?.anythingLessLoss || 'Anything less is a loss.'}
+            </p>
+          </>
+        )}
+        {role === 'survivor' && (
+          <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            {dict?.streaks?.trialOnlyCountsWinIf || 'A trial only counts as won if you'} <strong>{dict?.streaks?.escape || 'escape'}</strong>{dict?.streaks?.exitGatesOrHatch || ', through the exit gates or the hatch. Anything else is a loss.'}
+          </p>
+        )}
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          {role === 'killer'
+            ? (dict?.streaks?.killerRosterCapNote || 'The roster stops at the 43 killers, up through The Slasher.')
+            : (dict?.streaks?.survivorRosterCapNote || 'The roster stops at the 52 survivors, up through Kwon Tae-young.')}
+        </p>
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          {dict?.streaks?.every10WinsBanks || 'Every 10 wins banks a'} <strong>{dict?.streaks?.checkpoint || 'checkpoint'}</strong>
+          {dict?.streaks?.checkpointFallbackNote ||
+            '. Lose after that and you only fall back to your last checkpoint, not all the way to zero, though every'}{' '}
+          {role}{' '}
+          {dict?.streaks?.checkpointPoolNote ||
+            'cleared since then goes back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress you keep happen on the very same win.'}
+        </p>
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          {dict?.streaks?.pickTheseInGame || 'The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here.'}
+        </p>
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          {dict?.streaks?.rosterLockedNotice || "The roster is locked in for the run you're on. New characters you unlock mid-run won't join until you reset, lose back to zero, or complete it."}
+        </p>
+        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          {dict?.streaks?.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.'}
+        </p>
+      </div>
+
+      <div>
+        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+          <Flame className="w-4 h-4 text-amber-500" aria-hidden="true" />
+          <span>{dict?.streaks?.progressiveTierRestrictions || 'Progressive Tier Restrictions'}</span>
+        </h3>
+        <div className="grid grid-cols-1 gap-2.5" role="list">
+          {tiers.map((tier) => (
+            <div
+              key={tier.level}
+              className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-3 shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
+                  {dict?.streaks?.tierLabel || 'Tier'} {tier.level}: {tier.name}
+                </span>
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  ({tier.streakRange})
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+                <p className="text-xs text-slate-500 dark:text-slate-400 hidden lg:block max-w-xs truncate">
+                  {tier.description}
+                </p>
+                <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-300 text-xs bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20 whitespace-nowrap">
+                  <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" aria-hidden="true" />
+                  <span>
+                    {tier.perkLimit === 0
+                      ? (dict?.streaks?.perklessTierNote || '0 Perks (Perkless)')
+                      : `${tier.perkLimit} ${tier.perkLimit > 1 ? (dict?.streaks?.perksAllowedPlural || 'Perks Allowed') : (dict?.streaks?.perksAllowedSingular || 'Perk Allowed')}`}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {role === 'killer' ? (
+        <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
+          <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
+            <span>{dict?.streaks?.exceptionsAndClarifications || 'Exceptions & Clarifications'}</span>
+          </h3>
+          <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            {KILLER_EXCEPTIONS.map((item) => (
+              <li key={item.label}>
+                <strong>{item.label}:</strong> {item.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <>
+          <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
+            <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
+              <span>{dict?.streaks?.exceptions || 'Exceptions'}</span>
+            </h3>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              {SURVIVOR_EXCEPTIONS.map((item) => (
+                <li key={item.label}>
+                  <strong>{item.label}:</strong> {item.text}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 space-y-3 shadow-sm">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+              <span>{dict?.streaks?.clarifications || 'Clarifications'}</span>
+            </h3>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              {SURVIVOR_CLARIFICATIONS.map((item) => (
+                <li key={item.label}>
+                  <strong>{item.label}:</strong> {item.text}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+    </RulesModalShell>
+  );
+};
+
 ```
 
-### backend/tests/live/workflows/test_admin_governance_lifecycle_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-from tests.live.conftest import AuthenticatedClient
+### src/components/streaks/page-streak/BuildBar.tsx
 
+```tsx
+'use client';
 
-@pytest.mark.live
-@pytest.mark.workflow
-class TestAdminGovernanceLifecycleWorkflow:
-    """Workflow verifying end-to-end admin user management, promotion, suspension, metrics, and audit logging."""
+import React from 'react';
+import type { Dictionary } from '@/locales/types';
 
-    def test_full_admin_governance_and_user_management(
-        self, live_client: FlaskClient, admin_client: AuthenticatedClient
-    ) -> None:
-        users_res = admin_client.get("/api/v1/users?page=1&per_page=20")
-        assert users_res.status_code == 200
-        initial_users = users_res.get_json()["users"]
-        assert len(initial_users) > 0
+interface BuildBarProps {
+  selected: string[];
+  size: number;
+  confirmed: boolean;
+  onConfirm: () => void;
+  iconByPerk?: Record<string, string>;
+  dict?: Dictionary;
+}
 
-        create_res = admin_client.post(
-            "/api/v1/users",
-            json={
-                "username": "managed_player_1",
-                "email": "managed1@example.com",
-                "password": "PlayerPass123!",
-                "role": "user",
-            },
-        )
-        assert create_res.status_code == 201
-        created_user = create_res.get_json()["user"]
-        target_id = created_user["id"]
+const DIAMOND_CLIP_PATH = 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)';
 
-        promote_res = admin_client.put(
-            f"/api/v1/users/{target_id}",
-            json={"role": "admin", "is_active": True},
-        )
-        assert promote_res.status_code == 200
-        assert promote_res.get_json()["user"]["role"] == "admin"
+export const BuildBar: React.FC<BuildBarProps> = ({
+  selected,
+  size,
+  confirmed,
+  onConfirm,
+  iconByPerk = {},
+  dict,
+}) => {
+  const slots = Array.from({ length: size }, (_, i) => selected[i] ?? null);
 
-        deact_res = admin_client.put(
-            f"/api/v1/users/{target_id}",
-            json={"role": "user", "is_active": False},
-        )
-        assert deact_res.status_code == 200
-        assert deact_res.get_json()["user"]["is_active"] is False
+  return (
+    <div
+      role="region"
+      aria-label={dict?.streaks?.yourBuildForMatch || 'Perk Build Selection'}
+      className="flex flex-wrap items-center gap-2.5 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/50 p-3 shadow-sm"
+    >
+      {slots.map((name, index) => (
+        <div
+          key={index}
+          className={`flex h-16 min-w-[145px] flex-1 items-center gap-2.5 rounded-lg px-3 text-xs transition-colors ${
+            name
+              ? 'border border-orange-500/50 bg-orange-500/10 font-semibold text-slate-900 dark:text-slate-100'
+              : 'border border-dashed border-slate-300 dark:border-slate-700 font-mono text-slate-400 dark:text-slate-600'
+          }`}
+        >
+          {name && (
+            <span
+              className="grid h-11 w-11 flex-none place-items-center bg-orange-400/60"
+              style={{ clipPath: DIAMOND_CLIP_PATH }}
+            >
+              <span
+                className="grid h-[82%] w-[82%] place-items-center bg-gradient-to-br from-amber-900/80 to-slate-950"
+                style={{ clipPath: DIAMOND_CLIP_PATH }}
+              >
+                {iconByPerk[name] && (
+                  <img
+                    src={iconByPerk[name]}
+                    alt={name}
+                    className="h-[96%] w-[96%] object-contain"
+                  />
+                )}
+              </span>
+            </span>
+          )}
+          <span>{name ?? `${dict?.swf?.slot || 'Slot'} ${index + 1}`}</span>
+        </div>
+      ))}
 
-        banned_login = live_client.post(
-            "/api/v1/auth/login",
-            json={
-                "username": "managed_player_1",
-                "password": "PlayerPass123!",
-            },
-        )
-        assert banned_login.status_code in (400, 401, 403)
+      <button
+        type="button"
+        onClick={onConfirm}
+        disabled={selected.length !== size || confirmed}
+        className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 text-xs font-extrabold text-white transition-opacity disabled:opacity-40 shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+      >
+        {confirmed
+          ? (dict?.streaks?.buildLocked || 'Build locked')
+          : (dict?.streaks?.confirmBuild || 'Confirm build')}
+      </button>
+    </div>
+  );
+};
 
-        stats_res = admin_client.get("/api/v1/admin/stats")
-        assert stats_res.status_code == 200
-        stats = stats_res.get_json()
-        assert "active_users" in stats or "perks_count" in stats or isinstance(stats, dict)
-
-        export_res = admin_client.get("/api/v1/admin/database/export?targets=perks,characters")
-        assert export_res.status_code == 200
-        export_data = export_res.get_json()
-        assert isinstance(export_data, dict)
-
-        del_res = admin_client.delete(f"/api/v1/users/{target_id}")
-        assert del_res.status_code == 200
-
-        audit_res = admin_client.get("/api/v1/admin/audit-logs")
-        assert audit_res.status_code == 200
-        logs = audit_res.get_json()["logs"]
-        actions = [l["action"] for l in logs]
-        assert "user_updated" in actions
-        assert "user_deleted" in actions
 ```
 
-### backend/tests/live/workflows/test_admin_killswitch_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-from tests.live.conftest import AuthenticatedClient
+### src/components/streaks/page-streak/KillerRosterGrid.tsx
 
+```tsx
+'use client';
 
-@pytest.mark.live
-@pytest.mark.workflow
-class TestAdminKillswitchWorkflow:
-    """Workflow testing dynamic challenge mode killswitch deactivation and reactivation."""
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { Check, Skull } from 'lucide-react';
+import type { RosterEntry } from '@/types/pageStreak';
+import type { Dictionary } from '@/locales/types';
+import { staticUrl } from '@/utils/staticUrl';
 
-    def test_full_admin_killswitch_audit_workflow(
-        self,
-        live_client: FlaskClient,
-        admin_client: AuthenticatedClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, user_headers, user = auth_client_factory("player_wf", "player@example.com", "pass123")
+interface KillerRosterGridProps {
+  locale: string;
+  roster: RosterEntry[];
+  dict?: Dictionary;
+}
 
-        modes_res = admin_client.get("/api/v1/admin/challenge-modes")
-        assert modes_res.status_code == 200
-        modes = modes_res.get_json()["modes"]
-        assert any(m["mode"] == "chaos" for m in modes)
+const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = ({
+  name,
+  src,
+  done,
+}) => {
+  const [imgError, setImgError] = useState<boolean>(false);
 
-        dis_res = admin_client.put(
-            "/api/v1/admin/challenge-modes/chaos",
-            json={"is_enabled": False, "reason": "Emergency Maintenance"},
-        )
-        assert dis_res.status_code == 200
+  return (
+    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80">
+      {src && !imgError ? (
+        <img
+          src={src}
+          alt={name}
+          onError={() => setImgError(true)}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <Skull
+          className={`h-7 w-7 ${
+            done
+              ? 'text-emerald-500/80 dark:text-emerald-400/70'
+              : 'text-slate-400 dark:text-slate-600'
+          }`}
+          aria-hidden="true"
+        />
+      )}
+    </div>
+  );
+};
 
-        blocked_res = client.get("/api/v1/chaos-streak/run?difficulty=easy", headers=user_headers)
-        assert blocked_res.status_code == 400
-        assert "disabled" in blocked_res.get_json()["error"].lower()
+export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
+  locale,
+  roster,
+  dict,
+}) => {
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" role="list">
+      {roster.map((entry) => {
+        const done = entry.status === 'completed';
+        const active = entry.status === 'in_progress';
+        const pct =
+          entry.page_count > 0
+            ? Math.round(((entry.current_page - 1) / entry.page_count) * 100)
+            : 0;
 
-        en_res = admin_client.put(
-            "/api/v1/admin/challenge-modes/chaos",
-            json={"is_enabled": True},
-        )
-        assert en_res.status_code == 200
+        return (
+          <Link
+            key={entry.killer}
+            href={`/${locale}/streaks/killer/page-streak/${encodeURIComponent(entry.killer)}`}
+            className={`relative flex flex-col gap-2 rounded-xl border p-3 transition-all shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+              done
+                ? 'border-emerald-500/40 bg-emerald-500/[0.07] hover:border-emerald-400/60 ps-complete-pulse'
+                : active
+                ? 'border-orange-500/45 bg-orange-500/[0.07] hover:border-orange-400/70'
+                : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-900/80'
+            }`}
+          >
+            {done && (
+              <span
+                className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 dark:bg-emerald-400 text-white dark:text-slate-950 shadow-sm"
+                aria-label={dict?.streaks?.completed || 'completed'}
+              >
+                <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+              </span>
+            )}
+            <KillerPortrait
+              name={entry.killer}
+              src={staticUrl(entry.avatar_local_path)}
+              done={done}
+            />
+            <div className="text-center text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+              {entry.killer}
+            </div>
+            {active && (
+              <div
+                className="h-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"
+                role="progressbar"
+                aria-valuenow={pct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={`${entry.killer} progress: ${pct}%`}
+              >
+                <div
+                  className="h-full rounded-full bg-orange-500 dark:bg-orange-400"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            )}
+            <div
+              className={`text-center font-mono text-[10px] font-semibold ${
+                done
+                  ? 'text-emerald-600 dark:text-emerald-400'
+                  : active
+                  ? 'text-orange-600 dark:text-orange-400'
+                  : 'text-slate-400 dark:text-slate-500'
+              }`}
+            >
+              {done
+                ? (dict?.streaks?.completed || 'completed')
+                : active
+                ? `${dict?.streaks?.pageLabel || 'page'} ${entry.current_page} ${dict?.streaks?.ofLabel || 'of'} ${entry.page_count}`
+                : (dict?.streaks?.notStarted || 'not started')}
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  );
+};
 
-        ok_res = client.get("/api/v1/chaos-streak/run?difficulty=easy", headers=user_headers)
-        assert ok_res.status_code == 200
-
-        audit_res = admin_client.get("/api/v1/admin/audit-logs")
-        assert audit_res.status_code == 200
-        logs = audit_res.get_json()["logs"]
-        actions = [l["action"] for l in logs]
-        assert "challenge_mode_disabled" in actions
-        assert "challenge_mode_enabled" in actions
 ```
 
-### backend/tests/live/workflows/test_admin_multimode_killswitch_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-from tests.live.conftest import AuthenticatedClient
+### src/components/streaks/page-streak/RunHeader.tsx
 
+```tsx
+'use client';
 
-@pytest.mark.live
-@pytest.mark.workflow
-class TestAdminMultimodeKillswitchWorkflow:
-    """Workflow asserting multi-mode killswitch gating across various challenge streaks."""
+import React, { useState } from 'react';
+import { RotateCcw, Skull, Flame, Trophy, BookOpen, BarChart2 } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
+import type { PageStreakRun } from '@/types/pageStreak';
+import { FreezeBadge } from '../FreezeBadge';
 
-    def test_admin_multimode_killswitch_workflow(
-        self,
-        live_client: FlaskClient,
-        admin_client: AuthenticatedClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory("killswitch_user", "ksuser@example.com", "pass123")
+interface RunHeaderProps {
+  run: PageStreakRun;
+  avatarSrc?: string;
+  onOpenReset: () => void;
+  onOpenRules: () => void;
+  onOpenStats: () => void;
+  dict?: Dictionary;
+}
 
-        modes_res = admin_client.get("/api/v1/admin/challenge-modes")
-        assert modes_res.status_code == 200
-        modes = modes_res.get_json()["modes"]
-        mode_names = [m["mode"] for m in modes]
-        assert "chaos" in mode_names
+export const RunHeader: React.FC<RunHeaderProps> = ({
+  run,
+  avatarSrc,
+  onOpenReset,
+  onOpenRules,
+  onOpenStats,
+  dict,
+}) => {
+  const [imgError, setImgError] = useState<boolean>(false);
+  const cleared = run.status === 'completed' ? run.page_count : run.current_page - 1;
+  const pct = run.page_count > 0 ? Math.round((cleared / run.page_count) * 100) : 0;
 
-        dis_res = admin_client.put(
-            "/api/v1/admin/challenge-modes/chaos",
-            json={"is_enabled": False, "reason": "Temporary Chaos Maintenance"},
-        )
-        assert dis_res.status_code == 200
+  return (
+    <div>
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm">
+          {avatarSrc && !imgError ? (
+            <img
+              src={avatarSrc}
+              alt={run.killer}
+              onError={() => setImgError(true)}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <Skull className="h-7 w-7 text-slate-400 dark:text-slate-600" aria-hidden="true" />
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100">
+            {run.killer}
+          </h2>
+          <div className="mt-1 flex flex-wrap gap-4 font-mono text-[11px] text-slate-500">
+            <span>
+              {dict?.streaks?.attempt || 'attempt'}{' '}
+              <b className="text-slate-800 dark:text-slate-200">{run.attempt}</b>
+            </span>
+            {run.pool_frozen && (
+              <span>
+                {dict?.streaks?.layoutFrozen || 'layout frozen'}{' '}
+                <b className="text-slate-800 dark:text-slate-200">
+                  {new Date(run.snapshot_at).toLocaleDateString()}
+                </b>
+              </span>
+            )}
+          </div>
+        </div>
 
-        blocked_res = client.get("/api/v1/chaos-streak/run?difficulty=easy", headers=headers)
-        assert blocked_res.status_code == 400
-        assert "disabled" in blocked_res.get_json()["error"].lower()
+        <div className="flex flex-wrap items-center gap-2.5">
+          <FreezeBadge frozen={run.pool_frozen} dict={dict} />
+          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-orange-500/30 text-orange-600 dark:text-orange-400 shadow-sm">
+            <Flame className="w-5 h-5 text-orange-500 fill-orange-500/20" aria-hidden="true" />
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
+                {dict?.stats?.current || 'Current'}
+              </span>
+              <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
+                {cleared}
+              </span>
+            </div>
+          </div>
 
-        en_res = admin_client.put(
-            "/api/v1/admin/challenge-modes/chaos", json={"is_enabled": True}
-        )
-        assert en_res.status_code == 200
+          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-yellow-500/30 text-yellow-600 dark:text-yellow-400 shadow-sm">
+            <Trophy className="w-5 h-5 text-yellow-500 dark:text-yellow-400" aria-hidden="true" />
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
+                {dict?.stats?.best || 'Best'}
+              </span>
+              <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
+                {run.best_page}
+              </span>
+            </div>
+          </div>
 
-        unblocked = client.get("/api/v1/chaos-streak/run?difficulty=easy", headers=headers)
-        assert unblocked.status_code == 200
+          <button
+            type="button"
+            onClick={onOpenRules}
+            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-orange-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-orange-400 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+            title={dict?.streaks?.rules || 'Rules'}
+            aria-label={dict?.streaks?.rules || 'Rules'}
+          >
+            <BookOpen className="w-4 h-4 text-orange-500 dark:text-orange-400" aria-hidden="true" />
+            <span className="hidden sm:inline">{dict?.streaks?.rules || 'Rules'}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onOpenStats}
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+            title={dict?.streaks?.stats || 'Statistics'}
+            aria-label={dict?.streaks?.stats || 'Statistics'}
+          >
+            <BarChart2 className="w-5 h-5" aria-hidden="true" />
+          </button>
+
+          <button
+            type="button"
+            onClick={onOpenReset}
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/60 dark:text-slate-200 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+            title={dict?.streaks?.resetRun || 'Reset this streak'}
+            aria-label={dict?.streaks?.resetRun || 'Reset this streak'}
+          >
+            <RotateCcw className="w-5 h-5" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-wider text-slate-500">
+          <span>
+            {run.status === 'completed'
+              ? (dict?.streaks?.allPagesCleared || 'All pages cleared')
+              : `${dict?.streaks?.pageLabel || 'Page'} ${run.current_page} ${dict?.streaks?.ofLabel || 'of'} ${run.page_count}`}
+          </span>
+          <span className="tabular-nums font-semibold">{pct}{dict?.streaks?.percentSign || '%'}</span>
+        </div>
+        <div
+          className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"
+          role="progressbar"
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`${dict?.stats?.progress || 'Progress'}: ${pct}%`}
+        >
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-orange-400 to-orange-600 transition-[width] duration-500"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 ```
 
-### backend/tests/live/workflows/test_admin_system_metrics_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-from tests.live.conftest import AuthenticatedClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestAdminSystemMetricsWorkflow:
-    """Workflow validating administrative system metric querying and backup export generation."""
-
-    def test_admin_system_metrics_workflow(
-        self, live_client: FlaskClient, admin_client: AuthenticatedClient
-    ) -> None:
-        stats_res = admin_client.get("/api/v1/admin/stats")
-        assert stats_res.status_code == 200
-        stats = stats_res.get_json()
-        assert "perks_count" in stats or "active_users" in stats or isinstance(stats, dict)
-
-        export_res = admin_client.get("/api/v1/admin/database/export?targets=perks,characters")
-        assert export_res.status_code == 200
-        assert isinstance(export_res.get_json(), dict)
-```
-
-### backend/tests/live/workflows/test_auth_ownership_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask import Flask
-from flask.testing import FlaskClient
-from sqlalchemy import select
-from app.core.extensions import db
-from app.models import Perk
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestAuthOwnershipWorkflow:
-    """Workflow for user registration, login, profile retrieval, and automatic ownership cascades."""
-
-    def test_full_auth_and_ownership_cascade_workflow(
-        self,
-        live_client: FlaskClient,
-        live_app: Flask,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        reg_res = live_client.post(
-            "/api/v1/auth/register",
-            json={
-                "username": "workflow_owner_1",
-                "email": "owner1@example.com",
-                "password": "StrongPassword123!",
-            },
-        )
-        assert reg_res.status_code == 201
-        user_id = reg_res.get_json()["user"]["id"]
-        token = reg_res.get_json()["token"]
-        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-
-        login_res = live_client.post(
-            "/api/v1/auth/login",
-            json={
-                "username": "workflow_owner_1",
-                "password": "StrongPassword123!",
-            },
-        )
-        assert login_res.status_code == 200
-        assert login_res.get_json()["user"]["email"] == "owner1@example.com"
-
-        me_res = live_client.get("/api/v1/auth/me", headers=headers)
-        assert me_res.status_code == 200
-        assert me_res.get_json()["user"]["username"] == "workflow_owner_1"
-
-        chars_res = live_client.get(f"/api/v1/users/{user_id}/characters", headers=headers)
-        assert chars_res.status_code == 200
-        chars = chars_res.get_json()["data"]
-
-        free_names = {
-            "The Trapper",
-            "The Wraith",
-            "The Hillbilly",
-            "The Nurse",
-            "The Huntress",
-            "Dwight Fairfield",
-            "Meg Thomas",
-            "Claudette Morel",
-            "Jake Park",
-            "Nea Karlsson",
-            "Bill Overbeck",
-            "David King",
-        }
-
-        for c in chars:
-            if c["name"] in free_names:
-                assert c["is_owned"] is True, f"Expected {c['name']} to be owned by default"
-
-        trapper = next(c for c in chars if c["name"] == "The Trapper")
-        lock_res = live_client.post(
-            f"/api/v1/users/{user_id}/characters",
-            json={"character_id": trapper["id"], "is_owned": False},
-            headers=headers,
-        )
-        assert lock_res.status_code == 200
-
-        with live_app.app_context():
-            trapper_perks = db.session.scalars(
-                select(Perk.id).where(Perk.character_id == trapper["id"])
-            ).all()
-            perks_res = live_client.get(f"/api/v1/users/{user_id}/perks", headers=headers)
-            assert perks_res.status_code == 200
-            user_perks = {p["id"]: p for p in perks_res.get_json()["data"]}
-            for pid in trapper_perks:
-                if pid in user_perks:
-                    assert user_perks[pid]["is_unlocked"] is False
-
-        unlock_res = live_client.post(
-            f"/api/v1/users/{user_id}/characters",
-            json={"character_id": trapper["id"], "is_owned": True},
-            headers=headers,
-        )
-        assert unlock_res.status_code == 200
-
-        perks_res2 = live_client.get(f"/api/v1/users/{user_id}/perks", headers=headers)
-        user_perks2 = {p["id"]: p for p in perks_res2.get_json()["data"]}
-        for pid in trapper_perks:
-            if pid in user_perks2:
-                assert user_perks2[pid]["is_unlocked"] is True
-```
-
-### backend/tests/live/workflows/test_bug_report_resolution_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-from tests.live.conftest import AuthenticatedClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestBugReportResolutionWorkflow:
-    """Workflow tracking player bug report submission, status transitions, and administrative resolution."""
-
-    def test_full_bug_report_submission_triage_and_resolution(
-        self,
-        live_client: FlaskClient,
-        admin_client: AuthenticatedClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, user_headers, user = auth_client_factory(
-            "reporter_player", "reporter@example.com", "pass123"
-        )
-
-        submit_res = client.post(
-            "/api/v1/bug-reports",
-            json={
-                "title": "Nurse Blink Collision Desync on Crotus Prenn",
-                "message": "When blinking near the Asylum main building staircase, the killer clips into collision geometry.",
-                "category": "Gameplay",
-                "images": [],
-            },
-            headers=user_headers,
-        )
-        assert submit_res.status_code == 201
-        report = submit_res.get_json()["report"]
-        report_id = report["id"]
-        assert report["status"] == "pending"
-
-        my_reports_res = client.get("/api/v1/bug-reports/my", headers=user_headers)
-        assert my_reports_res.status_code == 200
-        my_reports = my_reports_res.get_json()["reports"]
-        assert any(r["id"] == report_id for r in my_reports)
-
-        admin_list_res = admin_client.get("/api/v1/admin/bug-reports?status=pending")
-        assert admin_list_res.status_code == 200
-        pending_list = admin_list_res.get_json()["reports"]
-        assert any(r["id"] == report_id for r in pending_list)
-
-        prog_res = admin_client.put(
-            f"/api/v1/admin/bug-reports/{report_id}",
-            json={
-                "status": "in_progress",
-                "admin_notes": "Assigned to physics replication team.",
-            },
-        )
-        assert prog_res.status_code == 200
-        assert prog_res.get_json()["report"]["status"] == "in_progress"
-
-        resolve_res = admin_client.put(
-            f"/api/v1/admin/bug-reports/{report_id}",
-            json={
-                "status": "resolved",
-                "admin_notes": "Fixed mesh collision boundaries in patch 2.4.1.",
-            },
-        )
-        assert resolve_res.status_code == 200
-        assert resolve_res.get_json()["report"]["status"] == "resolved"
-
-        my_reports_res2 = client.get("/api/v1/bug-reports/my", headers=user_headers)
-        assert my_reports_res2.status_code == 200
-        resolved_ticket = next(
-            r for r in my_reports_res2.get_json()["reports"] if r["id"] == report_id
-        )
-        assert resolved_ticket["status"] == "resolved"
-        assert "patch 2.4.1" in resolved_ticket.get("admin_notes", "")
-
-        del_res = admin_client.delete(f"/api/v1/admin/bug-reports/{report_id}")
-        assert del_res.status_code == 200
-
-        audit_res = admin_client.get("/api/v1/admin/audit-logs")
-        assert audit_res.status_code == 200
-        logs = audit_res.get_json()["logs"]
-        actions = [l["action"] for l in logs]
-        assert "bug_report_updated" in actions
-        assert "bug_report_deleted" in actions
-```
-
-### backend/tests/live/workflows/test_chaos_streak_blind_reveal_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestChaosStreakBlindRevealWorkflow:
-    """Workflow verifying blind perk reveals and consecutive match submissions in Chaos mode."""
-
-    def test_chaos_streak_blind_reveal_workflow(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "chaos_revealer", "creveal@example.com", "pass123"
-        )
-
-        start_res = client.get("/api/v1/chaos-streak/run?difficulty=easy", headers=headers)
-        assert start_res.status_code == 200
-        run = start_res.get_json()["run"]
-        run_id = run["id"]
-
-        rev0 = client.post("/api/v1/chaos-streak/reveal", json={"run_id": run_id}, headers=headers)
-        assert rev0.status_code == 200
-        run_rev = rev0.get_json()["run"]
-        assert "revealed_slots" in run_rev or "slots" in run_rev or isinstance(run_rev, dict)
-
-        win_res = client.post(
-            "/api/v1/chaos-streak/result",
-            json={"run_id": run_id, "result": "win", "killer_id": "The Trapper"},
-            headers=headers,
-        )
-        assert win_res.status_code in (200, 400)
-```
-
-### backend/tests/live/workflows/test_chaos_streak_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestChaosStreakWorkflow:
-    """Workflow verifying Chaos Streak run lifecycles, perk draws, and win rate calculation."""
-
-    def test_full_chaos_streak_lifecycle_workflow(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "chaos_runner_1", "chaos_wf@example.com", "pass123"
-        )
-
-        run_res = client.get("/api/v1/chaos-streak/run?difficulty=easy", headers=headers)
-        assert run_res.status_code == 200
-        run_data = run_res.get_json()["run"]
-        run_id = run_data["id"]
-        killer_id = (
-            run_data.get("killer_id")
-            or run_data.get("current_killer_id")
-            or (run_data.get("owned_killers") and run_data["owned_killers"][0])
-            or "The Trapper"
-        )
-
-        reveal_res = client.post(
-            "/api/v1/chaos-streak/reveal", json={"run_id": run_id}, headers=headers
-        )
-        assert reveal_res.status_code in (200, 400)
-
-        win_res = client.post(
-            "/api/v1/chaos-streak/result",
-            json={"run_id": run_id, "result": "win", "killer_id": killer_id},
-            headers=headers,
-        )
-        assert win_res.status_code in (200, 400)
-
-        stats_res = client.get("/api/v1/chaos-streak/stats?difficulty=easy", headers=headers)
-        assert stats_res.status_code == 200
-        stats = stats_res.get_json().get("stats", stats_res.get_json())
-        assert stats.get("total_wins", 0) >= 0 or isinstance(stats, dict)
-```
-
-### backend/tests/live/workflows/test_character_catalog_and_filtering_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestCharacterCatalogAndFilteringWorkflow:
-    """Workflow asserting complete character catalog queries, role separation, and release metadata."""
-
-    def test_character_catalog_and_filtering_workflow(self, live_client: FlaskClient) -> None:
-        killers_res = live_client.get("/api/v1/killers")
-        assert killers_res.status_code == 200
-        killers = killers_res.get_json()["data"]
-        assert len(killers) >= 30
-        assert all(k["role"] == "Killer" for k in killers)
-
-        surv_res = live_client.get("/api/v1/survivors")
-        assert surv_res.status_code == 200
-        survivors = surv_res.get_json()["data"]
-        assert len(survivors) >= 30
-        assert all(s["role"] == "Survivor" for s in survivors)
-
-        assert any("release_number" in k for k in killers)
-```
-
-### backend/tests/live/workflows/test_character_perks_addons_equipment_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestCharacterPerksAddonsEquipmentWorkflow:
-    """Workflow verifying character details, equipment queries, bulk ownership updates, and perk generation."""
-
-    def test_full_character_perks_addons_and_equipment_workflow(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        surv_res = live_client.get("/api/v1/survivors")
-        assert surv_res.status_code == 200
-        survivors = surv_res.get_json()["data"]
-        assert len(survivors) >= 20
-
-        killer_res = live_client.get("/api/v1/killers")
-        assert killer_res.status_code == 200
-        killers = killer_res.get_json()["data"]
-        assert len(killers) >= 20
-
-        nurse_detail_res = live_client.get("/api/v1/characters/The_Nurse/detail")
-        if nurse_detail_res.status_code == 404:
-            nurse_detail_res = live_client.get("/api/v1/characters/The%20Nurse/detail")
-        assert nurse_detail_res.status_code == 200
-        nurse_data = nurse_detail_res.get_json()["data"]
-        assert nurse_data["character"]["name"] == "The Nurse"
-        assert len(nurse_data["perks"]) == 3
-        assert len(nurse_data["addons"]) > 0
-
-        medkits_res = live_client.get("/api/v1/items?category=Med-Kit")
-        assert medkits_res.status_code == 200
-        medkits = medkits_res.get_json()["data"]
-        assert len(medkits) > 0
-
-        client, headers, user = auth_client_factory(
-            "bulk_owner_user", "bulk@example.com", "pass123"
-        )
-        user_id = user["id"]
-
-        all_chars_res = client.get(f"/api/v1/users/{user_id}/characters", headers=headers)
-        assert all_chars_res.status_code == 200
-        chars = all_chars_res.get_json()["data"]
-
-        updates = [{"character_id": c["id"], "is_owned": True} for c in chars[:10]]
-        bulk_res = client.post(
-            f"/api/v1/users/{user_id}/characters/bulk",
-            json={"updates": updates},
-            headers=headers,
-        )
-        assert bulk_res.status_code == 200
-
-        config_res = client.post(
-            "/api/v1/generator/config",
-            json={"role": "Killer", "mode": "random", "lock_perks": False},
-        )
-        assert config_res.status_code == 200
-
-        draw_res = client.post(
-            "/api/v1/generator/draw",
-            json={"role": "Killer", "perks": ["A Nurse's Calling", "Thanatophobia"]},
-        )
-        assert draw_res.status_code == 200
-        drawn = draw_res.get_json()["drawn_perks"]
-        assert len(drawn) >= 2
-
-        reset_res = client.post("/api/v1/generator/reset", json={"role": "Killer"})
-        assert reset_res.status_code == 200
-        assert len(reset_res.get_json()["drawn_perks"]) == 0
-```
-
-### backend/tests/live/workflows/test_character_power_and_addons_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestCharacterPowerAndAddonsWorkflow:
-    """Workflow asserting killer power associations and equipment item querying."""
-
-    def test_character_power_and_addons_workflow(self, live_client: FlaskClient) -> None:
-        trapper_res = live_client.get("/api/v1/characters/The_Trapper/detail")
-        if trapper_res.status_code == 404:
-            trapper_res = live_client.get("/api/v1/characters/The%20Trapper/detail")
-        assert trapper_res.status_code == 200
-        trapper = trapper_res.get_json()["data"]
-        assert trapper["character"]["name"] == "The Trapper"
-        assert len(trapper["perks"]) == 3
-        assert len(trapper["addons"]) > 0
-
-        item_res = live_client.get("/api/v1/items?category=Toolbox")
-        assert item_res.status_code == 200
-        items = item_res.get_json()["data"]
-        assert len(items) > 0
-```
-
-### backend/tests/live/workflows/test_gauntlet_multiround_progression_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestGauntletMultiroundProgressionWorkflow:
-    """Workflow testing multi-round Gauntlet progression, target reveals, and result logging."""
-
-    def test_gauntlet_multiround_progression_workflow(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "gauntlet_boss", "gboss@example.com", "pass123"
-        )
-
-        run_res = client.get("/api/v1/gauntlet-streak/run?role=killer", headers=headers)
-        assert run_res.status_code == 200
-        run = run_res.get_json()["run"]
-        run_id = run["id"]
-
-        reveal_res = client.post(
-            "/api/v1/gauntlet-streak/reveal", json={"run_id": run_id}, headers=headers
-        )
-        assert reveal_res.status_code in (200, 400)
-
-        win_res = client.post(
-            "/api/v1/gauntlet-streak/result",
-            json={"run_id": run_id, "result": "win", "role": "killer"},
-            headers=headers,
-        )
-        assert win_res.status_code in (200, 400)
-
-        stats_res = client.get("/api/v1/gauntlet-streak/stats?role=killer", headers=headers)
-        assert stats_res.status_code == 200
-        stats = stats_res.get_json()["stats"]
-        assert isinstance(stats, dict)
-```
-
-### backend/tests/live/workflows/test_generator_exclusion_pool_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestGeneratorExclusionPoolWorkflow:
-    """Workflow asserting random perk wheel exclusions and drawn perk state resets."""
-
-    def test_generator_exclusion_pool_workflow(self, live_client: FlaskClient) -> None:
-        c_res = live_client.post(
-            "/api/v1/generator/config",
-            json={"role": "Killer", "mode": "random"},
-        )
-        assert c_res.status_code == 200
-
-        draw1 = live_client.post(
-            "/api/v1/generator/draw",
-            json={
-                "role": "Killer",
-                "perks": [
-                    "Hex: Ruin",
-                    "Pop Goes The Weasel",
-                    "Barbecue & Chilli",
-                    "Scourge Hook: Pain Resonance",
-                ],
-            },
-        )
-        assert draw1.status_code == 200
-        drawn = draw1.get_json()["drawn_perks"]
-        assert len(drawn) == 4
-
-        get_drawn = live_client.get("/api/v1/generator/drawn?role=Killer")
-        assert get_drawn.status_code == 200
-        assert len(get_drawn.get_json()["drawn_perks"]) == 4
-
-        reset_res = live_client.post("/api/v1/generator/reset", json={"role": "Killer"})
-        assert reset_res.status_code == 200
-        assert len(reset_res.get_json()["drawn_perks"]) == 0
-```
-
-### backend/tests/live/workflows/test_generator_lock_and_redraw_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestGeneratorLockAndRedrawWorkflow:
-    """Workflow asserting perk locking and redrawing behavior in random loadout generator."""
-
-    def test_generator_lock_and_redraw_workflow(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "gen_user_lock", "genlock@example.com", "pass123"
-        )
-
-        config_res = client.post(
-            "/api/v1/generator/config",
-            json={"role": "Survivor", "mode": "random", "lock_perks": False},
-        )
-        assert config_res.status_code == 200
-
-        draw1 = client.post(
-            "/api/v1/generator/draw",
-            json={
-                "role": "Survivor",
-                "perks": ["Sprint Burst", "Self-Care", "Adrenaline", "Iron Will"],
-            },
-        )
-        assert draw1.status_code == 200
-        drawn1 = draw1.get_json()["drawn_perks"]
-        assert len(drawn1) >= 4
-
-        draw2 = client.post(
-            "/api/v1/generator/draw",
-            json={
-                "role": "Survivor",
-                "perks": ["Sprint Burst", "Adrenaline", "Kindred", "Decisive Strike"],
-            },
-        )
-        assert draw2.status_code == 200
-        drawn2 = draw2.get_json()["drawn_perks"]
-        assert len(drawn2) >= 4
-        assert "Sprint Burst" in drawn2
-        assert "Adrenaline" in drawn2
-
-        reset_res = client.post("/api/v1/generator/reset", json={"role": "Survivor"})
-        assert reset_res.status_code == 200
-        assert len(reset_res.get_json()["drawn_perks"]) == 0
-```
-
-### backend/tests/live/workflows/test_history_streak_guessing_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestHistoryStreakGuessingWorkflow:
-    """Workflow asserting History streak chronological release progression and outcomes."""
-
-    def test_history_streak_guessing_workflow(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "hist_guesser", "hguess@example.com", "pass123"
-        )
-
-        run_res = client.get("/api/v1/history-streak/run?mode=medium", headers=headers)
-        assert run_res.status_code == 200
-        run = run_res.get_json()
-        assert "target_date" in run or "perk_name" in run or "id" in run or "run" in run
-
-        res = client.post(
-            "/api/v1/history-streak/result",
-            json={"result": "loss", "mode": "medium"},
-            headers=headers,
-        )
-        assert res.status_code in (200, 400)
-```
-
-### backend/tests/live/workflows/test_interactive_map_navigation_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestInteractiveMapNavigationWorkflow:
-    """Workflow asserting interactive map navigation, realm filtering, and seed layout loading."""
-
-    def test_interactive_map_navigation_workflow(self, live_client: FlaskClient) -> None:
-        maps_res = live_client.get("/api/v1/maps")
-        assert maps_res.status_code == 200
-        maps = maps_res.get_json()["maps"]
-        assert len(maps) > 0
-
-        macmillan_res = live_client.get("/api/v1/maps?realm=The%20MacMillan%20Estate")
-        assert macmillan_res.status_code == 200
-        mac_maps = macmillan_res.get_json()["maps"]
-        assert len(mac_maps) > 0
-
-        detail_res = live_client.get("/api/v1/maps/coal_tower?seed=seed_a")
-        assert detail_res.status_code == 200
-        map_data = detail_res.get_json()["map"]
-
-        assert "coal_tower" in map_data["id"]
-        assert "name" in map_data
-```
-
-### backend/tests/live/workflows/test_jwt_security_and_session_validation_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask import Flask
-from flask.testing import FlaskClient
-from app.core.security import decode_token
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestJWTSecurityAndSessionValidationWorkflow:
-    """Workflow verifying cryptographic token validation, signature tampering, and header formatting."""
-
-    def test_jwt_security_and_session_validation_workflow(
-        self,
-        live_app: Flask,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "jwt_sec_user", "jwtsec@example.com", "pass123"
-        )
-        valid_token = headers["Authorization"].split(" ")[1]
-
-        me_res = client.get("/api/v1/auth/me", headers=headers)
-        assert me_res.status_code == 200
-        assert me_res.get_json()["authenticated"] is True
-
-        tampered_token = valid_token[:-5] + "XXXXX"
-        bad_sig_res = live_client.get(
-            "/api/v1/auth/me", headers={"Authorization": f"Bearer {tampered_token}"}
-        )
-        assert bad_sig_res.status_code == 200
-        assert bad_sig_res.get_json()["authenticated"] is False
-
-        malformed_res = live_client.get(
-            "/api/v1/auth/me", headers={"Authorization": "MalformedHeaderWithNoBearer"}
-        )
-        assert malformed_res.status_code == 200
-        assert malformed_res.get_json()["authenticated"] is False
-
-        with live_app.app_context():
-            decoded = decode_token(valid_token)
-            assert decoded is not None
-            assert str(decoded["sub"]) == str(user["id"])
-            assert decode_token("invalid.token.here") is None
-```
-
-### backend/tests/live/workflows/test_map_landmarks_and_seeds_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestMapLandmarksAndSeedsWorkflow:
-    """Workflow asserting multi-floor map landmark indexing and keyword search."""
-
-    def test_map_landmarks_and_seeds_workflow(self, live_client: FlaskClient) -> None:
-        search_res = live_client.get("/api/v1/maps?search=House")
-        assert search_res.status_code == 200
-        found = search_res.get_json()["maps"]
-        assert any("House" in m["name"] for m in found)
-
-        rpd_res = live_client.get("/api/v1/maps/rpd_east?floor=1")
-        assert rpd_res.status_code in (200, 404)
-        if rpd_res.status_code == 200:
-            rpd = rpd_res.get_json()["map"]
-            assert rpd["id"] == "rpd_east"
-```
-
-### backend/tests/live/workflows/test_page_streak_multipage_progression_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestPageStreakMultipageProgressionWorkflow:
-    """Workflow asserting multi-page streak progressions across consecutive 15-perk pages."""
-
-    def test_page_streak_multipage_progression_workflow(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "page_streak_runner", "pstreak@example.com", "pass123"
-        )
-
-        roster_res = client.get("/api/v1/page-streak/roster", headers=headers)
-        assert roster_res.status_code == 200
-        roster = roster_res.get_json()["data"]
-        assert len(roster) > 0
-        killer_name = roster[0]["killer"]
-
-        pool_res = client.get("/api/v1/page-streak/pool", headers=headers)
-        assert pool_res.status_code == 200
-        assert pool_res.get_json()["pool_size"] > 0
-
-        start_res = client.post(
-            "/api/v1/page-streak/run/start", json={"killer": killer_name}, headers=headers
-        )
-        assert start_res.status_code in (200, 201)
-
-        run_res = client.get(f"/api/v1/page-streak/run?killer={killer_name}", headers=headers)
-        assert run_res.status_code == 200
-        run_data = run_res.get_json()["run"]
-        assert run_data is not None
-        assert run_data["killer"] == killer_name
-
-        result_res = client.post(
-            "/api/v1/page-streak/run/result",
-            json={
-                "killer": killer_name,
-                "page": 0,
-                "perks": ["Agitation", "Brutal Strength"],
-                "result": "win",
-            },
-            headers=headers,
-        )
-        assert result_res.status_code in (200, 400)
-```
-
-### backend/tests/live/workflows/test_perk_detail_and_teachables_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestPerkDetailAndTeachablesWorkflow:
-    """Workflow asserting accurate assignment of 3 teachable perks per character profile."""
-
-    def test_perk_detail_and_teachables_association_workflow(
-        self, live_client: FlaskClient
-    ) -> None:
-        meg_res = live_client.get("/api/v1/characters/Meg_Thomas/detail")
-        if meg_res.status_code == 404:
-            meg_res = live_client.get("/api/v1/characters/Meg%20Thomas/detail")
-        assert meg_res.status_code == 200
-        meg_data = meg_res.get_json()["data"]
-        assert meg_data["character"]["name"] == "Meg Thomas"
-        meg_perk_names = [p["name"] for p in meg_data["perks"]]
-        assert len(meg_perk_names) == 3
-        assert (
-            any("Sprint Burst" in name for name in meg_perk_names)
-            or any("Adrenaline" in name for name in meg_perk_names)
-            or any("Quick & Quiet" in name for name in meg_perk_names)
-        )
-
-        trapper_res = live_client.get("/api/v1/characters/The_Trapper/detail")
-        if trapper_res.status_code == 404:
-            trapper_res = live_client.get("/api/v1/characters/The%20Trapper/detail")
-        assert trapper_res.status_code == 200
-        trapper_data = trapper_res.get_json()["data"]
-        trapper_perk_names = [p["name"] for p in trapper_data["perks"]]
-        assert len(trapper_perk_names) == 3
-        assert any(
-            "Agitation" in name or "Brutal Strength" in name or "Unnerving Presence" in name
-            for name in trapper_perk_names
-        )
-```
-
-### backend/tests/live/workflows/test_perks_polish_localization_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestPerksPolishLocalizationWorkflow:
-    """Workflow asserting Polish translations, pagination, and multi-field perk search."""
-
-    def test_perks_polish_localization_and_search_workflow(
-        self, live_client: FlaskClient
-    ) -> None:
-        res = live_client.get("/api/v1/perks?limit=50&page=1")
-        assert res.status_code == 200
-        data = res.get_json()
-        perks = data["data"]
-        pagination = data["pagination"]
-        assert len(perks) > 0
-        assert pagination["total"] >= 200
-
-        killer_res = live_client.get("/api/v1/perks?category=Killer&limit=30")
-        assert killer_res.status_code == 200
-        killer_perks = killer_res.get_json()["data"]
-        assert all(
-            p.get("category") == "Killer" or p.get("role") == "Killer" for p in killer_perks
-        )
-
-        surv_res = live_client.get("/api/v1/perks?category=Survivor&limit=30")
-        assert surv_res.status_code == 200
-        surv_perks = surv_res.get_json()["data"]
-        assert all(
-            p.get("category") == "Survivor" or p.get("role") == "Survivor" for p in surv_perks
-        )
-
-        search_res = live_client.get("/api/v1/perks?search=Calling")
-        assert search_res.status_code == 200
-        results = search_res.get_json()["data"]
-        assert any("Calling" in p["name"] for p in results)
-
-        sample = killer_perks[0]
-        assert "name" in sample
-        assert "description" in sample
-```
-
-### backend/tests/live/workflows/test_smash_or_pass_session_voting_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestSmashOrPassSessionVotingWorkflow:
-    """Workflow asserting session-based unvoted feed filtering and reset mechanics."""
-
-    def test_smash_or_pass_session_voting_workflow(self, live_client: FlaskClient) -> None:
-        session_id = "session_test_wf_13"
-
-        rosters_res = live_client.get("/api/v1/smash-or-pass/rosters")
-        assert rosters_res.status_code == 200
-        rosters = rosters_res.get_json()["data"]
-        assert len(rosters) > 0
-        slug = rosters[0]["slug"]
-
-        feed_res = live_client.get(
-            f"/api/v1/smash-or-pass/rosters/{slug}/feed?session_id={session_id}&limit=5"
-        )
-        assert feed_res.status_code == 200
-        feed_data = feed_res.get_json()["data"]
-        entities = feed_data["entities"]
-        assert len(entities) > 0
-        entity_id = entities[0]["id"]
-
-        vote_res = live_client.post(
-            "/api/v1/smash-or-pass/vote",
-            json={
-                "session_id": session_id,
-                "entity_id": entity_id,
-                "vote_type": "smash",
-                "roster_slug": slug,
-            },
-        )
-        assert vote_res.status_code == 200
-
-        lb_res = live_client.get(f"/api/v1/smash-or-pass/rosters/{slug}/leaderboard")
-        assert lb_res.status_code == 200
-        assert len(lb_res.get_json()["data"]) > 0
-
-        reset_res = live_client.post(
-            "/api/v1/smash-or-pass/reset", json={"session_id": session_id}
-        )
-        assert reset_res.status_code in (200, 404)
-```
-
-### backend/tests/live/workflows/test_smash_or_pass_tournament_workflow.py
-```python
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestSmashOrPassTournamentWorkflow:
-    """Workflow asserting complete tournament session voting, exclusion, and leaderboard recalculations."""
-
-    def test_full_smash_or_pass_voting_and_leaderboard_workflow(
-        self, live_client: FlaskClient
-    ) -> None:
-        res_rosters = live_client.get("/api/v1/smash-or-pass/rosters")
-        assert res_rosters.status_code == 200
-        rosters = res_rosters.get_json()["data"]
-        canon_roster = next((r for r in rosters if r["slug"] == "canon"), rosters[0])
-        slug = canon_roster["slug"]
-
-        session_headers = {"X-Session-ID": "workflow-session-12345"}
-        res_feed = live_client.get(
-            f"/api/v1/smash-or-pass/rosters/{slug}/feed", headers=session_headers
-        )
-        assert res_feed.status_code == 200
-        entities = res_feed.get_json()["data"].get("entities", [])
-        assert len(entities) > 0
-
-        voted_ids = []
-        for idx, ent in enumerate(entities[:3]):
-            vote_type = "smash" if idx % 2 == 0 else "pass"
-            res_vote = live_client.post(
-                "/api/v1/smash-or-pass/vote",
-                json={
-                    "entity_id": ent["id"],
-                    "vote": vote_type,
-                    "roster_slug": slug,
-                    "session_id": "workflow-session-12345",
-                },
-                headers=session_headers,
-            )
-            assert res_vote.status_code == 200
-            voted_ids.append(ent["id"])
-
-        res_feed2 = live_client.get(
-            f"/api/v1/smash-or-pass/rosters/{slug}/feed", headers=session_headers
-        )
-        assert res_feed2.status_code == 200
-        entities2 = res_feed2.get_json()["data"].get("entities", [])
-        remaining_ids = {e["id"] for e in entities2}
-        for vid in voted_ids:
-            assert vid not in remaining_ids
-
-        res_lead = live_client.get(f"/api/v1/smash-or-pass/rosters/{slug}/leaderboard")
-        assert res_lead.status_code == 200
-        leaders = res_lead.get_json()["data"]
-        assert len(leaders) > 0
-
-        res_reset = live_client.post(
-            "/api/v1/smash-or-pass/session/reset",
-            json={
-                "session_id": "workflow-session-12345",
-                "roster_slug": slug,
-            },
-        )
-        assert res_reset.status_code == 200
-
-        res_feed3 = live_client.get(
-            f"/api/v1/smash-or-pass/rosters/{slug}/feed", headers=session_headers
-        )
-        assert res_feed3.status_code == 200
-        entities3 = res_feed3.get_json()["data"].get("entities", [])
-        reset_ids = {e["id"] for e in entities3}
-        for vid in voted_ids:
-            assert vid in reset_ids
-```
-
-### backend/tests/live/workflows/test_streaks_and_challenge_governance_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-from tests.live.conftest import AuthenticatedClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestStreaksAndChallengeGovernanceWorkflow:
-    """Workflow asserting multi-mode streak access restrictions under active administrative governance."""
-
-    def test_full_streaks_and_challenge_governance(
-        self,
-        live_client: FlaskClient,
-        admin_client: AuthenticatedClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "challenge_master", "cmaster@example.com", "pass123"
-        )
-
-        roster_res = client.get("/api/v1/page-streak/roster", headers=headers)
-        assert roster_res.status_code == 200
-        roster = roster_res.get_json()["data"]
-        assert len(roster) > 0
-        test_killer = roster[0]["killer"] if isinstance(roster[0], dict) else str(roster[0])
-
-        run_res = client.get(f"/api/v1/page-streak/run?killer={test_killer}", headers=headers)
-        assert run_res.status_code == 200
-
-        gauntlet_res = client.get("/api/v1/gauntlet-streak/run?role=killer", headers=headers)
-        assert gauntlet_res.status_code == 200
-        g_run = gauntlet_res.get_json()["run"]
-        g_run_id = g_run["id"]
-
-        g_win_res = client.post(
-            "/api/v1/gauntlet-streak/result",
-            json={"run_id": g_run_id, "result": "win", "role": "killer"},
-            headers=headers,
-        )
-        assert g_win_res.status_code in (200, 400)
-
-        hist_res = client.get("/api/v1/history-streak/run?mode=medium", headers=headers)
-        assert hist_res.status_code == 200
-
-        dis_res = admin_client.put(
-            "/api/v1/admin/challenge-modes/gauntlet",
-            json={"is_enabled": False, "reason": "Gauntlet maintenance"},
-        )
-        assert dis_res.status_code == 200
-
-        client_new, headers_new, user_new = auth_client_factory(
-            "blocked_runner", "block@example.com", "pass123"
-        )
-        blocked_res = client_new.get(
-            "/api/v1/gauntlet-streak/run?role=killer", headers=headers_new
-        )
-        assert blocked_res.status_code == 400
-        assert "disabled" in blocked_res.get_json()["error"].lower()
-
-        en_res = admin_client.put(
-            "/api/v1/admin/challenge-modes/gauntlet", json={"is_enabled": True}
-        )
-        assert en_res.status_code == 200
-
-        unblocked_res = client_new.get(
-            "/api/v1/gauntlet-streak/run?role=killer", headers=headers_new
-        )
-        assert unblocked_res.status_code == 200
-```
-
-### backend/tests/live/workflows/test_user_ownership_bulk_cascades_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestUserOwnershipBulkCascadesWorkflow:
-    """Workflow verifying bulk character ownership updates and instant ownership summary recalculation."""
-
-    def test_user_ownership_bulk_cascades_workflow(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "cascade_tester", "casc@example.com", "pass123"
-        )
-        user_id = user["id"]
-
-        summary_res = client.get(f"/api/v1/users/{user_id}", headers=headers)
-        assert summary_res.status_code == 200
-        ownership = summary_res.get_json()["ownership"]
-        assert (
-            "owned_characters_count" in ownership
-            or "killers" in ownership
-            or isinstance(ownership, dict)
-        )
-
-        chars_res = client.get(f"/api/v1/users/{user_id}/characters", headers=headers)
-        assert chars_res.status_code == 200
-        chars = chars_res.get_json()["data"]
-
-        updates = [{"character_id": c["id"], "is_owned": True} for c in chars[:5]]
-        bulk_res = client.post(
-            f"/api/v1/users/{user_id}/characters/bulk",
-            json={"updates": updates},
-            headers=headers,
-        )
-        assert bulk_res.status_code == 200
-        assert bulk_res.get_json()["status"] == "success"
-```
-
-### backend/tests/live/workflows/test_user_profile_lifecycle_workflow.py
-```python
-from typing import Any, Callable
-import pytest
-from flask.testing import FlaskClient
-
-
-@pytest.mark.live
-@pytest.mark.workflow
-class TestUserProfileLifecycleWorkflow:
-    """Workflow asserting complete user profile lifecycle: updates, password changes, and re-authentication."""
-
-    def test_full_user_profile_and_password_lifecycle(
-        self,
-        live_client: FlaskClient,
-        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
-    ) -> None:
-        client, headers, user = auth_client_factory(
-            "profile_user_1", "prof1@example.com", "InitialPass123!"
-        )
-
-        me_res = client.get("/api/v1/auth/me", headers=headers)
-        assert me_res.status_code == 200
-        me_data = me_res.get_json()
-        assert me_data["user"]["username"] == "profile_user_1"
-        assert me_data["user"]["email"] == "prof1@example.com"
-
-        update_res = client.put(
-            "/api/v1/auth/profile",
-            json={
-                "email": "prof_updated@example.com",
-                "avatar_url": "custom_avatar_icon",
-                "new_password": "NewStrongPassword456!",
-            },
-            headers=headers,
-        )
-        assert update_res.status_code == 200
-        updated_user = update_res.get_json()["user"]
-        assert updated_user["email"] == "prof_updated@example.com"
-        assert updated_user["avatar_url"] == "custom_avatar_icon"
-
-        old_login = live_client.post(
-            "/api/v1/auth/login",
-            json={
-                "username": "profile_user_1",
-                "password": "InitialPass123!",
-            },
-        )
-        assert old_login.status_code in (400, 401)
-
-        new_login = live_client.post(
-            "/api/v1/auth/login",
-            json={
-                "username": "profile_user_1",
-                "password": "NewStrongPassword456!",
-            },
-        )
-        assert new_login.status_code == 200
-        new_token = new_login.get_json()["token"]
-        new_headers = {
-            "Authorization": f"Bearer {new_token}",
-            "Content-Type": "application/json",
-        }
-
-        me_res2 = client.get("/api/v1/auth/me", headers=new_headers)
-        assert me_res2.status_code == 200
-        assert me_res2.get_json()["user"]["email"] == "prof_updated@example.com"
+### src/components/ChaosWheelModal.tsx
+
+```tsx
+'use client';
+
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Skull, Sparkles, X, Check } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
+import type { ChaosMutator } from '@/types/chaos';
+import { CHAOS_MUTATORS } from '@/constants/chaosMutators';
+
+export { CHAOS_MUTATORS };
+export type { ChaosMutator };
+
+interface ChaosWheelModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSelectMutator: (mutator: ChaosMutator) => void;
+  activeMutator: ChaosMutator | null;
+  dict?: Dictionary;
+}
+
+export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
+  isOpen,
+  onClose,
+  onSelectMutator,
+  activeMutator,
+  dict,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animFrameRef = useRef<number | null>(null);
+  const angleRef = useRef<number>(0);
+
+  const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [wonMutator, setWonMutator] = useState<ChaosMutator | null>(activeMutator);
+
+  const drawWheel = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const size = canvas.width;
+    const center = size / 2;
+    const radius = center - 24;
+
+    ctx.clearRect(0, 0, size, size);
+
+    const total = CHAOS_MUTATORS.length;
+    const sliceAngle = (2 * Math.PI) / total;
+
+    for (let i = 0; i < total; i++) {
+      const startAngle = angleRef.current + i * sliceAngle;
+      const endAngle = startAngle + sliceAngle;
+      const m = CHAOS_MUTATORS[i];
+
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, radius, startAngle, endAngle);
+      ctx.closePath();
+
+      const grad = ctx.createRadialGradient(center, center, 10, center, center, radius);
+      if (m.type === 'curse') {
+        grad.addColorStop(0, '#31102f');
+        grad.addColorStop(1, i % 2 === 0 ? '#1e081e' : '#140414');
+      } else {
+        grad.addColorStop(0, '#064e3b');
+        grad.addColorStop(1, '#022c22');
+      }
+
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = m.type === 'curse' ? '#9333ea' : '#10b981';
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(center, center);
+      const midAngle = startAngle + sliceAngle / 2;
+      ctx.rotate(midAngle);
+
+      const normalizedAngle = ((midAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      const isLeft = normalizedAngle > Math.PI / 2 && normalizedAngle < (3 * Math.PI) / 2;
+
+      ctx.font = 'bold 13px system-ui, sans-serif';
+      ctx.fillStyle = '#f8fafc';
+
+      if (isLeft) {
+        ctx.rotate(Math.PI);
+        ctx.textAlign = 'left';
+        ctx.fillText(`${m.icon} ${m.name}`, -(radius - 35), 4);
+      } else {
+        ctx.textAlign = 'right';
+        ctx.fillText(`${m.icon} ${m.name}`, radius - 35, 4);
+      }
+
+      ctx.restore();
+    }
+
+    ctx.beginPath();
+    ctx.arc(center, center, 42, 0, 2 * Math.PI);
+    ctx.fillStyle = '#0f172a';
+    ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.stroke();
+
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = '900 11px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('CHAOS', center, center - 4);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '700 9px system-ui, sans-serif';
+    ctx.fillText('WHEEL', center, center + 10);
+
+    ctx.beginPath();
+    ctx.moveTo(center - 16, 4);
+    ctx.lineTo(center + 16, 4);
+    ctx.lineTo(center, 34);
+    ctx.closePath();
+    ctx.fillStyle = '#ef4444';
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      drawWheel();
+    }
+  }, [isOpen, drawWheel]);
+
+  useEffect(() => {
+    return () => {
+      if (animFrameRef.current !== null) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  const spinChaosWheel = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    setWonMutator(null);
+
+    const total = CHAOS_MUTATORS.length;
+    const sliceAngle = (2 * Math.PI) / total;
+    const winningIdx = Math.floor(Math.random() * total);
+
+    const targetAngle = (3 * Math.PI) / 2 - winningIdx * sliceAngle - sliceAngle / 2;
+    const startAngle = angleRef.current;
+    const fullSpins = 6 * 2 * Math.PI;
+    const finalAngle = startAngle + fullSpins + (targetAngle - (startAngle % (2 * Math.PI)));
+
+    const startTime = performance.now();
+    const duration = 3000;
+
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 4);
+
+      angleRef.current = startAngle + (finalAngle - startAngle) * easeOut;
+      drawWheel();
+
+      if (progress < 1) {
+        animFrameRef.current = requestAnimationFrame(animate);
+      } else {
+        angleRef.current = finalAngle % (2 * Math.PI);
+        drawWheel();
+        setIsSpinning(false);
+        const won = CHAOS_MUTATORS[winningIdx];
+        setWonMutator(won);
+        onSelectMutator(won);
+      }
+    };
+
+    animFrameRef.current = requestAnimationFrame(animate);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="chaos-modal-title"
+      aria-describedby="chaos-modal-desc"
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md cursor-pointer animate-in fade-in duration-200 select-none"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg rounded-3xl border border-purple-500/30 bg-white dark:bg-slate-900 p-6 shadow-2xl text-slate-900 dark:text-slate-100 cursor-default animate-in zoom-in-95 duration-200"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={dict?.modal?.close || 'Close modal'}
+          className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+        >
+          <X className="h-5 w-5" aria-hidden="true" />
+        </button>
+
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 dark:bg-purple-900/50 border border-purple-500/30 text-purple-600 dark:text-purple-300 shadow-sm" aria-hidden="true">
+            <Skull className="h-6 w-6 animate-pulse" />
+          </div>
+          <div>
+            <h2 id="chaos-modal-title" className="text-lg font-black tracking-wide text-slate-900 dark:text-white">
+              {dict?.generator?.chaosWheelTitle || 'Chaos Wheel of Curses'}
+            </h2>
+            <p id="chaos-modal-desc" className="text-xs text-slate-600 dark:text-slate-400">
+              {dict?.generator?.chaosWheelDesc || 'Spin to apply a single trial Curse or Buff to your 4 perk loadout.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="relative flex flex-col items-center justify-center my-4">
+          <canvas
+            ref={canvasRef}
+            width={400}
+            height={400}
+            aria-label={dict?.generator?.chaosWheelTitle || 'Chaos Wheel of Curses Canvas'}
+            className="h-[300px] w-[300px] sm:h-[360px] sm:w-[360px] drop-shadow-[0_0_25px_rgba(147,51,234,0.3)]"
+          />
+
+          <button
+            type="button"
+            onClick={spinChaosWheel}
+            disabled={isSpinning}
+            className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
+              isSpinning
+                ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed'
+                : 'bg-gradient-to-r from-purple-600 via-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-purple-900/40'
+            }`}
+          >
+            <Sparkles className={`h-4 w-4 ${isSpinning ? 'animate-spin' : ''}`} aria-hidden="true" />
+            <span>
+              {isSpinning
+                ? (dict?.generator?.spinningCurses || 'Spinning Chaos Curses...')
+                : (dict?.generator?.spinChaosWheel || 'Spin Chaos Wheel!')}
+            </span>
+          </button>
+        </div>
+
+        {wonMutator && (
+          <div
+            aria-live="polite"
+            className={`mt-4 rounded-2xl border p-4 backdrop-blur-sm transition-all shadow-sm ${wonMutator.badgeBg} ${wonMutator.borderColor}`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl" aria-hidden="true">
+                  {wonMutator.icon}
+                </span>
+                <div>
+                  <h3 className={`text-sm font-extrabold ${wonMutator.textColor}`}>
+                    {wonMutator.name}
+                  </h3>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">
+                    {wonMutator.description}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-bold text-xs bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>{dict?.smashOrPass?.active || 'Active'}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-6 flex justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl bg-slate-100 dark:bg-slate-800 px-5 py-2.5 font-bold text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+          >
+            {dict?.modal?.done || dict?.generator?.done || 'Done'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 ```

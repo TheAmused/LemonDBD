@@ -1,18 +1,16 @@
-// frontend/src/locales/pl/customPerks.ts
 export default {
-  "conceptLab": "Studio i Laboratorium Konceptów",
-  "designer": "Kreator Umiejętności",
-  "configureConcept": "Konfiguruj Koncept Umiejętności",
-  "requiredFields": "* Pola wymagane",
-  "titlePlaceholder": "np. Klątwa: Całun Cienia, Zastrzyk Adrenaliny...",
-  "characterPlaceholder": "np. Meg Thomas, Trapper, Ogólna...",
-  "authorPlaceholder": "np. ArchitektBytu",
-  "descPlaceholder": "Opisz mechanikę umiejętności... Użyj **pogrubienia** dla kluczowych efektów statusu.",
-  "conceptTag": "Koncept LemonDBD",
-  "searchPlaceholder": "Szukaj...",
-  "createNew": "Stwórz Nowy Koncept",
-  "tagExhausted": "+**Wyczerpanie**",
-  "tagHindered": "+**Spowolnienie**",
-  "tagAura": "+**Aura**"
-};
-
+  conceptLab: "Studio i Laboratorium Konceptów",
+  designer: "Kreator Umiejętności",
+  configureConcept: "Konfiguruj Koncept Umiejętności",
+  requiredFields: "* Pola wymagane",
+  titlePlaceholder: "np. Klątwa: Całun Cienia, Zastrzyk Adrenaliny...",
+  characterPlaceholder: "np. Meg Thomas, Trapper, Ogólna...",
+  authorPlaceholder: "np. ArchitektBytu",
+  descPlaceholder: "Opisz mechanikę umiejętności... Użyj **pogrubienia** dla kluczowych efektów statusu.",
+  conceptTag: "Koncept LemonDBD",
+  searchPlaceholder: "Szukaj...",
+  createNew: "Stwórz Nowy Koncept",
+  tagExhausted: "+**Wyczerpanie**",
+  tagHindered: "+**Spowolnienie**",
+  tagAura: "+**Aura**",
+} as const;

@@ -1,5 +1,4 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/QuestsModal.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -12,9 +11,9 @@ import {
   Sparkles,
   Flame,
 } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import { Quest } from '@/types/quest';
 import { fetchQuests, claimQuest } from '@/services/questApi';
-import { PerkDictionary } from '@/types/perks';
 
 interface QuestsModalProps {
   isOpen: boolean;
@@ -166,11 +165,10 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           <button
             type="button"
             onClick={() => setFilterCategory('all')}
-            className={`px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
-              filterCategory === 'all'
+            className={`px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${filterCategory === 'all'
                 ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 border-t-2 border-amber-500 shadow-sm'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
+              }`}
           >
             {dict?.quests?.allQuestsPrefix || 'All Quests ('}
             {quests.length})
@@ -178,24 +176,21 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           <button
             type="button"
             onClick={() => setFilterCategory('daily')}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
-              filterCategory === 'daily'
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${filterCategory === 'daily'
                 ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 border-t-2 border-amber-500 shadow-sm'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
+              }`}
           >
             <Calendar className="h-3.5 w-3.5" />
             {dict?.quests?.dailyQuests || 'Daily Quests'}
           </button>
           <button
             type="button"
-
             onClick={() => setFilterCategory('weekly')}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
-              filterCategory === 'weekly'
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${filterCategory === 'weekly'
                 ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 border-t-2 border-amber-500 shadow-sm'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-            }`}
+              }`}
           >
             <Flame className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
             {dict?.quests?.weeklyQuests || 'Weekly Quests'}
@@ -215,30 +210,27 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             </div>
           ) : (
             filteredQuests.map((quest) => {
-
               const isReadyToClaim = quest.progress >= quest.goal && !quest.is_completed;
               const pct = Math.min(100, Math.round((quest.progress / quest.goal) * 100));
 
               return (
                 <div
                   key={quest.id}
-                  className={`rounded-2xl border p-4 transition-all shadow-sm ${
-                    quest.is_completed
+                  className={`rounded-2xl border p-4 transition-all shadow-sm ${quest.is_completed
                       ? 'border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-950/40 opacity-75'
                       : isReadyToClaim
-                      ? 'border-amber-500/40 bg-gradient-to-r from-amber-50/90 via-white to-white dark:from-amber-950/30 dark:via-slate-900 dark:to-slate-900 shadow-sm dark:shadow-amber-950/20'
-                      : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60'
-                  }`}
+                        ? 'border-amber-500/40 bg-gradient-to-r from-amber-50/90 via-white to-white dark:from-amber-950/30 dark:via-slate-900 dark:to-slate-900 shadow-sm dark:shadow-amber-950/20'
+                        : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60'
+                    }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider ${
-                            quest.category === 'weekly'
+                          className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider ${quest.category === 'weekly'
                               ? 'bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 border border-purple-500/30'
                               : 'bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 border border-cyan-500/30'
-                          }`}
+                            }`}
                         >
                           {quest.category}
                         </span>
@@ -257,13 +249,12 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
                           <div
                             style={{ width: `${pct}%` }}
-                            className={`h-full transition-all duration-500 ${
-                              quest.is_completed
+                            className={`h-full transition-all duration-500 ${quest.is_completed
                                 ? 'bg-emerald-500'
                                 : isReadyToClaim
-                                ? 'bg-gradient-to-r from-amber-500 to-emerald-400 animate-pulse'
-                                : 'bg-amber-500'
-                            }`}
+                                  ? 'bg-gradient-to-r from-amber-500 to-emerald-400 animate-pulse'
+                                  : 'bg-amber-500'
+                              }`}
                           />
                         </div>
                       </div>
@@ -288,19 +279,18 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                           type="button"
                           onClick={() => handleClaim(quest)}
                           disabled={!isReadyToClaim || claimingId === quest.id}
-                          className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                            isReadyToClaim
+                          className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${isReadyToClaim
                               ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md shadow-amber-900/40 hover:from-amber-400 hover:to-amber-500 animate-bounce'
                               : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-60'
-                          }`}
+                            }`}
                         >
                           <Sparkles className="h-3.5 w-3.5" />
                           <span>
                             {claimingId === quest.id
-                              ? 'Claiming...'
+                              ? dict?.quests?.claiming || 'Claiming...'
                               : isReadyToClaim
-                              ? 'Claim Reward'
-                              : 'In Progress'}
+                                ? dict?.quests?.claimReward || 'Claim Reward'
+                                : dict?.quests?.inProgress || 'In Progress'}
                           </span>
                         </button>
                       )}
@@ -322,7 +312,6 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           </button>
         </div>
       </div>
-
     </div>
   );
 };

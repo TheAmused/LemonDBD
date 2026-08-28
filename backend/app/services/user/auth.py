@@ -4,6 +4,7 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import or_, select
 
+from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.core.security import (
     decode_token,
@@ -207,6 +208,7 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
     return user, None
 
 
+@retry_on_transient_db_error()
 def authenticate_user_credentials(
     username_or_email: str,
     password: str,

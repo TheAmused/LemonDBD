@@ -15,6 +15,7 @@ import {
   Info,
   ArrowRight,
 } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import {
   matchVoiceQuery,
   getVariantsForMap,
@@ -32,7 +33,6 @@ import {
   BrowserCompatibilityInfo,
 } from '@/services/clientSpeechModel';
 import { VoiceEngineInfoModal } from './VoiceEngineInfoModal';
-import { PerkDictionary } from '@/types/perks';
 
 export interface VoiceCommandBannerProps {
   locale?: string;
@@ -42,7 +42,7 @@ export interface VoiceCommandBannerProps {
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
   availableMaps?: Array<{ id: string; name: string; realm?: string; source?: string }>;
   className?: string;
-  dict?: PerkDictionary;
+  dict?: Dictionary | any;
 }
 
 export type VoiceStatusState =
@@ -94,7 +94,7 @@ function getAudioContext(): AudioContext | null {
       sharedAudioContext = new AudioCtx();
     }
     if (sharedAudioContext.state === 'suspended') {
-      sharedAudioContext.resume().catch(() => {});
+      sharedAudioContext.resume().catch(() => { });
     }
     return sharedAudioContext;
   } catch {
@@ -260,12 +260,12 @@ export function VoiceCommandBanner({
           recognitionRef.current.onerror = null;
           recognitionRef.current.onend = null;
           recognitionRef.current.abort();
-        } catch {}
+        } catch { }
       }
       if (audioSessionRef.current) {
         try {
           audioSessionRef.current.stop();
-        } catch {}
+        } catch { }
       }
       if (resetTimerRef.current) {
         clearTimeout(resetTimerRef.current);
@@ -281,7 +281,12 @@ export function VoiceCommandBanner({
     pendingMatchRef.current = null;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
-    const { onSourceChange: triggerSourceChange, onAction: triggerAction, onSelectMap: triggerSelectMap, soundEnabled: isSoundOn } = propsRef.current;
+    const {
+      onSourceChange: triggerSourceChange,
+      onAction: triggerAction,
+      onSelectMap: triggerSelectMap,
+      soundEnabled: isSoundOn,
+    } = propsRef.current;
 
     if (result.action === 'switch_source' && result.actionPayload) {
       setVoiceStatus('matched');
@@ -497,8 +502,8 @@ export function VoiceCommandBanner({
             err instanceof DOMException && err.name === 'NotAllowedError';
           setErrorMessage(
             isPermissionErr
-              ? 'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
-              : 'Failed to access microphone for local speech model.'
+              ? dict?.voice?.micBlocked || ''
+              : dict?.voice?.micAccessError || ''
           );
         }
         return;
@@ -523,14 +528,14 @@ export function VoiceCommandBanner({
           locale === 'pl'
             ? 'pl-PL'
             : locale === 'es'
-            ? 'es-ES'
-            : locale === 'tr'
-            ? 'tr-TR'
-            : locale === 'de'
-            ? 'de-DE'
-            : locale === 'fr'
-            ? 'fr-FR'
-            : 'en-US';
+              ? 'es-ES'
+              : locale === 'tr'
+                ? 'tr-TR'
+                : locale === 'de'
+                  ? 'de-DE'
+                  : locale === 'fr'
+                    ? 'fr-FR'
+                    : 'en-US';
         recognition.interimResults = true;
         recognition.maxAlternatives = 5;
         recognition.continuous = true;
@@ -602,7 +607,7 @@ export function VoiceCommandBanner({
             setActiveEngine('client-model');
             initClientSpeechModel(locale);
             setVoiceStatus('nomatch');
-            setErrorMessage('Switched to Local In-Browser Speech AI');
+            setErrorMessage(dict?.voice?.switchedToLocalEngine || '');
             if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
             resetTimerRef.current = setTimeout(() => {
               setVoiceStatus('idle');
@@ -610,7 +615,7 @@ export function VoiceCommandBanner({
           } else if (event.error === 'not-allowed') {
             setVoiceStatus('error');
             setErrorMessage(
-              'Microphone access blocked. Please allow microphone permissions in your browser address bar.'
+              dict?.voice?.micBlocked || ''
             );
           } else if (event.error === 'no-speech') {
             setVoiceStatus('nomatch');
@@ -619,7 +624,11 @@ export function VoiceCommandBanner({
             }, 2400);
           } else {
             setVoiceStatus('error');
-            setErrorMessage(`Speech recognition error: ${event.error || 'Unknown error'}`);
+            setErrorMessage(
+              dict?.voice?.speechRecognitionErrorPrefix
+                ? `${dict.voice.speechRecognitionErrorPrefix} ${event.error || ''}`
+                : event.error || ''
+            );
           }
         };
 
@@ -672,11 +681,11 @@ export function VoiceCommandBanner({
         isListeningRef.current = false;
         isHoldingRef.current = false;
         setVoiceStatus('error');
-        const message = err instanceof Error ? err.message : 'Failed to initialize voice recognition.';
+        const message = err instanceof Error ? err.message : dict?.voice?.failedToInitialize || '';
         setErrorMessage(message);
       }
     },
-    [activeEngine, locale, executeMatch, stopListeningAndProcess]
+    [activeEngine, locale, executeMatch, stopListeningAndProcess, dict]
   );
 
   useEffect(() => {
@@ -728,9 +737,11 @@ export function VoiceCommandBanner({
     };
   }, [startListening, stopListeningAndProcess]);
 
+  const rawVoiceDict = (dict?.voice || {}) as Record<string, string>;
+
   const statusConfig = {
     idle: {
-      badge: 'IDLE • READY',
+      badge: rawVoiceDict.idleReady || '',
       badgeClass:
         'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300',
       dotClass: 'bg-cyan-500 dark:bg-cyan-400',
@@ -739,7 +750,7 @@ export function VoiceCommandBanner({
         'bg-gradient-to-br from-cyan-600 via-cyan-700 to-blue-800 text-white shadow-cyan-900/30 ring-cyan-500/30 hover:from-cyan-500 hover:to-blue-700',
     },
     listening: {
-      badge: 'LISTENING • SPEAK NOW',
+      badge: rawVoiceDict.listeningSpeakNow || '',
       badgeClass:
         'bg-rose-500/20 border-rose-500/50 text-rose-700 dark:text-rose-300 animate-pulse',
       dotClass: 'bg-rose-500 animate-ping',
@@ -748,7 +759,7 @@ export function VoiceCommandBanner({
         'bg-gradient-to-br from-rose-500 via-red-600 to-rose-800 text-white shadow-red-900/50 ring-red-500/60 hover:from-rose-400 hover:to-red-700',
     },
     processing: {
-      badge: 'PROCESSING AUDIO...',
+      badge: rawVoiceDict.processingAudio || '',
       badgeClass:
         'bg-amber-500/20 border-amber-500/50 text-amber-800 dark:text-amber-300',
       dotClass: 'bg-amber-500 animate-pulse',
@@ -757,7 +768,7 @@ export function VoiceCommandBanner({
         'bg-gradient-to-br from-amber-600 via-amber-700 to-orange-800 text-white shadow-amber-900/40 ring-amber-500/40',
     },
     matched: {
-      badge: 'MATCHED • EXECUTING',
+      badge: rawVoiceDict.matchedExecuting || '',
       badgeClass:
         'bg-emerald-500/20 border-emerald-500/50 text-emerald-800 dark:text-emerald-300',
       dotClass: 'bg-emerald-500',
@@ -766,7 +777,7 @@ export function VoiceCommandBanner({
         'bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-800 text-white shadow-emerald-900/40 ring-emerald-500/50',
     },
     nomatch: {
-      badge: 'NO MATCH • TRY AGAIN',
+      badge: rawVoiceDict.noMatchTryAgain || '',
       badgeClass:
         'bg-amber-500/20 border-amber-500/40 text-amber-800 dark:text-amber-300',
       dotClass: 'bg-amber-500',
@@ -775,7 +786,7 @@ export function VoiceCommandBanner({
         'bg-gradient-to-br from-amber-600 via-stone-700 to-slate-800 text-white shadow-amber-900/30 ring-amber-500/30',
     },
     error: {
-      badge: 'MIC ERROR • CHECK PERMISSION',
+      badge: rawVoiceDict.micErrorCheckPermission || '',
       badgeClass:
         'bg-red-500/20 border-red-500/50 text-red-800 dark:text-red-300',
       dotClass: 'bg-red-500',
@@ -787,11 +798,16 @@ export function VoiceCommandBanner({
 
   const currentCfg = statusConfig[voiceStatus];
   const StatusIcon = currentCfg.icon;
-  const t = (dict?.voice || {}) as Record<string, string>;
+
+  const matchPercentText = matchedResult?.confidence
+    ? rawVoiceDict.matchPercent
+      ? rawVoiceDict.matchPercent.replace('{percent}', String(Math.round(matchedResult.confidence * 100)))
+      : `(${Math.round(matchedResult.confidence * 100)}%)`
+    : '';
 
   return (
     <section
-      aria-label={dict?.maps?.voiceEngineAria || 'Voice Map Navigation Engine'}
+      aria-label={dict?.maps?.voiceEngineAria || ''}
       className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-white/95 dark:bg-slate-900/90 p-4 sm:p-5 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-cyan-950/20 dark:shadow-cyan-950/40 transition-all duration-300 ${className}`}
     >
       <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl" />
@@ -802,7 +818,7 @@ export function VoiceCommandBanner({
           <div
             className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-black tracking-wide font-mono transition-all ${currentCfg.badgeClass}`}
           >
-            <span className={`h-2 w-2 rounded-full ${currentCfg.dotClass}`} />
+            <span className={`h-2 w-2 rounded-full ${currentCfg.dotClass}`} aria-hidden="true" />
             <span>{currentCfg.badge}</span>
           </div>
 
@@ -811,31 +827,31 @@ export function VoiceCommandBanner({
             onClick={() => setIsInfoModalOpen(true)}
             title={
               activeEngine === 'web-speech'
-                ? 'Web Speech API (Chrome/Edge/Safari). Click to view compatibility info.'
-                : 'In-Browser Speech Model (Local Fallback). Click to view compatibility info.'
+                ? dict?.voice?.webSpeechTooltip || ''
+                : dict?.voice?.clientModelTooltip || ''
             }
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-              activeEngine === 'web-speech'
+            aria-label={dict?.voice?.viewEngineInfo || ''}
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${activeEngine === 'web-speech'
                 ? 'border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/20'
                 : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20'
-            }`}
+              }`}
           >
             {activeEngine === 'web-speech' ? (
-              <Globe className="h-3 w-3 text-cyan-500" />
+              <Globe className="h-3 w-3 text-cyan-500" aria-hidden="true" />
             ) : (
-              <Cpu className="h-3 w-3 text-emerald-500" />
+              <Cpu className="h-3 w-3 text-emerald-500" aria-hidden="true" />
             )}
             <span>
               {activeEngine === 'web-speech'
-                ? t.engineNativeBadge || 'Web Speech API'
-                : t.engineClientBadge || 'Local AI Model'}
+                ? rawVoiceDict.engineNativeBadge || ''
+                : rawVoiceDict.engineClientBadge || ''}
             </span>
-            <Info className="h-3 w-3 opacity-70 hover:opacity-100" />
+            <Info className="h-3 w-3 opacity-70 hover:opacity-100" aria-hidden="true" />
           </button>
 
           {modelProgress.status === 'downloading' && (
             <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300 animate-pulse font-mono">
-              <RefreshCw className="h-2.5 w-2.5 animate-spin" />
+              <RefreshCw className="h-2.5 w-2.5 animate-spin" aria-hidden="true" />
               <span>{modelProgress.progress}{dict?.maps?.percentSign || '%'}</span>
             </div>
           )}
@@ -843,14 +859,14 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
-            title={soundEnabled ? 'Mute voice feedback sound' : 'Enable voice feedback sound'}
-            aria-label={soundEnabled ? 'Mute voice sound' : 'Enable voice sound'}
+            title={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
+            aria-label={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
             className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500"
           >
             {soundEnabled ? (
-              <Volume2 className="h-3 w-3" />
+              <Volume2 className="h-3 w-3" aria-hidden="true" />
             ) : (
-              <VolumeX className="h-3 w-3 text-slate-400 dark:text-slate-500" />
+              <VolumeX className="h-3 w-3 text-slate-400 dark:text-slate-500" aria-hidden="true" />
             )}
           </button>
         </div>
@@ -858,49 +874,46 @@ export function VoiceCommandBanner({
         <div className="flex flex-wrap items-center gap-2">
           <div
             role="group"
-            aria-label={dict?.maps?.providerAria || 'Map Provider Source'}
+            aria-label={dict?.maps?.providerAria || ''}
             className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 p-0.5"
           >
             <span className="px-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
-              {dict?.maps?.sourceLabel || 'Source:'}
+              {dict?.maps?.sourceLabel || ''}
             </span>
             <button
               type="button"
               onClick={() => onSourceChange('hens333')}
               aria-pressed={currentSource === 'hens333'}
-              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
-                currentSource === 'hens333'
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'hens333'
                   ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-sm font-black'
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+                }`}
             >
-              {dict?.maps?.sourceHensClock || 'Hens333 (12-Clock)'}
+              {dict?.maps?.sourceHensClock || ''}
             </button>
 
             <button
               type="button"
               onClick={() => onSourceChange('samoelcolt')}
               aria-pressed={currentSource === 'samoelcolt'}
-              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
-                currentSource === 'samoelcolt'
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'samoelcolt'
                   ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md font-black'
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+                }`}
             >
-              {dict?.maps?.sourceSamoelIsometric || 'SamoelColt (Isometric)'}
+              {dict?.maps?.sourceSamoelIsometric || ''}
             </button>
 
             <button
               type="button"
               onClick={() => onSourceChange('all')}
               aria-pressed={currentSource === 'all'}
-              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${
-                currentSource === 'all'
+              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'all'
                   ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-sm font-black'
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+                }`}
             >
-              {dict?.maps?.all || 'All'}
+              {dict?.maps?.all || ''}
             </button>
           </div>
 
@@ -912,7 +925,7 @@ export function VoiceCommandBanner({
                 onClick={() => handleExecuteCommand(prompt.query)}
                 className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 hover:border-cyan-500/50 px-2 py-0.5 text-[10px] font-mono font-medium text-slate-600 dark:text-slate-300 transition active:scale-95 cursor-pointer shadow-xs"
               >
-                {dict?.maps?.openQuote || '“'}{prompt.label}{dict?.maps?.closeQuote || '”'}
+                {dict?.maps?.openQuote || ''}{prompt.label}{dict?.maps?.closeQuote || ''}
               </button>
             ))}
           </div>
@@ -926,8 +939,8 @@ export function VoiceCommandBanner({
               voiceStatus === 'listening'
                 ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
                 : voiceStatus === 'matched'
-                ? 24
-                : 4;
+                  ? 24
+                  : 4;
             return (
               <span
                 key={`left-wave-${i}`}
@@ -938,13 +951,12 @@ export function VoiceCommandBanner({
                       ? `pulse ${(0.4 + (i % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
                       : 'none',
                 }}
-                className={`w-1 rounded-full transition-all duration-150 ${
-                  voiceStatus === 'listening'
+                className={`w-1 rounded-full transition-all duration-150 ${voiceStatus === 'listening'
                     ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
                     : voiceStatus === 'matched'
-                    ? 'bg-emerald-400'
-                    : 'bg-slate-300 dark:bg-slate-700/60'
-                }`}
+                      ? 'bg-emerald-400'
+                      : 'bg-slate-300 dark:bg-slate-700/60'
+                  }`}
               />
             );
           })}
@@ -954,8 +966,8 @@ export function VoiceCommandBanner({
           <div className="relative flex items-center justify-center">
             {voiceStatus === 'listening' && (
               <>
-                <span className="absolute h-16 w-16 animate-ping rounded-full bg-rose-500/20 pointer-events-none" />
-                <span className="absolute h-20 w-20 animate-ping rounded-full bg-rose-500/10 [animation-delay:200ms] pointer-events-none" />
+                <span className="absolute h-16 w-16 animate-ping rounded-full bg-rose-500/20 pointer-events-none" aria-hidden="true" />
+                <span className="absolute h-20 w-20 animate-ping rounded-full bg-rose-500/10 [animation-delay:200ms] pointer-events-none" aria-hidden="true" />
               </>
             )}
 
@@ -1004,12 +1016,13 @@ export function VoiceCommandBanner({
                   startListening(false);
                 }
               }}
-              aria-label={currentCfg.badge}
+              aria-label={currentCfg.badge || ''}
               aria-pressed={voiceStatus === 'listening'}
               className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl shadow-xl transition-all duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
             >
               <StatusIcon
                 className={`h-5 w-5 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
+                aria-hidden="true"
               />
             </button>
           </div>
@@ -1018,19 +1031,19 @@ export function VoiceCommandBanner({
             {voiceStatus === 'listening' && (
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+                  <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" aria-hidden="true" />
                   <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono truncate">
                     {liveTranscript
                       ? `“${liveTranscript}”`
                       : audioLevel > 8
-                      ? (locale === 'pl' ? 'Słucham głosu... Puść [V] lub kliknij' : 'Listening to voice... Release [V] or click')
-                      : (locale === 'pl' ? 'Mów teraz (np. Dead Dawg, RPD)' : 'Speak DBD map name (e.g. Dead Dawg)')}
+                        ? rawVoiceDict.listeningVoice || ''
+                        : rawVoiceDict.speakMapPrompt || ''}
                   </span>
                 </div>
                 <span className="text-[10px] text-slate-500 font-mono truncate">
                   {activeEngine === 'client-model'
-                    ? (locale === 'pl' ? 'Lokalny model AI • Puść [V] lub kliknij aby rozpoznać' : 'Local AI Model • Release [V] or click to transcribe')
-                    : (locale === 'pl' ? 'Rozpoznawanie mowy w toku...' : 'Speech recognition active...')}
+                    ? rawVoiceDict.localModelListeningDesc || ''
+                    : rawVoiceDict.webSpeechListeningDesc || ''}
                 </span>
               </div>
             )}
@@ -1038,15 +1051,15 @@ export function VoiceCommandBanner({
             {voiceStatus === 'processing' && (
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-2">
-                  <RefreshCw className="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" />
+                  <RefreshCw className="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" aria-hidden="true" />
                   <span className="text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
-                    {liveTranscript && liveTranscript !== 'Analyzing speech audio...'
-                      ? `Transcribing: “${liveTranscript}”`
-                      : (locale === 'pl' ? 'Przetwarzanie głosu przez model AI...' : 'Transcribing voice with local Whisper AI...')}
+                    {liveTranscript
+                      ? `${rawVoiceDict.transcribingPrefix || ''} “${liveTranscript}”`
+                      : rawVoiceDict.transcribingVoice || ''}
                   </span>
                 </div>
                 <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80 font-mono">
-                  {locale === 'pl' ? 'Lokalne przetwarzanie ONNX WebAssembly' : 'In-browser ONNX WebAssembly inference'}
+                  {rawVoiceDict.localWasmInference || ''}
                 </span>
               </div>
             )}
@@ -1054,18 +1067,18 @@ export function VoiceCommandBanner({
             {voiceStatus === 'matched' && matchedResult && (
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
                   <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 font-mono truncate">
                     {matchedResult.matchedMapName
-                      ? `Matched: ${matchedResult.matchedMapName}`
+                      ? `${rawVoiceDict.matchedPrefix || ''} ${matchedResult.matchedMapName}`
                       : matchedResult.action === 'switch_source'
-                      ? `Switched: ${matchedResult.actionPayload}`
-                      : `Action: ${matchedResult.action}`}
+                        ? `${rawVoiceDict.switchedPrefix || ''} ${matchedResult.actionPayload}`
+                        : `${rawVoiceDict.actionPrefix || ''} ${matchedResult.action}`}
                   </span>
                 </div>
                 {liveTranscript && (
                   <span className="text-[10px] text-emerald-600/90 dark:text-emerald-400/90 font-mono truncate">
-                    {dict?.maps?.heardLabel || 'Heard:'} {dict?.maps?.openQuote || '“'}{liveTranscript}{dict?.maps?.closeQuote || '”'} {matchedResult.confidence ? `(${Math.round(matchedResult.confidence * 100)}% match)` : ''}
+                    {dict?.maps?.heardLabel || ''} {dict?.maps?.openQuote || '“'}{liveTranscript}{dict?.maps?.closeQuote || '”'} {matchPercentText}
                   </span>
                 )}
               </div>
@@ -1074,17 +1087,15 @@ export function VoiceCommandBanner({
             {voiceStatus === 'nomatch' && (
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
-                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span className="truncate">
                     {liveTranscript
-                      ? `Heard: “${liveTranscript}” (No DBD match)`
-                      : (locale === 'pl' ? 'Brak dźwięku lub nierozpoznano' : 'No speech detected / Not recognized')}
+                      ? `${dict?.maps?.heardLabel || ''} “${liveTranscript}” (${rawVoiceDict.noDbdMatch || ''})`
+                      : rawVoiceDict.noSpeechDetected || ''}
                   </span>
                 </div>
                 <span className="text-[10px] text-slate-500 font-mono truncate">
-                  {locale === 'pl'
-                    ? 'Spróbuj: „Dead Dawg”, „RPD East” lub „Badham 2”'
-                    : 'Try saying: “Dead Dawg”, “RPD East”, or “Coal Tower”'}
+                  {rawVoiceDict.trySayingPrompt || ''}
                 </span>
               </div>
             )}
@@ -1092,11 +1103,11 @@ export function VoiceCommandBanner({
             {voiceStatus === 'error' && (
               <div className="flex flex-col text-left">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-rose-700 dark:text-rose-400 font-mono">
-                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                  <span className="truncate">{errorMessage || t.micBlocked || 'Microphone error'}</span>
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <span className="truncate">{errorMessage || rawVoiceDict.micBlocked || ''}</span>
                 </div>
                 <span className="text-[10px] text-rose-600/80 dark:text-rose-400/80 font-mono">
-                  {locale === 'pl' ? 'Sprawdź uprawnienia mikrofonu w przeglądarce' : 'Check microphone permissions in browser address bar'}
+                  {rawVoiceDict.checkPermissionsHint || ''}
                 </span>
               </div>
             )}
@@ -1107,7 +1118,7 @@ export function VoiceCommandBanner({
                   {dict?.maps?.keyV || 'V'}
                 </kbd>
                 <span className="truncate">
-                  {locale === 'pl' ? 'Przytrzymaj [V] aby mówić (lub kliknij mikrofon)' : 'Hold [V] to talk (or click mic)'}
+                  {rawVoiceDict.holdVToTalk || ''}
                 </span>
               </div>
             )}
@@ -1120,8 +1131,8 @@ export function VoiceCommandBanner({
               voiceStatus === 'listening'
                 ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
                 : voiceStatus === 'matched'
-                ? 24
-                : 4;
+                  ? 24
+                  : 4;
             return (
               <span
                 key={`right-wave-${i}`}
@@ -1132,13 +1143,12 @@ export function VoiceCommandBanner({
                       ? `pulse ${(0.4 + ((i + 2) % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
                       : 'none',
                 }}
-                className={`w-1 rounded-full transition-all duration-150 ${
-                  voiceStatus === 'listening'
+                className={`w-1 rounded-full transition-all duration-150 ${voiceStatus === 'listening'
                     ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
                     : voiceStatus === 'matched'
-                    ? 'bg-emerald-400'
-                    : 'bg-slate-300 dark:bg-slate-700/60'
-                }`}
+                      ? 'bg-emerald-400'
+                      : 'bg-slate-300 dark:bg-slate-700/60'
+                  }`}
               />
             );
           })}
@@ -1148,7 +1158,7 @@ export function VoiceCommandBanner({
       {disambiguationVariants.length > 0 && (
         <div className="relative z-10 mt-2.5 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-950/30 p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 text-xs font-black text-cyan-800 dark:text-cyan-300 font-mono">
-            <span>{dict?.maps?.variants || 'Variants:'}</span>
+            <span>{dict?.maps?.variants || ''}</span>
           </div>
 
           <div className="flex flex-wrap gap-1.5">
@@ -1160,7 +1170,7 @@ export function VoiceCommandBanner({
                 className="flex items-center gap-1 rounded-xl border border-cyan-400/40 bg-white/80 dark:bg-cyan-900/40 px-2.5 py-0.5 text-xs font-bold text-cyan-900 dark:text-cyan-200 transition hover:border-cyan-500 hover:bg-cyan-100 dark:hover:bg-cyan-800/60 active:scale-95 cursor-pointer shadow-xs font-mono focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400"
               >
                 <span>{variant}</span>
-                <ArrowRight className="h-3 w-3 text-cyan-500 dark:text-cyan-400" />
+                <ArrowRight className="h-3 w-3 text-cyan-500 dark:text-cyan-400" aria-hidden="true" />
               </button>
             ))}
           </div>
@@ -1181,7 +1191,7 @@ export function VoiceCommandBanner({
         hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
         modelProgress={modelProgress}
         onPreloadModel={() => initClientSpeechModel(locale)}
-        dict={dict as any}
+        dict={dict}
       />
     </section>
   );

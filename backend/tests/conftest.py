@@ -1,6 +1,7 @@
-﻿# backend/tests/conftest.py
+# backend/tests/conftest.py
 import os
 import pytest
+
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "unit: mark test as unit test (SQLite memory)")

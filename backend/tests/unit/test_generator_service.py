@@ -1,12 +1,14 @@
 # backend/tests/unit/test_generator_service.py
 import gc
-import os
 import tempfile
 import unittest
 from pathlib import Path
+import pytest
 from app.services.db_service import DatabaseService
 from app.services.generator_service import GeneratorService
 
+
+@pytest.mark.unit
 class TestGeneratorService(unittest.TestCase):
     def setUp(self):
         self._temp_dir = tempfile.TemporaryDirectory()
@@ -47,6 +49,7 @@ class TestGeneratorService(unittest.TestCase):
         config_after = self.service.get_config()
         self.assertEqual(config_after["role"], "Killer")
         self.assertEqual(config_after["no_repeat_perks"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

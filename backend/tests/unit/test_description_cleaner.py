@@ -3,19 +3,19 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+import pytest
 
 from app.services.perk_service import PerkService
 from app.services.scraper_service import ScraperService
 
-class TestDescriptionCleaner(unittest.TestCase):
 
+@pytest.mark.unit
+class TestDescriptionCleaner(unittest.TestCase):
     def test_clean_description_text(self):
-        # 1. HTML tags removal
         raw_html = "<p>Increases your <span>movement speed</span> by <b>5%</b>.</p>"
         cleaned = ScraperService.clean_description_text(raw_html)
         self.assertEqual(cleaned, "Increases your movement speed by 5%.")
 
-        # 2. data-discover="true" attribute fragments removal
         raw_fragment = 'data-discover="true">Unlocks potential in your Aura-reading ability.'
         cleaned_fragment = ScraperService.clean_description_text(raw_fragment)
         self.assertEqual(cleaned_fragment, "Unlocks potential in your Aura-reading ability.")
@@ -24,13 +24,11 @@ class TestDescriptionCleaner(unittest.TestCase):
         cleaned_attr_tag = ScraperService.clean_description_text(raw_attr_tag)
         self.assertEqual(cleaned_attr_tag, "Unlocks potential in your Aura-reading ability.")
 
-        # 3. Duplicate header text removal
         raw_duplicate = "Sprint Burst\nUnlocks potential in your Aura-reading ability.\nSprint Burst"
         cleaned_dup = ScraperService.clean_description_text(raw_duplicate)
         self.assertEqual(cleaned_dup, "Sprint Burst\nUnlocks potential in your Aura-reading ability.")
 
     def test_perk_service_sanitizes_descriptions(self):
-        # Test PerkService.reload_data() strips HTML attributes/tags from cached perk/item/addon descriptions
         with tempfile.TemporaryDirectory() as tmpdir:
             tmp_path = Path(tmpdir)
             perks_file = tmp_path / "perks.json"
@@ -85,5 +83,5 @@ class TestDescriptionCleaner(unittest.TestCase):
             self.assertEqual(service._addons_cache[0]["description"], "Test addon description.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

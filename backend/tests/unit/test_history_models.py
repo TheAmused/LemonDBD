@@ -1,12 +1,14 @@
 # backend/tests/unit/test_history_models.py
-import json
 import unittest
+import pytest
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import HistoryRun, HistoryMatchLog, User
+from app.core.json_provider import safe_json_dumps
+from app.models import HistoryMatchLog, HistoryRun, User
 
 
+@pytest.mark.unit
 class TestHistoryModels(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)
@@ -34,12 +36,12 @@ class TestHistoryModels(unittest.TestCase):
             current_row_index=1,
             total_killers_beaten=6,
             best_killers_beaten=6,
-            completed_killers_json=json.dumps(["The Wraith"]),
-            unlocked_perk_names_json=json.dumps(["Hex: Ruin", "Save the Best for Last"]),
+            completed_killers_json=safe_json_dumps(["The Wraith"]),
+            unlocked_perk_names_json=safe_json_dumps(["Hex: Ruin", "Save the Best for Last"]),
             checkpoint_row_index=1,
             checkpoint_total_killers_beaten=5,
             checkpoint_completed_killers_json="[]",
-            checkpoint_unlocked_perk_names_json=json.dumps(["Hex: Ruin"]),
+            checkpoint_unlocked_perk_names_json=safe_json_dumps(["Hex: Ruin"]),
         )
         db.session.add(run)
         db.session.commit()

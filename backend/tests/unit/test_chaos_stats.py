@@ -1,6 +1,6 @@
 # backend/tests/unit/test_chaos_stats.py
-import json
 import unittest
+import pytest
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
@@ -8,6 +8,7 @@ from app.models import ChaosMatchLog, ChaosRun, User
 from app.services.chaos.stats import fetch_chaos_user_stats
 
 
+@pytest.mark.unit
 class TestChaosStats(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)

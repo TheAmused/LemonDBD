@@ -1,12 +1,14 @@
 # backend/tests/unit/test_fullscreen_maps_service.py
 import gc
-import os
 import tempfile
 import unittest
 from pathlib import Path
+import pytest
 from app.services.db_service import DatabaseService
 from app.services.map_service import MapService
 
+
+@pytest.mark.unit
 class TestFullscreenMapsService(unittest.TestCase):
     def setUp(self):
         self._temp_dir = tempfile.TemporaryDirectory()
@@ -28,7 +30,6 @@ class TestFullscreenMapsService(unittest.TestCase):
         self.assertIn("tiles", detail)
         self.assertIn("objectives", detail)
         
-        # Verify tiles structure and pallet safety ratings
         tiles = detail["tiles"]
         self.assertGreaterEqual(len(tiles), 1)
         
@@ -44,13 +45,13 @@ class TestFullscreenMapsService(unittest.TestCase):
         for p in pallets:
             self.assertIn(p["pallet_safety_rating"], ["god", "safe", "mindgameable", "unsafe"])
 
-        # Verify objectives structure and coverage
         objectives = detail["objectives"]
         self.assertGreaterEqual(len(objectives), 1)
         obj_types = {obj["type"] for obj in objectives if "type" in obj}
         expected_types = {"totem", "generator", "exit_gate", "hatch", "chest", "basement"}
         for et in expected_types:
             self.assertIn(et, obj_types)
+
 
 if __name__ == "__main__":
     unittest.main()

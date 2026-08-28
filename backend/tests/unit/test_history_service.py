@@ -1,5 +1,6 @@
 # backend/tests/unit/test_history_service.py
 import unittest
+import pytest
 from sqlalchemy import select
 from app import create_app
 from app.core.config import TestingConfig
@@ -28,6 +29,7 @@ def seed_general_perk(name="Whispers"):
     db.session.commit()
 
 
+@pytest.mark.unit
 class HistoryTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app(TestingConfig)
@@ -50,6 +52,7 @@ class HistoryTestCase(unittest.TestCase):
         return user.id
 
 
+@pytest.mark.unit
 class TestGetOrCreateRun(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -79,6 +82,7 @@ class TestGetOrCreateRun(HistoryTestCase):
         self.assertEqual(first["id"], second["id"])
 
 
+@pytest.mark.unit
 class TestSubmitResultWithinARow(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -119,8 +123,6 @@ class TestSubmitResultWithinARow(HistoryTestCase):
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
         final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
-        # This win clears row 0 and completes the run (current_row_index advances past it),
-        # but the match was played in row 0, so the log must say 0, not the post-advance value.
         self.assertTrue(final["row_cleared"])
         logs = db.session.scalars(
             select(HistoryMatchLog).where(
@@ -152,6 +154,7 @@ class TestSubmitResultWithinARow(HistoryTestCase):
         self.assertEqual(reloaded["status"], "completed")
 
 
+@pytest.mark.unit
 class TestHellModeLoss(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -176,8 +179,6 @@ class TestHellModeLoss(HistoryTestCase):
         self.assertEqual(after_loss["current_row_index"], 0)
         self.assertEqual(after_loss["total_killers_beaten"], 0)
 
-        # The loss actually happened in row 1 (after clearing row 0), even though the run
-        # state has since been reset to row 0 -- the log must reflect where it was played.
         logs = db.session.scalars(
             select(HistoryMatchLog).where(
                 HistoryMatchLog.run_id == self.run["id"], HistoryMatchLog.killer_id == "Killer 5"
@@ -187,6 +188,7 @@ class TestHellModeLoss(HistoryTestCase):
         self.assertEqual(logs[0].row_index, 1)
 
 
+@pytest.mark.unit
 class TestMediumModeCheckpoint(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -217,6 +219,7 @@ class TestMediumModeCheckpoint(HistoryTestCase):
         self.assertIn("Killer 0 Perk 1", after_loss["unlocked_perk_names"])
 
 
+@pytest.mark.unit
 class TestResetRun(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -237,6 +240,7 @@ class TestResetRun(HistoryTestCase):
             self.service.reset_run(self.user_id, "medium")
 
 
+@pytest.mark.unit
 class TestGetStats(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -252,6 +256,7 @@ class TestGetStats(HistoryTestCase):
         self.assertEqual(stats["wins"], 1)
 
 
+@pytest.mark.unit
 class TestFrozenKillerRoster(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -276,9 +281,6 @@ class TestFrozenKillerRoster(HistoryTestCase):
         self.assertIn("Some New Killer", refrozen["owned_killers"])
 
     def test_medium_loss_before_any_checkpoint_refreezes_the_roster(self):
-        # Fresh medium-mode run, no checkpoint banked yet (checkpoint_row_index == 0
-        # and checkpoint_total_killers_beaten == 0), so a loss here falls back to
-        # zero -- a genuine reset, same as hell mode -- and must refreeze.
         run = self.service.get_or_create_run(self.user_id, "medium")
         seed_killer("Some New Killer", release_number=99)
         after_loss = self.service.submit_result(
@@ -287,8 +289,6 @@ class TestFrozenKillerRoster(HistoryTestCase):
         self.assertIn("Some New Killer", after_loss["owned_killers"])
 
     def test_medium_apply_inactivity_loss_before_any_checkpoint_refreezes_the_roster(self):
-        # Same as test_medium_loss_before_any_checkpoint_refreezes_the_roster above,
-        # but via the inactivity path instead of a real submit_result loss.
         run = self.service.get_or_create_run(self.user_id, "medium")
         seed_killer("Some New Killer", release_number=99)
         self.service.apply_inactivity_loss(run["id"])
@@ -296,6 +296,7 @@ class TestFrozenKillerRoster(HistoryTestCase):
         self.assertIn("Some New Killer", reloaded["owned_killers"])
 
 
+@pytest.mark.unit
 class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -305,11 +306,6 @@ class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
         self.user_id = self.register_user("mediumfreezeplayer")
 
     def test_medium_checkpoint_loss_does_not_refreeze(self):
-        # Win the whole first row to bank a medium-mode checkpoint (with only the
-        # original 10 killers frozen), then seed a new killer, then lose in the
-        # second row -- since a checkpoint was already banked, the loss falls back
-        # to that checkpoint (not to zero) and must NOT refreeze, so the snapshot
-        # should stay exactly what it was at row start.
         run = self.service.get_or_create_run(self.user_id, "medium")
         for name in ["Killer 0", "Killer 1", "Killer 2", "Killer 3", "Killer 4"]:
             cleared = self.service.submit_result(self.user_id, run["id"], "win", name)
@@ -323,8 +319,6 @@ class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
         self.assertNotIn("Some New Killer", after_loss["owned_killers"])
 
     def test_medium_apply_inactivity_loss_after_checkpoint_does_not_refreeze(self):
-        # Same as test_medium_checkpoint_loss_does_not_refreeze above, but via
-        # the inactivity path instead of a real submit_result loss.
         run = self.service.get_or_create_run(self.user_id, "medium")
         for name in ["Killer 0", "Killer 1", "Killer 2", "Killer 3", "Killer 4"]:
             cleared = self.service.submit_result(self.user_id, run["id"], "win", name)
@@ -339,6 +333,7 @@ class TestMediumCheckpointLossDoesNotRefreeze(HistoryTestCase):
         self.assertNotIn("Some New Killer", reloaded["owned_killers"])
 
 
+@pytest.mark.unit
 class TestOwnershipShrinksMidRun(HistoryTestCase):
     def setUp(self):
         super().setUp()
@@ -353,7 +348,6 @@ class TestOwnershipShrinksMidRun(HistoryTestCase):
         for name in ["Killer 1", "Killer 2", "Killer 3", "Killer 4", "Killer 5"]:
             self.service.submit_result(self.user_id, run["id"], "win", name)
 
-        # Now un-own Killer 6, the sole occupant of row 1 (the row the run just advanced into).
         killer_6 = self.killers["Killer 6"]
         self.ownership_service.set_character_ownership(self.user_id, killer_6.id, is_owned=False)
 

@@ -446,6 +446,7 @@ export default function AdminPanelPage() {
             }}
             onTriggerSync={handleTriggerSync}
             onRefreshData={() => (activeTab === 'users' ? fetchAdminData() : fetchBugReports())}
+            dict={dict}
           />
 
           {actionMessage && (
@@ -565,7 +566,7 @@ export default function AdminPanelPage() {
           ) : activeTab === 'challenges' ? (
             <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
           ) : activeTab === 'challenge_stats' ? (
-            <AdminChallengeStats stats={stats} />
+            <AdminChallengeStats stats={stats} dict={dict} />
           ) : activeTab === 'audit' ? (
             <AdminAuditLogView dict={dict} />
           ) : (

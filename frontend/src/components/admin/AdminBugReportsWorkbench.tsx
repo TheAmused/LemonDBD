@@ -44,6 +44,13 @@ const STATUS_CONFIG = {
   },
 };
 
+const STATUS_LABEL_KEYS: Record<string, string> = {
+  pending: 'statusPending',
+  in_progress: 'statusInProgress',
+  resolved: 'statusResolved',
+  rejected: 'statusRejected',
+};
+
 interface AdminBugReportsWorkbenchProps {
   bugReports: AdminBugReport[];
   bugStats: BugReportStats | null;
@@ -207,6 +214,8 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
 
                 const isSelected = selectedBugId === report.id;
                 const cfg = STATUS_CONFIG[report.status] || STATUS_CONFIG.pending;
+                const statusLabel =
+                  (dict?.admin as Record<string, string> | undefined)?.[STATUS_LABEL_KEYS[report.status]] || cfg.label;
 
                 return (
                   <div
@@ -228,7 +237,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                       <span
                         className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${cfg.badge}`}
                       >
-                        {cfg.label}
+                        {statusLabel}
                       </span>
                     </div>
 

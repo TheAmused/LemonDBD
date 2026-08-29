@@ -22,6 +22,24 @@ import time
 from typing import Callable, TypeVar
 
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy.exc import TimeoutError as SATimeoutError
+
+try:
+    # psycopg (v3) can raise its own driver-level errors -- notably a raw
+    # ProgrammingError from pool_pre_ping's do_ping() when it tries to
+    # toggle autocommit on a connection that got returned to the pool while
+    # still mid-transaction ("can't change 'autocommit' now: connection in
+    # transaction status INTRANS"). That specific failure happens *before*
+    # SQLAlchemy has a chance to wrap it as a DBAPIError, so it propagates as
+    # a bare psycopg.Error subclass and slips past the (DBAPIError,
+    # SATimeoutError) catch below entirely. We catch it explicitly here (and
+    # the app runs fine on sqlite in tests, where this import legitimately
+    # has nothing to catch) so the same rollback+remove+retry recovery
+    # applies to it too.
+    from psycopg import Error as PsycopgError
+except ImportError:  # pragma: no cover - psycopg not installed (e.g. sqlite-only env)
+    class PsycopgError(Exception):
+        pass
 
 from app.core.extensions import db
 
@@ -35,16 +53,32 @@ _TRANSIENT_MARKERS = (
     "consuming input failed",
     "terminating connection",
     "could not connect",
+    # SQLAlchemy pool-checkout timeout ("QueuePool limit of size X ... reached,
+    # connection timed out") -- distinct from a dropped connection, but the
+    # same class of "many parallel live-test files all starting up (and the
+    # background initial scrape possibly still running) at once" burst this
+    # module exists for. By construction nothing has been sent to the server
+    # yet when this fires (no connection was even checked out), so retrying
+    # is exactly as safe as the dropped-connection case above.
+    "queuepool limit",
+    "timed out",
+    # psycopg3's pool_pre_ping do_ping() autocommit-toggle failure when a
+    # connection was returned to the pool still mid-transaction -- see the
+    # PsycopgError import note above. Retrying (after our rollback+remove)
+    # gets a clean connection instead of crashing the request.
+    "connection in transaction status",
+    "can't change 'autocommit' now",
 )
 
 
-def _is_transient(err: DBAPIError) -> bool:
+def _is_transient(err: BaseException) -> bool:
     return any(marker in str(err).lower() for marker in _TRANSIENT_MARKERS)
 
 
-def retry_on_transient_db_error(retries: int = 1, delay_seconds: float = 0.15) -> Callable[[F], F]:
-    """Retry a read-only DB function once (by default) if it hits a transient
-    connection-drop error, discarding the poisoned session/connection first."""
+def retry_on_transient_db_error(retries: int = 2, delay_seconds: float = 0.25) -> Callable[[F], F]:
+    """Retry a DB function (by default up to twice more, three attempts total)
+    if it hits a transient connection-drop or pool-checkout-timeout error,
+    discarding the poisoned session/connection first."""
 
     def decorator(fn: F) -> F:
         @functools.wraps(fn)
@@ -53,7 +87,7 @@ def retry_on_transient_db_error(retries: int = 1, delay_seconds: float = 0.15) -
             for attempt in range(1, attempts + 1):
                 try:
                     return fn(*args, **kwargs)
-                except DBAPIError as exc:
+                except (DBAPIError, SATimeoutError, PsycopgError) as exc:
                     if attempt >= attempts or not _is_transient(exc):
                         raise
                     logger.warning(

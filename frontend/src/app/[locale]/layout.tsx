@@ -1,7 +1,7 @@
 // frontend/src/app/[locale]/layout.tsx
 import React from 'react';
 import type { Metadata } from 'next';
-import Script from 'next/script';
+import { UmamiScript } from '@/components/UmamiScript';
 import { i18n, type Locale } from '@/i18n/config';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
@@ -36,19 +36,10 @@ export default async function RootLayout({
     i18n.locales.includes(rawLocale as Locale) ? rawLocale : i18n.defaultLocale
   ) as Locale;
 
-  const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
-  const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL;
-
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
-        {umamiWebsiteId && umamiUrl && (
-          <Script
-            strategy="afterInteractive"
-            src={`${umamiUrl}/script.js`}
-            data-website-id={umamiWebsiteId}
-          />
-        )}
+        <UmamiScript />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
             {children}

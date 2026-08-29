@@ -3,6 +3,7 @@ from collections.abc import Callable
 from typing import Any
 from sqlalchemy import func, or_, select
 
+from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.models import Character, UserCharacterOwnership
 
@@ -166,8 +167,16 @@ def bulk_mutate_character_ownership(
     }
 
 
+@retry_on_transient_db_error()
 def seed_default_character_ownership(user_id: int) -> int:
-    """Lock every character except FREE_CHARACTER_SLUGS for a new account."""
+    """Lock every character except FREE_CHARACTER_SLUGS for a new account.
+
+    Retried on a transient connection drop/pool-timeout: safe because this
+    is a get-or-create per character followed by one commit, so re-running
+    it after a dropped connection either creates the rows cleanly or finds
+    them already there and just re-applies the same is_owned value -- never
+    a duplicate.
+    """
     locked_ids = db.session.scalars(
         select(Character.id).where(
             or_(

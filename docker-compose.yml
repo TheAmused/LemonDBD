@@ -43,6 +43,7 @@ services:
       - ./backend/app/static:/app/app/static
     environment:
       - FLASK_ENV=${FLASK_ENV:-production}
+      - FLASK_DEBUG=${FLASK_DEBUG:-false}
       # More headroom than gunicorn.conf.py's production default (2/4) --
       # the live/frontend test suite throws a lot of concurrent requests at
       # this stack locally, which otherwise queues through too few worker
@@ -60,6 +61,12 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD:-}
       - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER:-}
       - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
+      # Dev/test-vs-production feature toggles -- see .env.development /
+      # .env.production. All three default "on" (production-safe) when unset,
+      # so a bare `docker compose up` with no .env still behaves safely.
+      - RATELIMIT_ENABLED=${RATELIMIT_ENABLED:-true}
+      - SCHEDULER_ENABLED=${SCHEDULER_ENABLED:-true}
+      - INITIAL_SCRAPE_ENABLED=${INITIAL_SCRAPE_ENABLED:-true}
     depends_on:
       db:
         condition: service_healthy
@@ -117,7 +124,6 @@ services:
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost}
         NEXT_PUBLIC_UMAMI_URL: ${NEXT_PUBLIC_UMAMI_URL:-}
-        NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
         NEXT_PUBLIC_PGADMIN_URL: ${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
     container_name: dbd_frontend
     restart: unless-stopped
@@ -125,12 +131,24 @@ services:
       - "3000"
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://localhost}
-      - NEXT_PUBLIC_UMAMI_WEBSITE_ID=${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
       - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL:-}
       - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
+      # /api/umami-config (frontend/src/app/api/umami-config/route.ts)
+      # self-provisions the Umami website over the internal Docker network
+      # the first time anyone loads a page -- no separate container, no
+      # separate script, nothing to paste in by hand, and it self-heals on
+      # every `docker compose down -v` reset. These just point it at Umami
+      # and give it Umami's default admin login.
+      - UMAMI_INTERNAL_URL=http://umami:3000
+      - UMAMI_ADMIN_USERNAME=${UMAMI_ADMIN_USERNAME:-admin}
+      - UMAMI_ADMIN_PASSWORD=${UMAMI_ADMIN_PASSWORD:-umami}
+      - UMAMI_SITE_NAME=${UMAMI_SITE_NAME:-LemonDBD}
+      - UMAMI_SITE_DOMAIN=${UMAMI_SITE_DOMAIN:-localhost}
     depends_on:
       backend:
         condition: service_healthy
+      umami:
+        condition: service_started
     networks:
       - dbd_network
 
@@ -159,10 +177,18 @@ services:
     networks:
       - dbd_network
 
+  # Production-only WAF/IP-ban layer -- reads live nginx access logs and bans
+  # abusive IPs. Actively unhelpful in local dev/test: it "learns" from the
+  # live/frontend test suite's rapid concurrent requests and can start
+  # banning your own test traffic. Gated behind the "prod" Compose profile
+  # so it's skipped by a plain `docker compose up` and only runs with
+  # `docker compose --profile prod up`.
   crowdsec:
     image: crowdsecurity/crowdsec:latest
     container_name: dbd_crowdsec
     restart: unless-stopped
+    profiles:
+      - prod
     environment:
       COLLECTIONS: "crowdsecurity/nginx crowdsecurity/http-cve crowdsecurity/base-http-scenarios"
       GID: "1000"
@@ -186,7 +212,6 @@ volumes:
     driver: local
   crowdsec_data:
     driver: local
-
 networks:
   dbd_network:
     driver: bridge

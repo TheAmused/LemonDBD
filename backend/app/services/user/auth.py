@@ -27,6 +27,7 @@ def _generate_verification_code() -> str:
     return f"{secrets.randbelow(1_000_000):06d}"
 
 
+@retry_on_transient_db_error()
 def create_user_account(
     username: str,
     email: str,
@@ -34,7 +35,17 @@ def create_user_account(
     role: str = "user",
     avatar_url: str = "default_avatar",
 ) -> tuple[User | None, str | None]:
-    """Validate registration parameters, hash passwords, and persist new User entity."""
+    """Validate registration parameters, hash passwords, and persist new User entity.
+
+    Retries on a transient connection drop/pool-timeout (see db_retry.py):
+    safe here because the only write is the final db.session.commit() of
+    new_user, and a dropped connection means that commit did not reach the
+    server -- a retry either creates the account cleanly, or (in the rare
+    case the drop happened after the server received but before we saw the
+    ack) hits the username/email uniqueness check above and returns the
+    normal "already taken" error instead of a 500. Either outcome is
+    correct; neither double-creates an account.
+    """
     clean_username = (username or "").strip()
     clean_email = (email or "").strip().lower()
 

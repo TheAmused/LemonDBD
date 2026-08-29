@@ -110,6 +110,51 @@ if ($Strict) {
     Write-Host " [Gate 3] Strict Mode: Running Dual-Stack Live Tests     " -ForegroundColor Magenta
     Write-Host "========================================================" -ForegroundColor Magenta
 
+    # [Gate 2b] The backend healthcheck (and --wait above) only proves
+    # gunicorn is answering HTTP -- it says nothing about the initial DBD
+    # data scrape, which runs in a background thread (see backend/run.py)
+    # precisely so it doesn't block startup. On a fresh `down -v` reset that
+    # scrape can still be filling the DB when the line above prints, and the
+    # live test suite below assumes 50+ real characters already exist -- so
+    # wait for that here instead of finding out via a wave of confusing
+    # 500s/empty-array failures.
+    Write-Host ""
+    Write-Host "> Waiting for the initial character scrape to finish seeding the DB..." -ForegroundColor Yellow
+    # NOTE: this queries Postgres directly through `docker compose exec`
+    # instead of hitting the backend over the published host port. The HTTP
+    # path was found to hang/timeout unpredictably right after a fresh
+    # `up --wait` on Docker Desktop for Windows (the request never even
+    # reached gunicorn's access log), which is a host-networking quirk, not
+    # an application bug -- querying the DB in-network sidesteps it entirely
+    # and is also just a more direct check of the thing we actually care about.
+    $pgUser = if ($env:POSTGRES_USER) { $env:POSTGRES_USER } else { "postgres" }
+    $pgDb = if ($env:POSTGRES_DB) { $env:POSTGRES_DB } else { "dbd_db" }
+    $scrapeReady = $false
+    for ($i = 1; $i -le 60; $i++) {
+        $charCount = 0
+        try {
+            $raw = docker compose exec -T db psql -U $pgUser -d $pgDb -tAc "SELECT COUNT(*) FROM characters;" 2>$null
+            if ($raw -and ($raw.Trim() -match '^\d+$')) {
+                $charCount = [int]$raw.Trim()
+            }
+        } catch {
+            $charCount = 0
+            if ($i -eq 1 -or $i % 5 -eq 0) {
+                Write-Host "  [scrape-wait-check] DB count query failed: $($_.Exception.Message)" -ForegroundColor DarkYellow
+            }
+        }
+        if ($charCount -ge 50) {
+            Write-Host "[PASS] $charCount characters seeded -- data is ready." -ForegroundColor Green
+            $scrapeReady = $true
+            break
+        }
+        Write-Host "  ... $charCount/50+ characters so far, waiting ($i/60, ~3 min max)..." -ForegroundColor Yellow
+        Start-Sleep -Seconds 3
+    }
+    if (-not $scrapeReady) {
+        Write-Host "[WARN] Character data still not seeded after 3 minutes -- continuing anyway, but live tests will likely fail. Check 'docker compose logs backend' for scrape errors." -ForegroundColor Red
+    }
+
     # 3.1 Backend Live Tests (PostgreSQL Clone)
     Write-Host ""
     Write-Host "> [1/2] Running Backend Live Tests (PostgreSQL Clone)..." -ForegroundColor Yellow

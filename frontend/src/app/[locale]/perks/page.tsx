@@ -19,7 +19,6 @@ import { useAuth } from '@/context/AuthContext';
 import {
   Perk,
   CharacterItem,
-  CharacterOption,
   RoleCategory,
   ScopeFilter,
   OwnershipFilter,
@@ -46,7 +45,6 @@ function PerksContent() {
   const [dict, setDict] = useState<Dictionary | null>(null);
   const [perks, setPerks] = useState<Perk[]>([]);
   const [allPerksForGenerator, setAllPerksForGenerator] = useState<Perk[]>([]);
-  const [characterOptions, setCharacterOptions] = useState<CharacterOption[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
@@ -54,7 +52,6 @@ function PerksContent() {
   const [role, setRole] = useState<RoleCategory>('Survivor');
   const [scope, setScope] = useState<ScopeFilter>('all');
   const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('all');
-  const [character, setCharacter] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
   const [sortBy, setSortBy] = useState<SortField>('name');
   const [order, setOrder] = useState<SortOrder>('asc');
@@ -109,7 +106,6 @@ function PerksContent() {
       } else {
         setScope('all');
       }
-      setCharacter('all');
       setPage(1);
       try {
         localStorage.setItem(DASHBOARD_TAB_KEY, 'vault');
@@ -134,9 +130,6 @@ function PerksContent() {
       if (scope === 'general') {
         queryParams.append('scope', 'general');
       }
-      if (character !== 'all') {
-        queryParams.append('character', character);
-      }
       if (search) {
         queryParams.append('search', search);
       }
@@ -152,9 +145,8 @@ function PerksContent() {
         allPerksUrl.append('user_id', user.id.toString());
       }
 
-      const [perksRes, charRes, allPerksRes, allCharsRes] = await Promise.all([
+      const [perksRes, allPerksRes, allCharsRes] = await Promise.all([
         fetch(`${backendBase}/api/v1/perks?${queryParams.toString()}`),
-        fetch(`${backendBase}/api/v1/characters?category=${role}&lang=${locale}`),
         fetch(`${backendBase}/api/v1/perks?${allPerksUrl.toString()}`),
         fetch(`${backendBase}/api/v1/characters?lang=${locale}`),
       ]);
@@ -187,21 +179,6 @@ function PerksContent() {
           fullList.filter((p) => p.is_owned !== false).length
         );
       }
-
-      if (charRes.ok) {
-        const cData = await charRes.json();
-        const options: CharacterOption[] = (cData.data || []).map(
-          (c: CharacterItem) => ({
-            value: c.name,
-            label:
-              c.real_name && c.real_name !== c.name
-                ? `${c.name} (${c.real_name})`
-                : c.name,
-            real_name: c.real_name || c.name,
-          })
-        );
-        setCharacterOptions(options);
-      }
     } catch (err) {
       console.error('Failed fetching perks:', err);
     } finally {
@@ -211,7 +188,6 @@ function PerksContent() {
     backendBase,
     role,
     scope,
-    character,
     search,
     sortBy,
     order,
@@ -227,7 +203,6 @@ function PerksContent() {
 
   const handleResetFilters = () => {
     setSearch('');
-    setCharacter('all');
     setScope('all');
     setOwnershipFilter('all');
     setSortBy('name');
@@ -237,7 +212,6 @@ function PerksContent() {
 
   const handleRoleChange = (newRole: RoleCategory) => {
     setRole(newRole);
-    setCharacter('all');
     setPage(1);
   };
 
@@ -356,18 +330,12 @@ function PerksContent() {
                 setOwnershipFilter(o);
                 setPage(1);
               }}
-              character={character}
-              setCharacter={(v) => {
-                setCharacter(v);
-                setPage(1);
-              }}
               sortBy={sortBy}
               setSortBy={(s) => setSortBy(s)}
               order={order}
               setOrder={(o) => setOrder(o)}
               viewMode={viewMode}
               setViewMode={setViewMode}
-              characterOptions={characterOptions}
               dict={dict}
               onReset={handleResetFilters}
               locale={locale}
@@ -397,7 +365,7 @@ function PerksContent() {
                 </h2>
                 <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
                   {dict?.empty?.subtitle ||
-                    'Try clearing your search query, switching ownership filters, or choosing another character.'}
+                    'Try clearing your search query or switching ownership filters.'}
                 </p>
                 <button
                   type="button"

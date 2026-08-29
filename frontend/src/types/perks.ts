@@ -3,7 +3,7 @@ export type RoleCategory = 'Survivor' | 'Killer';
 export type GeneratorMode = 'instant' | 'wheel';
 export type ScopeFilter = 'all' | 'general';
 export type OwnershipFilter = 'all' | 'owned';
-export type SortField = 'name' | 'character' | 'category';
+export type SortField = 'name' | 'character';
 export type SortOrder = 'asc' | 'desc';
 export type ViewDisplayMode = 'grid' | 'list';
 

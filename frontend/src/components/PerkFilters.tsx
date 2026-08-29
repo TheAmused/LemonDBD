@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/PerkFilters.tsx
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Search,
   LayoutGrid,
@@ -13,10 +13,8 @@ import {
   Layers,
   CheckCircle2,
   X,
-  User,
   ArrowUpAZ,
   ArrowDownZA,
-  ChevronDown,
 } from 'lucide-react';
 import {
   RoleCategory,
@@ -25,7 +23,6 @@ import {
   SortField,
   SortOrder,
   ViewDisplayMode,
-  CharacterOption,
   PerkSuggestion,
   PerkDictionary,
 } from '@/types/perks';
@@ -40,17 +37,15 @@ interface PerkFiltersProps {
   setScope: (scope: ScopeFilter) => void;
   ownershipFilter: OwnershipFilter;
   setOwnershipFilter: (filter: OwnershipFilter) => void;
-  character: string;
-  setCharacter: (val: string) => void;
   sortBy: SortField;
   setSortBy: (val: SortField) => void;
   order: SortOrder;
   setOrder: (val: SortOrder) => void;
   viewMode: ViewDisplayMode;
   setViewMode: (val: ViewDisplayMode) => void;
-  characterOptions: CharacterOption[];
   dict?: PerkDictionary;
   onReset: () => void;
+  locale?: string;
 }
 
 export const PerkFilters: React.FC<PerkFiltersProps> = ({
@@ -62,45 +57,25 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   setScope,
   ownershipFilter,
   setOwnershipFilter,
-  character,
-  setCharacter,
   sortBy,
   setSortBy,
   order,
   setOrder,
   viewMode,
   setViewMode,
-  characterOptions,
   dict,
   onReset,
+  locale,
 }) => {
   const backendBase = getBackendBaseUrl();
-
-  const [charInput, setCharInput] = useState<string>('');
-  const [isCharDropdownOpen, setIsCharDropdownOpen] = useState<boolean>(false);
-  const charDropdownRef = useRef<HTMLDivElement | null>(null);
 
   const [perkSuggestions, setPerkSuggestions] = useState<PerkSuggestion[]>([]);
   const [isPerkSuggestionsOpen, setIsPerkSuggestionsOpen] = useState<boolean>(false);
   const searchDropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (character === 'all') {
-      setCharInput('');
-    } else if (character === 'General') {
-      setCharInput(dict?.filters?.generalPerksOnly || 'General Perks');
-    } else {
-      const match = characterOptions.find((c) => c.value === character);
-      setCharInput(match ? match.label : character);
-    }
-  }, [character, characterOptions, dict]);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      if (charDropdownRef.current && !charDropdownRef.current.contains(target)) {
-        setIsCharDropdownOpen(false);
-      }
       if (searchDropdownRef.current && !searchDropdownRef.current.contains(target)) {
         setIsPerkSuggestionsOpen(false);
       }
@@ -119,7 +94,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         const res = await fetch(
           `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(
             search
-          )}&category=${role}&limit=8`
+          )}&category=${role}&limit=8&lang=${encodeURIComponent(locale || 'en')}`
         );
         if (res.ok) {
           const json = await res.json();
@@ -130,22 +105,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       }
     }, 180);
     return () => clearTimeout(timer);
-  }, [search, role, backendBase]);
-
-  const filteredCharacterOptions = useMemo(() => {
-    const query = charInput.toLowerCase().trim();
-    if (!query) return characterOptions;
-    return characterOptions.filter(
-      (c) =>
-        c.value.toLowerCase().includes(query) ||
-        c.label.toLowerCase().includes(query) ||
-        (c.real_name && c.real_name.toLowerCase().includes(query))
-    );
-  }, [charInput, characterOptions]);
+  }, [search, role, backendBase, locale]);
 
   const hasActiveFilters =
     search !== '' ||
-    character !== 'all' ||
     scope !== 'all' ||
     ownershipFilter !== 'all' ||
     sortBy !== 'name' ||
@@ -363,103 +326,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between pt-2 border-t border-slate-100 dark:border-slate-800/60">
         <div className="flex flex-wrap items-center gap-3">
-          {/* Character Search & Dropdown */}
-          <div ref={charDropdownRef} className="relative min-w-[200px] flex-1 sm:flex-none">
-            <div className="relative">
-              <input
-                type="text"
-                value={charInput}
-                onChange={(e) => {
-                  setCharInput(e.target.value);
-                  setIsCharDropdownOpen(true);
-                }}
-                onFocus={() => setIsCharDropdownOpen(true)}
-                placeholder={dict?.filters?.filterByCharacter || 'Filter by character...'}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950 px-4 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-inner"
-              />
-              {character !== 'all' ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCharacter('all');
-                    setCharInput('');
-                    setIsCharDropdownOpen(false);
-                  }}
-                  aria-label={dict?.filters?.resetAllFilters || 'Reset character filter'}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              ) : (
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
-              )}
-            </div>
-
-            {isCharDropdownOpen && (
-              <div
-                role="listbox"
-                className="absolute top-full left-0 right-0 mt-1 max-h-56 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1 flex flex-col gap-0.5"
-              >
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={character === 'all'}
-                  onClick={() => {
-                    setCharacter('all');
-                    setCharInput('');
-                    setIsCharDropdownOpen(false);
-                  }}
-                  className={`p-2 rounded-xl text-xs font-bold cursor-pointer transition-colors text-left w-full ${
-                    character === 'all'
-                      ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300'
-                      : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
-                  }`}
-                >
-                  {dict?.filters?.allCharacters || 'All Characters'}
-                </button>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={character === 'General'}
-                  onClick={() => {
-                    setCharacter('General');
-                    setCharInput(
-                      dict?.filters?.generalPerksOnly || 'General Perks'
-                    );
-                    setIsCharDropdownOpen(false);
-                  }}
-                  className={`p-2 rounded-xl text-xs font-bold cursor-pointer transition-colors text-left w-full ${
-                    character === 'General'
-                      ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300'
-                      : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
-                  }`}
-                >
-                  {dict?.filters?.generalPerksOnly || 'General Perks Only'}
-                </button>
-                {filteredCharacterOptions.map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    role="option"
-                    aria-selected={character === opt.value}
-                    onClick={() => {
-                      setCharacter(opt.value);
-                      setCharInput(opt.label);
-                      setIsCharDropdownOpen(false);
-                    }}
-                    className={`p-2 rounded-xl text-xs font-semibold cursor-pointer transition-colors text-left w-full ${
-                      character === opt.value
-                        ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 font-black'
-                        : 'hover:bg-slate-100 dark:hover:bg-slate-900 text-slate-800 dark:text-slate-200'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
           <div
             role="group"
             aria-label={dict?.filters?.sortFields || 'Sort Fields'}
@@ -486,17 +352,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               }`}
             >
               {dict?.filters?.sortByCharacter || 'Character'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setSortBy('category')}
-              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-                sortBy === 'category'
-                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
-            >
-              {dict?.filters?.sortByRole || 'Role'}
             </button>
           </div>
 

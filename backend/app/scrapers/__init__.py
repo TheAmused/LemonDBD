@@ -1,30 +1,30 @@
 # backend/app/scrapers/__init__.py
-from app.scrapers.types import (
-    ScraperConfig,
-    CharacterData,
-    ItemData,
-    AddonData,
-    PerkData,
-    MapData,
-)
-from app.scrapers.utils import (
-    clean_description_text,
-    normalize_name_key,
-    sanitize_filename,
-    extract_high_res_url,
-    extract_slug_from_href,
-    classify_portrait,
-)
-from app.scrapers.wikigg import WikiGGScraperDriver
 from app.scrapers.constants import (
     GENERIC_PERK_CANONICAL_MAP,
     KNOWN_KILLER_POWER_ALIASES,
 )
 from app.scrapers.maps import (
-    get_map_landmarks_data,
     HensMapScraperDriver,
     SamoelColtMapScraperDriver,
+    get_map_landmarks_data,
 )
+from app.scrapers.types import (
+    AddonData,
+    CharacterData,
+    ItemData,
+    MapData,
+    PerkData,
+    ScraperConfig,
+)
+from app.scrapers.utils import (
+    classify_portrait,
+    clean_description_text,
+    extract_high_res_url,
+    extract_slug_from_href,
+    normalize_name_key,
+    sanitize_filename,
+)
+from app.scrapers.wikigg import WikiGGScraperDriver
 
 __all__ = [
     "ScraperConfig",

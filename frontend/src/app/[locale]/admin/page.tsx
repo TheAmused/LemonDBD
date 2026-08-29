@@ -1,9 +1,8 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/admin/page.tsx
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import React, { useState, useEffect, useCallback, use } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { Sidebar } from '@/components/Sidebar';
@@ -20,7 +19,8 @@ import { AdminAuditLogView } from '@/components/admin/AdminAuditLogView';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
-import {
+import type { Dictionary } from '@/locales/types';
+import type {
   AdminStats,
   UserRow,
   AdminBugReport,
@@ -29,55 +29,67 @@ import {
 } from '@/types/admin';
 import { Users, Bug, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
 
-export default function AdminPanelPage() {
-  const params = useParams();
+interface AdminPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+type AdminTab = 'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit';
+
+export default function AdminPanelPage({ params }: AdminPageProps) {
+  const resolvedParams = use(params);
   const router = useRouter();
-  const currentLocale = (params?.locale as Locale) || 'en';
+  const currentLocale = (resolvedParams?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
   const [dict, setDict] = useState<Dictionary | null>(null);
-  const [activeTab, setActiveTab] = useState<'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit'>('users');
+  const [activeTab, setActiveTab] = useState<AdminTab>('users');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
 
   // Users State
   const [users, setUsers] = useState<UserRow[]>([]);
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
-  const [page, setPage] = useState(1);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [loadingData, setLoadingData] = useState(true);
+  const [search, setSearch] = useState<string>('');
+  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [page, setPage] = useState<number>(1);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [loadingData, setLoadingData] = useState<boolean>(true);
 
   // Bug Reports State
   const [bugReports, setBugReports] = useState<AdminBugReport[]>([]);
   const [bugStats, setBugStats] = useState<BugReportStats | null>(null);
-  const [bugSearch, setBugSearch] = useState('');
-  const [bugStatusFilter, setBugStatusFilter] = useState('all');
-  const [bugPage, setBugPage] = useState(1);
-  const [totalBugReports, setTotalBugReports] = useState(0);
-  const [loadingBugs, setLoadingBugs] = useState(false);
+  const [bugSearch, setBugSearch] = useState<string>('');
+  const [bugStatusFilter, setBugStatusFilter] = useState<string>('all');
+  const [bugPage, setBugPage] = useState<number>(1);
+  const [totalBugReports, setTotalBugReports] = useState<number>(0);
+  const [loadingBugs, setLoadingBugs] = useState<boolean>(false);
   const [selectedBugId, setSelectedBugId] = useState<number | null>(null);
   const [editingNotes, setEditingNotes] = useState<Record<number, string>>({});
 
   // Modals & Scraper State
-  const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
   const [modalTab, setModalTab] = useState<'export' | 'import' | 'purge'>('export');
-  const [isSyncing, setIsSyncing] = useState(false);
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [syncStatus, setSyncStatus] = useState<string>('');
-  const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
+  const [isCreateUserOpen, setIsCreateUserOpen] = useState<boolean>(false);
   const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
-  const [isDeletingUser, setIsDeletingUser] = useState(false);
+  const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false);
   const [bugReportPendingDeletion, setBugReportPendingDeletion] = useState<number | null>(null);
-  const [isDeletingBugReport, setIsDeletingBugReport] = useState(false);
+  const [isDeletingBugReport, setIsDeletingBugReport] = useState<boolean>(false);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
+    let isMounted = true;
     getDictionary(currentLocale).then((d) => {
-      setDict(d);
-      document.title = d?.app?.adminPageTitle || 'LemonDBD - Admin Control Center';
+      if (isMounted) {
+        setDict(d);
+        document.title = d?.app?.adminPageTitle || 'LemonDBD - Admin Control Center';
+      }
     });
+    return () => {
+      isMounted = false;
+    };
   }, [currentLocale]);
 
   useEffect(() => {
@@ -86,8 +98,13 @@ export default function AdminPanelPage() {
     }
   }, [isLoading, isAuthenticated, isAdmin, currentLocale, router]);
 
+  const getAuthToken = (): string | null => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('lemondbd_token');
+  };
+
   const fetchAdminData = useCallback(async () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const token = getAuthToken();
     if (!token) return;
 
     setLoadingData(true);
@@ -101,7 +118,7 @@ export default function AdminPanelPage() {
         cache: 'no-store',
       });
       if (statsRes.ok) {
-        const sData = await statsRes.json();
+        const sData: AdminStats = await statsRes.json();
         setStats(sData);
       }
 
@@ -121,11 +138,11 @@ export default function AdminPanelPage() {
         cache: 'no-store',
       });
       if (usersRes.ok) {
-        const uData = await usersRes.json();
+        const uData: { users: UserRow[]; total: number } = await usersRes.json();
         setUsers(uData.users || []);
         setTotalUsers(uData.total || 0);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to load admin data:', err);
     } finally {
       setLoadingData(false);
@@ -133,7 +150,7 @@ export default function AdminPanelPage() {
   }, [API_BASE, page, roleFilter, search]);
 
   const fetchBugReports = useCallback(async () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const token = getAuthToken();
     if (!token) return;
 
     setLoadingBugs(true);
@@ -153,8 +170,8 @@ export default function AdminPanelPage() {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        const reportsList: AdminBugReport[] = data.reports || [];
+        const data: { reports: AdminBugReport[]; stats: BugReportStats; total: number } = await res.json();
+        const reportsList = data.reports || [];
         setBugReports(reportsList);
         setBugStats(data.stats || null);
         setTotalBugReports(data.total || 0);
@@ -171,7 +188,7 @@ export default function AdminPanelPage() {
           setSelectedBugId(null);
         }
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed to load bug reports:', err);
     } finally {
       setLoadingBugs(false);
@@ -190,14 +207,17 @@ export default function AdminPanelPage() {
 
   const handleTriggerSync = async () => {
     if (isSyncing) return;
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const token = getAuthToken();
     if (!token) {
-      setActionMessage({ type: 'error', text: 'Authentication token not found. Please log in again.' });
+      setActionMessage({
+        type: 'error',
+        text: dict?.admin?.tokenNotFound || 'Authentication token not found. Please log in again.',
+      });
       return;
     }
 
     setIsSyncing(true);
-    setSyncStatus('Scraping wiki.gg...');
+    setSyncStatus(dict?.admin?.scrapingWiki || 'Scraping wiki.gg...');
     try {
       const res = await fetch(`${API_BASE}/api/v1/scrape-and-seed`, {
         method: 'POST',
@@ -208,20 +228,25 @@ export default function AdminPanelPage() {
       });
 
       if (res.ok) {
-        const data = await res.json();
+        const data: { characters_synced?: number; perks_synced?: number } = await res.json();
+        const charCount = data.characters_synced ?? 98;
+        const perkCount = data.perks_synced ?? 321;
+        const defaultMsg = `Database sync completed! Synced ${charCount} Characters and ${perkCount} Perks.`;
         setActionMessage({
           type: 'success',
-          text: `Database sync completed! Synced ${data.characters_synced ?? 98} Characters and ${data.perks_synced ?? 321} Perks.`,
+          text: dict?.admin?.syncSuccessMsg
+            ? dict.admin.syncSuccessMsg.replace('{characters}', charCount.toString()).replace('{perks}', perkCount.toString())
+            : defaultMsg,
         });
       } else {
-        const errorData = await res.json().catch(() => ({}));
+        const errorData: { error?: string; message?: string } = await res.json().catch(() => ({}));
         setActionMessage({
           type: 'error',
-          text: errorData.error || errorData.message || 'Scraper failed to sync data.',
+          text: errorData.error || errorData.message || dict?.admin?.syncFailedMsg || 'Scraper failed to sync data.',
         });
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Network error during scraper sync.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error during scraper sync.';
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsSyncing(false);
@@ -231,7 +256,7 @@ export default function AdminPanelPage() {
   };
 
   const handleToggleRole = async (targetUser: UserRow) => {
-    const token = localStorage.getItem('lemondbd_token');
+    const token = getAuthToken();
     if (!token) return;
 
     const newRole = targetUser.role === 'admin' ? 'user' : 'admin';
@@ -245,20 +270,23 @@ export default function AdminPanelPage() {
         body: JSON.stringify({ role: newRole }),
       });
       if (res.ok) {
+        const updatedMsg = dict?.admin?.roleUpdated
+          ? dict.admin.roleUpdated.replace('{username}', targetUser.username).replace('{role}', newRole.toUpperCase())
+          : `Updated ${targetUser.username}'s role to ${newRole.toUpperCase()}.`;
         setActionMessage({
           type: 'success',
-          text: `Updated ${targetUser.username}'s role to ${newRole.toUpperCase()}.`,
+          text: updatedMsg,
         });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Network error.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
       setActionMessage({ type: 'error', text: msg });
     }
   };
 
   const handleToggleActive = async (targetUser: UserRow) => {
-    const token = localStorage.getItem('lemondbd_token');
+    const token = getAuthToken();
     if (!token) return;
 
     const newActive = !targetUser.is_active;
@@ -272,14 +300,18 @@ export default function AdminPanelPage() {
         body: JSON.stringify({ is_active: newActive }),
       });
       if (res.ok) {
+        const statusLabel = newActive ? 'ACTIVE' : 'SUSPENDED';
+        const msg = newActive
+          ? dict?.admin?.statusUpdatedActive?.replace('{username}', targetUser.username) || `${targetUser.username} is now ACTIVE.`
+          : dict?.admin?.statusUpdatedSuspended?.replace('{username}', targetUser.username) || `${targetUser.username} is now SUSPENDED.`;
         setActionMessage({
           type: 'success',
-          text: `${targetUser.username} is now ${newActive ? 'ACTIVE' : 'SUSPENDED'}.`,
+          text: msg || `${targetUser.username} is now ${statusLabel}.`,
         });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Network error.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -291,7 +323,7 @@ export default function AdminPanelPage() {
   const confirmDeleteUser = async () => {
     const targetUser = userPendingDeletion;
     if (!targetUser || isDeletingUser) return;
-    const token = localStorage.getItem('lemondbd_token');
+    const token = getAuthToken();
     if (!token) return;
 
     setIsDeletingUser(true);
@@ -301,11 +333,14 @@ export default function AdminPanelPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
-        setActionMessage({ type: 'success', text: `User ${targetUser.username} deleted.` });
+        setActionMessage({
+          type: 'success',
+          text: dict?.admin?.userDeletedSuccess?.replace('{username}', targetUser.username) || `User ${targetUser.username} deleted.`,
+        });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Network error.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingUser(false);
@@ -319,7 +354,7 @@ export default function AdminPanelPage() {
     password: string;
     role: 'user' | 'admin';
   }) => {
-    const token = localStorage.getItem('lemondbd_token');
+    const token = getAuthToken();
     if (!token) return;
 
     try {
@@ -333,21 +368,27 @@ export default function AdminPanelPage() {
       });
 
       if (res.ok) {
-        setActionMessage({ type: 'success', text: `User "${userData.username}" created successfully!` });
+        setActionMessage({
+          type: 'success',
+          text: dict?.admin?.userCreatedSuccess?.replace('{username}', userData.username) || `User "${userData.username}" created successfully!`,
+        });
         setIsCreateUserOpen(false);
         await fetchAdminData();
       } else {
-        const errorData = await res.json().catch(() => ({}));
-        setActionMessage({ type: 'error', text: errorData.error || 'Failed to create user.' });
+        const errorData: { error?: string } = await res.json().catch(() => ({}));
+        setActionMessage({
+          type: 'error',
+          text: errorData.error || dict?.admin?.userCreateFailed || 'Failed to create user.',
+        });
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Network error.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
       setActionMessage({ type: 'error', text: msg });
     }
   };
 
   const handleUpdateBugReport = async (reportId: number, newStatus?: string) => {
-    const token = localStorage.getItem('lemondbd_token');
+    const token = getAuthToken();
     if (!token) return;
 
     const payload: Record<string, string> = {};
@@ -369,12 +410,12 @@ export default function AdminPanelPage() {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: `Ticket #${reportId} updated successfully.`,
+          text: dict?.admin?.ticketUpdatedSuccess?.replace('{id}', reportId.toString()) || `Ticket #${reportId} updated successfully.`,
         });
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to update ticket.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Failed to update ticket.';
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -386,7 +427,7 @@ export default function AdminPanelPage() {
   const confirmDeleteBugReport = async () => {
     const reportId = bugReportPendingDeletion;
     if (reportId === null || isDeletingBugReport) return;
-    const token = localStorage.getItem('lemondbd_token');
+    const token = getAuthToken();
     if (!token) return;
 
     setIsDeletingBugReport(true);
@@ -397,11 +438,14 @@ export default function AdminPanelPage() {
       });
 
       if (res.ok) {
-        setActionMessage({ type: 'success', text: `Bug report #${reportId} deleted.` });
+        setActionMessage({
+          type: 'success',
+          text: dict?.admin?.ticketDeleteSuccess?.replace('{id}', reportId.toString()) || `Bug report #${reportId} deleted.`,
+        });
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to delete bug report.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.ticketDeleteFailed || 'Failed to delete bug report.';
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingBugReport(false);
@@ -411,11 +455,13 @@ export default function AdminPanelPage() {
 
   if (!dict || isLoading || !isAuthenticated || !isAdmin) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs">
+      <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs" role="status">
         <div className="flex flex-col items-center gap-3">
           <LemonIcon className="h-10 w-10 animate-bounce" />
           <p className="text-amber-400">
-            {isLoading ? 'Verifying administrative access...' : 'Redirecting to Dashboard...'}
+            {isLoading
+              ? dict?.admin?.verifyingAdminAccess || 'Verifying administrative access...'
+              : dict?.admin?.redirectingToDashboard || 'Redirecting to Dashboard...'}
           </p>
         </div>
       </div>
@@ -424,16 +470,12 @@ export default function AdminPanelPage() {
 
   return (
     <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={currentLocale}
-        dict={dict}
-        activeCategory="admin"
-      />
+      <Sidebar currentLocale={currentLocale} dict={dict} activeCategory="admin" />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+          }`}
+        id="main-admin-content"
       >
         <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
           <AdminHeader
@@ -451,17 +493,19 @@ export default function AdminPanelPage() {
 
           {actionMessage && (
             <div
-              className={`flex items-center justify-between rounded-xl border p-4 text-xs shadow-sm ${
-                actionMessage.type === 'success'
+              role="alert"
+              aria-live="polite"
+              className={`flex items-center justify-between rounded-xl border p-4 text-xs shadow-sm ${actionMessage.type === 'success'
                   ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
                   : 'border-red-500/30 bg-red-500/10 text-red-400'
-              }`}
+                }`}
             >
               <span>{actionMessage.text}</span>
               <button
                 type="button"
                 onClick={() => setActionMessage(null)}
-                className="text-slate-400 hover:text-slate-200 text-sm leading-none ml-3 cursor-pointer"
+                className="text-slate-400 hover:text-slate-200 text-sm leading-none ml-3 cursor-pointer p-1 rounded-md focus:outline-none focus:ring-1 focus:ring-slate-400"
+                aria-label={dict?.admin?.closeSymbol || 'Close notification'}
               >
                 {dict?.admin?.closeSymbol || '×'}
               </button>
@@ -469,41 +513,48 @@ export default function AdminPanelPage() {
           )}
 
           {/* Subtab Switcher */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-800 pb-2">
+          <nav aria-label={dict?.admin?.adminSections || 'Admin Sections'} className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-800 pb-2">
             <button
               type="button"
+              role="tab"
+              aria-selected={activeTab === 'users'}
               onClick={() => setActiveTab('users')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                activeTab === 'users'
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-amber-500 ${activeTab === 'users'
                   ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                }`}
             >
               <Users className="h-4 w-4" />
-              <span>{dict?.admin?.userDirectoryLabel || 'User Directory'} ({totalUsers})</span>
+              <span>
+                {dict?.admin?.userDirectoryLabel || 'User Directory'} ({totalUsers})
+              </span>
             </button>
 
             <button
               type="button"
+              role="tab"
+              aria-selected={activeTab === 'bugs'}
               onClick={() => setActiveTab('bugs')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                activeTab === 'bugs'
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-rose-500 ${activeTab === 'bugs'
                   ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                }`}
             >
               <Bug className="h-4 w-4" />
-              <span>{dict?.admin?.bugReportsLabel || 'Bug Reports'} ({bugStats?.pending ?? 0} {dict?.admin?.pending || 'Pending'})</span>
+              <span>
+                {dict?.admin?.bugReportsLabel || 'Bug Reports'} ({bugStats?.pending ?? 0} {dict?.admin?.pending || 'Pending'})
+              </span>
             </button>
 
             <button
               type="button"
+              role="tab"
+              aria-selected={activeTab === 'challenges'}
               onClick={() => setActiveTab('challenges')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                activeTab === 'challenges'
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-cyan-500 ${activeTab === 'challenges'
                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                }`}
             >
               <ShieldAlert className="h-4 w-4" />
               <span>{dict?.admin?.killSwitches || 'Kill Switches'}</span>
@@ -511,12 +562,13 @@ export default function AdminPanelPage() {
 
             <button
               type="button"
+              role="tab"
+              aria-selected={activeTab === 'challenge_stats'}
               onClick={() => setActiveTab('challenge_stats')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                activeTab === 'challenge_stats'
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 ${activeTab === 'challenge_stats'
                   ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                }`}
             >
               <BarChart3 className="h-4 w-4" />
               <span>{dict?.admin?.challengeStats || 'Challenge Stats'}</span>
@@ -524,17 +576,18 @@ export default function AdminPanelPage() {
 
             <button
               type="button"
+              role="tab"
+              aria-selected={activeTab === 'audit'}
               onClick={() => setActiveTab('audit')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                activeTab === 'audit'
+              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-emerald-500 ${activeTab === 'audit'
                   ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                }`}
             >
               <ScrollText className="h-4 w-4" />
               <span>{dict?.admin?.auditLog || 'Audit Log'}</span>
             </button>
-          </div>
+          </nav>
 
           {activeTab === 'users' ? (
             <div className="space-y-6">
@@ -631,7 +684,7 @@ export default function AdminPanelPage() {
             {dict?.admin?.cannotBeUndone || 'This cannot be undone.'}
           </>
         }
-        confirmLabel="Delete"
+        confirmLabel={dict?.admin?.delete || 'Delete'}
         busy={isDeletingUser}
         onConfirm={confirmDeleteUser}
         onCancel={() => setUserPendingDeletion(null)}
@@ -640,8 +693,12 @@ export default function AdminPanelPage() {
       <ConfirmModal
         open={bugReportPendingDeletion !== null}
         title={dict?.admin?.deleteBugReportTitle || 'Delete bug report?'}
-        message={`Are you sure you want to delete bug report #${bugReportPendingDeletion}?`}
-        confirmLabel="Delete"
+        message={
+          dict?.admin?.confirmDeleteBugReport
+            ? dict.admin.confirmDeleteBugReport.replace('{id}', (bugReportPendingDeletion ?? 0).toString())
+            : `Are you sure you want to delete bug report #${bugReportPendingDeletion}?`
+        }
+        confirmLabel={dict?.admin?.delete || 'Delete'}
         busy={isDeletingBugReport}
         onConfirm={confirmDeleteBugReport}
         onCancel={() => setBugReportPendingDeletion(null)}
@@ -649,4 +706,3 @@ export default function AdminPanelPage() {
     </div>
   );
 }
-

@@ -1,72 +1,71 @@
-# backend/tests/scrapers/test_character_scraper.py
-import unittest
+# backend/tests/unit/scrapers/test_character_scraper.py
+import gc
+import tempfile
+from pathlib import Path
+from typing import Generator
+import pytest
+from app.services.db_service import DatabaseService
+from app.services.perk_service import CharacterModel
 from app.services.scraper_service import ScraperService
 
 
-class TestClassifyPortrait(unittest.TestCase):
-    def test_killer_portrait_yields_category_and_number(self):
-        self.assertEqual(
-            ScraperService.classify_portrait(
-                "https://deadbydaylight.wiki.gg/images/8/81/K01_TheTrapper_Portrait.png/revision/latest"
+@pytest.mark.unit
+class TestClassifyPortrait:
+    """Tests for classifying DBD wiki character portrait URLs by role and release sequence number."""
+
+    @pytest.mark.parametrize(
+        "url, expected_result",
+        [
+            (
+                "https://deadbydaylight.wiki.gg/images/8/81/K01_TheTrapper_Portrait.png/revision/latest",
+                ("Killer", 1),
             ),
-            ("Killer", 1),
-        )
-
-    def test_survivor_portrait_yields_category_and_number(self):
-        self.assertEqual(
-            ScraperService.classify_portrait(
-                "https://deadbydaylight.wiki.gg/images/a/a1/S07_AceVisconti_Portrait.png"
+            (
+                "https://deadbydaylight.wiki.gg/images/a/a1/S07_AceVisconti_Portrait.png",
+                ("Survivor", 7),
             ),
-            ("Survivor", 7),
-        )
-
-    def test_double_digit_release_number(self):
-        self.assertEqual(
-            ScraperService.classify_portrait("https://x/images/c/c9/K23_TheTrickster_Portrait.png"),
-            ("Killer", 23),
-        )
-
-    def test_power_icon_is_not_a_portrait(self):
-        self.assertIsNone(ScraperService.classify_portrait("https://x/images/0/0f/IconPowers_trap.png"))
-
-    def test_item_icon_is_not_a_portrait(self):
-        self.assertIsNone(ScraperService.classify_portrait("https://x/images/1/1a/IconItems_flashlight.png"))
-
-    def test_portrait_without_role_prefix_is_rejected(self):
-        self.assertIsNone(ScraperService.classify_portrait("https://x/images/2/2b/Entity_Portrait.png"))
-
-    def test_lowercase_prefix_is_rejected(self):
-        self.assertIsNone(ScraperService.classify_portrait("https://x/images/2/2b/k01_TheTrapper_Portrait.png"))
-
-    def test_empty_url(self):
-        self.assertIsNone(ScraperService.classify_portrait(""))
-
-    def test_portrait_substring_not_at_start_is_rejected(self):
-        self.assertIsNone(
-            ScraperService.classify_portrait(
-                "https://x/images/0/0f/IconPowers_K01_x_Portrait.png"
-            )
-        )
+            (
+                "https://x/images/c/c9/K23_TheTrickster_Portrait.png",
+                ("Killer", 23),
+            ),
+            (
+                "https://deadbydaylight.wiki.gg/images/e/e0/S42_TheTroupe_Portrait.png",
+                ("Survivor", 42),
+            ),
+            ("https://x/images/0/0f/IconPowers_trap.png", None),
+            ("https://x/images/1/1a/IconItems_flashlight.png", None),
+            ("https://x/images/2/2b/Entity_Portrait.png", None),
+            ("https://x/images/2/2b/k01_TheTrapper_Portrait.png", None),
+            ("", None),
+            ("https://x/images/0/0f/IconPowers_K01_x_Portrait.png", None),
+        ],
+    )
+    def test_classify_portrait_matrix(
+        self, url: str, expected_result: tuple[str, int] | None
+    ) -> None:
+        assert ScraperService.classify_portrait(url) == expected_result
 
 
-class TestNormaliseCharacterName(unittest.TestCase):
-    def test_killer_loses_the_article(self):
-        self.assertEqual(ScraperService.normalise_character_name("The Trapper", "Killer"), "Trapper")
+@pytest.mark.unit
+class TestNormaliseCharacterName:
+    """Tests for standardizing DBD killer and survivor display names."""
 
-    def test_killer_with_multiword_title(self):
-        self.assertEqual(ScraperService.normalise_character_name("The Ghost Face", "Killer"), "Ghost Face")
-
-    def test_killer_without_article_is_untouched(self):
-        self.assertEqual(ScraperService.normalise_character_name("Xenomorph", "Killer"), "Xenomorph")
-
-    def test_only_the_leading_article_is_stripped(self):
-        self.assertEqual(ScraperService.normalise_character_name("The Unknown", "Killer"), "Unknown")
-
-    def test_survivor_name_is_never_stripped(self):
-        self.assertEqual(ScraperService.normalise_character_name("The Man", "Survivor"), "The Man")
-
-    def test_whitespace_is_trimmed(self):
-        self.assertEqual(ScraperService.normalise_character_name("  The Nurse  ", "Killer"), "Nurse")
+    @pytest.mark.parametrize(
+        "raw_name, role, expected_normalized",
+        [
+            ("The Trapper", "Killer", "Trapper"),
+            ("The Ghost Face", "Killer", "Ghost Face"),
+            ("Xenomorph", "Killer", "Xenomorph"),
+            ("The Unknown", "Killer", "Unknown"),
+            ("The Man", "Survivor", "The Man"),
+            ("  The Nurse  ", "Killer", "Nurse"),
+            ("Dwight Fairfield", "Survivor", "Dwight Fairfield"),
+        ],
+    )
+    def test_normalise_character_name_matrix(
+        self, raw_name: str, role: str, expected_normalized: str
+    ) -> None:
+        assert ScraperService.normalise_character_name(raw_name, role) == expected_normalized
 
 
 KILLER_PAGE_HTML = """
@@ -91,53 +90,60 @@ KILLER_PAGE_HTML = """
 """
 
 
-class TestParseCharacterPage(unittest.TestCase):
-    def setUp(self):
+@pytest.mark.unit
+class TestParseCharacterPage:
+    """Tests for parsing raw Wiki HTML into structured Character models."""
+
+    @pytest.fixture(autouse=True)
+    def setup_parsed_characters(self) -> None:
         self.service = ScraperService()
         self.characters = self.service.parse_character_page(KILLER_PAGE_HTML)
         self.by_name = {c.name: c for c in self.characters}
 
-    def test_only_portraits_become_characters(self):
-        self.assertEqual(sorted(self.by_name), ["Ace Visconti", "The Trapper", "The Wraith"])
+    def test_only_portraits_become_characters(self) -> None:
+        assert sorted(self.by_name) == ["Ace Visconti", "The Trapper", "The Wraith"]
 
-    def test_power_link_is_dropped(self):
-        self.assertNotIn("Bear Traps", self.by_name)
+    def test_power_link_is_dropped(self) -> None:
+        assert "Bear Traps" not in self.by_name
 
-    def test_concept_portrait_without_role_prefix_is_dropped(self):
-        self.assertNotIn("Entity", self.by_name)
+    def test_concept_portrait_without_role_prefix_is_dropped(self) -> None:
+        assert "Entity" not in self.by_name
 
-    def test_killer_category_comes_from_the_filename_not_the_page(self):
-        self.assertEqual(self.by_name["The Trapper"].category, "Killer")
+    def test_killer_category_comes_from_the_filename_not_the_page(self) -> None:
+        assert self.by_name["The Trapper"].category == "Killer"
 
-    def test_survivor_on_the_killer_page_is_still_a_survivor(self):
-        self.assertEqual(self.by_name["Ace Visconti"].category, "Survivor")
+    def test_survivor_on_the_killer_page_is_still_a_survivor(self) -> None:
+        assert self.by_name["Ace Visconti"].category == "Survivor"
 
-    def test_release_number_is_captured(self):
-        self.assertEqual(self.by_name["The Trapper"].release_number, 1)
-        self.assertEqual(self.by_name["The Wraith"].release_number, 2)
-        self.assertEqual(self.by_name["Ace Visconti"].release_number, 7)
+    def test_release_number_is_captured(self) -> None:
+        assert self.by_name["The Trapper"].release_number == 1
+        assert self.by_name["The Wraith"].release_number == 2
+        assert self.by_name["Ace Visconti"].release_number == 7
 
-    def test_avatar_path_follows_the_category(self):
-        self.assertEqual(self.by_name["The Trapper"].avatar_local_path, "avatars/killers/the_trapper.png")
-        self.assertEqual(self.by_name["Ace Visconti"].avatar_local_path, "avatars/survivors/ace_visconti.png")
+    def test_avatar_path_follows_the_category(self) -> None:
+        assert self.by_name["The Trapper"].avatar_local_path == "avatars/killers/the_trapper.png"
+        assert self.by_name["Ace Visconti"].avatar_local_path == "avatars/survivors/ace_visconti.png"
 
-    def test_avatar_url_is_the_portrait(self):
-        self.assertIn("K01_TheTrapper_Portrait", self.by_name["The Trapper"].avatar_url)
+    def test_avatar_url_is_the_portrait(self) -> None:
+        assert "K01_TheTrapper_Portrait" in self.by_name["The Trapper"].avatar_url
 
-    def test_duplicate_links_produce_one_character(self):
+    def test_duplicate_links_produce_one_character(self) -> None:
         doubled = self.service.parse_character_page(KILLER_PAGE_HTML + KILLER_PAGE_HTML)
-        self.assertEqual(len([c for c in doubled if c.name == "The Trapper"]), 1)
+        assert len([c for c in doubled if c.name == "The Trapper"]) == 1
 
-    def test_page_without_portraits_yields_nothing(self):
-        html = '<div class="mw-parser-output"><a href="/wiki/Hatch" title="Hatch">' \
-               '<img src="https://x/images/1/1a/IconHelp_hatch.png"/></a></div>'
-        self.assertEqual(self.service.parse_character_page(html), [])
+    def test_page_without_portraits_yields_nothing(self) -> None:
+        html = (
+            '<div class="mw-parser-output"><a href="/wiki/Hatch" title="Hatch">'
+            '<img src="https://x/images/1/1a/IconHelp_hatch.png"/></a></div>'
+        )
+        assert self.service.parse_character_page(html) == []
 
 
-class TestCharacterModelCarriesReleaseNumber(unittest.TestCase):
-    def test_model_accepts_and_returns_release_number(self):
-        from app.services.perk_service import CharacterModel
+@pytest.mark.unit
+class TestCharacterModelCarriesReleaseNumber:
+    """Tests for CharacterModel schema fields and serialization."""
 
+    def test_model_accepts_and_returns_release_number(self) -> None:
         model = CharacterModel(
             name="Trapper",
             real_name="The Trapper",
@@ -145,13 +151,11 @@ class TestCharacterModelCarriesReleaseNumber(unittest.TestCase):
             avatar_local_path="avatars/killers/trapper.png",
             release_number=1,
         )
-        self.assertEqual(model.model_dump()["release_number"], 1)
+        assert model.model_dump()["release_number"] == 1
 
-    def test_release_number_defaults_when_absent(self):
-        from app.services.perk_service import CharacterModel
-
+    def test_release_number_defaults_when_absent(self) -> None:
         model = CharacterModel(name="Meg Thomas", real_name="Meg Thomas", category="Survivor")
-        self.assertIsNone(model.model_dump()["release_number"])
+        assert model.model_dump()["release_number"] is None
 
 
 PERKS_HTML = """
@@ -168,7 +172,6 @@ PERKS_HTML = """
   </table>
 </div>
 """
-
 
 SURVIVOR_PAGE_HTML = """
 <div class="mw-parser-output">
@@ -194,29 +197,29 @@ TROUPE_PERKS_HTML = """
 """
 
 
-class TestPerkOwnerMatching(unittest.TestCase):
-    def test_survivor_stored_with_an_article_matches_a_link_without_one(self):
-        # "The Troupe" is stored with its article, but the perks page links it as
-        # /wiki/Troupe with the title "Troupe". Without both spellings registered,
-        # its perks silently fall through to "General".
+@pytest.mark.unit
+class TestPerkOwnerMatching:
+    """Tests for mapping wiki HTML table perk records to canonical characters."""
+
+    def test_survivor_stored_with_an_article_matches_a_link_without_one(self) -> None:
         service = ScraperService()
         characters = service.parse_character_page(SURVIVOR_PAGE_HTML)
         perks = service.parse_perks(TROUPE_PERKS_HTML, characters)
 
         bardic = next(p for p in perks if p.name == "Bardic Inspiration")
-        self.assertEqual(bardic.character, "The Troupe")
-        self.assertEqual(bardic.character_avatar_path, "avatars/survivors/the_troupe.png")
+        assert bardic.character == "The Troupe"
+        assert bardic.character_avatar_path == "avatars/survivors/the_troupe.png"
 
-    def test_perk_matches_a_killer_by_name(self):
+    def test_perk_matches_a_killer_by_name(self) -> None:
         service = ScraperService()
         characters = service.parse_character_page(KILLER_PAGE_HTML)
         perks = service.parse_perks(PERKS_HTML, characters)
 
         agitation = next(p for p in perks if p.name == "Agitation")
-        self.assertEqual(agitation.character, "The Trapper")
-        self.assertEqual(agitation.character_avatar_path, "avatars/killers/the_trapper.png")
+        assert agitation.character == "The Trapper"
+        assert agitation.character_avatar_path == "avatars/killers/the_trapper.png"
 
-    def test_perk_with_no_owner_column_falls_back_to_general(self):
+    def test_perk_with_no_owner_column_falls_back_to_general(self) -> None:
         service = ScraperService()
         characters = service.parse_character_page(KILLER_PAGE_HTML)
         html = """
@@ -234,25 +237,21 @@ class TestPerkOwnerMatching(unittest.TestCase):
         """
         perks = service.parse_perks(html, characters)
         iron_grasp = next(p for p in perks if p.name == "Iron Grasp")
-        self.assertEqual(iron_grasp.character, "General")
+        assert iron_grasp.character == "General"
 
 
-import gc
-import os
-import tempfile
-import unittest
-from pathlib import Path
-from app.services.db_service import DatabaseService
+@pytest.mark.unit
+class TestPruneStaleCharacterRows:
+    """Tests for pruning orphaned database rows when canonical roster is pruned."""
 
+    @pytest.fixture
+    def db_service_with_stale_data(self) -> Generator[DatabaseService, None, None]:
+        temp_dir = tempfile.TemporaryDirectory()
+        db_path = str(Path(temp_dir.name) / "test_prune_stale.db")
+        service = DatabaseService(db_path=db_path)
+        service.init_db()
 
-class TestPruneStaleCharacterRows(unittest.TestCase):
-    def setUp(self):
-        self._temp_dir = tempfile.TemporaryDirectory()
-        self.db_path = str(Path(self._temp_dir.name) / "test_prune_stale.db")
-        self.db_service = DatabaseService(db_path=self.db_path)
-        self.db_service.init_db()
-
-        conn = self.db_service.get_connection()
+        conn = service.get_connection()
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO gauntlet_runs (role, current_character_id, current_streak) VALUES (?, ?, ?);",
@@ -281,52 +280,57 @@ class TestPruneStaleCharacterRows(unittest.TestCase):
         conn.commit()
         conn.close()
 
-    def tearDown(self):
+        yield service
+
         gc.collect()
         try:
-            self._temp_dir.cleanup()
+            temp_dir.cleanup()
         except Exception:
             pass
 
-    def _count(self, table):
-        conn = self.db_service.get_connection()
+    def _count(self, service: DatabaseService, table: str) -> int:
+        conn = service.get_connection()
         cur = conn.cursor()
         cur.execute(f"SELECT COUNT(*) AS n FROM {table};")
         n = cur.fetchone()["n"]
         conn.close()
-        return n
+        return int(n)
 
-    def test_rows_with_unknown_characters_are_deleted(self):
-        deleted = self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
-        self.assertEqual(deleted["gauntlet_runs"], 1)
-        self.assertEqual(self._count("gauntlet_runs"), 1)
+    def test_rows_with_unknown_characters_are_deleted(
+        self, db_service_with_stale_data: DatabaseService
+    ) -> None:
+        deleted = db_service_with_stale_data.prune_stale_character_rows({"Trapper", "Clown"})
+        assert deleted["gauntlet_runs"] == 1
+        assert self._count(db_service_with_stale_data, "gauntlet_runs") == 1
 
-    def test_rows_with_known_characters_survive(self):
-        self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
-        conn = self.db_service.get_connection()
+    def test_rows_with_known_characters_survive(
+        self, db_service_with_stale_data: DatabaseService
+    ) -> None:
+        db_service_with_stale_data.prune_stale_character_rows({"Trapper", "Clown"})
+        conn = db_service_with_stale_data.get_connection()
         cur = conn.cursor()
         cur.execute("SELECT current_character_id FROM gauntlet_runs;")
         remaining = [row["current_character_id"] for row in cur.fetchall()]
         conn.close()
-        self.assertEqual(remaining, ["Trapper"])
+        assert remaining == ["Trapper"]
 
-    def test_page_streak_rows_are_pruned_too(self):
-        deleted = self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
-        self.assertEqual(deleted["page_streak_runs"], 1)
-        self.assertEqual(self._count("page_streak_runs"), 0)
+    def test_page_streak_rows_are_pruned_too(
+        self, db_service_with_stale_data: DatabaseService
+    ) -> None:
+        deleted = db_service_with_stale_data.prune_stale_character_rows({"Trapper", "Clown"})
+        assert deleted["page_streak_runs"] == 1
+        assert self._count(db_service_with_stale_data, "page_streak_runs") == 0
 
-    def test_an_empty_valid_set_is_ignored(self):
-        deleted = self.db_service.prune_stale_character_rows(set())
-        self.assertEqual(deleted, {})
-        self.assertEqual(self._count("gauntlet_runs"), 2)
+    def test_an_empty_valid_set_is_ignored(
+        self, db_service_with_stale_data: DatabaseService
+    ) -> None:
+        deleted = db_service_with_stale_data.prune_stale_character_rows(set())
+        assert deleted == {}
+        assert self._count(db_service_with_stale_data, "gauntlet_runs") == 2
 
-    def test_child_rows_are_cascaded_with_their_parent(self):
-        # Guards the PRAGMA foreign_keys = ON in prune_stale_character_rows: without it
-        # SQLite ignores ON DELETE CASCADE and leaves orphaned history behind.
-        self.db_service.prune_stale_character_rows({"Trapper", "Clown"})
-        self.assertEqual(self._count("gauntlet_match_logs"), 0)
-        self.assertEqual(self._count("page_streak_page_logs"), 0)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_child_rows_are_cascaded_with_their_parent(
+        self, db_service_with_stale_data: DatabaseService
+    ) -> None:
+        db_service_with_stale_data.prune_stale_character_rows({"Trapper", "Clown"})
+        assert self._count(db_service_with_stale_data, "gauntlet_match_logs") == 0
+        assert self._count(db_service_with_stale_data, "page_streak_page_logs") == 0

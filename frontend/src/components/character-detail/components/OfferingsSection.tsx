@@ -1,6 +1,6 @@
+// frontend/src/components/character-detail/components/OfferingsSection.tsx
 import React, { useState, useMemo } from 'react';
 import {
-  Search,
   Gift,
   Skull,
   Coins,
@@ -10,6 +10,7 @@ import {
   Sparkles,
   Layers,
   Box,
+  type LucideIcon,
 } from 'lucide-react';
 import {
   OfferingItem,
@@ -27,6 +28,13 @@ interface OfferingsSectionProps {
   t: Record<string, string>;
 }
 
+interface OfferingCategoryConfig {
+  key: string;
+  label: string;
+  icon: LucideIcon;
+  desc: string;
+}
+
 export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   offerings = [],
   role,
@@ -36,55 +44,110 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
 }) => {
   const isKiller = role === 'Killer';
 
-  const categories = useMemo(() => {
+  const categories = useMemo<OfferingCategoryConfig[]>(() => {
     if (isKiller) {
       return [
-        { key: 'special', label: t.categorySpecial || 'Special & Events', icon: Sparkles, desc: 'Anniversary & celebration offerings' },
-        { key: 'mori', label: t.categoryMori || 'Memento Mori', icon: Skull, desc: 'Execution rites' },
-        { key: 'bloodpoint', label: t.categoryBloodpoints || 'Bloodpoints', icon: Coins, desc: 'Score multipliers' },
-        { key: 'map', label: t.categoryMap || 'Realm Offerings', icon: MapIcon, desc: 'Location selections' },
-        { key: 'shroud', label: t.categoryShroud || 'Shrouds', icon: EyeOff, desc: 'Spawn positions' },
-        { key: 'ward', label: t.categoryWard || 'Wards', icon: Shield, desc: 'Protection against loss' },
+        {
+          key: 'special',
+          label: t.categorySpecial || 'Special & Events',
+          icon: Sparkles,
+          desc: t.categorySpecialDesc || 'Anniversary & celebration offerings',
+        },
+        {
+          key: 'mori',
+          label: t.categoryMori || 'Memento Mori',
+          icon: Skull,
+          desc: t.categoryMoriDesc || 'Execution rites',
+        },
+        {
+          key: 'bloodpoint',
+          label: t.categoryBloodpoints || 'Bloodpoints',
+          icon: Coins,
+          desc: t.categoryBloodpointsDesc || 'Score multipliers',
+        },
+        {
+          key: 'map',
+          label: t.categoryMap || 'Realm Offerings',
+          icon: MapIcon,
+          desc: t.categoryMapDesc || 'Location selections',
+        },
+        {
+          key: 'shroud',
+          label: t.categoryShroud || 'Shrouds',
+          icon: EyeOff,
+          desc: t.categoryShroudDesc || 'Spawn positions',
+        },
+        {
+          key: 'ward',
+          label: t.categoryWard || 'Wards',
+          icon: Shield,
+          desc: t.categoryWardDesc || 'Protection against loss',
+        },
       ];
     }
     return [
-      { key: 'special', label: t.categorySpecial || 'Special & Events', icon: Sparkles, desc: 'Anniversary & celebration offerings' },
-      { key: 'bloodpoint', label: t.categoryBloodpoints || 'Bloodpoints', icon: Coins, desc: 'Score multipliers' },
-      { key: 'luck', label: t.categoryLuck || 'Luck Charms', icon: Sparkles, desc: 'Trial fortune' },
-      { key: 'map', label: t.categoryMap || 'Realm Offerings', icon: MapIcon, desc: 'Location selections' },
-      { key: 'shroud', label: t.categoryShroud || 'Shrouds', icon: EyeOff, desc: 'Spawn positions' },
-      { key: 'blueprint', label: t.categoryBlueprint || 'Blueprints', icon: Layers, desc: 'Hatch & basement placement' },
-      { key: 'chest', label: t.categoryChest || 'Chests & Fog', icon: Box, desc: 'Chest spawns & fog density' },
-      { key: 'ward', label: t.categoryWard || 'Wards', icon: Shield, desc: 'Item & offering preservation' },
+      {
+        key: 'special',
+        label: t.categorySpecial || 'Special & Events',
+        icon: Sparkles,
+        desc: t.categorySpecialDesc || 'Anniversary & celebration offerings',
+      },
+      {
+        key: 'bloodpoint',
+        label: t.categoryBloodpoints || 'Bloodpoints',
+        icon: Coins,
+        desc: t.categoryBloodpointsDesc || 'Score multipliers',
+      },
+      {
+        key: 'luck',
+        label: t.categoryLuck || 'Luck Charms',
+        icon: Sparkles,
+        desc: t.categoryLuckDesc || 'Trial fortune',
+      },
+      {
+        key: 'map',
+        label: t.categoryMap || 'Realm Offerings',
+        icon: MapIcon,
+        desc: t.categoryMapDesc || 'Location selections',
+      },
+      {
+        key: 'shroud',
+        label: t.categoryShroud || 'Shrouds',
+        icon: EyeOff,
+        desc: t.categoryShroudDesc || 'Spawn positions',
+      },
+      {
+        key: 'blueprint',
+        label: t.categoryBlueprint || 'Blueprints',
+        icon: Layers,
+        desc: t.categoryBlueprintDesc || 'Hatch & basement placement',
+      },
+      {
+        key: 'chest',
+        label: t.categoryChest || 'Chests & Fog',
+        icon: Box,
+        desc: t.categoryChestDesc || 'Chest spawns & fog density',
+      },
+      {
+        key: 'ward',
+        label: t.categoryWard || 'Wards',
+        icon: Shield,
+        desc: t.categoryWardDesc || 'Item & offering preservation',
+      },
     ];
   }, [isKiller, t]);
 
   const [selectedCategory, setSelectedCategory] = useState<string>(
     isKiller ? 'mori' : 'bloodpoint'
   );
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [rarityFilter, setRarityFilter] = useState<string>('all');
-  const [sortOrder, setSortOrder] = useState<'rarity_desc' | 'rarity_asc' | 'name_asc'>('rarity_asc');
   const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
   const activeCategoryConfig =
     categories.find((c) => c.key === selectedCategory) || categories[0];
 
   const sortedAndFilteredOfferings = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
-
     return offerings
       .filter((off) => {
-        const matchesSearch =
-          !query ||
-          off.name.toLowerCase().includes(query) ||
-          Boolean(off.raw_name && off.raw_name.toLowerCase().includes(query)) ||
-          Boolean(off.description && off.description.toLowerCase().includes(query));
-
-        const offRarity = (off.rarity || '').toLowerCase();
-        const matchesRarity =
-          rarityFilter === 'all' || offRarity.includes(rarityFilter.toLowerCase());
-
         const raw = (off.raw_name || off.name || '').trim();
         const rawLower = raw.toLowerCase();
         const nameLower = (off.name || '').toLowerCase();
@@ -93,7 +156,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
 
         let itemCategory = 'map';
 
-        // 1. Memento Mori (EXACT name check)
+        // 1. Memento Mori
         if (
           rawLower.includes('memento mori') ||
           nameLower.includes('memento mori') ||
@@ -103,18 +166,30 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         ) {
           itemCategory = 'mori';
         }
-        // 2. Special / Event Offerings (Anniversary cakes, event foods, seasonal envelopes)
+        // 2. Special / Event Offerings
         else if (
           rarityLower === 'event' ||
           catLower === 'special' ||
           [
-            'gateau', 'flan', 'cobbler', 'terrormisu', 'sacrificial cake', 'torte', 'scream pie',
-            'pustula', 'cursed seed', 'bbq invitation', 'red envelope', 'bloodshot eye', 'dowsing', 'dousing'
+            'gateau',
+            'flan',
+            'cobbler',
+            'terrormisu',
+            'sacrificial cake',
+            'torte',
+            'scream pie',
+            'pustula',
+            'cursed seed',
+            'bbq invitation',
+            'red envelope',
+            'bloodshot eye',
+            'dowsing',
+            'dousing',
           ].some((k) => rawLower.includes(k) || nameLower.includes(k))
         ) {
           itemCategory = 'special';
         }
-        // 3. Wards (Preservation / Protection)
+        // 3. Wards
         else if (
           raw === 'Black Ward' ||
           raw === 'White Ward' ||
@@ -125,15 +200,15 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         ) {
           itemCategory = 'ward';
         }
-        // 4. Shrouds (Spawn modifiers)
+        // 4. Shrouds
         else if (rawLower.includes('shroud') || nameLower.includes('całun') || nameLower.includes('schleier')) {
           itemCategory = 'shroud';
         }
-        // 5. Blueprints (Hatch & Basement placements)
+        // 5. Blueprints
         else if (rawLower.includes('blueprint') || nameLower.includes('plan') || nameLower.includes('blaupause')) {
           itemCategory = 'blueprint';
         }
-        // 6. Luck Charms (Chalk pouches, salt pouches, statuettes, salty lips)
+        // 6. Luck Charms
         else if (
           ['chalk', 'salt', 'salty lips', 'statuette'].some((k) => rawLower.includes(k)) ||
           nameLower.includes('kreda') ||
@@ -142,15 +217,38 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         ) {
           itemCategory = 'luck';
         }
-        // 7. Bloodpoints (Wreaths, blossoms, sachets, cakes, puddings, envelopes, streamers)
+        // 7. Bloodpoints
         else if (
-          ['streamers', 'escape! cake', 'pudding', 'envelope', 'wreath', 'blossom',
-           'sachet', 'shell', 'laurel', 'amaranth', 'sweet william'].some((k) => rawLower.includes(k)) ||
-          ['serpentyn', 'ciasto ucieczki', 'budyń', 'koperta', 'wieniec', 'kwiat', 'saszetka', 'skorupa', 'szarłat', 'goździk', 'laurowiec'].some((k) => nameLower.includes(k))
+          [
+            'streamers',
+            'escape! cake',
+            'pudding',
+            'envelope',
+            'wreath',
+            'blossom',
+            'sachet',
+            'shell',
+            'laurel',
+            'amaranth',
+            'sweet william',
+          ].some((k) => rawLower.includes(k)) ||
+          [
+            'serpentyn',
+            'ciasto ucieczki',
+            'budyń',
+            'koperta',
+            'wieniec',
+            'kwiat',
+            'saszetka',
+            'skorupa',
+            'szarłat',
+            'goździk',
+            'laurowiec',
+          ].some((k) => nameLower.includes(k))
         ) {
           itemCategory = 'bloodpoint';
         }
-        // 8. Chests, Fog Reagents & Oaks (Chest spawns, fog density, hook distance)
+        // 8. Chests, Fog Reagents & Oaks
         else if (
           ['coin', 'reagent', 'oak', 'vial'].some((k) => rawLower.includes(k)) ||
           ['moneta', 'odczynnik', 'dąb', 'flakon'].some((k) => nameLower.includes(k))
@@ -162,28 +260,20 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           itemCategory = 'map';
         }
 
-        const matchesCat = itemCategory === selectedCategory;
-        return matchesSearch && matchesRarity && matchesCat;
+        return itemCategory === selectedCategory;
       })
       .sort((a, b) => {
-        if (sortOrder === 'name_asc') {
-          return a.name.localeCompare(b.name);
-        }
         const rankA = getRarityRank(a.rarity);
         const rankB = getRarityRank(b.rarity);
-        if (sortOrder === 'rarity_asc') {
-          if (rankA !== rankB) return rankA - rankB;
-          return a.name.localeCompare(b.name);
-        }
-        if (rankA !== rankB) return rankB - rankA;
+        if (rankA !== rankB) return rankA - rankB;
         return a.name.localeCompare(b.name);
       });
-  }, [offerings, searchQuery, rarityFilter, selectedCategory, sortOrder]);
+  }, [offerings, selectedCategory]);
 
   if (!offerings || offerings.length === 0) return null;
 
   return (
-    <section className="space-y-6 w-full pt-2">
+    <section className="space-y-6 w-full pt-2" aria-labelledby="offerings-heading">
       {/* Top Controls Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div className="flex items-center gap-2.5">
@@ -193,59 +283,21 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                 ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
                 : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
             }`}
+            aria-hidden="true"
           >
             <Gift className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
+            <h2 id="offerings-heading" className="text-lg sm:text-xl font-black text-slate-100 font-mono tracking-tight">
               {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
             </h2>
           </div>
         </div>
 
-        {/* Filter / Search Controls */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-full sm:w-44">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
-            <input
-              type="text"
-              placeholder={t.searchOfferings || 'Filter offerings...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-500 shadow-inner"
-            />
-          </div>
-
-          <select
-            value={rarityFilter}
-            onChange={(e) => setRarityFilter(e.target.value)}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
-          >
-            <option value="all">{t.allRarities || 'All Rarities'}</option>
-            <option value="Common">{t.rarityCommon || 'Common'}</option>
-            <option value="Uncommon">{t.rarityUncommon || 'Uncommon'}</option>
-            <option value="Rare">{t.rarityRare || 'Rare'}</option>
-            <option value="Very Rare">{t.rarityVeryRare || 'Very Rare'}</option>
-            <option value="Ultra Rare">{t.rarityUltraRare || 'Ultra Rare'}</option>
-            <option value="Event">{t.rarityEvent || 'Event'}</option>
-          </select>
-
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value as 'rarity_desc' | 'rarity_asc' | 'name_asc')}
-            className="px-2.5 py-1.5 rounded-xl border border-slate-700 bg-slate-950 text-xs font-semibold text-slate-200 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
-            aria-label={t.orderOfferings || 'Order offerings'}
-          >
-            <option value="rarity_asc">{t.sortRarityLowToHigh || 'Rarity: Low → High'}</option>
-            <option value="rarity_desc">{t.sortRarityHighToLow || 'Rarity: High → Low'}</option>
-            <option value="name_asc">{t.sortNameAsc || 'Name: A → Z'}</option>
-          </select>
-        </div>
       </div>
 
       {/* Main Container with Centered Category Buttons Straddling the Top Border */}
       <div className="relative mt-8 pt-8 pb-5 px-5 sm:px-6 rounded-3xl bg-slate-950/40 border border-slate-800 shadow-lg w-full">
-        {/* Buttons Centered on the Top Border */}
         <div className="absolute -top-5 inset-x-0 flex justify-center z-10 px-2 pointer-events-none">
           <div
             role="tablist"
@@ -271,13 +323,14 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                   }`}
                   title={`${cat.label} - ${cat.desc}`}
                 >
-                  <Icon className="h-3.5 w-3.5 shrink-0" />
+                  <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span>{cat.label}</span>
                   {isSelected && (
                     <span
                       className={`h-1.5 w-1.5 rounded-full ${
                         isKiller ? 'bg-rose-400' : 'bg-emerald-400'
                       }`}
+                      aria-hidden="true"
                     />
                   )}
                 </button>
@@ -293,7 +346,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
               isKiller ? 'text-rose-400' : 'text-emerald-400'
             }`}
           >
-            <Gift className="h-4 w-4" />
+            <Gift className="h-4 w-4" aria-hidden="true" />
             {activeCategoryConfig.label} {t.bulletSeparator || '•'} {t.offerings || 'Offerings'} ({sortedAndFilteredOfferings.length})
           </h3>
         </div>
@@ -304,7 +357,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             {t.noOfferingsFound || 'No offerings found in this category matching your active filter.'}
           </div>
         ) : (
-          <div className="flex flex-wrap items-center justify-center gap-3.5 p-2">
+          <div className="flex flex-wrap items-center justify-center gap-3.5 p-2" role="list">
             {sortedAndFilteredOfferings.map((offering, idx) => {
               const id = `offering-${offering.name}-${idx}`;
               const rarityStyle = getRarityTileStyle(offering.rarity);
@@ -327,7 +380,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                   }}
                   onMouseLeave={() => setActiveHover(null)}
                   className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                  aria-label={`Inspect offering: ${offering.name}`}
+                  aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
                 >
                   <img
                     src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}
@@ -354,5 +407,4 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
     </section>
   );
 };
-
 

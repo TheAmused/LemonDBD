@@ -1,7 +1,6 @@
 # backend/app/services/streak_cleanup_service.py
 import logging
 from datetime import timedelta
-from typing import Dict
 
 from sqlalchemy import select, text
 
@@ -15,33 +14,14 @@ from app.services.page_streak.runs import apply_inactivity_loss as apply_page_st
 
 logger = logging.getLogger(__name__)
 
-# Arbitrary fixed key for this job's Postgres advisory lock -- any int works,
-# it just has to be the same value every time this job runs.
 _ADVISORY_LOCK_KEY = 851193001
 
 
-def apply_inactivity_losses(inactive_after_days: int = 90) -> Dict[str, int]:
+def apply_inactivity_losses(inactive_after_days: int = 90) -> dict[str, int]:
     """Finds in-progress streak runs whose updated_at is older than
-    inactive_after_days and applies the same loss a real match would --
-    checkpoint fallback or reset-to-zero, plus a match-log row flagged
-    triggered_by='inactivity'. The run itself is never deleted; a
-    completed run is never touched.
-
-    Guarded by a Postgres advisory lock so that under gunicorn's multiple
-    worker processes, only one worker's scheduler tick actually performs
-    the pass. Skipped entirely on non-Postgres dialects (the test suite
-    runs on in-memory SQLite, which has no advisory lock function), so this
-    stays directly unit-testable without a Postgres fixture.
-
-    The lock is held on a single dedicated connection for the whole call,
-    independent of db.session's pooled connections -- session-level
-    advisory locks are tied to the physical connection, and db.session's
-    own commit() calls during the work below would otherwise risk the
-    acquire and release landing on two different pooled connections,
-    silently leaving the lock stuck forever on whichever one actually
-    holds it.
-    """
-    is_postgres = db.engine.dialect.name == "postgresql"
+    inactive_after_days and applies an inactivity loss. Guarded by a dedicated
+    Postgres advisory lock connection to prevent race conditions across Gunicorn workers."""
+    is_postgres = db.engine.dialect.name in ("postgresql", "postgres")
     lock_conn = None
     if is_postgres:
         lock_conn = db.engine.connect().execution_options(isolation_level="AUTOCOMMIT")
@@ -49,15 +29,13 @@ def apply_inactivity_losses(inactive_after_days: int = 90) -> Dict[str, int]:
             text("SELECT pg_try_advisory_lock(:key)"), {"key": _ADVISORY_LOCK_KEY}
         ).scalar()
         if not got_lock:
-            logger.warning(
-                "Inactivity cleanup skipped: advisory lock already held by another worker"
-            )
+            logger.warning("Inactivity cleanup skipped: advisory lock already held by another worker")
             lock_conn.close()
             return {}
 
     try:
         cutoff = utcnow() - timedelta(days=inactive_after_days)
-        affected: Dict[str, int] = {}
+        affected: dict[str, int] = {}
 
         gauntlet_service = GauntletService()
         stale_gauntlet = db.session.scalars(

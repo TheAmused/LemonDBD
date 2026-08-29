@@ -22,4 +22,3 @@ __all__ = [
     "mutate_perk_ownership",
     "bulk_mutate_perk_ownership",
 ]
-

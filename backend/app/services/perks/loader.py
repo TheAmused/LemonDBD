@@ -1,12 +1,12 @@
 # backend/app/services/perks/loader.py
 import json
 import logging
-from typing import Any
+import os
 from flask import current_app
 from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
-from app.models import Addon, Character, Item, MapObjective, MapRealm, MapTile, Perk
+from app.models import Addon, Character, Item, MapRealm, MapTile, Perk
 from app.services.perks.utils import clean_description
 
 logger = logging.getLogger(__name__)
@@ -129,7 +129,7 @@ def seed_database_from_json_files(service) -> None:
 
         map_count = db.session.scalar(select(func.count(MapRealm.id))) or 0
         if map_count == 0:
-            from app.services.maps.data import SAMPLE_MAPS, DEFAULT_TILES_SEED_A
+            from app.services.maps.data import DEFAULT_TILES_SEED_A, SAMPLE_MAPS
             for m in SAMPLE_MAPS:
                 existing = db.session.scalars(
                     select(MapRealm).where(MapRealm.map_id == m["id"])
@@ -261,4 +261,3 @@ def reload_service_data(service) -> None:
         logger.debug(f"Database query check during reload_data: {e}")
 
     load_fallback_files(service)
-

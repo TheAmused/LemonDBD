@@ -1,9 +1,9 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapDirectoryList.tsx
 
 import React, { useMemo } from 'react';
 import { Compass, Clock, Layers, ExternalLink, Search } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { getMapImageSrc } from '@/utils/mapUtils';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -53,11 +53,15 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
     return flatMaps.filter(
       (m) =>
         m.name.toLowerCase().includes(query) ||
-        (m.realm && m.realm.toLowerCase().includes(query))
+        Boolean(m.realm && m.realm.toLowerCase().includes(query))
     );
   }, [flatMaps, searchQuery]);
 
   const uniqueRealms = useMemo(() => Object.keys(groupedMaps || {}).sort(), [groupedMaps]);
+  const totalMapCount = useMemo(
+    () => Object.values(groupedMaps || {}).reduce((acc, curr) => acc + curr.length, 0),
+    [groupedMaps]
+  );
 
   return (
     <div className={`space-y-6 ${className}`} data-testid="map-directory-list">
@@ -65,7 +69,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
         <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/80 p-4 backdrop-blur-md shadow-sm">
           {onSearchChange && (
             <div className="relative w-full md:w-80">
-              <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 dark:text-slate-500" />
+              <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 dark:text-slate-500" aria-hidden="true" />
               <input
                 type="text"
                 placeholder={dict?.maps?.searchPlaceholder || 'Search map or realm...'}
@@ -79,9 +83,11 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
           )}
 
           {onSelectRealm && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin" role="tablist" aria-label={dict?.maps?.filterByRealm || 'Filter by realm'}>
               <button
                 type="button"
+                role="tab"
+                aria-selected={selectedRealm === 'all'}
                 onClick={() => onSelectRealm('all')}
                 className={`px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all cursor-pointer border min-h-[38px] ${
                   selectedRealm === 'all'
@@ -90,17 +96,20 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                 }`}
                 data-testid="realm-pill-all"
               >
-                {dict?.maps?.allRealms || 'All Realms'} ({Object.values(groupedMaps || {}).reduce((acc, curr) => acc + curr.length, 0)})
+                {dict?.maps?.allRealms || 'All Realms'} ({totalMapCount})
               </button>
               {uniqueRealms.map((r) => {
                 const count = groupedMaps[r]?.length || 0;
+                const isSelected = selectedRealm === r;
                 return (
                   <button
                     key={r}
                     type="button"
+                    role="tab"
+                    aria-selected={isSelected}
                     onClick={() => onSelectRealm(r)}
                     className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border min-h-[38px] ${
-                      selectedRealm === r
+                      isSelected
                         ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/20'
                         : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-950 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white dark:hover:border-slate-700'
                     }`}
@@ -137,6 +146,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
           <Compass
             className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3 animate-spin"
             style={{ animationDuration: '20s' }}
+            aria-hidden="true"
           />
           <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">{dict?.maps?.noMapsFound || 'No Maps Found'}</h3>
           <p className="mt-1 text-xs text-slate-500">
@@ -147,6 +157,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
           data-testid="map-directory-grid"
+          role="list"
         >
           {filteredMaps.map((m) => {
             const imgSrc = getMapImageSrc(m, backendBase);
@@ -186,7 +197,7 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-slate-600">
-                      <Compass className="h-12 w-12" />
+                      <Compass className="h-12 w-12" aria-hidden="true" />
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
@@ -205,7 +216,9 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                         : 'border-amber-500/50 bg-amber-950/90 text-amber-300'
                     }`}
                   >
-                    {isSamoel ? 'SamoelColt Isometric' : 'Hens333 12-Clock'}
+                    {isSamoel
+                      ? dict?.maps?.samoelIsometricScheme || 'SamoelColt Isometric'
+                      : dict?.maps?.hens12ClockScheme || 'Hens333 12-Clock'}
                   </div>
 
                   {onPopoutImage && (
@@ -217,10 +230,10 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                       }}
                       className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-xl border border-slate-700/80 bg-slate-950/80 text-slate-300 hover:text-amber-400 backdrop-blur-md transition-colors cursor-pointer min-h-[36px] min-w-[36px] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                       title={dict?.maps?.popoutAria || 'Popout Map Image in New Window'}
-                      aria-label={`Popout ${m.name} map in a new window`}
+                      aria-label={`${dict?.maps?.popoutPrefix || 'Popout'} ${m.name} ${dict?.maps?.popoutSuffix || 'map in a new window'}`}
                       data-testid={`map-popout-btn-${m.id}`}
                     >
-                      <ExternalLink className="h-4 w-4" />
+                      <ExternalLink className="h-4 w-4" aria-hidden="true" />
                     </button>
                   )}
                 </div>
@@ -233,12 +246,12 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
                   <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
                     {isSamoel ? (
                       <>
-                        <Layers className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
+                        <Layers className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" aria-hidden="true" />
                         <span>{dict?.maps?.isometricScheme || 'Isometric Scheme (Steam Guide)'}</span>
                       </>
                     ) : (
                       <>
-                        <Clock className="h-3.5 w-3.5 text-amber-500" />
+                        <Clock className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />
                         <span>{dict?.maps?.clockCalloutScheme || '12-Clock Callout Map System'}</span>
                       </>
                     )}
@@ -252,3 +265,4 @@ export const MapDirectoryList: React.FC<MapDirectoryListProps> = ({
     </div>
   );
 };
+

@@ -1,3 +1,4 @@
+// frontend/src/components/sidebar/SidebarNavLink.tsx
 'use client';
 
 import React from 'react';

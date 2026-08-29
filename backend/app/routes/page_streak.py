@@ -4,7 +4,7 @@ from app.core.security import login_required
 from app.services.page_streak_service import PageStreakService
 
 page_streak_bp = Blueprint("page_streak", __name__, url_prefix="/api/v1/page-streak")
-_default_service = None
+_default_service: PageStreakService | None = None
 
 
 def get_page_streak_service() -> PageStreakService:

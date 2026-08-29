@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   Swords,
   Sliders,
+  type LucideIcon,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 
@@ -38,11 +39,26 @@ export interface CustomPerk {
 }
 
 interface CustomPerkStudioProps {
-  dict?: Dictionary;
+  dict?: Dictionary | any;
   currentLocale?: string;
 }
 
-const ICON_PRESETS = [
+interface IconPreset {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+interface RarityOption {
+  id: 'Iridescent' | 'Very Rare' | 'Uncommon';
+  label: string;
+  bg: string;
+  border: string;
+  badgeBg: string;
+  glow: string;
+}
+
+const ICON_PRESETS: IconPreset[] = [
   { id: 'sparkles', label: 'Magic / Power', icon: Sparkles },
   { id: 'hex_totem', label: 'Hex Totem', icon: Flame },
   { id: 'sprint', label: 'Speed & Mobility', icon: Zap },
@@ -55,7 +71,7 @@ const ICON_PRESETS = [
   { id: 'endgame', label: 'Endgame & Objective', icon: Target },
 ];
 
-const RARITY_OPTIONS = [
+const RARITY_OPTIONS: RarityOption[] = [
   {
     id: 'Iridescent',
     label: 'Iridescent',
@@ -111,7 +127,6 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  // Fetch Community Perks
   const fetchCommunityPerks = useCallback(async () => {
     setLoadingGallery(true);
     try {
@@ -123,7 +138,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
       const res = await fetch(`${backendBase}/api/v1/custom-perks/?${params.toString()}`);
       if (res.ok) {
-        const data = await res.json();
+        const data = (await res.json()) as { custom_perks: CustomPerk[] };
         setCustomPerks(data.custom_perks || []);
       }
     } catch (err) {
@@ -137,17 +152,16 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
     fetchCommunityPerks();
   }, [fetchCommunityPerks]);
 
-  // Handle Perk Submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
 
     if (!name.trim()) {
-      setFormError('Please enter a perk name.');
+      setFormError(dict?.customPerks?.errorNameRequired || '');
       return;
     }
     if (!description.trim()) {
-      setFormError('Please provide a perk description.');
+      setFormError(dict?.customPerks?.errorDescriptionRequired || '');
       return;
     }
 
@@ -172,24 +186,28 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
       });
 
       if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
+        const errData = (await res.json().catch(() => ({}))) as { error?: string };
         throw new Error(errData.error || 'Failed to create custom perk');
       }
 
       await res.json();
-      setSuccessToast(`Successfully published "${payload.name}"!`);
+      setSuccessToast(
+        dict?.customPerks?.successPublishedPrefix
+          ? `${dict.customPerks.successPublishedPrefix} "${payload.name}"!`
+          : `"${payload.name}"`
+      );
       setTimeout(() => setSuccessToast(''), 4000);
 
       fetchCommunityPerks();
       setActiveTab('gallery');
-    } catch (err: any) {
-      setFormError(err.message || 'An error occurred while publishing.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An error occurred while publishing.';
+      setFormError(msg);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Handle Upvote
   const handleUpvote = async (id: number) => {
     if (upvotedIds[id]) return;
 
@@ -213,7 +231,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
     }
   };
 
-  const getPresetIconComponent = (presetId: string) => {
+  const getPresetIconComponent = (presetId: string): LucideIcon => {
     const matched = ICON_PRESETS.find((p) => p.id === presetId);
     return matched ? matched.icon : Sparkles;
   };
@@ -256,9 +274,11 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
     );
   };
 
-  const getRarityConfig = (rName: string) => {
+  const getRarityConfig = (rName: string): RarityOption => {
     return RARITY_OPTIONS.find((r) => r.id === rName) || RARITY_OPTIONS[1];
   };
+
+  const rawFiltersDict = (dict?.filters || {}) as Record<string, string>;
 
   return (
     <div className="space-y-8">
@@ -267,37 +287,41 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-xs font-bold text-red-600 dark:text-red-400">
-              <Wand2 className="h-3.5 w-3.5 animate-pulse" />
-              <span>{dict?.customPerks?.conceptLab || 'Studio & Concept Lab'}</span>
+              <Wand2 className="h-3.5 w-3.5 animate-pulse" aria-hidden="true" />
+              <span>{dict?.customPerks?.conceptLab || ''}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono">
-              {dict?.app?.customPerksPageTitle || 'Custom Perk Creator Studio'}
+              {dict?.app?.customPerksPageTitle || ''}
             </h1>
           </div>
-          <div className="flex items-center bg-white/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shrink-0 shadow-sm">
+          <div className="flex items-center bg-white/80 dark:bg-slate-900/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shrink-0 shadow-sm" role="tablist" aria-label={dict?.customPerks?.viewTabs || ''}>
             <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === 'designer'}
               onClick={() => setActiveTab('designer')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'designer'
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'designer'
                   ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-900/30'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+                }`}
             >
-              <Wand2 className="h-4 w-4" />
-              <span>{dict?.customPerks?.designer || 'Perk Designer'}</span>
+              <Wand2 className="h-4 w-4" aria-hidden="true" />
+              <span>{dict?.customPerks?.designer || ''}</span>
             </button>
             <button
+              type="button"
+              role="tab"
+              aria-selected={activeTab === 'gallery'}
               onClick={() => setActiveTab('gallery')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'gallery'
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${activeTab === 'gallery'
                   ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-900/30'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+                }`}
             >
-              <Layers className="h-4 w-4" />
+              <Layers className="h-4 w-4" aria-hidden="true" />
               <span>
-                {dict?.characterDetail?.communityGalleryPrefix || 'Community Gallery ('}
-                {customPerks.length})
+                {dict?.characterDetail?.communityGalleryPrefix || ''}
+                {dict?.characterDetail?.communityGalleryPrefix ? `${customPerks.length})` : customPerks.length}
               </span>
             </button>
           </div>
@@ -306,7 +330,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
       {successToast && (
         <div className="flex items-center gap-2 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-sm font-semibold animate-in fade-in slide-in-from-top-2">
-          <CheckCircle2 className="h-5 w-5 shrink-0" />
+          <CheckCircle2 className="h-5 w-5 shrink-0" aria-hidden="true" />
           <span>{successToast}</span>
         </div>
       )}
@@ -316,16 +340,16 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
           <div className="lg:col-span-7 bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-6">
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
               <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                <Sliders className="h-5 w-5 text-red-500" />
-                <span>{dict?.customPerks?.configureConcept || 'Configure Perk Concept'}</span>
+                <Sliders className="h-5 w-5 text-red-500" aria-hidden="true" />
+                <span>{dict?.customPerks?.configureConcept || ''}</span>
               </h2>
               <span className="text-xs text-slate-500 font-mono">
-                {dict?.customPerks?.requiredFields || '* Required fields'}
+                {dict?.customPerks?.requiredFields || ''}
               </span>
             </div>
 
             {formError && (
-              <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-400 text-xs font-semibold">
+              <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-400 text-xs font-semibold" role="alert">
                 {formError}
               </div>
             )}
@@ -333,13 +357,13 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                  {dict?.builds?.buildTitle || 'Perk Title *'}
+                  {dict?.customPerks?.perkTitle || dict?.builds?.buildTitle || ''}
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder={dict?.customPerks?.titlePlaceholder || 'e.g. Hex: Shadow Veil, Adrenaline Overdrive...'}
+                  placeholder={dict?.customPerks?.titlePlaceholder || ''}
                   className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   required
                 />
@@ -348,44 +372,46 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                    {dict?.builds?.role || 'Role *'}
+                    {dict?.customPerks?.role || dict?.builds?.role || ''}
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label={dict?.customPerks?.role || ''}>
                     <button
                       type="button"
+                      role="radio"
+                      aria-checked={role === 'survivor'}
                       onClick={() => setRole('survivor')}
-                      className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                        role === 'survivor'
+                      className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${role === 'survivor'
                           ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/40 shadow-sm'
                           : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                      }`}
+                        }`}
                     >
-                      <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                      <span>{dict?.generator?.survivor || 'Survivor'}</span>
+                      <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                      <span>{dict?.generator?.survivor || ''}</span>
                     </button>
                     <button
                       type="button"
+                      role="radio"
+                      aria-checked={role === 'killer'}
                       onClick={() => setRole('killer')}
-                      className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                        role === 'killer'
+                      className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${role === 'killer'
                           ? 'bg-rose-500/20 text-rose-800 dark:text-rose-300 border-rose-500/40 shadow-sm'
                           : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                      }`}
+                        }`}
                     >
-                      <Skull className="h-4 w-4 text-rose-600 dark:text-rose-400" />
-                      <span>{dict?.generator?.killer || 'Killer'}</span>
+                      <Skull className="h-4 w-4 text-rose-600 dark:text-rose-400" aria-hidden="true" />
+                      <span>{dict?.generator?.killer || ''}</span>
                     </button>
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                    {dict?.modal?.character || 'Character / Teachable'}
+                    {dict?.customPerks?.characterTeachable || dict?.modal?.character || ''}
                   </label>
                   <input
                     type="text"
                     value={characterName}
                     onChange={(e) => setCharacterName(e.target.value)}
-                    placeholder={dict?.customPerks?.characterPlaceholder || 'e.g. Meg Thomas, The Trapper, Teachable...'}
+                    placeholder={dict?.customPerks?.characterPlaceholder || ''}
                     className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   />
                 </div>
@@ -393,19 +419,20 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                  {dict?.characterDetail?.raritySpecial || 'Rarity *'}
+                  {dict?.characterDetail?.raritySpecial || ''}
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label={dict?.characterDetail?.raritySpecial || ''}>
                   {RARITY_OPTIONS.map((r) => (
                     <button
                       key={r.id}
                       type="button"
-                      onClick={() => setRarity(r.id as any)}
-                      className={`py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                        rarity === r.id
+                      role="radio"
+                      aria-checked={rarity === r.id}
+                      onClick={() => setRarity(r.id)}
+                      className={`py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${rarity === r.id
                           ? r.badgeBg
                           : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                      }`}
+                        }`}
                     >
                       {r.label}
                     </button>
@@ -415,9 +442,9 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                  {dict?.guesser?.perkIconChoice || 'Icon Preset *'}
+                  {dict?.guesser?.perkIconChoice || ''}
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2" role="radiogroup" aria-label={dict?.guesser?.perkIconChoice || ''}>
                   {ICON_PRESETS.map((preset) => {
                     const IconComp = preset.icon;
                     const isSelected = iconPreset === preset.id;
@@ -425,14 +452,15 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       <button
                         key={preset.id}
                         type="button"
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => setIconPreset(preset.id)}
-                        className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
-                          isSelected
+                        className={`flex flex-col items-center justify-center p-2.5 rounded-xl border text-center transition-all cursor-pointer ${isSelected
                             ? 'bg-red-500/10 dark:bg-red-500/20 text-red-600 dark:text-red-400 border-red-500/50 shadow-sm'
                             : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'
-                        }`}
+                          }`}
                       >
-                        <IconComp className="h-5 w-5 mb-1" />
+                        <IconComp className="h-5 w-5 mb-1" aria-hidden="true" />
                         <span className="text-[10px] font-semibold truncate w-full">{preset.label}</span>
                       </button>
                     );
@@ -442,13 +470,13 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-                  {dict?.builds?.authorName || 'Creator / Author Name'}
+                  {dict?.customPerks?.authorName || dict?.builds?.authorName || ''}
                 </label>
                 <input
                   type="text"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  placeholder={dict?.customPerks?.authorPlaceholder || 'e.g. EntityArchitect'}
+                  placeholder={dict?.customPerks?.authorPlaceholder || ''}
                   className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                 />
               </div>
@@ -456,7 +484,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    {dict?.modal?.perkDescription || 'Perk Description (Markdown Supported) *'}
+                    {dict?.customPerks?.perkDescription || dict?.modal?.perkDescription || ''}
                   </label>
                   <div className="flex gap-1.5 text-[10px] font-mono">
                     <button
@@ -486,7 +514,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={4}
-                  placeholder={dict?.customPerks?.descPlaceholder || 'Write perk mechanics... Use **bold** for key status terms.'}
+                  placeholder={dict?.customPerks?.descPlaceholder || ''}
                   className="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-3.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   required
                 />
@@ -497,8 +525,12 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 disabled={isSubmitting}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-extrabold text-sm shadow-xl shadow-red-900/30 hover:from-red-500 hover:to-red-600 disabled:opacity-60 transition-all cursor-pointer"
               >
-                <Plus className="h-4 w-4" />
-                <span>{isSubmitting ? 'Publishing Perk Concept...' : 'Publish Custom Perk Concept'}</span>
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                <span>
+                  {isSubmitting
+                    ? dict?.customPerks?.publishing || ''
+                    : dict?.customPerks?.publishButton || ''}
+                </span>
               </button>
             </form>
           </div>
@@ -506,11 +538,11 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
           <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
             <div className="flex items-center justify-between px-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <Sparkles className="h-4 w-4 text-red-500" />
-                {dict?.characterDetail?.interactiveViewer || 'Live Card Preview'}
+                <Sparkles className="h-4 w-4 text-red-500" aria-hidden="true" />
+                {dict?.characterDetail?.interactiveViewer || ''}
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold border border-emerald-500/30 animate-pulse">
-                {dict?.characterDetail?.realTimeLabel || 'REAL-TIME'}
+                {dict?.characterDetail?.realTimeLabel || ''}
               </span>
             </div>
             {(() => {
@@ -528,27 +560,28 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                           className={`absolute inset-0 bg-gradient-to-br ${rConfig.bg} opacity-50 blur-sm`}
                         />
                         <div className="-rotate-45 relative z-10 flex items-center justify-center">
-                          <CurrentIcon className="h-10 w-10 text-slate-100 drop-shadow-[0_2px_8px_rgba(255,255,255,0.4)]" />
+                          <CurrentIcon className="h-10 w-10 text-slate-100 drop-shadow-[0_2px_8px_rgba(255,255,255,0.4)]" aria-hidden="true" />
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-1.5 pt-2">
                       <h3 className="text-lg font-black text-slate-100 font-mono tracking-tight">
-                        {name || 'Untitled Perk'}
+                        {name || dict?.customPerks?.untitledPerk || ''}
                       </h3>
                       <p className="text-xs font-semibold text-slate-400">
-                        {characterName ? `Teachable — ${characterName}` : 'General Perk'}
+                        {characterName
+                          ? `${dict?.customPerks?.teachablePrefix || ''}${characterName}`
+                          : dict?.customPerks?.generalPerk || ''}
                       </p>
                     </div>
 
                     <div className="flex items-center justify-center gap-2">
                       <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${
-                          role === 'survivor'
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${role === 'survivor'
                             ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
                             : 'bg-rose-500/20 text-rose-400 border-rose-500/30'
-                        }`}
+                          }`}
                       >
                         {role}
                       </span>
@@ -565,18 +598,18 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                       renderMarkdown(description)
                     ) : (
                       <p className="text-xs text-slate-400 italic text-center">
-                        {dict?.modal?.perkDescription || 'Perk description will render live here...'}
+                        {dict?.modal?.perkDescription || ''}
                       </p>
                     )}
                   </div>
 
                   <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
                     <span className="flex items-center gap-1.5">
-                      <User className="h-3.5 w-3.5 text-slate-500" />
-                      <span>{author || 'Community'}</span>
+                      <User className="h-3.5 w-3.5 text-slate-500" aria-hidden="true" />
+                      <span>{author}</span>
                     </span>
                     <span className="font-mono text-[10px] text-slate-500">
-                      {dict?.customPerks?.conceptTag || 'LemonDBD Concept'}
+                      {dict?.customPerks?.conceptTag || ''}
                     </span>
                   </div>
                 </div>
@@ -591,26 +624,29 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
           <div className="bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
               <div className="md:col-span-5 relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" aria-hidden="true" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={dict?.customPerks?.searchPlaceholder || 'Search concepts by title, mechanic, character...'}
+                  placeholder={dict?.customPerks?.searchPlaceholder || ''}
+                  aria-label={dict?.customPerks?.searchPlaceholder || ''}
                   className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 pl-10 pr-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 />
               </div>
 
-              <div className="md:col-span-3 flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-2xl border border-slate-200 dark:border-slate-800">
+              <div className="md:col-span-3 flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-2xl border border-slate-200 dark:border-slate-800" role="radiogroup" aria-label={dict?.customPerks?.filterByRole || ''}>
                 {['all', 'survivor', 'killer'].map((r) => (
                   <button
                     key={r}
+                    type="button"
+                    role="radio"
+                    aria-checked={filterRole === r}
                     onClick={() => setFilterRole(r)}
-                    className={`flex-1 py-1.5 rounded-xl text-[11px] font-bold capitalize transition-all cursor-pointer ${
-                      filterRole === r
+                    className={`flex-1 py-1.5 rounded-xl text-[11px] font-bold capitalize transition-all cursor-pointer ${filterRole === r
                         ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 shadow-sm'
                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                    }`}
+                      }`}
                   >
                     {r}
                   </button>
@@ -621,12 +657,13 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 <select
                   value={filterRarity}
                   onChange={(e) => setFilterRarity(e.target.value)}
+                  aria-label={rawFiltersDict.allRarities || ''}
                   className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 >
-                  <option value="all" className="dark:bg-slate-900">{(dict?.filters as any)?.allRarities || 'All Rarities'}</option>
-                  <option value="Iridescent" className="dark:bg-slate-900">{(dict?.filters as any)?.rarityIridescent || 'Iridescent'}</option>
-                  <option value="Very Rare" className="dark:bg-slate-900">{(dict?.filters as any)?.rarityVeryRare || 'Very Rare'}</option>
-                  <option value="Uncommon" className="dark:bg-slate-900">{(dict?.filters as any)?.rarityUncommon || 'Uncommon'}</option>
+                  <option value="all" className="dark:bg-slate-900">{rawFiltersDict.allRarities || ''}</option>
+                  <option value="Iridescent" className="dark:bg-slate-900">{rawFiltersDict.rarityIridescent || ''}</option>
+                  <option value="Very Rare" className="dark:bg-slate-900">{rawFiltersDict.rarityVeryRare || ''}</option>
+                  <option value="Uncommon" className="dark:bg-slate-900">{rawFiltersDict.rarityUncommon || ''}</option>
                 </select>
               </div>
 
@@ -634,42 +671,50 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
+                  aria-label={rawFiltersDict.newestFirst || ''}
                   className="w-full rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2.5 text-xs text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/50 shadow-sm"
                 >
-                  <option value="newest" className="dark:bg-slate-900">{(dict?.filters as any)?.newestFirst || 'Newest First'}</option>
-                  <option value="upvotes" className="dark:bg-slate-900">{(dict?.filters as any)?.mostUpvoted || 'Most Upvoted'}</option>
+                  <option value="newest" className="dark:bg-slate-900">{rawFiltersDict.newestFirst || ''}</option>
+                  <option value="upvotes" className="dark:bg-slate-900">{rawFiltersDict.mostUpvoted || ''}</option>
                 </select>
               </div>
             </div>
           </div>
 
           {loadingGallery ? (
-            <div className="py-16 text-center text-slate-500 dark:text-slate-400 animate-pulse font-mono text-xs">
-              {dict?.app?.loadingPerks || 'Loading perk concepts...'}
+            <div className="py-16 text-center text-slate-500 dark:text-slate-400 animate-pulse font-mono text-xs" role="status">
+              {dict?.app?.loadingPerks || ''}
             </div>
           ) : customPerks.length === 0 ? (
             <div className="bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3">
-              <Sparkles className="h-8 w-8 text-slate-400 dark:text-slate-600 mx-auto" />
+              <Sparkles className="h-8 w-8 text-slate-400 dark:text-slate-600 mx-auto" aria-hidden="true" />
               <h3 className="text-base font-bold text-slate-800 dark:text-slate-300">
-                {dict?.empty?.title || 'No Custom Perks Found'}
+                {dict?.empty?.title || ''}
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                {dict?.empty?.subtitle || 'No perk concepts match your current filter settings. Try clearing filters or create a new concept!'}
+                {dict?.empty?.subtitle || ''}
               </p>
               <button
+                type="button"
                 onClick={() => setActiveTab('designer')}
                 className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-500 transition-colors cursor-pointer shadow-md shadow-red-900/20"
               >
-                <Plus className="h-4 w-4" />
-                <span>{dict?.customPerks?.createNew || 'Create New Concept'}</span>
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                <span>{dict?.customPerks?.createNew || ''}</span>
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="list">
               {customPerks.map((perk) => {
                 const rConfig = getRarityConfig(perk.rarity);
                 const CurrentIcon = getPresetIconComponent(perk.icon_preset);
                 const isUpvoted = upvotedIds[perk.id];
+
+                const upvoteAriaText = dict?.customPerks?.upvoteAria
+                  ? dict.customPerks.upvoteAria
+                    .replace('{name}', perk.name)
+                    .replace('{count}', String(perk.upvotes))
+                  : `${perk.name} (+${perk.upvotes})`;
 
                 return (
                   <div
@@ -681,24 +726,23 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
                         <div className="flex items-center gap-3">
                           <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 group-hover:scale-105 transition-transform overflow-hidden shadow-inner">
                             <div className={`absolute inset-0 bg-gradient-to-br ${rConfig.bg} opacity-40`} />
-                            <CurrentIcon className="h-6 w-6 text-slate-800 dark:text-slate-100 relative z-10" />
+                            <CurrentIcon className="h-6 w-6 text-slate-800 dark:text-slate-100 relative z-10" aria-hidden="true" />
                           </div>
                           <div>
                             <h4 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 font-mono line-clamp-1">
                               {perk.name}
                             </h4>
                             <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                              {perk.character_name || 'Teachable'}
+                              {perk.character_name || ''}
                             </p>
                           </div>
                         </div>
 
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider shrink-0 ${
-                            perk.role === 'survivor'
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider shrink-0 ${perk.role === 'survivor'
                               ? 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
                               : 'bg-rose-500/10 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400 border-rose-500/30'
-                          }`}
+                            }`}
                         >
                           {perk.role}
                         </span>
@@ -719,20 +763,21 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
 
                     <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                        <User className="h-3.5 w-3.5" />
+                        <User className="h-3.5 w-3.5" aria-hidden="true" />
                         <span className="truncate max-w-[110px]">{perk.author}</span>
                       </div>
 
                       <button
+                        type="button"
                         onClick={() => handleUpvote(perk.id)}
                         disabled={isUpvoted}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer shadow-sm ${
-                          isUpvoted
+                        aria-label={upvoteAriaText}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer shadow-sm ${isUpvoted
                             ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40'
                             : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'
-                        }`}
+                          }`}
                       >
-                        <ThumbsUp className={`h-3.5 w-3.5 ${isUpvoted ? 'fill-amber-500 dark:fill-amber-400 text-amber-500 dark:text-amber-400' : ''}`} />
+                        <ThumbsUp className={`h-3.5 w-3.5 ${isUpvoted ? 'fill-amber-500 dark:fill-amber-400 text-amber-500 dark:text-amber-400' : ''}`} aria-hidden="true" />
                         <span>{perk.upvotes}</span>
                       </button>
                     </div>
@@ -746,4 +791,3 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
     </div>
   );
 };
-

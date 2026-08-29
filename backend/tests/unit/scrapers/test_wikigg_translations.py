@@ -1,15 +1,16 @@
-# backend/tests/scrapers/test_wikigg_translations.py
-import unittest
+# backend/tests/unit/scrapers/test_wikigg_translations.py
 from unittest.mock import MagicMock
+import pytest
 from app.scrapers.wikigg import WikiGGScraperDriver
 from app.scrapers.types import CharacterData, PerkData, ItemData, AddonData, KillerPowerData
 
 
-class TestWikiGGTranslations(unittest.TestCase):
-    def setUp(self):
-        self.driver = WikiGGScraperDriver()
+@pytest.mark.unit
+class TestWikiGGTranslations:
+    """Tests for multi-locale translation scraping, enrichment, and parsing."""
 
-    def test_translation_enrichment_mock(self):
+    def test_translation_enrichment_mock(self) -> None:
+        driver = WikiGGScraperDriver()
         characters = [
             CharacterData(
                 name="The Trapper",
@@ -100,7 +101,7 @@ class TestWikiGGTranslations(unittest.TestCase):
         </table>
         """
 
-        def mock_fetch_lang(lang, page):
+        def mock_fetch_lang(lang: str, page: str) -> str:
             if lang == "pl":
                 if "Umiej" in page:
                     return pl_perks_html
@@ -112,30 +113,23 @@ class TestWikiGGTranslations(unittest.TestCase):
                     return pl_addons_html
             return ""
 
-        self.driver.fetch_lang_page_html = MagicMock(side_effect=mock_fetch_lang)
+        driver.fetch_lang_page_html = MagicMock(side_effect=mock_fetch_lang)
+        driver.scrape_translations(characters, perks, items, addons)
 
-        self.driver.scrape_translations(characters, perks, items, addons)
+        assert "en" in perks[0].translations
+        assert perks[0].translations["en"]["name"] == "Decisive Strike"
+        assert characters[0].translations["en"]["name"] == "The Trapper"
+        assert characters[0].translations["en"]["power_name"] == "Bear Trap"
 
-        # Verify English baseline
-        self.assertIn("en", perks[0].translations)
-        self.assertEqual(perks[0].translations["en"]["name"], "Decisive Strike")
-        self.assertEqual(characters[0].translations["en"]["name"], "The Trapper")
-        self.assertEqual(characters[0].translations["en"]["power_name"], "Bear Trap")
+        assert "pl" in perks[0].translations
+        assert perks[0].translations["pl"]["name"] == "Zdecydowany Cios"
+        assert perks[0].translations["pl"]["description"] == "Ugodź zabójcę po pochwyceniu."
 
-        # Verify Polish scraped translations
-        self.assertIn("pl", perks[0].translations)
-        self.assertEqual(perks[0].translations["pl"]["name"], "Zdecydowany Cios")
-        self.assertEqual(perks[0].translations["pl"]["description"], "Ugodź zabójcę po pochwyceniu.")
+        assert "pl" in characters[0].translations
+        assert characters[0].translations["pl"]["name"] == "Traper"
 
-        self.assertIn("pl", characters[0].translations)
-        self.assertEqual(characters[0].translations["pl"]["name"], "Traper")
+        assert "pl" in items[0].translations
+        assert items[0].translations["pl"]["name"] == "Latarka"
 
-        self.assertIn("pl", items[0].translations)
-        self.assertEqual(items[0].translations["pl"]["name"], "Latarka")
-
-        self.assertIn("pl", addons[0].translations)
-        self.assertEqual(addons[0].translations["pl"]["name"], "Bateria")
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert "pl" in addons[0].translations
+        assert addons[0].translations["pl"]["name"] == "Bateria"

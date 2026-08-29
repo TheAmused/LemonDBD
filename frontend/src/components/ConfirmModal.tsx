@@ -11,6 +11,7 @@ export interface ConfirmModalProps {
   confirmLabel?: string;
   confirmIcon?: React.ReactNode;
   cancelLabel?: string;
+  busyLabel?: string;
   busy?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
@@ -23,6 +24,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   confirmLabel = 'Confirm',
   confirmIcon,
   cancelLabel = 'Cancel',
+  busyLabel = 'Working...',
   busy = false,
   onConfirm,
   onCancel,
@@ -72,7 +74,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 py-3 text-sm font-extrabold text-white shadow-lg shadow-rose-950/30 transition-colors hover:bg-rose-500 disabled:opacity-50 cursor-pointer"
           >
             {!busy && confirmIcon}
-            {busy ? 'Working...' : confirmLabel}
+            {busy ? busyLabel : confirmLabel}
           </button>
         </div>
       </div>

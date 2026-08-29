@@ -1,7 +1,5 @@
-﻿# backend/app/scrapers/constants.py
-from typing import Dict, Tuple
-
-GENERIC_PERK_CANONICAL_MAP: Dict[str, Tuple[str, str]] = {
+# backend/app/scrapers/constants.py
+GENERIC_PERK_CANONICAL_MAP: dict[str, tuple[str, str]] = {
     "will to live": ("Decisive Strike", "Will to Live"),
     "down to the last": ("Sole Survivor", "Down to the Last"),
     "bound by obsession": ("Object of Obsession", "Bound by Obsession"),
@@ -24,7 +22,7 @@ GENERIC_PERK_CANONICAL_MAP: Dict[str, Tuple[str, str]] = {
     "renewal": ("Second Wind", "Renewal"),
 }
 
-KNOWN_KILLER_POWER_ALIASES: Dict[str, str] = {
+KNOWN_KILLER_POWER_ALIASES: dict[str, str] = {
     "bear trap": "The Trapper",
     "bear traps": "The Trapper",
     "wailing bell": "The Wraith",

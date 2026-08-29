@@ -1,71 +1,56 @@
 # backend/tests/unit/test_history_models.py
-import json
-import unittest
-from app import create_app
-from app.core.config import TestingConfig
-from app.core.extensions import db
-from app.models import HistoryRun, HistoryMatchLog, User
+import pytest
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session
+from app.core.json_provider import safe_json_dumps
+from app.models import HistoryMatchLog, HistoryRun, User
 
 
-class TestHistoryModels(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app(TestingConfig)
-        self.ctx = self.app.app_context()
-        self.ctx.push()
-        db.create_all()
+@pytest.mark.unit
+class TestHistoryModels:
+    """Tests for History mode database models, JSON serialization, and constraints."""
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-        self.ctx.pop()
-
-    def _make_user(self):
-        user = User(username="historyuser", email="history@test.com", password_hash="x")
-        db.session.add(user)
-        db.session.commit()
-        return user
-
-    def test_history_run_round_trip(self):
-        user = self._make_user()
+    def test_history_run_round_trip(self, db_session: Session, sample_user: User) -> None:
         run = HistoryRun(
-            user_id=user.id,
+            user_id=sample_user.id,
             mode="medium",
             status="in_progress",
             current_row_index=1,
             total_killers_beaten=6,
             best_killers_beaten=6,
-            completed_killers_json=json.dumps(["The Wraith"]),
-            unlocked_perk_names_json=json.dumps(["Hex: Ruin", "Save the Best for Last"]),
+            completed_killers_json=safe_json_dumps(["The Wraith"]),
+            unlocked_perk_names_json=safe_json_dumps(["Hex: Ruin", "Save the Best for Last"]),
             checkpoint_row_index=1,
             checkpoint_total_killers_beaten=5,
             checkpoint_completed_killers_json="[]",
-            checkpoint_unlocked_perk_names_json=json.dumps(["Hex: Ruin"]),
+            checkpoint_unlocked_perk_names_json=safe_json_dumps(["Hex: Ruin"]),
         )
-        db.session.add(run)
-        db.session.commit()
+        db_session.add(run)
+        db_session.commit()
 
         d = run.to_dict()
-        self.assertEqual(d["mode"], "medium")
-        self.assertEqual(d["current_row_index"], 1)
-        self.assertEqual(d["total_killers_beaten"], 6)
-        self.assertEqual(d["completed_killers"], ["The Wraith"])
-        self.assertEqual(d["unlocked_perk_names"], ["Hex: Ruin", "Save the Best for Last"])
-        self.assertEqual(d["checkpoint_row_index"], 1)
+        assert d["mode"] == "medium"
+        assert d["current_row_index"] == 1
+        assert d["total_killers_beaten"] == 6
+        assert d["completed_killers"] == ["The Wraith"]
+        assert d["unlocked_perk_names"] == ["Hex: Ruin", "Save the Best for Last"]
+        assert d["checkpoint_row_index"] == 1
 
-    def test_unique_constraint_on_user_and_mode(self):
-        user = self._make_user()
-        db.session.add(HistoryRun(user_id=user.id, mode="hell"))
-        db.session.commit()
-        db.session.add(HistoryRun(user_id=user.id, mode="hell"))
-        with self.assertRaises(Exception):
-            db.session.commit()
-        db.session.rollback()
+    def test_unique_constraint_on_user_and_mode(self, db_session: Session, sample_user: User) -> None:
+        db_session.add(HistoryRun(user_id=sample_user.id, mode="hell"))
+        db_session.commit()
 
-    def test_history_match_log_round_trip(self):
-        user = self._make_user()
-        run = HistoryRun(user_id=user.id, mode="hell")
-        db.session.add(run)
-        db.session.commit()
+        db_session.add(HistoryRun(user_id=sample_user.id, mode="hell"))
+        with pytest.raises(IntegrityError):
+            db_session.commit()
+
+        db_session.rollback()
+        assert db_session.is_active
+
+    def test_history_match_log_round_trip(self, db_session: Session, sample_user: User) -> None:
+        run = HistoryRun(user_id=sample_user.id, mode="hell")
+        db_session.add(run)
+        db_session.commit()
 
         log = HistoryMatchLog(
             run_id=run.id,
@@ -75,15 +60,11 @@ class TestHistoryModels(unittest.TestCase):
             streak_before=0,
             streak_after=1,
         )
-        db.session.add(log)
-        db.session.commit()
+        db_session.add(log)
+        db_session.commit()
 
         d = log.to_dict()
-        self.assertEqual(d["killer_id"], "The Trapper")
-        self.assertEqual(d["result"], "win")
-        self.assertEqual(d["row_index"], 0)
-        self.assertEqual(d["streak_after"], 1)
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert d["killer_id"] == "The Trapper"
+        assert d["result"] == "win"
+        assert d["row_index"] == 0
+        assert d["streak_after"] == 1

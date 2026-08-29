@@ -1,17 +1,13 @@
 'use client';
 // frontend/src/components/killer/KillerCalculator.tsx
-import type { Dictionary } from '@/locales/types';
 
+import type { Dictionary } from '@/locales/types';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Skull,
   Radio,
   Zap,
-  Sliders,
   Check,
-  Plus,
-  X,
-  Volume2,
   Activity,
   ArrowUpRight,
   ArrowDownRight,
@@ -25,12 +21,63 @@ interface PerkOptionState {
   furtive_chase_tokens: number;
 }
 
+interface KillerStatEntry {
+  name: string;
+  base_terror_radius: number;
+  lullaby_radius: number;
+  addons?: Record<string, AddonStatEntry>;
+}
+
+interface AddonStatEntry {
+  name: string;
+  rarity: string;
+  description: string;
+}
+
+interface PerkStatEntry {
+  name: string;
+  description: string;
+}
+
+interface StatDelta {
+  stat_id: string;
+  name: string;
+  base: number | string;
+  modified: number | string;
+  unit: string;
+  is_changed: boolean;
+  is_buff: boolean;
+  formatted_delta: string;
+}
+
+interface TRBreakdownItem {
+  source: string;
+  value: number;
+}
+
+interface CalculationResult {
+  terror_radius: {
+    base: number;
+    modified: number;
+    breakdown?: TRBreakdownItem[];
+  };
+  lullaby: {
+    base: number;
+  };
+  stat_deltas: StatDelta[];
+}
+
+interface KillerCalcData {
+  killers: Record<string, KillerStatEntry>;
+  perks: Record<string, PerkStatEntry>;
+}
+
 interface KillerCalculatorProps {
-  dict?: Dictionary;
+  dict?: Dictionary | any;
 }
 
 export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<KillerCalcData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedKillerId, setSelectedKillerId] = useState<string>('huntress');
   const [selectedAddonIds, setSelectedAddonIds] = useState<string[]>([]);
@@ -41,19 +88,18 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
     furtive_chase_tokens: 0,
   });
 
-  const [calculationResult, setCalculationResult] = useState<any>(null);
+  const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  // Fetch initial data (killers, perks, add-ons)
   useEffect(() => {
     async function loadData() {
       try {
         setLoading(true);
         const res = await fetch(`${backendBase}/api/v1/killer-calc/data`);
         if (res.ok) {
-          const json = await res.json();
+          const json = (await res.json()) as KillerCalcData;
           setData(json);
         }
       } catch (err) {
@@ -65,7 +111,6 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
     loadData();
   }, [backendBase]);
 
-  // Recalculate stats when killer, addons, or perks change
   useEffect(() => {
     async function doCalculation() {
       if (!selectedKillerId) return;
@@ -82,7 +127,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
         });
 
         if (res.ok) {
-          const json = await res.json();
+          const json = (await res.json()) as CalculationResult;
           setCalculationResult(json);
         }
       } catch (err) {
@@ -93,19 +138,16 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
     doCalculation();
   }, [selectedKillerId, selectedAddonIds, selectedPerkIds, perkOptions, backendBase]);
 
-  // Handle killer change (reset add-ons)
   const handleSelectKiller = (killerId: string) => {
     setSelectedKillerId(killerId);
     setSelectedAddonIds([]);
   };
 
-  // Toggle add-on selection (max 2)
   const handleToggleAddon = (addonId: string) => {
     if (selectedAddonIds.includes(addonId)) {
       setSelectedAddonIds(selectedAddonIds.filter((id) => id !== addonId));
     } else {
       if (selectedAddonIds.length >= 2) {
-        // Replace second add-on if 2 already selected
         setSelectedAddonIds([selectedAddonIds[0], addonId]);
       } else {
         setSelectedAddonIds([...selectedAddonIds, addonId]);
@@ -113,7 +155,6 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
     }
   };
 
-  // Toggle perk selection
   const handleTogglePerk = (perkId: string) => {
     if (selectedPerkIds.includes(perkId)) {
       setSelectedPerkIds(selectedPerkIds.filter((id) => id !== perkId));
@@ -122,7 +163,6 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
     }
   };
 
-  // Draw Interactive 2D Radar Canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !calculationResult) return;
@@ -139,14 +179,11 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
     const modifiedTR = calculationResult.terror_radius.modified;
     const lullaby = calculationResult.lullaby.base;
 
-    // Max radius for scaling: max meters to display is around 50m
     const maxDistanceMeters = Math.max(55, baseTR, modifiedTR, lullaby);
     const scale = (Math.min(width, height) / 2 - 30) / maxDistanceMeters;
 
-    // Clear canvas
     ctx.clearRect(0, 0, width, height);
 
-    // Draw background grid concentric rings
     ctx.lineWidth = 1;
     for (let m = 10; m <= 50; m += 10) {
       const r = m * scale;
@@ -155,13 +192,11 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
       ctx.arc(centerX, centerY, r, 0, 2 * Math.PI);
       ctx.stroke();
 
-      // Meter labels
       ctx.fillStyle = 'rgba(148, 163, 184, 0.4)';
       ctx.font = '10px monospace';
       ctx.fillText(`${m}m`, centerX + 4, centerY - r + 12);
     }
 
-    // Draw Lullaby Circle (if present)
     if (lullaby > 0) {
       const lullabyRadiusPx = lullaby * scale;
       ctx.save();
@@ -172,14 +207,12 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
       ctx.arc(centerX, centerY, lullabyRadiusPx, 0, 2 * Math.PI);
       ctx.stroke();
 
-      // Label
       ctx.fillStyle = 'rgba(245, 158, 11, 0.9)';
       ctx.font = 'bold 11px sans-serif';
       ctx.fillText(`Lullaby (${lullaby}m)`, centerX - 35, centerY - lullabyRadiusPx - 6);
       ctx.restore();
     }
 
-    // Draw Base Terror Radius Circle (dashed outline)
     if (baseTR > 0) {
       const baseRadiusPx = baseTR * scale;
       ctx.save();
@@ -192,11 +225,9 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
       ctx.restore();
     }
 
-    // Draw Modified Terror Radius Circle (solid glowing crimson circle)
     if (modifiedTR > 0) {
       const modRadiusPx = modifiedTR * scale;
 
-      // Glow fill
       const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, modRadiusPx);
       gradient.addColorStop(0, 'rgba(225, 29, 72, 0.35)');
       gradient.addColorStop(0.7, 'rgba(225, 29, 72, 0.15)');
@@ -207,20 +238,17 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
       ctx.arc(centerX, centerY, modRadiusPx, 0, 2 * Math.PI);
       ctx.fill();
 
-      // Outer Stroke
       ctx.strokeStyle = '#f43f5e';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.arc(centerX, centerY, modRadiusPx, 0, 2 * Math.PI);
       ctx.stroke();
 
-      // Label
       ctx.fillStyle = '#f43f5e';
       ctx.font = 'bold 12px sans-serif';
       ctx.fillText(`TR: ${modifiedTR}m`, centerX - 25, centerY - modRadiusPx - 6);
     }
 
-    // Draw Killer Center Point (pulsing core)
     ctx.fillStyle = '#f43f5e';
     ctx.shadowColor = '#e11d48';
     ctx.shadowBlur = 12;
@@ -237,11 +265,11 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
 
   if (loading || !data) {
     return (
-      <div className="flex h-96 items-center justify-center text-slate-400">
+      <div className="flex h-96 items-center justify-center text-slate-400" role="status">
         <div className="flex items-center gap-3">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-rose-500 border-t-transparent" />
           <span className="font-semibold text-sm">
-            {dict?.characterDetail?.loading || 'Loading Killer Stat Calculator...'}
+            {dict?.characterDetail?.loading || ''}
           </span>
         </div>
       </div>
@@ -250,7 +278,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
 
   const killers = data.killers || {};
   const perks = data.perks || {};
-  const currentKiller = killers[selectedKillerId] || {};
+  const currentKiller = killers[selectedKillerId] || { name: '', base_terror_radius: 32, lullaby_radius: 0 };
   const currentAddons = currentKiller.addons || {};
 
   const getRarityBadge = (rarity: string) => {
@@ -276,13 +304,13 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="rounded-full bg-rose-500/10 px-3 py-1 text-xs font-bold text-rose-600 dark:text-rose-400 border border-rose-500/20 flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5" />{' '}
-                {dict?.characterDetail?.phase3FeatureBadge || 'Phase 3 Feature'}
+                <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />{' '}
+                {dict?.characterDetail?.phase3FeatureBadge || ''}
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-mono flex items-center gap-3">
-              <Skull className="h-7 w-7 text-rose-500" />
-              {dict?.app?.killerCalculatorPageTitle || 'Killer Add-on Stat Calculator & TR Radar'}
+              <Skull className="h-7 w-7 text-rose-500" aria-hidden="true" />
+              {dict?.app?.killerCalculatorPageTitle || ''}
             </h1>
           </div>
         </div>
@@ -294,39 +322,45 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
         <div className="lg:col-span-5 space-y-4">
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl">
             <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2 mb-4">
-              <Skull className="h-4 w-4 text-rose-500 dark:text-rose-400" /> {dict?.streaks?.pickYourKiller || 'Select Killer'}
+              <Skull className="h-4 w-4 text-rose-500 dark:text-rose-400" aria-hidden="true" /> {dict?.streaks?.pickYourKiller || ''}
             </h2>
 
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-2.5" role="radiogroup" aria-label={dict?.streaks?.pickYourKiller || ''}>
               {Object.keys(killers).map((kid) => {
                 const k = killers[kid];
                 const isSelected = kid === selectedKillerId;
 
                 return (
                   <button
+                    type="button"
                     key={kid}
+                    role="radio"
+                    aria-checked={isSelected}
                     onClick={() => handleSelectKiller(kid)}
-                    className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                      isSelected
+                    className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all cursor-pointer ${isSelected
                         ? 'bg-rose-500/10 border-rose-500/50 text-rose-900 dark:text-white shadow-sm dark:shadow-lg dark:shadow-rose-950/40 ring-1 ring-rose-500/30'
                         : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700'
-                    }`}
+                      }`}
                   >
                     <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg font-bold text-sm font-mono ${
-                        isSelected ? 'bg-rose-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400'
-                      }`}
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg font-bold text-sm font-mono ${isSelected ? 'bg-rose-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400'
+                        }`}
+                      aria-hidden="true"
                     >
                       {k.name.charAt(4) || k.name.charAt(0)}
                     </div>
                     <div className="min-w-0">
                       <div className="font-extrabold text-xs text-slate-900 dark:text-slate-100 truncate">{k.name}</div>
                       <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                        {dict?.characterDetail?.terrorRadiusPrefix || 'TR:'} {k.base_terror_radius}
-                        {dict?.characterDetail?.meterUnit || 'm'}{' '}
-                        {k.lullaby_radius > 0
-                          ? `| Lullaby: ${k.lullaby_radius}${dict?.characterDetail?.meterUnit || 'm'}`
-                          : ''}
+                        {dict?.characterDetail?.terrorRadiusPrefix || ''} {k.base_terror_radius}
+                        {dict?.characterDetail?.meterUnit || 'm'}
+                        {k.lullaby_radius > 0 && (
+                          <span>
+                            {' | '}
+                            {dict?.characterDetail?.lullabyRadius || ''}: {k.lullaby_radius}
+                            {dict?.characterDetail?.meterUnit || 'm'}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </button>
@@ -339,15 +373,15 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2">
-                <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400" /> {dict?.characterDetail?.equipmentTitleKiller || 'Select 2 Add-ons'}
+                <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400" aria-hidden="true" /> {dict?.characterDetail?.equipmentTitleKiller || ''}
               </h2>
               <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full font-mono border border-slate-200 dark:border-slate-700">
                 {selectedAddonIds.length}
-                {dict?.characterDetail?.outOfTwoSelectedSuffix || '/2 Selected'}
+                {dict?.characterDetail?.outOfTwoSelectedSuffix || '/2'}
               </span>
             </div>
 
-            <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+            <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1" role="group" aria-label={dict?.characterDetail?.equipmentTitleKiller || ''}>
               {Object.keys(currentAddons).map((aid) => {
                 const addon = currentAddons[aid];
                 const isSelected = selectedAddonIds.includes(aid);
@@ -355,13 +389,14 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
 
                 return (
                   <button
+                    type="button"
                     key={aid}
+                    aria-pressed={isSelected}
                     onClick={() => handleToggleAddon(aid)}
-                    className={`w-full p-3 rounded-xl border text-left transition-all cursor-pointer relative ${
-                      isSelected
+                    className={`w-full p-3 rounded-xl border text-left transition-all cursor-pointer relative ${isSelected
                         ? 'bg-amber-500/10 border-amber-500/50 ring-1 ring-amber-500/30'
                         : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <div className="flex items-center gap-2">
@@ -375,7 +410,14 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                         </span>
                       </div>
                       {isSelected && (
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-slate-950 font-black text-[10px]">
+                        <span
+                          className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-slate-950 font-black text-[10px]"
+                          aria-label={
+                            dict?.characterDetail?.selectedSlot
+                              ? `${dict.characterDetail.selectedSlot} ${selectionIndex + 1}`
+                              : `#${selectionIndex + 1}`
+                          }
+                        >
                           #{selectionIndex + 1}
                         </span>
                       )}
@@ -390,10 +432,10 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           {/* Terror Radius Perks & Options */}
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl">
             <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2 mb-4">
-              <ShieldAlert className="h-4 w-4 text-purple-500 dark:text-purple-400" /> {dict?.characterDetail?.combatAttributes || 'TR Modifier Perks'}
+              <ShieldAlert className="h-4 w-4 text-purple-500 dark:text-purple-400" aria-hidden="true" /> {dict?.characterDetail?.combatAttributes || ''}
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-3" role="group" aria-label={dict?.characterDetail?.combatAttributes || ''}>
               {Object.keys(perks).map((pid) => {
                 const perk = perks[pid];
                 const isSelected = selectedPerkIds.includes(pid);
@@ -401,18 +443,19 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                 return (
                   <div key={pid} className="space-y-2">
                     <button
+                      type="button"
+                      aria-pressed={isSelected}
                       onClick={() => handleTogglePerk(pid)}
-                      className={`w-full flex items-center justify-between p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                        isSelected
+                      className={`w-full flex items-center justify-between p-2.5 rounded-xl border text-left transition-all cursor-pointer ${isSelected
                           ? 'bg-purple-500/10 border-purple-500/40 text-purple-800 dark:text-purple-300 shadow-sm'
                           : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <div
-                          className={`flex h-5 w-5 items-center justify-center rounded border transition-colors ${
-                            isSelected ? 'bg-purple-600 border-purple-500 text-white' : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900'
-                          }`}
+                          className={`flex h-5 w-5 items-center justify-center rounded border transition-colors ${isSelected ? 'bg-purple-600 border-purple-500 text-white' : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900'
+                            }`}
+                          aria-hidden="true"
                         >
                           {isSelected && <Check className="h-3.5 w-3.5" />}
                         </div>
@@ -423,21 +466,22 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                       </div>
                     </button>
 
-                    {/* Dynamic Perk Controls when selected */}
                     {isSelected && pid === 'monitor_and_abuse' && (
                       <div className="ml-7 flex items-center gap-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
                         <span className="text-slate-600 dark:text-slate-400 text-[11px]">
-                          {dict?.killerCalculator?.chaseStatus || 'Chase Status:'}
+                          {dict?.killerCalculator?.chaseStatus || ''}
                         </span>
                         <button
+                          type="button"
                           onClick={() => setPerkOptions({ ...perkOptions, in_chase: !perkOptions.in_chase })}
-                          className={`px-2.5 py-1 rounded-md text-[11px] font-extrabold transition-all cursor-pointer ${
-                            perkOptions.in_chase
+                          className={`px-2.5 py-1 rounded-md text-[11px] font-extrabold transition-all cursor-pointer ${perkOptions.in_chase
                               ? 'bg-rose-500 text-white'
                               : 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
-                          }`}
+                            }`}
                         >
-                          {perkOptions.in_chase ? '🔥 In Chase (+8m)' : '👟 Outside Chase (-8m)'}
+                          {perkOptions.in_chase
+                            ? `🔥 ${dict?.killerCalculator?.inChase || ''}`
+                            : `👟 ${dict?.killerCalculator?.outsideChase || ''}`}
                         </button>
                       </div>
                     )}
@@ -445,19 +489,21 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                     {isSelected && pid === 'agitation' && (
                       <div className="ml-7 flex items-center gap-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
                         <span className="text-slate-600 dark:text-slate-400 text-[11px]">
-                          {dict?.killerCalculator?.carryingSurvivor || 'Carrying Survivor:'}
+                          {dict?.killerCalculator?.carryingSurvivor || ''}
                         </span>
                         <button
+                          type="button"
                           onClick={() =>
                             setPerkOptions({ ...perkOptions, carrying_survivor: !perkOptions.carrying_survivor })
                           }
-                          className={`px-2.5 py-1 rounded-md text-[11px] font-extrabold transition-all cursor-pointer ${
-                            perkOptions.carrying_survivor
+                          className={`px-2.5 py-1 rounded-md text-[11px] font-extrabold transition-all cursor-pointer ${perkOptions.carrying_survivor
                               ? 'bg-amber-500 text-slate-950'
                               : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400'
-                          }`}
+                            }`}
                         >
-                          {perkOptions.carrying_survivor ? '💪 Carrying (+12m)' : '🚫 Normal (0m)'}
+                          {perkOptions.carrying_survivor
+                            ? `💪 ${dict?.killerCalculator?.carrying || ''}`
+                            : `🚫 ${dict?.killerCalculator?.notCarrying || ''}`}
                         </button>
                       </div>
                     )}
@@ -465,18 +511,19 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                     {isSelected && pid === 'furtive_chase' && (
                       <div className="ml-7 flex items-center gap-3 p-2 rounded-lg bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
                         <span className="text-slate-600 dark:text-slate-400 text-[11px]">
-                          {dict?.killerCalculator?.tokens || 'Tokens (-4m each):'}
+                          {dict?.killerCalculator?.tokens || ''}
                         </span>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1.5" role="group" aria-label={dict?.killerCalculator?.tokens || ''}>
                           {[0, 1, 2, 3, 4].map((t) => (
                             <button
+                              type="button"
                               key={t}
+                              aria-pressed={perkOptions.furtive_chase_tokens === t}
                               onClick={() => setPerkOptions({ ...perkOptions, furtive_chase_tokens: t })}
-                              className={`h-6 w-6 rounded text-[11px] font-bold transition-all cursor-pointer ${
-                                perkOptions.furtive_chase_tokens === t
+                              className={`h-6 w-6 rounded text-[11px] font-bold transition-all cursor-pointer ${perkOptions.furtive_chase_tokens === t
                                   ? 'bg-purple-600 text-white'
                                   : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 hover:bg-slate-300 dark:hover:bg-slate-700'
-                              }`}
+                                }`}
                             >
                               {t}
                             </button>
@@ -497,19 +544,19 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2">
-                <Radio className="h-4 w-4 text-rose-500 animate-pulse" /> {dict?.characterDetail?.terrorRadiusVisualizer || 'Interactive 2D Terror Radius Radar'}
+                <Radio className="h-4 w-4 text-rose-500 animate-pulse" aria-hidden="true" /> {dict?.characterDetail?.terrorRadiusVisualizer || ''}
               </h2>
               {calculationResult && (
                 <div className="flex items-center gap-3 text-xs font-mono">
                   <span className="text-slate-500 dark:text-slate-400">
-                    {dict?.characterDetail?.baseTrPrefix || 'Base TR:'}{' '}
+                    {dict?.characterDetail?.baseTrPrefix || ''}{' '}
                     <strong className="text-slate-800 dark:text-slate-200">
                       {calculationResult.terror_radius.base}
                       {dict?.characterDetail?.meterUnit || 'm'}
                     </strong>
                   </span>
                   <span className="text-rose-600 dark:text-rose-400 font-extrabold">
-                    {dict?.characterDetail?.modifiedPrefix || 'Modified:'}{' '}
+                    {dict?.characterDetail?.modifiedPrefix || ''}{' '}
                     <strong>
                       {calculationResult.terror_radius.modified}
                       {dict?.characterDetail?.meterUnit || 'm'}
@@ -521,14 +568,20 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
 
             {/* Canvas Container */}
             <div className="relative flex items-center justify-center rounded-xl bg-slate-950 border border-slate-800/80 p-4 shadow-inner">
-              <canvas ref={canvasRef} width={420} height={380} className="w-full max-w-[420px] h-[380px]" />
+              <canvas
+                ref={canvasRef}
+                width={420}
+                height={380}
+                className="w-full max-w-[420px] h-[380px]"
+                aria-label={dict?.characterDetail?.terrorRadiusVisualizer || ''}
+              />
             </div>
 
             {/* Radar Legend */}
             <div className="mt-4 grid grid-cols-3 gap-2 text-[11px] font-bold text-center">
               <div className="rounded-lg bg-slate-50 dark:bg-slate-950 p-2 border border-slate-200 dark:border-slate-800 shadow-sm">
                 <span className="text-slate-500 dark:text-slate-400 block text-[10px]">
-                  {dict?.characterDetail?.terrorRadius || 'BASE TERROR RADIUS'}
+                  {dict?.characterDetail?.terrorRadius || ''}
                 </span>
                 <span className="text-rose-600 dark:text-rose-400 font-mono">
                   {calculationResult?.terror_radius?.base || 0}
@@ -538,7 +591,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
 
               <div className="rounded-lg bg-rose-50 dark:bg-slate-950 p-2 border border-rose-500/30 bg-rose-500/5 shadow-sm">
                 <span className="text-rose-700 dark:text-rose-300 block text-[10px]">
-                  {dict?.characterDetail?.acousticRange || 'MODIFIED TERROR RADIUS'}
+                  {dict?.characterDetail?.acousticRange || ''}
                 </span>
                 <span className="text-rose-600 dark:text-rose-500 font-mono text-xs">
                   {calculationResult?.terror_radius?.modified || 0}
@@ -548,7 +601,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
 
               <div className="rounded-lg bg-slate-50 dark:bg-slate-950 p-2 border border-slate-200 dark:border-slate-800 shadow-sm">
                 <span className="text-amber-700 dark:text-amber-400/80 block text-[10px]">
-                  {dict?.characterDetail?.lullabyRadius || 'LULLABY RADIUS'}
+                  {dict?.characterDetail?.lullabyRadius || ''}
                 </span>
                 <span className="text-amber-700 dark:text-amber-400 font-mono">
                   {calculationResult?.lullaby?.base || 0}
@@ -561,33 +614,31 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
           {/* Live Stat Delta Cards */}
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 p-5 backdrop-blur-sm shadow-sm dark:shadow-xl space-y-4">
             <h2 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-400 flex items-center gap-2">
-              <Activity className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> {dict?.characterDetail?.combatAttributes || 'Live Power Stat Deltas'}
+              <Activity className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" /> {dict?.characterDetail?.combatAttributes || ''}
             </h2>
 
-            {calculationResult?.stat_deltas?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {calculationResult.stat_deltas.map((stat: any) => (
+            {calculationResult && calculationResult.stat_deltas.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3" role="list">
+                {calculationResult.stat_deltas.map((stat) => (
                   <div
                     key={stat.stat_id}
-                    className={`p-4 rounded-xl border transition-all shadow-sm ${
-                      stat.is_changed
+                    className={`p-4 rounded-xl border transition-all shadow-sm ${stat.is_changed
                         ? stat.is_buff
                           ? 'bg-emerald-500/10 border-emerald-500/30'
                           : 'bg-rose-500/10 border-rose-500/30'
                         : 'bg-slate-50 dark:bg-slate-950/80 border-slate-200 dark:border-slate-800'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-extrabold text-slate-900 dark:text-slate-200">{stat.name}</span>
                       {stat.is_changed && (
                         <span
-                          className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-0.5 ${
-                            stat.is_buff
+                          className={`text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-0.5 ${stat.is_buff
                               ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/40'
                               : 'bg-rose-500/20 text-rose-700 dark:text-rose-400 border border-rose-500/40'
-                          }`}
+                            }`}
                         >
-                          {stat.is_buff ? <ArrowDownRight className="h-3 w-3" /> : <ArrowUpRight className="h-3 w-3" />}
+                          {stat.is_buff ? <ArrowDownRight className="h-3 w-3" aria-hidden="true" /> : <ArrowUpRight className="h-3 w-3" aria-hidden="true" />}
                           {stat.formatted_delta}
                         </span>
                       )}
@@ -606,18 +657,18 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
               </div>
             ) : (
               <p className="text-xs text-slate-500 italic">
-                {dict?.empty?.subtitle || 'No power stats modified.'}
+                {dict?.empty?.subtitle || ''}
               </p>
             )}
 
             {/* TR Breakdown Summary */}
-            {calculationResult?.terror_radius?.breakdown?.length > 0 && (
+            {calculationResult?.terror_radius?.breakdown && calculationResult.terror_radius.breakdown.length > 0 && (
               <div className="mt-4 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2 shadow-inner">
                 <span className="text-[10px] font-extrabold uppercase text-slate-500 dark:text-slate-400 tracking-wider">
-                  {dict?.characterDetail?.terrorRadiusVisualizer || 'Terror Radius Modifier Breakdown'}
+                  {dict?.characterDetail?.terrorRadiusVisualizer || ''}
                 </span>
                 <div className="space-y-1 text-xs">
-                  {calculationResult.terror_radius.breakdown.map((item: any, idx: number) => (
+                  {calculationResult.terror_radius.breakdown.map((item, idx) => (
                     <div key={idx} className="flex justify-between items-center text-slate-800 dark:text-slate-300">
                       <span>{item.source}</span>
                       <span className="font-mono font-bold">

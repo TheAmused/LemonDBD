@@ -1,11 +1,12 @@
 # backend/app/routes/users.py
 import logging
-from typing import Any, Dict, List
-from flask import Blueprint, g, jsonify, request
+from datetime import datetime, timezone
+from flask import Blueprint, Response, g, jsonify, request
 from pydantic import ValidationError
 from sqlalchemy import delete
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.core.security import admin_required, login_required
 from app.models import (
     Addon,
@@ -22,6 +23,7 @@ from app.models import (
 )
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services.admin_control_service import log_admin_action
+from app.services.db.export_import import DatabaseExportImportService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
 
@@ -31,10 +33,6 @@ users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
 user_service = UserService()
 ownership_service = OwnershipService()
 
-
-# ==========================================
-# USER MANAGEMENT (ADMIN)
-# ==========================================
 
 @users_bp.route("/users", methods=["GET"])
 @admin_required
@@ -148,10 +146,6 @@ def delete_user_by_admin(user_id: int):
     return jsonify({"status": "success", "message": "User deleted successfully."}), 200
 
 
-# ==========================================
-# SYSTEM & DATABASE ADMINISTRATION
-# ==========================================
-
 @users_bp.route("/admin/stats", methods=["GET"])
 @admin_required
 def get_admin_stats():
@@ -165,11 +159,11 @@ def get_admin_stats():
 def purge_database_tables():
     """Purge specific database entity tables on demand."""
     data = request.get_json(silent=True) or {}
-    targets: List[str] = data.get("targets", [])
+    targets: list[str] = data.get("targets", [])
     if not isinstance(targets, list) or not targets:
         return jsonify({"error": "No valid purge targets specified.", "status": 400}), 400
 
-    purged: List[str] = []
+    purged: list[str] = []
     try:
         if "perks" in targets:
             db.session.execute(delete(Perk))
@@ -222,11 +216,6 @@ def purge_database_tables():
 @admin_required
 def export_database():
     """Export complete or selective database entities as JSON."""
-    from datetime import datetime, timezone
-    from flask import Response
-    import json
-    from app.services.db.export_import import DatabaseExportImportService
-
     targets_param = request.args.get("targets")
     targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
 
@@ -235,7 +224,7 @@ def export_database():
         download = request.args.get("download", "false").lower() in ["true", "1", "yes"]
         if download:
             timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-            json_str = json.dumps(data, indent=2, ensure_ascii=False)
+            json_str = safe_json_dumps(data)
             return Response(
                 json_str,
                 mimetype="application/json",
@@ -253,27 +242,22 @@ def export_database():
 @admin_required
 def import_database():
     """Import database entities from JSON payload or uploaded .json file."""
-    import json
-    from app.services.db.export_import import DatabaseExportImportService
-
     mode = request.form.get("mode") or request.args.get("mode") or "merge"
     targets_param = request.form.get("targets") or request.args.get("targets")
     targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
 
     payload = None
 
-    # 1. Handle uploaded multipart file
     if "file" in request.files:
         file = request.files["file"]
         if not file or not file.filename:
             return jsonify({"error": "Uploaded file is empty.", "status": 400}), 400
         try:
             content = file.read().decode("utf-8")
-            payload = json.loads(content)
+            payload = safe_json_loads(content)
         except Exception as json_err:
             return jsonify({"error": f"Invalid JSON file: {str(json_err)}", "status": 400}), 400
 
-    # 2. Handle JSON request body
     if payload is None:
         body = request.get_json(silent=True) or {}
         if not isinstance(body, dict):
@@ -298,10 +282,6 @@ def import_database():
         logger.error(f"Database import error: {e}", exc_info=True)
         return jsonify({"error": f"Database import failed: {str(e)}", "status": 500}), 500
 
-
-# ==========================================
-# CHARACTER OWNERSHIP
-# ==========================================
 
 @users_bp.route("/users/<int:user_id>/characters", methods=["GET"])
 @login_required
@@ -359,10 +339,6 @@ def bulk_set_character_ownership(user_id: int):
     result = ownership_service.bulk_set_character_ownership(user_id, updates)
     return jsonify({"status": "success", "data": result}), 200
 
-
-# ==========================================
-# PERK OWNERSHIP
-# ==========================================
 
 @users_bp.route("/users/<int:user_id>/perks", methods=["GET"])
 @login_required

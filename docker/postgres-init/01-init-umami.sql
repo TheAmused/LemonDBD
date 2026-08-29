@@ -1,3 +1,4 @@
+-- docker/postgres-init/01-init-umami.sql
 -- 01-init-umami.sql
 -- Automatically executed by the official PostgreSQL container on first startup.
 -- Ensures the dedicated 'umami' database exists for Umami analytics.

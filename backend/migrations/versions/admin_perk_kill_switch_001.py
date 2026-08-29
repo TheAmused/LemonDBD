@@ -1,3 +1,4 @@
+# backend/migrations/versions/admin_perk_kill_switch_001.py
 """add admin perk disable flag
 
 Revision ID: admin_perk_control_001

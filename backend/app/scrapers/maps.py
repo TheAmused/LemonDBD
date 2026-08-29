@@ -2,7 +2,7 @@
 import logging
 import re
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 from flask import current_app
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def get_map_landmarks_data(
     map_name: str, realm_name: str, source: str = "hens333"
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     try:
         if current_app:
             norm_map = normalize_name_key(map_name)
@@ -76,7 +76,7 @@ class HensMapScraperDriver:
     IMPERSONATE_BROWSER = "chrome120"
     REQUEST_TIMEOUT = 25
 
-    def scrape_maps(self) -> List[MapData]:
+    def scrape_maps(self) -> list[MapData]:
         logger.info("Scraping map callouts from Hens333...")
         session = requests.Session(impersonate=self.IMPERSONATE_BROWSER)
         res = None
@@ -106,12 +106,11 @@ class HensMapScraperDriver:
 
         try:
             soup = BeautifulSoup(res.text, "html.parser")
-            maps: List[MapData] = []
+            maps: list[MapData] = []
             seen_ids = set()
 
             realm_wrappers = soup.find_all("div", class_="realm-wrapper")
             if not realm_wrappers:
-                # Fallback: Search anywhere on the page for buttons or links with data-path
                 buttons = soup.find_all(attrs={"data-path": True})
                 for btn in buttons:
                     dpath = btn.get("data-path", "").strip()
@@ -205,7 +204,7 @@ class SamoelColtMapScraperDriver:
     IMPERSONATE_BROWSER = "chrome120"
     REQUEST_TIMEOUT = 30
 
-    def scrape_maps(self) -> List[MapData]:
+    def scrape_maps(self) -> list[MapData]:
         logger.info("Scraping SamoelColt map guides from Steam Workshop...")
         session = requests.Session(impersonate=self.IMPERSONATE_BROWSER)
         res = None
@@ -243,7 +242,7 @@ class SamoelColtMapScraperDriver:
 
         try:
             soup = BeautifulSoup(res.text, "html.parser")
-            maps: List[MapData] = []
+            maps: list[MapData] = []
             seen_ids = set()
 
             subsections = soup.find_all("div", class_="subSection")
@@ -258,7 +257,6 @@ class SamoelColtMapScraperDriver:
 
                 links = sub.find_all("a", class_="modalContentLink")
                 if not links:
-                    # Also try finding direct img tags inside preview links
                     links = sub.find_all("a", href=re.compile(r"images\.steamusercontent\.com|steamuserimages"))
 
                 for idx, link in enumerate(links):

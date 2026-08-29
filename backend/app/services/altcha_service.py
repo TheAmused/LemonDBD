@@ -4,7 +4,7 @@ import hmac
 import logging
 import secrets
 import time
-from typing import Any, Dict, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ class AltchaService:
         secret_key: str,
         max_number: int = 50000,
         expires_in_seconds: int = 300,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Generates an ALTCHA challenge payload.
 
@@ -60,16 +60,9 @@ class AltchaService:
         }
 
     @staticmethod
-    def verify_solution(payload: Dict[str, Any], secret_key: str) -> Tuple[bool, str]:
+    def verify_solution(payload: dict[str, Any], secret_key: str) -> tuple[bool, str]:
         """
         Validates an ALTCHA solution payload.
-
-        Validates:
-        1. Payload has all required fields (algorithm, challenge, number, salt, signature, expires, maxnumber).
-        2. algorithm == "SHA-256".
-        3. time.time() <= expires.
-        4. HMAC-SHA256 signature matches expected signature.
-        5. SHA256(f"{salt}{number}") == challenge.
 
         Returns:
             (True, "") on success or (False, "Error description") on failure.

@@ -1,6 +1,6 @@
 export default {
-  "general": "General Perk",
-  "viewDetails": "Inspect Perk",
-  "vaultTotal": "Vault Total",
-  "ownedPerks": "Owned Perks"
-};
+  general: "General Perk",
+  viewDetails: "Inspect Perk",
+  vaultTotal: "Vault Total",
+  ownedPerks: "Owned Perks",
+} as const;

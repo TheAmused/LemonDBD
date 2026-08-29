@@ -1,3 +1,4 @@
+# backend/migrations/versions/admin_character_kill_switch_001.py
 """add admin character disable flag, per-mode kill switch, and admin audit log
 
 Revision ID: admin_control_001

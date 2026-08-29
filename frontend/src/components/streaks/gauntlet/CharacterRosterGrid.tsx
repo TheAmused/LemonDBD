@@ -1,3 +1,4 @@
+// frontend/src/components/streaks/gauntlet/CharacterRosterGrid.tsx
 'use client';
 import type { Dictionary } from '@/locales/types';
 

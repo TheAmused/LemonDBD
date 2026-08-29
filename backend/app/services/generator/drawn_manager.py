@@ -1,6 +1,6 @@
 # backend/app/services/generator/drawn_manager.py
 import logging
-from typing import Any, List, Optional
+from typing import Any
 from flask import current_app
 from sqlalchemy import delete, select
 
@@ -10,8 +10,7 @@ from app.models import GeneratorDrawnPerk
 logger = logging.getLogger(__name__)
 
 
-def get_drawn_perks(role: Optional[str], use_sqlalchemy: bool, db_service: Any) -> List[str]:
-    """Retrieve all perks marked as drawn for a specific role."""
+def get_drawn_perks(role: str | None, use_sqlalchemy: bool, db_service: Any) -> list[str]:
     role_clean = (role or "Survivor").capitalize()
 
     if use_sqlalchemy:
@@ -35,8 +34,7 @@ def get_drawn_perks(role: Optional[str], use_sqlalchemy: bool, db_service: Any) 
     return [row[0] for row in rows]
 
 
-def add_drawn_perks(role: Optional[str], perk_names: List[str], use_sqlalchemy: bool, db_service: Any) -> List[str]:
-    """Insert perk names into drawn list, avoiding duplicates."""
+def add_drawn_perks(role: str | None, perk_names: list[str], use_sqlalchemy: bool, db_service: Any) -> list[str]:
     role_clean = (role or "Survivor").capitalize()
 
     if use_sqlalchemy:
@@ -72,8 +70,7 @@ def add_drawn_perks(role: Optional[str], perk_names: List[str], use_sqlalchemy: 
     return get_drawn_perks(role_clean, use_sqlalchemy=False, db_service=db_service)
 
 
-def reset_drawn_perks(role: Optional[str], use_sqlalchemy: bool, db_service: Any) -> List[str]:
-    """Clear all drawn perks globally or for a specific role."""
+def reset_drawn_perks(role: str | None, use_sqlalchemy: bool, db_service: Any) -> list[str]:
     if use_sqlalchemy:
         try:
             if current_app:
@@ -100,4 +97,3 @@ def reset_drawn_perks(role: Optional[str], use_sqlalchemy: bool, db_service: Any
     conn.close()
 
     return []
-

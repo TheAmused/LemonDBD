@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# scripts/inspect_streaks_components.py
 """
 inspect_streaks_components.py
 

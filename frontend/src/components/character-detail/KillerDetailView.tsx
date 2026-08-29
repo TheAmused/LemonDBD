@@ -56,20 +56,36 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
   const killerTRMeters = killerPower?.terror_radius_meters || 32;
   const killerHeight = formatKillerHeight(killerPower?.height, t);
 
-  const chapterName = character.chapter_name || t.baseGame || 'Base Game';
+  const chapterName = character.chapter_name || t.baseGame || '';
   const releaseDate = formatLocalizedReleaseDate(
     character.release_date || String(character.release_year || '2016'),
     currentLocale
   );
-  const rawLoreText = character.lore || t.noLoreFound || "No lore records discovered in the Entity's Archives yet.";
+  const rawLoreText = character.lore || t.noLoreFound || '';
+
+  const articleAriaLabel = t.characterDetails
+    ? `${character.name} - ${t.characterDetails}`
+    : character.name;
+
+  const powerTitle = killerPower
+    ? t.inspectPowerMechanics
+      ? `${killerPower.name} (${t.inspectPowerMechanics})`
+      : killerPower.name
+    : '';
+
+  const powerAriaLabel = killerPower
+    ? t.powerDetails
+      ? `${killerPower.name} - ${t.powerDetails}`
+      : killerPower.name
+    : '';
 
   return (
-    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={`${character.name} Details`}>
+    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={articleAriaLabel}>
       {/* 1. Breadcrumbs & Character Navigator */}
       <CharacterBreadcrumbs
         currentLocale={currentLocale}
         character={character}
-        roleLabel={t.roleKiller || 'Killer'}
+        roleLabel={t.roleKiller || ''}
         isSurvivor={false}
         allCharacters={allCharacters}
         t={t}
@@ -81,7 +97,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
         <CharacterHeroAvatar
           character={character}
           isSurvivor={false}
-          roleLabel={t.roleKiller || 'Killer'}
+          roleLabel={t.roleKiller || ''}
           backendBase={backendBase}
           onOpenModelModal={() => setIsModelModalOpen(true)}
           t={t}
@@ -96,8 +112,8 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
                   type="button"
                   onClick={() => setIsPowerModalOpen(true)}
                   className="group relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-2xl bg-gradient-to-br from-rose-950 via-slate-950 to-slate-900 border-2 border-rose-500/60 hover:border-rose-400 p-2.5 flex items-center justify-center shadow-xl shadow-rose-950/50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
-                  title={`${killerPower.name} - ${t.killerPower || 'Killer Power'} (Click to inspect power mechanics)`}
-                  aria-label={`${killerPower.name} Power Details`}
+                  title={powerTitle}
+                  aria-label={powerAriaLabel}
                 >
                   {killerPower.icon_url || killerPower.icon_local_path ? (
                     <img
@@ -112,7 +128,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
                       }}
                     />
                   ) : (
-                    <Flame className="h-10 w-10 text-rose-400 animate-pulse" />
+                    <Flame className="h-10 w-10 text-rose-400 animate-pulse" aria-hidden="true" />
                   )}
                   <span className="absolute -bottom-1 -right-1 flex h-4 w-4" aria-hidden="true">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
@@ -123,17 +139,17 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
 
               <div>
                 <span className="text-xs font-mono font-bold tracking-wider text-rose-500 uppercase">
-                  {t.roleKiller || 'Killer'}{' '}
+                  {t.roleKiller || ''}{' '}
                   {character.is_licensed
-                    ? `• ${t.dlcLicensed || 'Licensed'}`
-                    : `• ${t.dlcOriginal || 'Original'}`}
+                    ? `• ${t.dlcLicensed || ''}`
+                    : `• ${t.dlcOriginal || ''}`}
                 </span>
                 <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-100 font-mono tracking-tight">
                   {character.name}
                 </h1>
                 {character.real_name && character.real_name !== character.name && (
                   <p className="text-xs sm:text-sm font-semibold text-slate-400 mt-0.5">
-                    {t.realName || 'Full Name'}:{' '}
+                    {t.realName || ''}:{' '}
                     <span className="text-slate-200">{character.real_name}</span>
                   </p>
                 )}
@@ -146,25 +162,27 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
                 onClick={() => setIsLoreModalOpen(true)}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
               >
-                <BookOpen className="h-4 w-4" />
-                <span>{t.viewLore || 'Lore & Bio'}</span>
+                <BookOpen className="h-4 w-4" aria-hidden="true" />
+                <span>{t.viewLore || ''}</span>
               </button>
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 select-none">
-                <Bookmark className="h-3.5 w-3.5 shrink-0" />
-                {chapterName}
-              </span>
+              {chapterName && (
+                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 select-none">
+                  <Bookmark className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  {chapterName}
+                </span>
+              )}
 
               <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-400 select-none">
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
+                <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {releaseDate}
               </span>
 
               <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-400 select-none">
-                <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
-                  ? t.licensedFranchise || t.dlcLicensed || 'Licensed Franchise'
-                  : t.originalChapter || t.dlcOriginal || 'Dead by Daylight Original'}
+                  ? t.licensedFranchise || t.dlcLicensed || ''
+                  : t.originalChapter || t.dlcOriginal || ''}
               </span>
             </div>
           </header>
@@ -265,4 +283,3 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
     </article>
   );
 };
-

@@ -87,12 +87,7 @@ def _resolve_character_ids_by_name(character: str, lang: Optional[str] = None) -
 
 
 def _perk_search_haystacks(p: Perk, lang: Optional[str] = None) -> List[str]:
-    description = p.description or ""
-    if lang and isinstance(p.translations, dict):
-        loc_data = p.translations.get(lang)
-        if isinstance(loc_data, dict) and loc_data.get("description"):
-            description = loc_data["description"]
-    haystacks = [_localized_perk_name(p, lang), p.alternate_name or "", description]
+    haystacks = [_localized_perk_name(p, lang), p.alternate_name or ""]
 
     char = p.character
     if char:
@@ -113,14 +108,12 @@ def _perk_dict_matches_search(
     if is_general_match and (not p.get("character") or p.get("character", "").lower() == "general"):
         return True
     name = p.get("name", "")
-    description = p.get("description", "")
     translations = p.get("translations")
     if lang and isinstance(translations, dict):
         loc_data = translations.get(lang)
         if isinstance(loc_data, dict):
             name = loc_data.get("name") or name
-            description = loc_data.get("description") or description
-    haystacks = [name, p.get("alternate_name", ""), description, p.get("character", "")]
+    haystacks = [name, p.get("alternate_name", ""), p.get("character", "")]
     return any(_text_matches(h, query_lower, norm_query) for h in haystacks)
 
 

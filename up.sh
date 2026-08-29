@@ -108,6 +108,40 @@ if [ "$STRICT" = true ]; then
   echo -e "${MAGENTA} [Gate 3] Strict Mode: Running Dual-Stack Live Tests     ${NC}"
   echo -e "${MAGENTA}========================================================${NC}"
 
+  # [Gate 2b] The backend healthcheck (and --wait above) only proves gunicorn
+  # is answering HTTP -- it says nothing about the initial DBD data scrape,
+  # which runs in a background thread (see backend/run.py) precisely so it
+  # doesn't block startup. On a fresh `down -v` reset that scrape can still
+  # be filling the DB when the line above prints, and the live test suite
+  # below assumes 50+ real characters already exist -- so wait for that here
+  # instead of finding out via a wave of confusing 500s/empty-array failures.
+  echo -e "\n${YELLOW}> Waiting for the initial character scrape to finish seeding the DB...${NC}"
+  # NOTE: this queries Postgres directly through `docker compose exec` instead
+  # of hitting the backend over the published host port -- the HTTP path was
+  # found to hang/timeout unpredictably right after a fresh `up --wait` on
+  # some Docker Desktop setups (the request never even reached gunicorn's
+  # access log), which is a host-networking quirk, not an application bug.
+  PG_USER="${POSTGRES_USER:-postgres}"
+  PG_DB="${POSTGRES_DB:-dbd_db}"
+  SCRAPE_READY=false
+  for i in $(seq 1 60); do
+    CHAR_COUNT=$(docker compose exec -T db psql -U "$PG_USER" -d "$PG_DB" -tAc "SELECT COUNT(*) FROM characters;" 2>/dev/null | tr -d '[:space:]')
+    if ! [[ "$CHAR_COUNT" =~ ^[0-9]+$ ]]; then
+      CHAR_COUNT=0
+    fi
+    CHAR_COUNT=${CHAR_COUNT:-0}
+    if [ "$CHAR_COUNT" -ge 50 ] 2>/dev/null; then
+      echo -e "${GREEN}[PASS] ${CHAR_COUNT} characters seeded -- data is ready.${NC}"
+      SCRAPE_READY=true
+      break
+    fi
+    echo -e "${YELLOW}  ... ${CHAR_COUNT}/50+ characters so far, waiting (${i}/60, ~3 min max)...${NC}"
+    sleep 3
+  done
+  if [ "$SCRAPE_READY" != true ]; then
+    echo -e "${RED}[WARN] Character data still not seeded after 3 minutes -- continuing anyway, but live tests will likely fail. Check 'docker compose logs backend' for scrape errors.${NC}"
+  fi
+
   # 3.1 Backend Live Tests
   echo -e "\n${YELLOW}> [1/2] Running Backend Live Tests (PostgreSQL Clone)...${NC}"
   export POSTGRES_HOST=127.0.0.1

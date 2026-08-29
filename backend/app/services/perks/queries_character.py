@@ -30,10 +30,24 @@ def fetch_characters(service, category: str | None = None, lang: str | None = No
         )
 
         characters = _run_characters_query(stmt)
+        # TEMPORARY DIAGNOSTIC (remove once confirmed): this path silently
+        # falls back to a possibly-empty in-memory cache on ANY exception,
+        # including one raised inside to_dict() -- log it loudly so a bad
+        # fallback is never mistaken for "there's just no data yet".
+        if not characters:
+            logger.warning(
+                f"[characters-query-check] DB query returned 0 rows "
+                f"(category={category!r}); falling back to in-memory cache "
+                f"of size {len(service._characters_cache)}"
+            )
         if characters:
             return [c.to_dict(lang=lang) for c in characters]
-    except Exception as e:
-        logger.debug(f"Querying characters from DB: {e}")
+    except Exception:
+        logger.exception(
+            f"[characters-query-check] Querying/serializing characters from "
+            f"DB raised -- falling back to in-memory cache of size "
+            f"{len(service._characters_cache)}"
+        )
 
     return service._characters_cache
 

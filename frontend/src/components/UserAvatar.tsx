@@ -18,6 +18,7 @@ interface UserAvatarProps {
   previewUrl?: string | null;
   adminTitle?: string;
   adminAriaLabel?: string;
+  alt?: string;
 }
 
 const SIZE_MAP = {
@@ -66,8 +67,9 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   showAdminBadge = false,
   borderClassName,
   previewUrl,
-  adminTitle = 'System Administrator',
-  adminAriaLabel = 'System Administrator Badge',
+  adminTitle,
+  adminAriaLabel,
+  alt,
 }) => {
   const [imgError, setImgError] = useState(false);
   const sizeConfig = SIZE_MAP[size] || SIZE_MAP.md;
@@ -112,7 +114,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         {isCustomAvatar ? (
           <img
             src={finalSrc}
-            alt={user?.username ? `${user.username}'s avatar` : 'User avatar'}
+            alt={alt || user?.username || ''}
             onError={() => {
               console.warn('Avatar image failed to load from:', finalSrc);
               setImgError(true);

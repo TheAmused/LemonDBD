@@ -1,10 +1,11 @@
 # backend/app/services/others/draft_service.py
-import json
-import uuid
 import logging
+import uuid
 from flask import current_app
 from sqlalchemy import select
+
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import DraftSession
 from app.services.db_service import DatabaseService
 
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class DraftService:
     def __init__(self, db_service=None):
-        self._use_sqlalchemy = (db_service is None)
+        self._use_sqlalchemy = db_service is None
         self.db_service = db_service or DatabaseService()
 
     def _init_table(self):
@@ -65,7 +66,6 @@ class DraftService:
         cursor.execute("SELECT * FROM draft_sessions WHERE room_code = ?;", (room_code,))
         if cursor.fetchone():
             conn.close()
-            # Generate new code if collision
             room_code = uuid.uuid4().hex[:6].upper()
             conn = self.db_service.get_connection()
             cursor = conn.cursor()
@@ -98,9 +98,9 @@ class DraftService:
             return None
 
         data = dict(row)
-        data["banned_perks"] = json.loads(data.get("banned_perks") or "[]")
-        data["picked_survivor_perks"] = json.loads(data.get("picked_survivor_perks") or "[]")
-        data["picked_killer_perks"] = json.loads(data.get("picked_killer_perks") or "[]")
+        data["banned_perks"] = safe_json_loads(data.get("banned_perks"), default=[])
+        data["picked_survivor_perks"] = safe_json_loads(data.get("picked_survivor_perks"), default=[])
+        data["picked_killer_perks"] = safe_json_loads(data.get("picked_killer_perks"), default=[])
         return data
 
     def process_action(self, room_code, action_data):
@@ -140,9 +140,9 @@ class DraftService:
                     ).first()
                     if ds:
                         ds.phase = current_phase
-                        ds.banned_perks = json.dumps(banned_perks)
-                        ds.picked_survivor_perks = json.dumps(picked_survivor_perks)
-                        ds.picked_killer_perks = json.dumps(picked_killer_perks)
+                        ds.banned_perks = safe_json_dumps(banned_perks, default_val="[]")
+                        ds.picked_survivor_perks = safe_json_dumps(picked_survivor_perks, default_val="[]")
+                        ds.picked_killer_perks = safe_json_dumps(picked_killer_perks, default_val="[]")
                         db.session.commit()
                         return ds.to_dict()
             except Exception as e:
@@ -154,7 +154,7 @@ class DraftService:
             UPDATE draft_sessions
             SET phase = ?, banned_perks = ?, picked_survivor_perks = ?, picked_killer_perks = ?, updated_at = CURRENT_TIMESTAMP
             WHERE room_code = ?;
-        """, (current_phase, json.dumps(banned_perks), json.dumps(picked_survivor_perks), json.dumps(picked_killer_perks), room_code))
+        """, (current_phase, safe_json_dumps(banned_perks), safe_json_dumps(picked_survivor_perks), safe_json_dumps(picked_killer_perks), room_code))
         conn.commit()
         conn.close()
 

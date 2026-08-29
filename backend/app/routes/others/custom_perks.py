@@ -1,5 +1,5 @@
 # backend/app/routes/others/custom_perks.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
 from app.services.others.custom_perk_service import CustomPerkService
 
 custom_perks_bp = Blueprint("custom_perks", __name__, url_prefix="/api/v1/custom-perks")
@@ -27,7 +27,7 @@ def list_custom_perks():
 
 @custom_perks_bp.route("/", methods=["POST"], strict_slashes=False)
 def create_custom_perk():
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
 
     name = data.get("name")
     description = data.get("description")

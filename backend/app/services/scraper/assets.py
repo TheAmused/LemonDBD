@@ -4,7 +4,6 @@ import io
 import logging
 import re
 from pathlib import Path
-from typing import List, Optional
 
 from curl_cffi.requests import AsyncSession
 from PIL import Image
@@ -16,10 +15,10 @@ from app.services.scraper.state import ScraperStateManager
 logger = logging.getLogger(__name__)
 
 PERK_FRAME_TEMPLATE_PATH = Path(__file__).resolve().parent.parent.parent / "scrapers" / "assets" / "perk_frame.png"
-_perk_frame_template_cache: Optional[Image.Image] = None
+_perk_frame_template_cache: Image.Image | None = None
 
 
-def get_perk_frame_template() -> Optional[Image.Image]:
+def get_perk_frame_template() -> Image.Image | None:
     """Retrieve and cache the PNG diamond frame template for perks."""
     global _perk_frame_template_cache
     if _perk_frame_template_cache is None and PERK_FRAME_TEMPLATE_PATH.exists():
@@ -38,7 +37,7 @@ def apply_perk_diamond_frame(icon_bytes: bytes) -> bytes:
 
     icon = Image.open(io.BytesIO(icon_bytes)).convert("RGBA")
     icon_size = int(size * 0.85)
-    icon_resized = icon.resize((icon_size, icon_size), Image.LANCZOS)
+    icon_resized = icon.resize((icon_size, icon_size), Image.Resampling.LANCZOS)
     offset = ((size - icon_size) // 2, (size - icon_size) // 2)
     canvas.alpha_composite(icon_resized, offset)
 
@@ -90,12 +89,12 @@ async def download_single_asset(
 
 async def download_all_assets(
     static_dir: Path,
-    perks: List[PerkData],
-    characters: List[CharacterData],
-    items: Optional[List[ItemData]] = None,
-    addons: Optional[List[AddonData]] = None,
-    maps: Optional[List[MapData]] = None,
-    offerings: Optional[List[OfferingData]] = None,
+    perks: list[PerkData],
+    characters: list[CharacterData],
+    items: list[ItemData] | None = None,
+    addons: list[AddonData] | None = None,
+    maps: list[MapData] | None = None,
+    offerings: list[OfferingData] | None = None,
     impersonate_browser: str = "chrome120",
     max_concurrent_downloads: int = 10,
     request_timeout: int = 30,
@@ -167,7 +166,6 @@ async def download_all_assets(
                             timeout=request_timeout,
                         )
                     )
-                    # Also download under base name if different (e.g. without (The Slasher))
                     base_name = re.sub(r"\s*\([^)]*\)", "", addon.name).strip()
                     base_slug = sanitize_filename(base_name)
                     base_path = f"icons/addons/{base_slug}.png"
@@ -183,7 +181,6 @@ async def download_all_assets(
                             )
                         )
 
-                    # Common spelling / legacy aliases
                     alias_slugs = []
                     if "ether_15" in base_slug or "aether_15" in base_slug:
                         alias_slugs.extend(["aether_15%", "ether_15_vol%", "aether_15_vol%"])
@@ -235,4 +232,3 @@ async def download_all_assets(
                     )
 
         await asyncio.gather(*tasks)
-

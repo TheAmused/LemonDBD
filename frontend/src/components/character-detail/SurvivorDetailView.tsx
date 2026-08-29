@@ -43,19 +43,23 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
   const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | OfferingItem | null>(null);
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
-  const chapterName = character.chapter_name || t.baseGame || 'Base Game';
+  const chapterName = character.chapter_name || t.baseGame || '';
   const releaseDate = formatLocalizedReleaseDate(
     character.release_date || String(character.release_year || '2016'),
     currentLocale
   );
-  const rawLoreText = character.lore || t.noLoreFound || "No lore records discovered in the Entity's Archives yet.";
+  const rawLoreText = character.lore || t.noLoreFound || '';
+
+  const articleAriaLabel = t.characterDetails
+    ? `${character.name} - ${t.characterDetails}`
+    : character.name;
 
   return (
-    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={`${character.name} Details`}>
+    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={articleAriaLabel}>
       <CharacterBreadcrumbs
         currentLocale={currentLocale}
         character={character}
-        roleLabel={t.roleSurvivor || 'Survivor'}
+        roleLabel={t.roleSurvivor || ''}
         isSurvivor={true}
         allCharacters={allCharacters}
         t={t}
@@ -65,7 +69,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         <CharacterHeroAvatar
           character={character}
           isSurvivor={true}
-          roleLabel={t.roleSurvivor || 'Survivor'}
+          roleLabel={t.roleSurvivor || ''}
           backendBase={backendBase}
           onOpenModelModal={() => setIsModelModalOpen(true)}
           t={t}
@@ -75,17 +79,17 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
           <header className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <span className="text-xs font-mono font-bold tracking-wider text-emerald-400 uppercase">
-                {t.roleSurvivor || 'Survivor'}{' '}
+                {t.roleSurvivor || ''}{' '}
                 {character.is_licensed
-                  ? `• ${t.dlcLicensed || 'Licensed'}`
-                  : `• ${t.dlcOriginal || 'Original'}`}
+                  ? `• ${t.dlcLicensed || ''}`
+                  : `• ${t.dlcOriginal || ''}`}
               </span>
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-100 font-mono tracking-tight">
                 {character.name}
               </h1>
               {character.real_name && character.real_name !== character.name && (
                 <p className="text-xs sm:text-sm font-semibold text-slate-400 mt-0.5">
-                  {t.realName || 'Full Name'}:{' '}
+                  {t.realName || ''}:{' '}
                   <span className="text-slate-200">{character.real_name}</span>
                 </p>
               )}
@@ -97,25 +101,27 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
                 onClick={() => setIsLoreModalOpen(true)}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
               >
-                <BookOpen className="h-4 w-4" />
-                <span>{t.viewLore || 'Lore & Bio'}</span>
+                <BookOpen className="h-4 w-4" aria-hidden="true" />
+                <span>{t.viewLore || ''}</span>
               </button>
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 select-none">
-                <Bookmark className="h-3.5 w-3.5 shrink-0" />
-                {chapterName}
-              </span>
+              {chapterName && (
+                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 select-none">
+                  <Bookmark className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  {chapterName}
+                </span>
+              )}
 
               <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-400 select-none">
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
+                <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {releaseDate}
               </span>
 
               <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-400 select-none">
-                <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
-                  ? t.licensedFranchise || t.dlcLicensed || 'Licensed Franchise'
-                  : t.originalChapter || t.dlcOriginal || 'Dead by Daylight Original'}
+                  ? t.licensedFranchise || t.dlcLicensed || ''
+                  : t.originalChapter || t.dlcOriginal || ''}
               </span>
             </div>
           </header>
@@ -180,4 +186,3 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
     </article>
   );
 };
-

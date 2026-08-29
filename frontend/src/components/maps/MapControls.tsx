@@ -1,9 +1,9 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapControls.tsx
 
 import React from 'react';
 import { ZoomIn, ZoomOut, RotateCcw, Maximize2, ExternalLink } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 
 export interface MapControlsProps {
   zoomLevel: number;
@@ -48,7 +48,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         type="button"
         onClick={onZoomIn}
         aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
-        title={dict?.maps?.zoomIn ? `${dict?.maps?.zoomIn} (+25%)` : 'Zoom In (+25%)'}
+        title={dict?.maps?.zoomIn25 || 'Zoom In (+25%)'}
         className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
         data-testid="map-controls-zoom-in"
       >
@@ -67,7 +67,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         type="button"
         onClick={onZoomOut}
         aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
-        title={dict?.maps?.zoomOut ? `${dict?.maps?.zoomOut} (-25%)` : 'Zoom Out (-25%)'}
+        title={dict?.maps?.zoomOut25 || 'Zoom Out (-25%)'}
         className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
         data-testid="map-controls-zoom-out"
       >
@@ -152,7 +152,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
         type="button"
         onClick={onReset}
         aria-label={dict?.maps?.resetView || 'Reset View'}
-        title={dict?.maps?.resetZoomPan || 'Reset Zoom & Pan'}
+        title={dict?.maps?.resetPanZoom || 'Reset Zoom & Pan'}
         className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800/80 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
         data-testid="map-controls-reset"
       >

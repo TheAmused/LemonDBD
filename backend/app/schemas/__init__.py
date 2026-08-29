@@ -4,6 +4,11 @@ Schemas Package
 Exports all request and response validation DTOs.
 """
 
+from app.schemas.admin import (
+    AdminAuditLogResponse,
+    ChallengeModeSettingBase,
+    ChallengeModeSettingResponse,
+)
 from app.schemas.character import (
     CharacterBase,
     CharacterCreate,
@@ -28,6 +33,8 @@ from app.schemas.equipment import (
     AddonResponse,
     ItemBase,
     ItemResponse,
+    OfferingBase,
+    OfferingResponse,
 )
 from app.schemas.gauntlet import (
     GauntletMatchLogBase,
@@ -81,6 +88,13 @@ from app.schemas.perk import (
     PerkRuleBase,
     PerkRuleResponse,
 )
+from app.schemas.smash_or_pass import (
+    EntityResponse,
+    EntityStatResponse,
+    RosterResponse,
+    VoteCreate,
+    VoteResponse,
+)
 from app.schemas.user import (
     UserBase,
     UserCharacterOwnershipBase,
@@ -114,6 +128,8 @@ __all__ = [
     "ItemResponse",
     "AddonBase",
     "AddonResponse",
+    "OfferingBase",
+    "OfferingResponse",
     "MapPosition",
     "MapTileBase",
     "MapTileResponse",
@@ -158,5 +174,12 @@ __all__ = [
     "BugReportBase",
     "BugReportCreate",
     "BugReportResponse",
+    "ChallengeModeSettingBase",
+    "ChallengeModeSettingResponse",
+    "AdminAuditLogResponse",
+    "EntityResponse",
+    "EntityStatResponse",
+    "RosterResponse",
+    "VoteCreate",
+    "VoteResponse",
 ]
-

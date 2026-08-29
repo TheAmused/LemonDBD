@@ -2,12 +2,10 @@
 import functools
 import logging
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional
-
+from typing import Any
 import jwt
 from flask import current_app, g, jsonify, request
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from app.core.extensions import db
 from app.models.user import User
 
@@ -18,9 +16,8 @@ DEFAULT_SECRET_KEY = "dbd-lemon-secret-key-2026"
 DEFAULT_EXPIRATION = timedelta(hours=24)
 
 
-# Password Utilities
 def hash_password(password: str) -> str:
-    """Hash a plaintext password for database storage."""
+    """Hash a plaintext password for secure database storage."""
     return generate_password_hash(password)
 
 
@@ -28,14 +25,19 @@ def verify_password(password: str, password_hash: str) -> bool:
     """Verify a plaintext password against a stored password hash."""
     if not password or not password_hash:
         return False
-    return check_password_hash(password_hash, password)
+    try:
+        return check_password_hash(password_hash, password)
+    except (ValueError, TypeError) as exc:
+        # A hash produced by an older/incompatible hashing scheme (e.g. a
+        # pre-refactor default account seeded before the password hashing
+        # method changed) isn't a 500-worthy server error -- it just means
+        # this credential can't be verified. Treat it as "wrong password".
+        logger.warning(f"Password hash is unreadable/unsupported: {exc}")
+        return False
 
 
-# JWT Utilities
-def generate_token(user_id: int, role: str = "user", extra_claims: Optional[Dict[str, Any]] = None) -> str:
-    """
-    Generate a signed JWT for an authenticated user with guaranteed fallback configurations.
-    """
+def generate_token(user_id: int, role: str = "user", extra_claims: dict[str, Any] | None = None) -> str:
+    """Generate a signed JWT for an authenticated user with fallback configuration."""
     now = datetime.now(timezone.utc)
 
     if current_app:
@@ -47,7 +49,7 @@ def generate_token(user_id: int, role: str = "user", extra_claims: Optional[Dict
         secret_key = DEFAULT_SECRET_KEY
         algorithm = DEFAULT_JWT_ALGORITHM
 
-    payload = {
+    payload: dict[str, Any] = {
         "sub": str(user_id),
         "role": role,
         "iat": now,
@@ -60,10 +62,8 @@ def generate_token(user_id: int, role: str = "user", extra_claims: Optional[Dict
     return jwt.encode(payload, secret_key, algorithm=algorithm)
 
 
-def decode_token(token: str) -> Optional[Dict[str, Any]]:
-    """
-    Decode and validate a JWT string with resilient algorithm and key fallbacks.
-    """
+def decode_token(token: str) -> dict[str, Any] | None:
+    """Decode and validate a JWT string with resilient algorithm and key configuration."""
     if not token:
         return None
 
@@ -81,25 +81,22 @@ def decode_token(token: str) -> Optional[Dict[str, Any]]:
         logger.warning("JWT validation failed: Token has expired.")
         return None
     except jwt.InvalidTokenError as e:
-        logger.warning(f"JWT validation failed: {str(e)}")
+        logger.warning(f"JWT validation failed: {e}")
         return None
     except Exception as e:
-        logger.warning(f"Unexpected error during JWT validation: {str(e)}")
+        logger.warning(f"Unexpected error during JWT validation: {e}")
         return None
 
 
-# User Retrieval Helper
-def get_current_user() -> Optional[User]:
-    """
-    Extract and verify the current user from the Authorization Bearer header or query string.
-    """
+def get_current_user() -> User | None:
+    """Extract and verify the current user from the Authorization Bearer header or query string."""
     auth_header = request.headers.get("Authorization")
-    token = None
+    token: str | None = None
 
     if auth_header and auth_header.startswith("Bearer "):
         token = auth_header.split(" ", 1)[1].strip()
     elif request.args.get("token"):
-        token = request.args.get("token").strip()
+        token = request.args.get("token", "").strip()
 
     if not token:
         return None
@@ -120,7 +117,6 @@ def get_current_user() -> Optional[User]:
     return None
 
 
-# Route Protection Decorators
 def login_required(f):
     """Decorator ensuring the request contains a valid JWT for an active user."""
     @functools.wraps(f)

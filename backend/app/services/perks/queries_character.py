@@ -1,10 +1,11 @@
 # backend/app/services/perks/queries_character.py
 import logging
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.orm import joinedload
 
+from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.models import Addon, Character, Item, Offering
 from app.services.perks.utils import HEADER_EXCLUSIONS, normalize_search_key, slugify
@@ -12,7 +13,7 @@ from app.services.perks.utils import HEADER_EXCLUSIONS, normalize_search_key, sl
 logger = logging.getLogger(__name__)
 
 
-def fetch_characters(service, category: Optional[str] = None, lang: Optional[str] = None) -> List[Dict[str, Any]]:
+def fetch_characters(service, category: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
     """Retrieve character list ordered by canonical chapter release numbers."""
     try:
         stmt = select(Character).options(joinedload(Character.perks))
@@ -28,7 +29,7 @@ def fetch_characters(service, category: Optional[str] = None, lang: Optional[str
             Character.name.asc(),
         )
 
-        characters = db.session.scalars(stmt).unique().all()
+        characters = _run_characters_query(stmt)
         if characters:
             return [c.to_dict(lang=lang) for c in characters]
     except Exception as e:
@@ -37,12 +38,21 @@ def fetch_characters(service, category: Optional[str] = None, lang: Optional[str
     return service._characters_cache
 
 
+@retry_on_transient_db_error()
+def _run_characters_query(stmt):
+    # Split out so a transient connection drop gets retried once here,
+    # before fetch_characters' broader except falls back to the (possibly
+    # empty/stale) in-memory cache -- without this, a one-off blip silently
+    # degrades every caller to a near-empty catalog instead of a clean error.
+    return db.session.scalars(stmt).unique().all()
+
+
 def fetch_character_suggestions(
     service,
     query: str = "",
-    category: Optional[str] = None,
+    category: str | None = None,
     limit: int = 15,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """Autocomplete suggestions for characters by name or real name."""
     try:
         stmt = select(Character)
@@ -92,7 +102,7 @@ def fetch_character_suggestions(
         return res
 
 
-def fetch_character_detail(service, character_name: str, lang: Optional[str] = None) -> Optional[Dict[str, Any]]:
+def fetch_character_detail(service, character_name: str, lang: str | None = None) -> dict[str, Any] | None:
     """Retrieve full character detail including specific addons, powers, and teachable perks."""
     target_clean = character_name.strip().lower()
     target_slug = slugify(character_name)
@@ -100,7 +110,7 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
     try:
         stmt = select(Character).options(joinedload(Character.perks))
         chars = db.session.scalars(stmt).unique().all()
-        matched_char: Optional[Character] = None
+        matched_char: Character | None = None
 
         for c in chars:
             c_name = c.name.lower()
@@ -157,7 +167,7 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
             "event": 6,
         }
 
-        def get_rarity_sort_key(item_dict: Dict[str, Any]) -> Tuple[int, str]:
+        def get_rarity_sort_key(item_dict: dict[str, Any]) -> tuple[int, str]:
             r = (item_dict.get("rarity") or "").lower().strip()
             for k, rank in RARITY_RANK.items():
                 if k in r:
@@ -167,11 +177,9 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
         char_role = matched_char.role or "Survivor"
         perks_list = [p.to_dict(lang=lang) for p in matched_char.perks]
 
-        addons_list: List[Dict[str, Any]] = []
-        items_list: List[Dict[str, Any]] = []
-        offerings_list: List[Dict[str, Any]] = []
-
-        from app.models.equipment import Offering
+        addons_list: list[dict[str, Any]] = []
+        items_list: list[dict[str, Any]] = []
+        offerings_list: list[dict[str, Any]] = []
 
         if char_role.lower() == "killer":
             all_addons = db.session.scalars(
@@ -232,7 +240,6 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
             addons_list = [a.to_dict(lang=lang) for a in matched_addons]
             addons_list.sort(key=get_rarity_sort_key)
 
-            # Query Killer offerings
             killer_offerings = db.session.scalars(
                 select(Offering).where(func.lower(Offering.role).in_(["killer", "all"]))
             ).all()
@@ -253,7 +260,6 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
             ]
             addons_list.sort(key=get_rarity_sort_key)
 
-            # Query Survivor offerings
             survivor_offerings = db.session.scalars(
                 select(Offering).where(func.lower(Offering.role).in_(["survivor", "all"]))
             ).all()
@@ -271,4 +277,3 @@ def fetch_character_detail(service, character_name: str, lang: Optional[str] = N
     except Exception as e:
         logger.error(f"Error getting character detail from DB: {e}", exc_info=True)
         return None
-

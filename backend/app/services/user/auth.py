@@ -2,9 +2,9 @@
 import logging
 import secrets
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Tuple
 from sqlalchemy import or_, select
 
+from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.core.security import (
     decode_token,
@@ -33,7 +33,7 @@ def create_user_account(
     password: str,
     role: str = "user",
     avatar_url: str = "default_avatar",
-) -> Tuple[Optional[User], Optional[str]]:
+) -> tuple[User | None, str | None]:
     """Validate registration parameters, hash passwords, and persist new User entity."""
     clean_username = (username or "").strip()
     clean_email = (email or "").strip().lower()
@@ -80,7 +80,7 @@ def create_user_account(
     return new_user, None
 
 
-def verify_email_code(email: str, code: str) -> Tuple[Optional[User], Optional[str]]:
+def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
     """Consume a verification code and mark the matching user as verified."""
     clean_email = (email or "").strip().lower()
     clean_code = (code or "").strip()
@@ -120,13 +120,8 @@ def verify_email_code(email: str, code: str) -> Tuple[Optional[User], Optional[s
     return user, None
 
 
-def resend_verification_email(email: str) -> Tuple[bool, Optional[str]]:
-    """Regenerate and resend a verification code if the account isn't verified yet.
-
-    Rate-limited to one send per RESEND_COOLDOWN, derived from the existing
-    expiry timestamp (expires_at - lifetime = when the current code was sent)
-    so no extra column is needed to track last-sent time.
-    """
+def resend_verification_email(email: str) -> tuple[bool, str | None]:
+    """Regenerate and resend a verification code if the account isn't verified yet."""
     clean_email = (email or "").strip().lower()
     if not clean_email:
         return True, None
@@ -155,12 +150,8 @@ def resend_verification_email(email: str) -> Tuple[bool, Optional[str]]:
     return True, None
 
 
-def request_password_reset(email: str) -> Tuple[bool, Optional[str]]:
-    """Generate a reset token and email it, if an account with this email exists.
-
-    Rate-limited the same way as resend_verification_email: derived from the
-    existing expiry timestamp rather than a dedicated last-sent column.
-    """
+def request_password_reset(email: str) -> tuple[bool, str | None]:
+    """Generate a reset token and email it, if an account with this email exists."""
     clean_email = (email or "").strip().lower()
     if not clean_email:
         return True, None
@@ -188,7 +179,7 @@ def request_password_reset(email: str) -> Tuple[bool, Optional[str]]:
     return True, None
 
 
-def reset_password_with_token(token: str, new_password: str) -> Tuple[Optional[User], Optional[str]]:
+def reset_password_with_token(token: str, new_password: str) -> tuple[User | None, str | None]:
     """Consume a reset token and set a new password for the matching user."""
     clean_token = (token or "").strip()
     if not clean_token:
@@ -217,10 +208,11 @@ def reset_password_with_token(token: str, new_password: str) -> Tuple[Optional[U
     return user, None
 
 
+@retry_on_transient_db_error()
 def authenticate_user_credentials(
     username_or_email: str,
     password: str,
-) -> Tuple[Optional[User], Optional[str]]:
+) -> tuple[User | None, str | None]:
     """Verify username/email and password against stored database hash."""
     clean_id = (username_or_email or "").strip()
     if not clean_id or not password:
@@ -245,7 +237,7 @@ def authenticate_user_credentials(
     return None, None
 
 
-def retrieve_user_from_jwt(token: str) -> Optional[User]:
+def retrieve_user_from_jwt(token: str) -> User | None:
     """Decode incoming JWT and fetch corresponding active User entity."""
     payload = decode_token(token)
     if not payload or "sub" not in payload:
@@ -258,4 +250,3 @@ def retrieve_user_from_jwt(token: str) -> Optional[User]:
     except (ValueError, TypeError):
         return None
     return None
-

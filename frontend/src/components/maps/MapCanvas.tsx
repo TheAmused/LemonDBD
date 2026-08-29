@@ -1,9 +1,9 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/MapCanvas.tsx
 
 import React, { useState, useEffect } from 'react';
 import { Compass, ImageOff, Move } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 
 export interface MapCanvasProps {
   imageUrl?: string;
@@ -74,6 +74,22 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
       ? 'justify-end'
       : 'justify-center';
 
+  const altText = dict?.maps?.diagramAlt
+    ? dict.maps.diagramAlt.replace('{mapName}', `${mapName}${realmName ? ` - ${realmName}` : ''}`)
+    : `${mapName}${realmName ? ` - ${realmName}` : ''} Diagram`;
+
+  const fallbackTitle = imageError
+    ? dict?.maps?.unableToLoadDiagram || 'Unable to load diagram'
+    : dict?.maps?.noDiagramAvailable || 'No diagram available';
+
+  const fallbackDescription = imageError
+    ? dict?.maps?.failedToLoadDiagram
+      ? dict.maps.failedToLoadDiagram.replace('{mapName}', mapName)
+      : `Failed to load diagram for ${mapName}. Please check network connection.`
+    : dict?.maps?.diagramNotAvailable
+      ? dict.maps.diagramNotAvailable.replace('{mapName}', mapName)
+      : `Diagram for ${mapName} is not yet available.`;
+
   return (
     <div
       onMouseDown={onMouseDown}
@@ -102,7 +118,7 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
         {imageUrl && !imageError ? (
           <img
             src={imageUrl}
-            alt={`${mapName}${realmName ? ` - ${realmName}` : ''} Diagram`}
+            alt={altText}
             draggable={false}
             onError={handleImageError}
             style={{
@@ -123,12 +139,10 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({
             )}
             <div className="space-y-1">
               <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                {imageError ? 'Unable to load diagram' : 'No diagram available'}
+                {fallbackTitle}
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs">
-                {imageError
-                  ? `Failed to load diagram for ${mapName}. Please check network connection.`
-                  : `Diagram for ${mapName} is not yet available.`}
+                {fallbackDescription}
               </p>
             </div>
           </div>

@@ -3,7 +3,7 @@ from flask import Blueprint, current_app, jsonify, request
 from app.services.others.build_service import BuildService
 
 builds_bp = Blueprint("builds", __name__, url_prefix="/api/v1/builds")
-_default_build_service = None
+_default_build_service: BuildService | None = None
 
 
 def get_build_service() -> BuildService:
@@ -60,7 +60,7 @@ def create_build():
 
 
 @builds_bp.route("/<int:build_id>/upvote", methods=["POST"])
-def upvote_build(build_id):
+def upvote_build(build_id: int):
     service = get_build_service()
     try:
         updated_build = service.upvote_build(build_id)

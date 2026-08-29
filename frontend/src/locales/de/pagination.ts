@@ -1,15 +1,14 @@
-// frontend/src/locales/de/pagination.ts
 export default {
-  "showing": "Angezeigt werden",
-  "of": "von",
-  "results": "Talenten",
-  "perPage": "Pro Seite",
-  "page": "Seite",
-  "previous": "Vorherige Seite",
-  "next": "Nächste Seite",
-  "firstPage": "Erste Seite",
-  "lastPage": "Letzte Seite",
-  "goTo": "Gehe zu",
-  "navAriaLabel": "Seitennavigation",
-  "to": "bis"
-};
+  showing: "Angezeigt werden",
+  of: "von",
+  results: "Talenten",
+  perPage: "Pro Seite",
+  page: "Seite",
+  previous: "Vorherige Seite",
+  next: "Nächste Seite",
+  firstPage: "Erste Seite",
+  lastPage: "Letzte Seite",
+  goTo: "Gehe zu",
+  navAriaLabel: "Seitennavigation",
+  to: "bis",
+} as const;

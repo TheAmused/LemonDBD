@@ -1,5 +1,5 @@
 # backend/app/services/perks/queries_map.py
-from typing import Any, Dict, List, Optional
+from typing import Any
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import joinedload
 
@@ -9,10 +9,10 @@ from app.models import MapRealm
 
 def fetch_maps(
     service,
-    realm: Optional[str] = None,
-    search: Optional[str] = None,
-    source: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    realm: str | None = None,
+    search: str | None = None,
+    source: str | None = None,
+) -> list[dict[str, Any]]:
     """Retrieve maps list from database with cache fallback."""
     try:
         stmt = select(MapRealm).options(
@@ -48,9 +48,9 @@ def fetch_maps(
 def fetch_map_detail(
     service,
     map_id: str,
-    seed: Optional[str] = None,
-    floor: Optional[int] = None,
-) -> Optional[Dict[str, Any]]:
+    seed: str | None = None,
+    floor: int | None = None,
+) -> dict[str, Any] | None:
     """Retrieve full map details including seed and floor configurations."""
     try:
         target = map_id.lower().replace("_", "").replace("-", "").strip()
@@ -69,4 +69,3 @@ def fetch_map_detail(
     except Exception:
         pass
     return None
-

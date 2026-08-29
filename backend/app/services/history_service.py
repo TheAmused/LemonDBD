@@ -1,12 +1,13 @@
 # backend/app/services/history_service.py
-import json
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import HistoryMatchLog, HistoryRun
+from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.history import fetch_history_user_stats
 from app.services.history.roster import (
     ROW_SIZE,
@@ -16,43 +17,29 @@ from app.services.history.roster import (
     get_owned_killer_ids_by_release,
     resolve_killer_names_by_ids,
 )
-from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.ownership_service import OwnershipService
 
 logger = logging.getLogger(__name__)
 
 
 class HistoryService:
-    def __init__(self, ownership_service: Optional[OwnershipService] = None):
+    def __init__(self, ownership_service: OwnershipService | None = None):
         self.ownership_service = ownership_service or OwnershipService()
 
-    def _freeze_pool(self, run: HistoryRun) -> List[str]:
+    def _freeze_pool(self, run: HistoryRun) -> list[str]:
         ids = get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
-        run.owned_killers_json = json.dumps(ids)
+        run.owned_killers_json = safe_json_dumps(ids)
         return resolve_killer_names_by_ids(ids)
 
     def _is_unfrozen(self, run: HistoryRun) -> bool:
-        """True while its pool was never frozen."""
-        return not json.loads(run.owned_killers_json or "[]")
+        return not safe_json_loads(run.owned_killers_json, default=[])
 
     def _resolve_loss(self, run: HistoryRun):
-        """Computes and applies the state a loss resets History progress to:
-        medium-mode checkpoint fallback, or a full reset to row 0 (hell mode,
-        or medium with no checkpoint banked yet -- the checkpoint fields
-        still sit at their creation-time zero defaults in that case, so the
-        medium branch below naturally restores to zero too). Mutates run's
-        row/checkpoint fields in place, refreezes the roster when the
-        resulting state is genuinely zero progress (Task 4's rule), and
-        returns (completed, unlocked) for the caller to persist. Shared by
-        submit_result's real-match loss branch and apply_inactivity_loss's
-        synthetic one, since this exact computation caused the same
-        medium-checkpoint-zero-detection bug twice before being unified
-        here."""
         if run.mode == "medium":
             run.current_row_index = run.checkpoint_row_index
             run.total_killers_beaten = run.checkpoint_total_killers_beaten
-            completed = json.loads(run.checkpoint_completed_killers_json or "[]")
-            unlocked = json.loads(run.checkpoint_unlocked_perk_names_json or "[]")
+            completed = safe_json_loads(run.checkpoint_completed_killers_json, default=[])
+            unlocked = safe_json_loads(run.checkpoint_unlocked_perk_names_json, default=[])
         else:
             general = get_general_killer_perk_names()
             run.current_row_index = 0
@@ -62,20 +49,20 @@ class HistoryService:
             run.checkpoint_row_index = 0
             run.checkpoint_total_killers_beaten = 0
             run.checkpoint_completed_killers_json = "[]"
-            run.checkpoint_unlocked_perk_names_json = json.dumps(general)
+            run.checkpoint_unlocked_perk_names_json = safe_json_dumps(general)
 
         if run.current_row_index == 0 and run.total_killers_beaten == 0:
             self._freeze_pool(run)
 
         return completed, unlocked
 
-    def _augment(self, run: HistoryRun) -> Dict[str, Any]:
+    def _augment(self, run: HistoryRun) -> dict[str, Any]:
         if self._is_unfrozen(run):
             owned_names = resolve_killer_names_by_ids(
                 get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
             )
         else:
-            owned_ids = json.loads(run.owned_killers_json or "[]")
+            owned_ids = safe_json_loads(run.owned_killers_json, default=[])
             owned_names = resolve_killer_names_by_ids(owned_ids)
         rows = build_rows(owned_names)
 
@@ -87,10 +74,10 @@ class HistoryService:
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
 
         if current_row:
-            completed = json.loads(run.completed_killers_json or "[]")
+            completed = safe_json_loads(run.completed_killers_json, default=[])
             filtered = [k for k in completed if k in current_row]
             if filtered != completed:
-                run.completed_killers_json = json.dumps(filtered)
+                run.completed_killers_json = safe_json_dumps(filtered)
                 db.session.commit()
 
         data = run.to_dict()
@@ -102,7 +89,7 @@ class HistoryService:
         data["pool_frozen"] = not self._is_unfrozen(run)
         return data
 
-    def get_or_create_run(self, user_id: int, mode: str) -> Dict[str, Any]:
+    def get_or_create_run(self, user_id: int, mode: str) -> dict[str, Any]:
         run = db.session.scalars(
             select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
         ).first()
@@ -121,18 +108,18 @@ class HistoryService:
             total_killers_beaten=0,
             best_killers_beaten=0,
             completed_killers_json="[]",
-            owned_killers_json=json.dumps(owned_killer_ids),
-            unlocked_perk_names_json=json.dumps(general),
+            owned_killers_json=safe_json_dumps(owned_killer_ids),
+            unlocked_perk_names_json=safe_json_dumps(general),
             checkpoint_row_index=0,
             checkpoint_total_killers_beaten=0,
             checkpoint_completed_killers_json="[]",
-            checkpoint_unlocked_perk_names_json=json.dumps(general),
+            checkpoint_unlocked_perk_names_json=safe_json_dumps(general),
         )
         db.session.add(run)
         db.session.commit()
         return self._augment(run)
 
-    def reset_run(self, user_id: int, mode: str) -> Dict[str, Any]:
+    def reset_run(self, user_id: int, mode: str) -> dict[str, Any]:
         assert_challenge_mode_enabled("history")
         run = db.session.scalars(
             select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
@@ -143,7 +130,7 @@ class HistoryService:
         db.session.commit()
         return self.get_or_create_run(user_id, mode)
 
-    def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> Dict[str, Any]:
+    def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> dict[str, Any]:
         assert_challenge_mode_enabled("history")
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
@@ -160,17 +147,17 @@ class HistoryService:
 
         if self._is_unfrozen(run):
             self._freeze_pool(run)
-        owned_names = resolve_killer_names_by_ids(json.loads(run.owned_killers_json or "[]"))
+        owned_names = resolve_killer_names_by_ids(safe_json_loads(run.owned_killers_json, default=[]))
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
         if killer_id not in current_row:
             raise ValueError(f"{killer_id} is not in the active row")
 
-        completed = json.loads(run.completed_killers_json or "[]")
-        unlocked = json.loads(run.unlocked_perk_names_json or "[]")
+        completed = safe_json_loads(run.completed_killers_json, default=[])
+        unlocked = safe_json_loads(run.unlocked_perk_names_json, default=[])
         streak_before = run.total_killers_beaten
         row_index_for_log = run.current_row_index
-        newly_unlocked: List[str] = []
+        newly_unlocked: list[str] = []
         row_cleared = False
 
         if result == "win":
@@ -195,13 +182,13 @@ class HistoryService:
                     run.checkpoint_row_index = run.current_row_index
                     run.checkpoint_total_killers_beaten = run.total_killers_beaten
                     run.checkpoint_completed_killers_json = "[]"
-                    run.checkpoint_unlocked_perk_names_json = json.dumps(unlocked)
+                    run.checkpoint_unlocked_perk_names_json = safe_json_dumps(unlocked)
         else:
             completed, unlocked = self._resolve_loss(run)
 
         streak_after = run.total_killers_beaten
-        run.completed_killers_json = json.dumps(completed)
-        run.unlocked_perk_names_json = json.dumps(unlocked)
+        run.completed_killers_json = safe_json_dumps(completed)
+        run.unlocked_perk_names_json = safe_json_dumps(unlocked)
 
         db.session.add(HistoryMatchLog(
             run_id=run_id,
@@ -219,9 +206,6 @@ class HistoryService:
         return data
 
     def apply_inactivity_loss(self, run_id: int) -> None:
-        """Applies the same state transition submit_result's loss branch
-        would, without a killer_id. Used only by the inactivity cleanup job
-        (Task 11). A no-op if the run doesn't exist or is already completed."""
         run = db.session.scalars(select(HistoryRun).where(HistoryRun.id == run_id)).first()
         if not run or run.status == "completed":
             return
@@ -232,8 +216,8 @@ class HistoryService:
         completed, unlocked = self._resolve_loss(run)
 
         streak_after = run.total_killers_beaten
-        run.completed_killers_json = json.dumps(completed)
-        run.unlocked_perk_names_json = json.dumps(unlocked)
+        run.completed_killers_json = safe_json_dumps(completed)
+        run.unlocked_perk_names_json = safe_json_dumps(unlocked)
 
         db.session.add(HistoryMatchLog(
             run_id=run_id,
@@ -246,5 +230,5 @@ class HistoryService:
         ))
         db.session.commit()
 
-    def get_stats(self, user_id: int, mode: str) -> Dict[str, Any]:
+    def get_stats(self, user_id: int, mode: str) -> dict[str, Any]:
         return fetch_history_user_stats(user_id, mode)

@@ -1,20 +1,24 @@
 # backend/tests/live/workflows/test_character_catalog_and_filtering_workflow.py
 import pytest
+from flask.testing import FlaskClient
 
-def test_character_catalog_and_filtering_workflow(live_client):
-    # Step 1: Fetch killers
-    killers_res = live_client.get("/api/v1/killers")
-    assert killers_res.status_code == 200
-    killers = killers_res.get_json()["data"]
-    assert len(killers) >= 30
-    assert all(k["role"] == "Killer" for k in killers)
 
-    # Step 2: Fetch survivors
-    surv_res = live_client.get("/api/v1/survivors")
-    assert surv_res.status_code == 200
-    survivors = surv_res.get_json()["data"]
-    assert len(survivors) >= 30
-    assert all(s["role"] == "Survivor" for s in survivors)
+@pytest.mark.live
+@pytest.mark.workflow
+class TestCharacterCatalogAndFilteringWorkflow:
+    """Workflow asserting complete character catalog queries, role separation, and release metadata."""
 
-    # Step 3: Verify release numbers
-    assert any("release_number" in k for k in killers)
+    def test_character_catalog_and_filtering_workflow(self, live_client: FlaskClient) -> None:
+        killers_res = live_client.get("/api/v1/killers")
+        assert killers_res.status_code == 200
+        killers = killers_res.get_json()["data"]
+        assert len(killers) >= 30
+        assert all(k["role"] == "Killer" for k in killers)
+
+        surv_res = live_client.get("/api/v1/survivors")
+        assert surv_res.status_code == 200
+        survivors = surv_res.get_json()["data"]
+        assert len(survivors) >= 30
+        assert all(s["role"] == "Survivor" for s in survivors)
+
+        assert any("release_number" in k for k in killers)

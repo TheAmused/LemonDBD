@@ -1,4 +1,4 @@
-// frontend/src/utils/__tests__/i18nTranslations.test.ts
+// frontend/src/__tests__/unit/i18nTranslations.test.ts
 import test from 'node:test';
 import assert from 'node:assert';
 import { getDictionary } from '@/utils/../i18n/get-dictionary';
@@ -38,7 +38,7 @@ test('getDictionary resolves valid Dictionary object for each supported locale',
     const dict = await getDictionary(locale);
     assert.ok(dict, `Dictionary for ${locale} must be defined`);
     assert.strictEqual(typeof dict, 'object');
-    
+
     for (const ns of expectedNamespaces) {
       assert.ok((dict as any)[ns], `Namespace "${ns}" must exist in ${locale}`);
       assert.strictEqual(typeof (dict as any)[ns], 'object', `Namespace "${ns}" in ${locale} must be an object`);
@@ -60,7 +60,7 @@ test('Locales export parity: all 5 locales conform to English dictionary shape',
     for (const [key, value] of Object.entries(baseline)) {
       const currentPath = path ? `${path}.${key}` : key;
       assert.ok(key in target, `Missing translation key "${currentPath}" in ${loc}`);
-      
+
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         assert.strictEqual(typeof target[key], 'object', `Key "${currentPath}" in ${loc} must be an object`);
         verifyKeysRecursive(value, target[key], currentPath, loc);
@@ -82,7 +82,7 @@ test('Interpolation placeholders: {page}, {slot}, {drawn}, {total} preserved acr
 
   for (const loc of allLocales) {
     const dict = localeDicts[loc];
-    
+
     assert.ok(dict.generator.spinWheels.includes('{slot}'), `generator.spinWheels in ${loc} must include {slot}`);
     assert.ok(dict.generator.selectedPage.includes('{page}'), `generator.selectedPage in ${loc} must include {page}`);
     assert.ok(dict.generator.slotBadge.includes('{page}'), `generator.slotBadge in ${loc} must include {page}`);
@@ -101,7 +101,7 @@ test('Smash or Pass locale coverage: all roster categories and tiers present in 
   for (const loc of allLocales) {
     const sop = localeDicts[loc].smashOrPass;
     assert.ok(sop, `smashOrPass must exist in ${loc}`);
-    
+
     for (const tier of expectedTiers) {
       assert.ok((sop as any)[tier], `Tier "${tier}" must exist in ${loc}.smashOrPass`);
     }
@@ -127,6 +127,8 @@ test('Modal and Hover i18n coverage: all inspection and role keys present in all
     'close',
     'character',
     'role',
+    'copySlug',
+    'slugCopied',
     'perkDescription',
     'generalPerk',
     'alias',
@@ -136,6 +138,7 @@ test('Modal and Hover i18n coverage: all inspection and role keys present in all
     'survivorPerk',
     'unownedPerk',
     'equipment',
+    'clickOutsideToClose',
   ] as const;
 
   for (const loc of allLocales) {
@@ -153,6 +156,7 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedSidebarKeys = [
     'bugReportModalTitle',
+    'bugReportModalSubtitle',
     'bugCategoryPerks',
     'bugCategoryCharacters',
     'bugCategoryMaps',
@@ -179,6 +183,7 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
     'bugAltchaVerifying',
     'bugAltchaVerified',
     'coffeeTitle',
+    'coffeeSubtitle',
     'coffeeFuelNotice',
     'coffeeDonationMessage',
     'coffeeBuyMeCoffeeTagline',
@@ -205,6 +210,7 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
   const expectedDetailKeys = [
     'combatAttributes',
     'clickTerrorRadiusVisualizer',
+    'clickOutsideToClose',
     'acousticRange',
     'entityArchives',
     'codex',
@@ -217,9 +223,6 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
     'survivorSprint',
     'straightGapClose',
     'straightLine',
-    'sortRarityLowToHigh',
-    'sortRarityHighToLow',
-    'sortNameAsc',
     'clickOfferingForDetails',
     'clickAddonForDetails',
     'clickItemForDetails',
@@ -244,4 +247,4 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
       assert.ok((detailDict as any)[key].length > 0);
     }
   }
-});
+});

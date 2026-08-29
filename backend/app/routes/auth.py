@@ -23,17 +23,14 @@ ownership_service = OwnershipService()
 def register():
     payload = request.get_json(silent=True) or {}
 
-    # Honeypot verification
     if not validate_honeypot(payload):
         return jsonify({"error": "Spam detected.", "status": 400}), 400
 
-    # 1. Validate payload structure using Pydantic
     try:
         validated_data = UserCreate.model_validate(payload)
     except ValidationError as err:
         return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
 
-    # 2. Register user
     user, err = user_service.register_user(
         username=validated_data.username,
         email=validated_data.email,
@@ -43,7 +40,6 @@ def register():
     if err:
         return jsonify({"error": err, "status": 400}), 400
 
-    # 3. Seed default ownership, generate token & get ownership summary
     ownership_service.seed_default_ownership_for_new_user(user.id)
     token = user_service.generate_auth_token(user)
     summary = ownership_service.get_user_ownership_summary(user.id)
@@ -234,7 +230,7 @@ def delete_avatar():
 
 
 @auth_bp.route("/avatar/file/<path:filename>", methods=["GET"])
-def get_avatar_file(filename):
+def get_avatar_file(filename: str):
     clean_filename = os.path.basename(filename)
     primary_dir = user_service._get_avatar_dir()
     

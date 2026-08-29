@@ -1,196 +1,388 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { Role } from '@/types/gauntletStreak';
 import { BookOpen, AlertTriangle, Flame, Trophy, Lock } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
+import type { Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  role: 'killer' | 'survivor';
-  dict?: Dictionary;
+  role: Role;
+  dict?: Dictionary | any;
 }
 
-const SURVIVOR_TIERS = [
-  { level: 0, name: 'The Warm Up', streakRange: 'Streak 0 to 9', perkLimit: 4, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: 'Full 4 perk loadout.' },
-  { level: 1, name: 'The Thinning', streakRange: 'Streak 10 to 19', perkLimit: 3, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: 'Down to 3 perks.' },
-  { level: 2, name: 'The Struggle', streakRange: 'Streak 20 to 29', perkLimit: 2, badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30', description: 'Down to 2 perks.' },
-  { level: 3, name: 'The Hardcore', streakRange: 'Streak 30 to 39', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: 'Just 1 perk.' },
-  { level: 4, name: 'The Legend', streakRange: 'Streak 40+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'No perks. The full perkless trial.' },
+interface TierDefinition {
+  level: number;
+  nameKey: string;
+  defaultName: string;
+  streakRange: string;
+  perkLimit: number;
+  badgeColor: string;
+  descKey: string;
+}
+
+interface RuleException {
+  labelKey: string;
+  defaultLabel: string;
+  textKey: string;
+  defaultText: string;
+}
+
+const SURVIVOR_TIERS: TierDefinition[] = [
+  {
+    level: 0,
+    nameKey: 'tierWarmUp',
+    defaultName: '',
+    streakRange: '0 - 9',
+    perkLimit: 4,
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    descKey: 'tierWarmUpDesc',
+  },
+  {
+    level: 1,
+    nameKey: 'tierThinning',
+    defaultName: '',
+    streakRange: '10 - 19',
+    perkLimit: 3,
+    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    descKey: 'tierThinningDesc',
+  },
+  {
+    level: 2,
+    nameKey: 'tierStruggle',
+    defaultName: '',
+    streakRange: '20 - 29',
+    perkLimit: 2,
+    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    descKey: 'tierStruggleDesc',
+  },
+  {
+    level: 3,
+    nameKey: 'tierHardcore',
+    defaultName: '',
+    streakRange: '30 - 39',
+    perkLimit: 1,
+    badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+    descKey: 'tierHardcoreDesc',
+  },
+  {
+    level: 4,
+    nameKey: 'tierLegend',
+    defaultName: '',
+    streakRange: '40+',
+    perkLimit: 0,
+    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+    descKey: 'tierLegendDesc',
+  },
 ];
 
-const KILLER_TIERS = [
-  { level: 0, name: 'The Bloodbath', streakRange: 'Streak 0 to 9', perkLimit: 3, badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', description: "All 3 of your own perks." },
-  { level: 1, name: 'The Obsession', streakRange: 'Streak 10 to 19', perkLimit: 2, badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30', description: "Pick any 2 of your own." },
-  { level: 2, name: 'The Executioner', streakRange: 'Streak 20 to 29', perkLimit: 1, badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30', description: "Pick any 1 of your own." },
-  { level: 3, name: 'The Entity', streakRange: 'Streak 30+', perkLimit: 0, badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30', description: 'No perks. The full perkless trial.' },
+const KILLER_TIERS: TierDefinition[] = [
+  {
+    level: 0,
+    nameKey: 'tierBloodbath',
+    defaultName: '',
+    streakRange: '0 - 9',
+    perkLimit: 3,
+    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    descKey: 'tierBloodbathDesc',
+  },
+  {
+    level: 1,
+    nameKey: 'tierObsession',
+    defaultName: '',
+    streakRange: '10 - 19',
+    perkLimit: 2,
+    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    descKey: 'tierObsessionDesc',
+  },
+  {
+    level: 2,
+    nameKey: 'tierExecutioner',
+    defaultName: '',
+    streakRange: '20 - 29',
+    perkLimit: 1,
+    badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
+    descKey: 'tierExecutionerDesc',
+  },
+  {
+    level: 3,
+    nameKey: 'tierEntity',
+    defaultName: '',
+    streakRange: '30+',
+    perkLimit: 0,
+    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+    descKey: 'tierEntityDesc',
+  },
 ];
 
-const KILLER_EXCEPTIONS: { label: string; text: React.ReactNode }[] = [
-  { label: 'Game cancelled', text: 'someone left while the lobby was loading and the match never started. No reroll, same killer next queue.' },
-  { label: 'Hackers', text: 'obvious cheaters void the match. No reroll, replay the same killer.' },
-  { label: 'Crash or server failure', text: 'not a loss. No reroll, replay the same killer.' },
-  { label: 'Survivor disconnects', text: 'keep playing. The bot match still counts.' },
-  { label: 'No dodging', text: 'play whatever lobby you get, no matter the items or prestige levels.' },
-  { label: 'Add-ons and offerings', text: 'are always allowed, at every tier.' },
+const KILLER_EXCEPTIONS: RuleException[] = [
+  {
+    labelKey: 'excGameCancelledLabel',
+    defaultLabel: '',
+    textKey: 'excGameCancelledText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'excHackersLabel',
+    defaultLabel: '',
+    textKey: 'excHackersText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'excCrashLabel',
+    defaultLabel: '',
+    textKey: 'excCrashText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'excSurvDcLabel',
+    defaultLabel: '',
+    textKey: 'excSurvDcText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'excNoDodgingLabel',
+    defaultLabel: '',
+    textKey: 'excNoDodgingText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'excAddonsAllowedLabel',
+    defaultLabel: '',
+    textKey: 'excAddonsAllowedText',
+    defaultText: '',
+  },
 ];
 
-const SURVIVOR_EXCEPTIONS: { label: string; text: React.ReactNode }[] = [
-  { label: 'Early disconnect', text: 'a survivor leaves before any generator finishes? The match does not count either way. No reroll, play the same character next time.' },
-  { label: 'Game cancelled', text: 'someone left while the lobby was loading and the match never started. No reroll, same character next queue.' },
-  { label: 'Hackers', text: 'obvious cheaters on either side void the match. No reroll, replay the same character.' },
+const SURVIVOR_EXCEPTIONS: RuleException[] = [
+  {
+    labelKey: 'excEarlyDcLabel',
+    defaultLabel: '',
+    textKey: 'excEarlyDcText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'excGameCancelledLabel',
+    defaultLabel: '',
+    textKey: 'excGameCancelledText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'excHackersLabel',
+    defaultLabel: '',
+    textKey: 'excHackersText',
+    defaultText: '',
+  },
 ];
 
-const SURVIVOR_CLARIFICATIONS: { label: string; text: React.ReactNode }[] = [
-  { label: 'Rat off', text: 'survivors teaming up with the killer to get you out counts as a loss.' },
-  { label: 'A death is a death', text: 'dying by any means during a live match counts, whether that is the killer, a hatchet, a sabotage play, or a survivor working against you.' },
-  { label: 'Killer disconnects', text: 'if they rage quit after a generator is done, it counts as an escape. If they left from a bug or server issue, it does not count. No reroll, replay the same character.' },
+const SURVIVOR_CLARIFICATIONS: RuleException[] = [
+  {
+    labelKey: 'clarRatOffLabel',
+    defaultLabel: '',
+    textKey: 'clarRatOffText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'clarDeathIsDeathLabel',
+    defaultLabel: '',
+    textKey: 'clarDeathIsDeathText',
+    defaultText: '',
+  },
+  {
+    labelKey: 'clarKillerDcLabel',
+    defaultLabel: '',
+    textKey: 'clarKillerDcText',
+    defaultText: '',
+  },
 ];
 
-export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, onClose, role, dict }) => {
+export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
+  isOpen,
+  onClose,
+  role,
+  dict,
+}) => {
   const tiers = role === 'killer' ? KILLER_TIERS : SURVIVOR_TIERS;
+  const roleLabel = role === 'killer'
+    ? (dict?.filters?.killer || '')
+    : (dict?.filters?.survivor || '');
+
+  const rawStreaks = dict?.streaks || {};
+
+  const modalTitle = rawStreaks.gauntletRulesTitle
+    ? rawStreaks.gauntletRulesTitle.replace('{role}', roleLabel)
+    : roleLabel;
 
   return (
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
       icon={BookOpen}
-      title={`The ${role} Gauntlet Rules`}
-      subtitle="Progressive challenge rules, tier restrictions, & exception guidelines"
+      title={modalTitle}
+      subtitle={rawStreaks.gauntletRulesSubtitle || ''}
       iconClassName="bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
       footerButtonClassName="bg-amber-500 hover:bg-amber-400 !text-slate-950 shadow-amber-500/20"
     >
       <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
         <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-          <Trophy className="w-4 h-4" />
-          {dict?.streaks?.gauntletConcept || 'Gauntlet Concept'}
+          <Trophy className="w-4 h-4" aria-hidden="true" />
+          <span>{rawStreaks.gauntletConcept || ''}</span>
         </h3>
         <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {dict?.streaks?.beatEveryPrefix || 'Beat every'} {role}{' '}
-          {dict?.streaks?.gauntletConceptBody ||
-            'you own, one trial at a time. The longer your streak runs, the fewer perks you get to bring, until the final tier has you winning bare.'}
+          {rawStreaks.beatEveryPrefix || ''} {role}{' '}
+          {rawStreaks.gauntletConceptBody || ''}
         </p>
         {role === 'killer' && (
           <>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              {dict?.streaks?.youOnlyEverRun || 'You only ever run'} <strong>{dict?.streaks?.yourOwnTeachablePerks || 'your own teachable perks'}</strong>
-              {dict?.streaks?.neverAnyoneElseNote ||
-                ", never anyone else's. You start with all 3, and lose one at every tier. Once you are below 3, you choose which ones to keep."}
+              {rawStreaks.youOnlyEverRun || ''} <strong>{rawStreaks.yourOwnTeachablePerks || ''}</strong>
+              {rawStreaks.neverAnyoneElseNote || ''}
             </p>
             <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              {dict?.streaks?.trialOnlyCountsWinOn || 'A trial only counts as won on'} <strong>{dict?.streaks?.threeKillsOrMore || '3 kills or more'}</strong>. {dict?.streaks?.anythingLessLoss || 'Anything less is a loss.'}
+              {rawStreaks.trialOnlyCountsWinOn || ''} <strong>{rawStreaks.threeKillsOrMore || ''}</strong>. {rawStreaks.anythingLessLoss || ''}
             </p>
           </>
         )}
         {role === 'survivor' && (
           <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-            {dict?.streaks?.trialOnlyCountsWinIf || 'A trial only counts as won if you'} <strong>{dict?.streaks?.escape || 'escape'}</strong>{dict?.streaks?.exitGatesOrHatch || ', through the exit gates or the hatch. Anything else is a loss.'}
+            {rawStreaks.trialOnlyCountsWinIf || ''} <strong>{rawStreaks.escape || ''}</strong>{rawStreaks.exitGatesOrHatch || ''}
           </p>
         )}
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
           {role === 'killer'
-            ? 'The roster stops at the 43 killers, up through The Slasher.'
-            : 'The roster stops at the 52 survivors, up through Kwon Tae-young.'}
+            ? (rawStreaks.killerRosterCapNote || '')
+            : (rawStreaks.survivorRosterCapNote || '')}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {dict?.streaks?.every10WinsBanks || 'Every 10 wins banks a'} <strong>{dict?.streaks?.checkpoint || 'checkpoint'}</strong>
-          {dict?.streaks?.checkpointFallbackNote ||
-            '. Lose after that and you only fall back to your last checkpoint, not all the way to zero, though every'}{' '}
+          {rawStreaks.every10WinsBanks || ''} <strong>{rawStreaks.checkpoint || ''}</strong>
+          {rawStreaks.checkpointFallbackNote || ''}{' '}
           {role}{' '}
-          {dict?.streaks?.checkpointPoolNote ||
-            'cleared since then goes back into the pool. Checkpoints and tiers land together, so the perk you lose and the progress you keep happen on the very same win.'}
+          {rawStreaks.checkpointPoolNote || ''}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-          {dict?.streaks?.pickTheseInGame || 'The build shown is just a guide. Pick your actual perks in-game, nothing to confirm here.'}
+          {rawStreaks.pickTheseInGame || ''}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {dict?.streaks?.rosterLockedNotice || "The roster is locked in for the run you're on. New characters you unlock mid-run won't join until you reset, lose back to zero, or complete it."}
+          {rawStreaks.rosterLockedNotice || ''}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {dict?.streaks?.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.'}
+          {rawStreaks.inactivityLossNotice || ''}
         </p>
       </div>
 
       <div>
         <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-          <Flame className="w-4 h-4 text-amber-500" />
-          {dict?.streaks?.progressiveTierRestrictions || 'Progressive Tier Restrictions'}
+          <Flame className="w-4 h-4 text-amber-500" aria-hidden="true" />
+          <span>{rawStreaks.progressiveTierRestrictions || ''}</span>
         </h3>
-        <div className="grid grid-cols-1 gap-2.5">
-          {tiers.map((tier) => (
-            <div
-              key={tier.level}
-              className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-3 shadow-sm"
-            >
-              <div className="flex items-center gap-3">
-                <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
-                  {dict?.streaks?.tierLabel || 'Tier'} {tier.level}: {tier.name}
-                </span>
-                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                  ({tier.streakRange})
-                </span>
-              </div>
+        <div className="grid grid-cols-1 gap-2.5" role="list">
+          {tiers.map((tier) => {
+            const tierName = rawStreaks[tier.nameKey] || tier.defaultName;
+            const tierDesc = rawStreaks[tier.descKey] || '';
+            const streakRangeFormatted = rawStreaks.streakRangeLabel
+              ? rawStreaks.streakRangeLabel.replace('{range}', tier.streakRange)
+              : tier.streakRange;
 
-              <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-                <p className="text-xs text-slate-500 dark:text-slate-400 hidden lg:block max-w-xs truncate">
-                  {tier.description}
-                </p>
-                <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-300 text-xs bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20 whitespace-nowrap">
-                  <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                  <span>
-                    {tier.perkLimit === 0 ? '0 Perks (Perkless)' : `${tier.perkLimit} Perk${tier.perkLimit > 1 ? 's' : ''} Allowed`}
+            const perkLimitText =
+              tier.perkLimit === 0
+                ? rawStreaks.perklessTierNote || ''
+                : rawStreaks.perksAllowedCount
+                  ? rawStreaks.perksAllowedCount.replace('{count}', String(tier.perkLimit))
+                  : `${tier.perkLimit} ${tier.perkLimit > 1 ? (rawStreaks.perksAllowedPlural || '') : (rawStreaks.perksAllowedSingular || '')}`.trim();
+
+            return (
+              <div
+                key={tier.level}
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-3 shadow-sm"
+              >
+                <div className="flex items-center gap-3">
+                  <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
+                    {rawStreaks.tierLabel || ''} {tier.level}{tierName ? `: ${tierName}` : ''}
+                  </span>
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                    ({streakRangeFormatted})
                   </span>
                 </div>
+
+                <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+                  {tierDesc && (
+                    <p className="text-xs text-slate-500 dark:text-slate-400 hidden lg:block max-w-xs truncate">
+                      {tierDesc}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-300 text-xs bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20 whitespace-nowrap">
+                    <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" aria-hidden="true" />
+                    <span>{perkLimitText}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       {role === 'killer' ? (
         <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
           <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-            {dict?.streaks?.exceptionsAndClarifications || 'Exceptions & Clarifications'}
+            <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
+            <span>{rawStreaks.exceptionsAndClarifications || ''}</span>
           </h3>
           <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            {KILLER_EXCEPTIONS.map((item) => (
-              <li key={item.label}>
-                <strong>{item.label}:</strong> {item.text}
-              </li>
-            ))}
+            {KILLER_EXCEPTIONS.map((item) => {
+              const label = rawStreaks[item.labelKey] || item.defaultLabel;
+              const text = rawStreaks[item.textKey] || item.defaultText;
+              if (!label && !text) return null;
+              return (
+                <li key={item.labelKey}>
+                  {label && <strong>{label}: </strong>}
+                  <span>{text}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : (
         <>
           <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
             <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-              {dict?.streaks?.exceptions || 'Exceptions'}
+              <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
+              <span>{rawStreaks.exceptions || ''}</span>
             </h3>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              {SURVIVOR_EXCEPTIONS.map((item) => (
-                <li key={item.label}>
-                  <strong>{item.label}:</strong> {item.text}
-                </li>
-              ))}
+              {SURVIVOR_EXCEPTIONS.map((item) => {
+                const label = rawStreaks[item.labelKey] || item.defaultLabel;
+                const text = rawStreaks[item.textKey] || item.defaultText;
+                if (!label && !text) return null;
+                return (
+                  <li key={item.labelKey}>
+                    {label && <strong>{label}: </strong>}
+                    <span>{text}</span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
           <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 space-y-3 shadow-sm">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-              {dict?.streaks?.clarifications || 'Clarifications'}
+              <AlertTriangle className="w-4 h-4 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+              <span>{rawStreaks.clarifications || ''}</span>
             </h3>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              {SURVIVOR_CLARIFICATIONS.map((item) => (
-                <li key={item.label}>
-                  <strong>{item.label}:</strong> {item.text}
-                </li>
-              ))}
+              {SURVIVOR_CLARIFICATIONS.map((item) => {
+                const label = rawStreaks[item.labelKey] || item.defaultLabel;
+                const text = rawStreaks[item.textKey] || item.defaultText;
+                if (!label && !text) return null;
+                return (
+                  <li key={item.labelKey}>
+                    {label && <strong>{label}: </strong>}
+                    <span>{text}</span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </>

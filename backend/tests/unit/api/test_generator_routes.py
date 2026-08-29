@@ -1,50 +1,53 @@
-# backend/tests/api/test_generator_routes.py
-import unittest
+# backend/tests/unit/api/test_generator_routes.py
+import pytest
+from flask import Flask
+from flask.testing import FlaskClient
 from app import create_app
 
 
-class TestGeneratorRoutes(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app()
-        self.app.config["TESTING"] = True
-        self.client = self.app.test_client()
+@pytest.mark.unit
+class TestGeneratorRoutes:
+    """Tests for Generator configuration and persistent perk draw state."""
 
-    def test_get_config_returns_200(self):
-        response = self.client.get("/api/v1/generator/config")
-        self.assertEqual(response.status_code, 200)
+    @pytest.fixture
+    def client(self) -> FlaskClient:
+        app = create_app()
+        app.config["TESTING"] = True
+        return app.test_client()
+
+    def test_get_config_returns_200(self, client: FlaskClient) -> None:
+        response = client.get("/api/v1/generator/config")
+        assert response.status_code == 200
         data = response.get_json()
-        self.assertIn("config", data)
+        assert "config" in data
 
-    def test_update_config_returns_200(self):
-        response = self.client.post("/api/v1/generator/config", json={"gen_mode": "wheel"})
-        self.assertEqual(response.status_code, 200)
+    def test_update_config_returns_200(self, client: FlaskClient) -> None:
+        response = client.post("/api/v1/generator/config", json={"gen_mode": "wheel"})
+        assert response.status_code == 200
         data = response.get_json()
-        self.assertIn("config", data)
-        self.assertEqual(data["config"]["gen_mode"], "wheel")
+        assert "config" in data
+        assert data["config"]["gen_mode"] == "wheel"
 
-    def test_get_drawn_perks_returns_200(self):
-        response = self.client.get("/api/v1/generator/drawn?role=Survivor")
-        self.assertEqual(response.status_code, 200)
+    @pytest.mark.parametrize("role", ["Survivor", "Killer"])
+    def test_get_drawn_perks_returns_200(self, client: FlaskClient, role: str) -> None:
+        response = client.get(f"/api/v1/generator/drawn?role={role}")
+        assert response.status_code == 200
         data = response.get_json()
-        self.assertIn("drawn_perks", data)
-        self.assertIsInstance(data["drawn_perks"], list)
+        assert "drawn_perks" in data
+        assert isinstance(data["drawn_perks"], list)
 
-    def test_add_drawn_perks_returns_200(self):
-        response = self.client.post(
+    def test_add_drawn_perks_returns_200(self, client: FlaskClient) -> None:
+        response = client.post(
             "/api/v1/generator/draw",
             json={"role": "Survivor", "perks": ["Sprint Burst", "Adrenaline"]},
         )
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
         data = response.get_json()
-        self.assertIn("drawn_perks", data)
-        self.assertIn("Sprint Burst", data["drawn_perks"])
+        assert "drawn_perks" in data
+        assert "Sprint Burst" in data["drawn_perks"]
 
-    def test_reset_drawn_perks_returns_200(self):
-        response = self.client.post("/api/v1/generator/reset", json={"role": "Survivor"})
-        self.assertEqual(response.status_code, 200)
+    def test_reset_drawn_perks_returns_200(self, client: FlaskClient) -> None:
+        response = client.post("/api/v1/generator/reset", json={"role": "Survivor"})
+        assert response.status_code == 200
         data = response.get_json()
-        self.assertEqual(data["drawn_perks"], [])
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert data["drawn_perks"] == []

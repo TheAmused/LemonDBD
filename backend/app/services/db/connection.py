@@ -1,7 +1,6 @@
 # backend/app/services/db/connection.py
 import os
 import sqlite3
-from typing import Optional
 
 
 class MemConnectionWrapper:
@@ -29,7 +28,6 @@ class MemConnectionWrapper:
         return self._conn.executescript(*args, **kwargs)
 
     def close(self):
-        # Kept open intentionally for in-memory persistence across test calls
         pass
 
     def __getattr__(self, name: str):
@@ -46,4 +44,3 @@ def create_sqlite_connection(db_path: str = ":memory:") -> sqlite3.Connection:
     conn = sqlite3.connect(db_path, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
-

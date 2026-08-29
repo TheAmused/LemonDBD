@@ -1,3 +1,4 @@
+# translations/create_translations.py
 import copy
 import json
 import os

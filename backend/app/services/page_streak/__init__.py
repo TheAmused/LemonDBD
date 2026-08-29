@@ -52,4 +52,3 @@ __all__ = [
     "apply_inactivity_loss",
     "fetch_page_streak_user_stats",
 ]
-

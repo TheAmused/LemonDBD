@@ -1,8 +1,7 @@
 # backend/app/services/others/killer_calc_service.py
-import math
-from typing import Dict, List, Any, Optional
+from typing import Any
 
-KILLERS_DATA: Dict[str, Dict[str, Any]] = {
+KILLERS_DATA: dict[str, dict[str, Any]] = {
     "huntress": {
         "id": "huntress",
         "name": "The Huntress",
@@ -332,7 +331,7 @@ KILLERS_DATA: Dict[str, Dict[str, Any]] = {
     }
 }
 
-PERKS_DATA: Dict[str, Dict[str, Any]] = {
+PERKS_DATA: dict[str, dict[str, Any]] = {
     "distressing": {
         "id": "distressing",
         "name": "Distressing",
@@ -362,19 +361,19 @@ PERKS_DATA: Dict[str, Dict[str, Any]] = {
 
 
 class KillerCalcService:
-    def get_killers(self) -> Dict[str, Dict[str, Any]]:
+    def get_killers(self) -> dict[str, dict[str, Any]]:
         return KILLERS_DATA
 
-    def get_perks(self) -> Dict[str, Dict[str, Any]]:
+    def get_perks(self) -> dict[str, dict[str, Any]]:
         return PERKS_DATA
 
     def calculate(
         self,
         killer_id: str,
-        addon_ids: Optional[List[str]] = None,
-        perk_ids: Optional[List[str]] = None,
-        perk_options: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        addon_ids: list[str] | None = None,
+        perk_ids: list[str] | None = None,
+        perk_options: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         addon_ids = addon_ids or []
         perk_ids = perk_ids or []
         perk_options = perk_options or {}
@@ -386,7 +385,6 @@ class KillerCalcService:
         base_tr = float(killer["base_terror_radius"])
         lullaby_radius = float(killer["lullaby_radius"])
 
-        # 1. Terror Radius calculation
         tr_breakdown = [{"source": "Base Terror Radius", "value": base_tr}]
         percent_mod = 0.0
         flat_mod = 0.0
@@ -420,10 +418,9 @@ class KillerCalcService:
         modified_tr = round(max(0.0, base_tr * (1.0 + percent_mod / 100.0) + flat_mod), 2)
         tr_delta = round(modified_tr - base_tr, 2)
 
-        # 2. Add-on effects on stats
         equipped_addons = []
         addon_objects = []
-        for aid in addon_ids[:2]:  # Max 2 add-ons
+        for aid in addon_ids[:2]:
             if aid in killer["addons"]:
                 aobj = killer["addons"][aid]
                 equipped_addons.append(aobj)
@@ -434,7 +431,6 @@ class KillerCalcService:
                     "description": aobj["description"]
                 })
 
-        # Calculate power stat deltas
         stat_deltas = []
         power_stats = killer["power_stats"]
 
@@ -461,7 +457,6 @@ class KillerCalcService:
                 modified_val = round(base_val * (1.0 + sum_percent / 100.0) + sum_flat, 2)
             delta_val = round(modified_val - base_val, 2)
 
-            is_buff = False
             if lower_is_better:
                 is_buff = modified_val < base_val
             else:
@@ -519,9 +514,9 @@ class KillerCalcService:
 
 def calculate_killer_calc(
     killer_id: str,
-    addon_ids: Optional[List[str]] = None,
-    perk_ids: Optional[List[str]] = None,
-    perk_options: Optional[Dict[str, Any]] = None
-) -> Dict[str, Any]:
+    addon_ids: list[str] | None = None,
+    perk_ids: list[str] | None = None,
+    perk_options: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     service = KillerCalcService()
     return service.calculate(killer_id, addon_ids, perk_ids, perk_options)

@@ -1,6 +1,5 @@
 # backend/app/schemas/user.py
 from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
@@ -17,23 +16,23 @@ class UserCreate(BaseModel):
     username: str = Field(..., min_length=3, max_length=50)
     email: EmailStr
     password: str = Field(..., min_length=6)
-    role: Optional[str] = "user"
-    avatar_url: Optional[str] = "default_avatar"
+    role: str | None = "user"
+    avatar_url: str | None = "default_avatar"
 
 
 class UserUpdate(BaseModel):
-    username: Optional[str] = Field(None, min_length=3, max_length=50)
-    email: Optional[EmailStr] = None
-    role: Optional[str] = None
-    avatar_url: Optional[str] = None
-    is_active: Optional[bool] = None
-    password: Optional[str] = Field(None, min_length=6)
+    username: str | None = Field(None, min_length=3, max_length=50)
+    email: EmailStr | None = None
+    role: str | None = None
+    avatar_url: str | None = None
+    is_active: bool | None = None
+    password: str | None = Field(None, min_length=6)
 
 
 class UserResponse(UserBase):
     id: int
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -46,9 +45,9 @@ class UserCharacterOwnershipBase(BaseModel):
 
 class UserCharacterOwnershipResponse(UserCharacterOwnershipBase):
     id: int
-    character_name: Optional[str] = None
-    character_role: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    character_name: str | None = None
+    character_role: str | None = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -61,9 +60,8 @@ class UserPerkOwnershipBase(BaseModel):
 
 class UserPerkOwnershipResponse(UserPerkOwnershipBase):
     id: int
-    perk_name: Optional[str] = None
-    perk_category: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    perk_name: str | None = None
+    perk_category: str | None = None
+    updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
-

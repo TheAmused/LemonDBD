@@ -2,6 +2,7 @@
 import logging
 from flask import current_app
 from sqlalchemy import select
+
 from app.core.extensions import db
 from app.models import GuesserStat
 from app.services.db_service import DatabaseService
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class GuesserService:
     def __init__(self, db_service=None):
-        self._use_sqlalchemy = (db_service is None)
+        self._use_sqlalchemy = db_service is None
         self.db_service = db_service or DatabaseService()
 
     def get_all_stats(self):
@@ -93,7 +94,6 @@ class GuesserService:
         conn = self.db_service.get_connection()
         cursor = conn.cursor()
         
-        # Check if type exists
         cursor.execute("SELECT * FROM guesser_stats WHERE guesser_type = ?;", (guesser_type,))
         row = cursor.fetchone()
         

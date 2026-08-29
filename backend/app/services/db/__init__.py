@@ -11,4 +11,3 @@ __all__ = [
     "seed_default_configs",
     "prune_stale_character_rows",
 ]
-

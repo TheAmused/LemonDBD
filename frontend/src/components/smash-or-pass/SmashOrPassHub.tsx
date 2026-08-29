@@ -543,11 +543,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={toggleMusic}
                 title={isBgmPlaying ? dict?.smashOrPass?.tooltips?.pauseBgm || 'Pause BGM (B)' : dict?.smashOrPass?.tooltips?.playBgm || 'Play BGM (B)'}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${
-                  isBgmPlaying
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${isBgmPlaying
                     ? 'bg-rose-950/90 border-[#ff0055] text-pink-300 shadow-[0_0_15px_rgba(255,0,85,0.5)] animate-pulse'
                     : 'bg-zinc-900/90 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
-                }`}
+                  }`}
               >
                 <Music className="h-3.5 w-3.5 text-pink-400" />
                 <span className="hidden sm:inline">{hudLabels.bgm || 'BGM'}</span>
@@ -588,11 +587,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={toggleSound}
                 title={isMuted ? dict?.smashOrPass?.tooltips?.unmute || 'Unmute Sound FX (M)' : dict?.smashOrPass?.tooltips?.mute || 'Mute Sound FX (M)'}
-                className={`flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 ${
-                  isMuted
+                className={`flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 ${isMuted
                     ? 'bg-zinc-900/90 border-zinc-800 text-zinc-600'
                     : 'bg-pink-500/15 border-pink-500/40 text-pink-400 shadow-[0_0_12px_rgba(255,0,85,0.3)]'
-                }`}
+                  }`}
               >
                 {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
               </button>
@@ -627,22 +625,20 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => handleFilterChange('role', 'all')}
-              className={`flex-1 md:flex-none px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
-                roleFilter === 'all'
+              className={`flex-1 md:flex-none px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${roleFilter === 'all'
                   ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.5)]'
                   : 'text-zinc-400 hover:text-zinc-200'
-              }`}
+                }`}
             >
               {allRolesLabel}
             </button>
             <button
               type="button"
               onClick={() => handleFilterChange('role', 'Survivor')}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
-                roleFilter === 'Survivor'
+              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${roleFilter === 'Survivor'
                   ? 'bg-[#00f5d4] text-zinc-950 font-black shadow-[0_0_14px_rgba(0,245,212,0.45)]'
                   : 'text-zinc-400 hover:text-[#00f5d4]'
-              }`}
+                }`}
             >
               <Shield className="h-3.5 w-3.5" />
               {survivorsLabel}
@@ -650,11 +646,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => handleFilterChange('role', 'Killer')}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
-                roleFilter === 'Killer'
+              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${roleFilter === 'Killer'
                   ? 'bg-[#ff0055] text-white shadow-[0_0_14px_rgba(255,0,85,0.45)]'
                   : 'text-zinc-400 hover:text-[#ff0055]'
-              }`}
+                }`}
             >
               <Skull className="h-3.5 w-3.5" />
               {killersLabel}
@@ -666,44 +661,40 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => handleFilterChange('gender', 'all')}
-              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
-                genderFilter === 'all'
+              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${genderFilter === 'all'
                   ? 'bg-zinc-800 text-white border border-zinc-700 shadow'
                   : 'text-zinc-400 hover:text-zinc-200'
-              }`}
+                }`}
             >
               {allGendersLabel}
             </button>
             <button
               type="button"
               onClick={() => handleFilterChange('gender', 'female')}
-              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
-                genderFilter === 'female'
+              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${genderFilter === 'female'
                   ? 'bg-pink-600 text-white shadow-[0_0_12px_rgba(219,39,119,0.45)]'
                   : 'text-zinc-400 hover:text-pink-300'
-              }`}
+                }`}
             >
               {femaleOnlyLabel}
             </button>
             <button
               type="button"
               onClick={() => handleFilterChange('gender', 'male')}
-              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
-                genderFilter === 'male'
+              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${genderFilter === 'male'
                   ? 'bg-cyan-600 text-white shadow-[0_0_12px_rgba(8,145,178,0.45)]'
                   : 'text-zinc-400 hover:text-cyan-300'
-              }`}
+                }`}
             >
               {maleOnlyLabel}
             </button>
             <button
               type="button"
               onClick={() => handleFilterChange('gender', 'monster_other')}
-              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
-                genderFilter === 'monster_other'
+              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${genderFilter === 'monster_other'
                   ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(147,51,234,0.45)]'
                   : 'text-zinc-400 hover:text-purple-300'
-              }`}
+                }`}
             >
               {monstersLabel}
             </button>
@@ -731,18 +722,18 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   transform: dragPhysics.isDragging
                     ? `scale(${0.86 + Math.min(0.07, Math.abs(dragPhysics.x) / 1200)}) translateY(${Math.max(14, 28 - Math.abs(dragPhysics.x) * 0.025)}px)`
                     : isExiting
-                    ? 'scale(0.93) translateY(14px)'
-                    : 'scale(0.86) translateY(28px)',
+                      ? 'scale(0.93) translateY(14px)'
+                      : 'scale(0.86) translateY(28px)',
                   opacity: dragPhysics.isDragging
                     ? 0.45 + Math.min(0.35, Math.abs(dragPhysics.x) / 1000)
                     : isExiting
-                    ? 0.85
-                    : 0.45,
+                      ? 0.85
+                      : 0.45,
                   filter: dragPhysics.isDragging
                     ? `brightness(${0.75 + Math.min(0.15, Math.abs(dragPhysics.x) / 1000)})`
                     : isExiting
-                    ? 'brightness(0.9)'
-                    : 'brightness(0.75)',
+                      ? 'brightness(0.9)'
+                      : 'brightness(0.75)',
                   zIndex: 5,
                   willChange: 'transform, opacity, filter',
                   transition: isExiting
@@ -752,7 +743,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               >
                 <CharacterCard
                   character={thirdCharacter}
-                  onVote={() => {}}
+                  onVote={() => { }}
                   isTopCard={false}
                   locale={locale}
                   dict={dict}
@@ -769,18 +760,18 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   transform: dragPhysics.isDragging
                     ? `scale(${0.93 + Math.min(0.07, Math.abs(dragPhysics.x) / 900)}) translateY(${Math.max(0, 14 - Math.abs(dragPhysics.x) * 0.035)}px)`
                     : isExiting
-                    ? 'scale(1) translateY(0px)'
-                    : 'scale(0.93) translateY(14px)',
+                      ? 'scale(1) translateY(0px)'
+                      : 'scale(0.93) translateY(14px)',
                   opacity: dragPhysics.isDragging
                     ? 0.85 + Math.min(0.15, Math.abs(dragPhysics.x) / 900)
                     : isExiting
-                    ? 1
-                    : 0.85,
+                      ? 1
+                      : 0.85,
                   filter: dragPhysics.isDragging
                     ? `brightness(${0.9 + Math.min(0.1, Math.abs(dragPhysics.x) / 900)})`
                     : isExiting
-                    ? 'brightness(1)'
-                    : 'brightness(0.9)',
+                      ? 'brightness(1)'
+                      : 'brightness(0.9)',
                   zIndex: 10,
                   willChange: 'transform, opacity, filter',
                   transition: isExiting
@@ -790,7 +781,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               >
                 <CharacterCard
                   character={nextCharacter}
-                  onVote={() => {}}
+                  onVote={() => { }}
                   isTopCard={false}
                   locale={locale}
                   dict={dict}
@@ -1017,7 +1008,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         userSmashes={userSmashesList}
         editionName={activeRoster.name || selectedRosterSlug}
         isAuthenticated={isAuthenticated}
-        onSelectCharacter={(char) => setSelectedStatCharacter(char)}
+        onSelectCharacter={(char) => setSelectedStatCharacter(char as unknown as EntityItem)}
         locale={locale}
         dict={dict}
       />

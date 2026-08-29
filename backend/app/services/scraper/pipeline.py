@@ -1,10 +1,9 @@
 # backend/app/services/scraper/pipeline.py
 import asyncio
-import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
@@ -42,13 +41,13 @@ def execute_sync_pipeline(
     wikigg_driver: WikiGGScraperDriver,
     hens_map_driver: HensMapScraperDriver,
     samoel_map_driver: SamoelColtMapScraperDriver,
-    override_source: Optional[str] = None,
-    override_fallback: Optional[bool] = None,
+    override_source: str | None = None,
+    override_fallback: bool | None = None,
     download_assets: bool = True,
     impersonate_browser: str = "chrome120",
     max_concurrent_downloads: int = 10,
     request_timeout: int = 30,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Runs data extraction, database persistence, JSON caching, and asset fetching."""
     if ScraperStateManager.get_status()["is_running"]:
         logger.warning("Scrape pipeline already running.")
@@ -68,7 +67,7 @@ def execute_sync_pipeline(
         logger.info("Scraping deadbydaylight.wiki.gg dynamic data via API...")
         characters, perks, items, addons, offerings = wikigg_driver.scrape_all()
 
-        maps: List[MapData] = []
+        maps: list[MapData] = []
         try:
             logger.info("Scraping Hens333 maps...")
             maps.extend(hens_map_driver.scrape_maps())
@@ -131,7 +130,6 @@ def execute_sync_pipeline(
             except Exception as asset_err:
                 logger.warning(f"Asset downloading encountered an issue: {asset_err}")
 
-        # Auto-sync official translations across all 5 languages
         try:
             logger.info("Auto-syncing translations across EN, PL, DE, ES, JA...")
             from app.services.translations import TranslationService
@@ -140,7 +138,6 @@ def execute_sync_pipeline(
         except Exception as trans_pipeline_err:
             logger.warning(f"Could not auto-sync translations in scraper pipeline: {trans_pipeline_err}")
 
-        # Auto-sync Smash or Pass multi-rosters, rich entity profiles, and stats
         try:
             logger.info("Auto-seeding Smash or Pass rosters, rich entities, and stats...")
             from app.seeds.smash_roster_seeder import seed_smash_rosters
@@ -148,7 +145,6 @@ def execute_sync_pipeline(
         except Exception as smash_seed_err:
             logger.warning(f"Could not auto-seed Smash or Pass in scraper pipeline: {smash_seed_err}")
 
-        # Auto-sync custom edition assets (Hooked on You, Legendary, etc.)
         try:
             from app.scrapers.roster_images import RosterImageScraperDriver
             roster_driver = RosterImageScraperDriver(timeout=request_timeout)
@@ -202,4 +198,3 @@ def execute_sync_pipeline(
             error=str(e),
         )
         raise
-

@@ -12,6 +12,7 @@ from app.services.scraper.db_sync import (
     sync_characters_to_db,
     sync_items_to_db,
     sync_maps_to_db,
+    sync_offerings_to_db,
     sync_perks_to_db,
 )
 from app.services.scraper.pipeline import (
@@ -32,8 +33,8 @@ __all__ = [
     "sync_items_to_db",
     "sync_addons_to_db",
     "sync_maps_to_db",
+    "sync_offerings_to_db",
     "sync_all_to_database",
     "seed_canonical_characters_initial",
     "execute_sync_pipeline",
 ]
-

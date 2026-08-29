@@ -1,8 +1,9 @@
 # backend/app/services/others/custom_perk_service.py
 import logging
-from typing import List, Dict, Any, Optional
+from typing import Any
 from flask import current_app
-from sqlalchemy import select, or_, func
+from sqlalchemy import func, or_, select
+
 from app.core.extensions import db
 from app.models import CustomPerk
 from app.services.db_service import DatabaseService
@@ -54,8 +55,8 @@ DEFAULT_CUSTOM_PERKS = [
 
 
 class CustomPerkService:
-    def __init__(self, db_service: Optional[DatabaseService] = None):
-        self._use_sqlalchemy = (db_service is None)
+    def __init__(self, db_service: DatabaseService | None = None):
+        self._use_sqlalchemy = db_service is None
         self.db_service = db_service or DatabaseService()
 
     def init_table_and_seed(self):
@@ -103,11 +104,11 @@ class CustomPerkService:
 
     def get_custom_perks(
         self,
-        role: Optional[str] = None,
-        rarity: Optional[str] = None,
-        search: Optional[str] = None,
-        sort_by: str = "newest"
-    ) -> List[Dict[str, Any]]:
+        role: str | None = None,
+        rarity: str | None = None,
+        search: str | None = None,
+        sort_by: str = "newest",
+    ) -> list[dict[str, Any]]:
         self.init_table_and_seed()
         if self._use_sqlalchemy:
             try:
@@ -175,8 +176,8 @@ class CustomPerkService:
         rarity: str,
         icon_preset: str,
         description: str,
-        author: str = "Community"
-    ) -> Dict[str, Any]:
+        author: str = "Community",
+    ) -> dict[str, Any]:
         role_clean = role.lower() if role else "survivor"
         if role_clean not in ["survivor", "killer"]:
             role_clean = "survivor"
@@ -229,7 +230,7 @@ class CustomPerkService:
         conn.close()
         return dict(row)
 
-    def upvote_custom_perk(self, perk_id: int) -> Optional[Dict[str, Any]]:
+    def upvote_custom_perk(self, perk_id: int) -> dict[str, Any] | None:
         if self._use_sqlalchemy:
             try:
                 if current_app:

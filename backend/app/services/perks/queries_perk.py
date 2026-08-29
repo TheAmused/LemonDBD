@@ -1,8 +1,8 @@
 # backend/app/services/perks/queries_perk.py
 import logging
 import math
-from typing import Any, Dict, List, Optional
-from sqlalchemy import and_, case, func, or_, select
+from typing import Any
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
@@ -41,12 +41,12 @@ _GENERAL_KEYWORD_STEMS = {
 }
 
 
-def _is_general_query(query_lower: str, lang: Optional[str]) -> bool:
+def _is_general_query(query_lower: str, lang: str | None) -> bool:
     stem = _GENERAL_KEYWORD_STEMS.get(lang or "en", "general")
     return stem in query_lower
 
 
-def _localized_perk_name(p: Perk, lang: Optional[str]) -> str:
+def _localized_perk_name(p: Perk, lang: str | None) -> str:
     if lang and isinstance(p.translations, dict) and lang in p.translations:
         trans = p.translations.get(lang) or {}
         if isinstance(trans, dict) and trans.get("name"):
@@ -54,7 +54,7 @@ def _localized_perk_name(p: Perk, lang: Optional[str]) -> str:
     return p.name
 
 
-def _localized_character_name(character: Optional[Character], lang: Optional[str]) -> str:
+def _localized_character_name(character: Character | None, lang: str | None) -> str:
     if not character:
         return "General"
     if lang and isinstance(character.translations, dict) and lang in character.translations:
@@ -64,7 +64,7 @@ def _localized_character_name(character: Optional[Character], lang: Optional[str
     return character.name
 
 
-def _localized_character_real_name(character: Character, lang: Optional[str]) -> str:
+def _localized_character_real_name(character: Character, lang: str | None) -> str:
     if lang and isinstance(character.translations, dict) and lang in character.translations:
         trans = character.translations.get(lang) or {}
         if isinstance(trans, dict) and trans.get("real_name"):
@@ -72,10 +72,10 @@ def _localized_character_real_name(character: Character, lang: Optional[str]) ->
     return character.real_name or ""
 
 
-def _resolve_character_ids_by_name(character: str, lang: Optional[str] = None) -> List[int]:
+def _resolve_character_ids_by_name(character: str, lang: str | None = None) -> list[int]:
     target_lower = character.strip().lower()
     norm_target = normalize_search_key(character)
-    matched_ids: List[int] = []
+    matched_ids: list[int] = []
     for c in db.session.scalars(select(Character)).unique().all():
         display_candidates = [_localized_character_name(c, lang), _localized_character_real_name(c, lang)]
         if any(_text_equals(v, target_lower, norm_target) for v in display_candidates):
@@ -86,7 +86,7 @@ def _resolve_character_ids_by_name(character: str, lang: Optional[str] = None) -
     return matched_ids
 
 
-def _perk_search_haystacks(p: Perk, lang: Optional[str] = None) -> List[str]:
+def _perk_search_haystacks(p: Perk, lang: str | None = None) -> list[str]:
     haystacks = [_localized_perk_name(p, lang), p.alternate_name or ""]
 
     char = p.character
@@ -96,14 +96,14 @@ def _perk_search_haystacks(p: Perk, lang: Optional[str] = None) -> List[str]:
     return haystacks
 
 
-def _perk_matches_search(p: Perk, query_lower: str, norm_query: str, is_general_match: bool, lang: Optional[str] = None) -> bool:
+def _perk_matches_search(p: Perk, query_lower: str, norm_query: str, is_general_match: bool, lang: str | None = None) -> bool:
     if is_general_match and (p.character_id is None or p.is_generic_counterpart):
         return True
     return any(_text_matches(h, query_lower, norm_query) for h in _perk_search_haystacks(p, lang))
 
 
 def _perk_dict_matches_search(
-    p: Dict[str, Any], query_lower: str, norm_query: str, is_general_match: bool, lang: Optional[str] = None
+    p: dict[str, Any], query_lower: str, norm_query: str, is_general_match: bool, lang: str | None = None
 ) -> bool:
     if is_general_match and (not p.get("character") or p.get("character", "").lower() == "general"):
         return True
@@ -119,16 +119,16 @@ def _perk_dict_matches_search(
 
 def fetch_perks_fallback(
     service,
-    category: Optional[str] = None,
-    character: Optional[str] = None,
-    scope: Optional[str] = None,
-    search: Optional[str] = None,
+    category: str | None = None,
+    character: str | None = None,
+    scope: str | None = None,
+    search: str | None = None,
     sort_by: str = "name",
     order: str = "asc",
     page: int = 1,
     limit: int = 50,
-    lang: Optional[str] = None,
-) -> Dict[str, Any]:
+    lang: str | None = None,
+) -> dict[str, Any]:
     """In-memory cache fallback filtering for perk queries."""
     results = service._cache
     if category and category.lower() != "all":
@@ -215,18 +215,18 @@ def fetch_perks_fallback(
 
 def fetch_perks(
     service,
-    category: Optional[str] = None,
-    character: Optional[str] = None,
-    scope: Optional[str] = None,
-    search: Optional[str] = None,
+    category: str | None = None,
+    character: str | None = None,
+    scope: str | None = None,
+    search: str | None = None,
     sort_by: str = "name",
     order: str = "asc",
     page: int = 1,
     limit: int = 50,
-    user_id: Optional[int] = None,
+    user_id: int | None = None,
     owned_only: bool = False,
-    lang: Optional[str] = None,
-) -> Dict[str, Any]:
+    lang: str | None = None,
+) -> dict[str, Any]:
     """Execute paginated, sorted perk search with optional role and ownership filtering."""
     try:
         stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
@@ -289,7 +289,7 @@ def fetch_perks(
                 )
             )
 
-        search_matched_count: Optional[int] = None
+        search_matched_count: int | None = None
         if search and search.strip():
             query_lower = search.strip().lower()
             norm_query = normalize_search_key(search)
@@ -392,10 +392,10 @@ def fetch_perks(
 def fetch_perk_suggestions(
     service,
     query: str = "",
-    category: Optional[str] = None,
+    category: str | None = None,
     limit: int = 10,
-    lang: Optional[str] = None,
-) -> List[Dict[str, Any]]:
+    lang: str | None = None,
+) -> list[dict[str, Any]]:
     """Autocomplete suggestions for perks by name."""
     try:
         stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
@@ -447,7 +447,7 @@ def fetch_perk_suggestions(
         return res
 
 
-def fetch_perk_by_identifier(service, identifier: str, lang: Optional[str] = None) -> Optional[Dict[str, Any]]:
+def fetch_perk_by_identifier(service, identifier: str, lang: str | None = None) -> dict[str, Any] | None:
     """Find a perk by canonical title or formatted slug."""
     target = identifier.lower().strip()
     target_slug = slugify(identifier)
@@ -473,4 +473,3 @@ def fetch_perk_by_identifier(service, identifier: str, lang: Optional[str] = Non
         if p_name == target or p_alt == target or slugify(p_name) == target_slug or slugify(p_alt) == target_slug:
             return p
     return None
-

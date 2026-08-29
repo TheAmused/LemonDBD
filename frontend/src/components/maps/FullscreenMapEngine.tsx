@@ -1,5 +1,4 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/maps/FullscreenMapEngine.tsx
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
@@ -20,7 +19,8 @@ import {
   ArrowRight,
   MessageSquare,
 } from 'lucide-react';
-import { MapRealm, PalletSafetyRating } from '@/types/map';
+import type { MapRealm, PalletSafetyRating } from '@/types/map';
+import type { Dictionary } from '@/locales/types';
 import { fetchMapDetail } from '@/services/mapApi';
 import { TileInspectorDrawer, InspectorSelectedItem } from './TileInspectorDrawer';
 
@@ -29,7 +29,7 @@ interface FullscreenMapEngineProps {
   onClose: () => void;
   availableMaps?: MapRealm[];
   onSelectMapId?: (id: string) => void;
-  dict?: Dictionary;
+  dict?: Dictionary | any;
 }
 
 export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
@@ -71,18 +71,26 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let isMounted = true;
     async function loadDetail() {
       setLoading(true);
       try {
         const data = await fetchMapDetail(currentMapId, currentSeed, currentFloor);
-        setActiveMap(data.map);
+        if (isMounted) {
+          setActiveMap(data.map);
+        }
       } catch (err: unknown) {
         console.error('Failed to load fullscreen map data:', err);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
     loadDetail();
+    return () => {
+      isMounted = false;
+    };
   }, [currentMapId, currentSeed, currentFloor]);
 
   useEffect(() => {
@@ -199,7 +207,10 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     const lower = dirsStr.toLowerCase();
 
     return (
-      <div className="flex items-center gap-0.5 text-[9px] text-indigo-300 font-bold">
+      <div
+        className="flex items-center gap-0.5 text-[9px] text-indigo-300 font-bold"
+        aria-label={dict?.maps?.vaultDirectionsAria || ''}
+      >
         {lower.includes('north') && <ArrowUp className="w-3 h-3 text-indigo-400" />}
         {lower.includes('south') && <ArrowDown className="w-3 h-3 text-indigo-400" />}
         {lower.includes('west') && <ArrowLeft className="w-3 h-3 text-indigo-400" />}
@@ -212,7 +223,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={dict?.maps?.fullscreenEngineAria || '2D Fullscreen Map Engine'}
+      aria-label={dict?.maps?.fullscreenEngineAria || ''}
       className="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden select-none text-slate-100"
     >
       <header className="absolute top-0 inset-x-0 z-40 p-4 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent backdrop-blur-md flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/50">
@@ -223,7 +234,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 font-bold text-xs flex items-center gap-2 transition-all shadow-md cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
           >
             <X className="w-4 h-4 text-amber-500" />
-            <span>{dict?.modal?.close || 'Close Engine'}</span>
+            <span>{dict?.modal?.close || dict?.maps?.closeEngine || ''}</span>
           </button>
 
           {activeMap && (
@@ -234,7 +245,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                   <select
                     value={activeMap.id}
                     onChange={(e) => handleSelectMap(e.target.value)}
-                    aria-label={dict?.maps?.searchAria || 'Select Realm Map'}
+                    aria-label={dict?.maps?.searchAria || ''}
                     className="bg-slate-900 border border-slate-800 text-amber-400 text-xs font-bold rounded-lg px-2 py-1 focus:outline-none focus:border-amber-500 cursor-pointer"
                   >
                     {availableMaps.map((m) => (
@@ -255,12 +266,15 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         <div className="flex items-center gap-3">
           <div
             role="group"
-            aria-label={dict?.maps?.mapVariantSelectorAria || 'Map Variant Selector'}
+            aria-label={dict?.maps?.mapVariantSelectorAria || ''}
             className="flex items-center bg-slate-900/90 border border-slate-800 p-1 rounded-xl shadow-inner"
           >
-            <span className="text-[10px] font-mono uppercase text-slate-500 px-2 font-bold">{dict?.maps?.variant || 'Variant:'}</span>
+            <span className="text-[10px] font-mono uppercase text-slate-500 px-2 font-bold">{dict?.maps?.variant || ''}</span>
             {['seed_a', 'seed_b', 'seed_c'].map((seedKey, idx) => {
-              const label = `Seed ${String.fromCharCode(65 + idx)}`;
+              const letter = String.fromCharCode(65 + idx);
+              const label = dict?.maps?.seedLabel
+                ? dict.maps.seedLabel.replace('{seed}', letter)
+                : letter;
               const isActive = currentSeed === seedKey;
               return (
                 <button
@@ -268,11 +282,10 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                   type="button"
                   onClick={() => setCurrentSeed(seedKey)}
                   aria-pressed={isActive}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    isActive
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500 ${isActive
                       ? 'bg-amber-500 text-slate-950 shadow-md scale-105'
                       : 'text-slate-400 hover:text-white'
-                  }`}
+                    }`}
                 >
                   {label}
                 </button>
@@ -282,25 +295,27 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
 
           <div
             role="group"
-            aria-label={dict?.maps?.floorSelectorAria || 'Floor Selector'}
+            aria-label={dict?.maps?.floorSelectorAria || ''}
             className="flex items-center bg-slate-900/90 border border-slate-800 p-1 rounded-xl shadow-inner"
           >
-            <span className="text-[10px] font-mono uppercase text-slate-500 px-2 font-bold">{dict?.maps?.floor || 'Floor:'}</span>
+            <span className="text-[10px] font-mono uppercase text-slate-500 px-2 font-bold">{dict?.maps?.floor || ''}</span>
             {[1, 2].map((fl) => {
               const isActive = currentFloor === fl;
+              const floorLabel = dict?.maps?.floorNumber
+                ? dict.maps.floorNumber.replace('{floor}', fl.toString())
+                : `${fl}`;
               return (
                 <button
                   key={fl}
                   type="button"
                   onClick={() => setCurrentFloor(fl)}
                   aria-pressed={isActive}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    isActive
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500 ${isActive
                       ? 'bg-indigo-600 text-white shadow-md scale-105'
                       : 'text-slate-400 hover:text-white'
-                  }`}
+                    }`}
                 >
-                  {dict?.maps?.floor ? `${dict?.maps?.floor.replace(':', '')} ${fl}` : `Floor ${fl}`}
+                  {floorLabel}
                 </button>
               );
             })}
@@ -331,7 +346,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           >
             <div className="flex flex-col items-center gap-3">
               <Compass className="w-10 h-10 text-amber-500 animate-spin" style={{ animationDuration: '3s' }} />
-              <span className="text-xs font-bold text-slate-300">{dict?.maps?.renderingLayout || 'Rendering Tactical Map Layout...'}</span>
+              <span className="text-xs font-bold text-slate-300">{dict?.maps?.renderingLayout || ''}</span>
             </div>
           </div>
         )}
@@ -346,10 +361,10 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         >
           <div className="absolute inset-0 rounded-3xl border border-slate-700/40 p-4 pointer-events-none">
             <div className="absolute top-3 left-4 text-[10px] font-mono text-slate-600 uppercase tracking-wider">
-              {dict?.maps?.hudBracketOpen || '['} {activeMap?.realm || 'REALM'} {dict?.maps?.hudFloorLabel || '• FLOOR'} {currentFloor} {dict?.maps?.hudVariantLabel || '• VARIANT'} {currentSeed.toUpperCase()} {dict?.maps?.hudBracketClose || ']'}
+              {dict?.maps?.hudBracketOpen || '['} {activeMap?.realm || ''} {dict?.maps?.hudFloorLabel || ''} {currentFloor} {dict?.maps?.hudVariantLabel || ''} {currentSeed.toUpperCase()} {dict?.maps?.hudBracketClose || ']'}
             </div>
             <div className="absolute bottom-3 right-4 text-[10px] font-mono text-amber-500/60 uppercase">
-              {dict?.maps?.tacticalEngineVersion || 'LemonDBD Tactical Engine v2.0'}
+              {dict?.maps?.tacticalEngineVersion || ''}
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-slate-800/40 rounded-full flex items-center justify-center opacity-30">
               <Compass className="w-16 h-16 text-slate-700" />
@@ -373,10 +388,10 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                       {tile.type === 'shack'
                         ? '🛖'
                         : tile.type === 'main'
-                        ? '🏛️'
-                        : tile.type === 'gym'
-                        ? '🧱'
-                        : '🧩'}
+                          ? '🏛️'
+                          : tile.type === 'gym'
+                            ? '🧱'
+                            : '🧩'}
                     </span>
                     <span>{tile.name}</span>
 
@@ -420,19 +435,18 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-25 hover:z-40"
               >
                 <div
-                  className={`p-2 rounded-2xl shadow-xl border flex items-center justify-center transition-all duration-200 group-hover:scale-130 ${
-                    isTotem
+                  className={`p-2 rounded-2xl shadow-xl border flex items-center justify-center transition-all duration-200 group-hover:scale-130 ${isTotem
                       ? 'bg-red-950/90 border-red-500 text-red-400 ring-2 ring-red-500/40'
                       : isGen
-                      ? 'bg-amber-950/90 border-amber-500 text-amber-400 ring-2 ring-amber-500/40'
-                      : isExit
-                      ? 'bg-emerald-950/90 border-emerald-500 text-emerald-400'
-                      : isHatch
-                      ? 'bg-purple-950/90 border-purple-500 text-purple-300'
-                      : isPallet
-                      ? getPalletRingClass(obj.pallet_safety_rating)
-                      : 'bg-slate-900 border-slate-700 text-slate-300'
-                  }`}
+                        ? 'bg-amber-950/90 border-amber-500 text-amber-400 ring-2 ring-amber-500/40'
+                        : isExit
+                          ? 'bg-emerald-950/90 border-emerald-500 text-emerald-400'
+                          : isHatch
+                            ? 'bg-purple-950/90 border-purple-500 text-purple-300'
+                            : isPallet
+                              ? getPalletRingClass(obj.pallet_safety_rating)
+                              : 'bg-slate-900 border-slate-700 text-slate-300'
+                    }`}
                 >
                   {isTotem && <Skull className="w-4 h-4" />}
                   {isGen && <Zap className="w-4 h-4" />}
@@ -456,122 +470,115 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       <footer className="absolute bottom-6 inset-x-6 z-40 flex flex-col md:flex-row items-center justify-between gap-4 pointer-events-none">
         <div
           role="group"
-          aria-label={dict?.maps?.layerTogglesAria || 'Map Layer Toggles'}
+          aria-label={dict?.maps?.layerTogglesAria || ''}
           className="pointer-events-auto flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-2 rounded-2xl backdrop-blur-xl shadow-2xl overflow-x-auto max-w-full"
         >
           <div className="px-2 text-[10px] font-mono uppercase text-slate-500 font-bold flex items-center gap-1">
             <Layers className="w-3.5 h-3.5 text-amber-500" />
-            {dict?.maps?.layersLabel || 'Layers:'}
+            {dict?.maps?.layersLabel || ''}
           </div>
 
           <button
             type="button"
             onClick={() => setShowPallets(!showPallets)}
             aria-pressed={showPallets}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              showPallets
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500 ${showPallets
                 ? 'bg-amber-950 border border-amber-500/60 text-amber-300 shadow-md'
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
-            }`}
+              }`}
           >
-            <span>{dict?.maps?.palletEmoji || '🪵'} {dict?.maps?.pallets || 'Pallets'}</span>
+            <span>{dict?.maps?.palletEmoji || '🪵'} {dict?.maps?.pallets || ''}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowWindows(!showWindows)}
             aria-pressed={showWindows}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              showWindows
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500 ${showWindows
                 ? 'bg-indigo-950 border border-indigo-500/60 text-indigo-300 shadow-md'
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
-            }`}
+              }`}
           >
-            <span>{dict?.maps?.windowEmoji || '🪟'} {dict?.maps?.windows || 'Windows'}</span>
+            <span>{dict?.maps?.windowEmoji || '🪟'} {dict?.maps?.windows || ''}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowTotems(!showTotems)}
             aria-pressed={showTotems}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              showTotems
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-red-500 ${showTotems
                 ? 'bg-red-950 border border-red-500/60 text-red-400 shadow-md'
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
-            }`}
+              }`}
           >
             <Skull className="w-3.5 h-3.5" />
-            <span>{dict?.maps?.totems || 'Totems'}</span>
+            <span>{dict?.maps?.totems || ''}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowGenerators(!showGenerators)}
             aria-pressed={showGenerators}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              showGenerators
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-400 ${showGenerators
                 ? 'bg-amber-950 border border-amber-400/60 text-amber-400 shadow-md'
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
-            }`}
+              }`}
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>{dict?.maps?.gens || 'Gens'}</span>
+            <span>{dict?.maps?.gens || ''}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowExitHatch(!showExitHatch)}
             aria-pressed={showExitHatch}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              showExitHatch
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 ${showExitHatch
                 ? 'bg-emerald-950 border border-emerald-500/60 text-emerald-300 shadow-md'
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
-            }`}
+              }`}
           >
             <DoorOpen className="w-3.5 h-3.5" />
-            <span>{dict?.maps?.gatesHatch || 'Gates & Hatch'}</span>
+            <span>{dict?.maps?.gatesHatch || ''}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowTiles(!showTiles)}
             aria-pressed={showTiles}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              showTiles
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-400 ${showTiles
                 ? 'bg-emerald-950 border border-emerald-500/60 text-emerald-400 shadow-md'
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
-            }`}
+              }`}
           >
             <Shield className="w-3.5 h-3.5" />
-            <span>{dict?.maps?.tiles || 'Tiles'}</span>
+            <span>{dict?.maps?.tiles || ''}</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowCallouts(!showCallouts)}
             aria-pressed={showCallouts}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              showCallouts
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500 ${showCallouts
                 ? 'bg-blue-950 border border-blue-500/60 text-blue-300 shadow-md'
                 : 'bg-slate-950 text-slate-500 border border-slate-800'
-            }`}
+              }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>{dict?.maps?.callouts || 'Callouts'}</span>
+            <span>{dict?.maps?.callouts || ''}</span>
           </button>
         </div>
 
         <div
           role="toolbar"
-          aria-label={dict?.maps?.engineControlsAria || 'Engine Zoom and Reset Controls'}
+          aria-label={dict?.maps?.engineControlsAria || ''}
           className="pointer-events-auto flex items-center gap-2 bg-slate-900/90 border border-slate-800 p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
         >
           <button
             type="button"
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.1))}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title={dict?.maps?.zoomOut || 'Zoom Out'}
-            aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500"
+            title={dict?.maps?.zoomOut || ''}
+            aria-label={dict?.maps?.zoomOutAria || ''}
           >
             <ZoomOut className="w-4 h-4" />
           </button>
@@ -583,9 +590,9 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <button
             type="button"
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title={dict?.maps?.zoomIn || 'Zoom In'}
-            aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500"
+            title={dict?.maps?.zoomIn || ''}
+            aria-label={dict?.maps?.zoomInAria || ''}
           >
             <ZoomIn className="w-4 h-4" />
           </button>
@@ -595,9 +602,9 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <button
             type="button"
             onClick={handleResetView}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-            title={dict?.maps?.resetPanZoom || 'Reset Pan & Zoom'}
-            aria-label={dict?.maps?.resetPanAndZoomAria || 'Reset Pan and Zoom'}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500"
+            title={dict?.maps?.resetPanZoom || ''}
+            aria-label={dict?.maps?.resetPanAndZoomAria || ''}
           >
             <RotateCcw className="w-4 h-4" />
           </button>

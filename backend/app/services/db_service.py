@@ -1,6 +1,5 @@
 # backend/app/services/db_service.py
 import logging
-from typing import Dict, Optional, Set
 from flask import current_app
 
 from app.core.extensions import db
@@ -46,7 +45,6 @@ class DatabaseService:
 
                 is_testing = current_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
                 if not is_testing:
-                    # Seed baseline data if empty
                     try:
                         from app.services.perk_service import PerkService
                         perk_service = PerkService()
@@ -54,7 +52,6 @@ class DatabaseService:
                     except Exception as seed_err:
                         logger.debug(f"Baseline data seeding notice: {seed_err}")
 
-                    # Auto-sync squashed translations across all 5 languages
                     try:
                         from app.services.translations import TranslationService
                         trans_service = TranslationService()
@@ -64,7 +61,6 @@ class DatabaseService:
         except Exception as e:
             logger.debug(f"SQLAlchemy init_db skipped or failed (falling back): {e}")
 
-    def prune_stale_character_rows(self, valid_names: Optional[Set[str]]) -> Dict[str, int]:
+    def prune_stale_character_rows(self, valid_names: set[str] | None) -> dict[str, int]:
         """Delete run rows pinned to characters that no longer exist."""
         return _prune_rows(valid_names, self.get_connection)
-

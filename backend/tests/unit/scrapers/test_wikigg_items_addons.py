@@ -1,6 +1,7 @@
-# backend/tests/scrapers/test_wikigg_items_addons.py
-import unittest
+# backend/tests/unit/scrapers/test_wikigg_items_addons.py
+import pytest
 from app.scrapers.wikigg import WikiGGScraperDriver
+from app.scrapers.types import CharacterData, KillerPowerData
 
 
 ITEMS_HTML = """
@@ -54,49 +55,57 @@ ADDONS_HTML = """
 """
 
 
-class TestParseWikiItems(unittest.TestCase):
-    def setUp(self):
+@pytest.mark.unit
+class TestParseWikiItems:
+    """Tests for parsing survivor and killer item tables from wiki HTML."""
+
+    @pytest.fixture(autouse=True)
+    def setup_items(self) -> None:
         self.driver = WikiGGScraperDriver()
         self.items = self.driver.parse_wiki_items(ITEMS_HTML)
         self.by_name = {i.name: i for i in self.items}
 
-    def test_items_are_parsed(self):
-        self.assertEqual(sorted(self.by_name), ["Flashlight", "Some Killer Item"])
+    def test_items_are_parsed(self) -> None:
+        assert sorted(self.by_name) == ["Flashlight", "Some Killer Item"]
 
-    def test_category_follows_the_preceding_header(self):
-        self.assertEqual(self.by_name["Flashlight"].role, "Survivor")
-        self.assertEqual(self.by_name["Flashlight"].category, "Flashlight")
-        self.assertEqual(self.by_name["Some Killer Item"].role, "Killer")
+    def test_category_follows_the_preceding_header(self) -> None:
+        assert self.by_name["Flashlight"].role == "Survivor"
+        assert self.by_name["Flashlight"].category == "Flashlight"
+        assert self.by_name["Some Killer Item"].role == "Killer"
 
-    def test_rarity_and_description_are_captured(self):
-        self.assertEqual(self.by_name["Flashlight"].rarity, "Common")
-        self.assertIn("blind", self.by_name["Flashlight"].description.lower())
+    def test_rarity_and_description_are_captured(self) -> None:
+        assert self.by_name["Flashlight"].rarity == "Common"
+        assert "blind" in self.by_name["Flashlight"].description.lower()
 
-    def test_icon_local_path_is_sanitized(self):
-        self.assertEqual(self.by_name["Flashlight"].icon_local_path, "icons/items/flashlight.png")
+    def test_icon_local_path_is_sanitized(self) -> None:
+        assert self.by_name["Flashlight"].icon_local_path == "icons/items/flashlight.png"
 
-    def test_header_rows_are_not_treated_as_items(self):
-        self.assertNotIn("Survivor Items", self.by_name)
-        self.assertNotIn("Killer Items", self.by_name)
+    def test_header_rows_are_not_treated_as_items(self) -> None:
+        assert "Survivor Items" not in self.by_name
+        assert "Killer Items" not in self.by_name
 
 
-class TestParseWikiAddons(unittest.TestCase):
-    def setUp(self):
+@pytest.mark.unit
+class TestParseWikiAddons:
+    """Tests for disambiguating duplicate add-on names by associated parent target."""
+
+    @pytest.fixture(autouse=True)
+    def setup_addons(self) -> None:
         self.driver = WikiGGScraperDriver()
         self.addons = self.driver.parse_wiki_addons(ADDONS_HTML)
 
-    def test_addons_sharing_a_name_are_disambiguated_by_target(self):
+    def test_addons_sharing_a_name_are_disambiguated_by_target(self) -> None:
         names = sorted(a.name for a in self.addons)
-        self.assertEqual(names, ["Battery (Flashlight)", "Battery (Toolbox)"])
+        assert names == ["Battery (Flashlight)", "Battery (Toolbox)"]
 
-    def test_associated_target_is_captured(self):
+    def test_associated_target_is_captured(self) -> None:
         by_name = {a.name: a for a in self.addons}
-        self.assertEqual(by_name["Battery (Flashlight)"].associated_target, "Flashlight")
-        self.assertEqual(by_name["Battery (Toolbox)"].associated_target, "Toolbox")
+        assert by_name["Battery (Flashlight)"].associated_target == "Flashlight"
+        assert by_name["Battery (Toolbox)"].associated_target == "Toolbox"
 
-    def test_icon_local_path_is_sanitized(self):
+    def test_icon_local_path_is_sanitized(self) -> None:
         by_name = {a.name: a for a in self.addons}
-        self.assertEqual(by_name["Battery (Flashlight)"].icon_local_path, "icons/addons/battery_(flashlight).png")
+        assert by_name["Battery (Flashlight)"].icon_local_path == "icons/addons/battery_(flashlight).png"
 
 
 KILLER_ADDONS_HTML = """
@@ -137,10 +146,13 @@ KILLER_ADDONS_HTML = """
 """
 
 
-class TestKillerAddonParsingAndEdgeCases(unittest.TestCase):
-    def setUp(self):
+@pytest.mark.unit
+class TestKillerAddonParsingAndEdgeCases:
+    """Tests for resolving killer power add-ons and heading-less HTML fragments."""
+
+    @pytest.fixture(autouse=True)
+    def setup_killer_addons(self) -> None:
         self.driver = WikiGGScraperDriver()
-        from app.scrapers.types import CharacterData, KillerPowerData
         self.characters = [
             CharacterData(
                 name="The Singularity",
@@ -170,7 +182,7 @@ class TestKillerAddonParsingAndEdgeCases(unittest.TestCase):
                 category="Killer",
                 avatar_url="",
                 avatar_local_path="",
-                power=KillerPowerData(name="Bear Traps"),  # plural
+                power=KillerPowerData(name="Bear Traps"),
             ),
             CharacterData(
                 name="The Skull Merchant",
@@ -194,21 +206,17 @@ class TestKillerAddonParsingAndEdgeCases(unittest.TestCase):
             ),
         ]
 
-    def test_paragraph_intro_resolves_missing_heading(self):
+    def test_paragraph_intro_resolves_missing_heading(self) -> None:
         addons = self.driver.parse_wiki_addons(KILLER_ADDONS_HTML, self.characters)
         by_target = {a.name: a.associated_target for a in addons}
 
-        self.assertEqual(by_target.get("Broken Security Key"), "The Singularity")
-        self.assertEqual(by_target.get("Modified Ammo Belt"), "The Deathslinger")
-        self.assertEqual(by_target.get("Bear Oil"), "The Trapper")
-        self.assertEqual(by_target.get("Adi Valente Issue 1"), "The Skull Merchant")
+        assert by_target.get("Broken Security Key") == "The Singularity"
+        assert by_target.get("Modified Ammo Belt") == "The Deathslinger"
+        assert by_target.get("Bear Oil") == "The Trapper"
+        assert by_target.get("Adi Valente Issue 1") == "The Skull Merchant"
 
-    def test_numbers_overview_table_is_skipped(self):
+    def test_numbers_overview_table_is_skipped(self) -> None:
         addons = self.driver.parse_wiki_addons(KILLER_ADDONS_HTML, self.characters)
         names = [a.name for a in addons]
-        self.assertNotIn("Common", names)
-        self.assertNotIn("Numbers", [a.associated_target for a in addons])
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert "Common" not in names
+        assert "Numbers" not in [a.associated_target for a in addons]

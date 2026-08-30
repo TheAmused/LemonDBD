@@ -7,6 +7,7 @@ import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
+import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud } from '@/utils/perkAudio';
@@ -16,6 +17,9 @@ export interface InstantStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  revealedSlots: boolean[];
+  onRevealSlot: (idx: number) => void;
+  onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
   dict?: Dictionary;
   backendBase?: string;
@@ -26,12 +30,16 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  revealedSlots,
+  onRevealSlot,
+  onSelectPerk,
   isBlind = false,
   dict,
   backendBase,
 }) => {
   const [revealSlots, setRevealSlots] = useState<DrawnSlot[] | null>(null);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
   const reduceMotion = useReducedMotion();
 
@@ -54,7 +62,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     });
 
     const finalTimeoutId = window.setTimeout(() => {
-      celebrate(role);
+      celebrate(role, resultsRef.current);
       onRollComplete(slots);
     }, slots.length * 150 + 200);
     stopTimeoutsRef.current.push(finalTimeoutId);
@@ -79,31 +87,44 @@ export const InstantStage: React.FC<InstantStageProps> = ({
       <AnimatePresence>
         {revealSlots && (
           <motion.div
-            className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+            ref={resultsRef}
+            className="grid grid-cols-2 gap-3 lg:grid-cols-4"
             initial="hidden"
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: reduceMotion ? 0 : 0.15 } } }}
           >
-            {revealSlots.map((slot, i) => (
-              <motion.div
-                key={i}
-                variants={{
-                  hidden: { opacity: 0, y: 16, scale: 0.85 },
-                  visible: { opacity: 1, y: 0, scale: 1 },
-                }}
-                transition={reduceMotion ? { duration: 0 } : undefined}
-              >
-                <PerkSlot
-                  perk={slot.perk}
-                  role={role}
-                  page={slot.page}
-                  slot={slot.slot}
-                  size="large"
-                  isBlind={isBlind}
-                  dict={dict}
-                />
-              </motion.div>
-            ))}
+            {revealSlots.map((slot, i) => {
+              const { isObscured, onClick } = getSlotInteraction(
+                i,
+                slot.perk,
+                activeMutator,
+                revealedSlots,
+                onRevealSlot,
+                onSelectPerk
+              );
+              return (
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 16, scale: 0.85 },
+                    visible: { opacity: 1, y: 0, scale: 1 },
+                  }}
+                  transition={reduceMotion ? { duration: 0 } : undefined}
+                >
+                  <PerkSlot
+                    perk={slot.perk}
+                    role={role}
+                    page={slot.page}
+                    slot={slot.slot}
+                    size="large"
+                    isObscured={isObscured}
+                    isBlind={isBlind}
+                    onClick={onClick}
+                    dict={dict}
+                  />
+                </motion.div>
+              );
+            })}
           </motion.div>
         )}
       </AnimatePresence>

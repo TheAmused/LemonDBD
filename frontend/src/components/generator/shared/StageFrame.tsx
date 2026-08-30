@@ -78,7 +78,13 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
         )}
       />
 
-      <div className="relative z-10">{children}</div>
+      {/* Fixed minimum height so switching modes (or rolling within one)
+          never collapses/expands the stage and shoves the rest of the page
+          up and down -- every mode reserves the same footprint whether it's
+          showing a bare "roll" button or a full result grid. */}
+      <div className="relative z-10 flex min-h-[420px] flex-col items-center justify-center sm:min-h-[480px] lg:min-h-[520px]">
+        {children}
+      </div>
     </div>
   );
 };

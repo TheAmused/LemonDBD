@@ -25,7 +25,6 @@ import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
 import { computeEligiblePool, computePlayablePool } from './lib/perkPicker';
 import { Toolbar } from './Toolbar';
 import { ModeSwitcher } from './ModeSwitcher';
-import { LoadoutHotbar } from './LoadoutHotbar';
 import { StageFrame } from './shared/StageFrame';
 import { WheelStage } from './modes/WheelStage';
 import { InstantStage } from './modes/InstantStage';
@@ -273,9 +272,14 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 spinDurationSec={spinDurationSec}
                 role={role}
                 sortedPerks={activePlayablePerks}
+                loadout={loadout}
                 activeSlotIdx={activeSlotIdx}
                 activeMutator={activeMutator}
                 onWinSlot={handleWheelWinSlot}
+                revealedSlots={revealedSlots}
+                onRevealSlot={handleRevealSlot}
+                onSelectPerk={onSelectPerk}
+                isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
               />
@@ -287,6 +291,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                revealedSlots={revealedSlots}
+                onRevealSlot={handleRevealSlot}
+                onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
@@ -299,6 +306,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                revealedSlots={revealedSlots}
+                onRevealSlot={handleRevealSlot}
+                onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
@@ -311,6 +321,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                revealedSlots={revealedSlots}
+                onRevealSlot={handleRevealSlot}
+                onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
@@ -323,25 +336,15 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                revealedSlots={revealedSlots}
+                onRevealSlot={handleRevealSlot}
+                onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
               />
             )}
           </StageFrame>
-
-          <LoadoutHotbar
-            loadout={loadout}
-            activeSlotIdx={activeSlotIdx}
-            genMode={genMode}
-            role={role}
-            activeMutator={activeMutator}
-            revealedSlots={revealedSlots}
-            onRevealSlot={handleRevealSlot}
-            onSelectPerk={onSelectPerk}
-            isBlind={blindMode}
-            dict={dict}
-          />
         </>
       )}
 

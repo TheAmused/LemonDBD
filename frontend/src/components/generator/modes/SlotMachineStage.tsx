@@ -7,6 +7,7 @@ import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
+import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelTick, playReelThud } from '@/utils/perkAudio';
@@ -16,6 +17,9 @@ export interface SlotMachineStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  revealedSlots: boolean[];
+  onRevealSlot: (idx: number) => void;
+  onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
   dict?: Dictionary;
   backendBase?: string;
@@ -31,6 +35,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  revealedSlots,
+  onRevealSlot,
+  onSelectPerk,
   isBlind = false,
   dict,
   backendBase,
@@ -40,6 +47,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const finalSlotsRef = useRef<DrawnSlot[]>([]);
   const tickIntervalsRef = useRef<(ReturnType<typeof setInterval> | null)[]>([null, null, null, null]);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
   const reduceMotion = useReducedMotion();
 
@@ -96,7 +104,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         playReelThud();
 
         if (reelIdx === slots.length - 1) {
-          celebrate(role);
+          celebrate(role, resultsRef.current);
           onRollComplete(slots);
         }
       }, 1200 + reelIdx * REEL_STOP_DELAY_MS);
@@ -112,24 +120,33 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         {dict?.generator?.slotMachinePrompt || 'Pull the lever for a full 4-perk loadout.'}
       </p>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {displayedPerks.map((perk, idx) => (
-          <motion.div
-            key={idx}
-            animate={!reduceMotion && reelStates[idx] === 'spinning' ? { y: [0, -6, 0] } : { y: 0 }}
-            transition={!reduceMotion && reelStates[idx] === 'spinning' ? { repeat: Infinity, duration: 0.15 } : {}}
-          >
-            <PerkSlot
-              perk={perk}
-              role={role}
-              page={reelStates[idx] === 'stopped' ? finalSlotsRef.current[idx]?.page : undefined}
-              slot={reelStates[idx] === 'stopped' ? finalSlotsRef.current[idx]?.slot : undefined}
-              size="large"
-              isBlind={isBlind}
-              dict={dict}
-            />
-          </motion.div>
-        ))}
+      <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {displayedPerks.map((perk, idx) => {
+          const stopped = reelStates[idx] === 'stopped';
+          const interaction = stopped
+            ? getSlotInteraction(idx, perk, activeMutator, revealedSlots, onRevealSlot, onSelectPerk)
+            : undefined;
+
+          return (
+            <motion.div
+              key={idx}
+              animate={!reduceMotion && reelStates[idx] === 'spinning' ? { y: [0, -6, 0] } : { y: 0 }}
+              transition={!reduceMotion && reelStates[idx] === 'spinning' ? { repeat: Infinity, duration: 0.15 } : {}}
+            >
+              <PerkSlot
+                perk={perk}
+                role={role}
+                page={stopped ? finalSlotsRef.current[idx]?.page : undefined}
+                slot={stopped ? finalSlotsRef.current[idx]?.slot : undefined}
+                size="large"
+                isObscured={interaction?.isObscured}
+                isBlind={isBlind}
+                onClick={interaction?.onClick}
+                dict={dict}
+              />
+            </motion.div>
+          );
+        })}
       </div>
 
       <button

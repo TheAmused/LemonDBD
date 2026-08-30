@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import confetti from 'canvas-confetti';
 import { playFanfare } from '@/utils/perkAudio';
+import { triggerDbdBurst } from '../lib/dbdBurst';
 import { Dictionary } from '@/locales/types';
 import { RoleCategory } from '@/types/perks';
 
@@ -24,8 +24,14 @@ export function useJackpotCelebration(dict?: Dictionary) {
     };
   }, []);
 
+  /**
+   * `originEl` should be the actual on-screen element the result appeared
+   * in (a results-grid wrapper, the wheel canvas, etc.) so the particle
+   * burst is anchored to where the win really is instead of a fixed
+   * viewport-relative point. Falls back to the viewport center if omitted.
+   */
   const celebrate = useCallback(
-    (role: RoleCategory) => {
+    (role: RoleCategory, originEl?: HTMLElement | null) => {
       const lines = dict?.generator?.jackpotLines || DEFAULT_JACKPOT_LINES;
       const line = lines[Math.floor(Math.random() * lines.length)];
       setFlavorLine(line);
@@ -37,14 +43,7 @@ export function useJackpotCelebration(dict?: Dictionary) {
         window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       if (!prefersReducedMotion) {
-        confetti({
-          particleCount: 90,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: role === 'Survivor'
-            ? ['#10b981', '#34d399', '#f59e0b']
-            : ['#f43f5e', '#fb7185', '#f59e0b'],
-        });
+        triggerDbdBurst(originEl ?? null, role);
       }
 
       if (timeoutRef.current) clearTimeout(timeoutRef.current);

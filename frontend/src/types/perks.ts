@@ -65,6 +65,7 @@ export interface GeneratorStoredState {
   spinDurationSec: number;
   loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
+  blindMode: boolean;
 }
 
 export interface GeneratorConfigResponse {

@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams, useParams } from 'next/navigation';
+import { usePathname, useParams } from 'next/navigation';
 import {
   Flame,
   Sparkles,
@@ -61,9 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   characterCount = 0,
 }) => {
   const pathname = usePathname() || '';
-  const searchParams = useSearchParams();
   const params = useParams();
-  const currentTab = searchParams?.get('tab');
 
   // Safe fallback resolution for locale
   const routeLocale = (params?.locale as string) || pathname.split('/')[1];
@@ -98,19 +96,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const checkIsActive = (itemId: string, itemHref?: string): boolean => {
     if (!pathname) return false;
 
-    // Perk Randomizer: ONLY active when on /perks with tab=generator
+    // Perk Randomizer: its own route now, not a tab on /perks
     if (itemId === 'generator') {
       return (
         activeCategory === 'generator' ||
-        (pathname.startsWith(`/${currentLocale}/perks`) && currentTab === 'generator')
+        pathname.startsWith(`/${currentLocale}/randomizer`)
       );
     }
 
-    // Perks: active on /perks only when tab is NOT generator
     if (itemId === 'perks') {
-      if (activeCategory === 'generator' || currentTab === 'generator') {
-        return false;
-      }
       return (
         activeCategory === 'perks' ||
         activeCategory === 'Survivor' ||
@@ -166,7 +160,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       color: 'text-amber-500',
       activeBg:
         'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
-      href: `/${currentLocale}/perks?tab=generator`,
+      href: `/${currentLocale}/randomizer`,
     },
     {
       id: 'streaks',

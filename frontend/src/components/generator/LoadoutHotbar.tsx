@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { DrawnSlot, RoleCategory, Perk } from '@/types/perks';
+import { DrawnSlot, RoleCategory, Perk, GeneratorMode } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { PerkSlot } from './shared/PerkSlot';
@@ -10,27 +10,27 @@ import { PerkSlot } from './shared/PerkSlot';
 export interface LoadoutHotbarProps {
   loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
+  /** The active-slot highlight only makes sense for Wheel, which fills one
+   * slot per spin — every other mode fills all 4 at once. */
+  genMode: GeneratorMode;
   role: RoleCategory;
   activeMutator: ChaosMutator | null;
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
-  onClearSlot: (idx: number, e: React.MouseEvent) => void;
   dict?: Dictionary;
-  backendBase?: string;
 }
 
 export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
   loadout,
   activeSlotIdx,
+  genMode,
   role,
   activeMutator,
   revealedSlots,
   onRevealSlot,
   onSelectPerk,
-  onClearSlot,
   dict,
-  backendBase,
 }) => {
   const reduceMotion = useReducedMotion();
 
@@ -58,7 +58,7 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
               page={slotData?.page}
               slot={slotData?.slot}
               isObscured={isObscured}
-              isActive={activeSlotIdx === idx}
+              isActive={genMode === 'wheel' && activeSlotIdx === idx}
               announce
               onClick={() => {
                 if (isObscured) {
@@ -67,7 +67,6 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
                   onSelectPerk(perk);
                 }
               }}
-              onClear={perk ? (e) => onClearSlot(idx, e) : undefined}
               dict={dict}
             />
           </motion.div>

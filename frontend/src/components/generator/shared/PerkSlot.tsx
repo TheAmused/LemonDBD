@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ImageOff, EyeOff, Trash2 } from 'lucide-react';
+import { ImageOff, EyeOff } from 'lucide-react';
 import { Perk, RoleCategory } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
@@ -25,7 +25,6 @@ export interface PerkSlotProps {
   isActive?: boolean;
   announce?: boolean;
   onClick?: () => void;
-  onClear?: (e: React.MouseEvent) => void;
   dict?: Dictionary;
 }
 
@@ -37,7 +36,6 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   isActive = false,
   announce = false,
   onClick,
-  onClear,
   dict,
 }) => {
   if (isObscured) {
@@ -84,20 +82,6 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
         <span aria-live="polite" className="sr-only">
           {perk.name}
         </span>
-      )}
-
-      {onClear && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClear(e);
-          }}
-          aria-label={dict?.generator?.clearSlotTooltip || 'Clear slot'}
-          className="absolute bottom-1 right-1 z-20 rounded-lg bg-slate-950/60 p-1 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-        </button>
       )}
     </div>
   );

@@ -147,6 +147,7 @@ export interface PerkDictionary {
     coordSlot?: string;
     coordClose?: string;
     emptyCoordinate?: string;
+    hiddenPerkLabel?: string;
   };
   empty?: {
     title?: string;

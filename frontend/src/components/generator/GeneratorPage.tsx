@@ -58,6 +58,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const [activeSlotIdx, setActiveSlotIdx] = useState<number>(0);
   const [isChaosModalOpen, setIsChaosModalOpen] = useState(false);
   const [activeMutator, setActiveMutator] = useState<ChaosMutator | null>(null);
+  const [blindMode, setBlindMode] = useState<boolean>(false);
 
   const [revealedSlots, setRevealedSlots] = useState<boolean[]>([false, false, false, false]);
 
@@ -74,6 +75,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         if (typeof parsed.spinDurationSec === 'number') setSpinDurationSec(parsed.spinDurationSec);
         if (Array.isArray(parsed.loadout)) setLoadout(parsed.loadout);
         if (typeof parsed.activeSlotIdx === 'number') setActiveSlotIdx(parsed.activeSlotIdx);
+        if (typeof parsed.blindMode === 'boolean') setBlindMode(parsed.blindMode);
       }
     } catch (e) {
       console.error('Failed loading generator state from localStorage:', e);
@@ -108,12 +110,13 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         spinDurationSec,
         loadout,
         activeSlotIdx,
+        blindMode,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch (e) {
       console.error('Failed saving generator state to localStorage:', e);
     }
-  }, [role, genMode, noRepeatPerks, spinDurationSec, loadout, activeSlotIdx]);
+  }, [role, genMode, noRepeatPerks, spinDurationSec, loadout, activeSlotIdx, blindMode]);
 
   const baseEligibleRolePerks = useMemo(
     () => computeEligiblePool(allPerks, role, Boolean(user)),
@@ -165,6 +168,10 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     const next = !audioEnabled;
     setAudioEnabledState(next);
     setAudioEnabled(next);
+  };
+
+  const handleToggleBlindMode = () => {
+    setBlindMode((prev) => !prev);
   };
 
   const handleResetAllLoadoutAndWheels = async () => {
@@ -230,6 +237,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         onRoleChange={handleRoleChange}
         noRepeatPerks={noRepeatPerks}
         onToggleNoRepeat={handleToggleNoRepeat}
+        blindMode={blindMode}
+        onToggleBlindMode={handleToggleBlindMode}
         audioEnabled={audioEnabled}
         onToggleAudio={handleToggleAudio}
         onOpenChaosModal={() => setIsChaosModalOpen(true)}
@@ -278,6 +287,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
               />
@@ -289,6 +299,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
               />
@@ -300,6 +311,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
               />
@@ -311,6 +323,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                isBlind={blindMode}
                 dict={dict}
                 backendBase={backendBase}
               />
@@ -326,6 +339,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             revealedSlots={revealedSlots}
             onRevealSlot={handleRevealSlot}
             onSelectPerk={onSelectPerk}
+            isBlind={blindMode}
             dict={dict}
           />
         </>

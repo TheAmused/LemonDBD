@@ -45,6 +45,8 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   const handleOpen = () => {
     if (phase !== 'closed' || activePlayablePerks.length === 0) return;
 
+    stopTimeoutsRef.current = [];
+
     const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
     const slots = buildDrawnSlots(picked, activePlayablePerks);
 
@@ -106,9 +108,9 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           <motion.div
             key="results"
             className="grid grid-cols-2 gap-3 sm:grid-cols-4"
-            initial={{ opacity: 0, scale: 1.4 }}
+            initial={reduceMotion ? false : { opacity: 0, scale: 1.4 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: reduceMotion ? 0 : 0.4 }}
           >
             {revealedSlots.map((slot, idx) => (
               <motion.div

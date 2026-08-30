@@ -48,8 +48,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   return (
     <div
       onClick={() => {
-        if (isObscured) return;
-        if (perk && onClick) onClick();
+        if (isObscured || perk) onClick?.();
       }}
       className={cn(
         'group relative flex flex-col justify-between rounded-2xl bg-slate-900/40 backdrop-blur-md transition-all duration-200',

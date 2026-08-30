@@ -16,6 +16,7 @@ export interface SlotMachineStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  isBlind?: boolean;
   dict?: Dictionary;
   backendBase?: string;
 }
@@ -30,6 +31,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  isBlind = false,
   dict,
   backendBase,
 }) => {
@@ -122,6 +124,8 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               role={role}
               page={reelStates[idx] === 'stopped' ? finalSlotsRef.current[idx]?.page : undefined}
               slot={reelStates[idx] === 'stopped' ? finalSlotsRef.current[idx]?.slot : undefined}
+              size="large"
+              isBlind={isBlind}
               dict={dict}
             />
           </motion.div>

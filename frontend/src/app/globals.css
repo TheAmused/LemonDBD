@@ -47,6 +47,27 @@
   background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.06) 0%, transparent 80%);
 }
 
+@keyframes heartbeatPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 0.65;
+  }
+}
+
+.dbd-heartbeat-vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(190, 30, 40, 0.35) 100%);
+  animation: heartbeatPulse 1.2s ease-in-out infinite;
+}
+
+.dbd-heartbeat-vignette--static {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(190, 30, 40, 0.5) 100%);
+  animation: none;
+}
+
 /* Scrollbar Customization */
 ::-webkit-scrollbar {
   width: 6px;

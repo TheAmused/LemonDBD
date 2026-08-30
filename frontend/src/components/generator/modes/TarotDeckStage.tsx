@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Layers, Sparkle } from 'lucide-react';
+import { Layers } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
-import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
+import { pickRandomLoadout, buildDrawnSlots, getPerkTarotType, TarotType } from '../lib/perkPicker';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playCardFlip } from '@/utils/perkAudio';
@@ -16,23 +16,57 @@ export interface TarotDeckStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  isBlind?: boolean;
   dict?: Dictionary;
   backendBase?: string;
 }
 
 interface TarotCard {
-  cardName: string;
+  type: TarotType;
   slot: DrawnSlot;
   flipped: boolean;
 }
 
-const DEFAULT_CARD_NAMES = ['The Hex', 'The Exhaustion', 'The Obsession', 'The Boon'];
+const DEFAULT_TYPE_NAMES: Record<TarotType, string> = {
+  hex: 'The Hex',
+  boon: 'The Boon',
+  sacrifice: 'The Sacrifice',
+  exhaustion: 'The Exhaustion',
+  obsession: 'The Obsession',
+  aura: 'The Watcher',
+  generator: 'The Machinist',
+  healing: 'The Caregiver',
+  chase: 'The Chase',
+  stealth: 'The Shadow',
+  entity: 'The Entity',
+};
+
+/**
+ * Card-back image for a given type, with a graceful text-only fallback if
+ * the file is ever missing (never renders a broken <img>).
+ */
+const CardBackImage: React.FC<{ type: TarotType }> = ({ type }) => {
+  const [errored, setErrored] = useState(false);
+
+  if (errored) return null;
+
+  return (
+    <img
+      src={`/images/tarot/the-${type}.png`}
+      alt=""
+      aria-hidden="true"
+      onError={() => setErrored(true)}
+      className="absolute inset-0 h-full w-full rounded-2xl object-cover"
+    />
+  );
+};
 
 export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   role,
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  isBlind = false,
   dict,
   backendBase,
 }) => {
@@ -40,18 +74,17 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
   const reduceMotion = useReducedMotion();
 
-  const cardNames = dict?.generator?.tarotCardNames || DEFAULT_CARD_NAMES;
+  const typeNames = dict?.generator?.tarotCardNames || DEFAULT_TYPE_NAMES;
 
   const handleShuffle = () => {
     if (activePlayablePerks.length === 0) return;
 
     const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
     const slots = buildDrawnSlots(picked, activePlayablePerks);
-    const shuffledNames = [...cardNames].sort(() => Math.random() - 0.5);
 
     setCards(
-      slots.map((slot, i) => ({
-        cardName: shuffledNames[i % shuffledNames.length],
+      slots.map((slot) => ({
+        type: slot.perk ? getPerkTarotType(slot.perk) : 'entity',
         slot,
         flipped: false,
       }))
@@ -78,34 +111,39 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       </p>
 
       {cards ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {cards.map((card, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleFlip(idx)}
               disabled={card.flipped}
-              className="perspective-[1000px] cursor-pointer disabled:cursor-default"
-              style={{ perspective: '1000px' }}
+              className="cursor-pointer disabled:cursor-default"
+              style={{ perspective: '1200px' }}
             >
               <motion.div
-                className="relative h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48"
+                className="relative h-56 w-40 sm:h-64 sm:w-44 md:h-72 md:w-48"
                 style={{ transformStyle: 'preserve-3d' }}
-                animate={{ rotateY: card.flipped ? 180 : 0 }}
+                animate={{
+                  rotateY: card.flipped ? 180 : 0,
+                  scale: card.flipped && !reduceMotion ? [1, 1.08, 1] : 1,
+                }}
                 transition={{ duration: reduceMotion ? 0 : 0.5 }}
               >
                 <div
-                  className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-purple-950 to-slate-950"
+                  className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-purple-950 to-slate-950"
                   style={{ backfaceVisibility: 'hidden' }}
                 >
-                  <Sparkle className="h-6 w-6 text-purple-400" />
-                  <span className="text-[11px] font-black uppercase tracking-wide text-purple-300">
-                    {card.cardName}
-                  </span>
+                  <CardBackImage type={card.type} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-end gap-1 bg-gradient-to-t from-black/70 via-transparent to-transparent p-3">
+                    <span className="text-[11px] font-black uppercase tracking-wide text-white drop-shadow">
+                      {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
+                    </span>
+                  </div>
                 </div>
 
                 <div
-                  className="absolute inset-0"
+                  className="absolute inset-0 flex items-center justify-center rounded-2xl bg-slate-900/60"
                   style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                 >
                   <PerkSlot
@@ -113,6 +151,8 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     role={role}
                     page={card.slot.page}
                     slot={card.slot.slot}
+                    size="large"
+                    isBlind={isBlind}
                     dict={dict}
                   />
                 </div>

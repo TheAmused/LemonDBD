@@ -18,6 +18,7 @@ export interface LoadoutHotbarProps {
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
+  isBlind?: boolean;
   dict?: Dictionary;
 }
 
@@ -30,6 +31,7 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
   revealedSlots,
   onRevealSlot,
   onSelectPerk,
+  isBlind = false,
   dict,
 }) => {
   const reduceMotion = useReducedMotion();
@@ -47,6 +49,7 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
         return (
           <motion.div
             key={idx}
+            layoutId={`loadout-slot-${idx}`}
             layout
             initial={reduceMotion ? false : { scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -59,6 +62,7 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
               slot={slotData?.slot}
               isObscured={isObscured}
               isActive={genMode === 'wheel' && activeSlotIdx === idx}
+              isBlind={isBlind}
               announce
               onClick={() => {
                 if (isObscured) {

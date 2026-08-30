@@ -47,6 +47,17 @@ export const CHAOS_MUTATORS: readonly ChaosMutator[] = [
     borderColor: 'border-indigo-500',
     textColor: 'text-indigo-300',
   },
+  {
+    id: 'negative_only',
+    name: 'Curse of Sacrifice',
+    description:
+      'The Entity demands a price. At least one drawn perk will be a genuine handicap.',
+    type: 'curse',
+    icon: '💀',
+    badgeBg: 'bg-rose-950/90',
+    borderColor: 'border-rose-600',
+    textColor: 'text-rose-300',
+  },
 ];
 
 export const EXHAUSTION_PERK_NAMES: ReadonlySet<string> = new Set([

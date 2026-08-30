@@ -1,6 +1,6 @@
 // frontend/src/types/perks.ts
 export type RoleCategory = 'Survivor' | 'Killer';
-export type GeneratorMode = 'instant' | 'wheel';
+export type GeneratorMode = 'instant' | 'wheel' | 'slot' | 'tarot' | 'crate';
 export type ScopeFilter = 'all' | 'general';
 export type OwnershipFilter = 'all' | 'owned';
 export type SortField = 'name' | 'character';

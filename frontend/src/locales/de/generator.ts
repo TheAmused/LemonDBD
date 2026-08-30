@@ -12,6 +12,8 @@ export default {
   rollButton: "Neues Loadout würfeln",
   spinWheels: "Rad drehen für Slot #{slot}",
   spinning: "Rad dreht sich...",
+  spinningWheel: "Rad dreht sich...",
+  spinWheelButton: "Für Slot drehen",
   pageWheelTitle: "Seiten-Rad",
   perkWheelTitle: "Talente-Rad",
   selectedPage: "Ausgewählte Seite: {page}",

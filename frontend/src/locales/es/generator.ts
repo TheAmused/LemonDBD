@@ -12,6 +12,8 @@ export default {
   rollButton: "Tirar Nueva Build",
   spinWheels: "Girar Ruleta para Casilla #{slot}",
   spinning: "Girando Ruleta...",
+  spinningWheel: "Girando Ruleta...",
+  spinWheelButton: "Girar para Casilla",
   pageWheelTitle: "Ruleta de Página",
   perkWheelTitle: "Ruleta de Habilidad",
   selectedPage: "Página Seleccionada: {page}",

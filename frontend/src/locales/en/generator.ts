@@ -12,6 +12,8 @@ export default {
   rollButton: "Roll New Loadout",
   spinWheels: "Spin Wheel for Slot #{slot}",
   spinning: "Spinning Wheel...",
+  spinningWheel: "Spinning Wheel...",
+  spinWheelButton: "Spin for Perk Slot",
   pageWheelTitle: "Page Wheel",
   perkWheelTitle: "Perk Wheel",
   selectedPage: "Selected Page: {page}",

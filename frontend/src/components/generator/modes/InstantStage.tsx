@@ -94,9 +94,9 @@ export const InstantStage: React.FC<InstantStageProps> = ({
                 <PerkSlot
                   perk={slot.perk}
                   role={role}
-                  slotNumber={(slot.page - 1) * 15 + slot.slot}
+                  page={slot.page}
+                  slot={slot.slot}
                   dict={dict}
-                  backendBase={backendBase}
                 />
               </motion.div>
             ))}

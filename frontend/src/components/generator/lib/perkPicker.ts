@@ -64,22 +64,20 @@ export function filterPerksByMutator(
   return included.length > 0 ? included : notBlocked;
 }
 
+/**
+ * Eligibility is role + ownership only — there is no separate manual
+ * character-enable toggle. When logged in, only perks the user actually
+ * owns are eligible; when not logged in, every perk for the role is shown.
+ */
 export function computeEligiblePool(
   allPerks: Perk[],
   role: RoleCategory,
-  enabledCharacters: string[],
   isLoggedIn: boolean
 ): Perk[] {
   const rolePerks = allPerks.filter((p) => p.category === role);
-  const enabledSet = new Set(enabledCharacters);
-
-  const eligible = rolePerks.filter((p) => {
-    if (isLoggedIn && p.is_owned === false) return false;
-    const isGeneral =
-      !p.character || p.character === 'General' || p.is_generic_counterpart;
-    if (isGeneral) return true;
-    return enabledSet.has(p.character);
-  });
+  const eligible = isLoggedIn
+    ? rolePerks.filter((p) => p.is_owned !== false)
+    : rolePerks;
 
   return eligible.sort((a, b) => a.name.localeCompare(b.name));
 }

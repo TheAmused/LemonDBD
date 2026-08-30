@@ -1,7 +1,7 @@
 // frontend/src/components/generator/GeneratorPage.tsx
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import {
   Perk,
@@ -12,7 +12,6 @@ import {
 } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
 import { ChaosWheelModal, ChaosMutator } from '../ChaosWheelModal';
-import { CharacterConfigModal } from '../CharacterConfigModal';
 import { useAuth } from '@/context/AuthContext';
 import {
   fetchGeneratorConfig,
@@ -41,8 +40,6 @@ interface GeneratorPageProps {
 }
 
 const STORAGE_KEY = 'lemon_dbd_generator_v8';
-const SURV_STORAGE_KEY = 'lemon_dbd_enabled_survs_v7';
-const KILLER_STORAGE_KEY = 'lemon_dbd_enabled_killers_v7';
 const PERKS_PER_PAGE = 15;
 const KNOWN_MODES: GeneratorMode[] = ['wheel', 'instant', 'slot', 'tarot', 'crate'];
 
@@ -62,22 +59,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const [isChaosModalOpen, setIsChaosModalOpen] = useState(false);
   const [activeMutator, setActiveMutator] = useState<ChaosMutator | null>(null);
 
-  const [isCharModalOpen, setIsCharModalOpen] = useState(false);
-  const [enabledSurvCharacters, setEnabledSurvCharacters] = useState<string[]>([]);
-  const [enabledKillerCharacters, setEnabledKillerCharacters] = useState<string[]>([]);
   const [revealedSlots, setRevealedSlots] = useState<boolean[]>([false, false, false, false]);
-
-  const characterOptions = useMemo(() => {
-    const rolePerks = allPerks.filter((p) => p.category === role);
-    const namesSet = new Set<string>();
-    rolePerks.forEach((p) => {
-      const isGeneral = !p.character || p.character === 'General' || p.is_generic_counterpart;
-      if (!isGeneral && p.character) namesSet.add(p.character);
-    });
-    return Array.from(namesSet)
-      .sort((a, b) => a.localeCompare(b))
-      .map((name) => ({ value: name, label: name }));
-  }, [allPerks, role]);
 
   useEffect(() => {
     setAudioEnabledState(getAudioEnabled());
@@ -93,27 +75,10 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         if (Array.isArray(parsed.loadout)) setLoadout(parsed.loadout);
         if (typeof parsed.activeSlotIdx === 'number') setActiveSlotIdx(parsed.activeSlotIdx);
       }
-
-      const savedSurv = localStorage.getItem(SURV_STORAGE_KEY);
-      if (savedSurv) setEnabledSurvCharacters(JSON.parse(savedSurv));
-
-      const savedKillers = localStorage.getItem(KILLER_STORAGE_KEY);
-      if (savedKillers) setEnabledKillerCharacters(JSON.parse(savedKillers));
     } catch (e) {
       console.error('Failed loading generator state from localStorage:', e);
     }
   }, []);
-
-  useEffect(() => {
-    if (characterOptions.length === 0) return;
-    const allCharNames = ['General', ...characterOptions.map((c) => c.value)];
-
-    if (role === 'Survivor' && enabledSurvCharacters.length === 0) {
-      setEnabledSurvCharacters(allCharNames);
-    } else if (role === 'Killer' && enabledKillerCharacters.length === 0) {
-      setEnabledKillerCharacters(allCharNames);
-    }
-  }, [characterOptions, role, enabledSurvCharacters.length, enabledKillerCharacters.length]);
 
   useEffect(() => {
     fetchGeneratorConfig()
@@ -150,24 +115,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     }
   }, [role, genMode, noRepeatPerks, spinDurationSec, loadout, activeSlotIdx]);
 
-  const activeEnabledChars = useMemo(
-    () => (role === 'Survivor' ? enabledSurvCharacters : enabledKillerCharacters),
-    [role, enabledSurvCharacters, enabledKillerCharacters]
-  );
-
-  const handleSaveEnabledCharacters = (newEnabled: string[]) => {
-    if (role === 'Survivor') {
-      setEnabledSurvCharacters(newEnabled);
-      localStorage.setItem(SURV_STORAGE_KEY, JSON.stringify(newEnabled));
-    } else {
-      setEnabledKillerCharacters(newEnabled);
-      localStorage.setItem(KILLER_STORAGE_KEY, JSON.stringify(newEnabled));
-    }
-  };
-
   const baseEligibleRolePerks = useMemo(
-    () => computeEligiblePool(allPerks, role, activeEnabledChars, Boolean(user)),
-    [allPerks, role, activeEnabledChars, user]
+    () => computeEligiblePool(allPerks, role, Boolean(user)),
+    [allPerks, role, user]
   );
 
   const ownedOrAvailableCount = baseEligibleRolePerks.length;
@@ -292,7 +242,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         onToggleNoRepeat={handleToggleNoRepeat}
         audioEnabled={audioEnabled}
         onToggleAudio={handleToggleAudio}
-        onOpenCharacterConfig={() => setIsCharModalOpen(true)}
         onOpenChaosModal={() => setIsChaosModalOpen(true)}
         activeMutator={activeMutator}
         onResetAll={handleResetAllLoadoutAndWheels}
@@ -308,15 +257,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
           </h2>
           <p className="text-xs text-amber-300/80 max-w-md">
             {dict?.generator?.noPerksDesc ||
-              'All character teachables are currently deactivated or unowned. Please enable characters in character settings or unlock perks.'}
+              'You don\'t own any unlocked perks for this role yet.'}
           </p>
-          <button
-            type="button"
-            onClick={() => setIsCharModalOpen(true)}
-            className="mt-2 px-4 py-2 rounded-xl bg-amber-600 text-white font-bold text-xs shadow-md hover:bg-amber-700 transition-all cursor-pointer"
-          >
-            {dict?.generator?.configureCharacters || 'Configure Characters'}
-          </button>
         </section>
       ) : (
         <>
@@ -399,16 +341,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
           />
         </>
       )}
-
-      <CharacterConfigModal
-        isOpen={isCharModalOpen}
-        onClose={() => setIsCharModalOpen(false)}
-        role={role}
-        characterOptions={characterOptions}
-        enabledCharacters={activeEnabledChars}
-        onSave={handleSaveEnabledCharacters}
-        dict={dict}
-      />
 
       <ChaosWheelModal
         isOpen={isChaosModalOpen}

@@ -16,6 +16,9 @@ interface PerkCardProps {
   viewMode?: ViewDisplayMode;
   onSelect: (perk: Perk) => void;
   dict?: PerkDictionary;
+  /** When provided, renders a small "[P{page}/S{slot}]" coordinate tag so the
+   * perk can be located quickly in the Vault (used by the Perk Randomizer). */
+  coordinate?: { page: number; slot: number };
 }
 
 export const PerkCard: React.FC<PerkCardProps> = ({
@@ -23,6 +26,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
   viewMode = 'grid',
   onSelect,
   dict,
+  coordinate,
 }) => {
   const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
@@ -53,6 +57,10 @@ export const PerkCard: React.FC<PerkCardProps> = ({
   };
   const handleMouseLeave = () => setActiveHover(null);
   const ariaLabel = `${perk.name} - ${isGeneral ? generalLabel : perk.character}`;
+
+  const coordinateLabel = coordinate
+    ? `${dict?.generator?.coordOpenPage || '[P'}${coordinate.page}${dict?.generator?.coordSlot || '/S'}${coordinate.slot}${dict?.generator?.coordClose || ']'}`
+    : null;
 
   if (viewMode === 'list') {
     return (
@@ -98,7 +106,14 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm sm:text-base font-bold text-slate-100">{perk.name}</p>
+            <div className="flex items-center gap-2">
+              {coordinateLabel && (
+                <span className="shrink-0 font-mono text-[10px] font-black text-amber-400/90">
+                  {coordinateLabel}
+                </span>
+              )}
+              <p className="truncate text-sm sm:text-base font-bold text-slate-100">{perk.name}</p>
+            </div>
             <p className="truncate text-xs text-slate-400">
               {isGeneral ? generalLabel : perk.character} {'·'} {roleLabel}
             </p>
@@ -143,6 +158,12 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         aria-label={ariaLabel}
         className="relative flex h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48 cursor-pointer items-center justify-center transition-transform duration-200 group-hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-2xl"
       >
+        {coordinateLabel && (
+          <span className="absolute top-1 left-1 z-10 font-mono text-[10px] font-black text-amber-400/90 pointer-events-none">
+            {coordinateLabel}
+          </span>
+        )}
+
         <div
           className={`relative flex h-full w-full items-center justify-center ${
             perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''

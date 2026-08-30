@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shield, Skull, Users, Repeat, Sparkles, Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { Shield, Skull, Repeat, Volume2, VolumeX, RotateCcw } from 'lucide-react';
 import { RoleCategory } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -15,7 +15,6 @@ export interface ToolbarProps {
   onToggleNoRepeat: () => void;
   audioEnabled: boolean;
   onToggleAudio: () => void;
-  onOpenCharacterConfig: () => void;
   onOpenChaosModal: () => void;
   activeMutator: ChaosMutator | null;
   onResetAll: () => void;
@@ -30,7 +29,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onToggleNoRepeat,
   audioEnabled,
   onToggleAudio,
-  onOpenCharacterConfig,
   onOpenChaosModal,
   activeMutator,
   onResetAll,
@@ -43,6 +41,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         <h1 className="text-sm font-black uppercase tracking-wide text-slate-200">
           {role} {dict?.generator?.titleSuffix || 'Perk Randomizer'}
         </h1>
+        <span className="text-[11px] font-bold text-slate-500">
+          {playableCount} {dict?.generator?.playableLabel || 'Playable'}
+        </span>
         <SegmentedControl
           value={role}
           onChange={onRoleChange}
@@ -55,12 +56,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       </div>
 
       <div className="flex flex-wrap items-center gap-1">
-        <IconToggleButton
-          icon={<Users className="h-4 w-4" />}
-          label={dict?.generator?.charactersTooltip || 'Configure Characters'}
-          badge={playableCount}
-          onClick={onOpenCharacterConfig}
-        />
         <IconToggleButton
           icon={<Repeat className="h-4 w-4" />}
           label={dict?.generator?.noRepeatTooltip || 'Toggle No-Repeat Perks'}

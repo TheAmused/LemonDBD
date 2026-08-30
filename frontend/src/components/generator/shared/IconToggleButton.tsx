@@ -39,9 +39,12 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
         )}
       </button>
 
+      {/* Anchored to the button's right edge and never grows wider than the
+          toolbar row itself, so it can't run past the viewport edge for
+          buttons near the right side of the screen (e.g. Reset). */}
       <span
         role="tooltip"
-        className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-950 px-2.5 py-1.5 text-[11px] font-bold text-slate-100 shadow-xl group-hover:block group-focus-within:block"
+        className="pointer-events-none absolute right-0 top-full z-50 mt-2 hidden max-w-[min(14rem,90vw)] rounded-lg bg-slate-950 px-2.5 py-1.5 text-[11px] font-bold text-slate-100 shadow-xl group-hover:block group-focus-within:block"
       >
         {label}
       </span>

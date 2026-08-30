@@ -262,3 +262,25 @@ test('getPerkTarotType: a Hex perk that also mentions Aura in its description st
   const perk = makePerk({ name: 'Hex: The Third Seal', description: 'Blinds the Aura of the obsession.' });
   assert.strictEqual(getPerkTarotType(perk), 'hex');
 });
+
+const sacrificeMutator: ChaosMutator = {
+  id: 'negative_only',
+  name: 'Curse of Sacrifice',
+  description: '',
+  type: 'curse',
+  icon: '💀',
+  badgeBg: '',
+  borderColor: '',
+  textColor: '',
+};
+
+test('filterPerksByMutator: negative_only keeps only negative/handicap perks, falling back when none exist', () => {
+  const perksWithNegative = [makePerk({ name: 'No Mither' }), makePerk({ name: 'Iron Will' })];
+  const resultWith = filterPerksByMutator(perksWithNegative, sacrificeMutator);
+  assert.strictEqual(resultWith.length, 1);
+  assert.strictEqual(resultWith[0].name, 'No Mither');
+
+  const perksWithoutNegative = [makePerk({ name: 'Iron Will' }), makePerk({ name: 'Sprint Burst' })];
+  const resultWithout = filterPerksByMutator(perksWithoutNegative, sacrificeMutator);
+  assert.deepStrictEqual(resultWithout, perksWithoutNegative);
+});

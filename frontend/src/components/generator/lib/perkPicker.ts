@@ -65,6 +65,8 @@ export function filterPerksByMutator(
     included = notBlocked.filter(isHexOrBoonPerk);
   } else if (mutator.id === 'meme_loadout') {
     included = notBlocked.filter(isMemePerk);
+  } else if (mutator.id === 'negative_only') {
+    included = notBlocked.filter(isNegativePerk);
   } else {
     included = notBlocked;
   }

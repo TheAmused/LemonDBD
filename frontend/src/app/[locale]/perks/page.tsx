@@ -8,7 +8,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerkModal } from '@/components/PerkModal';
-import { PerkGenerator } from '@/components/PerkGenerator';
+import { GeneratorPage } from '@/components/generator/GeneratorPage';
 import { QuestsModal } from '@/components/QuestsModal';
 import { Pagination } from '@/components/Pagination';
 import { getDictionary } from '@/i18n/get-dictionary';
@@ -305,7 +305,7 @@ function PerksContent() {
         )}
 
         {activeTab === 'generator' ? (
-          <PerkGenerator
+          <GeneratorPage
             allPerks={allPerksForGenerator}
             onSelectPerk={setSelectedPerk}
             dict={dict}

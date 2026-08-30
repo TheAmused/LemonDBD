@@ -1,6 +1,14 @@
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
-import { EXHAUSTION_PERK_NAMES, MEME_PERK_NAMES } from '@/constants/chaosMutators';
+import { EXHAUSTION_PERK_NAMES, MEME_PERK_NAMES, NEGATIVE_PERK_NAMES } from '@/constants/chaosMutators';
+import {
+  AURA_KEYWORDS,
+  GENERATOR_KEYWORDS,
+  HEALING_KEYWORDS,
+  CHASE_KEYWORDS,
+  STEALTH_KEYWORDS,
+  OBSESSION_KEYWORDS,
+} from '@/constants/perkTraitKeywords';
 
 export function isExhaustionPerk(perk: Perk): boolean {
   const nameLower = perk.name.toLowerCase().trim();
@@ -122,4 +130,86 @@ export function buildDrawnSlots(
     const slot = (safeIndex % perksPerPage) + 1;
     return { page, slot, perk };
   });
+}
+
+export type TarotType =
+  | 'hex'
+  | 'boon'
+  | 'sacrifice'
+  | 'exhaustion'
+  | 'obsession'
+  | 'aura'
+  | 'generator'
+  | 'healing'
+  | 'chase'
+  | 'stealth'
+  | 'entity';
+
+export function isHexPerk(perk: Perk): boolean {
+  const nameLower = perk.name.toLowerCase();
+  const descLower = (perk.description || '').toLowerCase();
+  return nameLower.includes('hex:') || descLower.includes('hex:');
+}
+
+export function isBoonPerk(perk: Perk): boolean {
+  const nameLower = perk.name.toLowerCase();
+  const descLower = (perk.description || '').toLowerCase();
+  return nameLower.includes('boon:') || descLower.includes('boon:');
+}
+
+export function isNegativePerk(perk: Perk): boolean {
+  return NEGATIVE_PERK_NAMES.has(perk.name.toLowerCase().trim());
+}
+
+function descriptionMatchesAny(perk: Perk, keywords: readonly string[]): boolean {
+  const desc = (perk.description || '').toLowerCase();
+  return keywords.some((keyword) => desc.includes(keyword.toLowerCase()));
+}
+
+export function isAuraPerk(perk: Perk): boolean {
+  return descriptionMatchesAny(perk, AURA_KEYWORDS);
+}
+
+export function isGeneratorPerk(perk: Perk): boolean {
+  return descriptionMatchesAny(perk, GENERATOR_KEYWORDS);
+}
+
+export function isHealingPerk(perk: Perk): boolean {
+  return descriptionMatchesAny(perk, HEALING_KEYWORDS);
+}
+
+export function isChasePerk(perk: Perk): boolean {
+  return descriptionMatchesAny(perk, CHASE_KEYWORDS);
+}
+
+export function isStealthPerk(perk: Perk): boolean {
+  return descriptionMatchesAny(perk, STEALTH_KEYWORDS);
+}
+
+function isObsessionPerk(perk: Perk): boolean {
+  const nameLower = perk.name.toLowerCase();
+  return (
+    nameLower.includes('obsession') ||
+    descriptionMatchesAny(perk, OBSESSION_KEYWORDS)
+  );
+}
+
+/**
+ * Classifies a perk into exactly one Tarot card type, checked in priority
+ * order (most specific/exclusive first). Every drawn perk resolves to a
+ * type -- 'entity' is the catch-all for anything that matches nothing more
+ * specific, which is most perks by design.
+ */
+export function getPerkTarotType(perk: Perk): TarotType {
+  if (isHexPerk(perk)) return 'hex';
+  if (isBoonPerk(perk)) return 'boon';
+  if (isNegativePerk(perk)) return 'sacrifice';
+  if (isExhaustionPerk(perk)) return 'exhaustion';
+  if (isObsessionPerk(perk)) return 'obsession';
+  if (isAuraPerk(perk)) return 'aura';
+  if (isGeneratorPerk(perk)) return 'generator';
+  if (isHealingPerk(perk)) return 'healing';
+  if (isChasePerk(perk)) return 'chase';
+  if (isStealthPerk(perk)) return 'stealth';
+  return 'entity';
 }

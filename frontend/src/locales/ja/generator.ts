@@ -75,4 +75,7 @@ export default {
   crateOpening: "開封中...",
   cratePrompt: "試練の供物が待っている。開けてロードアウトを手に入れよう。",
   jackpotLines: ["エンティティは満足した。", "見事な結果だ。", "霧があなたの名を囁く。", "語り継がれる試練だ。", "4つ全て的中。エンティティはお喜びだ。", "どこかでキラーがため息をついた。"],
+  spinningPageWheel: "スロット #{slot} のページルーレットを回転中...",
+  landedPage: "ページ {page} に着地！パークルーレットに切り替え中...",
+  spinningPerkWheel: "パークルーレット回転中（ページ {page}）...",
 } as const;

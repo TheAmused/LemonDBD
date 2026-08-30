@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { DrawnSlot, RoleCategory, Perk } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -32,6 +32,8 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
   dict,
   backendBase,
 }) => {
+  const reduceMotion = useReducedMotion();
+
   return (
     <div
       role="region"
@@ -46,9 +48,9 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
           <motion.div
             key={idx}
             layout
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={reduceMotion ? false : { scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+            transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 24 }}
           >
             <PerkSlot
               perk={perk}
@@ -57,6 +59,7 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
               isObscured={isObscured}
               isActive={activeSlotIdx === idx}
               compact
+              announce
               onClick={() => {
                 if (isObscured) {
                   onRevealSlot(idx);

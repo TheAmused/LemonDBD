@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Gift } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -34,6 +34,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   const [revealedSlots, setRevealedSlots] = useState<DrawnSlot[]>([]);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     return () => {
@@ -60,6 +61,12 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           if (i === slots.length - 1) {
             celebrate(role);
             onRollComplete(slots);
+
+            const resetTimeoutId = window.setTimeout(() => {
+              setPhase('closed');
+              setRevealedSlots([]);
+            }, 1800);
+            stopTimeoutsRef.current.push(resetTimeoutId);
           }
         }, i * 350);
         stopTimeoutsRef.current.push(revealTimeoutId);
@@ -82,11 +89,11 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             onClick={handleOpen}
             disabled={phase === 'shaking' || activePlayablePerks.length === 0}
             animate={
-              phase === 'shaking'
+              !reduceMotion && phase === 'shaking'
                 ? { rotate: [0, -8, 8, -8, 8, 0], scale: [1, 1.05, 0.95, 1.05, 0.95, 1] }
                 : { rotate: 0, scale: 1 }
             }
-            transition={{ duration: 0.7 }}
+            transition={{ duration: reduceMotion ? 0 : 0.7 }}
             className="cursor-pointer disabled:cursor-default"
           >
             <Gift
@@ -106,9 +113,9 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             {revealedSlots.map((slot, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: -30, scale: 0.7 }}
+                initial={reduceMotion ? false : { opacity: 0, y: -30, scale: 0.7 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 20 }}
               >
                 <PerkSlot
                   perk={slot.perk}

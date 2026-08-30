@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Zap } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -31,6 +31,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   const [revealSlots, setRevealSlots] = useState<DrawnSlot[] | null>(null);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     return () => {
@@ -79,7 +80,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
             className="grid grid-cols-2 gap-3 sm:grid-cols-4"
             initial="hidden"
             animate="visible"
-            variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+            variants={{ visible: { transition: { staggerChildren: reduceMotion ? 0 : 0.15 } } }}
           >
             {revealSlots.map((slot, i) => (
               <motion.div
@@ -88,6 +89,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
                   hidden: { opacity: 0, y: 16, scale: 0.85 },
                   visible: { opacity: 1, y: 0, scale: 1 },
                 }}
+                transition={reduceMotion ? { duration: 0 } : undefined}
               >
                 <PerkSlot
                   perk={slot.perk}

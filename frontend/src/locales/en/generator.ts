@@ -75,4 +75,7 @@ export default {
   crateOpening: "Cracking Open...",
   cratePrompt: "A Trial Offering awaits. Crack it open for your loadout.",
   jackpotLines: ["The Entity approves.", "Hooked. Lined. Sinkered.", "The Fog whispers your name.", "A trial worth writing home about.", "Four for four. The Entity is pleased.", "Somewhere, a Killer just sighed."],
+  spinningPageWheel: "Spinning Page Wheel for Slot #{slot}...",
+  landedPage: "Landed on Page {page}! Swapping to Perk Wheel...",
+  spinningPerkWheel: "Spinning Perk Wheel (Page {page})...",
 } as const;

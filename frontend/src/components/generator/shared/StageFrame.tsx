@@ -56,17 +56,19 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
   return (
     <div
       className={cn(
-        'dbd-fog-overlay relative overflow-hidden rounded-3xl bg-slate-950/40 p-4 sm:p-6',
+        'relative overflow-hidden rounded-3xl bg-slate-950/40 p-4 sm:p-6',
         className
       )}
     >
-      <ParticlesProvider init={registerEngine}>
-        <Particles
-          id="generator-stage-particles"
-          options={particleOptions}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-        />
-      </ParticlesProvider>
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        <ParticlesProvider init={registerEngine}>
+          <Particles
+            id="generator-stage-particles"
+            options={particleOptions}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+          />
+        </ParticlesProvider>
+      </div>
       <div className="relative z-10">{children}</div>
     </div>
   );

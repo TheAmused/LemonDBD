@@ -51,9 +51,11 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [isMorphing, setIsMorphing] = useState<boolean>(false);
   const [statusText, setStatusText] = useState<string>('');
+  const [reduceMotion, setReduceMotion] = useState(false);
 
   const wheelCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const particlesCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const isMountedRef = useRef<boolean>(true);
 
   const wheelAngleRef = useRef<number>(0);
   const wheelPhaseRef = useRef<'page' | 'perk'>('page');
@@ -298,6 +300,16 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    setReduceMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const triggerParticleBurst = useCallback(() => {
     const canvas = particlesCanvasRef.current;
     if (!canvas) return;
@@ -389,7 +401,11 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
     wheelPhaseRef.current = 'page';
     setWheelPhase('page');
-    setStatusText(`Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`);
+    setStatusText(
+      dict?.generator?.spinningPageWheel
+        ? dict.generator.spinningPageWheel.replace('{slot}', String(activeSlotIdx + 1))
+        : `Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`
+    );
 
     const pageSliceAngle = (2 * Math.PI) / effectiveTotalPages;
     const pageTargetAngle = (3 * Math.PI) / 2 - (targetPage - 1) * pageSliceAngle - pageSliceAngle / 2;
@@ -397,32 +413,43 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     const pageFinalAngle = pageStartAngle + 4 * 2 * Math.PI + (pageTargetAngle - (pageStartAngle % (2 * Math.PI)));
     const pageStartTime = performance.now();
 
-    await new Promise<void>((resolve) => {
-      const animatePage = (now: number) => {
-        const elapsed = now - pageStartTime;
-        const progress = Math.min(elapsed / pageSpinDuration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 3);
+    if (reduceMotion) {
+      wheelAngleRef.current = pageFinalAngle % (2 * Math.PI);
+      drawUnifiedWheel();
+    } else {
+      await new Promise<void>((resolve) => {
+        const animatePage = (now: number) => {
+          const elapsed = now - pageStartTime;
+          const progress = Math.min(elapsed / pageSpinDuration, 1);
+          const easeOut = 1 - Math.pow(1 - progress, 3);
 
-        wheelAngleRef.current = pageStartAngle + (pageFinalAngle - pageStartAngle) * easeOut;
-        drawUnifiedWheel();
-
-        if (progress < 1) {
-          requestAnimationFrame(animatePage);
-        } else {
-          wheelAngleRef.current = pageFinalAngle % (2 * Math.PI);
+          wheelAngleRef.current = pageStartAngle + (pageFinalAngle - pageStartAngle) * easeOut;
           drawUnifiedWheel();
-          resolve();
-        }
-      };
-      requestAnimationFrame(animatePage);
-    });
+
+          if (progress < 1) {
+            requestAnimationFrame(animatePage);
+          } else {
+            wheelAngleRef.current = pageFinalAngle % (2 * Math.PI);
+            drawUnifiedWheel();
+            resolve();
+          }
+        };
+        requestAnimationFrame(animatePage);
+      });
+    }
+    if (!isMountedRef.current) return;
 
     activePageRef.current = targetPage;
     setSelectedPageUI(targetPage);
-    setStatusText(`Landed on Page ${targetPage}! Swapping to Perk Wheel...`);
+    setStatusText(
+      dict?.generator?.landedPage
+        ? dict.generator.landedPage.replace('{page}', String(targetPage))
+        : `Landed on Page ${targetPage}! Swapping to Perk Wheel...`
+    );
 
     setIsMorphing(true);
     await new Promise((res) => setTimeout(res, 250));
+    if (!isMountedRef.current) return;
 
     wheelPhaseRef.current = 'perk';
     setWheelPhase('perk');
@@ -431,8 +458,13 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
     setIsMorphing(false);
     await new Promise((res) => setTimeout(res, 250));
+    if (!isMountedRef.current) return;
 
-    setStatusText(`Spinning Perk Wheel (Page ${targetPage})...`);
+    setStatusText(
+      dict?.generator?.spinningPerkWheel
+        ? dict.generator.spinningPerkWheel.replace('{page}', String(targetPage))
+        : `Spinning Perk Wheel (Page ${targetPage})...`
+    );
 
     const perkSliceAngle = (2 * Math.PI) / maxSlotsOnPage;
     const perkTargetAngle = (3 * Math.PI) / 2 - (targetSlot - 1) * perkSliceAngle - perkSliceAngle / 2;
@@ -440,25 +472,31 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     const perkFinalAngle = perkStartAngle + 5 * 2 * Math.PI + (perkTargetAngle - (perkStartAngle % (2 * Math.PI)));
     const perkStartTime = performance.now();
 
-    await new Promise<void>((resolve) => {
-      const animatePerk = (now: number) => {
-        const elapsed = now - perkStartTime;
-        const progress = Math.min(elapsed / perkSpinDuration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 4);
+    if (reduceMotion) {
+      wheelAngleRef.current = perkFinalAngle % (2 * Math.PI);
+      drawUnifiedWheel();
+    } else {
+      await new Promise<void>((resolve) => {
+        const animatePerk = (now: number) => {
+          const elapsed = now - perkStartTime;
+          const progress = Math.min(elapsed / perkSpinDuration, 1);
+          const easeOut = 1 - Math.pow(1 - progress, 4);
 
-        wheelAngleRef.current = perkStartAngle + (perkFinalAngle - perkStartAngle) * easeOut;
-        drawUnifiedWheel();
-
-        if (progress < 1) {
-          requestAnimationFrame(animatePerk);
-        } else {
-          wheelAngleRef.current = perkFinalAngle % (2 * Math.PI);
+          wheelAngleRef.current = perkStartAngle + (perkFinalAngle - perkStartAngle) * easeOut;
           drawUnifiedWheel();
-          resolve();
-        }
-      };
-      requestAnimationFrame(animatePerk);
-    });
+
+          if (progress < 1) {
+            requestAnimationFrame(animatePerk);
+          } else {
+            wheelAngleRef.current = perkFinalAngle % (2 * Math.PI);
+            drawUnifiedWheel();
+            resolve();
+          }
+        };
+        requestAnimationFrame(animatePerk);
+      });
+    }
+    if (!isMountedRef.current) return;
 
     setIsSpinning(false);
     setStatusText(targetPerk ? `${targetPerk.name} [P${targetPage}/S${targetSlot}]` : '');
@@ -480,6 +518,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           ref={particlesCanvasRef}
           width={800}
           height={800}
+          aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-20 h-full w-full"
         />
         <div
@@ -512,12 +551,12 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
         }`}
       >
-        <Play className={`h-5 w-5 fill-current ${isSpinning ? 'animate-spin' : ''}`} />
+        <Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />
         <span>{spinButtonText}</span>
       </button>
 
       {statusText && (
-        <p aria-live="polite" className="mt-3 text-xs font-black text-amber-400 animate-pulse font-mono">
+        <p aria-live="polite" className={`mt-3 text-xs font-black text-amber-400 font-mono ${reduceMotion ? '' : 'animate-pulse'}`}>
           {statusText}
         </p>
       )}

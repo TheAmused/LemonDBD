@@ -44,6 +44,7 @@ const STORAGE_KEY = 'lemon_dbd_generator_v8';
 const SURV_STORAGE_KEY = 'lemon_dbd_enabled_survs_v7';
 const KILLER_STORAGE_KEY = 'lemon_dbd_enabled_killers_v7';
 const PERKS_PER_PAGE = 15;
+const KNOWN_MODES: GeneratorMode[] = ['wheel', 'instant', 'slot', 'tarot', 'crate'];
 
 export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelectPerk, dict }) => {
   const { user } = useAuth();
@@ -118,7 +119,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     fetchGeneratorConfig()
       .then((config) => {
         if (config.role === 'Survivor' || config.role === 'Killer') setRole(config.role);
-        if (config.gen_mode) setGenMode(config.gen_mode as GeneratorMode);
+        if (config.gen_mode && KNOWN_MODES.includes(config.gen_mode as GeneratorMode)) {
+          setGenMode(config.gen_mode as GeneratorMode);
+        }
         if (typeof config.no_repeat_perks !== 'undefined') setNoRepeatPerks(Boolean(config.no_repeat_perks));
         if (config.spin_duration_sec) setSpinDurationSec(config.spin_duration_sec);
       })
@@ -322,6 +325,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
           <StageFrame role={role}>
             {genMode === 'wheel' && (
               <WheelStage
+                key={role}
                 totalPages={totalPages}
                 perksPerPage={PERKS_PER_PAGE}
                 lastPagePerks={lastPagePerks}
@@ -337,6 +341,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             {genMode === 'instant' && (
               <InstantStage
+                key={role}
                 role={role}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
@@ -347,6 +352,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             {genMode === 'slot' && (
               <SlotMachineStage
+                key={role}
                 role={role}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
@@ -357,6 +363,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             {genMode === 'tarot' && (
               <TarotDeckStage
+                key={role}
                 role={role}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
@@ -367,6 +374,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             {genMode === 'crate' && (
               <LootCrateStage
+                key={role}
                 role={role}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}

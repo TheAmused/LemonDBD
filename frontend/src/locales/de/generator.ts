@@ -75,4 +75,7 @@ export default {
   crateOpening: "Wird geöffnet...",
   cratePrompt: "Eine Prüfungsgabe wartet. Öffne sie für dein Loadout.",
   jackpotLines: ["Die Entität ist zufrieden.", "Voller Erfolg.", "Der Nebel flüstert deinen Namen.", "Eine Prüfung für die Geschichtsbücher.", "Vier von vier. Die Entität ist erfreut.", "Irgendwo hat gerade ein Killer geseufzt."],
+  spinningPageWheel: "Seiten-Rad dreht sich für Slot #{slot}...",
+  landedPage: "Seite {page} getroffen! Wechsel zum Talente-Rad...",
+  spinningPerkWheel: "Talente-Rad dreht sich (Seite {page})...",
 } as const;

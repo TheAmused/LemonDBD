@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Rows3 } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -39,6 +39,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const tickIntervalsRef = useRef<(ReturnType<typeof setInterval> | null)[]>([null, null, null, null]);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     return () => {
@@ -58,7 +59,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     const slots = buildDrawnSlots(picked, activePlayablePerks);
     finalSlotsRef.current = slots;
 
-    setReelStates(['spinning', 'spinning', 'spinning', 'spinning']);
+    setReelStates((prev) =>
+      prev.map((_, idx) => (idx < slots.length ? 'spinning' : 'idle'))
+    );
 
     slots.forEach((slot, reelIdx) => {
       tickIntervalsRef.current[reelIdx] = setInterval(() => {
@@ -108,8 +111,8 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         {displayedPerks.map((perk, idx) => (
           <motion.div
             key={idx}
-            animate={reelStates[idx] === 'spinning' ? { y: [0, -6, 0] } : { y: 0 }}
-            transition={reelStates[idx] === 'spinning' ? { repeat: Infinity, duration: 0.15 } : {}}
+            animate={!reduceMotion && reelStates[idx] === 'spinning' ? { y: [0, -6, 0] } : { y: 0 }}
+            transition={!reduceMotion && reelStates[idx] === 'spinning' ? { repeat: Infinity, duration: 0.15 } : {}}
           >
             <PerkSlot
               perk={perk}
@@ -136,7 +139,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
         }`}
       >
-        <Rows3 className={`h-6 w-6 ${isSpinning ? 'animate-bounce' : ''}`} />
+        <Rows3 className={`h-6 w-6 ${isSpinning && !reduceMotion ? 'animate-bounce' : ''}`} />
         <span>
           {isSpinning
             ? dict?.generator?.slotMachineSpinning || 'Reels Spinning...'

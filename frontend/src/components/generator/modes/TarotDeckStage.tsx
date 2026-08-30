@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Layers, Sparkle } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -38,6 +38,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
 }) => {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const reduceMotion = useReducedMotion();
 
   const cardNames = dict?.generator?.tarotCardNames || DEFAULT_CARD_NAMES;
 
@@ -91,7 +92,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                 className="relative h-40 w-28 sm:h-44 sm:w-32"
                 style={{ transformStyle: 'preserve-3d' }}
                 animate={{ rotateY: card.flipped ? 180 : 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: reduceMotion ? 0 : 0.5 }}
               >
                 <div
                   className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-purple-950 to-slate-950"

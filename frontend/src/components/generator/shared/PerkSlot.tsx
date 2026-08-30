@@ -14,6 +14,7 @@ export interface PerkSlotProps {
   isObscured?: boolean;
   isActive?: boolean;
   compact?: boolean;
+  announce?: boolean;
   onClick?: () => void;
   onClear?: (e: React.MouseEvent) => void;
   dict?: Dictionary;
@@ -27,6 +28,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   isObscured = false,
   isActive = false,
   compact = false,
+  announce = false,
   onClick,
   onClear,
   dict,
@@ -109,7 +111,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
 
         <div className="min-w-0 flex-1">
           <p
-            aria-live="polite"
+            aria-live={announce ? 'polite' : undefined}
             className={cn(
               'font-black leading-tight text-slate-100 truncate',
               compact ? 'text-xs' : 'text-sm'

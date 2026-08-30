@@ -75,4 +75,7 @@ export default {
   crateOpening: "Abriendo...",
   cratePrompt: "Una Ofrenda del Juicio te espera. Ábrela para tu build.",
   jackpotLines: ["La Entidad aprueba.", "Cuatro de cuatro, impecable.", "La Niebla susurra tu nombre.", "Un juicio digno de recordar.", "Cuatro de cuatro. La Entidad está complacida.", "En algún lugar, un Asesino acaba de suspirar."],
+  spinningPageWheel: "Girando Ruleta de Página para Casilla #{slot}...",
+  landedPage: "¡Página {page} alcanzada! Cambiando a la Ruleta de Habilidad...",
+  spinningPerkWheel: "Girando Ruleta de Habilidad (Página {page})...",
 } as const;

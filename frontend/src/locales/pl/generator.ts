@@ -75,4 +75,7 @@ export default {
   crateOpening: "Otwieranie...",
   cratePrompt: "Dar Próby czeka. Otwórz go, aby zdobyć swój zestaw.",
   jackpotLines: ["Byt jest zadowolony.", "Cztery na cztery, bez zarzutu.", "Mgła szepcze twoje imię.", "Próba godna zapamiętania.", "Cztery na cztery. Byt jest zachwycony.", "Gdzieś właśnie westchnął Zabójca."],
+  spinningPageWheel: "Koło Stron kręci się dla slotu #{slot}...",
+  landedPage: "Trafiono Stronę {page}! Przełączanie na Koło Umiejętności...",
+  spinningPerkWheel: "Koło Umiejętności kręci się (Strona {page})...",
 } as const;

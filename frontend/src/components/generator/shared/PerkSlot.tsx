@@ -9,8 +9,10 @@ import { PerkCard } from '@/components/PerkCard';
 
 // Matches PerkCard's own grid-view footprint exactly, so an empty/obscured
 // slot takes up the same space as a filled one and nothing jumps around.
-const SLOT_SIZE_CLASSES =
-  'h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48';
+const SLOT_SIZE_CLASSES: Record<'default' | 'large', string> = {
+  default: 'h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48',
+  large: 'h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 lg:h-64 lg:w-64 xl:h-72 xl:w-72',
+};
 
 export interface PerkSlotProps {
   perk?: Perk | null;
@@ -24,6 +26,13 @@ export interface PerkSlotProps {
   isObscured?: boolean;
   isActive?: boolean;
   announce?: boolean;
+  /** 'large' is used by the reveal-moment stages; the always-visible
+   * LoadoutHotbar stays at 'default'. */
+  size?: 'default' | 'large';
+  /** Persistent Blind Mode -- distinct from `isObscured` (the Chaos
+   * "Curse of Blindness" mutator), which does NOT show the coordinate tag.
+   * Blind Mode always shows it. */
+  isBlind?: boolean;
   onClick?: () => void;
   dict?: Dictionary;
 }
@@ -35,6 +44,8 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   isObscured = false,
   isActive = false,
   announce = false,
+  size = 'default',
+  isBlind = false,
   onClick,
   dict,
 }) => {
@@ -44,7 +55,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
         type="button"
         onClick={onClick}
         className={cn(
-          SLOT_SIZE_CLASSES,
+          SLOT_SIZE_CLASSES[size],
           'flex flex-col items-center justify-center gap-1.5 rounded-2xl text-purple-400 cursor-pointer'
         )}
       >
@@ -60,7 +71,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
     return (
       <div
         className={cn(
-          SLOT_SIZE_CLASSES,
+          SLOT_SIZE_CLASSES[size],
           'flex flex-col items-center justify-center gap-1.5 text-slate-600'
         )}
       >
@@ -76,9 +87,16 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
 
   return (
     <div className={cn('relative', isActive && 'rounded-2xl ring-2 ring-amber-500/60')}>
-      <PerkCard perk={perk} onSelect={() => onClick?.()} dict={dict} coordinate={coordinate} />
+      <PerkCard
+        perk={perk}
+        onSelect={() => onClick?.()}
+        dict={dict}
+        coordinate={coordinate}
+        size={size}
+        isBlind={isBlind}
+      />
 
-      {announce && (
+      {announce && !isBlind && (
         <span aria-live="polite" className="sr-only">
           {perk.name}
         </span>

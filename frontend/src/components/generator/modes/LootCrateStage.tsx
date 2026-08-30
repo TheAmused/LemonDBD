@@ -16,6 +16,7 @@ export interface LootCrateStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  isBlind?: boolean;
   dict?: Dictionary;
   backendBase?: string;
 }
@@ -27,6 +28,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  isBlind = false,
   dict,
   backendBase,
 }) => {
@@ -115,6 +117,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             {revealedSlots.map((slot, idx) => (
               <motion.div
                 key={idx}
+                layoutId={`loadout-slot-${idx}`}
                 initial={reduceMotion ? false : { opacity: 0, y: -30, scale: 0.7 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 20 }}
@@ -124,6 +127,8 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                   role={role}
                   page={slot.page}
                   slot={slot.slot}
+                  size="large"
+                  isBlind={isBlind}
                   dict={dict}
                 />
               </motion.div>

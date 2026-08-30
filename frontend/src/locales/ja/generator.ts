@@ -12,6 +12,8 @@ export default {
   rollButton: "新しい構成を抽選",
   spinWheels: "スロット #{slot} のルーレットを回す",
   spinning: "ルーレット回転中...",
+  spinningWheel: "ルーレット回転中...",
+  spinWheelButton: "スロット抽選のルーレットを回す",
   pageWheelTitle: "ページルーレット",
   perkWheelTitle: "パークルーレット",
   selectedPage: "選択されたページ: {page}",

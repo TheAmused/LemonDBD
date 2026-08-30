@@ -12,6 +12,8 @@ export default {
   rollButton: "Wylosuj Nowy Zestaw",
   spinWheels: "Zakręć kołem dla slotu #{slot}",
   spinning: "Kręcenie kołem...",
+  spinningWheel: "Kręcenie kołem...",
+  spinWheelButton: "Zakręć dla slotu",
   pageWheelTitle: "Koło Stron",
   perkWheelTitle: "Koło Umiejętności",
   selectedPage: "Wybrana strona: {page}",

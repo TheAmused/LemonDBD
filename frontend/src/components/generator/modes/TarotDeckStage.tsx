@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Layers } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { pickRandomLoadout, buildDrawnSlots, getPerkTarotType, TarotType } from '../lib/perkPicker';
+import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playCardFlip } from '@/utils/perkAudio';
@@ -16,6 +17,9 @@ export interface TarotDeckStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  revealedSlots: boolean[];
+  onRevealSlot: (idx: number) => void;
+  onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
   dict?: Dictionary;
   backendBase?: string;
@@ -66,11 +70,15 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  revealedSlots,
+  onRevealSlot,
+  onSelectPerk,
   isBlind = false,
   dict,
   backendBase,
 }) => {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
   const reduceMotion = useReducedMotion();
 
@@ -99,7 +107,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
     setCards(next);
 
     if (next.every((c) => c.flipped)) {
-      celebrate(role);
+      celebrate(role, resultsRef.current);
       onRollComplete(next.map((c) => c.slot));
     }
   };
@@ -111,54 +119,73 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       </p>
 
       {cards ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {cards.map((card, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => handleFlip(idx)}
-              disabled={card.flipped}
-              className="cursor-pointer disabled:cursor-default"
-              style={{ perspective: '1200px' }}
-            >
-              <motion.div
-                className="relative h-56 w-40 sm:h-64 sm:w-44 md:h-72 md:w-48"
-                style={{ transformStyle: 'preserve-3d' }}
-                animate={{
-                  rotateY: card.flipped ? 180 : 0,
-                  scale: card.flipped && !reduceMotion ? [1, 1.08, 1] : 1,
-                }}
-                transition={{ duration: reduceMotion ? 0 : 0.5 }}
-              >
-                <div
-                  className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-purple-950 to-slate-950"
-                  style={{ backfaceVisibility: 'hidden' }}
-                >
-                  <CardBackImage type={card.type} />
-                  <div className="absolute inset-0 flex flex-col items-center justify-end gap-1 bg-gradient-to-t from-black/70 via-transparent to-transparent p-3">
-                    <span className="text-[11px] font-black uppercase tracking-wide text-white drop-shadow">
-                      {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
-                    </span>
-                  </div>
-                </div>
+        <div ref={resultsRef} className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {cards.map((card, idx) => {
+            const { isObscured, onClick } = getSlotInteraction(
+              idx,
+              card.slot.perk,
+              activeMutator,
+              revealedSlots,
+              onRevealSlot,
+              onSelectPerk
+            );
 
-                <div
-                  className="absolute inset-0 flex items-center justify-center rounded-2xl bg-slate-900/60"
-                  style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+            return (
+              <div key={idx} style={{ perspective: '1200px' }}>
+                <motion.div
+                  className="relative h-52 w-40 sm:h-64 sm:w-48 md:h-72 md:w-56 lg:h-80 lg:w-64 xl:h-96 xl:w-72"
+                  style={{ transformStyle: 'preserve-3d' }}
+                  animate={{
+                    rotateY: card.flipped ? 180 : 0,
+                    scale: card.flipped && !reduceMotion ? [1, 1.08, 1] : 1,
+                  }}
+                  transition={{ duration: reduceMotion ? 0 : 0.5 }}
                 >
-                  <PerkSlot
-                    perk={card.slot.perk}
-                    role={role}
-                    page={card.slot.page}
-                    slot={card.slot.slot}
-                    size="large"
-                    isBlind={isBlind}
-                    dict={dict}
-                  />
-                </div>
-              </motion.div>
-            </button>
-          ))}
+                  {/* Back face: its own button so it's the only clickable
+                      element pre-flip -- disabled (and hit-tested out) once
+                      flipped, so it never nests inside the front face's
+                      PerkCard button. */}
+                  <button
+                    type="button"
+                    onClick={() => handleFlip(idx)}
+                    disabled={card.flipped}
+                    className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-purple-950 to-slate-950 cursor-pointer disabled:cursor-default"
+                    style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
+                  >
+                    <CardBackImage type={card.type} />
+                    <div className="absolute inset-0 flex flex-col items-center justify-end gap-1 bg-gradient-to-t from-black/70 via-transparent to-transparent p-3">
+                      <span className="text-[11px] font-black uppercase tracking-wide text-white drop-shadow">
+                        {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Front face: plain wrapper, PerkCard supplies its own
+                      button -- only hit-testable once actually flipped. */}
+                  <div
+                    className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-2xl bg-slate-900/60"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      pointerEvents: card.flipped ? 'auto' : 'none',
+                    }}
+                  >
+                    <PerkSlot
+                      perk={card.slot.perk}
+                      role={role}
+                      page={card.slot.page}
+                      slot={card.slot.slot}
+                      size="large"
+                      isObscured={isObscured}
+                      isBlind={isBlind}
+                      onClick={onClick}
+                      dict={dict}
+                    />
+                  </div>
+                </motion.div>
+              </div>
+            );
+          })}
         </div>
       ) : (
         <Layers className="h-16 w-16 text-slate-600" />

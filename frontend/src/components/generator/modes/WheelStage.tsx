@@ -8,6 +8,9 @@ import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 import { isPerkBlockedByMutator, filterPerksByMutator } from '../lib/perkPicker';
+import { getSlotInteraction } from '../lib/blindnessCurse';
+import { PerkSlot } from '../shared/PerkSlot';
+import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 
 export interface WheelStageProps {
   totalPages: number;
@@ -16,9 +19,14 @@ export interface WheelStageProps {
   spinDurationSec: number;
   role: RoleCategory;
   sortedPerks: Perk[];
+  loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
   activeMutator: ChaosMutator | null;
   onWinSlot: (wonData: DrawnSlot) => void;
+  revealedSlots: boolean[];
+  onRevealSlot: (idx: number) => void;
+  onSelectPerk: (perk: Perk) => void;
+  isBlind?: boolean;
   dict?: Dictionary;
   backendBase?: string;
 }
@@ -40,8 +48,13 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   spinDurationSec,
   role,
   sortedPerks,
+  loadout,
   activeSlotIdx,
   onWinSlot,
+  revealedSlots,
+  onRevealSlot,
+  onSelectPerk,
+  isBlind = false,
   dict,
   backendBase,
   activeMutator,
@@ -55,6 +68,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
   const wheelCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const particlesCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const wheelWrapperRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef<boolean>(true);
 
   const wheelAngleRef = useRef<number>(0);
@@ -62,9 +76,9 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   const activePageRef = useRef<number>(1);
 
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
-  const particleListRef = useRef<Particle[]>([]);
-  const particleAnimFrameRef = useRef<number | null>(null);
   const emberAnimFrameRef = useRef<number | null>(null);
+
+  const { flavorLine, celebrate } = useJackpotCelebration(dict);
 
   const effectiveTotalPages = Math.max(1, totalPages);
 
@@ -100,12 +114,12 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     ctx.closePath();
 
     const rimGrad = ctx.createRadialGradient(centerX, centerY, radius - 10, centerX, centerY, radius + spikeHeight);
-    rimGrad.addColorStop(0, '#7f1d1d');
+    rimGrad.addColorStop(0, '#961f1f');
     rimGrad.addColorStop(1, '#1a0303');
     ctx.fillStyle = rimGrad;
     ctx.fill();
     ctx.lineWidth = 2;
-    ctx.strokeStyle = '#450a0a';
+    ctx.strokeStyle = '#5c1414';
     ctx.stroke();
     ctx.restore();
   };
@@ -136,17 +150,17 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
         const grad = ctx.createRadialGradient(centerX, centerY, 30, centerX, centerY, radius);
         if (i % 2 === 0) {
-          grad.addColorStop(0, '#3b0a0a');
-          grad.addColorStop(1, '#170303');
+          grad.addColorStop(0, '#4a0d0d');
+          grad.addColorStop(1, '#1c0404');
         } else {
-          grad.addColorStop(0, '#4c0f0f');
-          grad.addColorStop(1, '#0f0202');
+          grad.addColorStop(0, '#5c1414');
+          grad.addColorStop(1, '#1a0505');
         }
 
         ctx.fillStyle = grad;
         ctx.fill();
         ctx.lineWidth = 4;
-        ctx.strokeStyle = '#7f1d1d';
+        ctx.strokeStyle = '#a3232f';
         ctx.stroke();
 
         ctx.save();
@@ -341,9 +355,6 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
   useEffect(() => {
     return () => {
-      if (particleAnimFrameRef.current !== null) {
-        cancelAnimationFrame(particleAnimFrameRef.current);
-      }
       if (emberAnimFrameRef.current !== null) {
         cancelAnimationFrame(emberAnimFrameRef.current);
       }
@@ -360,61 +371,6 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       isMountedRef.current = false;
     };
   }, []);
-
-  const triggerParticleBurst = useCallback(() => {
-    const canvas = particlesCanvasRef.current;
-    if (!canvas) return;
-    const width = canvas.width;
-    const height = canvas.height;
-    const count = 65;
-
-    const newParticles: Particle[] = [];
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 9 + 3;
-      newParticles.push({
-        x: width / 2,
-        y: height / 2,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        size: Math.random() * 7 + 2,
-        alpha: 1.0,
-        color: role === 'Survivor' ? '#10b981' : '#f43f5e',
-      });
-    }
-    particleListRef.current = newParticles;
-
-    const renderParticles = () => {
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-
-      let alive = false;
-      for (const p of particleListRef.current) {
-        if (p.alpha > 0.02) {
-          alive = true;
-          p.x += p.vx;
-          p.y += p.vy;
-          p.alpha *= 0.93;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.globalAlpha = p.alpha;
-          ctx.fill();
-        }
-      }
-      ctx.globalAlpha = 1.0;
-
-      if (alive) {
-        particleAnimFrameRef.current = requestAnimationFrame(renderParticles);
-      } else {
-        ctx.clearRect(0, 0, width, height);
-      }
-    };
-
-    if (particleAnimFrameRef.current) cancelAnimationFrame(particleAnimFrameRef.current);
-    renderParticles();
-  }, [role]);
 
   const startEmberDrift = useCallback(() => {
     const canvas = particlesCanvasRef.current;
@@ -472,150 +428,185 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       cancelAnimationFrame(emberAnimFrameRef.current);
       emberAnimFrameRef.current = null;
     }
+    const canvas = particlesCanvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    }
   }, []);
+
+  const runSpinTween = (
+    startAngle: number,
+    finalAngle: number,
+    durationMs: number
+  ): Promise<void> => {
+    const startTime = performance.now();
+    return new Promise<void>((resolve) => {
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / durationMs, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+
+        wheelAngleRef.current = startAngle + (finalAngle - startAngle) * easeOut;
+        drawUnifiedWheel();
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          wheelAngleRef.current = finalAngle % (2 * Math.PI);
+          drawUnifiedWheel();
+          resolve();
+        }
+      };
+      requestAnimationFrame(step);
+    });
+  };
 
   const handleStartSpin = async () => {
     if (isSpinning || sortedPerks.length === 0) return;
     setIsSpinning(true);
     if (!reduceMotion) startEmberDrift();
 
-    const totalDurationMs = Math.max(1500, spinDurationSec * 1000);
-    const pageSpinDuration = totalDurationMs * 0.45;
-    const perkSpinDuration = totalDurationMs * 0.55;
+    try {
+      const totalDurationMs = Math.max(1500, spinDurationSec * 1000);
+      const pageSpinDuration = reduceMotion ? Math.min(500, totalDurationMs * 0.45) : totalDurationMs * 0.45;
+      const perkSpinDuration = reduceMotion ? Math.min(500, totalDurationMs * 0.55) : totalDurationMs * 0.55;
+      // Reduced motion still spins -- it just does one fast rotation
+      // instead of several. Skipping the animation entirely (as an earlier
+      // version did) made the whole draw look like nothing happened at all,
+      // which defeats the point of a "Wheel" mode.
+      const pageRotations = reduceMotion ? 1 : 4;
+      const perkRotations = reduceMotion ? 1 : 5;
+      const morphWaitMs = reduceMotion ? 100 : 250;
 
-    const targetPage = Math.floor(Math.random() * effectiveTotalPages) + 1;
-    const maxSlotsOnPage = Math.max(
-      1,
-      targetPage === effectiveTotalPages ? lastPagePerks || perksPerPage : perksPerPage
-    );
+      const targetPage = Math.floor(Math.random() * effectiveTotalPages) + 1;
+      const maxSlotsOnPage = Math.max(
+        1,
+        targetPage === effectiveTotalPages ? lastPagePerks || perksPerPage : perksPerPage
+      );
 
-    const pagePerksWithSlot: { slot: number; perk: Perk }[] = [];
-    for (let s = 1; s <= maxSlotsOnPage; s++) {
-      const idx = (targetPage - 1) * perksPerPage + (s - 1);
-      const perk = sortedPerks[idx];
-      if (perk) pagePerksWithSlot.push({ slot: s, perk });
-    }
+      const pagePerksWithSlot: { slot: number; perk: Perk }[] = [];
+      for (let s = 1; s <= maxSlotsOnPage; s++) {
+        const idx = (targetPage - 1) * perksPerPage + (s - 1);
+        const perk = sortedPerks[idx];
+        if (perk) pagePerksWithSlot.push({ slot: s, perk });
+      }
 
-    const allowedPerks = filterPerksByMutator(pagePerksWithSlot.map((e) => e.perk), activeMutator);
-    const allowedSlots = pagePerksWithSlot
-      .filter((e) => allowedPerks.includes(e.perk))
-      .map((e) => e.slot);
+      const allowedPerks = filterPerksByMutator(pagePerksWithSlot.map((e) => e.perk), activeMutator);
+      const allowedSlots = pagePerksWithSlot
+        .filter((e) => allowedPerks.includes(e.perk))
+        .map((e) => e.slot);
 
-    const targetSlot =
-      allowedSlots.length > 0
-        ? allowedSlots[Math.floor(Math.random() * allowedSlots.length)]
-        : Math.floor(Math.random() * maxSlotsOnPage) + 1;
+      const targetSlot =
+        allowedSlots.length > 0
+          ? allowedSlots[Math.floor(Math.random() * allowedSlots.length)]
+          : Math.floor(Math.random() * maxSlotsOnPage) + 1;
 
-    const targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
-    const targetPerk = sortedPerks[targetIndex] || sortedPerks[0];
+      const targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
+      const targetPerk = sortedPerks[targetIndex] || sortedPerks[0];
 
-    wheelPhaseRef.current = 'page';
-    setWheelPhase('page');
-    setStatusText(
-      dict?.generator?.spinningPageWheel
-        ? dict.generator.spinningPageWheel.replace('{slot}', String(activeSlotIdx + 1))
-        : `Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`
-    );
+      wheelPhaseRef.current = 'page';
+      setWheelPhase('page');
+      setStatusText(
+        dict?.generator?.spinningPageWheel
+          ? dict.generator.spinningPageWheel.replace('{slot}', String(activeSlotIdx + 1))
+          : `Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`
+      );
 
-    const pageSliceAngle = (2 * Math.PI) / effectiveTotalPages;
-    const pageTargetAngle = (3 * Math.PI) / 2 - (targetPage - 1) * pageSliceAngle - pageSliceAngle / 2;
-    const pageStartAngle = wheelAngleRef.current;
-    const pageFinalAngle = pageStartAngle + 4 * 2 * Math.PI + (pageTargetAngle - (pageStartAngle % (2 * Math.PI)));
-    const pageStartTime = performance.now();
+      const pageSliceAngle = (2 * Math.PI) / effectiveTotalPages;
+      const pageTargetAngle = (3 * Math.PI) / 2 - (targetPage - 1) * pageSliceAngle - pageSliceAngle / 2;
+      const pageStartAngle = wheelAngleRef.current;
+      const pageFinalAngle =
+        pageStartAngle + pageRotations * 2 * Math.PI + (pageTargetAngle - (pageStartAngle % (2 * Math.PI)));
 
-    if (reduceMotion) {
-      wheelAngleRef.current = pageFinalAngle % (2 * Math.PI);
+      await runSpinTween(pageStartAngle, pageFinalAngle, pageSpinDuration);
+      if (!isMountedRef.current) return;
+
+      activePageRef.current = targetPage;
+      setSelectedPageUI(targetPage);
+      setStatusText(
+        dict?.generator?.landedPage
+          ? dict.generator.landedPage.replace('{page}', String(targetPage))
+          : `Landed on Page ${targetPage}! Swapping to Perk Wheel...`
+      );
+
+      setIsMorphing(true);
+      await new Promise((res) => setTimeout(res, morphWaitMs));
+      if (!isMountedRef.current) return;
+
+      wheelPhaseRef.current = 'perk';
+      setWheelPhase('perk');
+      wheelAngleRef.current = 0;
       drawUnifiedWheel();
-    } else {
-      await new Promise<void>((resolve) => {
-        const animatePage = (now: number) => {
-          const elapsed = now - pageStartTime;
-          const progress = Math.min(elapsed / pageSpinDuration, 1);
-          const easeOut = 1 - Math.pow(1 - progress, 3);
 
-          wheelAngleRef.current = pageStartAngle + (pageFinalAngle - pageStartAngle) * easeOut;
-          drawUnifiedWheel();
+      setIsMorphing(false);
+      await new Promise((res) => setTimeout(res, morphWaitMs));
+      if (!isMountedRef.current) return;
 
-          if (progress < 1) {
-            requestAnimationFrame(animatePage);
-          } else {
-            wheelAngleRef.current = pageFinalAngle % (2 * Math.PI);
-            drawUnifiedWheel();
-            resolve();
-          }
-        };
-        requestAnimationFrame(animatePage);
-      });
+      setStatusText(
+        dict?.generator?.spinningPerkWheel
+          ? dict.generator.spinningPerkWheel.replace('{page}', String(targetPage))
+          : `Spinning Perk Wheel (Page ${targetPage})...`
+      );
+
+      const perkSliceAngle = (2 * Math.PI) / maxSlotsOnPage;
+      const perkTargetAngle = (3 * Math.PI) / 2 - (targetSlot - 1) * perkSliceAngle - perkSliceAngle / 2;
+      const perkStartAngle = 0;
+      const perkFinalAngle =
+        perkStartAngle + perkRotations * 2 * Math.PI + (perkTargetAngle - (perkStartAngle % (2 * Math.PI)));
+
+      await runSpinTween(perkStartAngle, perkFinalAngle, perkSpinDuration);
+      if (!isMountedRef.current) return;
+
+      stopEmberDrift();
+      setIsSpinning(false);
+      setStatusText(targetPerk ? `${targetPerk.name} [P${targetPage}/S${targetSlot}]` : '');
+      celebrate(role, wheelWrapperRef.current);
+
+      if (targetPerk) {
+        onWinSlot({ page: targetPage, slot: targetSlot, perk: targetPerk });
+      }
+    } catch (err) {
+      // Guarantees the button never gets stuck permanently disabled on an
+      // unexpected error -- without this, isSpinning could stay true
+      // forever with no visible feedback, which looks exactly like "the
+      // button does nothing."
+      console.error('Wheel spin failed:', err);
+      if (isMountedRef.current) {
+        stopEmberDrift();
+        setIsSpinning(false);
+        setIsMorphing(false);
+        setStatusText('');
+      }
     }
-    if (!isMountedRef.current) return;
+  };
 
-    activePageRef.current = targetPage;
-    setSelectedPageUI(targetPage);
-    setStatusText(
-      dict?.generator?.landedPage
-        ? dict.generator.landedPage.replace('{page}', String(targetPage))
-        : `Landed on Page ${targetPage}! Swapping to Perk Wheel...`
+  const renderFlankSlot = (idx: number) => {
+    const slotData = loadout[idx];
+    const perk = slotData?.perk;
+    const { isObscured, onClick } = getSlotInteraction(
+      idx,
+      perk,
+      activeMutator,
+      revealedSlots,
+      onRevealSlot,
+      onSelectPerk
     );
 
-    setIsMorphing(true);
-    await new Promise((res) => setTimeout(res, 250));
-    if (!isMountedRef.current) return;
-
-    wheelPhaseRef.current = 'perk';
-    setWheelPhase('perk');
-    wheelAngleRef.current = 0;
-    drawUnifiedWheel();
-
-    setIsMorphing(false);
-    await new Promise((res) => setTimeout(res, 250));
-    if (!isMountedRef.current) return;
-
-    setStatusText(
-      dict?.generator?.spinningPerkWheel
-        ? dict.generator.spinningPerkWheel.replace('{page}', String(targetPage))
-        : `Spinning Perk Wheel (Page ${targetPage})...`
+    return (
+      <PerkSlot
+        key={idx}
+        perk={perk}
+        role={role}
+        page={slotData?.page}
+        slot={slotData?.slot}
+        isActive={activeSlotIdx === idx}
+        isObscured={isObscured}
+        isBlind={isBlind}
+        onClick={onClick}
+        dict={dict}
+      />
     );
-
-    const perkSliceAngle = (2 * Math.PI) / maxSlotsOnPage;
-    const perkTargetAngle = (3 * Math.PI) / 2 - (targetSlot - 1) * perkSliceAngle - perkSliceAngle / 2;
-    const perkStartAngle = 0;
-    const perkFinalAngle = perkStartAngle + 5 * 2 * Math.PI + (perkTargetAngle - (perkStartAngle % (2 * Math.PI)));
-    const perkStartTime = performance.now();
-
-    if (reduceMotion) {
-      wheelAngleRef.current = perkFinalAngle % (2 * Math.PI);
-      drawUnifiedWheel();
-    } else {
-      await new Promise<void>((resolve) => {
-        const animatePerk = (now: number) => {
-          const elapsed = now - perkStartTime;
-          const progress = Math.min(elapsed / perkSpinDuration, 1);
-          const easeOut = 1 - Math.pow(1 - progress, 4);
-
-          wheelAngleRef.current = perkStartAngle + (perkFinalAngle - perkStartAngle) * easeOut;
-          drawUnifiedWheel();
-
-          if (progress < 1) {
-            requestAnimationFrame(animatePerk);
-          } else {
-            wheelAngleRef.current = perkFinalAngle % (2 * Math.PI);
-            drawUnifiedWheel();
-            resolve();
-          }
-        };
-        requestAnimationFrame(animatePerk);
-      });
-    }
-    if (!isMountedRef.current) return;
-
-    stopEmberDrift();
-    setIsSpinning(false);
-    setStatusText(targetPerk ? `${targetPerk.name} [P${targetPage}/S${targetSlot}]` : '');
-    triggerParticleBurst();
-
-    if (targetPerk) {
-      onWinSlot({ page: targetPage, slot: targetSlot, perk: targetPerk });
-    }
   };
 
   const spinButtonText = isSpinning
@@ -623,54 +614,70 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     : `${dict?.generator?.spinWheelButton || 'Spin for Perk Slot'} #${activeSlotIdx + 1}`;
 
   return (
-    <div className="relative flex flex-col items-center justify-center w-full">
-      <div className="relative flex items-center justify-center w-full">
-        <canvas
-          ref={particlesCanvasRef}
-          width={800}
-          height={800}
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-20 h-full w-full"
-        />
-        <div
-          className={`w-full max-w-[440px] sm:max-w-[520px] aspect-square transition-all duration-500 ease-out transform ${
-            isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
-          }`}
-        >
+    <div className="flex w-full flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-center lg:gap-6 xl:gap-10">
+      <div className="order-2 grid grid-cols-2 gap-3 lg:order-1 lg:grid-cols-1 lg:gap-4">
+        {renderFlankSlot(0)}
+        {renderFlankSlot(1)}
+      </div>
+
+      <div ref={wheelWrapperRef} className="order-1 flex flex-col items-center lg:order-2">
+        <div className="relative flex items-center justify-center w-full">
           <canvas
-            ref={wheelCanvasRef}
+            ref={particlesCanvasRef}
             width={800}
             height={800}
-            className={`h-full w-full ${
-              role === 'Survivor'
-                ? 'drop-shadow-[0_0_30px_rgba(16,185,129,0.35)]'
-                : 'drop-shadow-[0_0_30px_rgba(244,63,94,0.35)]'
-            }`}
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-20 h-full w-full"
           />
+          <div
+            className={`w-full max-w-[320px] sm:max-w-[360px] md:max-w-[400px] lg:max-w-[420px] xl:max-w-[480px] aspect-square transition-all duration-500 ease-out transform ${
+              isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
+            }`}
+          >
+            <canvas
+              ref={wheelCanvasRef}
+              width={800}
+              height={800}
+              className={`h-full w-full ${
+                role === 'Survivor'
+                  ? 'drop-shadow-[0_0_30px_rgba(16,185,129,0.35)]'
+                  : 'drop-shadow-[0_0_30px_rgba(244,63,94,0.35)]'
+              }`}
+            />
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleStartSpin}
+          disabled={isSpinning || sortedPerks.length === 0}
+          className={`mt-6 flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-base tracking-wider uppercase shadow-2xl transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+            isSpinning || sortedPerks.length === 0
+              ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
+              : role === 'Survivor'
+                ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
+                : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
+          }`}
+        >
+          <Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />
+          <span>{spinButtonText}</span>
+        </button>
+
+        {statusText && (
+          <p aria-live="polite" className={`mt-3 text-xs font-black text-amber-400 font-mono ${reduceMotion ? '' : 'animate-pulse'}`}>
+            {statusText}
+          </p>
+        )}
+
+        <div aria-live="polite" className="mt-2 text-xs font-black text-amber-400 text-center">
+          {flavorLine}
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={handleStartSpin}
-        disabled={isSpinning || sortedPerks.length === 0}
-        className={`mt-6 flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-base tracking-wider uppercase shadow-2xl transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
-          isSpinning || sortedPerks.length === 0
-            ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-            : role === 'Survivor'
-              ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-              : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-        }`}
-      >
-        <Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />
-        <span>{spinButtonText}</span>
-      </button>
-
-      {statusText && (
-        <p aria-live="polite" className={`mt-3 text-xs font-black text-amber-400 font-mono ${reduceMotion ? '' : 'animate-pulse'}`}>
-          {statusText}
-        </p>
-      )}
+      <div className="order-3 grid grid-cols-2 gap-3 lg:order-3 lg:grid-cols-1 lg:gap-4">
+        {renderFlankSlot(2)}
+        {renderFlankSlot(3)}
+      </div>
     </div>
   );
 };

@@ -26,8 +26,8 @@ export interface PerkSlotProps {
   isObscured?: boolean;
   isActive?: boolean;
   announce?: boolean;
-  /** 'large' is used by the reveal-moment stages; the always-visible
-   * LoadoutHotbar stays at 'default'. */
+  /** 'large' is used by every mode's result grid; the Wheel's flanking
+   * loadout slots stay at 'default' so they don't crowd out the wheel. */
   size?: 'default' | 'large';
   /** Persistent Blind Mode -- distinct from `isObscured` (the Chaos
    * "Curse of Blindness" mutator), which does NOT show the coordinate tag.

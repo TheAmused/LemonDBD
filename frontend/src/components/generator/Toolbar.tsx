@@ -55,21 +55,21 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-1">
+      <div className="flex flex-wrap items-center gap-1.5">
         <IconToggleButton
-          icon={<Repeat className="h-4 w-4" />}
+          icon={<Repeat className="h-5 w-5" />}
           label={dict?.generator?.noRepeatTooltip || 'Toggle No-Repeat Perks'}
           isActive={noRepeatPerks}
           onClick={onToggleNoRepeat}
         />
         <IconToggleButton
-          icon={<span className="text-base leading-none">{activeMutator ? activeMutator.icon : '🔮'}</span>}
+          icon={<span className="text-lg leading-none">{activeMutator ? activeMutator.icon : '🔮'}</span>}
           label={activeMutator ? activeMutator.name : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
           isActive={Boolean(activeMutator)}
           onClick={onOpenChaosModal}
         />
         <IconToggleButton
-          icon={audioEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+          icon={audioEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
           label={
             audioEnabled
               ? dict?.generator?.audioOnLabel || 'Sound On'
@@ -79,7 +79,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           onClick={onToggleAudio}
         />
         <IconToggleButton
-          icon={<RotateCcw className="h-4 w-4" />}
+          icon={<RotateCcw className="h-5 w-5" />}
           label={dict?.generator?.resetAllTooltip || 'Reset wheels, loadout slots, and memory'}
           onClick={onResetAll}
         />

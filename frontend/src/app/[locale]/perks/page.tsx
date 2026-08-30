@@ -8,7 +8,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerkModal } from '@/components/PerkModal';
-import { GeneratorPage } from '@/components/generator/GeneratorPage';
 import { QuestsModal } from '@/components/QuestsModal';
 import { Pagination } from '@/components/Pagination';
 import { getDictionary } from '@/i18n/get-dictionary';
@@ -29,7 +28,6 @@ import {
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
-const DASHBOARD_TAB_KEY = 'lemon_dbd_active_tab_v3';
 const DEFAULT_PERKS_PER_PAGE = 15;
 
 function PerksContent() {
@@ -39,16 +37,14 @@ function PerksContent() {
   const { isCollapsed } = useSidebarState();
   const { user } = useAuth();
 
-  const paramTab = searchParams ? searchParams.get('tab') : null;
   const paramRole = searchParams ? searchParams.get('role') : null;
 
   const [dict, setDict] = useState<Dictionary | null>(null);
   const [perks, setPerks] = useState<Perk[]>([]);
-  const [allPerksForGenerator, setAllPerksForGenerator] = useState<Perk[]>([]);
+  const [allPerksForStats, setAllPerksForGenerator] = useState<Perk[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
-  const [activeTab, setActiveTab] = useState<'vault' | 'generator'>('vault');
   const [role, setRole] = useState<RoleCategory>('Survivor');
   const [scope, setScope] = useState<ScopeFilter>('all');
   const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('all');
@@ -76,43 +72,22 @@ function PerksContent() {
   }, [locale]);
 
   useEffect(() => {
-    if (paramTab === 'generator') {
-      setActiveTab('generator');
-      document.title = dict?.app?.perkRandomizerPageTitle || 'LemonDBD - Perk Randomizer';
-    } else {
-      setActiveTab('vault');
-      if (paramRole === 'Killer' || paramRole === 'Survivor') {
-        setRole(paramRole);
-      }
-      document.title = dict?.app?.perksVaultPageTitle || 'LemonDBD - Dead by Daylight Perks Vault';
+    if (paramRole === 'Killer' || paramRole === 'Survivor') {
+      setRole(paramRole);
     }
-  }, [paramTab, paramRole, dict]);
+    document.title = dict?.app?.perksVaultPageTitle || 'LemonDBD - Dead by Daylight Perks Vault';
+  }, [paramRole, dict]);
 
   const handleSelectCategoryFromSidebar = (selected: string) => {
-    if (selected === 'generator') {
-      setActiveTab('generator');
-      try {
-        localStorage.setItem(DASHBOARD_TAB_KEY, 'generator');
-      } catch (e) {
-        console.error('Failed saving tab preference:', e);
-      }
+    if (selected === 'Survivor' || selected === 'Killer') {
+      setRole(selected);
+      setScope('all');
+    } else if (selected === 'General') {
+      setScope('general');
     } else {
-      setActiveTab('vault');
-      if (selected === 'Survivor' || selected === 'Killer') {
-        setRole(selected);
-        setScope('all');
-      } else if (selected === 'General') {
-        setScope('general');
-      } else {
-        setScope('all');
-      }
-      setPage(1);
-      try {
-        localStorage.setItem(DASHBOARD_TAB_KEY, 'vault');
-      } catch (e) {
-        console.error('Failed saving tab preference:', e);
-      }
+      setScope('all');
     }
+    setPage(1);
   };
 
   const fetchPerks = useCallback(async () => {
@@ -215,7 +190,7 @@ function PerksContent() {
     setPage(1);
   };
 
-  const totalVaultPerks = allPerksForGenerator.length || totalResults;
+  const totalVaultPerks = allPerksForStats.length || totalResults;
 
   if (!dict) return null;
 
@@ -224,7 +199,7 @@ function PerksContent() {
       <Sidebar
         currentLocale={locale}
         dict={dict}
-        activeCategory={activeTab === 'generator' ? 'generator' : 'perks'}
+        activeCategory="perks"
         onSelectCategory={handleSelectCategoryFromSidebar}
         onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalVaultPerks}
@@ -238,8 +213,7 @@ function PerksContent() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        {activeTab !== 'generator' && (
-          <header className="mb-6 flex flex-col gap-4 w-full">
+        <header className="mb-6 flex flex-col gap-4 w-full">
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60 border border-slate-800">
               <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
               <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
@@ -302,16 +276,8 @@ function PerksContent() {
               </div>
             </div>
           </header>
-        )}
 
-        {activeTab === 'generator' ? (
-          <GeneratorPage
-            allPerks={allPerksForGenerator}
-            onSelectPerk={setSelectedPerk}
-            dict={dict}
-          />
-        ) : (
-          <>
+        <>
             <PerkFilters
               search={search}
               setSearch={(v) => {
@@ -412,7 +378,6 @@ function PerksContent() {
               </section>
             )}
           </>
-        )}
 
         <PerkModal
           perk={selectedPerk}

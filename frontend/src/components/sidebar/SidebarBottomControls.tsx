@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { Sun, Moon, Bug, Coffee } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
@@ -32,6 +32,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
 }) => {
   const { resolvedTheme, setTheme } = useTheme();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const [isMounted, setIsMounted] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
@@ -44,7 +45,8 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
     if (!pathname) return '/';
     const segments = pathname.split('/');
     segments[1] = locale;
-    return segments.join('/');
+    const query = searchParams?.toString();
+    return segments.join('/') + (query ? `?${query}` : '');
   };
 
   useEffect(() => {

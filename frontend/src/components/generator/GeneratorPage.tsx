@@ -181,16 +181,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     }
   };
 
-  const handleClearSlot = (slotIdx: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setLoadout((prev) => {
-      const next = [...prev];
-      next[slotIdx] = null;
-      return next;
-    });
-    setActiveSlotIdx(slotIdx);
-  };
-
   const handleWheelWinSlot = async (wonData: DrawnSlot) => {
     setLoadout((prev) => {
       const next = [...prev];
@@ -330,14 +320,13 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
           <LoadoutHotbar
             loadout={loadout}
             activeSlotIdx={activeSlotIdx}
+            genMode={genMode}
             role={role}
             activeMutator={activeMutator}
             revealedSlots={revealedSlots}
             onRevealSlot={handleRevealSlot}
             onSelectPerk={onSelectPerk}
-            onClearSlot={handleClearSlot}
             dict={dict}
-            backendBase={backendBase}
           />
         </>
       )}

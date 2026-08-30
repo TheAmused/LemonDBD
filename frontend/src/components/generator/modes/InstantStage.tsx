@@ -16,6 +16,7 @@ export interface InstantStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  isBlind?: boolean;
   dict?: Dictionary;
   backendBase?: string;
 }
@@ -25,6 +26,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  isBlind = false,
   dict,
   backendBase,
 }) => {
@@ -96,6 +98,8 @@ export const InstantStage: React.FC<InstantStageProps> = ({
                   role={role}
                   page={slot.page}
                   slot={slot.slot}
+                  size="large"
+                  isBlind={isBlind}
                   dict={dict}
                 />
               </motion.div>

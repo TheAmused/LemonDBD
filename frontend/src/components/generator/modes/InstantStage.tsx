@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Zap } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
@@ -29,7 +29,14 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   backendBase,
 }) => {
   const [revealSlots, setRevealSlots] = useState<DrawnSlot[] | null>(null);
+  const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
+
+  useEffect(() => {
+    return () => {
+      stopTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
+    };
+  }, []);
 
   const handleRoll = () => {
     if (activePlayablePerks.length === 0) return;
@@ -39,13 +46,15 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     setRevealSlots(slots);
 
     slots.forEach((_, i) => {
-      window.setTimeout(() => playReelThud(), i * 150);
+      const timeoutId = window.setTimeout(() => playReelThud(), i * 150);
+      stopTimeoutsRef.current.push(timeoutId);
     });
 
-    window.setTimeout(() => {
+    const finalTimeoutId = window.setTimeout(() => {
       celebrate(role);
       onRollComplete(slots);
     }, slots.length * 150 + 200);
+    stopTimeoutsRef.current.push(finalTimeoutId);
   };
 
   return (

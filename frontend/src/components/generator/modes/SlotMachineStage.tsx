@@ -62,6 +62,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     setReelStates((prev) =>
       prev.map((_, idx) => (idx < slots.length ? 'spinning' : 'idle'))
     );
+    setDisplayedPerks((prev) =>
+      prev.map((perk, idx) => (idx < slots.length ? perk : null))
+    );
 
     slots.forEach((slot, reelIdx) => {
       tickIntervalsRef.current[reelIdx] = setInterval(() => {

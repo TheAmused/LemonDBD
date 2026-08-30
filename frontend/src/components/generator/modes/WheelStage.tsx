@@ -305,6 +305,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   }, []);
 
   useEffect(() => {
+    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
@@ -523,7 +524,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         />
         <div
           className={`w-full max-w-[440px] sm:max-w-[520px] aspect-square transition-all duration-500 ease-out transform ${
-            isMorphing ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
+            isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
           }`}
         >
           <canvas

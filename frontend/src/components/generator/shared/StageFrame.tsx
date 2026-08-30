@@ -69,6 +69,15 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
           />
         </ParticlesProvider>
       </div>
+
+      <div
+        aria-hidden="true"
+        className={cn(
+          'pointer-events-none absolute inset-0',
+          reduceMotion ? 'dbd-heartbeat-vignette--static' : 'dbd-heartbeat-vignette'
+        )}
+      />
+
       <div className="relative z-10">{children}</div>
     </div>
   );

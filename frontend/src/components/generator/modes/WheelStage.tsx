@@ -353,6 +353,20 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     drawUnifiedWheel();
   }, [drawUnifiedWheel, selectedPageUI, sortedPerks, activeMutator, wheelPhase]);
 
+  // With exactly one page, the "page wheel" is a single 360-degree slice --
+  // one solid color with nothing to differentiate and nothing for a spin to
+  // visibly change. Skip it entirely and show the real per-perk wheel (with
+  // actual slice colors and icons) from the start instead of a wheel that
+  // looks broken for anyone with a small playable pool.
+  useEffect(() => {
+    if (effectiveTotalPages <= 1 && wheelPhaseRef.current !== 'perk') {
+      wheelPhaseRef.current = 'perk';
+      activePageRef.current = 1;
+      setWheelPhase('perk');
+      setSelectedPageUI(1);
+    }
+  }, [effectiveTotalPages]);
+
   useEffect(() => {
     return () => {
       if (emberAnimFrameRef.current !== null) {
@@ -505,43 +519,55 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       const targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
       const targetPerk = sortedPerks[targetIndex] || sortedPerks[0];
 
-      wheelPhaseRef.current = 'page';
-      setWheelPhase('page');
-      setStatusText(
-        dict?.generator?.spinningPageWheel
-          ? dict.generator.spinningPageWheel.replace('{slot}', String(activeSlotIdx + 1))
-          : `Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`
-      );
+      if (effectiveTotalPages > 1) {
+        wheelPhaseRef.current = 'page';
+        setWheelPhase('page');
+        setStatusText(
+          dict?.generator?.spinningPageWheel
+            ? dict.generator.spinningPageWheel.replace('{slot}', String(activeSlotIdx + 1))
+            : `Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`
+        );
 
-      const pageSliceAngle = (2 * Math.PI) / effectiveTotalPages;
-      const pageTargetAngle = (3 * Math.PI) / 2 - (targetPage - 1) * pageSliceAngle - pageSliceAngle / 2;
-      const pageStartAngle = wheelAngleRef.current;
-      const pageFinalAngle =
-        pageStartAngle + pageRotations * 2 * Math.PI + (pageTargetAngle - (pageStartAngle % (2 * Math.PI)));
+        const pageSliceAngle = (2 * Math.PI) / effectiveTotalPages;
+        const pageTargetAngle = (3 * Math.PI) / 2 - (targetPage - 1) * pageSliceAngle - pageSliceAngle / 2;
+        const pageStartAngle = wheelAngleRef.current;
+        const pageFinalAngle =
+          pageStartAngle + pageRotations * 2 * Math.PI + (pageTargetAngle - (pageStartAngle % (2 * Math.PI)));
 
-      await runSpinTween(pageStartAngle, pageFinalAngle, pageSpinDuration);
-      if (!isMountedRef.current) return;
+        await runSpinTween(pageStartAngle, pageFinalAngle, pageSpinDuration);
+        if (!isMountedRef.current) return;
 
-      activePageRef.current = targetPage;
-      setSelectedPageUI(targetPage);
-      setStatusText(
-        dict?.generator?.landedPage
-          ? dict.generator.landedPage.replace('{page}', String(targetPage))
-          : `Landed on Page ${targetPage}! Swapping to Perk Wheel...`
-      );
+        activePageRef.current = targetPage;
+        setSelectedPageUI(targetPage);
+        setStatusText(
+          dict?.generator?.landedPage
+            ? dict.generator.landedPage.replace('{page}', String(targetPage))
+            : `Landed on Page ${targetPage}! Swapping to Perk Wheel...`
+        );
 
-      setIsMorphing(true);
-      await new Promise((res) => setTimeout(res, morphWaitMs));
-      if (!isMountedRef.current) return;
+        setIsMorphing(true);
+        await new Promise((res) => setTimeout(res, morphWaitMs));
+        if (!isMountedRef.current) return;
 
-      wheelPhaseRef.current = 'perk';
-      setWheelPhase('perk');
-      wheelAngleRef.current = 0;
-      drawUnifiedWheel();
+        wheelPhaseRef.current = 'perk';
+        setWheelPhase('perk');
+        wheelAngleRef.current = 0;
+        drawUnifiedWheel();
 
-      setIsMorphing(false);
-      await new Promise((res) => setTimeout(res, morphWaitMs));
-      if (!isMountedRef.current) return;
+        setIsMorphing(false);
+        await new Promise((res) => setTimeout(res, morphWaitMs));
+        if (!isMountedRef.current) return;
+      } else {
+        // Only one page exists -- there's nothing meaningful for a page
+        // wheel to spin (a single 360-degree slice looks identical at any
+        // rotation), so skip straight to the real per-perk wheel.
+        activePageRef.current = targetPage;
+        wheelPhaseRef.current = 'perk';
+        setWheelPhase('perk');
+        setSelectedPageUI(targetPage);
+        wheelAngleRef.current = 0;
+        drawUnifiedWheel();
+      }
 
       setStatusText(
         dict?.generator?.spinningPerkWheel

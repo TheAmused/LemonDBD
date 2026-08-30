@@ -47,7 +47,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const backendBase = getBackendBaseUrl();
 
   const [role, setRole] = useState<RoleCategory>('Survivor');
-  const [genMode, setGenMode] = useState<GeneratorMode>('wheel');
+  const [genMode, setGenMode] = useState<GeneratorMode>('instant');
   const [noRepeatPerks, setNoRepeatPerks] = useState<boolean>(true);
   const [spinDurationSec, setSpinDurationSec] = useState<number>(3);
   const [audioEnabled, setAudioEnabledState] = useState<boolean>(true);

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Zap } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -37,7 +37,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   dict,
   backendBase,
 }) => {
-  const [revealSlots, setRevealSlots] = useState<DrawnSlot[] | null>(null);
+  const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const { flavorLine, celebrate } = useJackpotCelebration(dict);
@@ -54,7 +54,9 @@ export const InstantStage: React.FC<InstantStageProps> = ({
 
     const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
     const slots = buildDrawnSlots(picked, activePlayablePerks);
-    setRevealSlots(slots);
+    // Pad to a fixed 4 so the grid always has exactly 4 cells even if
+    // fewer than 4 perks were available to draw.
+    setRevealSlots([0, 1, 2, 3].map((i) => slots[i] || null));
 
     slots.forEach((_, i) => {
       const timeoutId = window.setTimeout(() => playReelThud(), i * 150);
@@ -84,50 +86,42 @@ export const InstantStage: React.FC<InstantStageProps> = ({
         <span>{dict?.generator?.rollCompleteLoadout || `Roll Complete ${role} Loadout`}</span>
       </button>
 
-      <AnimatePresence>
-        {revealSlots && (
-          <motion.div
-            ref={resultsRef}
-            className="grid grid-cols-2 gap-3 lg:grid-cols-4"
-            initial="hidden"
-            animate="visible"
-            variants={{ visible: { transition: { staggerChildren: reduceMotion ? 0 : 0.15 } } }}
-          >
-            {revealSlots.map((slot, i) => {
-              const { isObscured, onClick } = getSlotInteraction(
-                i,
-                slot.perk,
-                activeMutator,
-                revealedSlots,
-                onRevealSlot,
-                onSelectPerk
-              );
-              return (
-                <motion.div
-                  key={i}
-                  variants={{
-                    hidden: { opacity: 0, y: 16, scale: 0.85 },
-                    visible: { opacity: 1, y: 0, scale: 1 },
-                  }}
-                  transition={reduceMotion ? { duration: 0 } : undefined}
-                >
-                  <PerkSlot
-                    perk={slot.perk}
-                    role={role}
-                    page={slot.page}
-                    slot={slot.slot}
-                    size="large"
-                    isObscured={isObscured}
-                    isBlind={isBlind}
-                    onClick={onClick}
-                    dict={dict}
-                  />
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Always mounted at its final size, even before the first roll --
+          empty and filled slots share the exact same footprint, so rolling
+          never changes the stage's height (no jump, no reserved dead
+          space when idle either). */}
+      <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {revealSlots.map((slot, i) => {
+          const { isObscured, onClick } = getSlotInteraction(
+            i,
+            slot?.perk,
+            activeMutator,
+            revealedSlots,
+            onRevealSlot,
+            onSelectPerk
+          );
+          return (
+            <motion.div
+              key={i}
+              initial={false}
+              animate={slot ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1 }}
+              transition={reduceMotion || !slot ? { duration: 0 } : { delay: i * 0.1, type: 'spring', stiffness: 260, damping: 20 }}
+            >
+              <PerkSlot
+                perk={slot?.perk}
+                role={role}
+                page={slot?.page}
+                slot={slot?.slot}
+                size="large"
+                isObscured={isObscured}
+                isBlind={isBlind}
+                onClick={onClick}
+                dict={dict}
+              />
+            </motion.div>
+          );
+        })}
+      </div>
 
       <div aria-live="polite" className="text-xs font-black text-amber-400 text-center">
         {flavorLine}

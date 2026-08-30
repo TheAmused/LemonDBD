@@ -78,11 +78,13 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
         )}
       />
 
-      {/* Fixed minimum height so switching modes (or rolling within one)
-          never collapses/expands the stage and shoves the rest of the page
-          up and down -- every mode reserves the same footprint whether it's
-          showing a bare "roll" button or a full result grid. */}
-      <div className="relative z-10 flex min-h-[420px] flex-col items-center justify-center sm:min-h-[480px] lg:min-h-[520px]">
+      {/* A small floor so the stage never looks collapsed when totally
+          empty -- the real anti-jank fix is each mode reserving its own
+          footprint (e.g. an empty-slot grid before rolling) so it doesn't
+          change size when results appear. A single large height forced on
+          every mode regardless of what it's showing just left a lot of
+          dead background under short content instead. */}
+      <div className="relative z-10 flex min-h-[240px] flex-col items-center justify-center">
         {children}
       </div>
     </div>

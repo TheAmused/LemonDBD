@@ -11,6 +11,15 @@ import {
   computePlayablePool,
   pickRandomLoadout,
   buildDrawnSlots,
+  isHexPerk,
+  isBoonPerk,
+  isNegativePerk,
+  isAuraPerk,
+  isGeneratorPerk,
+  isHealingPerk,
+  isChasePerk,
+  isStealthPerk,
+  getPerkTarotType,
 } from '@/components/generator/lib/perkPicker';
 import type { Perk } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
@@ -208,4 +217,48 @@ test('buildDrawnSlots: falls back to page 1 / slot 1 for a perk not found in the
   const strayPerk = makePerk({ name: 'Not In Pool' });
   const slots = buildDrawnSlots([strayPerk], sortedPool, 15);
   assert.deepStrictEqual(slots[0], { page: 1, slot: 1, perk: strayPerk });
+});
+
+test('isHexPerk / isBoonPerk: split the combined Hex/Boon check by name or description prefix', () => {
+  assert.ok(isHexPerk(makePerk({ name: 'Hex: Ruin' })));
+  assert.ok(!isBoonPerk(makePerk({ name: 'Hex: Ruin' })));
+  assert.ok(isBoonPerk(makePerk({ name: 'Boon: Circle of Healing' })));
+  assert.ok(!isHexPerk(makePerk({ name: 'Boon: Circle of Healing' })));
+  assert.ok(isHexPerk(makePerk({ name: 'Made-Up', description: 'Applies a Hex: effect.' })));
+  assert.ok(!isHexPerk(makePerk({ name: 'Sprint Burst' })));
+});
+
+test('isNegativePerk: matches the curated handicap list', () => {
+  assert.ok(isNegativePerk(makePerk({ name: 'No Mither' })));
+  assert.ok(isNegativePerk(makePerk({ name: '  NO MITHER  ' })));
+  assert.ok(!isNegativePerk(makePerk({ name: 'Iron Will' })));
+});
+
+test('isAuraPerk / isGeneratorPerk / isHealingPerk / isChasePerk / isStealthPerk: match description keywords across locales', () => {
+  assert.ok(isAuraPerk(makePerk({ name: 'Made-Up', description: 'Reveals the Aura of injured Survivors.' })));
+  assert.ok(isAuraPerk(makePerk({ name: 'Made-Up', description: 'Ujawnia Aury rannych Ocalałych.' })));
+  assert.ok(isGeneratorPerk(makePerk({ name: 'Made-Up', description: 'Repairing Generators is faster.' })));
+  assert.ok(isHealingPerk(makePerk({ name: 'Made-Up', description: 'Increases healing speed with a Med-Kit.' })));
+  assert.ok(isChasePerk(makePerk({ name: 'Made-Up', description: 'Grants the Haste Status Effect.' })));
+  assert.ok(isStealthPerk(makePerk({ name: 'Made-Up', description: 'Your Terror Radius is reduced.' })));
+  assert.ok(!isAuraPerk(makePerk({ name: 'Made-Up', description: 'A perk with no matching keyword at all.' })));
+});
+
+test('getPerkTarotType: resolves in priority order, Hex/Boon/Sacrifice/Exhaustion before the broader categories', () => {
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Hex: Ruin' })), 'hex');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Boon: Shadow Step' })), 'boon');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'No Mither' })), 'sacrifice');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Dead Hard' })), 'exhaustion');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Related to the Obsession.' })), 'obsession');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Reveals Auras.' })), 'aura');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Repair Generators faster.' })), 'generator');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Heal faster with a Med-Kit.' })), 'healing');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Grants Haste after a hit.' })), 'chase');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Reduces your Terror Radius.' })), 'stealth');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up Perk', description: 'Does something else entirely.' })), 'entity');
+});
+
+test('getPerkTarotType: a Hex perk that also mentions Aura in its description still resolves to hex (priority order holds)', () => {
+  const perk = makePerk({ name: 'Hex: The Third Seal', description: 'Blinds the Aura of the obsession.' });
+  assert.strictEqual(getPerkTarotType(perk), 'hex');
 });

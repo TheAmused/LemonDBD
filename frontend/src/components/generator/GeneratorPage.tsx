@@ -90,13 +90,13 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         if (typeof config.no_repeat_perks !== 'undefined') setNoRepeatPerks(Boolean(config.no_repeat_perks));
         if (config.spin_duration_sec) setSpinDurationSec(config.spin_duration_sec);
       })
-      .catch((e) => console.error('Failed fetching generator config from SQLite API:', e));
+      .catch((e) => console.error('Failed fetching generator config from backend API:', e));
   }, []);
 
   useEffect(() => {
     fetchDrawnPerks(role)
       .then(setDrawnPerks)
-      .catch((e) => console.error('Failed fetching drawn perks from SQLite API:', e));
+      .catch((e) => console.error('Failed fetching drawn perks from backend API:', e));
   }, [role]);
 
   useEffect(() => {
@@ -138,7 +138,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     try {
       await updateGeneratorConfig({ role: newRole });
     } catch (e) {
-      console.error('Failed updating role in SQLite:', e);
+      console.error('Failed updating role in backend:', e);
     }
   };
 
@@ -147,7 +147,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     try {
       await updateGeneratorConfig({ gen_mode: newMode });
     } catch (e) {
-      console.error('Failed updating gen_mode in SQLite:', e);
+      console.error('Failed updating gen_mode in backend:', e);
     }
   };
 
@@ -157,7 +157,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     try {
       await updateGeneratorConfig({ no_repeat_perks: nextVal ? 1 : 0 });
     } catch (e) {
-      console.error('Failed updating no_repeat_perks in SQLite:', e);
+      console.error('Failed updating no_repeat_perks in backend:', e);
     }
   };
 
@@ -176,7 +176,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
       const updatedDrawn = await resetDrawnPerks(role);
       setDrawnPerks(updatedDrawn);
     } catch (err) {
-      console.error('Failed resetting drawn perks in SQLite API:', err);
+      console.error('Failed resetting drawn perks via backend API:', err);
       setDrawnPerks([]);
     }
   };
@@ -194,7 +194,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         const updatedDrawn = await addDrawnPerks(role, [wonData.perk.name]);
         setDrawnPerks(updatedDrawn);
       } catch (err) {
-        console.error('Failed saving drawn perk from wheel to SQLite API:', err);
+        console.error('Failed saving drawn perk from wheel to backend API:', err);
       }
     }
   };
@@ -210,7 +210,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         const updatedDrawn = await addDrawnPerks(role, names);
         setDrawnPerks(updatedDrawn);
       } catch (err) {
-        console.error('Failed saving drawn perks to SQLite API:', err);
+        console.error('Failed saving drawn perks to backend API:', err);
       }
     }
   };

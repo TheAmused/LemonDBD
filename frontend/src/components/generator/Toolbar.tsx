@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shield, Skull, Repeat, Volume2, VolumeX, RotateCcw } from 'lucide-react';
+import { Shield, Skull, Repeat, Volume2, VolumeX, RotateCcw, EyeOff } from 'lucide-react';
 import { RoleCategory } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -13,6 +13,8 @@ export interface ToolbarProps {
   onRoleChange: (role: RoleCategory) => void;
   noRepeatPerks: boolean;
   onToggleNoRepeat: () => void;
+  blindMode: boolean;
+  onToggleBlindMode: () => void;
   audioEnabled: boolean;
   onToggleAudio: () => void;
   onOpenChaosModal: () => void;
@@ -27,6 +29,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onRoleChange,
   noRepeatPerks,
   onToggleNoRepeat,
+  blindMode,
+  onToggleBlindMode,
   audioEnabled,
   onToggleAudio,
   onOpenChaosModal,
@@ -61,6 +65,13 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           label={dict?.generator?.noRepeatTooltip || 'Toggle No-Repeat Perks'}
           isActive={noRepeatPerks}
           onClick={onToggleNoRepeat}
+        />
+        <IconToggleButton
+          icon={<EyeOff className="h-5 w-5" />}
+          label={dict?.generator?.blindModeTooltip || 'Hide Perk Icons (Blind Mode)'}
+          isActive={blindMode}
+          onClick={onToggleBlindMode}
+          className={blindMode ? 'text-purple-400 bg-purple-500/10' : undefined}
         />
         <IconToggleButton
           icon={<span className="text-lg leading-none">{activeMutator ? activeMutator.icon : '🔮'}</span>}

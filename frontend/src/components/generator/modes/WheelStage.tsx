@@ -64,6 +64,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const particleListRef = useRef<Particle[]>([]);
   const particleAnimFrameRef = useRef<number | null>(null);
+  const emberAnimFrameRef = useRef<number | null>(null);
 
   const effectiveTotalPages = Math.max(1, totalPages);
 
@@ -71,6 +72,43 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     (perk?: Perk) => getPerkIconUrl(perk, backendBase) || '',
     [backendBase]
   );
+
+  const drawThornedRim = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, radius: number) => {
+    const spikeCount = 28;
+    const spikeAngle = (2 * Math.PI) / spikeCount;
+    const spikeHeight = 14;
+
+    ctx.save();
+    ctx.beginPath();
+    for (let i = 0; i < spikeCount; i++) {
+      const baseAngle1 = i * spikeAngle;
+      const baseAngle2 = baseAngle1 + spikeAngle * 0.5;
+      const tipAngle = baseAngle1 + spikeAngle * 0.25;
+
+      const x1 = centerX + Math.cos(baseAngle1) * radius;
+      const y1 = centerY + Math.sin(baseAngle1) * radius;
+      const xTip = centerX + Math.cos(tipAngle) * (radius + spikeHeight);
+      const yTip = centerY + Math.sin(tipAngle) * (radius + spikeHeight);
+      const x2 = centerX + Math.cos(baseAngle2) * radius;
+      const y2 = centerY + Math.sin(baseAngle2) * radius;
+
+      if (i === 0) ctx.moveTo(x1, y1);
+      else ctx.lineTo(x1, y1);
+      ctx.lineTo(xTip, yTip);
+      ctx.lineTo(x2, y2);
+    }
+    ctx.closePath();
+
+    const rimGrad = ctx.createRadialGradient(centerX, centerY, radius - 10, centerX, centerY, radius + spikeHeight);
+    rimGrad.addColorStop(0, '#7f1d1d');
+    rimGrad.addColorStop(1, '#1a0303');
+    ctx.fillStyle = rimGrad;
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#450a0a';
+    ctx.stroke();
+    ctx.restore();
+  };
 
   const drawUnifiedWheel = useCallback(() => {
     const canvas = wheelCanvasRef.current;
@@ -98,17 +136,17 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
         const grad = ctx.createRadialGradient(centerX, centerY, 30, centerX, centerY, radius);
         if (i % 2 === 0) {
-          grad.addColorStop(0, '#1e293b');
-          grad.addColorStop(1, '#0f172a');
+          grad.addColorStop(0, '#3b0a0a');
+          grad.addColorStop(1, '#170303');
         } else {
-          grad.addColorStop(0, '#334155');
-          grad.addColorStop(1, '#1e293b');
+          grad.addColorStop(0, '#4c0f0f');
+          grad.addColorStop(1, '#0f0202');
         }
 
         ctx.fillStyle = grad;
         ctx.fill();
         ctx.lineWidth = 4;
-        ctx.strokeStyle = '#475569';
+        ctx.strokeStyle = '#7f1d1d';
         ctx.stroke();
 
         ctx.save();
@@ -150,10 +188,11 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       ctx.fillText('PAGE WHEEL', centerX, centerY);
 
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = '#f59e0b';
+      ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#dc2626';
       ctx.stroke();
+      drawThornedRim(ctx, centerX, centerY, radius);
     } else {
       const pageNumber = activePageRef.current;
       const maxSlotsOnPage = Math.max(
@@ -257,21 +296,29 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       ctx.fillText(`${maxSlotsOnPage} PERKS`, centerX, centerY + 12);
 
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = role === 'Survivor' ? '#10b981' : '#f43f5e';
+      ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#dc2626';
       ctx.stroke();
+      drawThornedRim(ctx, centerX, centerY, radius);
     }
 
+    // Top Pointer: a dripping 3-claw shape instead of a single triangle
     ctx.beginPath();
     ctx.moveTo(centerX - 22, 2);
+    ctx.lineTo(centerX - 14, 2);
+    ctx.lineTo(centerX - 9, 30);
+    ctx.lineTo(centerX - 3, 8);
+    ctx.lineTo(centerX, 46);
+    ctx.lineTo(centerX + 3, 8);
+    ctx.lineTo(centerX + 9, 30);
+    ctx.lineTo(centerX + 14, 2);
     ctx.lineTo(centerX + 22, 2);
-    ctx.lineTo(centerX, 42);
     ctx.closePath();
-    ctx.fillStyle = '#ef4444';
+    ctx.fillStyle = '#b91c1c';
     ctx.fill();
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#1a0303';
     ctx.stroke();
   }, [effectiveTotalPages, lastPagePerks, perksPerPage, sortedPerks, activeMutator, role, getIconSrc]);
 
@@ -296,6 +343,9 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     return () => {
       if (particleAnimFrameRef.current !== null) {
         cancelAnimationFrame(particleAnimFrameRef.current);
+      }
+      if (emberAnimFrameRef.current !== null) {
+        cancelAnimationFrame(emberAnimFrameRef.current);
       }
     };
   }, []);
@@ -366,9 +416,68 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     renderParticles();
   }, [role]);
 
+  const startEmberDrift = useCallback(() => {
+    const canvas = particlesCanvasRef.current;
+    if (!canvas) return;
+    const width = canvas.width;
+    const height = canvas.height;
+
+    const spawnEmber = (): Particle => ({
+      x: width / 2 + (Math.random() - 0.5) * width * 0.7,
+      y: height / 2 + (Math.random() - 0.5) * height * 0.7,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: -Math.random() * 1.2 - 0.3,
+      size: Math.random() * 3 + 1,
+      alpha: Math.random() * 0.4 + 0.2,
+      color: Math.random() > 0.5 ? '#f97316' : '#dc2626',
+    });
+
+    const embers: Particle[] = Array.from({ length: 40 }, spawnEmber);
+
+    // Deliberately does NOT check the `isSpinning` state variable here --
+    // calling startEmberDrift() synchronously right after setIsSpinning(true)
+    // would close over the pre-update value of isSpinning (still false from
+    // the render that scheduled this call), stopping the loop on its very
+    // first frame. This loop runs until explicitly cancelled via
+    // stopEmberDrift() instead.
+    const renderEmbers = () => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      embers.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha *= 0.995;
+        if (p.alpha < 0.05 || p.y < 0) {
+          embers[i] = spawnEmber();
+          return;
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1.0;
+
+      emberAnimFrameRef.current = requestAnimationFrame(renderEmbers);
+    };
+
+    renderEmbers();
+  }, []);
+
+  const stopEmberDrift = useCallback(() => {
+    if (emberAnimFrameRef.current !== null) {
+      cancelAnimationFrame(emberAnimFrameRef.current);
+      emberAnimFrameRef.current = null;
+    }
+  }, []);
+
   const handleStartSpin = async () => {
     if (isSpinning || sortedPerks.length === 0) return;
     setIsSpinning(true);
+    if (!reduceMotion) startEmberDrift();
 
     const totalDurationMs = Math.max(1500, spinDurationSec * 1000);
     const pageSpinDuration = totalDurationMs * 0.45;
@@ -499,6 +608,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     }
     if (!isMountedRef.current) return;
 
+    stopEmberDrift();
     setIsSpinning(false);
     setStatusText(targetPerk ? `${targetPerk.name} [P${targetPage}/S${targetSlot}]` : '');
     triggerParticleBurst();

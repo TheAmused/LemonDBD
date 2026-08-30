@@ -129,22 +129,19 @@ test('filterPerksByMutator: meme_loadout keeps only meme perks, falling back whe
   assert.deepStrictEqual(resultWithout, perksWithoutMeme);
 });
 
-test('computeEligiblePool: filters by role, excludes unowned perks when logged in, includes General/generic-counterpart regardless of character toggle, sorts by name', () => {
+test('computeEligiblePool: filters by role, excludes unowned perks when logged in, sorts by name', () => {
   const allPerks: Perk[] = [
     makePerk({ name: 'Zebra Perk', category: 'Survivor', character: 'General', is_owned: true }),
     makePerk({ name: 'Alpha Perk', category: 'Survivor', character: 'Meg Thomas', is_owned: true }),
     makePerk({ name: 'Locked Perk', category: 'Survivor', character: 'Meg Thomas', is_owned: false }),
-    makePerk({ name: 'Disabled Char Perk', category: 'Survivor', character: 'Claudette Morel', is_owned: true }),
     makePerk({ name: 'Killer Perk', category: 'Killer', character: 'General', is_owned: true }),
-    makePerk({ name: 'Generic Counterpart', category: 'Survivor', character: 'Meg Thomas', is_owned: true, is_generic_counterpart: true }),
   ];
 
-  const result = computeEligiblePool(allPerks, 'Survivor', ['Meg Thomas'], true);
+  const result = computeEligiblePool(allPerks, 'Survivor', true);
   const names = result.map((p) => p.name);
 
-  assert.deepStrictEqual(names, ['Alpha Perk', 'Generic Counterpart', 'Zebra Perk']);
+  assert.deepStrictEqual(names, ['Alpha Perk', 'Zebra Perk']);
   assert.ok(!names.includes('Locked Perk'), 'unowned perks must be excluded when logged in');
-  assert.ok(!names.includes('Disabled Char Perk'), 'perks for disabled characters must be excluded');
   assert.ok(!names.includes('Killer Perk'), 'wrong-role perks must be excluded');
 });
 
@@ -152,7 +149,7 @@ test('computeEligiblePool: does not filter by ownership when not logged in', () 
   const allPerks: Perk[] = [
     makePerk({ name: 'Locked Perk', category: 'Survivor', character: 'General', is_owned: false }),
   ];
-  const result = computeEligiblePool(allPerks, 'Survivor', [], false);
+  const result = computeEligiblePool(allPerks, 'Survivor', false);
   assert.strictEqual(result.length, 1);
 });
 

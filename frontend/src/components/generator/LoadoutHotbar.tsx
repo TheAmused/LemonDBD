@@ -55,10 +55,10 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
             <PerkSlot
               perk={perk}
               role={role}
-              slotNumber={slotData ? (slotData.page - 1) * 15 + slotData.slot : undefined}
+              page={slotData?.page}
+              slot={slotData?.slot}
               isObscured={isObscured}
               isActive={activeSlotIdx === idx}
-              compact
               announce
               onClick={() => {
                 if (isObscured) {
@@ -69,7 +69,6 @@ export const LoadoutHotbar: React.FC<LoadoutHotbarProps> = ({
               }}
               onClear={perk ? (e) => onClearSlot(idx, e) : undefined}
               dict={dict}
-              backendBase={backendBase}
             />
           </motion.div>
         );

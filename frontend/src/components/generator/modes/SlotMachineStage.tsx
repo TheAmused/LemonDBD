@@ -120,13 +120,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             <PerkSlot
               perk={perk}
               role={role}
-              slotNumber={
-                reelStates[idx] === 'stopped' && finalSlotsRef.current[idx]
-                  ? (finalSlotsRef.current[idx].page - 1) * 15 + finalSlotsRef.current[idx].slot
-                  : undefined
-              }
+              page={reelStates[idx] === 'stopped' ? finalSlotsRef.current[idx]?.page : undefined}
+              slot={reelStates[idx] === 'stopped' ? finalSlotsRef.current[idx]?.slot : undefined}
               dict={dict}
-              backendBase={backendBase}
             />
           </motion.div>
         ))}

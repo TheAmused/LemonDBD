@@ -89,7 +89,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
               style={{ perspective: '1000px' }}
             >
               <motion.div
-                className="relative h-40 w-28 sm:h-44 sm:w-32"
+                className="relative h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48"
                 style={{ transformStyle: 'preserve-3d' }}
                 animate={{ rotateY: card.flipped ? 180 : 0 }}
                 transition={{ duration: reduceMotion ? 0 : 0.5 }}
@@ -105,16 +105,15 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                 </div>
 
                 <div
-                  className="absolute inset-0 rounded-2xl bg-slate-900/60"
+                  className="absolute inset-0"
                   style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                 >
                   <PerkSlot
                     perk={card.slot.perk}
                     role={role}
-                    slotNumber={(card.slot.page - 1) * 15 + card.slot.slot}
-                    compact
+                    page={card.slot.page}
+                    slot={card.slot.slot}
                     dict={dict}
-                    backendBase={backendBase}
                   />
                 </div>
               </motion.div>

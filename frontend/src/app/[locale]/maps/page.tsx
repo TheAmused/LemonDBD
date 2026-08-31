@@ -34,11 +34,6 @@ function MapsPageInner() {
     mapName: initialMapName,
     timestamp: Date.now(),
   });
-  const [triggerAction, setTriggerAction] = useState<{
-    action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close';
-    timestamp: number;
-  } | null>(null);
-
   useEffect(() => {
     if (initialMapName) {
       setSelectedMap({ mapName: initialMapName, timestamp: Date.now() });
@@ -122,6 +117,7 @@ function MapsPageInner() {
           <button
             type="button"
             onClick={() => setSearchMode('text')}
+            aria-pressed={searchMode === 'text'}
             className={`rounded-xl px-4 py-1.5 text-xs font-bold transition-colors ${
               searchMode === 'text'
                 ? 'bg-amber-500 text-slate-950'
@@ -133,6 +129,7 @@ function MapsPageInner() {
           <button
             type="button"
             onClick={() => setSearchMode('voice')}
+            aria-pressed={searchMode === 'voice'}
             className={`rounded-xl px-4 py-1.5 text-xs font-bold transition-colors ${
               searchMode === 'voice'
                 ? 'bg-amber-500 text-slate-950'
@@ -152,8 +149,11 @@ function MapsPageInner() {
             onSelectMap={(name) => {
               setSelectedMap({ mapName: name, timestamp: Date.now() });
             }}
-            onAction={(act) => {
-              setTriggerAction({ action: act, timestamp: Date.now() });
+            onAction={() => {
+              // Voice zoom/fullscreen/close actions have no target in the redesigned
+              // realm-grid layout (no single "active" map). Intentionally unwired
+              // pending a follow-up to re-home this behavior, matching how
+              // VariantSwitcherBar was deferred in the same redesign.
             }}
             availableMaps={availableMaps}
           />

@@ -202,8 +202,6 @@ class HensMapScraperDriver:
                 return maps
 
             for rw in realm_wrappers:
-                h1 = rw.find(["h1", "h2", "h3", "div"], class_=lambda c: not c or "realm" in str(c).lower())
-
                 for btn in rw.find_all(attrs={"data-path": True}):
                     dpath = btn["data-path"].strip()
                     if not dpath:

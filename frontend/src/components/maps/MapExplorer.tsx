@@ -70,7 +70,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         groupedMapsByRealm.map(({ realm, maps: realmMaps }) => {
           const realmImage = realmImages[realm];
           const bannerSrc = realmImage
-            ? getMapImageSrc({ callout_image_local_path: realmImage.image_local_path, callout_image_url: realmImage.image_url } as MapRealm, backendBase)
+            ? getMapImageSrc({ callout_image_local_path: realmImage.image_local_path, callout_image_url: realmImage.image_url }, backendBase)
             : '';
 
           return (

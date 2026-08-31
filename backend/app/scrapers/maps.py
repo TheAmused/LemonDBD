@@ -15,6 +15,56 @@ from app.scrapers.utils import normalize_name_key, sanitize_filename
 
 logger = logging.getLogger(__name__)
 
+FOLDER_REALM_MAP: dict[str, str] = {
+    "azarovs": "Autohaven Wreckers",
+    "badham": "Springwood",
+    "boneyard": "Forsaken Boneyard",
+    "borgo": "The Decimated Borgo",
+    "coldwind": "Coldwind Farm",
+    "crotus pen": "Disturbed Ward",
+    "dvarka deepwood": "Dvarka Deepwood",
+    "mcmillan": "The Macmillan Estate",
+    "ormond": "Ormond",
+    "raccoon city": "Raccoon City",
+    "red forest": "Red Forest",
+    "sleepless district": "Sleepless District",
+    "swamp": "Backwater Swamp",
+    "yamaoka": "Yamaoka Estate",
+}
+
+OTHER_MAP_REALM_OVERRIDES: dict[str, str] = {
+    "dead dawg saloon": "Grave of Glenvale",
+    "fallen refuge": "Withered Isle",
+    "freddy fazbears pizza": "Withered Isle",
+    "garden of joy": "Withered Isle",
+    "greenville square": "Withered Isle",
+    "lampkin lane": "Haddonfield",
+    "midwich elementary school": "Silent Hill",
+    "the game": "Gideon Meat Plant",
+    "the underground complex": "Hawkins National Laboratory",
+    "treatment theatre": "Lery's Memorial Institute",
+}
+
+
+def resolve_hens_realm(map_name: str, dpath: str) -> str:
+    """Derive the real realm name from the folder segment already embedded in
+    a Hens333 callout dpath (e.g. "Azarovs/Blood Lodge.webp" -> "Autohaven
+    Wreckers"). The site's realm-wrapper HTML this previously read from no
+    longer exists, which is why every map used to land on "General Realm"."""
+    if "/" not in dpath:
+        return "General Realm"
+
+    folder = dpath.split("/")[0].strip()
+    folder_key = folder.lower()
+
+    if folder_key == "other":
+        name_key = map_name.strip().lower()
+        if name_key in OTHER_MAP_REALM_OVERRIDES:
+            return OTHER_MAP_REALM_OVERRIDES[name_key]
+        return folder
+
+    return FOLDER_REALM_MAP.get(folder_key, folder)
+
 
 def get_map_landmarks_data(
     map_name: str, realm_name: str, source: str = "hens333"
@@ -118,7 +168,7 @@ class HensMapScraperDriver:
                         continue
                     map_name = btn.get_text(strip=True) or dpath.split("/")[-1].split(".")[0]
                     map_slug = sanitize_filename(map_name)
-                    realm_name = dpath.split("/")[0] if "/" in dpath else "General Realm"
+                    realm_name = resolve_hens_realm(map_name, dpath)
                     realm_slug = sanitize_filename(realm_name)
 
                     encoded_dpath = re.sub(r"\s", "%20", dpath)
@@ -153,8 +203,6 @@ class HensMapScraperDriver:
 
             for rw in realm_wrappers:
                 h1 = rw.find(["h1", "h2", "h3", "div"], class_=lambda c: not c or "realm" in str(c).lower())
-                realm_name = h1.get_text(strip=True) if h1 else "General Realm"
-                realm_slug = sanitize_filename(realm_name)
 
                 for btn in rw.find_all(attrs={"data-path": True}):
                     dpath = btn["data-path"].strip()
@@ -164,6 +212,8 @@ class HensMapScraperDriver:
                     if not map_name:
                         map_name = dpath.split("/")[-1].split(".")[0]
                     map_slug = sanitize_filename(map_name)
+                    realm_name = resolve_hens_realm(map_name, dpath)
+                    realm_slug = sanitize_filename(realm_name)
 
                     encoded_dpath = re.sub(r"\s", "%20", dpath)
                     remote_url = f"{self.CDN_BASE}{encoded_dpath}" if not dpath.startswith("http") else dpath

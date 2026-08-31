@@ -1117,7 +1117,78 @@ class WikiGGScraperDriver:
                         continue
         return items
 
+    @staticmethod
+    def canonicalise_addons(raw_addons: list[dict]) -> list[AddonData]:
+        """Assign final display names and icon paths for add-ons from every source.
+
+        Both the global Add-ons page and the per-character pages feed into this one
+        function. Doing the naming here - rather than separately in each scrape pass -
+        is what keeps a single add-on from entering the database twice under two
+        spellings ("Magnetised Manacles" and "Magnetised Manacles (The Judgment)"),
+        which previously produced duplicate rows and icons saved under a name the
+        database never referenced.
+
+        A "(Target)" suffix is added only to disambiguate an add-on name that genuinely
+        belongs to more than one target, and the icon path is derived from the resulting
+        display name, so the file on disk and the value stored in the database always
+        agree.
+        """
+        by_identity: dict[tuple[str, str], dict] = {}
+        for a in raw_addons:
+            name_key = normalize_name_key(a["name"])
+            target_key = normalize_name_key(a.get("target") or "")
+            if not name_key:
+                continue
+            identity = (name_key, target_key)
+            existing = by_identity.get(identity)
+            if existing is None:
+                by_identity[identity] = a
+                continue
+            # Same add-on seen twice (global page + character page): keep the richer
+            # record so a page that omitted the icon or description cannot win.
+            merged = dict(existing)
+            for field in ("icon_url", "description", "rarity", "category"):
+                if not merged.get(field) and a.get(field):
+                    merged[field] = a[field]
+            by_identity[identity] = merged
+
+        targets_per_name: dict[str, set[str]] = defaultdict(set)
+        for name_key, target_key in by_identity:
+            targets_per_name[name_key].add(target_key)
+
+        addons: list[AddonData] = []
+        seen_display: set[str] = set()
+        for (name_key, _target_key), a in by_identity.items():
+            addon_name = a["name"].strip()
+            target = a.get("target") or ""
+            needs_suffix = len(targets_per_name[name_key]) > 1 and bool(target)
+            display_name = f"{addon_name} ({target})" if needs_suffix else addon_name
+
+            norm_display = normalize_name_key(display_name)
+            if norm_display in seen_display:
+                continue
+            seen_display.add(norm_display)
+
+            local_path = f"icons/addons/{sanitize_filename(display_name)}.png"
+            addons.append(
+                AddonData(
+                    name=display_name,
+                    associated_target=target,
+                    category=a.get("category", ""),
+                    description=a.get("description", ""),
+                    icon_url=a.get("icon_url", ""),
+                    icon_local_path=local_path,
+                    rarity=a.get("rarity", ""),
+                )
+            )
+        return addons
+
     def parse_wiki_addons(self, html_content: str, characters: list[CharacterData] | None = None) -> list[AddonData]:
+        """Parse the global Add-ons page into fully named AddonData records."""
+        return self.canonicalise_addons(self.collect_addon_rows(html_content, characters))
+
+    def collect_addon_rows(self, html_content: str, characters: list[CharacterData] | None = None) -> list[dict]:
+        """Extract raw add-on rows from the global Add-ons page (naming happens later)."""
         soup = BeautifulSoup(html_content, "html.parser")
         raw_addons: list[dict] = []
         content_area = soup.find("div", class_="mw-parser-output") or soup
@@ -1249,45 +1320,14 @@ class WikiGGScraperDriver:
                     except Exception:
                         continue
 
-        name_target_counts = defaultdict(set)
-        for a in raw_addons:
-            name_target_counts[normalize_name_key(a["name"])].add(normalize_name_key(a["target"]))
-
-        addons: list[AddonData] = []
-        seen_unique_names = set()
-        for a in raw_addons:
-            addon_name = a["name"]
-            target = a["target"]
-
-            if "serum" in addon_name.lower():
-                if a["category"] == "Survivor" or "survivor" in str(target).lower():
-                    target = "Special"
-
-            display_name = f"{addon_name} ({target})" if len(name_target_counts[normalize_name_key(addon_name)]) > 1 else addon_name
-
-            norm_unique = normalize_name_key(display_name)
-            if norm_unique in seen_unique_names:
-                continue
-            seen_unique_names.add(norm_unique)
-
-            sanitized = sanitize_filename(display_name)
-            local_path = f"icons/addons/{sanitized}.png"
-
-            addons.append(
-                AddonData(
-                    name=display_name,
-                    associated_target=target,
-                    category=a["category"],
-                    description=a["description"],
-                    icon_url=a["icon_url"],
-                    icon_local_path=local_path,
-                    rarity=a["rarity"],
-                )
-            )
-
-        return addons
+        return raw_addons
 
     def scrape_addons_from_character_page(self, char: CharacterData) -> list[AddonData]:
+        """Parse one character's own page into fully named AddonData records."""
+        return self.canonicalise_addons(self.collect_character_addon_rows(char))
+
+    def collect_character_addon_rows(self, char: CharacterData) -> list[dict]:
+        """Extract raw add-on rows from a character's dedicated page."""
         candidate_slugs = []
         if char.wiki_slug:
             candidate_slugs.append(char.wiki_slug)
@@ -1315,7 +1355,7 @@ class WikiGGScraperDriver:
 
         soup = BeautifulSoup(html_content, "html.parser")
         content_area = soup.find("div", class_="mw-parser-output") or soup
-        addons: list[AddonData] = []
+        addons: list[dict] = []
         target = char.name
         current_section = ""
 
@@ -1358,21 +1398,18 @@ class WikiGGScraperDriver:
                                 else:
                                     rarity = "Ultra Rare"
 
-                            display_name = f"{addon_name} ({target})"
-                            sanitized = sanitize_filename(display_name)
-                            local_path = f"icons/addons/{sanitized}.png"
-
-                            addons.append(
-                                AddonData(
-                                    name=display_name,
-                                    associated_target=target,
-                                    category="Killer",
-                                    description=description,
-                                    icon_url=icon_url,
-                                    icon_local_path=local_path,
-                                    rarity=rarity,
-                                )
-                            )
+                            # No naming here: canonicalise_addons() decides whether this
+                            # add-on needs a "(Target)" suffix once every source has been
+                            # merged. Naming it here unconditionally used to create a
+                            # second database row for an add-on the global page already had.
+                            addons.append({
+                                "name": addon_name,
+                                "target": target,
+                                "category": "Killer",
+                                "description": description,
+                                "icon_url": icon_url,
+                                "rarity": rarity,
+                            })
                         except Exception:
                             continue
         return addons
@@ -1555,10 +1592,10 @@ class WikiGGScraperDriver:
         try:
             logger.info("Fetching Add-ons...")
             html_addons = self.fetch_page_html("Add-ons")
-            addons = self.parse_wiki_addons(html_addons, characters)
+            addon_rows = self.collect_addon_rows(html_addons, characters)
 
             known_covered_killers = {
-                normalize_name_key(a.associated_target) for a in addons if a.associated_target
+                normalize_name_key(r.get("target") or "") for r in addon_rows if r.get("target")
             }
             if characters:
                 for c in characters:
@@ -1566,10 +1603,14 @@ class WikiGGScraperDriver:
                         c_norm = normalize_name_key(c.name)
                         c_norm_no_the = normalize_name_key(c.name.replace("The ", ""))
                         if c_norm not in known_covered_killers and c_norm_no_the not in known_covered_killers:
-                            char_addons = self.scrape_addons_from_character_page(c)
-                            if char_addons:
-                                logger.info(f"Enriched {len(char_addons)} add-ons from dedicated page for {c.name}")
-                                addons.extend(char_addons)
+                            char_rows = self.collect_character_addon_rows(c)
+                            if char_rows:
+                                logger.info(f"Enriched {len(char_rows)} add-ons from dedicated page for {c.name}")
+                                addon_rows.extend(char_rows)
+
+            # One naming pass over every source. Merging raw rows first is what stops the
+            # same add-on arriving twice under two different names.
+            addons = self.canonicalise_addons(addon_rows)
         except Exception as e:
             logger.warning(f"Failed to scrape wiki.gg addons: {e}")
             addons = []

@@ -2,7 +2,6 @@
 import asyncio
 import io
 import logging
-import re
 from pathlib import Path
 
 from curl_cffi.requests import AsyncSession
@@ -46,6 +45,29 @@ def apply_perk_diamond_frame(icon_bytes: bytes) -> bytes:
     return buf.getvalue()
 
 
+def normalise_image_bytes(content: bytes, relative_path: str) -> bytes:
+    """Make the stored bytes match the extension the database will serve.
+
+    wiki.gg serves most icons as WebP regardless of the ".png" in the URL. Writing
+    those bytes straight to a ".png" file leaves every icon mislabelled: the API
+    sends `Content-Type: image/png` for a WebP body, which strict clients, caches
+    and image pipelines are entitled to reject. Re-encoding costs one pass per
+    asset during a scrape and removes the mismatch entirely.
+    """
+    if not relative_path.lower().endswith(".png"):
+        return content
+    if content[:8] == b"\x89PNG\r\n\x1a\n":
+        return content
+    try:
+        with Image.open(io.BytesIO(content)) as img:
+            buf = io.BytesIO()
+            img.convert("RGBA").save(buf, format="PNG")
+            return buf.getvalue()
+    except Exception as err:
+        logger.warning(f"Could not re-encode [{relative_path}] to PNG: {err}")
+        return content
+
+
 async def download_single_asset(
     client: AsyncSession,
     semaphore: asyncio.Semaphore,
@@ -74,7 +96,7 @@ async def download_single_asset(
         try:
             response = await client.get(url, timeout=timeout)
             response.raise_for_status()
-            content = response.content
+            content = normalise_image_bytes(response.content, relative_path)
             if apply_perk_frame:
                 try:
                     content = apply_perk_diamond_frame(content)
@@ -166,60 +188,6 @@ async def download_all_assets(
                             timeout=request_timeout,
                         )
                     )
-                    base_name = re.sub(r"\s*\([^)]*\)", "", addon.name).strip()
-                    base_slug = sanitize_filename(base_name)
-                    base_path = f"icons/addons/{base_slug}.png"
-                    if base_path != addon.icon_local_path:
-                        tasks.append(
-                            download_single_asset(
-                                client,
-                                semaphore,
-                                static_dir,
-                                addon.icon_url,
-                                base_path,
-                                timeout=request_timeout,
-                            )
-                        )
-
-                    alias_slugs = []
-                    if "magnetise" in base_slug or "magnetize" in base_slug:
-                        alias_slugs.extend([
-                            "magnetised_manacles",
-                            "magnetized_manacles",
-                            "magnetised_manacles_(the_judgment)",
-                            "magnetized_manacles_(the_judgment)",
-                        ])
-                    if "ether_15" in base_slug or "aether_15" in base_slug:
-                        alias_slugs.extend([
-                            "ether_15%",
-                            "ether_15%_vol",
-                            "ether_15_vol%",
-                            "ether_15_vol",
-                            "aether_15%",
-                            "aether_15_vol%",
-                            "ether_15_vol%_(the_clown)",
-                            "ether_15%_vol_(the_clown)",
-                        ])
-                    if "molted_skin" in base_slug or "moulted_skin" in base_slug:
-                        alias_slugs.extend(["molted_skin", "moulted_skin"])
-                    if "honey_locust_thorn" in base_slug:
-                        alias_slugs.extend(["honey_locust_thorn", "honey_locust_thorns"])
-                    if "adi_valente" in base_slug:
-                        alias_slugs.extend(["adi_valente_issue_1", "adi_valente_issue_#1", "adi_valente_1"])
-
-                    for alias in set(alias_slugs):
-                        alias_path = f"icons/addons/{sanitize_filename(alias)}.png"
-                        if alias_path != addon.icon_local_path and alias_path != base_path:
-                            tasks.append(
-                                download_single_asset(
-                                    client,
-                                    semaphore,
-                                    static_dir,
-                                    addon.icon_url,
-                                    alias_path,
-                                    timeout=request_timeout,
-                                )
-                            )
         if offerings:
             for off in offerings:
                 if off.icon_url:

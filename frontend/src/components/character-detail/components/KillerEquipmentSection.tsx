@@ -9,6 +9,7 @@ import {
   getRarityRank,
 } from '../types';
 import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
+import { toTitleCase } from '@/utils/textCase';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -76,6 +77,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
         {sortedAddons.map((item, idx) => {
           const iconSrc = getAssetUrl(backendBase, item.icon_local_path, item.icon_url);
           const rarityStyle = getRarityTileStyle(item.rarity);
+          const displayItem = { ...item, name: toTitleCase(item.name) };
 
           return (
             <div
@@ -83,18 +85,18 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
               onMouseEnter={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 setActiveHover({
-                  item,
+                  item: displayItem,
                   rect,
                   accentColor: 'text-rose-400',
                 });
               }}
               onMouseLeave={() => setActiveHover(null)}
-              onClick={() => onSelectEquipment(item)}
+              onClick={() => onSelectEquipment(displayItem)}
               className={`relative group rounded-3xl border-2 p-2.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 shadow-lg ${rarityStyle.bg}`}
             >
               <img
                 src={iconSrc}
-                alt={item.name}
+                alt={displayItem.name}
                 className="h-full w-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';

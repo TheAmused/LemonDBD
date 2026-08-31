@@ -149,4 +149,6 @@ export default {
   westSector: '9 Uhr / Westsektor',
   zoomIn25: 'Vergrößern (+25%)',
   zoomOut25: 'Verkleinern (-25%)',
+  searchTextTab: 'Suche',
+  searchVoiceTab: 'Sprache',
 } as const;

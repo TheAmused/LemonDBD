@@ -149,4 +149,6 @@ export default {
   westSector: '9 en punto / Sector Oeste',
   zoomIn25: 'Acercar (+25%)',
   zoomOut25: 'Alejar (-25%)',
+  searchTextTab: 'Buscar',
+  searchVoiceTab: 'Voz',
 } as const;

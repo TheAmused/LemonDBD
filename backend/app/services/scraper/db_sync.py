@@ -269,8 +269,10 @@ def sync_maps_to_db(maps: list[MapData]) -> None:
     existing_maps = {
         m.map_id: m for m in db.session.scalars(select(MapRealm)).all()
     }
+    valid_ids = set()
     for m in maps:
         m_id = getattr(m, "id", None) or f"map_{sanitize_filename(m.name)}"
+        valid_ids.add(m_id)
         desc = ""
         if getattr(m, "clock_system", None) and isinstance(m.clock_system, dict):
             desc = m.clock_system.get("description", "")
@@ -336,6 +338,10 @@ def sync_maps_to_db(maps: list[MapData]) -> None:
                             has_window=("shack" in tile_name.lower() or "gym" in tile_name.lower() or "main" in tile_name.lower()),
                         )
                     )
+
+    for k, existing_map in existing_maps.items():
+        if k not in valid_ids:
+            db.session.delete(existing_map)
 
     db.session.commit()
 

@@ -417,7 +417,7 @@ export default function UserProfilePage() {
                     </Link>
 
                     <Link
-                      href={`/${currentLocale}/perks?tab=generator`}
+                      href={`/${currentLocale}/randomizer`}
                       className="flex items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-xs font-bold text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-400 transition-all group shadow-sm"
                     >
                       <div className="flex items-center gap-2.5">

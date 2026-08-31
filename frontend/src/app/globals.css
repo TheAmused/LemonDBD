@@ -47,6 +47,27 @@
   background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.06) 0%, transparent 80%);
 }
 
+@keyframes heartbeatPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 0.65;
+  }
+}
+
+.dbd-heartbeat-vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(190, 30, 40, 0.35) 100%);
+  animation: heartbeatPulse 1.2s ease-in-out infinite;
+}
+
+.dbd-heartbeat-vignette--static {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(190, 30, 40, 0.5) 100%);
+  animation: none;
+}
+
 /* Scrollbar Customization */
 ::-webkit-scrollbar {
   width: 6px;
@@ -248,6 +269,32 @@ strong {
 .chaos-lever-pull { animation: chaosLeverPull 550ms cubic-bezier(.34, 1.56, .64, 1) both; }
 .chaos-badge-pop { animation: chaosBadgePop 380ms cubic-bezier(.22, 1.4, .36, 1) both; }
 .chaos-marquee-bulb { animation: chaosMarqueeGlow 2.4s ease-in-out infinite; }
+
+/* ========================================================================= */
+/* SHARED DBD-THEMED PRIMARY-ACTION BUTTON (Pull the Lever / Confirm / Roll / */
+/* Shuffle & Draw / Crack Open / Draw Again, across all 5 randomizer modes). */
+/* ========================================================================= */
+@keyframes dbdButtonPulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent, 0 14px 30px rgba(0, 0, 0, 0.55); }
+  50% { box-shadow: 0 0 28px 4px var(--dbd-btn-glow, rgba(245, 158, 11, 0.4)), 0 14px 30px rgba(0, 0, 0, 0.55); }
+}
+
+@keyframes dbdButtonSweep {
+  0% { transform: translateX(-160%) skewX(-20deg); }
+  100% { transform: translateX(360%) skewX(-20deg); }
+}
+
+.dbd-btn-pulse { animation: dbdButtonPulse 2.4s ease-in-out infinite; }
+
+/* Slot machine cabinet marquee bulbs (reused chaos-marquee-bulb keyframe, own class
+   so the two features' bulb rows can be styled/timed independently later). */
+.slot-cabinet-bulb { animation: chaosMarqueeGlow 2.2s ease-in-out infinite; }
+
+@keyframes slotCabinetHum {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.85; }
+}
+.slot-cabinet-hum { animation: slotCabinetHum 3.2s ease-in-out infinite; }
 .history-lock-shake { animation: historyLockShake 380ms ease-in-out; }
 .history-lock-break { animation: historyLockBreak 380ms cubic-bezier(.36, 0, .66, -0.56) forwards; }
 
@@ -259,9 +306,20 @@ strong {
     animation: none;
   }
 
-  .chaos-marquee-bulb {
+  .chaos-marquee-bulb,
+  .slot-cabinet-bulb {
     animation: none;
     opacity: .7;
+  }
+
+  .dbd-btn-pulse {
+    animation: none;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+  }
+
+  .slot-cabinet-hum {
+    animation: none;
+    opacity: 0.7;
   }
 }
 

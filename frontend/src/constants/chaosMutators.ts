@@ -47,6 +47,17 @@ export const CHAOS_MUTATORS: readonly ChaosMutator[] = [
     borderColor: 'border-indigo-500',
     textColor: 'text-indigo-300',
   },
+  {
+    id: 'negative_only',
+    name: 'Curse of Sacrifice',
+    description:
+      'The Entity demands a price. At least one drawn perk will be a genuine handicap.',
+    type: 'curse',
+    icon: '💀',
+    badgeBg: 'bg-rose-950/90',
+    borderColor: 'border-rose-600',
+    textColor: 'text-rose-300',
+  },
 ];
 
 export const EXHAUSTION_PERK_NAMES: ReadonlySet<string> = new Set([
@@ -89,4 +100,12 @@ export const MEME_PERK_NAMES: ReadonlySet<string> = new Set([
   'deerstalker',
   'rancor',
   'trail of torment',
+]);
+
+// Perks with a genuine built-in drawback/handicap, not just "off-meta."
+// Deliberately starts small (one entry) rather than a padded list that
+// might misjudge a perk's actual balance -- extend this list only when
+// explicitly asked to.
+export const NEGATIVE_PERK_NAMES: ReadonlySet<string> = new Set([
+  'no mither',
 ]);

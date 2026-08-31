@@ -2,7 +2,7 @@
 // frontend/src/components/PerkCard.tsx
 
 import React, { useState } from 'react';
-import { ImageOff, Lock } from 'lucide-react';
+import { ImageOff, Lock, HelpCircle } from 'lucide-react';
 import { Perk, PerkDictionary, ViewDisplayMode } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
@@ -11,11 +11,26 @@ import { UnifiedHoverModal, ActiveHoverState } from '@/components/common/Unified
 
 export type { Perk };
 
+const GRID_SIZE_CLASSES: Record<'default' | 'large', string> = {
+  default: 'h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48',
+  large: 'h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 lg:h-64 lg:w-64 xl:h-72 xl:w-72',
+};
+
 interface PerkCardProps {
   perk: Perk;
   viewMode?: ViewDisplayMode;
   onSelect: (perk: Perk) => void;
   dict?: PerkDictionary;
+  /** When provided, renders a small "[P{page}/S{slot}]" coordinate tag so the
+   * perk can be located quickly in the Vault (used by the Perk Randomizer). */
+  coordinate?: { page: number; slot: number };
+  /** Grid-view footprint. 'large' is used by the Randomizer's reveal
+   * moments; 'default' (the Vault's own size) is the default. */
+  size?: 'default' | 'large';
+  /** When true, hides the perk icon/avatar/hover-preview behind a "?"
+   * placeholder, showing only the coordinate tag if one is provided.
+   * Clicking does nothing while blind. */
+  isBlind?: boolean;
 }
 
 export const PerkCard: React.FC<PerkCardProps> = ({
@@ -23,6 +38,9 @@ export const PerkCard: React.FC<PerkCardProps> = ({
   viewMode = 'grid',
   onSelect,
   dict,
+  coordinate,
+  size = 'default',
+  isBlind = false,
 }) => {
   const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
@@ -53,6 +71,28 @@ export const PerkCard: React.FC<PerkCardProps> = ({
   };
   const handleMouseLeave = () => setActiveHover(null);
   const ariaLabel = `${perk.name} - ${isGeneral ? generalLabel : perk.character}`;
+
+  const coordinateLabel = coordinate
+    ? `${dict?.generator?.coordOpenPage || '[P'}${coordinate.page}${dict?.generator?.coordSlot || '/S'}${coordinate.slot}${dict?.generator?.coordClose || ']'}`
+    : null;
+
+  if (isBlind) {
+    return (
+      <div
+        className={`relative flex flex-col items-center justify-center gap-2 p-2 ${GRID_SIZE_CLASSES[size]}`}
+      >
+        {coordinateLabel && (
+          <span className="absolute top-1 left-1 z-10 font-mono text-[10px] font-black text-amber-400/90">
+            {coordinateLabel}
+          </span>
+        )}
+        <HelpCircle className="h-10 w-10 text-slate-500" />
+        <span className="text-[11px] font-bold text-slate-500 text-center px-2">
+          {dict?.generator?.hiddenPerkLabel || 'Hidden — check in-game'}
+        </span>
+      </div>
+    );
+  }
 
   if (viewMode === 'list') {
     return (
@@ -98,7 +138,14 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm sm:text-base font-bold text-slate-100">{perk.name}</p>
+            <div className="flex items-center gap-2">
+              {coordinateLabel && (
+                <span className="shrink-0 font-mono text-[10px] font-black text-amber-400/90">
+                  {coordinateLabel}
+                </span>
+              )}
+              <p className="truncate text-sm sm:text-base font-bold text-slate-100">{perk.name}</p>
+            </div>
             <p className="truncate text-xs text-slate-400">
               {isGeneral ? generalLabel : perk.character} {'·'} {roleLabel}
             </p>
@@ -141,8 +188,14 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         aria-label={ariaLabel}
-        className="relative flex h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48 cursor-pointer items-center justify-center transition-transform duration-200 group-hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-2xl"
+        className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 group-hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-2xl ${GRID_SIZE_CLASSES[size]}`}
       >
+        {coordinateLabel && (
+          <span className="absolute top-1 left-1 z-10 font-mono text-[10px] font-black text-amber-400/90 pointer-events-none">
+            {coordinateLabel}
+          </span>
+        )}
+
         <div
           className={`relative flex h-full w-full items-center justify-center ${
             perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''

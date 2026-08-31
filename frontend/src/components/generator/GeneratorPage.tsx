@@ -1,8 +1,8 @@
 // frontend/src/components/generator/GeneratorPage.tsx
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { AlertTriangle, RotateCcw } from 'lucide-react';
 import {
   Perk,
   DrawnSlot,
@@ -25,7 +25,10 @@ import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
 import { computeEligiblePool, computePlayablePool } from './lib/perkPicker';
 import { Toolbar } from './Toolbar';
 import { ModeSwitcher } from './ModeSwitcher';
+import { RoleToggle } from './shared/RoleToggle';
+import { motion } from 'framer-motion';
 import { StageFrame } from './shared/StageFrame';
+import { ConfirmModal } from '../ConfirmModal';
 import { WheelStage } from './modes/WheelStage';
 import { InstantStage } from './modes/InstantStage';
 import { SlotMachineStage } from './modes/SlotMachineStage';
@@ -41,6 +44,7 @@ interface GeneratorPageProps {
 const STORAGE_KEY = 'lemon_dbd_generator_v8';
 const PERKS_PER_PAGE = 15;
 const KNOWN_MODES: GeneratorMode[] = ['wheel', 'instant', 'slot', 'tarot', 'crate'];
+const FULL_LOADOUT_SIZE = 4;
 
 export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelectPerk, dict }) => {
   const { user } = useAuth();
@@ -60,6 +64,14 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const [blindMode, setBlindMode] = useState<boolean>(false);
 
   const [revealedSlots, setRevealedSlots] = useState<boolean[]>([false, false, false, false]);
+
+  // Safeguard for No-Repeat mode grinding the playable pool down below what
+  // a full loadout needs: pop a warning (not just silently give a short
+  // loadout) offering a one-click reset of drawn-perk memory. Triggered on
+  // the falling edge (pool just dropped under the threshold) rather than on
+  // every render at a low count, so closing it doesn't just reopen it.
+  const [showLowPoolWarning, setShowLowPoolWarning] = useState(false);
+  const prevPlayableCountRef = useRef<number | null>(null);
 
   useEffect(() => {
     setAudioEnabledState(getAudioEnabled());
@@ -133,6 +145,23 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const totalPages = Math.max(1, Math.ceil(totalPlayableCount / PERKS_PER_PAGE));
   const lastPagePerks = totalPlayableCount % PERKS_PER_PAGE || (totalPlayableCount > 0 ? PERKS_PER_PAGE : 0);
 
+  useEffect(() => {
+    // Skip until real perk data has actually loaded -- allPerks/baseEligibleRolePerks
+    // start empty before the fetch resolves, which used to read as "the pool just hit
+    // zero" and fire the warning on every page load before any perk had even been drawn.
+    if (baseEligibleRolePerks.length === 0) return;
+
+    const prev = prevPlayableCountRef.current;
+    // Only the falling edge counts -- and only once we've already seen a real
+    // (non-null) prior reading, so the first post-load measurement never fires by itself.
+    const crossedDown = noRepeatPerks && totalPlayableCount < FULL_LOADOUT_SIZE && prev !== null && prev >= FULL_LOADOUT_SIZE;
+    if (crossedDown) setShowLowPoolWarning(true);
+    // Belt-and-suspenders: if the pool is healthy again (role switch, reset, etc.),
+    // never leave a stale warning open showing a live count that no longer matches it.
+    if (totalPlayableCount >= FULL_LOADOUT_SIZE) setShowLowPoolWarning(false);
+    prevPlayableCountRef.current = totalPlayableCount;
+  }, [totalPlayableCount, noRepeatPerks, baseEligibleRolePerks.length]);
+
   const handleRoleChange = async (newRole: RoleCategory) => {
     setRole(newRole);
     setLoadout([null, null, null, null]);
@@ -187,6 +216,20 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     }
   };
 
+  /** Just the drawn-perk memory, from the low-pool warning modal's Reset
+   * button -- keeps the current loadout/mutator intact rather than wiping
+   * the whole board, since all the player actually needs is the pool back. */
+  const handleResetDrawnPerksOnly = async () => {
+    try {
+      const updatedDrawn = await resetDrawnPerks(role);
+      setDrawnPerks(updatedDrawn);
+    } catch (err) {
+      console.error('Failed resetting drawn perks via backend API:', err);
+      setDrawnPerks([]);
+    }
+    setShowLowPoolWarning(false);
+  };
+
   const handleWheelWinSlot = async (wonData: DrawnSlot) => {
     setLoadout((prev) => {
       const next = [...prev];
@@ -229,13 +272,16 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     });
   };
 
-  return (
-    <div className="w-full space-y-4">
+  const topLeft = <ModeSwitcher mode={genMode} onChange={handleGenModeChange} dict={dict} />;
+
+  const topRight = (
+    <>
+      <RoleToggle role={role} onChange={handleRoleChange} className="mr-1" dict={dict} />
       <Toolbar
-        role={role}
-        onRoleChange={handleRoleChange}
         noRepeatPerks={noRepeatPerks}
         onToggleNoRepeat={handleToggleNoRepeat}
+        playableCount={totalPlayableCount}
+        ownedCount={ownedOrAvailableCount}
         blindMode={blindMode}
         onToggleBlindMode={handleToggleBlindMode}
         audioEnabled={audioEnabled}
@@ -243,10 +289,13 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         onOpenChaosModal={() => setIsChaosModalOpen(true)}
         activeMutator={activeMutator}
         onResetAll={handleResetAllLoadoutAndWheels}
-        playableCount={totalPlayableCount}
         dict={dict}
       />
+    </>
+  );
 
+  return (
+    <div className="flex w-full flex-1 min-h-0 flex-col gap-4">
       {ownedOrAvailableCount === 0 ? (
         <section aria-live="polite" className="flex flex-col items-center justify-center gap-3 p-12 text-center">
           <AlertTriangle className="h-12 w-12 text-amber-400 animate-bounce" />
@@ -260,12 +309,16 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         </section>
       ) : (
         <>
-          <ModeSwitcher mode={genMode} onChange={handleGenModeChange} dict={dict} />
-
-          <StageFrame role={role}>
+          <StageFrame role={role} className="flex-1 min-h-0" topLeft={topLeft} topRight={topRight}>
+            <motion.div
+              key={`${genMode}-${role}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+              className="flex h-full w-full flex-1 min-h-0 flex-col items-center justify-center"
+            >
             {genMode === 'wheel' && (
               <WheelStage
-                key={role}
                 totalPages={totalPages}
                 perksPerPage={PERKS_PER_PAGE}
                 lastPagePerks={lastPagePerks}
@@ -286,7 +339,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             {genMode === 'instant' && (
               <InstantStage
-                key={role}
                 role={role}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
@@ -301,7 +353,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             {genMode === 'slot' && (
               <SlotMachineStage
-                key={role}
                 role={role}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
@@ -316,7 +367,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             {genMode === 'tarot' && (
               <TarotDeckStage
-                key={role}
                 role={role}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
@@ -331,7 +381,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             {genMode === 'crate' && (
               <LootCrateStage
-                key={role}
                 role={role}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
@@ -344,6 +393,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 backendBase={backendBase}
               />
             )}
+            </motion.div>
           </StageFrame>
         </>
       )}
@@ -357,6 +407,30 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         }}
         activeMutator={activeMutator}
         dict={dict}
+      />
+
+      <ConfirmModal
+        open={showLowPoolWarning}
+        title={
+          totalPlayableCount === 0
+            ? dict?.generator?.lowPoolEmptyTitle || "You're out of perks"
+            : dict?.generator?.lowPoolTitle || 'Running low on perks'
+        }
+        message={
+          totalPlayableCount === 0
+            ? dict?.generator?.lowPoolEmptyDesc ||
+              "No-Repeat Mode has drawn every playable perk -- there's nothing left to pull. Reset your drawn-perk memory to open the pool back up."
+            : totalPlayableCount === 1
+              ? (dict?.generator?.lowPoolDescOne || 'Only 1 perk left in the pool with No-Repeat Mode on -- not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.').replace('{size}', String(FULL_LOADOUT_SIZE))
+              : (dict?.generator?.lowPoolDescMany || 'Only {count} perks left in the pool with No-Repeat Mode on -- not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.')
+                  .replace('{count}', String(totalPlayableCount))
+                  .replace('{size}', String(FULL_LOADOUT_SIZE))
+        }
+        confirmLabel={dict?.generator?.lowPoolResetButton || 'Reset Drawn Perks'}
+        confirmIcon={<RotateCcw className="h-4 w-4" />}
+        cancelLabel={dict?.generator?.lowPoolCloseButton || 'Close'}
+        onConfirm={handleResetDrawnPerksOnly}
+        onCancel={() => setShowLowPoolWarning(false)}
       />
     </div>
   );

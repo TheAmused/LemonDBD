@@ -11,13 +11,20 @@ interface StageFrameProps {
   role: RoleCategory;
   children: React.ReactNode;
   className?: string;
+  /** Floats bare (no banner/background of its own) over the stage's
+   * top-left corner -- the role toggle + mode tabs now live here instead
+   * of in a separate toolbar bar above the stage. */
+  topLeft?: React.ReactNode;
+  /** Floats bare over the stage's top-right corner -- the no-repeat/blind/
+   * chaos/sound/reset icon buttons. */
+  topRight?: React.ReactNode;
 }
 
 async function registerEngine(engine: Engine): Promise<void> {
   await loadSlim(engine);
 }
 
-export const StageFrame: React.FC<StageFrameProps> = ({ role, children, className }) => {
+export const StageFrame: React.FC<StageFrameProps> = ({ role, children, className, topLeft, topRight }) => {
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
@@ -84,7 +91,21 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
           change size when results appear. A single large height forced on
           every mode regardless of what it's showing just left a lot of
           dead background under short content instead. */}
-      <div className="relative z-10 flex min-h-[240px] flex-col items-center justify-center">
+      {(topLeft || topRight) && (
+        <div className="relative z-20 mb-2 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3">{topLeft}</div>
+          <div className="flex flex-wrap items-center gap-1.5">{topRight}</div>
+        </div>
+      )}
+
+      {/* One consistent, viewport-driven height for every mode -- this is what
+          actually kills the "stutter": before, each mode (Wheel/Slot/Crate/...) sized
+          its own content and the box would visibly jump in height switching between
+          them (and on role switch, since key={role} remounts the active mode). Now
+          the box itself never resizes; only what's drawn inside it changes. It also
+          uses the real available screen instead of a small 240px floor, so there's
+          no dead space on desktop or mobile. */}
+      <div className="relative z-10 flex h-full min-h-[62vh] sm:min-h-[66vh] lg:min-h-[72vh] flex-col items-center justify-center">
         {children}
       </div>
     </div>

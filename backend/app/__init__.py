@@ -1,6 +1,7 @@
 # backend/app/__init__.py
 import logging
 import os
+from pathlib import Path
 from typing import Type
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, jsonify
@@ -51,7 +52,15 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
         flask_app.config["SQLALCHEMY_ENGINE_OPTIONS"] = engine_opts
 
     db.init_app(flask_app)
-    migrate.init_app(flask_app, db)
+    # Resolve migrations/ relative to this package's location on disk,
+    # not the process's current working directory: flask-migrate
+    # defaults to a cwd-relative "migrations" path, which only happens
+    # to match inside the Docker image (entrypoint.sh runs with
+    # cwd=/app). Running pytest (or anything else) from the repo root
+    # instead of backend/ made alembic fail with "Path doesn't exist:
+    # migrations" even though the folder exists at backend/migrations.
+    migrations_dir = Path(__file__).resolve().parent.parent / "migrations"
+    migrate.init_app(flask_app, db, directory=str(migrations_dir))
     mail.init_app(flask_app)
     limiter.init_app(flask_app)
 

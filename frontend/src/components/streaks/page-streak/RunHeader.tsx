@@ -6,6 +6,7 @@ import { RotateCcw, Skull, Flame, Trophy, BookOpen, BarChart2 } from 'lucide-rea
 import type { Dictionary } from '@/locales/types';
 import type { PageStreakRun } from '@/types/pageStreak';
 import { FreezeBadge } from '../FreezeBadge';
+import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 interface RunHeaderProps {
   run: PageStreakRun;
@@ -24,6 +25,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
   onOpenStats,
   dict,
 }) => {
+  const killerDisplayName = useCharacterDisplayName()(run.killer);
   const [imgError, setImgError] = useState<boolean>(false);
   const cleared = run.status === 'completed' ? run.page_count : run.current_page - 1;
   const pct = run.page_count > 0 ? Math.round((cleared / run.page_count) * 100) : 0;
@@ -35,7 +37,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           {avatarSrc && !imgError ? (
             <img
               src={avatarSrc}
-              alt={run.killer}
+              alt={killerDisplayName}
               onError={() => setImgError(true)}
               className="h-full w-full object-cover"
             />
@@ -45,7 +47,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100">
-            {run.killer}
+            {killerDisplayName}
           </h2>
           <div className="mt-1 flex flex-wrap gap-4 font-mono text-[11px] text-slate-500">
             <span>

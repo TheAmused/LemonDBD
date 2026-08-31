@@ -38,6 +38,10 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   dict,
 }) => {
   const ModeIcon = MODE_ICON[mode] ?? Shield;
+  const modeLabel = {
+    medium: dict?.streaks?.historyMediumLabel || 'Medium',
+    hell: dict?.streaks?.historyHellLabel || 'Hell',
+  }[mode];
 
   return (
     <div className="w-full bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-sm dark:shadow-xl mb-6">
@@ -51,7 +55,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           <div className="flex flex-col items-center sm:items-start">
             <span className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 capitalize">
               <ModeIcon className="w-4 h-4" />
-              {mode}
+              {modeLabel}
             </span>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight text-center sm:text-left">
               {dict?.streaks?.historyStreak || 'History Streak'}
@@ -60,7 +64,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
-          <FreezeBadge frozen={poolFrozen} />
+          <FreezeBadge frozen={poolFrozen} dict={dict} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-400/30 text-slate-600 dark:text-slate-300 shadow-sm">
             <Flame className="w-5 h-5 text-slate-500 fill-slate-500/20" />
             <div className="flex flex-col">

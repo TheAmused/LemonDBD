@@ -8,7 +8,9 @@ from app.core.extensions import db
 from app.models import Perk, UserCharacterOwnership, UserPerkOwnership
 
 
-def fetch_user_perks(user_id: int | None = None, category: str | None = None) -> list[dict[str, Any]]:
+def fetch_user_perks(
+    user_id: int | None = None, category: str | None = None, lang: str | None = None
+) -> list[dict[str, Any]]:
     """Retrieve all perks annotated with unlock status for the given user."""
     stmt = select(Perk).options(joinedload(Perk.character))
     if category and category.lower() != "all":
@@ -19,7 +21,7 @@ def fetch_user_perks(user_id: int | None = None, category: str | None = None) ->
     if not user_id:
         result = []
         for p in all_perks:
-            d = p.to_dict()
+            d = p.to_dict(lang=lang)
             d["perk_id"] = p.id
             d["character_id"] = p.character_id
             d["is_unlocked"] = True
@@ -39,7 +41,7 @@ def fetch_user_perks(user_id: int | None = None, category: str | None = None) ->
 
     result = []
     for p in all_perks:
-        d = p.to_dict()
+        d = p.to_dict(lang=lang)
         d["perk_id"] = p.id
         d["character_id"] = p.character_id
         is_general = p.character_id is None or p.is_generic_counterpart

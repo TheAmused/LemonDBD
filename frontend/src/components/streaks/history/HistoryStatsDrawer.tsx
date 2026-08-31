@@ -5,6 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { HistoryStats, HistoryMatchLog } from '@/types/historyStreak';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
+import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 export interface HistoryStatsDrawerProps {
   isOpen: boolean;
@@ -13,7 +14,9 @@ export interface HistoryStatsDrawerProps {
   dict?: Dictionary;
 }
 
-export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (
+export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => {
+  const characterDisplayName = useCharacterDisplayName();
+  return (
   <StreakStatsDrawer<HistoryMatchLog>
     isOpen={isOpen}
     onClose={onClose}
@@ -22,7 +25,7 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
     stats={stats}
     dict={dict}
     renderLabel={(log) => (
-      <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer_id}</div>
+      <div className="text-sm font-bold text-slate-900 dark:text-white">{characterDisplayName(log.killer_id)}</div>
     )}
     renderMeta={(log) => (
       <span>
@@ -32,4 +35,5 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
       </span>
     )}
   />
-);
+  );
+};

@@ -11,7 +11,7 @@ export interface GauntletRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
   role: Role;
-  dict?: Dictionary | any;
+  dict?: Dictionary;
 }
 
 interface TierDefinition {
@@ -35,7 +35,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 0,
     nameKey: 'tierWarmUp',
-    defaultName: '',
+    defaultName: 'The Warm Up',
     streakRange: '0 - 9',
     perkLimit: 4,
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
@@ -44,7 +44,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 1,
     nameKey: 'tierThinning',
-    defaultName: '',
+    defaultName: 'The Thinning',
     streakRange: '10 - 19',
     perkLimit: 3,
     badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
@@ -53,7 +53,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 2,
     nameKey: 'tierStruggle',
-    defaultName: '',
+    defaultName: 'The Struggle',
     streakRange: '20 - 29',
     perkLimit: 2,
     badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
@@ -62,7 +62,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 3,
     nameKey: 'tierHardcore',
-    defaultName: '',
+    defaultName: 'The Hardcore',
     streakRange: '30 - 39',
     perkLimit: 1,
     badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
@@ -71,7 +71,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 4,
     nameKey: 'tierLegend',
-    defaultName: '',
+    defaultName: 'The Legend',
     streakRange: '40+',
     perkLimit: 0,
     badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
@@ -83,7 +83,7 @@ const KILLER_TIERS: TierDefinition[] = [
   {
     level: 0,
     nameKey: 'tierBloodbath',
-    defaultName: '',
+    defaultName: 'The Bloodbath',
     streakRange: '0 - 9',
     perkLimit: 3,
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
@@ -92,7 +92,7 @@ const KILLER_TIERS: TierDefinition[] = [
   {
     level: 1,
     nameKey: 'tierObsession',
-    defaultName: '',
+    defaultName: 'The Obsession',
     streakRange: '10 - 19',
     perkLimit: 2,
     badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
@@ -101,7 +101,7 @@ const KILLER_TIERS: TierDefinition[] = [
   {
     level: 2,
     nameKey: 'tierExecutioner',
-    defaultName: '',
+    defaultName: 'The Executioner',
     streakRange: '20 - 29',
     perkLimit: 1,
     badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
@@ -110,7 +110,7 @@ const KILLER_TIERS: TierDefinition[] = [
   {
     level: 3,
     nameKey: 'tierEntity',
-    defaultName: '',
+    defaultName: 'The Entity',
     streakRange: '30+',
     perkLimit: 0,
     badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
@@ -121,81 +121,81 @@ const KILLER_TIERS: TierDefinition[] = [
 const KILLER_EXCEPTIONS: RuleException[] = [
   {
     labelKey: 'excGameCancelledLabel',
-    defaultLabel: '',
+    defaultLabel: 'Game cancelled',
     textKey: 'excGameCancelledText',
-    defaultText: '',
+    defaultText: 'someone left while the lobby was loading and the match never started. No reroll, queue again with the same one.',
   },
   {
     labelKey: 'excHackersLabel',
-    defaultLabel: '',
+    defaultLabel: 'Hackers',
     textKey: 'excHackersText',
-    defaultText: '',
+    defaultText: 'obvious cheaters void the match. No reroll, replay the same one.',
   },
   {
     labelKey: 'excCrashLabel',
-    defaultLabel: '',
+    defaultLabel: 'Crash or server failure',
     textKey: 'excCrashText',
-    defaultText: '',
+    defaultText: 'not a loss. No reroll, replay the same killer.',
   },
   {
     labelKey: 'excSurvDcLabel',
-    defaultLabel: '',
+    defaultLabel: 'Survivor disconnects',
     textKey: 'excSurvDcText',
-    defaultText: '',
+    defaultText: 'keep playing. The bot match still counts.',
   },
   {
     labelKey: 'excNoDodgingLabel',
-    defaultLabel: '',
+    defaultLabel: 'No dodging',
     textKey: 'excNoDodgingText',
-    defaultText: '',
+    defaultText: 'play whatever lobby you get, no matter the items or prestige levels.',
   },
   {
     labelKey: 'excAddonsAllowedLabel',
-    defaultLabel: '',
+    defaultLabel: 'Add-ons and offerings',
     textKey: 'excAddonsAllowedText',
-    defaultText: '',
+    defaultText: 'are always allowed, at every tier.',
   },
 ];
 
 const SURVIVOR_EXCEPTIONS: RuleException[] = [
   {
     labelKey: 'excEarlyDcLabel',
-    defaultLabel: '',
+    defaultLabel: 'Early disconnect',
     textKey: 'excEarlyDcText',
-    defaultText: '',
+    defaultText: 'a survivor leaves before any generator finishes? The match does not count either way. No reroll, play the same character next time.',
   },
   {
     labelKey: 'excGameCancelledLabel',
-    defaultLabel: '',
+    defaultLabel: 'Game cancelled',
     textKey: 'excGameCancelledText',
-    defaultText: '',
+    defaultText: 'someone left while the lobby was loading and the match never started. No reroll, queue again with the same one.',
   },
   {
     labelKey: 'excHackersLabel',
-    defaultLabel: '',
+    defaultLabel: 'Hackers',
     textKey: 'excHackersText',
-    defaultText: '',
+    defaultText: 'obvious cheaters void the match. No reroll, replay the same one.',
   },
 ];
 
 const SURVIVOR_CLARIFICATIONS: RuleException[] = [
   {
     labelKey: 'clarRatOffLabel',
-    defaultLabel: '',
+    defaultLabel: 'Rat off',
     textKey: 'clarRatOffText',
-    defaultText: '',
+    defaultText: 'survivors teaming up with the killer to get you out counts as a loss.',
   },
   {
     labelKey: 'clarDeathIsDeathLabel',
-    defaultLabel: '',
+    defaultLabel: 'A death is a death',
     textKey: 'clarDeathIsDeathText',
-    defaultText: '',
+    defaultText: 'dying by any means during a live match counts, whether that is the killer, a hatchet, a sabotage play, or a survivor working against you.',
   },
   {
     labelKey: 'clarKillerDcLabel',
-    defaultLabel: '',
+    defaultLabel: 'Killer disconnects',
     textKey: 'clarKillerDcText',
-    defaultText: '',
+    defaultText: 'if they rage quit after a generator is done, it counts as an escape. If they left from a bug or server issue, it does not count. No reroll, replay the same character.',
   },
 ];
 
@@ -210,7 +210,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
     ? (dict?.filters?.killer || '')
     : (dict?.filters?.survivor || '');
 
-  const rawStreaks = dict?.streaks || {};
+  const rawStreaks = (dict?.streaks ?? {}) as Record<string, string>;
 
   const modalTitle = rawStreaks.gauntletRulesTitle
     ? rawStreaks.gauntletRulesTitle.replace('{role}', roleLabel)
@@ -222,9 +222,9 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
       onClose={onClose}
       icon={BookOpen}
       title={modalTitle}
-      subtitle={rawStreaks.gauntletRulesSubtitle || ''}
       iconClassName="bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
       footerButtonClassName="bg-amber-500 hover:bg-amber-400 !text-slate-950 shadow-amber-500/20"
+      footerButtonLabel={rawStreaks.gotItLetsPlay || "Got It, Let's Play!"}
     >
       <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
         <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
@@ -253,8 +253,8 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
         )}
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
           {role === 'killer'
-            ? (rawStreaks.killerRosterCapNote || '')
-            : (rawStreaks.survivorRosterCapNote || '')}
+            ? (rawStreaks.killerRosterCapNote || 'The roster stops at the 43 killers, up through The Slasher.')
+            : (rawStreaks.survivorRosterCapNote || 'The roster stops at the 52 survivors, up through Kwon Tae-young.')}
         </p>
         <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
           {rawStreaks.every10WinsBanks || ''} <strong>{rawStreaks.checkpoint || ''}</strong>
@@ -288,7 +288,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
 
             const perkLimitText =
               tier.perkLimit === 0
-                ? rawStreaks.perklessTierNote || ''
+                ? rawStreaks.perklessTrial || '0 Perks (Perkless Trial)'
                 : rawStreaks.perksAllowedCount
                   ? rawStreaks.perksAllowedCount.replace('{count}', String(tier.perkLimit))
                   : `${tier.perkLimit} ${tier.perkLimit > 1 ? (rawStreaks.perksAllowedPlural || '') : (rawStreaks.perksAllowedSingular || '')}`.trim();

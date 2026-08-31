@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { avatarUrlForCharacter, perkIconUrl } from '@/utils/staticUrl';
+import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 
 export const avatarUrlFor = (name: string, role: Role) =>
   name ? avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers') : null;
@@ -94,17 +95,18 @@ const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> 
 
 const PerkIcon: React.FC<{ perk: Perk; size?: string }> = ({ perk, size = 'w-12 h-12' }) => {
   const [failed, setFailed] = useState<boolean>(false);
+  const displayName = usePerkDisplayName()(perk.name);
   const src = perkIconFor(perk);
 
   return (
     <div
-      title={perk.name}
+      title={displayName}
       className={`relative ${size} shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center p-1 overflow-hidden`}
     >
       {src && !failed ? (
         <img
           src={src}
-          alt={perk.name}
+          alt={displayName}
           className="w-full h-full object-contain filter drop-shadow-md"
           onError={() => setFailed(true)}
         />
@@ -129,8 +131,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   dict,
 }) => {
   const [avatarError, setAvatarError] = useState<boolean>(false);
+  const characterDisplayName = useCharacterDisplayName();
 
   const targetName = run?.current_character_id || run?.current_loadout?.character || '';
+  const targetDisplayName = characterDisplayName(targetName);
   const completed = run?.completed_characters || [];
 
   const drawPool = useMemo(() => {
@@ -138,7 +142,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     return names.includes(targetName) ? names : [...names, targetName].filter(Boolean);
   }, [characters, completed, targetName]);
 
-  const { displayName, phase, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
+  const { displayName: reelName, phase, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
+  const reelDisplayName = reelName != null ? characterDisplayName(reelName) : null;
 
   const sendOffPool = role === 'killer' ? KILLER_SEND_OFFS : SURVIVOR_SEND_OFFS;
   const [sendOff, setSendOff] = useState<string>(sendOffPool[0]);
@@ -198,8 +203,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           }`}
         >
           <RevealPortrait
-            key={drawing ? displayName ?? 'idle' : 'idle'}
-            name={drawing ? displayName ?? undefined : undefined}
+            key={drawing ? reelName ?? 'idle' : 'idle'}
+            name={drawing ? reelName ?? undefined : undefined}
             role={role}
             phase={drawing ? phase : 'idle'}
           />
@@ -208,7 +213,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         {drawing ? (
           <>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
-              {displayName ?? ' '}
+              {reelDisplayName ?? ' '}
             </h2>
             <p
               className={`h-6 text-base font-bold text-amber-600 dark:text-amber-400 ${
@@ -267,7 +272,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               {avatarSrc && !avatarError ? (
                 <img
                   src={avatarSrc}
-                  alt={targetName}
+                  alt={targetDisplayName}
                   className="w-full h-full object-cover rounded-xl"
                   onError={() => setAvatarError(true)}
                 />
@@ -287,7 +292,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               {dict?.streaks?.activeGauntletTarget || 'Active Gauntlet Target'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-              {targetName}
+              {targetDisplayName}
             </h2>
             <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center justify-center sm:justify-start gap-2">
               <span>
@@ -334,7 +339,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
         {charactersPerksOnly && perkLimit === 0 && (
           <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
-            {dict?.streaks?.noPerksThisTrial || 'No perks this trial.'} {targetName}{' '}
+            {dict?.streaks?.noPerksThisTrial || 'No perks this trial.'} {targetDisplayName}{' '}
             {dict?.streaks?.goesInBare || 'goes in bare.'}
           </p>
         )}
@@ -384,7 +389,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                       {dict?.streaks?.slotLabel || 'Slot'} {idx + 1}
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                      {dict?.streaks?.ownPerkOf || 'Own perk:'} {targetName}
+                      {dict?.streaks?.ownPerkOf || 'Own perk:'} {targetDisplayName}
                     </p>
                   </div>
                 </div>
@@ -402,7 +407,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                       {dict?.streaks?.slotOneOfThese || 'Slot 1: one of these'}
                     </h4>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                      {dict?.streaks?.ownPerksOf || 'Own perks:'} {targetName}
+                      {dict?.streaks?.ownPerksOf || 'Own perks:'} {targetDisplayName}
                     </p>
                   </div>
                   {charPerks.length > 0 ? (

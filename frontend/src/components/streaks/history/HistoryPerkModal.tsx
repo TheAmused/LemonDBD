@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { PartyPopper, Sparkles, Lock } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
+import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 
 type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';
 
@@ -15,6 +16,7 @@ const LOCK_UNLOCKED_DELAY_MS = 1560;
 
 const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ perk, index, phase }) => {
   const [failed, setFailed] = useState(false);
+  const displayName = usePerkDisplayName()(perk.name);
   const src = perkIconFor(perk);
   const isUnlocked = phase === 'unlocked';
   const isRevealed = phase === 'breaking' || phase === 'unlocked';
@@ -39,7 +41,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
         {src && !failed ? (
           <img
             src={src}
-            alt={perk.name}
+            alt={displayName}
             className="w-full h-full object-contain filter drop-shadow-md"
             onError={() => setFailed(true)}
           />
@@ -48,7 +50,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
         )}
       </div>
       <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate w-full text-center">
-        {perk.name}
+        {displayName}
       </span>
 
       {!isUnlocked && (
@@ -80,6 +82,7 @@ export interface HistoryPerkModalProps {
 
 export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose, dict }) => {
   const [phase, setPhase] = useState<LockPhase>('locked');
+  const killerDisplayName = useCharacterDisplayName()(killerName || '');
 
   useEffect(() => {
     if (!killerName) {
@@ -112,7 +115,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
           <PartyPopper className="h-8 w-8" />
         </div>
 
-        <h2 className="text-xl font-black tracking-tight text-white">{killerName} {dict?.stats?.win || 'beaten'}!</h2>
+        <h2 className="text-xl font-black tracking-tight text-white">{killerDisplayName} {dict?.stats?.win || 'beaten'}!</h2>
         <p className="mt-1 text-xs text-slate-400 uppercase tracking-wider font-bold">
           {dict?.streaks?.perksUnlocked || 'Perks unlocked'}
         </p>

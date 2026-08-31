@@ -1,6 +1,8 @@
 // frontend/src/components/streaks/page-streak/PageStreakModeModal.tsx
 'use client';
 
+import type { Dictionary } from '@/locales/types';
+
 import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
@@ -10,7 +12,7 @@ export interface PageStreakModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onStart: () => void;
-  dict?: any;
+  dict?: Dictionary;
 }
 
 export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen, onClose, onStart, dict }) => {

@@ -5,6 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { PageStreakStats, PageStreakMatchLog } from '@/types/pageStreak';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
+import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 export interface PageStreakStatsDrawerProps {
   isOpen: boolean;
@@ -13,7 +14,9 @@ export interface PageStreakStatsDrawerProps {
   dict?: Dictionary;
 }
 
-export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (
+export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => {
+  const characterDisplayName = useCharacterDisplayName();
+  return (
   <StreakStatsDrawer<PageStreakMatchLog>
     isOpen={isOpen}
     onClose={onClose}
@@ -22,7 +25,7 @@ export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ is
     stats={stats}
     dict={dict}
     renderLabel={(log) => (
-      <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer}</div>
+      <div className="text-sm font-bold text-slate-900 dark:text-white">{characterDisplayName(log.killer)}</div>
     )}
     renderMeta={(log) => (
       <span>
@@ -30,4 +33,5 @@ export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ is
       </span>
     )}
   />
-);
+  );
+};

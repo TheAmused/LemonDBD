@@ -27,6 +27,14 @@ test('toTitleCase: leaves an already-correct name containing a short acronym unt
   assert.strictEqual(toTitleCase('EMP Device'), 'EMP Device');
 });
 
+test('toTitleCase: fixes a short connector word stuck in caps, not mistaking it for an acronym', () => {
+  assert.strictEqual(toTitleCase('Ulepszenie DO Wysokiego Prądu'), 'Ulepszenie Do Wysokiego Prądu');
+});
+
+test('toTitleCase: fixes a fully-caps title containing a short connector word', () => {
+  assert.strictEqual(toTitleCase('ULEPSZENIE DO WYSOKIEGO PRĄDU'), 'Ulepszenie Do Wysokiego Prądu');
+});
+
 test('toTitleCase: handles lowercase input', () => {
   assert.strictEqual(toTitleCase('rusty shackles'), 'Rusty Shackles');
 });

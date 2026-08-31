@@ -2,10 +2,10 @@
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 
 import React from 'react';
-import { BookOpen, AlertTriangle, Flame, Trophy, Lock } from 'lucide-react';
+import { BookOpen, AlertTriangle, Flame, Trophy, Lock, Snowflake, Clock } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { Role } from '@/types/gauntletStreak';
-import { RulesModalShell } from '../RulesModalShell';
+import { RulesModalShell, RulesModalNotices, RulesModalListSection } from '../RulesModalShell';
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;
@@ -21,7 +21,6 @@ interface TierDefinition {
   streakRange: string;
   perkLimit: number;
   badgeColor: string;
-  descKey: string;
 }
 
 interface RuleException {
@@ -39,7 +38,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     streakRange: '0 - 9',
     perkLimit: 4,
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-    descKey: 'tierWarmUpDesc',
   },
   {
     level: 1,
@@ -48,7 +46,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     streakRange: '10 - 19',
     perkLimit: 3,
     badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-    descKey: 'tierThinningDesc',
   },
   {
     level: 2,
@@ -57,7 +54,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     streakRange: '20 - 29',
     perkLimit: 2,
     badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    descKey: 'tierStruggleDesc',
   },
   {
     level: 3,
@@ -66,7 +62,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     streakRange: '30 - 39',
     perkLimit: 1,
     badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
-    descKey: 'tierHardcoreDesc',
   },
   {
     level: 4,
@@ -75,7 +70,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     streakRange: '40+',
     perkLimit: 0,
     badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-    descKey: 'tierLegendDesc',
   },
 ];
 
@@ -87,7 +81,6 @@ const KILLER_TIERS: TierDefinition[] = [
     streakRange: '0 - 9',
     perkLimit: 3,
     badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-    descKey: 'tierBloodbathDesc',
   },
   {
     level: 1,
@@ -96,7 +89,6 @@ const KILLER_TIERS: TierDefinition[] = [
     streakRange: '10 - 19',
     perkLimit: 2,
     badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-    descKey: 'tierObsessionDesc',
   },
   {
     level: 2,
@@ -105,7 +97,6 @@ const KILLER_TIERS: TierDefinition[] = [
     streakRange: '20 - 29',
     perkLimit: 1,
     badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
-    descKey: 'tierExecutionerDesc',
   },
   {
     level: 3,
@@ -114,7 +105,6 @@ const KILLER_TIERS: TierDefinition[] = [
     streakRange: '30+',
     perkLimit: 0,
     badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-    descKey: 'tierEntityDesc',
   },
 ];
 
@@ -123,37 +113,40 @@ const KILLER_EXCEPTIONS: RuleException[] = [
     labelKey: 'excGameCancelledLabel',
     defaultLabel: 'Game cancelled',
     textKey: 'excGameCancelledText',
-    defaultText: 'someone left while the lobby was loading and the match never started. No reroll, queue again with the same one.',
+    defaultText: 'Someone leaves the lobby before it finishes loading and the match never starts.',
   },
   {
     labelKey: 'excHackersLabel',
     defaultLabel: 'Hackers',
     textKey: 'excHackersText',
-    defaultText: 'obvious cheaters void the match. No reroll, replay the same one.',
+    defaultText: 'Obvious cheaters are in the match.',
   },
   {
     labelKey: 'excCrashLabel',
     defaultLabel: 'Crash or server failure',
     textKey: 'excCrashText',
-    defaultText: 'not a loss. No reroll, replay the same killer.',
+    defaultText: 'The game or server crashes mid-match.',
   },
+];
+
+const KILLER_CLARIFICATIONS: RuleException[] = [
   {
     labelKey: 'excSurvDcLabel',
     defaultLabel: 'Survivor disconnects',
     textKey: 'excSurvDcText',
-    defaultText: 'keep playing. The bot match still counts.',
+    defaultText: 'Keep playing. The bot match still counts.',
   },
   {
     labelKey: 'excNoDodgingLabel',
     defaultLabel: 'No dodging',
     textKey: 'excNoDodgingText',
-    defaultText: 'play whatever lobby you get, no matter the items or prestige levels.',
+    defaultText: 'Play whatever lobby you get.',
   },
   {
     labelKey: 'excAddonsAllowedLabel',
     defaultLabel: 'Add-ons and offerings',
     textKey: 'excAddonsAllowedText',
-    defaultText: 'are always allowed, at every tier.',
+    defaultText: 'All available.',
   },
 ];
 
@@ -162,40 +155,54 @@ const SURVIVOR_EXCEPTIONS: RuleException[] = [
     labelKey: 'excEarlyDcLabel',
     defaultLabel: 'Early disconnect',
     textKey: 'excEarlyDcText',
-    defaultText: 'a survivor leaves before any generator finishes? The match does not count either way. No reroll, play the same character next time.',
+    defaultText: 'A teammate leaves before any generator is finished.',
   },
   {
     labelKey: 'excGameCancelledLabel',
     defaultLabel: 'Game cancelled',
     textKey: 'excGameCancelledText',
-    defaultText: 'someone left while the lobby was loading and the match never started. No reroll, queue again with the same one.',
+    defaultText: 'Someone leaves the lobby before it finishes loading and the match never starts.',
   },
   {
     labelKey: 'excHackersLabel',
     defaultLabel: 'Hackers',
     textKey: 'excHackersText',
-    defaultText: 'obvious cheaters void the match. No reroll, replay the same one.',
+    defaultText: 'Obvious cheaters are in the match.',
+  },
+  {
+    labelKey: 'excCrashLabel',
+    defaultLabel: 'Crash or server failure',
+    textKey: 'excCrashText',
+    defaultText: 'The game or server crashes mid-match.',
   },
 ];
 
 const SURVIVOR_CLARIFICATIONS: RuleException[] = [
   {
+    labelKey: 'excAddonsAllowedLabel',
+    defaultLabel: 'Add-ons and offerings',
+    textKey: 'excAddonsAllowedText',
+    defaultText: 'All available.',
+  },
+  {
     labelKey: 'clarRatOffLabel',
     defaultLabel: 'Rat off',
     textKey: 'clarRatOffText',
-    defaultText: 'survivors teaming up with the killer to get you out counts as a loss.',
+    defaultText: 'Teammates working with the killer to get you out counts as a loss.',
   },
   {
     labelKey: 'clarDeathIsDeathLabel',
     defaultLabel: 'A death is a death',
     textKey: 'clarDeathIsDeathText',
-    defaultText: 'dying by any means during a live match counts, whether that is the killer, a hatchet, a sabotage play, or a survivor working against you.',
+    defaultText:
+      'Dying counts, even to stream sniping, a thrown game, or a teammate sabotaging you. Hackers are the exception, that still voids the whole match. See Exceptions above.',
   },
   {
     labelKey: 'clarKillerDcLabel',
     defaultLabel: 'Killer disconnects',
     textKey: 'clarKillerDcText',
-    defaultText: 'if they rage quit after a generator is done, it counts as an escape. If they left from a bug or server issue, it does not count. No reroll, replay the same character.',
+    defaultText:
+      "If the killer leaves before the first generator is done, or leaves because of a bug or server issue, the match doesn't count. If they leave after the first generator is done for any other reason, it counts as your escape.",
   },
 ];
 
@@ -216,6 +223,27 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
     ? rawStreaks.gauntletRulesTitle.replace('{role}', roleLabel)
     : roleLabel;
 
+  const concept = role === 'killer'
+    ? (rawStreaks.gauntletConceptKiller ||
+        'Face every killer, one trial at a time. Your perk loadout shrinks with every tier, until you win with none at all.')
+    : (rawStreaks.gauntletConceptSurvivor ||
+        'Face every survivor, one trial at a time. Your perk loadout shrinks with every tier, until you win with none at all.');
+
+  const winCondition = role === 'killer'
+    ? (rawStreaks.gauntletWinConditionKiller || 'Win = 3 kills or more. Anything less breaks the streak.')
+    : (rawStreaks.gauntletWinConditionSurvivor || 'Win = escape, through the exit gates or the hatch. Anything else breaks the streak.');
+
+  const perkRule = role === 'killer'
+    ? (rawStreaks.gauntletKillerPerkRule || 'You always run your own teachables. Start with all 3, lose one each tier.')
+    : (rawStreaks.gauntletSurvivorPerkRule || 'Only 1 of your perks has to be your own teachable. The other 3 are your pick.');
+
+  const rosterCapNote = role === 'killer'
+    ? (rawStreaks.killerRosterCapNote || 'The roster stops at the 43 killers, up through The Slasher.')
+    : (rawStreaks.survivorRosterCapNote || 'The roster stops at the 52 survivors, up through Kwon Tae-young.');
+
+  const exceptions = role === 'killer' ? KILLER_EXCEPTIONS : SURVIVOR_EXCEPTIONS;
+  const clarifications = role === 'killer' ? KILLER_CLARIFICATIONS : SURVIVOR_CLARIFICATIONS;
+
   return (
     <RulesModalShell
       isOpen={isOpen}
@@ -229,66 +257,40 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
       <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
         <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">
           <Trophy className="w-4 h-4" aria-hidden="true" />
-          <span>{rawStreaks.gauntletConcept || ''}</span>
+          <span>{rawStreaks.gauntletConcept || 'Gauntlet Concept'}</span>
         </h3>
         <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {rawStreaks.beatEveryPrefix || ''} {role}{' '}
-          {rawStreaks.gauntletConceptBody || ''}
+          {concept}
         </p>
-        {role === 'killer' && (
-          <>
-            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              {rawStreaks.youOnlyEverRun || ''} <strong>{rawStreaks.yourOwnTeachablePerks || ''}</strong>
-              {rawStreaks.neverAnyoneElseNote || ''}
-            </p>
-            <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              {rawStreaks.trialOnlyCountsWinOn || ''} <strong>{rawStreaks.threeKillsOrMore || ''}</strong>. {rawStreaks.anythingLessLoss || ''}
-            </p>
-          </>
-        )}
-        {role === 'survivor' && (
-          <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-            {rawStreaks.trialOnlyCountsWinIf || ''} <strong>{rawStreaks.escape || ''}</strong>{rawStreaks.exitGatesOrHatch || ''}
-          </p>
-        )}
-        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-          {role === 'killer'
-            ? (rawStreaks.killerRosterCapNote || 'The roster stops at the 43 killers, up through The Slasher.')
-            : (rawStreaks.survivorRosterCapNote || 'The roster stops at the 52 survivors, up through Kwon Tae-young.')}
-        </p>
-        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {rawStreaks.every10WinsBanks || ''} <strong>{rawStreaks.checkpoint || ''}</strong>
-          {rawStreaks.checkpointFallbackNote || ''}{' '}
-          {role}{' '}
-          {rawStreaks.checkpointPoolNote || ''}
-        </p>
-        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-          {rawStreaks.pickTheseInGame || ''}
-        </p>
-        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {rawStreaks.rosterLockedNotice || ''}
-        </p>
-        <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          {rawStreaks.inactivityLossNotice || ''}
-        </p>
+      </div>
+
+      <div>
+        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+          {rawStreaks.howItWorks || 'How it works'}
+        </h3>
+        <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed list-disc pl-4 marker:text-amber-500">
+          <li>{winCondition}</li>
+          <li>{perkRule}</li>
+          <li>{rawStreaks.gauntletCheckpointRule || 'Every 10 wins banks a checkpoint, so a loss only falls back that far, not to zero.'}</li>
+          <li>{rosterCapNote}</li>
+        </ul>
       </div>
 
       <div>
         <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
           <Flame className="w-4 h-4 text-amber-500" aria-hidden="true" />
-          <span>{rawStreaks.progressiveTierRestrictions || ''}</span>
+          <span>{rawStreaks.progressiveTierRestrictions || 'Progressive Tier Restrictions'}</span>
         </h3>
         <div className="grid grid-cols-1 gap-2.5" role="list">
           {tiers.map((tier) => {
             const tierName = rawStreaks[tier.nameKey] || tier.defaultName;
-            const tierDesc = rawStreaks[tier.descKey] || '';
             const streakRangeFormatted = rawStreaks.streakRangeLabel
               ? rawStreaks.streakRangeLabel.replace('{range}', tier.streakRange)
               : tier.streakRange;
 
             const perkLimitText =
               tier.perkLimit === 0
-                ? rawStreaks.perklessTrial || '0 Perks (Perkless Trial)'
+                ? rawStreaks.perklessTrial || '0 Perks'
                 : rawStreaks.perksAllowedCount
                   ? rawStreaks.perksAllowedCount.replace('{count}', String(tier.perkLimit))
                   : `${tier.perkLimit} ${tier.perkLimit > 1 ? (rawStreaks.perksAllowedPlural || '') : (rawStreaks.perksAllowedSingular || '')}`.trim();
@@ -308,11 +310,6 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-                  {tierDesc && (
-                    <p className="text-xs text-slate-500 dark:text-slate-400 hidden lg:block max-w-xs truncate">
-                      {tierDesc}
-                    </p>
-                  )}
                   <div className="flex items-center gap-1.5 font-bold text-amber-700 dark:text-amber-300 text-xs bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20 whitespace-nowrap">
                     <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" aria-hidden="true" />
                     <span>{perkLimitText}</span>
@@ -324,69 +321,47 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
         </div>
       </div>
 
-      {role === 'killer' ? (
-        <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
-          <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
-            <span>{rawStreaks.exceptionsAndClarifications || ''}</span>
-          </h3>
-          <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            {KILLER_EXCEPTIONS.map((item) => {
-              const label = rawStreaks[item.labelKey] || item.defaultLabel;
-              const text = rawStreaks[item.textKey] || item.defaultText;
-              if (!label && !text) return null;
-              return (
-                <li key={item.labelKey}>
-                  {label && <strong>{label}: </strong>}
-                  <span>{text}</span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ) : (
-        <>
-          <div className="bg-slate-50 dark:bg-slate-950/80 border border-amber-500/20 rounded-xl p-4 space-y-3 shadow-sm">
-            <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
-              <span>{rawStreaks.exceptions || ''}</span>
-            </h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              {SURVIVOR_EXCEPTIONS.map((item) => {
-                const label = rawStreaks[item.labelKey] || item.defaultLabel;
-                const text = rawStreaks[item.textKey] || item.defaultText;
-                if (!label && !text) return null;
-                return (
-                  <li key={item.labelKey}>
-                    {label && <strong>{label}: </strong>}
-                    <span>{text}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+      <RulesModalListSection
+        icon={AlertTriangle}
+        title={rawStreaks.exceptions || 'Exceptions'}
+        intro={rawStreaks.voidMatchNotice || 'These void the match. Replay it.'}
+        headerColorClassName="text-amber-600 dark:text-amber-400"
+        boxClassName="border-amber-500/20"
+        items={exceptions
+          .map((item) => ({
+            label: rawStreaks[item.labelKey] || item.defaultLabel,
+            text: rawStreaks[item.textKey] || item.defaultText,
+          }))
+          .filter((item) => item.label || item.text)}
+      />
 
-          <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 space-y-3 shadow-sm">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-              <span>{rawStreaks.clarifications || ''}</span>
-            </h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              {SURVIVOR_CLARIFICATIONS.map((item) => {
-                const label = rawStreaks[item.labelKey] || item.defaultLabel;
-                const text = rawStreaks[item.textKey] || item.defaultText;
-                if (!label && !text) return null;
-                return (
-                  <li key={item.labelKey}>
-                    {label && <strong>{label}: </strong>}
-                    <span>{text}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </>
-      )}
+      <RulesModalListSection
+        icon={AlertTriangle}
+        title={rawStreaks.clarifications || 'Clarifications'}
+        headerColorClassName="text-amber-600 dark:text-amber-400"
+        boxClassName="border-slate-200 dark:border-slate-800/80"
+        items={clarifications
+          .map((item) => ({
+            label: rawStreaks[item.labelKey] || item.defaultLabel,
+            text: rawStreaks[item.textKey] || item.defaultText,
+          }))
+          .filter((item) => item.label || item.text)}
+      />
+
+      <RulesModalNotices
+        accentClassName="border-amber-500/20 bg-amber-500/5 text-amber-800 dark:text-amber-300"
+        notices={[
+          {
+            icon: Snowflake,
+            text: rawStreaks.runFreezeNotice ||
+              'Your run freezes. New unlocks join after your next reset, loss to zero, or completion.',
+          },
+          {
+            icon: Clock,
+            text: rawStreaks.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.',
+          },
+        ]}
+      />
     </RulesModalShell>
   );
 };

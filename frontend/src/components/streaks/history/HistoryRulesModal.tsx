@@ -3,8 +3,8 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BookOpen, Trophy, Dices } from 'lucide-react';
-import { RulesModalShell } from '../RulesModalShell';
+import { BookOpen, Trophy, Flame, AlertTriangle, Snowflake, Clock } from 'lucide-react';
+import { RulesModalShell, RulesModalNotices, RulesModalListSection } from '../RulesModalShell';
 
 export interface HistoryRulesModalProps {
   isOpen: boolean;
@@ -24,30 +24,34 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
   >
     <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
       <h3 className="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">
-        <Dices className="w-4 h-4" />
-        {dict?.streaks?.concept || 'Concept'}
+        <Trophy className="w-4 h-4" />
+        {dict?.streaks?.historyConceptLabel || 'History Concept'}
       </h3>
       <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        {dict?.streaks?.historyConceptDesc1 || 'Your owned killers, sorted by release order, are grouped into rows of 5. Only the current row is playable. Beat every killer in it to unlock the next.'}
+        {dict?.streaks?.historyConceptShort ||
+          'Killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next.'}
       </p>
-      <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        {dict?.streaks?.historyConceptDesc2 || 'You start with every General perk unlocked. Beating a killer adds their own teachable perks to your pool. Addons and builds play no role here, pick a killer and play.'}
-      </p>
-      <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400 italic">
+    </div>
+
+    <div>
+      <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+        {dict?.streaks?.howItWorks || 'How it works'}
+      </h3>
+      <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed list-disc pl-4 marker:text-slate-400">
+        <li>{dict?.streaks?.historyWinCondition || 'Win = 3 kills or more. Anything less breaks the streak.'}</li>
+        <li>{dict?.streaks?.historyStartingPerksNote || 'You start with every General perk unlocked.'}</li>
+        <li>{dict?.streaks?.historyPerkUnlockRule || 'Beating a killer adds their teachables to your pool.'}</li>
+        <li>{dict?.streaks?.historyCheckpointRule || 'A checkpoint saves your progress, so a loss falls back to your last checkpoint instead of zero.'}</li>
+      </ul>
+      <p className="mt-3 leading-relaxed text-xs sm:text-sm text-slate-500 dark:text-slate-400 italic">
         {dict?.streaks?.historyConceptHint || 'For the full experience try to play killers in order from the oldest to newest. 🙂'}
-      </p>
-      <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        {dict?.streaks?.rosterLockedNotice || "The roster is locked in for the run you're on. New killers you unlock mid-run won't join until you reset, lose back to zero, or complete it."}
-      </p>
-      <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        {dict?.streaks?.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.'}
       </p>
     </div>
 
     <div>
       <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-        <Trophy className="w-4 h-4 text-slate-500" />
-        {dict?.streaks?.modes || 'Modes'}
+        <Flame className="w-4 h-4 text-slate-500" />
+        {dict?.streaks?.difficultyAndCheckpoints || 'Difficulty'}
       </h3>
       <div className="grid grid-cols-1 gap-2.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-2 shadow-sm">
@@ -55,8 +59,7 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
             {dict?.streaks?.mediumMode || 'Medium'}
           </span>
           <p className="text-xs text-slate-600 dark:text-slate-300 sm:text-right sm:max-w-xs">
-            {dict?.streaks?.mediumModeDesc ||
-              "Checkpoints save each row you clear. A loss falls back to the row's start, not to zero."}
+            {dict?.streaks?.mediumModeDesc || 'Checkpoint every row.'}
           </p>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-2 shadow-sm">
@@ -64,10 +67,68 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
             {dict?.streaks?.hellMode || 'Hell'}
           </span>
           <p className="text-xs text-slate-600 dark:text-slate-300 sm:text-right sm:max-w-xs">
-            {dict?.streaks?.hellModeDesc || 'No checkpoints. One loss resets the whole run, every row and every unlocked perk.'}
+            {dict?.streaks?.hellModeDesc || 'No checkpoints.'}
           </p>
         </div>
       </div>
     </div>
+
+    <RulesModalListSection
+      icon={AlertTriangle}
+      title={dict?.streaks?.exceptions || 'Exceptions'}
+      intro={dict?.streaks?.voidMatchNotice || 'These void the match. Replay it.'}
+      headerColorClassName="text-slate-600 dark:text-slate-400"
+      boxClassName="border-slate-500/20"
+      items={[
+        {
+          label: dict?.streaks?.excGameCancelledLabel || 'Game cancelled',
+          text: dict?.streaks?.excGameCancelledText || 'Someone leaves the lobby before it finishes loading and the match never starts.',
+        },
+        {
+          label: dict?.streaks?.excHackersLabel || 'Hackers',
+          text: dict?.streaks?.excHackersText || 'Obvious cheaters are in the match.',
+        },
+        {
+          label: dict?.streaks?.excCrashLabel || 'Crash or server failure',
+          text: dict?.streaks?.excCrashText || 'The game or server crashes mid-match.',
+        },
+      ]}
+    />
+
+    <RulesModalListSection
+      icon={AlertTriangle}
+      title={dict?.streaks?.clarifications || 'Clarifications'}
+      headerColorClassName="text-slate-600 dark:text-slate-400"
+      boxClassName="border-slate-200 dark:border-slate-800/80"
+      items={[
+        {
+          label: dict?.streaks?.excSurvDcLabel || 'Survivor disconnects',
+          text: dict?.streaks?.excSurvDcText || 'Keep playing. The bot match still counts.',
+        },
+        {
+          label: dict?.streaks?.excNoDodgingLabel || 'No dodging',
+          text: dict?.streaks?.excNoDodgingText || 'Play whatever lobby you get.',
+        },
+        {
+          label: dict?.streaks?.excAddonsAllowedLabel || 'Add-ons and offerings',
+          text: dict?.streaks?.excAddonsAllowedText || 'All available.',
+        },
+      ]}
+    />
+
+    <RulesModalNotices
+      accentClassName="border-slate-500/20 bg-slate-500/5 text-slate-700 dark:text-slate-300"
+      notices={[
+        {
+          icon: Snowflake,
+          text: dict?.streaks?.runFreezeNotice ||
+            'Your run freezes. New unlocks join after your next reset, loss to zero, or completion.',
+        },
+        {
+          icon: Clock,
+          text: dict?.streaks?.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.',
+        },
+      ]}
+    />
   </RulesModalShell>
 );

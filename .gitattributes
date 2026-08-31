@@ -1,0 +1,4 @@
+# Force LF line endings for files that get executed inside Linux containers,
+# regardless of the OS or editor settings used to check them out.
+*.sh text eol=lf
+entrypoint.sh text eol=lf

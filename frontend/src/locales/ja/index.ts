@@ -23,6 +23,7 @@ import maps from './maps';
 import quests from './quests';
 import killerCalculator from './killerCalculator';
 import customPerks from './customPerks';
+import changelog from './changelog';
 
 const ja = {
   app,
@@ -49,6 +50,7 @@ const ja = {
   quests,
   killerCalculator,
   customPerks,
+  changelog,
 };
 
 export default ja;

@@ -2,7 +2,7 @@
 import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/perks/page.tsx
 
-import React, { useEffect, useState, useCallback, Suspense } from 'react';
+import React, { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { PerkFilters } from '@/components/PerkFilters';
@@ -12,7 +12,7 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { Pagination } from '@/components/Pagination';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { Shield, Skull, Database, Flame, CheckCircle2 } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -59,11 +59,49 @@ function PerksContent() {
 
   const [survivorCount, setSurvivorCount] = useState<number>(0);
   const [killerCount, setKillerCount] = useState<number>(0);
+  const [survivorOwnedCount, setSurvivorOwnedCount] = useState<number>(0);
+  const [killerOwnedCount, setKillerOwnedCount] = useState<number>(0);
   const [characterCount, setCharacterCount] = useState<number>(0);
   const [ownedPerksCount, setOwnedPerksCount] = useState<number>(0);
 
   const [viewMode, setViewMode] = useState<ViewDisplayMode>('grid');
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
+
+  // The 5-column perk grid always shows exactly 3 rows worth of vertical
+  // space -- any extra rows (from a larger Pagination page size) should
+  // scroll at that *same* per-row height instead of squeezing everything
+  // to fit or collapsing to zero height. That per-row height can't be
+  // expressed as a CSS percentage of the grid's own box (that's a cyclic
+  // calculation -- the row height would depend on the height being solved
+  // for -- which is exactly what broke rows past the 15th item). So it's
+  // measured directly off the grid's own rendered height instead, the
+  // same ResizeObserver-based approach used for the slot machine's reel
+  // sizing.
+  const [rowHeightPx, setRowHeightPx] = useState<number | null>(null);
+  const gridResizeObserverRef = useRef<ResizeObserver | null>(null);
+  const GRID_ROW_GAP_PX = 12; // matches the grid's gap-3 (0.75rem @ 16px root)
+
+  const measureGridArea = useCallback((node: HTMLDivElement | null) => {
+    if (gridResizeObserverRef.current) {
+      gridResizeObserverRef.current.disconnect();
+      gridResizeObserverRef.current = null;
+    }
+    if (!node) return;
+    const compute = () => {
+      const h = node.clientHeight;
+      setRowHeightPx(h > 0 ? Math.max(0, (h - GRID_ROW_GAP_PX * 2) / 3) : null);
+    };
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(node);
+    gridResizeObserverRef.current = ro;
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      gridResizeObserverRef.current?.disconnect();
+    };
+  }, []);
 
   const backendBase = getBackendBaseUrl();
 
@@ -150,6 +188,12 @@ function PerksContent() {
           fullList.filter((p) => p.category === 'Survivor').length
         );
         setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
+        setSurvivorOwnedCount(
+          fullList.filter((p) => p.category === 'Survivor' && p.is_owned !== false).length
+        );
+        setKillerOwnedCount(
+          fullList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length
+        );
         setOwnedPerksCount(
           fullList.filter((p) => p.is_owned !== false).length
         );
@@ -195,7 +239,7 @@ function PerksContent() {
   if (!dict) return null;
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -208,176 +252,151 @@ function PerksContent() {
         characterCount={characterCount}
       />
 
+      {/* Fixed-height column: the filters bar (and, when present, the empty
+          state) never scroll away -- only the perk grid/list area below
+          them does, in its own contained region. That's what keeps every
+          control reachable without ever having to scroll the whole page to
+          find them again. */}
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${
+        className={`flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden transition-all duration-300 p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 ${
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <header className="mb-6 flex flex-col gap-4 w-full">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-2xl shadow-slate-950/60 border border-slate-800">
-              <div className="pointer-events-none absolute -left-12 -top-12 h-36 w-36 rounded-full bg-cyan-500/10 blur-3xl" />
-              <div className="pointer-events-none absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-rose-600/10 blur-3xl" />
+        <div className="shrink-0">
+          <PerkFilters
+            search={search}
+            setSearch={(v) => {
+              setSearch(v);
+              setPage(1);
+            }}
+            role={role}
+            setRole={handleRoleChange}
+            scope={scope}
+            setScope={(s) => {
+              setScope(s);
+              setPage(1);
+            }}
+            ownershipFilter={ownershipFilter}
+            setOwnershipFilter={(o) => {
+              setOwnershipFilter(o);
+              setPage(1);
+            }}
+            sortBy={sortBy}
+            setSortBy={(s) => setSortBy(s)}
+            order={order}
+            setOrder={(o) => setOrder(o)}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            dict={dict}
+            onReset={handleResetFilters}
+            locale={locale}
+            survivorCount={survivorCount}
+            killerCount={killerCount}
+            allCount={role === 'Survivor' ? survivorCount : killerCount}
+            ownedCount={role === 'Survivor' ? survivorOwnedCount : killerOwnedCount}
+          />
+        </div>
 
-              <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/10 shadow-lg shadow-cyan-950/40 border border-cyan-500/20">
-                    <Database className="h-6 w-6 text-cyan-400" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-black text-slate-100 tracking-tight sm:text-3xl">
-                      {dict?.app?.perksVaultTitle || 'Perks Vault & Codex'}
-                    </h1>
-                  </div>
+        {/* The scrollable perk grid/list lives strictly between the
+            filters bar above and the Pagination footer below -- Pagination
+            itself is a fixed shrink-0 sibling AFTER this scroll region, not
+            inside it, so it never ends up buried mid-scroll behind the
+            grid once a larger page size pushes the grid past 3 rows. */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          {loading ? (
+            // Same fixed 5x3 grid as the real content below -- 15 skeleton
+            // cells always exactly fill 3 rows of 5, stretched to the full
+            // height of this area (grid-rows-3 + flex-1), so the loading
+            // state doesn't jump in size once the real perks arrive.
+            <div
+              ref={measureGridArea}
+              aria-busy="true"
+              aria-label={dict?.characterDetail?.loading || 'Loading perks'}
+              className="grid min-h-0 w-full flex-1 grid-cols-5 gap-3"
+              style={rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
+            >
+              {Array.from({ length: 15 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-center p-1"
+                >
+                  <div className="aspect-square h-[88%] w-[88%] rotate-45 animate-pulse rounded-2xl bg-slate-900/60 border border-slate-800" />
                 </div>
-
-                <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
-                  <div className="flex items-center gap-2.5 rounded-2xl bg-slate-950/80 px-4 py-2.5 shadow-inner border border-slate-800">
-                    <Flame className="h-4 w-4 text-cyan-400" />
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-slate-500">
-                        {dict?.stats?.vaultTotal || 'Vault Total'}
-                      </span>
-                      <span className="text-xs font-black text-slate-100">{totalVaultPerks}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 rounded-2xl bg-emerald-950/30 px-4 py-2.5 shadow-inner border border-emerald-500/20">
-                    <Shield className="h-4 w-4 text-emerald-400" />
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-emerald-400/80">
-                        {dict?.generator?.survivor || 'Survivor'}
-                      </span>
-                      <span className="text-xs font-black text-emerald-300">{survivorCount}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2.5 rounded-2xl bg-rose-950/30 px-4 py-2.5 shadow-inner border border-rose-500/20">
-                    <Skull className="h-4 w-4 text-rose-400" />
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase text-rose-400/80">
-                        {dict?.generator?.killer || 'Killer'}
-                      </span>
-                      <span className="text-xs font-black text-rose-300">{killerCount}</span>
-                    </div>
-                  </div>
-
-                  {user && (
-                    <div className="flex items-center gap-2.5 rounded-2xl bg-cyan-950/30 px-4 py-2.5 shadow-inner border border-cyan-500/20">
-                      <CheckCircle2 className="h-4 w-4 text-cyan-400" />
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-bold uppercase text-cyan-400/80">
-                          {dict?.stats?.ownedPerks || 'Owned Perks'}
-                        </span>
-                        <span className="text-xs font-black text-cyan-300">{ownedPerksCount}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+              ))}
             </div>
-          </header>
-
-        <>
-            <PerkFilters
-              search={search}
-              setSearch={(v) => {
-                setSearch(v);
-                setPage(1);
-              }}
-              role={role}
-              setRole={handleRoleChange}
-              scope={scope}
-              setScope={(s) => {
-                setScope(s);
-                setPage(1);
-              }}
-              ownershipFilter={ownershipFilter}
-              setOwnershipFilter={(o) => {
-                setOwnershipFilter(o);
-                setPage(1);
-              }}
-              sortBy={sortBy}
-              setSortBy={(s) => setSortBy(s)}
-              order={order}
-              setOrder={(o) => setOrder(o)}
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-              dict={dict}
-              onReset={handleResetFilters}
-              locale={locale}
-            />
-
-            {loading ? (
-              <div
-                aria-busy="true"
-                aria-label={dict?.characterDetail?.loading || 'Loading perks'}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-10 justify-items-center w-full py-12"
+          ) : perks.length === 0 ? (
+            <section
+              aria-live="polite"
+              className="my-auto rounded-3xl bg-slate-900/40 p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-slate-800"
+            >
+              <Shield className="mx-auto h-12 w-12 text-slate-600 mb-3" />
+              <h2 className="text-lg font-extrabold text-slate-200">
+                {dict?.empty?.title || 'No Perks Found'}
+              </h2>
+              <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
+                {dict?.empty?.subtitle ||
+                  'Try clearing your search query or switching ownership filters.'}
+              </p>
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/30"
               >
-                {Array.from({ length: 15 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48 rotate-45 animate-pulse rounded-2xl bg-slate-900/60 border border-slate-800"
+                {dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters'}
+              </button>
+            </section>
+          ) : (
+            <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="flex min-h-0 flex-1 flex-col">
+              {/* Fixed 5 columns x 3 rows on every screen size -- not a
+                  breakpoint-driven column count that happens to add up to
+                  3 rows only sometimes. Each row is an equal 1fr share of
+                  whatever height this section actually has (flex-1 above),
+                  so 15 cards always exactly fill the space instead of
+                  capping out at a fixed card size and leaving empty space
+                  underneath on a tall/1440p screen. PerkCard's `fill` size
+                  variant is what lets each card scale into that space
+                  (measured per-cell via container query units) instead of
+                  snapping to one of a few fixed breakpoint sizes. */}
+              <div
+                ref={viewMode === 'grid' ? measureGridArea : undefined}
+                className={
+                  viewMode === 'list'
+                    ? 'flex flex-col gap-2 w-full'
+                    : 'grid min-h-0 w-full flex-1 grid-cols-5 gap-3'
+                }
+                style={viewMode === 'grid' && rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
+              >
+                {perks.map((perk, idx) => (
+                  <PerkCard
+                    key={`${perk.name}-${idx}`}
+                    perk={perk}
+                    viewMode={viewMode}
+                    size={viewMode === 'grid' ? 'fill' : undefined}
+                    onSelect={setSelectedPerk}
+                    dict={dict}
                   />
                 ))}
               </div>
-            ) : perks.length === 0 ? (
-              <section
-                aria-live="polite"
-                className="my-12 rounded-3xl bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm w-full border border-slate-800"
-              >
-                <Shield className="mx-auto h-12 w-12 text-slate-600 mb-3" />
-                <h2 className="text-lg font-extrabold text-slate-200">
-                  {dict?.empty?.title || 'No Perks Found'}
-                </h2>
-                <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
-                  {dict?.empty?.subtitle ||
-                    'Try clearing your search query or switching ownership filters.'}
-                </p>
-                <button
-                  type="button"
-                  onClick={handleResetFilters}
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/30"
-                >
-                  {dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters'}
-                </button>
-              </section>
-            ) : (
-              <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="w-full">
-                <div
-                  className={
-                    viewMode === 'list'
-                      ? 'flex flex-col gap-2 sm:gap-3 w-full py-6'
-                      : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 lg:gap-8 justify-items-center w-full py-6'
-                  }
-                >
-                  {perks.map((perk, idx) => (
-                    <PerkCard
-                      key={`${perk.name}-${idx}`}
-                      perk={perk}
-                      viewMode={viewMode}
-                      onSelect={setSelectedPerk}
-                      dict={dict}
-                    />
-                  ))}
-                </div>
+            </section>
+          )}
+        </div>
 
-                <div className="mt-8 w-full">
-                  <Pagination
-                    page={page}
-                    totalPages={totalPages}
-                    totalResults={totalResults}
-                    limit={limit}
-                    onPageChange={setPage}
-                    onLimitChange={(newLimit) => {
-                      setLimit(newLimit);
-                      setPage(1);
-                    }}
-                    dict={dict}
-                  />
-                </div>
-              </section>
-            )}
-          </>
+        {!loading && perks.length > 0 && (
+          <div className="shrink-0 w-full">
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              totalResults={totalResults}
+              limit={limit}
+              onPageChange={setPage}
+              onLimitChange={(newLimit) => {
+                setLimit(newLimit);
+                setPage(1);
+              }}
+              dict={dict}
+            />
+          </div>
+        )}
 
         <PerkModal
           perk={selectedPerk}

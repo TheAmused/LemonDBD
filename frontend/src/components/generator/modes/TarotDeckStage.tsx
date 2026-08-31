@@ -183,10 +183,21 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     </div>
                   </button>
 
-                  {/* Front face: still dressed as the same tarot card --
-                      dark card stock, amber frame, corner pips -- just
+                  {/* Front face: still dressed as the same tarot card,
+                      dark card stock, amber frame, corner pips, just
                       revealing the perk in its center window instead of
-                      turning into a bare icon. */}
+                      turning into a bare icon.
+
+                      The actual perk content only mounts once `card.flipped`
+                      is true. Rendering it unconditionally here (relying on
+                      backfaceVisibility + the 3D transform alone to hide it)
+                      let the new perk flash into view for a frame whenever a
+                      fresh, unflipped card reused this same DOM slot (e.g.
+                      shuffling right after a flip) -- the combined rotation
+                      briefly passes through "facing the viewer" before the
+                      flip-back settles, so the still-mounted image was
+                      visible for that frame. Not rendering it until flipped
+                      removes the leak regardless of transform/timing. */}
                   <div
                     className="absolute inset-0 flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border-2 border-amber-500/25 bg-gradient-to-b from-slate-900 via-[#120a1c] to-slate-950 p-3"
                     style={{
@@ -201,22 +212,26 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                         character portrait; pips in those same corners just
                         overlapped and cluttered them. */}
                     <span className="pointer-events-none absolute inset-2 rounded-xl border border-amber-500/15" />
-                    <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/80">
-                      {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
-                    </span>
-                    <span className="relative z-10">
-                      <PerkSlot
-                        perk={card.slot.perk}
-                        role={role}
-                        page={card.slot.page}
-                        slot={card.slot.slot}
-                        size="large"
-                        isObscured={isObscured}
-                        isBlind={isBlind}
-                        onClick={onClick}
-                        dict={dict}
-                      />
-                    </span>
+                    {card.flipped && (
+                      <>
+                        <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/80">
+                          {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
+                        </span>
+                        <span className="relative z-10">
+                          <PerkSlot
+                            perk={card.slot.perk}
+                            role={role}
+                            page={card.slot.page}
+                            slot={card.slot.slot}
+                            size="large"
+                            isObscured={isObscured}
+                            isBlind={isBlind}
+                            onClick={onClick}
+                            dict={dict}
+                          />
+                        </span>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               </div>

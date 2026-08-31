@@ -98,14 +98,24 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
         </div>
       )}
 
-      {/* One consistent, viewport-driven height for every mode -- this is what
-          actually kills the "stutter": before, each mode (Wheel/Slot/Crate/...) sized
-          its own content and the box would visibly jump in height switching between
-          them (and on role switch, since key={role} remounts the active mode). Now
-          the box itself never resizes; only what's drawn inside it changes. It also
-          uses the real available screen instead of a small 240px floor, so there's
-          no dead space on desktop or mobile. */}
-      <div className="relative z-10 flex h-full min-h-[62vh] sm:min-h-[66vh] lg:min-h-[72vh] flex-col items-center justify-center">
+      {/* One consistent height for every mode -- this is what actually kills
+          the "stutter": before, each mode (Wheel/Slot/Crate/...) sized its
+          own content and the box would visibly jump in height switching
+          between them (and on role switch, since key={role} remounts the
+          active mode). Now the box itself never resizes; only what's drawn
+          inside it changes.
+
+          The floor is a fixed-px scale (not a raw vh figure) capped by a
+          dvh-based ceiling: a bare min-h-[62vh]-style value grows without
+          limit on short/landscape mobile screens, which is exactly what
+          pushed a mode's own CTA button off the bottom of the viewport and
+          forced a page-level scroll to reach it. `max-h` + `overflow-y-auto`
+          means that if a mode's content is ever still taller than the
+          available viewport (a very short window, aggressive OS zoom, etc.)
+          the scrollbar shows up *inside this box*, not on the page -- the
+          mode's tabs/toolbar above it and the surrounding page chrome stay
+          put either way. */}
+      <div className="relative z-10 flex h-full min-h-[380px] max-h-[calc(100dvh-9rem)] flex-col items-center justify-center overflow-y-auto sm:min-h-[440px] sm:max-h-[calc(100dvh-10rem)] lg:min-h-[520px] lg:max-h-[calc(100dvh-11rem)]">
         {children}
       </div>
     </div>

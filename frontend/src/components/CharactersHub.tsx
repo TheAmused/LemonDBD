@@ -11,7 +11,6 @@ import {
   Sparkles,
   Package,
   User,
-  Flame,
   Lock,
   Check,
   MailWarning,
@@ -79,7 +78,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
   const [characters, setCharacters] = useState<CharacterItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [activeTab, setActiveTab] = useState<'all' | RoleCategory>('all');
+  const [activeTab, setActiveTab] = useState<RoleCategory>('Survivor');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const roleParam = searchParams?.get('role') || searchParams?.get('tab') || '';
@@ -91,16 +90,13 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         setActiveTab('Killer');
       } else if (lower === 'survivor' || lower === 'survivors') {
         setActiveTab('Survivor');
-      } else if (lower === 'all') {
-        setActiveTab('all');
       }
     }
   }, [roleParam]);
 
-  const handleTabChange = (tab: 'all' | RoleCategory) => {
+  const handleTabChange = (tab: RoleCategory) => {
     setActiveTab(tab);
-    const query = tab === 'all' ? '' : `?role=${tab}`;
-    router.replace(`/${locale}/characters${query}`, { scroll: false });
+    router.replace(`/${locale}/characters?role=${tab}`, { scroll: false });
   };
 
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
@@ -289,7 +285,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const filteredCharacters = useMemo(() => {
     return characters.filter((c) => {
       const matchesTab =
-        activeTab === 'all' ? true : c.category?.toLowerCase() === activeTab.toLowerCase();
+        c.category?.toLowerCase() === activeTab.toLowerCase();
       const query = searchQuery.toLowerCase().trim();
       const matchesSearch =
         !query ||
@@ -304,32 +300,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
   return (
     <div className={`space-y-6 ${ownershipMode ? 'pb-20' : ''}`}>
-      <header className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-r from-white via-slate-50 to-red-50/40 dark:border-slate-800 dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-900 dark:to-red-950/40 p-6 sm:p-8 shadow-sm dark:shadow-2xl">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30">
-                <Flame className="h-4 w-4" />
-              </span>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
-                {dict?.characterDetail?.allCharacters || 'Characters Hub'}
-              </h1>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-bold">
-              <Shield className="h-4 w-4" />
-              <span>{survivorCount} {dict?.filters?.survivor || 'Survivors'}</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-400 text-xs font-bold">
-              <Skull className="h-4 w-4" />
-              <span>{killerCount} {dict?.filters?.killer || 'Killers'}</span>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <section
         aria-label={dict?.characterDetail?.characterOverview || 'Character Filter Navigation'}
         className="flex flex-col sm:flex-row gap-4 justify-between items-center"
@@ -337,25 +307,23 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         <div
           role="group"
           aria-label={dict?.filters?.category || 'Filter characters by role'}
-          className="flex items-center p-1 bg-slate-100/90 border border-slate-200 dark:bg-slate-900/90 dark:border-slate-800 rounded-2xl w-full sm:w-auto shadow-inner"
+          className="relative flex items-center w-full sm:w-72 h-11 p-1 bg-slate-100/90 border border-slate-200 dark:bg-slate-900/90 dark:border-slate-800 rounded-2xl shadow-inner select-none"
         >
-          <button
-            type="button"
-            onClick={() => handleTabChange('all')}
-            className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'all'
-                ? 'bg-red-600 text-white shadow-md'
-                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+          <span
+            aria-hidden="true"
+            className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-xl shadow-md transition-transform duration-300 ease-out ${
+              activeTab === 'Survivor'
+                ? 'translate-x-0 bg-emerald-600'
+                : 'translate-x-[calc(100%+8px)] bg-rose-600'
             }`}
-          >
-            {dict?.filters?.all || 'All'} ({characters.length})
-          </button>
+          />
           <button
             type="button"
             onClick={() => handleTabChange('Survivor')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            aria-pressed={activeTab === 'Survivor'}
+            className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full rounded-xl text-xs font-bold transition-colors cursor-pointer ${
               activeTab === 'Survivor'
-                ? 'bg-emerald-600 text-white shadow-md'
+                ? 'text-white'
                 : 'text-slate-600 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-400'
             }`}
           >
@@ -365,9 +333,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           <button
             type="button"
             onClick={() => handleTabChange('Killer')}
-            className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            aria-pressed={activeTab === 'Killer'}
+            className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full rounded-xl text-xs font-bold transition-colors cursor-pointer ${
               activeTab === 'Killer'
-                ? 'bg-rose-600 text-white shadow-md'
+                ? 'text-white'
                 : 'text-slate-600 hover:text-rose-700 dark:text-slate-400 dark:hover:text-rose-400'
             }`}
           >

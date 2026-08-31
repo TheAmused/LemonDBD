@@ -6,16 +6,14 @@ import {
   Search,
   LayoutGrid,
   List,
-  RotateCcw,
   Shield,
   Skull,
   Sparkles,
-  Layers,
-  CheckCircle2,
   X,
   ArrowUpAZ,
   ArrowDownZA,
 } from 'lucide-react';
+import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
 import {
   RoleCategory,
   ScopeFilter,
@@ -27,6 +25,25 @@ import {
   PerkDictionary,
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+
+/** Pure "is any filter non-default" check, pulled out of the component body
+ * so it's unit-testable without rendering anything. Drives whether the
+ * Reset button shows up at all. */
+export function computeHasActiveFilters(state: {
+  search: string;
+  scope: ScopeFilter;
+  ownershipFilter: OwnershipFilter;
+  sortBy: SortField;
+  order: SortOrder;
+}): boolean {
+  return (
+    state.search !== '' ||
+    state.scope !== 'all' ||
+    state.ownershipFilter !== 'all' ||
+    state.sortBy !== 'name' ||
+    state.order !== 'asc'
+  );
+}
 
 interface PerkFiltersProps {
   search: string;
@@ -46,6 +63,15 @@ interface PerkFiltersProps {
   dict?: PerkDictionary;
   onReset: () => void;
   locale?: string;
+  /** Live per-role counts across the whole vault (not just the current
+   * page) -- shown right on the Survivor/Killer switch itself. */
+  survivorCount?: number;
+  killerCount?: number;
+  /** Live counts for the currently selected role -- shown on the
+   * All/Owned ownership switch itself, same pattern as the role switch
+   * above it. */
+  allCount?: number;
+  ownedCount?: number;
 }
 
 export const PerkFilters: React.FC<PerkFiltersProps> = ({
@@ -66,6 +92,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   dict,
   onReset,
   locale,
+  survivorCount,
+  killerCount,
+  allCount,
+  ownedCount,
 }) => {
   const backendBase = getBackendBaseUrl();
 
@@ -107,296 +137,262 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     return () => clearTimeout(timer);
   }, [search, role, backendBase, locale]);
 
-  const hasActiveFilters =
-    search !== '' ||
-    scope !== 'all' ||
-    ownershipFilter !== 'all' ||
-    sortBy !== 'name' ||
-    order !== 'asc';
+  const roleOptions: readonly [ToggleSwitchOption<RoleCategory>, ToggleSwitchOption<RoleCategory>] = [
+    {
+      value: 'Survivor',
+      icon: <Shield className="h-3.5 w-3.5" />,
+      activeClassName: 'bg-gradient-to-r from-emerald-600 to-teal-700',
+      label: (
+        <span className="inline-flex items-center gap-1.5">
+          {dict?.filters?.survivor || 'Survivors'}
+          {typeof survivorCount === 'number' && (
+            <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
+              {survivorCount}
+            </span>
+          )}
+        </span>
+      ),
+    },
+    {
+      value: 'Killer',
+      icon: <Skull className="h-3.5 w-3.5" />,
+      activeClassName: 'bg-gradient-to-r from-rose-700 to-red-800',
+      label: (
+        <span className="inline-flex items-center gap-1.5">
+          {dict?.filters?.killer || 'Killers'}
+          {typeof killerCount === 'number' && (
+            <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
+              {killerCount}
+            </span>
+          )}
+        </span>
+      ),
+    },
+  ];
+
+  const ownershipOptions: readonly [ToggleSwitchOption<OwnershipFilter>, ToggleSwitchOption<OwnershipFilter>] = [
+    {
+      value: 'all',
+      activeClassName: 'bg-gradient-to-r from-slate-700 to-slate-800',
+      label: (
+        <span className="inline-flex items-center gap-1.5">
+          {dict?.filters?.allPerks || 'All'}
+          {typeof allCount === 'number' && (
+            <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
+              {allCount}
+            </span>
+          )}
+        </span>
+      ),
+    },
+    {
+      value: 'owned',
+      activeClassName: 'bg-gradient-to-r from-cyan-600 to-teal-700',
+      label: (
+        <span className="inline-flex items-center gap-1.5">
+          {dict?.filters?.ownedOnly || 'Owned'}
+          {typeof ownedCount === 'number' && (
+            <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
+              {ownedCount}
+            </span>
+          )}
+        </span>
+      ),
+    },
+  ];
+
+  const sortFieldOptions: readonly [ToggleSwitchOption<SortField>, ToggleSwitchOption<SortField>] = [
+    {
+      value: 'name',
+      label: dict?.filters?.sortByName || 'Name',
+      activeClassName: 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60',
+    },
+    {
+      value: 'character',
+      label: dict?.filters?.sortByCharacter || 'Character',
+      activeClassName: 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60',
+    },
+  ];
+
+  const sortOrderOptions: readonly [ToggleSwitchOption<SortOrder>, ToggleSwitchOption<SortOrder>] = [
+    {
+      value: 'asc',
+      icon: <ArrowUpAZ className="h-3.5 w-3.5" />,
+      label: dict?.filters?.orderAsc || 'A-Z',
+      activeClassName: 'bg-white text-cyan-600 dark:bg-slate-800 dark:text-cyan-400 border border-slate-200 dark:border-slate-700/60',
+    },
+    {
+      value: 'desc',
+      icon: <ArrowDownZA className="h-3.5 w-3.5" />,
+      label: dict?.filters?.orderDesc || 'Z-A',
+      activeClassName: 'bg-white text-cyan-600 dark:bg-slate-800 dark:text-cyan-400 border border-slate-200 dark:border-slate-700/60',
+    },
+  ];
 
   return (
     <section
       aria-label={dict?.filters?.filtersTitle || 'Perk Filters'}
-      className="relative z-30 mb-6 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-sm dark:shadow-xl dark:shadow-slate-950/40"
+      className="relative z-30 flex w-full items-center gap-3 rounded-3xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/60 dark:shadow-xl dark:shadow-slate-950/40 sm:p-4 backdrop-blur-xl"
     >
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <div className="flex flex-wrap items-center gap-2.5">
-          {/* Role Filter */}
-          <div
-            role="group"
-            aria-label={dict?.filters?.sortByRole || 'Filter by Role'}
-            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
-          >
-            <button
-              type="button"
-              onClick={() => setRole('Survivor')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 cursor-pointer ${
-                role === 'Survivor'
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md ring-1 ring-emerald-400/40'
-                  : 'text-slate-700 hover:text-emerald-700 hover:bg-emerald-500/10 dark:text-slate-400 dark:hover:text-emerald-400 dark:hover:bg-emerald-950/30'
-              }`}
-            >
-              <Shield className="h-3.5 w-3.5" />
-              <span>{dict?.filters?.survivor || 'Survivor'}</span>
-            </button>
+      {/* Every toggle, the General Only checkbox, and Reset all live in one
+          horizontally-scrollable cluster -- never wrapped onto a second
+          line, and never truncated: each switch is sized to its own
+          content (see ToggleSwitch), so a longer label in another locale
+          just makes that one switch wider instead of getting clipped. If
+          the cluster is ever wider than the available space it scrolls
+          sideways within itself, rather than wrapping the toolbar to a
+          second row or shrinking any label. */}
+      <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-0.5 sm:gap-2.5 [scrollbar-width:thin]">
+        <ToggleSwitch
+          ariaLabel={dict?.filters?.sortByRole || 'Filter by Role'}
+          value={role}
+          onChange={setRole}
+          options={roleOptions}
+        />
 
-            <button
-              type="button"
-              onClick={() => setRole('Killer')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-black rounded-xl transition-all duration-200 cursor-pointer ${
-                role === 'Killer'
-                  ? 'bg-gradient-to-r from-rose-700 to-red-800 text-white shadow-md ring-1 ring-rose-500/40'
-                  : 'text-slate-700 hover:text-rose-700 hover:bg-rose-500/10 dark:text-slate-400 dark:hover:text-rose-400 dark:hover:bg-rose-950/30'
-              }`}
-            >
-              <Skull className="h-3.5 w-3.5" />
-              <span>{dict?.filters?.killer || 'Killer'}</span>
-            </button>
-          </div>
+        <ToggleSwitch
+          ariaLabel={dict?.filters?.ownershipFilter || 'Filter by Ownership'}
+          value={ownershipFilter}
+          onChange={setOwnershipFilter}
+          options={ownershipOptions}
+        />
 
-          {/* Scope Filter */}
-          <div
-            role="group"
-            aria-label={dict?.filters?.allPerks || 'Filter by Scope'}
-            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
-          >
-            <button
-              type="button"
-              onClick={() => setScope('all')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${
-                scope === 'all'
-                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
-            >
-              <Layers className="h-3.5 w-3.5 text-cyan-500 dark:text-cyan-400" />
-              <span>{dict?.filters?.allPerks || 'All Perks'}</span>
-            </button>
+        {/* "General Only" used to be its own two-way toggle (All Perks /
+            General Only) sitting right next to the ownership toggle above,
+            which meant two separate switches both nominally about "how much
+            of the pool" -- confusing, and one extra control. It's just a
+            single on/off narrowing filter, so it's a checkbox now. */}
+        <label className="inline-flex shrink-0 cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-extrabold text-slate-700 shadow-inner dark:border-slate-800/80 dark:bg-slate-950/80 dark:text-slate-300">
+          <input
+            type="checkbox"
+            checked={scope === 'general'}
+            onChange={(e) => setScope(e.target.checked ? 'general' : 'all')}
+            className="h-3.5 w-3.5 shrink-0 rounded border-slate-400 accent-amber-500 dark:border-slate-600"
+          />
+          <Sparkles className="h-3.5 w-3.5 shrink-0 text-amber-500 dark:text-amber-400" />
+          <span>{dict?.filters?.generalOnly || 'General Only'}</span>
+        </label>
 
-            <button
-              type="button"
-              onClick={() => setScope('general')}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${
-                scope === 'general'
-                  ? 'bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-md ring-1 ring-amber-400/40'
-                  : 'text-slate-600 hover:text-amber-700 hover:bg-amber-500/10 dark:text-slate-400 dark:hover:text-amber-400 dark:hover:bg-amber-950/30'
-              }`}
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>{dict?.filters?.generalOnly || 'General Only'}</span>
-            </button>
-          </div>
+        <ToggleSwitch
+          ariaLabel={dict?.filters?.sortFields || 'Sort Fields'}
+          value={sortBy}
+          onChange={setSortBy}
+          options={sortFieldOptions}
+          size="sm"
+        />
 
-          {/* Ownership Filter */}
-          <div
-            role="group"
-            aria-label={dict?.filters?.ownershipFilter || 'Filter by Ownership'}
-            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
-          >
-            <button
-              type="button"
-              onClick={() => setOwnershipFilter('all')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${
-                ownershipFilter === 'all'
-                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
-            >
-              <Layers className="h-3.5 w-3.5 text-slate-400" />
-              <span>{dict?.filters?.everyPerk || 'Every Perk'}</span>
-            </button>
+        <ToggleSwitch
+          ariaLabel={dict?.filters?.sortOrderLabel || 'Sort Direction'}
+          value={order}
+          onChange={setOrder}
+          options={sortOrderOptions}
+          size="sm"
+        />
 
-            <button
-              type="button"
-              onClick={() => setOwnershipFilter('owned')}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold rounded-xl transition-all duration-200 cursor-pointer ${
-                ownershipFilter === 'owned'
-                  ? 'bg-gradient-to-r from-cyan-600 to-teal-700 text-white shadow-md ring-1 ring-cyan-400/40'
-                  : 'text-slate-600 hover:text-cyan-700 hover:bg-cyan-500/10 dark:text-slate-400 dark:hover:text-cyan-400 dark:hover:bg-cyan-950/30'
-              }`}
-            >
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>{dict?.filters?.ownedOnly || 'Owned Only'}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Search & View Mode Switcher */}
-        <div className="flex items-center gap-3">
-          <div ref={searchDropdownRef} className="relative z-40 flex-1 sm:w-80">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
-            <input
-              type="text"
-              value={search}
-              onFocus={() => setIsPerkSuggestionsOpen(true)}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setIsPerkSuggestionsOpen(true);
-              }}
-              placeholder={
-                dict?.filters?.searchPlaceholder || 'Type perk name or alias...'
-              }
-              aria-label={dict?.filters?.searchPlaceholder || 'Search perks'}
-              className="w-full rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 py-2.5 pl-10 pr-9 text-xs font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:border-cyan-500 focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all"
-            />
-            {search && (
-              <button
-                type="button"
-                onClick={() => {
-                  setSearch('');
-                  setIsPerkSuggestionsOpen(false);
-                }}
-                aria-label={dict?.filters?.clearSearch || 'Clear search text'}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            )}
-
-            {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
-              <div
-                role="listbox"
-                className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1.5 flex flex-col gap-1"
-              >
-                {perkSuggestions.map((item, idx) => (
-                  <button
-                    key={`${item.name}-${idx}`}
-                    type="button"
-                    role="option"
-                    aria-selected={false}
-                    onClick={() => {
-                      setSearch(item.name);
-                      setIsPerkSuggestionsOpen(false);
-                    }}
-                    className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition-colors text-left w-full"
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-xs font-black text-slate-900 dark:text-slate-100 truncate">
-                          {item.name}
-                        </span>
-                        {item.alternate_name && (
-                          <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold truncate">
-                            {dict?.filters?.aliasLabel || 'Alias:'} {item.alternate_name}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 shrink-0">
-                      {item.character || 'General'}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div
-            role="group"
-            aria-label={dict?.filters?.viewMode || 'View Mode Toggle'}
-            className="flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/90 p-1 shrink-0"
-          >
-            <button
-              type="button"
-              onClick={() => setViewMode('grid')}
-              aria-label={dict?.filters?.gridView || 'Grid View'}
-              className={`rounded-xl p-2 transition-all cursor-pointer ${
-                viewMode === 'grid'
-                  ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
-                  : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
-              }`}
-            >
-              <LayoutGrid className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('list')}
-              aria-label={dict?.filters?.listView || 'List View'}
-              className={`rounded-xl p-2 transition-all cursor-pointer ${
-                viewMode === 'list'
-                  ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
-                  : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
-              }`}
-            >
-              <List className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
       </div>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between pt-2 border-t border-slate-100 dark:border-slate-800/60">
-        <div className="flex flex-wrap items-center gap-3">
-          <div
-            role="group"
-            aria-label={dict?.filters?.sortFields || 'Sort Fields'}
-            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
-          >
+      {/* Search + view mode live outside the scrolling cluster above (not
+          scrolled away with it) so the search suggestions dropdown always
+          has room to open below it without being clipped. */}
+      <div className="flex shrink-0 items-center gap-2.5">
+        <div ref={searchDropdownRef} className="relative z-40 w-36 sm:w-64">
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+          <input
+            type="text"
+            value={search}
+            onFocus={() => setIsPerkSuggestionsOpen(true)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setIsPerkSuggestionsOpen(true);
+            }}
+            placeholder={
+              dict?.filters?.searchPlaceholder || 'Type perk name or alias...'
+            }
+            aria-label={dict?.filters?.searchPlaceholder || 'Search perks'}
+            className="w-full rounded-full border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 py-2.5 pl-10 pr-9 text-xs font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:border-cyan-500 focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all"
+          />
+          {search && (
             <button
               type="button"
-              onClick={() => setSortBy('name')}
-              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-                sortBy === 'name'
-                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
+              onClick={() => {
+                setSearch('');
+                setIsPerkSuggestionsOpen(false);
+              }}
+              aria-label={dict?.filters?.clearSearch || 'Clear search text'}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
             >
-              {dict?.filters?.sortByName || 'Name'}
+              <X className="h-3 w-3" />
             </button>
-            <button
-              type="button"
-              onClick={() => setSortBy('character')}
-              className={`px-3 py-1.5 text-xs font-extrabold rounded-xl transition-all cursor-pointer ${
-                sortBy === 'character'
-                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700/60'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
-            >
-              {dict?.filters?.sortByCharacter || 'Character'}
-            </button>
-          </div>
+          )}
 
-          <div
-            role="group"
-            aria-label={dict?.filters?.sortOrderLabel || 'Sort Direction'}
-            className="inline-flex items-center rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/80 p-1 shadow-inner"
-          >
-            <button
-              type="button"
-              onClick={() => setOrder('asc')}
-              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer ${
-                order === 'asc'
-                  ? 'bg-white text-cyan-600 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-cyan-400 dark:border-slate-700/60'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
+          {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
+            <div
+              role="listbox"
+              className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1.5 flex flex-col gap-1"
             >
-              <ArrowUpAZ className="h-3.5 w-3.5" />
-              <span>{dict?.filters?.orderAsc || 'A-Z'}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setOrder('desc')}
-              className={`flex items-center gap-1 px-3 py-1.5 text-xs font-black rounded-xl transition-all cursor-pointer ${
-                order === 'desc'
-                  ? 'bg-white text-cyan-600 shadow-sm border border-slate-200 dark:bg-slate-800 dark:text-cyan-400 dark:border-slate-700/60'
-                  : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
-            >
-              <ArrowDownZA className="h-3.5 w-3.5" />
-              <span>{dict?.filters?.orderDesc || 'Z-A'}</span>
-            </button>
-          </div>
+              {perkSuggestions.map((item, idx) => (
+                <button
+                  key={`${item.name}-${idx}`}
+                  type="button"
+                  role="option"
+                  aria-selected={false}
+                  onClick={() => {
+                    setSearch(item.name);
+                    setIsPerkSuggestionsOpen(false);
+                  }}
+                  className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition-colors text-left w-full"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-black text-slate-900 dark:text-slate-100 truncate">
+                        {item.name}
+                      </span>
+                      {item.alternate_name && (
+                        <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold truncate">
+                          {dict?.filters?.aliasLabel || 'Alias:'} {item.alternate_name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 shrink-0">
+                    {item.character || 'General'}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {hasActiveFilters && (
+        <div
+          role="group"
+          aria-label={dict?.filters?.viewMode || 'View Mode Toggle'}
+          className="flex shrink-0 items-center rounded-full border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/90 p-1"
+        >
           <button
             type="button"
-            onClick={onReset}
-            className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 transition-colors cursor-pointer w-full lg:w-auto justify-center"
+            onClick={() => setViewMode('grid')}
+            aria-label={dict?.filters?.gridView || 'Grid View'}
+            className={`rounded-full p-2 transition-all cursor-pointer ${
+              viewMode === 'grid'
+                ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
+                : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
+            }`}
           >
-            <RotateCcw className="h-3.5 w-3.5" />
-            <span>{dict?.filters?.clear || 'Reset Filters'}</span>
+            <LayoutGrid className="h-4 w-4" />
           </button>
-        )}
+          <button
+            type="button"
+            onClick={() => setViewMode('list')}
+            aria-label={dict?.filters?.listView || 'List View'}
+            className={`rounded-full p-2 transition-all cursor-pointer ${
+              viewMode === 'list'
+                ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
+                : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
+            }`}
+          >
+            <List className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </section>
   );

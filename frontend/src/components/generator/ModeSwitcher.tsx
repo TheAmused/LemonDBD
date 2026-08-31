@@ -24,7 +24,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict
           value: 'instant',
           label: dict?.generator?.modeInstant || 'Instant Roll',
           icon: <Zap className="h-3.5 w-3.5" />,
-          tooltip: { description: dict?.generator?.modeInstantTooltip || 'Draw all four perks at once -- no ceremony, just the result.' },
+          tooltip: { description: dict?.generator?.modeInstantTooltip || 'Draw all four perks at once, no ceremony, just the result.' },
         },
         {
           value: 'wheel',
@@ -36,7 +36,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict
           value: 'slot',
           label: dict?.generator?.modeSlot || 'Slot Machine',
           icon: <Rows3 className="h-3.5 w-3.5" />,
-          tooltip: { description: dict?.generator?.modeSlotTooltip || 'Pull the lever and lock in reels over up to 3 cycles. A reel or two may jam broken -- reroll the whole machine to clear it.' },
+          tooltip: { description: dict?.generator?.modeSlotTooltip || 'Pull the lever and lock in reels over up to 3 cycles. A reel or two may jam broken, reroll the whole machine to clear it.' },
         },
         {
           value: 'tarot',

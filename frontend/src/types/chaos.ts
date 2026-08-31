@@ -1,6 +1,4 @@
 // frontend/src/types/chaos.ts
-import { Perk } from '@/types/perks';
-
 export type ChaosMutatorType = 'curse' | 'buff';
 
 export interface ChaosMutator {
@@ -13,11 +11,4 @@ export interface ChaosMutator {
   borderColor: string;
   textColor: string;
   blockedPerkKeywords?: string[];
-}
-
-export interface WheelWinSlotPayload {
-  page: number;
-  slot: number;
-  perk: Perk;
-  mutator?: ChaosMutator;
 }

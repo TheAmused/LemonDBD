@@ -1,6 +1,6 @@
 // frontend/src/types/perks.ts
 export type RoleCategory = 'Survivor' | 'Killer';
-export type GeneratorMode = 'instant' | 'wheel';
+export type GeneratorMode = 'instant' | 'wheel' | 'slot' | 'tarot' | 'crate';
 export type ScopeFilter = 'all' | 'general';
 export type OwnershipFilter = 'all' | 'owned';
 export type SortField = 'name' | 'character';
@@ -65,6 +65,7 @@ export interface GeneratorStoredState {
   spinDurationSec: number;
   loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
+  blindMode: boolean;
 }
 
 export interface GeneratorConfigResponse {
@@ -147,6 +148,7 @@ export interface PerkDictionary {
     coordSlot?: string;
     coordClose?: string;
     emptyCoordinate?: string;
+    hiddenPerkLabel?: string;
   };
   empty?: {
     title?: string;

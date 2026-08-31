@@ -3,8 +3,8 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BookOpen, Trophy, Dices } from 'lucide-react';
-import { RulesModalShell } from '../RulesModalShell';
+import { BookOpen, Trophy, AlertTriangle, Snowflake, Clock } from 'lucide-react';
+import { RulesModalShell, RulesModalNotices, RulesModalListSection } from '../RulesModalShell';
 
 export interface PageStreakRulesModalProps {
   isOpen: boolean;
@@ -24,46 +24,81 @@ export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOp
   >
     <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
       <h3 className="text-sm font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-        <Dices className="w-4 h-4" />
-        {dict?.streaks?.concept || 'Concept'}
+        <Trophy className="w-4 h-4" aria-hidden="true" />
+        <span>{dict?.streaks?.pageStreakConceptLabel || 'Page Streak Concept'}</span>
       </h3>
       <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        {dict?.streaks?.pageStreakConceptDesc1 || "Pick a killer. Every perk that killer's teachables have unlocked for you gets split into pages. Build the strongest loadout you can from the current page, then report whether the match was a win or a loss."}
-      </p>
-      <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        {dict?.streaks?.pageStreakConceptDesc2 || 'A win advances you to the next page. A loss sends you back to page 1 and starts a new attempt, current page included, though your page history is kept.'}
-      </p>
-      <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        {dict?.streaks?.pageStreakLayoutFrozenNotice || "The page layout is locked in when you start the run. New perks you unlock mid-run won't reshuffle it until you reset."}
-      </p>
-      <p className="mt-2 leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-        {dict?.streaks?.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.'}
+        {dict?.streaks?.pageStreakConceptShort || 'Pick a killer, then build a loadout from your perks, split across pages.'}
       </p>
     </div>
 
     <div>
-      <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-        <Trophy className="w-4 h-4 text-orange-500" />
-        {dict?.streaks?.progress || 'Progress'}
+      <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+        {dict?.streaks?.howItWorks || 'How it works'}
       </h3>
-      <div className="grid grid-cols-1 gap-2.5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-2 shadow-sm">
-          <span className="px-2.5 py-1 rounded-lg text-xs font-bold border bg-orange-500/20 text-orange-300 border-orange-500/30 whitespace-nowrap w-fit">
-            {dict?.streaks?.current || 'Current'}
-          </span>
-          <p className="text-xs text-slate-600 dark:text-slate-300 sm:text-right sm:max-w-xs">
-            {dict?.streaks?.pageStreakCurrentDesc || 'Pages cleared so far on this attempt. Drops back to 0 on a loss.'}
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-2 shadow-sm">
-          <span className="px-2.5 py-1 rounded-lg text-xs font-bold border bg-yellow-500/20 text-yellow-300 border-yellow-500/30 whitespace-nowrap w-fit">
-            {dict?.streaks?.best || 'Best'}
-          </span>
-          <p className="text-xs text-slate-600 dark:text-slate-300 sm:text-right sm:max-w-xs">
-            {dict?.streaks?.pageStreakBestDesc || "The furthest page you've ever reached on this killer, across every attempt."}
-          </p>
-        </div>
-      </div>
+      <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed list-disc pl-4 marker:text-orange-500">
+        <li>{dict?.streaks?.pageStreakKillWinCondition || 'Win = 3 kills or more.'}</li>
+        <li>{dict?.streaks?.pageStreakWinCondition || 'Win a page to move to the next.'}</li>
+        <li>{dict?.streaks?.pageStreakLossCondition || 'Lose and start over from page 1.'}</li>
+      </ul>
     </div>
+
+    <RulesModalListSection
+      icon={AlertTriangle}
+      title={dict?.streaks?.exceptions || 'Exceptions'}
+      intro={dict?.streaks?.voidMatchNotice || 'These void the match. Replay it.'}
+      headerColorClassName="text-orange-600 dark:text-orange-400"
+      boxClassName="border-orange-500/20"
+      items={[
+        {
+          label: dict?.streaks?.excGameCancelledLabel || 'Game cancelled',
+          text: dict?.streaks?.excGameCancelledText || 'Someone leaves the lobby before it finishes loading and the match never starts.',
+        },
+        {
+          label: dict?.streaks?.excHackersLabel || 'Hackers',
+          text: dict?.streaks?.excHackersText || 'Obvious cheaters are in the match.',
+        },
+        {
+          label: dict?.streaks?.excCrashLabel || 'Crash or server failure',
+          text: dict?.streaks?.excCrashText || 'The game or server crashes mid-match.',
+        },
+      ]}
+    />
+
+    <RulesModalListSection
+      icon={AlertTriangle}
+      title={dict?.streaks?.clarifications || 'Clarifications'}
+      headerColorClassName="text-orange-600 dark:text-orange-400"
+      boxClassName="border-slate-200 dark:border-slate-800/80"
+      items={[
+        {
+          label: dict?.streaks?.excSurvDcLabel || 'Survivor disconnects',
+          text: dict?.streaks?.excSurvDcText || 'Keep playing. The bot match still counts.',
+        },
+        {
+          label: dict?.streaks?.excNoDodgingLabel || 'No dodging',
+          text: dict?.streaks?.excNoDodgingText || 'Play whatever lobby you get.',
+        },
+        {
+          label: dict?.streaks?.excAddonsAllowedLabel || 'Add-ons and offerings',
+          text: dict?.streaks?.excAddonsAllowedText || 'All available.',
+        },
+      ]}
+    />
+
+    <RulesModalNotices
+      accentClassName="border-orange-500/20 bg-orange-500/5 text-orange-800 dark:text-orange-300"
+      notices={[
+        {
+          icon: Snowflake,
+          text: dict?.streaks?.runFreezeNotice ||
+            'Your run freezes. New unlocks join after your next reset, loss to zero, or completion.',
+        },
+        {
+          icon: Clock,
+          text: dict?.streaks?.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.',
+        },
+      ]}
+    />
   </RulesModalShell>
 );

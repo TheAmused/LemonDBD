@@ -33,7 +33,7 @@ COPY --from=builder /root/.local /home/appuser/.local
 COPY --chown=appuser:appuser . .
 
 RUN mkdir -p /app/data /app/app/static/icons && chown -R appuser:appuser /app
-RUN chmod +x /app/entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 USER appuser
 

@@ -18,6 +18,7 @@ from app.models import (
     MapTile,
     PageStreakRun,
     Perk,
+    Realm,
     UserCharacterOwnership,
     UserPerkOwnership,
 )
@@ -185,6 +186,7 @@ def purge_database_tables():
             db.session.execute(delete(MapObjective))
             db.session.execute(delete(MapTile))
             db.session.execute(delete(MapRealm))
+            db.session.execute(delete(Realm))
             purged.append("maps")
 
         if "ownerships" in targets:

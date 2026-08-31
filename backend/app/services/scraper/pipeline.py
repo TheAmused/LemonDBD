@@ -9,7 +9,7 @@ from sqlalchemy import select
 from app.core.extensions import db
 from app.models import Character
 from app.scrapers.maps import HensMapScraperDriver
-from app.scrapers.types import MapData
+from app.scrapers.types import MapData, RealmImageData
 from app.scrapers.wikigg import WikiGGScraperDriver
 from app.services.scraper.assets import download_all_assets
 from app.services.scraper.db_sync import sync_all_to_database
@@ -73,6 +73,13 @@ def execute_sync_pipeline(
         except Exception as map_err:
             logger.warning(f"Failed scraping Hens333 maps: {map_err}")
 
+        try:
+            logger.info("Scraping realm images from wiki.gg...")
+            realms = wikigg_driver.scrape_realm_images()
+        except Exception as realm_err:
+            logger.warning(f"Failed scraping realm images: {realm_err}")
+            realms = []
+
         ScraperStateManager.update_status(current_step="seeding_database")
         db_sync_metrics = sync_all_to_database(
             characters=characters,
@@ -81,6 +88,7 @@ def execute_sync_pipeline(
             addons=addons,
             maps=maps,
             offerings=offerings,
+            realms=realms,
         )
 
         if download_assets:
@@ -91,6 +99,7 @@ def execute_sync_pipeline(
                 + len(addons)
                 + len(maps)
                 + len(offerings)
+                + len(realms)
             )
             ScraperStateManager.update_status(
                 current_step="downloading_assets",
@@ -115,6 +124,7 @@ def execute_sync_pipeline(
                         addons=addons,
                         maps=maps,
                         offerings=offerings,
+                        realms=realms,
                         impersonate_browser=impersonate_browser,
                         max_concurrent_downloads=max_concurrent_downloads,
                         request_timeout=request_timeout,

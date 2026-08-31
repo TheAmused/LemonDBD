@@ -14,6 +14,7 @@ import {
   ShieldAlert,
   Sparkles,
 } from 'lucide-react';
+import { toTitleCase } from '@/utils/textCase';
 
 interface PerkOptionState {
   in_chase: boolean;
@@ -400,7 +401,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
                   >
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-xs text-slate-900 dark:text-slate-100">{addon.name}</span>
+                        <span className="font-bold text-xs text-slate-900 dark:text-slate-100">{toTitleCase(addon.name)}</span>
                         <span
                           className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded border uppercase tracking-wider ${getRarityBadge(
                             addon.rarity

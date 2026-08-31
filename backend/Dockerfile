@@ -33,9 +33,13 @@ COPY --from=builder /root/.local /home/appuser/.local
 COPY --chown=appuser:appuser . .
 
 RUN mkdir -p /app/data /app/app/static/icons && chown -R appuser:appuser /app
+RUN chmod +x /app/entrypoint.sh
 
 USER appuser
 
 EXPOSE 5000
 
+# Applies pending Alembic migrations on every container start, then execs
+# the real command below (or whatever `docker compose run` overrides it with).
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["gunicorn", "-c", "gunicorn.conf.py", "run:app"]

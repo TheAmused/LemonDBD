@@ -271,8 +271,14 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     }
   };
 
-  const handlePullLever = () => {
-    if (phase !== 'idle' || activePlayablePerks.length === 0) return;
+  /** The actual pull -- fresh reels, fresh spin -- with no dependency on
+   * the current phase. Both the first "Pull the Lever" press (via
+   * handlePullLever, still phase-gated to 'idle') and the completed-loadout
+   * screen's "Pull the Lever" button (via handleReset, which used to just
+   * drop back to 'idle' and make the player press the lever a second time)
+   * funnel through this. */
+  const beginPull = () => {
+    if (activePlayablePerks.length === 0) return;
 
     const reelCount = Math.max(1, Math.min(REEL_COUNT, activePlayablePerks.length));
     // A jammed reel or two only makes sense once the machine is at full
@@ -304,6 +310,11 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     const finalMap = new Map<number, Perk | null>(nonBrokenIds.map((id, i) => [id, picks[i] ?? null]));
 
     spinReels(initialReels, finalMap, () => setPhase('awaiting'));
+  };
+
+  const handlePullLever = () => {
+    if (phase !== 'idle' || activePlayablePerks.length === 0) return;
+    beginPull();
   };
 
   const toggleStage = (id: number) => {
@@ -363,12 +374,13 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     spinReels(unlockedReels, finalMap, () => setPhase('awaiting'));
   };
 
+  /** "Pull the Lever" on the completed-loadout screen -- goes straight into
+   * a brand-new pull instead of dropping back to the idle screen and
+   * forcing a second click. */
   const handleReset = () => {
-    setPhase('idle');
-    setReels([]);
     setStaged(new Set());
-    setCycleIndex(0);
     setSelected([]);
+    beginPull();
   };
 
   const range = phase === 'awaiting' ? getSelectionRange(selected.length, cycleIndex) : { min: 0, max: 0 };
@@ -398,7 +410,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               'Pull the lever, then lock in perks over up to 3 cycles until your loadout is full.'}
             {' '}
             {dict?.generator?.slotCursedFlavor ||
-              "Eight reels spin at once -- but the machine's cursed, so a reel or two may jam broken."}
+              "Eight reels spin at once, but the machine's cursed, so a reel or two may jam broken."}
           </p>
           <DbdButton
             role={role}
@@ -506,8 +518,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     })}
                   </div>
 
-                  {/* Payline marking the actual result row at the window's center. */}
-                  <div className="pointer-events-none absolute inset-x-0 top-1/2 z-10 h-px -translate-y-1/2 bg-amber-500/40" />
                   <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-black/70 via-transparent to-black/70" />
 
                   {reel.locked && (
@@ -525,7 +535,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                       title={dict?.generator?.slotJammedTitle || 'Jammed'}
                       description={
                         dict?.generator?.slotJammedDesc ||
-                        'This reel is broken for the whole draw -- it can never be picked. Pull a brand-new draw to clear it.'
+                        'This reel is broken for the whole draw, so it can never be picked. Pull a brand-new draw to clear it.'
                       }
                     >
                       {reelWindow}

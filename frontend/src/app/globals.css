@@ -47,6 +47,12 @@
   background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.06) 0%, transparent 80%);
 }
 
+[data-placeholder]:empty:before {
+  content: attr(data-placeholder);
+  color: rgb(100 116 139);
+  pointer-events: none;
+}
+
 @keyframes heartbeatPulse {
   0%,
   100% {

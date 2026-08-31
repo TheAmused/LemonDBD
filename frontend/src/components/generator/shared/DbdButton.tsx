@@ -3,14 +3,19 @@
 //
 // Shared primary-action button for the Perk Randomizer's draw/confirm CTAs --
 // Pull the Lever, Spin for Perk Slot, Roll, Shuffle & Draw, Crack Open the
-// Crate, Confirm Selection, Draw Again. Styled to actually sit inside this
-// app's existing HUD language instead of floating on top of it: a dark
-// bevelled panel that matches the page's near-black background, an amber
-// bezel (the same accent already used for the active mode tab, the active
-// PerkSlot ring, and a locked slot-machine reel), a thin role-tinted
-// underline for Survivor/Killer identity, and a restrained hover sweep +
-// idle glow instead of a loud gradient block.
-
+// Crate, Confirm Selection, Draw Again.
+//
+// Previously this was a bespoke dark bevelled panel with a diamond
+// clip-path notch and an amber *border* only -- a completely different
+// visual language from every other primary button on the rest of the site
+// (AuthModal's submit button, UserProfileForm's save button, BuildVault's
+// and CustomPerkStudio's submit buttons, etc.), which all share the same
+// convention: a solid amber-to-red gradient fill, rounded-xl corners, white
+// uppercase text, and an amber drop shadow. That mismatch is exactly why
+// this button stood out. It's now built on that same shared convention so
+// it reads as part of the app instead of a different app pasted into it --
+// the role accent (Survivor/Killer) survives only as a thin focus/idle ring
+// tint, not as a whole separate shape or color scheme.
 import React from 'react';
 import { cn } from '@/utils/cn';
 
@@ -28,33 +33,29 @@ export interface DbdButtonProps
   pulse?: boolean;
 }
 
+// Padding/type scale steps down on small screens instead of using one fixed
+// desktop-sized value everywhere -- a fixed px-10/py-5 "lg" button alone
+// could run wider than a narrow phone viewport once its icon + label text
+// were accounted for.
 const SIZE_STYLES: Record<DbdButtonSize, string> = {
-  lg: 'gap-3 px-10 py-5 text-base sm:text-lg',
-  md: 'gap-2.5 px-8 py-4 text-sm',
-  sm: 'gap-2 px-6 py-3 text-xs',
-};
-
-const CONTENT_GAP: Record<DbdButtonSize, string> = {
-  lg: 'gap-3',
-  md: 'gap-2.5',
-  sm: 'gap-2',
+  lg: 'gap-2 px-6 py-3.5 text-sm sm:gap-3 sm:px-10 sm:py-4 sm:text-base',
+  md: 'gap-2 px-5 py-3 text-xs sm:gap-2.5 sm:px-8 sm:py-3.5 sm:text-sm',
+  sm: 'gap-1.5 px-4 py-2.5 text-[11px] sm:gap-2 sm:px-6 sm:py-3 sm:text-xs',
 };
 
 const ICON_SIZE: Record<DbdButtonSize, string> = {
-  lg: 'h-6 w-6',
-  md: 'h-5 w-5',
+  lg: 'h-5 w-5 sm:h-6 sm:w-6',
+  md: 'h-4 w-4 sm:h-5 sm:w-5',
   sm: 'h-4 w-4',
 };
 
-const ROLE_BAR: Record<DbdButtonRole, string> = {
-  Survivor: 'from-emerald-500/0 via-emerald-400 to-emerald-500/0',
-  Killer: 'from-rose-500/0 via-rose-500 to-rose-500/0',
+// Role identity now lives only in the focus ring + idle shadow tint --
+// Survivor leans the shared amber-red gradient slightly warmer/greener at
+// the ring, Killer slightly redder -- instead of a differently-shaped panel.
+const ROLE_RING: Record<DbdButtonRole, string> = {
+  Survivor: 'focus-visible:ring-emerald-400',
+  Killer: 'focus-visible:ring-rose-400',
 };
-
-// Angular "trial panel" notch on the top-left and bottom-right corners --
-// echoes the rotated-diamond perk icons already used throughout this app,
-// instead of a generic rounded-rect button.
-const NOTCH = '[clip-path:polygon(14px_0,100%_0,100%_calc(100%-14px),calc(100%-14px)_100%,0_100%,0_14px)]';
 
 export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(function DbdButton(
   { role, size = 'lg', icon, children, onClick, disabled, type = 'button', className, pulse = true, ...rest },
@@ -70,45 +71,21 @@ export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(fun
       disabled={disabled}
       {...rest}
       className={cn(
-        'group/dbdbtn relative isolate flex items-center justify-center font-black uppercase tracking-wider transition-transform duration-200',
+        'inline-flex items-center justify-center rounded-xl font-black uppercase tracking-wider text-white transition-all duration-200 focus:outline-none focus-visible:ring-2',
         SIZE_STYLES[size],
-        active ? cn('cursor-pointer active:scale-[0.97]', pulse && 'dbd-btn-pulse') : 'cursor-not-allowed',
+        ROLE_RING[role],
+        active
+          ? cn(
+              'cursor-pointer bg-gradient-to-r from-amber-600 via-amber-500 to-red-600 shadow-lg shadow-amber-900/30 hover:from-amber-500 hover:via-amber-400 hover:to-red-500 active:scale-[0.97]',
+              pulse && 'dbd-btn-pulse'
+            )
+          : 'cursor-not-allowed bg-slate-800 text-slate-500 opacity-60',
         className
       )}
     >
-      {/* Bordered + clipped panel: border + fill share one box so the amber
-          bezel follows the notch cut cleanly instead of needing a second
-          inset layer. */}
-      <span
-        className={cn(
-          'absolute inset-0 -z-10 overflow-hidden border-[1.5px]',
-          NOTCH,
-          active
-            ? 'border-amber-500/50 bg-gradient-to-b from-[#181d28] to-[#0a0c11]'
-            : 'border-slate-700/60 bg-gradient-to-b from-slate-900 to-slate-950'
-        )}
-      >
-        <span className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:repeating-linear-gradient(45deg,#fff_0,#fff_1px,transparent_1px,transparent_9px)]" />
-        <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/[0.06] via-transparent to-black/40" />
-        <span className={cn('pointer-events-none absolute inset-x-3 top-0 h-px', active ? 'bg-amber-200/25' : 'bg-white/5')} />
-        {active && (
-          <span className={cn('pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r', ROLE_BAR[role])} />
-        )}
-        {active && (
-          <span
-            aria-hidden="true"
-            className={cn(
-              'pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent via-amber-200/25 to-transparent opacity-0',
-              'transition-[transform,opacity] duration-700 ease-out -translate-x-[160%] -skew-x-[20deg]',
-              'group-hover/dbdbtn:translate-x-[420%] group-hover/dbdbtn:opacity-100'
-            )}
-          />
-        )}
-      </span>
-
-      <span className={cn('relative z-10 flex items-center', CONTENT_GAP[size])}>
-        {icon && <span className={cn('shrink-0', ICON_SIZE[size], active ? 'text-amber-400' : 'text-slate-600')}>{icon}</span>}
-        <span className={active ? 'text-white' : 'text-slate-500'}>{children}</span>
+      <span className={cn('inline-flex items-center', size === 'sm' ? 'gap-1.5' : size === 'md' ? 'gap-2' : 'gap-2 sm:gap-2.5')}>
+        {icon && <span className={cn('shrink-0', ICON_SIZE[size])}>{icon}</span>}
+        <span>{children}</span>
       </span>
     </button>
   );

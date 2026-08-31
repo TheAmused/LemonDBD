@@ -75,7 +75,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     <div className="flex flex-col items-center justify-center gap-6 py-10">
       <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
         {dict?.generator?.instantRollPrompt ||
-          'Rolls all four perks at once, instantly -- no wheel, no waiting. Page and slot are decided the moment you click.'}
+          'Rolls all four perks at once, instantly. Page and slot are decided the moment you click.'}
       </p>
 
       <DbdButton

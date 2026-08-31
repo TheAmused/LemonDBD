@@ -127,7 +127,7 @@ def extract_cell_markdown_text(cell_tag: Tag | None) -> str:
 def sanitize_filename(name: str) -> str:
     clean_str = name.lower().strip()
     clean_str = re.sub(r"[\s\-/]+", "_", clean_str)
-    clean_str = re.sub(r'[\\/*?:"<>|®™\']', "", clean_str)
+    clean_str = re.sub(r'[\\/*?:"<>|®™\'%#.,!+&]', "", clean_str)
     clean_str = re.sub(r"_+", "_", clean_str)
     return clean_str.strip("_")
 

@@ -112,6 +112,11 @@ test('textFormatter: token regex matches multilingual DBD keywords', () => {
 
   const perkRegex = createPerkTokenRegex('Sprint Burst');
   assert.ok(perkRegex.test('When using Sprint Burst, break into a sprint.'));
+
+  // Multilingual inflections (Polish: generatorów, testów umiejętności)
+  const matches = 'Po naprawieniu generatorów wykonaj testy umiejętności.'.match(regex);
+  assert.ok(matches && matches.includes('generatorów'), 'Should match generatorów as a full token');
+  assert.ok(matches && matches.includes('testy umiejętności'), 'Should match testy umiejętności');
 });
 
 test('textFormatter: renderFormattedDbdText handles plain text, quotes, and bullet items', () => {

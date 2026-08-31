@@ -1,4 +1,4 @@
-﻿// frontend/src/hooks/useMapExplorerData.ts
+// frontend/src/hooks/useMapExplorerData.ts
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
@@ -69,6 +69,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [openMapId, setOpenMapId] = useState<string | null>(null);
+  const lastHandledTargetRef = useRef<string | null>(null);
 
   const onAvailableMapsLoadedRef = useRef(onAvailableMapsLoaded);
   useEffect(() => {
@@ -128,9 +129,16 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
       typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.mapName : rawTarget;
     if (!targetMapName || !targetMapName.trim() || maps.length === 0) return;
 
+    const targetKey =
+      typeof rawTarget === 'object' && rawTarget !== null
+        ? `${rawTarget.mapName}:${rawTarget.timestamp}`
+        : rawTarget;
+    if (lastHandledTargetRef.current === targetKey) return;
+
     const match = findMapByName(maps, targetMapName);
     if (match) {
       setOpenMapId(match.id);
+      lastHandledTargetRef.current = targetKey;
     }
   }, [initialMapName, selectedMap, maps]);
 

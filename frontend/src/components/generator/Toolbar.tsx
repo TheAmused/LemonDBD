@@ -48,8 +48,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           title={dict?.generator?.noRepeatTooltipTitle || 'No-Repeat Perks'}
           description={
             noRepeatPerks
-              ? dict?.generator?.noRepeatTooltipDescOn || 'On -- perks you already drew stay out of the pool until you reset them.'
-              : dict?.generator?.noRepeatTooltipDescOff || 'Off -- every draw pulls from the full pool, repeats and all.'
+              ? dict?.generator?.noRepeatTooltipDescOn || 'On: perks you already drew stay out of the pool until you reset them.'
+              : dict?.generator?.noRepeatTooltipDescOff || 'Off: every draw pulls from the full pool, repeats and all.'
           }
         >
           <IconToggleButton
@@ -96,8 +96,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           title={dict?.generator?.soundTooltipTitle || 'Sound Effects'}
           description={
             audioEnabled
-              ? dict?.generator?.soundTooltipDescOn || 'On -- reel ticks, thuds, and fanfare will play.'
-              : dict?.generator?.soundTooltipDescOff || 'Muted -- every effect is silenced.'
+              ? dict?.generator?.soundTooltipDescOn || 'On: reel ticks, thuds, and fanfare will play.'
+              : dict?.generator?.soundTooltipDescOff || 'Muted: every effect is silenced.'
           }
         >
           <IconToggleButton

@@ -653,10 +653,10 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-4">
       <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
         {dict?.generator?.spinOrRollPrompt ||
-          'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it -- one slot at a time until all four are filled.'}
+          'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it, one slot at a time until all four are filled.'}
       </p>
 
-      <div className="flex w-full flex-1 min-h-0 flex-col items-center justify-center gap-6 lg:flex-row lg:items-center lg:justify-center lg:gap-10 xl:gap-16">
+      <div className="flex w-full flex-1 min-h-0 flex-col items-center justify-center gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-center lg:gap-10 xl:gap-16">
       <div className="order-2 grid grid-cols-2 gap-3 lg:order-1 lg:grid-cols-1 lg:gap-4">
         {renderFlankSlot(0)}
         {renderFlankSlot(1)}
@@ -672,7 +672,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
             className="pointer-events-none absolute inset-0 z-20 h-full w-full"
           />
           <div
-            className={`w-full max-w-[360px] sm:max-w-[440px] md:max-w-[520px] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px] aspect-square transition-all duration-500 ease-out transform ${
+            className={`w-full max-w-[46vw] min-w-[180px] max-h-[38dvh] sm:max-w-[300px] sm:max-h-[46dvh] md:max-w-[380px] lg:max-w-[440px] lg:max-h-none xl:max-w-[500px] 2xl:max-w-[580px] aspect-square transition-all duration-500 ease-out transform ${
               isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
             }`}
           >
@@ -694,7 +694,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           size="md"
           onClick={handleStartSpin}
           disabled={isSpinning || sortedPerks.length === 0}
-          className="mt-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          className="mt-3 sm:mt-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
           icon={<Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />}
         >
           {spinButtonText}

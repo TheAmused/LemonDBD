@@ -100,8 +100,14 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     };
   }, []);
 
-  const handleOpen = () => {
-    if (phase !== 'closed' || activePlayablePerks.length === 0) return;
+  /** The actual open flow -- shake, then throw a fresh scatter pool -- with
+   * no dependency on the current phase. Both the first "Tap the Trial
+   * Offering" press (via handleOpen, still phase-gated to 'closed') and the
+   * "Crack Open Another" button on the completed-loadout screen (via
+   * handleReset, which used to just drop back to 'closed' and make the
+   * player press Open a second time) funnel through this. */
+  const beginOpen = () => {
+    if (activePlayablePerks.length === 0) return;
 
     setPhase('shaking');
 
@@ -129,6 +135,11 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       setPhase('scattering');
     }, 700);
     timeoutsRef.current.push(shakeTimeoutId);
+  };
+
+  const handleOpen = () => {
+    if (phase !== 'closed' || activePlayablePerks.length === 0) return;
+    beginOpen();
   };
 
   const handlePick = (item: ScatterItem) => {
@@ -175,16 +186,19 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     }
   };
 
+  /** "Crack Open Another" on the completed-loadout screen -- goes straight
+   * into a brand-new open (shake -> scatter) instead of dropping back to the
+   * closed 'Tap the Trial Offering' screen and forcing a second click. */
   const handleReset = () => {
-    setPhase('closed');
     setScatterPool([]);
     setLockedItems([]);
     setSelected([]);
+    beginOpen();
   };
 
   const scatterPrompt = (
     dict?.generator?.scatterPrompt ||
-    'Pick one -- choosing it costs the Entity 1-2 of the others. {count}/4 locked in.'
+    'Pick one. Choosing it costs the Entity 1-2 of the others. {count}/4 locked in.'
   ).replace('{count}', String(selected.length));
 
   return (
@@ -234,7 +248,12 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             {scatterPrompt}
           </p>
 
-          <div className="relative h-full w-full flex-1 min-h-0">
+          {/* Explicit min-height floor (not just flex-1/min-h-0) -- relying
+              purely on the flex chain to hand this box a real height left it
+              able to collapse to near-zero in some viewport/flex-basis
+              combinations, which read as "nothing happened" after opening
+              the crate since the scattered perks had no box to lay out in. */}
+          <div className="relative h-full min-h-[260px] w-full flex-1 sm:min-h-[320px]">
             {lockedItems.map((item) => (
               <motion.div
                 key={`locked-${item.id}`}

@@ -60,7 +60,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale, dict
           {dict?.streaks?.loadingRoster || 'Loading roster…'}
         </p>
       ) : (
-        <KillerRosterGrid locale={locale} roster={roster} />
+        <KillerRosterGrid locale={locale} roster={roster} dict={dict} />
       )}
     </div>
   );

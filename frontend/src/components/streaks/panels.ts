@@ -15,7 +15,6 @@ import type { PanelColor } from './panelColors';
 export interface StreakPanelDef {
   id: string;
   title: string;
-  description: string;
   icon: LucideIcon;
   /** Tailwind text color class for the icon and title accent. */
   accent: string;
@@ -37,9 +36,6 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'gauntlet-streak',
       title: t?.gauntletStreakTitle || 'Gauntlet streak',
-      description:
-        t?.gauntletIntroKiller ||
-        'Face a random owned killer with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.',
       icon: Swords,
       accent: 'text-amber-400',
       accentBorder: 'border-amber-500/20',
@@ -49,9 +45,6 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'page-streak',
       title: t?.pageStreakPanelTitle || 'Page streak',
-      description:
-        t?.pageStreakPanelDesc ||
-        'Win a round using perks from page 1, then move to page 2, and keep going through all 12 perk pages.',
       icon: BookOpen,
       accent: 'text-orange-400',
       accentBorder: 'border-orange-500/20',
@@ -61,9 +54,6 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'history-streak',
       title: t?.historyStreakPanelTitle || 'History streak',
-      description:
-        t?.historyStreakPanelDesc ||
-        'A run built around the killer roster in release order.',
       icon: History,
       accent: 'text-slate-400',
       accentBorder: 'border-slate-700/60',
@@ -73,9 +63,6 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'chaos-streak',
       title: t?.chaosStreakPanelTitle || 'Chaos streak',
-      description:
-        t?.chaosStreakPanelDesc ||
-        'Every round randomises 4 perks and 2 addon rarities. You pick which killer plays them.',
       icon: Shuffle,
       accent: 'text-violet-400',
       accentBorder: 'border-violet-500/20',
@@ -85,7 +72,6 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'nice-guy-streak',
       title: t?.niceGuyStreakTitle || 'Nice Guy streak',
-      description: t?.niceGuyStreakDesc || 'A new challenge mode. Details soon.',
       icon: Smile,
       accent: 'text-emerald-400',
       accentBorder: 'border-emerald-500/20',
@@ -96,7 +82,6 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'blood-money-streak',
       title: t?.bloodMoneyStreakTitle || 'Blood Money streak',
-      description: t?.bloodMoneyStreakDesc || 'A new challenge mode. Details soon.',
       icon: Coins,
       accent: 'text-rose-400',
       accentBorder: 'border-rose-500/20',
@@ -116,9 +101,6 @@ export function getSurvivorStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'gauntlet-streak',
       title: t?.gauntletStreakTitle || 'Gauntlet streak',
-      description:
-        t?.gauntletIntroSurvivor ||
-        'Face a random owned survivor with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.',
       icon: Swords,
       accent: 'text-amber-400',
       accentBorder: 'border-amber-500/20',
@@ -128,9 +110,6 @@ export function getSurvivorStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'copycat-streak',
       title: t?.copycatStreakTitle || 'Copycat streak',
-      description:
-        t?.copycatSurvivorDesc ||
-        'Shortened, survivor only version of Copycat streak. Details soon.',
       icon: Cat,
       accent: 'text-sky-400',
       accentBorder: 'border-sky-500/20',
@@ -150,9 +129,6 @@ export function getChallengeStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'copycat-streak',
       title: t?.copycatStreakTitle || 'Copycat streak',
-      description:
-        t?.copycatChallengeDesc ||
-        'Full version of Copycat streak, mixing killer and survivor picks together. Details soon.',
       icon: Cat,
       accent: 'text-cyan-400',
       accentBorder: 'border-cyan-500/20',

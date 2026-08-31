@@ -5,26 +5,18 @@ import type { Dictionary } from '@/locales/types';
 import React, { useState } from 'react';
 import { Check, Skull } from 'lucide-react';
 import { avatarUrlForCharacter } from '@/utils/staticUrl';
-
-export interface KillerPickerGridProps {
-  killers: string[];
-  completedKillers: string[];
-  selectedKillerId: string | null;
-  onSelect: (name: string) => void;
-  disabled?: boolean;
-  loading?: boolean;
-  center?: boolean;
-}
+import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 export const avatarUrlFor = (name: string) => avatarUrlForCharacter(name, 'killers');
 
 const KillerTile: React.FC<{
   name: string;
+  displayName: string;
   isCompleted: boolean;
   isSelected: boolean;
   disabled?: boolean;
   onSelect: (name: string) => void;
-}> = ({ name, isCompleted, isSelected, disabled, onSelect }) => {
+}> = ({ name, displayName, isCompleted, isSelected, disabled, onSelect }) => {
   const [failed, setFailed] = useState(false);
   const src = avatarUrlFor(name);
 
@@ -39,7 +31,7 @@ const KillerTile: React.FC<{
       type="button"
       onClick={() => onSelect(name)}
       disabled={disabled || isCompleted}
-      title={`${name}${isCompleted ? ' (Cleared)' : ''}`}
+      title={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
       className={`relative flex flex-col items-center gap-1.5 rounded-lg border p-1.5 transition-all cursor-pointer disabled:cursor-not-allowed ${
         isCompleted ? '' : 'disabled:opacity-40'
       } ${cardBorder}`}
@@ -53,7 +45,7 @@ const KillerTile: React.FC<{
         {!failed ? (
           <img
             src={src}
-            alt={name}
+            alt={displayName}
             className={`w-full h-full object-cover ${isCompleted ? 'brightness-105' : ''}`}
             onError={() => setFailed(true)}
           />
@@ -62,7 +54,7 @@ const KillerTile: React.FC<{
         )}
       </div>
       <span className="text-[11px] font-medium text-center text-slate-700 dark:text-slate-200 truncate w-full">
-        {name}
+        {displayName}
       </span>
     </button>
   );
@@ -89,6 +81,8 @@ export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
   center = false,
   dict,
 }) => {
+  const displayName = useCharacterDisplayName();
+
   if (loading) {
     return (
       <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -101,6 +95,7 @@ export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
     <KillerTile
       key={name}
       name={name}
+      displayName={displayName(name)}
       isCompleted={completedKillers.includes(name)}
       isSelected={selectedKillerId === name}
       disabled={disabled}

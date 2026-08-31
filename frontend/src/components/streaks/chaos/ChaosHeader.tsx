@@ -41,6 +41,11 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
   dict,
 }) => {
   const DifficultyIcon = DIFFICULTY_ICON[difficulty] ?? Skull;
+  const difficultyLabel = {
+    easy: dict?.streaks?.chaosEasyLabel || 'Easy',
+    medium: dict?.streaks?.chaosMediumLabel || 'Medium',
+    hell: dict?.streaks?.chaosHellLabel || 'Hell',
+  }[difficulty];
 
   return (
     <div className="w-full bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-sm dark:shadow-xl mb-6">
@@ -53,11 +58,11 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           />
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2 justify-center sm:justify-start">
             <DifficultyIcon className="w-6 h-6 text-violet-500" />
-            <span className="capitalize">{difficulty}</span> {dict?.streaks?.chaosStreak || 'Chaos Streak'}
+            <span className="capitalize">{difficultyLabel}</span> {dict?.streaks?.chaosStreak || 'Chaos Streak'}
           </h1>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
-          <FreezeBadge frozen={poolFrozen} />
+          <FreezeBadge frozen={poolFrozen} dict={dict} />
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-violet-500/30 text-violet-600 dark:text-violet-400 shadow-sm">
             <Flame className="w-5 h-5 text-violet-500 fill-violet-500/20 animate-pulse" />
             <div className="flex flex-col">

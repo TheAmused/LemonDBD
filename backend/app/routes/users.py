@@ -291,8 +291,13 @@ def get_user_characters(user_id: int):
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized access to character ownership.", "status": 403}), 403
 
+    # Ownership rows double as the identifier gauntlet/chaos runs match against,
+    # so translation here is opt-in via an explicit `lang` param only -- never
+    # inferred from Referer/Accept-Language like the public catalog endpoints,
+    # or a same-origin request would silently translate `name` out from under
+    # any run-state comparison keyed on the canonical English name.
     role = request.args.get("role")
-    characters = ownership_service.get_user_characters(user_id, role=role)
+    characters = ownership_service.get_user_characters(user_id, role=role, lang=request.args.get("lang"))
     return jsonify({
         "user_id": user_id,
         "count": len(characters),
@@ -348,8 +353,10 @@ def get_user_perks(user_id: int):
     if curr.id != user_id and curr.role != "admin":
         return jsonify({"error": "Unauthorized access to perk ownership.", "status": 403}), 403
 
+    # Same opt-in-only rule as get_user_characters: perk `name` here is matched
+    # against run-state build slots, so it must stay in the caller's control.
     category = request.args.get("category")
-    perks = ownership_service.get_user_perks(user_id, category=category)
+    perks = ownership_service.get_user_perks(user_id, category=category, lang=request.args.get("lang"))
     return jsonify({
         "user_id": user_id,
         "count": len(perks),

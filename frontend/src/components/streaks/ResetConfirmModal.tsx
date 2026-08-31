@@ -28,6 +28,7 @@ export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({
     title={dict?.streaks?.resetRunTitle || 'Reset this run?'}
     message={message}
     confirmLabel={dict?.generator?.resetAllLabel || 'Yes, wipe it'}
+    cancelLabel={dict?.streaks?.cancel || 'Cancel'}
     confirmIcon={<RotateCcw className="h-4 w-4" />}
     busy={busy}
     onConfirm={onConfirm}

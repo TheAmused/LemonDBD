@@ -111,6 +111,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
+          dict={dict}
         />
 
         {isCompleted ? (
@@ -159,6 +160,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               disabled={busy || Boolean(acceptedKillerId)}
               loading={loading}
               center
+              dict={dict}
             />
 
             <div className="mt-5 flex items-center justify-center gap-4">
@@ -202,25 +204,27 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         )}
 
         {!isCompleted && run && (
-          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} />
+          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} dict={dict} />
         )}
 
         <ResetConfirmModal
           open={confirmingReset}
           busy={busy}
-          message="Row progress and every unlocked perk go back to the start. This cannot be undone."
+          message={dict?.streaks?.historyResetConfirmPrompt || 'Row progress and every unlocked perk go back to the start. This cannot be undone.'}
           onCancel={() => setConfirmingReset(false)}
           onConfirm={handleReset}
+          dict={dict}
         />
 
-        <HistoryStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
-        <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
+        <HistoryStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
         <HistoryPerkModal
           killerName={perkModal?.killerName ?? null}
           perks={perkModal?.perks ?? []}
           onClose={() => setPerkModal(null)}
+          dict={dict}
         />
-        <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} />
+        <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} dict={dict} />
         <HistoryModeModal
           isOpen={isChangeModeOpen}
           onClose={() => setIsChangeModeOpen(false)}

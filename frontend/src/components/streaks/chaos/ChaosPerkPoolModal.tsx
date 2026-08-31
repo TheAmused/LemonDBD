@@ -6,8 +6,9 @@ import { X, Layers, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
+import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 
-const PerkTile: React.FC<{ perk: Perk }> = ({ perk }) => {
+const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displayName }) => {
   const [failed, setFailed] = useState<boolean>(false);
   const src = perkIconFor(perk);
   return (
@@ -16,7 +17,7 @@ const PerkTile: React.FC<{ perk: Perk }> = ({ perk }) => {
         {src && !failed ? (
           <img
             src={src}
-            alt={perk.name}
+            alt={displayName}
             className="w-full h-full object-contain p-1.5"
             onError={() => setFailed(true)}
           />
@@ -25,7 +26,7 @@ const PerkTile: React.FC<{ perk: Perk }> = ({ perk }) => {
         )}
       </div>
       <span className="text-[11px] font-medium text-center text-slate-700 dark:text-slate-200 leading-tight line-clamp-2">
-        {perk.name}
+        {displayName}
       </span>
     </div>
   );
@@ -46,6 +47,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
   usedPerkNames,
   dict,
 }) => {
+  const displayName = usePerkDisplayName();
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -143,7 +145,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
           ) : (
             <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2" role="list">
               {shown.map((perk) => (
-                <PerkTile key={perk.id ?? perk.name} perk={perk} />
+                <PerkTile key={perk.id ?? perk.name} perk={perk} displayName={displayName(perk.name)} />
               ))}
             </div>
           )}

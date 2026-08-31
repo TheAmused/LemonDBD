@@ -7,11 +7,12 @@ import { Check, Skull } from 'lucide-react';
 import type { RosterEntry } from '@/types/pageStreak';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/staticUrl';
+import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 interface KillerRosterGridProps {
   locale: string;
   roster: RosterEntry[];
-  dict?: Dictionary | any;
+  dict?: Dictionary;
 }
 
 const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = ({
@@ -48,25 +49,24 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
   roster,
   dict,
 }) => {
+  const characterDisplayName = useCharacterDisplayName();
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" role="list">
       {roster.map((entry) => {
         const done = entry.status === 'completed';
         const active = entry.status === 'in_progress';
+        const displayName = characterDisplayName(entry.killer);
         const pct =
           entry.page_count > 0
             ? Math.round(((entry.current_page - 1) / entry.page_count) * 100)
             : 0;
 
         const progressAriaLabel = dict?.streaks?.progress
-          ? `${entry.killer} - ${dict.streaks.progress} ${pct}%`
-          : `${entry.killer} ${pct}%`;
+          ? `${displayName} - ${dict.streaks.progress} ${pct}%`
+          : `${displayName} ${pct}%`;
 
-        const activePageText = dict?.streaks?.pageOfProgress
-          ? dict.streaks.pageOfProgress
-            .replace('{current}', String(entry.current_page))
-            .replace('{total}', String(entry.page_count))
-          : `${dict?.streaks?.pageLabel || dict?.generator?.pageLabel || ''} ${entry.current_page} ${dict?.streaks?.ofLabel || ''} ${entry.page_count}`.trim();
+        const activePageText =
+          `${dict?.streaks?.pageLabel || dict?.generator?.pageLabel || ''} ${entry.current_page} ${dict?.streaks?.ofLabel || ''} ${entry.page_count}`.trim();
 
         return (
           <Link
@@ -88,12 +88,12 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
               </span>
             )}
             <KillerPortrait
-              name={entry.killer}
+              name={displayName}
               src={staticUrl(entry.avatar_local_path)}
               done={done}
             />
             <div className="text-center text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
-              {entry.killer}
+              {displayName}
             </div>
             {active && (
               <div
@@ -122,7 +122,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
                 ? (dict?.streaks?.completed || '')
                 : active
                   ? activePageText
-                  : (dict?.streaks?.notStarted || '')}
+                  : (dict?.streaks?.notStarted || 'Not started')}
             </div>
           </Link>
         );

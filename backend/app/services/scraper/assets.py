@@ -182,8 +182,24 @@ async def download_all_assets(
                         )
 
                     alias_slugs = []
+                    if "magnetise" in base_slug or "magnetize" in base_slug:
+                        alias_slugs.extend([
+                            "magnetised_manacles",
+                            "magnetized_manacles",
+                            "magnetised_manacles_(the_judgment)",
+                            "magnetized_manacles_(the_judgment)",
+                        ])
                     if "ether_15" in base_slug or "aether_15" in base_slug:
-                        alias_slugs.extend(["aether_15%", "ether_15_vol%", "aether_15_vol%"])
+                        alias_slugs.extend([
+                            "ether_15%",
+                            "ether_15%_vol",
+                            "ether_15_vol%",
+                            "ether_15_vol",
+                            "aether_15%",
+                            "aether_15_vol%",
+                            "ether_15_vol%_(the_clown)",
+                            "ether_15%_vol_(the_clown)",
+                        ])
                     if "molted_skin" in base_slug or "moulted_skin" in base_slug:
                         alias_slugs.extend(["molted_skin", "moulted_skin"])
                     if "honey_locust_thorn" in base_slug:

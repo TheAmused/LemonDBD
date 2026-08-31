@@ -11,6 +11,7 @@ from app.core.extensions import db
 from app.models.character import Character
 from app.models.equipment import Addon, Item, Offering
 from app.models.perk import Perk
+from app.scrapers.utils import sanitize_filename
 
 logger = logging.getLogger(__name__)
 
@@ -62,10 +63,14 @@ def simplify_lookup_key(s: str) -> str:
     s = s.replace("camaraderie", "kinship")
     s = s.replace("thorns", "thorn")
     s = s.replace("straps", "strap")
-    s = s.replace("gloves", "glove")
+    s = s.replace("magnetised", "magnetized")
+    s = s.replace("vol%", "")
+    s = s.replace("%vol", "")
+    s = s.replace("vol.", "")
+    s = s.replace("vol", "")
+    s = s.replace("percent", "")
+    s = s.replace("%", "")
     s = s.replace("deja vu", "dejavu")
-    s = s.replace("trapper bag", "trappersack")
-    s = s.replace("trapper sack", "trappersack")
     s = s.replace("naped elektromagnetyczny", "emp")
     s = s.replace("napedelektromagnetyczny", "emp")
     s = s.replace("urzadzenie emp", "emp")
@@ -254,12 +259,15 @@ class TranslationService:
                     category=a_val.get("category", "Killer"),
                     rarity=a_val.get("rarity", "Common"),
                     description=a_val.get("translations", {}).get("en", {}).get("description", ""),
+                    icon_local_path=f"icons/addons/{sanitize_filename(a_val.get('name', a_name))}.png",
                     translations=a_val.get("translations", {}),
                 )
                 db.session.add(matched)
                 addon_map[simplify_lookup_key(a_name)] = matched
                 addon_exact_map[a_low] = matched
             else:
+                if not matched.icon_local_path:
+                    matched.icon_local_path = f"icons/addons/{sanitize_filename(a_val.get('name', a_name))}.png"
                 if a_val.get("associated_target"):
                     matched.associated_target = a_val.get("associated_target")
                 if a_val.get("category"):

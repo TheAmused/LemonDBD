@@ -45,6 +45,8 @@ def run_command(cmd_str: str, cwd: Path, env: Optional[Dict[str, str]] = None) -
             shell=True,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             stdin=subprocess.DEVNULL,
             timeout=120,
         )

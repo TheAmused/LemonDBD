@@ -101,3 +101,5 @@ translations/*
 scratch/*
 
 response.md
+frontend/AGENTS.md
+frontend/CLAUDE.md

@@ -1183,7 +1183,7 @@ class WikiGGScraperDriver:
                     current_target = matched_killer if matched_killer else target_clean
 
             elif element.name == "table" and "wikitable" in element.get("class", []):
-                if current_section in ["contents", "overview", "stacking", "numbers", "change log"]:
+                if any(k in current_section for k in ["contents", "overview", "stacking", "numbers", "change log", "decommission", "unused", "removed", "retired"]):
                     continue
 
                 intro_target = None

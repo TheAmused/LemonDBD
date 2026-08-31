@@ -114,51 +114,188 @@ export const DBD_KEYWORDS: readonly string[] = [
   'Aktywuje',
   'Pośpiech',
   'Pośpiechu',
+  'Pośpiechem',
   'Spowolnienie',
+  'Spowolnienia',
+  'Spowolnieniem',
   'Narażenie',
+  'Narażenia',
+  'Narażeniem',
   'Wyczerpanie',
+  'Wyczerpania',
+  'Wyczerpaniem',
   'Wyczerpany',
+  'Wyczerpana',
+  'Wyczerpani',
   'Oślepienie',
+  'Oślepienia',
+  'Oślepieniem',
+  'Oślepiony',
+  'Oślepiona',
   'Okaleczenie',
+  'Okaleczenia',
+  'Okaleczeniem',
+  'Okaleczony',
+  'Okaleczona',
   'Nieświadomość',
+  'Nieświadomości',
+  'Nieświadomością',
+  'Nieświadomy',
+  'Nieświadoma',
   'Niewykrywalność',
+  'Niewykrywalności',
+  'Niewykrywalnością',
+  'Niewykrywalny',
+  'Niewykrywalna',
   'Obezwładnienie',
+  'Obezwładnienia',
+  'Obezwładnieniem',
+  'Obezwładniony',
+  'Obezwładniona',
   'Głęboka Rana',
   'Głębokiej Rany',
+  'Głęboką Ranę',
+  'Głębokiej Ranie',
+  'Głęboką Raną',
+  'Głębokie Rany',
+  'Głębokich Ran',
   'Krwotok',
+  'Krwotoku',
+  'Krwotokiem',
   'Wytrzymałość',
+  'Wytrzymałości',
+  'Wytrzymałością',
   'Żądza Krwi',
+  'Żądzy Krwi',
+  'Żądzę Krwi',
+  'Żądzą Krwi',
   'Zasięg Terroru',
   'Zasięgu Terroru',
+  'Zasięgiem Terroru',
   'Instynkt Zabójcy',
+  'Instynktu Zabójcy',
+  'Instynktem Zabójcy',
   'Czytanie Aur',
+  'Czytaniu Aur',
+  'Czytaniem Aur',
+  'Aura Zabójcy',
+  'Aury Zabójcy',
+  'Aurę Zabójcy',
+  'Aury Ocalałych',
+  'Aurę Ocalałych',
   'Aura',
   'Aury',
   'Aurę',
-  'Aury Zabójcy',
+  'Aurze',
+  'Aurą',
+  'Aurom',
+  'Aurami',
+  'Aurach',
   'Obsesja',
+  'Obsesji',
   'Obsesję',
+  'Obsesją',
   'Klątwa:',
   'Klątwa',
+  'Klątwy',
+  'Klątwie',
+  'Klątwę',
+  'Klątwą',
+  'Klątw',
   'Dar:',
   'Dar',
+  'Daru',
+  'Darem',
+  'Darze',
+  'Dary',
+  'Darów',
+  'Darom',
+  'Darami',
   'Hak Plagi:',
   'Hak Plagi',
+  'Haki Plagi',
+  'Haków Plagi',
+  'Hakom Plagi',
+  'Hakami Plagi',
+  'Hakach Plagi',
+  'Haku Plagi',
+  'Hak',
+  'Haki',
+  'Haka',
+  'Haku',
+  'Hakiem',
+  'Haków',
+  'Hakom',
+  'Hakami',
+  'Hakach',
   'Test Umiejętności',
   'Testy Umiejętności',
+  'Testu Umiejętności',
+  'Testem Umiejętności',
+  'Testów Umiejętności',
+  'Testom Umiejętności',
+  'Testami Umiejętności',
+  'Testach Umiejętności',
   'Pułapka na Niedźwiedzie',
   'Pułapki na Niedźwiedzie',
+  'Pułapce na Niedźwiedzie',
+  'Pułapkę na Niedźwiedzie',
+  'Pułapką na Niedźwiedzie',
+  'Pułapek na Niedźwiedzie',
+  'Pułapkom na Niedźwiedzie',
+  'Pułapkami na Niedźwiedzie',
+  'Pułapkach na Niedźwiedzie',
   'Stan Konania',
+  'Stanu Konania',
+  'Stanowi Konania',
+  'Stanem Konania',
+  'Stanie Konania',
   'Stan Ranny',
+  'Stanu Rannego',
+  'Stanowi Rannemu',
+  'Stanem Rannym',
+  'Stanie Rannym',
   'Stan Zdrowy',
+  'Stanu Zdrowego',
+  'Stanowi Zdrowemu',
+  'Stanem Zdrowym',
+  'Stanie Zdrowym',
   'Generator',
   'Generatory',
+  'Generatora',
+  'Generatorów',
+  'Generatorom',
+  'Generatorami',
+  'Generatorze',
+  'Generatorach',
+  'Generatorowi',
   'Paleta',
   'Palety',
+  'Palecie',
+  'Paletę',
+  'Paletą',
+  'Palet',
+  'Paletom',
+  'Paletami',
+  'Paletach',
   'Skrzynia',
   'Skrzynie',
+  'Skrzyni',
+  'Skrzynię',
+  'Skrzynią',
+  'Skrzyń',
+  'Skrzyniom',
+  'Skrzyniami',
+  'Skrzyniach',
   'Totem',
   'Totemy',
+  'Totemu',
+  'Totemem',
+  'Totemie',
+  'Totemów',
+  'Totemom',
+  'Totemami',
+  'Totemach',
 
   // --- German (DE) ---
   'Erhöht',
@@ -410,6 +547,84 @@ export const INPUT_ACTION_LABELS: Record<string, Record<string, string>> = {
   },
 };
 
+/* ------------------------------------------------------------------ *
+ * Numeric value grammar
+ *
+ * Every numeric highlight in a description is built from these pieces, so the
+ * tokenizer (which finds values) and the validator (which decides how to style
+ * a token it was handed) can never drift apart.
+ * ------------------------------------------------------------------ */
+
+/**
+ * A number with an optional fractional part, accepting BOTH decimal marks.
+ * Polish, German and Spanish descriptions write "3,5%" where English writes
+ * "3.5%" - matching only `.` left the integer part unstyled.
+ */
+const NUMBER = String.raw`\d+(?:[.,]\d+)?`;
+
+/**
+ * Measurement units across all 5 supported locales.
+ *
+ * Inflected languages are matched by stem + `\w*` so every case ending is
+ * covered ("sekundy", "sekundach", "sekundę", "metrów", "metrach", ...) rather
+ * than only the two or three forms that happened to be listed by hand.
+ * The bare abbreviations `m` and `s` come LAST so the full words win the
+ * alternation, and a trailing `(?!\w)` stops `s` from matching inside
+ * "sekund" or `m` inside "metrów".
+ */
+const UNITS: readonly string[] = [
+  // English
+  'metres?', 'meters?', 'seconds?', 'tokens?', 'charges?', 'stacks?', 'points?',
+  // Polish (stem + inflection)
+  'metr\\w*', 'sekund\\w*', 'ładunk\\w*', 'żeton\\w*', 'punkt\\w*',
+  // German - `Sek.` / `Min.` abbreviations appear throughout the DE corpus
+  'Sek\\w*', 'Min\\w*', 'Metern?', 'Aufladungen', 'Marken', 'Punkten?',
+  // Spanish
+  'segundos?', 'metros?', 'cargas?', 'fichas?', 'puntos?',
+  // Japanese
+  'メートル', '秒', 'ポイント',
+  // Abbreviations - must stay last
+  'm', 's',
+];
+
+const UNIT = UNITS.join('|');
+
+/**
+ * A unit, guarded so `s` cannot match inside "sekund" nor `m` inside "metrów".
+ * The guard belongs to the unit alone: a `%` terminates a value by itself, and
+ * demanding a non-word character after it dropped the highlight in corpus typos
+ * such as "o 5%Pośpiech".
+ */
+const UNIT_TERM = `(?:${UNIT})(?!\\w)`;
+
+/** `{0}` / `{1}%` interpolation placeholders emitted by the game data. */
+const PLACEHOLDER = String.raw`\{[0-9]+\}%?`;
+/** Per-tier values: `2/3/4%`, `10 / 15 / 20 seconds`, `+1/2/3`. */
+const TIER_RANGE = String.raw`[+\-]?${NUMBER}(?:\s*\/\s*[+\-]?${NUMBER})+(?:\s*(?:%|${UNIT_TERM}))?`;
+/** Explicitly signed values: `+5%`, `-0,5 s`. */
+const SIGNED_VALUE = String.raw`[+\-]${NUMBER}\s*(?:%|${UNIT_TERM})`;
+/** Percentages: `30%`, `3,5 %`. */
+const PERCENT = String.raw`${NUMBER}\s*%`;
+/** Measurements: `24 m`, `30 s`, `0,1 sekundy`. */
+const MEASURE = String.raw`${NUMBER}\s*${UNIT_TERM}`;
+
+/**
+ * Ordered longest-first: a tier range must be tried before a bare percentage so
+ * `2/3/4%` is highlighted as one token instead of three separate numbers.
+ */
+const VALUE_PATTERN = [PLACEHOLDER, TIER_RANGE, SIGNED_VALUE, PERCENT, MEASURE]
+  .map((p) => `(?:${p})`)
+  .join('|');
+
+/** Keeps a value from starting mid-number (the `5` of `3,5%`). */
+const VALUE_LEFT = String.raw`(?<![\d.,])`;
+
+/**
+ * Whole-string test used when styling an already-split token. Derived from the
+ * same grammar as the tokenizer, so the two cannot disagree.
+ */
+export const VALUE_TOKEN_REGEX = new RegExp(`^(?:${VALUE_PATTERN})$`, 'i');
+
 /**
  * Builds a dynamic regular expression to tokenize special game keywords, numeric values,
  * tier ranges, and input action buttons across English, Polish, German, Spanish, and Japanese.
@@ -428,18 +643,14 @@ export function createDbdTokenRegex(highlightName?: string): RegExp {
     .map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
     .join('|');
 
-  const namePart = escapedName ? `\\b(?:${escapedName})\\b|` : '';
+  const namePart = escapedName ? `(?<![\\p{L}\\p{N}])(?:${escapedName})(?![\\p{L}\\p{N}])|` : '';
 
   return new RegExp(
     `(${namePart}` +
       `(?:${buttonsPattern})|` +
-      `\\b(?:${keywordsPattern})\\b|` +
-      `\\{[0-9]+\\}%?|` +
-      `\\+?\\-?\\d+(?:\\.\\d+)?(?:\\s*\\/\\s*\\d+(?:\\.\\d+)?)+(?:\\s*%)?|` +
-      `\\+\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|m\\b|%|seconds?|s\\b|tokens?|charges?|metrów|metry|sekund|sekundy|Sekunden|segundos|メートル|秒)|` +
-      `\\b\\d+(?:\\.\\d+)?\\s*%|` +
-      `\\b\\d+(?:\\.\\d+)?\\s*(?:metres?|meters?|seconds?|tokens?|metrów|metry|sekund|sekundy|Sekunden|segundos|メートル|秒)\\b)`,
-    'gi'
+      `(?<![\\p{L}\\p{N}])(?:${keywordsPattern})(?![\\p{L}\\p{N}])|` +
+      `${VALUE_LEFT}(?:${VALUE_PATTERN}))`,
+    'giu'
   );
 }
 
@@ -496,16 +707,7 @@ function parsePlainTextSubTokens(
           (k) => k.toLowerCase() === trimmed.toLowerCase()
         );
 
-        const isValueNumber =
-          /^\{[0-9]+\}%?$/.test(trimmed) ||
-          /^\+?\-?\d+(?:\.\d+)?(?:\s*\/\s*\d+(?:\.\d+)?)+(?:\s*%)?$/.test(trimmed) ||
-          /^\+\d+(?:\.\d+)?\s*(?:metres?|meters?|m|%|seconds?|s|tokens?|charges?|metrów|metry|sekund|sekundy|Sekunden|segundos|メートル|秒)$/i.test(
-            trimmed
-          ) ||
-          /^\d+(?:\.\d+)?\s*%$/.test(trimmed) ||
-          /^\d+(?:\.\d+)?\s*(?:metres?|meters?|seconds?|tokens?|metrów|metry|sekund|sekundy|Sekunden|segundos|メートル|秒)$/i.test(
-            trimmed
-          );
+        const isValueNumber = VALUE_TOKEN_REGEX.test(trimmed);
 
         if (isKeyword || isValueNumber) {
           return (
@@ -583,8 +785,14 @@ export function parseLineTokens(
           );
         }
 
-        // 4. Regular text chunk
-        return parsePlainTextSubTokens(seg, key, tokenRegex, highlightName);
+        // 4. Regular text chunk. Wrapped in a keyed Fragment because this sits
+        // inside segments.map() - returning a bare <> here made React warn on
+        // every single description render.
+        return (
+          <React.Fragment key={key}>
+            {parsePlainTextSubTokens(seg, key, tokenRegex, highlightName)}
+          </React.Fragment>
+        );
       })}
     </>
   );
@@ -647,12 +855,41 @@ export function renderFormattedDbdText(
     .replace(/(?<=\S)\*(?=\s|$|[.,;:!?)])/g, '')
     .replace(/\*(?=[a-zA-Z0-9+%-])/g, '')
     .replace(/(?<=[a-zA-Z0-9+%-])\*/g, '')
-    .replace(/\s+\./g, '.')
-    .replace(/\s+,/g, ',')
+    // A line that begins with a punctuation mark is a stray break inside a
+    // sentence ("...unter Ahnungslos\n. Ahnungslos verhindert..."); rejoin it
+    // so it does not render as its own paragraph starting with a full stop.
+    .replace(/[^\S\r\n]*\r?\n[^\S\r\n]*([.,;:!?])/g, '$1')
+    // Source data ships "50% %" / "6/8/10% %" - collapse the duplicated sign.
+    .replace(/%[^\S\r\n]*%/g, '%')
+    // Whitespace before punctuation, without pulling a mark onto the line above.
+    .replace(/[^\S\r\n]+([.,;:!?])/g, '$1')
+    // Sentence glued to the next one ("...wątrób.Zwiększa prędkość..."). An
+    // inline tag is allowed between, so "...end.<b>Next</b>" is repaired too.
+    .replace(/([\p{Ll}\d%)])([.!?])(<[^>]+>)?(\p{Lu})/gu, '$1$2 $3$4')
+    // Runs of spaces/tabs left behind by stripped markup. Newlines are
+    // preserved - they are the paragraph and bullet separators.
+    .replace(/[^\S\r\n]{2,}/g, ' ')
     .trim();
 
   const lines = normalized.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   const elements: React.ReactNode[] = [];
+
+  // Consecutive bullets are collected here and flushed as one <ul>. Previously
+  // each bullet was pushed as a bare <li> with no list parent, which is invalid
+  // HTML and left indentation and marker styling up to the browser.
+  let bullets: React.ReactNode[] = [];
+  const flushBullets = () => {
+    if (!bullets.length) return;
+    elements.push(
+      <ul
+        key={`ul-${elements.length}`}
+        className={`list-disc pl-5 ${isCompact ? 'my-1 space-y-0.5' : 'my-2 space-y-1'}`}
+      >
+        {bullets}
+      </ul>
+    );
+    bullets = [];
+  };
 
   lines.forEach((line, lineIdx) => {
     let stripped = line.replace(/^[\*\s_]+/, '').replace(/[\*\s_]+$/, '');
@@ -675,6 +912,7 @@ export function renderFormattedDbdText(
           stripped.includes('". -')));
 
     if (isQuote) {
+      flushBullets();
       let cleanQuote = stripped;
       // Strip redundant outer quote layer if double quoted (e.g. "„..."." or ""..."")
       if (cleanQuote.startsWith('"') && cleanQuote.endsWith('"') && cleanQuote.length > 2) {
@@ -698,6 +936,7 @@ export function renderFormattedDbdText(
 
     // Special event notices
     if (/^THIS (ITEM|ADD-ON|UNLOCKABLE) (IS|CAN) (NO LONGER|UNUSED)/i.test(line) && !isCompact) {
+      flushBullets();
       elements.push(
         <div
           key={`ev-${lineIdx}`}
@@ -723,11 +962,11 @@ export function renderFormattedDbdText(
 
     if (isBullet) {
       const content = line.replace(/^[•\*\-]\s*/, '');
-      elements.push(
+      bullets.push(
         <li
           key={`li-${lineIdx}`}
-          className={`ml-5 list-disc leading-relaxed text-slate-300 marker:text-amber-400 transition-colors ${
-            isCompact ? 'my-0.5 text-xs' : 'my-1.5 text-xs sm:text-sm'
+          className={`leading-relaxed text-slate-300 marker:text-amber-400 transition-colors ${
+            isCompact ? 'text-xs' : 'text-xs sm:text-sm'
           }`}
         >
           {parseLineTokens(content, lineIdx, tokenRegex, highlightName)}
@@ -737,6 +976,7 @@ export function renderFormattedDbdText(
     }
 
     // Regular paragraphs
+    flushBullets();
     elements.push(
       <p
         key={`p-${lineIdx}`}
@@ -748,6 +988,8 @@ export function renderFormattedDbdText(
       </p>
     );
   });
+
+  flushBullets();
 
   return <>{elements}</>;
 }

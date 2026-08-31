@@ -29,11 +29,11 @@ test('getSelectionRange: picking the maximum every cycle never exceeds 4 and fin
   assert.ok(cycle <= SLOT_TOTAL_CYCLES, 'should never need more than the total allowed cycles');
 });
 
-test('getSelectionRange: forces exactly 2 on cycle 1 if the player picked 0 on cycle 0', () => {
+test('getSelectionRange: allows 0-2 on cycle 1 if the player picked 0 on cycle 0', () => {
   // cycle 0: needed=4, remainingCycles=3 -> min 0, max 2. Player picks 0.
   const cycle1Range = getSelectionRange(0, 1);
-  // remainingCycles = 3-1 = 2, needed = 4 -> min = max(0, 4 - 2*1) = 2, max = min(2,4) = 2
-  assert.deepStrictEqual(cycle1Range, { min: 2, max: 2 });
+  // remainingCycles = 2, needed = 4 -> min 0, max 2 (purely optional before final cycle)
+  assert.deepStrictEqual(cycle1Range, { min: 0, max: 2 });
 });
 
 test('getSelectionRange: forces exactly 2 on the final cycle when 2 are reachably still needed', () => {

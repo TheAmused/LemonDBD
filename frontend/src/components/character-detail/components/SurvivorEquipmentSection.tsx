@@ -20,6 +20,7 @@ import {
   getRarityRank,
 } from '../types';
 import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
+import { toTitleCase } from '@/utils/textCase';
 
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
@@ -289,30 +290,31 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 {categorizedData.displayedAddons.map((item, idx) => {
                   const id = `addon-${item.name}-${idx}`;
                   const rarityStyle = getRarityTileStyle(item.rarity);
+                  const displayItem = { ...item, name: toTitleCase(item.name) };
 
                   return (
                     <div
                       key={id}
                       role="button"
                       tabIndex={0}
-                      onClick={() => onSelectEquipment(item)}
+                      onClick={() => onSelectEquipment(displayItem)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
-                          onSelectEquipment(item);
+                          onSelectEquipment(displayItem);
                         }
                       }}
                       onMouseEnter={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item, rect, accentColor: 'text-amber-400' });
+                        setActiveHover({ item: displayItem, rect, accentColor: 'text-amber-400' });
                       }}
                       onMouseLeave={() => setActiveHover(null)}
                       className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                      aria-label={`${t.inspectAddonPrefix || 'Inspect addon:'} ${item.name}`}
+                      aria-label={`${t.inspectAddonPrefix || 'Inspect addon:'} ${displayItem.name}`}
                     >
                       <img
                         src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                        alt={item.name}
+                        alt={displayItem.name}
                         className="h-full w-full object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = 'none';

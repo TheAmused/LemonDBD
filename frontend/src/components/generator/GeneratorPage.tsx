@@ -419,10 +419,10 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         message={
           totalPlayableCount === 0
             ? dict?.generator?.lowPoolEmptyDesc ||
-              "No-Repeat Mode has drawn every playable perk -- there's nothing left to pull. Reset your drawn-perk memory to open the pool back up."
+              "No-Repeat Mode has drawn every playable perk. There's nothing left to pull, so reset your drawn-perk memory to open the pool back up."
             : totalPlayableCount === 1
-              ? (dict?.generator?.lowPoolDescOne || 'Only 1 perk left in the pool with No-Repeat Mode on -- not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.').replace('{size}', String(FULL_LOADOUT_SIZE))
-              : (dict?.generator?.lowPoolDescMany || 'Only {count} perks left in the pool with No-Repeat Mode on -- not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.')
+              ? (dict?.generator?.lowPoolDescOne || 'Only 1 perk left in the pool with No-Repeat Mode on, not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.').replace('{size}', String(FULL_LOADOUT_SIZE))
+              : (dict?.generator?.lowPoolDescMany || 'Only {count} perks left in the pool with No-Repeat Mode on, not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.')
                   .replace('{count}', String(totalPlayableCount))
                   .replace('{size}', String(FULL_LOADOUT_SIZE))
         }

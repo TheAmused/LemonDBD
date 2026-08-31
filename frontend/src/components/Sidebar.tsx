@@ -36,6 +36,7 @@ import { SidebarStatsCard } from './sidebar/SidebarStatsCard';
 import { SidebarUserSection } from './sidebar/SidebarUserSection';
 import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n, type Locale } from '@/i18n/config';
+import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 
 interface SidebarProps {
   currentLocale?: string;
@@ -308,6 +309,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </Link>
 
+          <WhatsNewLauncher dict={dict} />
         </div>
 
         {/* Navigation */}
@@ -492,15 +494,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </span>
         </Link>
 
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          aria-expanded={mobileOpen}
-          aria-label={dict?.sidebar?.openDrawer || 'Open Navigation Drawer'}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900 transition-colors cursor-pointer"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <WhatsNewLauncher dict={dict} />
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            aria-expanded={mobileOpen}
+            aria-label={dict?.sidebar?.openDrawer || 'Open Navigation Drawer'}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-900 transition-colors cursor-pointer"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
       </header>
 
       {/* Mobile Drawer */}

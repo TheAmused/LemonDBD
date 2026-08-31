@@ -12,6 +12,7 @@ import { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { Sparkles, ArrowRight } from 'lucide-react';
+import { FogHeartbeatBackground } from '@/components/landing/FogHeartbeatBackground';
 
 function LandingContent() {
   const params = useParams();
@@ -28,7 +29,9 @@ function LandingContent() {
   if (!dict) return null;
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="relative min-h-screen overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+      <FogHeartbeatBackground />
+
       <Sidebar
         currentLocale={locale}
         dict={dict}

@@ -11,9 +11,16 @@ import { UnifiedHoverModal, ActiveHoverState } from '@/components/common/Unified
 
 export type { Perk };
 
-const GRID_SIZE_CLASSES: Record<'default' | 'large', string> = {
+const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill', string> = {
   default: 'h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-44 lg:w-44 xl:h-48 xl:w-48',
   large: 'h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 lg:h-64 lg:w-64 xl:h-72 xl:w-72',
+  // Used by the Perks Vault grid: the card fills whatever square space its
+  // grid cell actually has (via container query units, resolved against
+  // that cell -- not the viewport), instead of snapping to one of a
+  // handful of fixed breakpoint sizes. With a fixed 5-column x 3-row grid,
+  // that's what lets 15 cards genuinely fill the available area on any
+  // screen instead of capping out early and leaving dead space beneath them.
+  fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
 };
 
 interface PerkCardProps {
@@ -26,7 +33,7 @@ interface PerkCardProps {
   coordinate?: { page: number; slot: number };
   /** Grid-view footprint. 'large' is used by the Randomizer's reveal
    * moments; 'default' (the Vault's own size) is the default. */
-  size?: 'default' | 'large';
+  size?: 'default' | 'large' | 'fill';
   /** When true, hides the perk icon/avatar/hover-preview behind a "?"
    * placeholder, showing only the coordinate tag if one is provided.
    * Clicking does nothing while blind. */
@@ -181,7 +188,14 @@ export const PerkCard: React.FC<PerkCardProps> = ({
   }
 
   return (
-    <div key={viewMode} className="relative group flex items-center justify-center p-2 sm:p-3 w-full">
+    <div
+      key={viewMode}
+      className={
+        size === 'fill'
+          ? 'relative group flex h-full w-full items-center justify-center p-1 [container-type:size]'
+          : 'relative group flex items-center justify-center p-2 sm:p-3 w-full'
+      }
+    >
       <button
         type="button"
         onClick={() => onSelect(perk)}

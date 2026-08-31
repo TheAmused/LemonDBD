@@ -149,4 +149,6 @@ export default {
   westSector: '9 o\'clock / West Sector',
   zoomIn25: 'Zoom In (+25%)',
   zoomOut25: 'Zoom Out (-25%)',
+  searchTextTab: 'Search',
+  searchVoiceTab: 'Voice',
 } as const;

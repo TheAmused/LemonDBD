@@ -149,4 +149,6 @@ export default {
   westSector: 'Godzina 9:00 / Sektor Zachodni',
   zoomIn25: 'Przybliż (+25%)',
   zoomOut25: 'Oddal (-25%)',
+  searchTextTab: 'Szukaj',
+  searchVoiceTab: 'Głos',
 } as const;

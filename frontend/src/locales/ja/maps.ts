@@ -149,4 +149,6 @@ export default {
   westSector: '9時方向 / 西セクター',
   zoomIn25: '拡大 (+25%)',
   zoomOut25: '縮小 (-25%)',
+  searchTextTab: '検索',
+  searchVoiceTab: '音声',
 } as const;

@@ -198,7 +198,8 @@ export function getCharacterSlug(name: string): string {
 
 export function getAssetUrl(backendBase: string, path?: string, url?: string): string {
   if (path) {
-    const cleanPath = path.replace(/^\/?(static\/)?/, '');
+    let cleanPath = path.replace(/^\/?(static\/)?/, '');
+    cleanPath = cleanPath.replace(/%+/g, '');
     return `${backendBase}/static/${cleanPath}`;
   }
   return url || '';

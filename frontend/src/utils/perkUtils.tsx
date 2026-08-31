@@ -16,7 +16,7 @@ export function getBackendBaseUrl(): string {
 }
 
 export function sanitizePath(rawPath: string): string {
-  return rawPath.replace(/^\/?(static\/)?/, '');
+  return rawPath.replace(/^\/?(static\/)?/, '').replace(/%+/g, '');
 }
 
 export function sanitizeCharacterNameForAvatar(name: string): string {

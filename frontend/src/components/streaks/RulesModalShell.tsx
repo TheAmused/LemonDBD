@@ -9,7 +9,6 @@ export interface RulesModalShellProps {
   onClose: () => void;
   icon: LucideIcon;
   title: string;
-  subtitle: string;
   /** Tailwind classes for the header icon chip, e.g. "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400". */
   iconClassName: string;
   /** Tailwind classes for the footer button, e.g. "bg-amber-600 hover:bg-amber-500". */
@@ -30,7 +29,6 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
   onClose,
   icon: Icon,
   title,
-  subtitle,
   iconClassName,
   footerButtonClassName,
   footerButtonLabel = "Got It, Let's Play!",
@@ -61,12 +59,9 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
             <div className={`p-2.5 border rounded-xl ${iconClassName}`}>
               <Icon className="w-6 h-6" />
             </div>
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight capitalize">
-                {title}
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>
-            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight capitalize">
+              {title}
+            </h2>
           </div>
           <button
             onClick={onClose}

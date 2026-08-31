@@ -6,6 +6,7 @@ import React from 'react';
 import { ChaosStats, ChaosMatchLog } from '@/types/chaosStreak';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
+import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 export interface ChaosStatsDrawerProps {
   isOpen: boolean;
@@ -14,7 +15,9 @@ export interface ChaosStatsDrawerProps {
   dict?: Dictionary;
 }
 
-export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => (
+export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => {
+  const characterDisplayName = useCharacterDisplayName();
+  return (
   <StreakStatsDrawer<ChaosMatchLog>
     isOpen={isOpen}
     onClose={onClose}
@@ -24,7 +27,7 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
     dict={dict}
     renderLabel={(log) => (
       <>
-        <div className="text-sm font-bold text-slate-900 dark:text-white">{log.killer_id}</div>
+        <div className="text-sm font-bold text-slate-900 dark:text-white">{characterDisplayName(log.killer_id)}</div>
         <div className="flex items-center gap-1 mt-1">
           {log.addon_rarities.map((rarity, i) => (
             <img
@@ -45,4 +48,5 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
       </span>
     )}
   />
-);
+  );
+};

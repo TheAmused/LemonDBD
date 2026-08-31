@@ -44,9 +44,6 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
       <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100">
         {dict?.streaks?.readyForPrefix || 'Ready for'} {pageCount ?? '…'} {dict?.streaks?.pagesOnSuffix || 'pages on'} {killer}?
       </h3>
-      <p className="max-w-md text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-        {dict?.streaks?.pageStreakStartPanelDesc || 'You start on page 1. A win moves you to the next page, a loss sends you back to the beginning. The page layout is frozen for the whole attempt.'}
-      </p>
       <div className="flex flex-wrap justify-center gap-5 font-mono text-[11px] text-slate-500">
         <span>{dict?.streaks?.perksCount || 'perks'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{poolSize ?? '—'}</b></span>
         <span>{dict?.streaks?.pagesCount || 'pages'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{pageCount ?? '—'}</b></span>

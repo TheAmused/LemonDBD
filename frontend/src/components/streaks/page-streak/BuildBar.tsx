@@ -3,6 +3,7 @@
 
 import React from 'react';
 import type { Dictionary } from '@/locales/types';
+import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 
 interface BuildBarProps {
   selected: string[];
@@ -23,6 +24,7 @@ export const BuildBar: React.FC<BuildBarProps> = ({
   iconByPerk = {},
   dict,
 }) => {
+  const displayName = usePerkDisplayName();
   const slots = Array.from({ length: size }, (_, i) => selected[i] ?? null);
 
   return (
@@ -52,14 +54,14 @@ export const BuildBar: React.FC<BuildBarProps> = ({
                 {iconByPerk[name] && (
                   <img
                     src={iconByPerk[name]}
-                    alt={name}
+                    alt={displayName(name)}
                     className="h-[96%] w-[96%] object-contain"
                   />
                 )}
               </span>
             </span>
           )}
-          <span>{name ?? `${dict?.swf?.slot || 'Slot'} ${index + 1}`}</span>
+          <span>{name ? displayName(name) : `${dict?.swf?.slot || 'Slot'} ${index + 1}`}</span>
         </div>
       ))}
 

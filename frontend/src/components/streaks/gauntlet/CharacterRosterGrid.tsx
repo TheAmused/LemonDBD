@@ -7,6 +7,7 @@ import { Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
 import { Check, User, Skull, ShieldCheck } from 'lucide-react';
 import { avatarUrlForCharacter } from '@/utils/staticUrl';
+import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 export interface CharacterRosterGridProps {
   role: Role;
@@ -28,6 +29,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   dict,
 }) => {
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const displayName = useCharacterDisplayName();
 
   const handleImageError = (charName: string) => {
     setImageErrors((prev) => ({ ...prev, [charName]: true }));
@@ -65,9 +67,6 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             )}
             <span>{roleLabel}</span> {dict?.streaks?.rosterProgress || 'Roster Progress'}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            {dict?.streaks?.rosterProgressDesc || 'Complete matches with each owned character to master the roster.'}
-          </p>
         </div>
         <div className="px-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-sm">
           {completedText}: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{completedCount}</span> / {characters.length}
@@ -106,7 +105,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
               <div
                 key={char.name}
                 className={`relative group rounded-xl border p-2 flex flex-col items-center justify-between transition-all duration-200 ${cardBorder}`}
-                title={`${char.name}${statusSuffix}`}
+                title={`${displayName(char.name)}${statusSuffix}`}
               >
                 {completed && (
                   <div className="absolute -top-2 -right-2 bg-emerald-500 text-white dark:text-slate-950 p-1 rounded-full shadow-md z-10">
@@ -128,7 +127,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                   {avatarUrl && !hasError ? (
                     <img
                       src={avatarUrl}
-                      alt={char.name}
+                      alt={displayName(char.name)}
                       className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${completed ? 'brightness-105' : !active ? 'opacity-90' : ''
                         }`}
                       onError={() => handleImageError(char.name)}
@@ -141,7 +140,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                 </div>
 
                 <span className="text-[11px] font-semibold text-center text-slate-700 dark:text-slate-200 line-clamp-1 w-full group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors">
-                  {char.name}
+                  {displayName(char.name)}
                 </span>
               </div>
             );

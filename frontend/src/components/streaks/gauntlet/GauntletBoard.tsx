@@ -1,7 +1,5 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
-import type { Dictionary } from '@/locales/types';
-
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -18,6 +16,7 @@ import { CharacterRosterGrid } from './CharacterRosterGrid';
 import { GauntletStatsDrawer } from './GauntletStatsDrawer';
 import { GauntletRulesModal } from './GauntletRulesModal';
 import { CheckpointModal } from './CheckpointModal';
+import { useStreaksDict } from '@/context/StreaksDictContext';
 
 // Particle/Lottie code is heavy and only ever needed on this page, so it gets
 // its own chunk rather than riding along in every route that imports GauntletBoard.
@@ -29,10 +28,10 @@ const GauntletFireBackground = dynamic(
 interface GauntletBoardProps {
   locale: string;
   role: Role;
-  dict?: Dictionary;
 }
 
-export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict }) => {
+export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) => {
+  const dict = useStreaksDict();
   const {
     run,
     stats,
@@ -119,6 +118,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
+          dict={dict}
         />
 
         {isCompleted ? (
@@ -153,6 +153,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict
             holdReel={justBankedCheckpoint != null}
             shownTarget={shownTarget}
             onShownTargetChange={setShownTarget}
+            dict={dict}
           />
         )}
 
@@ -169,12 +170,13 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role, dict
         <ResetConfirmModal
           open={confirmingReset}
           busy={busy}
-          message={`Streak, checkpoints and every cleared ${role} go back to zero. This cannot be undone.`}
+          message={`${dict?.streaks?.resetConfirmPrefix || 'Streak, checkpoints and every cleared'} ${dict?.streaks?.[role] || role} ${dict?.streaks?.resetConfirmSuffix || 'go back to zero. This cannot be undone.'}`}
           onCancel={() => setConfirmingReset(false)}
           onConfirm={() => {
             setConfirmingReset(false);
             reset();
           }}
+          dict={dict}
         />
 
         <GauntletStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />

@@ -69,7 +69,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              description={panel.description}
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
@@ -90,7 +89,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              description={panel.description}
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
@@ -109,7 +107,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              description={panel.description}
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
@@ -133,7 +130,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              description={panel.description}
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
@@ -157,7 +153,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              description={panel.description}
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
@@ -181,7 +176,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              description={panel.description}
               icon={panel.icon}
               accent={panel.accent}
               accentBorder={panel.accentBorder}
@@ -203,7 +197,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           <StreakPanel
             key={panel.id}
             title={panel.title}
-            description={panel.description}
             icon={panel.icon}
             accent={panel.accent}
             accentBorder={panel.accentBorder}

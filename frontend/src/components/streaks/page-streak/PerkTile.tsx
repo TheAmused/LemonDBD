@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 
 interface PerkTileProps {
   name: string;
@@ -20,6 +21,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
   iconSrc,
   onToggle,
 }) => {
+  const label = usePerkDisplayName()(name);
   const [imgError, setImgError] = useState(false);
   const showImage = Boolean(iconSrc) && !imgError;
 
@@ -42,7 +44,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
           {showImage && (
             <img
               src={iconSrc}
-              alt={name}
+              alt={label}
               onError={() => setImgError(true)}
               className="h-[96%] w-[96%] object-contain drop-shadow"
             />
@@ -50,7 +52,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
         </span>
       </span>
       <span className={`text-center text-[10.5px] font-semibold leading-tight ${selected ? 'text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400'}`}>
-        {name}
+        {label}
       </span>
     </>
   );

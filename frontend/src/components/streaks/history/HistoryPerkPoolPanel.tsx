@@ -6,8 +6,13 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Layers, CheckCircle2, Lock, Sparkles } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
+import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 
-const UnlockedTile: React.FC<{ perk: Perk; justUnlocked: boolean }> = ({ perk, justUnlocked }) => {
+const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: boolean }> = ({
+  perk,
+  displayName,
+  justUnlocked,
+}) => {
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
@@ -20,7 +25,7 @@ const UnlockedTile: React.FC<{ perk: Perk; justUnlocked: boolean }> = ({ perk, j
         {src && !failed ? (
           <img
             src={src}
-            alt={perk.name}
+            alt={displayName}
             className="w-full h-full object-contain p-1.5"
             onError={() => setFailed(true)}
           />
@@ -29,13 +34,13 @@ const UnlockedTile: React.FC<{ perk: Perk; justUnlocked: boolean }> = ({ perk, j
         )}
       </div>
       <span className="text-[11px] font-medium text-center text-slate-700 dark:text-slate-200 leading-tight line-clamp-2">
-        {perk.name}
+        {displayName}
       </span>
     </div>
   );
 };
 
-const LockedTile: React.FC<{ perk: Perk }> = ({ perk }) => {
+const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displayName }) => {
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
@@ -44,7 +49,7 @@ const LockedTile: React.FC<{ perk: Perk }> = ({ perk }) => {
         {src && !failed ? (
           <img
             src={src}
-            alt={perk.name}
+            alt={displayName}
             className="w-full h-full object-contain p-1.5"
             onError={() => setFailed(true)}
           />
@@ -53,7 +58,7 @@ const LockedTile: React.FC<{ perk: Perk }> = ({ perk }) => {
         )}
       </div>
       <span className="text-[11px] font-medium text-center text-slate-500 dark:text-slate-500 leading-tight line-clamp-2 opacity-60">
-        {perk.name}
+        {displayName}
       </span>
       <div className="absolute inset-0 flex items-center justify-center bg-slate-950/25 dark:bg-slate-950/45">
         <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-800/90 border border-slate-500/60 shadow-md">
@@ -70,7 +75,12 @@ export interface HistoryPerkPoolPanelProps {
   dict?: Dictionary;
 }
 
-export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool, unlockedPerkNames, dict }) => {
+export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
+  pool,
+  unlockedPerkNames,
+  dict,
+}) => {
+  const displayName = usePerkDisplayName();
   const unlockedSet = useMemo(() => new Set(unlockedPerkNames), [unlockedPerkNames]);
   const unlocked = useMemo(() => pool.filter((p) => unlockedSet.has(p.name)), [pool, unlockedSet]);
   const locked = useMemo(() => pool.filter((p) => !unlockedSet.has(p.name)), [pool, unlockedSet]);
@@ -103,11 +113,6 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
             {dict?.streaks?.perkPool || 'Perk pool'}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            {unlocked.length} {dict?.streaks?.unlockedSuffix || 'unlocked'}{' '}
-            {dict?.streaks?.middotSeparator || '·'} {locked.length}{' '}
-            {dict?.streaks?.lockedSuffix || 'locked'}
-          </p>
         </div>
       </div>
 
@@ -122,7 +127,12 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
       ) : (
         <div className="mb-5 grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {unlocked.map((perk) => (
-            <UnlockedTile key={perk.id ?? perk.name} perk={perk} justUnlocked={justUnlockedNames.has(perk.name)} />
+            <UnlockedTile
+              key={perk.id ?? perk.name}
+              perk={perk}
+              displayName={displayName(perk.name)}
+              justUnlocked={justUnlockedNames.has(perk.name)}
+            />
           ))}
         </div>
       )}
@@ -138,7 +148,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
       ) : (
         <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {locked.map((perk) => (
-            <LockedTile key={perk.id ?? perk.name} perk={perk} />
+            <LockedTile key={perk.id ?? perk.name} perk={perk} displayName={displayName(perk.name)} />
           ))}
         </div>
       )}

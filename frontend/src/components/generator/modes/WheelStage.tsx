@@ -3,6 +3,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Play } from 'lucide-react';
+import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -113,11 +114,20 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     }
     ctx.closePath();
 
+    // Without this inner circle subpath + evenodd fill, the zig-zag path
+    // above has no hole -- ctx.fill() would flood the ENTIRE disk (center
+    // to spike tips) with the rim gradient, painting over every slice,
+    // badge, and hub drawn earlier in the same pass. That's what silently
+    // reduced the whole wheel to a solid circle with nothing visible on it.
+    ctx.moveTo(centerX + (radius - 10), centerY);
+    ctx.arc(centerX, centerY, radius - 10, 0, Math.PI * 2);
+    ctx.closePath();
+
     const rimGrad = ctx.createRadialGradient(centerX, centerY, radius - 10, centerX, centerY, radius + spikeHeight);
     rimGrad.addColorStop(0, '#961f1f');
     rimGrad.addColorStop(1, '#1a0303');
     ctx.fillStyle = rimGrad;
-    ctx.fill();
+    ctx.fill('evenodd');
     ctx.lineWidth = 2;
     ctx.strokeStyle = '#5c1414';
     ctx.stroke();
@@ -640,7 +650,13 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     : `${dict?.generator?.spinWheelButton || 'Spin for Perk Slot'} #${activeSlotIdx + 1}`;
 
   return (
-    <div className="flex w-full flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-center lg:gap-6 xl:gap-10">
+    <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-4">
+      <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+        {dict?.generator?.spinOrRollPrompt ||
+          'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it -- one slot at a time until all four are filled.'}
+      </p>
+
+      <div className="flex w-full flex-1 min-h-0 flex-col items-center justify-center gap-6 lg:flex-row lg:items-center lg:justify-center lg:gap-10 xl:gap-16">
       <div className="order-2 grid grid-cols-2 gap-3 lg:order-1 lg:grid-cols-1 lg:gap-4">
         {renderFlankSlot(0)}
         {renderFlankSlot(1)}
@@ -656,7 +672,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
             className="pointer-events-none absolute inset-0 z-20 h-full w-full"
           />
           <div
-            className={`w-full max-w-[320px] sm:max-w-[360px] md:max-w-[400px] lg:max-w-[420px] xl:max-w-[480px] aspect-square transition-all duration-500 ease-out transform ${
+            className={`w-full max-w-[360px] sm:max-w-[440px] md:max-w-[520px] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px] aspect-square transition-all duration-500 ease-out transform ${
               isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
             }`}
           >
@@ -673,21 +689,16 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           </div>
         </div>
 
-        <button
-          type="button"
+        <DbdButton
+          role={role}
+          size="md"
           onClick={handleStartSpin}
           disabled={isSpinning || sortedPerks.length === 0}
-          className={`mt-6 flex items-center gap-3 px-8 py-4 rounded-2xl font-black text-base tracking-wider uppercase shadow-2xl transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
-            isSpinning || sortedPerks.length === 0
-              ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-              : role === 'Survivor'
-                ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-                : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-          }`}
+          className="mt-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          icon={<Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />}
         >
-          <Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />
-          <span>{spinButtonText}</span>
-        </button>
+          {spinButtonText}
+        </DbdButton>
 
         {statusText && (
           <p aria-live="polite" className={`mt-3 text-xs font-black text-amber-400 font-mono ${reduceMotion ? '' : 'animate-pulse'}`}>
@@ -703,6 +714,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       <div className="order-3 grid grid-cols-2 gap-3 lg:order-3 lg:grid-cols-1 lg:gap-4">
         {renderFlankSlot(2)}
         {renderFlankSlot(3)}
+      </div>
       </div>
     </div>
   );

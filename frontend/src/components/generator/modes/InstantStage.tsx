@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Zap } from 'lucide-react';
+import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -72,19 +73,20 @@ export const InstantStage: React.FC<InstantStageProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-10">
-      <button
-        type="button"
+      <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+        {dict?.generator?.instantRollPrompt ||
+          'Rolls all four perks at once, instantly -- no wheel, no waiting. Page and slot are decided the moment you click.'}
+      </p>
+
+      <DbdButton
+        role={role}
+        size="lg"
         onClick={handleRoll}
         disabled={activePlayablePerks.length === 0}
-        className={`flex items-center gap-3 rounded-2xl px-10 py-5 font-black text-lg tracking-wider uppercase shadow-2xl transition-all duration-300 cursor-pointer ${
-          role === 'Survivor'
-            ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-            : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-        }`}
+        icon={<Zap className="h-6 w-6" />}
       >
-        <Zap className="h-6 w-6" />
-        <span>{dict?.generator?.rollCompleteLoadout || `Roll Complete ${role} Loadout`}</span>
-      </button>
+        {dict?.generator?.rollCompleteLoadout || `Roll Complete ${role} Loadout`}
+      </DbdButton>
 
       {/* Always mounted at its final size, even before the first roll --
           empty and filled slots share the exact same footprint, so rolling

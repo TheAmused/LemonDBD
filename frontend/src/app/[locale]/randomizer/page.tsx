@@ -89,7 +89,7 @@ function RandomizerContent() {
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${
+        className={`flex-1 w-full min-h-screen overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 flex flex-col ${
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >

@@ -2,7 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Gift, Sparkles } from 'lucide-react';
+import { Gift, Sparkles, Lock } from 'lucide-react';
+import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -32,7 +33,41 @@ const LOADOUT_SIZE = 4;
 interface ScatterItem extends DrawnSlot {
   id: string;
   rotate: number;
-  jitterY: number;
+  /** Landing position as a percentage of the scatter field, so the perks
+   * genuinely land thrown around the block instead of snapping into a grid. */
+  xPct: number;
+  yPct: number;
+  scale: number;
+  /** Where it flies in FROM (a delta from its landing spot), so it reads as
+   * "thrown out of the crate" rather than fading in in place. */
+  fromX: number;
+  fromY: number;
+}
+
+/** A 4x3 cell grid (12 slots -- covers the 8-12 throw range) shuffled and
+ * jittered per-item, so drops land scattered around the block view without
+ * two perks ever landing on top of each other. */
+function buildScatterLayout(count: number): { xPct: number; yPct: number }[] {
+  const cols = 4;
+  const rows = 3;
+  const cells: { xPct: number; yPct: number }[] = [];
+  for (let r = 0; r < rows; r++) {
+    for (let cIdx = 0; cIdx < cols; cIdx++) {
+      cells.push({
+        xPct: (cIdx + 0.5) * (100 / cols),
+        yPct: (r + 0.5) * (100 / rows),
+      });
+    }
+  }
+  // Shuffle (Fisher-Yates).
+  for (let i = cells.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cells[i], cells[j]] = [cells[j], cells[i]];
+  }
+  return cells.slice(0, count).map((cell) => ({
+    xPct: Math.min(94, Math.max(6, cell.xPct + (Math.random() - 0.5) * 14)),
+    yPct: Math.min(90, Math.max(10, cell.yPct + (Math.random() - 0.5) * 20)),
+  }));
 }
 
 export const LootCrateStage: React.FC<LootCrateStageProps> = ({
@@ -49,6 +84,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 }) => {
   const [phase, setPhase] = useState<CratePhase>('closed');
   const [scatterPool, setScatterPool] = useState<ScatterItem[]>([]);
+  const [lockedItems, setLockedItems] = useState<ScatterItem[]>([]);
   const [selected, setSelected] = useState<DrawnSlot[]>([]);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef(true);
@@ -75,14 +111,20 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       const throwCount = Math.min(activePlayablePerks.length, Math.floor(Math.random() * 5) + 8); // 8-12
       const picked = pickRandomLoadout(activePlayablePerks, activeMutator, throwCount);
       const drawn = buildDrawnSlots(picked, activePlayablePerks);
-      const pool: ScatterItem[] = drawn.map((slot) => ({
+      const layout = buildScatterLayout(drawn.length);
+      const pool: ScatterItem[] = drawn.map((slot, i) => ({
         ...slot,
         id: slot.perk?.name || `${slot.page}-${slot.slot}`,
-        rotate: (Math.random() - 0.5) * 24,
-        jitterY: (Math.random() - 0.5) * 18,
+        rotate: (Math.random() - 0.5) * 30,
+        xPct: layout[i].xPct,
+        yPct: layout[i].yPct,
+        scale: 0.88 + Math.random() * 0.24,
+        fromX: (Math.random() - 0.5) * 260,
+        fromY: -220 - Math.random() * 80,
       }));
 
       setScatterPool(pool);
+      setLockedItems([]);
       setSelected([]);
       setPhase('scattering');
     }, 700);
@@ -95,6 +137,12 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     playCardFlip();
 
     const nextSelected = [...selected, { page: item.page, slot: item.slot, perk: item.perk }];
+
+    // The picked perk stays exactly where it landed and switches to a
+    // locked visual -- it moves into its own array so it's never touched
+    // by the scatterPool's AnimatePresence exit animation (that's reserved
+    // for perks the Entity claims away below).
+    setLockedItems((prev) => [...prev, item]);
 
     // Remove the picked perk, then let the Entity claim 1-2 more at random
     // -- but never delete past what's still needed to finish the loadout,
@@ -130,6 +178,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   const handleReset = () => {
     setPhase('closed');
     setScatterPool([]);
+    setLockedItems([]);
     setSelected([]);
   };
 
@@ -139,11 +188,12 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   ).replace('{count}', String(selected.length));
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-6 py-10">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-4 py-4">
       {(phase === 'closed' || phase === 'shaking') && (
         <>
-          <p className="text-xs font-bold text-slate-400 text-center">
-            {dict?.generator?.cratePrompt || 'A Trial Offering awaits. Crack it open for your loadout.'}
+          <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+            {dict?.generator?.cratePrompt ||
+              'A sealed Trial Offering awaits. Crack it open and the Entity scatters perks around the block for you to pick from.'}
           </p>
           <motion.button
             type="button"
@@ -180,20 +230,42 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'scattering' && (
         <>
-          <p aria-live="polite" className="text-xs font-bold text-slate-400 text-center max-w-md">
+          <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
             {scatterPrompt}
           </p>
 
-          <div className="grid w-full max-w-4xl grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+          <div className="relative h-full w-full flex-1 min-h-0">
+            {lockedItems.map((item) => (
+              <motion.div
+                key={`locked-${item.id}`}
+                className="absolute -translate-x-1/2 -translate-y-1/2"
+                style={{ left: `${item.xPct}%`, top: `${item.yPct}%` }}
+                initial={reduceMotion ? false : { scale: item.scale * 1.3, opacity: 0.4 }}
+                animate={{ scale: item.scale, opacity: 1, rotate: 0 }}
+                transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 18 }}
+              >
+                <div className="relative">
+                  <div className="rounded-xl ring-2 ring-amber-400 shadow-[0_0_18px_rgba(245,158,11,0.4)]">
+                    <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} dict={dict} />
+                  </div>
+                  <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow-lg">
+                    <Lock className="h-3.5 w-3.5" />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+
             <AnimatePresence>
               {scatterPool.map((item) => (
                 <motion.div
                   key={item.id}
-                  layout
-                  initial={reduceMotion ? false : { opacity: 0, y: -90, rotate: item.rotate, scale: 0.5 }}
-                  animate={{ opacity: 1, y: item.jitterY, rotate: item.rotate, scale: 1 }}
-                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.4, rotate: item.rotate + 40 }}
-                  transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 20 }}
+                  className="absolute -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: `${item.xPct}%`, top: `${item.yPct}%` }}
+                  initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, rotate: item.rotate * 2.2, scale: 0.4 }}
+                  animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: item.scale }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3, rotate: item.rotate + 50, transition: { duration: 0.25 } }}
+                  transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 210, damping: 16 }}
+                  whileHover={reduceMotion ? undefined : { scale: item.scale * 1.08, rotate: 0, zIndex: 20 }}
                 >
                   {/* Full visibility during selection is deliberate: Blind
                       Mode and the Curse of Blindness only obscure the final
@@ -216,7 +288,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'complete' && (
         <>
-          <p className="text-xs font-bold text-slate-400 text-center">
+          <p className="text-sm font-bold text-slate-300 text-center sm:text-base">
             {dict?.generator?.scatterComplete || 'Your loadout is locked in.'}
           </p>
           <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -245,18 +317,14 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
               );
             })}
           </div>
-          <button
-            type="button"
+          <DbdButton
+            role={role}
+            size="md"
             onClick={handleReset}
-            className={`flex items-center gap-3 rounded-2xl px-8 py-4 font-black text-sm tracking-wider uppercase shadow-2xl transition-all duration-300 cursor-pointer ${
-              role === 'Survivor'
-                ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-                : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-            }`}
+            icon={<Sparkles className="h-5 w-5" />}
           >
-            <Sparkles className="h-5 w-5" />
-            <span>{dict?.generator?.crateOpenAnother || 'Crack Open Another'}</span>
-          </button>
+            {dict?.generator?.crateOpenAnother || 'Crack Open Another'}
+          </DbdButton>
         </>
       )}
 

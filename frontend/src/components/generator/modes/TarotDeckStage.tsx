@@ -3,6 +3,7 @@
 import React, { useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Layers } from 'lucide-react';
+import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -45,6 +46,27 @@ const DEFAULT_TYPE_NAMES: Record<TarotType, string> = {
   entity: 'The Entity',
 };
 
+/** The on-disk card-back filenames (public/images/tarot/the-*.png) follow
+ * each type's *display* name, not its internal TarotType key -- most line
+ * up (hex/boon/sacrifice/exhaustion/obsession/chase/entity), but four
+ * don't: 'aura' ships as the-watcher.png, 'generator' as the-machinist.png,
+ * 'healing' as the-caregiver.png, and 'stealth' as the-shadow.png. Using
+ * the raw type key directly 404'd those four and silently fell back to
+ * the solid-gradient placeholder. */
+const TAROT_IMAGE_SLUG: Record<TarotType, string> = {
+  hex: 'hex',
+  boon: 'boon',
+  sacrifice: 'sacrifice',
+  exhaustion: 'exhaustion',
+  obsession: 'obsession',
+  aura: 'watcher',
+  generator: 'machinist',
+  healing: 'caregiver',
+  chase: 'chase',
+  stealth: 'shadow',
+  entity: 'entity',
+};
+
 /**
  * Card-back image for a given type, with a graceful text-only fallback if
  * the file is ever missing (never renders a broken <img>).
@@ -56,7 +78,7 @@ const CardBackImage: React.FC<{ type: TarotType }> = ({ type }) => {
 
   return (
     <img
-      src={`/images/tarot/the-${type}.png`}
+      src={`/images/tarot/the-${TAROT_IMAGE_SLUG[type]}.png`}
       alt=""
       aria-hidden="true"
       onError={() => setErrored(true)}
@@ -114,8 +136,9 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-10">
-      <p className="text-xs font-bold text-slate-400 text-center">
-        {dict?.generator?.tarotTapToFlip || 'Tap a card to reveal your perk'}
+      <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+        {dict?.generator?.tarotTapToFlip ||
+          'Tap any card to flip it and reveal the perk hidden beneath. Flip all four to lock in your loadout.'}
       </p>
 
       {cards ? (
@@ -160,27 +183,40 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     </div>
                   </button>
 
-                  {/* Front face: plain wrapper, PerkCard supplies its own
-                      button -- only hit-testable once actually flipped. */}
+                  {/* Front face: still dressed as the same tarot card --
+                      dark card stock, amber frame, corner pips -- just
+                      revealing the perk in its center window instead of
+                      turning into a bare icon. */}
                   <div
-                    className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-2xl bg-slate-900/60"
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border-2 border-amber-500/25 bg-gradient-to-b from-slate-900 via-[#120a1c] to-slate-950 p-3"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
                       pointerEvents: card.flipped ? 'auto' : 'none',
                     }}
                   >
-                    <PerkSlot
-                      perk={card.slot.perk}
-                      role={role}
-                      page={card.slot.page}
-                      slot={card.slot.slot}
-                      size="large"
-                      isObscured={isObscured}
-                      isBlind={isBlind}
-                      onClick={onClick}
-                      dict={dict}
-                    />
+                    {/* Inner card-stock border only -- no corner pips here.
+                        PerkCard (rendered below via PerkSlot) already draws
+                        its own top-left coordinate tag and bottom-right
+                        character portrait; pips in those same corners just
+                        overlapped and cluttered them. */}
+                    <span className="pointer-events-none absolute inset-2 rounded-xl border border-amber-500/15" />
+                    <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/80">
+                      {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
+                    </span>
+                    <span className="relative z-10">
+                      <PerkSlot
+                        perk={card.slot.perk}
+                        role={role}
+                        page={card.slot.page}
+                        slot={card.slot.slot}
+                        size="large"
+                        isObscured={isObscured}
+                        isBlind={isBlind}
+                        onClick={onClick}
+                        dict={dict}
+                      />
+                    </span>
                   </div>
                 </motion.div>
               </div>
@@ -191,19 +227,15 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
         <Layers className="h-16 w-16 text-slate-600" />
       )}
 
-      <button
-        type="button"
+      <DbdButton
+        role={role}
+        size="lg"
         onClick={handleShuffle}
         disabled={activePlayablePerks.length === 0}
-        className={`flex items-center gap-3 rounded-2xl px-10 py-5 font-black text-lg tracking-wider uppercase shadow-2xl transition-all duration-300 cursor-pointer ${
-          role === 'Survivor'
-            ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-            : 'bg-gradient-to-r from-rose-600 via-red-600 to-amber-500 hover:brightness-110 text-white active:scale-95'
-        }`}
+        icon={<Layers className="h-6 w-6" />}
       >
-        <Layers className="h-6 w-6" />
-        <span>{dict?.generator?.tarotShuffleButton || 'Shuffle & Draw'}</span>
-      </button>
+        {dict?.generator?.tarotShuffleButton || 'Shuffle & Draw'}
+      </DbdButton>
 
       <div aria-live="polite" className="text-xs font-black text-amber-400 text-center">
         {flavorLine}

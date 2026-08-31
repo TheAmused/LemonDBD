@@ -9,7 +9,7 @@ from app.core.json_provider import safe_json_loads
 from app.models.character import Character
 from app.models.perk import Perk
 from app.models.equipment import Item, Addon
-from app.models.map import MapRealm, MapTile, MapObjective
+from app.models.map import MapRealm, MapTile, MapObjective, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
 from app.models.minigames import GeneratorSetting, GuesserStat
@@ -192,6 +192,17 @@ class DatabaseExportImportService:
             export_data["maps"] = map_list
             counts["maps"] = len(map_list)
 
+            realms_banner = db.session.scalars(select(Realm).order_by(Realm.id)).all()
+            realm_list = []
+            for rb in realms_banner:
+                realm_list.append({
+                    "name": rb.name,
+                    "image_url": rb.image_url,
+                    "image_local_path": rb.image_local_path,
+                })
+            export_data["realms"] = realm_list
+            counts["realms"] = len(realm_list)
+
         if "users" in target_set:
             users = db.session.scalars(select(User).order_by(User.id)).all()
             user_list = []
@@ -304,6 +315,7 @@ class DatabaseExportImportService:
                     db.session.execute(delete(MapObjective))
                     db.session.execute(delete(MapTile))
                     db.session.execute(delete(MapRealm))
+                    db.session.execute(delete(Realm))
                 if "addons" in target_keys:
                     db.session.execute(delete(Addon))
                 if "items" in target_keys:
@@ -489,6 +501,31 @@ class DatabaseExportImportService:
                             db.session.add(obj)
                 db.session.flush()
                 summary["maps"] = {"created": created, "updated": updated}
+
+            if "realms" in target_keys and "realms" in data:
+                raw_realms = data["realms"]
+                created, updated = 0, 0
+                for rdata in raw_realms:
+                    name = rdata.get("name")
+                    if not name:
+                        continue
+                    realm_banner = db.session.scalar(select(Realm).where(Realm.name == name))
+                    if not realm_banner:
+                        realm_banner = Realm(
+                            name=name,
+                            image_url=rdata.get("image_url", ""),
+                            image_local_path=rdata.get("image_local_path", ""),
+                        )
+                        db.session.add(realm_banner)
+                        created += 1
+                    else:
+                        updated += 1
+
+                    for k in ["image_url", "image_local_path"]:
+                        if k in rdata:
+                            setattr(realm_banner, k, rdata[k])
+                db.session.flush()
+                summary["realms"] = {"created": created, "updated": updated}
 
             if "users" in target_keys and "users" in data:
                 raw_users = data["users"]

@@ -1,7 +1,5 @@
 'use client';
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
-import type { Dictionary } from '@/locales/types';
-
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
@@ -15,11 +13,12 @@ import { PageStreakStatsDrawer } from './PageStreakStatsDrawer';
 import { Confetti } from '../Confetti';
 import { ResetConfirmModal } from '../ResetConfirmModal';
 import { staticUrl } from '@/utils/staticUrl';
+import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 interface PageStreakRunViewProps {
   locale: string;
   killer: string;
-  dict?: Dictionary;
 }
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -29,7 +28,9 @@ const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   </div>
 );
 
-export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer, dict }) => {
+export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
+  const dict = useStreaksDict();
+  const killerDisplayName = useCharacterDisplayName()(killer);
   const { run, stats, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
   const iconByPerk = React.useMemo(() => {
     const entries = Object.entries(run?.perk_icons ?? {});
@@ -103,7 +104,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
 
       {!loading && !run && (
         <div className="mt-5">
-          <StartRunPanel killer={killer} busy={busy} onStart={startRun} />
+          <StartRunPanel killer={killerDisplayName} busy={busy} onStart={startRun} dict={dict} />
         </div>
       )}
 
@@ -115,12 +116,13 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             onOpenReset={() => setConfirmingReset(true)}
             onOpenRules={() => setIsRulesOpen(true)}
             onOpenStats={() => setIsStatsOpen(true)}
+            dict={dict}
           />
 
           {run.status === 'completed' ? (
             <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] px-5 py-6 text-center">
               <p className="text-sm font-extrabold text-emerald-400">
-                {dict?.streaks?.allPagesClearedPrefix || 'All'} {run.page_count} {dict?.streaks?.pagesClearedOnSuffix || 'pages cleared on'} {killer}
+                {dict?.streaks?.allPagesClearedPrefix || 'All'} {run.page_count} {dict?.streaks?.pagesClearedOnSuffix || 'pages cleared on'} {killerDisplayName}
               </p>
               <p className="mt-1 text-xs text-slate-400">
                 {dict?.streaks?.resetRunPrompt || 'Reset the run if you want to go through it again.'}
@@ -174,6 +176,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 confirmed={confirmed}
                 onConfirm={() => setConfirmed(true)}
                 iconByPerk={iconByPerk}
+                dict={dict}
               />
 
               {nextPagePerks.length > 0 && (
@@ -202,7 +205,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
                     </div>
                   </div>
                 </>
@@ -213,16 +215,17 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           <ResetConfirmModal
             open={confirmingReset}
             busy={busy}
-            message={`Reset ${killer} to page 1? History is kept.`}
+            message={`${dict?.streaks?.pageStreakResetConfirmPrefix || 'Reset'} ${killerDisplayName} ${dict?.streaks?.pageStreakResetConfirmSuffix || 'to page 1? History is kept.'}`}
             onCancel={() => setConfirmingReset(false)}
             onConfirm={() => {
               setConfirmingReset(false);
               resetRun();
             }}
+            dict={dict}
           />
 
-          <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
-          <PageStreakStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
+          <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
+          <PageStreakStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
         </div>
       )}
     </div>

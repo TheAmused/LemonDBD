@@ -1,6 +1,5 @@
 # backend/app/routes/perks.py
 import logging
-import re
 import threading
 from dataclasses import asdict
 from pathlib import Path
@@ -10,6 +9,7 @@ from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from app.core.security import admin_required, get_current_user
 from app.services.perk_service import PerkService
 from app.services.scraper_service import ScraperService
+from app.utils.lang import extract_lang as _extract_lang
 
 logger = logging.getLogger(__name__)
 perks_bp = Blueprint("perks", __name__)
@@ -25,27 +25,6 @@ def _extract_optional_user_id() -> int | None:
     user = get_current_user()
     if user:
         return user.id
-
-    return None
-
-
-def _extract_lang() -> str | None:
-    """Extract requested language from query parameter, Referer path, or Accept-Language header."""
-    lang = request.args.get("lang")
-    if lang:
-        return lang.strip().lower()
-
-    referer = request.headers.get("Referer", "")
-    if referer:
-        m = re.search(r"/(pl|de|es|fr|it|ja|en)(?:/|$|\?)", referer, re.IGNORECASE)
-        if m:
-            return m.group(1).lower()
-
-    accept_lang = request.headers.get("Accept-Language", "")
-    if accept_lang:
-        primary = accept_lang.split(",")[0].split(";")[0].split("-")[0].strip().lower()
-        if primary in {"pl", "de", "es", "fr", "it", "ja", "en"}:
-            return primary
 
     return None
 

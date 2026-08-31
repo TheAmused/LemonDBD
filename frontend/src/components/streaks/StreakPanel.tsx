@@ -8,7 +8,6 @@ import { DisabledReasonModal } from '@/components/DisabledReasonModal';
 
 interface StreakPanelBaseProps {
   title: string;
-  description: string;
   icon: LucideIcon;
   accent: string;
   accentBorder: string;
@@ -26,7 +25,6 @@ type StreakPanelProps = StreakPanelBaseProps &
 
 export const StreakPanel: React.FC<StreakPanelProps> = ({
   title,
-  description,
   icon: Icon,
   accent,
   accentBorder,
@@ -81,7 +79,6 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       <h3 className={`relative mt-4 text-sm font-extrabold tracking-wide ${comingSoon || disabled ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
         {title}
       </h3>
-      <p className="relative mt-1.5 text-xs leading-relaxed text-slate-500 dark:text-slate-400">{description}</p>
     </>
   );
 

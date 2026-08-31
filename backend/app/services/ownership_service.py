@@ -20,8 +20,10 @@ class OwnershipService:
     def get_user_ownership_summary(self, user_id: int | None = None) -> dict[str, Any]:
         return calculate_ownership_summary(user_id)
 
-    def get_user_characters(self, user_id: int | None = None, role: str | None = None) -> list[dict[str, Any]]:
-        return fetch_user_characters(user_id=user_id, role=role)
+    def get_user_characters(
+        self, user_id: int | None = None, role: str | None = None, lang: str | None = None
+    ) -> list[dict[str, Any]]:
+        return fetch_user_characters(user_id=user_id, role=role, lang=lang)
 
     def set_character_ownership(self, user_id: int, character_id: int, is_owned: bool) -> dict[str, Any]:
         return mutate_character_ownership(user_id, character_id, is_owned)
@@ -32,8 +34,10 @@ class OwnershipService:
     def bulk_set_character_ownership(self, user_id: int, updates: list[dict[str, Any]]) -> dict[str, Any]:
         return bulk_mutate_character_ownership(user_id, updates, self.get_user_ownership_summary)
 
-    def get_user_perks(self, user_id: int | None = None, category: str | None = None) -> list[dict[str, Any]]:
-        return fetch_user_perks(user_id=user_id, category=category)
+    def get_user_perks(
+        self, user_id: int | None = None, category: str | None = None, lang: str | None = None
+    ) -> list[dict[str, Any]]:
+        return fetch_user_perks(user_id=user_id, category=category, lang=lang)
 
     def set_perk_ownership(self, user_id: int, perk_id: int, is_unlocked: bool) -> dict[str, Any]:
         return mutate_perk_ownership(user_id, perk_id, is_unlocked)

@@ -14,7 +14,9 @@ FREE_CHARACTER_SLUGS: set[str] = {
 }
 
 
-def fetch_user_characters(user_id: int | None = None, role: str | None = None) -> list[dict[str, Any]]:
+def fetch_user_characters(
+    user_id: int | None = None, role: str | None = None, lang: str | None = None
+) -> list[dict[str, Any]]:
     """Retrieve all characters annotated with the user's ownership flag."""
     stmt = select(Character)
     if role and role.lower() != "all":
@@ -25,7 +27,7 @@ def fetch_user_characters(user_id: int | None = None, role: str | None = None) -
     if not user_id:
         result = []
         for c in all_chars:
-            d = c.to_dict()
+            d = c.to_dict(lang=lang)
             d["is_owned"] = True
             result.append(d)
         return result
@@ -37,7 +39,7 @@ def fetch_user_characters(user_id: int | None = None, role: str | None = None) -
 
     result = []
     for c in all_chars:
-        d = c.to_dict()
+        d = c.to_dict(lang=lang)
         d["is_owned"] = owned_dict.get(c.id, True)
         result.append(d)
     return result

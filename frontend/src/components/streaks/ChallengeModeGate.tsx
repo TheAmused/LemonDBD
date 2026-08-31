@@ -1,11 +1,11 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/ChallengeModeGate.tsx
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
 import { fetchChallengeModeStatus } from '@/services/challengeModesApi';
+import { useStreaksDict } from '@/context/StreaksDictContext';
 
 interface ChallengeModeGateProps {
   /** Backend `ChallengeModeSetting.mode` key (gauntlet/chaos/history/page_streak). */
@@ -13,13 +13,13 @@ interface ChallengeModeGateProps {
   locale: string;
   role: string;
   children: React.ReactNode;
-  dict?: Dictionary;
 }
 
 /** Guards a challenge mode's route: while its admin kill switch is on, the
  * actual game board never mounts -- this renders a block screen instead,
  * regardless of how the URL was reached. */
-export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, locale, role, children, dict }) => {
+export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, locale, role, children }) => {
+  const dict = useStreaksDict();
   const [status, setStatus] = useState<'loading' | 'enabled' | 'disabled'>('loading');
   const [reason, setReason] = useState<string | null>(null);
 

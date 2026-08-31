@@ -131,11 +131,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
     }
   };
 
-  const completionTitle =
-    dict?.streaks?.chaosStreakComplete ||
-    dict?.streaks?.streakComplete ||
-    dict?.streaks?.chaosStreak ||
-    '';
+  const completionTitle = dict?.streaks?.chaosStreak || '';
 
   const youWonText = dict?.streaks?.youWonOn
     ? `${dict.streaks.youWonOn} `
@@ -175,6 +171,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onOpenPerkPool={() => setIsPerkPoolOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeDifficulty={() => setIsChangeDifficultyOpen(true)}
+          dict={dict}
         />
 
         {!isCompleted && rosterKillers.length > 0 && (
@@ -183,6 +180,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
             lastCheckpointStreak={run?.last_checkpoint_streak || 0}
             checkpointInterval={run?.checkpoint_interval || 0}
             totalKillers={rosterKillers.length}
+            dict={dict}
           />
         )}
 
@@ -217,6 +215,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 onPullLever={reveal}
                 loading={loading || busy}
                 locked={Boolean(acceptedKillerId)}
+                dict={dict}
               />
             </div>
             <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 shadow-sm">
@@ -267,6 +266,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                   onSelect={setSelectedKillerId}
                   disabled={busy || Boolean(acceptedKillerId) || !run?.perks_revealed}
                   loading={loadingKillers}
+                  dict={dict}
                 />
               </div>
             </div>
@@ -291,13 +291,14 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         <ResetConfirmModal
           open={confirmingReset}
           busy={busy}
-          message={dict?.streaks?.resetConfirmPrompt || ''}
+          message={dict?.streaks?.resetConfirmPrompt || 'Streak, checkpoints and your unlocked pool go back to zero. This cannot be undone.'}
           onCancel={() => setConfirmingReset(false)}
           onConfirm={handleReset}
+          dict={dict}
         />
 
-        <ChaosStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} />
-        <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
+        <ChaosStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
         <ChaosPerkPoolModal
           isOpen={isPerkPoolOpen}
           onClose={() => setIsPerkPoolOpen(false)}
@@ -305,7 +306,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           usedPerkNames={run?.used_perks || []}
           dict={dict}
         />
-        <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />
+        <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} dict={dict} />
         <ChaosModeModal
           isOpen={isChangeDifficultyOpen}
           onClose={() => setIsChangeDifficultyOpen(false)}

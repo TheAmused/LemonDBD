@@ -8,7 +8,7 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.models import Character
-from app.scrapers.maps import HensMapScraperDriver, SamoelColtMapScraperDriver
+from app.scrapers.maps import HensMapScraperDriver
 from app.scrapers.types import MapData
 from app.scrapers.wikigg import WikiGGScraperDriver
 from app.services.scraper.assets import download_all_assets
@@ -40,7 +40,6 @@ def execute_sync_pipeline(
     config_file: Path,
     wikigg_driver: WikiGGScraperDriver,
     hens_map_driver: HensMapScraperDriver,
-    samoel_map_driver: SamoelColtMapScraperDriver,
     override_source: str | None = None,
     override_fallback: bool | None = None,
     download_assets: bool = True,
@@ -73,12 +72,6 @@ def execute_sync_pipeline(
             maps.extend(hens_map_driver.scrape_maps())
         except Exception as map_err:
             logger.warning(f"Failed scraping Hens333 maps: {map_err}")
-
-        try:
-            logger.info("Scraping SamoelColt Steam Workshop maps...")
-            maps.extend(samoel_map_driver.scrape_maps())
-        except Exception as map_err:
-            logger.warning(f"Failed scraping SamoelColt maps: {map_err}")
 
         ScraperStateManager.update_status(current_step="seeding_database")
         db_sync_metrics = sync_all_to_database(

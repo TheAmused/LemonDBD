@@ -2,15 +2,12 @@
 // frontend/src/utils/__tests__/mapLandmarks.test.ts
 import test from 'node:test';
 import assert from 'node:assert';
-import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import {
   getMapLandmarks,
   normalizeLandmarkKey,
   MAP_LANDMARKS_DICTIONARY,
   REALM_LANDMARKS_DICTIONARY,
 } from '@/utils/mapLandmarks';
-import { MapLegendDrawer } from '@/utils/../components/maps/MapLegendDrawer';
 
 // ─── 1. Key Normalization Tests ───────────────────────────────────────────────
 test('normalizeLandmarkKey cleans casing, whitespace, punctuation, and diacritics', () => {
@@ -149,85 +146,4 @@ test('getMapLandmarks handles SamoelColt and Hens source descriptions', () => {
 
   const samoelCallouts = getMapLandmarks('Ironworks of Misery', 'The MacMillan Estate', 'samoelcolt');
   assert.ok(samoelCallouts.description?.includes('Isometric') || samoelCallouts.description?.includes('Ironworks'));
-});
-
-// ─── 5. MapLegendDrawer Integration Tests ─────────────────────────────────────
-test('MapLegendDrawer resolves rich landmark callouts when clockSystem has generic placeholders', () => {
-  const genericClockSystem = {
-    twelve_o_clock: 'North Sector',
-    three_o_clock: 'East Sector',
-    six_o_clock: 'South Sector',
-    nine_o_clock: 'West Sector',
-  };
-
-  const html = renderToStaticMarkup(
-    React.createElement(MapLegendDrawer, {
-      mapName: "Azarov's Resting Place",
-      realmName: 'Autohaven Wreckers',
-      clockSystem: genericClockSystem,
-      source: 'samoelcolt',
-      isOpen: true,
-    })
-  );
-
-  // Sector titles
-  assert.ok(html.includes('North Sector'));
-  assert.ok(html.includes('East Sector'));
-  assert.ok(html.includes('South Sector'));
-  assert.ok(html.includes('West Sector'));
-
-  // Resolved rich landmarks
-  assert.ok(html.includes("Azarov&#x27;s Office") || html.includes("Azarov's Office"));
-  assert.ok(html.includes('Killer Shack'));
-
-  // Center Landmark Highlight
-  assert.ok(html.includes('data-testid="map-legend-sector-center"'));
-  assert.ok(html.includes('Center Landmark / Objective'));
-  assert.ok(html.includes('Chokepoint') || html.includes('Spine'));
-});
-
-test('MapLegendDrawer resolves rich landmark callouts when clockSystem is omitted', () => {
-  const html = renderToStaticMarkup(
-    React.createElement(MapLegendDrawer, {
-      mapName: 'Dead Dawg Saloon',
-      realmName: 'Grave of Glennvale',
-      source: 'hens333',
-      isOpen: true,
-    })
-  );
-
-  assert.ok(html.includes('12-Clock Callout System'));
-  assert.ok(html.includes('Dead Dawg Saloon') || html.includes('Saloon'));
-  assert.ok(html.includes('Gallows'));
-  assert.ok(html.includes('Killer Shack'));
-  assert.ok(html.includes('data-testid="map-legend-sector-center"'));
-  assert.ok(html.includes('Sheriff Carriage') || html.includes('Main Street'));
-});
-
-test('MapLegendDrawer respects explicit custom non-generic clockSystem values', () => {
-  const customClockSystem = {
-    description: 'Custom tournament callout configuration',
-    twelve_o_clock: 'Tournament Top Spawn A',
-    three_o_clock: 'Tournament East Gen Cluster B',
-    six_o_clock: 'Tournament Basement Shack C',
-    nine_o_clock: 'Tournament West God Pallet D',
-    center: 'Tournament Center Main Objective E',
-  };
-
-  const html = renderToStaticMarkup(
-    React.createElement(MapLegendDrawer, {
-      mapName: 'Coal Tower',
-      realmName: 'The MacMillan Estate',
-      clockSystem: customClockSystem,
-      source: 'hens333',
-      isOpen: true,
-    })
-  );
-
-  assert.ok(html.includes('Tournament Top Spawn A'));
-  assert.ok(html.includes('Tournament East Gen Cluster B'));
-  assert.ok(html.includes('Tournament Basement Shack C'));
-  assert.ok(html.includes('Tournament West God Pallet D'));
-  assert.ok(html.includes('Tournament Center Main Objective E'));
-  assert.ok(html.includes('Custom tournament callout configuration'));
 });

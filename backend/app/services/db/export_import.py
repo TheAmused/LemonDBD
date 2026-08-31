@@ -502,7 +502,7 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["maps"] = {"created": created, "updated": updated}
 
-            if "realms" in target_keys and "realms" in data:
+            if "maps" in target_keys and "realms" in data:
                 raw_realms = data["realms"]
                 created, updated = 0, 0
                 for rdata in raw_realms:

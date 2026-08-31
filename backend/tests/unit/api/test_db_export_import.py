@@ -239,9 +239,17 @@ class TestDatabaseExportImport:
         assert data["data"]["realms"][0]["name"] == "Autohaven Wreckers"
         assert data["data"]["realms"][0]["image_local_path"] == "realms/autohaven_wreckers.png"
 
-    def test_import_database_merge_creates_and_updates_realm(
+    def test_import_database_merge_restores_realms_under_maps_target_only(
         self, client: FlaskClient, admin_token: str
     ) -> None:
+        """Regression test: a restore call whose targets list only contains
+        "maps" (never "realms" -- the real-world shape for both a pre-Fix-3
+        backup with no "realms" key at all, and any caller that never learned
+        "realms" is a separate target) must still restore realm rows present
+        in the import data. The restore-from-import gate must match the
+        clear-before-restore gate ("maps" in target_keys), not a narrower,
+        separate "realms" in target_keys check.
+        """
         payload = {
             "realms": [
                 {
@@ -255,7 +263,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "merge", "targets": ["realms"], "data": payload},
+            json={"mode": "merge", "targets": ["maps"], "data": payload},
         )
         assert res.status_code == 200
         res_data = res.get_json()
@@ -269,12 +277,36 @@ class TestDatabaseExportImport:
         res2 = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "merge", "targets": ["realms"], "data": payload},
+            json={"mode": "merge", "targets": ["maps"], "data": payload},
         )
         assert res2.status_code == 200
         assert res2.get_json()["summary"]["realms"]["updated"] == 1
         db.session.refresh(realm)
         assert realm.image_url == "https://example.com/ormond-v2.png"
+
+    def test_import_database_replace_mode_old_backup_without_realms_key_degrades_gracefully(
+        self, client: FlaskClient, admin_token: str
+    ) -> None:
+        """A pre-Fix-3 backup file has "maps" data but no "realms" key at
+        all. Restoring it in replace mode with targets=["maps"] clears
+        existing Realm rows (same as it always cleared MapRealm/MapTile/
+        MapObjective under the "maps" key) but must not error just because
+        there is nothing to restore them from.
+        """
+        db.session.add(Realm(name="Haddonfield", image_url="", image_local_path=""))
+        db.session.commit()
+        assert db.session.scalars(select(Realm).where(Realm.name == "Haddonfield")).first() is not None
+
+        payload = {"characters": []}  # no "maps" or "realms" keys at all, like an old backup
+        res = client.post(
+            "/api/v1/admin/database/import",
+            headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
+            json={"mode": "replace", "targets": ["maps"], "data": payload},
+        )
+        assert res.status_code == 200
+        assert "realms" not in res.get_json()["summary"]
+
+        assert db.session.scalars(select(Realm)).first() is None
 
     def test_import_database_replace_mode_clears_realms(
         self, client: FlaskClient, admin_token: str
@@ -291,7 +323,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "replace", "targets": ["maps", "realms"], "data": payload},
+            json={"mode": "replace", "targets": ["maps"], "data": payload},
         )
         assert res.status_code == 200
 

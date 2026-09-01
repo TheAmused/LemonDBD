@@ -88,6 +88,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const touchStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const lastDragZoneRef = useRef<'neutral' | 'smash' | 'pass'>('neutral');
 
   const cardRef = useRef<HTMLDivElement | null>(null);
   const backendBase = getBackendBaseUrl();
@@ -195,9 +196,10 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 
     touchStartRef.current = { x: clientX, y: clientY };
+    lastDragZoneRef.current = 'neutral';
     setIsDragging(true);
     onDragUpdate?.(0, 0, true);
-    SmashSounds.playHoverTick();
+    SmashSounds.playCardGrabSound();
   };
 
   const handleTouchMove = useCallback(
@@ -212,8 +214,15 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       setDragOffset({ x: deltaX, y: deltaY });
       onDragUpdate?.(deltaX, deltaY, true);
 
-      if (Math.abs(deltaX) > 80 && Math.abs(deltaX) % 30 < 5) {
-        SmashSounds.playHeartbeat(1.1);
+      const ZONE_THRESHOLD = 45;
+      if (deltaX > ZONE_THRESHOLD && lastDragZoneRef.current !== 'smash') {
+        lastDragZoneRef.current = 'smash';
+        SmashSounds.playSensualHover();
+      } else if (deltaX < -ZONE_THRESHOLD && lastDragZoneRef.current !== 'pass') {
+        lastDragZoneRef.current = 'pass';
+        SmashSounds.playSadHover();
+      } else if (Math.abs(deltaX) < 25 && lastDragZoneRef.current !== 'neutral') {
+        lastDragZoneRef.current = 'neutral';
       }
     },
     [isDragging, isTopCard, isExiting, isFlipped, onDragUpdate]
@@ -222,6 +231,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const handleTouchEnd = useCallback(() => {
     if (!isDragging || !isTopCard || isExiting || isFlipped) return;
     setIsDragging(false);
+    lastDragZoneRef.current = 'neutral';
 
     const SWIPE_THRESHOLD = 110;
 

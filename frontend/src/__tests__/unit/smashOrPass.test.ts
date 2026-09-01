@@ -306,6 +306,9 @@ test('SmashOrPass: Sound Effects & Web Audio Synthesizer', async (t) => {
     assert.doesNotThrow(() => SmashSounds.playFlipSound());
     assert.doesNotThrow(() => SmashSounds.playHeartbeat(1.0));
     assert.doesNotThrow(() => SmashSounds.playHoverTick());
+    assert.doesNotThrow(() => SmashSounds.playSensualHover());
+    assert.doesNotThrow(() => SmashSounds.playSadHover());
+    assert.doesNotThrow(() => SmashSounds.playCardGrabSound());
   });
 
   await t.test('SmashSounds mute state toggles correctly', () => {

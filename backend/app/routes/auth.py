@@ -10,6 +10,7 @@ from app.schemas.user import UserCreate, UserResponse
 from app.services.altcha_service import AltchaService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
+from app.utils.api_i18n import error_response
 
 logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/api/v1/auth")
@@ -199,7 +200,7 @@ def upload_avatar():
     user = g.current_user
     file = request.files.get("avatar") or request.files.get("file")
     if not file:
-        return jsonify({"error": "No avatar file provided ('avatar' or 'file').", "status": 400}), 400
+        return error_response("no_avatar_file", 400)
 
     updated_user, err = user_service.save_user_avatar(user.id, file)
     if err:

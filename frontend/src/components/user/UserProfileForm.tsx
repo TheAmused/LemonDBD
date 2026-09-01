@@ -5,6 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useState } from 'react';
 import { Key, CheckCircle2, AlertCircle } from 'lucide-react';
 import { StatusFeedback } from '@/types/userProfile';
+import { updateUserProfile, ApiError } from '@/services/userProfileApi';
 
 interface UserProfileFormProps {
   initialEmail: string;
@@ -32,43 +33,27 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
     setStatusMessage(null);
 
     if (newPassword && newPassword !== confirmPassword) {
-      setStatusMessage({ type: 'error', text: 'New passwords do not match.' });
-      return;
-    }
-
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
-    if (!token) {
-      setStatusMessage({ type: 'error', text: 'Authentication token missing. Please log in again.' });
+      setStatusMessage({ type: 'error', text: dict?.user?.passwordsDoNotMatch || 'New passwords do not match.' });
       return;
     }
 
     setIsUpdating(true);
     try {
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || '';
       const body: Record<string, string> = {};
       if (newEmail && newEmail !== initialEmail) body.email = newEmail;
       if (newPassword) body.new_password = newPassword;
 
-      const res = await fetch(`${backendBase}/api/v1/auth/profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        setStatusMessage({ type: 'error', text: data.error || 'Failed to update profile.' });
-      } else {
-        setStatusMessage({ type: 'success', text: 'Profile updated successfully!' });
-        setNewPassword('');
-        setConfirmPassword('');
-        await onRefreshUser();
-      }
+      await updateUserProfile(body);
+      setStatusMessage({ type: 'success', text: dict?.user?.profileUpdateSuccessMsg || 'Profile updated successfully!' });
+      setNewPassword('');
+      setConfirmPassword('');
+      await onRefreshUser();
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : 'Network error occurred.';
+      const fallback =
+        err instanceof ApiError && err.code === 'authTokenMissing'
+          ? dict?.user?.authTokenMissing || 'Authentication token missing. Please log in again.'
+          : dict?.user?.profileUpdateFailedMsg || 'Failed to update profile.';
+      const errorMsg = err instanceof ApiError ? err.message || fallback : fallback;
       setStatusMessage({ type: 'error', text: errorMsg });
     } finally {
       setIsUpdating(false);

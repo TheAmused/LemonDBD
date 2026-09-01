@@ -2,22 +2,23 @@
 import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/user/page.tsx
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { UserAvatar } from '@/components/UserAvatar';
 import { Sidebar } from '@/components/Sidebar';
-import { AuthModal } from '@/components/AuthModal';
-import { BugReportModal } from '@/components/sidebar/BugReportModal';
-import { UserMetricsGrid } from '@/components/user/UserMetricsGrid';
+import { UserMetricsGrid, UserMetricsGridSkeleton } from '@/components/user/UserMetricsGrid';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
-import { UserBugReportsList } from '@/components/user/UserBugReportsList';
+import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
+import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
+import { fetchMyBugReports, uploadAvatar, resetAvatar, ApiError } from '@/services/userProfileApi';
 import {
   User,
   Mail,
@@ -32,6 +33,26 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react';
+
+// Modals are only needed once the user interacts (sign-in prompt, bug report
+// form) -- code-split them out of the initial /user bundle. `ssr: false`
+// because both hold client-only state (file inputs, altcha, portals).
+const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), {
+  ssr: false,
+});
+const BugReportModal = dynamic(
+  () => import('@/components/sidebar/BugReportModal').then((m) => m.BugReportModal),
+  { ssr: false }
+);
+
+// The bug-reports subtab is not visible on first paint (default tab is
+// "overview"), so its list UI is fetched only when the user actually
+// switches to it.
+const UserBugReportsList = dynamic(
+  () => import('@/components/user/UserBugReportsList').then((m) => m.UserBugReportsList),
+  { ssr: false, loading: () => <UserBugReportsSkeleton /> }
+);
+
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -51,84 +72,73 @@ export default function UserProfilePage() {
 
   const [myReports, setMyReports] = useState<UserBugReport[]>([]);
   const [loadingReports, setLoadingReports] = useState(false);
+  const [reportsTotal, setReportsTotal] = useState(0);
+  const [reportsPage, setReportsPage] = useState(1);
+  const [reportsTotalPages, setReportsTotalPages] = useState(1);
+  const REPORTS_PER_PAGE = 10;
 
   useEffect(() => {
     document.title = dict?.app?.userPageTitle || 'LemonDBD - User Profile';
     getDictionary(currentLocale).then(setDict);
   }, [currentLocale]);
 
-  const fetchMyReports = useCallback(async () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
-    if (!token) return;
+  const fetchMyReports = useCallback(async (page: number = 1, signal?: AbortSignal) => {
+    if (!isAuthenticated) return;
 
     setLoadingReports(true);
     try {
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || '';
-      const res = await fetch(`${backendBase}/api/v1/bug-reports/my?_t=${Date.now()}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setMyReports(data.reports || []);
-      }
+      const result = await fetchMyBugReports(page, REPORTS_PER_PAGE, signal);
+      setMyReports(result.reports);
+      setReportsTotal(result.total);
+      setReportsPage(result.page);
+      setReportsTotalPages(result.totalPages);
     } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
       console.error('Failed to fetch user bug reports:', err);
     } finally {
       setLoadingReports(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchMyReports();
-    }
+    if (!isAuthenticated) return;
+    // Cancel a still-in-flight request from a prior page/tab switch so its
+    // (potentially stale) response can never overwrite a newer one.
+    const controller = new AbortController();
+    fetchMyReports(1, controller.signal);
+    return () => controller.abort();
   }, [isAuthenticated, fetchMyReports]);
+
+  const handleReportsPageChange = useCallback(
+    (page: number) => {
+      fetchMyReports(page);
+    },
+    [fetchMyReports]
+  );
 
   const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (file.size > 10 * 1024 * 1024) {
-      setAvatarFeedback({ type: 'error', text: 'Avatar file size must be under 10MB.' });
+      setAvatarFeedback({ type: 'error', text: dict?.user?.avatarSizeLimit || 'Avatar file size must be under 10MB.' });
       return;
     }
-
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
-    if (!token) return;
 
     const localBlobUrl = URL.createObjectURL(file);
     setOptimisticPreview(localBlobUrl);
     setIsUploadingAvatar(true);
     setAvatarFeedback(null);
 
-    const formData = new FormData();
-    formData.append('avatar', file);
-
     try {
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || '';
-      const res = await fetch(`${backendBase}/api/v1/auth/avatar`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        setOptimisticPreview(null);
-        setAvatarFeedback({ type: 'error', text: data.error || 'Failed to upload avatar.' });
-      } else {
-        setAvatarFeedback({ type: 'success', text: 'Avatar updated successfully!' });
-        await refreshUser();
-        setOptimisticPreview(null);
-      }
+      await uploadAvatar(file);
+      setAvatarFeedback({ type: 'success', text: dict?.user?.avatarUpdateSuccess || 'Avatar updated successfully!' });
+      await refreshUser();
+      setOptimisticPreview(null);
     } catch (err: unknown) {
       setOptimisticPreview(null);
-      const errorMsg = err instanceof Error ? err.message : 'Network error uploading avatar.';
+      const fallback = dict?.user?.avatarUploadFailed || 'Failed to upload avatar.';
+      const errorMsg = err instanceof ApiError ? err.message || fallback : fallback;
       setAvatarFeedback({ type: 'error', text: errorMsg });
     } finally {
       setIsUploadingAvatar(false);
@@ -137,31 +147,17 @@ export default function UserProfilePage() {
   };
 
   const handleResetAvatar = async () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
-    if (!token) return;
-
     setIsUploadingAvatar(true);
     setAvatarFeedback(null);
     setOptimisticPreview(null);
 
     try {
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || '';
-      const res = await fetch(`${backendBase}/api/v1/auth/avatar`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        setAvatarFeedback({ type: 'error', text: data.error || 'Failed to reset avatar.' });
-      } else {
-        setAvatarFeedback({ type: 'success', text: 'Avatar reset to default.' });
-        await refreshUser();
-      }
+      await resetAvatar();
+      setAvatarFeedback({ type: 'success', text: dict?.user?.avatarResetSuccessMsg || 'Avatar reset to default.' });
+      await refreshUser();
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : 'Network error resetting avatar.';
+      const fallback = dict?.user?.avatarResetFailed || 'Failed to reset avatar.';
+      const errorMsg = err instanceof ApiError ? err.message || fallback : fallback;
       setAvatarFeedback({ type: 'error', text: errorMsg });
     } finally {
       setIsUploadingAvatar(false);
@@ -169,16 +165,9 @@ export default function UserProfilePage() {
   };
 
   if (!dict || isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs">
-        <div className="flex flex-col items-center gap-3">
-          <LemonIcon className="h-10 w-10 animate-bounce" />
-          <p className="text-amber-400">
-            {dict?.characterDetail?.loading || 'Loading profile...'}
-          </p>
-        </div>
-      </div>
-    );
+    // Full layout-matched skeleton (header/metrics/tabs/columns) instead of
+    // a bare spinner -- keeps CLS at zero once the real content mounts.
+    return <UserProfileSkeleton dict={dict} />;
   }
 
   if (!isAuthenticated || !user) {
@@ -280,7 +269,7 @@ export default function UserProfilePage() {
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploadingAvatar}
-                    className="flex items-center gap-1 rounded-lg border border-slate-700 bg-slate-800/80 px-2.5 py-1 text-[10px] font-bold text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer shadow-xs"
+                    className="relative flex items-center gap-1 rounded-lg border border-slate-700 bg-slate-800/80 px-2.5 py-1 text-[10px] font-bold text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer shadow-xs before:absolute before:-inset-3 before:content-['']"
                   >
                     <Upload className="h-3 w-3 text-amber-500" />
                     <span>{dict?.user?.changeAvatar || 'Change'}</span>
@@ -291,7 +280,7 @@ export default function UserProfilePage() {
                       onClick={handleResetAvatar}
                       disabled={isUploadingAvatar}
                       title={dict?.user?.removeAvatar || 'Reset to default icon'}
-                      className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-950/40 px-2.5 py-1 text-[10px] font-bold text-rose-400 hover:bg-rose-900/60 transition-colors cursor-pointer shadow-xs"
+                      className="relative flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-950/40 px-2.5 py-1 text-[10px] font-bold text-rose-400 hover:bg-rose-900/60 transition-colors cursor-pointer shadow-xs before:absolute before:-inset-3 before:content-['']"
                     >
                       <Trash2 className="h-3 w-3" />
                       <span>{dict?.user?.removeAvatar || 'Reset'}</span>
@@ -361,7 +350,7 @@ export default function UserProfilePage() {
             <button
               type="button"
               onClick={() => setActiveSubTab('overview')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                 activeSubTab === 'overview'
                   ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
                   : 'text-slate-400 hover:text-slate-200'
@@ -374,20 +363,24 @@ export default function UserProfilePage() {
             <button
               type="button"
               onClick={() => setActiveSubTab('bugs')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                 activeSubTab === 'bugs'
                   ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Bug className="h-4 w-4" />
-              <span>{dict?.user?.tabBugReports || 'My Bug Reports'} ({myReports.length})</span>
+              <span>{dict?.user?.tabBugReports || 'My Bug Reports'} ({reportsTotal})</span>
             </button>
           </div>
 
           {activeSubTab === 'overview' ? (
             <>
-              <UserMetricsGrid ownership={ownership} dict={dict} />
+              {ownership === null ? (
+                <UserMetricsGridSkeleton />
+              ) : (
+                <UserMetricsGrid ownership={ownership} dict={dict} />
+              )}
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 w-full">
@@ -442,12 +435,19 @@ export default function UserProfilePage() {
               </div>
             </>
           ) : (
-            <UserBugReportsList
-              reports={myReports}
-              loading={loadingReports}
-              onOpenReportModal={() => setBugModalOpen(true)}
-              dict={dict}
-            />
+            <Suspense fallback={<UserBugReportsSkeleton dict={dict} />}>
+              <UserBugReportsList
+                reports={myReports}
+                loading={loadingReports}
+                onOpenReportModal={() => setBugModalOpen(true)}
+                dict={dict}
+                total={reportsTotal}
+                page={reportsPage}
+                perPage={REPORTS_PER_PAGE}
+                totalPages={reportsTotalPages}
+                onPageChange={handleReportsPageChange}
+              />
+            </Suspense>
           )}
         </div>
       </main>

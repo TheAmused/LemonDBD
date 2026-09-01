@@ -26,7 +26,14 @@ def list_all_users_paginated(
     page: int = 1,
     per_page: int = 20,
 ) -> dict[str, Any]:
-    """Retrieve paginated user records annotated with owned count metrics."""
+    """Retrieve paginated user records annotated with owned count metrics.
+
+    The per-row owned-character / unlocked-perk counts used to be two extra
+    COUNT queries *per user* (2 * per_page queries for one page load). Both
+    are now fetched as a single GROUP BY per metric, scoped to just the
+    users on this page, and merged in Python -- 2 extra queries total
+    regardless of page size.
+    """
     stmt = select(User)
 
     if role and role.lower() in ["admin", "user"]:
@@ -39,30 +46,37 @@ def list_all_users_paginated(
     total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
     stmt = stmt.order_by(User.id.asc()).offset((page - 1) * per_page).limit(per_page)
     users = db.session.scalars(stmt).all()
+    user_ids = [u.id for u in users]
+
+    owned_chars_by_user: dict[int, int] = {}
+    unlocked_perks_by_user: dict[int, int] = {}
+
+    if user_ids:
+        char_rows = db.session.execute(
+            select(UserCharacterOwnership.user_id, func.count(UserCharacterOwnership.id))
+            .where(
+                UserCharacterOwnership.user_id.in_(user_ids),
+                UserCharacterOwnership.is_owned.is_(True),
+            )
+            .group_by(UserCharacterOwnership.user_id)
+        ).all()
+        owned_chars_by_user = dict(char_rows)
+
+        perk_rows = db.session.execute(
+            select(UserPerkOwnership.user_id, func.count(UserPerkOwnership.id))
+            .where(
+                UserPerkOwnership.user_id.in_(user_ids),
+                UserPerkOwnership.is_unlocked.is_(True),
+            )
+            .group_by(UserPerkOwnership.user_id)
+        ).all()
+        unlocked_perks_by_user = dict(perk_rows)
 
     user_list = []
     for u in users:
         d = u.to_dict()
-        owned_chars = (
-            db.session.scalar(
-                select(func.count(UserCharacterOwnership.id)).where(
-                    UserCharacterOwnership.user_id == u.id,
-                    UserCharacterOwnership.is_owned.is_(True),
-                )
-            )
-            or 0
-        )
-        unlocked_perks = (
-            db.session.scalar(
-                select(func.count(UserPerkOwnership.id)).where(
-                    UserPerkOwnership.user_id == u.id,
-                    UserPerkOwnership.is_unlocked.is_(True),
-                )
-            )
-            or 0
-        )
-        d["owned_characters_count"] = owned_chars
-        d["unlocked_perks_count"] = unlocked_perks
+        d["owned_characters_count"] = owned_chars_by_user.get(u.id, 0)
+        d["unlocked_perks_count"] = unlocked_perks_by_user.get(u.id, 0)
         user_list.append(d)
 
     return {

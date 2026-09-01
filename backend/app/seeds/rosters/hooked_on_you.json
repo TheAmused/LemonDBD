@@ -7,7 +7,7 @@
         "theme_color": "#00f5d4",
         "category": "Dating Sim",
         "is_nsfw": false,
-        "is_active": true
+        "is_active": false
     },
     "translations": {
         "en": {

@@ -31,9 +31,20 @@ class SmashSoundEngine {
       }
     }
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
     return this.ctx;
+  }
+
+  // Called on first user interaction anywhere on the window (click/touch/key)
+  public handleUserInteraction() {
+    const ctx = this.initContext();
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+    if (!this.isMuted && this.isBgmPlaying && (!this.bgmGainNode || !this.bgmIntervalId)) {
+      this.startBgm();
+    }
   }
 
   public getIsMuted(): boolean {
@@ -69,6 +80,35 @@ class SmashSoundEngine {
     }
   }
 
+  public isSoundActive(): boolean {
+    return !this.isMuted;
+  }
+
+  public toggleMasterSound(): boolean {
+    if (this.isMuted || !this.isBgmPlaying) {
+      // Turn sound ON
+      this.isMuted = false;
+      this.isBgmPlaying = true;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('lemondbd_smash_sound_muted', 'false');
+        localStorage.setItem('lemondbd_smash_bgm_playing', 'true');
+      }
+      this.startBgm();
+      this.playSmashSound();
+      return true;
+    } else {
+      // Turn sound OFF
+      this.isMuted = true;
+      this.isBgmPlaying = false;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('lemondbd_smash_sound_muted', 'true');
+        localStorage.setItem('lemondbd_smash_bgm_playing', 'false');
+      }
+      this.stopBgm();
+      return false;
+    }
+  }
+
   // ================= BACKGROUND MUSIC: "SEXY & TWISTED" DARK SYNTH AMBIENCE =================
   public toggleBgm(): boolean {
     if (this.isBgmPlaying) {
@@ -98,10 +138,10 @@ class SmashSoundEngine {
 
     // Dark sensual chord progression in D-minor: Dm9 -> Bbmaj7#11 -> Gm9 -> A7alt
     const chords = [
-      [146.83, 220.00, 261.63, 329.63, 440.00], // D3, A3, C4, E4, A4 (Dm9)
+      [146.83, 220.0, 261.63, 329.63, 440.0], // D3, A3, C4, E4, A4 (Dm9)
       [116.54, 233.08, 293.66, 369.99, 466.16], // Bb2, Bb3, D4, F#4, Bb4 (Bbmaj7#11)
-      [98.00, 196.00, 261.63, 293.66, 392.00],  // G2, G3, C4, D4, G4 (Gm9)
-      [110.00, 220.00, 277.18, 329.63, 415.30], // A2, A3, C#4, E4, G#4 (A7alt)
+      [98.0, 196.0, 261.63, 293.66, 392.0], // G2, G3, C4, D4, G4 (Gm9)
+      [110.0, 220.0, 277.18, 329.63, 415.3], // A2, A3, C#4, E4, G#4 (A7alt)
     ];
 
     let chordStep = 0;
@@ -133,7 +173,7 @@ class SmashSoundEngine {
 
         oscGain.gain.setValueAtTime(0.001, now);
         oscGain.gain.linearRampToValueAtTime(idx === 0 ? 0.25 : 0.08, now + 1.8);
-        oscGain.gain.linearRampToValueAtTime(idx === 0 ? 0.20 : 0.06, now + 4.5);
+        oscGain.gain.linearRampToValueAtTime(idx === 0 ? 0.2 : 0.06, now + 4.5);
         oscGain.gain.linearRampToValueAtTime(0.001, now + 6.2);
 
         osc.connect(oscGain);
@@ -198,9 +238,9 @@ class SmashSoundEngine {
     }
   }
 
-  // ================= SOUND EFFECTS =================
+  // ================= SOUND EFFECTS: SEXY SMASH & BIG AIR WHOOSH =================
 
-  // Seductive / Sexy Smash Audio Cue
+  // SEXY SMASH: Warm 808 sub-drop + lush romantic FM harp chord + crystalline shimmer
   public playSmashSound() {
     if (this.isMuted) return;
     const ctx = this.initContext();
@@ -208,45 +248,90 @@ class SmashSoundEngine {
 
     const now = ctx.currentTime;
 
-    // 1. Sultry Warm Harmonic Chords (F#4 -> A#4 -> C#5 -> F5)
-    const freqs = [369.99, 466.16, 554.37, 698.46];
-    freqs.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
-      osc.frequency.setValueAtTime(freq * 0.98, now + idx * 0.04);
-      osc.frequency.exponentialRampToValueAtTime(freq, now + idx * 0.04 + 0.12);
-
-      gain.gain.setValueAtTime(0.001, now + idx * 0.04);
-      gain.gain.linearRampToValueAtTime(0.12, now + idx * 0.04 + 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.04 + 0.7);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now + idx * 0.04);
-      osc.stop(now + idx * 0.04 + 0.75);
-    });
-
-    // 2. Sexy Sub-Bass Heartbeat Thump
+    // 1. Sensual deep sub-bass drop (808 style)
     const subOsc = ctx.createOscillator();
     const subGain = ctx.createGain();
     subOsc.type = 'sine';
-    subOsc.frequency.setValueAtTime(95, now);
-    subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.35);
+    subOsc.frequency.setValueAtTime(115, now);
+    subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.32);
 
-    subGain.gain.setValueAtTime(0.25, now);
-    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    subGain.gain.setValueAtTime(0.28, now);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
 
     subOsc.connect(subGain);
     subGain.connect(ctx.destination);
-
     subOsc.start(now);
-    subOsc.stop(now + 0.36);
+    subOsc.stop(now + 0.34);
+
+    // 2. Lush romantic FM chime chord: F4 (349Hz), A4 (440Hz), C5 (523Hz), E5 (659Hz), A5 (880Hz)
+    const freqs = [349.23, 440.0, 523.25, 659.25, 880.0];
+    freqs.forEach((freq, idx) => {
+      const carrier = ctx.createOscillator();
+      const modulator = ctx.createOscillator();
+      const modGain = ctx.createGain();
+      const carrierGain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      const startTime = now + idx * 0.032;
+
+      carrier.type = 'sine';
+      carrier.frequency.setValueAtTime(freq, startTime);
+
+      modulator.type = 'triangle';
+      modulator.frequency.setValueAtTime(freq * 2, startTime);
+
+      // FM index envelope
+      modGain.gain.setValueAtTime(freq * 0.75, startTime);
+      modGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.45);
+
+      modulator.connect(modGain);
+      modGain.connect(carrier.frequency);
+
+      // High-sheen resonant filter
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2800, startTime);
+      filter.frequency.exponentialRampToValueAtTime(900, startTime + 0.55);
+
+      carrierGain.gain.setValueAtTime(0.001, startTime);
+      carrierGain.gain.linearRampToValueAtTime(0.12 - idx * 0.015, startTime + 0.025);
+      carrierGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.55);
+
+      carrier.connect(filter);
+      filter.connect(carrierGain);
+      carrierGain.connect(ctx.destination);
+
+      modulator.start(startTime);
+      carrier.start(startTime);
+      modulator.stop(startTime + 0.58);
+      carrier.stop(startTime + 0.58);
+    });
+
+    // 3. Delicate sparkle pop accent
+    const sparkleOsc = ctx.createOscillator();
+    const sparkleGain = ctx.createGain();
+    const sparkleFilter = ctx.createBiquadFilter();
+
+    sparkleFilter.type = 'bandpass';
+    sparkleFilter.frequency.setValueAtTime(3200, now + 0.1);
+    sparkleFilter.Q.setValueAtTime(4.0, now + 0.1);
+
+    sparkleOsc.type = 'sine';
+    sparkleOsc.frequency.setValueAtTime(1600, now + 0.1);
+    sparkleOsc.frequency.exponentialRampToValueAtTime(3200, now + 0.22);
+
+    sparkleGain.gain.setValueAtTime(0.001, now + 0.1);
+    sparkleGain.gain.linearRampToValueAtTime(0.07, now + 0.13);
+    sparkleGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+
+    sparkleOsc.connect(sparkleFilter);
+    sparkleFilter.connect(sparkleGain);
+    sparkleGain.connect(ctx.destination);
+
+    sparkleOsc.start(now + 0.1);
+    sparkleOsc.stop(now + 0.36);
   }
 
-  // Melancholic / Sad Pass Audio Cue
+  // BIG AIR WHOOSH PASS: High-velocity aerodynamic filtered noise whoosh + sub air displacement
   public playPassSound() {
     if (this.isMuted) return;
     const ctx = this.initContext();
@@ -254,45 +339,62 @@ class SmashSoundEngine {
 
     const now = ctx.currentTime;
 
-    // Descending Minor Sad Chords (E4 -> D4 -> C4 -> A3)
-    const freqs = [329.63, 293.66, 261.63, 220.0];
-    freqs.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+    // 1. Aerodynamic White Noise Whoosh Buffer (0.42s)
+    const bufferSize = Math.floor(ctx.sampleRate * 0.42);
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
 
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now + idx * 0.06);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.92, now + idx * 0.06 + 0.4);
+    const whiteNoise = ctx.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
 
-      gain.gain.setValueAtTime(0.001, now + idx * 0.06);
-      gain.gain.linearRampToValueAtTime(0.1, now + idx * 0.06 + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.06 + 0.55);
+    // Resonant bandpass filter that sweeps rapidly downward (4200Hz -> 90Hz)
+    const whooshFilter = ctx.createBiquadFilter();
+    whooshFilter.type = 'bandpass';
+    whooshFilter.frequency.setValueAtTime(4200, now);
+    whooshFilter.frequency.exponentialRampToValueAtTime(95, now + 0.4);
+    whooshFilter.Q.setValueAtTime(3.8, now);
 
-      osc.connect(gain);
-      gain.connect(ctx.destination);
+    // Second lowpass stage for smooth cinematic body
+    const lowpassStage = ctx.createBiquadFilter();
+    lowpassStage.type = 'lowpass';
+    lowpassStage.frequency.setValueAtTime(3500, now);
+    lowpassStage.frequency.exponentialRampToValueAtTime(200, now + 0.4);
 
-      osc.start(now + idx * 0.06);
-      osc.stop(now + idx * 0.06 + 0.6);
-    });
+    const whooshGain = ctx.createGain();
+    whooshGain.gain.setValueAtTime(0.001, now);
+    whooshGain.gain.linearRampToValueAtTime(0.32, now + 0.06); // Fast aggressive attack
+    whooshGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
 
-    // Hollow wind / dark void undertone
-    const noiseOsc = ctx.createOscillator();
-    const noiseGain = ctx.createGain();
-    noiseOsc.type = 'triangle';
-    noiseOsc.frequency.setValueAtTime(110, now);
-    noiseOsc.frequency.exponentialRampToValueAtTime(55, now + 0.45);
+    whiteNoise.connect(whooshFilter);
+    whooshFilter.connect(lowpassStage);
+    lowpassStage.connect(whooshGain);
+    whooshGain.connect(ctx.destination);
 
-    noiseGain.gain.setValueAtTime(0.12, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+    whiteNoise.start(now);
+    whiteNoise.stop(now + 0.42);
 
-    noiseOsc.connect(noiseGain);
-    noiseGain.connect(ctx.destination);
+    // 2. Sub Air Displacement Body (Physical air whoosh weight)
+    const subAirOsc = ctx.createOscillator();
+    const subAirGain = ctx.createGain();
+    subAirOsc.type = 'sine';
+    subAirOsc.frequency.setValueAtTime(160, now);
+    subAirOsc.frequency.exponentialRampToValueAtTime(40, now + 0.38);
 
-    noiseOsc.start(now);
-    noiseOsc.stop(now + 0.46);
+    subAirGain.gain.setValueAtTime(0.001, now);
+    subAirGain.gain.linearRampToValueAtTime(0.18, now + 0.05);
+    subAirGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+
+    subAirOsc.connect(subAirGain);
+    subAirGain.connect(ctx.destination);
+
+    subAirOsc.start(now);
+    subAirOsc.stop(now + 0.4);
   }
 
-  // Card Flip Sound
+  // Tactile Tarot Card Flip Sound (Crisp, silky flick)
   public playFlipSound() {
     if (this.isMuted) return;
     const ctx = this.initContext();
@@ -301,22 +403,27 @@ class SmashSoundEngine {
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(800, now);
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(450, now);
-    osc.frequency.exponentialRampToValueAtTime(220, now + 0.08);
+    osc.frequency.setValueAtTime(320, now);
+    osc.frequency.exponentialRampToValueAtTime(140, now + 0.06);
 
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    gain.gain.setValueAtTime(0.06, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
 
-    osc.connect(gain);
+    osc.connect(filter);
+    filter.connect(gain);
     gain.connect(ctx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.09);
+    osc.stop(now + 0.07);
   }
 
-  // Terror Radius Heartbeat
+  // Warm anatomical heartbeat (Organic lub-dub double pulse)
   public playHeartbeat(speedMultiplier = 1.0) {
     if (this.isMuted) return;
     const ctx = this.initContext();
@@ -326,6 +433,10 @@ class SmashSoundEngine {
     const playThump = (time: number, freq: number, vol: number) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(150, time);
 
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, time);
@@ -334,18 +445,19 @@ class SmashSoundEngine {
       gain.gain.setValueAtTime(vol, time);
       gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
 
-      osc.connect(gain);
+      osc.connect(filter);
+      filter.connect(gain);
       gain.connect(ctx.destination);
 
       osc.start(time);
       osc.stop(time + 0.13);
     };
 
-    playThump(now, 75, 0.25);
-    playThump(now + 0.14 / speedMultiplier, 60, 0.18);
+    playThump(now, 72, 0.22);
+    playThump(now + 0.14 / speedMultiplier, 58, 0.16);
   }
 
-  // Hover Tick / Eerie Whisper
+  // Silky hover micro-tick
   public playHoverTick() {
     if (this.isMuted) return;
     const ctx = this.initContext();
@@ -356,17 +468,17 @@ class SmashSoundEngine {
     const gain = ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, now);
-    osc.frequency.exponentialRampToValueAtTime(440, now + 0.03);
+    osc.frequency.setValueAtTime(620, now);
+    osc.frequency.exponentialRampToValueAtTime(400, now + 0.025);
 
-    gain.gain.setValueAtTime(0.02, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+    gain.gain.setValueAtTime(0.018, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.035);
+    osc.stop(now + 0.03);
   }
 }
 

@@ -7,7 +7,7 @@
         "theme_color": "#ec4899",
         "category": "Anime",
         "is_nsfw": false,
-        "is_active": true
+        "is_active": false
     },
     "translations": {
         "en": {

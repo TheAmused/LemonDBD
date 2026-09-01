@@ -7,7 +7,7 @@
         "theme_color": "#a855f7",
         "category": "Eldritch",
         "is_nsfw": false,
-        "is_active": true
+        "is_active": false
     },
     "translations": {
         "en": {

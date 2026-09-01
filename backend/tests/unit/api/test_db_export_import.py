@@ -10,6 +10,7 @@ from app import create_app
 from app.core.extensions import db
 from app.core.security import generate_token
 from app.models.character import Character
+from app.models.map import Realm
 from app.models.perk import Perk
 from app.models.user import User
 
@@ -217,3 +218,114 @@ class TestDatabaseExportImport:
             data="not json",
         )
         assert res.status_code == 400
+
+    def test_export_database_includes_realms(self, client: FlaskClient, admin_token: str) -> None:
+        realm = Realm(
+            name="Autohaven Wreckers",
+            image_url="https://example.com/autohaven.png",
+            image_local_path="realms/autohaven_wreckers.png",
+        )
+        db.session.add(realm)
+        db.session.commit()
+
+        res = client.get(
+            "/api/v1/admin/database/export?targets=maps",
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert res.status_code == 200
+        data = res.get_json()
+        assert "realms" in data["data"]
+        assert data["counts"]["realms"] == 1
+        assert data["data"]["realms"][0]["name"] == "Autohaven Wreckers"
+        assert data["data"]["realms"][0]["image_local_path"] == "realms/autohaven_wreckers.png"
+
+    def test_import_database_merge_restores_realms_under_maps_target_only(
+        self, client: FlaskClient, admin_token: str
+    ) -> None:
+        """Regression test: a restore call whose targets list only contains
+        "maps" (never "realms" -- the real-world shape for both a pre-Fix-3
+        backup with no "realms" key at all, and any caller that never learned
+        "realms" is a separate target) must still restore realm rows present
+        in the import data. The restore-from-import gate must match the
+        clear-before-restore gate ("maps" in target_keys), not a narrower,
+        separate "realms" in target_keys check.
+        """
+        payload = {
+            "realms": [
+                {
+                    "name": "Ormond",
+                    "image_url": "https://example.com/ormond.png",
+                    "image_local_path": "realms/ormond.png",
+                }
+            ]
+        }
+
+        res = client.post(
+            "/api/v1/admin/database/import",
+            headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
+            json={"mode": "merge", "targets": ["maps"], "data": payload},
+        )
+        assert res.status_code == 200
+        res_data = res.get_json()
+        assert res_data["summary"]["realms"]["created"] == 1
+
+        realm = db.session.scalars(select(Realm).where(Realm.name == "Ormond")).first()
+        assert realm is not None
+        assert realm.image_local_path == "realms/ormond.png"
+
+        payload["realms"][0]["image_url"] = "https://example.com/ormond-v2.png"
+        res2 = client.post(
+            "/api/v1/admin/database/import",
+            headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
+            json={"mode": "merge", "targets": ["maps"], "data": payload},
+        )
+        assert res2.status_code == 200
+        assert res2.get_json()["summary"]["realms"]["updated"] == 1
+        db.session.refresh(realm)
+        assert realm.image_url == "https://example.com/ormond-v2.png"
+
+    def test_import_database_replace_mode_old_backup_without_realms_key_degrades_gracefully(
+        self, client: FlaskClient, admin_token: str
+    ) -> None:
+        """A pre-Fix-3 backup file has "maps" data but no "realms" key at
+        all. Restoring it in replace mode with targets=["maps"] clears
+        existing Realm rows (same as it always cleared MapRealm/MapTile/
+        MapObjective under the "maps" key) but must not error just because
+        there is nothing to restore them from.
+        """
+        db.session.add(Realm(name="Haddonfield", image_url="", image_local_path=""))
+        db.session.commit()
+        assert db.session.scalars(select(Realm).where(Realm.name == "Haddonfield")).first() is not None
+
+        payload = {"characters": []}  # no "maps" or "realms" keys at all, like an old backup
+        res = client.post(
+            "/api/v1/admin/database/import",
+            headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
+            json={"mode": "replace", "targets": ["maps"], "data": payload},
+        )
+        assert res.status_code == 200
+        assert "realms" not in res.get_json()["summary"]
+
+        assert db.session.scalars(select(Realm)).first() is None
+
+    def test_import_database_replace_mode_clears_realms(
+        self, client: FlaskClient, admin_token: str
+    ) -> None:
+        db.session.add(Realm(name="Springwood", image_url="", image_local_path=""))
+        db.session.commit()
+        assert db.session.scalars(select(Realm).where(Realm.name == "Springwood")).first() is not None
+
+        payload = {
+            "realms": [
+                {"name": "Yamaoka Estate", "image_url": "", "image_local_path": ""}
+            ]
+        }
+        res = client.post(
+            "/api/v1/admin/database/import",
+            headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
+            json={"mode": "replace", "targets": ["maps"], "data": payload},
+        )
+        assert res.status_code == 200
+
+        assert db.session.scalars(select(Realm).where(Realm.name == "Springwood")).first() is None
+        assert db.session.scalars(select(Realm).where(Realm.name == "Yamaoka Estate")).first() is not None

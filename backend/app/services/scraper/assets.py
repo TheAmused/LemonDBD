@@ -7,7 +7,7 @@ from pathlib import Path
 from curl_cffi.requests import AsyncSession
 from PIL import Image
 
-from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData
+from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData, RealmImageData
 from app.scrapers.utils import sanitize_filename
 from app.services.scraper.state import ScraperStateManager
 
@@ -117,11 +117,12 @@ async def download_all_assets(
     addons: list[AddonData] | None = None,
     maps: list[MapData] | None = None,
     offerings: list[OfferingData] | None = None,
+    realms: list[RealmImageData] | None = None,
     impersonate_browser: str = "chrome120",
     max_concurrent_downloads: int = 10,
     request_timeout: int = 30,
 ) -> None:
-    """Batch concurrent asset downloader for characters, powers, perks, items, addons, maps, and offerings."""
+    """Batch concurrent asset downloader for characters, powers, perks, items, addons, maps, offerings, and realms."""
     semaphore = asyncio.Semaphore(max_concurrent_downloads)
     async with AsyncSession(impersonate=impersonate_browser, verify=False) as client:
         tasks = [
@@ -211,6 +212,19 @@ async def download_all_assets(
                             static_dir,
                             m.callout_image_url,
                             m.callout_image_local_path,
+                            timeout=request_timeout,
+                        )
+                    )
+        if realms:
+            for r in realms:
+                if r.image_url and r.image_local_path:
+                    tasks.append(
+                        download_single_asset(
+                            client,
+                            semaphore,
+                            static_dir,
+                            r.image_url,
+                            r.image_local_path,
                             timeout=request_timeout,
                         )
                     )

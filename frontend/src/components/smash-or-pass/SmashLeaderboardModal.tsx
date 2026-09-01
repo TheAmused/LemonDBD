@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Trophy,
   Heart,
@@ -13,10 +13,17 @@ import {
   Flame,
   Sparkles,
   Layers,
-  Info,
+  Crown,
+  Medal,
+  ThumbsDown,
+  User,
+  Users,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { LeaderboardItem, EntityMetadata } from '@/types/smashOrPass';
+import { Modal } from '@/components/common/Modal';
+import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
+import { Tooltip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
@@ -66,23 +73,14 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const [viewMode, setViewMode] = useState<'flat' | 'grouped'>('flat');
 
   const backendBase = getBackendBaseUrl();
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  const rawSmashDict = dict?.smashOrPass;
 
   const userVotedSet = useMemo(() => {
     return new Set(userSmashes.map((s) => s.slug));
   }, [userSmashes]);
 
-  const getItemTierKey = (smashRate: number): TierKey => {
+  const getItemTierKey = (smashRate: number, totalVotes: number): TierKey | null => {
+    if (totalVotes === 0) return null;
     if (smashRate >= 85) return 'godTier';
     if (smashRate >= 65) return 'fatalAttraction';
     if (smashRate >= 40) return 'friendzone';
@@ -92,31 +90,31 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const tierMetadata: Record<TierKey, TierConfig> = useMemo(
     () => ({
       godTier: {
-        name: dict?.smashOrPass?.tiers?.godTier || '',
-        style: 'border-[#ffd166]/50 bg-[#ffd166]/15 text-[#ffd166] shadow-[0_0_12px_rgba(255,209,102,0.3)]',
+        name: rawSmashDict?.tiers?.godTier || 'God Tier',
+        style: 'border-[#ffd166]/50 bg-[#ffd166]/15 text-[#ffd166] shadow-[0_0_10px_rgba(255,209,102,0.3)]',
         icon: <Sparkles className="h-3.5 w-3.5 text-[#ffd166]" aria-hidden="true" />,
         range: '>= 85%',
       },
       fatalAttraction: {
-        name: dict?.smashOrPass?.tiers?.fatalAttraction || '',
-        style: 'border-[#ff0055]/50 bg-[#ff0055]/15 text-[#ff0055] shadow-[0_0_12px_rgba(255,0,85,0.3)]',
+        name: rawSmashDict?.tiers?.fatalAttraction || 'Fatal Attraction',
+        style: 'border-[#ff0055]/50 bg-[#ff0055]/15 text-pink-300 shadow-[0_0_10px_rgba(255,0,85,0.3)]',
         icon: <Flame className="h-3.5 w-3.5 text-[#ff0055]" aria-hidden="true" />,
         range: '65% - 84%',
       },
       friendzone: {
-        name: dict?.smashOrPass?.tiers?.friendzone || '',
-        style: 'border-[#00f5d4]/50 bg-[#00f5d4]/15 text-[#00f5d4] shadow-[0_0_12px_rgba(0,245,212,0.3)]',
+        name: rawSmashDict?.tiers?.friendzone || 'Friendzone',
+        style: 'border-[#00f5d4]/50 bg-[#00f5d4]/15 text-[#00f5d4] shadow-[0_0_10px_rgba(0,245,212,0.3)]',
         icon: <Shield className="h-3.5 w-3.5 text-[#00f5d4]" aria-hidden="true" />,
         range: '40% - 64%',
       },
       eldritchVoid: {
-        name: dict?.smashOrPass?.tiers?.eldritchVoid || '',
-        style: 'border-purple-500/50 bg-purple-950/40 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]',
+        name: rawSmashDict?.tiers?.eldritchVoid || 'Eldritch Void',
+        style: 'border-purple-500/50 bg-purple-950/40 text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.3)]',
         icon: <Skull className="h-3.5 w-3.5 text-purple-300" aria-hidden="true" />,
         range: '< 40%',
       },
     }),
-    [dict]
+    [rawSmashDict]
   );
 
   const filteredItems = useMemo(() => {
@@ -124,13 +122,14 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       .filter((item) => {
         const itemSlug = item.slug || item.character_slug || '';
         const itemName = item.name || item.character_name || '';
+        const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
+        const itemRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
 
         if (roleFilter !== 'all' && item.role !== roleFilter) return false;
         if (genderFilter !== 'all' && item.gender !== genderFilter) return false;
 
         if (tierFilter !== 'all') {
-          const itemRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
-          const itemTier = getItemTierKey(itemRate);
+          const itemTier = getItemTierKey(itemRate, totalVotes);
           if (itemTier !== tierFilter) return false;
         }
 
@@ -179,77 +178,124 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       eldritchVoid: [],
     };
     filteredItems.forEach((item) => {
+      const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
       const rate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
-      const tierKey = getItemTierKey(rate);
-      groups[tierKey].push(item);
+      const tierKey = getItemTierKey(rate, totalVotes);
+      if (tierKey) {
+        groups[tierKey].push(item);
+      }
     });
     return groups;
   }, [filteredItems]);
 
-  if (!isOpen) return null;
+  const title = rawSmashDict?.modals?.leaderboardTitle || rawSmashDict?.leaderboard || 'Hall of Fame Leaderboard';
+  const searchPlaceholder = rawSmashDict?.search || 'Search candidates...';
+  const allRolesLabel = rawSmashDict?.filters?.allRoles || 'All Roles';
+  const survivorsLabel = rawSmashDict?.filters?.survivors || 'Survivors';
+  const killersLabel = rawSmashDict?.filters?.killers || 'Killers';
+  const allGendersLabel = rawSmashDict?.filters?.allGenders || 'All Genders';
+  const femaleOnlyLabel = rawSmashDict?.filters?.femaleOnly || 'Female';
+  const maleOnlyLabel = rawSmashDict?.filters?.maleOnly || 'Male';
+  const monstersLabel = rawSmashDict?.filters?.monsters || 'Monsters & Eldritch';
+  const allTiersLabel = rawSmashDict?.allTiers || rawSmashDict?.all || 'All Tiers';
+  const unratedLabel = rawSmashDict?.tiers?.unrated || 'Unrated';
 
-  const rawSmashDict = dict?.smashOrPass;
-  const title = rawSmashDict?.leaderboard || '';
-  const searchPlaceholder = rawSmashDict?.search || '';
-  const allRolesLabel = rawSmashDict?.filters?.allRoles || rawSmashDict?.allRoles || '';
-  const survivorsLabel = rawSmashDict?.filters?.survivors || rawSmashDict?.survivors || '';
-  const killersLabel = rawSmashDict?.filters?.killers || rawSmashDict?.killers || '';
-  const allGendersLabel = rawSmashDict?.filters?.allGenders || rawSmashDict?.allGenders || '';
-  const femaleOnlyLabel = rawSmashDict?.filters?.femaleOnly || rawSmashDict?.femaleOnly || '';
-  const maleOnlyLabel = rawSmashDict?.filters?.maleOnly || rawSmashDict?.maleOnly || '';
-  const monstersLabel = rawSmashDict?.filters?.monsters || rawSmashDict?.monsters || '';
-  const closeLabel = rawSmashDict?.close || '';
+  const groupByTierLabel = rawSmashDict?.groupByTier || 'Group by Tier';
+  const rankedListLabel = rawSmashDict?.rankedList || 'Ranked List';
+  const sortSmashRateLabel = rawSmashDict?.sortSmashRate || 'Smash Rate (%)';
+  const sortTotalVotesLabel = rawSmashDict?.sortTotalVotes || 'Total Votes';
+  const sortMostSmashesLabel = rawSmashDict?.sortMostSmashes || 'Most Smashes';
+  const noVotesTitle = rawSmashDict?.noCommunityVotesTitle || 'No Community Votes Yet';
+  const noVotesDesc = rawSmashDict?.noCommunityVotesDesc || 'Cast votes to populate the Hall of Fame rankings.';
+  const noMatchesText = rawSmashDict?.noCandidatesFound || 'No candidates found matching your filter criteria.';
+  const votesWord = rawSmashDict?.votesWord || rawSmashDict?.votes || 'votes';
+  const candidatesWord = rawSmashDict?.candidatesWord || rawSmashDict?.candidates || 'candidates';
+  const percentSign = rawSmashDict?.percentSign || '%';
 
-  const loginNotice = rawSmashDict?.loginNotice || '';
-  const groupByTierLabel = rawSmashDict?.groupByTier || '';
-  const rankedListLabel = rawSmashDict?.rankedList || '';
-  const sortLabel = rawSmashDict?.sort || '';
-  const sortSmashRateLabel = rawSmashDict?.sortSmashRate || '';
-  const sortTotalVotesLabel = rawSmashDict?.sortTotalVotes || '';
-  const sortMostSmashesLabel = rawSmashDict?.sortMostSmashes || '';
-  const noVotesTitle = rawSmashDict?.noCommunityVotesTitle || '';
-  const noVotesDesc = rawSmashDict?.noCommunityVotesDesc || '';
-  const noMatchesText = rawSmashDict?.noCandidatesFound || '';
-  const votesWord = rawSmashDict?.votesWord || rawSmashDict?.votes || '';
-  const smashWord = rawSmashDict?.smashWord || rawSmashDict?.smash || '';
-  const passWord = rawSmashDict?.passWord || rawSmashDict?.pass || '';
-  const candidatesWord = rawSmashDict?.candidatesWord || rawSmashDict?.candidatesCount || rawSmashDict?.candidates || '';
+  // Dropdown Options with Full Icon Coverage
+  const roleOptions: DropdownOption<'all' | 'Survivor' | 'Killer'>[] = [
+    { value: 'all', label: allRolesLabel, icon: <Users className="h-3.5 w-3.5 text-zinc-400" /> },
+    { value: 'Survivor', label: survivorsLabel, icon: <Shield className="h-3.5 w-3.5 text-[#00f5d4]" /> },
+    { value: 'Killer', label: killersLabel, icon: <Skull className="h-3.5 w-3.5 text-[#ff0055]" /> },
+  ];
 
-  const showingSummaryText = rawSmashDict?.showingCount
-    ? rawSmashDict.showingCount
-      .replace('{count}', String(filteredItems.length))
-      .replace('{total}', String(items.length))
-    : rawSmashDict?.showingCandidates
-      ? `${rawSmashDict.showingCandidates} ${filteredItems.length}`
-      : `${filteredItems.length} ${candidatesWord}`.trim();
+  const genderOptions: DropdownOption<'all' | 'female' | 'male' | 'monster_other'>[] = [
+    { value: 'all', label: allGendersLabel, icon: <Sparkles className="h-3.5 w-3.5 text-zinc-400" /> },
+    {
+      value: 'female',
+      label: femaleOnlyLabel,
+      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-pink-400 text-xs">♀</span>,
+    },
+    {
+      value: 'male',
+      label: maleOnlyLabel,
+      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-cyan-400 text-xs">♂</span>,
+    },
+    { value: 'monster_other', label: monstersLabel, icon: <Skull className="h-3.5 w-3.5 text-purple-400" /> },
+  ];
+
+  const tierOptions: DropdownOption<'all' | TierKey>[] = [
+    { value: 'all', label: allTiersLabel, icon: <Layers className="h-3.5 w-3.5 text-zinc-400" /> },
+    {
+      value: 'godTier',
+      label: tierMetadata.godTier.name,
+      sublabel: tierMetadata.godTier.range,
+      icon: <Sparkles className="h-3.5 w-3.5 text-[#ffd166]" />,
+    },
+    {
+      value: 'fatalAttraction',
+      label: tierMetadata.fatalAttraction.name,
+      sublabel: tierMetadata.fatalAttraction.range,
+      icon: <Flame className="h-3.5 w-3.5 text-[#ff0055]" />,
+    },
+    {
+      value: 'friendzone',
+      label: tierMetadata.friendzone.name,
+      sublabel: tierMetadata.friendzone.range,
+      icon: <Shield className="h-3.5 w-3.5 text-[#00f5d4]" />,
+    },
+    {
+      value: 'eldritchVoid',
+      label: tierMetadata.eldritchVoid.name,
+      sublabel: tierMetadata.eldritchVoid.range,
+      icon: <Skull className="h-3.5 w-3.5 text-purple-400" />,
+    },
+  ];
+
+  const sortOptions: DropdownOption<'smash_rate' | 'total_votes' | 'smash_count'>[] = [
+    { value: 'smash_rate', label: sortSmashRateLabel, icon: <Heart className="h-3.5 w-3.5 text-[#ff0055] fill-[#ff0055]" /> },
+    { value: 'total_votes', label: sortTotalVotesLabel, icon: <Users className="h-3.5 w-3.5 text-cyan-400" /> },
+    { value: 'smash_count', label: sortMostSmashesLabel, icon: <Flame className="h-3.5 w-3.5 text-amber-400" /> },
+  ];
 
   const renderCandidateRow = (item: LeaderboardItem, index: number) => {
     const itemSlug = item.slug || item.character_slug || '';
     const itemName = item.name || item.character_name || itemSlug;
     const isSurvivor = item.role === 'Survivor';
-    const isTop3 = index < 3 && !searchQuery && tierFilter === 'all';
-    const hasUserSmashed = userVotedSet.has(itemSlug);
-
-    const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
     const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
+    const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
     const smashCount = item.smash_count ?? item.stat?.smash_count ?? 0;
     const passCount = item.pass_count ?? item.stat?.pass_count ?? 0;
 
-    const tierKey = getItemTierKey(smashRate);
-    const tier = tierMetadata[tierKey];
+    const hasVotes = totalVotes > 0;
+    const isTop3 = index < 3 && !searchQuery && tierFilter === 'all';
+    const hasUserSmashed = userVotedSet.has(itemSlug);
+
+    const tierKey = getItemTierKey(smashRate, totalVotes);
+    const tier = tierKey ? tierMetadata[tierKey] : null;
 
     const avatarSrc =
       item.media_url?.startsWith('http') || item.media_url?.startsWith('/static')
         ? `${item.media_url.startsWith('http') ? '' : backendBase}${item.media_url}`
         : resolveAvatarUrl(
-          backendBase,
-          {
-            name: itemName,
-            category: item.role,
-            avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${itemSlug}.png`,
-          },
-          isSurvivor
-        );
+            backendBase,
+            {
+              name: itemName,
+              category: item.role,
+              avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${itemSlug}.png`,
+            },
+            isSurvivor
+          );
 
     const meta = (item.metadata || {}) as EntityMetadata & {
       translations?: Record<string, LocalizedMetadata>;
@@ -266,9 +312,9 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
     const candidateAriaLabel = rawSmashDict?.candidateRankLabel
       ? rawSmashDict.candidateRankLabel
-        .replace('{name}', itemName)
-        .replace('{rank}', String(index + 1))
-        .replace('{rate}', String(smashRate))
+          .replace('{name}', itemName)
+          .replace('{rank}', String(index + 1))
+          .replace('{rate}', String(smashRate))
       : `${itemName} #${index + 1} (${smashRate}%)`;
 
     return (
@@ -284,277 +330,176 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           }
         }}
         aria-label={candidateAriaLabel}
-        className={`flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0055] ${hasUserSmashed
-            ? 'bg-rose-950/30 border-[#ff0055]/40 hover:border-[#ff0055]'
-            : 'bg-zinc-950/70 border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-900'
-          }`}
+        className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-3xl border transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0055] gap-3.5 sm:gap-4 ${
+          hasUserSmashed
+            ? 'bg-gradient-to-r from-rose-950/40 via-zinc-900/90 to-zinc-950/90 border-[#ff0055]/50 shadow-[0_0_20px_rgba(255,0,85,0.15)] hover:border-[#ff0055]'
+            : 'bg-zinc-950/80 border-zinc-800/90 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-lg'
+        }`}
       >
-        <div className="flex items-center gap-3 min-w-0">
+        {/* Left Section: Rank + Avatar + Details */}
+        <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
+          {/* Special Luxury Rank Medals for #1, #2, #3 */}
           <div
-            className={`flex h-8 w-8 items-center justify-center rounded-xl font-black font-mono text-xs shrink-0 ${isTop3
+            className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl font-black font-mono text-xs sm:text-sm shrink-0 transition-transform group-hover:scale-105 ${
+              isTop3
                 ? index === 0
-                  ? 'bg-[#ffd166] text-zinc-950 shadow-md shadow-amber-500/30'
+                  ? 'bg-gradient-to-br from-amber-300 via-[#ffd166] to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(255,209,102,0.6)] border border-amber-200 ring-2 ring-amber-400/30'
                   : index === 1
-                    ? 'bg-slate-300 text-zinc-950 shadow-md shadow-slate-300/30'
-                    : 'bg-amber-700 text-white shadow-md shadow-amber-700/30'
-                : 'bg-zinc-800 text-zinc-400'
-              }`}
+                    ? 'bg-gradient-to-br from-slate-100 via-slate-300 to-slate-400 text-zinc-950 shadow-[0_0_15px_rgba(226,232,240,0.5)] border border-white ring-2 ring-slate-300/30'
+                    : 'bg-gradient-to-br from-amber-600 via-amber-700 to-amber-900 text-amber-100 shadow-[0_0_15px_rgba(180,83,9,0.5)] border border-amber-500 ring-2 ring-amber-600/30'
+                : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
+            }`}
           >
-            #{index + 1}
-          </div>
-
-          <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 shrink-0">
-            <img
-              src={avatarSrc}
-              alt={itemName}
-              className="h-full w-full object-cover object-top"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src =
-                  'https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/IconHelpLoading_players.png/revision/latest';
-              }}
-            />
-            {hasUserSmashed && (
-              <div className="absolute top-1 right-1 h-3 w-3 rounded-full bg-[#ff0055] border-2 border-zinc-950 shadow-sm" aria-label={rawSmashDict?.youSmashedThis || ''} />
+            {isTop3 ? (
+              index === 0 ? <Crown className="h-5 w-5 fill-zinc-950 stroke-zinc-950" /> : <Medal className="h-5 w-5" />
+            ) : (
+              `#${index + 1}`
             )}
           </div>
 
-          <div className="min-w-0 text-left">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-sm font-black font-mono text-zinc-100 truncate">
+          {/* Avatar Portrait */}
+          <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 shrink-0 shadow-inner group-hover:border-pink-500/50 transition-colors">
+            <img
+              src={avatarSrc}
+              alt=""
+              className="h-full w-full object-cover object-top"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                if (!target.dataset.triedFallback) {
+                  target.dataset.triedFallback = '1';
+                  target.src = `${backendBase}/static/avatars/survivors/sable_ward.png`;
+                }
+              }}
+            />
+            {hasUserSmashed && (
+              <div
+                className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#ff0055] text-white shadow-[0_0_8px_rgba(255,0,85,0.9)] ring-2 ring-zinc-950"
+                title={rawSmashDict?.youSmashedThis || 'You smashed this candidate'}
+              >
+                <Heart className="h-2.5 w-2.5 fill-white text-white" />
+              </div>
+            )}
+          </div>
+
+          {/* Details: Name + Icon-Only Badges */}
+          <div className="min-w-0 text-left flex-1">
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <span className="text-sm sm:text-base font-black font-mono text-zinc-100 group-hover:text-white truncate">
                 {itemName}
               </span>
-              <span
-                className={`text-[9px] font-black uppercase font-mono px-1.5 py-0.5 rounded border ${isSurvivor
-                    ? 'bg-[#00f5d4]/10 text-[#00f5d4] border-[#00f5d4]/30'
-                    : 'bg-[#ff0055]/10 text-[#ff0055] border-[#ff0055]/30'
+
+              {/* Role Icon Badge */}
+              <Tooltip title={isSurvivor ? survivorsLabel : killersLabel}>
+                <span
+                  className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${
+                    isSurvivor
+                      ? 'bg-[#00f5d4]/15 border-[#00f5d4]/40 text-[#00f5d4] shadow-[0_0_8px_rgba(0,245,212,0.25)]'
+                      : 'bg-[#ff0055]/15 border-[#ff0055]/40 text-pink-300 shadow-[0_0_8px_rgba(255,0,85,0.25)]'
                   }`}
-              >
-                {item.role}
-              </span>
-              <span className={`inline-flex items-center gap-1 text-[9px] font-black uppercase font-mono px-1.5 py-0.5 rounded border ${tier.style}`}>
-                {tier.icon}
-                <span>{tier.name}</span>
-              </span>
+                >
+                  {isSurvivor ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
+                </span>
+              </Tooltip>
+
+              {/* Tier Icon Badge or Unrated "?" Badge */}
+              {tier ? (
+                <Tooltip title={tier.name} description={tier.range}>
+                  <span
+                    className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
+                  >
+                    {tier.icon}
+                  </span>
+                </Tooltip>
+              ) : (
+                <Tooltip title={unratedLabel} description={noVotesDesc}>
+                  <span className="flex h-6 w-6 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 font-black font-mono text-xs shadow-inner shrink-0 transition-transform hover:scale-110">
+                    ?
+                  </span>
+                </Tooltip>
+              )}
             </div>
-            <p className="text-[11px] text-zinc-400 italic line-clamp-1">
+
+            <p className="text-xs text-zinc-400 font-sans italic line-clamp-1">
               {itemSubtitle}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 text-right shrink-0">
-          <div>
-            <div className="flex items-center gap-1 justify-end font-black font-mono text-sm text-[#ff0055]">
-              <Heart className="h-3.5 w-3.5 fill-[#ff0055]" aria-hidden="true" />
-              <span>{smashRate}{dict?.smashOrPass?.percentSign || '%'}</span>
+        {/* Right Section: Visual Progress Bar + Smash Percentage + Vote Breakdown */}
+        <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-zinc-800/60">
+          {/* Progress Bar */}
+          <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
+            <div className="flex items-center justify-between text-[11px] font-mono">
+              <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-[#ff0055]' : 'text-zinc-400'}`}>
+                <Heart className={`h-3 w-3 ${hasVotes ? 'fill-[#ff0055] text-[#ff0055]' : 'text-zinc-500'}`} />
+                {hasVotes ? `${smashRate}${percentSign}` : '—'}
+              </span>
+              <span className="text-zinc-500">
+                {hasVotes ? `${100 - smashRate}${percentSign}` : '—'}
+              </span>
             </div>
-            <span className="text-[10px] font-mono text-zinc-400">
+
+            <div className="h-2 w-full rounded-full bg-zinc-800/80 overflow-hidden flex shadow-inner">
+              {hasVotes ? (
+                <>
+                  <div
+                    style={{ width: `${Math.max(4, Math.min(100, smashRate))}%` }}
+                    className="h-full bg-gradient-to-r from-rose-500 to-[#ff0055] transition-all duration-300"
+                  />
+                  <div
+                    style={{ width: `${Math.max(0, 100 - smashRate)}%` }}
+                    className="h-full bg-zinc-700/60"
+                  />
+                </>
+              ) : (
+                <div className="h-full w-full bg-zinc-800/60" />
+              )}
+            </div>
+
+            <span className="text-[10px] font-mono text-zinc-400 text-right">
               {totalVotes.toLocaleString()} {votesWord}
             </span>
           </div>
 
-          <div className="hidden sm:block text-right font-mono text-[10px]">
-            <span className="text-[#ff0055] font-bold">
-              {smashCount} {smashWord}
-            </span>
-            <br />
-            <span className="text-zinc-500">{passCount} {passWord}</span>
+          {/* Smashes / Passes Numeric Counts */}
+          <div className="text-right font-mono text-xs shrink-0 min-w-[65px]">
+            <div className="flex items-center gap-1.5 justify-end text-[#ff0055] font-black">
+              <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
+              <span>{smashCount}</span>
+            </div>
+            <div className="flex items-center gap-1.5 justify-end text-zinc-500 text-[11px] font-semibold mt-0.5">
+              <ThumbsDown className="h-3 w-3 text-zinc-500" />
+              <span>{passCount}</span>
+            </div>
           </div>
         </div>
       </div>
     );
   };
 
+  const headerBadge = editionName ? (
+    <span className="px-2.5 py-0.5 rounded-full bg-[#ff0055]/20 text-rose-300 border border-[#ff0055]/40 text-xs font-bold font-mono truncate max-w-[200px]">
+      {editionName}
+    </span>
+  ) : null;
+
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="leaderboard-title"
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#09090b]/85 backdrop-blur-xl animate-in fade-in duration-200 select-none"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="5xl"
+      title={title}
+      icon={<Trophy className="h-6 w-6 text-[#ffd166]" />}
+      badge={headerBadge}
+      centerTitle={true}
+      className="h-[88vh] max-h-[850px] min-h-[480px]"
+      bodyClassName="flex flex-col"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative flex flex-col w-full max-w-4xl h-[92vh] max-h-[880px] overflow-hidden rounded-3xl border border-[#ff0055]/30 bg-[#09090b] shadow-2xl shadow-rose-950/40"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-zinc-800 p-4 sm:p-5 bg-gradient-to-r from-[#09090b] via-zinc-900 to-rose-950/30 shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ffd166]/15 text-[#ffd166] border border-[#ffd166]/30 shadow-md" aria-hidden="true">
-              <Trophy className="h-5 w-5" />
-            </span>
-            <div className="text-left">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h2 id="leaderboard-title" className="text-lg sm:text-xl font-black font-mono text-zinc-100 tracking-tight">
-                  {title}
-                </h2>
-                {editionName && (
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#ff0055]/20 text-rose-300 border border-[#ff0055]/40 text-[10px] font-bold font-mono">
-                    {editionName}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={dict?.smashOrPass?.close || ''}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0055]"
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
-
-        {/* Authentication Notice */}
-        {!isAuthenticated && loginNotice && (
-          <div className="bg-rose-950/30 border-b border-[#ff0055]/20 px-4 py-2 flex items-center justify-between text-xs text-rose-300 shrink-0">
-            <div className="flex items-center gap-2">
-              <Info className="h-4 w-4 text-[#ff0055] shrink-0" aria-hidden="true" />
-              <span>{loginNotice}</span>
-            </div>
-          </div>
-        )}
-
-        {/* Filter Bar 1 */}
-        <div className="flex items-center gap-2 p-3 overflow-x-auto border-b border-zinc-800/80 bg-zinc-950/60 shrink-0 text-xs font-bold font-mono">
-          <div className="flex items-center gap-1 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800 shrink-0" role="radiogroup" aria-label={allRolesLabel}>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={roleFilter === 'all'}
-              onClick={() => setRoleFilter('all')}
-              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${roleFilter === 'all'
-                  ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow'
-                  : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-            >
-              {allRolesLabel}
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={roleFilter === 'Survivor'}
-              onClick={() => setRoleFilter('Survivor')}
-              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${roleFilter === 'Survivor'
-                  ? 'bg-[#00f5d4] text-zinc-950 shadow'
-                  : 'text-zinc-400 hover:text-[#00f5d4]'
-                }`}
-            >
-              {survivorsLabel}
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={roleFilter === 'Killer'}
-              onClick={() => setRoleFilter('Killer')}
-              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${roleFilter === 'Killer'
-                  ? 'bg-[#ff0055] text-white shadow'
-                  : 'text-zinc-400 hover:text-[#ff0055]'
-                }`}
-            >
-              {killersLabel}
-            </button>
-          </div>
-
-          <div className="flex items-center gap-1 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800 shrink-0" role="radiogroup" aria-label={allGendersLabel}>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={genderFilter === 'all'}
-              onClick={() => setGenderFilter('all')}
-              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${genderFilter === 'all' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-            >
-              {allGendersLabel}
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={genderFilter === 'female'}
-              onClick={() => setGenderFilter('female')}
-              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${genderFilter === 'female' ? 'bg-pink-600 text-white' : 'text-zinc-400 hover:text-pink-300'
-                }`}
-            >
-              {femaleOnlyLabel}
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={genderFilter === 'male'}
-              onClick={() => setGenderFilter('male')}
-              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${genderFilter === 'male' ? 'bg-cyan-600 text-white' : 'text-zinc-400 hover:text-cyan-300'
-                }`}
-            >
-              {maleOnlyLabel}
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={genderFilter === 'monster_other'}
-              onClick={() => setGenderFilter('monster_other')}
-              className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${genderFilter === 'monster_other' ? 'bg-purple-600 text-white' : 'text-zinc-400 hover:text-purple-300'
-                }`}
-            >
-              {monstersLabel}
-            </button>
-          </div>
-        </div>
-
-        {/* Filter Bar 2 */}
-        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-zinc-800/80 bg-zinc-950/80 shrink-0 text-xs font-bold font-mono overflow-x-auto">
-          <div className="flex items-center gap-1.5 shrink-0" role="radiogroup" aria-label={rawSmashDict?.tierFilterLabel || ''}>
-            {rawSmashDict?.tierFilterLabel && (
-              <span className="text-[10px] text-zinc-500 uppercase tracking-wider pl-1">
-                {rawSmashDict.tierFilterLabel}
-              </span>
-            )}
-            <button
-              type="button"
-              role="radio"
-              aria-checked={tierFilter === 'all'}
-              onClick={() => setTierFilter('all')}
-              className={`px-2.5 py-1 rounded-xl text-[11px] transition-all cursor-pointer ${tierFilter === 'all' ? 'bg-zinc-800 text-white border border-zinc-700' : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-            >
-              {dict?.smashOrPass?.all || dict?.smashOrPass?.allTiers || ''}
-            </button>
-            {(Object.keys(tierMetadata) as TierKey[]).map((key) => {
-              const meta = tierMetadata[key];
-              const isActive = tierFilter === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  role="radio"
-                  aria-checked={isActive}
-                  onClick={() => setTierFilter(key)}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] transition-all cursor-pointer border ${isActive ? meta.style : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:text-zinc-200'
-                    }`}
-                >
-                  {meta.icon}
-                  <span>{meta.name}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex items-center gap-1 shrink-0">
-            <button
-              type="button"
-              onClick={() => setViewMode(viewMode === 'flat' ? 'grouped' : 'flat')}
-              className="px-2.5 py-1 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white text-[11px] font-bold cursor-pointer transition-all flex items-center gap-1"
-            >
-              <Layers className="h-3 w-3" aria-hidden="true" />
-              <span>{viewMode === 'flat' ? groupByTierLabel : rankedListLabel}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Filter Controls Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 sm:px-5 bg-zinc-900/60 border-b border-zinc-800 shrink-0">
-          <div className="relative w-full sm:w-80">
+      {/* SINGLE HORIZONTAL FILTER & SEARCH TOOLBAR */}
+      <div className="p-3.5 sm:p-4 bg-zinc-950/80 border-b border-zinc-800 shrink-0">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+          {/* 1. Search Bar */}
+          <div className="relative flex-1 min-w-[140px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" aria-hidden="true" />
             <input
               type="text"
@@ -562,89 +507,135 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={searchPlaceholder}
               aria-label={searchPlaceholder}
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-[#ff0055]/50 font-mono"
+              className="w-full pl-9 pr-8 py-2 rounded-xl bg-zinc-900/90 border border-zinc-800 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[#ff0055] font-mono shadow-inner transition-colors"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-200 cursor-pointer p-0.5"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end text-xs font-mono">
-            <span className="text-zinc-400 flex items-center gap-1 font-bold">
-              <ArrowUpDown className="h-3.5 w-3.5 text-zinc-500" aria-hidden="true" /> {sortLabel}
-            </span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'smash_rate' | 'total_votes' | 'smash_count')}
-              aria-label={sortLabel}
-              className="px-3 py-1.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs focus:outline-none focus:border-[#ff0055]/50 cursor-pointer font-mono [&>option]:bg-zinc-900"
-            >
-              <option value="smash_rate">{sortSmashRateLabel}</option>
-              <option value="total_votes">{sortTotalVotesLabel}</option>
-              <option value="smash_count">{sortMostSmashesLabel}</option>
-            </select>
-          </div>
-        </div>
+          {/* 2. Custom Role Dropdown */}
+          <CustomDropdown<'all' | 'Survivor' | 'Killer'>
+            value={roleFilter}
+            onChange={setRoleFilter}
+            options={roleOptions}
+            icon={<Shield className="h-3.5 w-3.5" />}
+            ariaLabel={allRolesLabel}
+            minWidthClass="min-w-[150px]"
+          />
 
-        {/* Leaderboard Content */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-5 space-y-4">
-          {totalCommunityVotes === 0 && !searchQuery.trim() ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ff0055]/10 border border-[#ff0055]/20 text-[#ff0055]" aria-hidden="true">
-                <Heart className="h-7 w-7 fill-[#ff0055]/20 text-[#ff0055] animate-pulse" />
-              </div>
-              <div className="space-y-1 max-w-sm">
-                <h3 className="text-base font-extrabold text-zinc-200 font-mono">{noVotesTitle}</h3>
-                <p className="text-xs text-zinc-400">
-                  {noVotesDesc}
-                </p>
-              </div>
-            </div>
-          ) : filteredItems.length === 0 ? (
-            <div className="py-12 text-center text-xs text-zinc-500 font-mono">
-              {noMatchesText}
-            </div>
-          ) : viewMode === 'grouped' ? (
-            (Object.keys(tierMetadata) as TierKey[]).map((tKey) => {
-              const tierList = groupedByTier[tKey];
-              if (tierList.length === 0) return null;
-              const meta = tierMetadata[tKey];
+          {/* 3. Custom Gender Dropdown */}
+          <CustomDropdown<'all' | 'female' | 'male' | 'monster_other'>
+            value={genderFilter}
+            onChange={setGenderFilter}
+            options={genderOptions}
+            icon={<User className="h-3.5 w-3.5" />}
+            ariaLabel={allGendersLabel}
+            minWidthClass="min-w-[170px]"
+          />
 
-              return (
-                <div key={tKey} className="space-y-2">
-                  <div className={`flex items-center justify-between px-3.5 py-2 rounded-2xl border ${meta.style}`}>
-                    <div className="flex items-center gap-2">
-                      {meta.icon}
-                      <span className="font-mono font-black text-xs uppercase">{meta.name}</span>
-                      <span className="text-[10px] opacity-80">({meta.range})</span>
-                    </div>
-                    <span className="text-[11px] font-mono font-bold">
-                      {`${tierList.length} ${candidatesWord}`.trim()}
-                    </span>
-                  </div>
+          {/* 4. Custom Tier Dropdown */}
+          <CustomDropdown<'all' | TierKey>
+            value={tierFilter}
+            onChange={setTierFilter}
+            options={tierOptions}
+            icon={<Sparkles className="h-3.5 w-3.5" />}
+            ariaLabel={allTiersLabel}
+            minWidthClass="min-w-[190px]"
+          />
 
-                  <div className="space-y-2 pl-1" role="list">
-                    {tierList.map((item, idx) => renderCandidateRow(item, idx))}
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <div className="space-y-2" role="list">
-              {filteredItems.map((item, index) => renderCandidateRow(item, index))}
-            </div>
-          )}
-        </div>
+          {/* 5. Custom Sort Dropdown */}
+          <CustomDropdown<'smash_rate' | 'total_votes' | 'smash_count'>
+            value={sortBy}
+            onChange={setSortBy}
+            options={sortOptions}
+            icon={<ArrowUpDown className="h-3.5 w-3.5" />}
+            ariaLabel={sortSmashRateLabel}
+            minWidthClass="min-w-[160px]"
+            align="right"
+          />
 
-        {/* Footer */}
-        <div className="flex items-center justify-between border-t border-zinc-800 p-3 sm:px-5 bg-zinc-950/90 text-xs text-zinc-400 shrink-0 font-mono">
-          <span>{showingSummaryText}</span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold transition-colors cursor-pointer"
+          {/* 6. View Mode Toggle with Reusable Tooltip Component */}
+          <Tooltip
+            title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
+            description={
+              viewMode === 'flat'
+                ? (rawSmashDict?.tooltips?.groupByTierDesc || 'Group candidates into God Tier, Fatal Attraction, and lower tiers.')
+                : (rawSmashDict?.tooltips?.rankedListDesc || 'Display all candidates in descending global rank order.')
+            }
+            placement="bottom"
           >
-            {closeLabel}
-          </button>
+            <button
+              type="button"
+              onClick={() => setViewMode(viewMode === 'flat' ? 'grouped' : 'flat')}
+              aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
+              className={`flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer shrink-0 hover:scale-105 active:scale-95 ${
+                viewMode === 'grouped'
+                  ? 'bg-pink-500/20 border-pink-500/60 text-pink-300 shadow-[0_0_12px_rgba(255,0,85,0.35)]'
+                  : 'bg-zinc-900/90 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+              }`}
+            >
+              <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </button>
+          </Tooltip>
         </div>
       </div>
-    </div>
+
+      {/* Leaderboard Content */}
+      <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 custom-scrollbar">
+        {totalCommunityVotes === 0 && !searchQuery.trim() ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center space-y-3.5">
+            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#ff0055]/15 border border-[#ff0055]/30 text-[#ff0055] shadow-[0_0_30px_rgba(255,0,85,0.3)]" aria-hidden="true">
+              <Heart className="h-8 w-8 fill-[#ff0055]/30 text-[#ff0055] animate-pulse" />
+            </div>
+            <div className="space-y-1.5 max-w-md">
+              <h3 className="text-lg font-black text-zinc-100 font-mono">{noVotesTitle}</h3>
+              <p className="text-xs sm:text-sm text-zinc-400 font-sans">
+                {noVotesDesc}
+              </p>
+            </div>
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="py-16 text-center text-xs sm:text-sm text-zinc-400 font-mono">
+            {noMatchesText}
+          </div>
+        ) : viewMode === 'grouped' ? (
+          (Object.keys(tierMetadata) as TierKey[]).map((tKey) => {
+            const tierList = groupedByTier[tKey];
+            if (tierList.length === 0) return null;
+            const meta = tierMetadata[tKey];
+
+            return (
+              <div key={tKey} className="space-y-2.5">
+                <div className={`flex items-center justify-between px-4 py-2 rounded-2xl border ${meta.style}`}>
+                  <div className="flex items-center gap-2">
+                    {meta.icon}
+                    <span className="font-mono font-black text-xs sm:text-sm uppercase tracking-wider">{meta.name}</span>
+                    <span className="text-[11px] opacity-85 font-mono">({meta.range})</span>
+                  </div>
+                  <span className="text-xs font-mono font-black">
+                    {tierList.length} {candidatesWord}
+                  </span>
+                </div>
+
+                <div className="space-y-2.5 pl-1" role="list">
+                  {tierList.map((item, idx) => renderCandidateRow(item, idx))}
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="space-y-2.5" role="list">
+            {filteredItems.map((item, index) => renderCandidateRow(item, index))}
+          </div>
+        )}
+      </div>
+    </Modal>
   );
 };

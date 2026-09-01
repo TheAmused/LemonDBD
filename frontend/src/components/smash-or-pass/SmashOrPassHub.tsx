@@ -24,7 +24,10 @@ import {
   RotateCw,
   Maximize2,
   Gamepad2,
+  SlidersHorizontal,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Tooltip } from '@/components/common/Tooltip';
 import { CharacterCard } from './CharacterCard';
 import { SmashAnimations } from './SmashAnimations';
 import { InteractiveDragBackground } from './InteractiveDragBackground';
@@ -49,6 +52,8 @@ import {
   fetchLeaderboard,
   resetSessionVotes as apiResetSessionVotes,
   resetUserVotes as apiResetUserVotes,
+  fetchUserVotes,
+  syncSessionVotes as apiSyncSessionVotes,
 } from '@/services/smashApi';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -95,12 +100,30 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     isDragging: false,
   });
 
-  // Voting History & Session State
+  // Voting History & Session State (Persisted in localStorage & synced with backend)
   const [voteHistory, setVoteHistory] = useState<
     Array<{ character: EntityItem; vote: 'smash' | 'pass'; timestamp: number }>
-  >([]);
-  const [sessionSmashes, setSessionSmashes] = useState<number>(0);
-  const [sessionPasses, setSessionPasses] = useState<number>(0);
+  >(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const storedRoster = localStorage.getItem('dbd_smash_selected_roster') || 'canon';
+        const raw = localStorage.getItem(`dbd_smash_votes_${storedRoster}`);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch {}
+    }
+    return [];
+  });
+
+  const sessionSmashes = useMemo(() => {
+    return voteHistory.filter((v) => v.vote === 'smash').length;
+  }, [voteHistory]);
+
+  const sessionPasses = useMemo(() => {
+    return voteHistory.filter((v) => v.vote === 'pass').length;
+  }, [voteHistory]);
 
   // Animation Triggers
   const [animTrigger, setAnimTrigger] = useState<{
@@ -112,6 +135,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // Modals & UI Controls
   const [isRosterModalOpen, setIsRosterModalOpen] = useState<boolean>(false);
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
   const [rosterSwitchEffect, setRosterSwitchEffect] = useState<string | null>(null);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
   const [isPersonaOpen, setIsPersonaOpen] = useState<boolean>(false);
@@ -120,6 +144,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const [selectedStatCharacter, setSelectedStatCharacter] = useState<EntityItem | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(SmashSounds.getIsMuted());
   const [isBgmPlaying, setIsBgmPlaying] = useState<boolean>(SmashSounds.getIsBgmPlaying());
+  const [isSoundActive, setIsSoundActive] = useState<boolean>(!SmashSounds.getIsMuted());
 
   // Active Roster Metadata
   const activeRoster: RosterItem = useMemo(() => {
@@ -179,6 +204,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       const feed = await fetchRosterFeed(selectedRosterSlug, {
         role: roleFilter !== 'all' ? roleFilter : undefined,
         gender: genderFilter !== 'all' ? genderFilter : undefined,
+        limit: 300,
       });
 
       if (feed && feed.entities) {
@@ -197,6 +223,69 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     }
   }, [selectedRosterSlug, roleFilter, genderFilter]);
 
+  // Synchronize vote history from LocalStorage & Backend
+  const syncVotes = useCallback(async (rosterSlug: string) => {
+    let currentVotes: Array<{ character: EntityItem; vote: 'smash' | 'pass'; timestamp: number }> = [];
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem(`dbd_smash_votes_${rosterSlug}`);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) currentVotes = parsed;
+        }
+      } catch {}
+    }
+
+    // If user is authenticated, migrate any guest session votes to user account
+    if (isAuthenticated || token || user?.id) {
+      try {
+        await apiSyncSessionVotes(rosterSlug);
+      } catch (err) {
+        console.debug('Error syncing guest session votes:', err);
+      }
+    }
+
+    try {
+      const backendVotes = await fetchUserVotes(rosterSlug);
+      if (backendVotes && backendVotes.length > 0) {
+        const existingSlugs = new Set(currentVotes.map((v) => v.character?.slug || (v as any).slug));
+        const merged = [...currentVotes];
+
+        backendVotes.forEach((bv) => {
+          if (!existingSlugs.has(bv.character_slug)) {
+            const voteType: 'smash' | 'pass' = bv.vote_type === 'pass' ? 'pass' : 'smash';
+            merged.push({
+              character: (bv.entity || {
+                id: bv.character_slug,
+                slug: bv.character_slug,
+                name: (bv as any).character_name || bv.character_slug,
+                role: (bv as any).role || 'Survivor',
+                gender: (bv as any).gender || 'female',
+                order_index: 0,
+                is_active: true,
+                roster_id: rosterSlug,
+              }) as EntityItem,
+              vote: voteType,
+              timestamp: bv.created_at ? new Date(bv.created_at).getTime() : Date.now(),
+            });
+            existingSlugs.add(bv.character_slug);
+          }
+        });
+
+        currentVotes = merged;
+      }
+    } catch (err) {
+      console.debug('Error syncing backend user votes:', err);
+    }
+
+    if (typeof window !== 'undefined' && currentVotes.length > 0) {
+      try {
+        localStorage.setItem(`dbd_smash_votes_${rosterSlug}`, JSON.stringify(currentVotes));
+      } catch {}
+    }
+    setVoteHistory(currentVotes);
+  }, [isAuthenticated, token, user?.id]);
+
   // Initial Load
   useEffect(() => {
     loadRosters();
@@ -205,7 +294,28 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   useEffect(() => {
     loadFeed();
     loadLeaderboard();
-  }, [loadFeed, loadLeaderboard]);
+    syncVotes(selectedRosterSlug);
+  }, [loadFeed, loadLeaderboard, syncVotes, selectedRosterSlug]);
+
+  // Auto-resume audio on first user gesture if user has audio enabled
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleFirstUserGesture = () => {
+      SmashSounds.handleUserInteraction();
+    };
+
+    window.addEventListener('pointerdown', handleFirstUserGesture, { once: true });
+    window.addEventListener('keydown', handleFirstUserGesture, { once: true });
+    window.addEventListener('touchstart', handleFirstUserGesture, { once: true });
+    window.addEventListener('click', handleFirstUserGesture, { once: true });
+
+    return () => {
+      window.removeEventListener('pointerdown', handleFirstUserGesture);
+      window.removeEventListener('keydown', handleFirstUserGesture);
+      window.removeEventListener('touchstart', handleFirstUserGesture);
+      window.removeEventListener('click', handleFirstUserGesture);
+    };
+  }, []);
 
   const handleFilterChange = (type: 'role' | 'gender', value: any) => {
     if (type === 'role') setRoleFilter(value);
@@ -263,17 +373,15 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     [dict, locale]
   );
 
-  // 5. Handle Vote (Smash or Pass) with Database API
+  // 5. Handle Vote (Smash or Pass) with Database API & Local Persistence
   const handleVote = useCallback(
     async (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
       if (!currentCharacter || isExiting) return;
 
       if (vote === 'smash') {
         SmashSounds.playSmashSound();
-        setSessionSmashes((s) => s + 1);
       } else {
         SmashSounds.playPassSound();
-        setSessionPasses((p) => p + 1);
       }
 
       setAnimTrigger((prev) => ({
@@ -307,19 +415,67 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         handleExitComplete();
       }, 480);
 
-      setVoteHistory((prev) => [
-        ...prev,
-        { character: currentCharacter, vote, timestamp: Date.now() },
-      ]);
+      const newEntry = { character: currentCharacter, vote, timestamp: Date.now() };
+      setVoteHistory((prev) => {
+        const filtered = prev.filter(
+          (v) => (v.character?.slug || (v as any).slug) !== currentCharacter.slug
+        );
+        const updated = [...filtered, newEntry];
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.setItem(
+              `dbd_smash_votes_${selectedRosterSlug}`,
+              JSON.stringify(updated)
+            );
+          } catch {}
+        }
+        return updated;
+      });
 
       // Call database API to cast vote
       try {
-        await apiCastVote(currentCharacter.id, vote, currentCharacter.slug);
+        const voteResponse = await apiCastVote(currentCharacter.id, vote, currentCharacter.slug);
+        const entityData = voteResponse?.data || (voteResponse as any);
+        if (entityData) {
+          setLeaderboardItems((prev) => {
+            return prev.map((item) => {
+              const slug = item.slug || item.character_slug;
+              if (slug === currentCharacter.slug || item.id === currentCharacter.id) {
+                const sCount = entityData.smash_count ?? item.smash_count ?? 0;
+                const pCount = entityData.pass_count ?? item.pass_count ?? 0;
+                const ssCount = entityData.super_smash_count ?? item.super_smash_count ?? 0;
+                const tVotes = entityData.total_votes ?? item.total_votes ?? (sCount + pCount + ssCount);
+                const sRate = entityData.smash_rate ?? item.smash_rate ?? 0;
+
+                return {
+                  ...item,
+                  smash_count: sCount,
+                  pass_count: pCount,
+                  super_smash_count: ssCount,
+                  total_votes: tVotes,
+                  smash_rate: sRate,
+                  stat: item.stat
+                    ? {
+                        ...item.stat,
+                        smash_count: sCount,
+                        pass_count: pCount,
+                        super_smash_count: ssCount,
+                        total_votes: tVotes,
+                        smash_rate: sRate,
+                      }
+                    : null,
+                };
+              }
+              return item;
+            });
+          });
+        }
+        await loadLeaderboard();
       } catch (err) {
         console.debug('Failed to cast vote to database:', err);
       }
     },
-    [currentCharacter, isExiting, dragPhysics, handleExitComplete]
+    [currentCharacter, isExiting, dragPhysics, handleExitComplete, selectedRosterSlug, loadLeaderboard]
   );
 
   // 6. Reset All Votes via Database API
@@ -329,16 +485,19 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     try {
       if (isAuthenticated || token || user?.id) {
         await apiResetUserVotes(selectedRosterSlug);
-      } else {
-        await apiResetSessionVotes(selectedRosterSlug);
       }
+      await apiResetSessionVotes(selectedRosterSlug);
     } catch (err) {
       console.error('Failed to reset votes on backend database:', err);
     }
 
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(`dbd_smash_votes_${selectedRosterSlug}`);
+      } catch {}
+    }
+
     setVoteHistory([]);
-    setSessionSmashes(0);
-    setSessionPasses(0);
     setRoleFilter('all');
     setGenderFilter('all');
     await loadFeed();
@@ -364,14 +523,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       }
 
       // Audio & Modals
-      if (e.key === 'm' || e.key === 'M') {
+      if (e.key === 'm' || e.key === 'M' || e.key === 'b' || e.key === 'B') {
         e.preventDefault();
-        const next = SmashSounds.toggleMute();
-        setIsMuted(next);
-      } else if (e.key === 'b' || e.key === 'B') {
-        e.preventDefault();
-        const next = SmashSounds.toggleBgm();
-        setIsBgmPlaying(next);
+        const active = SmashSounds.toggleMasterSound();
+        setIsSoundActive(active);
+        setIsMuted(!active);
+        setIsBgmPlaying(active);
       } else if (e.key === '?' || e.key === '/') {
         e.preventDefault();
         setIsHowToPlayOpen((prev) => !prev);
@@ -399,21 +556,29 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [areModalsOpen, currentCharacter, isExiting, handleVote]);
 
-  const toggleSound = () => {
-    const next = SmashSounds.toggleMute();
-    setIsMuted(next);
-    if (!next) SmashSounds.playHeartbeat(1.1);
-  };
+  // Auto-refresh leaderboard and vote state whenever the Hall of Fame modal opens
+  useEffect(() => {
+    if (isLeaderboardOpen) {
+      loadLeaderboard();
+      syncVotes(selectedRosterSlug);
+    }
+  }, [isLeaderboardOpen, loadLeaderboard, syncVotes, selectedRosterSlug]);
 
-  const toggleMusic = () => {
-    const next = SmashSounds.toggleBgm();
-    setIsBgmPlaying(next);
+  const handleToggleMasterSound = () => {
+    const active = SmashSounds.toggleMasterSound();
+    setIsSoundActive(active);
+    setIsMuted(!active);
+    setIsBgmPlaying(active);
   };
 
   const userSmashesList = useMemo(() => {
     return voteHistory
       .filter((v) => v.vote === 'smash')
-      .map((v) => ({ slug: v.character.slug, vote: v.vote, timestamp: v.timestamp }));
+      .map((v) => ({
+        slug: v.character?.slug || (v as any).slug || (v as any).character_slug || '',
+        vote: v.vote,
+        timestamp: v.timestamp,
+      }));
   }, [voteHistory]);
 
   const totalSessionVotes = sessionSmashes + sessionPasses;
@@ -462,36 +627,48 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       />
 
       {/* ========================================================================= */}
-      {/* REDESIGNED UNIFIED COMMAND DOCK (TOP BAR + TELEMETRY + FILTERS + ACTIONS) */}
+      {/* REDESIGNED UNIFIED COMMAND DOCK (LEFT STATS | CENTER ROSTER | RIGHT ICONS) */}
       {/* ========================================================================= */}
       <header className="relative z-20 mx-auto w-full max-w-6xl rounded-3xl bg-zinc-950/85 border border-pink-500/25 shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_35px_rgba(255,0,85,0.08)] backdrop-blur-2xl p-3.5 sm:p-4 md:p-5 space-y-3.5 transition-all cockpit-neon-pulse">
-        {/* ROW 1: Brand + Dynamic Roster Selector + Telemetry HUD + Action Cluster */}
-        <div className="flex flex-col xl:flex-row items-center justify-between gap-3 sm:gap-4">
-          {/* Brand & Edition Roster Trigger */}
-          <div className="flex items-center gap-4 w-full xl:w-auto justify-between xl:justify-start">
-            {/* Brand Title (Horizontal, Proud, Zero Squish) */}
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-600/30 via-pink-600/20 to-[#ff0055]/30 border border-[#ff0055]/60 text-[#ff0055] shadow-[0_0_20px_rgba(255,0,85,0.45)] group shrink-0">
-                <Heart className="h-5 w-5 fill-[#ff0055] animate-pulse" />
-                <div className="absolute -inset-0.5 rounded-2xl bg-[#ff0055] opacity-20 blur group-hover:opacity-40 transition-opacity" />
-              </div>
-              <div className="leading-tight shrink-0 whitespace-nowrap">
-                <h1 className="text-base sm:text-lg font-black tracking-wider font-mono text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-rose-100 to-white drop-shadow-[0_0_12px_rgba(255,0,85,0.5)]">
-                  {title}
-                </h1>
-                <span className="text-[9px] font-mono font-bold tracking-widest text-pink-400/90 uppercase block">
-                  {activeRoster.category || 'DBD'} {dict?.smashOrPass?.occultDossier || 'OCCULT DOSSIER'}
+        {/* MAIN ROW: Left Stats + Centered Roster Pill + Right Action Cluster */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4 w-full">
+          {/* LEFT: Live Session Telemetry Capsule */}
+          <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto order-2 lg:order-1 shrink-0">
+            <div className="flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-xs sm:text-sm font-mono shadow-inner">
+              <span className="flex items-center gap-1.5 text-cyan-400 font-bold">
+                <Layers className="h-4 w-4 text-cyan-400/90" />
+                <span className="text-zinc-100 font-black text-sm sm:text-base">{remainingInDeck}</span>
+                <span className="text-[11px] sm:text-xs text-zinc-400 font-medium">
+                  {hudLabels.left || (locale === 'pl' ? 'pozostało' : 'left')}
                 </span>
-              </div>
+              </span>
+              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
+              <span className="flex items-center gap-1.5 text-[#ff0055] font-black text-xs sm:text-sm">
+                <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-[#ff0055]" />
+                <span>{sessionSmashes}</span>
+              </span>
+              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
+              <span className="flex items-center gap-1.5 text-slate-400 font-black text-xs sm:text-sm">
+                <ThumbsDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400" />
+                <span>{sessionPasses}</span>
+              </span>
+              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
+              <span className="text-amber-300 font-black text-xs sm:text-sm tracking-wide">
+                {sessionSmashRate}{dict?.smashOrPass?.percentSign || '%'}
+              </span>
             </div>
+          </div>
 
-            {/* Custom Glass Roster Selector Trigger (Opens Modal) */}
+          {/* CENTER: Heart-Flanked Dynamic Roster Selector */}
+          <div className="flex items-center justify-center gap-2.5 sm:gap-3 w-full lg:w-auto order-1 lg:order-2">
+            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-[#ff0055] fill-[#ff0055] animate-pulse drop-shadow-[0_0_12px_rgba(255,0,85,0.9)] shrink-0" />
+
             <button
               type="button"
               onClick={() => setIsRosterModalOpen(true)}
-              className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-zinc-900/90 border border-pink-500/40 hover:border-[#ff0055] hover:shadow-[0_0_20px_rgba(255,0,85,0.35)] text-xs font-mono font-bold text-pink-100 transition-all cursor-pointer group shrink-0"
+              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-zinc-900/95 border border-pink-500/50 hover:border-[#ff0055] hover:shadow-[0_0_25px_rgba(255,0,85,0.4)] text-xs sm:text-sm font-mono font-bold text-pink-100 transition-all cursor-pointer group shrink-0"
             >
-              <span className="relative flex h-5 w-5 items-center justify-center rounded-lg overflow-hidden border border-pink-500/50 shrink-0">
+              <span className="relative flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-lg overflow-hidden border border-pink-500/60 shrink-0">
                 <img
                   src={getRosterCover(activeRoster)}
                   alt=""
@@ -501,205 +678,247 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   className="h-full w-full object-cover"
                 />
               </span>
-              <span className="truncate max-w-[140px] sm:max-w-[200px] text-zinc-200 group-hover:text-white">
+              <span className="truncate max-w-[150px] sm:max-w-[220px] text-zinc-100 group-hover:text-white font-black tracking-wide">
                 {getRosterDisplayName(activeRoster)}
               </span>
-              <span className="px-1.5 py-0.5 rounded-md bg-pink-500/20 text-pink-300 text-[10px]">
-                {activeRoster.entity_count ?? activeRoster.character_count ?? 0}
+              <span className="px-2 py-0.5 rounded-lg bg-pink-500/25 text-pink-300 text-[10px] sm:text-xs font-black">
+                {activeRoster.entity_count ?? activeRoster.character_count ?? totalRemaining ?? deck.length}
               </span>
-              <ChevronDown className="h-3.5 w-3.5 text-pink-400 group-hover:translate-y-0.5 transition-transform" />
+              <ChevronDown className="h-4 w-4 text-pink-400 group-hover:translate-y-0.5 transition-transform" />
             </button>
+
+            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-[#ff0055] fill-[#ff0055] animate-pulse drop-shadow-[0_0_12px_rgba(255,0,85,0.9)] shrink-0" />
           </div>
 
-          {/* Telemetry HUD & Action Cluster */}
-          <div className="flex items-center flex-wrap gap-2.5 w-full xl:w-auto justify-between xl:justify-end">
-            {/* Live Session Telemetry Capsule */}
-            <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 text-xs font-mono shadow-inner">
-              <span className="flex items-center gap-1.5 text-cyan-400 font-bold">
-                <Layers className="h-3.5 w-3.5 text-cyan-400/80" />
-                <span className="text-zinc-100 font-black">{remainingInDeck}</span>
-                <span className="text-[10px] text-zinc-400 font-medium">
-                  {hudLabels.left || (locale === 'pl' ? 'pozostało' : 'left')}
-                </span>
-              </span>
-              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="flex items-center gap-1 text-[#ff0055] font-black">
-                <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
-                <span>{sessionSmashes}</span>
-              </span>
-              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="flex items-center gap-1 text-slate-400 font-black">
-                <ThumbsDown className="h-3.5 w-3.5 text-slate-400" />
-                <span>{sessionPasses}</span>
-              </span>
-              <span className="text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="text-amber-300 font-black tracking-wide">{sessionSmashRate}{dict?.smashOrPass?.percentSign || '%'}</span>
-            </div>
-
-            {/* Micro Action Controls */}
-            <div className="flex items-center gap-1.5">
-              {/* BGM Toggle */}
+          {/* RIGHT: Action Cluster (Icons with Tooltips) */}
+          <div className="flex items-center justify-center lg:justify-end gap-1.5 sm:gap-2 w-full lg:w-auto order-3 shrink-0">
+            {/* Filter Settings Drawer Toggle */}
+            <Tooltip
+              title={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
+              description={dict?.smashOrPass?.tooltips?.filterDesc || 'Filter by survivor/killer role and character gender.'}
+              placement="bottom"
+            >
               <button
                 type="button"
-                onClick={toggleMusic}
-                title={isBgmPlaying ? dict?.smashOrPass?.tooltips?.pauseBgm || 'Pause BGM (B)' : dict?.smashOrPass?.tooltips?.playBgm || 'Play BGM (B)'}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${isBgmPlaying
-                    ? 'bg-rose-950/90 border-[#ff0055] text-pink-300 shadow-[0_0_15px_rgba(255,0,85,0.5)] animate-pulse'
+                onClick={() => setIsFilterDrawerOpen((prev) => !prev)}
+                aria-label={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
+                className={`relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                  isFilterDrawerOpen || roleFilter !== 'all' || genderFilter !== 'all'
+                    ? 'bg-pink-500/20 border-pink-500/60 text-pink-300 shadow-[0_0_14px_rgba(255,0,85,0.4)]'
                     : 'bg-zinc-900/90 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
-                  }`}
+                }`}
               >
-                <Music className="h-3.5 w-3.5 text-pink-400" />
-                <span className="hidden sm:inline">{hudLabels.bgm || 'BGM'}</span>
+                <SlidersHorizontal className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                {(roleFilter !== 'all' || genderFilter !== 'all') && (
+                  <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#ff0055] ring-2 ring-zinc-950" />
+                )}
               </button>
+            </Tooltip>
 
-              {/* Archetype Modal */}
+            {/* Dynamic Sound Toggle */}
+            <Tooltip
+              title={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudio || 'Mute Audio (M / B)') : (dict?.smashOrPass?.tooltips?.unmuteAudio || 'Enable Audio (M / B)')}
+              description={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudioDesc || 'Mute all background music and sound effects.') : (dict?.smashOrPass?.tooltips?.unmuteAudioDesc || 'Enable dark synth ambience and sound effects.')}
+              placement="bottom"
+            >
+              <button
+                type="button"
+                onClick={handleToggleMasterSound}
+                aria-label={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudio || '') : (dict?.smashOrPass?.tooltips?.unmuteAudio || '')}
+                className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                  isSoundActive
+                    ? 'bg-rose-950/90 border-[#ff0055] text-pink-300 shadow-[0_0_16px_rgba(255,0,85,0.5)]'
+                    : 'bg-zinc-900/90 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
+                }`}
+              >
+                {isSoundActive ? <Volume2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-pink-400 animate-pulse" /> : <VolumeX className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
+              </button>
+            </Tooltip>
+
+            {/* Archetype Modal */}
+            <Tooltip
+              title={dict?.smashOrPass?.modals?.personaTitle || 'Trial Romance Archetype'}
+              description={dict?.smashOrPass?.tooltips?.archetypeDesc || 'Discover your personal dating archetype based on your voting tendencies.'}
+              placement="bottom"
+            >
               <button
                 type="button"
                 onClick={() => setIsPersonaOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-500/15 border border-pink-500/30 hover:border-pink-500/60 text-pink-300 text-xs font-mono font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                aria-label={dict?.smashOrPass?.tooltips?.archetype || dict?.smashOrPass?.modals?.personaTitle || ''}
+                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 hover:border-pink-500/60 text-pink-300 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
               >
-                <Sparkles className="h-3.5 w-3.5 text-pink-400" />
-                <span className="hidden sm:inline">{hudLabels.archetype || (locale === 'pl' ? 'Archetyp' : 'Archetype')}</span>
+                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-pink-400" />
               </button>
+            </Tooltip>
 
-              {/* Leaderboard Modal */}
+            {/* Hall of Fame Leaderboard Modal */}
+            <Tooltip
+              title={dict?.smashOrPass?.modals?.leaderboardTitle || 'Hall of Fame'}
+              description={dict?.smashOrPass?.tooltips?.leaderboardDesc || 'View community rankings and smash statistics across the realm.'}
+              placement="bottom"
+            >
               <button
                 type="button"
                 onClick={() => setIsLeaderboardOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 text-xs font-mono font-bold transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                aria-label={dict?.smashOrPass?.tooltips?.leaderboard || dict?.smashOrPass?.modals?.leaderboardTitle || ''}
+                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
               >
-                <Trophy className="h-3.5 w-3.5 text-amber-400" />
-                <span className="hidden sm:inline">{hudLabels.hallOfFame || leaderboardLabel}</span>
+                <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-400" />
               </button>
+            </Tooltip>
 
-              {/* Shuffle */}
+            {/* Shuffle */}
+            <Tooltip
+              title={dict?.smashOrPass?.tooltips?.shuffle || 'Shuffle Remaining'}
+              description={dict?.smashOrPass?.tooltips?.shuffleDesc || 'Randomize the remaining candidates in your deck.'}
+              placement="bottom"
+            >
               <button
                 type="button"
                 onClick={shuffleDeck}
-                title={dict?.smashOrPass?.tooltips?.shuffle || hudLabels.shuffle || 'Shuffle Remaining'}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                aria-label={dict?.smashOrPass?.tooltips?.shuffle || ''}
+                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
               >
-                <Shuffle className="h-3.5 w-3.5" />
+                <Shuffle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </button>
+            </Tooltip>
 
-              {/* Sound Toggle */}
-              <button
-                type="button"
-                onClick={toggleSound}
-                title={isMuted ? dict?.smashOrPass?.tooltips?.unmute || 'Unmute Sound FX (M)' : dict?.smashOrPass?.tooltips?.mute || 'Mute Sound FX (M)'}
-                className={`flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 ${isMuted
-                    ? 'bg-zinc-900/90 border-zinc-800 text-zinc-600'
-                    : 'bg-pink-500/15 border-pink-500/40 text-pink-400 shadow-[0_0_12px_rgba(255,0,85,0.3)]'
-                  }`}
-              >
-                {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-              </button>
-
-              {/* Reset */}
+            {/* Reset */}
+            <Tooltip
+              title={dict?.smashOrPass?.tooltips?.resetAllVotes || 'Reset Voting Data'}
+              description={dict?.smashOrPass?.tooltips?.resetDesc || 'Clear your votes and restore all candidate cards.'}
+              placement="bottom"
+            >
               <button
                 type="button"
                 onClick={() => setIsResetConfirmOpen(true)}
-                title={dict?.smashOrPass?.tooltips?.resetAllVotes || 'Reset All My Votes'}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-rose-400 hover:border-rose-500/40 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                aria-label={dict?.smashOrPass?.tooltips?.resetAllVotes || ''}
+                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-rose-400 hover:border-rose-500/40 transition-all cursor-pointer hover:scale-105 active:scale-95"
               >
-                <Trash2 className="h-3.5 w-3.5" />
+                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </button>
+            </Tooltip>
 
-              {/* How to Play */}
+            {/* How to Play */}
+            <Tooltip
+              title={dict?.smashOrPass?.tooltips?.howToPlay || 'How to Play'}
+              description={dict?.smashOrPass?.tooltips?.howToPlayDesc || 'View keyboard shortcuts, voting controls, and trial mechanics.'}
+              placement="bottom"
+            >
               <button
                 type="button"
                 onClick={() => setIsHowToPlayOpen(true)}
-                title={dict?.smashOrPass?.tooltips?.howToPlay || hudLabels.howToPlay || 'How to Play & Keybindings'}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                aria-label={dict?.smashOrPass?.tooltips?.howToPlay || ''}
+                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
               >
-                <HelpCircle className="h-3.5 w-3.5" />
+                <HelpCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </button>
-            </div>
+            </Tooltip>
           </div>
         </div>
 
-        {/* ROW 2: Tactical Filter Array (Roles & Genders) */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-3 border-t border-zinc-800/80">
-          {/* Role Segmented Switch */}
-          <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800/90 rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold">
-            <button
-              type="button"
-              onClick={() => handleFilterChange('role', 'all')}
-              className={`flex-1 md:flex-none px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${roleFilter === 'all'
-                  ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.5)]'
-                  : 'text-zinc-400 hover:text-zinc-200'
-                }`}
+        {/* FRAMER MOTION EXPANDABLE FILTER DRAWER */}
+        <AnimatePresence>
+          {isFilterDrawerOpen && (
+            <motion.div
+              key="smash-filter-drawer"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden border-t border-zinc-800/80 pt-3"
             >
-              {allRolesLabel}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('role', 'Survivor')}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${roleFilter === 'Survivor'
-                  ? 'bg-[#00f5d4] text-zinc-950 font-black shadow-[0_0_14px_rgba(0,245,212,0.45)]'
-                  : 'text-zinc-400 hover:text-[#00f5d4]'
-                }`}
-            >
-              <Shield className="h-3.5 w-3.5" />
-              {survivorsLabel}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('role', 'Killer')}
-              className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${roleFilter === 'Killer'
-                  ? 'bg-[#ff0055] text-white shadow-[0_0_14px_rgba(255,0,85,0.45)]'
-                  : 'text-zinc-400 hover:text-[#ff0055]'
-                }`}
-            >
-              <Skull className="h-3.5 w-3.5" />
-              {killersLabel}
-            </button>
-          </div>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+                {/* Role Segmented Switch */}
+                <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800/90 rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold">
+                  <button
+                    type="button"
+                    onClick={() => handleFilterChange('role', 'all')}
+                    className={`flex-1 md:flex-none px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                      roleFilter === 'all'
+                        ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.5)]'
+                        : 'text-zinc-400 hover:text-zinc-200'
+                    }`}
+                  >
+                    {allRolesLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFilterChange('role', 'Survivor')}
+                    className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                      roleFilter === 'Survivor'
+                        ? 'bg-[#00f5d4] text-zinc-950 font-black shadow-[0_0_14px_rgba(0,245,212,0.45)]'
+                        : 'text-zinc-400 hover:text-[#00f5d4]'
+                    }`}
+                  >
+                    <Shield className="h-3.5 w-3.5" />
+                    {survivorsLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFilterChange('role', 'Killer')}
+                    className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                      roleFilter === 'Killer'
+                        ? 'bg-[#ff0055] text-white shadow-[0_0_14px_rgba(255,0,85,0.45)]'
+                        : 'text-zinc-400 hover:text-[#ff0055]'
+                    }`}
+                  >
+                    <Skull className="h-3.5 w-3.5" />
+                    {killersLabel}
+                  </button>
+                </div>
 
-          {/* Gender Segmented Switch */}
-          <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800/90 rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
-            <button
-              type="button"
-              onClick={() => handleFilterChange('gender', 'all')}
-              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${genderFilter === 'all'
-                  ? 'bg-zinc-800 text-white border border-zinc-700 shadow'
-                  : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-            >
-              {allGendersLabel}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('gender', 'female')}
-              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${genderFilter === 'female'
-                  ? 'bg-pink-600 text-white shadow-[0_0_12px_rgba(219,39,119,0.45)]'
-                  : 'text-zinc-400 hover:text-pink-300'
-                }`}
-            >
-              {femaleOnlyLabel}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('gender', 'male')}
-              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${genderFilter === 'male'
-                  ? 'bg-cyan-600 text-white shadow-[0_0_12px_rgba(8,145,178,0.45)]'
-                  : 'text-zinc-400 hover:text-cyan-300'
-                }`}
-            >
-              {maleOnlyLabel}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('gender', 'monster_other')}
-              className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${genderFilter === 'monster_other'
-                  ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(147,51,234,0.45)]'
-                  : 'text-zinc-400 hover:text-purple-300'
-                }`}
-            >
-              {monstersLabel}
-            </button>
-          </div>
-        </div>
+                {/* Gender Segmented Switch */}
+                <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800/90 rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
+                  <button
+                    type="button"
+                    onClick={() => handleFilterChange('gender', 'all')}
+                    className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                      genderFilter === 'all'
+                        ? 'bg-zinc-800 text-white border border-zinc-700 shadow'
+                        : 'text-zinc-400 hover:text-zinc-200'
+                    }`}
+                  >
+                    {allGendersLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFilterChange('gender', 'female')}
+                    className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                      genderFilter === 'female'
+                        ? 'bg-pink-600 text-white shadow-[0_0_12px_rgba(219,39,119,0.45)]'
+                        : 'text-zinc-400 hover:text-pink-300'
+                    }`}
+                  >
+                    {femaleOnlyLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFilterChange('gender', 'male')}
+                    className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                      genderFilter === 'male'
+                        ? 'bg-cyan-600 text-white shadow-[0_0_12px_rgba(8,145,178,0.45)]'
+                        : 'text-zinc-400 hover:text-cyan-300'
+                    }`}
+                  >
+                    {maleOnlyLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFilterChange('gender', 'monster_other')}
+                    className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                      genderFilter === 'monster_other'
+                        ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(147,51,234,0.45)]'
+                        : 'text-zinc-400 hover:text-purple-300'
+                    }`}
+                  >
+                    {monstersLabel}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* MAIN INTERACTIVE ARENA WITH MULTI-CARD STACK QUEUE */}

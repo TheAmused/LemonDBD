@@ -41,6 +41,8 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
     resetSessionVotes,
     resetUserVotes,
     fetchDynamicTranslations,
+    fetchUserVotes,
+    syncSessionVotes,
   } = await import('../../services/smashApi');
 
   await t.test('getSessionId returns valid session identifier', () => {
@@ -242,6 +244,55 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
     try {
       const dict = await fetchDynamicTranslations('ja');
       assert.strictEqual(dict['smashOrPass.ui.smash'], 'スマッシュ');
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test('fetchUserVotes retrieves user vote history from backend', async () => {
+    const originalFetch = globalThis.fetch;
+    const mockUserVotes = [
+      { character_slug: 'ada_wong', vote_type: 'smash' },
+      { character_slug: 'the_trapper', vote_type: 'pass' },
+    ];
+    globalThis.fetch = async (url: any) => {
+      assert.ok(String(url).includes('/api/v1/smash-or-pass/user-votes'));
+      assert.ok(String(url).includes('edition=canon'));
+      return {
+        ok: true,
+        json: async () => ({ data: mockUserVotes, count: 2 }),
+      } as any;
+    };
+
+    try {
+      const votes = await fetchUserVotes('canon');
+      assert.strictEqual(votes.length, 2);
+      assert.strictEqual(votes[0].character_slug, 'ada_wong');
+      assert.strictEqual(votes[0].vote_type, 'smash');
+      assert.strictEqual(votes[1].vote_type, 'pass');
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  await t.test('syncSessionVotes sends session_id to backend for migration', async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async (url: any, opts: any) => {
+      assert.ok(String(url).includes('/api/v1/smash-or-pass/sync-session'));
+      assert.strictEqual(opts.method, 'POST');
+      const body = JSON.parse(opts.body);
+      assert.ok(body.session_id);
+      assert.strictEqual(body.roster_slug, 'canon');
+      return {
+        ok: true,
+        json: async () => ({ data: { status: 'success', synced_count: 30 } }),
+      } as any;
+    };
+
+    try {
+      const result = await syncSessionVotes('canon');
+      assert.strictEqual(result.status, 'success');
+      assert.strictEqual(result.synced_count, 30);
     } finally {
       globalThis.fetch = originalFetch;
     }

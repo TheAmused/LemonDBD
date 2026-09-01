@@ -144,8 +144,21 @@ def seed_smash_rosters():
     return _seed_smash_rosters_impl()
 
 
+def ensure_roster_assets(static_dir: Path | None = None) -> None:
+    """Ensures roster covers and special cosmetic avatars exist in static avatars dir."""
+    try:
+        if static_dir is None:
+            static_dir = Path(__file__).resolve().parent.parent / "static"
+        from app.scrapers.roster_images import RosterImageScraperDriver
+        driver = RosterImageScraperDriver(timeout=10)
+        driver.sync_all_rosters(static_dir)
+    except Exception as e:
+        logger.debug(f"Non-critical asset sync check: {e}")
+
+
 def _seed_smash_rosters_impl():
     try:
+        ensure_roster_assets()
         rosters_list, entities_by_roster, translations_map = load_rosters_from_json_files()
 
         # 1. Seed / Upsert Rosters

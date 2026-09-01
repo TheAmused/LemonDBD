@@ -22,22 +22,6 @@ export async function fetchMaps(realm?: string, search?: string, source?: string
   return res.json();
 }
 
-export async function fetchMapDetail(
-  mapId: string,
-  seed?: string,
-  floor?: number
-): Promise<{ map: MapRealm }> {
-  const params = new URLSearchParams();
-  if (seed) params.append('seed', seed);
-  if (floor !== undefined) params.append('floor', floor.toString());
-
-  const queryString = params.toString();
-  const url = `${API_BASE}/maps/${mapId}${queryString ? `?${queryString}` : ''}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('Failed to fetch map detail');
-  return res.json();
-}
-
 export async function fetchRealms(): Promise<{ realms: Realm[] }> {
   const url = `${API_BASE}/maps/realms`;
   const res = await fetch(url);

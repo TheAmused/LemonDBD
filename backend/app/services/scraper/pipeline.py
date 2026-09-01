@@ -80,17 +80,6 @@ def execute_sync_pipeline(
             logger.warning(f"Failed scraping realm images: {realm_err}")
             realms = []
 
-        ScraperStateManager.update_status(current_step="seeding_database")
-        db_sync_metrics = sync_all_to_database(
-            characters=characters,
-            perks=perks,
-            items=items,
-            addons=addons,
-            maps=maps,
-            offerings=offerings,
-            realms=realms,
-        )
-
         if download_assets:
             total_downloads = (
                 len(perks)
@@ -115,6 +104,10 @@ def execute_sync_pipeline(
                 logger.warning(f"Could not prepare static icons directory {static_dir}: {static_prep_err}")
 
             try:
+                # Must run before sync_all_to_database: this mutates each entity's
+                # *_local_path to the .webp extension the downloader actually wrote
+                # to disk, so the DB is seeded with the corrected path, not the
+                # source scraper's original (e.g. wiki.gg's .png) path.
                 asyncio.run(
                     download_all_assets(
                         static_dir,
@@ -132,6 +125,17 @@ def execute_sync_pipeline(
                 )
             except Exception as asset_err:
                 logger.warning(f"Asset downloading encountered an issue: {asset_err}")
+
+        ScraperStateManager.update_status(current_step="seeding_database")
+        db_sync_metrics = sync_all_to_database(
+            characters=characters,
+            perks=perks,
+            items=items,
+            addons=addons,
+            maps=maps,
+            offerings=offerings,
+            realms=realms,
+        )
 
         try:
             logger.info("Auto-syncing translations across EN, PL, DE, ES, JA...")

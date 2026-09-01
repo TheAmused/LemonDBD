@@ -6,6 +6,7 @@ from app.services.db_service import DatabaseService
 from app.services.maps import (
     fetch_map_by_id,
     fetch_maps,
+    fetch_realms,
     seed_maps_if_empty,
 )
 
@@ -35,3 +36,6 @@ class MapService:
         floor: int = 1,
     ) -> dict[str, Any] | None:
         return fetch_map_by_id(self._use_sqlalchemy, self.db_service, map_id, seed_variant=seed_variant, floor=floor)
+
+    def get_realms(self) -> list[dict[str, Any]]:
+        return fetch_realms()

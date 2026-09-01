@@ -7,7 +7,7 @@ from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_loads
-from app.models import MapRealm
+from app.models import MapRealm, Realm
 from app.services.maps.data import SAMPLE_MAPS
 from app.services.maps.seeder import seed_maps_if_empty
 
@@ -43,7 +43,9 @@ def fetch_maps(
                     )
                 stmt = stmt.order_by(MapRealm.name.asc())
                 rows = db.session.scalars(stmt).unique().all()
-                if rows:
+                # Only fall through to the legacy seed path if the table is fully unseeded.
+                table_has_any_rows = rows or db.session.scalar(select(MapRealm.map_id).limit(1)) is not None
+                if table_has_any_rows:
                     return [r.to_dict() for r in rows]
         except Exception as e:
             logger.debug(f"SQLAlchemy get_maps fallback: {e}")
@@ -94,6 +96,21 @@ def fetch_maps(
             "image_url": r["image_url"],
         })
     return maps
+
+
+def fetch_realms() -> list[dict[str, Any]]:
+    """Retrieve all realm banner images, keyed by realm name for client-side matching."""
+    try:
+        if current_app:
+            rows = db.session.scalars(select(Realm)).all()
+            return [r.to_dict() for r in rows]
+    except Exception as e:
+        logger.debug(f"fetch_realms fallback: {e}")
+        try:
+            db.session.rollback()
+        except Exception:
+            pass
+    return []
 
 
 def fetch_map_by_id(

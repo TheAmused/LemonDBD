@@ -1,6 +1,12 @@
 // frontend/src/types/map.ts
 export type PalletSafetyRating = 'god' | 'safe' | 'mindgameable' | 'unsafe';
 
+export interface Realm {
+  name: string;
+  image_url: string;
+  image_local_path: string;
+}
+
 export interface TotemSpawn {
   id: number;
   x: number;

@@ -1,5 +1,5 @@
 // frontend/src/services/mapApi.ts
-import { MapRealm } from '@/types/map';
+import { MapRealm, Realm } from '@/types/map';
 
 const getApiBase = () => {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -35,5 +35,12 @@ export async function fetchMapDetail(
   const url = `${API_BASE}/maps/${mapId}${queryString ? `?${queryString}` : ''}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch map detail');
+  return res.json();
+}
+
+export async function fetchRealms(): Promise<{ realms: Realm[] }> {
+  const url = `${API_BASE}/maps/realms`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Failed to fetch realms');
   return res.json();
 }

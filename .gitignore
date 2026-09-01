@@ -94,6 +94,7 @@ frontend/pnpm-debug.log*
 backend/app/static/avatars/
 backend/app/static/icons/
 backend/app/static/maps/
+backend/app/static/realms/
 backend/app/static/uploads/
 translations/*
 !translations/create_translations.py

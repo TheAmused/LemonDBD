@@ -4,8 +4,8 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
-from app.models import Addon, Character, Item, MapRealm, MapTile, Offering, Perk
-from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData
+from app.models import Addon, Character, Item, MapRealm, MapTile, Offering, Perk, Realm
+from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData, RealmImageData
 from app.scrapers.utils import clean_description_text, normalize_name_key, sanitize_filename
 
 logger = logging.getLogger(__name__)
@@ -269,8 +269,10 @@ def sync_maps_to_db(maps: list[MapData]) -> None:
     existing_maps = {
         m.map_id: m for m in db.session.scalars(select(MapRealm)).all()
     }
+    valid_ids = set()
     for m in maps:
         m_id = getattr(m, "id", None) or f"map_{sanitize_filename(m.name)}"
+        valid_ids.add(m_id)
         desc = ""
         if getattr(m, "clock_system", None) and isinstance(m.clock_system, dict):
             desc = m.clock_system.get("description", "")
@@ -337,6 +339,36 @@ def sync_maps_to_db(maps: list[MapData]) -> None:
                         )
                     )
 
+    incoming_sources = {getattr(m, "source", "hens333") for m in maps}
+    for k, existing_map in existing_maps.items():
+        if k not in valid_ids and existing_map.source in incoming_sources:
+            db.session.delete(existing_map)
+
+    db.session.commit()
+
+
+def sync_realms_to_db(realms: list[RealmImageData]) -> None:
+    """Upsert realm banner images by name. No FK to map_realms.realm on
+    purpose (spec decision): matching by string name keeps this additive and
+    lets the frontend fall back to a plain text header when no match exists."""
+    if not realms:
+        return
+
+    existing = {r.name: r for r in db.session.scalars(select(Realm)).all()}
+    for r in realms:
+        existing_realm = existing.get(r.name)
+        if existing_realm:
+            existing_realm.image_url = r.image_url
+            existing_realm.image_local_path = r.image_local_path
+        else:
+            db.session.add(
+                Realm(
+                    name=r.name,
+                    image_url=r.image_url,
+                    image_local_path=r.image_local_path,
+                )
+            )
+
     db.session.commit()
 
 
@@ -394,12 +426,14 @@ def sync_all_to_database(
     addons: list[AddonData] | None = None,
     maps: list[MapData] | None = None,
     offerings: list[OfferingData] | None = None,
+    realms: list[RealmImageData] | None = None,
 ) -> dict[str, int]:
     """Execute complete database synchronization pipeline across all DBD entity domains."""
     items = items or []
     addons = addons or []
     maps = maps or []
     offerings = offerings or []
+    realms = realms or []
 
     existing_chars = sync_characters_to_db(characters)
 
@@ -415,6 +449,7 @@ def sync_all_to_database(
     sync_items_to_db(items)
     sync_addons_to_db(addons)
     sync_maps_to_db(maps)
+    sync_realms_to_db(realms)
     sync_offerings_to_db(offerings)
 
     return {
@@ -424,4 +459,5 @@ def sync_all_to_database(
         "addons_synced": len(addons),
         "maps_synced": len(maps),
         "offerings_synced": len(offerings),
+        "realms_synced": len(realms),
     }

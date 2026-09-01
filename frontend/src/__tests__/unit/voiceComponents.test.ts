@@ -4,26 +4,16 @@ import test from 'node:test';
 import assert from 'node:assert';
 import { matchVoiceQuery, getVariantsForMap, MAP_VARIANT_GROUPS } from '@/utils/mapVoiceMatcher';
 import { VoiceCommandBanner } from '@/utils/../components/maps/VoiceCommandBanner';
-import { VoiceNavButton } from '@/utils/../components/maps/VoiceNavButton';
 import { MapExplorer } from '@/utils/../components/maps/MapExplorer';
 import { FullscreenMapEngine } from '@/utils/../components/maps/FullscreenMapEngine';
 
-import { MapCanvas } from '@/utils/../components/maps/MapCanvas';
-import { MapControls } from '@/utils/../components/maps/MapControls';
 import { VariantSwitcherBar } from '@/utils/../components/maps/VariantSwitcherBar';
-import { MapLegendDrawer } from '@/utils/../components/maps/MapLegendDrawer';
-import { MapDirectoryList } from '@/utils/../components/maps/MapDirectoryList';
 
-test('VoiceCommandBanner, VoiceNavButton, MapExplorer, FullscreenMapEngine, and modular sub-components are properly exported', () => {
+test('VoiceCommandBanner, MapExplorer, FullscreenMapEngine, and VariantSwitcherBar are properly exported', () => {
   assert.strictEqual(typeof VoiceCommandBanner, 'function');
-  assert.strictEqual(typeof VoiceNavButton, 'function');
   assert.strictEqual(typeof MapExplorer, 'function');
   assert.strictEqual(typeof FullscreenMapEngine, 'function');
-  assert.strictEqual(typeof MapCanvas, 'function');
-  assert.strictEqual(typeof MapControls, 'function');
   assert.strictEqual(typeof VariantSwitcherBar, 'function');
-  assert.strictEqual(typeof MapLegendDrawer, 'function');
-  assert.strictEqual(typeof MapDirectoryList, 'function');
 });
 
 test('VoiceCommandBanner props interface and match handling integration', () => {

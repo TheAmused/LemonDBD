@@ -43,7 +43,9 @@ def fetch_maps(
                     )
                 stmt = stmt.order_by(MapRealm.name.asc())
                 rows = db.session.scalars(stmt).unique().all()
-                if rows:
+                # Only fall through to the legacy seed path if the table is fully unseeded.
+                table_has_any_rows = rows or db.session.scalar(select(MapRealm.map_id).limit(1)) is not None
+                if table_has_any_rows:
                     return [r.to_dict() for r in rows]
         except Exception as e:
             logger.debug(f"SQLAlchemy get_maps fallback: {e}")

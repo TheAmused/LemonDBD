@@ -16,6 +16,7 @@ from curl_cffi.requests import AsyncSession
 
 from app.core.json_provider import safe_json_dumps
 from app.scrapers.constants import GENERIC_PERK_CANONICAL_MAP, KNOWN_KILLER_POWER_ALIASES
+from app.scrapers.maps import FOLDER_REALM_MAP, OTHER_MAP_REALM_OVERRIDES
 from app.scrapers.types import (
     AddonData,
     CharacterData,
@@ -1578,29 +1579,9 @@ class WikiGGScraperDriver:
             logger.warning(f"Failed to scrape wiki.gg offerings: {e}")
             return []
 
-    CANONICAL_REALM_NAMES = [
-        "Autohaven Wreckers",
-        "Springwood",
-        "Forsaken Boneyard",
-        "The Decimated Borgo",
-        "Coldwind Farm",
-        "Disturbed Ward",
-        "Dvarka Deepwood",
-        "The Macmillan Estate",
-        "Ormond",
-        "Raccoon City",
-        "Red Forest",
-        "Sleepless District",
-        "Backwater Swamp",
-        "Yamaoka Estate",
-        "Grave of Glenvale",
-        "Withered Isle",
-        "Haddonfield",
-        "Silent Hill",
-        "Gideon Meat Plant",
-        "Hawkins National Laboratory",
-        "Lery's Memorial Institute",
-    ]
+    CANONICAL_REALM_NAMES = list(
+        dict.fromkeys([*FOLDER_REALM_MAP.values(), *OTHER_MAP_REALM_OVERRIDES.values()])
+    )
 
     # The wiki.gg "Realms" page's own gallery is a Twitter meme gallery (an
     # "Entity Realm Nature Guide"), not per-realm banner art - matching against

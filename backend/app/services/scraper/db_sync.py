@@ -339,8 +339,9 @@ def sync_maps_to_db(maps: list[MapData]) -> None:
                         )
                     )
 
+    incoming_sources = {getattr(m, "source", "hens333") for m in maps}
     for k, existing_map in existing_maps.items():
-        if k not in valid_ids:
+        if k not in valid_ids and existing_map.source in incoming_sources:
             db.session.delete(existing_map)
 
     db.session.commit()

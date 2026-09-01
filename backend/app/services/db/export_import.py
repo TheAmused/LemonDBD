@@ -22,6 +22,7 @@ SUPPORTED_EXPORT_TARGETS = [
     "items",
     "addons",
     "maps",
+    "realms",
     "users",
     "ownerships",
     "community_builds",
@@ -192,6 +193,7 @@ class DatabaseExportImportService:
             export_data["maps"] = map_list
             counts["maps"] = len(map_list)
 
+        if "maps" in target_set or "realms" in target_set:
             realms_banner = db.session.scalars(select(Realm).order_by(Realm.id)).all()
             realm_list = []
             for rb in realms_banner:
@@ -315,6 +317,7 @@ class DatabaseExportImportService:
                     db.session.execute(delete(MapObjective))
                     db.session.execute(delete(MapTile))
                     db.session.execute(delete(MapRealm))
+                if "maps" in target_keys or "realms" in target_keys:
                     db.session.execute(delete(Realm))
                 if "addons" in target_keys:
                     db.session.execute(delete(Addon))
@@ -502,7 +505,7 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["maps"] = {"created": created, "updated": updated}
 
-            if "maps" in target_keys and "realms" in data:
+            if ("maps" in target_keys or "realms" in target_keys) and "realms" in data:
                 raw_realms = data["realms"]
                 created, updated = 0, 0
                 for rdata in raw_realms:

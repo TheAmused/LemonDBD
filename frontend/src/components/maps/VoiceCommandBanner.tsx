@@ -14,6 +14,7 @@ import {
   Globe,
   Info,
   ArrowRight,
+  Lock,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import {
@@ -159,18 +160,6 @@ function playMatchSuccessSound() {
     // Audio feedback is non-critical
   }
 }
-
-const QUICK_COMMAND_PROMPTS = [
-  { label: "Azarov's", query: "Azarov's Resting Place" },
-  { label: 'RPD East', query: 'RPD East Wing' },
-  { label: 'Badham 2', query: 'Preschool II' },
-  { label: 'Dead Dawg', query: 'Dead Dawg Saloon' },
-  { label: 'The Game', query: 'The Game' },
-  { label: 'Switch to Samoel', query: 'Switch to Samoel' },
-  { label: 'Switch to Hens', query: 'Switch to Hens' },
-  { label: 'Zoom In', query: 'Zoom In' },
-  { label: 'Fullscreen', query: 'Fullscreen' },
-];
 
 export function VoiceCommandBanner({
   locale = 'en',
@@ -894,14 +883,13 @@ export function VoiceCommandBanner({
 
             <button
               type="button"
-              onClick={() => onSourceChange('samoelcolt')}
-              aria-pressed={currentSource === 'samoelcolt'}
-              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'samoelcolt'
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md font-black'
-                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
+              disabled
+              title={dict?.maps?.lemonDbdSourceLocked || ''}
+              aria-disabled="true"
+              className="flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-extrabold font-mono text-slate-400 dark:text-slate-600 cursor-not-allowed"
             >
-              {dict?.maps?.sourceSamoelIsometric || ''}
+              <Lock className="h-2.5 w-2.5" aria-hidden="true" />
+              {dict?.maps?.sourceLemonDbd || ''}
             </button>
 
             <button
@@ -916,54 +904,42 @@ export function VoiceCommandBanner({
               {dict?.maps?.all || ''}
             </button>
           </div>
-
-          <div className="hidden lg:flex items-center gap-1">
-            {QUICK_COMMAND_PROMPTS.slice(0, 3).map((prompt) => (
-              <button
-                key={prompt.label}
-                type="button"
-                onClick={() => handleExecuteCommand(prompt.query)}
-                className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/70 hover:border-cyan-500/50 px-2 py-0.5 text-[10px] font-mono font-medium text-slate-600 dark:text-slate-300 transition active:scale-95 cursor-pointer shadow-xs"
-              >
-                {dict?.maps?.openQuote || ''}{prompt.label}{dict?.maps?.closeQuote || ''}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
-      <div className="relative z-10 my-3.5 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="hidden sm:flex items-center gap-1 h-9 px-1" aria-hidden="true">
-          {[12, 22, 16, 28, 18, 32, 24, 14].map((h, i) => {
-            const dynamicHeight =
-              voiceStatus === 'listening'
-                ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
-                : voiceStatus === 'matched'
-                  ? 24
-                  : 4;
-            return (
-              <span
-                key={`left-wave-${i}`}
-                style={{
-                  height: `${dynamicHeight}px`,
-                  animation:
-                    voiceStatus === 'listening'
-                      ? `pulse ${(0.4 + (i % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
-                      : 'none',
-                }}
-                className={`w-1 rounded-full transition-all duration-150 ${voiceStatus === 'listening'
-                    ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
-                    : voiceStatus === 'matched'
-                      ? 'bg-emerald-400'
-                      : 'bg-slate-300 dark:bg-slate-700/60'
-                  }`}
-              />
-            );
-          })}
-        </div>
+      <div className="relative z-10 my-3.5 flex flex-col items-center gap-3">
+        <div className="grid w-full grid-cols-3 items-center gap-4">
+          <div className="hidden sm:flex items-center gap-1 h-9 px-1" aria-hidden="true">
+            {[12, 22, 16, 28, 18, 32, 24, 14].map((h, i) => {
+              const dynamicHeight =
+                voiceStatus === 'listening'
+                  ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
+                  : voiceStatus === 'matched'
+                    ? 24
+                    : 4;
+              return (
+                <span
+                  key={`left-wave-${i}`}
+                  style={{
+                    height: `${dynamicHeight}px`,
+                    animation:
+                      voiceStatus === 'listening'
+                        ? `pulse ${(0.4 + (i % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
+                        : 'none',
+                  }}
+                  className={`w-1 rounded-full transition-all duration-150 ${voiceStatus === 'listening'
+                      ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
+                      : voiceStatus === 'matched'
+                        ? 'bg-emerald-400'
+                        : 'bg-slate-300 dark:bg-slate-700/60'
+                    }`}
+                />
+              );
+            })}
+          </div>
 
-        <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center">
+          <div className="flex items-center justify-center">
+           <div className="relative inline-flex items-center justify-center">
             {voiceStatus === 'listening' && (
               <>
                 <span className="absolute h-16 w-16 animate-ping rounded-full bg-rose-500/20 pointer-events-none" aria-hidden="true" />
@@ -1025,11 +1001,51 @@ export function VoiceCommandBanner({
                 aria-hidden="true"
               />
             </button>
+
+            {voiceStatus === 'idle' && (
+              <kbd
+                className="absolute left-full ml-2 rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1 py-0.2 text-[9px] font-mono text-cyan-600 dark:text-cyan-300 shadow-xs"
+                aria-hidden="true"
+              >
+                {dict?.maps?.keyV || 'V'}
+              </kbd>
+            )}
+           </div>
           </div>
 
-          <div className="flex flex-col min-w-[200px] sm:min-w-[340px]" aria-live="polite">
+          <div className="hidden sm:flex items-center justify-end gap-1 h-9 px-1" aria-hidden="true">
+            {[14, 24, 32, 18, 28, 16, 22, 12].map((h, i) => {
+              const dynamicHeight =
+                voiceStatus === 'listening'
+                  ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
+                  : voiceStatus === 'matched'
+                    ? 24
+                    : 4;
+              return (
+                <span
+                  key={`right-wave-${i}`}
+                  style={{
+                    height: `${dynamicHeight}px`,
+                    animation:
+                      voiceStatus === 'listening'
+                        ? `pulse ${(0.4 + ((i + 2) % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
+                        : 'none',
+                  }}
+                  className={`w-1 rounded-full transition-all duration-150 ${voiceStatus === 'listening'
+                      ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
+                      : voiceStatus === 'matched'
+                        ? 'bg-emerald-400'
+                        : 'bg-slate-300 dark:bg-slate-700/60'
+                    }`}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center max-w-[340px]" aria-live="polite">
             {voiceStatus === 'listening' && (
-              <div className="flex flex-col text-left">
+              <div className="flex flex-col text-center items-center">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" aria-hidden="true" />
                   <span className="text-xs font-black text-slate-900 dark:text-slate-100 font-mono truncate">
@@ -1049,7 +1065,7 @@ export function VoiceCommandBanner({
             )}
 
             {voiceStatus === 'processing' && (
-              <div className="flex flex-col text-left">
+              <div className="flex flex-col text-center items-center">
                 <div className="flex items-center gap-2">
                   <RefreshCw className="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" aria-hidden="true" />
                   <span className="text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
@@ -1065,7 +1081,7 @@ export function VoiceCommandBanner({
             )}
 
             {voiceStatus === 'matched' && matchedResult && (
-              <div className="flex flex-col text-left">
+              <div className="flex flex-col text-center items-center">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
                   <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 font-mono truncate">
@@ -1085,7 +1101,7 @@ export function VoiceCommandBanner({
             )}
 
             {voiceStatus === 'nomatch' && (
-              <div className="flex flex-col text-left">
+              <div className="flex flex-col text-center items-center">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-mono">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span className="truncate">
@@ -1101,7 +1117,7 @@ export function VoiceCommandBanner({
             )}
 
             {voiceStatus === 'error' && (
-              <div className="flex flex-col text-left">
+              <div className="flex flex-col text-center items-center">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-rose-700 dark:text-rose-400 font-mono">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span className="truncate">{errorMessage || rawVoiceDict.micBlocked || ''}</span>
@@ -1114,44 +1130,11 @@ export function VoiceCommandBanner({
 
             {voiceStatus === 'idle' && (
               <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono">
-                <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1 py-0.2 text-[9px] font-mono text-cyan-600 dark:text-cyan-300 shadow-xs">
-                  {dict?.maps?.keyV || 'V'}
-                </kbd>
                 <span className="truncate">
                   {rawVoiceDict.holdVToTalk || ''}
                 </span>
               </div>
             )}
-          </div>
-        </div>
-
-        <div className="hidden sm:flex items-center gap-1 h-9 px-1" aria-hidden="true">
-          {[14, 24, 32, 18, 28, 16, 22, 12].map((h, i) => {
-            const dynamicHeight =
-              voiceStatus === 'listening'
-                ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
-                : voiceStatus === 'matched'
-                  ? 24
-                  : 4;
-            return (
-              <span
-                key={`right-wave-${i}`}
-                style={{
-                  height: `${dynamicHeight}px`,
-                  animation:
-                    voiceStatus === 'listening'
-                      ? `pulse ${(0.4 + ((i + 2) % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
-                      : 'none',
-                }}
-                className={`w-1 rounded-full transition-all duration-150 ${voiceStatus === 'listening'
-                    ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
-                    : voiceStatus === 'matched'
-                      ? 'bg-emerald-400'
-                      : 'bg-slate-300 dark:bg-slate-700/60'
-                  }`}
-              />
-            );
-          })}
         </div>
       </div>
 

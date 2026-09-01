@@ -126,7 +126,6 @@ test('VoiceEngineInfoModal renders dual-engine explanation and compatibility det
   assert.ok(html.includes('Client-Side AI Model') || html.includes('Client-Side'));
   assert.ok(html.includes('Why is a Client-Side Fallback Needed?'));
   assert.ok(html.includes('45%'));
-  assert.ok(html.includes('CacheStorage'));
 });
 
 test('VoiceEngineInfoModal handles native Web Speech engine active state', () => {
@@ -174,7 +173,8 @@ test('VoiceCommandBanner renders active engine badge and fallback trigger', () =
     html.includes('Voice Recognition Engine')
   );
   assert.ok(html.includes('Hens333 (12-Clock)'));
-  assert.ok(html.includes('SamoelColt (Isometric)'));
+  assert.ok(html.includes('LemonDBD'));
+  assert.ok(!html.includes('SamoelColt'));
 });
 
 test('Multilingual translations dictionary coverage for voice recognition fallback', () => {

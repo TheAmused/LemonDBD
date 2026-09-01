@@ -1,7 +1,8 @@
 // frontend/src/components/generator/GeneratorPage.tsx
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 import {
   Perk,
@@ -11,7 +12,6 @@ import {
   GeneratorStoredState,
 } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
-import { ChaosWheelModal, ChaosMutator } from '../ChaosWheelModal';
 import { useAuth } from '@/context/AuthContext';
 import {
   fetchGeneratorConfig,
@@ -28,12 +28,15 @@ import { ModeSwitcher } from './ModeSwitcher';
 import { RoleToggle } from './shared/RoleToggle';
 import { motion } from 'framer-motion';
 import { StageFrame } from './shared/StageFrame';
-import { ConfirmModal } from '../ConfirmModal';
-import { WheelStage } from './modes/WheelStage';
-import { InstantStage } from './modes/InstantStage';
-import { SlotMachineStage } from './modes/SlotMachineStage';
-import { TarotDeckStage } from './modes/TarotDeckStage';
-import { LootCrateStage } from './modes/LootCrateStage';
+import type { ChaosMutator } from '../ChaosWheelModal';
+
+const ChaosWheelModal = dynamic(() => import('../ChaosWheelModal').then((m) => m.ChaosWheelModal), { ssr: false });
+const ConfirmModal = dynamic(() => import('../ConfirmModal').then((m) => m.ConfirmModal), { ssr: false });
+const WheelStage = dynamic(() => import('./modes/WheelStage').then((m) => m.WheelStage), { ssr: false });
+const InstantStage = dynamic(() => import('./modes/InstantStage').then((m) => m.InstantStage), { ssr: false });
+const SlotMachineStage = dynamic(() => import('./modes/SlotMachineStage').then((m) => m.SlotMachineStage), { ssr: false });
+const TarotDeckStage = dynamic(() => import('./modes/TarotDeckStage').then((m) => m.TarotDeckStage), { ssr: false });
+const LootCrateStage = dynamic(() => import('./modes/LootCrateStage').then((m) => m.LootCrateStage), { ssr: false });
 
 interface GeneratorPageProps {
   allPerks: Perk[];

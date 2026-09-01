@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
 
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import {
   Trophy,
   Heart,
@@ -55,6 +55,269 @@ interface LocalizedMetadata {
   bio?: string;
 }
 
+interface CandidateRowProps {
+  item: LeaderboardItem;
+  index: number;
+  isTop3: boolean;
+  hasUserSmashed: boolean;
+  tier: TierConfig | null;
+  locale: string;
+  backendBase: string;
+  rawSmashDict: any;
+  survivorsLabel: string;
+  killersLabel: string;
+  unratedLabel: string;
+  noVotesDesc: string;
+  percentSign: string;
+  votesWord: string;
+  onSelectCharacter?: (character: LeaderboardItem) => void;
+  onDragStateCheck: () => boolean;
+  onMouseDownCheck: () => boolean;
+}
+
+/**
+ * Highly optimized, memoized candidate row for the Hall of Fame leaderboard.
+ * Uses native title attributes for badges to avoid mounting hundreds of nested Tooltip portals.
+ */
+const CandidateRow = React.memo<CandidateRowProps>(({
+  item,
+  index,
+  isTop3,
+  hasUserSmashed,
+  tier,
+  locale,
+  backendBase,
+  rawSmashDict,
+  survivorsLabel,
+  killersLabel,
+  unratedLabel,
+  noVotesDesc,
+  percentSign,
+  votesWord,
+  onSelectCharacter,
+  onDragStateCheck,
+  onMouseDownCheck,
+}) => {
+  const itemSlug = item.slug || item.character_slug || '';
+  const itemName = item.name || item.character_name || itemSlug;
+  const isSurvivor = item.role === 'Survivor';
+  const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
+  const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
+  const smashCount = item.smash_count ?? item.stat?.smash_count ?? 0;
+  const passCount = item.pass_count ?? item.stat?.pass_count ?? 0;
+  const hasVotes = totalVotes > 0;
+
+  const avatarSrc =
+    item.media_url?.startsWith('http') || item.media_url?.startsWith('/static')
+      ? `${item.media_url.startsWith('http') ? '' : backendBase}${item.media_url}`
+      : resolveAvatarUrl(
+          backendBase,
+          {
+            name: itemName,
+            category: item.role,
+            avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${itemSlug}.png`,
+          },
+          isSurvivor
+        );
+
+  const meta = (item.metadata || {}) as EntityMetadata & {
+    translations?: Record<string, LocalizedMetadata>;
+    i18n?: Record<string, LocalizedMetadata>;
+  };
+  const currentLoc = locale || 'en';
+  const locMeta = meta.translations?.[currentLoc] || meta.i18n?.[currentLoc] || {};
+  const itemSubtitle =
+    locMeta.title ||
+    meta.title ||
+    locMeta.tagline ||
+    meta.tagline ||
+    item.role;
+
+  const candidateAriaLabel = rawSmashDict?.candidateRankLabel
+    ? rawSmashDict.candidateRankLabel
+        .replace('{name}', itemName)
+        .replace('{rank}', String(index + 1))
+        .replace('{rate}', String(smashRate))
+    : `${itemName} #${index + 1} (${smashRate}%)`;
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => {
+        if (onDragStateCheck()) return;
+        SmashSounds.playHoverTick();
+        onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName });
+      }}
+      onMouseEnter={() => {
+        if (!onMouseDownCheck()) {
+          SmashSounds.playHoverTick();
+        }
+      }}
+      onMouseDown={() => {
+        SmashSounds.playCardGrabSound();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName });
+        }
+      }}
+      aria-label={candidateAriaLabel}
+      className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-3xl border transition-all duration-150 cursor-pointer select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0055] gap-3.5 sm:gap-4 ${
+        hasUserSmashed
+          ? 'bg-gradient-to-r from-rose-950/40 via-zinc-900/90 to-zinc-950/90 border-[#ff0055]/50 shadow-[0_0_20px_rgba(255,0,85,0.15)] hover:border-[#ff0055]'
+          : 'bg-zinc-950/80 border-zinc-800/90 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-lg'
+      }`}
+    >
+      {/* Left Section: Rank + Avatar + Details */}
+      <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
+        {/* Special Luxury Rank Medals for #1, #2, #3 */}
+        <div
+          className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl font-black font-mono text-xs sm:text-sm shrink-0 transition-transform group-hover:scale-105 ${
+            isTop3
+              ? index === 0
+                ? 'bg-gradient-to-br from-amber-300 via-[#ffd166] to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(255,209,102,0.6)] border border-amber-200 ring-2 ring-amber-400/30'
+                : index === 1
+                  ? 'bg-gradient-to-br from-slate-100 via-slate-300 to-slate-400 text-zinc-950 shadow-[0_0_15px_rgba(226,232,240,0.5)] border border-white ring-2 ring-slate-300/30'
+                  : 'bg-gradient-to-br from-amber-600 via-amber-700 to-amber-900 text-amber-100 shadow-[0_0_15px_rgba(180,83,9,0.5)] border border-amber-500 ring-2 ring-amber-600/30'
+              : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
+          }`}
+        >
+          {isTop3 ? (
+            index === 0 ? <Crown className="h-5 w-5 fill-zinc-950 stroke-zinc-950" /> : <Medal className="h-5 w-5" />
+          ) : (
+            `#${index + 1}`
+          )}
+        </div>
+
+        {/* Avatar Portrait */}
+        <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 shrink-0 shadow-inner group-hover:border-pink-500/50 transition-colors">
+          <img
+            src={avatarSrc}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover object-top"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              if (!target.dataset.triedFallback) {
+                target.dataset.triedFallback = '1';
+                target.src = `${backendBase}/static/avatars/survivors/sable_ward.png`;
+              }
+            }}
+          />
+          {hasUserSmashed && (
+            <div
+              className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#ff0055] text-white shadow-[0_0_8px_rgba(255,0,85,0.9)] ring-2 ring-zinc-950"
+              title={rawSmashDict?.youSmashedThis || ''}
+              aria-label={rawSmashDict?.youSmashedThis || ''}
+            >
+              <Heart className="h-2.5 w-2.5 fill-white text-white" />
+            </div>
+          )}
+        </div>
+
+        {/* Details: Name + Icon-Only Badges */}
+        <div className="min-w-0 text-left flex-1">
+          <div className="flex items-center gap-2 flex-wrap mb-1">
+            <span className="text-sm sm:text-base font-black font-mono text-zinc-100 group-hover:text-white truncate">
+              {itemName}
+            </span>
+
+            {/* Role Icon Badge (Accessible native tooltip) */}
+            <span
+              title={isSurvivor ? survivorsLabel : killersLabel}
+              aria-label={isSurvivor ? survivorsLabel : killersLabel}
+              className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${
+                isSurvivor
+                  ? 'bg-[#00f5d4]/15 border-[#00f5d4]/40 text-[#00f5d4] shadow-[0_0_8px_rgba(0,245,212,0.25)]'
+                  : 'bg-[#ff0055]/15 border-[#ff0055]/40 text-pink-300 shadow-[0_0_8px_rgba(255,0,85,0.25)]'
+              }`}
+            >
+              {isSurvivor ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
+            </span>
+
+            {/* Tier Icon Badge or Unrated "?" Badge (Accessible native tooltip) */}
+            {tier ? (
+              <span
+                title={`${tier.name} (${tier.range})`}
+                aria-label={`${tier.name} (${tier.range})`}
+                className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
+              >
+                {tier.icon}
+              </span>
+            ) : (
+              <span
+                title={`${unratedLabel} - ${noVotesDesc}`}
+                aria-label={`${unratedLabel} - ${noVotesDesc}`}
+                className="flex h-6 w-6 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 font-black font-mono text-xs shadow-inner shrink-0 transition-transform hover:scale-110"
+              >
+                ?
+              </span>
+            )}
+          </div>
+
+          <p className="text-xs text-zinc-400 font-sans italic line-clamp-1">
+            {itemSubtitle}
+          </p>
+        </div>
+      </div>
+
+      {/* Right Section: Visual Progress Bar + Smash Percentage + Vote Breakdown */}
+      <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-zinc-800/60">
+        {/* Progress Bar */}
+        <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
+          <div className="flex items-center justify-between text-[11px] font-mono">
+            <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-[#ff0055]' : 'text-zinc-400'}`}>
+              <Heart className={`h-3 w-3 ${hasVotes ? 'fill-[#ff0055] text-[#ff0055]' : 'text-zinc-500'}`} />
+              {hasVotes ? `${smashRate}${percentSign}` : '—'}
+            </span>
+            <span className="text-zinc-500">
+              {hasVotes ? `${100 - smashRate}${percentSign}` : '—'}
+            </span>
+          </div>
+
+          <div className="h-2 w-full rounded-full bg-zinc-800/80 overflow-hidden flex shadow-inner">
+            {hasVotes ? (
+              <>
+                <div
+                  style={{ width: `${Math.max(4, Math.min(100, smashRate))}%` }}
+                  className="h-full bg-gradient-to-r from-rose-500 to-[#ff0055] transition-all duration-300"
+                />
+                <div
+                  style={{ width: `${Math.max(0, 100 - smashRate)}%` }}
+                  className="h-full bg-zinc-700/60"
+                />
+              </>
+            ) : (
+              <div className="h-full w-full bg-zinc-800/60" />
+            )}
+          </div>
+
+          <span className="text-[10px] font-mono text-zinc-400 text-right">
+            {totalVotes.toLocaleString()} {votesWord}
+          </span>
+        </div>
+
+        {/* Smashes / Passes Numeric Counts */}
+        <div className="text-right font-mono text-xs shrink-0 min-w-[65px]">
+          <div className="flex items-center gap-1.5 justify-end text-[#ff0055] font-black">
+            <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
+            <span>{smashCount}</span>
+          </div>
+          <div className="flex items-center gap-1.5 justify-end text-zinc-500 text-[11px] font-semibold mt-0.5">
+            <ThumbsDown className="h-3 w-3 text-zinc-500" />
+            <span>{passCount}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+CandidateRow.displayName = 'CandidateRow';
+
 export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   isOpen,
   onClose,
@@ -72,6 +335,12 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const [tierFilter, setTierFilter] = useState<'all' | TierKey>('all');
   const [sortBy, setSortBy] = useState<'smash_rate' | 'total_votes' | 'smash_count'>('smash_rate');
   const [viewMode, setViewMode] = useState<'flat' | 'grouped'>('flat');
+  const [visibleCount, setVisibleCount] = useState<number>(35);
+
+  // Reset pagination slicing on filters or modal open
+  useEffect(() => {
+    setVisibleCount(35);
+  }, [searchQuery, roleFilter, genderFilter, tierFilter, sortBy, viewMode, isOpen]);
 
   // PC Grabbing & Drag-to-Scroll Physics
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -118,6 +387,16 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     setIsGrabbing(false);
   };
 
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    if (target.scrollTop + target.clientHeight >= target.scrollHeight - 350) {
+      setVisibleCount((prev) => prev + 35);
+    }
+  };
+
+  const checkDragState = useCallback(() => dragStartRef.current.isDragging, []);
+  const checkMouseDown = useCallback(() => isMouseDownRef.current, []);
+
   const backendBase = getBackendBaseUrl();
   const rawSmashDict = dict?.smashOrPass;
 
@@ -136,25 +415,25 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const tierMetadata: Record<TierKey, TierConfig> = useMemo(
     () => ({
       godTier: {
-        name: rawSmashDict?.tiers?.godTier || 'God Tier',
+        name: rawSmashDict?.tiers?.godTier || rawSmashDict?.godTier || 'God Tier',
         style: 'border-[#ffd166]/50 bg-[#ffd166]/15 text-[#ffd166] shadow-[0_0_10px_rgba(255,209,102,0.3)]',
         icon: <Sparkles className="h-3.5 w-3.5 text-[#ffd166]" aria-hidden="true" />,
         range: '>= 85%',
       },
       fatalAttraction: {
-        name: rawSmashDict?.tiers?.fatalAttraction || 'Fatal Attraction',
+        name: rawSmashDict?.tiers?.fatalAttraction || rawSmashDict?.fatalAttraction || 'Fatal Attraction',
         style: 'border-[#ff0055]/50 bg-[#ff0055]/15 text-pink-300 shadow-[0_0_10px_rgba(255,0,85,0.3)]',
         icon: <Flame className="h-3.5 w-3.5 text-[#ff0055]" aria-hidden="true" />,
         range: '65% - 84%',
       },
       friendzone: {
-        name: rawSmashDict?.tiers?.friendzone || 'Friendzone',
+        name: rawSmashDict?.tiers?.friendzone || rawSmashDict?.friendzone || 'Friendzone',
         style: 'border-[#00f5d4]/50 bg-[#00f5d4]/15 text-[#00f5d4] shadow-[0_0_10px_rgba(0,245,212,0.3)]',
         icon: <Shield className="h-3.5 w-3.5 text-[#00f5d4]" aria-hidden="true" />,
         range: '40% - 64%',
       },
       eldritchVoid: {
-        name: rawSmashDict?.tiers?.eldritchVoid || 'Eldritch Void',
+        name: rawSmashDict?.tiers?.eldritchVoid || rawSmashDict?.eldritchVoid || 'Eldritch Void',
         style: 'border-purple-500/50 bg-purple-950/40 text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.3)]',
         icon: <Skull className="h-3.5 w-3.5 text-purple-300" aria-hidden="true" />,
         range: '< 40%',
@@ -314,227 +593,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     { value: 'smash_count', label: sortMostSmashesLabel, icon: <Flame className="h-3.5 w-3.5 text-amber-400" /> },
   ];
 
-  const renderCandidateRow = (item: LeaderboardItem, index: number) => {
-    const itemSlug = item.slug || item.character_slug || '';
-    const itemName = item.name || item.character_name || itemSlug;
-    const isSurvivor = item.role === 'Survivor';
-    const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
-    const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
-    const smashCount = item.smash_count ?? item.stat?.smash_count ?? 0;
-    const passCount = item.pass_count ?? item.stat?.pass_count ?? 0;
-
-    const hasVotes = totalVotes > 0;
-    const isTop3 = index < 3 && !searchQuery && tierFilter === 'all';
-    const hasUserSmashed = userVotedSet.has(itemSlug);
-
-    const tierKey = getItemTierKey(smashRate, totalVotes);
-    const tier = tierKey ? tierMetadata[tierKey] : null;
-
-    const avatarSrc =
-      item.media_url?.startsWith('http') || item.media_url?.startsWith('/static')
-        ? `${item.media_url.startsWith('http') ? '' : backendBase}${item.media_url}`
-        : resolveAvatarUrl(
-            backendBase,
-            {
-              name: itemName,
-              category: item.role,
-              avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${itemSlug}.png`,
-            },
-            isSurvivor
-          );
-
-    const meta = (item.metadata || {}) as EntityMetadata & {
-      translations?: Record<string, LocalizedMetadata>;
-      i18n?: Record<string, LocalizedMetadata>;
-    };
-    const currentLoc = locale || 'en';
-    const locMeta = meta.translations?.[currentLoc] || meta.i18n?.[currentLoc] || {};
-    const itemSubtitle =
-      locMeta.title ||
-      meta.title ||
-      locMeta.tagline ||
-      meta.tagline ||
-      item.role;
-
-    const candidateAriaLabel = rawSmashDict?.candidateRankLabel
-      ? rawSmashDict.candidateRankLabel
-          .replace('{name}', itemName)
-          .replace('{rank}', String(index + 1))
-          .replace('{rate}', String(smashRate))
-      : `${itemName} #${index + 1} (${smashRate}%)`;
-
-    return (
-      <div
-        key={itemSlug}
-        role="button"
-        tabIndex={0}
-        onClick={() => {
-          if (dragStartRef.current.isDragging) return;
-          SmashSounds.playHoverTick();
-          onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName });
-        }}
-        onMouseEnter={() => {
-          if (!isMouseDownRef.current) {
-            SmashSounds.playHoverTick();
-          }
-        }}
-        onMouseDown={() => {
-          SmashSounds.playCardGrabSound();
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName });
-          }
-        }}
-        aria-label={candidateAriaLabel}
-        className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-3xl border transition-all duration-200 cursor-pointer select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0055] gap-3.5 sm:gap-4 ${
-          hasUserSmashed
-            ? 'bg-gradient-to-r from-rose-950/40 via-zinc-900/90 to-zinc-950/90 border-[#ff0055]/50 shadow-[0_0_20px_rgba(255,0,85,0.15)] hover:border-[#ff0055]'
-            : 'bg-zinc-950/80 border-zinc-800/90 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-lg'
-        }`}
-      >
-        {/* Left Section: Rank + Avatar + Details */}
-        <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
-          {/* Special Luxury Rank Medals for #1, #2, #3 */}
-          <div
-            className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl font-black font-mono text-xs sm:text-sm shrink-0 transition-transform group-hover:scale-105 ${
-              isTop3
-                ? index === 0
-                  ? 'bg-gradient-to-br from-amber-300 via-[#ffd166] to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(255,209,102,0.6)] border border-amber-200 ring-2 ring-amber-400/30'
-                  : index === 1
-                    ? 'bg-gradient-to-br from-slate-100 via-slate-300 to-slate-400 text-zinc-950 shadow-[0_0_15px_rgba(226,232,240,0.5)] border border-white ring-2 ring-slate-300/30'
-                    : 'bg-gradient-to-br from-amber-600 via-amber-700 to-amber-900 text-amber-100 shadow-[0_0_15px_rgba(180,83,9,0.5)] border border-amber-500 ring-2 ring-amber-600/30'
-                : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
-            }`}
-          >
-            {isTop3 ? (
-              index === 0 ? <Crown className="h-5 w-5 fill-zinc-950 stroke-zinc-950" /> : <Medal className="h-5 w-5" />
-            ) : (
-              `#${index + 1}`
-            )}
-          </div>
-
-          {/* Avatar Portrait */}
-          <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 shrink-0 shadow-inner group-hover:border-pink-500/50 transition-colors">
-            <img
-              src={avatarSrc}
-              alt=""
-              className="h-full w-full object-cover object-top"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                if (!target.dataset.triedFallback) {
-                  target.dataset.triedFallback = '1';
-                  target.src = `${backendBase}/static/avatars/survivors/sable_ward.png`;
-                }
-              }}
-            />
-            {hasUserSmashed && (
-              <div
-                className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#ff0055] text-white shadow-[0_0_8px_rgba(255,0,85,0.9)] ring-2 ring-zinc-950"
-                title={rawSmashDict?.youSmashedThis || 'You smashed this candidate'}
-              >
-                <Heart className="h-2.5 w-2.5 fill-white text-white" />
-              </div>
-            )}
-          </div>
-
-          {/* Details: Name + Icon-Only Badges */}
-          <div className="min-w-0 text-left flex-1">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-sm sm:text-base font-black font-mono text-zinc-100 group-hover:text-white truncate">
-                {itemName}
-              </span>
-
-              {/* Role Icon Badge */}
-              <Tooltip title={isSurvivor ? survivorsLabel : killersLabel}>
-                <span
-                  className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${
-                    isSurvivor
-                      ? 'bg-[#00f5d4]/15 border-[#00f5d4]/40 text-[#00f5d4] shadow-[0_0_8px_rgba(0,245,212,0.25)]'
-                      : 'bg-[#ff0055]/15 border-[#ff0055]/40 text-pink-300 shadow-[0_0_8px_rgba(255,0,85,0.25)]'
-                  }`}
-                >
-                  {isSurvivor ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
-                </span>
-              </Tooltip>
-
-              {/* Tier Icon Badge or Unrated "?" Badge */}
-              {tier ? (
-                <Tooltip title={tier.name} description={tier.range}>
-                  <span
-                    className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
-                  >
-                    {tier.icon}
-                  </span>
-                </Tooltip>
-              ) : (
-                <Tooltip title={unratedLabel} description={noVotesDesc}>
-                  <span className="flex h-6 w-6 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 font-black font-mono text-xs shadow-inner shrink-0 transition-transform hover:scale-110">
-                    ?
-                  </span>
-                </Tooltip>
-              )}
-            </div>
-
-            <p className="text-xs text-zinc-400 font-sans italic line-clamp-1">
-              {itemSubtitle}
-            </p>
-          </div>
-        </div>
-
-        {/* Right Section: Visual Progress Bar + Smash Percentage + Vote Breakdown */}
-        <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-zinc-800/60">
-          {/* Progress Bar */}
-          <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
-            <div className="flex items-center justify-between text-[11px] font-mono">
-              <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-[#ff0055]' : 'text-zinc-400'}`}>
-                <Heart className={`h-3 w-3 ${hasVotes ? 'fill-[#ff0055] text-[#ff0055]' : 'text-zinc-500'}`} />
-                {hasVotes ? `${smashRate}${percentSign}` : '—'}
-              </span>
-              <span className="text-zinc-500">
-                {hasVotes ? `${100 - smashRate}${percentSign}` : '—'}
-              </span>
-            </div>
-
-            <div className="h-2 w-full rounded-full bg-zinc-800/80 overflow-hidden flex shadow-inner">
-              {hasVotes ? (
-                <>
-                  <div
-                    style={{ width: `${Math.max(4, Math.min(100, smashRate))}%` }}
-                    className="h-full bg-gradient-to-r from-rose-500 to-[#ff0055] transition-all duration-300"
-                  />
-                  <div
-                    style={{ width: `${Math.max(0, 100 - smashRate)}%` }}
-                    className="h-full bg-zinc-700/60"
-                  />
-                </>
-              ) : (
-                <div className="h-full w-full bg-zinc-800/60" />
-              )}
-            </div>
-
-            <span className="text-[10px] font-mono text-zinc-400 text-right">
-              {totalVotes.toLocaleString()} {votesWord}
-            </span>
-          </div>
-
-          {/* Smashes / Passes Numeric Counts */}
-          <div className="text-right font-mono text-xs shrink-0 min-w-[65px]">
-            <div className="flex items-center gap-1.5 justify-end text-[#ff0055] font-black">
-              <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
-              <span>{smashCount}</span>
-            </div>
-            <div className="flex items-center gap-1.5 justify-end text-zinc-500 text-[11px] font-semibold mt-0.5">
-              <ThumbsDown className="h-3 w-3 text-zinc-500" />
-              <span>{passCount}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const headerBadge = editionName ? (
     <span className="px-2.5 py-0.5 rounded-full bg-[#ff0055]/20 text-rose-300 border border-[#ff0055]/40 text-xs font-bold font-mono truncate max-w-[200px]">
       {editionName}
@@ -624,8 +682,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
             description={
               viewMode === 'flat'
-                ? (rawSmashDict?.tooltips?.groupByTierDesc || 'Group candidates into God Tier, Fatal Attraction, and lower tiers.')
-                : (rawSmashDict?.tooltips?.rankedListDesc || 'Display all candidates in descending global rank order.')
+                ? (rawSmashDict?.tooltips?.groupByTierDesc || '')
+                : (rawSmashDict?.tooltips?.rankedListDesc || '')
             }
             placement="bottom"
           >
@@ -648,6 +706,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       {/* Leaderboard Content with Smooth PC Drag-to-Scroll & Grab Physics */}
       <div
         ref={scrollContainerRef}
+        onScroll={handleScroll}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -692,17 +751,78 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                 </div>
 
                 <div className="space-y-2.5 pl-1" role="list">
-                  {tierList.map((item, idx) => renderCandidateRow(item, idx))}
+                  {tierList.map((item, idx) => {
+                    const itemSlug = item.slug || item.character_slug || '';
+                    const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
+                    const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
+                    const tierKey = getItemTierKey(smashRate, totalVotes);
+                    const tier = tierKey ? tierMetadata[tierKey] : null;
+
+                    return (
+                      <CandidateRow
+                        key={itemSlug}
+                        item={item}
+                        index={idx}
+                        isTop3={false}
+                        hasUserSmashed={userVotedSet.has(itemSlug)}
+                        tier={tier}
+                        locale={locale}
+                        backendBase={backendBase}
+                        rawSmashDict={rawSmashDict}
+                        survivorsLabel={survivorsLabel}
+                        killersLabel={killersLabel}
+                        unratedLabel={unratedLabel}
+                        noVotesDesc={noVotesDesc}
+                        percentSign={percentSign}
+                        votesWord={votesWord}
+                        onSelectCharacter={onSelectCharacter}
+                        onDragStateCheck={checkDragState}
+                        onMouseDownCheck={checkMouseDown}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             );
           })
         ) : (
           <div className="space-y-2.5" role="list">
-            {filteredItems.map((item, index) => renderCandidateRow(item, index))}
+            {filteredItems.slice(0, visibleCount).map((item, index) => {
+              const itemSlug = item.slug || item.character_slug || '';
+              const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
+              const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
+              const isTop3 = index < 3 && !searchQuery && tierFilter === 'all';
+              const tierKey = getItemTierKey(smashRate, totalVotes);
+              const tier = tierKey ? tierMetadata[tierKey] : null;
+
+              return (
+                <CandidateRow
+                  key={itemSlug}
+                  item={item}
+                  index={index}
+                  isTop3={isTop3}
+                  hasUserSmashed={userVotedSet.has(itemSlug)}
+                  tier={tier}
+                  locale={locale}
+                  backendBase={backendBase}
+                  rawSmashDict={rawSmashDict}
+                  survivorsLabel={survivorsLabel}
+                  killersLabel={killersLabel}
+                  unratedLabel={unratedLabel}
+                  noVotesDesc={noVotesDesc}
+                  percentSign={percentSign}
+                  votesWord={votesWord}
+                  onSelectCharacter={onSelectCharacter}
+                  onDragStateCheck={checkDragState}
+                  onMouseDownCheck={checkMouseDown}
+                />
+              );
+            })}
           </div>
         )}
       </div>
     </Modal>
   );
 };
+
+export default SmashLeaderboardModal;

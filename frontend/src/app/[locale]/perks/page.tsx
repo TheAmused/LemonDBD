@@ -3,12 +3,12 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/perks/page.tsx
 
 import React, { useEffect, useState, useCallback, useRef, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
-import { PerkModal } from '@/components/PerkModal';
-import { QuestsModal } from '@/components/QuestsModal';
+import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { Pagination } from '@/components/Pagination';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
@@ -27,6 +27,12 @@ import {
   PerkDictionary,
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+
+const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
+const QuestsModal = dynamic(
+  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
+  { ssr: false }
+);
 
 const DEFAULT_PERKS_PER_PAGE = 15;
 
@@ -236,7 +242,16 @@ function PerksContent() {
 
   const totalVaultPerks = allPerksForStats.length || totalResults;
 
-  if (!dict) return null;
+  if (!dict) {
+    return (
+      <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
+        <main className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lg:pl-72">
+          <PerksGridSkeleton />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
@@ -304,10 +319,7 @@ function PerksContent() {
             grid once a larger page size pushes the grid past 3 rows. */}
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {loading ? (
-            // Same fixed 5x3 grid as the real content below -- 15 skeleton
-            // cells always exactly fill 3 rows of 5, stretched to the full
-            // height of this area (grid-rows-3 + flex-1), so the loading
-            // state doesn't jump in size once the real perks arrive.
+            // Fixed 5x3 grid (grid-cols-5 and 3 rows / grid-rows-3 sharing equal height)
             <div
               ref={measureGridArea}
               aria-busy="true"
@@ -347,16 +359,6 @@ function PerksContent() {
             </section>
           ) : (
             <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="flex min-h-0 flex-1 flex-col">
-              {/* Fixed 5 columns x 3 rows on every screen size -- not a
-                  breakpoint-driven column count that happens to add up to
-                  3 rows only sometimes. Each row is an equal 1fr share of
-                  whatever height this section actually has (flex-1 above),
-                  so 15 cards always exactly fill the space instead of
-                  capping out at a fixed card size and leaving empty space
-                  underneath on a tall/1440p screen. PerkCard's `fill` size
-                  variant is what lets each card scale into that space
-                  (measured per-cell via container query units) instead of
-                  snapping to one of a few fixed breakpoint sizes. */}
               <div
                 ref={viewMode === 'grid' ? measureGridArea : undefined}
                 className={
@@ -398,16 +400,20 @@ function PerksContent() {
           </div>
         )}
 
-        <PerkModal
-          perk={selectedPerk}
-          onClose={() => setSelectedPerk(null)}
-          dict={dict}
-        />
-        <QuestsModal
-          isOpen={isQuestsOpen}
-          onClose={() => setIsQuestsOpen(false)}
-          dict={dict}
-        />
+        {selectedPerk && (
+          <PerkModal
+            perk={selectedPerk}
+            onClose={() => setSelectedPerk(null)}
+            dict={dict}
+          />
+        )}
+        {isQuestsOpen && (
+          <QuestsModal
+            isOpen={isQuestsOpen}
+            onClose={() => setIsQuestsOpen(false)}
+            dict={dict}
+          />
+        )}
       </main>
     </div>
   );
@@ -415,14 +421,16 @@ function PerksContent() {
 
 export default function PerksPage() {
   return (
-     <Suspense
-       fallback={
-         <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-           <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-         </div>
-       }
-     >
-
+    <Suspense
+      fallback={
+        <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+          <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
+          <main className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lg:pl-72">
+            <PerksGridSkeleton />
+          </main>
+        </div>
+      }
+    >
       <PerksContent />
     </Suspense>
   );

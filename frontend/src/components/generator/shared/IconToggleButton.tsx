@@ -71,7 +71,7 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
       aria-label={label}
       aria-pressed={isActive}
       className={cn(
-        'group/btn relative flex items-center gap-2 overflow-hidden rounded-lg px-3.5 py-3 text-slate-400 transition-all duration-200 cursor-pointer hover:text-slate-100 hover:bg-slate-800/50',
+        'group/btn relative flex items-center gap-2 overflow-hidden rounded-lg px-3.5 py-3 min-h-[44px] touch-manipulation text-slate-400 transition-all duration-200 cursor-pointer hover:text-slate-100 hover:bg-slate-800/50',
         // Notched top-left / bottom-right corners -- a small "trial sigil"
         // silhouette that reads as its own DBD-flavored shape instead of
         // the plain rounded rectangle used everywhere else in the toolbar.

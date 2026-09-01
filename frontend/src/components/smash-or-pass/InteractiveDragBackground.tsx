@@ -9,6 +9,7 @@ interface InteractiveDragBackgroundProps {
   isDragging?: boolean;
   actionTrigger?: 'smash' | 'pass' | 'super_smash' | null;
   triggerKey?: number;
+  isPaused?: boolean;
 }
 
 interface Particle {
@@ -35,6 +36,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
   isDragging = false,
   actionTrigger = null,
   triggerKey = 0,
+  isPaused = false,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -48,13 +50,15 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
     superIntensity: 0,
     actionTrigger: null as 'smash' | 'pass' | 'super_smash' | null,
     triggerKey: 0,
+    isPaused: false,
   });
 
   useEffect(() => {
     stateRef.current.dragX = dragX;
     stateRef.current.dragY = dragY;
     stateRef.current.isDragging = isDragging;
-  }, [dragX, dragY, isDragging]);
+    stateRef.current.isPaused = isPaused;
+  }, [dragX, dragY, isDragging, isPaused]);
 
   useEffect(() => {
     stateRef.current.actionTrigger = actionTrigger;
@@ -203,6 +207,11 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
     let lastHandledKey = 0;
 
     const render = () => {
+      if (stateRef.current.isPaused) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
 
       const curState = stateRef.current;

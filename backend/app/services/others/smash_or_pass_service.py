@@ -89,35 +89,29 @@ class SmashOrPassService:
         stmt = stmt.order_by(Roster.slug)
         rosters = db.session.scalars(stmt).all()
 
+        # Single grouped query for entity_count and total_votes by roster_id to eliminate N+1 queries
+        counts_stmt = (
+            select(
+                Entity.roster_id,
+                func.count(Entity.id).label("entity_count"),
+                func.coalesce(func.sum(EntityStat.total_votes), 0).label("total_votes"),
+            )
+            .outerjoin(EntityStat, Entity.id == EntityStat.entity_id)
+            .where(Entity.is_active.is_(True))
+            .group_by(Entity.roster_id)
+        )
+        counts_by_roster = {
+            row.roster_id: (int(row.entity_count or 0), int(row.total_votes or 0))
+            for row in db.session.execute(counts_stmt).all()
+        }
+
         result = []
         for r in rosters:
-            entity_count = (
-                db.session.scalar(
-                    select(func.count(Entity.id)).where(
-                        Entity.roster_id == r.id,
-                        Entity.is_active.is_(True),
-                    )
-                )
-                or 0
-            )
-
-            total_votes = (
-                db.session.scalar(
-                    select(func.coalesce(func.sum(EntityStat.total_votes), 0))
-                    .select_from(Entity)
-                    .join(EntityStat, Entity.id == EntityStat.entity_id)
-                    .where(
-                        Entity.roster_id == r.id,
-                        Entity.is_active.is_(True),
-                    )
-                )
-                or 0
-            )
-
+            entity_count, total_votes = counts_by_roster.get(r.id, (0, 0))
             r_dict = r.to_dict()
             r_dict["entity_count"] = entity_count
             r_dict["character_count"] = entity_count
-            r_dict["total_votes"] = int(total_votes)
+            r_dict["total_votes"] = total_votes
             result.append(r_dict)
         return result
 

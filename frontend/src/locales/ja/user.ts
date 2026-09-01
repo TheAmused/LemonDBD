@@ -83,4 +83,15 @@ export default {
   invalidCredentials: "認証情報が無効です。",
   registrationFailed: "登録に失敗しました。",
   unexpectedError: "予期しないエラーが発生しました。",
+
+  // --- /user page: perf & i18n hardening pass additions ---
+  avatarSizeLimit: "アバター画像は10MB未満にしてください。",
+  avatarUploadFailed: "アバターのアップロードに失敗しました。",
+  avatarUpdateSuccess: "アバターを更新しました！",
+  avatarResetFailed: "アバターのリセットに失敗しました。",
+  avatarResetSuccessMsg: "アバターをデフォルトにリセットしました。",
+  authTokenMissing: "認証トークンがありません。再度ログインしてください。",
+  profileUpdateFailedMsg: "プロフィールの更新に失敗しました。",
+  profileUpdateSuccessMsg: "プロフィールを更新しました！",
+  myBugReportsCount: "マイバグ報告（{count}件）",
 } as const;

@@ -17,6 +17,8 @@ from app.core.json_provider import safe_json_dumps
 from app.core.limiter import limiter, validate_honeypot
 from app.core.security import admin_required, get_current_user
 from app.models import BugReport
+from app.utils.api_i18n import error_response
+from app.utils.lang import extract_lang
 from app.schemas.community import BugReportResponse
 from app.services.admin_control_service import log_admin_action
 
@@ -211,10 +213,22 @@ def submit_bug_report():
 
 @bug_reports_bp.route("/bug-reports/my", methods=["GET"])
 def get_my_bug_reports():
-    """Retrieves all bug reports submitted by the authenticated user."""
+    """Retrieves the authenticated user's bug reports, paginated (newest first).
+
+    Optional `page` (default 1) and `per_page` (default 10, max 50) query
+    params keep the payload bounded even for a prolific reporter; omitting
+    them still returns page 1 so existing callers keep working.
+    """
+    lang = extract_lang()
     user = get_current_user()
     if not user:
-        return jsonify({"error": "Authentication required."}), 401
+        return error_response("auth_required", 401, lang=lang)
+
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=10, type=int)
+    if page is None or per_page is None or page < 1 or per_page < 1:
+        return error_response("invalid_pagination", 400, lang=lang)
+    per_page = min(per_page, 50)
 
     try:
         conditions = [BugReport.user_id == user.id]
@@ -223,19 +237,24 @@ def get_my_bug_reports():
         if user.username:
             conditions.append(func.lower(BugReport.reporter_name) == user.username.lower())
 
-        stmt = (
-            select(BugReport)
-            .where(or_(*conditions))
-            .order_by(desc(BugReport.created_at))
-        )
-        reports = db.session.scalars(stmt).all()
+        stmt = select(BugReport).where(or_(*conditions)).order_by(desc(BugReport.created_at))
+
+        total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
+        paginated_stmt = stmt.offset((page - 1) * per_page).limit(per_page)
+        reports = db.session.scalars(paginated_stmt).all()
+
+        total_pages = max(1, (total + per_page - 1) // per_page)
+
         return jsonify({
             "reports": [BugReportResponse.model_validate(r).model_dump() for r in reports],
-            "total": len(reports),
+            "total": total,
+            "page": page,
+            "per_page": per_page,
+            "total_pages": total_pages,
         }), 200
     except Exception as e:
         logger.error(f"Error fetching user bug reports: {e}", exc_info=True)
-        return jsonify({"error": "Failed to fetch bug reports."}), 500
+        return error_response("bug_reports_fetch_failed", 500, lang=lang)
 
 
 @bug_reports_bp.route("/admin/bug-reports", methods=["GET"])

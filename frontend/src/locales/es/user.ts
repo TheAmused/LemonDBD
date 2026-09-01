@@ -83,4 +83,15 @@ export default {
   invalidCredentials: "Credenciales inválidas.",
   registrationFailed: "Registro fallido.",
   unexpectedError: "Ocurrió un error inesperado.",
+
+  // --- /user page: perf & i18n hardening pass additions ---
+  avatarSizeLimit: "El archivo de avatar debe pesar menos de 10 MB.",
+  avatarUploadFailed: "No se pudo subir el avatar.",
+  avatarUpdateSuccess: "¡Avatar actualizado correctamente!",
+  avatarResetFailed: "No se pudo restablecer el avatar.",
+  avatarResetSuccessMsg: "Avatar restablecido al predeterminado.",
+  authTokenMissing: "Falta el token de autenticación. Vuelve a iniciar sesión.",
+  profileUpdateFailedMsg: "No se pudo actualizar el perfil.",
+  profileUpdateSuccessMsg: "¡Perfil actualizado correctamente!",
+  myBugReportsCount: "Mis Informes de Errores ({count})",
 } as const;

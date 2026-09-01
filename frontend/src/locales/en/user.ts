@@ -83,4 +83,15 @@ export default {
   invalidCredentials: "Invalid credentials",
   registrationFailed: "Registration failed",
   unexpectedError: "An unexpected error occurred.",
+
+  // --- /user page: perf & i18n hardening pass additions ---
+  avatarSizeLimit: "Avatar file size must be under 10MB.",
+  avatarUploadFailed: "Failed to upload avatar.",
+  avatarUpdateSuccess: "Avatar updated successfully!",
+  avatarResetFailed: "Failed to reset avatar.",
+  avatarResetSuccessMsg: "Avatar reset to default.",
+  authTokenMissing: "Authentication token missing. Please log in again.",
+  profileUpdateFailedMsg: "Failed to update profile.",
+  profileUpdateSuccessMsg: "Profile updated successfully!",
+  myBugReportsCount: "My Bug Reports ({count})",
 } as const;

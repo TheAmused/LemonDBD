@@ -7,6 +7,25 @@ from app.core.extensions import Base
 from app.models.base import utcnow
 
 
+class Realm(Base):
+    __tablename__ = "realms"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    image_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "name": self.name,
+            "image_url": self.image_url or "",
+            "image_local_path": self.image_local_path or "",
+        }
+
+
 class MapRealm(Base):
     __tablename__ = "map_realms"
 

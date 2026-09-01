@@ -5,7 +5,6 @@ from app.scrapers.constants import (
 )
 from app.scrapers.maps import (
     HensMapScraperDriver,
-    SamoelColtMapScraperDriver,
     get_map_landmarks_data,
 )
 from app.scrapers.types import (
@@ -44,5 +43,4 @@ __all__ = [
     "WikiGGScraperDriver",
     "get_map_landmarks_data",
     "HensMapScraperDriver",
-    "SamoelColtMapScraperDriver",
 ]

@@ -120,3 +120,10 @@ class MapData:
     clock_system: dict[str, Any]
     source: str = "hens333"
     source_label: str = "Hens333 12-Clock Callouts"
+
+
+@dataclass
+class RealmImageData:
+    name: str
+    image_url: str
+    image_local_path: str

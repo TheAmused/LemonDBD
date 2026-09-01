@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from app.scrapers.maps import HensMapScraperDriver, SamoelColtMapScraperDriver
+from app.scrapers.maps import HensMapScraperDriver
 from app.scrapers.roster_images import RosterImageScraperDriver
 from app.scrapers.types import (
     AddonData,
@@ -67,7 +67,6 @@ class ScraperService:
         self.state_manager = ScraperStateManager()
         self.wikigg_driver = WikiGGScraperDriver(self.base_dir)
         self.hens_map_driver = HensMapScraperDriver()
-        self.samoel_map_driver = SamoelColtMapScraperDriver()
         self.roster_driver = RosterImageScraperDriver(
             timeout=self.REQUEST_TIMEOUT,
         )
@@ -216,7 +215,6 @@ class ScraperService:
             config_file=self.config_file,
             wikigg_driver=self.wikigg_driver,
             hens_map_driver=self.hens_map_driver,
-            samoel_map_driver=self.samoel_map_driver,
             override_source=override_source,
             override_fallback=override_fallback,
             download_assets=download_assets,

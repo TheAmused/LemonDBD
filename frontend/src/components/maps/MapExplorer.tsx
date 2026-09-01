@@ -1,225 +1,345 @@
 'use client';
 // frontend/src/components/maps/MapExplorer.tsx
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Search, ImageOff, ChevronDown } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
-import { useMapExplorerData, type MapSource } from '@/hooks/useMapExplorerData';
-import { useMapGestures } from '@/hooks/useMapGestures';
-import { handlePopoutImageWindow } from '@/utils/mapUtils';
-import { DesktopMapLayout } from './layouts/DesktopMapLayout';
-import { MobileMapLayout } from './layouts/MobileMapLayout';
+import { useMapExplorerData } from '@/hooks/useMapExplorerData';
+import { getMapImageSrc } from '@/utils/mapUtils';
+import { MapCard } from './MapCard';
 import { FullscreenMapEngine } from './FullscreenMapEngine';
+
+// Must mirror the grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 classes below.
+const REALM_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
+  { minWidth: 1024, columns: 6 },
+  { minWidth: 768, columns: 4 },
+  { minWidth: 640, columns: 3 },
+];
+
+// Must match the panel wrapper's transition-duration below.
+const PANEL_EXIT_MS = 300;
+
+function useRealmGridColumns(): number {
+  const [columns, setColumns] = useState(2);
+  useEffect(() => {
+    function computeColumns() {
+      const match = REALM_GRID_BREAKPOINTS.find((bp) => window.innerWidth >= bp.minWidth);
+      setColumns(match ? match.columns : 2);
+    }
+    computeColumns();
+    window.addEventListener('resize', computeColumns);
+    return () => window.removeEventListener('resize', computeColumns);
+  }, []);
+  return columns;
+}
 
 export interface MapExplorerProps {
   initialMapName?: string;
   selectedMap?: { mapName: string; timestamp: number } | string;
-  selectedSource?: MapSource;
-  onSourceChange?: (source: MapSource) => void;
-  onActionTriggered?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
-  triggerAction?:
-    | { action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close'; timestamp: number }
-    | 'zoom_in'
-    | 'zoom_out'
-    | 'fullscreen'
-    | 'close'
-    | null;
+  backendBase: string;
+  dict?: Dictionary;
+  hideSearch?: boolean;
 }
 
 export const MapExplorer: React.FC<MapExplorerProps> = ({
   initialMapName = '',
   selectedMap,
-  selectedSource,
-  onSourceChange,
-  onActionTriggered,
   onAvailableMapsLoaded,
-  triggerAction,
+  backendBase,
+  dict,
+  hideSearch = false,
 }) => {
-  const [isFullscreenOpen, setIsFullscreenOpen] = useState<boolean>(false);
-
   const {
     maps,
     loading,
-    activeMap,
-    selectedMapId,
-    selectedRealm,
-    setSelectedRealm,
     search,
     setSearch,
-    activeSource,
-    setActiveSource,
-    uniqueRealms,
-    groupedMaps,
-    variants,
-    selectMapById,
-    selectVariantByName,
+    activeSearch,
+    groupedMapsByRealm,
+    realmImages,
+    openMapId,
+    setOpenMapId,
   } = useMapExplorerData({
     initialMapName,
     selectedMap,
-    selectedSource,
-    onSourceChange,
     onAvailableMapsLoaded,
   });
 
-  const {
-    zoomLevel,
-    isDragging,
-    handleZoomIn,
-    handleZoomOut,
-    handleSetZoom,
-    handleResetZoomPan,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-    handleMouseLeave,
-    handleWheel,
-    handleTouchStart,
-    handleTouchMove,
-    handleTouchEnd,
-    handleTouchCancel,
-    transformStyle,
-  } = useMapGestures({
-    onActionTriggered,
-  });
-
-  const canvasHandlers = useMemo(
-    () => ({
-      onMouseDown: handleMouseDown,
-      onMouseMove: handleMouseMove,
-      onMouseUp: handleMouseUp,
-      onMouseLeave: handleMouseLeave,
-      onWheel: handleWheel,
-      onTouchStart: handleTouchStart,
-      onTouchMove: handleTouchMove,
-      onTouchEnd: handleTouchEnd,
-      onTouchCancel: handleTouchCancel,
-    }),
-    [
-      handleMouseDown,
-      handleMouseMove,
-      handleMouseUp,
-      handleMouseLeave,
-      handleWheel,
-      handleTouchStart,
-      handleTouchMove,
-      handleTouchEnd,
-      handleTouchCancel,
-    ]
-  );
+  const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
+  const [realmFilter, setRealmFilter] = useState<string | null>(null);
+  const columns = useRealmGridColumns();
 
   useEffect(() => {
-    handleResetZoomPan();
-  }, [selectedMapId, handleResetZoomPan]);
-
-  useEffect(() => {
-    if (!triggerAction) return;
-    const action = typeof triggerAction === 'object' ? triggerAction.action : triggerAction;
-    if (action === 'zoom_in') {
-      handleZoomIn();
-    } else if (action === 'zoom_out') {
-      handleZoomOut();
-    } else if (action === 'fullscreen') {
-      setIsFullscreenOpen(true);
-    } else if (action === 'close') {
-      setIsFullscreenOpen(false);
+    if (hideSearch) {
+      if (search) setSearch('');
+      if (realmFilter) setRealmFilter(null);
     }
-  }, [triggerAction, handleZoomIn, handleZoomOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hideSearch]);
 
   useEffect(() => {
-    if (!isFullscreenOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsFullscreenOpen(false);
-        onActionTriggered?.('close');
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isFullscreenOpen, onActionTriggered]);
+    if (realmFilter && !groupedMapsByRealm.some((g) => g.realm === realmFilter)) {
+      setRealmFilter(null);
+    }
+  }, [groupedMapsByRealm, realmFilter]);
 
-  const handlePopoutImage = useCallback((url: string, title: string) => {
-    handlePopoutImageWindow(url, title);
-  }, []);
+  const isSearching = activeSearch.trim().length > 0;
+  const isRealmExpanded = (realm: string) =>
+    isSearching || expandedRealm === realm || (realmFilter !== null && realmFilter === realm);
+
+  const pendingOpenRef = useRef<string | null>(null);
+  const toggleRealm = (realm: string) => {
+    setExpandedRealm((prev) => {
+      if (prev === realm) {
+        pendingOpenRef.current = null;
+        return null;
+      }
+      if (prev !== null) {
+        pendingOpenRef.current = realm;
+        return null;
+      }
+      pendingOpenRef.current = null;
+      return realm;
+    });
+  };
+
+  const displayedGroups = realmFilter ? groupedMapsByRealm.filter((g) => g.realm === realmFilter) : groupedMapsByRealm;
+
+  const activeRealms = useMemo(() => {
+    const set = new Set<string>();
+    displayedGroups.forEach(({ realm }) => {
+      if (isRealmExpanded(realm)) set.add(realm);
+    });
+    return set;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayedGroups, isSearching, expandedRealm, realmFilter]);
+  const activeRealmsSignature = [...activeRealms].sort().join('|');
+
+  const [renderedRealms, setRenderedRealms] = useState<Set<string>>(new Set());
+  const [openRealms, setOpenRealms] = useState<Set<string>>(new Set());
+  const exitTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+
+  useEffect(() => {
+    const toEnter = [...activeRealms].filter((r) => !renderedRealms.has(r));
+    const toExit = [...renderedRealms].filter((r) => !activeRealms.has(r));
+    if (toEnter.length === 0 && toExit.length === 0) return;
+
+    toEnter.forEach((r) => {
+      const timer = exitTimers.current.get(r);
+      if (timer) {
+        clearTimeout(timer);
+        exitTimers.current.delete(r);
+      }
+    });
+
+    if (toEnter.length > 0) {
+      setRenderedRealms((prev) => {
+        const next = new Set(prev);
+        toEnter.forEach((r) => next.add(r));
+        return next;
+      });
+      requestAnimationFrame(() => {
+        setOpenRealms((prev) => {
+          const next = new Set(prev);
+          toEnter.forEach((r) => next.add(r));
+          return next;
+        });
+      });
+    }
+
+    if (toExit.length > 0) {
+      setOpenRealms((prev) => {
+        const next = new Set(prev);
+        toExit.forEach((r) => next.delete(r));
+        return next;
+      });
+      toExit.forEach((r) => {
+        const timer = setTimeout(() => {
+          setRenderedRealms((prev) => {
+            const next = new Set(prev);
+            next.delete(r);
+            return next;
+          });
+          exitTimers.current.delete(r);
+          if (pendingOpenRef.current) {
+            const next = pendingOpenRef.current;
+            pendingOpenRef.current = null;
+            setExpandedRealm(next);
+          }
+        }, PANEL_EXIT_MS);
+        exitTimers.current.set(r, timer);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeRealmsSignature]);
+
+  useEffect(() => {
+    const present = new Set(displayedGroups.map((g) => g.realm));
+    setRenderedRealms((prev) => {
+      const next = new Set([...prev].filter((r) => present.has(r)));
+      return next.size === prev.size ? prev : next;
+    });
+    setOpenRealms((prev) => {
+      const next = new Set([...prev].filter((r) => present.has(r)));
+      return next.size === prev.size ? prev : next;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayedGroups]);
+
+  const rowPanels = useMemo(() => {
+    const panels = new Map<number, { realm: string; maps: MapRealm[]; open: boolean }[]>();
+    displayedGroups.forEach(({ realm, maps: realmMaps }, index) => {
+      if (!renderedRealms.has(realm)) return;
+      const rowEnd = Math.min(columns * (Math.floor(index / columns) + 1) - 1, displayedGroups.length - 1);
+      const list = panels.get(rowEnd) ?? [];
+      list.push({ realm, maps: realmMaps, open: openRealms.has(realm) });
+      panels.set(rowEnd, list);
+    });
+    return panels;
+  }, [displayedGroups, columns, renderedRealms, openRealms]);
 
   return (
     <div className="w-full space-y-6" data-testid="map-explorer-root">
-      <div className="hidden lg:block">
-        <DesktopMapLayout
-          maps={maps}
-          groupedMaps={groupedMaps}
-          activeMap={activeMap}
-          selectedMapId={selectedMapId}
-          onSelectMapId={selectMapById}
-          uniqueRealms={uniqueRealms}
-          selectedRealm={selectedRealm}
-          onSelectRealm={setSelectedRealm}
-          search={search}
-          onSearchChange={setSearch}
-          activeSource={activeSource}
-          onSourceChange={setActiveSource}
-          variants={variants}
-          onSelectVariant={selectVariantByName}
-          loading={loading}
-          transformStyle={transformStyle}
-          isDragging={isDragging}
-          zoomLevel={zoomLevel}
-          onZoomIn={handleZoomIn}
-          onZoomOut={handleZoomOut}
-          onSetZoom={handleSetZoom}
-          onResetZoomPan={handleResetZoomPan}
-          canvasHandlers={canvasHandlers}
-          onLaunchFullscreen={() => {
-            setIsFullscreenOpen(true);
-            onActionTriggered?.('fullscreen');
-          }}
-          onPopoutImage={handlePopoutImage}
-        />
-      </div>
+      {!hideSearch && (
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
+            aria-label={dict?.maps?.searchAria || 'Search map or realm'}
+            className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          />
+        </div>
+      )}
 
-      <div className="block lg:hidden">
-        <MobileMapLayout
-          maps={maps}
-          groupedMaps={groupedMaps}
-          activeMap={activeMap}
-          selectedMapId={selectedMapId}
-          onSelectMapId={selectMapById}
-          uniqueRealms={uniqueRealms}
-          selectedRealm={selectedRealm}
-          onSelectRealm={setSelectedRealm}
-          search={search}
-          onSearchChange={setSearch}
-          activeSource={activeSource}
-          onSourceChange={setActiveSource}
-          variants={variants}
-          onSelectVariant={selectVariantByName}
-          loading={loading}
-          transformStyle={transformStyle}
-          isDragging={isDragging}
-          zoomLevel={zoomLevel}
-          onZoomIn={handleZoomIn}
-          onZoomOut={handleZoomOut}
-          onSetZoom={handleSetZoom}
-          onResetZoomPan={handleResetZoomPan}
-          canvasHandlers={canvasHandlers}
-          onLaunchFullscreen={() => {
-            setIsFullscreenOpen(true);
-            onActionTriggered?.('fullscreen');
-          }}
-          onPopoutImage={handlePopoutImage}
-        />
-      </div>
+      {loading && (
+        <div className="py-16 text-center text-xs text-slate-500 font-mono">
+          {dict?.maps?.loadingTacticalMaps || 'Loading Tactical Maps...'}
+        </div>
+      )}
 
-      {isFullscreenOpen && activeMap && (
+      {!loading && groupedMapsByRealm.length === 0 && (
+        <div className="py-16 text-center text-xs text-slate-500 font-mono">
+          {dict?.maps?.noMapsFound || 'No Maps Found'}
+        </div>
+      )}
+
+      {!hideSearch && !loading && groupedMapsByRealm.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setRealmFilter(null)}
+            aria-pressed={realmFilter === null}
+            className={`rounded-full px-3 py-1 text-xs font-bold transition-colors ${
+              realmFilter === null
+                ? 'bg-amber-500 text-slate-950'
+                : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            {dict?.maps?.all || 'All'}
+          </button>
+          {groupedMapsByRealm.map(({ realm }) => (
+            <button
+              key={realm}
+              type="button"
+              onClick={() => setRealmFilter(realm)}
+              aria-pressed={realmFilter === realm}
+              className={`rounded-full px-3 py-1 text-xs font-bold transition-colors ${
+                realmFilter === realm
+                  ? 'bg-amber-500 text-slate-950'
+                  : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              {realm}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {!loading && groupedMapsByRealm.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          {displayedGroups.map(({ realm, maps: realmMaps }, index) => {
+            const realmImage = realmImages[realm];
+            const bannerSrc = realmImage
+              ? getMapImageSrc({ callout_image_local_path: realmImage.image_local_path, callout_image_url: realmImage.image_url }, backendBase)
+              : '';
+            const expanded = isRealmExpanded(realm);
+            const panelGroups = rowPanels.get(index);
+            const showPanel = !!panelGroups && panelGroups.length > 0;
+            const isOpen = showPanel && panelGroups!.some((g) => g.open);
+
+            return (
+              <React.Fragment key={realm}>
+                <button
+                  type="button"
+                  onClick={() => toggleRealm(realm)}
+                  aria-expanded={expanded}
+                  aria-controls={`realm-panel-${realm}`}
+                  aria-label={`${expanded ? dict?.maps?.collapseRealmAria || 'Collapse realm' : dict?.maps?.expandRealmAria || 'Expand realm'}: ${realm}`}
+                  className={`group relative aspect-square w-full overflow-hidden rounded-2xl border-2 text-left focus:outline-none focus:ring-2 focus:ring-amber-500 ${expanded ? 'border-amber-400' : 'border-slate-200 dark:border-slate-800'}`}
+                >
+                  {bannerSrc ? (
+                    <img src={bannerSrc} alt={realm} className="absolute inset-0 h-full w-full object-cover" />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-900">
+                      <ImageOff className="h-8 w-8 text-slate-400" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/10 to-transparent" />
+                  <h2 className="absolute bottom-2 left-2 right-2 text-sm sm:text-base font-black text-white tracking-tight line-clamp-2">
+                    {realm}
+                  </h2>
+                  <span className="absolute top-2 left-2 rounded-full bg-slate-950/60 px-2 py-0.5 text-xs font-mono text-white/90">
+                    {realmMaps.length}
+                  </span>
+                  <ChevronDown
+                    className={`absolute top-2 right-2 h-5 w-5 text-white drop-shadow transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+                  />
+                </button>
+
+                {showPanel && (
+                  <div
+                    id={`realm-panel-${realm}`}
+                    className="grid transition-[grid-template-rows] duration-300 ease-out"
+                    style={{ gridColumn: '1 / -1', gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-3">
+                        {(panelGroups ?? []).map((group) => (
+                          <div key={group.realm} className="space-y-2">
+                            {(panelGroups?.length ?? 0) > 1 && (
+                              <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                                {group.realm}
+                              </h3>
+                            )}
+                            <div className="flex flex-wrap gap-3">
+                              {group.maps.map((m) => (
+                                <MapCard key={m.id} map={m} backendBase={backendBase} onSelect={(map) => setOpenMapId(map.id)} />
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      )}
+
+      {openMapId && (
         <FullscreenMapEngine
-          mapId={activeMap.id}
+          mapId={openMapId}
           availableMaps={maps}
-          onSelectMapId={(id) => {
-            selectMapById(id);
-          }}
-          onClose={() => {
-            setIsFullscreenOpen(false);
-            onActionTriggered?.('close');
-          }}
+          onSelectMapId={(id) => setOpenMapId(id)}
+          onClose={() => setOpenMapId(null)}
+          dict={dict}
         />
       )}
     </div>

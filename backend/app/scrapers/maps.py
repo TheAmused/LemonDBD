@@ -15,6 +15,56 @@ from app.scrapers.utils import normalize_name_key, sanitize_filename
 
 logger = logging.getLogger(__name__)
 
+FOLDER_REALM_MAP: dict[str, str] = {
+    "azarovs": "Autohaven Wreckers",
+    "badham": "Springwood",
+    "boneyard": "Forsaken Boneyard",
+    "borgo": "The Decimated Borgo",
+    "coldwind": "Coldwind Farm",
+    "crotus pen": "Disturbed Ward",
+    "dvarka deepwood": "Dvarka Deepwood",
+    "mcmillan": "The Macmillan Estate",
+    "ormond": "Ormond",
+    "raccoon city": "Raccoon City",
+    "red forest": "Red Forest",
+    "sleepless district": "Sleepless District",
+    "swamp": "Backwater Swamp",
+    "yamaoka": "Yamaoka Estate",
+}
+
+OTHER_MAP_REALM_OVERRIDES: dict[str, str] = {
+    "dead dawg saloon": "Grave of Glenvale",
+    "fallen refuge": "Withered Isle",
+    "freddy fazbears pizza": "Withered Isle",
+    "garden of joy": "Withered Isle",
+    "greenville square": "Withered Isle",
+    "lampkin lane": "Haddonfield",
+    "midwich elementary school": "Silent Hill",
+    "the game": "Gideon Meat Plant",
+    "the underground complex": "Hawkins National Laboratory",
+    "treatment theatre": "Lery's Memorial Institute",
+}
+
+
+def resolve_hens_realm(map_name: str, dpath: str) -> str:
+    """Derive the real realm name from the folder segment already embedded in
+    a Hens333 callout dpath (e.g. "Azarovs/Blood Lodge.webp" -> "Autohaven
+    Wreckers"). The site's realm-wrapper HTML this previously read from no
+    longer exists, which is why every map used to land on "General Realm"."""
+    if "/" not in dpath:
+        return "General Realm"
+
+    folder = dpath.split("/")[0].strip()
+    folder_key = folder.lower()
+
+    if folder_key == "other":
+        name_key = map_name.strip().lower()
+        if name_key in OTHER_MAP_REALM_OVERRIDES:
+            return OTHER_MAP_REALM_OVERRIDES[name_key]
+        return folder
+
+    return FOLDER_REALM_MAP.get(folder_key, folder)
+
 
 def get_map_landmarks_data(
     map_name: str, realm_name: str, source: str = "hens333"
@@ -118,7 +168,7 @@ class HensMapScraperDriver:
                         continue
                     map_name = btn.get_text(strip=True) or dpath.split("/")[-1].split(".")[0]
                     map_slug = sanitize_filename(map_name)
-                    realm_name = dpath.split("/")[0] if "/" in dpath else "General Realm"
+                    realm_name = resolve_hens_realm(map_name, dpath)
                     realm_slug = sanitize_filename(realm_name)
 
                     encoded_dpath = re.sub(r"\s", "%20", dpath)
@@ -152,10 +202,6 @@ class HensMapScraperDriver:
                 return maps
 
             for rw in realm_wrappers:
-                h1 = rw.find(["h1", "h2", "h3", "div"], class_=lambda c: not c or "realm" in str(c).lower())
-                realm_name = h1.get_text(strip=True) if h1 else "General Realm"
-                realm_slug = sanitize_filename(realm_name)
-
                 for btn in rw.find_all(attrs={"data-path": True}):
                     dpath = btn["data-path"].strip()
                     if not dpath:
@@ -164,6 +210,8 @@ class HensMapScraperDriver:
                     if not map_name:
                         map_name = dpath.split("/")[-1].split(".")[0]
                     map_slug = sanitize_filename(map_name)
+                    realm_name = resolve_hens_realm(map_name, dpath)
+                    realm_slug = sanitize_filename(realm_name)
 
                     encoded_dpath = re.sub(r"\s", "%20", dpath)
                     remote_url = f"{self.CDN_BASE}{encoded_dpath}" if not dpath.startswith("http") else dpath
@@ -196,111 +244,4 @@ class HensMapScraperDriver:
             return maps
         except Exception as e:
             logger.error(f"Error parsing Hens333 maps: {e}")
-            return []
-
-
-class SamoelColtMapScraperDriver:
-    STEAM_GUIDE_URL = "https://steamcommunity.com/sharedfiles/filedetails/?id=2899093390"
-    IMPERSONATE_BROWSER = "chrome120"
-    REQUEST_TIMEOUT = 30
-
-    def scrape_maps(self) -> list[MapData]:
-        logger.info("Scraping SamoelColt map guides from Steam Workshop...")
-        session = requests.Session(impersonate=self.IMPERSONATE_BROWSER)
-        res = None
-        cookies = {
-            "birthtime": "283993201",
-            "mature_content": "1",
-            "wants_mature_content": "1",
-            "lastagecheckage": "1-January-1980",
-        }
-
-        for attempt in range(3):
-            try:
-                res = session.get(
-                    self.STEAM_GUIDE_URL,
-                    cookies=cookies,
-                    verify=False,
-                    timeout=self.REQUEST_TIMEOUT,
-                    headers={
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                        "Accept-Language": "en-US,en;q=0.9",
-                    },
-                )
-                if res.status_code == 200:
-                    break
-                logger.warning(f"Attempt {attempt + 1}: Steam guide returned HTTP {res.status_code}")
-                time.sleep(2.0)
-            except Exception as req_err:
-                logger.warning(f"Attempt {attempt + 1}: Failed to fetch Steam guide: {req_err}")
-                time.sleep(2.0)
-
-        if not res or res.status_code != 200:
-            logger.warning("Could not retrieve SamoelColt Steam guide after multiple attempts.")
-            return []
-
-        try:
-            soup = BeautifulSoup(res.text, "html.parser")
-            maps: list[MapData] = []
-            seen_ids = set()
-
-            subsections = soup.find_all("div", class_="subSection")
-            for sub in subsections:
-                title_div = sub.find("div", class_="subSectionTitle")
-                realm_name = title_div.get_text(strip=True) if title_div else "General Realm"
-                if realm_name in ["Overview", "Comments", "General", "Change Log", "Introduction", "Changelog", "Credits"]:
-                    continue
-
-                realm_slug = sanitize_filename(realm_name)
-                lines = [text.strip() for text in sub.stripped_strings if text.strip() and text.strip() != realm_name]
-
-                links = sub.find_all("a", class_="modalContentLink")
-                if not links:
-                    links = sub.find_all("a", href=re.compile(r"images\.steamusercontent\.com|steamuserimages"))
-
-                for idx, link in enumerate(links):
-                    href = link.get("href", "")
-                    if not href:
-                        img_tag = link.find("img")
-                        if img_tag:
-                            href = img_tag.get("src", "")
-
-                    if href and ("images.steamusercontent.com" in href or "steamuserimages" in href):
-                        map_name = f"{realm_name} Map {idx + 1}"
-                        if idx < len(lines):
-                            potential_name = lines[idx]
-                            if 3 < len(potential_name) < 50 and not potential_name.startswith("http") and not potential_name.startswith("Preview"):
-                                map_name = potential_name
-
-                        map_slug = sanitize_filename(map_name)
-                        unique_id = f"samoel_{realm_slug}_{map_slug}_{idx + 1}"
-                        if unique_id in seen_ids:
-                            continue
-                        seen_ids.add(unique_id)
-
-                        rel_static_path = f"maps/callouts/samoelcolt/{realm_slug}/{map_slug}_{idx + 1}.jpg"
-
-                        maps.append(
-                            MapData(
-                                id=unique_id,
-                                name=map_name,
-                                realm=realm_name,
-                                realm_id=realm_slug,
-                                callout_image_url=href,
-                                callout_image_local_path=rel_static_path,
-                                dpath="",
-                                clock_system=get_map_landmarks_data(
-                                    map_name=map_name,
-                                    realm_name=realm_name,
-                                    source="samoelcolt",
-                                ),
-                                source="samoelcolt",
-                                source_label="SamoelColt Isometric Scheme",
-                            )
-                        )
-            logger.info(f"Scraped {len(maps)} SamoelColt maps from Steam Workshop.")
-            return maps
-        except Exception as e:
-            logger.error(f"Error parsing SamoelColt maps: {e}")
             return []

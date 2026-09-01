@@ -22,7 +22,7 @@ from app.models.gauntlet import (
     GauntletMatchLog,
     GauntletRun,
 )
-from app.models.map import MapObjective, MapRealm, MapTile
+from app.models.map import MapObjective, MapRealm, MapTile, Realm
 from app.models.minigames import (
     DraftSession,
     GeneratorDrawnPerk,
@@ -61,6 +61,7 @@ __all__ = [
     "Item",
     "Addon",
     "Offering",
+    "Realm",
     "MapRealm",
     "MapTile",
     "MapObjective",

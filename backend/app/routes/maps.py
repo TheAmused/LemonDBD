@@ -6,6 +6,13 @@ maps_bp = Blueprint("maps", __name__, url_prefix="/api/v1/maps")
 service = MapService()
 
 
+@maps_bp.route("/realms", methods=["GET"])
+def get_realms():
+    """Retrieve all realm banner images for client-side name matching."""
+    realms = service.get_realms()
+    return jsonify({"realms": realms}), 200
+
+
 @maps_bp.route("", methods=["GET"])
 @maps_bp.route("/", methods=["GET"])
 def get_maps():

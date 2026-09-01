@@ -320,14 +320,9 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                   <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/10 text-amber-400 shadow-inner">
                     <Sparkles className="h-4 w-4" />
                   </span>
-                  <div>
-                    <h2 id="whats-new-title" className="text-base font-black tracking-tight text-slate-100">
-                      {t?.modalTitle || "What's New"}
-                    </h2>
-                    <p className="text-[11px] font-medium text-slate-500">
-                      {t?.modalSubtitle || 'Trials, Tomes & fixes from the Fog'}
-                    </p>
-                  </div>
+                  <h2 id="whats-new-title" className="text-base font-black tracking-tight text-slate-100">
+                    {t?.modalTitle || "What's New"}
+                  </h2>
                 </div>
                 <div className="flex items-center gap-1.5">
                   {isAdmin && (

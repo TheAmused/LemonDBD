@@ -3,7 +3,6 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/ResetConfirmModal.tsx
 
 import React from 'react';
-import { RotateCcw } from 'lucide-react';
 import { ConfirmModal } from '@/components/ConfirmModal';
 
 export interface ResetConfirmModalProps {
@@ -29,7 +28,6 @@ export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({
     message={message}
     confirmLabel={dict?.generator?.resetAllLabel || 'Yes, wipe it'}
     cancelLabel={dict?.streaks?.cancel || 'Cancel'}
-    confirmIcon={<RotateCcw className="h-4 w-4" />}
     busy={busy}
     onConfirm={onConfirm}
     onCancel={onCancel}

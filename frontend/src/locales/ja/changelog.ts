@@ -2,7 +2,6 @@
 export default {
   triggerTitle: 'お知らせ',
   modalTitle: 'お知らせ',
-  modalSubtitle: '霧からのトライアル、書物、修正情報',
   newEntry: '新規投稿',
   close: '閉じる',
   filterAll: 'すべて',

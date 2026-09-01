@@ -2,7 +2,6 @@
 export default {
   triggerTitle: 'Neuigkeiten?',
   modalTitle: 'Neuigkeiten',
-  modalSubtitle: 'Prüfungen, Wälzer & Fixes aus dem Nebel',
   newEntry: 'Neuer Eintrag',
   close: 'Schließen',
   filterAll: 'Alle',

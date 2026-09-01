@@ -2,7 +2,6 @@
 export default {
   triggerTitle: '¿Novedades?',
   modalTitle: 'Novedades',
-  modalSubtitle: 'Pruebas, Tomos y correcciones de la Niebla',
   newEntry: 'Nueva entrada',
   close: 'Cerrar',
   filterAll: 'Todo',

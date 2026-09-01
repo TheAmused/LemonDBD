@@ -2,6 +2,7 @@
 // frontend/src/components/maps/FullscreenMapEngine.tsx
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import {
   X,
   ZoomIn,
@@ -22,7 +23,12 @@ import {
 import type { MapRealm, PalletSafetyRating } from '@/types/map';
 import type { Dictionary } from '@/locales/types';
 import { fetchMapDetail } from '@/services/mapApi';
-import { TileInspectorDrawer, InspectorSelectedItem } from './TileInspectorDrawer';
+import type { InspectorSelectedItem } from './TileInspectorDrawer';
+
+const TileInspectorDrawer = dynamic(
+  () => import('./TileInspectorDrawer').then((m) => m.TileInspectorDrawer),
+  { ssr: false }
+);
 
 interface FullscreenMapEngineProps {
   mapId: string;

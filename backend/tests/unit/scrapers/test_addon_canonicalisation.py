@@ -33,7 +33,7 @@ class TestCanonicaliseAddons:
             _rows(("Magnetised Manacles", "The Judgment", "desc", "http://i/x.png", "Rare"))
         )
         assert [a.name for a in addons] == ["Magnetised Manacles"]
-        assert addons[0].icon_local_path == "icons/addons/magnetised_manacles.png"
+        assert addons[0].icon_local_path == "icons/addons/magnetised_manacles.webp"
 
     def test_same_addon_from_two_sources_is_not_duplicated(self):
         """The global page and the character page describe one add-on, not two."""
@@ -67,7 +67,7 @@ class TestCanonicaliseAddons:
             )
         )
         for a in addons:
-            assert a.icon_local_path == f"icons/addons/{sanitize_filename(a.name)}.png"
+            assert a.icon_local_path == f"icons/addons/{sanitize_filename(a.name)}.webp"
 
     def test_richer_record_wins_when_a_source_omits_fields(self):
         addons = WikiGGScraperDriver.canonicalise_addons(

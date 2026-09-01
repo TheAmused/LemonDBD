@@ -204,7 +204,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         ? r.cover_image_url
         : `${getBackendBaseUrl()}${r.cover_image_url}`;
     }
-    return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.png`;
+    return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.webp`;
   }, []);
 
   // 1. Fetch available rosters from PostgreSQL database
@@ -713,7 +713,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   src={getRosterCover(activeRoster)}
                   alt=""
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.png`;
+                    (e.target as HTMLImageElement).src = `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.webp`;
                   }}
                   className="h-full w-full object-cover"
                 />

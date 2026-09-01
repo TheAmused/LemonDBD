@@ -121,8 +121,8 @@ class TestParseCharacterPage:
         assert self.by_name["Ace Visconti"].release_number == 7
 
     def test_avatar_path_follows_the_category(self) -> None:
-        assert self.by_name["The Trapper"].avatar_local_path == "avatars/killers/the_trapper.png"
-        assert self.by_name["Ace Visconti"].avatar_local_path == "avatars/survivors/ace_visconti.png"
+        assert self.by_name["The Trapper"].avatar_local_path == "avatars/killers/the_trapper.webp"
+        assert self.by_name["Ace Visconti"].avatar_local_path == "avatars/survivors/ace_visconti.webp"
 
     def test_avatar_url_is_the_portrait(self) -> None:
         assert "K01_TheTrapper_Portrait" in self.by_name["The Trapper"].avatar_url
@@ -208,7 +208,7 @@ class TestPerkOwnerMatching:
 
         bardic = next(p for p in perks if p.name == "Bardic Inspiration")
         assert bardic.character == "The Troupe"
-        assert bardic.character_avatar_path == "avatars/survivors/the_troupe.png"
+        assert bardic.character_avatar_path == "avatars/survivors/the_troupe.webp"
 
     def test_perk_matches_a_killer_by_name(self) -> None:
         service = ScraperService()
@@ -217,7 +217,7 @@ class TestPerkOwnerMatching:
 
         agitation = next(p for p in perks if p.name == "Agitation")
         assert agitation.character == "The Trapper"
-        assert agitation.character_avatar_path == "avatars/killers/the_trapper.png"
+        assert agitation.character_avatar_path == "avatars/killers/the_trapper.webp"
 
     def test_perk_with_no_owner_column_falls_back_to_general(self) -> None:
         service = ScraperService()

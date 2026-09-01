@@ -232,7 +232,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
         ? r.cover_image_url
         : `${getBackendBaseUrl()}${r.cover_image_url}`;
     }
-    return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.png`;
+    return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.webp`;
   };
 
   const lastMoveXRef = useRef<number>(0);
@@ -475,7 +475,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       const target = e.target as HTMLImageElement;
                       if (!target.dataset.triedFallback) {
                         target.dataset.triedFallback = '1';
-                        target.src = `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.png`;
+                        target.src = `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.webp`;
                       } else {
                         target.style.display = 'none';
                       }

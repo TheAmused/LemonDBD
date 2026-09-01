@@ -75,13 +75,13 @@ test('perkUtils: getCharacterAvatarUrl handles general and specific character av
   // Survivor avatar fallback
   assert.strictEqual(
     getCharacterAvatarUrl({ character: 'Meg Thomas', category: 'Survivor', character_avatar_path: undefined, is_generic_counterpart: false }, 'Survivor', base),
-    'https://api.lemondbd.com/static/avatars/survivors/meg_thomas.png'
+    'https://api.lemondbd.com/static/avatars/survivors/meg_thomas.webp'
   );
 
   // Killer avatar fallback
   assert.strictEqual(
     getCharacterAvatarUrl({ character: 'The Trapper', category: 'Killer', character_avatar_path: undefined, is_generic_counterpart: false }, 'Killer', base),
-    'https://api.lemondbd.com/static/avatars/killers/the_trapper.png'
+    'https://api.lemondbd.com/static/avatars/killers/the_trapper.webp'
   );
 });
 
@@ -91,8 +91,8 @@ test('staticUrl utilities: staticUrl, sanitizeName, avatarUrlForCharacter, perkI
   assert.ok(staticUrl('icons/perk.png')?.endsWith('/static/icons/perk.png'));
 
   assert.strictEqual(sanitizeName('The Ghost Face'), 'the_ghost_face');
-  assert.ok(avatarUrlForCharacter('The Nurse', 'killers')?.includes('/static/avatars/killers/the_nurse.png'));
-  assert.ok(avatarUrlForCharacter('Dwight Fairfield', 'survivors')?.includes('/static/avatars/survivors/dwight_fairfield.png'));
+  assert.ok(avatarUrlForCharacter('The Nurse', 'killers')?.includes('/static/avatars/killers/the_nurse.webp'));
+  assert.ok(avatarUrlForCharacter('Dwight Fairfield', 'survivors')?.includes('/static/avatars/survivors/dwight_fairfield.webp'));
 
   assert.strictEqual(perkIconUrl({ icon_local_path: null, icon_url: 'https://cdn.dbd/icon.png' }), 'https://cdn.dbd/icon.png');
 });

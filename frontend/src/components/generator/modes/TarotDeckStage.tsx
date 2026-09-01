@@ -46,7 +46,7 @@ const DEFAULT_TYPE_NAMES: Record<TarotType, string> = {
   entity: 'The Entity',
 };
 
-/** The on-disk card-back filenames (public/images/tarot/the-*.png) follow
+/** The on-disk card-back filenames (public/images/tarot/the-*.webp) follow
  * each type's *display* name, not its internal TarotType key -- most line
  * up (hex/boon/sacrifice/exhaustion/obsession/chase/entity), but four
  * don't: 'aura' ships as the-watcher.png, 'generator' as the-machinist.png,
@@ -78,7 +78,7 @@ const CardBackImage: React.FC<{ type: TarotType }> = ({ type }) => {
 
   return (
     <img
-      src={`/images/tarot/the-${TAROT_IMAGE_SLUG[type]}.png`}
+      src={`/images/tarot/the-${TAROT_IMAGE_SLUG[type]}.webp`}
       alt=""
       aria-hidden="true"
       onError={() => setErrored(true)}

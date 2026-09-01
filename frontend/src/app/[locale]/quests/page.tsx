@@ -19,6 +19,7 @@ import {
 import type { Quest } from '@/types/quest';
 import type { Dictionary } from '@/locales/types';
 import { fetchQuests, claimQuest } from '@/services/questApi';
+import { DbdSpinner } from '@/components/DbdSpinner';
 
 interface QuestsPageProps {
   params: Promise<{ locale: string }>;
@@ -289,17 +290,16 @@ export default function QuestsPage({ params }: QuestsPageProps) {
         {/* Quests List Grid */}
         <div className="space-y-4">
           {loading ? (
-            <div
-              className="space-y-4"
-              role="status"
-              aria-label={dict?.quests?.loadingQuests || dict?.app?.loadingPerks || undefined}
-            >
-              {[1, 2, 3, 4].map((n) => (
-                <div
-                  key={n}
-                  className="h-28 animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80"
-                />
-              ))}
+            <div className="w-full py-12 flex items-center justify-center">
+              <DbdSpinner
+                size="responsive"
+                layout="inline"
+                accent="violet"
+                needleSpeed={1.1}
+                label={dict?.quests?.loadingQuests || 'Decoding Entity Rituals...'}
+                sublabel="Fetching daily & weekly trial challenges"
+                dict={dict}
+              />
             </div>
           ) : filteredQuests.length === 0 ? (
             <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800/80 bg-white/40 dark:bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm">

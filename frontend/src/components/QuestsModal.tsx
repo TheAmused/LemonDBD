@@ -14,6 +14,7 @@ import {
 import type { Dictionary } from '@/locales/types';
 import { Quest } from '@/types/quest';
 import { fetchQuests, claimQuest } from '@/services/questApi';
+import { DbdSpinner } from '@/components/DbdSpinner';
 
 interface QuestsModalProps {
   isOpen: boolean;
@@ -199,10 +200,15 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
 
         <div className="p-6 max-h-[50vh] overflow-y-auto space-y-4">
           {loading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800/50" />
-              ))}
+            <div className="w-full py-8 flex items-center justify-center">
+              <DbdSpinner
+                size="lg"
+                layout="inline"
+                accent="violet"
+                needleSpeed={1.1}
+                label={dict?.quests?.loadingQuests || 'Decoding Entity Rituals...'}
+                dict={dict}
+              />
             </div>
           ) : filteredQuests.length === 0 ? (
             <div className="py-8 text-center text-xs text-slate-500 dark:text-slate-400">

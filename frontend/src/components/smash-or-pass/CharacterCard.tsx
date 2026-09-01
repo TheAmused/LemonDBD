@@ -155,7 +155,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         {
           name: character.name,
           category: character.role,
-          avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`,
+          avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`,
         },
         isSurvivor
       );
@@ -399,10 +399,13 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const target = e.target as HTMLImageElement;
                   if (!target.dataset.fallback) {
                     target.dataset.fallback = '1';
-                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
+                    // Backend writes avatars as WebP; retry that explicitly in case the
+                    // initial src (e.g. a stale DB path) pointed somewhere unexpected.
+                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
                   } else if (target.dataset.fallback === '1') {
                     target.dataset.fallback = '2';
-                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
+                    // Legacy fallback: some pre-normalization assets may still only exist as .png.
+                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
                   }
                 }}
               />
@@ -679,10 +682,13 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const target = e.target as HTMLImageElement;
                   if (!target.dataset.fallback) {
                     target.dataset.fallback = '1';
-                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
+                    // Backend writes avatars as WebP; retry that explicitly in case the
+                    // initial src (e.g. a stale DB path) pointed somewhere unexpected.
+                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
                   } else if (target.dataset.fallback === '1') {
                     target.dataset.fallback = '2';
-                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
+                    // Legacy fallback: some pre-normalization assets may still only exist as .png.
+                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
                   }
                 }}
               />

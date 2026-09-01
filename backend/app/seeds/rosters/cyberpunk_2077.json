@@ -3,7 +3,7 @@
         "slug": "cyberpunk_2077",
         "name_i18n_key": "smashOrPass.rosters.cyberpunk_2077.name",
         "description_i18n_key": "smashOrPass.rosters.cyberpunk_2077.desc",
-        "cover_image_url": "/static/avatars/rosters/cyberpunk_2077.png",
+        "cover_image_url": "/static/avatars/rosters/cyberpunk_2077.webp",
         "theme_color": "#00f5d4",
         "category": "Cyberpunk",
         "is_nsfw": false,
@@ -137,7 +137,7 @@
             "name": "Trickster: Neon Chrome",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/cyber_trickster.png",
+            "media_url": "/static/avatars/killers/cyber_trickster.webp",
             "metadata": {
                 "title": "Night City Virtuoso",
                 "tagline": "Holographic throwing blades, sub-dermal audio implants.",
@@ -369,7 +369,7 @@
             "name": "Nea: Netrunner Ghost",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/netrunner_nea.png",
+            "media_url": "/static/avatars/survivors/netrunner_nea.webp",
             "metadata": {
                 "title": "Cyberspace Street Rebel",
                 "tagline": "Cyberdeck strapped to hip, graffiti overlays in augmented reality.",
@@ -601,7 +601,7 @@
             "name": "Wesker: Cyber Overlord",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/chrome_wesker.png",
+            "media_url": "/static/avatars/killers/chrome_wesker.webp",
             "metadata": {
                 "title": "Arasaka Biotech Director",
                 "tagline": "Refined black trench coat, ocular cyberware, and complete global saturation.",
@@ -833,7 +833,7 @@
             "name": "Sable: Neon Occultist",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/neon_sable.png",
+            "media_url": "/static/avatars/survivors/neon_sable.webp",
             "metadata": {
                 "title": "Cyber-Goth Invoker",
                 "tagline": "Bioluminescent tattoo circuitry, dark web grimoires.",
@@ -1065,7 +1065,7 @@
             "name": "Feng Min: VR Prodigy",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/cyber_feng_min.png",
+            "media_url": "/static/avatars/survivors/cyber_feng_min.webp",
             "metadata": {
                 "title": "Holo-Arcade Champion",
                 "tagline": "Augmented reality bunny ears, neural gaming rigs.",
@@ -1297,7 +1297,7 @@
             "name": "Meg: Hyperdrive Sprinter",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/meg_turbo.png",
+            "media_url": "/static/avatars/survivors/meg_turbo.webp",
             "metadata": {
                 "title": "Sub-Orbital Courier",
                 "tagline": "Bionic legs, hydraulic dash turbines, neon tracksuits.",
@@ -1529,7 +1529,7 @@
             "name": "Kazan: Mecha Demon",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/cyber_oni.png",
+            "media_url": "/static/avatars/killers/cyber_oni.webp",
             "metadata": {
                 "title": "Chromed Blood Titan",
                 "tagline": "Hydraulic club, titanium horns, and boiling plasma fury.",
@@ -1761,7 +1761,7 @@
             "name": "Evan: Matrix Hunter",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/high_tech_trapper.png",
+            "media_url": "/static/avatars/killers/high_tech_trapper.webp",
             "metadata": {
                 "title": "Laser Snare Engineer",
                 "tagline": "Proximity laser traps, carbon fiber armor, reinforced bear claws.",
@@ -1993,7 +1993,7 @@
             "name": "Sally: Hologram Surgeon",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/cyber_nurse.png",
+            "media_url": "/static/avatars/killers/cyber_nurse.webp",
             "metadata": {
                 "title": "Quantum Phase Medic",
                 "tagline": "Holographic phase-blink, medical laser scalpel, cybernetic levitation.",
@@ -2225,7 +2225,7 @@
             "name": "David: Underground Brawler",
             "role": "Survivor",
             "gender": "male",
-            "media_url": "/static/avatars/survivors/cyber_david_king.png",
+            "media_url": "/static/avatars/survivors/cyber_david_king.webp",
             "metadata": {
                 "title": "Chromed Fist Rebel",
                 "tagline": "Reinforced cyber-knuckles, leather jacket with neon trim, unyielding grit.",

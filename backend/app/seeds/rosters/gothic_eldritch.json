@@ -3,7 +3,7 @@
         "slug": "gothic_eldritch",
         "name_i18n_key": "smashOrPass.rosters.gothic_eldritch.name",
         "description_i18n_key": "smashOrPass.rosters.gothic_eldritch.desc",
-        "cover_image_url": "/static/avatars/rosters/gothic_eldritch.png",
+        "cover_image_url": "/static/avatars/rosters/gothic_eldritch.webp",
         "theme_color": "#a855f7",
         "category": "Eldritch",
         "is_nsfw": false,
@@ -137,7 +137,7 @@
             "name": "Dracula: Lord of Shadows",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/gothic_dracula.png",
+            "media_url": "/static/avatars/killers/gothic_dracula.webp",
             "metadata": {
                 "title": "Victorian Sovereign",
                 "tagline": "Crimson velvet cape, grand castle ballrooms, and timeless aristocratic charm.",
@@ -369,7 +369,7 @@
             "name": "Sable: Victorian Mourner",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/gothic_sable.png",
+            "media_url": "/static/avatars/survivors/gothic_sable.webp",
             "metadata": {
                 "title": "Gothic Cemetery Maiden",
                 "tagline": "Lace corsets, black roses, and Victorian poetry by midnight tombstones.",
@@ -601,7 +601,7 @@
             "name": "Huntress: Yharnam Hunter",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/bloodborne_huntress.png",
+            "media_url": "/static/avatars/killers/bloodborne_huntress.webp",
             "metadata": {
                 "title": "Beast-Cleaving Huntress",
                 "tagline": "Tricorn hunter hat, heavy bone-cleaver, and stalking the nightmare moon.",
@@ -833,7 +833,7 @@
             "name": "Mikaela: Grimoire Sorceress",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/dark_fantasy_mikaela.png",
+            "media_url": "/static/avatars/survivors/dark_fantasy_mikaela.webp",
             "metadata": {
                 "title": "Arcane Scholar",
                 "tagline": "Dark grimoire, blood seal blessings, Gothic witch allure.",
@@ -1065,7 +1065,7 @@
             "name": "Sally: Cosmic Void Maiden",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/eldritch_nurse.png",
+            "media_url": "/static/avatars/killers/eldritch_nurse.webp",
             "metadata": {
                 "title": "Star-Spawn Spectre",
                 "tagline": "Constellation shroud, void blink, cosmic lullabies.",
@@ -1297,7 +1297,7 @@
             "name": "Adiris: Dynasty High Priestess",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/plague_priestess.png",
+            "media_url": "/static/avatars/killers/plague_priestess.webp",
             "metadata": {
                 "title": "Babylonian Sovereign",
                 "tagline": "Golden headdress, swinging censer, ancient sacred devotion.",
@@ -1529,7 +1529,7 @@
             "name": "Carmina: Crow Queen",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/raven_artist.png",
+            "media_url": "/static/avatars/killers/raven_artist.webp",
             "metadata": {
                 "title": "Gothic Surrealist Painter",
                 "tagline": "Feather dress, ink-stained hands, flight of dire crows.",
@@ -1761,7 +1761,7 @@
             "name": "Vittorio: Runemaster",
             "role": "Survivor",
             "gender": "male",
-            "media_url": "/static/avatars/survivors/occult_vittorio.png",
+            "media_url": "/static/avatars/survivors/occult_vittorio.webp",
             "metadata": {
                 "title": "Centuries-Old Scholar",
                 "tagline": "Glowing blue runes, medieval parchment, profound ancient wisdom.",
@@ -1993,7 +1993,7 @@
             "name": "Philip: Barrow Wight",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/phantom_wraith.png",
+            "media_url": "/static/avatars/killers/phantom_wraith.webp",
             "metadata": {
                 "title": "Gothic Bell Mourner",
                 "tagline": "Spectral tattered cloak, wailing bell, graveyard mist.",
@@ -2225,7 +2225,7 @@
             "name": "The Dredge: Eldritch Void",
             "role": "Killer",
             "gender": "monster_other",
-            "media_url": "/static/avatars/killers/abyssal_dredge.png",
+            "media_url": "/static/avatars/killers/abyssal_dredge.webp",
             "metadata": {
                 "title": "Amalgamation of Nightfall",
                 "tagline": "Nightfall shroud, thousands of whispering hands, cosmic darkness.",

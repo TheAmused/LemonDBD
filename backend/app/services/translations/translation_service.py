@@ -10,12 +10,20 @@ from sqlalchemy import select
 from app.core.extensions import db
 from app.models.character import Character
 from app.models.equipment import Addon, Item, Offering
+from app.models.map import MapRealm, Realm
 from app.models.perk import Perk
 from app.scrapers.utils import sanitize_filename
 
 logger = logging.getLogger(__name__)
 
 SUPPORTED_LOCALES: list[str] = ["en", "pl", "de", "es", "ja"]
+
+# Strips layout-variant suffixes (e.g. "Coal Tower II" -> "Coal Tower") so variants share one translation.
+_MAP_VARIANT_SUFFIX = re.compile(r"\s+(IIIV|IV|III|II|V|I)$")
+
+
+def strip_map_variant_suffix(name: str) -> str:
+    return _MAP_VARIANT_SUFFIX.sub("", name.strip())
 
 
 def simplify_lookup_key(s: str) -> str:
@@ -283,7 +291,55 @@ class TranslationService:
                             curr[l] = trans[l]
                     matched.translations = curr
 
-        # 5. Sync Offerings
+        # 5. Sync Realms (banner rows) and Map realm-name translations
+        realms_data = data.get("realms", {})
+        db_realms = db.session.scalars(select(Realm)).all()
+        db_map_realms = db.session.scalars(select(MapRealm)).all()
+        realm_exact_map = {r.name.strip(): r for r in db_realms}
+
+        for r_name, r_val in realms_data.items():
+            trans = r_val.get("translations", {})
+            if not trans:
+                continue
+
+            realm_row = realm_exact_map.get(r_name.strip())
+            if realm_row:
+                curr = dict(realm_row.translations or {})
+                for l in target_locales:
+                    if l in trans:
+                        curr[l] = {"name": trans[l].get("name") or realm_row.name}
+                realm_row.translations = curr
+
+            for map_row in db_map_realms:
+                if map_row.realm.strip() != r_name.strip():
+                    continue
+                curr = dict(map_row.translations or {})
+                for l in target_locales:
+                    if l in trans:
+                        entry = dict(curr.get(l) or {})
+                        entry["realm"] = trans[l].get("name") or map_row.realm
+                        curr[l] = entry
+                map_row.translations = curr
+
+        # 6. Sync Map name translations
+        maps_data = data.get("maps", {})
+        for map_row in db_map_realms:
+            base_name = strip_map_variant_suffix(map_row.name)
+            m_val = maps_data.get(base_name)
+            if not m_val:
+                continue
+            trans = m_val.get("translations", {})
+            if not trans:
+                continue
+            curr = dict(map_row.translations or {})
+            for l in target_locales:
+                if l in trans:
+                    entry = dict(curr.get(l) or {})
+                    entry["name"] = trans[l].get("name") or map_row.name
+                    curr[l] = entry
+            map_row.translations = curr
+
+        # 7. Sync Offerings
         db_offerings = list(db.session.scalars(select(Offering)).all())
         seen_keys = {}
         for o in list(db_offerings):
@@ -393,6 +449,8 @@ class TranslationService:
             "items_updated": len(db_items),
             "addons_updated": len(db_addons),
             "offerings_updated": len(db_offerings),
+            "realms_updated": len(db_realms),
+            "maps_updated": len(db_map_realms),
             "locales_processed": target_locales,
         }
         logger.info(f"Successfully synced squashed translations: {stats}")
@@ -405,6 +463,8 @@ class TranslationService:
         db_perks = db.session.scalars(select(Perk)).all()
         db_items = db.session.scalars(select(Item)).all()
         db_addons = db.session.scalars(select(Addon)).all()
+        db_realms = db.session.scalars(select(Realm)).all()
+        db_map_realms = db.session.scalars(select(MapRealm)).all()
 
         squashed_data = {
             "version": "2.0",
@@ -413,6 +473,8 @@ class TranslationService:
             "perks": {},
             "items": {},
             "addons": {},
+            "realms": {},
+            "maps": {},
         }
 
         for c in db_characters:
@@ -439,6 +501,32 @@ class TranslationService:
                 "category": i.category,
                 "role": i.role,
                 "translations": i.translations or {},
+            }
+
+        for r in db_realms:
+            squashed_data["realms"][r.name.strip()] = {
+                "name": r.name,
+                "translations": {
+                    l: {"name": t.get("name")}
+                    for l, t in (r.translations or {}).items()
+                    if isinstance(t, dict)
+                },
+            }
+
+        seen_base_names: set[str] = set()
+        for m in db_map_realms:
+            base_name = strip_map_variant_suffix(m.name)
+            if base_name in seen_base_names:
+                continue
+            seen_base_names.add(base_name)
+            squashed_data["maps"][base_name] = {
+                "name": m.name,
+                "realm": m.realm,
+                "translations": {
+                    l: {"name": t.get("name")}
+                    for l, t in (m.translations or {}).items()
+                    if isinstance(t, dict) and t.get("name")
+                },
             }
 
         for a in db_addons:

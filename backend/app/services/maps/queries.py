@@ -20,6 +20,7 @@ def fetch_maps(
     realm: str | None = None,
     search: str | None = None,
     source: str | None = None,
+    lang: str | None = None,
 ) -> list[dict[str, Any]]:
     """Retrieve maps list with optional realm, search, and source filtering."""
     if use_sqlalchemy:
@@ -46,7 +47,7 @@ def fetch_maps(
                 # Only fall through to the legacy seed path if the table is fully unseeded.
                 table_has_any_rows = rows or db.session.scalar(select(MapRealm.map_id).limit(1)) is not None
                 if table_has_any_rows:
-                    return [r.to_dict() for r in rows]
+                    return [r.to_dict(lang=lang) for r in rows]
         except Exception as e:
             logger.debug(f"SQLAlchemy get_maps fallback: {e}")
             try:
@@ -98,12 +99,12 @@ def fetch_maps(
     return maps
 
 
-def fetch_realms() -> list[dict[str, Any]]:
+def fetch_realms(lang: str | None = None) -> list[dict[str, Any]]:
     """Retrieve all realm banner images, keyed by realm name for client-side matching."""
     try:
         if current_app:
             rows = db.session.scalars(select(Realm)).all()
-            return [r.to_dict() for r in rows]
+            return [r.to_dict(lang=lang) for r in rows]
     except Exception as e:
         logger.debug(f"fetch_realms fallback: {e}")
         try:
@@ -119,6 +120,7 @@ def fetch_map_by_id(
     map_id: str,
     seed_variant: str = "seed_a",
     floor: int = 1,
+    lang: str | None = None,
 ) -> dict[str, Any] | None:
     """Retrieve detailed map info including tiles and objective coordinates."""
     if use_sqlalchemy:
@@ -141,7 +143,7 @@ def fetch_map_by_id(
                 )
                 m = db.session.scalars(stmt).unique().first()
                 if m:
-                    d = m.to_dict()
+                    d = m.to_dict(lang=lang)
                     d["seed_variant"] = seed_variant
                     d["floor"] = floor
                     return d

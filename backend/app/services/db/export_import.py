@@ -187,6 +187,7 @@ class DatabaseExportImportService:
                     "image_url": r.image_url,
                     "callout_image_url": r.callout_image_url,
                     "callout_image_local_path": r.callout_image_local_path,
+                    "translations": r.translations or {},
                     "tiles": tiles,
                     "objectives": objectives,
                 })
@@ -201,6 +202,7 @@ class DatabaseExportImportService:
                     "name": rb.name,
                     "image_url": rb.image_url,
                     "image_local_path": rb.image_local_path,
+                    "translations": rb.translations or {},
                 })
             export_data["realms"] = realm_list
             counts["realms"] = len(realm_list)
@@ -470,7 +472,8 @@ class DatabaseExportImportService:
                         "name", "realm", "realm_id", "source", "source_label",
                         "layout_type", "jungle_gyms_count", "totem_spawns_count",
                         "pallet_density", "shack_has_basement", "description",
-                        "image_url", "callout_image_url", "callout_image_local_path"
+                        "image_url", "callout_image_url", "callout_image_local_path",
+                        "translations",
                     ]:
                         if k in mdata:
                             setattr(realm_obj, k, mdata[k])
@@ -524,7 +527,7 @@ class DatabaseExportImportService:
                     else:
                         updated += 1
 
-                    for k in ["image_url", "image_local_path"]:
+                    for k in ["image_url", "image_local_path", "translations"]:
                         if k in rdata:
                             setattr(realm_banner, k, rdata[k])
                 db.session.flush()

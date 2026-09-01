@@ -72433,5 +72433,1131 @@
         }
       }
     }
+  },
+  "realms": {
+    "Autohaven Wreckers": {
+      "name": "Autohaven Wreckers",
+      "translations": {
+        "pl": {
+          "name": "Złomowisko Autohaven"
+        },
+        "de": {
+          "name": "Autohaven-Schrottplatz"
+        },
+        "es": {
+          "name": "Desguace Autohaven"
+        },
+        "ja": {
+          "name": "オートヘイヴン・レッカーズ"
+        }
+      }
+    },
+    "Backwater Swamp": {
+      "name": "Backwater Swamp",
+      "translations": {
+        "pl": {
+          "name": "Bagienne Rozlewisko"
+        },
+        "de": {
+          "name": "Backwater-Sumpf"
+        },
+        "es": {
+          "name": "Pantano de Aguas Estancadas"
+        },
+        "ja": {
+          "name": "バックウォーター・スワンプ"
+        }
+      }
+    },
+    "Coldwind Farm": {
+      "name": "Coldwind Farm",
+      "translations": {
+        "pl": {
+          "name": "Farma Coldwind"
+        },
+        "de": {
+          "name": "Coldwind Farm"
+        },
+        "es": {
+          "name": "Granja Coldwind"
+        },
+        "ja": {
+          "name": "コールドウィンド・ファーム"
+        }
+      }
+    },
+    "Disturbed Ward": {
+      "name": "Disturbed Ward",
+      "translations": {
+        "pl": {
+          "name": "Przytułek Crotus Prenn"
+        },
+        "de": {
+          "name": "Crotus-Prenn-Anstalt"
+        },
+        "es": {
+          "name": "Psiquiátrico Crotus Prenn"
+        },
+        "ja": {
+          "name": "クロータス・プレン・アサイラム"
+        }
+      }
+    },
+    "Dvarka Deepwood": {
+      "name": "Dvarka Deepwood",
+      "translations": {
+        "pl": {
+          "name": "Gęsty Las Dvarki"
+        },
+        "de": {
+          "name": "Dvarka-Dschungel"
+        },
+        "es": {
+          "name": "Bosque Profundo de Dvarka"
+        },
+        "ja": {
+          "name": "ドヴァルカ・ディープウッド"
+        }
+      }
+    },
+    "Forsaken Boneyard": {
+      "name": "Forsaken Boneyard",
+      "translations": {
+        "pl": {
+          "name": "Zapomniany Cmentarz"
+        },
+        "de": {
+          "name": "Einsamer Friedhof"
+        },
+        "es": {
+          "name": "Cementerio Abandonado"
+        },
+        "ja": {
+          "name": "荒れ果てた墓場"
+        }
+      }
+    },
+    "Gideon Meat Plant": {
+      "name": "Gideon Meat Plant",
+      "translations": {
+        "pl": {
+          "name": "Zakład Mięsny Gideon"
+        },
+        "de": {
+          "name": "Gideon-Fleischfabrik"
+        },
+        "es": {
+          "name": "Planta Procesadora de Carne Gideon"
+        },
+        "ja": {
+          "name": "ギデオン食肉工場"
+        }
+      }
+    },
+    "Grave of Glenvale": {
+      "name": "Grave of Glenvale",
+      "translations": {
+        "pl": {
+          "name": "Grób w Glenvale"
+        },
+        "de": {
+          "name": "Grab von Glenvale"
+        },
+        "es": {
+          "name": "Tumba de Glenvale"
+        },
+        "ja": {
+          "name": "グレンベールの墓場"
+        }
+      }
+    },
+    "Haddonfield": {
+      "name": "Haddonfield",
+      "translations": {
+        "pl": {
+          "name": "Haddonfield"
+        },
+        "de": {
+          "name": "Haddonfield"
+        },
+        "es": {
+          "name": "Haddonfield"
+        },
+        "ja": {
+          "name": "ハドンフィールド"
+        }
+      }
+    },
+    "Hawkins National Laboratory": {
+      "name": "Hawkins National Laboratory",
+      "translations": {
+        "pl": {
+          "name": "Hawkins National Laboratory"
+        },
+        "de": {
+          "name": "Hawkins National Laboratory"
+        },
+        "es": {
+          "name": "Laboratorio Nacional Hawkins"
+        },
+        "ja": {
+          "name": "ホーキンス国立研究所"
+        }
+      }
+    },
+    "Lery's Memorial Institute": {
+      "name": "Lery's Memorial Institute",
+      "translations": {
+        "pl": {
+          "name": "Instytut Pamięci Léry'ego"
+        },
+        "de": {
+          "name": "Lérys Gedenkinstitut"
+        },
+        "es": {
+          "name": "Instituto Conmemorativo Léry"
+        },
+        "ja": {
+          "name": "レリー記念研究所"
+        }
+      }
+    },
+    "Ormond": {
+      "name": "Ormond",
+      "translations": {
+        "pl": {
+          "name": "Ormond"
+        },
+        "de": {
+          "name": "Ormond"
+        },
+        "es": {
+          "name": "Ormond"
+        },
+        "ja": {
+          "name": "オーモンド"
+        }
+      }
+    },
+    "Raccoon City": {
+      "name": "Raccoon City",
+      "translations": {
+        "pl": {
+          "name": "Raccoon City"
+        },
+        "de": {
+          "name": "Raccoon City"
+        },
+        "es": {
+          "name": "Raccoon City"
+        },
+        "ja": {
+          "name": "ラクーンシティ"
+        }
+      }
+    },
+    "Red Forest": {
+      "name": "Red Forest",
+      "translations": {
+        "pl": {
+          "name": "Czerwony Las"
+        },
+        "de": {
+          "name": "Roter Wald"
+        },
+        "es": {
+          "name": "Bosque Rojo"
+        },
+        "ja": {
+          "name": "レッド・フォレスト"
+        }
+      }
+    },
+    "Silent Hill": {
+      "name": "Silent Hill",
+      "translations": {
+        "pl": {
+          "name": "Silent Hill"
+        },
+        "de": {
+          "name": "Silent Hill"
+        },
+        "es": {
+          "name": "Silent Hill"
+        },
+        "ja": {
+          "name": "サイレントヒル"
+        }
+      }
+    },
+    "Sleepless District": {
+      "name": "Sleepless District",
+      "translations": {
+        "pl": {
+          "name": "Bezsenna Dzielnica"
+        },
+        "de": {
+          "name": "Schlafloses Viertel"
+        },
+        "es": {
+          "name": "Distrito Insomne"
+        },
+        "ja": {
+          "name": "眠らない界隈"
+        }
+      }
+    },
+    "Springwood": {
+      "name": "Springwood",
+      "translations": {
+        "pl": {
+          "name": "Springwood"
+        },
+        "de": {
+          "name": "Springwood"
+        },
+        "es": {
+          "name": "Springwood"
+        },
+        "ja": {
+          "name": "スプリングウッド"
+        }
+      }
+    },
+    "The Decimated Borgo": {
+      "name": "The Decimated Borgo",
+      "translations": {
+        "pl": {
+          "name": "Zdziesiątkowane Borgo"
+        },
+        "de": {
+          "name": "Das dezimierte Borgo"
+        },
+        "es": {
+          "name": "El Pueblo Diezmado"
+        },
+        "ja": {
+          "name": "壊滅したボルゴ"
+        }
+      }
+    },
+    "The Macmillan Estate": {
+      "name": "The Macmillan Estate",
+      "translations": {
+        "pl": {
+          "name": "Posiadłość Macmillanów"
+        },
+        "de": {
+          "name": "MacMillan-Anwesen"
+        },
+        "es": {
+          "name": "La Finca MacMillan"
+        },
+        "ja": {
+          "name": "マクミラン・エステート"
+        }
+      }
+    },
+    "Withered Isle": {
+      "name": "Withered Isle",
+      "translations": {
+        "pl": {
+          "name": "Uschnięta Wyspa"
+        },
+        "de": {
+          "name": "Verkümmerte Insel"
+        },
+        "es": {
+          "name": "Isla Marchita"
+        },
+        "ja": {
+          "name": "枯死の島"
+        }
+      }
+    },
+    "Yamaoka Estate": {
+      "name": "Yamaoka Estate",
+      "translations": {
+        "pl": {
+          "name": "Posiadłość Rodziny Yamaoka"
+        },
+        "de": {
+          "name": "Yamaoka-Anwesen"
+        },
+        "es": {
+          "name": "Residencia Yamaoka"
+        },
+        "ja": {
+          "name": "山岡邸"
+        }
+      }
+    }
+  },
+  "maps": {
+    "Azarov's Resting Place": {
+      "name": "Azarov's Resting Place",
+      "translations": {
+        "pl": {
+          "name": "Miejsce Spoczynku Azarova"
+        },
+        "de": {
+          "name": "Azarovs Ruhestätte"
+        },
+        "es": {
+          "name": "Lugar de Descanso de Azarov"
+        },
+        "ja": {
+          "name": "アザロフの休憩所"
+        }
+      }
+    },
+    "Blood Lodge": {
+      "name": "Blood Lodge",
+      "translations": {
+        "pl": {
+          "name": "Krwawa Stróżówka"
+        },
+        "de": {
+          "name": "Bluthütte"
+        },
+        "es": {
+          "name": "Cabaña de Sangre"
+        },
+        "ja": {
+          "name": "ブラッド・ロッジ"
+        }
+      }
+    },
+    "Gas Heaven": {
+      "name": "Gas Heaven",
+      "translations": {
+        "pl": {
+          "name": "Stacja Paliw"
+        },
+        "de": {
+          "name": "Sprithimmel"
+        },
+        "es": {
+          "name": "Gasolinera"
+        },
+        "ja": {
+          "name": "ガス・ヘヴン"
+        }
+      }
+    },
+    "Wreckers' Yard": {
+      "name": "Wreckers' Yard",
+      "translations": {
+        "pl": {
+          "name": "Podwórze Złomowiska"
+        },
+        "de": {
+          "name": "Schrottplatz"
+        },
+        "es": {
+          "name": "Desguace"
+        },
+        "ja": {
+          "name": "レッカーズ・ヤード"
+        }
+      }
+    },
+    "Wretched Shop": {
+      "name": "Wretched Shop",
+      "translations": {
+        "pl": {
+          "name": "Sklep Nędzy"
+        },
+        "de": {
+          "name": "Werkstatt"
+        },
+        "es": {
+          "name": "Taller Ruinoso"
+        },
+        "ja": {
+          "name": "レッチド・ショップ"
+        }
+      }
+    },
+    "Grim Pantry": {
+      "name": "Grim Pantry",
+      "translations": {
+        "pl": {
+          "name": "Ponura Spiżarnia"
+        },
+        "de": {
+          "name": "Schaurige Speisekammer"
+        },
+        "es": {
+          "name": "Despensa Sombría"
+        },
+        "ja": {
+          "name": "おぞましい貯蔵室"
+        }
+      }
+    },
+    "The Pale Rose": {
+      "name": "The Pale Rose",
+      "translations": {
+        "pl": {
+          "name": "Blada Róża"
+        },
+        "de": {
+          "name": "Die Pale Rose"
+        },
+        "es": {
+          "name": "La Rosa Pálida"
+        },
+        "ja": {
+          "name": "ペイル・ローズ"
+        }
+      }
+    },
+    "Fractured Cowshed": {
+      "name": "Fractured Cowshed",
+      "translations": {
+        "pl": {
+          "name": "Spękana Obora"
+        },
+        "de": {
+          "name": "Verfallener Kuhstall"
+        },
+        "es": {
+          "name": "Establo en Ruinas"
+        },
+        "ja": {
+          "name": "フラクチャード・カウシェッド"
+        }
+      }
+    },
+    "Rancid Abbatoir": {
+      "name": "Rancid Abbatoir",
+      "translations": {
+        "pl": {
+          "name": "Zjęłczała Rzeźnia"
+        },
+        "de": {
+          "name": "Widerliches Schlachthaus"
+        },
+        "es": {
+          "name": "Matadero Pestilente"
+        },
+        "ja": {
+          "name": "ランシッド・アバトワー"
+        }
+      }
+    },
+    "Rotten Fields": {
+      "name": "Rotten Fields",
+      "translations": {
+        "pl": {
+          "name": "Zbutwiałe Pola"
+        },
+        "de": {
+          "name": "Faulige Felder"
+        },
+        "es": {
+          "name": "Campos Podridos"
+        },
+        "ja": {
+          "name": "ロトン・フィールズ"
+        }
+      }
+    },
+    "The Thompson House": {
+      "name": "The Thompson House",
+      "translations": {
+        "pl": {
+          "name": "Dom Thompsona"
+        },
+        "de": {
+          "name": "Das Thompson-Haus"
+        },
+        "es": {
+          "name": "La Casa de los Thompson"
+        },
+        "ja": {
+          "name": "トンプソン・ハウス"
+        }
+      }
+    },
+    "Torment Creek": {
+      "name": "Torment Creek",
+      "translations": {
+        "pl": {
+          "name": "Przełęcz Udręki"
+        },
+        "de": {
+          "name": "Tal der Qual"
+        },
+        "es": {
+          "name": "Arroyo del Tormento"
+        },
+        "ja": {
+          "name": "トーメント・クリーク"
+        }
+      }
+    },
+    "Disturbed Ward": {
+      "name": "Disturbed Ward",
+      "translations": {
+        "pl": {
+          "name": "Niespokojny Oddział"
+        },
+        "de": {
+          "name": "Gestörtenabteilung"
+        },
+        "es": {
+          "name": "Sala de Trastornados"
+        },
+        "ja": {
+          "name": "ディスターブド・ウォード"
+        }
+      }
+    },
+    "Father Campbells Chapel": {
+      "name": "Father Campbells Chapel",
+      "translations": {
+        "pl": {
+          "name": "Kaplica Ojca Campbella"
+        },
+        "de": {
+          "name": "Pater Campbells Kapelle"
+        },
+        "es": {
+          "name": "Capilla del Padre Campbell"
+        },
+        "ja": {
+          "name": "ファザー・キャンベルズ・チャペル"
+        }
+      }
+    },
+    "Nostromo Wreckage": {
+      "name": "Nostromo Wreckage",
+      "translations": {
+        "pl": {
+          "name": "Wrak Nostromo"
+        },
+        "de": {
+          "name": "Nostromo-Wrack"
+        },
+        "es": {
+          "name": "Ruinas de la Nostromo"
+        },
+        "ja": {
+          "name": "ノストロモ号の残骸"
+        }
+      }
+    },
+    "Toba Landing": {
+      "name": "Toba Landing",
+      "translations": {
+        "pl": {
+          "name": "Ziemie Toba"
+        },
+        "de": {
+          "name": "Toba-Landeplatz"
+        },
+        "es": {
+          "name": "Desembarco en Toba"
+        },
+        "ja": {
+          "name": "トーバ着陸地点"
+        }
+      }
+    },
+    "Dead Sands": {
+      "name": "Dead Sands",
+      "translations": {
+        "pl": {
+          "name": "Martwe Piaski"
+        },
+        "de": {
+          "name": "Tote Sande"
+        },
+        "es": {
+          "name": "Arenas Mortales"
+        },
+        "ja": {
+          "name": "死の砂漠"
+        }
+      }
+    },
+    "Eyrie of Crows": {
+      "name": "Eyrie of Crows",
+      "translations": {
+        "pl": {
+          "name": "Gniazdo Kruków"
+        },
+        "de": {
+          "name": "Krähenhorst"
+        },
+        "es": {
+          "name": "Aviario de Cuervos"
+        },
+        "ja": {
+          "name": "カラスの巣"
+        }
+      }
+    },
+    "The Game": {
+      "name": "The Game",
+      "translations": {
+        "pl": {
+          "name": "Rozgrywka"
+        },
+        "de": {
+          "name": "Das Spiel"
+        },
+        "es": {
+          "name": "El Juego"
+        },
+        "ja": {
+          "name": "ザ・ゲーム"
+        }
+      }
+    },
+    "Dead Dawg Saloon": {
+      "name": "Dead Dawg Saloon",
+      "translations": {
+        "pl": {
+          "name": "Knajpa pod Martwym Ziomkiem"
+        },
+        "de": {
+          "name": "Dead Dawg Saloon"
+        },
+        "es": {
+          "name": "Cantina El Perro Muerto"
+        },
+        "ja": {
+          "name": "死んだ犬の酒場"
+        }
+      }
+    },
+    "Lampkin Lane": {
+      "name": "Lampkin Lane",
+      "translations": {
+        "pl": {
+          "name": "Alejka Lampkin"
+        },
+        "de": {
+          "name": "Lampkin Lane"
+        },
+        "es": {
+          "name": "Avenida Lampkin"
+        },
+        "ja": {
+          "name": "ランプキン・レーン"
+        }
+      }
+    },
+    "The Underground Complex": {
+      "name": "The Underground Complex",
+      "translations": {
+        "pl": {
+          "name": "Podziemny Kompleks"
+        },
+        "de": {
+          "name": "Der Untergrundkomplex"
+        },
+        "es": {
+          "name": "El Complejo Subterráneo"
+        },
+        "ja": {
+          "name": "地下施設"
+        }
+      }
+    },
+    "Treatment Theatre": {
+      "name": "Treatment Theatre",
+      "translations": {
+        "pl": {
+          "name": "Placówka Medyczna"
+        },
+        "de": {
+          "name": "Behandlungsbereich"
+        },
+        "es": {
+          "name": "Centro de Tratamiento"
+        },
+        "ja": {
+          "name": "治療シアター"
+        }
+      }
+    },
+    "Mount Ormond Resort": {
+      "name": "Mount Ormond Resort",
+      "translations": {
+        "pl": {
+          "name": "Ośrodek Mount Ormond"
+        },
+        "de": {
+          "name": "Skiort am Mount Ormond"
+        },
+        "es": {
+          "name": "Complejo del Monte Ormond"
+        },
+        "ja": {
+          "name": "オーモンド山のリゾート"
+        }
+      }
+    },
+    "Ormond Lake Mine": {
+      "name": "Ormond Lake Mine",
+      "translations": {
+        "pl": {
+          "name": "Kopalnia nad Jeziorem Ormond"
+        },
+        "de": {
+          "name": "Mine am Ormond-See"
+        },
+        "es": {
+          "name": "Mina del Lago Ormond"
+        },
+        "ja": {
+          "name": "オーモンド湖採掘場"
+        }
+      }
+    },
+    "Police Station East Wing": {
+      "name": "Police Station East Wing",
+      "translations": {
+        "pl": {
+          "name": "Posterunek Policji Raccoon City – Wschodnie Skrzydło"
+        },
+        "de": {
+          "name": "Ostflügel der Polizeistation von Raccoon City"
+        },
+        "es": {
+          "name": "Ala Este del Departamento de Policía de Raccoon City"
+        },
+        "ja": {
+          "name": "ラクーンシティ警察署東棟"
+        }
+      }
+    },
+    "Police Station West Wing": {
+      "name": "Police Station West Wing",
+      "translations": {
+        "pl": {
+          "name": "Posterunek Policji Raccoon City – Zachodnie Skrzydło"
+        },
+        "de": {
+          "name": "Westflügel der Polizeistation von Raccoon City"
+        },
+        "es": {
+          "name": "Ala Oeste del Departamento de Policía de Raccoon City"
+        },
+        "ja": {
+          "name": "ラクーンシティ警察署西棟"
+        }
+      }
+    },
+    "Mother's Dwelling": {
+      "name": "Mother's Dwelling",
+      "translations": {
+        "pl": {
+          "name": "Dom Matki"
+        },
+        "de": {
+          "name": "Mutters Behausung"
+        },
+        "es": {
+          "name": "Morada Maternal"
+        },
+        "ja": {
+          "name": "マザーズ・ドゥエリング"
+        }
+      }
+    },
+    "Temple of Purgation": {
+      "name": "Temple of Purgation",
+      "translations": {
+        "pl": {
+          "name": "Świątynia Oczyszczenia"
+        },
+        "de": {
+          "name": "Der Tempel der Reinigung"
+        },
+        "es": {
+          "name": "El Templo de la Purgación"
+        },
+        "ja": {
+          "name": "浄罪の神殿"
+        }
+      }
+    },
+    "Midwich Elementary School": {
+      "name": "Midwich Elementary School",
+      "translations": {
+        "pl": {
+          "name": "Szkoła Podstawowa Midwich"
+        },
+        "de": {
+          "name": "Midwich Elementary School"
+        },
+        "es": {
+          "name": "Escuela Primaria Midwich"
+        },
+        "ja": {
+          "name": "ミッドウィッチ小学校"
+        }
+      }
+    },
+    "Trickster's Delusion": {
+      "name": "Trickster's Delusion",
+      "translations": {
+        "pl": {
+          "name": "Urojenia Magika"
+        },
+        "de": {
+          "name": "Illusion des Tricksters"
+        },
+        "es": {
+          "name": "Delirio del Embaucador"
+        },
+        "ja": {
+          "name": "トリックスターの妄想"
+        }
+      }
+    },
+    "Preschool": {
+      "name": "Preschool",
+      "translations": {
+        "pl": {
+          "name": "Przedszkole w Badham"
+        },
+        "de": {
+          "name": "Badham-Vorschule"
+        },
+        "es": {
+          "name": "Guardería Badham"
+        },
+        "ja": {
+          "name": "バダム幼稚園"
+        }
+      }
+    },
+    "Forgotten Ruins": {
+      "name": "Forgotten Ruins",
+      "translations": {
+        "pl": {
+          "name": "Zapomniane Ruiny"
+        },
+        "de": {
+          "name": "Vergessene Ruinen"
+        },
+        "es": {
+          "name": "Ruinas Olvidadas"
+        },
+        "ja": {
+          "name": "忘れ去られた遺跡"
+        }
+      }
+    },
+    "Shattered Square": {
+      "name": "Shattered Square",
+      "translations": {
+        "pl": {
+          "name": "Roztrzaskany Plac"
+        },
+        "de": {
+          "name": "Der zerstörte Platz"
+        },
+        "es": {
+          "name": "El Cuadrado Roto"
+        },
+        "ja": {
+          "name": "瓦礫と化した広場"
+        }
+      }
+    },
+    "Coal Tower": {
+      "name": "Coal Tower",
+      "translations": {
+        "pl": {
+          "name": "Wieża Węglowa"
+        },
+        "de": {
+          "name": "Kohlelager"
+        },
+        "es": {
+          "name": "Torre de Carbón"
+        },
+        "ja": {
+          "name": "コール・タワー"
+        }
+      }
+    },
+    "Groaning Storehouse": {
+      "name": "Groaning Storehouse",
+      "translations": {
+        "pl": {
+          "name": "Jęczący Magazyn"
+        },
+        "de": {
+          "name": "Seufzendes Lagerhaus"
+        },
+        "es": {
+          "name": "Almacén Quejumbroso"
+        },
+        "ja": {
+          "name": "グロウニング・ストアハウス"
+        }
+      }
+    },
+    "Ironworks Of Misery": {
+      "name": "Ironworks Of Misery",
+      "translations": {
+        "pl": {
+          "name": "Huta Niedoli"
+        },
+        "de": {
+          "name": "Eisenwerk der Qual"
+        },
+        "es": {
+          "name": "Fundición de la Miseria"
+        },
+        "ja": {
+          "name": "アイアンワークス・オブ・ミザリー"
+        }
+      }
+    },
+    "Shelter Woods": {
+      "name": "Shelter Woods",
+      "translations": {
+        "pl": {
+          "name": "Leśne Schronisko"
+        },
+        "de": {
+          "name": "Schutzwald"
+        },
+        "es": {
+          "name": "Bosque Refugio"
+        },
+        "ja": {
+          "name": "シェルター・ウッズ"
+        }
+      }
+    },
+    "Suffocation Pit": {
+      "name": "Suffocation Pit",
+      "translations": {
+        "pl": {
+          "name": "Duszna Kopalnia"
+        },
+        "de": {
+          "name": "Grubenschacht"
+        },
+        "es": {
+          "name": "Pozo de Asfixia"
+        },
+        "ja": {
+          "name": "サファケーション・ピット"
+        }
+      }
+    },
+    "Fallen Refuge": {
+      "name": "Fallen Refuge",
+      "translations": {
+        "pl": {
+          "name": "Upadły Azyl"
+        },
+        "de": {
+          "name": "Gefallene Zuflucht"
+        },
+        "es": {
+          "name": "Refugio Caído"
+        },
+        "ja": {
+          "name": "落ちた避難所"
+        }
+      }
+    },
+    "Freddy Fazbears Pizza": {
+      "name": "Freddy Fazbears Pizza",
+      "translations": {
+        "pl": {
+          "name": "Pizzeria Freddy Fazbear"
+        },
+        "de": {
+          "name": "Freddy Fazbear's Pizza"
+        },
+        "es": {
+          "name": "Freddy Fazbear's Pizza"
+        },
+        "ja": {
+          "name": "フレディファズベアーズピザ"
+        }
+      }
+    },
+    "Garden of Joy": {
+      "name": "Garden of Joy",
+      "translations": {
+        "pl": {
+          "name": "Ogród Radości"
+        },
+        "de": {
+          "name": "Garten der Freude"
+        },
+        "es": {
+          "name": "Jardín de Dicha"
+        },
+        "ja": {
+          "name": "喜びの庭"
+        }
+      }
+    },
+    "Greenville Square": {
+      "name": "Greenville Square",
+      "translations": {
+        "pl": {
+          "name": "Plac Greenville"
+        },
+        "de": {
+          "name": "Hauptplatz von Greenville"
+        },
+        "es": {
+          "name": "Plaza de Greenville"
+        },
+        "ja": {
+          "name": "グリーンビル広場"
+        }
+      }
+    },
+    "Family Residence": {
+      "name": "Family Residence",
+      "translations": {
+        "pl": {
+          "name": "Rezydencja Rodzinna"
+        },
+        "de": {
+          "name": "Familiensitz"
+        },
+        "es": {
+          "name": "Residencia Familiar"
+        },
+        "ja": {
+          "name": "ファミリー・レジデンス"
+        }
+      }
+    },
+    "Sanctum of Wrath": {
+      "name": "Sanctum of Wrath",
+      "translations": {
+        "pl": {
+          "name": "Sanktuarium Gniewu"
+        },
+        "de": {
+          "name": "Heiligtum des Zorns"
+        },
+        "es": {
+          "name": "Santuario de la Ira"
+        },
+        "ja": {
+          "name": "怒りの聖所"
+        }
+      }
+    }
   }
 }

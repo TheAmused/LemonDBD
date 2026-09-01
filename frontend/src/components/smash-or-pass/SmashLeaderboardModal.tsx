@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import {
   Trophy,
   Heart,
@@ -26,6 +26,7 @@ import { CustomDropdown, type DropdownOption } from '@/components/common/CustomD
 import { Tooltip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -71,6 +72,51 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const [tierFilter, setTierFilter] = useState<'all' | TierKey>('all');
   const [sortBy, setSortBy] = useState<'smash_rate' | 'total_votes' | 'smash_count'>('smash_rate');
   const [viewMode, setViewMode] = useState<'flat' | 'grouped'>('flat');
+
+  // PC Grabbing & Drag-to-Scroll Physics
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const isMouseDownRef = useRef<boolean>(false);
+  const dragStartRef = useRef<{ startY: number; scrollTop: number; isDragging: boolean }>({
+    startY: 0,
+    scrollTop: 0,
+    isDragging: false,
+  });
+  const [isGrabbing, setIsGrabbing] = useState<boolean>(false);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    const target = e.target as HTMLElement;
+    if (target.closest('input, button, select, a, [data-prevent-drag="true"]')) {
+      return;
+    }
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    isMouseDownRef.current = true;
+    setIsGrabbing(true);
+    dragStartRef.current = {
+      startY: e.clientY,
+      scrollTop: container.scrollTop,
+      isDragging: false,
+    };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isMouseDownRef.current) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const deltaY = e.clientY - dragStartRef.current.startY;
+    if (Math.abs(deltaY) > 5) {
+      dragStartRef.current.isDragging = true;
+    }
+    container.scrollTop = dragStartRef.current.scrollTop - deltaY;
+  };
+
+  const handleMouseUp = () => {
+    isMouseDownRef.current = false;
+    setIsGrabbing(false);
+  };
 
   const backendBase = getBackendBaseUrl();
   const rawSmashDict = dict?.smashOrPass;
@@ -322,7 +368,19 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         key={itemSlug}
         role="button"
         tabIndex={0}
-        onClick={() => onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName })}
+        onClick={() => {
+          if (dragStartRef.current.isDragging) return;
+          SmashSounds.playHoverTick();
+          onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName });
+        }}
+        onMouseEnter={() => {
+          if (!isMouseDownRef.current) {
+            SmashSounds.playHoverTick();
+          }
+        }}
+        onMouseDown={() => {
+          SmashSounds.playCardGrabSound();
+        }}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -330,7 +388,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           }
         }}
         aria-label={candidateAriaLabel}
-        className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-3xl border transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0055] gap-3.5 sm:gap-4 ${
+        className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-3xl border transition-all duration-200 cursor-pointer select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0055] gap-3.5 sm:gap-4 ${
           hasUserSmashed
             ? 'bg-gradient-to-r from-rose-950/40 via-zinc-900/90 to-zinc-950/90 border-[#ff0055]/50 shadow-[0_0_20px_rgba(255,0,85,0.15)] hover:border-[#ff0055]'
             : 'bg-zinc-950/80 border-zinc-800/90 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-lg'
@@ -587,8 +645,17 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         </div>
       </div>
 
-      {/* Leaderboard Content */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 custom-scrollbar">
+      {/* Leaderboard Content with Smooth PC Drag-to-Scroll & Grab Physics */}
+      <div
+        ref={scrollContainerRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        className={`flex-1 overflow-y-auto p-4 sm:p-5 space-y-3 custom-scrollbar transition-all ${
+          isGrabbing ? 'cursor-grabbing select-none' : 'cursor-grab'
+        }`}
+      >
         {totalCommunityVotes === 0 && !searchQuery.trim() ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-3.5">
             <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#ff0055]/15 border border-[#ff0055]/30 text-[#ff0055] shadow-[0_0_30px_rgba(255,0,85,0.3)]" aria-hidden="true">

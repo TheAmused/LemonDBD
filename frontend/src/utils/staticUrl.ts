@@ -21,10 +21,11 @@ export function sanitizeName(name: string): string {
 }
 
 /** Builds a character avatar URL straight from its name, no lookup needed:
- * `${backendBase}/static/avatars/{killers|survivors}/{sanitized-name}.png`. */
+ * `${backendBase}/static/avatars/{killers|survivors}/{sanitized-name}.webp`.
+ * Backend writes character avatars as WebP (see backend/app/services/image_conversion.py). */
 export function avatarUrlForCharacter(name: string, subDir: 'killers' | 'survivors' = 'killers'): string | undefined {
   if (!name) return undefined;
-  return `${backendBase}/static/avatars/${subDir}/${sanitizeName(name)}.png`;
+  return `${backendBase}/static/avatars/${subDir}/${sanitizeName(name)}.webp`;
 }
 
 /** Resolves a perk's icon: prefer the scraped local path, fall back to its

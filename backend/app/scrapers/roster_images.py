@@ -5,7 +5,7 @@ from typing import Any
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 
-from app.scrapers.utils import auto_save_webp, sanitize_filename, save_image_as_webp
+from app.services.image_conversion import save_webp
 
 logger = logging.getLogger(__name__)
 
@@ -191,24 +191,20 @@ class RosterImageScraperDriver:
                     "character_name": slug.replace("_", " ").title(),
                     "slug": slug,
                     "image_url": img_url,
-                    "relative_path": f"avatars/{role_sub}/{slug}.png",
+                    "relative_path": f"avatars/{role_sub}/{slug}.webp",
                     "source_page": WIKI_BASE_URL,
                 })
         return results
 
-    @auto_save_webp(quality=90)
     def download_roster_image(self, image_url: str, output_path: Path) -> bool:
         try:
-            output_path = Path(output_path)
-            webp_path = output_path.with_suffix(".webp")
-            if output_path.exists() and output_path.stat().st_size > 500 and webp_path.exists():
+            output_path = Path(output_path).with_suffix(".webp")
+            if output_path.exists() and output_path.stat().st_size > 500:
                 return True
             output_path.parent.mkdir(parents=True, exist_ok=True)
             resp = self.session.get(image_url, timeout=self.timeout, impersonate="chrome120", verify=False)
             if resp.status_code == 200 and len(resp.content) > 500:
-                with open(output_path, "wb") as f:
-                    f.write(resp.content)
-                save_image_as_webp(resp.content, output_path, quality=90)
+                save_webp(resp.content, output_path, quality=90)
                 logger.info(f"Successfully downloaded image: {output_path.name} ({len(resp.content):,} bytes)")
                 return True
         except Exception as e:

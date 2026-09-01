@@ -11,19 +11,17 @@ import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
 
-describe('Perks: Skeletons & Zero-CLS Layout Integrity', () => {
-  it('PerksGridSkeleton renders with role="status", aria-busy="true", and fixed 5-column diamond grid', () => {
+describe('Perks: Skeletons & DBD Framer Motion Spinner Integrity', () => {
+  it('PerksGridSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(
       React.createElement(PerksGridSkeleton, {
-        count: 15,
         dict: enDict,
       })
     );
 
     assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
-    assert.ok(html.includes('grid-cols-5'), 'Perk vault skeleton must enforce 5-column grid layout');
-    assert.ok(html.includes('rotate-45'), 'Skeleton cells must match diamond rotation');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Perk vault skeleton must render DBD Skill Check SVG');
   });
 });
 

@@ -14,32 +14,29 @@ import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
 
-describe('User Page: Skeletons & Zero-CLS Layout Integrity', () => {
-  it('UserProfileSkeleton renders with role="status", aria-busy="true", and matches header/metrics/tabs/columns layout', () => {
+describe('User Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
+  it('UserProfileSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(React.createElement(UserProfileSkeleton, { dict: enDict }));
 
     assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
-    assert.ok(html.includes('grid-cols-1'), 'Metrics grid placeholder must be present');
-    assert.ok(html.includes('lg:grid-cols-3'), 'Overview two-column placeholder must be present');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Profile skeleton must render DBD Skill Check SVG');
   });
 
-  it('UserBugReportsSkeleton renders with role="status", aria-busy="true", and a configurable card count', () => {
+  it('UserBugReportsSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(
-      React.createElement(UserBugReportsSkeleton, { dict: enDict, count: 4 })
+      React.createElement(UserBugReportsSkeleton, { dict: enDict })
     );
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
-
-    const cardMatches = html.match(/rounded-3xl border border-slate-800 bg-slate-900\/70/g) || [];
-    assert.equal(cardMatches.length, 4, 'Should render exactly `count` card placeholders');
+    assert.ok(html.includes('viewBox="0 0 160 160"'));
   });
 
-  it('UserMetricsGridSkeleton renders with role="status", aria-busy="true", and a 3-column responsive grid', () => {
+  it('UserMetricsGridSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(React.createElement(UserMetricsGridSkeleton, {}));
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
-    assert.ok(html.includes('sm:grid-cols-3'));
+    assert.ok(html.includes('viewBox="0 0 160 160"'));
   });
 });
 

@@ -19,6 +19,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { useSidebarState } from '@/hooks/useSidebarState';
+import { DbdSpinner } from '@/components/DbdSpinner';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 const DisabledReasonModal = dynamic(
@@ -394,17 +395,16 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       </section>
 
       {loading ? (
-        <div
-          aria-busy="true"
-          aria-label={dict?.characterDetail?.loading || 'Loading character list'}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
-        >
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-64 animate-pulse rounded-2xl bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800"
-            />
-          ))}
+        <div className="w-full py-12 flex items-center justify-center">
+          <DbdSpinner
+            size="responsive"
+            layout="inline"
+            accent="emerald"
+            needleSpeed={1.4}
+            dict={dict}
+            label={dict?.characterDetail?.loading || 'Loading character list...'}
+            sublabel="Filtering survivor & killer roster"
+          />
         </div>
       ) : filteredCharacters.length === 0 ? (
         <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center bg-white/60 dark:bg-transparent">
@@ -494,10 +494,13 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       const target = e.target as HTMLImageElement;
                       if (!target.dataset.triedFallback) {
                         target.dataset.triedFallback = '1';
-                        target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.png`;
+                        // Backend writes avatars as WebP; retry that explicitly in case the
+                        // initial src (e.g. a stale DB path) pointed somewhere unexpected.
+                        target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.webp`;
                       } else if (target.dataset.triedFallback === '1') {
                         target.dataset.triedFallback = '2';
-                        target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.webp`;
+                        // Legacy fallback: some pre-normalization assets may still only exist as .png.
+                        target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.png`;
                       }
                     }}
                   />

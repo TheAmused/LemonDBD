@@ -203,7 +203,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
               const target = e.target as HTMLImageElement;
               if (!target.dataset.triedFallback) {
                 target.dataset.triedFallback = '1';
-                target.src = `${backendBase}/static/avatars/survivors/sable_ward.png`;
+                target.src = `${backendBase}/static/avatars/survivors/sable_ward.webp`;
               }
             }}
           />

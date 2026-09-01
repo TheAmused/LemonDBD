@@ -78,7 +78,7 @@ class TestParseWikiItems:
         assert "blind" in self.by_name["Flashlight"].description.lower()
 
     def test_icon_local_path_is_sanitized(self) -> None:
-        assert self.by_name["Flashlight"].icon_local_path == "icons/items/flashlight.png"
+        assert self.by_name["Flashlight"].icon_local_path == "icons/items/flashlight.webp"
 
     def test_header_rows_are_not_treated_as_items(self) -> None:
         assert "Survivor Items" not in self.by_name
@@ -105,7 +105,7 @@ class TestParseWikiAddons:
 
     def test_icon_local_path_is_sanitized(self) -> None:
         by_name = {a.name: a for a in self.addons}
-        assert by_name["Battery (Flashlight)"].icon_local_path == "icons/addons/battery_(flashlight).png"
+        assert by_name["Battery (Flashlight)"].icon_local_path == "icons/addons/battery_(flashlight).webp"
 
 
 KILLER_ADDONS_HTML = """

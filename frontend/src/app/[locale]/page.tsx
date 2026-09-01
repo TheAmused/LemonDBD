@@ -13,11 +13,14 @@ import type { Dictionary } from '@/locales/types';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { FogHeartbeatBackground } from '@/components/landing/FogHeartbeatBackground';
+import { DbdSpinner } from '@/components/DbdSpinner';
+import { useImagePrefetch } from '@/components/ImagePreloadProvider';
 
 function LandingContent() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
   const { isCollapsed } = useSidebarState();
+  const { prefetchImages } = useImagePrefetch();
 
   const [dict, setDict] = useState<Dictionary | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
@@ -26,7 +29,26 @@ function LandingContent() {
     getDictionary(locale).then(setDict);
   }, [locale]);
 
-  if (!dict) return null;
+  // Warm up primary navigation assets in background idle time
+  useEffect(() => {
+    prefetchImages([
+      '/logo.webp',
+      '/icon.png',
+    ]);
+  }, [prefetchImages]);
+
+  if (!dict) {
+    return (
+      <DbdSpinner
+        layout="fullscreen"
+        size="responsive"
+        accent="amber"
+        needleSpeed={1.3}
+        label="Entering LemonDBD Realm..."
+        sublabel="Initializing Dead by Daylight companion"
+      />
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
@@ -92,12 +114,16 @@ export default function LandingPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-        </div>
+        <DbdSpinner
+          layout="fullscreen"
+          size="responsive"
+          accent="amber"
+          needleSpeed={1.3}
+          label="Entering LemonDBD Realm..."
+          sublabel="Initializing Dead by Daylight companion"
+        />
       }
     >
-
       <LandingContent />
     </Suspense>
   );

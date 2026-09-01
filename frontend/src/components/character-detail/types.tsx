@@ -214,7 +214,10 @@ export function getAvatarUrl(
   if (!rawPath && char.name) {
     const subDir = isSurvivor ? 'survivors' : 'killers';
     const sanitized = getCharacterSlug(char.name);
-    rawPath = `avatars/${subDir}/${sanitized}.png`;
+    // Scraped/backend-normalized avatars are always written as WebP
+    // (see backend/app/services/image_conversion.py); .png is only a
+    // legacy fallback handled by the onError cascades in the UI.
+    rawPath = `avatars/${subDir}/${sanitized}.webp`;
   }
   if (rawPath) {
     const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');

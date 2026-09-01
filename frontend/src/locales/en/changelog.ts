@@ -2,7 +2,6 @@
 export default {
   triggerTitle: "What's New?",
   modalTitle: "What's New",
-  modalSubtitle: 'Trials, Tomes & fixes from the Fog',
   newEntry: 'New entry',
   close: 'Close',
   filterAll: 'All',

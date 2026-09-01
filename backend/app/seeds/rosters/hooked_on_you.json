@@ -3,7 +3,7 @@
         "slug": "hooked_on_you",
         "name_i18n_key": "smashOrPass.rosters.hooked_on_you.name",
         "description_i18n_key": "smashOrPass.rosters.hooked_on_you.desc",
-        "cover_image_url": "/static/avatars/rosters/hooked_on_you.png",
+        "cover_image_url": "/static/avatars/rosters/hooked_on_you.webp",
         "theme_color": "#00f5d4",
         "category": "Dating Sim",
         "is_nsfw": false,
@@ -137,7 +137,7 @@
             "name": "The Trapper (Island)",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/the_trapper_hoy.png",
+            "media_url": "/static/avatars/killers/the_trapper_hoy.webp",
             "metadata": {
                 "title": "The Brooding Beach Jock",
                 "tagline": "Muscles, bear traps, and secretly loves carving romantic driftwood.",
@@ -369,7 +369,7 @@
             "name": "The Huntress (Bikini)",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/the_huntress_hoy.png",
+            "media_url": "/static/avatars/killers/the_huntress_hoy.webp",
             "metadata": {
                 "title": "The Amazonian Beach Queen",
                 "tagline": "Loves coconut bowling, throwing hatchets, and singing island lullabies.",
@@ -601,7 +601,7 @@
             "name": "The Spirit (Resort)",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/the_spirit_hoy.png",
+            "media_url": "/static/avatars/killers/the_spirit_hoy.webp",
             "metadata": {
                 "title": "The Goth Resort Princess",
                 "tagline": "Sunhat, dark parasol, and loves sipping tropical mocktails in the shade.",
@@ -833,7 +833,7 @@
             "name": "The Wraith (Beach)",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/the_wraith_hoy.png",
+            "media_url": "/static/avatars/killers/the_wraith_hoy.webp",
             "metadata": {
                 "title": "The Gentle Bell Chimer",
                 "tagline": "Wears vibrant floral shorts and plays steel drums by the bonfire.",
@@ -1065,7 +1065,7 @@
             "name": "Claudette (Island Botanist)",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/claudette_morel_hoy.png",
+            "media_url": "/static/avatars/survivors/claudette_morel_hoy.webp",
             "metadata": {
                 "title": "The Tropical Herbalist",
                 "tagline": "Crafts hibiscus flower crowns and aloe vera sun lotions.",
@@ -1297,7 +1297,7 @@
             "name": "Dwight (Lifeguard)",
             "role": "Survivor",
             "gender": "male",
-            "media_url": "/static/avatars/survivors/dwight_fairfield_hoy.png",
+            "media_url": "/static/avatars/survivors/dwight_fairfield_hoy.webp",
             "metadata": {
                 "title": "The Anxious Lifeguard",
                 "tagline": "Whistle around his neck, oversized sunglasses, and trying his very best.",
@@ -1529,7 +1529,7 @@
             "name": "The Trickster (Summer Idol)",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/the_trickster_hoy.png",
+            "media_url": "/static/avatars/killers/the_trickster_hoy.webp",
             "metadata": {
                 "title": "The K-Pop Poolside Sensation",
                 "tagline": "Neon sunglasses, open tropical silk shirt, and unlimited charisma.",
@@ -1761,7 +1761,7 @@
             "name": "The Entity (Island Spirit)",
             "role": "Killer",
             "gender": "monster_other",
-            "media_url": "/static/avatars/killers/the_ocean_hoy.png",
+            "media_url": "/static/avatars/killers/the_ocean_hoy.webp",
             "metadata": {
                 "title": "The Eldritch Island Sovereign",
                 "tagline": "Sparkling bioluminescent waves and cosmic tentacle embraces.",

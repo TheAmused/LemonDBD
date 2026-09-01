@@ -62,7 +62,8 @@ export function getCharacterAvatarUrl(
     const role = (perk.category as RoleCategory) || fallbackRole || 'Survivor';
     const subDir = role === 'Survivor' ? 'survivors' : 'killers';
     const sanitized = sanitizeCharacterNameForAvatar(perk.character);
-    rawPath = `avatars/${subDir}/${sanitized}.png`;
+    // Backend writes character avatars as WebP (see backend/app/services/image_conversion.py).
+    rawPath = `avatars/${subDir}/${sanitized}.webp`;
   }
 
   if (!rawPath) return null;

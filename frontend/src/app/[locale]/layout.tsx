@@ -5,6 +5,7 @@ import { UmamiScript } from '@/components/UmamiScript';
 import { i18n, type Locale } from '@/i18n/config';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
+import { ImagePreloadProvider } from '@/components/ImagePreloadProvider';
 import '@/app/globals.css';
 
 export const metadata: Metadata = {
@@ -42,7 +43,9 @@ export default async function RootLayout({
         <UmamiScript />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
-            {children}
+            <ImagePreloadProvider>
+              {children}
+            </ImagePreloadProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

@@ -119,7 +119,7 @@ class ScraperService:
                     short_name=s_fn,
                     category=role,
                     avatar_url=src,
-                    avatar_local_path=f"avatars/{role_folder}/{s_fn}.png",
+                    avatar_local_path=f"avatars/{role_folder}/{s_fn}.webp",
                     release_number=rel_num,
                     code_prefix=f"{role[0]}{rel_num:02d}",
                 )

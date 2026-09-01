@@ -117,7 +117,7 @@ class Character(Base):
                 "name": power_name,
                 "description": power_desc,
                 "icon_url": self.power_icon_url or "",
-                "icon_local_path": f"icons/powers/{p_clean}.png" if p_clean else "",
+                "icon_local_path": f"icons/powers/{p_clean}.webp" if p_clean else "",
                 "movement_speed": self.movement_speed or "4.6 m/s (115%)",
                 "terror_radius": self.terror_radius or "32 m",
                 "terror_radius_meters": self.terror_radius_meters or 32,

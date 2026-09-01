@@ -18,6 +18,7 @@ import {
   Award,
   Filter,
 } from 'lucide-react';
+import { DbdSpinner } from '@/components/DbdSpinner';
 import type { Dictionary } from '@/locales/types';
 
 export interface Build {
@@ -334,13 +335,16 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
 
       {/* Build Cards Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="status" aria-label={dict?.app?.loadingPerks || ''}>
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="h-64 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800"
-            />
-          ))}
+        <div className="w-full py-12 flex items-center justify-center">
+          <DbdSpinner
+            size="responsive"
+            layout="inline"
+            accent="emerald"
+            needleSpeed={1.2}
+            label={dict?.app?.loadingPerks || 'Assembling Build Vault...'}
+            sublabel="Calibrating 4-perk synergized loadouts"
+            dict={dict}
+          />
         </div>
       ) : builds.length === 0 ? (
         <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center">

@@ -165,7 +165,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         alt={name}
         className="h-full w-full object-cover object-top"
         onError={(e) => {
-          (e.target as HTMLImageElement).src = `${backendBase}/static/avatars/survivors/sable_ward.png`;
+          (e.target as HTMLImageElement).src = `${backendBase}/static/avatars/survivors/sable_ward.webp`;
         }}
       />
     </div>

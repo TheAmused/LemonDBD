@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Shield, Skull, Sparkles } from 'lucide-react';
+import { DbdSpinner } from '@/components/DbdSpinner';
 
 interface MetricItem {
   owned: number;
@@ -26,28 +27,15 @@ interface UserMetricsGridProps {
   dict?: Dictionary;
 }
 
-/** Layout-matched loading placeholder for the three metric cards. */
-export const UserMetricsGridSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => (
+/** DBD Skill Check Framer Motion Loading Spinner for metric cards. */
+export const UserMetricsGridSkeleton: React.FC<{ className?: string; dict?: Dictionary | null }> = ({ className = '', dict }) => (
   <div
     role="status"
     aria-busy="true"
-    className={`grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5 w-full animate-pulse ${className}`}
+    aria-label={dict?.characterDetail?.loading || dict?.app?.loading || undefined}
+    className={`w-full min-h-[120px] flex items-center justify-center p-4 rounded-2xl border border-slate-800/80 bg-slate-900/60 ${className}`}
   >
-    {[0, 1, 2].map((i) => (
-      <div
-        key={i}
-        className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 sm:p-5 space-y-3 h-[104px] sm:h-[116px]"
-      >
-        <div className="flex items-center gap-2.5">
-          <div className="h-9 w-9 rounded-xl bg-slate-800/80" />
-          <div className="space-y-1.5">
-            <div className="h-2.5 w-16 rounded bg-slate-800/70" />
-            <div className="h-3.5 w-12 rounded bg-slate-800/70" />
-          </div>
-        </div>
-        <div className="h-2 w-full rounded-full bg-slate-950" />
-      </div>
-    ))}
+    <DbdSpinner size="sm" layout="inline" accent="amber" dict={dict} />
   </div>
 );
 

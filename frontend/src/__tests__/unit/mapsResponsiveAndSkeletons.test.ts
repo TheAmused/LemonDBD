@@ -10,8 +10,8 @@ import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
 
-describe('Maps: Skeletons & Zero-CLS Layout Integrity', () => {
-  it('MapsPageSkeleton renders with role="status", aria-busy="true", and 2-to-6 column realm grid placeholders', () => {
+describe('Maps: Skeletons & DBD Framer Motion Spinner Integrity', () => {
+  it('MapsPageSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(
       React.createElement(MapsPageSkeleton, {
         dict: enDict,
@@ -20,8 +20,7 @@ describe('Maps: Skeletons & Zero-CLS Layout Integrity', () => {
 
     assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
-    assert.ok(html.includes('grid-cols-2'), 'Must contain grid-cols-2 base layout');
-    assert.ok(html.includes('lg:grid-cols-6'), 'Must contain lg:grid-cols-6 responsive layout');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Maps skeleton must render DBD Skill Check SVG');
   });
 });
 

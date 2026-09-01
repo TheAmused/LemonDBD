@@ -14,29 +14,20 @@ import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
 
-describe('Characters: Skeletons & Zero-CLS Layout Integrity', () => {
-  it('CharactersGridSkeleton renders with role="status", aria-busy="true", and responsive grid breakpoints', () => {
+describe('Characters: Skeletons & DBD Framer Motion Spinner Integrity', () => {
+  it('CharactersGridSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(
       React.createElement(CharactersGridSkeleton, {
-        count: 12,
         dict: enDict,
       })
     );
 
     assert.ok(html.includes('role="status"'), 'Skeleton should have role="status"');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should indicate busy state');
-    assert.ok(
-      html.includes('grid-cols-2') &&
-        html.includes('sm:grid-cols-3') &&
-        html.includes('md:grid-cols-4') &&
-        html.includes('lg:grid-cols-5') &&
-        html.includes('xl:grid-cols-6'),
-      'Roster grid skeleton must match full responsive breakpoint matrix'
-    );
-    assert.ok(html.includes('aspect-[3/4]'), 'Character cards must enforce 3:4 aspect ratio');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Grid skeleton must render DBD Skill Check SVG');
   });
 
-  it('CharacterDetailSkeleton renders all subpage sections with zero layout shift geometry', () => {
+  it('CharacterDetailSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(
       React.createElement(CharacterDetailSkeleton, {
         dict: enDict,
@@ -44,9 +35,8 @@ describe('Characters: Skeletons & Zero-CLS Layout Integrity', () => {
     );
 
     assert.ok(html.includes('role="status"'), 'Detail skeleton should have status role');
-    assert.ok(html.includes('aspect-[3/4]'), 'Hero avatar skeleton must reserve 3:4 aspect space');
-    assert.ok(html.includes('grid-cols-1 lg:grid-cols-12'), 'Hero section must match 12-column grid layout');
-    assert.ok(html.includes('md:grid-cols-3'), 'Teachable perks section must reserve 3-column layout');
+    assert.ok(html.includes('aria-busy="true"'), 'Detail skeleton should indicate busy state');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Detail skeleton must render DBD Skill Check SVG');
   });
 });
 

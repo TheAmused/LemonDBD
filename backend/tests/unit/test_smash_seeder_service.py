@@ -94,10 +94,12 @@ class TestSmashSeederService:
     def test_service_get_rosters(self, db_session: Session) -> None:
         seed_smash_rosters()
         service = SmashOrPassService()
-        rosters = service.get_rosters(active_only=True)
+        active_rosters = service.get_rosters(active_only=True)
+        all_rosters = service.get_rosters(active_only=False)
 
-        assert len(rosters) == 6
-        canon = next((r for r in rosters if r["slug"] == "canon"), None)
+        assert len(active_rosters) == 2
+        assert len(all_rosters) == 6
+        canon = next((r for r in active_rosters if r["slug"] == "canon"), None)
         assert canon is not None
         assert canon["entity_count"] == 98
         assert canon["total_votes"] == 0
@@ -159,7 +161,7 @@ class TestSmashSeederService:
         res1 = service.cast_vote(
             character_slug="ada_wong",
             vote_type="smash",
-            session_id="user_sess_1",
+            user_id=1,
             edition="canon",
         )
         assert res1["stat"]["smash_count"] == 1
@@ -170,7 +172,7 @@ class TestSmashSeederService:
         res2 = service.cast_vote(
             character_slug="ada_wong",
             vote_type="pass",
-            session_id="user_sess_2",
+            user_id=2,
             edition="canon",
         )
         assert res2["stat"]["smash_count"] == 1
@@ -181,7 +183,7 @@ class TestSmashSeederService:
         res3 = service.cast_vote(
             character_slug="ada_wong",
             vote_type="super_smash",
-            session_id="user_sess_3",
+            user_id=3,
             edition="canon",
         )
         assert res3["stat"]["smash_count"] == 1
@@ -193,7 +195,7 @@ class TestSmashSeederService:
         res4 = service.cast_vote(
             character_slug="ada_wong",
             vote_type="pass",
-            session_id="user_sess_1",
+            user_id=1,
             edition="canon",
         )
         assert res4["stat"]["smash_count"] == 0
@@ -238,30 +240,30 @@ class TestSmashSeederService:
             service.cast_vote(
                 character_slug="ada_wong",
                 vote_type="smash",
-                session_id=f"tier_sess_ada_{i}",
+                user_id=100 + i,
             )
 
         for i in range(7):
             service.cast_vote(
                 character_slug="sable_ward",
                 vote_type="smash",
-                session_id=f"tier_sess_sable_s_{i}",
+                user_id=200 + i,
             )
         for i in range(3):
             service.cast_vote(
                 character_slug="sable_ward",
                 vote_type="pass",
-                session_id=f"tier_sess_sable_p_{i}",
+                user_id=300 + i,
             )
 
-        service.cast_vote(character_slug="feng_min", vote_type="smash", session_id="f1")
-        service.cast_vote(character_slug="feng_min", vote_type="pass", session_id="f2")
+        service.cast_vote(character_slug="feng_min", vote_type="smash", user_id=401)
+        service.cast_vote(character_slug="feng_min", vote_type="pass", user_id=402)
 
         for i in range(4):
             service.cast_vote(
                 character_slug="kate_denson",
                 vote_type="pass",
-                session_id=f"tier_sess_kate_{i}",
+                user_id=500 + i,
             )
 
         leaderboard = service.get_leaderboard(roster_slug="canon", limit=10)
@@ -290,6 +292,7 @@ class TestSmashSeederService:
         seed_smash_rosters()
         service = SmashOrPassService()
 
+        # Guest session vote
         service.cast_vote(
             character_slug="ada_wong", vote_type="smash", session_id="sess_reset_me"
         )
@@ -297,17 +300,11 @@ class TestSmashSeederService:
             character_slug="sable_ward", vote_type="pass", session_id="sess_reset_me"
         )
 
-        ada_stat = service.get_character_stat("ada_wong")
-        assert ada_stat["smash_count"] == 1
-
         reset_res = service.reset_session_votes(session_id="sess_reset_me")
         assert reset_res["status"] == "success"
         assert reset_res["reset_count"] == 2
 
-        ada_stat_after = service.get_character_stat("ada_wong")
-        assert ada_stat_after["smash_count"] == 0
-        assert ada_stat_after["total_votes"] == 0
-
+        # User vote (mutates global stats)
         service.cast_vote(character_slug="ada_wong", vote_type="super_smash", user_id=99)
         assert service.get_character_stat("ada_wong")["super_smash_count"] == 1
 
@@ -341,7 +338,7 @@ class TestSmashSeederService:
         service = SmashOrPassService()
 
         editions = service.get_editions()
-        assert len(editions) >= 6
+        assert len(editions) >= 2
 
         canon_chars = service.get_characters_with_stats(edition="canon")
         assert len(canon_chars) == 98

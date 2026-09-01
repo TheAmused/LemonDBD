@@ -13,6 +13,34 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 const SESSION_KEY = 'smash_session_id';
 
 /**
+ * Retrieves the stored JWT authentication token from localStorage if available.
+ */
+function getAuthToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    return localStorage.getItem('lemondbd_token') || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Constructs universal request headers attaching both persistent Session ID and Bearer Auth Token.
+ */
+function getRequestHeaders(customHeaders: Record<string, string> = {}): Record<string, string> {
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    'X-Session-ID': getSessionId(),
+    ...customHeaders,
+  };
+  const token = getAuthToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+/**
  * Retrieves the persistent unique session ID for the current client,
  * or generates and stores a new one in localStorage if not already present.
  */
@@ -60,10 +88,7 @@ export async function fetchRosters(activeOnly: boolean = true): Promise<RosterIt
   const url = `${backendBase}/api/v1/smash-or-pass/rosters?active_only=${activeOnly}`;
   const response = await fetch(url, {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'X-Session-ID': getSessionId(),
-    },
+    headers: getRequestHeaders(),
     cache: 'no-store',
   });
   const data = await handleResponse<{ data: RosterItem[]; count: number }>(response);
@@ -89,10 +114,7 @@ export async function fetchRosterFeed(
   const url = `${backendBase}/api/v1/smash-or-pass/rosters/${encodeURIComponent(slug)}/feed?${params.toString()}`;
   const response = await fetch(url, {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'X-Session-ID': sessionId,
-    },
+    headers: getRequestHeaders(),
     cache: 'no-store',
   });
 
@@ -122,11 +144,9 @@ export async function castVote(
 
   const response = await fetch(`${backendBase}/api/v1/smash-or-pass/vote`, {
     method: 'POST',
-    headers: {
+    headers: getRequestHeaders({
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'X-Session-ID': sessionId,
-    },
+    }),
     body: JSON.stringify(payload),
   });
 
@@ -150,10 +170,7 @@ export async function fetchLeaderboard(
   const url = `${backendBase}/api/v1/smash-or-pass/rosters/${encodeURIComponent(slug)}/leaderboard?${params.toString()}`;
   const response = await fetch(url, {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'X-Session-ID': getSessionId(),
-    },
+    headers: getRequestHeaders(),
     cache: 'no-store',
   });
 
@@ -179,11 +196,9 @@ export async function resetSessionVotes(
 
   const response = await fetch(`${backendBase}/api/v1/smash-or-pass/session/reset`, {
     method: 'POST',
-    headers: {
+    headers: getRequestHeaders({
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'X-Session-ID': sessionId,
-    },
+    }),
     body: JSON.stringify(payload),
   });
 
@@ -211,11 +226,9 @@ export async function resetUserVotes(
 
   const response = await fetch(`${backendBase}/api/v1/smash-or-pass/user-votes/reset`, {
     method: 'POST',
-    headers: {
+    headers: getRequestHeaders({
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'X-Session-ID': getSessionId(),
-    },
+    }),
     body: JSON.stringify(payload),
   });
 
@@ -249,3 +262,71 @@ export async function fetchDynamicTranslations(locale: string): Promise<Record<s
     return {};
   }
 }
+
+/**
+ * Fetch all votes cast by the current user/session for stats persistence and hydration.
+ */
+export async function fetchUserVotes(
+  slug: string = 'canon'
+): Promise<Array<{ character_slug: string; vote_type: 'smash' | 'pass' | 'super_smash'; created_at?: string; entity?: any }>> {
+  const backendBase = getBackendBaseUrl();
+  const sessionId = getSessionId();
+  const params = new URLSearchParams();
+  params.set('edition', slug);
+  params.set('session_id', sessionId);
+
+  try {
+    const response = await fetch(
+      `${backendBase}/api/v1/smash-or-pass/user-votes?${params.toString()}`,
+      {
+        method: 'GET',
+        headers: getRequestHeaders(),
+        cache: 'no-store',
+      }
+    );
+    const data = await handleResponse<{ data: any[]; count: number }>(response);
+    return data.data || [];
+  } catch (err) {
+    console.debug('Failed to fetch user votes:', err);
+    return [];
+  }
+}
+
+/**
+ * Synchronize and migrate guest session votes into an authenticated user account.
+ */
+export async function syncSessionVotes(
+  slug?: string
+): Promise<{ status: string; synced_count: number; synced_votes?: any[] }> {
+  const backendBase = getBackendBaseUrl();
+  const sessionId = getSessionId();
+
+  const payload: Record<string, any> = {
+    session_id: sessionId,
+  };
+  if (slug) {
+    payload.roster_slug = slug;
+  }
+
+  try {
+    const response = await fetch(`${backendBase}/api/v1/smash-or-pass/sync-session`, {
+      method: 'POST',
+      headers: getRequestHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify(payload),
+    });
+    const result = await handleResponse<{ data?: { status: string; synced_count: number; synced_votes?: any[] }; status: string; synced_count?: number }>(response);
+    if (result.data) return result.data;
+    return {
+      status: result.status || 'success',
+      synced_count: result.synced_count ?? 0,
+    };
+  } catch (err) {
+    console.debug('Failed to sync session votes:', err);
+    return { status: 'error', synced_count: 0 };
+  }
+}
+
+
+

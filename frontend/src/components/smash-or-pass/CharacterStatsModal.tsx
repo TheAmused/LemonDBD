@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/smash-or-pass/CharacterStatsModal.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useMemo } from 'react';
 import {
@@ -12,12 +11,13 @@ import {
   Quote,
   CheckCircle2,
   AlertTriangle,
-  X,
   ThumbsDown,
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { EntityMetadata, EntityStatItem } from '@/types/smashOrPass';
+import { Modal } from '@/components/common/Modal';
+import type { Dictionary } from '@/locales/types';
 
 interface CharacterStatsModalProps {
   isOpen: boolean;
@@ -25,7 +25,7 @@ interface CharacterStatsModalProps {
   character: any;
   stats?: EntityStatItem;
   locale?: string;
-  dict?: Dictionary;
+  dict?: Dictionary | any;
 }
 
 export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
@@ -37,6 +37,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
   dict,
 }) => {
   const backendBase = getBackendBaseUrl();
+  const rawSmashDict = dict?.smashOrPass;
 
   const slug = rawCharacter?.slug || rawCharacter?.character_slug || rawCharacter?.id || '';
 
@@ -58,46 +59,16 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     locMeta.title ||
     meta.title ||
     meta.archetype ||
-    rawCharacter?.title ||
-    (currentLoc === 'pl' ? (isSurvivor ? 'Ocalały we Mgle' : 'Zabójca we Mgle') : role);
+    locMeta.tagline ||
+    meta.tagline ||
+    role;
 
-  const bio =
-    locMeta.bio ||
-    meta.bio ||
-    meta.backstory ||
-    rawCharacter?.bio ||
-    (currentLoc === 'pl'
-      ? `${name} to wyrazista postać we Mgle, gotowa na wszystko w obliczu próby.`
-      : 'A formidable candidate in the Fog.');
-
-  const quote = locMeta.quote || meta.lore_quote || meta.quote || rawCharacter?.quote || `"${name}"`;
-
-  const greenFlags: string[] =
-    locMeta.green_flags ||
-    meta.green_flags ||
-    meta.greenFlags ||
-    rawCharacter?.greenFlags ||
-    (currentLoc === 'pl' ? ['Lojalny towarzysz w próbie', 'Instynkt przetrwania'] : ['Loyal trial companion']);
-
-  const redFlags: string[] =
-    locMeta.red_flags ||
-    meta.red_flags ||
-    meta.redFlags ||
-    rawCharacter?.redFlags ||
-    (currentLoc === 'pl' ? ['Nieprzewidywalny we mgle'] : ['Unpredictable in the fog']);
-
-  const turnOn =
-    locMeta.turn_on ||
-    meta.turn_on ||
-    meta.turnOn ||
-    rawCharacter?.turnOn ||
-    (currentLoc === 'pl' ? 'Odwaga i lojalność pod presją' : 'Courage and loyalty under pressure');
-
-  const dealbreaker =
-    locMeta.dealbreaker ||
-    meta.dealbreaker ||
-    rawCharacter?.dealbreaker ||
-    (currentLoc === 'pl' ? 'Zdrada i brak zaufania' : 'Betrayal of trust');
+  const bio = locMeta.bio || meta.bio || locMeta.description || meta.description || '';
+  const quote = locMeta.quote || meta.quote || locMeta.lore_quote || meta.lore_quote || '';
+  const greenFlags = locMeta.green_flags || meta.green_flags || (meta as any).greenFlags || [];
+  const redFlags = locMeta.red_flags || meta.red_flags || (meta as any).redFlags || [];
+  const turnOn = locMeta.turn_on || meta.turn_on || (meta as any).turnOn || '';
+  const dealbreaker = locMeta.dealbreaker || meta.dealbreaker || '';
 
   const avatarSrc =
     rawCharacter?.media_url?.startsWith('http') || rawCharacter?.media_url?.startsWith('/static')
@@ -112,26 +83,18 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           isSurvivor
         );
 
-  // Community Votes calculation
-  const smashCount = stats?.smash_count ?? 0;
-  const passCount = stats?.pass_count ?? 0;
-  const totalVotes = stats?.total_votes ?? (smashCount + passCount);
-  const effectiveTotal = totalVotes > 0 ? totalVotes : 1;
-  const smashRate =
-    stats?.smash_rate !== undefined
-      ? stats.smash_rate
-      : totalVotes > 0
-      ? Math.round((smashCount / totalVotes) * 1000) / 10
-      : 50;
+  const totalVotes = stats?.total_votes ?? rawCharacter?.total_votes ?? 0;
+  const smashCount = stats?.smash_count ?? rawCharacter?.smash_count ?? 0;
+  const passCount = stats?.pass_count ?? rawCharacter?.pass_count ?? 0;
+  const smashRate = stats?.smash_rate ?? rawCharacter?.smash_rate ?? 0;
 
-  const smashPct = Math.round((smashCount / effectiveTotal) * 100);
-  const passPct = Math.max(0, 100 - smashPct);
+  const smashPct = totalVotes > 0 ? Math.round((smashCount / totalVotes) * 100) : 50;
+  const passPct = 100 - smashPct;
 
-  // Dynamic Consensus Rating Tiers (God Tier, Fatal Attraction, Friendzone, Eldritch Void)
   const tierInfo = useMemo(() => {
     if (smashRate >= 85) {
       return {
-        tier: dict?.smashOrPass?.tiers?.godTier || 'God Tier',
+        tier: rawSmashDict?.tiers?.godTier || 'God Tier',
         color: 'text-[#ffd166]',
         bg: 'bg-[#ffd166]/15 border-[#ffd166]/40',
         glow: 'shadow-[0_0_20px_rgba(255,209,102,0.35)]',
@@ -140,7 +103,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     }
     if (smashRate >= 65) {
       return {
-        tier: dict?.smashOrPass?.tiers?.fatalAttraction || 'Fatal Attraction',
+        tier: rawSmashDict?.tiers?.fatalAttraction || 'Fatal Attraction',
         color: 'text-[#ff0055]',
         bg: 'bg-[#ff0055]/15 border-[#ff0055]/40',
         glow: 'shadow-[0_0_20px_rgba(255,0,85,0.35)]',
@@ -149,7 +112,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     }
     if (smashRate >= 40) {
       return {
-        tier: dict?.smashOrPass?.tiers?.friendzone || 'Friendzone',
+        tier: rawSmashDict?.tiers?.friendzone || 'Friendzone',
         color: 'text-[#00f5d4]',
         bg: 'bg-[#00f5d4]/15 border-[#00f5d4]/40',
         glow: 'shadow-[0_0_20px_rgba(0,245,212,0.35)]',
@@ -157,214 +120,195 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
       };
     }
     return {
-      tier: dict?.smashOrPass?.tiers?.eldritchVoid || 'Eldritch Void',
+      tier: rawSmashDict?.tiers?.eldritchVoid || 'Eldritch Void',
       color: 'text-purple-400',
       bg: 'bg-purple-950/40 border-purple-500/40',
       glow: 'shadow-[0_0_20px_rgba(168,85,247,0.35)]',
       icon: <Skull className="h-4 w-4 text-purple-400" />,
     };
-  }, [smashRate, dict]);
+  }, [smashRate, rawSmashDict]);
 
-  if (!isOpen || !rawCharacter) return null;
-
-  // Localized UI strings
   const roleLabel = isSurvivor
-    ? dict?.smashOrPass?.filters?.survivors || (currentLoc === 'pl' ? 'Ocalały' : 'Survivor')
-    : dict?.smashOrPass?.filters?.killers || (currentLoc === 'pl' ? 'Zabójca' : 'Killer');
+    ? rawSmashDict?.filters?.survivors || 'Survivor'
+    : rawSmashDict?.filters?.killers || 'Killer';
 
-  const communityConsensusLabel = currentLoc === 'pl' ? 'Ocena Społeczności' : 'Community Consensus';
-  const smashRateLabel = dict?.smashOrPass?.statsDetail?.communitySmashRate || (currentLoc === 'pl' ? 'Wskaźnik Smash' : 'Smash Rate');
-  const smashesLabel = dict?.smashOrPass?.statsDetail?.smashCount || (currentLoc === 'pl' ? 'Smashe' : 'Smashes');
-  const passesLabel = dict?.smashOrPass?.statsDetail?.passCount || (currentLoc === 'pl' ? 'Passy' : 'Passes');
-  const totalVotesLabel = dict?.smashOrPass?.statsDetail?.totalVotes || (currentLoc === 'pl' ? 'Liczba Głosów' : 'Total Votes');
-  const globalRankLabel = dict?.smashOrPass?.statsDetail?.rank || (currentLoc === 'pl' ? 'Pozycja w Rankingu' : 'Global Rank');
-  const loreQuoteLabel = dict?.smashOrPass?.loreLabels?.signatureQuote || (currentLoc === 'pl' ? 'Charakterystyczny Cytat' : 'Lore Quote');
-  const loreProfileLabel = currentLoc === 'pl' ? 'Profil i Osobowość Kandydata' : 'Candidate Lore & Personality';
-  const greenFlagsLabel = dict?.smashOrPass?.loreLabels?.greenFlag || (currentLoc === 'pl' ? 'Zielone Flagi' : 'Green Flags');
-  const redFlagsLabel = dict?.smashOrPass?.loreLabels?.redFlag || (currentLoc === 'pl' ? 'Czerwone Flagi' : 'Red Flags');
-  const turnOnLabel = currentLoc === 'pl' ? 'Na Plus:' : 'Turn On:';
-  const dealbreakerLabel = currentLoc === 'pl' ? 'Na Minus:' : 'Dealbreaker:';
-  const closeLabel = dict?.smashOrPass?.close || (currentLoc === 'pl' ? 'Zamknij' : 'Close');
+  const communityConsensusLabel = rawSmashDict?.communityConsensus || 'Community Consensus';
+  const smashRateLabel = rawSmashDict?.statsDetail?.communitySmashRate || rawSmashDict?.statsDetail?.smashRate || 'Smash Rate';
+  const smashesLabel = rawSmashDict?.statsDetail?.smashCount || 'Smashes';
+  const passesLabel = rawSmashDict?.statsDetail?.passCount || 'Passes';
+  const totalVotesLabel = rawSmashDict?.statsDetail?.totalVotes || 'Total Votes';
+  const globalRankLabel = rawSmashDict?.statsDetail?.rank || 'Global Rank';
+  const loreQuoteLabel = rawSmashDict?.loreLabels?.signatureQuote || 'Signature Quote';
+  const loreProfileLabel = rawSmashDict?.loreLabels?.bio || 'Bio';
+  const greenFlagsLabel = rawSmashDict?.loreLabels?.greenFlag || 'Green Flags';
+  const redFlagsLabel = rawSmashDict?.loreLabels?.redFlag || 'Red Flags';
+  const turnOnLabel = rawSmashDict?.loreLabels?.turn_on || 'Turn On:';
+  const dealbreakerLabel = rawSmashDict?.loreLabels?.dealbreaker || 'Dealbreaker:';
+  const percentSign = rawSmashDict?.percentSign || '%';
+
+  const roleBadge = (
+    <span
+      className={`text-[10px] font-black uppercase font-mono px-2 py-0.5 rounded-lg border ${
+        isSurvivor
+          ? 'bg-[#00f5d4]/15 text-[#00f5d4] border-[#00f5d4]/40 shadow-[0_0_8px_rgba(0,245,212,0.25)]'
+          : 'bg-[#ff0055]/15 text-pink-300 border-[#ff0055]/40 shadow-[0_0_8px_rgba(255,0,85,0.25)]'
+      }`}
+    >
+      {roleLabel}
+    </span>
+  );
+
+  const headerAvatar = (
+    <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-2xl overflow-hidden border border-pink-500/40 shrink-0 bg-black shadow-md">
+      <img
+        src={avatarSrc}
+        alt={name}
+        className="h-full w-full object-cover object-top"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = `${backendBase}/static/avatars/survivors/sable_ward.png`;
+        }}
+      />
+    </div>
+  );
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="stats-modal-title"
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090b]/85 backdrop-blur-xl animate-in fade-in duration-200"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="xl"
+      title={name}
+      icon={headerAvatar}
+      badge={roleBadge}
+      centerTitle={true}
+      className="h-[88vh] max-h-[850px] min-h-[480px]"
+      bodyClassName="flex flex-col"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-xl max-h-[90vh] overflow-hidden rounded-3xl border border-pink-500/30 bg-[#09090b] shadow-2xl flex flex-col text-zinc-100 font-mono"
-      >
-        {/* Header Ribbon */}
-        <div className="flex items-center justify-between border-b border-zinc-800 p-4 sm:px-6 bg-zinc-950/80 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="relative h-12 w-12 rounded-2xl overflow-hidden border border-pink-500/40 shrink-0 bg-black">
-              <img
-                src={avatarSrc}
-                alt={name}
-                className="h-full w-full object-cover object-top"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    'https://static.wikia.nocookie.net/deadbydaylight_gamepedia_en/images/5/53/IconHelpLoading_players.png/revision/latest';
-                }}
-              />
+      {/* Scrollable Dossier Content */}
+      <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar">
+        {/* 1. Consensus Tier Badge & Global Smash Rate Bar */}
+        <div className={`p-4 rounded-2xl border ${tierInfo.bg} ${tierInfo.glow} flex items-center justify-between`}>
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black/40 border border-white/10">
+              {tierInfo.icon}
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h2 id="stats-modal-title" className="text-base sm:text-lg font-black tracking-tight text-white">
-                  {name}
-                </h2>
-                <span
-                  className={`text-[9px] font-black uppercase px-2 py-0.5 rounded border ${
-                    isSurvivor
-                      ? 'bg-[#00f5d4]/10 text-[#00f5d4] border-[#00f5d4]/30'
-                      : 'bg-[#ff0055]/10 text-[#ff0055] border-[#ff0055]/30'
-                  }`}
-                >
-                  {roleLabel}
-                </span>
-              </div>
-              <p className="text-xs text-zinc-400 italic line-clamp-1">{title}</p>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 block font-mono">
+                {communityConsensusLabel}
+              </span>
+              <span className={`text-sm font-black font-mono ${tierInfo.color}`}>
+                {tierInfo.tier}
+              </span>
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={dict?.smashOrPass?.close || 'Close'}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition-colors cursor-pointer"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <div className="text-right font-mono">
+            <span className="text-[10px] text-zinc-400 block">{smashRateLabel}</span>
+            <span className="text-xl font-black text-[#ff0055] flex items-center gap-1 justify-end">
+              <Heart className="h-4 w-4 fill-[#ff0055]" /> {smashRate}{percentSign}
+            </span>
+          </div>
         </div>
 
-        {/* Scrollable Dossier Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
-          {/* 1. Consensus Tier Badge & Global Smash Rate Bar */}
-          <div className={`p-4 rounded-2xl border ${tierInfo.bg} ${tierInfo.glow} flex items-center justify-between`}>
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black/40 border border-white/10">
-                {tierInfo.icon}
-              </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 block">
-                  {communityConsensusLabel}
-                </span>
-                <span className={`text-sm font-black ${tierInfo.color}`}>
-                  {tierInfo.tier}
-                </span>
-              </div>
-            </div>
-
-            <div className="text-right">
-              <span className="text-[10px] text-zinc-400 block">{smashRateLabel}</span>
-              <span className="text-xl font-black text-[#ff0055] flex items-center gap-1 justify-end">
-                <Heart className="h-4 w-4 fill-[#ff0055]" /> {smashRate}{dict?.smashOrPass?.percentSign || '%'}
-              </span>
-            </div>
+        {/* 2. Vote Breakdown Progress Bar */}
+        <div className="space-y-1.5 p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800 font-mono">
+          <div className="flex justify-between text-xs font-bold">
+            <span className="flex items-center gap-1 text-[#ff0055]">
+              <Heart className="h-3.5 w-3.5 fill-[#ff0055]" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}{percentSign})
+            </span>
+            <span className="flex items-center gap-1 text-zinc-400">
+              <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} {passesLabel} ({passPct}{percentSign})
+            </span>
           </div>
-
-          {/* 2. Vote Breakdown Progress Bar */}
-          <div className="space-y-1.5 p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800">
-            <div className="flex justify-between text-xs font-bold">
-              <span className="flex items-center gap-1 text-[#ff0055]">
-                <Heart className="h-3.5 w-3.5 fill-[#ff0055]" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}{dict?.smashOrPass?.percentClose || '%)'}
-              </span>
-              <span className="flex items-center gap-1 text-zinc-400">
-                <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} {passesLabel} ({passPct}{dict?.smashOrPass?.percentClose || '%)'}
-              </span>
-            </div>
-            <div className="h-3 w-full bg-zinc-800 rounded-full overflow-hidden flex">
-              <div
-                style={{ width: `${smashPct}%` }}
-                className="h-full bg-gradient-to-r from-rose-600 to-[#ff0055] transition-all duration-500"
-              />
-              <div
-                style={{ width: `${passPct}%` }}
-                className="h-full bg-zinc-700 transition-all duration-500"
-              />
-            </div>
-            <div className="flex justify-between text-[10px] text-zinc-500 pt-1">
-              <span>{totalVotesLabel}: {totalVotes.toLocaleString()}</span>
-              {stats?.rank && <span>{globalRankLabel}: #{stats.rank}</span>}
-            </div>
+          <div className="h-3 w-full bg-zinc-800 rounded-full overflow-hidden flex shadow-inner">
+            <div
+              style={{ width: `${smashPct}%` }}
+              className="h-full bg-gradient-to-r from-rose-600 to-[#ff0055] transition-all duration-500"
+            />
+            <div
+              style={{ width: `${passPct}%` }}
+              className="h-full bg-zinc-700 transition-all duration-500"
+            />
           </div>
+          <div className="flex justify-between text-[10px] text-zinc-500 pt-1">
+            <span>{totalVotesLabel}: {totalVotes.toLocaleString()}</span>
+            {stats?.rank && <span>{globalRankLabel}: #{stats.rank}</span>}
+          </div>
+        </div>
 
-          {/* 3. Lore Quote */}
-          {quote && (
-            <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800 space-y-1">
-              <div className="flex items-center gap-1 text-amber-400 text-[10px] uppercase font-bold">
-                <Quote className="h-3.5 w-3.5" />
-                <span>{loreQuoteLabel}</span>
-              </div>
-              <p className="text-xs text-amber-100/90 font-serif italic leading-relaxed">
-                {quote}
-              </p>
+        {/* 3. Lore Quote */}
+        {quote && (
+          <div className="p-3.5 rounded-2xl bg-zinc-950/60 border border-zinc-800 space-y-1">
+            <div className="flex items-center gap-1 text-amber-400 text-[10px] uppercase font-bold font-mono">
+              <Quote className="h-3.5 w-3.5" />
+              <span>{loreQuoteLabel}</span>
             </div>
-          )}
+            <p className="text-xs text-amber-100/90 font-serif italic leading-relaxed">
+              {quote}
+            </p>
+          </div>
+        )}
 
-          {/* 4. Bio & Lore Profile */}
+        {/* 4. Bio Profile */}
+        {bio && (
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 font-mono">
               {loreProfileLabel}
             </span>
             <p className="text-xs text-zinc-300 leading-relaxed bg-zinc-950/70 p-3 rounded-2xl border border-zinc-800 font-sans">
               {bio}
             </p>
           </div>
+        )}
 
-          {/* 5. Green & Red Flags */}
+        {/* 5. Green & Red Flags */}
+        {(greenFlags.length > 0 || redFlags.length > 0) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div className="space-y-1.5 bg-emerald-950/30 border border-emerald-500/20 p-3 rounded-2xl">
-              <span className="flex items-center gap-1.5 font-black text-emerald-400 text-[11px] uppercase">
-                <CheckCircle2 className="h-3.5 w-3.5" /> {greenFlagsLabel}
-              </span>
-              <ul className="text-xs text-emerald-200/90 space-y-1 pl-4 list-disc font-sans">
-                {greenFlags.map((f: string, i: number) => (
-                  <li key={i}>{f}</li>
-                ))}
-              </ul>
-            </div>
+            {greenFlags.length > 0 && (
+              <div className="space-y-1.5 bg-emerald-950/30 border border-emerald-500/20 p-3 rounded-2xl">
+                <span className="flex items-center gap-1.5 font-black text-emerald-400 text-[11px] uppercase font-mono">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> {greenFlagsLabel}
+                </span>
+                <ul className="text-xs text-emerald-200/90 space-y-1 pl-4 list-disc font-sans">
+                  {greenFlags.map((f: string, i: number) => (
+                    <li key={i}>{f}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-            <div className="space-y-1.5 bg-rose-950/30 border border-rose-500/20 p-3 rounded-2xl">
-              <span className="flex items-center gap-1.5 font-black text-rose-400 text-[11px] uppercase">
-                <AlertTriangle className="h-3.5 w-3.5" /> {redFlagsLabel}
-              </span>
-              <ul className="text-xs text-rose-200/90 space-y-1 pl-4 list-disc font-sans">
-                {redFlags.map((f: string, i: number) => (
-                  <li key={i}>{f}</li>
-                ))}
-              </ul>
-            </div>
+            {redFlags.length > 0 && (
+              <div className="space-y-1.5 bg-rose-950/30 border border-rose-500/20 p-3 rounded-2xl">
+                <span className="flex items-center gap-1.5 font-black text-rose-400 text-[11px] uppercase font-mono">
+                  <AlertTriangle className="h-3.5 w-3.5" /> {redFlagsLabel}
+                </span>
+                <ul className="text-xs text-rose-200/90 space-y-1 pl-4 list-disc font-sans">
+                  {redFlags.map((f: string, i: number) => (
+                    <li key={i}>{f}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
+        )}
 
-          {/* 6. Turn On & Dealbreaker */}
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="bg-zinc-950/70 border border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
-              <span className="font-bold text-[#ff0055] uppercase text-[10px] block">{turnOnLabel}</span>
-              <p className="text-zinc-300 text-[11px] leading-tight font-sans">{turnOn}</p>
-            </div>
-            <div className="bg-zinc-950/70 border border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
-              <span className="font-bold text-[#ffd166] uppercase text-[10px] block">{dealbreakerLabel}</span>
-              <p className="text-zinc-300 text-[11px] leading-tight font-sans">{dealbreaker}</p>
-            </div>
+        {/* 6. Turn On & Dealbreaker */}
+        {(turnOn || dealbreaker) && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+            {turnOn && (
+              <div className="bg-zinc-950/70 border border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
+                <span className="font-bold text-[#ff0055] uppercase text-[10px] block">{turnOnLabel}</span>
+                <p className="text-zinc-300 text-[11px] leading-tight font-sans">{turnOn}</p>
+              </div>
+            )}
+            {dealbreaker && (
+              <div className="bg-zinc-950/70 border border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
+                <span className="font-bold text-[#ffd166] uppercase text-[10px] block">{dealbreakerLabel}</span>
+                <p className="text-zinc-300 text-[11px] leading-tight font-sans">{dealbreaker}</p>
+              </div>
+            )}
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex justify-end border-t border-zinc-800 p-3 sm:px-5 bg-zinc-950/90 shrink-0">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-zinc-200 transition-colors cursor-pointer"
-          >
-            {closeLabel}
-          </button>
-        </div>
+        )}
       </div>
-    </div>
+    </Modal>
   );
 };

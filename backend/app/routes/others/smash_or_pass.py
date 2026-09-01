@@ -65,7 +65,7 @@ vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
 def get_rosters():
     """Retrieve all active rosters with real-time stats."""
     try:
-        rosters = smash_service.get_rosters(active_only=True)
+        rosters = smash_service.get_rosters(active_only=False)
         return jsonify({"data": rosters, "count": len(rosters)}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass rosters: {e}")
@@ -83,7 +83,7 @@ def get_roster_feed(slug: str):
     user_id = request.args.get("user_id", type=int)
     role = request.args.get("role")
     gender = request.args.get("gender")
-    limit = request.args.get("limit", default=50, type=int)
+    limit = request.args.get("limit", default=250, type=int)
 
     current_user = get_current_user()
     if current_user:
@@ -244,11 +244,55 @@ def reset_session():
         return jsonify({"error": str(e)}), 500
 
 
+@smash_or_pass_bp.route("/sync-session", methods=["POST"])
+def sync_session():
+    """Synchronize and migrate guest session votes to an authenticated user account."""
+    payload = request.get_json(silent=True) or {}
+    session_id = (
+        payload.get("session_id")
+        or request.headers.get("X-Session-ID")
+        or request.cookies.get("session_id")
+    )
+    roster_slug = (
+        payload.get("roster_slug")
+        or payload.get("edition")
+        or request.args.get("roster_slug")
+        or request.args.get("edition")
+    )
+
+    current_user = get_current_user()
+    if not current_user:
+        return (
+            jsonify({"error": "Authentication required to sync guest session votes to an account"}),
+            401,
+        )
+
+    if not session_id:
+        return jsonify({"error": "Field 'session_id' is required"}), 400
+
+    try:
+        result = smash_service.sync_session_votes(
+            user_id=current_user.id,
+            session_id=session_id,
+            roster_slug=roster_slug,
+        )
+        return jsonify({"data": result, "status": "success"}), 200
+    except Exception as e:
+        logger.error(f"Error syncing session votes: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+
 @smash_or_pass_bp.route("/user-votes/reset", methods=["POST"])
 def reset_user_votes():
     """Reset and wipe all votes for a specific user and recalculate stats."""
     payload = request.get_json(silent=True) or {}
     requested_user_id = payload.get("user_id") or request.args.get("user_id", type=int)
+    session_id = (
+        payload.get("session_id")
+        or request.headers.get("X-Session-ID")
+        or request.cookies.get("session_id")
+    )
     roster_slug = (
         payload.get("roster_slug")
         or payload.get("edition")
@@ -277,6 +321,7 @@ def reset_user_votes():
             user_id=target_user_id,
             roster_slug=roster_slug,
             edition=edition,
+            session_id=session_id,
         )
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
@@ -327,9 +372,14 @@ def get_characters():
 
 @smash_or_pass_bp.route("/user-votes", methods=["GET"])
 def get_user_votes():
-    """Retrieve all votes cast by the current user for no-repeat deck filtering (legacy)."""
+    """Retrieve all votes cast by the current user or session for no-repeat deck filtering and stats sync."""
     requested_user_id = request.args.get("user_id", type=int)
-    edition = request.args.get("edition", "canon")
+    edition = request.args.get("edition") or request.args.get("roster_slug") or "canon"
+    session_id = (
+        request.args.get("session_id")
+        or request.headers.get("X-Session-ID")
+        or request.cookies.get("session_id")
+    )
 
     current_user = get_current_user()
     if current_user:
@@ -339,12 +389,17 @@ def get_user_votes():
     else:
         target_user_id = requested_user_id
 
-    if not target_user_id:
-        return jsonify({"data": [], "message": "No user_id provided"}), 200
+    if not target_user_id and not session_id:
+        return jsonify({"data": [], "count": 0, "message": "No user_id or session_id provided"}), 200
 
     try:
-        votes = smash_service.get_user_votes(user_id=target_user_id, edition=edition)
-        return jsonify({"data": votes, "count": len(votes)}), 200
+        votes = smash_service.get_user_votes(
+            user_id=target_user_id,
+            session_id=session_id,
+            edition=edition,
+        )
+        return jsonify({"data": votes, "count": len(votes), "edition": edition}), 200
     except Exception as e:
-        logger.error(f"Error fetching user smash-or-pass votes: {e}")
+        logger.error(f"Error fetching user/session smash-or-pass votes: {e}")
         return jsonify({"error": str(e)}), 500
+

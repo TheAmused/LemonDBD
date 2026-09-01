@@ -69,7 +69,8 @@ export default {
   killerMindgameCounterTitle: "Killer Mindgame Counterplay",
   killerMindgameCounterDefault: "Killers will attempt to hide red stain by moonwalking backward around high walls or faking window vault angles to force premature pallet drops.",
   sourceHensClock: "Hens333 (12-Clock)",
-  sourceSamoelIsometric: "SamoelColt (Isometric)",
+  sourceLemonDbd: "LemonDBD",
+  lemonDbdSourceLocked: "Coming soon",
   sourceHens: "Hens333",
   detectedBrowser: "Detected Browser",
   activeRecognitionEngine: "Active Recognition Engine",
@@ -124,4 +125,6 @@ export default {
   zoomOut25: 'Zoom Out (-25%)',
   searchTextTab: 'Search',
   searchVoiceTab: 'Voice',
+  expandRealmAria: 'Expand realm',
+  collapseRealmAria: 'Collapse realm',
 } as const;

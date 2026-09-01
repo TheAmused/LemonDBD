@@ -69,7 +69,8 @@ export default {
   killerMindgameCounterTitle: "キラーの読み合い対策",
   killerMindgameCounterDefault: "キラーは高い壁の周囲で後ろ歩き（ムーンウォーク）してステインを隠したり、窓枠越えをフェイントしてパレットの早期消費を誘います。",
   sourceHensClock: "Hens333 (12-Clock)",
-  sourceSamoelIsometric: "SamoelColt (アイソメトリック)",
+  sourceLemonDbd: "LemonDBD",
+  lemonDbdSourceLocked: "近日公開",
   sourceHens: "Hens333",
   detectedBrowser: "検出されたブラウザ",
   activeRecognitionEngine: "アクティブ認識エンジン",
@@ -124,4 +125,6 @@ export default {
   zoomOut25: '縮小 (-25%)',
   searchTextTab: '検索',
   searchVoiceTab: '音声',
+  expandRealmAria: 'レルムを展開',
+  collapseRealmAria: 'レルムを折りたたむ',
 } as const;

@@ -167,6 +167,7 @@ function MapsPageInner() {
           }}
           backendBase={backendBase}
           dict={dict}
+          hideSearch={searchMode === 'voice'}
         />
 
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />

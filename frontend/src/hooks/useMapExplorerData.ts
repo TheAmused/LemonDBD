@@ -5,6 +5,9 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { MapRealm, Realm } from '@/types/map';
 import { fetchMaps, fetchRealms } from '@/services/mapApi';
 
+const SEARCH_MIN_CHARS = 3;
+const SEARCH_DEBOUNCE_MS = 300;
+
 export interface UseMapExplorerDataOptions {
   initialMapName?: string;
   selectedMap?: { mapName: string; timestamp: number } | string;
@@ -55,6 +58,8 @@ export interface UseMapExplorerDataReturn {
   loading: boolean;
   search: string;
   setSearch: (search: string) => void;
+  /** Debounced, 3-char-minimum value actually sent to the backend; unlike `search`, safe to treat as "search is active". */
+  activeSearch: string;
   groupedMapsByRealm: { realm: string; maps: MapRealm[] }[];
   realmImages: Record<string, Realm>;
   openMapId: string | null;
@@ -67,6 +72,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   const [maps, setMaps] = useState<MapRealm[]>([]);
   const [realmImages, setRealmImages] = useState<Record<string, Realm>>({});
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [openMapId, setOpenMapId] = useState<string | null>(null);
   const lastHandledTargetRef = useRef<string | null>(null);
@@ -77,11 +83,21 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   }, [onAvailableMapsLoaded]);
 
   useEffect(() => {
+    const trimmed = search.trim();
+    if (trimmed.length > 0 && trimmed.length < SEARCH_MIN_CHARS) {
+      setDebouncedSearch('');
+      return;
+    }
+    const timeoutId = setTimeout(() => setDebouncedSearch(search), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timeoutId);
+  }, [search]);
+
+  useEffect(() => {
     let isCancelled = false;
     async function loadMaps() {
       try {
         setLoading(true);
-        const data = await fetchMaps(undefined, search, 'hens333');
+        const data = await fetchMaps(undefined, debouncedSearch, 'hens333');
         const loaded: MapRealm[] = data?.maps || [];
         if (!isCancelled) {
           setMaps(loaded);
@@ -99,7 +115,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     return () => {
       isCancelled = true;
     };
-  }, [search]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -149,6 +165,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     loading,
     search,
     setSearch,
+    activeSearch: debouncedSearch,
     groupedMapsByRealm,
     realmImages,
     openMapId,

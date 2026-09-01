@@ -33,7 +33,7 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
       }
       onClick={() => onChange(isKiller ? 'Survivor' : 'Killer')}
       className={cn(
-        'relative flex h-8 w-[76px] shrink-0 items-center rounded-full border border-white/10 bg-slate-950/70 px-1 cursor-pointer transition-colors duration-200',
+        'relative flex h-8 w-[76px] shrink-0 items-center rounded-full border border-white/10 bg-slate-950/70 px-1 cursor-pointer transition-colors duration-200 touch-manipulation',
         className
       )}
     >

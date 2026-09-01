@@ -1,10 +1,15 @@
 import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/StreakPanel.tsx
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { AlertTriangle, ArrowRight, type LucideIcon } from 'lucide-react';
 import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
-import { DisabledReasonModal } from '@/components/DisabledReasonModal';
+
+const DisabledReasonModal = dynamic(
+  () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
+  { ssr: false }
+);
 
 interface StreakPanelBaseProps {
   title: string;
@@ -46,6 +51,8 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           src={image}
           alt=""
           aria-hidden="true"
+          loading="lazy"
+          decoding="async"
           className="pointer-events-none absolute -right-5 -bottom-5 h-40 w-40 rounded-2xl object-cover opacity-[0.18] dark:opacity-[0.35] [mask-image:radial-gradient(circle_at_bottom_right,black,transparent_85%)]"
         />
       )}
@@ -55,6 +62,8 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           <img
             src={image}
             alt=""
+            loading="lazy"
+            decoding="async"
             className={`h-11 w-11 rounded-xl border ${accentBorder} object-cover shadow-sm`}
           />
         ) : (
@@ -82,7 +91,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
     </>
   );
 
-  const base = `relative flex h-full flex-col overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-all shadow-sm ${accentBorder}`;
+  const base = `relative flex h-full min-h-[48px] touch-manipulation flex-col overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-all shadow-sm ${accentBorder}`;
 
   if (disabled) {
     return (

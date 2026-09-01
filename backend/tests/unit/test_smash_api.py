@@ -812,4 +812,79 @@ class TestSmashOrPassAPI:
         assert trapper_2["total_votes"] == 1
         assert trapper_2["smash_rate"] == 0.0
 
+    def test_get_rosters_query_optimization_and_grouping(
+        self, app: Flask, db_session: Session
+    ) -> None:
+        """
+        Verify that get_rosters correctly calculates grouped entity counts and total votes
+        across multiple rosters without N+1 query discrepancies.
+        """
+        client = app.test_client()
+        user = _create_user(db_session, username="roster_test_user", email="roster_u@test.com")
+        token = generate_token(user.id, role="user")
+
+        # Cast votes in canon roster
+        client.post(
+            "/api/v1/smash-or-pass/vote",
+            headers={"Authorization": f"Bearer {token}"},
+            json={"character_slug": "sable_ward", "vote_type": "smash", "roster_slug": "canon"},
+        )
+        client.post(
+            "/api/v1/smash-or-pass/vote",
+            headers={"Authorization": f"Bearer {token}"},
+            json={"character_slug": "the_trapper", "vote_type": "pass", "roster_slug": "canon"},
+        )
+
+        # Cast vote in cyberpunk_2077 roster
+        feed_res = client.get("/api/v1/smash-or-pass/rosters/cyberpunk_2077/feed?limit=1")
+        assert feed_res.status_code == 200
+        cyber_char = feed_res.get_json()["data"]["entities"][0]
+        client.post(
+            "/api/v1/smash-or-pass/vote",
+            headers={"Authorization": f"Bearer {token}"},
+            json={"entity_id": cyber_char["id"], "vote_type": "super_smash", "roster_slug": "cyberpunk_2077"},
+        )
+
+        # Fetch rosters
+        res = client.get("/api/v1/smash-or-pass/rosters")
+        assert res.status_code == 200
+        data = res.get_json()["data"]
+
+        canon = next(r for r in data if r["slug"] == "canon")
+        assert canon["entity_count"] == 98
+        assert canon["total_votes"] == 2
+
+        cyber = next(r for r in data if r["slug"] == "cyberpunk_2077")
+        assert cyber["entity_count"] == 10
+        assert cyber["total_votes"] == 1
+
+        hoy = next(r for r in data if r["slug"] == "hooked_on_you")
+        assert hoy["entity_count"] == 8
+        assert hoy["total_votes"] == 0
+
+    def test_feed_pagination_and_role_gender_matrix(
+        self, app: Flask
+    ) -> None:
+        """
+        Verify feed pagination, limits, and role/gender query matrix combinations.
+        """
+        client = app.test_client()
+
+        # Limit 5
+        res_limit_5 = client.get("/api/v1/smash-or-pass/rosters/canon/feed?limit=5")
+        assert res_limit_5.status_code == 200
+        data_5 = res_limit_5.get_json()["data"]
+        assert len(data_5["entities"]) == 5
+        assert data_5["total_remaining"] == 98
+
+        # Role=Killer, Gender=male
+        res_killer_male = client.get(
+            "/api/v1/smash-or-pass/rosters/canon/feed?role=Killer&gender=male&limit=50"
+        )
+        assert res_killer_male.status_code == 200
+        data_km = res_killer_male.get_json()["data"]
+        assert all(e["role"] == "Killer" and e["gender"] == "male" for e in data_km["entities"])
+        assert data_km["total_remaining"] > 0
+
+
 

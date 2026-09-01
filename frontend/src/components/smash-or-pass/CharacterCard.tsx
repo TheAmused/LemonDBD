@@ -391,6 +391,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               <img
                 src={avatarSrc}
                 alt={character.name}
+                loading={isTopCard ? 'eager' : 'lazy'}
+                fetchPriority={isTopCard ? 'high' : 'auto'}
+                decoding="async"
                 className="h-full w-full object-cover object-top pointer-events-none transition-transform duration-700 select-none"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
@@ -418,7 +421,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.flipToDatingProfile || ''}
                 aria-label={rawSmashDict?.flipToDatingProfile || ''}
-                className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-slate-950/85 border border-pink-500/40 text-pink-300 hover:text-white hover:border-[#ff0055] hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer"
+                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-slate-950/85 border border-pink-500/40 text-pink-300 hover:text-white hover:border-[#ff0055] hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -434,7 +437,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.zoomFullPortrait || ''}
                 aria-label={rawSmashDict?.zoomFullPortrait || ''}
-                className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-slate-950/85 border border-slate-700/80 text-slate-200 hover:text-white hover:border-pink-400 hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer"
+                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-slate-950/85 border border-slate-700/80 text-slate-200 hover:text-white hover:border-pink-400 hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <Maximize2 className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -452,7 +455,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.pass || ''}
                 aria-label={rawSmashDict?.pass || ''}
-                className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-slate-950/90 border-2 border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-400 hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer"
+                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-slate-950/90 border-2 border-slate-700 text-slate-400 hover:text-slate-100 hover:border-slate-400 hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <ThumbsDown className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
               </button>
@@ -468,7 +471,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.smash || ''}
                 aria-label={rawSmashDict?.smash || ''}
-                className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-600 to-[#ff0055] text-white hover:scale-110 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,0,85,0.6)] cursor-pointer"
+                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-rose-600 to-[#ff0055] text-white hover:scale-110 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,0,85,0.6)] cursor-pointer touch-manipulation"
               >
                 <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-white" aria-hidden="true" />
               </button>
@@ -498,7 +501,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.flipBack || ''}
                 aria-label={rawSmashDict?.flipBack || ''}
-                className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-zinc-900/90 border border-pink-500/40 text-pink-300 hover:text-white hover:border-[#ff0055] hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer"
+                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-zinc-900/90 border border-pink-500/40 text-pink-300 hover:text-white hover:border-[#ff0055] hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
               </button>

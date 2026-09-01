@@ -2,11 +2,11 @@
 // frontend/src/app/[locale]/randomizer/page.tsx
 
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
-import { PerkModal } from '@/components/PerkModal';
 import { GeneratorPage } from '@/components/generator/GeneratorPage';
-import { QuestsModal } from '@/components/QuestsModal';
+import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
@@ -14,6 +14,12 @@ import { useAuth } from '@/context/AuthContext';
 import { Perk, CharacterItem } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+
+const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
+const QuestsModal = dynamic(
+  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
+  { ssr: false }
+);
 
 function RandomizerContent() {
   const params = useParams();
@@ -73,7 +79,16 @@ function RandomizerContent() {
     fetchData();
   }, [fetchData]);
 
-  if (!dict) return null;
+  if (!dict) {
+    return (
+      <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
+        <main className="flex-1 w-full min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8 lg:pl-72 flex flex-col items-center">
+          <RandomizerPageSkeleton />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
@@ -93,14 +108,20 @@ function RandomizerContent() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <GeneratorPage allPerks={allPerks} onSelectPerk={setSelectedPerk} dict={dict} />
+        <Suspense fallback={<RandomizerPageSkeleton dict={dict} />}>
+          <GeneratorPage allPerks={allPerks} onSelectPerk={setSelectedPerk} dict={dict} />
+        </Suspense>
 
-        <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
-        <QuestsModal
-          isOpen={isQuestsOpen}
-          onClose={() => setIsQuestsOpen(false)}
-          dict={dict}
-        />
+        {selectedPerk && (
+          <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
+        )}
+        {isQuestsOpen && (
+          <QuestsModal
+            isOpen={isQuestsOpen}
+            onClose={() => setIsQuestsOpen(false)}
+            dict={dict}
+          />
+        )}
       </main>
     </div>
   );
@@ -110,8 +131,11 @@ export default function RandomizerPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+        <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+          <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
+          <main className="flex-1 w-full min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8 lg:pl-72 flex flex-col items-center">
+            <RandomizerPageSkeleton />
+          </main>
         </div>
       }
     >

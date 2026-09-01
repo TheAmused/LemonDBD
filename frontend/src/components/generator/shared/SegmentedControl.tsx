@@ -52,11 +52,11 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(opt.value)}
             aria-pressed={isActive}
             className={cn(
-              'relative flex shrink-0 items-center gap-1.5 text-xs font-black tracking-wider uppercase transition-all duration-200 cursor-pointer',
+              'relative flex shrink-0 items-center gap-1.5 text-xs font-black tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[40px] sm:min-h-[44px]',
               bare
-                ? cn('pb-1', isActive ? 'text-amber-400' : 'text-slate-500 hover:text-slate-300')
+                ? cn('pb-1.5 pt-1 px-1', isActive ? 'text-amber-400' : 'text-slate-500 hover:text-slate-300')
                 : cn(
-                    'rounded-xl px-3 py-1.5',
+                    'rounded-xl px-3 py-2',
                     isActive ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-100'
                   )
             )}

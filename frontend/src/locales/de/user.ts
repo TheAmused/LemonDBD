@@ -83,4 +83,15 @@ export default {
   invalidCredentials: "Ungültige Anmeldedaten.",
   registrationFailed: "Registrierung fehlgeschlagen.",
   unexpectedError: "Ein unerwarteter Fehler ist aufgetreten.",
+
+  // --- /user page: perf & i18n hardening pass additions ---
+  avatarSizeLimit: "Die Avatar-Datei darf maximal 10 MB groß sein.",
+  avatarUploadFailed: "Avatar konnte nicht hochgeladen werden.",
+  avatarUpdateSuccess: "Avatar erfolgreich aktualisiert!",
+  avatarResetFailed: "Avatar konnte nicht zurückgesetzt werden.",
+  avatarResetSuccessMsg: "Avatar auf Standard zurückgesetzt.",
+  authTokenMissing: "Authentifizierungs-Token fehlt. Bitte erneut anmelden.",
+  profileUpdateFailedMsg: "Profil konnte nicht aktualisiert werden.",
+  profileUpdateSuccessMsg: "Profil erfolgreich aktualisiert!",
+  myBugReportsCount: "Meine Fehlerberichte ({count})",
 } as const;

@@ -56,6 +56,9 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           <img
             src={getAvatarUrl(backendBase, character, isSurvivor)}
             alt={character.name}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
             onError={() => setImgFailed(true)}
           />

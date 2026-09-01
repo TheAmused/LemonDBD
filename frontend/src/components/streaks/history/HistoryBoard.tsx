@@ -3,26 +3,44 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
-import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
-import { ResetConfirmModal } from '../ResetConfirmModal';
+import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useHistoryRun } from './useHistoryRun';
 import { useKillerPerkPool } from '../chaos/useKillerPerkPool';
 import { KillerPickerGrid } from '../chaos/KillerPickerGrid';
 import { HistoryHeader } from './HistoryHeader';
-import { HistoryStatsDrawer } from './HistoryStatsDrawer';
 import { HistoryPerkPoolPanel } from './HistoryPerkPoolPanel';
-import { HistoryPerkModal } from './HistoryPerkModal';
 import { HistoryNextRowPreview } from './HistoryNextRowPreview';
 import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
-import { HistoryRulesModal } from './HistoryRulesModal';
-import { HistoryModeModal } from './HistoryModeModal';
 import { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+
+const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
+const ResetConfirmModal = dynamic(
+  () => import('../ResetConfirmModal').then((m) => m.ResetConfirmModal),
+  { ssr: false }
+);
+const HistoryStatsDrawer = dynamic(
+  () => import('./HistoryStatsDrawer').then((m) => m.HistoryStatsDrawer),
+  { ssr: false }
+);
+const HistoryPerkModal = dynamic(
+  () => import('./HistoryPerkModal').then((m) => m.HistoryPerkModal),
+  { ssr: false }
+);
+const HistoryRulesModal = dynamic(
+  () => import('./HistoryRulesModal').then((m) => m.HistoryRulesModal),
+  { ssr: false }
+);
+const HistoryModeModal = dynamic(
+  () => import('./HistoryModeModal').then((m) => m.HistoryModeModal),
+  { ssr: false }
+);
 
 interface HistoryBoardProps {
   locale: string;

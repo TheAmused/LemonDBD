@@ -73,6 +73,8 @@ export default {
   pipeSeparator: '|',
   loadingRosterPrefix: 'Laden',
   loadingRosterSuffix: 'aus der Datenbank...',
+  loadingArena: 'Lade Smash or Pass Arena...',
+  loadingRankings: 'Lade Ruhmeshallen-Rangliste...',
   stats: 'Info',
   reset: 'Zurücksetzen',
   rosters: {

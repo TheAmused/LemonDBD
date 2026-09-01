@@ -33,7 +33,12 @@ import {
   ModelProgressInfo,
   BrowserCompatibilityInfo,
 } from '@/services/clientSpeechModel';
-import { VoiceEngineInfoModal } from './VoiceEngineInfoModal';
+import dynamic from 'next/dynamic';
+
+const VoiceEngineInfoModal = dynamic(
+  () => import('./VoiceEngineInfoModal').then((m) => m.VoiceEngineInfoModal),
+  { ssr: false }
+);
 
 export interface VoiceCommandBannerProps {
   locale?: string;

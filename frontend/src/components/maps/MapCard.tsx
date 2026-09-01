@@ -20,7 +20,7 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
     <button
       type="button"
       onClick={() => onSelect(map)}
-      className="group flex flex-col items-center gap-2 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2 transition-all duration-200 hover:scale-105 hover:border-amber-400 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm"
+      className="group flex flex-col items-center gap-2 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2 min-h-[44px] touch-manipulation cursor-pointer transition-all duration-200 hover:scale-105 hover:border-amber-400 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm"
       data-testid={`map-card-${map.id}`}
     >
       <div className="h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-950 flex items-center justify-center">
@@ -28,6 +28,8 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
           <img
             src={imageSrc}
             alt={map.name}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
             onError={() => setImageFailed(true)}
           />

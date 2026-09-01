@@ -14,6 +14,8 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import { UserBugReport } from '@/types/userProfile';
+import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
+import { Pagination } from '@/components/Pagination';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -21,6 +23,12 @@ interface UserBugReportsListProps {
   onOpenReportModal: () => void;
   dict?: Dictionary;
   t?: Record<string, string>;
+  /** Total count across all pages (falls back to reports.length when omitted). */
+  total?: number;
+  page?: number;
+  perPage?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
@@ -29,8 +37,14 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
   onOpenReportModal,
   dict,
   t: propT,
+  total,
+  page = 1,
+  perPage = 10,
+  totalPages = 1,
+  onPageChange,
 }) => {
   const t: Record<string, string> = propT || dict?.user || {};
+  const totalCount = total ?? reports.length;
 
   const getStatusBadge = (status: UserBugReport['status']) => {
     switch (status) {
@@ -87,9 +101,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-12 text-center text-xs text-slate-400 font-mono">
-          {t.loadingReports || 'Loading your reported tickets...'}
-        </div>
+        <UserBugReportsSkeleton dict={dict} count={Math.min(perPage, 5) || 3} />
       ) : reports.length === 0 ? (
         <div className="rounded-3xl border-2 border-dashed border-slate-800 bg-slate-900/40 p-8 sm:p-12 text-center space-y-3">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-500">
@@ -186,6 +198,18 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             </div>
           ))}
         </div>
+      )}
+
+      {!loading && reports.length > 0 && totalPages > 1 && onPageChange && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          totalResults={totalCount}
+          limit={perPage}
+          onPageChange={onPageChange}
+          onLimitChange={() => {}}
+          dict={dict as any}
+        />
       )}
     </div>
   );

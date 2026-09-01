@@ -2,7 +2,8 @@
 // frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import {
   Heart,
   Skull,
@@ -29,14 +30,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tooltip } from '@/components/common/Tooltip';
 import { CharacterCard } from './CharacterCard';
-import { SmashAnimations } from './SmashAnimations';
-import { InteractiveDragBackground } from './InteractiveDragBackground';
-import { FloatingLoreScattered } from './FloatingLoreScattered';
-import { TactileKeycaps } from './TactileKeycaps';
-import { SmashLeaderboardModal } from './SmashLeaderboardModal';
-import { CharacterStatsModal } from './CharacterStatsModal';
-import { RomancePersonaModal } from './RomancePersonaModal';
-import { RosterSelectModal } from './RosterSelectModal';
 import { SmashSounds } from './SmashSoundEffects';
 import {
   EntityItem,
@@ -57,6 +50,47 @@ import {
 } from '@/services/smashApi';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+
+// Dynamic client-side imports for heavy visual layers and interactive modals
+const SmashAnimations = dynamic(
+  () => import('./SmashAnimations').then((m) => m.SmashAnimations),
+  { ssr: false }
+);
+
+const InteractiveDragBackground = dynamic(
+  () => import('./InteractiveDragBackground').then((m) => m.InteractiveDragBackground),
+  { ssr: false }
+);
+
+const FloatingLoreScattered = dynamic(
+  () => import('./FloatingLoreScattered').then((m) => m.FloatingLoreScattered),
+  { ssr: false }
+);
+
+const TactileKeycaps = dynamic(
+  () => import('./TactileKeycaps').then((m) => m.TactileKeycaps),
+  { ssr: false }
+);
+
+const SmashLeaderboardModal = dynamic(
+  () => import('./SmashLeaderboardModal').then((m) => m.SmashLeaderboardModal),
+  { ssr: false }
+);
+
+const CharacterStatsModal = dynamic(
+  () => import('./CharacterStatsModal').then((m) => m.CharacterStatsModal),
+  { ssr: false }
+);
+
+const RomancePersonaModal = dynamic(
+  () => import('./RomancePersonaModal').then((m) => m.RomancePersonaModal),
+  { ssr: false }
+);
+
+const RosterSelectModal = dynamic(
+  () => import('./RosterSelectModal').then((m) => m.RosterSelectModal),
+  { ssr: false }
+);
 
 interface SmashOrPassHubProps {
   dict?: Dictionary;
@@ -556,13 +590,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [areModalsOpen, currentCharacter, isExiting, handleVote]);
 
-  // Auto-refresh leaderboard and vote state whenever the Hall of Fame modal opens
+  // Auto-refresh leaderboard when the Hall of Fame modal opens
   useEffect(() => {
     if (isLeaderboardOpen) {
       loadLeaderboard();
-      syncVotes(selectedRosterSlug);
     }
-  }, [isLeaderboardOpen, loadLeaderboard, syncVotes, selectedRosterSlug]);
+  }, [isLeaderboardOpen, loadLeaderboard]);
 
   const handleToggleMasterSound = () => {
     const active = SmashSounds.toggleMasterSound();
@@ -606,25 +639,32 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   return (
     <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-hidden">
       {/* Interactive Reactive Background */}
-      <InteractiveDragBackground
-        dragX={dragPhysics.x}
-        dragY={dragPhysics.y}
-        isDragging={dragPhysics.isDragging}
-        actionTrigger={animTrigger.type}
-        triggerKey={animTrigger.key}
-      />
+      <Suspense fallback={null}>
+        <InteractiveDragBackground
+          dragX={dragPhysics.x}
+          dragY={dragPhysics.y}
+          isDragging={dragPhysics.isDragging}
+          actionTrigger={animTrigger.type}
+          triggerKey={animTrigger.key}
+          isPaused={areModalsOpen}
+        />
+      </Suspense>
 
       {/* Scattered Ambient Lore Wings Flanking the Candidate Card */}
-      <FloatingLoreScattered character={currentCharacter} locale={locale} dict={dict} />
+      <Suspense fallback={null}>
+        <FloatingLoreScattered character={currentCharacter} locale={locale} dict={dict} />
+      </Suspense>
 
       {/* Particle & Visual Overlay Animation Engine */}
-      <SmashAnimations
-        triggerType={animTrigger.type}
-        triggerKey={animTrigger.key}
-        originX={animTrigger.originX}
-        originY={animTrigger.originY}
-        dict={dict}
-      />
+      <Suspense fallback={null}>
+        <SmashAnimations
+          triggerType={animTrigger.type}
+          triggerKey={animTrigger.key}
+          originX={animTrigger.originX}
+          originY={animTrigger.originY}
+          dict={dict}
+        />
+      </Suspense>
 
       {/* ========================================================================= */}
       {/* REDESIGNED UNIFIED COMMAND DOCK (LEFT STATS | CENTER ROSTER | RIGHT ICONS) */}
@@ -666,7 +706,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => setIsRosterModalOpen(true)}
-              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl bg-zinc-900/95 border border-pink-500/50 hover:border-[#ff0055] hover:shadow-[0_0_25px_rgba(255,0,85,0.4)] text-xs sm:text-sm font-mono font-bold text-pink-100 transition-all cursor-pointer group shrink-0"
+              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-zinc-900/95 border border-pink-500/50 hover:border-[#ff0055] hover:shadow-[0_0_25px_rgba(255,0,85,0.4)] text-xs sm:text-sm font-mono font-bold text-pink-100 transition-all cursor-pointer group shrink-0 touch-manipulation"
             >
               <span className="relative flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-lg overflow-hidden border border-pink-500/60 shrink-0">
                 <img
@@ -690,8 +730,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-[#ff0055] fill-[#ff0055] animate-pulse drop-shadow-[0_0_12px_rgba(255,0,85,0.9)] shrink-0" />
           </div>
 
-          {/* RIGHT: Action Cluster (Icons with Tooltips) */}
-          <div className="flex items-center justify-center lg:justify-end gap-1.5 sm:gap-2 w-full lg:w-auto order-3 shrink-0">
+          {/* RIGHT: Action Cluster (Icons with Tooltips and >=44px Touch Targets) */}
+          <div className="flex items-center justify-center lg:justify-end gap-1.5 sm:gap-2 w-full lg:w-auto order-3 shrink-0 flex-wrap">
             {/* Filter Settings Drawer Toggle */}
             <Tooltip
               title={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
@@ -702,15 +742,15 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsFilterDrawerOpen((prev) => !prev)}
                 aria-label={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
-                className={`relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                className={`relative flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${
                   isFilterDrawerOpen || roleFilter !== 'all' || genderFilter !== 'all'
                     ? 'bg-pink-500/20 border-pink-500/60 text-pink-300 shadow-[0_0_14px_rgba(255,0,85,0.4)]'
                     : 'bg-zinc-900/90 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
                 }`}
               >
-                <SlidersHorizontal className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4" />
                 {(roleFilter !== 'all' || genderFilter !== 'all') && (
-                  <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#ff0055] ring-2 ring-zinc-950" />
+                  <span className="absolute 1.5 sm:-top-0.5 1.5 sm:-right-0.5 h-2.5 w-2.5 rounded-full bg-[#ff0055] ring-2 ring-zinc-950" />
                 )}
               </button>
             </Tooltip>
@@ -725,13 +765,13 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={handleToggleMasterSound}
                 aria-label={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudio || '') : (dict?.smashOrPass?.tooltips?.unmuteAudio || '')}
-                className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                className={`flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${
                   isSoundActive
                     ? 'bg-rose-950/90 border-[#ff0055] text-pink-300 shadow-[0_0_16px_rgba(255,0,85,0.5)]'
                     : 'bg-zinc-900/90 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
                 }`}
               >
-                {isSoundActive ? <Volume2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-pink-400 animate-pulse" /> : <VolumeX className="h-3.5 w-3.5 sm:h-4 sm:w-4" />}
+                {isSoundActive ? <Volume2 className="h-4 w-4 sm:h-4 sm:w-4 text-pink-400 animate-pulse" /> : <VolumeX className="h-4 w-4 sm:h-4 sm:w-4" />}
               </button>
             </Tooltip>
 
@@ -745,9 +785,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsPersonaOpen(true)}
                 aria-label={dict?.smashOrPass?.tooltips?.archetype || dict?.smashOrPass?.modals?.personaTitle || ''}
-                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 hover:border-pink-500/60 text-pink-300 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 hover:border-pink-500/60 text-pink-300 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
-                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-pink-400" />
+                <Sparkles className="h-4 w-4 sm:h-4 sm:w-4 text-pink-400" />
               </button>
             </Tooltip>
 
@@ -761,9 +801,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsLeaderboardOpen(true)}
                 aria-label={dict?.smashOrPass?.tooltips?.leaderboard || dict?.smashOrPass?.modals?.leaderboardTitle || ''}
-                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/60 text-amber-300 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
-                <Trophy className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-400" />
+                <Trophy className="h-4 w-4 sm:h-4 sm:w-4 text-amber-400" />
               </button>
             </Tooltip>
 
@@ -777,9 +817,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={shuffleDeck}
                 aria-label={dict?.smashOrPass?.tooltips?.shuffle || ''}
-                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
-                <Shuffle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <Shuffle className="h-4 w-4 sm:h-4 sm:w-4" />
               </button>
             </Tooltip>
 
@@ -793,9 +833,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsResetConfirmOpen(true)}
                 aria-label={dict?.smashOrPass?.tooltips?.resetAllVotes || ''}
-                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-rose-400 hover:border-rose-500/40 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-rose-400 hover:border-rose-500/40 transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
-                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <Trash2 className="h-4 w-4 sm:h-4 sm:w-4" />
               </button>
             </Tooltip>
 
@@ -809,9 +849,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsHowToPlayOpen(true)}
                 aria-label={dict?.smashOrPass?.tooltips?.howToPlay || ''}
-                className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-900/90 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
-                <HelpCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <HelpCircle className="h-4 w-4 sm:h-4 sm:w-4" />
               </button>
             </Tooltip>
           </div>
@@ -834,7 +874,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'all')}
-                    className={`flex-1 md:flex-none px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'all'
                         ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.5)]'
                         : 'text-zinc-400 hover:text-zinc-200'
@@ -845,7 +885,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'Survivor')}
-                    className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'Survivor'
                         ? 'bg-[#00f5d4] text-zinc-950 font-black shadow-[0_0_14px_rgba(0,245,212,0.45)]'
                         : 'text-zinc-400 hover:text-[#00f5d4]'
@@ -857,7 +897,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'Killer')}
-                    className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
+                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'Killer'
                         ? 'bg-[#ff0055] text-white shadow-[0_0_14px_rgba(255,0,85,0.45)]'
                         : 'text-zinc-400 hover:text-[#ff0055]'
@@ -873,7 +913,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'all')}
-                    className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'all'
                         ? 'bg-zinc-800 text-white border border-zinc-700 shadow'
                         : 'text-zinc-400 hover:text-zinc-200'
@@ -884,7 +924,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'female')}
-                    className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'female'
                         ? 'bg-pink-600 text-white shadow-[0_0_12px_rgba(219,39,119,0.45)]'
                         : 'text-zinc-400 hover:text-pink-300'
@@ -895,7 +935,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'male')}
-                    className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'male'
                         ? 'bg-cyan-600 text-white shadow-[0_0_12px_rgba(8,145,178,0.45)]'
                         : 'text-zinc-400 hover:text-cyan-300'
@@ -906,7 +946,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'monster_other')}
-                    className={`px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer ${
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'monster_other'
                         ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(147,51,234,0.45)]'
                         : 'text-zinc-400 hover:text-purple-300'
@@ -924,11 +964,16 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       {/* MAIN INTERACTIVE ARENA WITH MULTI-CARD STACK QUEUE */}
       <main className="relative flex-1 flex flex-col items-center justify-center my-2 z-20 pointer-events-none">
         {loading ? (
-          <div className="flex flex-col items-center gap-3 py-20 text-zinc-400 pointer-events-auto">
-            <Heart className="h-10 w-10 text-rose-500 animate-ping" />
-            <span className="text-xs font-mono">
-              {dict?.smashOrPass?.loadingRosterPrefix || 'Loading'} {activeRoster.name || selectedRosterSlug} {dict?.smashOrPass?.loadingRosterSuffix || 'from Database...'}
-            </span>
+          <div className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none animate-pulse">
+            <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-zinc-950 border-2 border-pink-500/30 flex flex-col items-center justify-center p-6 space-y-4 shadow-[0_0_35px_rgba(255,0,85,0.15)]">
+              <Heart className="h-12 w-12 text-rose-500 fill-rose-500/30 animate-pulse" />
+              <span className="text-xs font-mono text-zinc-300 text-center font-semibold">
+                {dict?.smashOrPass?.loadingRosterPrefix || 'Loading'} {activeRoster.name || selectedRosterSlug} {dict?.smashOrPass?.loadingRosterSuffix || 'from Database...'}
+              </span>
+              <div className="h-1.5 w-32 rounded-full bg-zinc-800 overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-pink-500 to-[#ff0055] animate-[shimmer_1.5s_infinite]" />
+              </div>
+            </div>
           </div>
         ) : currentCharacter ? (
           <div className="relative flex flex-col items-center justify-center pointer-events-auto min-h-[460px] sm:min-h-[520px]">

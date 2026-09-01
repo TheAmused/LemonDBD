@@ -2,13 +2,18 @@
 // frontend/src/components/maps/MapExplorer.tsx
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Search, ImageOff, ChevronDown } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
 import { getMapImageSrc } from '@/utils/mapUtils';
 import { MapCard } from './MapCard';
-import { FullscreenMapEngine } from './FullscreenMapEngine';
+
+const FullscreenMapEngine = dynamic(
+  () => import('./FullscreenMapEngine').then((m) => m.FullscreenMapEngine),
+  { ssr: false }
+);
 
 // Must mirror the grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 classes below.
 const REALM_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
@@ -280,10 +285,16 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   aria-expanded={expanded}
                   aria-controls={`realm-panel-${realm}`}
                   aria-label={`${expanded ? dict?.maps?.collapseRealmAria || 'Collapse realm' : dict?.maps?.expandRealmAria || 'Expand realm'}: ${realm}`}
-                  className={`group relative aspect-square w-full overflow-hidden rounded-2xl border-2 text-left focus:outline-none focus:ring-2 focus:ring-amber-500 ${expanded ? 'border-amber-400' : 'border-slate-200 dark:border-slate-800'}`}
+                  className={`group relative aspect-square w-full min-h-[48px] touch-manipulation overflow-hidden rounded-2xl border-2 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 ${expanded ? 'border-amber-400' : 'border-slate-200 dark:border-slate-800'}`}
                 >
                   {bannerSrc ? (
-                    <img src={bannerSrc} alt={realm} className="absolute inset-0 h-full w-full object-cover" />
+                    <img
+                      src={bannerSrc}
+                      alt={realm}
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-900">
                       <ImageOff className="h-8 w-8 text-slate-400" />

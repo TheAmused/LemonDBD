@@ -2,13 +2,13 @@
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import type { Difficulty } from '@/types/chaosStreak';
 import type { Perk } from '@/types/gauntletStreak';
-import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
-import { ResetConfirmModal } from '../ResetConfirmModal';
+import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useChaosRun } from './useChaosRun';
 import { useOwnedKillers } from './useOwnedKillers';
 import { useKillerPerkPool } from './useKillerPerkPool';
@@ -16,14 +16,35 @@ import { ChaosHeader } from './ChaosHeader';
 import { ChaosProgressBar } from './ChaosProgressBar';
 import { SlotMachineStage } from './SlotMachineStage';
 import { KillerPickerGrid } from './KillerPickerGrid';
-import { ChaosCheckpointModal } from './ChaosCheckpointModal';
-import { ChaosStatsDrawer } from './ChaosStatsDrawer';
-import { ChaosRulesModal } from './ChaosRulesModal';
-import { ChaosPerkPoolModal } from './ChaosPerkPoolModal';
-import { ChaosModeModal } from './ChaosModeModal';
 import { useAuth } from '@/context/AuthContext';
 import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+
+const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
+const ResetConfirmModal = dynamic(
+  () => import('../ResetConfirmModal').then((m) => m.ResetConfirmModal),
+  { ssr: false }
+);
+const ChaosCheckpointModal = dynamic(
+  () => import('./ChaosCheckpointModal').then((m) => m.ChaosCheckpointModal),
+  { ssr: false }
+);
+const ChaosStatsDrawer = dynamic(
+  () => import('./ChaosStatsDrawer').then((m) => m.ChaosStatsDrawer),
+  { ssr: false }
+);
+const ChaosRulesModal = dynamic(
+  () => import('./ChaosRulesModal').then((m) => m.ChaosRulesModal),
+  { ssr: false }
+);
+const ChaosPerkPoolModal = dynamic(
+  () => import('./ChaosPerkPoolModal').then((m) => m.ChaosPerkPoolModal),
+  { ssr: false }
+);
+const ChaosModeModal = dynamic(
+  () => import('./ChaosModeModal').then((m) => m.ChaosModeModal),
+  { ssr: false }
+);
 
 interface ChaosBoardProps {
   locale: string;

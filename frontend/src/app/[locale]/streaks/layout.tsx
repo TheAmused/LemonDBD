@@ -3,18 +3,21 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useParams, usePathname } from 'next/navigation';
 import { Lock, MailWarning, Swords } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
-import { QuestsModal } from '@/components/QuestsModal';
-import { AuthModal } from '@/components/AuthModal';
 import { RoleTabs } from '@/components/streaks/RoleTabs';
+import { StreaksHubSkeleton } from '@/components/streaks/StreaksSkeleton';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { useAuth } from '@/context/AuthContext';
 import { StreaksDictProvider } from '@/context/StreaksDictContext';
 import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
+
+const QuestsModal = dynamic(() => import('@/components/QuestsModal').then((m) => m.QuestsModal), { ssr: false });
+const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 export default function StreaksLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
@@ -83,13 +86,16 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
     .slice(2); // drop the locale and "streaks" segments
   const isPickerPage = segmentsAfterStreaks.length <= 1;
 
-   if (!dict) {
-     return (
-       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400">
-         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-       </div>
-     );
-   }
+  if (!dict) {
+    return (
+      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 bg-[#0a0f18]/90 p-4 space-y-4 select-none animate-pulse" />
+        <main className="flex-1 w-full overflow-y-auto p-5 sm:p-7 lg:p-9 lg:pl-72">
+          <StreaksHubSkeleton />
+        </main>
+      </div>
+    );
+  }
 
 
 

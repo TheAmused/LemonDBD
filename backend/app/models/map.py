@@ -1,7 +1,8 @@
 # backend/app/models/map.py
 from datetime import datetime
 from typing import Any
-from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.models.base import utcnow
@@ -14,13 +15,22 @@ class Realm(Base):
     name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     image_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    translations: Mapped[dict[str, Any] | None] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self, lang: str | None = None) -> dict[str, Any]:
+        name = self.name
+        if lang and self.translations and lang in self.translations:
+            trans = self.translations.get(lang) or {}
+            if isinstance(trans, dict):
+                name = trans.get("name") or name
+
         return {
-            "name": self.name,
+            "name": name,
             "image_url": self.image_url or "",
             "image_local_path": self.image_local_path or "",
         }
@@ -47,6 +57,9 @@ class MapRealm(Base):
     image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     callout_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     callout_image_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    translations: Mapped[dict[str, Any] | None] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
@@ -58,11 +71,19 @@ class MapRealm(Base):
         back_populates="map_realm", cascade="all, delete-orphan", lazy="selectin"
     )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self, lang: str | None = None) -> dict[str, Any]:
+        name = self.name
+        realm = self.realm
+        if lang and self.translations and lang in self.translations:
+            trans = self.translations.get(lang) or {}
+            if isinstance(trans, dict):
+                name = trans.get("name") or name
+                realm = trans.get("realm") or realm
+
         return {
             "id": self.map_id,
-            "name": self.name,
-            "realm": self.realm,
+            "name": name,
+            "realm": realm,
             "realm_id": self.realm_id or "",
             "source": self.source or "hens333",
             "source_label": self.source_label or "Hens333 12-Clock Callouts",

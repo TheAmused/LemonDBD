@@ -348,8 +348,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         <FullscreenMapEngine
           mapId={openMapId}
           availableMaps={maps}
-          onSelectMapId={(id) => setOpenMapId(id)}
           onClose={() => setOpenMapId(null)}
+          backendBase={backendBase}
           dict={dict}
         />
       )}

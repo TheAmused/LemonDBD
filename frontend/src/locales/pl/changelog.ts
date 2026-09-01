@@ -2,7 +2,6 @@
 export default {
   triggerTitle: 'Co nowego?',
   modalTitle: 'Co nowego',
-  modalSubtitle: 'Próby, Tomy i poprawki ze Mgły',
   newEntry: 'Nowy wpis',
   close: 'Zamknij',
   filterAll: 'Wszystko',

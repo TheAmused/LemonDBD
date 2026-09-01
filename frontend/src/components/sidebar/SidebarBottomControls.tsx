@@ -140,20 +140,20 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           type="button"
           onClick={onOpenBugModal}
           aria-label={dict?.sidebar?.reportBug || 'Report Bug'}
-          className="flex h-8 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 text-[11px] font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          className="flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 px-2 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
         >
-          <Bug className="h-3.5 w-3.5 text-rose-500" />
-          <span>{dict?.sidebar?.reportBug || 'Report Bug'}</span>
+          <Bug className="h-3.5 w-3.5 shrink-0 text-rose-500" />
+          <span className="text-center">{dict?.sidebar?.reportBug || 'Report Bug'}</span>
         </button>
 
         <button
           type="button"
           onClick={onOpenCoffeeModal}
           aria-label={dict?.sidebar?.buyCoffee || 'Buy Coffee'}
-          className="flex h-8 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 text-[11px] font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          className="flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100/50 px-2 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
         >
-          <Coffee className="h-3.5 w-3.5 text-amber-500" />
-          <span>{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</span>
+          <Coffee className="h-3.5 w-3.5 shrink-0 text-amber-500" />
+          <span className="text-center">{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</span>
         </button>
       </div>
     </div>

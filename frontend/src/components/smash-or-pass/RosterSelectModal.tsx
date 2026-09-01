@@ -2,7 +2,7 @@
 // frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Check, Flame, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Flame, X, Lock } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -10,13 +10,20 @@ import { SmashSounds } from './SmashSoundEffects';
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
+export const ENABLED_ROSTER_SLUGS = new Set(['canon', 'legendary_cosplay', 'legendary']);
+
 const ROSTER_HERO_MAP: Record<string, string> = {
-  canon: 'Mikaela & Sable',
-  hooked_on_you: 'The Huntress',
-  legendary_cosplay: 'Baba Yaga',
-  cyberpunk_2077: 'Cyber Trickster',
-  anime_manga: 'The Spirit',
-  gothic_eldritch: 'The Dark Lord',
+  canon: 'All 98 Survivors & Killers',
+  legendary_cosplay: 'Legendary Outfits & Mythic Cosplays',
+  legendary: 'Legendary Outfits & Mythic Cosplays',
+  hooked_on_you: 'Island Romance Dating Sim',
+  hoy: 'Island Romance Dating Sim',
+  cyberpunk_2077: 'Cyberpunk Neon Editions',
+  cyberpunk: 'Cyberpunk Neon Editions',
+  anime_manga: 'Anime & Manga Art Editions',
+  anime: 'Anime & Manga Art Editions',
+  gothic_eldritch: 'Victorian & Gothic Eldritch',
+  gothic: 'Victorian & Gothic Eldritch',
 };
 
 interface RosterSelectModalProps {
@@ -140,6 +147,10 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
       const chosenRoster = rosters[targetIdx];
       if (chosenRoster) {
+        if (!ENABLED_ROSTER_SLUGS.has(chosenRoster.slug) || chosenRoster.is_active === false) {
+          SmashSounds.playHoverTick();
+          return;
+        }
         setActiveSelectedSlug(chosenRoster.slug);
         if (typeof window !== 'undefined') {
           localStorage.setItem(STORAGE_KEY, chosenRoster.slug);
@@ -391,6 +402,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               const absOffset = Math.abs(visualOffset);
               const isCenter = absOffset < 0.5;
               const isCurrentlyActive = r.slug === activeSelectedSlug;
+              const isRosterEnabled = ENABLED_ROSTER_SLUGS.has(r.slug) && r.is_active !== false;
               const count = r.entity_count ?? r.character_count ?? 0;
               const heroName = getRosterHeroName(r.slug);
               const coverUrl = getRosterCoverUrl(r);
@@ -410,7 +422,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               const brightness = Math.max(0.3, 1 - absOffset * 0.35);
               const zIndex = Math.round(40 - absOffset * 10);
 
-              const rosterLabel = `${getRosterDisplayName(r)}${count ? `, ${count} ${candidatesWord}` : ''}`;
+              const rosterLabel = `${getRosterDisplayName(r)}${count ? `, ${count} ${candidatesWord}` : ''}${!isRosterEnabled ? ' (Coming Soon)' : ''}`;
 
               return (
                 <div
@@ -423,24 +435,30 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     if (!isCenter) {
                       animateTo(Math.round(targetIndexRef.current + visualOffset), 420);
                       SmashSounds.playHoverTick();
-                    } else {
+                    } else if (isRosterEnabled) {
                       commitSelection();
+                    } else {
+                      SmashSounds.playHoverTick();
                     }
                   }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      commitSelection();
+                      if (isRosterEnabled) commitSelection();
                     }
                   }}
                   className={`absolute w-[240px] sm:w-[300px] md:w-[350px] lg:w-[370px] h-[360px] sm:h-[450px] md:h-[500px] lg:h-[540px] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
-                      ? 'border-2 sm:border-[3px] border-[#ff0055] shadow-[0_0_55px_rgba(255,0,85,0.75),inset_0_0_25px_rgba(255,0,85,0.3)]'
+                      ? isRosterEnabled
+                        ? 'border-2 sm:border-[3px] border-[#ff0055] shadow-[0_0_55px_rgba(255,0,85,0.75),inset_0_0_25px_rgba(255,0,85,0.3)]'
+                        : 'border-2 border-zinc-700 shadow-[0_0_35px_rgba(0,0,0,0.9)]'
                       : 'border border-pink-500/20 shadow-[0_0_25px_rgba(0,0,0,0.85)]'
                     }`}
                   style={{
                     transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
                     opacity,
-                    filter: `brightness(${brightness})`,
+                    filter: isRosterEnabled
+                      ? `brightness(${brightness})`
+                      : `brightness(${brightness * 0.75}) grayscale(45%)`,
                     zIndex,
                     transformStyle: 'preserve-3d',
                     transition: isDragging
@@ -452,12 +470,14 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 >
                   <img
                     src={coverUrl}
-                    alt={r.name || r.slug}
+                    alt=""
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      if (!target.dataset.triedWebp) {
-                        target.dataset.triedWebp = '1';
-                        target.src = `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.webp`;
+                      if (!target.dataset.triedFallback) {
+                        target.dataset.triedFallback = '1';
+                        target.src = `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.png`;
+                      } else {
+                        target.style.display = 'none';
                       }
                     }}
                     className="absolute inset-0 h-full w-full object-cover object-center pointer-events-none"
@@ -465,10 +485,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/20 pointer-events-none" aria-hidden="true" />
 
-                  <div className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm font-mono font-bold shadow-md pointer-events-none">
-                    <Flame className="h-4 w-4 text-pink-400 fill-pink-400" aria-hidden="true" />
-                    <span>{count}</span>
-                  </div>
+                  {isRosterEnabled && (
+                    <div className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm font-mono font-bold shadow-md pointer-events-none">
+                      <Flame className="h-4 w-4 text-pink-400 fill-pink-400" aria-hidden="true" />
+                      <span>{count}</span>
+                    </div>
+                  )}
 
                   {isCurrentlyActive && (
                     <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-[#ff0055] text-white text-xs font-mono font-black shadow-[0_0_20px_rgba(255,0,85,0.9)] pointer-events-none">
@@ -477,11 +499,24 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     </div>
                   )}
 
+                  {!isRosterEnabled && !isCurrentlyActive && (
+                    <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-zinc-950/90 border border-zinc-700 text-zinc-300 text-xs font-mono font-bold shadow-lg pointer-events-none">
+                      <Lock className="h-3.5 w-3.5 text-zinc-400" aria-hidden="true" />
+                      <span>{dict?.smashOrPass?.comingSoon || 'Coming Soon'}</span>
+                    </div>
+                  )}
+
                   {isCenter && (
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
-                      <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-pink-950/45 border-2 border-pink-500/50 shadow-[0_0_35px_rgba(255,0,85,0.6)] backdrop-blur-sm animate-pulse">
-                        <Flame className="h-8 w-8 sm:h-10 sm:w-10 text-pink-400 fill-pink-400 drop-shadow-[0_0_15px_rgba(255,0,85,0.9)]" />
-                      </div>
+                      {isRosterEnabled ? (
+                        <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-pink-950/45 border-2 border-pink-500/50 shadow-[0_0_35px_rgba(255,0,85,0.6)] backdrop-blur-sm animate-pulse">
+                          <Flame className="h-8 w-8 sm:h-10 sm:w-10 text-pink-400 fill-pink-400 drop-shadow-[0_0_15px_rgba(255,0,85,0.9)]" />
+                        </div>
+                      ) : (
+                        <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-zinc-950/70 border-2 border-zinc-700/80 shadow-2xl backdrop-blur-sm">
+                          <Lock className="h-8 w-8 sm:h-9 sm:w-9 text-zinc-400" />
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -498,7 +533,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   </div>
 
                   {isCenter && (
-                    <div className="absolute inset-0 rounded-[28px] sm:rounded-[36px] border-2 border-pink-400/50 pointer-events-none" aria-hidden="true" />
+                    <div
+                      className={`absolute inset-0 rounded-[28px] sm:rounded-[36px] border-2 pointer-events-none ${
+                        isRosterEnabled ? 'border-pink-400/50' : 'border-zinc-600/50'
+                      }`}
+                      aria-hidden="true"
+                    />
                   )}
                 </div>
               );
@@ -514,17 +554,30 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           )}
 
           {activeRosterInCenter && (
-            <button
-              type="button"
-              onClick={() => commitSelection()}
-              className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-pink-600 via-rose-600 to-pink-600 text-white font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase border border-pink-400/60 shadow-[0_0_35px_rgba(255,0,85,0.6)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
-            >
-              <Check className="h-4 w-4 sm:h-5 sm:w-5 stroke-[3]" aria-hidden="true" />
-              <span>
-                {selectPrefixText ? `${selectPrefixText} ` : ''}
-                {getRosterDisplayName(activeRosterInCenter)}
-              </span>
-            </button>
+            ENABLED_ROSTER_SLUGS.has(activeRosterInCenter.slug) && activeRosterInCenter.is_active !== false ? (
+              <button
+                type="button"
+                onClick={() => commitSelection()}
+                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-pink-600 via-rose-600 to-pink-600 text-white font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase border border-pink-400/60 shadow-[0_0_35px_rgba(255,0,85,0.6)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              >
+                <Check className="h-4 w-4 sm:h-5 sm:w-5 stroke-[3]" aria-hidden="true" />
+                <span>
+                  {selectPrefixText ? `${selectPrefixText} ` : ''}
+                  {getRosterDisplayName(activeRosterInCenter)}
+                </span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-500 font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase cursor-not-allowed opacity-75"
+              >
+                <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-zinc-500" aria-hidden="true" />
+                <span>
+                  {getRosterDisplayName(activeRosterInCenter)} ({dict?.smashOrPass?.comingSoon || 'Coming Soon'})
+                </span>
+              </button>
+            )
           )}
         </div>
       </div>

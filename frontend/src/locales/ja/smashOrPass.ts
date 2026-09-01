@@ -73,6 +73,8 @@ export default {
   pipeSeparator: '|',
   loadingRosterPrefix: '読み込み中',
   loadingRosterSuffix: 'データベースから...',
+  loadingArena: 'Smash or Passアリーナを読み込み中...',
+  loadingRankings: '殿堂入りランキングを読み込み中...',
   stats: 'Info',
   reset: 'リセット',
   rosters: {

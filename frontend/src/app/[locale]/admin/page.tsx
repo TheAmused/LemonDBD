@@ -1,21 +1,16 @@
 'use client';
 // frontend/src/app/[locale]/admin/page.tsx
 
-import React, { useState, useEffect, useCallback, use } from 'react';
+import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { LemonIcon } from '@/components/LemonIcon';
 import { Sidebar } from '@/components/Sidebar';
-import { ScraperConfigModal } from '@/components/ScraperConfigModal';
-import { ConfirmModal } from '@/components/ConfirmModal';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
 import { AdminUserTable } from '@/components/admin/AdminUserTable';
-import { AdminCreateUserModal } from '@/components/admin/AdminCreateUserModal';
-import { AdminBugReportsWorkbench } from '@/components/admin/AdminBugReportsWorkbench';
-import { AdminChallengeControl } from '@/components/admin/AdminChallengeControl';
-import { AdminChallengeStats } from '@/components/admin/AdminChallengeStats';
-import { AdminAuditLogView } from '@/components/admin/AdminAuditLogView';
+import { AdminPanelSkeleton } from '@/components/admin/AdminPanelSkeleton';
+import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
@@ -28,6 +23,38 @@ import type {
   ActionMessage,
 } from '@/types/admin';
 import { Users, Bug, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
+
+// Only the "Users" tab (and its create/toggle-role modal chain) is visible
+// on first paint. The other four admin subtabs, and every modal that only
+// opens on interaction, are code-split out of the initial /admin bundle.
+const AdminBugReportsWorkbench = dynamic(
+  () => import('@/components/admin/AdminBugReportsWorkbench').then((m) => m.AdminBugReportsWorkbench),
+  { ssr: false, loading: () => <AdminTabContentSkeleton /> }
+);
+const AdminChallengeControl = dynamic(
+  () => import('@/components/admin/AdminChallengeControl').then((m) => m.AdminChallengeControl),
+  { ssr: false, loading: () => <AdminTabContentSkeleton /> }
+);
+const AdminChallengeStats = dynamic(
+  () => import('@/components/admin/AdminChallengeStats').then((m) => m.AdminChallengeStats),
+  { ssr: false, loading: () => <AdminTabContentSkeleton /> }
+);
+const AdminAuditLogView = dynamic(
+  () => import('@/components/admin/AdminAuditLogView').then((m) => m.AdminAuditLogView),
+  { ssr: false, loading: () => <AdminTabContentSkeleton /> }
+);
+const AdminCreateUserModal = dynamic(
+  () => import('@/components/admin/AdminCreateUserModal').then((m) => m.AdminCreateUserModal),
+  { ssr: false }
+);
+const ScraperConfigModal = dynamic(
+  () => import('@/components/ScraperConfigModal').then((m) => m.ScraperConfigModal),
+  { ssr: false }
+);
+const ConfirmModal = dynamic(() => import('@/components/ConfirmModal').then((m) => m.ConfirmModal), {
+  ssr: false,
+});
+
 
 interface AdminPageProps {
   params: Promise<{ locale: string }>;
@@ -454,18 +481,9 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   };
 
   if (!dict || isLoading || !isAuthenticated || !isAdmin) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#070b12] text-slate-100 font-mono text-xs" role="status">
-        <div className="flex flex-col items-center gap-3">
-          <LemonIcon className="h-10 w-10 animate-bounce" />
-          <p className="text-amber-400">
-            {isLoading
-              ? dict?.admin?.verifyingAdminAccess || 'Verifying administrative access...'
-              : dict?.admin?.redirectingToDashboard || 'Redirecting to Dashboard...'}
-          </p>
-        </div>
-      </div>
-    );
+    // Layout-matched skeleton instead of a bare spinner -- keeps CLS at
+    // zero once the real header/stats/table mount.
+    return <AdminPanelSkeleton dict={dict} />;
   }
 
   return (
@@ -519,7 +537,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'users'}
               onClick={() => setActiveTab('users')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-amber-500 ${activeTab === 'users'
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-amber-500 ${activeTab === 'users'
                   ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
                 }`}
@@ -535,7 +553,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'bugs'}
               onClick={() => setActiveTab('bugs')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-rose-500 ${activeTab === 'bugs'
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-rose-500 ${activeTab === 'bugs'
                   ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
                 }`}
@@ -551,7 +569,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'challenges'}
               onClick={() => setActiveTab('challenges')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-cyan-500 ${activeTab === 'challenges'
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-cyan-500 ${activeTab === 'challenges'
                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
                 }`}
@@ -565,7 +583,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'challenge_stats'}
               onClick={() => setActiveTab('challenge_stats')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 ${activeTab === 'challenge_stats'
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 ${activeTab === 'challenge_stats'
                   ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
                 }`}
@@ -579,7 +597,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'audit'}
               onClick={() => setActiveTab('audit')}
-              className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-emerald-500 ${activeTab === 'audit'
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-emerald-500 ${activeTab === 'audit'
                   ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
                 }`}
@@ -617,39 +635,47 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               />
             </div>
           ) : activeTab === 'challenges' ? (
-            <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+              <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
+            </Suspense>
           ) : activeTab === 'challenge_stats' ? (
-            <AdminChallengeStats stats={stats} dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+              <AdminChallengeStats stats={stats} dict={dict} />
+            </Suspense>
           ) : activeTab === 'audit' ? (
-            <AdminAuditLogView dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+              <AdminAuditLogView dict={dict} />
+            </Suspense>
           ) : (
-            <AdminBugReportsWorkbench
-              bugReports={bugReports}
-              bugStats={bugStats}
-              totalBugReports={totalBugReports}
-              bugPage={bugPage}
-              bugSearch={bugSearch}
-              bugStatusFilter={bugStatusFilter}
-              selectedBugId={selectedBugId}
-              editingNotes={editingNotes}
-              loading={loadingBugs}
-              dict={dict}
-              onSearchChange={(val) => {
-                setBugSearch(val);
-                setBugPage(1);
-              }}
-              onStatusFilterChange={(val) => {
-                setBugStatusFilter(val);
-                setBugPage(1);
-              }}
-              onPageChange={setBugPage}
-              onSelectBug={setSelectedBugId}
-              onNoteChange={(id, text) =>
-                setEditingNotes((prev) => ({ ...prev, [id]: text }))
-              }
-              onUpdateBug={handleUpdateBugReport}
-              onDeleteBug={handleDeleteBugReport}
-            />
+            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+              <AdminBugReportsWorkbench
+                bugReports={bugReports}
+                bugStats={bugStats}
+                totalBugReports={totalBugReports}
+                bugPage={bugPage}
+                bugSearch={bugSearch}
+                bugStatusFilter={bugStatusFilter}
+                selectedBugId={selectedBugId}
+                editingNotes={editingNotes}
+                loading={loadingBugs}
+                dict={dict}
+                onSearchChange={(val) => {
+                  setBugSearch(val);
+                  setBugPage(1);
+                }}
+                onStatusFilterChange={(val) => {
+                  setBugStatusFilter(val);
+                  setBugPage(1);
+                }}
+                onPageChange={setBugPage}
+                onSelectBug={setSelectedBugId}
+                onNoteChange={(id, text) =>
+                  setEditingNotes((prev) => ({ ...prev, [id]: text }))
+                }
+                onUpdateBug={handleUpdateBugReport}
+                onDeleteBug={handleDeleteBugReport}
+              />
+            </Suspense>
           )}
         </div>
       </main>

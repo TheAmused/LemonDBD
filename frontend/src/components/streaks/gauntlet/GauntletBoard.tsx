@@ -5,18 +5,32 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
 import { Role } from '@/types/gauntletStreak';
-import { Confetti, CONFETTI_LIFETIME_MS } from '../Confetti';
-import { ResetConfirmModal } from '../ResetConfirmModal';
+import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useGauntletRun } from './useGauntletRun';
 import { useOwnedCharacters, OwnedCharacterItem } from './useOwnedCharacters';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
 import { GauntletHeader } from './GauntletHeader';
 import { ActiveTargetStage } from './ActiveTargetStage';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
-import { GauntletStatsDrawer } from './GauntletStatsDrawer';
-import { GauntletRulesModal } from './GauntletRulesModal';
-import { CheckpointModal } from './CheckpointModal';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+
+const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
+const ResetConfirmModal = dynamic(
+  () => import('../ResetConfirmModal').then((m) => m.ResetConfirmModal),
+  { ssr: false }
+);
+const GauntletStatsDrawer = dynamic(
+  () => import('./GauntletStatsDrawer').then((m) => m.GauntletStatsDrawer),
+  { ssr: false }
+);
+const GauntletRulesModal = dynamic(
+  () => import('./GauntletRulesModal').then((m) => m.GauntletRulesModal),
+  { ssr: false }
+);
+const CheckpointModal = dynamic(
+  () => import('./CheckpointModal').then((m) => m.CheckpointModal),
+  { ssr: false }
+);
 
 // Particle/Lottie code is heavy and only ever needed on this page, so it gets
 // its own chunk rather than riding along in every route that imports GauntletBoard.

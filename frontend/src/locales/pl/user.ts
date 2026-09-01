@@ -83,4 +83,15 @@ export default {
   invalidCredentials: "Nieprawidłowe dane logowania.",
   registrationFailed: "Rejestracja nie powiodła się.",
   unexpectedError: "Wystąpił nieoczekiwany błąd.",
+
+  // --- /user page: perf & i18n hardening pass additions ---
+  avatarSizeLimit: "Plik awatara musi być mniejszy niż 10 MB.",
+  avatarUploadFailed: "Nie udało się przesłać awatara.",
+  avatarUpdateSuccess: "Awatar został pomyślnie zaktualizowany!",
+  avatarResetFailed: "Nie udało się zresetować awatara.",
+  avatarResetSuccessMsg: "Awatar przywrócony do domyślnego.",
+  authTokenMissing: "Brak tokenu uwierzytelniającego. Zaloguj się ponownie.",
+  profileUpdateFailedMsg: "Nie udało się zaktualizować profilu.",
+  profileUpdateSuccessMsg: "Profil został pomyślnie zaktualizowany!",
+  myBugReportsCount: "Moje Zgłoszenia Błędów ({count})",
 } as const;

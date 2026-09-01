@@ -1,7 +1,8 @@
 'use client';
 // frontend/src/components/character-detail/KillerDetailView.tsx
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { BookOpen, Flame, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
 import {
   CharacterViewBaseProps,
@@ -19,14 +20,15 @@ import { KillerCombatStats } from './components/KillerCombatStats';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { KillerEquipmentSection } from './components/KillerEquipmentSection';
 import { OfferingsSection } from './components/OfferingsSection';
-import { LoreModal } from './modals/LoreModal';
-import { Model3DModal } from './modals/Model3DModal';
-import { KillerPowerModal } from './modals/KillerPowerModal';
-import { TerrorRadiusModal } from './modals/TerrorRadiusModal';
-import { EquipmentDetailModal } from './modals/EquipmentDetailModal';
-import { PerkModal } from '@/components/PerkModal';
 import { Perk, PerkDictionary } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+
+const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
+const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
+const KillerPowerModal = dynamic(() => import('./modals/KillerPowerModal').then((m) => m.KillerPowerModal), { ssr: false });
+const TerrorRadiusModal = dynamic(() => import('./modals/TerrorRadiusModal').then((m) => m.TerrorRadiusModal), { ssr: false });
+const EquipmentDetailModal = dynamic(() => import('./modals/EquipmentDetailModal').then((m) => m.EquipmentDetailModal), { ssr: false });
+const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
 export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
   currentLocale,

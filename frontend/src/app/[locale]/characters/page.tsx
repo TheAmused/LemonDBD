@@ -2,15 +2,21 @@
 import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/characters/page.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { CharactersHub } from '@/components/CharactersHub';
-import { QuestsModal } from '@/components/QuestsModal';
+import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { CharacterItem, PerkItem } from '@/components/character-detail/types';
+
+const QuestsModal = dynamic(
+  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
+  { ssr: false }
+);
 
 export default function CharactersPage() {
   const params = useParams();
@@ -63,8 +69,11 @@ export default function CharactersPage() {
 
   if (!dict) {
     return (
-      <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-        {((dict as any)?.app?.loadingCharactersHub) || 'Loading Characters Hub...'}
+      <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
+        <main className="flex-1 w-full overflow-y-auto p-4 sm:p-6 lg:p-8 lg:pl-72">
+          <CharactersGridSkeleton />
+        </main>
       </div>
     );
   }
@@ -87,8 +96,12 @@ export default function CharactersPage() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <CharactersHub dict={dict} />
-        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
+        <Suspense fallback={<CharactersGridSkeleton dict={dict} />}>
+          <CharactersHub dict={dict} />
+        </Suspense>
+        {isQuestsOpen && (
+          <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
+        )}
       </main>
     </div>
   );

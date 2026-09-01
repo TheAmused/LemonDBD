@@ -1,7 +1,8 @@
 'use client';
 // frontend/src/components/character-detail/SurvivorDetailView.tsx
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { BookOpen, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
 import {
   CharacterViewBaseProps,
@@ -15,12 +16,13 @@ import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection';
 import { OfferingsSection } from './components/OfferingsSection';
-import { LoreModal } from './modals/LoreModal';
-import { Model3DModal } from './modals/Model3DModal';
-import { EquipmentDetailModal } from './modals/EquipmentDetailModal';
-import { PerkModal } from '@/components/PerkModal';
 import { Perk, PerkDictionary } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+
+const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
+const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
+const EquipmentDetailModal = dynamic(() => import('./modals/EquipmentDetailModal').then((m) => m.EquipmentDetailModal), { ssr: false });
+const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
 export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
   currentLocale,

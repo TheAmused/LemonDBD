@@ -238,9 +238,109 @@ class SmashSoundEngine {
     }
   }
 
-  // ================= SOUND EFFECTS: SEXY SMASH & BIG AIR WHOOSH =================
+  // ================= SOUND EFFECTS: SEXY SMASH & SAD PASS AUDIO SUITE =================
 
-  // SEXY SMASH: Warm 808 sub-drop + lush romantic FM harp chord + crystalline shimmer
+  // SEXY DRAG HOVER: Seductive ascending FM harmonic flutter when dragging towards Smash
+  public playSensualHover() {
+    if (this.isMuted) return;
+    const ctx = this.initContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+
+    // Seductive harmonic arpeggio (A4 -> C#5 -> E5 -> G#5)
+    const notes = [440.0, 554.37, 659.25, 830.61];
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      const startTime = now + idx * 0.035;
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.05, startTime + 0.18);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2200, startTime);
+      filter.frequency.exponentialRampToValueAtTime(800, startTime + 0.22);
+
+      gain.gain.setValueAtTime(0.001, startTime);
+      gain.gain.linearRampToValueAtTime(0.045, startTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.22);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + 0.24);
+    });
+  }
+
+  // SAD DRAG HOVER: Melancholic descending cello sigh when dragging towards Pass
+  public playSadHover() {
+    if (this.isMuted) return;
+    const ctx = this.initContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+
+    // Sorrowful descending minor tone glide (D4 -> C4 -> Bb3 -> A3)
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(293.66, now); // D4
+    osc.frequency.exponentialRampToValueAtTime(220.0, now + 0.28); // Glides down to A3
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(750, now);
+    filter.frequency.linearRampToValueAtTime(320, now + 0.28);
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.055, now + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.32);
+  }
+
+  // TACTILE CARD LIFT / GRAB: Silky card touch
+  public playCardGrabSound() {
+    if (this.isMuted) return;
+    const ctx = this.initContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(380, now);
+    osc.frequency.exponentialRampToValueAtTime(190, now + 0.045);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1200, now);
+
+    gain.gain.setValueAtTime(0.03, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.05);
+  }
+
+  // SEXY SMASH: Warm 808 sub-drop + lush romantic FM harp chord + crystalline golden shimmer
   public playSmashSound() {
     if (this.isMuted) return;
     const ctx = this.initContext();
@@ -252,19 +352,19 @@ class SmashSoundEngine {
     const subOsc = ctx.createOscillator();
     const subGain = ctx.createGain();
     subOsc.type = 'sine';
-    subOsc.frequency.setValueAtTime(115, now);
-    subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.32);
+    subOsc.frequency.setValueAtTime(110, now);
+    subOsc.frequency.exponentialRampToValueAtTime(36, now + 0.38);
 
-    subGain.gain.setValueAtTime(0.28, now);
-    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+    subGain.gain.setValueAtTime(0.3, now);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
 
     subOsc.connect(subGain);
     subGain.connect(ctx.destination);
     subOsc.start(now);
-    subOsc.stop(now + 0.34);
+    subOsc.stop(now + 0.4);
 
-    // 2. Lush romantic FM chime chord: F4 (349Hz), A4 (440Hz), C5 (523Hz), E5 (659Hz), A5 (880Hz)
-    const freqs = [349.23, 440.0, 523.25, 659.25, 880.0];
+    // 2. Lush romantic FM chime chord: F4 (349Hz), A4 (440Hz), C5 (523Hz), E5 (659Hz), A5 (880Hz), C6 (1046Hz)
+    const freqs = [349.23, 440.0, 523.25, 659.25, 880.0, 1046.5];
     freqs.forEach((freq, idx) => {
       const carrier = ctx.createOscillator();
       const modulator = ctx.createOscillator();
@@ -272,7 +372,7 @@ class SmashSoundEngine {
       const carrierGain = ctx.createGain();
       const filter = ctx.createBiquadFilter();
 
-      const startTime = now + idx * 0.032;
+      const startTime = now + idx * 0.03;
 
       carrier.type = 'sine';
       carrier.frequency.setValueAtTime(freq, startTime);
@@ -280,21 +380,19 @@ class SmashSoundEngine {
       modulator.type = 'triangle';
       modulator.frequency.setValueAtTime(freq * 2, startTime);
 
-      // FM index envelope
-      modGain.gain.setValueAtTime(freq * 0.75, startTime);
-      modGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.45);
+      modGain.gain.setValueAtTime(freq * 0.8, startTime);
+      modGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.5);
 
       modulator.connect(modGain);
       modGain.connect(carrier.frequency);
 
-      // High-sheen resonant filter
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(2800, startTime);
-      filter.frequency.exponentialRampToValueAtTime(900, startTime + 0.55);
+      filter.frequency.setValueAtTime(3200, startTime);
+      filter.frequency.exponentialRampToValueAtTime(900, startTime + 0.6);
 
       carrierGain.gain.setValueAtTime(0.001, startTime);
-      carrierGain.gain.linearRampToValueAtTime(0.12 - idx * 0.015, startTime + 0.025);
-      carrierGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.55);
+      carrierGain.gain.linearRampToValueAtTime(0.14 - idx * 0.018, startTime + 0.025);
+      carrierGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.6);
 
       carrier.connect(filter);
       filter.connect(carrierGain);
@@ -302,8 +400,8 @@ class SmashSoundEngine {
 
       modulator.start(startTime);
       carrier.start(startTime);
-      modulator.stop(startTime + 0.58);
-      carrier.stop(startTime + 0.58);
+      modulator.stop(startTime + 0.62);
+      carrier.stop(startTime + 0.62);
     });
 
     // 3. Delicate sparkle pop accent
@@ -312,26 +410,26 @@ class SmashSoundEngine {
     const sparkleFilter = ctx.createBiquadFilter();
 
     sparkleFilter.type = 'bandpass';
-    sparkleFilter.frequency.setValueAtTime(3200, now + 0.1);
-    sparkleFilter.Q.setValueAtTime(4.0, now + 0.1);
+    sparkleFilter.frequency.setValueAtTime(3400, now + 0.08);
+    sparkleFilter.Q.setValueAtTime(4.0, now + 0.08);
 
     sparkleOsc.type = 'sine';
-    sparkleOsc.frequency.setValueAtTime(1600, now + 0.1);
-    sparkleOsc.frequency.exponentialRampToValueAtTime(3200, now + 0.22);
+    sparkleOsc.frequency.setValueAtTime(1760, now + 0.08);
+    sparkleOsc.frequency.exponentialRampToValueAtTime(3520, now + 0.24);
 
-    sparkleGain.gain.setValueAtTime(0.001, now + 0.1);
-    sparkleGain.gain.linearRampToValueAtTime(0.07, now + 0.13);
-    sparkleGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+    sparkleGain.gain.setValueAtTime(0.001, now + 0.08);
+    sparkleGain.gain.linearRampToValueAtTime(0.08, now + 0.12);
+    sparkleGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
 
     sparkleOsc.connect(sparkleFilter);
     sparkleFilter.connect(sparkleGain);
     sparkleGain.connect(ctx.destination);
 
-    sparkleOsc.start(now + 0.1);
-    sparkleOsc.stop(now + 0.36);
+    sparkleOsc.start(now + 0.08);
+    sparkleOsc.stop(now + 0.4);
   }
 
-  // BIG AIR WHOOSH PASS: High-velocity aerodynamic filtered noise whoosh + sub air displacement
+  // SAD PASS: Heartbreaking, poignant minor teardrop + sorrowful cello sigh + cold breeze whisper
   public playPassSound() {
     if (this.isMuted) return;
     const ctx = this.initContext();
@@ -339,8 +437,59 @@ class SmashSoundEngine {
 
     const now = ctx.currentTime;
 
-    // 1. Aerodynamic White Noise Whoosh Buffer (0.42s)
-    const bufferSize = Math.floor(ctx.sampleRate * 0.42);
+    // 1. Sad cello minor chord (D3 146Hz, F3 174Hz, A3 220Hz -> fading down to G2 98Hz)
+    const celloChords = [146.83, 174.61, 220.0];
+    celloChords.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.82, now + 0.55);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(420, now);
+      filter.frequency.linearRampToValueAtTime(160, now + 0.55);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.08 - idx * 0.02, now + 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.58);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.6);
+    });
+
+    // 2. Sorrowful teardrop resonance (descending triangle chime)
+    const dropOsc = ctx.createOscillator();
+    const dropGain = ctx.createGain();
+    const dropFilter = ctx.createBiquadFilter();
+
+    dropOsc.type = 'triangle';
+    dropOsc.frequency.setValueAtTime(587.33, now); // D5
+    dropOsc.frequency.exponentialRampToValueAtTime(329.63, now + 0.35); // E4 sad drop
+
+    dropFilter.type = 'lowpass';
+    dropFilter.frequency.setValueAtTime(1100, now);
+    dropFilter.frequency.exponentialRampToValueAtTime(300, now + 0.38);
+
+    dropGain.gain.setValueAtTime(0.001, now);
+    dropGain.gain.linearRampToValueAtTime(0.07, now + 0.04);
+    dropGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
+
+    dropOsc.connect(dropFilter);
+    dropFilter.connect(dropGain);
+    dropGain.connect(ctx.destination);
+
+    dropOsc.start(now);
+    dropOsc.stop(now + 0.4);
+
+    // 3. Gentle melancholic wind sigh (filtered soft noise)
+    const bufferSize = Math.floor(ctx.sampleRate * 0.45);
     const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const output = noiseBuffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
@@ -350,48 +499,23 @@ class SmashSoundEngine {
     const whiteNoise = ctx.createBufferSource();
     whiteNoise.buffer = noiseBuffer;
 
-    // Resonant bandpass filter that sweeps rapidly downward (4200Hz -> 90Hz)
-    const whooshFilter = ctx.createBiquadFilter();
-    whooshFilter.type = 'bandpass';
-    whooshFilter.frequency.setValueAtTime(4200, now);
-    whooshFilter.frequency.exponentialRampToValueAtTime(95, now + 0.4);
-    whooshFilter.Q.setValueAtTime(3.8, now);
+    const windFilter = ctx.createBiquadFilter();
+    windFilter.type = 'bandpass';
+    windFilter.frequency.setValueAtTime(800, now);
+    windFilter.frequency.exponentialRampToValueAtTime(180, now + 0.45);
+    windFilter.Q.setValueAtTime(2.0, now);
 
-    // Second lowpass stage for smooth cinematic body
-    const lowpassStage = ctx.createBiquadFilter();
-    lowpassStage.type = 'lowpass';
-    lowpassStage.frequency.setValueAtTime(3500, now);
-    lowpassStage.frequency.exponentialRampToValueAtTime(200, now + 0.4);
+    const windGain = ctx.createGain();
+    windGain.gain.setValueAtTime(0.001, now);
+    windGain.gain.linearRampToValueAtTime(0.06, now + 0.05);
+    windGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
 
-    const whooshGain = ctx.createGain();
-    whooshGain.gain.setValueAtTime(0.001, now);
-    whooshGain.gain.linearRampToValueAtTime(0.32, now + 0.06); // Fast aggressive attack
-    whooshGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
-
-    whiteNoise.connect(whooshFilter);
-    whooshFilter.connect(lowpassStage);
-    lowpassStage.connect(whooshGain);
-    whooshGain.connect(ctx.destination);
+    whiteNoise.connect(windFilter);
+    windFilter.connect(windGain);
+    windGain.connect(ctx.destination);
 
     whiteNoise.start(now);
-    whiteNoise.stop(now + 0.42);
-
-    // 2. Sub Air Displacement Body (Physical air whoosh weight)
-    const subAirOsc = ctx.createOscillator();
-    const subAirGain = ctx.createGain();
-    subAirOsc.type = 'sine';
-    subAirOsc.frequency.setValueAtTime(160, now);
-    subAirOsc.frequency.exponentialRampToValueAtTime(40, now + 0.38);
-
-    subAirGain.gain.setValueAtTime(0.001, now);
-    subAirGain.gain.linearRampToValueAtTime(0.18, now + 0.05);
-    subAirGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
-
-    subAirOsc.connect(subAirGain);
-    subAirGain.connect(ctx.destination);
-
-    subAirOsc.start(now);
-    subAirOsc.stop(now + 0.4);
+    whiteNoise.stop(now + 0.46);
   }
 
   // Tactile Tarot Card Flip Sound (Crisp, silky flick)

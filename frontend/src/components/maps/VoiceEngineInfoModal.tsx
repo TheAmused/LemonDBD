@@ -240,12 +240,8 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
             />
           </div>
 
-          <div className="flex items-center justify-between pt-1">
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              {t.modelCached || ''}
-            </p>
-
-            {modelProgress.status !== 'ready' && modelProgress.status !== 'downloading' && (
+          {modelProgress.status !== 'ready' && modelProgress.status !== 'downloading' && (
+            <div className="flex items-center justify-end pt-1">
               <button
                 type="button"
                 onClick={onPreloadModel}
@@ -254,8 +250,8 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
                 <RefreshCw className="h-3 w-3" aria-hidden="true" />
                 <span>{dict?.maps?.preloadModel || ''}</span>
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Footer Actions */}

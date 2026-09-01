@@ -69,7 +69,8 @@ export default {
   killerMindgameCounterTitle: "Kontrowanie Zwodów Zabójcy",
   killerMindgameCounterDefault: "Zabójcy próbują ukrywać poświatę idąc tyłem (moonwalk) wokół wysokich ścian lub markując skok przez okno, by wymusić przedwczesne zrzucenie palety.",
   sourceHensClock: "Hens333 (12-Clock)",
-  sourceSamoelIsometric: "SamoelColt (Izometryczny)",
+  sourceLemonDbd: "LemonDBD",
+  lemonDbdSourceLocked: "Wkrótce",
   sourceHens: "Hens333",
   detectedBrowser: "Wykryta Przeglądarka",
   activeRecognitionEngine: "Aktywny Silnik Rozpoznawania",
@@ -124,4 +125,6 @@ export default {
   zoomOut25: 'Oddal (-25%)',
   searchTextTab: 'Szukaj',
   searchVoiceTab: 'Głos',
+  expandRealmAria: 'Rozwiń realm',
+  collapseRealmAria: 'Zwiń realm',
 } as const;

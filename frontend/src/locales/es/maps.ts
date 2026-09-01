@@ -69,7 +69,8 @@ export default {
   killerMindgameCounterTitle: "Contramedidas a Fintas del Asesino",
   killerMindgameCounterDefault: "Los asesinos intentarán ocultar su mancha roja caminando de espaldas (moonwalk) o amagando saltos de ventana para forzar caídas tempranas de palés.",
   sourceHensClock: "Hens333 (12-Clock)",
-  sourceSamoelIsometric: "SamoelColt (Isométrico)",
+  sourceLemonDbd: "LemonDBD",
+  lemonDbdSourceLocked: "Próximamente",
   sourceHens: "Hens333",
   detectedBrowser: "Navegador Detectado",
   activeRecognitionEngine: "Motor de Reconocimiento Activo",
@@ -124,4 +125,6 @@ export default {
   zoomOut25: 'Alejar (-25%)',
   searchTextTab: 'Buscar',
   searchVoiceTab: 'Voz',
+  expandRealmAria: 'Expandir reino',
+  collapseRealmAria: 'Contraer reino',
 } as const;

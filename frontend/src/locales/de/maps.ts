@@ -69,7 +69,8 @@ export default {
   killerMindgameCounterTitle: "Killer-Mindgame-Konter",
   killerMindgameCounterDefault: "Killer versuchen den roten Fleck durch Moonwalks an hohen Wänden zu verbergen oder Fenstersprünge anzutäuschen, um frühe Palettenabwürfe zu erzwingen.",
   sourceHensClock: "Hens333 (12-Uhr)",
-  sourceSamoelIsometric: "SamoelColt (Isometrisch)",
+  sourceLemonDbd: "LemonDBD",
+  lemonDbdSourceLocked: "Demnächst",
   sourceHens: "Hens333",
   detectedBrowser: "Erkannter Browser",
   activeRecognitionEngine: "Aktive Erkennungs-Engine",
@@ -124,4 +125,6 @@ export default {
   zoomOut25: 'Verkleinern (-25%)',
   searchTextTab: 'Suche',
   searchVoiceTab: 'Sprache',
+  expandRealmAria: 'Reich aufklappen',
+  collapseRealmAria: 'Reich einklappen',
 } as const;

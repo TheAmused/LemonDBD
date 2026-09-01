@@ -3,7 +3,7 @@
         "slug": "anime_manga",
         "name_i18n_key": "smashOrPass.rosters.anime_manga.name",
         "description_i18n_key": "smashOrPass.rosters.anime_manga.desc",
-        "cover_image_url": "/static/avatars/rosters/anime_manga.png",
+        "cover_image_url": "/static/avatars/rosters/anime_manga.webp",
         "theme_color": "#ec4899",
         "category": "Anime",
         "is_nsfw": false,
@@ -137,7 +137,7 @@
             "name": "Rin: Spirit Blade",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/anime_spirit.png",
+            "media_url": "/static/avatars/killers/anime_spirit.webp",
             "metadata": {
                 "title": "Phantasmagoric Shonen Blade",
                 "tagline": "Floating ethereal shards, dramatic anime wind, and tragic backstory.",
@@ -369,7 +369,7 @@
             "name": "Mikaela: Mahou Shoujo",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/anime_mikaela.png",
+            "media_url": "/static/avatars/survivors/anime_mikaela.webp",
             "metadata": {
                 "title": "Boon Witch of Starlight",
                 "tagline": "Pastel witch hat, glowing magical circle boons, and wholesome coffee stories.",
@@ -601,7 +601,7 @@
             "name": "Yui: Midnight Racer",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/anime_yui.png",
+            "media_url": "/static/avatars/survivors/anime_yui.webp",
             "metadata": {
                 "title": "Tokyo Drift Champion",
                 "tagline": "Leather racing jacket, custom turbocharged motorcycle, fierce leadership.",
@@ -833,7 +833,7 @@
             "name": "Trickster: Idol Shinigami",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/anime_trickster.png",
+            "media_url": "/static/avatars/killers/anime_trickster.webp",
             "metadata": {
                 "title": "Shonen Stage Virtuoso",
                 "tagline": "Golden microphone dagger, anime sparkle effects, and concert choreography.",
@@ -1065,7 +1065,7 @@
             "name": "Anna: Tsundere Forest Queen",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/anime_huntress.png",
+            "media_url": "/static/avatars/killers/anime_huntress.webp",
             "metadata": {
                 "title": "Bavarian Forest Tsundere",
                 "tagline": "Rabbit mask with bunny ears, huge hatchet, flustered blushes.",
@@ -1297,7 +1297,7 @@
             "name": "Frank & Julie: Delinquent Duo",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/anime_legion.png",
+            "media_url": "/static/avatars/killers/anime_legion.webp",
             "metadata": {
                 "title": "High School Rebel Squad",
                 "tagline": "Graffiti hoodie, sprint frenzy, high-energy school festival romance.",
@@ -1529,7 +1529,7 @@
             "name": "Dracula: Castlevania Prince",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/anime_dracula.png",
+            "media_url": "/static/avatars/killers/anime_dracula.webp",
             "metadata": {
                 "title": "Bishounen Dark Sovereign",
                 "tagline": "Flowing silver hair, velvet cape, tragic shonen backstory.",
@@ -1761,7 +1761,7 @@
             "name": "Feng Min: Arcade Senpai",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/anime_feng_min.png",
+            "media_url": "/static/avatars/survivors/anime_feng_min.webp",
             "metadata": {
                 "title": "Rhythm Game Queen",
                 "tagline": "Neon bunny headphones, perfect 100% combo streak, boba lover.",
@@ -1993,7 +1993,7 @@
             "name": "Wesker: Megane Mastermind",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/anime_wesker.png",
+            "media_url": "/static/avatars/killers/anime_wesker.webp",
             "metadata": {
                 "title": "Calculating Student President",
                 "tagline": "Pushes glasses up nose, trench coat, seven minutes plan.",
@@ -2225,7 +2225,7 @@
             "name": "Meg: Track & Field Kouhai",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/anime_meg.png",
+            "media_url": "/static/avatars/survivors/anime_meg.webp",
             "metadata": {
                 "title": "Energetic Athletics Star",
                 "tagline": "Twin tails, track baton, morning jogging dates.",

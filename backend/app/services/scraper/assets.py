@@ -1,71 +1,40 @@
 # backend/app/services/scraper/assets.py
 import asyncio
-import io
 import logging
 from pathlib import Path
 
 from curl_cffi.requests import AsyncSession
-from PIL import Image
 
 from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData, RealmImageData
 from app.scrapers.utils import sanitize_filename
+from app.services.image_conversion import (
+    composite_perk_diamond_frame,
+    ensure_format_bytes,
+    get_perk_frame_template as _get_perk_frame_template,
+)
 from app.services.scraper.state import ScraperStateManager
 
 logger = logging.getLogger(__name__)
 
 PERK_FRAME_TEMPLATE_PATH = Path(__file__).resolve().parent.parent.parent / "scrapers" / "assets" / "perk_frame.png"
-_perk_frame_template_cache: Image.Image | None = None
 
 
-def get_perk_frame_template() -> Image.Image | None:
+def get_perk_frame_template():
     """Retrieve and cache the PNG diamond frame template for perks."""
-    global _perk_frame_template_cache
-    if _perk_frame_template_cache is None and PERK_FRAME_TEMPLATE_PATH.exists():
-        _perk_frame_template_cache = Image.open(PERK_FRAME_TEMPLATE_PATH).convert("RGBA")
-    return _perk_frame_template_cache
+    return _get_perk_frame_template(PERK_FRAME_TEMPLATE_PATH)
 
 
 def apply_perk_diamond_frame(icon_bytes: bytes) -> bytes:
-    """Composites perk icon onto the canonical diamond framing template."""
-    template = get_perk_frame_template()
-    if template is None:
-        return icon_bytes
-
-    size = template.size[0]
-    canvas = template.copy()
-
-    icon = Image.open(io.BytesIO(icon_bytes)).convert("RGBA")
-    icon_size = int(size * 0.85)
-    icon_resized = icon.resize((icon_size, icon_size), Image.Resampling.LANCZOS)
-    offset = ((size - icon_size) // 2, (size - icon_size) // 2)
-    canvas.alpha_composite(icon_resized, offset)
-
-    buf = io.BytesIO()
-    canvas.save(buf, format="PNG")
-    return buf.getvalue()
+    """Composites perk icon onto the canonical diamond framing template and exports high-quality WebP."""
+    return composite_perk_diamond_frame(icon_bytes, PERK_FRAME_TEMPLATE_PATH, quality=92)
 
 
 def normalise_image_bytes(content: bytes, relative_path: str) -> bytes:
-    """Make the stored bytes match the extension the database will serve.
+    """Make the stored bytes match the WebP (or specified) extension.
 
-    wiki.gg serves most icons as WebP regardless of the ".png" in the URL. Writing
-    those bytes straight to a ".png" file leaves every icon mislabelled: the API
-    sends `Content-Type: image/png` for a WebP body, which strict clients, caches
-    and image pipelines are entitled to reject. Re-encoding costs one pass per
-    asset during a scrape and removes the mismatch entirely.
+    Ensures all stored static assets are valid, compressed WebP binaries.
     """
-    if not relative_path.lower().endswith(".png"):
-        return content
-    if content[:8] == b"\x89PNG\r\n\x1a\n":
-        return content
-    try:
-        with Image.open(io.BytesIO(content)) as img:
-            buf = io.BytesIO()
-            img.convert("RGBA").save(buf, format="PNG")
-            return buf.getvalue()
-    except Exception as err:
-        logger.warning(f"Could not re-encode [{relative_path}] to PNG: {err}")
-        return content
+    return ensure_format_bytes(content, relative_path, quality=92)
 
 
 async def download_single_asset(
@@ -80,6 +49,10 @@ async def download_single_asset(
     """Asynchronously download and persist an individual asset file."""
     if not url:
         return
+
+    # Ensure path uses .webp extension
+    if not relative_path.lower().endswith((".webp", ".svg", ".json")):
+        relative_path = str(Path(relative_path).with_suffix(".webp")).replace("\\", "/")
 
     destination = static_dir / relative_path
     try:
@@ -96,12 +69,14 @@ async def download_single_asset(
         try:
             response = await client.get(url, timeout=timeout)
             response.raise_for_status()
-            content = normalise_image_bytes(response.content, relative_path)
             if apply_perk_frame:
                 try:
-                    content = apply_perk_diamond_frame(content)
+                    content = apply_perk_diamond_frame(response.content)
                 except Exception as frame_err:
                     logger.warning(f"Could not frame perk icon [{url}]: {frame_err}")
+                    content = normalise_image_bytes(response.content, relative_path)
+            else:
+                content = normalise_image_bytes(response.content, relative_path)
             destination.write_bytes(content)
         except Exception as err:
             logger.error(f"Download failed [{url}]: {err}")
@@ -124,21 +99,42 @@ async def download_all_assets(
 ) -> None:
     """Batch concurrent asset downloader for characters, powers, perks, items, addons, maps, offerings, and realms."""
     semaphore = asyncio.Semaphore(max_concurrent_downloads)
+
+    def _to_webp_path(path: str) -> str:
+        """Force a relative asset path to end in .webp.
+
+        download_single_asset always *writes* the file as .webp regardless of
+        the extension it's handed, but it has no way to report that correction
+        back to the caller. Every path we intend to persist to the database
+        must therefore already be normalized to .webp *before* we hand it to
+        download_single_asset -- otherwise the DB ends up pointing at a .png
+        that was never actually written (see char.power.icon_local_path below,
+        which this mirrors; it was previously the only path fixed up this way,
+        which is exactly why perk/character/item/addon/offering/map/realm
+        assets kept 404ing after the download layer switched to WebP).
+        """
+        if not path or path.lower().endswith((".webp", ".svg", ".json")):
+            return path
+        return str(Path(path).with_suffix(".webp")).replace("\\", "/")
+
     async with AsyncSession(impersonate=impersonate_browser, verify=False) as client:
-        tasks = [
-            download_single_asset(
-                client,
-                semaphore,
-                static_dir,
-                perk.icon_url,
-                perk.icon_local_path,
-                timeout=request_timeout,
-                apply_perk_frame=True,
+        tasks = []
+        for perk in perks:
+            perk.icon_local_path = _to_webp_path(perk.icon_local_path)
+            tasks.append(
+                download_single_asset(
+                    client,
+                    semaphore,
+                    static_dir,
+                    perk.icon_url,
+                    perk.icon_local_path,
+                    timeout=request_timeout,
+                    apply_perk_frame=True,
+                )
             )
-            for perk in perks
-        ]
         for char in characters:
             if char.avatar_url:
+                char.avatar_local_path = _to_webp_path(char.avatar_local_path)
                 tasks.append(
                     download_single_asset(
                         client,
@@ -151,7 +147,7 @@ async def download_all_assets(
                 )
             if char.power and char.power.icon_url:
                 p_slug = sanitize_filename(char.power.name)
-                p_path = f"icons/powers/{p_slug}.png"
+                p_path = f"icons/powers/{p_slug}.webp"
                 char.power.icon_local_path = p_path
                 tasks.append(
                     download_single_asset(
@@ -166,6 +162,7 @@ async def download_all_assets(
         if items:
             for item in items:
                 if item.icon_url:
+                    item.icon_local_path = _to_webp_path(item.icon_local_path)
                     tasks.append(
                         download_single_asset(
                             client,
@@ -179,6 +176,7 @@ async def download_all_assets(
         if addons:
             for addon in addons:
                 if addon.icon_url:
+                    addon.icon_local_path = _to_webp_path(addon.icon_local_path)
                     tasks.append(
                         download_single_asset(
                             client,
@@ -192,6 +190,7 @@ async def download_all_assets(
         if offerings:
             for off in offerings:
                 if off.icon_url:
+                    off.icon_local_path = _to_webp_path(off.icon_local_path)
                     tasks.append(
                         download_single_asset(
                             client,
@@ -205,6 +204,7 @@ async def download_all_assets(
         if maps:
             for m in maps:
                 if m.callout_image_url and m.callout_image_local_path:
+                    m.callout_image_local_path = _to_webp_path(m.callout_image_local_path)
                     tasks.append(
                         download_single_asset(
                             client,
@@ -218,6 +218,7 @@ async def download_all_assets(
         if realms:
             for r in realms:
                 if r.image_url and r.image_local_path:
+                    r.image_local_path = _to_webp_path(r.image_local_path)
                     tasks.append(
                         download_single_asset(
                             client,

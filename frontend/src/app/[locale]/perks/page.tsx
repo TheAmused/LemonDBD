@@ -27,6 +27,7 @@ import {
   PerkDictionary,
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { useImagePrefetch } from '@/components/ImagePreloadProvider';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 const QuestsModal = dynamic(
@@ -134,6 +135,8 @@ function PerksContent() {
     setPage(1);
   };
 
+  const { prefetchPerkIcons } = useImagePrefetch();
+
   const fetchPerks = useCallback(async () => {
     setLoading(true);
     try {
@@ -172,7 +175,9 @@ function PerksContent() {
 
       if (perksRes.ok) {
         const result = await perksRes.json();
-        setPerks(result.data || []);
+        const perkList = result.data || [];
+        setPerks(perkList);
+        prefetchPerkIcons(perkList);
         if (result.pagination) {
           setTotalPages(result.pagination.total_pages);
           setTotalResults(result.pagination.total);
@@ -189,6 +194,7 @@ function PerksContent() {
         const gResult = await allPerksRes.json();
         const fullList: Perk[] = gResult.data || [];
         setAllPerksForGenerator(fullList);
+        prefetchPerkIcons(fullList.slice(0, 60));
 
         setSurvivorCount(
           fullList.filter((p) => p.category === 'Survivor').length
@@ -319,23 +325,8 @@ function PerksContent() {
             grid once a larger page size pushes the grid past 3 rows. */}
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {loading ? (
-            // Fixed 5x3 grid (grid-cols-5 and 3 rows / grid-rows-3 sharing equal height)
-            <div
-              ref={measureGridArea}
-              aria-busy="true"
-              aria-label={dict?.characterDetail?.loading || 'Loading perks'}
-              className="grid min-h-0 w-full flex-1 grid-cols-5 gap-3"
-              style={rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
-            >
-              {Array.from({ length: 15 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-center p-1"
-                >
-                  <div className="aspect-square h-[88%] w-[88%] rotate-45 animate-pulse rounded-2xl bg-slate-900/60 border border-slate-800" />
-                </div>
-              ))}
-            </div>
+            // Fixed 5x3 grid (grid-cols-5 and grid-rows-3 layout)
+            <PerksGridSkeleton dict={dict} />
           ) : perks.length === 0 ? (
             <section
               aria-live="polite"

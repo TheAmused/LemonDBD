@@ -240,7 +240,8 @@ export default function GuesserPage() {
         .replace(/[^a-z0-9_]/g, '')
         .replace(/_+/g, '_')
         .replace(/^_+|_+$/g, '');
-      rawPath = `avatars/${subDir}/${sanitized}.png`;
+      // Backend writes character avatars as WebP.
+      rawPath = `avatars/${subDir}/${sanitized}.webp`;
     }
     if (!rawPath) return char.avatar_url || '';
     const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');

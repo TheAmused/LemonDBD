@@ -394,7 +394,7 @@ class WikiGGScraperDriver:
                     short_name=slug_lower,
                     category=role,
                     avatar_url=avatar_url,
-                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.png",
+                    avatar_local_path=f"avatars/{sub_dir}/{sanitized}.webp",
                     release_number=release_num,
                     code_prefix=code_prefix,
                     power=power_data,
@@ -937,9 +937,9 @@ class WikiGGScraperDriver:
                         category_dir = "survivors" if current_category == "Survivor" else "killers"
 
                         if canonical_name == "General":
-                            local_rel_path = f"icons/{category_dir}/General/{sanitized_name}.png"
+                            local_rel_path = f"icons/{category_dir}/General/{sanitized_name}.webp"
                         else:
-                            local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.png"
+                            local_rel_path = f"icons/{category_dir}/{canonical_name}/{sanitized_name}.webp"
 
                         norm_key_str = normalize_name_key(perk_name)
                         alternate_name = alias_backlog.get(norm_key_str)
@@ -1013,7 +1013,7 @@ class WikiGGScraperDriver:
                         rarity = extract_rarity_from_elements(cells, img_tag=img_tag, section_context=current_section)
                         description = clean_description_text(description)
                         sanitized = sanitize_filename(item_name)
-                        local_path = f"icons/items/{sanitized}.png"
+                        local_path = f"icons/items/{sanitized}.webp"
 
                         name_low = item_name.lower().strip()
                         is_event = (
@@ -1178,7 +1178,7 @@ class WikiGGScraperDriver:
                 continue
             seen_display.add(norm_display)
 
-            local_path = f"icons/addons/{sanitize_filename(display_name)}.png"
+            local_path = f"icons/addons/{sanitize_filename(display_name)}.webp"
             addons.append(
                 AddonData(
                     name=display_name,
@@ -1500,7 +1500,7 @@ class WikiGGScraperDriver:
                 rarity = extract_rarity_from_elements(cells, img_tag=img)
                 description = clean_description_text(description)
                 sanitized = sanitize_filename(off_name)
-                local_path = f"icons/offerings/{sanitized}.png"
+                local_path = f"icons/offerings/{sanitized}.webp"
 
                 role = nearest_section_role(row)
                 if role == "All":

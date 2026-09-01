@@ -15,8 +15,8 @@ import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
 
-describe('Streaks: Skeletons & Zero-CLS Layout Integrity', () => {
-  it('StreaksHubSkeleton renders with role="status", aria-busy="true", and 3-column card placeholders', () => {
+describe('Streaks: Skeletons & DBD Framer Motion Spinner Integrity', () => {
+  it('StreaksHubSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(
       React.createElement(StreaksHubSkeleton, {
         dict: enDict,
@@ -25,11 +25,10 @@ describe('Streaks: Skeletons & Zero-CLS Layout Integrity', () => {
 
     assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
-    assert.ok(html.includes('grid-cols-1'), 'Must contain grid-cols-1');
-    assert.ok(html.includes('lg:grid-cols-3'), 'Must contain lg:grid-cols-3');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Hub skeleton must render DBD Skill Check SVG');
   });
 
-  it('StreakBoardSkeleton renders with role="status", aria-busy="true", and stage placeholder', () => {
+  it('StreakBoardSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(
       React.createElement(StreakBoardSkeleton, {
         dict: enDict,
@@ -38,7 +37,7 @@ describe('Streaks: Skeletons & Zero-CLS Layout Integrity', () => {
 
     assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
-    assert.ok(html.includes('animate-pulse'), 'Must contain pulse animation class');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Board skeleton must render DBD Skill Check SVG');
   });
 });
 

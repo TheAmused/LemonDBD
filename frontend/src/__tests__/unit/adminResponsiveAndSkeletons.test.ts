@@ -10,20 +10,19 @@ import { AdminUserTable } from '@/components/admin/AdminUserTable';
 import type { UserRow } from '@/types/admin';
 import enDict from '@/locales/en';
 
-describe('Admin Page: Skeletons & Zero-CLS Layout Integrity', () => {
-  it('AdminPanelSkeleton renders with role="status", aria-busy="true", and matches header/stats/tabs/table layout', () => {
+describe('Admin Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
+  it('AdminPanelSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(React.createElement(AdminPanelSkeleton, { dict: enDict }));
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
-    assert.ok(html.includes('lg:grid-cols-5'), 'Stats grid placeholder must match the real 5-column layout');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Admin panel skeleton must render DBD Skill Check SVG');
   });
 
-  it('AdminTabContentSkeleton renders with role="status", aria-busy="true", and a configurable row count', () => {
+  it('AdminTabContentSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(React.createElement(AdminTabContentSkeleton, { dict: enDict, rows: 3 }));
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
-    const rowMatches = html.match(/h-12 w-full rounded-xl bg-slate-800\/40/g) || [];
-    assert.equal(rowMatches.length, 3);
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Admin tab content skeleton must render DBD Skill Check SVG');
   });
 });
 

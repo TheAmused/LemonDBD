@@ -4,8 +4,8 @@ import assert from 'node:assert';
 import React from 'react';
 import { SmashHubSkeleton, SmashLeaderboardSkeleton } from '../../components/smash-or-pass/SmashOrPassSkeleton';
 
-test('SmashOrPass: Skeletons & CLS Prevention Suite', async (t) => {
-  await t.test('SmashHubSkeleton renders with correct accessibility and zero-CLS structure', () => {
+test('SmashOrPass: Skeletons & DBD Framer Motion Spinner Suite', async (t) => {
+  await t.test('SmashHubSkeleton renders with correct accessibility and DBD Skill Check Spinner', () => {
     const el = React.createElement(SmashHubSkeleton, {
       dict: { smashOrPass: { loadingArena: 'Loading Smash or Pass arena...' } },
     });
@@ -20,21 +20,16 @@ test('SmashOrPass: Skeletons & CLS Prevention Suite', async (t) => {
     assert.strictEqual(rendered.props['aria-busy'], 'true');
     assert.strictEqual(rendered.props['aria-label'], 'Loading Smash or Pass arena...');
     assert.ok(rendered.props.className.includes('min-h-[calc(100vh-5rem)]'));
-    assert.ok(rendered.props.className.includes('animate-pulse'));
   });
 
-  await t.test('SmashLeaderboardSkeleton renders specified item count', () => {
+  await t.test('SmashLeaderboardSkeleton renders with status role and accessibility label', () => {
     const mockDict = { smashOrPass: { loadingRankings: 'Loading Hall of Fame rankings...' } };
     const el5 = React.createElement(SmashLeaderboardSkeleton, { count: 5, dict: mockDict });
     const rendered5 = (el5.type as any)({ count: 5, dict: mockDict });
     assert.ok(rendered5);
     assert.strictEqual(rendered5.props.role, 'status');
     assert.strictEqual(rendered5.props['aria-label'], 'Loading Hall of Fame rankings...');
-    assert.strictEqual(rendered5.props.children.length, 5);
-
-    const el8 = React.createElement(SmashLeaderboardSkeleton, { count: 8, dict: mockDict });
-    const rendered8 = (el8.type as any)({ count: 8, dict: mockDict });
-    assert.strictEqual(rendered8.props.children.length, 8);
+    assert.strictEqual(rendered5.props['aria-busy'], 'true');
   });
 });
 

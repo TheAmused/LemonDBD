@@ -12,8 +12,8 @@ import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
 
-describe('Randomizer: Skeletons & Zero-CLS Layout Integrity', () => {
-  it('RandomizerPageSkeleton renders with role="status", aria-busy="true", and complete layout slots', () => {
+describe('Randomizer: Skeletons & DBD Framer Motion Spinner Integrity', () => {
+  it('RandomizerPageSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderToStaticMarkup(
       React.createElement(RandomizerPageSkeleton, {
         dict: enDict,
@@ -22,8 +22,7 @@ describe('Randomizer: Skeletons & Zero-CLS Layout Integrity', () => {
 
     assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
-    assert.ok(html.includes('rotate-45'), 'Skeleton loadout dock must reserve diamond-rotated perk slots');
-    assert.ok(html.includes('grid-cols-2 sm:grid-cols-4'), 'Loadout dock must have 2 to 4 column responsive grid');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Randomizer skeleton must render DBD Skill Check SVG');
   });
 });
 

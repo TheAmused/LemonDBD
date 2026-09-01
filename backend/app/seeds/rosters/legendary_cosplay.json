@@ -3,7 +3,7 @@
         "slug": "legendary_cosplay",
         "name_i18n_key": "smashOrPass.rosters.legendary_cosplay.name",
         "description_i18n_key": "smashOrPass.rosters.legendary_cosplay.desc",
-        "cover_image_url": "/static/avatars/rosters/legendary_cosplay.png",
+        "cover_image_url": "/static/avatars/rosters/legendary_cosplay.webp",
         "theme_color": "#ffd166",
         "category": "Collabs",
         "is_nsfw": false,
@@ -137,7 +137,7 @@
             "name": "William Birkin",
             "role": "Killer",
             "gender": "monster_other",
-            "media_url": "/static/avatars/killers/william_birkin.png",
+            "media_url": "/static/avatars/killers/william_birkin.webp",
             "metadata": {
                 "title": "The G-Virus Colossus",
                 "tagline": "Massive shoulder eye, unstoppable bio-hazard strength.",
@@ -369,7 +369,7 @@
             "name": "HUNK (Grim Reaper)",
             "role": "Killer",
             "gender": "male",
-            "media_url": "/static/avatars/killers/hunk.png",
+            "media_url": "/static/avatars/killers/hunk.webp",
             "metadata": {
                 "title": "The Unstoppable Operative",
                 "tagline": "Gas mask, tactical armor, and never leaves an extraction point.",
@@ -601,7 +601,7 @@
             "name": "James Sunderland",
             "role": "Survivor",
             "gender": "male",
-            "media_url": "/static/avatars/survivors/james_sunderland.png",
+            "media_url": "/static/avatars/survivors/james_sunderland.webp",
             "metadata": {
                 "title": "The Silent Hill Wanderer",
                 "tagline": "Green military jacket, searching for letters from lost love.",
@@ -833,7 +833,7 @@
             "name": "Maria",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/maria.png",
+            "media_url": "/static/avatars/survivors/maria.webp",
             "metadata": {
                 "title": "The Seductive Enigma",
                 "tagline": "Leopard print, butterfly tattoo, and alluring charm.",
@@ -1065,7 +1065,7 @@
             "name": "Cybil Bennett",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/cybil_bennett.png",
+            "media_url": "/static/avatars/survivors/cybil_bennett.webp",
             "metadata": {
                 "title": "The Brave Patrol Officer",
                 "tagline": "Motorcycle boots, service revolver, and fierce protective instincts.",
@@ -1297,7 +1297,7 @@
             "name": "Lisa Garland",
             "role": "Survivor",
             "gender": "female",
-            "media_url": "/static/avatars/survivors/lisa_garland.png",
+            "media_url": "/static/avatars/survivors/lisa_garland.webp",
             "metadata": {
                 "title": "The Compassionate Nurse",
                 "tagline": "Alchemilla hospital uniform, warm bedside manner, and a heart of gold.",
@@ -1529,7 +1529,7 @@
             "name": "Naughty Bear",
             "role": "Killer",
             "gender": "monster_other",
-            "media_url": "/static/avatars/killers/naughty_bear.png",
+            "media_url": "/static/avatars/killers/naughty_bear.webp",
             "metadata": {
                 "title": "The Vengeful Teddy",
                 "tagline": "Plush fur, party hat, and loves throwing chaotic celebrations.",
@@ -1761,7 +1761,7 @@
             "name": "Baba Yaga",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/baba_yaga.png",
+            "media_url": "/static/avatars/killers/baba_yaga.webp",
             "metadata": {
                 "title": "The Slavic Witch",
                 "tagline": "Hut on chicken legs, ancient herbal cauldrons, and folklore wisdom.",
@@ -1993,7 +1993,7 @@
             "name": "The Look-See",
             "role": "Killer",
             "gender": "monster_other",
-            "media_url": "/static/avatars/killers/the_look_see.png",
+            "media_url": "/static/avatars/killers/the_look_see.webp",
             "metadata": {
                 "title": "The Crypt TV Spectre",
                 "tagline": "Tailored suit, wide toothy grin, and helps you let go of grief.",
@@ -2225,7 +2225,7 @@
             "name": "The Minotaur",
             "role": "Killer",
             "gender": "monster_other",
-            "media_url": "/static/avatars/killers/minotaur.png",
+            "media_url": "/static/avatars/killers/minotaur.webp",
             "metadata": {
                 "title": "The Labyrinth Champion",
                 "tagline": "Towering horns, ancient bronze armor, and unstoppable labyrinth guide.",
@@ -2457,7 +2457,7 @@
             "name": "Tiffany Valentine",
             "role": "Killer",
             "gender": "female",
-            "media_url": "/static/avatars/killers/tiffany_valentine.png",
+            "media_url": "/static/avatars/killers/tiffany_valentine.webp",
             "metadata": {
                 "title": "The Blonde Doll of Mayhem",
                 "tagline": "Leather jacket, bridal veil, and loves candlelit crime sprees.",
@@ -2689,7 +2689,7 @@
             "name": "Chatterer Cenobite",
             "role": "Killer",
             "gender": "monster_other",
-            "media_url": "/static/avatars/killers/chatterer.png",
+            "media_url": "/static/avatars/killers/chatterer.webp",
             "metadata": {
                 "title": "The Rhythmic Cenobite",
                 "tagline": "Chattering teeth, leather vestments, and cosmic sensations.",

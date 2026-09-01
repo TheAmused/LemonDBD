@@ -73,6 +73,8 @@ export default {
   pipeSeparator: '|',
   loadingRosterPrefix: 'Cargando',
   loadingRosterSuffix: 'de la base de datos...',
+  loadingArena: 'Cargando arena de Smash or Pass...',
+  loadingRankings: 'Cargando clasificaciones del Salón de la Fama...',
   stats: 'Info',
   reset: 'Restablecer',
   rosters: {

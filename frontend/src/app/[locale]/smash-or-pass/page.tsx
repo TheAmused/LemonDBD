@@ -13,6 +13,8 @@ import { useSidebarState } from '@/hooks/useSidebarState';
 import { PerkItem, CharacterItem } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
+import { SmashHubSkeleton } from '@/components/smash-or-pass/SmashOrPassSkeleton';
+
 export default function SmashOrPassPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
@@ -62,20 +64,11 @@ export default function SmashOrPassPage() {
     loadVaultStats();
   }, [backendBase]);
 
-   if (!dict) {
-     return (
-       <div className="min-h-screen bg-[#070b12] text-slate-400 flex items-center justify-center font-mono text-xs">
-         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-       </div>
-     );
-   }
-
-
   return (
     <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
-        dict={dict}
+        dict={dict || ({} as Dictionary)}
         activeCategory="smash-or-pass"
         onOpenQuests={() => setIsQuestsOpen(true)}
         totalPerksCount={totalPerksCount}
@@ -89,8 +82,14 @@ export default function SmashOrPassPage() {
           isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
         }`}
       >
-        <SmashOrPassHub dict={dict} locale={locale} />
-        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
+        <React.Suspense fallback={<SmashHubSkeleton />}>
+          {dict ? (
+            <SmashOrPassHub dict={dict} locale={locale} />
+          ) : (
+            <SmashHubSkeleton />
+          )}
+        </React.Suspense>
+        {dict && <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />}
       </main>
     </div>
   );

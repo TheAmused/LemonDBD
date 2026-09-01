@@ -120,52 +120,73 @@ def fetch_character_detail(service, character_name: str, lang: str | None = None
     """Retrieve full character detail including specific addons, powers, and teachable perks."""
     target_clean = character_name.strip().lower()
     target_slug = slugify(character_name)
+    target_spaces = target_clean.replace("-", " ").replace("_", " ")
 
     try:
-        stmt = select(Character).options(joinedload(Character.perks))
-        chars = db.session.scalars(stmt).unique().all()
-        matched_char: Character | None = None
+        # Fast-path: attempt direct indexed SQL lookup on common canonical identifiers
+        direct_stmt = (
+            select(Character)
+            .options(joinedload(Character.perks))
+            .where(
+                or_(
+                    func.lower(Character.name) == target_clean,
+                    func.lower(Character.name) == target_spaces,
+                    func.lower(Character.wiki_slug) == target_clean,
+                    func.lower(Character.wiki_slug) == target_slug,
+                    func.lower(Character.short_name) == target_clean,
+                    func.lower(Character.code_prefix) == target_clean,
+                    func.lower(Character.real_name) == target_clean,
+                    func.lower(Character.real_name) == target_spaces,
+                )
+            )
+        )
+        matched_char: Character | None = db.session.scalars(direct_stmt).unique().first()
 
-        for c in chars:
-            c_name = c.name.lower()
-            c_real = (c.real_name or "").lower()
-            c_slug = (c.wiki_slug or "").lower()
-            c_short = (c.short_name or "").lower()
-            c_prefix = (c.code_prefix or "").lower()
+        # Fallback path: check normalized aliases and localized translation names
+        if not matched_char:
+            stmt = select(Character).options(joinedload(Character.perks))
+            chars = db.session.scalars(stmt).unique().all()
 
-            candidate_slugs = {
-                c_name,
-                c_real,
-                c_slug,
-                c_short,
-                c_prefix,
-                slugify(c.name),
-                slugify(c.real_name or ""),
-                slugify(c.wiki_slug or ""),
-                slugify(c.short_name or ""),
-                slugify(c.code_prefix or ""),
-                normalize_search_key(c.name),
-                normalize_search_key(c.real_name or ""),
-                normalize_search_key(c.short_name or ""),
-            }
+            for c in chars:
+                c_name = c.name.lower()
+                c_real = (c.real_name or "").lower()
+                c_slug = (c.wiki_slug or "").lower()
+                c_short = (c.short_name or "").lower()
+                c_prefix = (c.code_prefix or "").lower()
 
-            if c.translations and isinstance(c.translations, dict):
-                for l_code, l_data in c.translations.items():
-                    if isinstance(l_data, dict):
-                        loc_name = l_data.get("name")
-                        if loc_name:
-                            candidate_slugs.add(loc_name.lower())
-                            candidate_slugs.add(slugify(loc_name))
-                            candidate_slugs.add(normalize_search_key(loc_name))
-                        loc_real = l_data.get("real_name")
-                        if loc_real:
-                            candidate_slugs.add(loc_real.lower())
-                            candidate_slugs.add(slugify(loc_real))
-                            candidate_slugs.add(normalize_search_key(loc_real))
+                candidate_slugs = {
+                    c_name,
+                    c_real,
+                    c_slug,
+                    c_short,
+                    c_prefix,
+                    slugify(c.name),
+                    slugify(c.real_name or ""),
+                    slugify(c.wiki_slug or ""),
+                    slugify(c.short_name or ""),
+                    slugify(c.code_prefix or ""),
+                    normalize_search_key(c.name),
+                    normalize_search_key(c.real_name or ""),
+                    normalize_search_key(c.short_name or ""),
+                }
 
-            if target_clean in candidate_slugs or target_slug in candidate_slugs or normalize_search_key(character_name) in candidate_slugs:
-                matched_char = c
-                break
+                if c.translations and isinstance(c.translations, dict):
+                    for l_code, l_data in c.translations.items():
+                        if isinstance(l_data, dict):
+                            loc_name = l_data.get("name")
+                            if loc_name:
+                                candidate_slugs.add(loc_name.lower())
+                                candidate_slugs.add(slugify(loc_name))
+                                candidate_slugs.add(normalize_search_key(loc_name))
+                            loc_real = l_data.get("real_name")
+                            if loc_real:
+                                candidate_slugs.add(loc_real.lower())
+                                candidate_slugs.add(slugify(loc_real))
+                                candidate_slugs.add(normalize_search_key(loc_real))
+
+                if target_clean in candidate_slugs or target_slug in candidate_slugs or normalize_search_key(character_name) in candidate_slugs:
+                    matched_char = c
+                    break
 
         if not matched_char:
             return None

@@ -2,12 +2,13 @@
 import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/characters/[slug]/page.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronLeft, UserX, RefreshCw } from 'lucide-react';
+import { ChevronLeft, UserX } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
-import { QuestsModal } from '@/components/QuestsModal';
+import { CharacterDetailSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import {
   CharacterSubpageView,
   CharacterDetailPayload,
@@ -17,6 +18,11 @@ import {
 import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { useSidebarState } from '@/hooks/useSidebarState';
+
+const QuestsModal = dynamic(
+  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
+  { ssr: false }
+);
 
 export default function CharacterDetailPage() {
   const params = useParams();
@@ -134,14 +140,16 @@ export default function CharacterDetailPage() {
     };
   }, [slug, backendBase, locale]);
 
-   if (!dict) {
-     return (
-       <div className="min-h-screen bg-[#070b12] flex items-center justify-center text-slate-400 font-mono text-xs">
-         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-       </div>
-     );
-   }
-
+  if (!dict) {
+    return (
+      <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
+        <main className="flex-1 w-full overflow-y-auto p-4 sm:p-6 lg:p-8 lg:pl-72">
+          <CharacterDetailSkeleton />
+        </main>
+      </div>
+    );
+  }
 
   const t = dict.characterDetail;
 
@@ -164,12 +172,7 @@ export default function CharacterDetailPage() {
         }`}
       >
         {loading ? (
-          <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-            <RefreshCw className="h-8 w-8 text-rose-500 animate-spin" />
-            <p className="text-xs font-mono text-slate-400">
-              {t.loading || 'Loading Character Details...'}
-            </p>
-          </div>
+          <CharacterDetailSkeleton dict={dict} />
         ) : notFound || !detailData ? (
           <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-5 text-center p-6">
             <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-900 border border-slate-800 text-slate-400">
@@ -193,19 +196,23 @@ export default function CharacterDetailPage() {
             </Link>
           </div>
         ) : (
-          <CharacterSubpageView
-            currentLocale={locale}
-            dict={dict}
-            detailData={detailData}
-            allCharacters={allCharacters}
-          />
+          <Suspense fallback={<CharacterDetailSkeleton dict={dict} />}>
+            <CharacterSubpageView
+              currentLocale={locale}
+              dict={dict}
+              detailData={detailData}
+              allCharacters={allCharacters}
+            />
+          </Suspense>
         )}
 
-        <QuestsModal
-          isOpen={isQuestsOpen}
-          onClose={() => setIsQuestsOpen(false)}
-          dict={dict}
-        />
+        {isQuestsOpen && (
+          <QuestsModal
+            isOpen={isQuestsOpen}
+            onClose={() => setIsQuestsOpen(false)}
+            dict={dict}
+          />
+        )}
       </main>
     </div>
   );

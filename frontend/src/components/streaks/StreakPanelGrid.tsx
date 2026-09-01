@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { StreakPanel } from './StreakPanel';
 import {
@@ -9,14 +10,27 @@ import {
   getSurvivorStreakPanels,
   getChallengeStreakPanels,
 } from './panels';
-import { GauntletModeModal } from './gauntlet/GauntletModeModal';
-import { ChaosModeModal } from './chaos/ChaosModeModal';
-import { HistoryModeModal } from './history/HistoryModeModal';
-import { PageStreakModeModal } from './page-streak/PageStreakModeModal';
 import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+
+const GauntletModeModal = dynamic(
+  () => import('./gauntlet/GauntletModeModal').then((m) => m.GauntletModeModal),
+  { ssr: false }
+);
+const ChaosModeModal = dynamic(
+  () => import('./chaos/ChaosModeModal').then((m) => m.ChaosModeModal),
+  { ssr: false }
+);
+const HistoryModeModal = dynamic(
+  () => import('./history/HistoryModeModal').then((m) => m.HistoryModeModal),
+  { ssr: false }
+);
+const PageStreakModeModal = dynamic(
+  () => import('./page-streak/PageStreakModeModal').then((m) => m.PageStreakModeModal),
+  { ssr: false }
+);
 import {
   getSavedChaosDifficulty,
   saveChaosDifficulty,

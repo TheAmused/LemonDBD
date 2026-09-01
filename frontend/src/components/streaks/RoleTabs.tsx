@@ -53,7 +53,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
             key={tab.id}
             href={`/${locale}/streaks/${tab.id}`}
             aria-current={isActive ? 'page' : undefined}
-            className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-xs font-bold transition-all focus:outline-none focus:ring-2 ${tab.ring} ${
+            className={`flex items-center gap-2 rounded-xl border px-4 py-2 min-h-[44px] touch-manipulation text-xs font-bold transition-all focus:outline-none focus:ring-2 ${tab.ring} ${
               isActive
                 ? tab.active
                 : `border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:bg-slate-900/80 shadow-sm ${tab.hover}`

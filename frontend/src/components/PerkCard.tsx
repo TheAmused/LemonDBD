@@ -2,12 +2,17 @@
 // frontend/src/components/PerkCard.tsx
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { ImageOff, Lock, HelpCircle } from 'lucide-react';
 import { Perk, PerkDictionary, ViewDisplayMode } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
-import { DisabledReasonModal } from '@/components/DisabledReasonModal';
 import { UnifiedHoverModal, ActiveHoverState } from '@/components/common/UnifiedHoverModal';
+
+const DisabledReasonModal = dynamic(
+  () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
+  { ssr: false }
+);
 
 export type { Perk };
 
@@ -110,7 +115,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           aria-label={ariaLabel}
-          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-slate-800 bg-slate-900/40 px-3 py-2 sm:px-4 sm:py-3 text-left cursor-pointer transition-colors hover:bg-slate-900/70 hover:border-cyan-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-slate-800 bg-slate-900/40 px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-slate-900/70 hover:border-cyan-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
         >
           <div
             className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center ${
@@ -124,6 +129,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
                 onError={() => setImgError(true)}
                 className="h-full w-full object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.85)] pointer-events-none"
                 loading="lazy"
+                decoding="async"
               />
             ) : (
               <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-slate-900 border border-slate-800">
@@ -139,6 +145,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
                   onError={() => setAvatarError(true)}
                   className="h-full w-full object-cover object-top"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
             )}
@@ -202,7 +209,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         aria-label={ariaLabel}
-        className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 group-hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-2xl ${GRID_SIZE_CLASSES[size]}`}
+        className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 group-hover:scale-105 active:scale-95 touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-2xl ${GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
           <span className="absolute top-1 left-1 z-10 font-mono text-[10px] font-black text-amber-400/90 pointer-events-none">
@@ -222,6 +229,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
               onError={() => setImgError(true)}
               className="h-full w-full object-contain filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)] group-hover:drop-shadow-[0_0_18px_rgba(6,182,212,0.6)] transition-all duration-200 pointer-events-none"
               loading="lazy"
+              decoding="async"
             />
           ) : (
             <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-slate-900 border border-slate-800">
@@ -237,6 +245,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
                 onError={() => setAvatarError(true)}
                 className="h-full w-full object-cover object-top"
                 loading="lazy"
+                decoding="async"
               />
             </div>
           )}
